@@ -6,6 +6,15 @@
 
 ## 2026-06-04
 
+### Desktop Plugin 入口模型与看板状态对齐
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。
+- Developer/system delta: `docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。
+- Verification: `docs/workflow/project/dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated `state.generated.js` confirmed plugin status/running/feature card values；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed。
+- Risk / follow-up: 本次为 docs-only / contract-only，不解冻 P2、不实现 Plugin Center、不启动 feature-build。后续仍按 G1 后顺序推进：Organizer closeout → Widget Host MVP → Clipboard MVP（先修 `clipboard.item` vs `clipboard.entry` 契约漂移）→ Pet basic；Meditation desktop plugin 继续延后。
+
 ### 项目 Skill 体系补齐：部署 / 桌面发布 gate + Cursor 镜像
 
 - Product line: project-system / workflow governance

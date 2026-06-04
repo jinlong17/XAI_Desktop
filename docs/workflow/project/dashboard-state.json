@@ -944,13 +944,13 @@
       "key": "plugin",
       "order": 3,
       "title": "桌面整理插件 / Widget",
-      "subtitle": "类似 MacBook widget 的桌面扩展",
+      "subtitle": "Mac App 控制面板入口 + 内置 Plugin Center",
       "badge": "P2 · paused",
-      "status": "等待 App 平台",
+      "status": "Paused until G1 · entry model decided",
       "branch": "desktop-plugin-next",
       "dependency": "依赖桌面 App 插件平台",
-      "next": "G1 稳定后恢复。",
-      "tracker": "插件 SDK、widget host、单插件功能、平台兼容。",
+      "next": "只做 PRD / SDK / 看板对齐；G1 后先 Organizer closeout，再做 Widget Host MVP。",
+      "tracker": "入口设计已决；实现未开工；内置 Plugin Center、AddToDesktop 和实例设置 schema 等待解冻。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -961,37 +961,44 @@
         "icon": "P"
       },
       "overview": {
-        "phase": "平台等待",
-        "running": "等待 App 平台",
+        "phase": "Paused until G1",
+        "running": "入口设计已决 · 功能实现未开工",
         "progress_fallback": 24,
-        "recent_update": "插件状态来自 PLUGIN_MAP",
-        "todo_fallback": "插件 SDK / Widget host 恢复排期",
-        "target": { "type": "doc", "path": "docs/PLUGIN_MAP.md", "label": "打开 PLUGIN_MAP" }
+        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
+        "todo_fallback": "G1 前仅维护 brief / docs；不启动 feature-build",
+        "target": { "type": "doc", "path": "docs/planning/sub-prds/plugin/PRD.md", "label": "打开 Plugin PRD" }
       },
       "tracking": {
         "region": "主产品链",
         "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
-        "anchor_docs": [["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "⚠️ 整体方向待定:ADR-0011 将 overlay/organizer/桌面插件降为 P3 Future", "status": "contested", "note": "是否保留 Smart Container 取决于 W/D 路线决策;见 ADR-0015" },
-        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "web 线已交付旗舰;dev 线 ADR-0011 列 P3" },
-        { "name": "桌面小组件 Widget host", "status": "planned" },
-        { "name": "文件夹挂件", "status": "planned" },
-        { "name": "Sticky Notes 便签", "status": "planned" },
-        { "name": "剪贴板 clipboard(历史/OCR)", "status": "planned", "note": "stub;需 App 原生命令" },
-        { "name": "桌宠 pet(独立包 plugin-pet)", "status": "planned" },
-        { "name": "快速记账 / 快速时间追踪挂件", "status": "proposed" }
+        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "planned", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only" },
+        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
+        { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
+        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "G1 后第一批低原生依赖插件" },
+        { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
+        { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
+        { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
       ],
       "points": [
         [
           "定位",
-          "围绕桌面整理、widget、小工具和插件生态展开，属于 App 之上的扩展层。"
+          "不是第四条完整产品线，而是 Mac App 之上的增强层：轻量、可瞥见、可快速操作。"
+        ],
+        [
+          "入口模型",
+          "主入口为 Mac App 控制面板的“桌面插件”；Plugin Center 负责内置插件列表、已启用实例、添加到桌面和实例设置；设置页只放全局偏好。"
         ],
         [
           "独立跟踪",
-          "插件平台、SDK、widget host、单插件功能要分开记录，不和 App RC 混在一起。"
+          "入口 App delta 与插件内容 plugin delta 要拆开记录；G1 前只做 brief / PRD / SDK contract 对齐，不开 feature-build。"
+        ],
+        [
+          "风险",
+          "不要把 scaffold 误读为成熟体系：organizer 可用，clipboard/widgets/pet 多为 mock 或未装载，meditation 未建包；Clipboard MVP 前需修 entityType drift。"
         ],
         [
           "和下一层关系",
@@ -1002,11 +1009,12 @@
           "三面反混淆(底座=App 原生 / 挂件=插件 / Web 同名组件)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
-      "goal": "为 macOS App 提供桌面整理插件 / Widget 平台（Smart Container Grid、剪贴板、便签、宠物、冥想等），surface 落在 apps/desktop/ 的插件槽位 + packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（部分如 plugin-meditation 仍为 PLUGIN_MAP 上的 Planned 规划行、未建包）。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;organizer 的 P 级 reconcile(web 线 P2 vs dev 线 ADR-0011 P3)见 ADR-0015(Proposed)。三面边界权威见 docs/MODULE_BOUNDARIES.md。",
+      "goal": "为 macOS App 提供桌面整理插件 / Widget 平台（Smart Container Grid、剪贴板、便签、宠物、冥想等），surface 落在 apps/desktop/ 的插件槽位 + packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（部分如 plugin-meditation 仍为 PLUGIN_MAP 上的 Planned 规划行、未建包）。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
       "routing": [
         "改动落在 apps/desktop/ 的插件槽位（plugin slots），或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（plugin-meditation 当前为 PLUGIN_MAP Planned 行、尚未建包）",
         "需求提到 桌面整理 / Smart Container / Grid 容器 / 拖拽归类 / 文件夹与 App 整理 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想",
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线",
+        "涉及 Plugin Center 内容契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema）归 plugin；涉及 Mac App 控制面板入口、Plugin Center 容器、实例 placement/pin/click-through/权限提示归 app",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
         "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
         "状态线索：当前 P2 PAUSED，需求被标注为 等 G1 ships 后再开工 / P2 / 暂停中（ADR-0010 §D2）",
@@ -1053,6 +1061,7 @@
         "解冻后开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按标准特性管线推进：feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
         "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
+        "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
       ],

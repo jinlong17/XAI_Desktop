@@ -227,6 +227,7 @@ Start the bug-diagnose agent.
 - 改动落在 apps/desktop/ 的插件槽位（plugin slots），或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包（plugin-meditation 当前为 PLUGIN_MAP Planned 行、尚未建包）
 - 需求提到 桌面整理 / Smart Container / Grid 容器 / 拖拽归类 / 文件夹与 App 整理 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想
 - 涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线
+- 涉及 Plugin Center 的**内容契约**（可添加插件目录、`PluginInstance`、`AddToDesktopRequest`、实例 settings schema、内置插件 maturity/status）归 plugin；但 Mac App 控制面板按钮、Plugin Center 窗口容器、pin/click-through/placement 等原生实例管理归 app
 - 插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层
 - 分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）
 - 状态线索：当前 P2 PAUSED，需求被标注为 等 G1 ships 后再开工 / P2 / 暂停中（ADR-0010 §D2）
@@ -244,8 +245,9 @@ Start the bug-diagnose agent.
 2. 解冻后开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按标准特性管线推进：feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。
 3. 数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。
 4. 插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。
-5. 若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。
-6. 每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。
+5. Plugin Center 拆分判定：`桌面插件`入口按钮、Plugin Center window、实例 placement、pin、click-through、permissions 属 app；插件目录、AddToDesktop contract、实例 settings schema 和 `packages/plugin-*` 内容属 plugin。一个 feature 同时触及时，先在 plan 中拆 App delta 与 Plugin delta，不把入口需求写进 Web 工作台。
+6. 若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。
+7. 每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。
 
 **常用 prompt（可直接复制）**
 
@@ -291,6 +293,7 @@ Start the feature-plan agent.
 |---|---|---|---|---|
 | 账号云同步层（`sync`） | 某插件实体确实需要跨设备（用户在 Web 与 App 间共享同一份数据），须从默认 device-local 升为 syncScope: account-sync | codex/sync/<feature> | `feature-plan` | 切到 sync 线按 ADR-0013 D4 九项清单补齐 entityType（registered in packages/core-data/src/entities.ts）/schemaVersion/本地存储映射/push 格式/pull 应用规则/冲突策略（非静默 LWW）/Web IndexedDB 测试/App SQLite 测试/双设备 smoke；本模块只声明 account-sync，不自实现同步管线。sync 线 P2 PAUSED until G1 SHIPPED。 |
 | Mac 桌面版 App（`app`） | 插件需求其实落在 App 主体的原生窗口/运行时（NSWindow、点击穿透、Grid 原生窗口、Tauri 命令），而非纯插件槽位逻辑 | codex/desktop/<feature> | `feature-plan` | 原生窗口契约与运行时归 app 线（apps/desktop + src-tauri，dev 分支）。涉及 dev 的操作需操作者显式确认；插件侧通过 @repo/core/events 与窗口契约协作，不直接改原生层。 |
+| Mac 桌面版 App（`app`） | 新增 Mac App 控制面板的 `桌面插件`入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限提示等原生入口管理 | codex/desktop/<feature> | `feature-plan` | 入口和窗口管理是 App delta；plugin 线只提供 Plugin Center 目录、AddToDesktop contract、实例 settings schema 和具体插件渲染。MVP 入口形态已拍板为“控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好”。 |
 | Mac 桌面版 App（`app`） | 某 Web 改动经 D3 判定为 W3 native-bridge-needed，需要新增 Tauri/Rust 命令或原生能力来支撑插件平台 | desktop-plugin-next | `xai-feature-full-loop` | W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-next/desktop-plugin-next 上做原生 delta，并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已在 D2 定义但尚未创建。 |
 
 **影响 / 需同步更新的模块**
@@ -299,6 +302,7 @@ Start the feature-plan agent.
 |---|---|---|
 | 账号云同步层（`sync`） | 本模块把某插件实体的 syncScope 从 device-local 改为 account-sync（需要跨设备） | 在 packages/core-data/src/entities.ts 注册新的 entityType（^[a-z]+\.[a-z_]+$ dotted slug）并定 schemaVersion，由 sync 线按 D4 九项清单补 push/pull/冲突策略与双设备 smoke；否则该实体永不入远端 outbox。 |
 | Mac 桌面版 App（`app`） | 插件平台/Widget 需要新的原生能力（Tauri 命令、NSWindow 行为、点击穿透或 Grid 原生窗口契约变更） | 在 app 线（apps/desktop/src-tauri 的 commands/ 与 platform/macos/）新增对应命令与契约，并更新 @repo/core/events 中的窗口命令契约；插件侧只消费、不实现原生层。 |
+| Mac 桌面版 App（`app`） | Plugin Center 入口从文档进入实现阶段 | 在 apps/desktop 控制面板加入 `桌面插件` 一级入口、打开 Plugin Center 容器，并将设置页限定为全局偏好；不要把管理中心实现成 Web 工作台页面或独立完整产品线。 |
 | Web（`web`） | 插件平台的共享能力源自 Web 侧某改动，需经 D3 同步过来（W1/W2/W3） | 由 web 线发起 D3 分类（xai-web-to-desktop-sync），产出 Parity Receipt 后再在 desktop-next/desktop-plugin-next 落地；plugin 模块据此承接原生/运行时 delta。 |
 | Mac 桌面版 App（`app`） | 新增/改动插件包后需要让 App 真正装载它 | 在 apps/desktop 的插件注册入口（main.tsx 装载点）补 import 注册，并在 docs/PLUGIN_MAP.md 增/改对应行状态（如把 clipboard/widgets/meditation 从 Planned 推进），保持全局状态机一致。 |
 

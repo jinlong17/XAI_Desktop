@@ -204,6 +204,11 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **D. 模块轨道（6 模块卡，3 区）** | 职责：模块卡 Owner。展示：3 区（主产品链/项目系统区/Control Plane），每模块卡 order/badge/title/状态/branch/依赖/next。数据源：`products` 按 `region` 分组。色彩：模块色顶边。交互：点卡→`setProduct` |
 | **E. 产品明细面板** | 职责：模块深挖 Owner。展示：目标/Feature 列表(按 6 状态)/状态网格/部署块/测试块/任务归属信号/推荐 skill/常用 prompt/workflow/transitions/impacts/相关文档。数据源：选中 `products[key]` 全字段。交互：开 target、开 doc、复制 prompt、折叠 navBlock、跨模块 data-to/data-module |
 
+> Desktop Plugin 状态卡属于 D 的 `plugin` 模块卡，数据只从 Product Module Registry
+> (`docs/workflow/project/dashboard-state.json.product_lines[key=plugin]`) 读取。它必须明确标出
+> `Paused until G1`、`入口设计已决`、`实现未开工`，并说明 Plugin Center 入口模型是文档 / contract
+> 决策，不代表插件功能已解冻。禁止在总览或 HTML 中另写一张静态 Desktop Plugin 卡。
+
 > 总览的模块 drawer 是紧凑 Mirror。它可以与 D 有不同密度，但不得拥有第二套数据源、状态词汇或
 > Owner-only 字段解释；真正定位 / 完整明细仍回到 D。
 
