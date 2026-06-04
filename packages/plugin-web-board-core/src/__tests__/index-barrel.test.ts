@@ -29,6 +29,14 @@ describe("index barrel", () => {
     expect(typeof Barrel.normalizeBoardCardDetail).toBe("function");
     expect(typeof Barrel.setListColor).toBe("function");
     expect(typeof Barrel.updateCardInList).toBe("function");
+    expect(typeof Barrel.compareIsoDateOnly).toBe("function");
+    expect(typeof Barrel.formatIsoDateOnly).toBe("function");
+    expect(typeof Barrel.getBoardCardDateCompatibilityPatch).toBe("function");
+    expect(typeof Barrel.getBoardCardDateMeta).toBe("function");
+    expect(typeof Barrel.isoDateFromOffset).toBe("function");
+    expect(typeof Barrel.isIsoDateOnly).toBe("function");
+    expect(typeof Barrel.normalizeBoardCardDates).toBe("function");
+    expect(typeof Barrel.parseIsoDateOnly).toBe("function");
 
     // Persistence
     expect(typeof Barrel.loadBoardsOrDefault).toBe("function");

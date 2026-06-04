@@ -9,6 +9,7 @@
  */
 
 import type { DragEvent, MouseEvent } from "react";
+import { getBoardCardDateMeta } from "./internal/dateModel.js";
 import type { BoardCard as BoardCardData } from "./types.js";
 
 /** Wire-format MIME for cross-list drag-and-drop. Namespaced to avoid foreign drops. */
@@ -33,7 +34,8 @@ export function BoardCard({
   onDragStart,
   onDragEnd,
 }: BoardCardProps) {
-  const dueText = card.dueEn && lang === "en" ? card.dueEn : card.due;
+  const dateMeta = getBoardCardDateMeta(card);
+  const dueText = dateMeta.dueLabel?.[lang];
   const checklist = card.checklist;
   const checklistDone =
     checklist !== undefined && checklist.total > 0 && checklist.done === checklist.total;
@@ -67,12 +69,12 @@ export function BoardCard({
         ) : null}
         <div className="bc-title">{card.title[lang]}</div>
         <div className="bc-meta">
-          {card.due ? (
+          {dueText ? (
             <span
               className={
                 "bc-due" +
-                (card.dueLate ? " late" : "") +
-                (dueText === "Today" || card.due === "今天" ? " today" : "")
+                (dateMeta.isOverdue ? " late" : "") +
+                (dateMeta.isDueToday ? " today" : "")
               }
               data-testid="bc-due"
             >

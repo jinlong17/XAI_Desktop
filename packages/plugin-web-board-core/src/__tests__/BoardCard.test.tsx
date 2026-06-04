@@ -52,18 +52,29 @@ describe("BoardCard", () => {
     expect(chip.className).toContain("done");
   });
 
-  test("BC4 renders due chip when card.due set; adds late class when dueLate=true", () => {
+  test("BC4 renders due chip from board-core date meta and derives late state from typed dueDate", () => {
     const { rerender } = render(
       <BoardCard card={makeCard({ due: "5/26" })} lang="en" />,
     );
     expect(screen.getByTestId("bc-due").textContent).toBe("5/26");
+
+    rerender(
+      <BoardCard
+        card={makeCard({ dueDate: "2000-01-01", dueLate: false })}
+        lang="en"
+      />,
+    );
+    expect(screen.getByTestId("bc-due").textContent).toBe("1/1");
+    expect(screen.getByTestId("bc-due").className).toContain("late");
+
     rerender(
       <BoardCard
         card={makeCard({ due: "Overdue", dueLate: true })}
         lang="en"
       />,
     );
-    expect(screen.getByTestId("bc-due").className).toContain("late");
+    expect(screen.getByTestId("bc-due").textContent).toBe("Overdue");
+    expect(screen.getByTestId("bc-due").className).not.toContain("late");
   });
 
   test("BC4b dueEn is used when lang=en + dueEn provided", () => {

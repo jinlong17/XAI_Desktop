@@ -75,6 +75,25 @@ export {
   updateCardInList,
 } from "./internal/boardOps.js";
 
+export {
+  compareIsoDateOnly,
+  formatIsoDateOnly,
+  getBoardCardDateCompatibilityPatch,
+  getBoardCardDateMeta,
+  isoDateFromOffset,
+  isIsoDateOnly,
+  normalizeBoardCardDates,
+  parseIsoDateOnly,
+} from "./internal/dateModel.js";
+export type {
+  BoardCardDateMeta,
+  BoardDateLabel,
+  BoardDateOptions,
+  BoardDateSource,
+  BoardIsoDate,
+  DateOnlyParts,
+} from "./internal/dateModel.js";
+
 // ---- Persistence helpers -------------------------------------------------
 export {
   loadBoardsOrDefault,

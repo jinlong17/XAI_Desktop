@@ -21,6 +21,7 @@ import type {
   CardChecklist,
   CardLocation,
 } from "../types.js";
+import { isIsoDateOnly } from "./dateModel.js";
 import { LIST_COLOR_IDS } from "./listColors.js";
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -39,11 +40,6 @@ function isBilingualText(value: unknown): value is BilingualText {
 function isCardChecklist(value: unknown): value is CardChecklist {
   if (!isObject(value)) return false;
   return typeof value.done === "number" && typeof value.total === "number";
-}
-
-function isIsoDateString(value: unknown): value is string {
-  if (!isString(value)) return false;
-  return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
 function isBoardChecklistItem(value: unknown): value is BoardChecklistItem {
@@ -147,8 +143,8 @@ export function isBoardCard(value: unknown): value is BoardCard {
   if (value.due !== undefined && !isString(value.due)) return false;
   if (value.dueEn !== undefined && !isString(value.dueEn)) return false;
   if (value.start !== undefined && !isString(value.start)) return false;
-  if (value.startDate !== undefined && !isIsoDateString(value.startDate)) return false;
-  if (value.dueDate !== undefined && !isIsoDateString(value.dueDate)) return false;
+  if (value.startDate !== undefined && !isIsoDateOnly(value.startDate)) return false;
+  if (value.dueDate !== undefined && !isIsoDateOnly(value.dueDate)) return false;
   if (value.dueLate !== undefined && typeof value.dueLate !== "boolean") {
     return false;
   }

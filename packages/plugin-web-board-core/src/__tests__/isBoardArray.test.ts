@@ -140,6 +140,13 @@ describe("isBoardArray", () => {
         dueDate: "05/26/2026",
       }),
     ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        dueDate: "2026-02-31",
+      }),
+    ).toBe(false);
   });
 
   test("V8c isBoardCard rejects card with malformed checklist", () => {

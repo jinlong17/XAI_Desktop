@@ -162,6 +162,33 @@ describe("boardOps", () => {
     expect(cleared.dueLate).toBeUndefined();
   });
 
+  test("M9d mergeBoardCardPatch does not rewrite date compatibility fields on unrelated edits", () => {
+    const card = {
+      ...makeLists()[0]!.cards[0]!,
+      dueDate: "2099-01-02",
+      due: "custom",
+      dueEn: "custom-en",
+      dueLate: true,
+    };
+    const next = mergeBoardCardPatch(card, { labels: ["feature"] });
+    expect(next.labels).toEqual(["feature"]);
+    expect(next.dueDate).toBe("2099-01-02");
+    expect(next.due).toBe("custom");
+    expect(next.dueEn).toBe("custom-en");
+    expect(next.dueLate).toBe(true);
+  });
+
+  test("M9e mergeBoardCardPatch clears invalid ISO date edits instead of persisting malformed typed state", () => {
+    const card = makeLists()[0]!.cards[0]!;
+    const next = mergeBoardCardPatch(card, {
+      dueDate: "2026-02-31",
+    });
+    expect(next.dueDate).toBeUndefined();
+    expect(next.due).toBeUndefined();
+    expect(next.dueEn).toBeUndefined();
+    expect(next.dueLate).toBeUndefined();
+  });
+
   test("M10 helpers do not mutate input arrays (input remains structurally equal)", () => {
     const lists = makeLists();
     const snapshot = JSON.stringify(lists);

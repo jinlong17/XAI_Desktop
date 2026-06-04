@@ -7,9 +7,9 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-date-model |
 | Title | Web Project module P0 typed date contract — promote `startDate` / `dueDate` to canonical ISO fields, derive today/overdue labels across Board/Table/Calendar/Timeline/Dashboard, and keep legacy `xai_boards_v2` blobs load-safe without introducing schema-version migration work |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_BUILD |
+| Status | BUILDING |
+| Suggested Next | feature-build P2 |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5.3-codex inline feature-review |
@@ -167,3 +167,4 @@ Please review specifically:
 - 2026-06-03 19:21 PDT — `gpt-5.3-codex inline feature-review` — reviewed discovery/design/api/test/dev_log against roadmap row #3, shipped row #2 card-detail behavior, and row #7 boundary; returned REVISE because the year-inference rule for legacy `M/D` and the partial/range semantics for `startDate` / `dueDate` are not frozen tightly enough for build execution; commits: —; next step: `feature-plan`
 - 2026-06-03 19:23 PDT — `gpt-5.3-codex inline feature-plan` — revised discovery/design/api/test/dev_log per review: froze the current-year-plus-Dec/Jan-rollover `M/D` rule with injected-`now` examples, froze cross-view semantics for `dueDate`-only / `startDate`-only / `startDate > dueDate`, and tightened the row #7 boundary to in-memory narrowing plus explicit-edit compatibility dual-writes only; commits: —; next step: `feature-review`
 - 2026-06-03 19:29 PDT — `gpt-5.3-codex inline feature-review` — re-reviewed the revised discovery/design/api/test/dev_log set against the prior blockers and current board package boundaries; approved the plan because the frozen date semantics, legacy-year inference rule, and row #7 boundary are now precise enough for phased implementation; commits: —; next step: `feature-build`
+- 2026-06-03 19:38 PDT — `gpt-5.4 parent inline feature-build P1` — implemented board-core typed-date helpers, strict ISO validation, recoverable legacy `M/D` inference with Dec/Jan rollover, board-card chip rendering from derived meta, and explicit-date-edit-only compatibility dual-writes; added core regression coverage for typed/recoverable/ambiguous dates and guard behavior; commits: pending; tests: `pnpm --filter @repo/plugin-web-board-core typecheck` PASS, `pnpm --filter @repo/plugin-web-board-core test` PASS (121/121; pre-existing React act() stderr warnings remain); next step: `feature-build P2`
