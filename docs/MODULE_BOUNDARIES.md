@@ -27,8 +27,8 @@
 | 层 | 实质 | 归属模块 | 谁拥有 | 现状 |
 |---|---|---|---|---|
 | **A1. Mac 壳（Web 容器）** | 承载 Web SPA 的主窗口 + 原生 chrome：菜单栏、托盘、离线缓存、账号/Keychain、自动更新、系统通知、深链、开机启动、`桌面插件` 入口按钮 | **P1 Mac 桌面壳**（`app`） | App 层（`apps/desktop/` + `src-tauri/` 外壳） | 壳身份 = "把 Web 装进原生窗 + 原生便利"，**不是桌面整理器** |
-| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | 命令基本做完；产品归属是插件平台而非壳身份 |
-| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | organizer 已 Stable；其余 Planned/stub，**整条线 Paused until G1**；入口模型已决，功能实现未开工 |
+| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | G1 平台运行时为 active gate；Plugin Center / 通用实例模型尚未实现 |
+| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | 平台运行时 / Phase 1 底座 active；organizer 已 Stable；其余具体插件包 Planned/stub 且 paused；入口模型已决，具体功能实现未开工 |
 | **C. Web 同名组件** | `xai-web-pet`、`dashboard-widgets`、`dashboard-grid` 等 | **P0 Web**（`web`） | `packages/{xai-web-*,plugin-web-*}` | 已 SHIPPED，是网页内组件，**与桌面插件零代码共享** |
 
 > **一句话**：Mac 壳（A1）只把 Web 装进原生窗 + 原生便利；多窗口运行时（A2）物理在 host、**产品归插件平台**；真正的桌面插件（B）骑在 A2 上，多数还没做且被 Paused；Web 的同名组件（C）只是借用了相同词汇。
@@ -43,7 +43,7 @@
 |---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/` + `xai-web-*` + `plugin-web-*` | `web` | **P0 active mainline** |
 | 2 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
-| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **P2 paused（等 G1）** |
+| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **平台运行时 / G1 active gate；具体插件包 paused** |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
 | 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` | (proposed) | PROPOSED |
@@ -92,7 +92,7 @@
 | **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **独立包 plugin-pet**(ADR-0015 Accepted;非 widgets 子模块) |
 | **meditation** | 冥想 / 专注 | Planned（**未建包**） | 全屏覆盖 | Web 形态已 ship 为 `xai-web-meditation` |
 
-> 全部 P2 桌面插件按 ADR-0010 §D2 **Paused until G1 SHIPPED**。开工前用 `xai-feature-brief` 规范化入队，不开 feature-build。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
+> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 **Paused until G1 / 平台运行时闭环**。但 multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate，可按 `plugin` 产品线推进系统底座。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
 
 ---
 
@@ -106,8 +106,8 @@
    - 不能（需原生窗口/fs/剪贴板/屏幕）→ 进 3。
 3. **是"Mac 壳能力"、"多窗口平台运行时"还是"用平台做挂件"？**
    - Mac 壳 / native chrome（菜单栏、托盘、离线缓存、账号+Keychain、自动更新、通知、深链、开机启动、承载 Web SPA）→ **App（P1，`codex/desktop/*`）**。
-   - 多窗口引擎 / overlay / grid 持久化 / window-command / 平台运行时（代码物理在 host，**产品归插件平台**）→ **桌面插件平台（P2，`codex/plugin/*`，当前 Paused）**。
-   - 用现有平台做轻量挂件/整理 → **桌面插件（P2，当前 Paused）**。
+   - 多窗口引擎 / overlay / grid 持久化 / window-command / 平台运行时（代码物理在 host，**产品归插件平台**）→ **桌面插件平台（`codex/plugin/*`，G1 active gate）**。
+   - 用现有平台做轻量挂件/整理 → **桌面插件（具体插件包仍 paused，先 brief / contract，不开 feature-build）**。
 4. **是插件入口还是插件内容？**
    - Mac App 控制面板入口 / Plugin Center 容器 / 原生实例窗口 → **App**。
    - 插件目录、AddToDesktop contract、实例设置 schema、具体 plugin 包 → **Plugin**。
@@ -125,6 +125,7 @@
 - 插件状态机：`docs/PLUGIN_MAP.md`
 - 插件 SDK 契约蓝图：`docs/PLUGIN_SDK.md`
 - 桌面插件开发范围 + MVP：`docs/planning/sub-prds/plugin/PRD.md`
+- 桌面插件第一阶段执行路线：`docs/planning/execution/desktop-plugin-platform-phase1.md`
 - 机器可读分类注册表：`docs/workflow/project/module-classification.json`
 - 决策记录（organizer P 级 + pet 归属）：`docs/adr/0015-desktop-plugin-scope-and-organizer-level.md`
 - 分支拓扑 + D3/D4：`docs/adr/0013-branch-sync-governance.md`

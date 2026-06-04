@@ -59,7 +59,7 @@
       "surface": ["apps/desktop/ 插件槽位", "packages/plugin-organizer", "packages/plugin-clipboard", "packages/plugin-widgets", "packages/plugin-pet"],
       "main_branch": "desktop-plugin-next (defined, not yet created)",
       "short_branch": "codex/plugin/<feature>",
-      "status": "P2-paused-until-G1",
+      "status": "platform-runtime-active-packages-paused",
       "signals": ["插件 SDK/Widget Host", "插件平台运行时", "multi-window engine", "native overlay", "click-through", "Spaces/多显示器矩阵", "grid persistence", "桌面整理/Smart Container/Grid 容器", "快速入口/快速操作小窗", "浮动小组件/便签/进度条/桌宠/剪贴板", "单插件功能", "manifest.json 插件注册装载"],
       "form": "lightweight overlay/grid window on the App plugin platform",
       "data": "device-local by default (never syncs unless explicitly account-sync)",

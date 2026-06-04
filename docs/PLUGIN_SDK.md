@@ -9,7 +9,7 @@
 > - `CORE_INFRA.md` — 基础设施 API 文件路径
 > - `PLUGIN_MAP.md` — 各 Plugin 当前状态
 >
-> 最后更新:2026-05-14 · 对齐 PRD v1.6 / SYSTEM_ARCHITECTURE v2
+> 最后更新:2026-06-04 · 对齐 Plugin Phase-1 platform runtime / Plugin Center contract
 
 ---
 
@@ -522,7 +522,7 @@ import '@repo/plugin-ai/register';
 
 ### 3.5 PluginInstance / PluginCenter / AddToDesktop 契约（桌面入口模型）
 
-> 本节定义未来 `桌面插件` 入口的 SDK 语义。它是**设计 / contract 层**，不是当前运行时实现。G1 SHIPPED 前保持文档对齐，不开插件功能开发。
+> 本节定义 `桌面插件` 入口的 SDK 语义。2026-06-04 起，它是**第一阶段系统底座的实现 contract**：Plugin Center、`PluginInstance`、`AddToDesktop` 和实例配置应优先落地；具体插件包功能仍等平台运行时闭环后再开 feature-build。
 
 #### 3.5.1 归属边界
 
@@ -647,6 +647,45 @@ export interface AddToDesktopResult {
 | 插件详情 | manifest + `PluginCenterEntry` | 预览、简介、`添加到桌面`、依赖、权限 |
 | 实例设置 | `PluginInstance` + `settingsSchema` | 尺寸、位置、透明度、样式、数据来源、行为 |
 | 全局偏好 | App Settings | 默认透明度、默认点击穿透、显示/隐藏所有桌面插件 |
+
+#### 3.5.5 第一阶段实现顺序与 commit 门
+
+第一阶段只实现平台能力，不实现具体业务插件功能。每个小步只能完成一个可验证能力，提交前必须能回答 `Why / What / Scope / Risk / Docs / Tests`。
+
+| Step | 能力 | 允许文件范围 | 最低验证 |
+|---|---|---|---|
+| P1-S1 | typed contract | `packages/core/src/types/plugin.ts`、`docs/PLUGIN_SDK.md`、相关 tests | `pnpm --filter @repo/core check-types`；manifest / type fixture |
+| P1-S2 | instance store | plugin platform package 或 `apps/desktop` host store | unit test：create / disable / delete / migrate；device-local 断言 |
+| P1-S3 | generic window adapter | `apps/desktop/src-tauri/src/commands/window.rs`、`apps/desktop/src/windows/*`、capabilities | cargo test；desktop build；window allowlist denial test |
+| P1-S4 | Plugin Center shell | `apps/desktop/src/windows/*` 或 plugin-center package | component test；manual Tauri smoke |
+| P1-S5 | AddToDesktop flow | contract + App bridge + one low-risk built-in entry | Add → hide → disable → delete → restart restore smoke |
+| P1-S6 | dashboard / release-log sync | dashboard registry + release-log | `pnpm dashboard`；dashboard verifier；release-log entry |
+
+Commit message shape:
+
+```text
+feat(plugin-platform): <one concrete system ability>
+
+Why:
+- <why this system ability is needed before concrete plugins>
+
+What:
+- <typed contracts / host bridge / tests changed>
+
+Scope:
+- <exact files or module boundary; no concrete plugin feature work>
+
+Risk:
+- <window/runtime/manual-smoke risk, or none>
+
+Docs:
+- <PRD / SDK / module map / dashboard / release-log touched>
+
+Tests:
+- <exact commands and pass/fail>
+```
+
+Do not combine P1-S1 through P1-S6 into one commit. If a step needs both App host and plugin contract files, keep the commit scoped to the same system ability and state the ownership split in `Scope`.
 
 ---
 

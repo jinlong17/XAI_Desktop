@@ -6,6 +6,15 @@
 
 ## 2026-06-04
 
+### Desktop Plugin Phase 1 系统底座文档包
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/plugin/platform-docs` / docs commit in this branch
+- User-visible change: 无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。
+- Developer/system delta: 新增 `docs/planning/execution/desktop-plugin-platform-phase1.md`，给出 Phase 1/2/3 顺序、系统能力清单、Mac App bridge 边界、小步 commit 规则和可复制 goal prompt；同步更新 Plugin PRD、模块边界、产品模块图、Plugin map、Plugin SDK、module-classification registry、execution pack 索引和个人开发看板状态。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed；`git diff --check` passed。
+- Risk / follow-up: 本次只完成文档、分类和看板同步；不创建 `desktop-plugin-next`，不触碰 `dev`，不实现 Plugin Center / plugin container / native window bridge。下一步开发应先确认或创建 `desktop-plugin-next`，再按一个系统能力一个 commit 的方式推进 Phase 1。
+
 ### Desktop Plugin 产品边界与长期平台路线落地
 
 - Product line: desktop-plugin / project-system

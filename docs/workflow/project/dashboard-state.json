@@ -899,7 +899,7 @@
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
           "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。平台运行时 / Phase 1 底座可作为 active gate 推进；clipboard/widgets/pet/meditation 等具体插件包在底座闭环前仍 paused。"
         },
         {
           "to": "sync",
@@ -935,7 +935,7 @@
         {
           "module": "plugin",
           "when": "App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层",
-          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(注意 P2 插件线 G1 SHIPPED 前 paused,需操作者解冻)"
+          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(平台运行时 / Phase 1 底座可作为 active gate；具体插件包等底座闭环后再解冻)"
         }
       ]
     },
@@ -945,11 +945,11 @@
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
       "badge": "G1 runtime active · packages paused",
-      "status": "Platform runtime active gate · plugin packages paused until G1",
+      "status": "Phase 1 platform foundation ready · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "G1 平台运行时可推进；插件包继续 PRD / SDK / 看板对齐，等 G1 后做 Widget Host MVP。",
-      "tracker": "入口设计已决；G1 平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待解冻。",
+      "next": "创建或确认 desktop-plugin-next 后先做系统底座：实例模型、Plugin Center、通用窗口桥、本地配置；具体插件包继续 paused。",
+      "tracker": "Phase 1 执行文档已补齐；平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待底座闭环后解冻。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -960,25 +960,25 @@
         "icon": "P"
       },
       "overview": {
-        "phase": "Runtime active · packages paused",
-        "running": "G1 平台运行时可推进 · 插件包未开工",
+        "phase": "Phase 1 ready · packages paused",
+        "running": "系统底座可按 active gate 开始 · 插件包未开工",
         "progress_fallback": 24,
-        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-        "todo_fallback": "G1 运行时走 active gate；插件包仅维护 brief / docs",
-        "target": { "type": "doc", "path": "docs/planning/sub-prds/plugin/PRD.md", "label": "打开 Plugin PRD" }
+        "recent_update": "Phase 1 execution pack / commit flow / goal prompt 已写入文档",
+        "todo_fallback": "先执行平台运行时和 Plugin Center contract；再做通用插件动作；最后做具体插件。",
+        "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
         "region": "主产品链",
         "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
-        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["Phase 1 execution", "docs/planning/execution/desktop-plugin-platform-phase1.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "active-gate", "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host" },
-        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "planned", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only" },
+        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-ready", "note": "G1 锚点;产品归属为 plugin；先做系统底座和 host bridge" },
+        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "phase-1-ready", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;Phase 1 做 contract 和基础 UI shell" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
         { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
-        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "G1 后第一批低原生依赖插件" },
+        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "Phase 1 底座闭环后进入 Phase 2/3；不抢跑具体插件" },
         { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
         { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
         { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
@@ -994,7 +994,7 @@
         ],
         [
           "独立跟踪",
-          "入口 App delta、G1 平台运行时 delta、具体插件包 delta 要拆开记录；G1 运行时可走 active gate，插件包 G1 前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；平台底座可走 active gate，插件包在底座闭环前只做 brief / PRD / SDK contract 对齐。"
         ],
         [
           "风险",
@@ -1006,7 +1006,7 @@
         ],
         [
           "边界与文档",
-          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
+          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;Phase 1 执行路线见 docs/planning/execution/desktop-plugin-platform-phase1.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
       "goal": "为 macOS App 提供桌面原生超能力层：插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）+ 具体桌面整理插件 / Widget（Smart Container Grid、剪贴板、便签、宠物、冥想、快速入口/快速操作小窗等）。运行时代码物理可落在 apps/desktop host，但产品归属是 plugin；Mac 壳只负责 Web 容器 + native chrome。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
@@ -1061,7 +1061,7 @@
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），平台底座闭环前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
         "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
         "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
