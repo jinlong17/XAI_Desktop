@@ -498,6 +498,64 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByTestId("card-detail-due-date")).toHaveValue("");
   });
 
+  it("BWM-CHECKLIST-1: toggling, editing, and removing checklist rows persists derived progress", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(screen.getByTestId("card-detail-checklist-summary")).toHaveTextContent("2/5");
+
+    fireEvent.click(screen.getByTestId("card-detail-check-legacy-bc1-3"));
+    fireEvent.change(screen.getByTestId("card-detail-check-text-legacy-bc1-1"), {
+      target: { value: "Updated checklist item" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-check-remove-legacy-bc1-2"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.checklistItems?.map((item) => item.id)).toEqual([
+      "legacy-bc1-1",
+      "legacy-bc1-3",
+      "legacy-bc1-4",
+      "legacy-bc1-5",
+    ]);
+    expect(card.checklistItems?.[0]?.text).toBe("Updated checklist item");
+    expect(card.checklistItems?.[1]?.done).toBe(true);
+    expect(card.checklist).toEqual({ done: 2, total: 4 });
+    expect(screen.getByTestId("card-detail-checklist-summary")).toHaveTextContent("2/4");
+  });
+
+  it("BWM-CHECKLIST-2: removing the last checklist item clears the legacy chip", async () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[0]!.cards[0] = {
+      ...seed[0]!.lists[0]!.cards[0]!,
+      checklistItems: [
+        { id: "i1", text: "One", done: true },
+        { id: "i2", text: "Two", done: false },
+      ],
+      checklist: { done: 1, total: 2 },
+    };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-check-remove-i1"));
+    fireEvent.click(screen.getByTestId("card-detail-check-remove-i2"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const card = getStoredCard("bc1");
+    expect(card.checklistItems).toEqual([]);
+    expect(card.checklist).toBeUndefined();
+    expect(screen.getByTestId("card-detail-checklist-summary")).toHaveTextContent("0/0");
+  });
+
   it("BWM-LIST-1: first-run keyed kanban list rename persists customName without clearing key", async () => {
     render(<BoardWorkspacesModule lang="en" />);
 

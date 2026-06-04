@@ -159,6 +159,16 @@ describe("boardOps", () => {
     expect(next.attach).toBe(2);
   });
 
+  test("M9bb mergeBoardCardPatch clears legacy checklist chip when checklistItems is empty", () => {
+    const card = {
+      ...makeLists()[0]!.cards[0]!,
+      checklist: { done: 1, total: 2 },
+    };
+    const next = mergeBoardCardPatch(card, { checklistItems: [] });
+    expect(next.checklistItems).toEqual([]);
+    expect(next.checklist).toBeUndefined();
+  });
+
   test("M9c mergeBoardCardPatch derives legacy date fields from ISO detail dates and clears them", () => {
     const card = makeLists()[0]!.cards[0]!;
     const withDates = mergeBoardCardPatch(card, {

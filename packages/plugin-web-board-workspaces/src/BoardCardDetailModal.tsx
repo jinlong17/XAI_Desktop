@@ -275,7 +275,9 @@ export function BoardCardDetailSurface({
           <section className="cd-section">
             <div className="cd-section-head">
               <h3>{STR.checklist[lang]}</h3>
-              <span className="mono">{checklistSummary}</span>
+              <span className="mono" data-testid="card-detail-checklist-summary">
+                {checklistSummary}
+              </span>
             </div>
             <div className="cd-list">
               {checklistItems.length === 0 ? (
@@ -308,6 +310,7 @@ export function BoardCardDetailSurface({
                           ),
                         );
                       }}
+                      data-testid={`card-detail-check-text-${item.id}`}
                     />
                     <button
                       type="button"
@@ -318,6 +321,7 @@ export function BoardCardDetailSurface({
                         );
                       }}
                       aria-label={STR.remove[lang]}
+                      data-testid={`card-detail-check-remove-${item.id}`}
                     >
                       x
                     </button>
