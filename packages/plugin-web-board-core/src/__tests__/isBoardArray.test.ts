@@ -122,9 +122,11 @@ describe("isBoardArray", () => {
         activity: [
           {
             id: "act1",
-            kind: "note",
+            kind: "comment",
             body: "Updated",
             createdAt: "2026-06-03T00:00:00.000Z",
+            authorId: "u1",
+            authorName: "Alice",
           },
         ],
         taskLink: {
@@ -150,6 +152,39 @@ describe("isBoardArray", () => {
         id: "c1",
         title: { en: "a", zh: "b" },
         completedAt: 123,
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bf isBoardCard rejects malformed activity entries", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        activity: [
+          {
+            id: "act1",
+            kind: "system",
+            body: "Unsupported",
+            createdAt: "2026-06-03T00:00:00.000Z",
+          },
+        ],
+      }),
+    ).toBe(false);
+
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        activity: [
+          {
+            id: "act1",
+            kind: "comment",
+            body: "Updated",
+            createdAt: "2026-06-03T00:00:00.000Z",
+            authorName: 123,
+          },
+        ],
       }),
     ).toBe(false);
   });

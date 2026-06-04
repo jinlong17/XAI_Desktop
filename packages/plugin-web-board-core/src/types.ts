@@ -59,12 +59,15 @@ export interface BoardCardAttachmentLink {
   source?: BoardAttachmentIntegrationSource;
 }
 
+export type BoardCardActivityKind = "note" | "comment";
+
 export interface BoardCardActivityEntry {
   id: string;
-  kind: "note";
+  kind: BoardCardActivityKind;
   body: string;
   createdAt: string;
   authorId?: string;
+  authorName?: string;
 }
 
 export interface BoardCardTaskLink {

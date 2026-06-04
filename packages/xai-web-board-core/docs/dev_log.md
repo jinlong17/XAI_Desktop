@@ -359,3 +359,23 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
 - PASS `pnpm --filter @repo/plugin-web-board-core lint`
 - PASS `pnpm --filter @repo/plugin-web-board-core test` (179 tests)
+
+---
+
+## Extension Lineage - xai-web-board-comments-activity (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+- Added `BoardCardActivityKind = "note" | "comment"` and optional
+  `authorName` metadata on `BoardCardActivityEntry`.
+- Added pure `createBoardCardComment()` and
+  `createBoardCardActivityNote()` helpers.
+- Widened `isBoardCard` activity guard to accept valid comment entries and
+  reject malformed activity metadata.
+- New `activityEntries.test.ts` covers helper success/failure.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (183 tests)

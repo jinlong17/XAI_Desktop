@@ -599,3 +599,39 @@ Rules:
   network
 - optional `source` metadata is additive; old attachments remain valid
 - storage guard rejects malformed provider metadata
+
+## §S18 — 2026-06-03 Extension API (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+Board-core now formalizes the card activity timeline as comments plus existing
+notes:
+
+```ts
+export type BoardCardActivityKind = "note" | "comment";
+
+export interface BoardCardActivityEntry {
+  id: string;
+  kind: BoardCardActivityKind;
+  body: string;
+  createdAt: string;
+  authorId?: string;
+  authorName?: string;
+}
+
+export function createBoardCardComment(
+  input: BoardCardActivityInput,
+): BoardCardActivityResult;
+
+export function createBoardCardActivityNote(
+  input: BoardCardActivityInput,
+): BoardCardActivityResult;
+```
+
+Rules:
+
+- `kind: "note"` remains valid for backward compatibility
+- new card-detail discussion rows use `kind: "comment"`
+- helpers reject missing ids, empty bodies, and missing timestamps
+- optional author metadata is trimmed
+- helpers are pure and do not touch storage, events, or network state

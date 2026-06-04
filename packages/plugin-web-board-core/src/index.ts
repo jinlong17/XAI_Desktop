@@ -26,6 +26,7 @@ export type {
   Board,
   BoardCard as BoardCardData,
   BoardCardActivityEntry,
+  BoardCardActivityKind,
   BoardCardAttachmentLink,
   BoardCardTaskLink,
   BoardChecklistItem,
@@ -126,6 +127,15 @@ export type {
   BoardAutomationLiteResult,
   BoardAutomationLiteStats,
 } from "./internal/automationLite.js";
+
+export {
+  createBoardCardActivityNote,
+  createBoardCardComment,
+} from "./internal/activityEntries.js";
+export type {
+  BoardCardActivityInput,
+  BoardCardActivityResult,
+} from "./internal/activityEntries.js";
 
 export {
   BOARD_INTEGRATION_PROVIDER_IDS,

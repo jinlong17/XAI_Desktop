@@ -1009,9 +1009,33 @@
   font-weight: 700;
 }
 .cd-activity-row {
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   font-size: var(--fs-sm);
   color: var(--text-1);
+}
+.cd-activity-kind {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 7px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  background: var(--bg-panel-2);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 750;
+  white-space: nowrap;
+}
+.cd-activity-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cd-activity-author {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 700;
 }
 .cd-activity-row time {
   color: var(--text-3);

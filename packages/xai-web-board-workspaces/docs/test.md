@@ -334,3 +334,20 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-workspaces lint`
 - `pnpm --filter @repo/plugin-web-board-workspaces test`
 - local `/app/board` browser smoke
+
+## §9 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in
+> `packages/xai-web-board-comments-activity/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-COMMENTS-1 | Card detail adds comment entries with author metadata and persists them in `xai_boards_v2`. |
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-COMMENTS-2 | Existing note entries remain valid timeline rows. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`
+- local `/app/board` browser smoke

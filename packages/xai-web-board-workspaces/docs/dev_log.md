@@ -342,3 +342,23 @@ Verification:
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
 - PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (218 tests)
 - PASS local Chrome smoke at `http://localhost:3001/app/board`
+
+---
+
+## Extension Lineage - xai-web-board-comments-activity (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+- Card detail activity section now renders as Comments & Activity.
+- Add action writes `kind: "comment"` entries through board-core's
+  `createBoardCardComment()` helper.
+- Timeline rows render Comment/Note badges and author metadata when present.
+- Existing `kind: "note"` entries remain display-compatible.
+- Browser smoke screenshot: `/tmp/xai-board-comments-activity.png`.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test` (220 tests)
+- PASS local Chrome smoke at `http://localhost:3001/app/board`

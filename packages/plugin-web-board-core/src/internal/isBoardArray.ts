@@ -86,10 +86,11 @@ function isBoardAttachmentIntegrationSource(
 function isBoardCardActivityEntry(value: unknown): value is BoardCardActivityEntry {
   if (!isObject(value)) return false;
   if (!isString(value.id)) return false;
-  if (value.kind !== "note") return false;
+  if (value.kind !== "note" && value.kind !== "comment") return false;
   if (!isString(value.body)) return false;
   if (!isString(value.createdAt)) return false;
   if (value.authorId !== undefined && !isString(value.authorId)) return false;
+  if (value.authorName !== undefined && !isString(value.authorName)) return false;
   return true;
 }
 

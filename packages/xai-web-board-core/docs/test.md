@@ -203,6 +203,25 @@ Acceptance gate:
 - `pnpm --filter @repo/plugin-web-board-core lint`
 - `pnpm --filter @repo/plugin-web-board-core test`
 
+## §10 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in
+> `packages/xai-web-board-comments-activity/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/activityEntries.test.ts` | ACT-1 | Comment helper trims body and author metadata. |
+| | ACT-2 | Note helper creates backward-compatible note entries. |
+| | ACT-3 | Helpers reject missing ids, empty bodies, and missing timestamps. |
+| `__tests__/isBoardArray.test.ts` | V8b/V8bf | Guard accepts valid comments and rejects malformed activity entries. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports activity helper surface. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`
+
 ## §9 — 2026-06-03 Extension Tests (Project module row #15 — Board integrations)
 
 > Canonical row docs live in `packages/xai-web-board-integrations/docs/`.

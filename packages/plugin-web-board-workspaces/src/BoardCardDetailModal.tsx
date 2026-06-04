@@ -3,10 +3,10 @@ import {
   BOARD_INTEGRATION_PROVIDERS,
   BOARD_MEMBER_OPTIONS,
   PM_LABELS,
+  createBoardCardComment,
   createBoardIntegrationAttachment,
 } from "@repo/plugin-web-board-core";
 import type {
-  BoardCardActivityEntry,
   BoardCardAttachmentLink,
   BoardCardData,
   BoardChecklistItem,
@@ -53,8 +53,11 @@ const STR = {
   addLink: { en: "Add link", zh: "添加链接" },
   url: { en: "URL", zh: "链接" },
   title: { en: "Title", zh: "标题" },
-  activity: { en: "Activity", zh: "动态" },
-  addNote: { en: "Add note", zh: "添加记录" },
+  activity: { en: "Comments & Activity", zh: "评论与动态" },
+  comment: { en: "Comment", zh: "评论" },
+  note: { en: "Note", zh: "记录" },
+  addComment: { en: "Add comment", zh: "添加评论" },
+  you: { en: "You", zh: "我" },
   empty: { en: "No items yet", zh: "暂无内容" },
   remove: { en: "Remove", zh: "移除" },
 };
@@ -151,16 +154,16 @@ export function BoardCardDetailSurface({
     setAttachmentTitle("");
   };
 
-  const addActivityNote = () => {
-    const body = activityText.trim();
-    if (!body) return;
-    const entry: BoardCardActivityEntry = {
+  const addActivityComment = () => {
+    const result = createBoardCardComment({
       id: makeId("act"),
-      kind: "note",
-      body,
+      body: activityText,
       createdAt: new Date().toISOString(),
-    };
-    onPatchCard({ activity: [entry, ...activity] });
+      authorId: "local-user",
+      authorName: STR.you[lang],
+    });
+    if (result.status !== "valid") return;
+    onPatchCard({ activity: [result.entry, ...activity] });
     setActivityText("");
   };
 
@@ -485,12 +488,17 @@ export function BoardCardDetailSurface({
                 value={activityText}
                 onChange={(event) => setActivityText(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") addActivityNote();
+                  if (event.key === "Enter") addActivityComment();
                 }}
                 data-testid="card-detail-activity-input"
               />
-              <button type="button" className="btn" onClick={addActivityNote}>
-                {STR.addNote[lang]}
+              <button
+                type="button"
+                className="btn"
+                onClick={addActivityComment}
+                data-testid="card-detail-activity-add"
+              >
+                {STR.addComment[lang]}
               </button>
             </div>
             <div className="cd-list">
@@ -499,7 +507,18 @@ export function BoardCardDetailSurface({
               ) : (
                 activity.map((entry) => (
                   <div key={entry.id} className="cd-activity-row">
-                    <span>{entry.body}</span>
+                    <span
+                      className="cd-activity-kind"
+                      data-testid={`card-detail-activity-kind-${entry.id}`}
+                    >
+                      {entry.kind === "comment" ? STR.comment[lang] : STR.note[lang]}
+                    </span>
+                    <div className="cd-activity-main">
+                      <span>{entry.body}</span>
+                      {entry.authorName ? (
+                        <span className="cd-activity-author">{entry.authorName}</span>
+                      ) : null}
+                    </div>
                     <time className="mono">{new Date(entry.createdAt).toLocaleDateString()}</time>
                   </div>
                 ))

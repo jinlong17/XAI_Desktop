@@ -554,6 +554,59 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(card.attach).toBe(1);
   });
 
+  it("BWM-COMMENTS-1: card detail adds comment entries with author metadata", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.change(screen.getByTestId("card-detail-activity-input"), {
+      target: { value: "Please review the launch checklist." },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-activity-add"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("Please review the launch checklist.")).toBeInTheDocument();
+    expect(screen.getByTestId(/card-detail-activity-kind-/)).toHaveTextContent(
+      "Comment",
+    );
+    expect(screen.getByText("You")).toBeInTheDocument();
+
+    const card = getStoredCard("bc1");
+    expect(card.activity?.[0]).toMatchObject({
+      kind: "comment",
+      body: "Please review the launch checklist.",
+      authorId: "local-user",
+      authorName: "You",
+    });
+  });
+
+  it("BWM-COMMENTS-2: existing note entries remain valid timeline rows", () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[0]!.cards[0] = {
+      ...seed[0]!.lists[0]!.cards[0]!,
+      activity: [
+        {
+          id: "note-1",
+          kind: "note",
+          body: "Moved from Inbox",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
+      ],
+    };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(screen.getByText("Moved from Inbox")).toBeInTheDocument();
+    expect(screen.getByTestId("card-detail-activity-kind-note-1")).toHaveTextContent(
+      "Note",
+    );
+  });
+
   it("BWM-DETAIL-5: Table view title opens the shared card detail modal", () => {
     seedAltView("table");
     render(<BoardWorkspacesModule lang="en" />);

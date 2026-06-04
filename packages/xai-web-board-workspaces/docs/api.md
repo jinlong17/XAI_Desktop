@@ -586,3 +586,20 @@ rule builder is introduced.
 
 No Settings OAuth pref is read by Board in this row. The UI creates typed
 external links only; it does not sync provider data.
+
+## §S18 — 2026-06-03 Extension API (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+`BoardCardDetailSurface` now treats the bottom timeline as "Comments &
+Activity":
+
+- comment input still uses `data-testid="card-detail-activity-input"`
+- add button uses `data-testid="card-detail-activity-add"`
+- submitted rows are stored as `kind: "comment"` entries
+- local author metadata is stored as `authorId: "local-user"` and localized
+  `authorName`
+- existing `kind: "note"` entries render with a Note badge
+
+Mentions, notifications, editing, and deleting comments are not implemented in
+this row.
