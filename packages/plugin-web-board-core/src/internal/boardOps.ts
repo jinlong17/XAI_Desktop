@@ -8,6 +8,7 @@
  */
 
 import type {
+  ArchivedBoardCardRecord,
   BoardCard,
   BoardList,
   BoardListColorId,
@@ -194,6 +195,37 @@ export function getArchivedBoardLists(lists: readonly BoardList[]): BoardList[] 
   return lists.filter((list) => list.archived === true);
 }
 
+export function getActiveBoardCards(cards: readonly BoardCard[]): BoardCard[] {
+  return cards.filter((card) => card.archived !== true);
+}
+
+export function getActiveBoardCardLists(lists: readonly BoardList[]): BoardList[] {
+  let changed = false;
+  const next = lists.map((list) => {
+    const activeCards = getActiveBoardCards(list.cards);
+    if (activeCards.length === list.cards.length) {
+      return list;
+    }
+    changed = true;
+    return { ...list, cards: activeCards };
+  });
+  return changed ? next : lists as BoardList[];
+}
+
+export function getArchivedBoardCards(
+  lists: readonly BoardList[],
+): ArchivedBoardCardRecord[] {
+  const records: ArchivedBoardCardRecord[] = [];
+  for (const list of lists) {
+    for (const card of list.cards) {
+      if (card.archived === true) {
+        records.push({ listId: list.id, list, card });
+      }
+    }
+  }
+  return records;
+}
+
 export function renameList(
   lists: readonly BoardList[],
   listId: string,
@@ -297,6 +329,133 @@ export function deleteList(
     return lists as BoardList[];
   }
   return lists.filter((list) => list.id !== listId);
+}
+
+export function renameCard(
+  lists: readonly BoardList[],
+  listId: string,
+  cardId: string,
+  titleText: string,
+): BoardList[] {
+  const trimmed = titleText.trim();
+  if (!trimmed) {
+    return lists as BoardList[];
+  }
+  const targetList = lists.find((list) => list.id === listId);
+  const targetCard = targetList?.cards.find((card) => card.id === cardId);
+  if (!targetList || !targetCard || targetCard.archived === true) {
+    return lists as BoardList[];
+  }
+  const nextTitle = makeBilingualMirror(trimmed);
+  if (
+    targetCard.title.en === nextTitle.en &&
+    targetCard.title.zh === nextTitle.zh
+  ) {
+    return lists as BoardList[];
+  }
+  return updateCardInList(lists, listId, cardId, { title: nextTitle });
+}
+
+export function moveCardWithinListByOffset(
+  lists: readonly BoardList[],
+  listId: string,
+  cardId: string,
+  offset: -1 | 1,
+): BoardList[] {
+  const targetList = lists.find((list) => list.id === listId);
+  if (!targetList) {
+    return lists as BoardList[];
+  }
+  const targetCard = targetList.cards.find((card) => card.id === cardId);
+  if (!targetCard || targetCard.archived === true) {
+    return lists as BoardList[];
+  }
+
+  const activeIds = getActiveBoardCards(targetList.cards).map((card) => card.id);
+  const visibleIndex = activeIds.indexOf(cardId);
+  if (visibleIndex < 0) {
+    return lists as BoardList[];
+  }
+  const swapWithId = activeIds[visibleIndex + offset];
+  if (!swapWithId) {
+    return lists as BoardList[];
+  }
+
+  const rawFrom = targetList.cards.findIndex((card) => card.id === cardId);
+  const rawTo = targetList.cards.findIndex((card) => card.id === swapWithId);
+  if (rawFrom < 0 || rawTo < 0) {
+    return lists as BoardList[];
+  }
+
+  return lists.map((list) => {
+    if (list.id !== listId) return list;
+    const nextCards = [...list.cards];
+    nextCards[rawFrom] = list.cards[rawTo]!;
+    nextCards[rawTo] = list.cards[rawFrom]!;
+    return { ...list, cards: nextCards };
+  });
+}
+
+export function archiveCard(
+  lists: readonly BoardList[],
+  listId: string,
+  cardId: string,
+): BoardList[] {
+  const targetList = lists.find((list) => list.id === listId);
+  const targetCard = targetList?.cards.find((card) => card.id === cardId);
+  if (!targetList || !targetCard || targetCard.archived === true) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) => {
+    if (list.id !== listId) return list;
+    return {
+      ...list,
+      cards: list.cards.map((card) =>
+        card.id === cardId ? { ...card, archived: true } : card,
+      ),
+    };
+  });
+}
+
+export function restoreCard(
+  lists: readonly BoardList[],
+  listId: string,
+  cardId: string,
+): BoardList[] {
+  const targetList = lists.find((list) => list.id === listId);
+  const targetCard = targetList?.cards.find((card) => card.id === cardId);
+  if (!targetList || !targetCard || targetCard.archived !== true) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) => {
+    if (list.id !== listId) return list;
+    return {
+      ...list,
+      cards: list.cards.map((card) => {
+        if (card.id !== cardId) return card;
+        const restored = { ...card };
+        delete restored.archived;
+        return restored;
+      }),
+    };
+  });
+}
+
+export function deleteCard(
+  lists: readonly BoardList[],
+  listId: string,
+  cardId: string,
+): BoardList[] {
+  const targetList = lists.find((list) => list.id === listId);
+  const targetCard = targetList?.cards.find((card) => card.id === cardId);
+  if (!targetList || !targetCard || targetCard.archived !== true) {
+    return lists as BoardList[];
+  }
+  return lists.map((list) =>
+    list.id === listId
+      ? { ...list, cards: list.cards.filter((card) => card.id !== cardId) }
+      : list,
+  );
 }
 
 /** Merge a patch into the matching card and normalize derived detail fields. */

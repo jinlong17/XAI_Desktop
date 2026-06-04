@@ -96,6 +96,7 @@ describe("isBoardArray", () => {
       isBoardCard({
         id: "c1",
         title: { en: "a", zh: "b" },
+        archived: true,
         description: "Detail text",
         labels: ["l1"],
         members: ["u1"],
@@ -125,6 +126,16 @@ describe("isBoardArray", () => {
         cover: "linear-gradient(...)",
       }),
     ).toBe(true);
+  });
+
+  test("V8bc isBoardCard rejects malformed archived card shape", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        archived: "yes",
+      }),
+    ).toBe(false);
   });
 
   test("V8bb isBoardCard rejects malformed detail arrays", () => {

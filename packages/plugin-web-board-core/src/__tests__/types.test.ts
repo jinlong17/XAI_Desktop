@@ -49,9 +49,11 @@ describe("types (T1)", () => {
     const card: BoardCard = {
       id: "c",
       title: { en: "x", zh: "x" },
+      archived: true,
       due: "5/26",
     };
     expect(card.due).toBe("5/26");
+    expect(card.archived).toBe(true);
   });
 
   test("T1f BoardList.key is `string | null` so key:null + customName is valid", () => {

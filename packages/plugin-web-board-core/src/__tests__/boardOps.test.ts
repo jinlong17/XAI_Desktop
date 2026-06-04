@@ -3,15 +3,23 @@ import {
   addCardToListById,
   addCardToList,
   addNewList,
+  archiveCard,
   archiveList,
   canManageBoardList,
+  deleteCard,
   deleteList,
+  getActiveBoardCardLists,
+  getActiveBoardCards,
   getActiveBoardLists,
+  getArchivedBoardCards,
   getArchivedBoardLists,
   mergeBoardCardPatch,
+  moveCardWithinListByOffset,
   moveListByOffset,
   moveCardToList,
+  renameCard,
   renameList,
+  restoreCard,
   restoreList,
   setListColor,
   updateCardInList,
@@ -214,6 +222,11 @@ describe("boardOps", () => {
     archiveList(lists, "A", PM_CTX);
     restoreList([{ ...lists[0]!, archived: true }, lists[1]!], "A", PM_CTX);
     deleteList([{ ...lists[0]!, cards: [] }, lists[1]!], "A", PM_CTX);
+    renameCard(lists, "A", "c1", "Renamed");
+    moveCardWithinListByOffset(lists, "A", "c2", -1);
+    archiveCard(lists, "A", "c1");
+    restoreCard([{ ...lists[0]!, cards: [{ ...lists[0]!.cards[0]!, archived: true }] }, lists[1]!], "A", "c1");
+    deleteCard([{ ...lists[0]!, cards: [{ ...lists[0]!.cards[0]!, archived: true }] }, lists[1]!], "A", "c1");
     updateCardInList(lists, "A", "c1", { due: "Z" });
     expect(JSON.stringify(lists)).toBe(snapshot);
   });
@@ -332,5 +345,149 @@ describe("boardOps", () => {
     expect(getActiveBoardLists(lists).map((list) => list.id)).toEqual(["A", "B"]);
     expect(getArchivedBoardLists(lists).map((list) => list.id)).toEqual(["X"]);
     expect(lists.map((list) => list.id)).toEqual(["A", "X", "B"]);
+  });
+
+  test("CC1 active card selectors hide archived cards without mutating source", () => {
+    const lists: BoardList[] = [
+      {
+        id: "A",
+        key: null,
+        customName: { en: "A", zh: "A" },
+        cards: [
+          { id: "c1", title: { en: "one", zh: "一" } },
+          { id: "c2", title: { en: "two", zh: "二" }, archived: true },
+        ],
+      },
+    ];
+    const snapshot = JSON.stringify(lists);
+
+    expect(getActiveBoardCards(lists[0]!.cards).map((card) => card.id)).toEqual(["c1"]);
+    const activeLists = getActiveBoardCardLists(lists);
+    expect(activeLists[0]?.cards.map((card) => card.id)).toEqual(["c1"]);
+    expect(JSON.stringify(lists)).toBe(snapshot);
+  });
+
+  test("CC2 active card list selector returns the same reference when no card is archived", () => {
+    const lists = makeLists();
+    expect(getActiveBoardCardLists(lists)).toBe(lists);
+  });
+
+  test("CC3 archived card selector returns list/card records", () => {
+    const lists: BoardList[] = [
+      {
+        id: "A",
+        key: null,
+        customName: { en: "A", zh: "A" },
+        cards: [
+          { id: "c1", title: { en: "one", zh: "一" }, archived: true },
+          { id: "c2", title: { en: "two", zh: "二" } },
+        ],
+      },
+    ];
+    const records = getArchivedBoardCards(lists);
+    expect(records).toHaveLength(1);
+    expect(records[0]?.listId).toBe("A");
+    expect(records[0]?.card.id).toBe("c1");
+    expect(records[0]?.list).toBe(lists[0]);
+  });
+
+  test("CC4 renameCard mirrors title and rejects blank/unknown/archived targets", () => {
+    const lists = makeLists();
+    const next = renameCard(lists, "A", "c1", "Updated");
+    expect(next[0]?.cards[0]?.title).toEqual({ en: "Updated", zh: "Updated" });
+
+    expect(renameCard(lists, "A", "c1", "   ")).toBe(lists);
+    expect(renameCard(lists, "missing", "c1", "X")).toBe(lists);
+    expect(renameCard(lists, "A", "missing", "X")).toBe(lists);
+
+    const archived: BoardList[] = [
+      { ...lists[0]!, cards: [{ ...lists[0]!.cards[0]!, archived: true }] },
+    ];
+    expect(renameCard(archived, "A", "c1", "X")).toBe(archived);
+  });
+
+  test("CC5 moveCardWithinListByOffset swaps by active order across archived gaps", () => {
+    const lists: BoardList[] = [
+      {
+        id: "A",
+        key: null,
+        customName: { en: "A", zh: "A" },
+        cards: [
+          { id: "c1", title: { en: "one", zh: "一" } },
+          { id: "cX", title: { en: "archived", zh: "归档" }, archived: true },
+          { id: "c2", title: { en: "two", zh: "二" } },
+        ],
+      },
+    ];
+    const next = moveCardWithinListByOffset(lists, "A", "c2", -1);
+    expect(next[0]?.cards.map((card) => card.id)).toEqual(["c2", "cX", "c1"]);
+  });
+
+  test("CC6 moveCardWithinListByOffset rejects bounds, archived targets, and unknown ids", () => {
+    const lists: BoardList[] = [
+      {
+        id: "A",
+        key: null,
+        customName: { en: "A", zh: "A" },
+        cards: [
+          { id: "c1", title: { en: "one", zh: "一" } },
+          { id: "c2", title: { en: "two", zh: "二" }, archived: true },
+        ],
+      },
+    ];
+    expect(moveCardWithinListByOffset(lists, "A", "c1", -1)).toBe(lists);
+    expect(moveCardWithinListByOffset(lists, "A", "c2", -1)).toBe(lists);
+    expect(moveCardWithinListByOffset(lists, "missing", "c1", 1)).toBe(lists);
+    expect(moveCardWithinListByOffset(lists, "A", "missing", 1)).toBe(lists);
+  });
+
+  test("CC7 archiveCard and restoreCard preserve detail/date fields", () => {
+    const lists: BoardList[] = [
+      {
+        id: "A",
+        key: null,
+        customName: { en: "A", zh: "A" },
+        cards: [
+          {
+            id: "c1",
+            title: { en: "one", zh: "一" },
+            description: "Detail",
+            checklistItems: [{ id: "i1", text: "Task", done: true }],
+            attachments: [{ id: "a1", url: "https://example.com" }],
+            activity: [{ id: "n1", kind: "note", body: "Note", createdAt: "2026-06-03T00:00:00.000Z" }],
+            startDate: "2026-06-03",
+            dueDate: "2026-06-04",
+            location: { lat: 40, lng: -74, label: "NYC" },
+            cover: "linear-gradient(red, blue)",
+          },
+        ],
+      },
+    ];
+    const beforePayload = { ...lists[0]!.cards[0]! };
+    const archived = archiveCard(lists, "A", "c1");
+    expect(archived[0]?.cards[0]?.archived).toBe(true);
+    expect({ ...archived[0]!.cards[0]!, archived: undefined }).toEqual({
+      ...beforePayload,
+      archived: undefined,
+    });
+
+    const restored = restoreCard(archived, "A", "c1");
+    expect(restored[0]?.cards[0]?.archived).toBeUndefined();
+    expect(restored[0]?.cards[0]?.description).toBe("Detail");
+    expect(restored[0]?.cards[0]?.dueDate).toBe("2026-06-04");
+  });
+
+  test("CC8 archiveCard, restoreCard, and deleteCard no-op policy", () => {
+    const lists = makeLists();
+    expect(archiveCard(lists, "missing", "c1")).toBe(lists);
+    expect(archiveCard(lists, "A", "missing")).toBe(lists);
+
+    const archived = archiveCard(lists, "A", "c1");
+    expect(archiveCard(archived, "A", "c1")).toBe(archived);
+    expect(restoreCard(lists, "A", "c1")).toBe(lists);
+    expect(deleteCard(lists, "A", "c1")).toBe(lists);
+
+    const deleted = deleteCard(archived, "A", "c1");
+    expect(deleted[0]?.cards.map((card) => card.id)).toEqual(["c2"]);
   });
 });

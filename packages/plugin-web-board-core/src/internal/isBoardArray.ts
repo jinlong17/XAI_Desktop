@@ -95,6 +95,9 @@ export function isBoardCard(value: unknown): value is BoardCard {
   if (!isObject(value)) return false;
   if (!isString(value.id)) return false;
   if (!isBilingualText(value.title)) return false;
+  if (value.archived !== undefined && typeof value.archived !== "boolean") {
+    return false;
+  }
   if (value.description !== undefined && !isString(value.description)) return false;
   if (value.labels !== undefined && !Array.isArray(value.labels)) return false;
   if (

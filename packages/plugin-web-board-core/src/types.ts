@@ -70,6 +70,8 @@ export interface CardLocation {
 export interface BoardCard {
   id: string;
   title: BilingualText;
+  /** Soft-hidden from active card renders; restored/deleted by card manager. */
+  archived?: boolean;
   /** Rich card detail description, persisted by the workspace detail modal. */
   description?: string;
   /** Label ids; reference entries in PM_LABELS or future global label set. */
@@ -118,6 +120,12 @@ export interface BoardList {
 
 export interface BoardListMutationContext {
   template: BoardTemplate;
+}
+
+export interface ArchivedBoardCardRecord {
+  listId: string;
+  list: BoardList;
+  card: BoardCard;
 }
 
 export interface BoardWorkspace {
