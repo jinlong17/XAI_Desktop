@@ -1,24 +1,3 @@
-// Feature-list styles injected here (not styles.css) to keep this change isolated
-// from a concurrent dashboard refactor touching styles.css on the same branch.
-(function ensureFeatureStyles(){
-  if (typeof document === "undefined" || document.getElementById("xai-feature-list-styles")) return;
-  const style = document.createElement("style");
-  style.id = "xai-feature-list-styles";
-  style.textContent = `
-  .detail-features{margin:4px 0 2px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--surface) 80%,transparent);padding:10px 12px}
-  .detail-features-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-  .detail-features-head b{font-size:13px}
-  .feature-rows{display:grid;gap:6px}
-  .feature-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;padding:7px 9px;border-radius:8px;background:var(--surface-2)}
-  .feature-row .badge{align-self:start;white-space:nowrap}
-  .feature-row-text b{display:block;font-size:12px}
-  .feature-row-text span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-  .overview-module-features{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint)}
-  .overview-module-features b{font-size:13px;margin-right:3px}
-  `;
-  document.head.appendChild(style);
-})();
-
 function renderStructureMap(){
   if(!products.length) return;
   const nodes = products.map(item => `

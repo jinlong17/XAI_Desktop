@@ -41,6 +41,7 @@
 | Skill / Agent 注册表 | **Skill 和 Agent** | 总览（常用 Skill 镜像条） | — |
 | 操作命令 / 进程控制 | **使用和操作** | 部署页（构建/部署命令交叉链接） | — |
 | 看板自身同步状态 | **总览**（原生） | — | — |
+| 跨模块同步编排 / ADR-0014 actions | **产品结构图** | — | — |
 
 > 总览是**富聚合驾驶舱**（定位 = **多展示**，不是薄索引）：它可以富展示任意 Owner 的内容
 > （flow 图、模块卡、drawer 都可以）。它的约束**不是少展示**，而是**实现层复用**——
@@ -191,7 +192,7 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 | **A. 闸门 + 分叉状态** | 展示：当前 gate 状态、gate 时间线、web/dev ahead、共享 base、最近 release tag、drift 判定。数据源：`branch_policy`。交互：无 |
 | **B. 长期分支表** | 展示：每条长期分支 目标/允许/禁止/上游/下游/drift。数据源：主源为 `branch_policy.long_lived_branches`；`state.js` 仅保留 stale/generated-missing 的 last-resort fallback。交互：无 |
 
-### 4.5 产品结构图 `product-flow`（4 卡 · 模块 Owner）
+### 4.5 产品结构图 `product-flow`（5 卡 · 模块 Owner）
 
 **定位**：**模块导航的唯一 Owner**——结构、模块卡、模块明细的源头。
 
@@ -199,8 +200,9 @@ Owner 的渲染器/数据/状态词汇，不 fork 第二套。**富展示不算�
 |---|---|
 | **A. 结构大图** | 职责：全模块 SVG 节点图 + 连边。展示：节点（order/title/subtitle）+ 边（main/soft/control 色调）。数据源：`products`+`product_links`。交互：点节点→`setProduct` |
 | **B. 分支流程** | 展示：编号 branch 工作流步骤（title/branch/desc）。数据源：`branch_workflow`。交互：选步→写明细 |
-| **C. 模块轨道（6 模块卡，3 区）** | 职责：模块卡 Owner。展示：3 区（主产品链/项目系统区/Control Plane），每模块卡 order/badge/title/状态/branch/依赖/next。数据源：`products` 按 `region` 分组。色彩：模块色顶边。交互：点卡→`setProduct` |
-| **D. 产品明细面板** | 职责：模块深挖 Owner。展示：目标/Feature 列表(按 6 状态)/状态网格/部署块/测试块/任务归属信号/推荐 skill/常用 prompt/workflow/transitions/impacts/相关文档。数据源：选中 `products[key]` 全字段。交互：开 target、开 doc、复制 prompt、折叠 navBlock、跨模块 data-to/data-module |
+| **C. 跨模块同步编排** | 职责：ADR-0014 sync workflow 的只读编排 Owner。展示：trigger phrase、actions（复用/新建、并行/串行、skill、depends_on）、执行波次、相关文档。数据源：`sync_orchestration`（由 `docs/workflow/project/sync-registry.json` 生成）。色彩：workflow tag token；必须由 `styles.css` 管理，不得 JS 内联样式。交互：相关文档→文档库 |
+| **D. 模块轨道（6 模块卡，3 区）** | 职责：模块卡 Owner。展示：3 区（主产品链/项目系统区/Control Plane），每模块卡 order/badge/title/状态/branch/依赖/next。数据源：`products` 按 `region` 分组。色彩：模块色顶边。交互：点卡→`setProduct` |
+| **E. 产品明细面板** | 职责：模块深挖 Owner。展示：目标/Feature 列表(按 6 状态)/状态网格/部署块/测试块/任务归属信号/推荐 skill/常用 prompt/workflow/transitions/impacts/相关文档。数据源：选中 `products[key]` 全字段。交互：开 target、开 doc、复制 prompt、折叠 navBlock、跨模块 data-to/data-module |
 
 > 总览的模块 drawer 是紧凑 Mirror。它可以与 D 有不同密度，但不得拥有第二套数据源、状态词汇或
 > Owner-only 字段解释；真正定位 / 完整明细仍回到 D。

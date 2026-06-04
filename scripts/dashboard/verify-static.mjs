@@ -10,6 +10,7 @@ const repoRoot = resolve(scriptDir, "../..");
 const dashboardDir = resolve(repoRoot, "docs/prototypes/dev-dashboard");
 const htmlPath = resolve(dashboardDir, "index.html");
 const generatedPath = resolve(dashboardDir, "state.generated.js");
+const syncRegistryPath = resolve(repoRoot, "docs/workflow/project/sync-registry.json");
 const requiredMountIds = [
   "primaryNavList",
   "overview",
@@ -19,6 +20,7 @@ const requiredMountIds = [
   "overviewSyncStatus",
   "overviewFlowCanvas",
   "overviewModuleGrid",
+  "syncOrchestration",
   "deployment",
   "deploymentSummaryGrid",
   "deploymentRecordList",
@@ -171,6 +173,17 @@ assert(Array.isArray(state.kpis) && state.kpis.length > 0, "kpis must be populat
 assert(state.sync_status?.refresh_command === "pnpm dashboard", "sync_status.refresh_command must stay pnpm dashboard");
 assert(state.sync_status?.serve_command === "pnpm dashboard:serve", "sync_status.serve_command must stay pnpm dashboard:serve");
 assert(state.sync_status?.sync_skill?.status === "tracked", "xai-dev-dashboard-sync must be present and tracked");
+
+if (existsSync(syncRegistryPath)) {
+  const syncOrchestration = state.sync_orchestration;
+  assert(syncOrchestration, "sync_orchestration must be generated from sync-registry.json");
+  assert(syncOrchestration.source === relative(repoRoot, syncRegistryPath), "sync_orchestration.source must point to sync-registry.json");
+  assert(Array.isArray(syncOrchestration.actions) && syncOrchestration.actions.length > 0, "sync_orchestration.actions must be populated");
+  assert(Array.isArray(syncOrchestration.waves) && syncOrchestration.waves.length > 0, "sync_orchestration.waves must be populated");
+  (syncOrchestration.docs || []).forEach(doc => {
+    assert(doc.path && !doc.path.startsWith("/"), `sync_orchestration doc path must be repo-relative: ${doc.path || "<missing>"}`);
+  });
+}
 
 assert(state.product_module_registry?.field === "product_lines", "product_module_registry.field must be product_lines");
 assert(Array.isArray(state.product_lines), "product_lines must be an array");
