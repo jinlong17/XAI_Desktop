@@ -31,6 +31,7 @@ const dashboardReadmePath = "docs/prototypes/dev-dashboard/README.md";
 const dashboardMachineDocPath = "docs/workflow/project/dev-dashboard.md";
 const dashboardTemplatePath = "docs/prototypes/dev-dashboard/TEMPLATE.md";
 const dashboardBoundariesPath = "docs/prototypes/dev-dashboard/BOUNDARIES.md";
+const dashboardReusePath = "docs/prototypes/dev-dashboard/REUSE.md";
 const dashboardDesignPath = "docs/prototypes/dev-dashboard/DESIGN.md";
 const dashboardSyncSkillPath = ".teams/skills/xai-dev-dashboard-sync/SKILL.md";
 
@@ -924,6 +925,7 @@ function buildDocHub(skillGroups, agentFamilies) {
         docEntry("看板 README", dashboardReadmePath, "打开、运行、刷新个人开发看板和定位权威文档的入口。", ["dashboard", "readme"], "必读"),
         docEntry("看板可复用模板", dashboardTemplatePath, "新项目复用个人开发看板时的结构、视觉和管理逻辑模板。", ["dashboard", "template"], "必读"),
         docEntry("看板边界规范", dashboardBoundariesPath, "本项目具体页面、卡片、Owner / Mirror / Shared-Widget 和数据源边界。", ["dashboard", "boundaries"], "必读"),
+        docEntry("看板复用指南", dashboardReusePath, "把看板复用到别的项目：要交接哪些文件 + 新建/审查改造两套 copy-paste prompt。", ["dashboard", "reuse"], "必读"),
         docEntry("AGENTS.md", "AGENTS.md", "Codex 会话规则、handoff 展示和 agent/skill tracking 边界。", ["rules", "codex"], "必读"),
         docEntry("CLAUDE.md", "CLAUDE.md", "跨平台共享工程规则、架构边界和测试要求。", ["rules", "architecture"], "必读"),
         docEntry("项目使用手册", "docs/workflow/project/usage-guide.md", "个人开发看板与 Workflow V2 的日常入口。", ["guide", "workflow"], "必读"),
