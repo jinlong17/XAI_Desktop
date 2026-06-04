@@ -645,7 +645,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
               </section>
             )}
 
-            <section className="tt-panel">
+            <section className="tt-panel tt-category-panel">
               <div className="tt-section-head">
                 <h2>{ttCopy(lang, "categories")}</h2>
                 <div className="tt-section-actions">
@@ -1139,35 +1139,47 @@ function CategoryCard({
       }}
       onDragEnd={() => onSetDragId(null)}
     >
-      <div className="tt-card-actions">
-        <button
-          type="button"
-          className="tt-card-collapse"
-          aria-expanded={!collapsed}
-          aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
-          onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
-        >
-          <IconGlyph name="chevD" size={14} />
-        </button>
-        <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
-          <IconGlyph name="plus" size={14} />
-        </button>
-        <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
-          <IconGlyph name="dots" size={15} />
-        </button>
-      </div>
-      <button type="button" className="tt-category-body" onClick={onDetail}>
-        <div className="tt-category-top">
-          <span className="tt-category-icon"><IconGlyph name={category.icon} size={18} /></span>
-          <div>
+      <div className="tt-card-head">
+        <button type="button" className="tt-category-body" onClick={onDetail}>
+          <span className="tt-category-icon"><IconGlyph name={category.icon} size={17} /></span>
+          <span className="tt-category-copy">
             <h3>{textName(category.name, lang)}</h3>
-            <p>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</p>
-          </div>
-          <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
-          {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+            <span>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</span>
+          </span>
+        </button>
+        <div className="tt-card-actions">
+          <button
+            type="button"
+            className="tt-category-start"
+            disabled={!canStart}
+            aria-label={`${ttCopy(lang, "start")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onStart(category.id, null); }}
+          >
+            <IconGlyph name="play" size={13} />
+            <span>{ttCopy(lang, "start")}</span>
+          </button>
+          <button
+            type="button"
+            className="tt-card-collapse"
+            aria-expanded={!collapsed}
+            aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
+          >
+            <IconGlyph name="chevD" size={13} />
+          </button>
+          <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
+            <IconGlyph name="plus" size={13} />
+          </button>
+          <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
+            <IconGlyph name="dots" size={14} />
+          </button>
         </div>
-        <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
-      </button>
+      </div>
+      <div className="tt-category-meta-row">
+        <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
+        {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+      </div>
+      <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
       {!collapsed && (
         <div className="tt-subcard-grid">
           {tiles.map((tile) => {
@@ -1188,7 +1200,11 @@ function CategoryCard({
                   <strong>{tile.name}</strong>
                   <em>{textName(category.name, lang)}</em>
                 </span>
-                {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
+                {tileRunning ? (
+                  <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>
+                ) : (
+                  <span className="tt-subcard-play" aria-hidden="true"><IconGlyph name="play" size={12} /></span>
+                )}
               </button>
             );
           })}
@@ -1233,11 +1249,11 @@ function ActiveSession({
       <b>{formatTimer(entryDuration(entry, nowMs))}</b>
       <div className="tt-active-actions" data-no-drag>
         {isPausedEntry(entry) ? (
-          <button type="button" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={14} /><span>{ttCopy(lang, "resume")}</span></button>
         ) : (
-          <button type="button" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={14} /><span>{ttCopy(lang, "pause")}</span></button>
         )}
-        <button type="button" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={15} /></button>
+        <button type="button" className="tt-action-pill tt-action-stop" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={14} /><span>{ttCopy(lang, "end")}</span></button>
       </div>
     </article>
   );

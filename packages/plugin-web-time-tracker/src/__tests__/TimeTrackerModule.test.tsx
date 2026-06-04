@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { StrictMode } from "react";
 import { TimeTrackerModule } from "../TimeTrackerModule.js";
 import { TIME_TRACKER_CATEGORIES_KEY, readTimeTrackerCategories, readTimeTrackerEntries } from "../internal/storage.js";
 import { TIME_TRACKER_CATEGORY_COLORS } from "../internal/defaults.js";
@@ -45,6 +46,23 @@ describe("TimeTrackerModule", () => {
       fireEvent.click(screen.getByLabelText("End"));
     });
     expect(readTimeTrackerEntries()[0]?.done).toBe(true);
+  });
+
+  it("starts one entry per click under React StrictMode", () => {
+    render(
+      <StrictMode>
+        <TimeTrackerModule lang="en" />
+      </StrictMode>,
+    );
+
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
+    });
+
+    expect(readTimeTrackerEntries()).toHaveLength(1);
+    expect(screen.getByText("Active sessions").closest("section")).toHaveTextContent("Code · Study");
   });
 
   it("adds a manual record", () => {
