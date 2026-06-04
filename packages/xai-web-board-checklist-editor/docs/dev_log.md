@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-checklist-editor |
 | Title | Web Project module P0 checklist editor slice - formalize card-detail checklist item CRUD and derived progress |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | `xai-web-board-storage-contract` |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 21:36 PDT |
+| Updated | 2026-06-03 21:41 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #6 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -57,7 +57,28 @@ Verification:
 
 ## Verify Notes
 
-Pending verify.
+Ship verification passed:
+
+- `pnpm --filter @repo/plugin-web-board-core lint` PASS
+- `pnpm --filter @repo/plugin-web-board-core typecheck` PASS
+- `pnpm --filter @repo/plugin-web-board-core test -- --run` PASS (`150/150`)
+- `pnpm --filter @repo/plugin-web-board-workspaces lint` PASS
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck` PASS
+- `pnpm --filter @repo/plugin-web-board-workspaces test -- --run` PASS (`199/199`)
+- `pnpm --filter @repo/web check-types` PASS
+- `pnpm --filter @repo/web test -- --run` PASS (`116/116`)
+- `pnpm --filter @repo/web build` PASS
+- `pnpm --filter @repo/web test -- --run src/__tests__/build-manifest.test.ts` PASS (`2/2`)
+- `git diff --check` PASS
+- Live smoke: `curl -I http://localhost:3001/app/board` returned HTTP 200 under `dev:mock-auth`.
+- Live smoke: Chromium screenshot captured at `/tmp/xai-board-checklist-editor-smoke.png`; Board view, card action menu entry points, `Archived cards`, and checklist progress chips rendered.
+
+Known inherited warnings were observed but did not fail verification:
+
+- React act warnings in board-core tests.
+- BoardSwitcher nested button stderr warning in workspaces tests.
+- `xai_rail_order contains unknown id "settings"` stderr in Web host tests.
+- Vite chunk-size warning in Web build.
 
 ## Work Log
 
@@ -65,3 +86,5 @@ Pending verify.
 |---|---|---|---|---|
 | 2026-06-03 21:35 PDT | gpt-5 parent inline | feature-plan - audited `BoardCardDetailModal` and board-core normalization, confirmed checklist add/toggle/edit/remove runtime already exists, and produced row #6 discovery/design/api/test/dev_log docs for a narrow formalization + regression-coverage slice. | pending | feature-build |
 | 2026-06-03 21:36 PDT | gpt-5 parent inline | Inline build - added stable checklist editor test ids and focused regression coverage for board-core progress clearing plus workspaces add/toggle/edit/remove/last-item removal behavior. Verification: board-core lint PASS, typecheck PASS, focused boardOps PASS (`37/37`); board-workspaces lint PASS, typecheck PASS, focused BoardWorkspacesModule PASS (`45/45`, existing BoardSwitcher nested button stderr warning). | pending | feature-verify |
+| 2026-06-03 21:41 PDT | gpt-5 parent inline | feature-verify - ran full board-core/workspaces package gates, Web host gates, build-manifest test, `git diff --check`, and live `/app/board` smoke screenshot. | `17b3a74`, `aeb4ee2` | ship |
+| 2026-06-03 21:41 PDT | gpt-5 parent inline | ship - updated roadmap, personal development board mapping, product structure, PLUGIN_MAP, and this dev log to mark row #6 shipped. | pending docs commit | `xai-web-board-storage-contract` |
