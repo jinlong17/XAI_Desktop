@@ -100,6 +100,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
   "xai_meditation_prefs",   // xai-web-meditation #16
   "xai_board_view_by_id",   // xai-web-board-views #8 (per-board active view selection)
+  "xai_board_filter_by_id", // xai-web-board-saved-filters #10 (per-board saved filter selection)
   // xai-web-settings-features-panel #23 — 8 boolean toggles in the xai_pref_* family per ADR-0007 §S8
   "xai_pref_features_tasks",
   "xai_pref_features_board",

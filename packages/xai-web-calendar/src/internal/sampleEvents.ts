@@ -33,6 +33,13 @@ export interface CalEvent {
    * below gain endTime as a Week/Day view demo. AC-FIXTURE-EXT-1..3 assert shape.
    */
   endTime?: string;
+  /** Optional source metadata for derived events such as Board card feeds. */
+  source?: {
+    type: "board-card";
+    boardId: string;
+    listId: string;
+    cardId: string;
+  };
 }
 
 /** Day-of-month (1..31) → events. Day 14 and day 31 are empty arrays per source. */

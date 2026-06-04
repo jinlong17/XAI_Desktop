@@ -976,6 +976,9 @@ importers:
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage
+      '@repo/plugin-web-tasks':
+        specifier: workspace:*
+        version: link:../xai-web-tasks
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
@@ -1698,6 +1701,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-board-core':
+        specifier: workspace:*
+        version: link:../plugin-web-board-core
       '@repo/plugin-web-storage':
         specifier: workspace:*
         version: link:../plugin-web-storage

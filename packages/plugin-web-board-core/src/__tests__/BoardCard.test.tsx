@@ -52,18 +52,29 @@ describe("BoardCard", () => {
     expect(chip.className).toContain("done");
   });
 
-  test("BC4 renders due chip when card.due set; adds late class when dueLate=true", () => {
+  test("BC4 renders due chip from board-core date meta and derives late state from typed dueDate", () => {
     const { rerender } = render(
       <BoardCard card={makeCard({ due: "5/26" })} lang="en" />,
     );
     expect(screen.getByTestId("bc-due").textContent).toBe("5/26");
+
+    rerender(
+      <BoardCard
+        card={makeCard({ dueDate: "2000-01-01", dueLate: false })}
+        lang="en"
+      />,
+    );
+    expect(screen.getByTestId("bc-due").textContent).toBe("1/1");
+    expect(screen.getByTestId("bc-due").className).toContain("late");
+
     rerender(
       <BoardCard
         card={makeCard({ due: "Overdue", dueLate: true })}
         lang="en"
       />,
     );
-    expect(screen.getByTestId("bc-due").className).toContain("late");
+    expect(screen.getByTestId("bc-due").textContent).toBe("Overdue");
+    expect(screen.getByTestId("bc-due").className).not.toContain("late");
   });
 
   test("BC4b dueEn is used when lang=en + dueEn provided", () => {
@@ -96,5 +107,87 @@ describe("BoardCard", () => {
     // payload writing is the caller's responsibility — test in BoardView.test
     // We just confirm the MIME constant is exported and well-formed.
     expect(BOARD_CARD_DND_MIME).toBe("application/x-xai-board-card");
+  });
+
+  test("BC6 card action menu stops detail click and calls rename/move/archive callbacks", () => {
+    const onClick = vi.fn();
+    const openCardMenu = vi.fn();
+    const closeCardMenu = vi.fn();
+    const renameCard = vi.fn();
+    const moveCardByOffset = vi.fn();
+    const archiveCard = vi.fn();
+    const { rerender } = render(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        onClick={onClick}
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-menu-open"));
+    expect(openCardMenu).toHaveBeenCalledTimes(1);
+    expect(onClick).not.toHaveBeenCalled();
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        onClick={onClick}
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-rename-open"));
+    fireEvent.change(screen.getByTestId("card-rename-input"), {
+      target: { value: "Renamed card" },
+    });
+    fireEvent.click(screen.getByTestId("card-rename-save"));
+    expect(renameCard).toHaveBeenCalledWith("Renamed card");
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("card-move-up"));
+    expect(moveCardByOffset).toHaveBeenCalledWith(-1);
+
+    rerender(
+      <BoardCard
+        card={makeCard()}
+        lang="en"
+        cardMenuOpen
+        canMoveCardUp
+        canMoveCardDown
+        openCardMenu={openCardMenu}
+        closeCardMenu={closeCardMenu}
+        renameCard={renameCard}
+        moveCardByOffset={moveCardByOffset}
+        archiveCard={archiveCard}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("card-archive"));
+    expect(archiveCard).toHaveBeenCalledTimes(1);
   });
 });

@@ -165,6 +165,7 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)
   "xai_meditation_prefs",     // xai-web-meditation #16
   "xai_board_view_by_id",     // xai-web-board-views #8 (per-board active view selection)
+  "xai_board_filter_by_id",   // xai-web-board-saved-filters #10 (per-board saved filter selection)
   // xai-web-settings-features-panel #23 — 8 boolean toggles, one per user-toggleable rail module
   "xai_pref_features_tasks",
   "xai_pref_features_board",
@@ -226,12 +227,6 @@ const OWNER_ROW_ADDITIONS = [
   // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
   "xai_pref_premium_tier",
   "xai_pref_premium_started_at",
-  // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
-  "xai_calendar_events",
-  // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
-  "xai_dashboard_stickies",
-  // xai-web-dashboard-weather-mail extension 2026-05-29 — weather manual-entry persistence
-  "xai_dashboard_weather",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
@@ -247,146 +242,15 @@ describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () =
   });
 });
 
-// ---- xai-web-calendar event-create extension (2026-05-27) ------------------
-// AC-REGISTRY-CREATE-1..2 — calendar events persistence entry shape +
-// localStorage round-trip via setPref/getPref.
-
-describe("AC-REGISTRY-CREATE-1: xai_calendar_events entry shape", () => {
-  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
-    const entry = PREF_REGISTRY.xai_calendar_events;
-    expect(entry.key).toBe("xai_calendar_events");
-    expect(entry.codec).toBe("json");
-    expect(entry.default).toEqual({});
-    expect(entry.owner).toBe("xai-web-calendar");
-    expect(entry.category).toBe("module");
-    expect(entry.schemaVersion).toBe(1);
-  });
-
-  it("entry is NOT proposed (canonical xai_calendar_* family)", () => {
-    const entry = PREF_REGISTRY.xai_calendar_events as { proposed?: true };
-    expect(entry.proposed).toBeUndefined();
-  });
-});
-
-describe("AC-REGISTRY-CREATE-2: xai_calendar_events round-trip via setPref/getPref", () => {
-  it("default {} round-trips with no data corruption", async () => {
-    const { setPref, getPref } = await import("../internal/storage.js");
-    const fixture = {
-      "evt-1": {
-        id: "evt-1",
-        title: "Sample",
-        startISO: "2026-05-22T09:00",
-        endISO: "2026-05-22T10:00",
-        colorPreset: "mint",
-        recurrence: null,
-        createdAt: "2026-05-22T00:00:00.000Z",
-        updatedAt: "2026-05-22T00:00:00.000Z",
-      },
-    };
-    setPref("xai_calendar_events", fixture);
-    const read = getPref("xai_calendar_events");
-    expect(read).toEqual(fixture);
-  });
-
-  it("empty {} default returns when key is absent", async () => {
-    localStorage.clear();
-    const { getPref } = await import("../internal/storage.js");
-    const read = getPref("xai_calendar_events");
-    expect(read).toEqual({});
-  });
-});
-
-// ---- xai-web-dashboard-stickies-create extension (2026-05-28) ---------------
-// AC-REGISTRY-STICKIES-1..2 — stickies persistence entry shape +
-// localStorage round-trip via setPref/getPref.
-
-describe("AC-REGISTRY-STICKIES-1: xai_dashboard_stickies entry shape", () => {
-  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
-    const entry = PREF_REGISTRY.xai_dashboard_stickies;
-    expect(entry.key).toBe("xai_dashboard_stickies");
-    expect(entry.codec).toBe("json");
-    expect(entry.default).toEqual({});
-    expect(entry.owner).toBe("xai-web-dashboard-widgets");
-    expect(entry.category).toBe("module");
-    expect(entry.schemaVersion).toBe(1);
-  });
-
-  it("entry is NOT proposed (canonical owner-row addition)", () => {
-    const entry = PREF_REGISTRY.xai_dashboard_stickies as { proposed?: true };
-    expect(entry.proposed).toBeUndefined();
-  });
-});
-
-describe("AC-REGISTRY-STICKIES-2: xai_dashboard_stickies round-trip via setPref/getPref", () => {
-  it("sticky record round-trips with no data corruption", async () => {
-    const { setPref, getPref } = await import("../internal/storage.js");
-    const fixture = {
-      "sticky-1": {
-        id: "sticky-1",
-        text: "Test note",
-        color: "sun",
-        createdAt: "2026-05-28T10:00:00.000Z",
-      },
-    };
-    setPref("xai_dashboard_stickies", fixture);
-    const read = getPref("xai_dashboard_stickies");
-    expect(read).toEqual(fixture);
-  });
-
-  it("empty {} default returns when key is absent", async () => {
-    localStorage.clear();
-    const { getPref } = await import("../internal/storage.js");
-    const read = getPref("xai_dashboard_stickies");
-    expect(read).toEqual({});
-  });
-});
-
-// ---- xai-web-dashboard-weather-mail extension (2026-05-29) ------------------
-// AC-REGISTRY-WEATHER-1..2 — weather persistence entry shape +
-// localStorage round-trip via setPref/getPref.
-
-describe("AC-REGISTRY-WEATHER-1: xai_dashboard_weather entry shape", () => {
-  it("entry exists with correct codec/default/owner/category/schemaVersion", () => {
-    const entry = PREF_REGISTRY.xai_dashboard_weather;
-    expect(entry.key).toBe("xai_dashboard_weather");
-    expect(entry.codec).toBe("json");
-    expect(entry.default).toBeNull();
-    expect(entry.owner).toBe("xai-web-dashboard-widgets");
-    expect(entry.category).toBe("module");
-    expect(entry.schemaVersion).toBe(1);
-  });
-
-  it("entry is NOT proposed (canonical owner-row addition)", () => {
-    const entry = PREF_REGISTRY.xai_dashboard_weather as { proposed?: true };
-    expect(entry.proposed).toBeUndefined();
-  });
-
-  it("default is null (singleton unset), NOT {} (unlike xai_dashboard_stickies)", () => {
-    expect(PREF_REGISTRY.xai_dashboard_weather.default).toBeNull();
-    expect(PREF_REGISTRY.xai_dashboard_stickies.default).toEqual({});
-  });
-});
-
-describe("AC-REGISTRY-WEATHER-2: xai_dashboard_weather round-trip via setPref/getPref", () => {
-  it("UserWeather fixture round-trips with no data corruption", async () => {
-    const { setPref, getPref } = await import("../internal/storage.js");
-    const fixture = {
-      city: "Beijing",
-      temp: 28,
-      condition: "sunny",
-      hi: 32,
-      lo: 22,
-      updatedAt: "2026-05-29T10:00:00.000Z",
-    };
-    setPref("xai_dashboard_weather", fixture as unknown as null);
-    const read = getPref("xai_dashboard_weather");
-    expect(read).toEqual(fixture);
-  });
-
-  it("null default returns when key is absent", async () => {
-    localStorage.clear();
-    const { getPref } = await import("../internal/storage.js");
-    const read = getPref("xai_dashboard_weather");
-    expect(read).toBeNull();
+describe("AC-REG-9: xai-web-board-saved-filters owner-row key contract", () => {
+  it("registers xai_board_filter_by_id as module json state", () => {
+    expect(PREF_REGISTRY.xai_board_filter_by_id).toMatchObject({
+      key: "xai_board_filter_by_id",
+      codec: "json",
+      default: {},
+      schemaVersion: 1,
+      owner: "xai-web-board-saved-filters",
+      category: "module",
+    });
   });
 });

@@ -557,3 +557,77 @@ No consumer wired in this row (declaration-only — mirrors row #5 precedent).
 | `<dialog>` not supported (legacy browsers) | Per row #5 R4 — Baseline 2022; deferred to that ADR-level analysis. |
 | Filter applied while a card is being mid-drag (Calendar DnD / Timeline DnD) | Card movement writes back to SOURCE list via `updateCard` (delegates to `updateCardInList`); filter is recomputed on next render. No orphan state. |
 
+## §S16 — 2026-06-03 Extension API (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+`BoardWorkspacesModule` now wires Board Automation Lite through board-core's
+public helper:
+
+- browser-local daily mount pass per active board/day
+- toolbar command `data-testid="automation-run-btn"` for manual preset reruns
+- cross-list move path runs completion automation with `sortDueDates: false`
+- writes continue through `preserveBoardStorageFormat(rawBoards, nextBoards)`
+
+No automation settings key, backend scheduler, notification channel, or custom
+rule builder is introduced.
+
+## §S17 — 2026-06-03 Extension API (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+`BoardCardDetailSurface` now exposes integration-backed attachment creation:
+
+- provider select: `data-testid="card-detail-integration-provider"`
+- provider catalog comes from `@repo/plugin-web-board-core`
+- Add link uses `createBoardIntegrationAttachment()`
+- added links persist through existing `BoardCard.attachments[]`
+- integration-backed links render provider labels in the attachment list
+
+No Settings OAuth pref is read by Board in this row. The UI creates typed
+external links only; it does not sync provider data.
+
+## §S18 — 2026-06-03 Extension API (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+`BoardCardDetailSurface` now treats the bottom timeline as "Comments &
+Activity":
+
+- comment input still uses `data-testid="card-detail-activity-input"`
+- add button uses `data-testid="card-detail-activity-add"`
+- submitted rows are stored as `kind: "comment"` entries
+- local author metadata is stored as `authorId: "local-user"` and localized
+  `authorName`
+- existing `kind: "note"` entries render with a Note badge
+
+Mentions, notifications, editing, and deleting comments are not implemented in
+this row.
+
+## §S19 — 2026-06-03 Extension API (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+`BoardWorkspacesModule` now wires local Board visibility:
+
+- header toggle: `data-testid="board-visibility-toggle"`
+- legacy boards render as `Private` / `私有`
+- clicking toggles `private` ⇄ `shared`
+- writes continue through
+  `preserveBoardStorageFormat(rawBoards, nextBoards)` to `xai_boards_v2`
+- no extra preference key is introduced
+
+`ShareModal` now requires:
+
+```ts
+visibility: BoardVisibility;
+```
+
+The modal displays:
+
+- permission note: `data-testid="sm-permission-note"`
+- visibility note: `data-testid="sm-visibility-note"`
+
+`createMockBoardShareEnvelope(boardId, visibility)` and
+`web:board:share-requested` both include `visibility`. This is still a mock
+share contract, not a backend ACL or invite grant.

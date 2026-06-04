@@ -13,6 +13,7 @@ import type { JSX } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
 import type { UserCalEvent } from "./internal/eventStore/types.js";
+import type { CalendarEventsByDate } from "./internal/boardCalendarFeed.js";
 import { weekWindowFor } from "./internal/weekWindow.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { mergeEventsForWindow } from "./internal/eventStore/mergeEventsForViewport.js";
@@ -24,6 +25,7 @@ export interface WeekViewProps {
   events: CalEventsByDay;
   todayKey: string;
   lang: Lang;
+  feedEventsByDate?: CalendarEventsByDate;
   /**
    * User-created events to merge with the fixture (event-create extension).
    * P3: accepted but not yet wired into rendering (P4 lands integration).
@@ -43,6 +45,7 @@ export function WeekView({
   events,
   todayKey,
   lang,
+  feedEventsByDate = {},
   userEvents = {},
   onUserEventClick,
 }: WeekViewProps): JSX.Element {
@@ -61,17 +64,32 @@ export function WeekView({
     return `${name ?? ""} ${parsed.day}`;
   });
 
-  const mergedEventsByDateKey = useMemo(
-    () =>
-      mergeEventsForWindow(
-        events,
-        { year: activeMonth.year, month: activeMonth.month },
-        userEvents,
-        windowStartKey,
-        windowEndKey,
-      ),
-    [events, activeMonth.year, activeMonth.month, userEvents, windowStartKey, windowEndKey],
-  );
+  const mergedEventsByDateKey = useMemo(() => {
+    const merged = mergeEventsForWindow(
+      events,
+      { year: activeMonth.year, month: activeMonth.month },
+      userEvents,
+      windowStartKey,
+      windowEndKey,
+    );
+    const withFeed = { ...merged };
+    for (const dateKey of dayKeys) {
+      withFeed[dateKey] = [
+        ...(withFeed[dateKey] ?? []),
+        ...(feedEventsByDate[dateKey] ?? []),
+      ];
+    }
+    return withFeed;
+  }, [
+    events,
+    activeMonth.year,
+    activeMonth.month,
+    userEvents,
+    windowStartKey,
+    windowEndKey,
+    dayKeys,
+    feedEventsByDate,
+  ]);
 
   return (
     <TimeGrid

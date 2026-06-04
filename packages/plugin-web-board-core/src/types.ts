@@ -26,9 +26,63 @@ export type BoardListColorId =
 /** Built-in board templates per DESIGN.md §4.3 / `board-data.js`. */
 export type BoardTemplate = "kanban" | "pm" | "blank";
 
+/** Board-level visibility state. Missing legacy values resolve to private. */
+export type BoardVisibility = "private" | "shared";
+
 export interface CardChecklist {
   done: number;
   total: number;
+}
+
+export interface BoardChecklistItem {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+export type BoardIntegrationProviderId =
+  | "gcal"
+  | "github"
+  | "linear"
+  | "drive"
+  | "link";
+
+export interface BoardAttachmentIntegrationSource {
+  kind: "integration";
+  providerId: BoardIntegrationProviderId;
+  providerName: string;
+  externalId?: string;
+}
+
+export interface BoardCardAttachmentLink {
+  id: string;
+  url: string;
+  title?: string;
+  /** Optional provider metadata for integration-backed external links. */
+  source?: BoardAttachmentIntegrationSource;
+}
+
+export type BoardCardActivityKind = "note" | "comment";
+
+export interface BoardCardActivityEntry {
+  id: string;
+  kind: BoardCardActivityKind;
+  body: string;
+  createdAt: string;
+  authorId?: string;
+  authorName?: string;
+}
+
+export interface BoardCardTaskLink {
+  source: "xai-web-tasks";
+  taskId: string;
+  createdAt: string;
+}
+
+export interface BoardMemberOption {
+  id: string;
+  name: string;
+  color: string;
 }
 
 /** Geographic location for Map view rendering (gap-closure row #6). */
@@ -44,17 +98,35 @@ export interface CardLocation {
 export interface BoardCard {
   id: string;
   title: BilingualText;
+  /** Soft-hidden from active card renders; restored/deleted by card manager. */
+  archived?: boolean;
+  /** ISO datetime marker set by Automation Lite when a card enters Done. */
+  completedAt?: string;
+  /** Rich card detail description, persisted by the workspace detail modal. */
+  description?: string;
   /** Label ids; reference entries in PM_LABELS or future global label set. */
   labels?: string[];
   /** Member user ids; rendered as avatar chips. */
   members?: string[];
   checklist?: CardChecklist;
+  /** Structured checklist rows. `checklist` is derived for legacy chip rendering. */
+  checklistItems?: BoardChecklistItem[];
+  /** Structured link attachments. `attach` is derived for legacy chip rendering. */
+  attachments?: BoardCardAttachmentLink[];
+  /** Lightweight card activity timeline. */
+  activity?: BoardCardActivityEntry[];
+  /** Optional one-way link to a generated Tasks module card. */
+  taskLink?: BoardCardTaskLink;
   /** Opaque display string (e.g. "5/26", "Today"). Not parsed by row #7. */
   due?: string;
   /** Optional english-localized due override for the prototype's bilingual seed. */
   dueEn?: string;
   /** Opaque display string for start date. */
   start?: string;
+  /** ISO date input value (`YYYY-MM-DD`) used by the detail modal. */
+  startDate?: string;
+  /** ISO date input value (`YYYY-MM-DD`) used by the detail modal. */
+  dueDate?: string;
   dueLate?: boolean;
   /** Display string (e.g. attachment count). */
   attach?: string | number;
@@ -73,7 +145,19 @@ export interface BoardList {
   customName?: BilingualText;
   /** Null or absent means "no color stripe". */
   color?: BoardListColorId | null;
+  /** Soft-hidden from active board renders; restored/deleted by list manager. */
+  archived?: boolean;
   cards: BoardCard[];
+}
+
+export interface BoardListMutationContext {
+  template: BoardTemplate;
+}
+
+export interface ArchivedBoardCardRecord {
+  listId: string;
+  list: BoardList;
+  card: BoardCard;
 }
 
 export interface BoardWorkspace {
@@ -90,5 +174,7 @@ export interface Board {
   /** CSS background string (linear-gradient, image, etc.). */
   cover: string;
   template: BoardTemplate;
+  /** Local visibility state. This is not a backend ACL grant. */
+  visibility?: BoardVisibility;
   lists: BoardList[];
 }

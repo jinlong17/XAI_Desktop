@@ -382,13 +382,14 @@ Worktree: <absolute_worktree_path>
 | 子 PRD | 现役路径 | 现役 manifest / 入口 |
 |---|---|---|
 | **sync** | 单 roadmap manifest, continue | `docs/workflow/roadmap/sync-v1.md` (W0-W3 大量 Shipped, Phase 5 完善剩余) + `sync-v1.deferred-gates.md` |
-| **web** | 单 roadmap manifest, continue | `docs/workflow/roadmap/web-ticktick-parity.md` (25 row, 10 已 SHIPPED at 2026-05-22) |
+| **web** | 单 roadmap manifest + targeted follow-up manifests | `docs/workflow/roadmap/web-ticktick-parity.md` (platform spine) + `docs/workflow/roadmap/xai-web-console.md` (24/24 shipped UI baseline) + targeted follow-ups such as `docs/workflow/roadmap/xai-web-project-module.md` |
 | **console** | plugin-by-plugin manual,**无**独立 manifest | `plugin-console` 已 SHIPPED;`plugin-productivity/labels/project` 走 Level 1/2 verify+ship,最后做真机走查 |
 
 ### 8.3 调度规则
 
-- **不要为子 PRD 新建 manifest**(`/xai-roadmap-loop init`):现役 sync-v1 / web-ticktick-parity
-  已覆盖 sync + web,console 不需要 manifest 层。
+- **不要为子 PRD 新建重复 manifest**(`/xai-roadmap-loop init`):现役 sync-v1 / web-ticktick-parity
+  已覆盖 sync + web,console 不需要 manifest 层。允许为已审查出的明确缺口新增 targeted follow-up
+  manifest,例如 `xai-web-project-module`,但必须引用具体审查/PRD 文档,不能凭空拆任务。
 - 推进现役 manifest 用 `/xai-roadmap-loop` run 模式,具体见 §7。
 - 推进单个 feature(含 console 的 plugin)用 `/xai-feature-full-loop`,具体见 §5。
 - 子 PRD 自身的修订 / 新章节 / discovery 仍然在子 PRD 文件里改;但**别**用 `/xai-roadmap-loop init`

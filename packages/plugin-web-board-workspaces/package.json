@@ -27,6 +27,7 @@
     "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-board-views": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"

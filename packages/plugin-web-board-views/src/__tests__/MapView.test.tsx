@@ -224,17 +224,18 @@ describe("MapView", () => {
   test("MAP-8 marker popup content includes card title + label when present", async () => {
     render(<MapView lang="en" lists={[LIST_WITH_LOCATIONS]} />);
     await act(async () => { await Promise.resolve(); });
-    const firstPopupContent = mockModule.__mocks.markerBindPopup.mock.calls[0]![0] as string;
-    expect(firstPopupContent).toContain("Tokyo");
-    expect(firstPopupContent).toContain("Tokyo HQ");
+    const firstPopupContent = mockModule.__mocks.markerBindPopup.mock.calls[0]![0] as HTMLElement;
+    expect(firstPopupContent.textContent).toContain("Tokyo");
+    expect(firstPopupContent.textContent).toContain("Tokyo HQ");
+    expect(firstPopupContent.querySelector("span")?.textContent).toBe("Tokyo HQ");
   });
 
   test("MAP-9 marker popup for pin without label omits label span", async () => {
     render(<MapView lang="en" lists={[LIST_WITH_LOCATIONS]} />);
     await act(async () => { await Promise.resolve(); });
-    const secondPopupContent = mockModule.__mocks.markerBindPopup.mock.calls[1]![0] as string;
-    expect(secondPopupContent).toContain("London");
-    expect(secondPopupContent).not.toContain("<span>");
+    const secondPopupContent = mockModule.__mocks.markerBindPopup.mock.calls[1]![0] as HTMLElement;
+    expect(secondPopupContent.textContent).toContain("London");
+    expect(secondPopupContent.querySelector("span")).toBeNull();
   });
 
   test("MAP-10 onSelectCard callback fires on marker click", async () => {

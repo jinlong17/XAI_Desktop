@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",

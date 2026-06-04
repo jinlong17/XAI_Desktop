@@ -294,3 +294,109 @@ Already enumerated in test.md §5 (Q1..Q10). Confirm:
 | 2026-05-25 22:40 | claude-sonnet-4-6 (feature-build verify-feedback-patch) | Cross-ref flip: Status → READY_FOR_VERIFY. Verify-feedback patch resolved all 5 blockers (B1/B2/B3 typecheck in board-views; B4 lint in board-workspaces; B5 vite.config.ts manifest). board-core itself unchanged; 108 tests PASS. See canonical dev_log in board-views for full patch notes. | (see verify-patch commit) | feature-verify |
 | 2026-05-25 22:50 | Claude Opus 4.7 1M (feature-verify cycle 2) | Cross-ref flip: Status → READY_TO_SHIP. board-core re-verified clean (untouched by verify-feedback patches): `pnpm --filter @repo/plugin-web-board-core test` → 108/108 PASS. All 5 row-level cycle-1 BLOCKERs resolved (all in sibling packages — board-core had none). See canonical dev_log in board-views for full cycle-2 verify report. | — | ship |
 | 2026-05-25 23:10 | claude-sonnet-4-6 (ship) | Cross-ref flip: Status → SHIPPED. All 3 lineage dev_logs flipped in this commit. Ship Report in canonical dev_log (`packages/xai-web-board-views/docs/dev_log.md`). This package's build commit included in Ship Report: 389ee17 (P1 — BoardCard.location? additive schema extension). Deferred residual risks acknowledged (RR-1 cross-vendor cold-read / RR-3 manual browser smoke) per canonical dev_log. | (dev_log flip commit — this) | Workflow complete |
+
+---
+
+## Extension Lineage - xai-web-board-export-import (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-export-import/docs/`.
+
+- Added pure Board export/import payload helpers in
+  `packages/plugin-web-board-core/src/internal/exportImport.ts`.
+- Exposed `createBoardExportPayload`, `readBoardExportPayload`,
+  `boardImportStorageValueFromPayload`, and payload constants/types from the
+  package barrel.
+- New `exportImport.test.ts` covers valid legacy/envelope export, logical
+  entities, invalid payload rejection, and import storage value validation.
+- `plugin-web-storage` remains dependency-free from board-core.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (169 tests)
+
+---
+
+## Extension Lineage - xai-web-board-automation-lite (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+- Added pure `applyBoardAutomationLite()` helper in
+  `packages/plugin-web-board-core/src/internal/automationLite.ts`.
+- Exposed `BOARD_AUTOMATION_URGENT_LABEL_ID`,
+  `BOARD_AUTOMATION_DUE_SOON_DAYS`, helper types, and
+  `applyBoardAutomationLite()` from the package barrel.
+- Added optional `BoardCard.completedAt` and guard coverage.
+- New `automationLite.test.ts` covers Done completion, due-soon urgent labels,
+  due-date sorting, no-op identity, and archived skip behavior.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (174 tests)
+
+---
+
+## Extension Lineage - xai-web-board-integrations (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+- Added Board integration provider catalog in
+  `packages/plugin-web-board-core/src/internal/integrationAdapters.ts`.
+- Added optional `BoardCardAttachmentLink.source` metadata for typed external
+  integration links.
+- Exposed provider catalog, provider guard, provider lookup, helper types, and
+  `createBoardIntegrationAttachment()` from the package barrel.
+- Widened `isBoardCard` attachment guard to accept valid integration metadata
+  and reject malformed provider ids.
+- New `integrationAdapters.test.ts` covers catalog, helper success/failure, and
+  provider lookup.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (179 tests)
+
+---
+
+## Extension Lineage - xai-web-board-comments-activity (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+- Added `BoardCardActivityKind = "note" | "comment"` and optional
+  `authorName` metadata on `BoardCardActivityEntry`.
+- Added pure `createBoardCardComment()` and
+  `createBoardCardActivityNote()` helpers.
+- Widened `isBoardCard` activity guard to accept valid comment entries and
+  reject malformed activity metadata.
+- New `activityEntries.test.ts` covers helper success/failure.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (183 tests)
+
+---
+
+## Extension Lineage - xai-web-board-permissions (2026-06-03) - cross-ref
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+- Added `BoardVisibility = "private" | "shared"` and optional
+  `Board.visibility`.
+- Added pure `BOARD_VISIBILITY_VALUES`, `isBoardVisibility`,
+  `getBoardVisibility`, and `setBoardVisibility` helpers.
+- Widened `isBoard` to accept valid visibility values and reject malformed
+  values.
+- Exposed visibility helpers from the public package barrel.
+- New `boardVisibility.test.ts` covers helper success/no-op behavior.
+
+Verification:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS `pnpm --filter @repo/plugin-web-board-core test` (188 tests)

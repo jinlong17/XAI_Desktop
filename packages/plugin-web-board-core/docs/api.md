@@ -48,6 +48,15 @@ export type { BoardViewProps } from "./BoardView.js";
 // ---- Shell slot registration --------------------------------------------
 export { boardCoreWebModuleRegistration } from "./registration.js";
 
+// ---- Board export/import data contract (row #13) -------------------------
+export {
+  BOARD_EXPORT_PAYLOAD_KIND,
+  BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION,
+  createBoardExportPayload,
+  readBoardExportPayload,
+  boardImportStorageValueFromPayload,
+} from "./internal/exportImport.js";
+
 // ---- Side-effect CSS imports --------------------------------------------
 import "./styles.css";
 ```
@@ -269,6 +278,47 @@ export function pickActiveBoard(boards: readonly Board[], activeId: string): Boa
 
 Row #7 reads/writes ONLY the first two. Rows #8 / #9 add usage of the last two.
 
+## §6.1 — Board export/import contract (`src/internal/exportImport.ts`)
+
+```ts
+export const BOARD_EXPORT_PAYLOAD_KIND = "xai.web.board.export";
+export const BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION = 1;
+
+export interface BoardExportPayloadV1 {
+  kind: typeof BOARD_EXPORT_PAYLOAD_KIND;
+  schemaVersion: typeof BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION;
+  exportedAt: string;
+  storageKey: typeof BOARD_STORAGE_KEY;
+  storageSource: "legacy-array" | "v1-envelope";
+  storageValue: BoardStorageValue;
+  boards: Board[];
+  logicalEntities: BoardStorageLogicalEntities;
+}
+
+export function createBoardExportPayload(
+  raw: unknown,
+  options?: { exportedAt?: string },
+): BoardExportPayloadResult;
+
+export function readBoardExportPayload(
+  raw: unknown,
+): BoardExportPayloadReadResult;
+
+export function boardImportStorageValueFromPayload(
+  raw: unknown,
+): BoardImportStorageValueResult;
+```
+
+Semantics:
+
+- The helpers are pure and never touch `localStorage` directly.
+- Export accepts valid legacy `Board[]` or v1 storage envelopes.
+- Legacy arrays are exported as envelope-backed payloads.
+- Existing v1 envelopes keep their storage value identity.
+- Every valid payload includes board/list/card logical entities via
+  `projectBoardStorageEntities`.
+- Import returns the validated value a future UI can write to `xai_boards_v2`.
+
 ## §7 — Shell registration (`src/registration.tsx`)
 
 ```tsx
@@ -475,3 +525,148 @@ defaults — the Map view simply omits malformed cards from its pin set.
 - BCV2: card without `location` → guard passes (back-compat)
 - BCV3: card with `location.lat === NaN` → guard passes (structural OK)
 - BCV4: card with `location = "garbage"` → guard fails
+
+## §S16 — 2026-06-03 Extension API (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+Board-core now owns fixed Board automation presets through a pure helper:
+
+```ts
+export const BOARD_AUTOMATION_URGENT_LABEL_ID = "urgent";
+export const BOARD_AUTOMATION_DUE_SOON_DAYS = 2;
+
+export function applyBoardAutomationLite(
+  lists: readonly BoardListData[],
+  options?: BoardAutomationLiteOptions,
+): BoardAutomationLiteResult;
+```
+
+Additive schema field:
+
+```ts
+interface BoardCard {
+  completedAt?: string;
+}
+```
+
+Rules:
+
+- semantic Done cards receive `completedAt` and completed checklist progress
+- active non-Done cards due today through 2 days ahead receive `urgent`
+- daily due sort orders active non-Done cards by valid `dueDate`
+- archived lists/cards are skipped
+- helper remains pure and never touches `localStorage`
+
+## §S17 — 2026-06-03 Extension API (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+Board-core now owns the Board integration link adapter vocabulary:
+
+```ts
+export type BoardIntegrationProviderId =
+  | "gcal"
+  | "github"
+  | "linear"
+  | "drive"
+  | "link";
+
+export interface BoardAttachmentIntegrationSource {
+  kind: "integration";
+  providerId: BoardIntegrationProviderId;
+  providerName: string;
+  externalId?: string;
+}
+
+export interface BoardCardAttachmentLink {
+  id: string;
+  url: string;
+  title?: string;
+  source?: BoardAttachmentIntegrationSource;
+}
+
+export function createBoardIntegrationAttachment(
+  input: BoardIntegrationAttachmentInput,
+): BoardIntegrationAttachmentResult;
+```
+
+Rules:
+
+- provider catalog is GCal, GitHub, Linear, Google Drive, and generic Link
+- only HTTP(S) URLs are accepted
+- helper is pure and never touches Settings prefs, OAuth state, storage, or the
+  network
+- optional `source` metadata is additive; old attachments remain valid
+- storage guard rejects malformed provider metadata
+
+## §S18 — 2026-06-03 Extension API (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in `packages/xai-web-board-comments-activity/docs/`.
+
+Board-core now formalizes the card activity timeline as comments plus existing
+notes:
+
+```ts
+export type BoardCardActivityKind = "note" | "comment";
+
+export interface BoardCardActivityEntry {
+  id: string;
+  kind: BoardCardActivityKind;
+  body: string;
+  createdAt: string;
+  authorId?: string;
+  authorName?: string;
+}
+
+export function createBoardCardComment(
+  input: BoardCardActivityInput,
+): BoardCardActivityResult;
+
+export function createBoardCardActivityNote(
+  input: BoardCardActivityInput,
+): BoardCardActivityResult;
+```
+
+Rules:
+
+- `kind: "note"` remains valid for backward compatibility
+- new card-detail discussion rows use `kind: "comment"`
+- helpers reject missing ids, empty bodies, and missing timestamps
+- optional author metadata is trimmed
+- helpers are pure and do not touch storage, events, or network state
+
+## §S19 — 2026-06-03 Extension API (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+Board-core now owns local board visibility as an additive planning contract:
+
+```ts
+export type BoardVisibility = "private" | "shared";
+
+export interface Board {
+  visibility?: BoardVisibility;
+}
+
+export const BOARD_VISIBILITY_VALUES: readonly BoardVisibility[];
+
+export function isBoardVisibility(value: unknown): value is BoardVisibility;
+
+export function getBoardVisibility(
+  board: Pick<Board, "visibility">,
+): BoardVisibility;
+
+export function setBoardVisibility<T extends Board>(
+  board: T,
+  visibility: BoardVisibility,
+): T;
+```
+
+Rules:
+
+- missing legacy `visibility` resolves to `private`
+- `setBoardVisibility(board, "private")` is a no-op for legacy private boards
+- setting `shared` or toggling an explicit value returns a cloned board
+- helper surface is pure and does not touch storage, events, or network state
+- this is not a backend ACL grant

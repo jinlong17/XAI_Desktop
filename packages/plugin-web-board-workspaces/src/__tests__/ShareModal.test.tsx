@@ -1,5 +1,5 @@
 /**
- * ShareModal tests — SM-1..SM-8
+ * ShareModal tests — SM-1..SM-9
  * Gap-closure row #6 — board-workspaces slice
  */
 import {
@@ -52,7 +52,7 @@ describe("ShareModal", () => {
   });
 
   test("SM-1 opens with <dialog> mounted + URL visible after async generation", async () => {
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={vi.fn()} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={vi.fn()} />);
     // showModal called on mount
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
     // dialog is in the DOM
@@ -62,10 +62,17 @@ describe("ShareModal", () => {
       const input = screen.getByTestId("sm-url-input") as HTMLInputElement;
       expect(input.value).toMatch(/^https:\/\/xai-web\.example\/share\/[0-9a-f]{8}$/);
     });
+    expect(screen.getByTestId("sm-stub-badge").textContent).toBe("Mock link");
+    expect(screen.getByTestId("sm-stub-banner").textContent).toContain(
+      "does not grant access",
+    );
+    expect(screen.getByTestId("sm-share-contract").textContent).toBe(
+      "mock/unimplemented/view",
+    );
   });
 
   test("SM-2 Copy button calls navigator.clipboard.writeText(url)", async () => {
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={vi.fn()} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={vi.fn()} />);
     await waitFor(() => {
       const input = screen.getByTestId("sm-url-input") as HTMLInputElement;
       expect(input.value).toMatch(/xai-web\.example\/share\//);
@@ -78,7 +85,7 @@ describe("ShareModal", () => {
   });
 
   test("SM-3 'Copied!' affordance flips on success", async () => {
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={vi.fn()} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={vi.fn()} />);
     await waitFor(() => {
       expect((screen.getByTestId("sm-url-input") as HTMLInputElement).value).toMatch(/share\//);
     });
@@ -90,7 +97,7 @@ describe("ShareModal", () => {
 
   test("SM-4 'Copied!' reverts after 2 seconds", async () => {
     vi.useFakeTimers();
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={vi.fn()} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={vi.fn()} />);
     // Advance timers to allow URL generation (which uses real SubtleCrypto)
     await act(async () => { await Promise.resolve(); });
 
@@ -116,7 +123,7 @@ describe("ShareModal", () => {
     });
 
     const onClose = vi.fn(() => { closeOrder.push("onClose"); });
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={onClose} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={onClose} />);
     await act(async () => { await Promise.resolve(); });
 
     fireEvent.click(screen.getByTestId("sm-close-btn"));
@@ -124,11 +131,23 @@ describe("ShareModal", () => {
     expect(closeOrder[0]).toBe("emitWebEvent");
     expect(closeOrder[1]).toBe("dialog.close");
     expect(closeOrder[2]).toBe("onClose");
+    expect(emitWebEvent).toHaveBeenCalledWith(
+      "web:board:share-requested",
+      expect.objectContaining({
+        boardId: "b-test",
+        source: "header",
+        mode: "mock",
+        visibility: "private",
+        permission: "view",
+        expiresAt: null,
+        backend: "unimplemented",
+      }),
+    );
   });
 
   test("SM-6 backdrop click (event.target === dialogRef) closes modal", async () => {
     const onClose = vi.fn();
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={onClose} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={onClose} />);
     await act(async () => { await Promise.resolve(); });
 
     // Simulate clicking on the dialog backdrop (target === dialog element)
@@ -140,7 +159,7 @@ describe("ShareModal", () => {
 
   test("SM-7 ESC triggers cancel event → handleClose called", async () => {
     const onClose = vi.fn();
-    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={onClose} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={onClose} />);
     await act(async () => { await Promise.resolve(); });
 
     const dialog = screen.getByTestId("share-dialog");
@@ -150,8 +169,12 @@ describe("ShareModal", () => {
   });
 
   test("SM-8 bilingual zh — heading shows '分享看板' + Copied text '已复制'", async () => {
-    render(<ShareModal board={MOCK_BOARD} lang="zh" onClose={vi.fn()} />);
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="zh" onClose={vi.fn()} />);
     expect(screen.getByTestId("sm-heading").textContent).toBe("分享看板");
+    expect(screen.getByTestId("sm-stub-badge").textContent).toBe("模拟链接");
+    expect(screen.getByTestId("sm-stub-banner").textContent).toContain(
+      "不会授予访问权限",
+    );
     await waitFor(() => {
       expect((screen.getByTestId("sm-url-input") as HTMLInputElement).value).toMatch(/share\//);
     });
@@ -159,5 +182,31 @@ describe("ShareModal", () => {
       fireEvent.click(screen.getByTestId("sm-copy-btn"));
     });
     expect(screen.getByTestId("sm-copy-btn").textContent).toBe("已复制");
+  });
+
+  test("SM-9 permission note makes view-only scope explicit", () => {
+    render(<ShareModal board={MOCK_BOARD} visibility="private" lang="en" onClose={vi.fn()} />);
+    expect(screen.getByTestId("sm-permission-note").textContent).toBe(
+      "Permission: view-only",
+    );
+  });
+
+  test("SM-10 visibility note and event payload include board visibility", async () => {
+    const onClose = vi.fn();
+    render(<ShareModal board={MOCK_BOARD} visibility="shared" lang="en" onClose={onClose} />);
+    expect(screen.getByTestId("sm-visibility-note").textContent).toBe(
+      "Visibility: Shared",
+    );
+
+    await act(async () => { await Promise.resolve(); });
+    fireEvent.click(screen.getByTestId("sm-close-btn"));
+
+    expect(emitWebEvent).toHaveBeenCalledWith(
+      "web:board:share-requested",
+      expect.objectContaining({
+        boardId: "b-test",
+        visibility: "shared",
+      }),
+    );
   });
 });

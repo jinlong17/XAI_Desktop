@@ -258,7 +258,8 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
       };
 
       if (patch.tag === null && nextTags === undefined) {
-        const { tag: _removed, ...rest } = updatedCard;
+        const rest = { ...updatedCard };
+        delete rest.tag;
         return rest;
       }
       return updatedCard;

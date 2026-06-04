@@ -10,11 +10,11 @@ import { describe, expect, test, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { TimelineView } from "../TimelineView.js";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { isoDateFromOffset } from "@repo/plugin-web-board-core";
 // timelineDrag helpers not used (tests use inline act()/fireEvent/dispatchEvent sequences)
 // import { simulateTimelineDrag, simulateTimelineDragNoMove } from "./_helpers/timelineDrag.js";
 
 const TODAY = new Date();
-const TD = TODAY.getDate();
 
 function makeCard(overrides: Partial<BoardCardData> = {}): BoardCardData {
   return {
@@ -34,13 +34,11 @@ function makeList(overrides: Partial<BoardListData> = {}): BoardListData {
 }
 
 function tomorrowDue() {
-  const d = new Date(TODAY.getFullYear(), TODAY.getMonth(), TD + 1);
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+  return isoDateFromOffset(1, TODAY);
 }
 
 function dayN(offset: number) {
-  const d = new Date(TODAY.getFullYear(), TODAY.getMonth(), TD + offset);
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+  return isoDateFromOffset(offset, TODAY);
 }
 
 /** Stub getBoundingClientRect on all elements to width=900 for DnD tests */
@@ -72,16 +70,16 @@ describe("TimelineView", () => {
     expect(screen.getByTestId("tl-day-today")).toBeInTheDocument();
   });
 
-  test("TL3 card with due=tomorrow renders a bar", () => {
-    const lists = [makeList({ cards: [makeCard({ due: tomorrowDue() })] })];
+  test("TL3 card with dueDate=tomorrow renders a bar", () => {
+    const lists = [makeList({ cards: [makeCard({ dueDate: tomorrowDue() })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     expect(screen.getByTestId("tl-bar")).toBeInTheDocument();
   });
 
   test("TL4 card with start and due renders multi-day bar (wider style)", () => {
     const start = dayN(0);
-    const due = dayN(7);
-    const lists = [makeList({ cards: [makeCard({ start, due })] })];
+    const dueDate = dayN(7);
+    const lists = [makeList({ cards: [makeCard({ startDate: start, dueDate })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     const bar = screen.getByTestId("tl-bar");
     const style = bar.getAttribute("style") ?? "";
@@ -93,7 +91,7 @@ describe("TimelineView", () => {
   });
 
   test("TL5 card without start renders as single-day bar at due", () => {
-    const lists = [makeList({ cards: [makeCard({ due: tomorrowDue() })] })];
+    const lists = [makeList({ cards: [makeCard({ dueDate: tomorrowDue() })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     const bar = screen.getByTestId("tl-bar");
     const style = bar.getAttribute("style") ?? "";
@@ -105,7 +103,7 @@ describe("TimelineView", () => {
   });
 
   test("TL6 three handles render per bar", () => {
-    const lists = [makeList({ cards: [makeCard({ due: "Today" })] })];
+    const lists = [makeList({ cards: [makeCard({ dueDate: dayN(0) })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     expect(screen.getByTestId("tl-handle-l")).toBeInTheDocument();
     expect(screen.getByTestId("tl-handle-r")).toBeInTheDocument();
@@ -116,7 +114,7 @@ describe("TimelineView", () => {
     // start before today = negative offset — it won't render in items since start < DAYS
     // but a card with start far in past and due today will still render
     const pastStart = dayN(-5);
-    const lists = [makeList({ cards: [makeCard({ start: pastStart, due: "Today" })] })];
+    const lists = [makeList({ cards: [makeCard({ startDate: pastStart, dueDate: dayN(0) })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     const bar = screen.getByTestId("tl-bar");
     // We verify the bar exists (clip is CSS, not inline style in jsdom)
@@ -125,7 +123,7 @@ describe("TimelineView", () => {
 
   test("TL8 bar ending after day 29 still renders (clipped by CSS)", () => {
     const farDue = dayN(35);
-    const lists = [makeList({ cards: [makeCard({ due: farDue })] })];
+    const lists = [makeList({ cards: [makeCard({ dueDate: farDue })] })];
     render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
     // end beyond day 29 means end >= 0 && start < 30 → still shows
     // (the clampDay happens in drag preview, not in static rendering)
@@ -138,9 +136,25 @@ describe("TimelineView", () => {
     expect(() => screen.queryByTestId("tl-bar")).not.toThrow();
   });
 
+  test("TL8b startDate-only card does not render a timeline bar", () => {
+    const lists = [makeList({ cards: [makeCard({ startDate: dayN(0) })] })];
+    render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByTestId("tl-bar")).not.toBeInTheDocument();
+  });
+
+  test("TL8c startDate > dueDate fails soft with no timeline bar", () => {
+    const lists = [
+      makeList({
+        cards: [makeCard({ startDate: dayN(3), dueDate: dayN(1) })],
+      }),
+    ];
+    render(<TimelineView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByTestId("tl-bar")).not.toBeInTheDocument();
+  });
+
   test("TL9 DnD: resize-r +2 days → ONE updateCard with new due (atomic)", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -163,14 +177,14 @@ describe("TimelineView", () => {
     const [lId, cId, patch] = updateCard.mock.calls[0] as [string, string, Partial<BoardCardData>];
     expect(lId).toBe("lx");
     expect(cId).toBe("cx");
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
-    expect(patch.dueEn).toBeUndefined();
-    expect(patch.dueLate).toBe(false);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.due).toBeUndefined();
+    expect(patch.dueLate).toBeUndefined();
   });
 
   test("TL10 DnD: move handle +3 days → updateCard with both start+due moved", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", start: "Today", due: dayN(3) });
+    const card = makeCard({ id: "cx", startDate: dayN(0), dueDate: dayN(3) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -188,13 +202,13 @@ describe("TimelineView", () => {
 
     expect(updateCard).toHaveBeenCalledOnce();
     const patch = updateCard.mock.calls[0]![2] as Partial<BoardCardData>;
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
-    expect(patch.start).toMatch(/^\d+\/\d+$/);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.startDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   test("TL11 DnD: resize-l +1 day → updateCard with start changed only", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", start: "Today", due: dayN(5) });
+    const card = makeCard({ id: "cx", startDate: dayN(0), dueDate: dayN(5) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -212,12 +226,12 @@ describe("TimelineView", () => {
 
     expect(updateCard).toHaveBeenCalledOnce();
     const patch = updateCard.mock.calls[0]![2] as Partial<BoardCardData>;
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   test("TL12 mouseup WITHOUT mousemove → NO updateCard call", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -236,7 +250,7 @@ describe("TimelineView", () => {
 
   test("TL13 DnD past day 29 clamps due to day 29", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: dayN(25) });
+    const card = makeCard({ id: "cx", dueDate: dayN(25) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -254,12 +268,12 @@ describe("TimelineView", () => {
 
     expect(updateCard).toHaveBeenCalledOnce();
     const patch = updateCard.mock.calls[0]![2] as Partial<BoardCardData>;
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   test("TL14 DnD before day 0 clamps start to 0", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -277,12 +291,12 @@ describe("TimelineView", () => {
 
     expect(updateCard).toHaveBeenCalledOnce();
     const patch = updateCard.mock.calls[0]![2] as Partial<BoardCardData>;
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   test("TL15 window-level pointerup commits the preview", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -304,7 +318,7 @@ describe("TimelineView", () => {
 
   test("TL16 pointerup without preview (no pointermove) → no commit", async () => {
     const updateCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<TimelineView lists={lists} lang="en" updateCard={updateCard} />);
     stubTracks();
@@ -322,7 +336,7 @@ describe("TimelineView", () => {
 
   test("TL17 clicking bar body calls onOpenCard", () => {
     const onOpenCard = vi.fn();
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: dayN(0) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(
       <TimelineView

@@ -304,3 +304,69 @@ Existing 135 tests in `packages/plugin-web-board-workspaces/src/__tests__/**` MU
 | G3a | All NEW tests (38 cases) PASS individually |
 | G3b | Existing 135 tests PASS unchanged (no regression) |
 
+## §7 — 2026-06-03 Extension Tests (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-AUTO-1 | Daily mount automation persists urgent labels, due-date sort, and Done completion through `xai_boards_v2`. |
+| | BWM-AUTO-2 | Manual toolbar button reruns presets after a same-day due edit. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`
+
+## §8 — 2026-06-03 Extension Tests (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-INTEGRATIONS-1 | Provider link attachments persist integration metadata and render the provider label. |
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-DETAIL-4 | Invalid integration URLs still do not mutate card attachment state. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`
+- local `/app/board` browser smoke
+
+## §10 — 2026-06-03 Extension Tests (Project module row #17 — Board permissions)
+
+> Canonical row docs live in
+> `packages/xai-web-board-permissions/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-PERM-1 | Visibility toggle defaults to Private, persists Shared, then persists Private. |
+| `__tests__/ShareModal.test.tsx` | SM-10 | Visibility note and event payload include board visibility. |
+| `__tests__/shareContract.test.ts` | SCON-3 | Mock share envelope includes supplied visibility. |
+
+Acceptance gate:
+
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- PASS targeted board-workspaces tests: 69/69
+- PASS `pnpm --filter @repo/plugin-web-board-workspaces test`: 223/223
+- PASS local Chrome smoke at `http://localhost:3001/app/board`
+
+## §9 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in
+> `packages/xai-web-board-comments-activity/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-COMMENTS-1 | Card detail adds comment entries with author metadata and persists them in `xai_boards_v2`. |
+| `__tests__/BoardWorkspacesModule.test.tsx` | BWM-COMMENTS-2 | Existing note entries remain valid timeline rows. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck`
+- `pnpm --filter @repo/plugin-web-board-workspaces lint`
+- `pnpm --filter @repo/plugin-web-board-workspaces test`
+- local `/app/board` browser smoke

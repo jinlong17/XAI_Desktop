@@ -65,9 +65,37 @@ export const STR_BOTTOM_SWITCHER = {
 export const STR_HEADER = {
   overview: { en: "Overview", zh: "总览" },
   filter: { en: "Filter", zh: "筛选" },
+  archived: { en: "Archived", zh: "已归档" },
+  automation: { en: "Automate", zh: "自动化" },
+  private: { en: "Private", zh: "私有" },
+  shared: { en: "Shared", zh: "共享" },
   share: { en: "Share", zh: "分享" },
   totalSuffix: { en: "cards", zh: "张卡片" },
   viewBoard: { en: "Board", zh: "看板" },
+} as const;
+
+export const STR_ARCHIVED_LISTS = {
+  title: { en: "Archived lists", zh: "已归档列" },
+  empty: { en: "No archived lists", zh: "暂无已归档列" },
+  restore: { en: "Restore", zh: "恢复" },
+  deletePermanent: { en: "Delete", zh: "删除" },
+  deleteConfirm: {
+    en: "Permanently delete this archived list and its cards?",
+    zh: "永久删除该归档列及其卡片？",
+  },
+  cards: { en: "cards", zh: "张卡片" },
+} as const;
+
+export const STR_ARCHIVED_CARDS = {
+  toolbar: { en: "Archived cards", zh: "已归档卡片" },
+  title: { en: "Archived cards", zh: "已归档卡片" },
+  empty: { en: "No archived cards", zh: "暂无已归档卡片" },
+  restore: { en: "Restore", zh: "恢复" },
+  deletePermanent: { en: "Delete", zh: "删除" },
+  deleteConfirm: {
+    en: "Permanently delete this archived card?",
+    zh: "永久删除该归档卡片？",
+  },
 } as const;
 
 /** Bilingual day-name table (Mon-first localized labels). */

@@ -178,3 +178,105 @@ Existing 104 tests in `packages/plugin-web-board-core/src/__tests__/**` MUST con
 | G1 | `pnpm --filter @repo/plugin-web-board-core test` → 104 baseline + 4 = 108 PASS |
 | G1a | All NEW tests (BCV1..BCV4) PASS individually |
 | G1b | Existing 100 isBoardArray cases PASS unchanged |
+
+---
+
+## §7 — 2026-06-03 Extension Tests (Project module row #13 — Board export/import)
+
+> APPEND-ONLY. Canonical row docs live in
+> `packages/xai-web-board-export-import/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/exportImport.test.ts` | EI1 | Legacy `Board[]` export creates a v1 payload and envelope-backed storage value. |
+| | EI2 | Payload includes board/list/card logical entities. |
+| | EI3 | Existing v1 envelope export preserves storage value identity. |
+| | EI4 | Malformed or empty storage fails closed. |
+| | EI5 | Generated payload round-trips through `readBoardExportPayload`. |
+| | EI6 | Reader rejects bad kind, schema, storage, and logical entity shape. |
+| | EI7 | Import helper returns a validated storage value for `xai_boards_v2` writes. |
+| | EI8 | Import helper rejects invalid payloads without throwing. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`
+
+## §11 — 2026-06-03 Extension Tests (Project module row #17 — Board permissions)
+
+> Canonical row docs live in `packages/xai-web-board-permissions/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/boardVisibility.test.ts` | BV-1 | Closed visibility set plus guard acceptance/rejection. |
+| | BV-2 | Missing legacy visibility resolves to `private`. |
+| | BV-3 | Setting `shared` clones and no-op preserves reference. |
+| | BV-4 | Setting `private` on a legacy private board is a no-op. |
+| `__tests__/isBoardArray.test.ts` | V6c | Guard accepts `private`/`shared` and rejects malformed visibility. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports visibility constants and helpers. |
+
+Acceptance gate:
+
+- PASS `pnpm --filter @repo/plugin-web-board-core typecheck`
+- PASS `pnpm --filter @repo/plugin-web-board-core lint`
+- PASS targeted board-core tests: 30/30
+- PASS `pnpm --filter @repo/plugin-web-board-core test`: 188/188
+
+## §10 — 2026-06-03 Extension Tests (Project module row #16 — Comments/activity)
+
+> Canonical row docs live in
+> `packages/xai-web-board-comments-activity/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/activityEntries.test.ts` | ACT-1 | Comment helper trims body and author metadata. |
+| | ACT-2 | Note helper creates backward-compatible note entries. |
+| | ACT-3 | Helpers reject missing ids, empty bodies, and missing timestamps. |
+| `__tests__/isBoardArray.test.ts` | V8b/V8bf | Guard accepts valid comments and rejects malformed activity entries. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports activity helper surface. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`
+
+## §9 — 2026-06-03 Extension Tests (Project module row #15 — Board integrations)
+
+> Canonical row docs live in `packages/xai-web-board-integrations/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/integrationAdapters.test.ts` | IA1 | Provider catalog includes GCal, GitHub, Linear, Drive, and generic Link. |
+| | IA2 | Provider id guard accepts known ids and rejects unknown ids. |
+| | IA3 | Helper creates normalized provider-backed attachments. |
+| | IA4 | Helper rejects missing ids, unknown providers, and non-HTTP URLs. |
+| | IA5 | Provider lookup returns catalog metadata. |
+| `__tests__/isBoardArray.test.ts` | V8b/V8bb | Guard accepts valid attachment integration source and rejects malformed provider metadata. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports integration provider catalog and helper surface. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`
+
+## §8 — 2026-06-03 Extension Tests (Project module row #14 — Automation Lite)
+
+> Canonical row docs live in `packages/xai-web-board-automation-lite/docs/`.
+
+| File | Suite | Cases |
+|---|---|---|
+| `__tests__/automationLite.test.ts` | AUTO-1 | Done list completion sets `completedAt` and completes checklist progress. |
+| | AUTO-2 | Due-soon active non-Done cards receive `urgent` once; overdue/later/Done cards are skipped. |
+| | AUTO-3 | Active non-Done cards sort by valid due date while archived card positions are preserved. |
+| | AUTO-4 | No-op input returns the same list reference and zero stats. |
+| `__tests__/isBoardArray.test.ts` | V8be | Guard accepts additive `completedAt` strings and rejects malformed values. |
+| `__tests__/index-barrel.test.ts` | IB1 | Barrel exports Automation Lite constants and helper. |
+
+Acceptance gate:
+
+- `pnpm --filter @repo/plugin-web-board-core typecheck`
+- `pnpm --filter @repo/plugin-web-board-core lint`
+- `pnpm --filter @repo/plugin-web-board-core test`

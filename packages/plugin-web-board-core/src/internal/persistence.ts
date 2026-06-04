@@ -5,8 +5,8 @@
  */
 
 import type { Board } from "../types.js";
-import { isBoardArray } from "./isBoardArray.js";
 import { makeDefaultBoards } from "./seed/board-data.js";
+import { readBoardStorage } from "./storageContract.js";
 
 /**
  * Read boards from a `usePref("xai_boards_v2")` raw value.
@@ -16,15 +16,14 @@ import { makeDefaultBoards } from "./seed/board-data.js";
  *  - empty array → seed (a freshly persisted empty array indicates wipe; we
  *    refuse to render a "no boards" empty state in row #7)
  *  - valid `Board[]` → identity-preserved (no copy)
+ *  - valid v1 storage envelope → returns `envelope.boards`
  */
 export function loadBoardsOrDefault(raw: unknown): Board[] {
-  if (!isBoardArray(raw)) {
+  const read = readBoardStorage(raw);
+  if (read.status === "invalid") {
     return makeDefaultBoards();
   }
-  if (raw.length === 0) {
-    return makeDefaultBoards();
-  }
-  return raw;
+  return read.boards;
 }
 
 /**

@@ -177,3 +177,71 @@ packages/plugin-web-*/     → npm-namespace siblings of xai-web-* (same code, d
 - §4 #4/#5/#6 apply to desktop only — web replaces with persistence-contract + event-bus + manifest-optional shim pattern.
 - §5/§6/§7/§9 are desktop-only.
 - §10 新建 Plugin 标准路径 is desktop-only; web packages use a parallel template (full spec pending ADR-0009).
+
+### 12.4 Web Project / Board module structure (2026-06-03)
+
+The current Web Project surface is the `/app/board` route. It is implemented as
+a board module family, not by the desktop `@repo/plugin-project` package.
+
+```mermaid
+flowchart LR
+  A["apps/web /app/board route"] --> B["plugin-web-board-workspaces"]
+  B --> C["plugin-web-board-core"]
+  B --> D["plugin-web-board-views"]
+  B --> K["plugin-web-tasks"]
+  M["plugin-web-calendar"] --> C
+  C --> E["Board/List/Card model + Kanban"]
+  D --> F["Table/Calendar/Dashboard/Timeline/Map"]
+  B --> G["Switcher/Creator/Inbox/Planner/Filter/Task link/Share stub"]
+  K --> L["xai_task_cols linked task records"]
+  H["plugin-project"] -. "desktop/control reference only" .-> E
+  E --> I["shipped detail + dates + CRUD + checklist + storage contract"]
+  I --> J["Board -> Calendar read-only feed shipped"]
+  J --> N["per-board saved filters shipped"]
+  N --> O["explicit mock share contract shipped"]
+  O --> P["responsive smoke shipped"]
+  P --> Q["Board export/import data contract shipped"]
+  Q --> R["Automation Lite presets shipped"]
+  R --> S["Integration adapter links shipped"]
+  S --> T["Comments/activity shipped"]
+  T --> U["Private/shared visibility shipped"]
+  U --> V["future real ACL + active export/import UI"]
+```
+
+Ownership rules:
+
+- `plugin-web-board-core` owns the current Web board/list/card schema, Kanban
+  rendering, drag flow, and `xai_boards_v2` / `xai_active_board` persistence.
+- `plugin-web-board-views` owns alternate board projections: Table, Calendar,
+  Dashboard, Timeline, and Map.
+- `plugin-web-board-workspaces` owns the product shell around boards: switcher,
+  creator, workspace chips, Inbox, Planner, filters, Board-card to Task link UI,
+  per-board saved filter preference state, the explicit mock share modal, and
+  responsive containment for the Board toolbar/detail shell.
+- `plugin-web-board-core` also owns the Board export/import data contract:
+  payload helpers that validate `xai_boards_v2`, preserve v1 storage envelopes,
+  and project board/list/card logical entities.
+- `plugin-web-board-core` owns Automation Lite preset evaluation. The active
+  Web board calls that pure helper through `plugin-web-board-workspaces` for
+  browser-local daily runs, manual reruns, and move-to-Done completion.
+- `plugin-web-board-core` owns the Board integration adapter metadata contract:
+  provider catalog, optional attachment source metadata, URL validation, and
+  pure helper creation. Real third-party API sync remains outside this package.
+- `plugin-web-board-workspaces` owns the card-detail integration link UI that
+  writes provider-labeled links into existing `BoardCard.attachments[]`.
+- `plugin-web-board-core` owns the Board comment/activity entry contract:
+  `note | comment`, author metadata, pure creation helpers, and runtime guard
+  validation.
+- `plugin-web-board-workspaces` owns the visible card-detail Comments &
+  Activity timeline. Mention notifications and realtime collaboration are
+  future work.
+- `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
+  helper surface used to create deterministic linked tasks from Board cards.
+- `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage
+  helpers to render a read-only derived Board-card date feed. Calendar must not
+  own or duplicate Board card storage.
+- `@repo/plugin-project` remains the desktop/control Project capability package
+  and parity reference; Web code must not import its internals until a dedicated
+  Web runtime contract is accepted.
+- Formal Project-module follow-up work is tracked in
+  `docs/workflow/roadmap/xai-web-project-module.md`.

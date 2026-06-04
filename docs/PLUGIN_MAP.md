@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-06-02
+> 最后更新: 2026-06-04
 
 ---
 
@@ -107,6 +107,18 @@ Current rule: Web new work is permitted on the `web` line; P1/G1 native foundati
 
 > Browser-only business plugins for the XAI Web Console. Each registers one slot in `apps/web/src/routes/modules/shellRegistrations.tsx`.
 > Consumers must treat In-Dev rows as mock-first until the row reaches Stable.
+>
+> **Project module clarification (merged to `web` 2026-06-04):** the current Web
+> Project surface is `/app/board`, implemented by the
+> `@repo/plugin-web-board-core`, `@repo/plugin-web-board-views`, and
+> `@repo/plugin-web-board-workspaces` family. The follow-up manifest
+> `docs/workflow/roadmap/xai-web-project-module.md` is complete: card detail,
+> typed dates, list/card/checklist CRUD, storage/export contract, task link,
+> calendar feed, saved filters, mock share contract, responsive smoke,
+> Automation Lite, provider-labeled integrations, comments/activity, and
+> private/shared visibility are SHIPPED. Real ACL/share-token backend, active
+> export/import UI, real third-party sync, custom rule builder, and realtime
+> collaboration remain future work.
 
 | Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
 |---------|------|------|------|------|---------|

@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
 import type { UserCalEvent } from "./internal/eventStore/types.js";
+import type { CalendarEventsByDate } from "./internal/boardCalendarFeed.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
 import { mergeEventsForWindow } from "./internal/eventStore/mergeEventsForViewport.js";
@@ -22,6 +23,7 @@ export interface DayViewProps {
   events: CalEventsByDay;
   todayKey: string;
   lang: Lang;
+  feedEventsByDate?: CalendarEventsByDate;
   /**
    * User-created events to merge with the fixture (event-create extension).
    * P3: accepted but not yet wired into rendering (P4 lands integration).
@@ -40,6 +42,7 @@ export function DayView({
   events,
   todayKey,
   lang,
+  feedEventsByDate = {},
   userEvents = {},
   onUserEventClick,
 }: DayViewProps): JSX.Element {
@@ -63,17 +66,22 @@ export function DayView({
   const isZh = lang === "zh";
   const dayName = isZh ? DOW_NAMES_ZH[dow] : DOW_NAMES_EN[dow];
   const dayLabel = `${dayName ?? ""} ${day}`;
-  const mergedEventsByDateKey = useMemo(
-    () =>
-      mergeEventsForWindow(
-        events,
-        { year, month },
-        userEvents,
-        activeDate,
-        activeDate,
-      ),
-    [events, year, month, userEvents, activeDate],
-  );
+  const mergedEventsByDateKey = useMemo(() => {
+    const merged = mergeEventsForWindow(
+      events,
+      { year, month },
+      userEvents,
+      activeDate,
+      activeDate,
+    );
+    return {
+      ...merged,
+      [activeDate]: [
+        ...(merged[activeDate] ?? []),
+        ...(feedEventsByDate[activeDate] ?? []),
+      ],
+    };
+  }, [events, year, month, userEvents, activeDate, feedEventsByDate]);
 
   return (
     <div ref={containerRef} data-testid="cal-day-view">

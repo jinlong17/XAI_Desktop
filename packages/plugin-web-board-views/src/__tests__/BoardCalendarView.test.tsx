@@ -8,6 +8,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BoardCalendarView } from "../BoardCalendarView.js";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { isoDateFromOffset } from "@repo/plugin-web-board-core";
 import { makeDataTransferMock } from "./_helpers/dataTransfer.js";
 
 function makeCard(overrides: Partial<BoardCardData> = {}): BoardCardData {
@@ -30,10 +31,10 @@ function makeList(overrides: Partial<BoardListData> = {}): BoardListData {
 
 // Determine current month/day for deterministic tests
 const TODAY = new Date();
-const CURRENT_MONTH = TODAY.getMonth() + 1;
 const TODAY_DATE = TODAY.getDate();
-const TOMORROW_DATE = TODAY_DATE + 1;
-const TOMORROW_DUE = `${CURRENT_MONTH}/${TOMORROW_DATE}`;
+const TOMORROW = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 1);
+const TOMORROW_DATE = TOMORROW.getDate();
+const TOMORROW_DUE_DATE = isoDateFromOffset(1, TODAY);
 
 describe("BoardCalendarView", () => {
   test("BC1 renders 7 weekday headers (Mon–Sun)", () => {
@@ -53,20 +54,28 @@ describe("BoardCalendarView", () => {
     expect(cells.length).toBe(daysInMonth);
   });
 
-  test("BC3 cards with due === tomorrow appear in the correct day cell", () => {
-    const card = makeCard({ id: "c1", due: TOMORROW_DUE });
+  test("BC3 cards with dueDate === tomorrow appear in the correct day cell", () => {
+    const card = makeCard({ id: "c1", dueDate: TOMORROW_DUE_DATE });
     const lists = [makeList({ id: "l1", cards: [card] })];
     render(<BoardCalendarView lists={lists} lang="en" updateCard={() => {}} />);
     const cell = screen.getByTestId(`cal-cell-${TOMORROW_DATE}`);
     expect(cell.textContent).toContain("Test Card");
   });
 
-  test("BC4 cards with due === 'Today' appear in today's cell", () => {
+  test("BC4 recoverable legacy due === 'Today' appears in today's cell", () => {
     const card = makeCard({ id: "c1", due: "Today" });
     const lists = [makeList({ id: "l1", cards: [card] })];
     render(<BoardCalendarView lists={lists} lang="en" updateCard={() => {}} />);
     const cell = screen.getByTestId(`cal-cell-${TODAY_DATE}`);
     expect(cell.textContent).toContain("Test Card");
+  });
+
+  test("BC4b startDate-only cards do not appear in Calendar placement", () => {
+    const card = makeCard({ id: "c1", startDate: isoDateFromOffset(0, TODAY) });
+    const lists = [makeList({ id: "l1", cards: [card] })];
+    render(<BoardCalendarView lists={lists} lang="en" updateCard={() => {}} />);
+    expect(screen.queryByText("Test Card")).not.toBeInTheDocument();
+    expect(screen.getByTestId("cal-empty")).toBeInTheDocument();
   });
 
   test("BC5 cell with >3 cards shows +N more indicator", () => {
@@ -79,7 +88,7 @@ describe("BoardCalendarView", () => {
   });
 
   test("BC6 dragstart on a card sets dataTransfer to JSON {cardId, listId}", () => {
-    const card = makeCard({ id: "cx", due: "Today" });
+    const card = makeCard({ id: "cx", dueDate: isoDateFromOffset(0, TODAY) });
     const lists = [makeList({ id: "lx", cards: [card] })];
     render(<BoardCalendarView lists={lists} lang="en" updateCard={() => {}} />);
     const cardEl = screen.getByTestId("cal-card");
@@ -99,7 +108,7 @@ describe("BoardCalendarView", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
-  test("BC8 drop on a day calls updateCard with correct due patch (hard constraint)", () => {
+  test("BC8 drop on a day calls updateCard with correct ISO dueDate patch", () => {
     const updateCard = vi.fn();
     const card = makeCard({ id: "cx", due: "Today" });
     const lists = [makeList({ id: "lx", cards: [card] })];
@@ -119,9 +128,9 @@ describe("BoardCalendarView", () => {
     const [lId, cId, patch] = updateCard.mock.calls[0] as [string, string, Partial<BoardCardData>];
     expect(lId).toBe("lx");
     expect(cId).toBe("cx");
-    expect(patch.due).toMatch(/^\d+\/\d+$/);
-    expect(patch.dueEn).toBeUndefined();
-    expect(patch.dueLate).toBe(false);
+    expect(patch.dueDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(patch.due).toBeUndefined();
+    expect(patch.dueLate).toBeUndefined();
   });
 
   test("BC9 drop with malformed dataTransfer payload is a no-op", () => {

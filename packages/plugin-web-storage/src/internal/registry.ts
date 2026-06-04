@@ -86,6 +86,7 @@ export type TaskColsState = Record<string, boolean>;
 export type BoardsState = unknown;
 export type BoardPanelState = unknown;
 export type InboxCard = unknown;
+export type BoardFilterByIdState = Record<string, unknown>;
 export type DashWidgetId = string;
 export type AiConvo = unknown;
 export type PomodoroSession = unknown;
@@ -423,6 +424,18 @@ export const PREF_REGISTRY = {
     owner: "xai-web-board-views row #8",
     category: "module",
   } satisfies PrefEntry<Record<string, string>>,
+
+  // ---- Board saved filters (§S8 — declared by xai-web-board-saved-filters #10) ----
+  // Shape: Record<boardId, SavedBoardFilter>. Canonical declarations live in
+  // @repo/plugin-web-board-workspaces. Defaults to {} (no saved filters).
+  xai_board_filter_by_id: {
+    key: "xai_board_filter_by_id",
+    codec: "json",
+    default: {} as BoardFilterByIdState,
+    schemaVersion: 1,
+    owner: "xai-web-board-saved-filters",
+    category: "module",
+  } satisfies PrefEntry<BoardFilterByIdState>,
 
   // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
   // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.

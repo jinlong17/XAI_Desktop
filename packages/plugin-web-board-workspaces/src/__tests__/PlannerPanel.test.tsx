@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import type { BoardListData } from "@repo/plugin-web-board-core";
+import type { BoardCardData, BoardListData } from "@repo/plugin-web-board-core";
 import { PlannerPanel, computePlannerSlots } from "../PlannerPanel.js";
 
 // Fixed reference date — 2026-05-22 (Friday)
@@ -19,10 +19,16 @@ const mkList = (over: Partial<BoardListData>): BoardListData => ({
   ...over,
 });
 
-const mkCard = (id: string, title: string, due: string | null = null) => ({
+const mkCard = (
+  id: string,
+  title: string,
+  due: string | null = null,
+  extra: Partial<BoardCardData> = {},
+) => ({
   id,
   title: { en: title, zh: title + " ZH" },
   due: due ?? undefined,
+  ...extra,
 });
 
 describe("PlannerPanel (PP1..PP12)", () => {
@@ -141,5 +147,19 @@ describe("PlannerPanel (PP1..PP12)", () => {
     const lists = [mkList({ cards: [mkCard("c1", "Today by zh", "今天")] })];
     render(<PlannerPanel lists={lists} lang="zh" now={NOW} />);
     expect(screen.getByText("Today by zh ZH")).toBeInTheDocument();
+  });
+
+  it("matches typed dueDate as today and ignores dueLate-only cards", () => {
+    const lists = [
+      mkList({
+        cards: [
+          mkCard("c1", "Typed today", null, { dueDate: "2026-05-22" }),
+          mkCard("c2", "Raw late only", null, { dueLate: true }),
+        ],
+      }),
+    ];
+    render(<PlannerPanel lists={lists} lang="en" now={NOW} />);
+    expect(screen.getByText("Typed today")).toBeInTheDocument();
+    expect(screen.queryByText("Raw late only")).not.toBeInTheDocument();
   });
 });

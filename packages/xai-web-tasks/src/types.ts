@@ -46,6 +46,13 @@ export interface TaskTitleBundle {
   readonly zh: string;
 }
 
+export interface BoardTaskLinkSource {
+  readonly type: "board-card";
+  readonly boardId: string;
+  readonly listId: string;
+  readonly cardId: string;
+}
+
 // ---------------------------------------------------------------------------
 // TaskCard — immutable card; moves create new objects via the reducer
 // ---------------------------------------------------------------------------
@@ -67,6 +74,8 @@ export interface TaskCard {
   readonly priority?: TaskPriority;
   /** Freeform note edited from the detail panel. */
   readonly notes?: string;
+  /** Optional source reference used by Board card -> Task linking. */
+  readonly source?: BoardTaskLinkSource;
   /** Optional date display string in EN format ("7/31", "Jun 14", etc.). */
   readonly date?: string;
   /** Optional date display string in ZH format ("6 月 14 日", etc.). */

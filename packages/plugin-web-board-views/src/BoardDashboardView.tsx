@@ -7,7 +7,7 @@
  */
 
 import type { BoardListData } from "@repo/plugin-web-board-core";
-import { PM_LABELS } from "@repo/plugin-web-board-core";
+import { PM_LABELS, getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 
 export interface BoardDashboardViewProps {
@@ -44,10 +44,10 @@ function KpiCard({ label, value, color }: KpiProps) {
 export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
   const total = lists.reduce((n, l) => n + l.cards.length, 0);
   const allCards = lists.flatMap((l) => l.cards);
-  const overdue = allCards.filter((c) => c.dueLate === true).length;
-  const dueToday = allCards.filter(
-    (c) => c.due === "Today" || c.due === "今天",
-  ).length;
+  const now = new Date();
+  const dateMetas = allCards.map((c) => getBoardCardDateMeta(c, { now }));
+  const overdue = dateMetas.filter((meta) => meta.isOverdue).length;
+  const dueToday = dateMetas.filter((meta) => meta.isDueToday).length;
 
   // Per-label counts
   const labelCounts: Record<string, number> = {};

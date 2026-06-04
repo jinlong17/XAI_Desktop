@@ -20,6 +20,7 @@ export { tasksWebModuleRegistration } from "./registration.js";
 
 // ---- Public types ------------------------------------------------------------
 export type {
+  BoardTaskLinkSource,
   TaskCard,
   TaskCol,
   BucketId,
@@ -27,6 +28,19 @@ export type {
   TaskTitleBundle,
   NewTaskDraft,
 } from "./types.js";
+
+export {
+  boardLinkedTaskId,
+  bucketIdForBoardDueDate,
+  findBoardLinkedTask,
+  loadTaskColsOrSeed,
+  taskCardFromBoardLink,
+  upsertBoardLinkedTask,
+} from "./taskLink.js";
+export type {
+  BoardLinkedTaskInput,
+  BoardLinkedTaskLookup,
+} from "./taskLink.js";
 
 // ---- AI tool layer subscriber (additive — P4 xai-web-ai-tool-layer) ----------
 export { useTaskCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js";

@@ -75,11 +75,26 @@ export type { BoardCreatorProps } from "./BoardCreator.js";
 export { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 export type { StatusOverviewBannerProps } from "./StatusOverviewBanner.js";
 
+export { ArchivedListsManager } from "./ArchivedListsManager.js";
+export type { ArchivedListsManagerProps } from "./ArchivedListsManager.js";
+
+export { ArchivedCardsManager } from "./ArchivedCardsManager.js";
+export type { ArchivedCardsManagerProps } from "./ArchivedCardsManager.js";
+
 export { InboxPanel } from "./InboxPanel.js";
 export type { InboxPanelProps } from "./InboxPanel.js";
 
 export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
 export type { PlannerPanelProps } from "./PlannerPanel.js";
+
+export {
+  BoardCardDetailModal,
+  BoardCardDetailSurface,
+} from "./BoardCardDetailModal.js";
+export type {
+  BoardCardDetailModalProps,
+  BoardCardDetailSurfaceProps,
+} from "./BoardCardDetailModal.js";
 
 // ---- gap-closure row #6 additions ----------------------------------------
 export { FilterPopover } from "./FilterPopover.js";

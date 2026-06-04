@@ -144,7 +144,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
       };
       onSave(draft, bucket);
     },
-    [title, tag, bucket, withDate, onSave],
+    [title, tag, listId, priority, bucket, withDate, onSave],
   );
 
   const handleCancel = useCallback(

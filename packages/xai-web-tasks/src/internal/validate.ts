@@ -61,6 +61,15 @@ export function isTaskCard(value: unknown): value is TaskCard {
   if ("notes" in v && v["notes"] !== undefined) {
     if (typeof v["notes"] !== "string") return false;
   }
+  if ("source" in v && v["source"] !== undefined) {
+    const source = v["source"];
+    if (!source || typeof source !== "object") return false;
+    const sourceObj = source as Record<string, unknown>;
+    if (sourceObj["type"] !== "board-card") return false;
+    if (typeof sourceObj["boardId"] !== "string" || sourceObj["boardId"].length === 0) return false;
+    if (typeof sourceObj["listId"] !== "string" || sourceObj["listId"].length === 0) return false;
+    if (typeof sourceObj["cardId"] !== "string" || sourceObj["cardId"].length === 0) return false;
+  }
   if ("date" in v && v["date"] !== undefined) {
     if (typeof v["date"] !== "string") return false;
   }

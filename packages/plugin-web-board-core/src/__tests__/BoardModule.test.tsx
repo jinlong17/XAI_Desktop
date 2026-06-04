@@ -2,6 +2,10 @@ import { describe, expect, test } from "vitest";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { BoardModule } from "../BoardModule.js";
 import { makeDefaultBoards } from "../internal/seed/board-data.js";
+import {
+  createBoardStorageEnvelope,
+  isBoardStorageEnvelopeV1,
+} from "../internal/storageContract.js";
 
 describe("BoardModule", () => {
   test("BM1 first mount with empty localStorage renders boards[0].name.en", () => {
@@ -81,5 +85,25 @@ describe("BoardModule", () => {
     expect(raw).not.toBe(null);
     // Parsed value should be an array.
     expect(Array.isArray(JSON.parse(raw!))).toBe(true);
+  });
+
+  test("BM9 mount from v1 envelope and add-card preserves envelope storage", () => {
+    const seed = makeDefaultBoards();
+    localStorage.setItem(
+      "xai_boards_v2",
+      JSON.stringify(createBoardStorageEnvelope(seed)),
+    );
+
+    render(<BoardModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("add-card-btn")[0]!);
+    const ta = screen.getByTestId("card-composer-input");
+    fireEvent.change(ta, { target: { value: "Envelope card" } });
+    fireEvent.keyDown(ta, { key: "Enter" });
+
+    const raw = localStorage.getItem("xai_boards_v2");
+    expect(raw).toBeTruthy();
+    const parsed = JSON.parse(raw!);
+    expect(isBoardStorageEnvelopeV1(parsed)).toBe(true);
+    expect(JSON.stringify(parsed)).toContain("Envelope card");
   });
 });

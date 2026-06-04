@@ -70,6 +70,15 @@ const mockWipeRegisteredIDB = vi.mocked(wipeRegisteredIDB);
 const mockRemovePref = vi.mocked(removePref);
 const mockUseWebAuthSession = vi.mocked(useWebAuthSession);
 
+const BOARD_WIPE_KEYS = [
+  "xai_boards_v2",
+  "xai_active_board",
+  "xai_board_panels",
+  "xai_board_inbox",
+  "xai_board_view_by_id",
+  "xai_board_filter_by_id",
+] as const;
+
 function createMockSupabaseClient(): SupabaseClient {
   return {
     functions: { invoke: vi.fn(async () => ({ error: null, data: {} })) },
@@ -191,6 +200,13 @@ describe("useAccountDeleteOrchestrator — P3 (gap-closure row #9)", () => {
     expect(mockRemovePref).toHaveBeenCalledTimes(expectedKeys.length);
     for (const key of expectedKeys) {
       expect(mockRemovePref).toHaveBeenCalledWith(key);
+    }
+  });
+
+  it("DEL-WIPE-1B: Board export/import keys are included in the registry wipe set", () => {
+    const registryKeys = Object.keys(PREF_REGISTRY);
+    for (const key of BOARD_WIPE_KEYS) {
+      expect(registryKeys).toContain(key);
     }
   });
 
