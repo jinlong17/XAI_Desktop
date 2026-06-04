@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-card-crud |
 | Title | Web Project module P0 card CRUD slice - add card rename, archive/delete, and same-list reorder on `/app/board` while preserving shipped card detail, typed dates, and list CRUD |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-checklist-editor |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 21:28 PDT |
-| Blockers | None currently. |
+| Updated | 2026-06-03 21:31 PDT |
+| Blockers | None. Shipped locally and pushed for downstream roadmap rows. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #5 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
 | Write Scope | `docs/reviews/xai-web-board-card-crud/` + `packages/xai-web-board-card-crud/docs/` during planning. Runtime build scope is expected to stay inside `packages/plugin-web-board-{core,workspaces}` plus parity-only `plugin-web-board-views` if shared `BoardView` props change. |
@@ -120,7 +120,33 @@ Verification:
 
 ## Verify Notes
 
-Pending verify.
+PASS. Shipped.
+
+1. Implementation matches the row #5 contract: active card rename, same-list
+   move up/down, archive, archived-card restore, archived-only permanent delete,
+   active-card filtering, and card detail cleanup are all wired through
+   board-core helpers and the workspaces `writeLists(...)` path.
+2. Out-of-scope boundaries held: no route change, storage key, schemaVersion,
+   backend sync, checklist editor, comments, automations, integrations, or
+   cross-list exact insertion point was introduced.
+3. Package verification passed:
+   `pnpm --filter @repo/plugin-web-board-core lint && typecheck && test -- --run`
+   (`149/149`), `pnpm --filter @repo/plugin-web-board-views lint && typecheck && test -- --run`
+   (`131/131`), and `pnpm --filter @repo/plugin-web-board-workspaces lint && typecheck && test -- --run`
+   (`197/197`).
+4. Web verification passed: `pnpm --filter @repo/web check-types`,
+   `pnpm --filter @repo/web test -- --run` (`116/116`),
+   `pnpm --filter @repo/web build`, and post-build
+   `build-manifest.test.ts` (`2/2`).
+5. Live smoke passed on `http://localhost:3001/app/board`: `curl -I`
+   returned `HTTP 200`; Playwright Chromium screenshot saved to
+   `/tmp/xai-board-card-crud-smoke.png` and shows the board with card action
+   menus plus `Archived cards`.
+6. Residual non-blocking warnings remain pre-existing: React `act(...)` stderr
+   in older suites, BoardSwitcher nested-button hydration warning,
+   SubtleCrypto fallback logging, `xai_rail_order` unknown settings stderr,
+   Vite dynamic import warning for `plugin-web-ai-chat`, and large bundle chunk
+   warning.
 
 ## Work Log
 
@@ -130,3 +156,4 @@ Pending verify.
 | 2026-06-03 21:18 PDT | gpt-5 parent inline | Inline build P1 - added board-core card lifecycle contract: `archived?: boolean`, archived-card record type, card archived guard acceptance/rejection, active/archived card selectors, rename, same-list visible-order move, archive, restore, archived-only permanent delete helpers, barrel exports, and unit coverage. Verification: board-core lint PASS, typecheck PASS, test PASS (`146/146`, pre-existing React `act(...)` stderr warnings remain). | pending | P2 board card action UI |
 | 2026-06-03 21:24 PDT | gpt-5 parent inline | Inline build P2 - wired shared board-surface card actions: `BoardCard` action menu, rename form, move up/down, archive, propagation guard, `BoardList`/`BoardView` stable listId+cardId callback contract, core host, board-views parity host, workspaces host, and token/core CSS. Verification: board-core lint/typecheck/test PASS (`149/149`); board-views lint/typecheck/test PASS (`131/131`); board-workspaces lint PASS and typecheck PASS. Existing stderr warnings remain limited to prior React `act(...)` cases. | pending | P3 workspace archived-card manager |
 | 2026-06-03 21:28 PDT | gpt-5 parent inline | Inline build P3 - added workspace archived-card manager, active-card filtered render pipeline, restore/permanent-delete callbacks, active detail cleanup, public barrel export, and route-level integration coverage for rename/reorder/archive/restore/delete/table-hide. Verification: board-core lint/typecheck/test PASS (`149/149`); board-workspaces lint/typecheck/test PASS (`197/197`). Existing stderr warnings remain: BoardSwitcher nested button hydration, SubtleCrypto fallback, and React `act(...)` warnings in older suites. | pending | feature-verify |
+| 2026-06-03 21:31 PDT | gpt-5 parent inline | feature-verify + ship - PASS. Reran full package gates for board-core (`149/149`), board-views (`131/131`), and board-workspaces (`197/197`), then Web `check-types`, Web tests (`116/116`), production build, post-build manifest test (`2/2`), `git diff --check`, `/app/board` HTTP 200, and Playwright Chromium screenshot smoke at `/tmp/xai-board-card-crud-smoke.png`. Updated roadmap, PLUGIN_MAP, and this dev_log to SHIPPED. | db3c011, 71ddc20, 781cd24, b87d8de | xai-web-board-checklist-editor |
