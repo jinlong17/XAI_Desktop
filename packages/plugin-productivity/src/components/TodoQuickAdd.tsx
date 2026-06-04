@@ -22,8 +22,10 @@ export function TodoQuickAdd() {
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Add task"
         style={{
-          border: "1px solid #d1d5db",
+          background: "var(--bg-panel)",
+          border: "1px solid var(--border-1)",
           borderRadius: 8,
+          color: "var(--text-1)",
           flex: "1 1 220px",
           minHeight: 36,
           padding: "0 10px",
@@ -33,17 +35,17 @@ export function TodoQuickAdd() {
       <input
         aria-label="Due date"
         onChange={(event) => setDueDate(event.target.value)}
-        style={{ border: "1px solid #d1d5db", borderRadius: 8, minHeight: 36, padding: "0 10px" }}
+        style={{ background: "var(--bg-panel)", border: "1px solid var(--border-1)", borderRadius: 8, color: "var(--text-1)", minHeight: 36, padding: "0 10px" }}
         type="date"
         value={dueDate}
       />
-      <span style={{ color: "#6b7280", fontSize: 12, minWidth: 86 }}>{previewQuadrant ?? "auto"}</span>
+      <span style={{ color: "var(--text-2)", fontSize: 12, minWidth: 86 }}>{previewQuadrant ?? "auto"}</span>
       <button
         style={{
-          background: "#2563eb",
+          background: "var(--accent)",
           border: 0,
           borderRadius: 8,
-          color: "#ffffff",
+          color: "var(--text-on-accent)",
           cursor: "pointer",
           fontWeight: 700,
           minHeight: 36,

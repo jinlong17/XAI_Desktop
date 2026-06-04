@@ -1869,6 +1869,69 @@
   from { opacity: 0; transform: translate(-6px, 4px) scale(.96); }
   to   { opacity: 1; transform: translate(0, 0) scale(1); }
 }
+
+.xai-sign-out-dialog {
+  width: min(380px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  box-shadow: var(--shadow-3);
+}
+.xai-sign-out-dialog::backdrop {
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
+}
+.xai-sign-out-dialog__content {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+.xai-sign-out-dialog__title {
+  margin: 0;
+  color: var(--text-1);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.xai-sign-out-dialog__body {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+.xai-sign-out-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+.xai-sign-out-dialog__btn {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  background: var(--bg-panel-2);
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  font-weight: 650;
+}
+.xai-sign-out-dialog__btn:hover,
+.xai-sign-out-dialog__btn:focus-visible {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+  outline: none;
+}
+.xai-sign-out-dialog__btn--confirm {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--text-on-accent);
+}
+.xai-sign-out-dialog__btn--confirm:hover,
+.xai-sign-out-dialog__btn--confirm:focus-visible {
+  border-color: color-mix(in oklch, var(--red) 86%, black);
+  background: color-mix(in oklch, var(--red) 86%, black);
+}
 .avm-header { display: flex; align-items: center; gap: 10px; padding: 14px 14px 10px; }
 .avm-avatar { position: relative; width: 36px; height: 36px; border-radius: 999px; overflow: visible; }
 .avm-avatar svg { border-radius: 999px; overflow: hidden; display: block; }

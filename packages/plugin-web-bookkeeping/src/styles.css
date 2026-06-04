@@ -542,8 +542,8 @@
 }
 
 .bk-flag-chip.reimb {
-  background: oklch(94% 0.06 290);
-  color: oklch(50% 0.14 290);
+  background: color-mix(in oklch, var(--violet, oklch(60% 0.12 290)) 16%, var(--bg-panel-2, oklch(94% 0.06 290)));
+  color: var(--violet, oklch(60% 0.12 290));
 }
 
 .bk-list-wrap {

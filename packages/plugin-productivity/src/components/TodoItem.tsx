@@ -21,9 +21,10 @@ export function TodoItem({ todo, selected = false, onToggle, onSelect, onStartPo
     <article
       aria-current={selected ? "true" : undefined}
       style={{
-        background: selected ? "#eef2ff" : "#ffffff",
-        border: `1px solid ${selected ? "#818cf8" : "#e5e7eb"}`,
+        background: selected ? "var(--accent-soft)" : "var(--bg-panel)",
+        border: `1px solid ${selected ? "var(--accent)" : "var(--border-1)"}`,
         borderRadius: 8,
+        color: "var(--text-1)",
         display: "grid",
         gap: 8,
         padding: 10,
@@ -53,11 +54,11 @@ export function TodoItem({ todo, selected = false, onToggle, onSelect, onStartPo
         >
           <strong style={{ display: "block", textDecoration: done ? "line-through" : "none" }}>{todo.title}</strong>
           {todo.description ? (
-            <span style={{ color: "#6b7280", display: "block", fontSize: 12, marginTop: 3 }}>{todo.description}</span>
+            <span style={{ color: "var(--text-2)", display: "block", fontSize: 12, marginTop: 3 }}>{todo.description}</span>
           ) : null}
         </button>
       </div>
-      <footer style={{ alignItems: "center", color: "#6b7280", display: "flex", flexWrap: "wrap", fontSize: 12, gap: 8 }}>
+      <footer style={{ alignItems: "center", color: "var(--text-2)", display: "flex", flexWrap: "wrap", fontSize: 12, gap: 8 }}>
         <span>{statusLabel[todo.status]}</span>
         <span>{todo.priority}</span>
         {todo.dueDate ? <time dateTime={todo.dueDate}>{todo.dueDate}</time> : null}
@@ -65,10 +66,10 @@ export function TodoItem({ todo, selected = false, onToggle, onSelect, onStartPo
         <button
           onClick={() => onStartPomodoro?.(todo.id)}
           style={{
-            background: "#111827",
+            background: "var(--accent)",
             border: 0,
             borderRadius: 6,
-            color: "#ffffff",
+            color: "var(--text-on-accent)",
             cursor: "pointer",
             fontSize: 12,
             marginLeft: "auto",

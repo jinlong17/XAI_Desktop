@@ -1275,8 +1275,8 @@
 }
 .cdd-late-badge {
   font-size: var(--fs-xs);
-  background: oklch(92% 0.06 25);
-  color: oklch(42% 0.14 25);
+  background: var(--red-soft, oklch(92% 0.06 25));
+  color: var(--red, oklch(42% 0.14 25));
   border-radius: var(--r-sm);
   padding: 1px 5px;
   margin-left: 4px;

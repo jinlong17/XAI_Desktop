@@ -24,6 +24,10 @@
   --dash-widget-glass-dark-alpha: 0.18;
   --dash-widget-glass-dark-hover-alpha: 0.22;
   --dash-widget-glass-dark-border-alpha: 0.22;
+  --dash-control-bg: oklch(100% 0 0 / 0.62);
+  --dash-control-bg-hover: oklch(100% 0 0 / 0.9);
+  --dash-control-border: oklch(75% 0.018 215 / 0.36);
+  --dash-control-shadow: 0 4px 12px oklch(25% 0.02 220 / 0.1);
   --dash-card-bg:
     linear-gradient(
       145deg,
@@ -59,6 +63,10 @@
 }
 
 [data-theme="dark"] .module-dashboard {
+  --dash-control-bg: oklch(30% 0.014 220 / 0.72);
+  --dash-control-bg-hover: oklch(36% 0.016 220 / 0.88);
+  --dash-control-border: oklch(54% 0.018 220 / 0.38);
+  --dash-control-shadow: 0 8px 18px rgb(0 0 0 / 0.24);
   --dash-card-bg:
     linear-gradient(
       145deg,
@@ -87,6 +95,9 @@
     0 4px 12px rgb(0 0 0 / 0.22),
     inset 0 1px 0 rgb(255 255 255 / 0.14),
     inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 34%),
+    linear-gradient(180deg, var(--bg-app), color-mix(in oklch, var(--bg-app) 88%, black));
 }
 
 .module-dashboard .dash-head {
@@ -110,9 +121,9 @@
 }
 
 .module-dashboard .dash-add {
-  border-color: oklch(78% 0.018 215 / 0.62);
-  background: oklch(100% 0 0 / 0.62);
-  box-shadow: 0 1px 2px oklch(35% 0.02 220 / 0.06);
+  border-color: var(--dash-control-border);
+  background: var(--dash-control-bg);
+  box-shadow: var(--dash-control-shadow);
   backdrop-filter: blur(12px) saturate(140%);
   margin-left: 0;
   white-space: nowrap;
@@ -267,9 +278,9 @@
   width: 26px;
   height: 26px;
   padding: 0;
-  border: 1px solid oklch(78% 0.018 215 / 0.46);
+  border: 1px solid var(--dash-control-border);
   border-radius: 999px;
-  background: oklch(100% 0 0 / 0.52);
+  background: var(--dash-control-bg);
   color: var(--text-2);
   cursor: pointer;
 }
@@ -278,7 +289,7 @@
 .module-dashboard .dash-note__icon-btn:focus-visible,
 .module-dashboard .dash-note__clear:hover,
 .module-dashboard .dash-note__clear:focus-visible {
-  background: oklch(100% 0 0 / 0.86);
+  background: var(--dash-control-bg-hover);
   border-color: var(--accent, oklch(64% 0.13 180));
   color: var(--text-1);
   outline: none;
@@ -659,8 +670,8 @@
   padding: 0;
   /* Reset native button chrome. */
   border: 0;
-  border: 1px solid oklch(75% 0.018 215 / 0.36);
-  background: oklch(100% 0 0 / 0.62);
+  border: 1px solid var(--dash-control-border);
+  background: var(--dash-control-bg);
   border-radius: 999px;
   cursor: pointer;
   /* Layout. */
@@ -671,7 +682,7 @@
   opacity: 0;
   pointer-events: none;
   transform: translate(4px, -4px) scale(0.96);
-  box-shadow: 0 4px 12px oklch(25% 0.02 220 / 0.1);
+  box-shadow: var(--dash-control-shadow);
   backdrop-filter: blur(10px) saturate(130%);
   transition: opacity 120ms ease, background 120ms ease, transform 120ms ease;
   /* Ensure the button is above any widget body chrome. */
@@ -690,7 +701,7 @@
 .widget-shell__remove:hover,
 .widget-shell__remove:focus-visible {
   opacity: 1;
-  background: oklch(100% 0 0 / 0.9);
+  background: var(--dash-control-bg-hover);
   transform: scale(1.04);
   outline: none;
 }
@@ -702,16 +713,16 @@
   width: 24px;
   height: 24px;
   padding: 0;
-  border: 1px solid oklch(75% 0.018 215 / 0.36);
+  border: 1px solid var(--dash-control-border);
   border-radius: 8px;
-  background: oklch(100% 0 0 / 0.62);
+  background: var(--dash-control-bg);
   color: var(--text-3, currentColor);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: nwse-resize;
   opacity: 0;
-  box-shadow: 0 4px 12px oklch(25% 0.02 220 / 0.1);
+  box-shadow: var(--dash-control-shadow);
   backdrop-filter: blur(10px) saturate(130%);
   transition: opacity 120ms ease, background 120ms ease, color 120ms ease, transform 120ms ease;
   z-index: 10;
@@ -726,7 +737,7 @@
 .widget-shell__resize:focus-visible {
   opacity: 1;
   color: var(--text-1, currentColor);
-  background: oklch(100% 0 0 / 0.9);
+  background: var(--dash-control-bg-hover);
   transform: scale(1.04);
   outline: none;
 }
@@ -811,7 +822,8 @@
 .add-widget-picker {
   border: 1px solid var(--border-1, oklch(85% 0.01 250));
   border-radius: 20px;
-  background: var(--bg-panel-2, #fff);
+  background: var(--bg-panel-2, var(--bg-panel));
+  color: var(--text-1, currentColor);
   padding: 0;
   max-width: 660px;
   width: 90vw;
@@ -855,7 +867,7 @@
   padding: 16px;
   border: 1px solid var(--border-1, oklch(85% 0.01 250));
   border-radius: 12px;
-  background: var(--bg-panel-1, transparent);
+  background: var(--bg-panel-1, var(--bg-panel));
   cursor: pointer;
   text-align: left;
   transition: background 120ms ease, border-color 120ms ease;
@@ -863,7 +875,7 @@
 
 .awp-card:hover,
 .awp-card:focus-visible {
-  background: var(--hover-bg, oklch(95% 0.01 250));
+  background: var(--hover-bg, var(--bg-hover));
   border-color: var(--accent, oklch(60% 0.15 250));
   outline: none;
 }

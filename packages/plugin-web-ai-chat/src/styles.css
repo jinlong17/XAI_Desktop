@@ -145,7 +145,7 @@
   box-shadow: 0 4px 18px color-mix(in oklch, var(--accent) 30%, transparent);
 }
 .ai-insights-toggle.on .ait-dot {
-  background: #fff;
+  background: var(--text-on-accent, #fff);
   box-shadow: 0 0 0 3px oklch(100% 0 0 / .25);
 }
 .ai-open-side:hover, .ai-new-corner:hover { background: var(--bg-hover); color: var(--text-1); }

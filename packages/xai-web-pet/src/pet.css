@@ -190,7 +190,9 @@
   position: absolute;
   bottom: calc(100% + 8px);
   max-width: 200px;
-  background: #fff;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, #333);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.08));
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   padding: 8px 10px;
@@ -206,7 +208,7 @@
   bottom: -6px;
   border-width: 6px 5px 0;
   border-style: solid;
-  border-color: #fff transparent transparent;
+  border-color: var(--bg-panel, #fff) transparent transparent;
 }
 
 /* Bubble anchored to the left when pet is near the right edge */
@@ -227,7 +229,7 @@
 
 .pet-bubble-text {
   margin: 0 0 4px;
-  color: #333;
+  color: var(--text-1, #333);
 }
 
 .pet-change-link {
@@ -237,12 +239,12 @@
   border: none;
   padding: 0;
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   cursor: pointer;
   text-align: left;
 }
 .pet-change-link:hover {
-  color: #555;
+  color: var(--text-2, #555);
 }
 
 /* ---- Swap button ---- */
@@ -254,8 +256,9 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: color-mix(in oklch, var(--bg-panel, #fff) 90%, transparent);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.1));
+  color: var(--text-2, currentColor);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -266,7 +269,8 @@
   z-index: 2;
 }
 .pet-swap-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
 }
 
 /* ---- PetPicker modal ---- */
@@ -283,7 +287,9 @@
 }
 
 .pet-picker {
-  background: #fff;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
+  border: 1px solid var(--border-1, transparent);
   border-radius: 16px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
   width: 340px;
@@ -298,20 +304,20 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 16px 16px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
 }
 
 .pp-head h3 {
   margin: 0 0 2px;
   font-size: 15px;
   font-weight: 600;
-  color: #111;
+  color: var(--text-1, #111);
 }
 
 .pp-head p {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: var(--text-3, #888);
 }
 
 .pp-close-btn {
@@ -319,7 +325,7 @@
   border: none;
   cursor: pointer;
   padding: 2px;
-  color: #888;
+  color: var(--text-3, #888);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -327,8 +333,8 @@
   flex-shrink: 0;
 }
 .pp-close-btn:hover {
-  color: #333;
-  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-1, #333);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.06));
 }
 
 .pp-list {
@@ -347,15 +353,16 @@
   border: none;
   cursor: pointer;
   text-align: left;
+  color: var(--text-1, currentColor);
   transition: background 0.1s;
 }
 
 .pp-row:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .pp-row.current {
-  background: rgba(100, 180, 120, 0.08);
+  background: var(--accent-soft, rgba(100, 180, 120, 0.08));
 }
 
 .pp-avatar {
@@ -376,31 +383,31 @@
 .pp-name {
   font-size: 13px;
   font-weight: 600;
-  color: #111;
+  color: var(--text-1, #111);
 }
 
 .pp-desc {
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   margin-top: 1px;
 }
 
 .pp-btn {
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .pp-btn.selected {
-  color: #3a8a5a;
+  color: var(--accent-ink, #3a8a5a);
   font-weight: 600;
 }
 
 .pp-foot {
   padding: 8px 16px 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
   font-size: 11px;
-  color: #aaa;
+  color: var(--text-3, #aaa);
   text-align: center;
 }

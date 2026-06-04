@@ -543,6 +543,21 @@
   line-height: 1.5;
 }
 
+[data-theme="dark"] .widget-open-btn,
+[data-theme="dark"] .ww-edit-btn,
+[data-theme="dark"] .ww-source span,
+[data-theme="dark"] .ww-metrics span,
+[data-theme="dark"] .wwf-day,
+[data-theme="dark"] .ww-empty {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 78%, transparent);
+  border-color: color-mix(in oklch, var(--border-1, oklch(40% 0.014 220)) 76%, transparent);
+}
+
+[data-theme="dark"] .ww-empty:hover,
+[data-theme="dark"] .ww-empty:focus-visible {
+  background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2));
+}
+
 /* WeatherEditor dialog (§G-A; additive, no .widget* redefinition) */
 .weather-editor {
   border: none;
@@ -780,7 +795,7 @@
   border: none;
 }
 .weather-editor-btn--cancel {
-  background: var(--bg-2, #f5f5f5);
+  background: var(--bg-2, var(--bg-panel-2));
   color: var(--text-2);
 }
 .weather-editor-btn--save {
@@ -817,6 +832,27 @@
   background:
     linear-gradient(rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.12)),
     color-mix(in oklch, var(--bg-panel-2, #f6f8f7) 68%, transparent);
+}
+
+[data-theme="dark"] .sticky-stack {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01)),
+    color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 84%, transparent);
+}
+
+[data-theme="dark"] .sticky {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 82%, var(--accent) 8%) !important;
+  color: var(--text-1, oklch(96% 0.005 200));
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.22);
+}
+
+[data-theme="dark"] .sticky-meta span {
+  background: color-mix(in oklch, var(--bg-hover, oklch(32% 0.014 220)) 72%, transparent);
+  color: var(--text-2, oklch(82% 0.006 200));
+}
+
+[data-theme="dark"] .sticky-time {
+  color: var(--text-3, oklch(68% 0.006 200));
 }
 .sticky {
   box-sizing: border-box;
@@ -906,6 +942,16 @@
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
+}
+
+[data-theme="dark"] .sticky-empty-action {
+  background: color-mix(in oklch, var(--bg-panel-2, oklch(26% 0.012 220)) 76%, transparent);
+  color: var(--text-2, oklch(82% 0.006 200));
+}
+
+[data-theme="dark"] .sticky-empty-action:hover,
+[data-theme="dark"] .sticky-empty-action:focus-visible {
+  background: color-mix(in oklch, var(--accent-soft, var(--bg-panel-2)) 34%, var(--bg-panel-2));
 }
 .sticky-empty-action:hover,
 .sticky-empty-action:focus-visible {
