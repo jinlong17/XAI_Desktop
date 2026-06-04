@@ -188,12 +188,14 @@ flowchart LR
   A["apps/web /app/board route"] --> B["plugin-web-board-workspaces"]
   B --> C["plugin-web-board-core"]
   B --> D["plugin-web-board-views"]
+  B --> K["plugin-web-tasks"]
   C --> E["Board/List/Card model + Kanban"]
   D --> F["Table/Calendar/Dashboard/Timeline/Map"]
-  B --> G["Switcher/Creator/Inbox/Planner/Filter/Share stub"]
+  B --> G["Switcher/Creator/Inbox/Planner/Filter/Task link/Share stub"]
+  K --> L["xai_task_cols linked task records"]
   H["plugin-project"] -. "desktop/control reference only" .-> E
-  E --> I["future card detail + typed dates + checklist editor"]
-  I --> J["future encrypted blob sync contract"]
+  E --> I["shipped detail + dates + CRUD + checklist + storage contract"]
+  I --> J["future calendar feed + share/sync contract"]
 ```
 
 Ownership rules:
@@ -203,8 +205,10 @@ Ownership rules:
 - `plugin-web-board-views` owns alternate board projections: Table, Calendar,
   Dashboard, Timeline, and Map.
 - `plugin-web-board-workspaces` owns the product shell around boards: switcher,
-  creator, workspace chips, Inbox, Planner, filters, and the current mock share
-  modal.
+  creator, workspace chips, Inbox, Planner, filters, Board-card to Task link UI,
+  and the current mock share modal.
+- `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
+  helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-project` remains the desktop/control Project capability package
   and parity reference; Web code must not import its internals until a dedicated
   Web runtime contract is accepted.

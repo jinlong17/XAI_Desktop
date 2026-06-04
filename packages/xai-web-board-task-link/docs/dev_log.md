@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-task-link |
 | Title | Web Project module P1 task link - create Tasks item from Board card and show linked status |
-| Current Phase | FEATURE_BUILD |
-| Status | READY_FOR_VERIFY |
-| Suggested Next | feature-verify |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | `xai-web-board-calendar-feed` |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 22:01 PDT |
+| Updated | 2026-06-03 22:05 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #8 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -64,5 +64,6 @@ state, event-bus changes, and backend sync are out of scope.
 
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
-| 2026-06-03 21:52 PDT | gpt-5 parent inline | feature-plan - audited Tasks public surface, `xai_task_cols` persistence, Board card detail modal, and Board writer path; created row #8 discovery/design/api/test/dev_log docs. | pending | feature-build |
-| 2026-06-03 22:01 PDT | gpt-5 parent inline | feature-build - implemented Tasks helper surface, Board `taskLink` contract, card-detail Task section, create/unlink handlers, and regression coverage. | pending | feature-verify |
+| 2026-06-03 21:52 PDT | gpt-5 parent inline | feature-plan - audited Tasks public surface, `xai_task_cols` persistence, Board card detail modal, and Board writer path; created row #8 discovery/design/api/test/dev_log docs. | `f5f7e0c` | feature-build |
+| 2026-06-03 22:01 PDT | gpt-5 parent inline | feature-build - implemented Tasks helper surface, Board `taskLink` contract, card-detail Task section, create/unlink handlers, and regression coverage. | `79a8bf3` | feature-verify |
+| 2026-06-03 22:05 PDT | gpt-5 parent inline | ship-docs - marked row #8 shipped in roadmap, PRD, PLUGIN_MAP, product structure diagram, and personal development board mapping. | pending | `xai-web-board-calendar-feed` |

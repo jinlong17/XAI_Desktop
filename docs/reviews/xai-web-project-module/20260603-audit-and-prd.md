@@ -247,7 +247,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 
 | Task | Owner surface | Notes |
 |---|---|---|
-| `xai-web-board-task-link` | board + tasks | Link/convert card ↔ task. |
+| `xai-web-board-task-link` | board + tasks | SHIPPED: one-way create/link task from board card, with persisted linked status in card detail. |
 | `xai-web-board-calendar-feed` | board + calendar | Cards with dates appear in Calendar. |
 | `xai-web-board-saved-filters` | board-workspaces | Persist filters per board. |
 | `xai-web-board-share-contract` | board + sync/share | Replace mock URL with explicit share-envelope plan or label it as stub. |
@@ -307,6 +307,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Personal development board | `docs/workflow/roadmap/xai-web-project-module.md` now records the P0/P1/P2 task queue and list mapping for follow-up execution. |
 | Workflow docs | `docs/workflow/project/usage-guide.md` now allows targeted follow-up manifests when they cite a concrete audit/PRD source. |
 | Skill / Agent pages | No change applied; current `xai-feature-full-loop` / `xai-roadmap-loop` skills remain sufficient. |
+| Task link implementation | `xai-web-board-task-link` shipped one-way Board-card to Tasks linkage and moved the next personal-board focus to `xai-web-board-calendar-feed`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 
