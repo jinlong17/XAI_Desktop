@@ -6,15 +6,28 @@ an existing one up to this standard.
 
 ## What to hand the AI
 
-| File | Give it? | Why |
-|---|---|---|
-| **`TEMPLATE.md`** | ✅ **Always** | The authoritative reusable template (25 sections, parameterized — module names/paths/ports are placeholders). The AI regenerates from it; it does not copy this project's code. |
-| **`BOUNDARIES.md`** | ✅ Strongly recommended | A *worked example* of the template applied to one project — shows how the Owner/Mirror/Shared-Widget model lands per-card. Tell the AI not to copy this project's module keys/paths. |
-| `README.md` | Optional | Example run/entry doc to model the new one on. |
-| `styles.css` | Optional (visual head-start) | The token core / dark theme / accent system is genuinely portable; but re-check the project-specific literal hex flagged in `BOUNDARIES.md §7`. |
-| `DESIGN.md`, `index.html`, `js/*`, `state.generated.js` | ❌ Don't | DESIGN is this project's build journal; the code carries this project's module names + absolute paths. Let the AI **regenerate** from `TEMPLATE.md` instead. |
+Hand over these four files (absolute paths on this machine; on another machine
+they're repo-relative under `docs/prototypes/dev-dashboard/`):
 
-> TL;DR: hand over **`TEMPLATE.md` (required) + `BOUNDARIES.md` (as the example)**; let the AI generate the rest.
+| File | Give it? | Absolute path (this machine) | Why |
+|---|---|---|---|
+| **`TEMPLATE.md`** | ✅ Always | `/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/TEMPLATE.md` | Authoritative reusable template (25 sections, parameterized — names/paths/ports are placeholders). AI regenerates from it, doesn't copy this project's code. |
+| **`BOUNDARIES.md`** | ✅ Always | `/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/BOUNDARIES.md` | Worked example of the template applied — shows Owner/Mirror/Shared-Widget per-card. Tell the AI not to copy this project's module keys/paths. |
+| **`README.md`** | ✅ Give too | `/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/README.md` | Run/entry-doc example to model the new one on. |
+| **`styles.css`** | ✅ Give too (visual head-start) | `/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/styles.css` | Token core / dark theme / accent system is portable; re-check the project-specific literal hex flagged in `BOUNDARIES.md §7`. |
+| `DESIGN.md`, `index.html`, `js/*`, `state.generated.js` | ❌ Don't | — | DESIGN is this project's build journal; the code carries this project's module names + absolute paths. Let the AI **regenerate** from `TEMPLATE.md`. |
+
+📎 **Copy / attach these 4 (this machine):**
+
+```text
+/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/TEMPLATE.md
+/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/BOUNDARIES.md
+/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/README.md
+/Users/lijinlong/Desktop/AI_Desktop/XAI_Desktop/docs/prototypes/dev-dashboard/styles.css
+```
+
+> 注：以上为**本机绝对路径**，方便直接 attach / `cp`。它们是机器专属的——换台电脑就是仓库相对路径
+> `docs/prototypes/dev-dashboard/<file>`。（这是 operator 的取件清单；看板**自身**的 tracked 文件仍不写绝对路径，见 §P3.1。）
 
 ---
 
