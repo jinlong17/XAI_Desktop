@@ -6,6 +6,7 @@ import { act } from "react";
 import { Navigate, RouterProvider, createMemoryRouter } from "react-router";
 import type { PropsWithChildren, ReactElement } from "react";
 import { webHostRouteObjects } from "./router";
+import { resolveMockAuthenticatedAuthRedirect } from "./RouteGateElements";
 
 const mockDeviceFetch = vi.fn(async () => new Response(JSON.stringify({ rows: [] }), { status: 200 }));
 
@@ -126,6 +127,12 @@ describe("web host router integration", () => {
     const indexElement = indexRoute?.element as ReactElement<{ to: string }> | undefined;
     expect(indexElement?.type).toBe(Navigate);
     expect(indexElement?.props.to).toMatch(/^\/app\//);
+  });
+
+  it("routes mock-authenticated auth entries to the app shell", () => {
+    expect(resolveMockAuthenticatedAuthRedirect({ VITE_WEB_AUTH_MODE: "mock-authenticated" })).toBe("/app");
+    expect(resolveMockAuthenticatedAuthRedirect({ VITE_WEB_AUTH_MODE: "live" })).toBeNull();
+    expect(resolveMockAuthenticatedAuthRedirect({})).toBeNull();
   });
 
   it("keeps app shell stable when invoking todo module controls", async () => {
