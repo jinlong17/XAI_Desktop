@@ -172,13 +172,13 @@ function docCategoryLabel(entry = {}){
 
 function docTheme(entry = {}){
   const family = docFamilyFor(entry);
-  if(family === "rules") return {tone:"#ea4335", bg:"#fff0ed"};
-  if(family === "skill") return {tone:"#7c4dff", bg:"#f1edff"};
-  if(family === "workflow") return {tone:"#b56f00", bg:"#fff7df"};
-  if(entry.importance === "必读") return {tone:"#ea4335", bg:"#ffefed"};
-  if(entry.importance === "必要") return {tone:"#1a73e8", bg:"#eaf2ff"};
-  if(entry.importance === "系统级") return {tone:"#07849a", bg:"#e6f8fb"};
-  return {tone:"#566175", bg:"#eef1f6"};
+  if(family === "rules") return {tone:"var(--doc-rules-tone)", bg:"var(--doc-rules-bg)"};
+  if(family === "skill") return {tone:"var(--doc-skill-tone)", bg:"var(--doc-skill-bg)"};
+  if(family === "workflow") return {tone:"var(--doc-workflow-tone)", bg:"var(--doc-workflow-bg)"};
+  if(entry.importance === "必读") return {tone:"var(--doc-must-tone)", bg:"var(--doc-must-bg)"};
+  if(entry.importance === "必要") return {tone:"var(--doc-required-tone)", bg:"var(--doc-required-bg)"};
+  if(entry.importance === "系统级") return {tone:"var(--doc-system-tone)", bg:"var(--doc-system-bg)"};
+  return {tone:"var(--doc-reference-tone)", bg:"var(--doc-reference-bg)"};
 }
 
 function docGroupImportance(group = {}){
