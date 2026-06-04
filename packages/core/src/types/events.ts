@@ -341,6 +341,14 @@ export interface EventMap {
     url: string;
     /** Where the action originated. v1 closed union: 'header'. */
     source: 'header';
+    /** Current row keeps sharing explicit as a mock contract, not a backend access grant. */
+    mode: 'mock';
+    /** Mock contract permission; future backend sharing can widen this union. */
+    permission: 'view';
+    /** Null until real token expiry is accepted. */
+    expiresAt: null;
+    /** Explicit backend state for the generated link. */
+    backend: 'unimplemented';
   };
 
   // Cmd+K command palette events (owner: @repo/xai-web-cmdk gap-closure row #3)

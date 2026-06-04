@@ -990,6 +990,28 @@
 .icon-btn.danger {
   color: var(--red);
 }
+.sm-stub-banner {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--amber);
+  border-radius: var(--r-sm);
+  background: var(--amber-soft);
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+}
+.sm-stub-banner strong {
+  color: var(--amber);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+.sm-stub-banner .mono,
+.sm-permission-note {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
 
 @media (max-width: 900px) {
   .status-overview {

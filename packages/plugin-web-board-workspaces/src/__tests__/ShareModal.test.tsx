@@ -1,5 +1,5 @@
 /**
- * ShareModal tests — SM-1..SM-8
+ * ShareModal tests — SM-1..SM-9
  * Gap-closure row #6 — board-workspaces slice
  */
 import {
@@ -62,6 +62,13 @@ describe("ShareModal", () => {
       const input = screen.getByTestId("sm-url-input") as HTMLInputElement;
       expect(input.value).toMatch(/^https:\/\/xai-web\.example\/share\/[0-9a-f]{8}$/);
     });
+    expect(screen.getByTestId("sm-stub-badge").textContent).toBe("Mock link");
+    expect(screen.getByTestId("sm-stub-banner").textContent).toContain(
+      "does not grant access",
+    );
+    expect(screen.getByTestId("sm-share-contract").textContent).toBe(
+      "mock/unimplemented/view",
+    );
   });
 
   test("SM-2 Copy button calls navigator.clipboard.writeText(url)", async () => {
@@ -124,6 +131,17 @@ describe("ShareModal", () => {
     expect(closeOrder[0]).toBe("emitWebEvent");
     expect(closeOrder[1]).toBe("dialog.close");
     expect(closeOrder[2]).toBe("onClose");
+    expect(emitWebEvent).toHaveBeenCalledWith(
+      "web:board:share-requested",
+      expect.objectContaining({
+        boardId: "b-test",
+        source: "header",
+        mode: "mock",
+        permission: "view",
+        expiresAt: null,
+        backend: "unimplemented",
+      }),
+    );
   });
 
   test("SM-6 backdrop click (event.target === dialogRef) closes modal", async () => {
@@ -152,6 +170,10 @@ describe("ShareModal", () => {
   test("SM-8 bilingual zh — heading shows '分享看板' + Copied text '已复制'", async () => {
     render(<ShareModal board={MOCK_BOARD} lang="zh" onClose={vi.fn()} />);
     expect(screen.getByTestId("sm-heading").textContent).toBe("分享看板");
+    expect(screen.getByTestId("sm-stub-badge").textContent).toBe("模拟链接");
+    expect(screen.getByTestId("sm-stub-banner").textContent).toContain(
+      "不会授予访问权限",
+    );
     await waitFor(() => {
       expect((screen.getByTestId("sm-url-input") as HTMLInputElement).value).toMatch(/share\//);
     });
@@ -159,5 +181,12 @@ describe("ShareModal", () => {
       fireEvent.click(screen.getByTestId("sm-copy-btn"));
     });
     expect(screen.getByTestId("sm-copy-btn").textContent).toBe("已复制");
+  });
+
+  test("SM-9 permission note makes view-only scope explicit", () => {
+    render(<ShareModal board={MOCK_BOARD} lang="en" onClose={vi.fn()} />);
+    expect(screen.getByTestId("sm-permission-note").textContent).toBe(
+      "Permission: view-only",
+    );
   });
 });
