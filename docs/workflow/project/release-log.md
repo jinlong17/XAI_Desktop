@@ -6,6 +6,15 @@
 
 ## 2026-06-04
 
+### Desktop Plugin 产品边界与长期平台路线落地
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/web/dev-dashboard-authority-refactor` / local working tree
+- User-visible change: 无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。
+- Developer/system delta: 新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.
+- Risk / follow-up: 本次只落实治理、文档、分类和看板；不创建 `desktop-plugin-next`，不启动 feature-build，不实现 Plugin Center / Widget Host / 多窗口运行时代码。后续产品开发仍需等 G1 解冻和 operator 确认。
+
 ### Desktop Plugin 入口模型与看板状态对齐
 
 - Product line: desktop-plugin / project-system

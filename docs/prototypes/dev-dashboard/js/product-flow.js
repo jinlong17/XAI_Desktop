@@ -93,7 +93,60 @@ function renderModules(){
       </section>
     `;
   }).join("");
-  document.querySelectorAll(".module-card").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+  document.querySelectorAll(".module-card[data-product]").forEach(node => node.addEventListener("click", () => setProduct(node.dataset.product)));
+}
+
+function futureSurfaceTitle(key){
+  const map = { iphone:"iPhone", ipad:"iPad", apple_watch:"Apple Watch", android:"Android", browser_extension:"浏览器扩展" };
+  return map[key] || key;
+}
+
+function renderFutureSurfaces(){
+  const el = document.getElementById("futureSurfaces");
+  if(!el) return;
+  if(!futureSurfaces || !Array.isArray(futureSurfaces.surfaces) || !futureSurfaces.surfaces.length){ el.innerHTML = ""; return; }
+  const roleLabel = {};
+  (futureSurfaces.roles || []).forEach(r => { roleLabel[r.key] = r.label || r.key; });
+  const ordered = [...futureSurfaces.surfaces].sort((a,b) => Number(a.priority || 99) - Number(b.priority || 99));
+  const cards = ordered.map(s => `
+    <div class="module-card future-surface-card is-future" data-future="${h(s.key)}">
+      <div class="module-top">
+        <span class="module-index">P${h(s.priority || "·")}</span>
+        <span class="badge">${h(roleLabel[s.role] || s.role || "future")}</span>
+      </div>
+      <div>
+        <h3>${h(futureSurfaceTitle(s.key))}</h3>
+        <p>${h(s.phase || "")}</p>
+      </div>
+      <div class="module-meta">
+        <span><b>承载</b> ${h(s.carries || "")}</span>
+        <span><b>不承载</b> ${h(s.not_for || "")}</span>
+      </div>
+      <span class="pill">${h(s.status || "planning-only")}</span>
+    </div>
+  `).join("");
+  const order = Array.isArray(futureSurfaces.priority_order) ? futureSurfaces.priority_order.join(" → ") : (futureSurfaces.priority_order || "");
+  const authority = futureSurfaces.authority || "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md";
+  el.innerHTML = `
+    <section class="module-region future-surface-region is-future-region" data-region="未来面">
+      <div class="region-label">
+        <b>未来面 · Future Surfaces（planning-only）</b>
+        <span>${h(futureSurfaces.rule || "多平台长期规划：以 future surfaces 进入文档 + 看板，不进入当前开发队列。")}</span>
+      </div>
+      <div class="region-track">${cards}</div>
+      ${order ? `<span class="pill" style="margin-top:10px">长期优先级：${h(order)}</span>` : ""}
+      <div class="flow-note" style="margin-top:10px">
+        <b>规划层，不是第七条产品线</b>
+        <p style="margin-top:8px">这些 surface 只用于长期判断，不创建 active branch、不进入 feature-build，除非 operator 显式升级边界。</p>
+        <button class="reader-btn" data-future-surface-doc="${h(authority)}" type="button">打开长期路线图</button>
+      </div>
+    </section>
+  `;
+  el.querySelectorAll("[data-future-surface-doc]").forEach(node => {
+    node.addEventListener("click", () => {
+      if(typeof openDocInLibrary === "function") openDocInLibrary(node.dataset.futureSurfaceDoc);
+    });
+  });
 }
 
 function productTitleFor(key){
@@ -102,6 +155,8 @@ function productTitleFor(key){
   const labels = {
     web:"Web 版本", app:"Mac 桌面版 App", plugin:"桌面整理插件 / Widget",
     sync:"账号云同步层", site:"官方网页", admin:"Admin Dashboard / 控制面",
+    iphone:"iPhone", ipad:"iPad", apple_watch:"Apple Watch", android:"Android",
+    browser_extension:"浏览器扩展",
     release:"发布冻结线 release/desktop/*", main:"main 汇合点", dev:"dev (App RC)"
   };
   return labels[key] || key;

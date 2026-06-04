@@ -1046,6 +1046,9 @@
     align-items:flex-start;
     overflow-wrap:anywhere;
   }
+  .future-surface-region .region-track{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+  .future-surface-card{cursor:default;--tone:var(--faint);--tone-bg:var(--surface-2)}
+  .future-surface-card:hover{transform:none;border-color:var(--line);box-shadow:none}
   .module-meta{display:grid;gap:7px;margin-top:2px}
   .module-meta span{
     display:block;

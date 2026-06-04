@@ -13,6 +13,8 @@
 - Manual state base: `docs/workflow/project/dashboard-state.json`
 - Product Module Registry: `docs/workflow/project/dashboard-state.json` field
   `product_lines`
+- Future Surface Registry: `docs/workflow/project/dashboard-state.json` field
+  `future_surfaces` (planning-only, not active Product Module Registry entries)
 - Testing Registry: `docs/workflow/project/dashboard-state.json` field
   `testing`
 - Skill / Agent Knowledge Registry:
@@ -46,6 +48,11 @@ source; `dashboard-state.json.product_lines` is the Product Module Registry that
 the dashboard renders. When the boundary or classification changes, update
 `module-classification.json`, `docs/PRODUCT_MODULE_MAP.md`, and the matching
 registry entry in `dashboard-state.json` in the same change.
+Future iPhone / iPad / Apple Watch / Android / browser-extension surfaces live
+in `module-classification.json.future_surfaces` and
+`dashboard-state.json.future_surfaces` as planning-only data. They must not be
+rendered or routed as active `product_lines` unless the operator explicitly
+promotes a surface into `MODULE_BOUNDARIES.md`.
 
 Each registry entry owns the shared module definition for Overview, Product
 structure, Testing, Deployment, Release records, Docs library, and Skill / Agent
@@ -82,6 +89,7 @@ and block automatic opening when the port belongs to another project.
 |---|---|---|
 | Product routing | `CLAUDE.md`, `AGENTS.md`, `docs/PRODUCT_MODULE_MAP.md` | Authority for task classification and module navigation. |
 | Human decisions / Product Module Registry | `docs/workflow/project/dashboard-state.json` | Manual fields such as priority, branch creation, release gates, risk acceptance, and shared module definitions under `product_lines`. |
+| Future surface planning | `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`, `dashboard-state.json.future_surfaces`, `module-classification.json.future_surfaces` | Planning-only platform roadmap; not active module routing. |
 | Generated facts | `scripts/dashboard/generate-state.mjs` | Reads git, roadmap manifests, skill/agent files, docs, release-log, and dev logs. |
 | Human cockpit | `docs/prototypes/dev-dashboard/index.html` | Shows Overview, product structure, docs library, Skill / Agent registry, release records, and workflow entry points. |
 | Machine contract | this file | Tells agents how to refresh, trust, and update the dashboard. |

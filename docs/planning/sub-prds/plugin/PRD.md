@@ -31,7 +31,7 @@
 | 三面边界 / 同名陷阱 / 数据 syncScope 规则 | `docs/MODULE_BOUNDARIES.md` |
 | 插件 SDK / Widget Host / manifest 槽位 | `docs/PLUGIN_SDK.md` |
 
-> **桌面插件不是新功能集合**，而是骑在 App 原生底座（多窗口 / 点击穿透 / grid 窗口 / Tauri 命令）之上的**轻量挂件 / 小窗能力**。底座本身归 P1 App，不在本 PRD 范围（见 MODULE_BOUNDARIES §1 A 层）。
+> **桌面插件不是新功能集合**，而是骑在多窗口 / 原生运行时（点击穿透 / grid 窗口 / Tauri 命令）之上的**轻量挂件 / 小窗能力**。该运行时**代码物理在 host（app 通道执行），但产品归属是桌面插件平台**（见 MODULE_BOUNDARIES §1 **A2**，物理位置 ≠ 产品归属）；**Mac 壳（A1）只是 Web 容器**，不是桌面整理器。本 PRD 即"桌面原生超能力层"这一产品面。
 
 ---
 
@@ -41,6 +41,7 @@
 2. **不重做 Web 已覆盖的完整模块。** 任务/看板/日历/番茄/习惯/统计/四象限/倒数日/AI 聊天/设置已是 Web 最完整面；桌面侧通过共享业务包（`plugin-productivity`/`project`/`labels`）复用，不在插件里再造网页形态。
 3. **数据默认 `device-local`，永不上云。** 每个插件实体先在 `packages/core-data/src/entities.ts` 定 `syncScope`；仅显式 `account-sync`（如 grids/grid_items/pets）才交 sync 线按 D4 九项清单补齐。本 PRD 不自行实现同步。
 4. **插件间只走 `@repo/core/events`**，业务逻辑全在 `packages/plugin-*`，`index.ts` 为唯一公共出口；依赖前查 PLUGIN_MAP，只有 Stable（organizer）可直依，其余须 mock。
+5. **"快速入口 / 快速操作"挂件族属本产品（2026-06-03 operator 澄清）。** 桌面便签、文件夹挂件、小型悬浮窗、快速操作面板，以及**快速记账 / 快速时间追踪等轻量小窗快速入口**，都属桌面插件范围（"环境 / 微交互面"的桌面形态）。它们**复用** Web 模块的业务逻辑包（如 bookkeeping / time-tracker）写同一份实体，**不重做**完整网页模块（与红线 #2 一致）——即捕获在小窗、编排在 Web/Mac。长期"环境面"定位（与 Apple Watch 同角色）见 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`。
 
 ---
 
