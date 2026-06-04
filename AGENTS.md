@@ -124,7 +124,7 @@ router (the six-module table with task-attribution signals, plus the
 
 - `web` → `apps/web/`, branch `codex/web/<feature>`→`web`.
 - `app` → Mac shell / Web container in `apps/desktop/` (single Web SPA main window + native chrome; host process may implement native commands), branch `codex/desktop/<feature>`→`desktop-next`→`dev`.
-- `plugin` → desktop plugin platform/runtime + widget/plugin packages (multi-window / overlay / click-through / grid persistence product ownership lives here even when code is physically in the Tauri host), branch `codex/plugin/<feature>`→`desktop-plugin-next` (paused).
+- `plugin` → desktop plugin platform/runtime + widget/plugin packages (multi-window / overlay / click-through / grid persistence product ownership lives here even when code is physically in the Tauri host), branch `codex/plugin/<feature>`→`desktop-plugin-next`; G1 platform-runtime/window-command anchor is active gate, concrete plugin packages are paused until G1 ships.
 - `sync` → account cloud-sync, branch `codex/sync/<feature>` (paused; only `syncScope: account-sync`).
 - `site` → official website (Cloudflare), branch `codex/site/<feature>` (PROPOSED — needs operator OK).
 - `admin` → Admin/Control Plane prototype, branch `codex/admin/<feature>` (PROPOSED — needs operator OK).
