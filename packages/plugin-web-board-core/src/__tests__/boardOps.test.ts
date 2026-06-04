@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   addCardToList,
   addNewList,
+  mergeBoardCardPatch,
   moveCardToList,
   setListColor,
   updateCardInList,
@@ -113,12 +114,52 @@ describe("boardOps", () => {
     expect(next[1]?.color).toBe("green");
   });
 
-  test("M9 updateCardInList shallow-merges patch into the matching card", () => {
+  test("M9 updateCardInList merges patch into the matching card", () => {
     const lists = makeLists();
     const next = updateCardInList(lists, "A", "c1", { due: "5/26", dueLate: true });
     expect(next[0]?.cards[0]?.due).toBe("5/26");
     expect(next[0]?.cards[0]?.dueLate).toBe(true);
     expect(next[0]?.cards[0]?.title.en).toBe("one"); // preserved
+  });
+
+  test("M9b mergeBoardCardPatch derives checklist and attachment chips from detail fields", () => {
+    const card = makeLists()[0]!.cards[0]!;
+    const next = mergeBoardCardPatch(card, {
+      checklistItems: [
+        { id: "i1", text: "One", done: true },
+        { id: "i2", text: "Two", done: false },
+      ],
+      attachments: [
+        { id: "a1", url: "https://example.com/spec" },
+        { id: "a2", url: "https://example.com/prd", title: "PRD" },
+      ],
+    });
+
+    expect(next.checklist).toEqual({ done: 1, total: 2 });
+    expect(next.attach).toBe(2);
+  });
+
+  test("M9c mergeBoardCardPatch derives legacy date fields from ISO detail dates and clears them", () => {
+    const card = makeLists()[0]!.cards[0]!;
+    const withDates = mergeBoardCardPatch(card, {
+      startDate: "2099-01-01",
+      dueDate: "2099-01-02",
+    });
+
+    expect(withDates.start).toBe("1/1");
+    expect(withDates.due).toBe("1/2");
+    expect(withDates.dueLate).toBe(false);
+
+    const cleared = mergeBoardCardPatch(withDates, {
+      startDate: undefined,
+      dueDate: undefined,
+    });
+    expect(cleared.startDate).toBeUndefined();
+    expect(cleared.dueDate).toBeUndefined();
+    expect(cleared.start).toBeUndefined();
+    expect(cleared.due).toBeUndefined();
+    expect(cleared.dueEn).toBeUndefined();
+    expect(cleared.dueLate).toBeUndefined();
   });
 
   test("M10 helpers do not mutate input arrays (input remains structurally equal)", () => {

@@ -87,17 +87,59 @@ describe("isBoardArray", () => {
       isBoardCard({
         id: "c1",
         title: { en: "a", zh: "b" },
+        description: "Detail text",
         labels: ["l1"],
         members: ["u1"],
         checklist: { done: 1, total: 2 },
+        checklistItems: [
+          { id: "i1", text: "Item 1", done: true },
+          { id: "i2", text: "Item 2", done: false },
+        ],
+        attachments: [
+          { id: "a1", url: "https://example.com", title: "Spec" },
+        ],
+        activity: [
+          {
+            id: "act1",
+            kind: "note",
+            body: "Updated",
+            createdAt: "2026-06-03T00:00:00.000Z",
+          },
+        ],
         due: "5/26",
         dueEn: "Today",
         start: "5/20",
+        startDate: "2026-05-20",
+        dueDate: "2026-05-26",
         dueLate: true,
         attach: 2,
         cover: "linear-gradient(...)",
       }),
     ).toBe(true);
+  });
+
+  test("V8bb isBoardCard rejects malformed detail arrays", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        checklistItems: [{ id: "i1", text: "Missing done" }],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        attachments: [{ id: "a1" }],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        dueDate: "05/26/2026",
+      }),
+    ).toBe(false);
   });
 
   test("V8c isBoardCard rejects card with malformed checklist", () => {

@@ -15,6 +15,9 @@ import type {
   BoardList,
   BoardListColorId,
   BoardTemplate,
+  BoardCardActivityEntry,
+  BoardCardAttachmentLink,
+  BoardChecklistItem,
   CardChecklist,
   CardLocation,
 } from "../types.js";
@@ -36,6 +39,38 @@ function isBilingualText(value: unknown): value is BilingualText {
 function isCardChecklist(value: unknown): value is CardChecklist {
   if (!isObject(value)) return false;
   return typeof value.done === "number" && typeof value.total === "number";
+}
+
+function isIsoDateString(value: unknown): value is string {
+  if (!isString(value)) return false;
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isBoardChecklistItem(value: unknown): value is BoardChecklistItem {
+  if (!isObject(value)) return false;
+  return (
+    isString(value.id) &&
+    isString(value.text) &&
+    typeof value.done === "boolean"
+  );
+}
+
+function isBoardCardAttachmentLink(value: unknown): value is BoardCardAttachmentLink {
+  if (!isObject(value)) return false;
+  if (!isString(value.id)) return false;
+  if (!isString(value.url)) return false;
+  if (value.title !== undefined && !isString(value.title)) return false;
+  return true;
+}
+
+function isBoardCardActivityEntry(value: unknown): value is BoardCardActivityEntry {
+  if (!isObject(value)) return false;
+  if (!isString(value.id)) return false;
+  if (value.kind !== "note") return false;
+  if (!isString(value.body)) return false;
+  if (!isString(value.createdAt)) return false;
+  if (value.authorId !== undefined && !isString(value.authorId)) return false;
+  return true;
 }
 
 function isCardLocation(value: unknown): value is CardLocation {
@@ -64,6 +99,7 @@ export function isBoardCard(value: unknown): value is BoardCard {
   if (!isObject(value)) return false;
   if (!isString(value.id)) return false;
   if (!isBilingualText(value.title)) return false;
+  if (value.description !== undefined && !isString(value.description)) return false;
   if (value.labels !== undefined && !Array.isArray(value.labels)) return false;
   if (
     Array.isArray(value.labels) &&
@@ -81,9 +117,38 @@ export function isBoardCard(value: unknown): value is BoardCard {
   if (value.checklist !== undefined && !isCardChecklist(value.checklist)) {
     return false;
   }
+  if (value.checklistItems !== undefined && !Array.isArray(value.checklistItems)) {
+    return false;
+  }
+  if (
+    Array.isArray(value.checklistItems) &&
+    !value.checklistItems.every(isBoardChecklistItem)
+  ) {
+    return false;
+  }
+  if (value.attachments !== undefined && !Array.isArray(value.attachments)) {
+    return false;
+  }
+  if (
+    Array.isArray(value.attachments) &&
+    !value.attachments.every(isBoardCardAttachmentLink)
+  ) {
+    return false;
+  }
+  if (value.activity !== undefined && !Array.isArray(value.activity)) {
+    return false;
+  }
+  if (
+    Array.isArray(value.activity) &&
+    !value.activity.every(isBoardCardActivityEntry)
+  ) {
+    return false;
+  }
   if (value.due !== undefined && !isString(value.due)) return false;
   if (value.dueEn !== undefined && !isString(value.dueEn)) return false;
   if (value.start !== undefined && !isString(value.start)) return false;
+  if (value.startDate !== undefined && !isIsoDateString(value.startDate)) return false;
+  if (value.dueDate !== undefined && !isIsoDateString(value.dueDate)) return false;
   if (value.dueLate !== undefined && typeof value.dueLate !== "boolean") {
     return false;
   }

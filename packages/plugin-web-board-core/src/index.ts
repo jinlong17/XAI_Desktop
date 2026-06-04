@@ -23,8 +23,12 @@ import "./styles.css";
 export type {
   Board,
   BoardCard as BoardCardData,
+  BoardCardActivityEntry,
+  BoardCardAttachmentLink,
+  BoardChecklistItem,
   BoardList as BoardListData,
   BoardListColorId,
+  BoardMemberOption,
   BoardTemplate,
   BoardWorkspace,
   BilingualText,
@@ -50,6 +54,7 @@ export {
 // ---- Seed (typed; consumed at first run + by row #9 board-workspaces) ----
 export {
   BOARD_TEMPLATES,
+  BOARD_MEMBER_OPTIONS,
   DEFAULT_WORKSPACES,
   PM_LABELS,
   makeDefaultBoards,
@@ -63,7 +68,9 @@ export type {
 export {
   addCardToList,
   addNewList,
+  mergeBoardCardPatch,
   moveCardToList,
+  normalizeBoardCardDetail,
   setListColor,
   updateCardInList,
 } from "./internal/boardOps.js";
