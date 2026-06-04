@@ -3,6 +3,96 @@ import type { ComponentType } from 'react';
 /** Content types a plugin can render in grid windows */
 export type ContentType = string;
 
+export type PluginInstanceId = string;
+
+export type PluginCenterEntryStatus =
+  | 'available'
+  | 'disabled'
+  | 'planned'
+  | 'shipped'
+  | 'unavailable';
+
+export type PluginWindowSurface = 'overlay' | 'control' | 'grid' | 'console';
+
+export type PluginInstanceLifecycleState =
+  | 'enabled'
+  | 'disabled'
+  | 'hidden'
+  | 'destroyed';
+
+export type PluginInstanceSyncScope = 'device-local';
+
+export type PluginInstanceSizePreset = 'small' | 'medium' | 'large';
+
+export type PluginInstanceStyleMode = 'system' | 'light' | 'dark' | 'minimal';
+
+export interface PluginInstancePlacement {
+  x: number;
+  y: number;
+  displayId?: string;
+  spaceId?: string;
+}
+
+export interface PluginInstanceSize {
+  preset: PluginInstanceSizePreset;
+  width: number;
+  height: number;
+}
+
+export interface PluginInstanceBehavior {
+  pinned: boolean;
+  clickThrough: boolean;
+  allSpaces: boolean;
+  clickAction: 'focus' | 'open-settings' | 'none';
+}
+
+export interface PluginInstanceStyle {
+  mode: PluginInstanceStyleMode;
+  opacity: number;
+}
+
+export interface PluginInstanceConfig {
+  placement: PluginInstancePlacement;
+  size: PluginInstanceSize;
+  behavior: PluginInstanceBehavior;
+  style: PluginInstanceStyle;
+  dataSource?: Record<string, unknown>;
+}
+
+export interface PluginInstance {
+  id: PluginInstanceId;
+  pluginName: string;
+  contentType: ContentType;
+  schemaVersion: number;
+  lifecycleState: PluginInstanceLifecycleState;
+  syncScope: PluginInstanceSyncScope;
+  config: PluginInstanceConfig;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PluginCenterEntry {
+  pluginName: string;
+  displayName: string;
+  description: string;
+  version: string;
+  status: PluginCenterEntryStatus;
+  enabledByManifest: boolean;
+  contentTypes: ContentType[];
+  supportedSurfaces: PluginWindowSurface[];
+  defaultContentType?: ContentType;
+  canAddToDesktop: boolean;
+  canOpenSettings: boolean;
+  unavailableReason?: string;
+}
+
+export interface AddToDesktopRequest {
+  pluginName: string;
+  contentType: ContentType;
+  source: 'plugin-center' | 'deep-link' | 'restore' | 'test';
+  config: PluginInstanceConfig;
+}
+
 /** Plugin manifest — the metadata file each plugin provides */
 export interface PluginManifest {
   name: string;
