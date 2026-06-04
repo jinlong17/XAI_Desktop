@@ -7,14 +7,14 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-list-crud |
 | Title | Web Project module P0 list CRUD slice - add rename, archive/delete, and deterministic reorder for board lists on `/app/board` while preserving row #2 card detail, row #3 typed dates, and the current board writer path |
-| Current Phase | FEATURE_REVIEW |
-| Status | APPROVED |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
-| Executor | gpt-5.3-codex |
-| Updated | 2026-06-03 20:33 PDT |
-| Blockers | - |
+| Executor | gpt-5.4 |
+| Updated | 2026-06-03 20:53 PDT |
+| Blockers | None. P1/P2/P3 build commits are complete and await independent feature-verify. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #4 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
 | Write Scope | `docs/reviews/xai-web-board-list-crud/` + `packages/xai-web-board-list-crud/docs/` during planning. Runtime build scope is expected to stay inside `packages/plugin-web-board-{core,workspaces}` plus parity-only `plugin-web-board-views` if shared `BoardView` props change. |
