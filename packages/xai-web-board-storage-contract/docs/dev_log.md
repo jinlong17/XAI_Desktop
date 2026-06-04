@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-storage-contract |
 | Title | Web Project module P0 storage contract - versioned `xai_boards_v2` read/migration/entity projection |
-| Current Phase | FEATURE_PLAN |
-| Status | READY_FOR_BUILD |
-| Suggested Next | feature-build |
+| Current Phase | FEATURE_BUILD |
+| Status | READY_FOR_VERIFY |
+| Suggested Next | feature-verify |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 21:43 PDT |
+| Updated | 2026-06-03 21:48 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #7 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -35,7 +35,41 @@ projection helpers.
 
 ## Build Notes
 
-Pending build.
+Build landed as a compatibility-first storage contract patch:
+
+- added `storageContract.ts` in `@repo/plugin-web-board-core`
+- exported v1 constants for `xai_boards_v2`
+- added `BoardStorageEnvelopeV1`
+- added `readBoardStorage(...)`, `createBoardStorageEnvelope(...)`,
+  `migrateBoardStorageRawToEnvelope(...)`, and
+  `preserveBoardStorageFormat(...)`
+- updated `loadBoardsOrDefault(...)` to accept v1 envelopes while preserving
+  legacy-array fallback behavior
+- added `projectBoardStorageEntities(...)` to project board/list/card logical
+  entities with RepoRecord-compatible metadata and full payload preservation
+- updated board-core, board-views, and board-workspaces writers to preserve
+  envelope form when the previous raw storage value was already an envelope
+- added board-core regression coverage for read, migration, write preservation,
+  entity projection, and BoardModule envelope writes
+
+Package verification run during build:
+
+- `pnpm --filter @repo/plugin-web-board-core lint` PASS
+- `pnpm --filter @repo/plugin-web-board-core typecheck` PASS
+- `pnpm --filter @repo/plugin-web-board-core test -- --run src/__tests__/storageContract.test.ts src/__tests__/persistence.test.ts src/__tests__/BoardModule.test.tsx` PASS (`26/26`)
+- `pnpm --filter @repo/plugin-web-board-core test -- --run` PASS (`160/160`)
+- `pnpm --filter @repo/plugin-web-board-views lint` PASS
+- `pnpm --filter @repo/plugin-web-board-views typecheck` PASS
+- `pnpm --filter @repo/plugin-web-board-views test -- --run` PASS (`131/131`)
+- `pnpm --filter @repo/plugin-web-board-workspaces lint` PASS
+- `pnpm --filter @repo/plugin-web-board-workspaces typecheck` PASS
+- `pnpm --filter @repo/plugin-web-board-workspaces test -- --run` PASS (`199/199`)
+
+Known inherited warnings observed during package verification:
+
+- React act warnings in board-core and board-views tests.
+- BoardSwitcher nested button stderr warning in workspaces tests.
+- SubtleCrypto unavailable fallback warning in `shareUrl.test.ts`.
 
 ## Verify Notes
 
@@ -46,3 +80,4 @@ Pending verify.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 21:43 PDT | gpt-5 parent inline | feature-plan - audited board-core persistence, plugin-web-storage registry/migration stub, core-data repository contract, and current board views/workspaces writer paths; created row #7 discovery/design/api/test/dev_log docs. | pending | feature-build |
+| 2026-06-03 21:48 PDT | gpt-5 parent inline | Inline build - added board-core v1 storage envelope/read/migration/write-preservation helpers, logical entity projection, public exports, writer-preservation updates in board-core/views/workspaces, and focused regression tests. Verification: board-core lint PASS, typecheck PASS, focused tests PASS (`26/26`), full board-core PASS (`160/160`), board-views PASS (`131/131`), board-workspaces PASS (`199/199`). | pending | feature-verify |

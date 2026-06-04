@@ -45,6 +45,7 @@ import {
   moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
+  preserveBoardStorageFormat,
   renameCard as renameCardOp,
   renameList as renameListOp,
   setListColor as setListColorOp,
@@ -117,9 +118,9 @@ export function BoardModule({ lang }: BoardModuleProps) {
           ? { ...board, lists: updater(board.lists) }
           : board,
       );
-      setRawBoards(nextBoards as unknown);
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
-    [boards, activeBoard.id, setRawBoards],
+    [boards, activeBoard.id, rawBoards, setRawBoards],
   );
 
   // ---- Card mutation closure (all 5 view components call this) -----------

@@ -50,6 +50,7 @@ import {
   moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
   moveListByOffset as moveListByOffsetOp,
+  preserveBoardStorageFormat,
   renameCard as renameCardOp,
   renameList as renameListOp,
   restoreCard as restoreCardOp,
@@ -206,9 +207,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           ? { ...board, lists: updater(board.lists) }
           : board,
       );
-      setRawBoards(nextBoards as unknown);
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
-    [boards, activeBoard.id, setRawBoards],
+    [boards, activeBoard.id, rawBoards, setRawBoards],
   );
 
   // ---- Filter state (HC1: render-only; reset on board switch) -----------
@@ -273,12 +274,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         template: templateId,
         lists: tpl.lists() as BoardListData[],
       };
-      setRawBoards([...boards, newBoard] as unknown);
+      setRawBoards(
+        preserveBoardStorageFormat(rawBoards, [...boards, newBoard]) as unknown,
+      );
       setActiveBoardId(newId);
       setCreateOpen(false);
       setSwitcherOpen(false);
     },
-    [boards, setRawBoards, setActiveBoardId],
+    [boards, rawBoards, setRawBoards, setActiveBoardId],
   );
 
   const deleteBoard = useCallback(
@@ -288,9 +291,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         setActiveBoardId(remaining[0].id);
       }
       const next = remaining.length ? remaining : makeDefaultBoards();
-      setRawBoards(next as unknown);
+      setRawBoards(preserveBoardStorageFormat(rawBoards, next) as unknown);
     },
-    [boards, activeBoard.id, setRawBoards, setActiveBoardId],
+    [boards, activeBoard.id, rawBoards, setRawBoards, setActiveBoardId],
   );
 
   // ---- Kanban-view ops ---------------------------------------------------

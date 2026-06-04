@@ -119,6 +119,33 @@ export {
   pickActiveBoard,
 } from "./internal/persistence.js";
 
+export {
+  BOARD_STORAGE_ENVELOPE_KIND,
+  BOARD_STORAGE_ENTITY_SCHEMA_VERSION,
+  BOARD_STORAGE_KEY,
+  BOARD_STORAGE_SCHEMA_VERSION,
+  createBoardStorageEnvelope,
+  isBoardStorageEnvelopeV1,
+  migrateBoardStorageRawToEnvelope,
+  preserveBoardStorageFormat,
+  projectBoardStorageEntities,
+  readBoardStorage,
+} from "./internal/storageContract.js";
+export type {
+  BoardStorageBoardEntity,
+  BoardStorageCardEntity,
+  BoardStorageEntityType,
+  BoardStorageEnvelopeV1,
+  BoardStorageListEntity,
+  BoardStorageLogicalEntities,
+  BoardStorageLogicalEntity,
+  BoardStorageMigrationResult,
+  BoardStorageReadResult,
+  BoardStorageRecordBase,
+  BoardStorageSource,
+  BoardStorageValue,
+} from "./internal/storageContract.js";
+
 // ---- React components ----------------------------------------------------
 export { BoardCard, BOARD_CARD_DND_MIME } from "./BoardCard.js";
 export type { BoardCardProps } from "./BoardCard.js";

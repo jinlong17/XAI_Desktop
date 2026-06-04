@@ -40,6 +40,7 @@ import {
   loadBoardsOrDefault,
   pickActiveBoard,
 } from "./internal/persistence.js";
+import { preserveBoardStorageFormat } from "./internal/storageContract.js";
 import { makeDefaultBoards } from "./internal/seed/board-data.js";
 import type { Board, BoardList, BoardListColorId } from "./types.js";
 
@@ -73,9 +74,9 @@ export function BoardModule({ lang }: BoardModuleProps) {
       // setRawBoards is typed `unknown` → `unknown` at the registry boundary
       // (BoardsState = unknown). A valid `Board[]` is acceptable; widen via
       // an explicit unknown cast.
-      setRawBoards(nextBoards as unknown);
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
-    [boards, activeBoard.id, setRawBoards],
+    [boards, activeBoard.id, rawBoards, setRawBoards],
   );
 
   // Defensive: if the persisted active id doesn't match any board, sync it.
