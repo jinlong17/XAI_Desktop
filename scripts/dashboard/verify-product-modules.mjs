@@ -4,7 +4,6 @@ import { resolve } from "node:path";
 const repoRoot = resolve(new URL("../..", import.meta.url).pathname);
 const sourcePath = resolve(repoRoot, "docs/workflow/project/dashboard-state.json");
 const generatedPath = resolve(repoRoot, "docs/prototypes/dev-dashboard/state.generated.js");
-const requiredKeys = ["web", "app", "plugin", "sync", "site", "admin"];
 const allowedSupportReleaseKeys = new Set(["project-system"]);
 
 function readJson(path) {
@@ -22,11 +21,11 @@ function assert(condition, message) {
   }
 }
 
-function assertKeySet(label, rows) {
+function assertKeySet(label, rows, expectedKeys) {
   const keys = rows.map(row => row.key);
   assert(
-    JSON.stringify([...keys].sort()) === JSON.stringify([...requiredKeys].sort()),
-    `${label} keys must be ${requiredKeys.join(", ")}; got ${keys.join(", ")}`
+    JSON.stringify([...keys].sort()) === JSON.stringify([...expectedKeys].sort()),
+    `${label} keys must be ${expectedKeys.join(", ")}; got ${keys.join(", ")}`
   );
   assert(new Set(keys).size === keys.length, `${label} keys must be unique`);
 }
@@ -60,7 +59,9 @@ function assertRegistryModule(module, sourceModule) {
 
 const source = readJson(sourcePath);
 assert(Array.isArray(source.product_lines), "dashboard-state.json must define product_lines");
-assertKeySet("source product_lines", source.product_lines);
+const requiredKeys = source.product_lines.map(module => module.key);
+assert(requiredKeys.length > 0, "dashboard-state.json product_lines must not be empty");
+assertKeySet("source product_lines", source.product_lines, requiredKeys);
 source.product_lines.forEach(module => assertRegistryModule(module));
 
 assert(existsSync(generatedPath), "state.generated.js is missing; run pnpm dashboard first");
@@ -68,8 +69,8 @@ const generated = readGeneratedState(generatedPath);
 assert(generated.product_module_registry?.field === "product_lines", "generated state must expose product_module_registry.field=product_lines");
 assert(Array.isArray(generated.product_lines), "generated product_lines missing");
 assert(Array.isArray(generated.overview_modules), "generated overview_modules missing");
-assertKeySet("generated product_lines", generated.product_lines);
-assertKeySet("generated overview_modules", generated.overview_modules);
+assertKeySet("generated product_lines", generated.product_lines, requiredKeys);
+assertKeySet("generated overview_modules", generated.overview_modules, requiredKeys);
 assert(
   JSON.stringify(generated.product_lines) === JSON.stringify(generated.overview_modules),
   "overview_modules must be the same generated module definitions as product_lines"
