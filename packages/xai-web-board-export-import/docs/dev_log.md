@@ -7,13 +7,13 @@
 | Workflow | FEATURE_DEV |
 | Target | xai-web-board-export-import |
 | Title | Web Project module P1 Board export/import/delete data contract |
-| Current Phase | FEATURE_VERIFY |
-| Status | READY_FOR_SHIP |
-| Suggested Next | ship docs |
+| Current Phase | SHIP |
+| Status | SHIPPED |
+| Suggested Next | xai-web-board-automation-lite |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | yes |
 | Executor | gpt-5 parent inline |
-| Updated | 2026-06-03 23:02 PDT |
+| Updated | 2026-06-03 23:03 PDT |
 | Blockers | None currently. |
 | Roadmap Manifest | `docs/workflow/roadmap/xai-web-project-module.md` row #13 |
 | Source PRD / Audit | `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` |
@@ -71,4 +71,5 @@ The UI and encrypted bundle layer remain future work.
 | Timestamp | Executor | Action | Commits | Next Step |
 |---|---|---|---|---|
 | 2026-06-03 22:55 PDT | gpt-5 parent inline | feature-plan - audited legacy export/import pages, active Settings delete flow, storage registry, and board-core storage contract; selected board-core payload helpers plus delete-flow registry proof. | `5ab3f27` | feature-build |
-| 2026-06-03 23:02 PDT | gpt-5 parent inline | feature-build/verify - implemented board export/import payload helpers, barrel exports, contract tests, delete-flow Board key proof, and package/web verification. | pending | ship docs |
+| 2026-06-03 23:02 PDT | gpt-5 parent inline | feature-build/verify - implemented board export/import payload helpers, barrel exports, contract tests, delete-flow Board key proof, and package/web verification. | `128f4be` | ship docs |
+| 2026-06-03 23:03 PDT | gpt-5 parent inline | feature-ship - roadmap, PLUGIN_MAP, architecture, PRD, and dev_log marked shipped. | this docs commit | xai-web-board-automation-lite |

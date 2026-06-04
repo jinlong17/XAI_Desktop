@@ -200,7 +200,8 @@ flowchart LR
   J --> N["per-board saved filters shipped"]
   N --> O["explicit mock share contract shipped"]
   O --> P["responsive smoke shipped"]
-  P --> Q["future sync/export"]
+  P --> Q["Board export/import data contract shipped"]
+  Q --> R["future automation + active export/import UI"]
 ```
 
 Ownership rules:
@@ -213,6 +214,9 @@ Ownership rules:
   creator, workspace chips, Inbox, Planner, filters, Board-card to Task link UI,
   per-board saved filter preference state, the explicit mock share modal, and
   responsive containment for the Board toolbar/detail shell.
+- `plugin-web-board-core` also owns the Board export/import data contract:
+  payload helpers that validate `xai_boards_v2`, preserve v1 storage envelopes,
+  and project board/list/card logical entities.
 - `@repo/plugin-web-tasks` owns the `xai_task_cols` shape and public board-link
   helper surface used to create deterministic linked tasks from Board cards.
 - `@repo/plugin-web-calendar` may read `plugin-web-board-core` public storage

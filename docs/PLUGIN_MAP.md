@@ -114,9 +114,10 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 > It is a stable board foundation, not yet the full formal Project module:
 > card detail, typed date model, list CRUD, card CRUD, checklist editor,
 > storage contract/logical entities, one-way Board-card to Task linkage, and
-> Calendar read-only Board feed, per-board saved filters, and explicit mock
-> share contract, plus desktop/mobile responsive smoke are now shipped; real
-> backend share, export/import, comments/activity, automation, and permissions are tracked in
+> Calendar read-only Board feed, per-board saved filters, explicit mock share
+> contract, desktop/mobile responsive smoke, and Board export/import data
+> contract are now shipped; real backend share, active export/import UI,
+> comments/activity, automation, and permissions are tracked in
 > `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` and
 > `docs/workflow/roadmap/xai-web-project-module.md`.
 >
@@ -204,6 +205,14 @@ Per P1 period: new work on P1/G1 native foundation permitted; P0 web is maintena
 > Calendar, Timeline, and Detail at `1440x900` and `390x844`; package/app gates
 > passed for board-workspaces, board-views, plugin-web-tokens, and web. Real
 > mobile Safari/Firefox cross-browser proof remains future work.
+>
+> **Board export/import contract amendment (2026-06-03):** roadmap row
+> `xai-web-board-export-import` is SHIPPED. Board-core now exposes a pure
+> `xai.web.board.export` v1 payload contract with validated `xai_boards_v2`
+> storage values plus board/list/card logical entities. Account-delete tests
+> assert Board-owned keys are included in the registry wipe set. Active Web
+> export/import UI, encrypted bundle wrapping, and backend restore remain future
+> work.
 
 | Package | 目录 | 状态 | 说明 | 依赖 | 最后更新 |
 |---------|------|------|------|------|---------|

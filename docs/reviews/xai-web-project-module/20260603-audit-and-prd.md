@@ -252,7 +252,7 @@ This is good enough for local demo and first-run state. It is not enough for dur
 | `xai-web-board-saved-filters` | board-workspaces | SHIPPED: persist filters per board with clear/reset. |
 | `xai-web-board-share-contract` | board + sync/share | SHIPPED: mock URL is visibly labeled as planning-only and emits explicit mock share-envelope fields. |
 | `xai-web-board-responsive-smoke` | Web shell + board packages | SHIPPED: desktop/mobile Board/Table/Calendar/Timeline/Detail smoke passed; mobile shell/detail overflow blockers fixed. |
-| `xai-web-board-export-import` | export/delete/privacy | Add board entities to export and delete flows. |
+| `xai-web-board-export-import` | export/delete/privacy | SHIPPED: board-core exposes Board export/import payload helpers with board/list/card logical entities; delete-flow tests prove Board keys are in the registry wipe set. Active export/import UI remains future work. |
 
 ### P2: Advanced Trello-Like Extensions
 
@@ -312,6 +312,7 @@ Do not update generated dashboard snapshots directly. If a dashboard generator c
 | Saved filters implementation | `xai-web-board-saved-filters` shipped `xai_board_filter_by_id`, per-board filter restore, and persisted Clear reset; the next personal-board focus is `xai-web-board-share-contract`. |
 | Share contract implementation | `xai-web-board-share-contract` shipped visible mock-only share labeling and explicit envelope fields; the next personal-board focus is `xai-web-board-responsive-smoke`. |
 | Responsive smoke implementation | `xai-web-board-responsive-smoke` shipped desktop/mobile Board/Table/Calendar/Timeline/Detail smoke, fixed mobile toolbar containment and detail modal viewport bounds, and moved the next personal-board focus to `xai-web-board-export-import`. |
+| Export/import data contract implementation | `xai-web-board-export-import` shipped board-core payload helpers for export/import, logical entity inclusion, and Board key coverage in account-delete registry wipe tests; the next personal-board focus is `xai-web-board-automation-lite`. |
 
 ## 11. Acceptance Criteria for the Next Implementation Wave
 
