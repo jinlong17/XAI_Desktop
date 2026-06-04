@@ -25,9 +25,7 @@ beforeEach(() => {
 });
 
 function getStoredCard(cardId: string): BoardCardData {
-  const raw = localStorage.getItem("xai_boards_v2");
-  if (!raw) throw new Error("xai_boards_v2 not persisted");
-  const boards = JSON.parse(raw) as Board[];
+  const boards = getStoredBoards();
   for (const board of boards) {
     for (const list of board.lists) {
       const card = list.cards.find((entry) => entry.id === cardId);
@@ -35,6 +33,20 @@ function getStoredCard(cardId: string): BoardCardData {
     }
   }
   throw new Error(`card not found: ${cardId}`);
+}
+
+function getStoredBoards(): Board[] {
+  const raw = localStorage.getItem("xai_boards_v2");
+  if (!raw) throw new Error("xai_boards_v2 not persisted");
+  return JSON.parse(raw) as Board[];
+}
+
+function getStoredList(listId: string) {
+  for (const board of getStoredBoards()) {
+    const list = board.lists.find((entry) => entry.id === listId);
+    if (list) return list;
+  }
+  throw new Error(`list not found: ${listId}`);
 }
 
 function seedAltView(view: "table" | "calendar" | "timeline") {
@@ -484,5 +496,88 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
     expect(screen.getByTestId("card-detail-modal")).toBeInTheDocument();
     expect(screen.getByTestId("card-detail-due-date")).toHaveValue("");
+  });
+
+  it("BWM-LIST-1: first-run keyed kanban list rename persists customName without clearing key", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("bl-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("list-rename-open"));
+    fireEvent.change(screen.getByTestId("list-rename-input"), {
+      target: { value: "Focus Queue" },
+    });
+    fireEvent.click(screen.getByTestId("list-rename-save"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const list = getStoredList("b-backlog");
+    expect(list.key).toBe("backlog");
+    expect(list.customName).toEqual({ en: "Focus Queue", zh: "Focus Queue" });
+    expect(screen.getByText("Focus Queue")).toBeInTheDocument();
+  });
+
+  it("BWM-LIST-2: add-card targets listId after archived gaps, not visible index", async () => {
+    const seed = makeDefaultBoards() as Board[];
+    seed[0]!.lists[1] = { ...seed[0]!.lists[1]!, archived: true };
+    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
+    localStorage.setItem("xai_active_board", "b-default");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("add-card-btn")[1]!);
+    fireEvent.change(screen.getByTestId("card-composer-input"), {
+      target: { value: "Card for week" },
+    });
+    fireEvent.click(screen.getByTestId("card-composer-add"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const today = getStoredList("b-today");
+    const week = getStoredList("b-week");
+    expect(today.cards.some((card) => card.title.en === "Card for week")).toBe(false);
+    expect(week.cards.some((card) => card.title.en === "Card for week")).toBe(true);
+  });
+
+  it("BWM-LIST-3: archive manager restores and permanently deletes archived lists", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<BoardWorkspacesModule lang="en" />);
+
+    fireEvent.click(screen.getAllByTestId("bl-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("list-archive"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredList("b-backlog").archived).toBe(true);
+    expect(screen.queryByText("Backlog")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("archive-toggle"));
+    expect(screen.getByTestId("archive-popover")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("archive-restore-b-backlog"));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredList("b-backlog").archived).toBeUndefined();
+    expect(screen.getByText("Backlog")).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByTestId("bl-menu-open")[0]!);
+    fireEvent.click(screen.getByTestId("list-archive"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    fireEvent.click(screen.getByTestId("archive-toggle"));
+    fireEvent.click(screen.getByTestId("archive-delete-b-backlog"));
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getStoredBoards()[0]!.lists.some((list) => list.id === "b-backlog")).toBe(false);
   });
 });

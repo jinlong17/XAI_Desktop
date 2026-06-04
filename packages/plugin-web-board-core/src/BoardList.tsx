@@ -6,6 +6,7 @@
  * `BoardList` (lines 387..476).
  */
 
+import { useState } from "react";
 import type { DragEvent, KeyboardEvent } from "react";
 import { LIST_COLOR_PALETTE } from "./internal/listColors.js";
 import { BoardCard } from "./BoardCard.js";
@@ -28,6 +29,13 @@ export interface BoardListProps {
   openListMenu: () => void;
   closeListMenu: () => void;
   setListColor: (color: BoardListColorId | null) => void;
+  canManageList: boolean;
+  canMoveListLeft: boolean;
+  canMoveListRight: boolean;
+  renameList: (name: string) => void;
+  moveListByOffset: (offset: -1 | 1) => void;
+  archiveList: () => void;
+  deleteList: () => void;
 
   // Drag state
   isDropTarget: boolean;
@@ -51,12 +59,14 @@ const LIST_KEY_LABEL: Record<string, { en: string; zh: string }> = {
 };
 
 function resolveListName(list: BoardListData, lang: "en" | "zh"): string {
+  const customName = list.customName?.[lang];
+  if (customName) return customName;
   if (list.key) {
     const dict = LIST_KEY_LABEL[list.key];
     if (dict) return dict[lang];
     return list.key;
   }
-  return list.customName?.[lang] ?? (lang === "zh" ? "未命名" : "Untitled");
+  return lang === "zh" ? "未命名" : "Untitled";
 }
 
 export function BoardList({
@@ -72,6 +82,13 @@ export function BoardList({
   openListMenu,
   closeListMenu,
   setListColor,
+  canManageList,
+  canMoveListLeft,
+  canMoveListRight,
+  renameList,
+  moveListByOffset,
+  archiveList,
+  deleteList,
   isDropTarget,
   onListDragOver,
   onListDragLeave,
@@ -82,6 +99,8 @@ export function BoardList({
   onOpenCard,
 }: BoardListProps) {
   const name = resolveListName(list, lang);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameText, setRenameText] = useState(name);
   const colorEntry =
     list.color !== undefined && list.color !== null
       ? LIST_COLOR_PALETTE.find((c) => c.id === list.color)
@@ -96,6 +115,33 @@ export function BoardList({
     if (event.key === "Escape") {
       event.preventDefault();
       closeComposer();
+    }
+  };
+
+  const closeActionsMenu = (): void => {
+    setIsRenaming(false);
+    closeListMenu();
+  };
+
+  const startRename = (): void => {
+    setRenameText(name);
+    setIsRenaming(true);
+  };
+
+  const submitRename = (): void => {
+    renameList(renameText);
+    closeActionsMenu();
+  };
+
+  const onRenameKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitRename();
+      return;
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setIsRenaming(false);
     }
   };
 
@@ -143,10 +189,10 @@ export function BoardList({
               <span>{lang === "zh" ? "列操作" : "List actions"}</span>
               <button
                 type="button"
-                className="icon-btn"
-                onClick={closeListMenu}
-                aria-label={lang === "zh" ? "关闭" : "Close"}
-              >
+            className="icon-btn"
+            onClick={closeActionsMenu}
+            aria-label={lang === "zh" ? "关闭" : "Close"}
+          >
                 ✕
               </button>
             </header>
@@ -156,11 +202,94 @@ export function BoardList({
                 className="popover-item"
                 onClick={() => {
                   openComposer();
-                  closeListMenu();
+                  closeActionsMenu();
                 }}
               >
                 {lang === "zh" ? "添加卡片" : "Add card"}
               </button>
+              {canManageList ? (
+                <>
+                  <button
+                    type="button"
+                    className="popover-item"
+                    onClick={startRename}
+                    data-testid="list-rename-open"
+                  >
+                    {lang === "zh" ? "重命名列" : "Rename list"}
+                  </button>
+                  {isRenaming ? (
+                    <div className="list-rename-form">
+                      <input
+                        autoFocus
+                        value={renameText}
+                        onChange={(event) => setRenameText(event.target.value)}
+                        onKeyDown={onRenameKeyDown}
+                        data-testid="list-rename-input"
+                        aria-label={lang === "zh" ? "列名" : "List name"}
+                      />
+                      <div className="composer-actions">
+                        <button
+                          type="button"
+                          className="btn primary"
+                          onClick={submitRename}
+                          data-testid="list-rename-save"
+                        >
+                          {lang === "zh" ? "保存" : "Save"}
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          onClick={() => setIsRenaming(false)}
+                          aria-label={lang === "zh" ? "取消" : "Cancel"}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="popover-item"
+                    onClick={() => {
+                      moveListByOffset(-1);
+                      closeActionsMenu();
+                    }}
+                    disabled={!canMoveListLeft}
+                    data-testid="list-move-left"
+                  >
+                    {lang === "zh" ? "左移" : "Move left"}
+                  </button>
+                  <button
+                    type="button"
+                    className="popover-item"
+                    onClick={() => {
+                      moveListByOffset(1);
+                      closeActionsMenu();
+                    }}
+                    disabled={!canMoveListRight}
+                    data-testid="list-move-right"
+                  >
+                    {lang === "zh" ? "右移" : "Move right"}
+                  </button>
+                  <button
+                    type="button"
+                    className="popover-item remove-color"
+                    onClick={() => {
+                      if (list.cards.length > 0) {
+                        archiveList();
+                      } else {
+                        deleteList();
+                      }
+                      closeActionsMenu();
+                    }}
+                    data-testid={list.cards.length > 0 ? "list-archive" : "list-delete"}
+                  >
+                    {list.cards.length > 0
+                      ? lang === "zh" ? "归档列" : "Archive list"
+                      : lang === "zh" ? "删除空列" : "Delete empty list"}
+                  </button>
+                </>
+              ) : null}
               <div className="popover-divider" />
               <div className="color-picker-h">
                 {lang === "zh" ? "更改颜色" : "Change color"}
@@ -176,7 +305,7 @@ export function BoardList({
                     style={{ background: entry.cssVar }}
                     onClick={() => {
                       setListColor(entry.id);
-                      closeListMenu();
+                      closeActionsMenu();
                     }}
                     aria-label={entry.id}
                     data-color-id={entry.id}
@@ -188,7 +317,7 @@ export function BoardList({
                 className="popover-item remove-color"
                 onClick={() => {
                   setListColor(null);
-                  closeListMenu();
+                  closeActionsMenu();
                 }}
               >
                 {lang === "zh" ? "去除颜色" : "Remove color"}

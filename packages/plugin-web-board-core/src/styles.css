@@ -367,6 +367,30 @@
 .popover-item:hover  { background: var(--bg-hover); }
 .popover-item.active { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
 .popover-item.remove-color { color: var(--text-2); }
+.popover-item:disabled {
+  cursor: not-allowed;
+  color: var(--text-3);
+  opacity: 0.55;
+}
+.popover-item:disabled:hover { background: transparent; }
+
+.list-rename-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 10px 8px;
+}
+
+.list-rename-form input {
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-sm);
+  padding: 0 8px;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  background: var(--bg-panel-2);
+}
 
 .popover-divider {
   height: 1px;

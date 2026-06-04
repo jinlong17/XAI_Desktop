@@ -31,6 +31,13 @@ function baseProps(overrides = {}) {
     openListMenu: vi.fn(),
     closeListMenu: vi.fn(),
     setListColor: vi.fn(),
+    canManageList: true,
+    canMoveListLeft: true,
+    canMoveListRight: true,
+    renameList: vi.fn(),
+    moveListByOffset: vi.fn(),
+    archiveList: vi.fn(),
+    deleteList: vi.fn(),
     isDropTarget: false,
     onListDragOver: vi.fn(),
     onListDragLeave: vi.fn(),
@@ -114,6 +121,8 @@ describe("BoardList", () => {
       .getAllByRole("button")
       .filter((btn) => btn.getAttribute("data-color-id"));
     expect(swatches.length).toBe(10);
+    expect(screen.getByTestId("list-rename-open")).toBeInTheDocument();
+    expect(screen.getByTestId("list-move-left")).toBeInTheDocument();
   });
 
   test("BL9 click a swatch → setListColor(id) fires + closeListMenu fires", () => {
@@ -164,5 +173,78 @@ describe("BoardList", () => {
   test("BL13 drop-target class applied when isDropTarget=true", () => {
     render(<BoardList {...baseProps({ isDropTarget: true })} />);
     expect(screen.getByTestId("board-list").className).toContain("drop-target");
+  });
+
+  test("BL14 rename form calls renameList and closes menu", () => {
+    const renameList = vi.fn();
+    const closeListMenu = vi.fn();
+    render(
+      <BoardList
+        {...baseProps({ listMenuOpen: true, renameList, closeListMenu })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("list-rename-open"));
+    fireEvent.change(screen.getByTestId("list-rename-input"), {
+      target: { value: "Renamed" },
+    });
+    fireEvent.click(screen.getByTestId("list-rename-save"));
+
+    expect(renameList).toHaveBeenCalledWith("Renamed");
+    expect(closeListMenu).toHaveBeenCalledTimes(1);
+  });
+
+  test("BL15 move buttons call moveListByOffset with signed offsets", () => {
+    const moveListByOffset = vi.fn();
+    render(
+      <BoardList
+        {...baseProps({ listMenuOpen: true, moveListByOffset })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("list-move-left"));
+    expect(moveListByOffset).toHaveBeenCalledWith(-1);
+  });
+
+  test("BL16 non-empty destructive action archives; empty destructive action deletes", () => {
+    const archiveList = vi.fn();
+    const deleteList = vi.fn();
+    const { rerender } = render(
+      <BoardList
+        {...baseProps({ listMenuOpen: true, archiveList, deleteList })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("list-archive"));
+    expect(archiveList).toHaveBeenCalledTimes(1);
+    expect(deleteList).not.toHaveBeenCalled();
+
+    rerender(
+      <BoardList
+        {...baseProps({
+          list: makeList({ cards: [] }),
+          listMenuOpen: true,
+          archiveList,
+          deleteList,
+        })}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("list-delete"));
+    expect(deleteList).toHaveBeenCalledTimes(1);
+  });
+
+  test("BL17 keyed list displays customName override before key catalog label", () => {
+    render(
+      <BoardList
+        {...baseProps({
+          list: makeList({
+            key: "today",
+            customName: { en: "Focus", zh: "专注" },
+          }),
+        })}
+      />,
+    );
+    expect(screen.getByText("Focus")).toBeInTheDocument();
+    expect(screen.queryByText("Today")).not.toBeInTheDocument();
   });
 });

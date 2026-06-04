@@ -29,8 +29,8 @@ function baseProps(overrides = {}) {
   return {
     lists: makeLists(),
     lang: "en" as const,
-    draftListIdx: null,
-    setDraftListIdx: vi.fn(),
+    draftListId: null,
+    setDraftListId: vi.fn(),
     composerText: "",
     setComposerText: vi.fn(),
     showListComposer: false,
@@ -41,6 +41,12 @@ function baseProps(overrides = {}) {
     addList: vi.fn(),
     setListColor: vi.fn(),
     moveCardToList: vi.fn(),
+    canManageList: vi.fn(() => true),
+    canMoveListByOffset: vi.fn(() => true),
+    renameList: vi.fn(),
+    moveListByOffset: vi.fn(),
+    archiveList: vi.fn(),
+    deleteList: vi.fn(),
     listMenu: null,
     setListMenu: vi.fn(),
     ...overrides,
@@ -165,5 +171,20 @@ describe("BoardView", () => {
 
     // Source list does not get .drop-target
     expect(lists[0]!.className).not.toContain("drop-target");
+  });
+
+  test("BV10 add-card composer targets the stable list id", () => {
+    const addCard = vi.fn();
+    render(
+      <BoardView
+        {...baseProps({
+          draftListId: "B",
+          addCard,
+        })}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("card-composer-add"));
+    expect(addCard).toHaveBeenCalledWith("B");
   });
 });

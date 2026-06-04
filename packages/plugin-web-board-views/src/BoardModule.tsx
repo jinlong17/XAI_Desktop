@@ -28,16 +28,22 @@
  * shape, so a future re-export refactor is a clean swap.
  */
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
   loadBoardsOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
-  addCardToList,
+  addCardToListById,
   addNewList,
+  archiveList as archiveListOp,
+  canManageBoardList,
+  deleteList as deleteListOp,
+  getActiveBoardLists,
   moveCardToList as moveCardOp,
+  moveListByOffset as moveListByOffsetOp,
+  renameList as renameListOp,
   setListColor as setListColorOp,
   updateCardInList,
 } from "@repo/plugin-web-board-core";
@@ -76,7 +82,12 @@ export function BoardModule({ lang }: BoardModuleProps) {
 
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
-  const lists: BoardListData[] = activeBoard.lists;
+  const rawLists: BoardListData[] = activeBoard.lists;
+  const lists: BoardListData[] = getActiveBoardLists(rawLists);
+  const mutationCtx = useMemo(
+    () => ({ template: activeBoard.template }),
+    [activeBoard.template],
+  );
 
   const viewByBoardId = loadViewByBoardIdOrEmpty(rawViewByBoardId);
   const activeView: BoardViewId = viewByBoardId[activeBoard.id] ?? "board";
@@ -130,7 +141,7 @@ export function BoardModule({ lang }: BoardModuleProps) {
 
   // ---- Kanban-view local state (REC-1 intentional reproduction) ----------
   // These are only used when activeView === "board".
-  const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
+  const [draftListId, setDraftListId] = useState<string | null>(null);
   const [composerText, setComposerText] = useState<string>("");
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
@@ -138,12 +149,12 @@ export function BoardModule({ lang }: BoardModuleProps) {
 
   // ---- Kanban operations -------------------------------------------------
   const addCard = useCallback(
-    (listIdx: number) => {
+    (listId: string) => {
       const text = composerText.trim();
-      if (!text) { setDraftListIdx(null); return; }
-      writeLists((prev) => addCardToList(prev, listIdx, text));
+      if (!text) { setDraftListId(null); return; }
+      writeLists((prev) => addCardToListById(prev, listId, text));
       setComposerText("");
-      setDraftListIdx(null);
+      setDraftListId(null);
     },
     [composerText, writeLists],
   );
@@ -170,6 +181,48 @@ export function BoardModule({ lang }: BoardModuleProps) {
     [writeLists],
   );
 
+  const canManageList = useCallback(
+    (listId: string) => {
+      const list = rawLists.find((entry) => entry.id === listId);
+      return list ? canManageBoardList(list, mutationCtx) : false;
+    },
+    [mutationCtx, rawLists],
+  );
+
+  const canMoveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) =>
+      moveListByOffsetOp(rawLists, listId, offset, mutationCtx) !== rawLists,
+    [mutationCtx, rawLists],
+  );
+
+  const renameList = useCallback(
+    (listId: string, name: string) => {
+      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const moveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const archiveList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const deleteList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
   // ---- Render ------------------------------------------------------------
   return (
     <div className="board-module board-views-host" data-testid="board-views-module">
@@ -190,8 +243,8 @@ export function BoardModule({ lang }: BoardModuleProps) {
           <BoardView
             lists={lists}
             lang={lang}
-            draftListIdx={draftListIdx}
-            setDraftListIdx={setDraftListIdx}
+            draftListId={draftListId}
+            setDraftListId={setDraftListId}
             composerText={composerText}
             setComposerText={setComposerText}
             showListComposer={showListComposer}
@@ -202,6 +255,12 @@ export function BoardModule({ lang }: BoardModuleProps) {
             addList={addList}
             setListColor={setListColor}
             moveCardToList={moveCardToList}
+            canManageList={canManageList}
+            canMoveListByOffset={canMoveListByOffset}
+            renameList={renameList}
+            moveListByOffset={moveListByOffset}
+            archiveList={archiveList}
+            deleteList={deleteList}
             listMenu={listMenu}
             setListMenu={setListMenu}
           />

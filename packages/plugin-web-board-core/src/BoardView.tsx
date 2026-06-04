@@ -21,8 +21,8 @@ export interface BoardViewProps {
   lang: "en" | "zh";
 
   // Composer states (lifted to caller)
-  draftListIdx: number | null;
-  setDraftListIdx: (next: number | null) => void;
+  draftListId: string | null;
+  setDraftListId: (next: string | null) => void;
   composerText: string;
   setComposerText: (text: string) => void;
   showListComposer: boolean;
@@ -31,10 +31,16 @@ export interface BoardViewProps {
   setNewListName: (next: string) => void;
 
   // Operations
-  addCard: (listIdx: number) => void;
+  addCard: (listId: string) => void;
   addList: () => void;
   setListColor: (listId: string, color: BoardListColorId | null) => void;
   moveCardToList: (cardId: string, fromListId: string, toListId: string) => void;
+  canManageList: (listId: string) => boolean;
+  canMoveListByOffset: (listId: string, offset: -1 | 1) => boolean;
+  renameList: (listId: string, name: string) => void;
+  moveListByOffset: (listId: string, offset: -1 | 1) => void;
+  archiveList: (listId: string) => void;
+  deleteList: (listId: string) => void;
 
   // Menu
   listMenu: string | null;
@@ -52,8 +58,8 @@ interface DragState {
 export function BoardView({
   lists,
   lang,
-  draftListIdx,
-  setDraftListIdx,
+  draftListId,
+  setDraftListId,
   composerText,
   setComposerText,
   showListComposer,
@@ -64,6 +70,12 @@ export function BoardView({
   addList,
   setListColor,
   moveCardToList,
+  canManageList,
+  canMoveListByOffset,
+  renameList,
+  moveListByOffset,
+  archiveList,
+  deleteList,
   listMenu,
   setListMenu,
   onOpenCard,
@@ -150,24 +162,31 @@ export function BoardView({
 
   return (
     <div className="board-lists" data-testid="board-lists">
-      {lists.map((list, idx) => (
+      {lists.map((list) => (
         <BoardList
           key={list.id}
           list={list}
           lang={lang}
-          isComposer={draftListIdx === idx}
+          isComposer={draftListId === list.id}
           openComposer={() => {
-            setDraftListIdx(idx);
+            setDraftListId(list.id);
             setComposerText("");
           }}
-          closeComposer={() => setDraftListIdx(null)}
+          closeComposer={() => setDraftListId(null)}
           composerText={composerText}
           setComposerText={setComposerText}
-          addCard={() => addCard(idx)}
+          addCard={() => addCard(list.id)}
           listMenuOpen={listMenu === list.id}
           openListMenu={() => setListMenu(list.id)}
           closeListMenu={() => setListMenu(null)}
           setListColor={(color) => setListColor(list.id, color)}
+          canManageList={canManageList(list.id)}
+          canMoveListLeft={canMoveListByOffset(list.id, -1)}
+          canMoveListRight={canMoveListByOffset(list.id, 1)}
+          renameList={(name) => renameList(list.id, name)}
+          moveListByOffset={(offset) => moveListByOffset(list.id, offset)}
+          archiveList={() => archiveList(list.id)}
+          deleteList={() => deleteList(list.id)}
           isDropTarget={
             overListId === list.id &&
             dragging !== null &&

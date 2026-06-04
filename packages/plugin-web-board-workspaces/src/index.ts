@@ -75,6 +75,9 @@ export type { BoardCreatorProps } from "./BoardCreator.js";
 export { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 export type { StatusOverviewBannerProps } from "./StatusOverviewBanner.js";
 
+export { ArchivedListsManager } from "./ArchivedListsManager.js";
+export type { ArchivedListsManagerProps } from "./ArchivedListsManager.js";
+
 export { InboxPanel } from "./InboxPanel.js";
 export type { InboxPanelProps } from "./InboxPanel.js";
 

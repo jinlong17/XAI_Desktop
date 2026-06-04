@@ -27,7 +27,7 @@
  * can toggle Inbox / Planner / Switch-boards regardless of view.
  */
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import {
   BoardView,
@@ -36,9 +36,17 @@ import {
   loadBoardsOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
-  addCardToList,
+  addCardToListById,
   addNewList,
+  archiveList as archiveListOp,
+  canManageBoardList,
+  deleteList as deleteListOp,
+  getActiveBoardLists,
+  getArchivedBoardLists,
   moveCardToList as moveCardOp,
+  moveListByOffset as moveListByOffsetOp,
+  renameList as renameListOp,
+  restoreList as restoreListOp,
   setListColor as setListColorOp,
   updateCardInList,
 } from "@repo/plugin-web-board-core";
@@ -64,6 +72,7 @@ import { EMPTY_FILTER } from "@repo/plugin-web-board-views";
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
 import { BoardCardDetailModal } from "./BoardCardDetailModal.js";
+import { ArchivedListsManager } from "./ArchivedListsManager.js";
 import { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 import { InboxPanel } from "./InboxPanel.js";
 import { PlannerPanel } from "./PlannerPanel.js";
@@ -144,7 +153,13 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
   const activeBoard: Board = pickActiveBoard(boards, activeBoardId);
-  const lists: BoardListData[] = activeBoard.lists;
+  const rawLists: BoardListData[] = activeBoard.lists;
+  const activeLists: BoardListData[] = getActiveBoardLists(rawLists);
+  const archivedLists: BoardListData[] = getArchivedBoardLists(rawLists);
+  const mutationCtx = useMemo(
+    () => ({ template: activeBoard.template }),
+    [activeBoard.template],
+  );
   const panels: BoardPanelStateShape = loadPanelsOrDefault(rawPanels);
   const inboxCards: InboxCardShape[] = loadInboxOrDefault(rawInbox);
 
@@ -154,7 +169,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const workspaces = DEFAULT_WORKSPACES;
   const activeWorkspace =
     workspaces.find((w) => w.id === activeBoard.workspaceId) ?? workspaces[0]!;
-  const totalCards = lists.reduce((n, l) => n + l.cards.length, 0);
+  const totalCards = activeLists.reduce((n, l) => n + l.cards.length, 0);
   const isPM = activeBoard.template === "pm";
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
@@ -190,18 +205,19 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     setFilter(EMPTY_FILTER);
   }, [activeBoard.id]);
 
-  const filteredLists = applyFilter(lists, filter);
+  const filteredLists = applyFilter(activeLists, filter);
 
   // ---- Switcher / creator / overview state -------------------------------
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [archiveOpen, setArchiveOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [activeCardRef, setActiveCardRef] = useState<ActiveCardRef | null>(null);
 
   // ---- Kanban-view composer state ---------------------------------------
-  const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
+  const [draftListId, setDraftListId] = useState<string | null>(null);
   const [composerText, setComposerText] = useState<string>("");
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
@@ -265,15 +281,15 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   // ---- Kanban-view ops ---------------------------------------------------
   const addCard = useCallback(
-    (listIdx: number) => {
+    (listId: string) => {
       const text = composerText.trim();
       if (!text) {
-        setDraftListIdx(null);
+        setDraftListId(null);
         return;
       }
-      writeLists((prev) => addCardToList(prev, listIdx, text));
+      writeLists((prev) => addCardToListById(prev, listId, text));
       setComposerText("");
-      setDraftListIdx(null);
+      setDraftListId(null);
     },
     [composerText, writeLists],
   );
@@ -303,6 +319,68 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [writeLists],
   );
 
+  const canManageList = useCallback(
+    (listId: string) => {
+      const list = rawLists.find((entry) => entry.id === listId);
+      return list ? canManageBoardList(list, mutationCtx) : false;
+    },
+    [mutationCtx, rawLists],
+  );
+
+  const canMoveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) =>
+      moveListByOffsetOp(rawLists, listId, offset, mutationCtx) !== rawLists,
+    [mutationCtx, rawLists],
+  );
+
+  const renameList = useCallback(
+    (listId: string, name: string) => {
+      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const moveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const archiveList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const deleteList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+      if (activeCardRef?.listId === listId && activeCardRef.boardId === activeBoard.id) {
+        setActiveCardRef(null);
+      }
+    },
+    [activeBoard.id, activeCardRef, mutationCtx, writeLists],
+  );
+
+  const restoreArchivedList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => restoreListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const permanentlyDeleteArchivedList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+      if (activeCardRef?.listId === listId && activeCardRef.boardId === activeBoard.id) {
+        setActiveCardRef(null);
+      }
+    },
+    [activeBoard.id, activeCardRef, mutationCtx, writeLists],
+  );
+
   // ---- Card mutation closure (shared by Table / Calendar / Timeline) -----
   // All board-views card mutations route through this single closure, which
   // delegates to board-core's updateCardInList pure helper. This preserves
@@ -325,7 +403,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const activeCardContext =
     activeCardRef && activeCardRef.boardId === activeBoard.id
       ? (() => {
-          const list = lists.find((entry) => entry.id === activeCardRef.listId);
+          const list = rawLists.find((entry) => entry.id === activeCardRef.listId);
           const card = list?.cards.find((entry) => entry.id === activeCardRef.cardId);
           if (!list || !card) return null;
           return { list, card };
@@ -416,7 +494,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           </button>
           {filterOpen && (
             <FilterPopover
-              lists={lists}
+              lists={activeLists}
               filter={filter}
               onChange={setFilter}
               onClose={() => setFilterOpen(false)}
@@ -424,6 +502,15 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
             />
           )}
         </div>
+        <ArchivedListsManager
+          lists={archivedLists}
+          lang={lang}
+          open={archiveOpen}
+          onToggle={() => setArchiveOpen((open) => !open)}
+          onClose={() => setArchiveOpen(false)}
+          onRestore={restoreArchivedList}
+          onDeletePermanent={permanentlyDeleteArchivedList}
+        />
         <button
           type="button"
           className="board-icon-btn primary"
@@ -439,7 +526,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           <>
             {isPM && overviewOpen && panels.board && (
               <StatusOverviewBanner
-                lists={lists}
+                lists={activeLists}
                 lang={lang}
                 onClose={() => setOverviewOpen(false)}
               />
@@ -457,8 +544,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                   <BoardView
                     lists={filteredLists}
                     lang={lang}
-                    draftListIdx={draftListIdx}
-                    setDraftListIdx={setDraftListIdx}
+                    draftListId={draftListId}
+                    setDraftListId={setDraftListId}
                     composerText={composerText}
                     setComposerText={setComposerText}
                     showListComposer={showListComposer}
@@ -469,6 +556,12 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                     addList={addList}
                     setListColor={setListColor}
                     moveCardToList={moveCardToList}
+                    canManageList={canManageList}
+                    canMoveListByOffset={canMoveListByOffset}
+                    renameList={renameList}
+                    moveListByOffset={moveListByOffset}
+                    archiveList={archiveList}
+                    deleteList={deleteList}
                     listMenu={listMenu}
                     setListMenu={setListMenu}
                     onOpenCard={openCard}
