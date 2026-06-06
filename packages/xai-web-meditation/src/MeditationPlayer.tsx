@@ -14,10 +14,11 @@
  * Ambient sound is generated through Web Audio by useAmbientAudio.
  *
  * Fixed/custom sessions count down to 00:00. Infinite sessions keep running
- * until the user exits.
+ * until the user exits. The active view hides setup controls and progress
+ * chrome so the player stays quiet and centered.
  */
 
-import { useEffect, useState, type JSX } from "react";
+import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type {
@@ -72,7 +73,30 @@ export function MeditationPlayer({
   const [elapsed, setElapsed] = useState<number>(0);
   const [paused, setPaused] = useState<boolean>(false);
   const [controlsOpen, setControlsOpen] = useState<boolean>(false);
+  const [controlsVisible, setControlsVisible] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const controlsHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ambient = useAmbientAudio();
+
+  const clearControlsHideTimer = useCallback((): void => {
+    if (controlsHideTimer.current === null) return;
+    clearTimeout(controlsHideTimer.current);
+    controlsHideTimer.current = null;
+  }, []);
+
+  const scheduleControlsHide = useCallback((): void => {
+    clearControlsHideTimer();
+    if (controlsOpen || paused) return;
+    controlsHideTimer.current = setTimeout(() => {
+      setControlsVisible(false);
+      controlsHideTimer.current = null;
+    }, 2400);
+  }, [clearControlsHideTimer, controlsOpen, paused]);
+
+  const revealControls = useCallback((): void => {
+    setControlsVisible(true);
+    scheduleControlsHide();
+  }, [scheduleControlsHide]);
 
   useEffect(() => {
     if (paused) return;
@@ -97,17 +121,39 @@ export function MeditationPlayer({
     ambient.setVolume(volume);
   }, [ambient, volume]);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const onFullscreenChange = (): void => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    onFullscreenChange();
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  useEffect(() => () => clearControlsHideTimer(), [clearControlsHideTimer]);
+
+  useEffect(() => {
+    if (controlsOpen || paused) {
+      clearControlsHideTimer();
+      setControlsVisible(true);
+      return;
+    }
+    scheduleControlsHide();
+  }, [clearControlsHideTimer, controlsOpen, paused, scheduleControlsHide]);
+
   const total = resolveDurationSeconds(durationMode, duration, customDuration);
   const remaining = total === null ? null : Math.max(0, total - elapsed);
-  const progress = total === null ? 1 : Math.min(1, elapsed / total);
   const timeLabel = remaining === null ? formatElapsed(elapsed) : (() => {
     const { mm, ss } = formatRemaining(remaining);
     return `${mm}:${ss}`;
   })();
   const isInfinite = durationMode === "infinite";
   const particleClass = `med-particles med-particles-${scene.animation}`;
+  const focusClockVariant: ClockVariant = clock.startsWith("analog") || clock === "breathRing" ? "digital" : clock;
   const soundPlaying = ambient.state.playing && ambient.state.sound === sound;
   const soundToggleLabel = soundPlaying ? s("meditation.pause_sound") : s("meditation.play_sound");
+  const controlsShouldShow = controlsVisible || controlsOpen || paused;
   const pauseSession = (): void => {
     setPaused(true);
     ambient.pause();
@@ -126,13 +172,41 @@ export function MeditationPlayer({
       void ambient.play(sound, volume);
     }
   };
+  const toggleFullscreen = (): void => {
+    if (typeof document === "undefined") return;
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+      return;
+    }
+    void document.documentElement.requestFullscreen?.();
+  };
+  const toggleControlsPanel = (): void => {
+    setControlsVisible(true);
+    setControlsOpen((open) => !open);
+  };
+  const hideControlsImmediately = (): void => {
+    if (controlsOpen || paused) return;
+    clearControlsHideTimer();
+    setControlsVisible(false);
+  };
   const exit = (): void => {
     ambient.pause();
+    if (typeof document !== "undefined" && document.fullscreenElement) {
+      void document.exitFullscreen();
+    }
     onExit();
   };
 
   return (
-    <div className="med-player" style={{ background: scene.grad }}>
+    <div
+      className={"med-player" + (controlsShouldShow ? " controls-visible" : "") + (controlsOpen ? " controls-open" : "")}
+      style={{ background: scene.grad }}
+      onPointerEnter={revealControls}
+      onPointerMove={revealControls}
+      onPointerDown={revealControls}
+      onPointerLeave={hideControlsImmediately}
+      onFocus={revealControls}
+    >
       <div className="med-player-bg" />
 
       {/* Ambient rising particles — compositor-only animation */}
@@ -151,45 +225,32 @@ export function MeditationPlayer({
         ))}
       </div>
 
-      {/* Central live clock */}
-      <div className="med-player-clock">
-        <ClockDisplay
-          variant={clock}
-          accent={scene.accent}
-          scale={clockScale}
-          colors={clockColors}
-        />
-      </div>
-
-      {/* Breathing ring + label */}
-      <div className="med-breathe">
-        <div className="breathe-ring" style={{ borderColor: scene.accent }} />
-        <div className="breathe-label" style={{ color: scene.accent }}>
-          {s("meditation.breathe")}
-        </div>
-      </div>
-
-      {/* Bottom progress band + countdown + sound name */}
-      <div className="med-player-footer">
-        <div className="mp-progress">
-          <div
-            className="mp-progress-bar"
-            style={{ width: `${progress * 100}%`, background: scene.accent }}
-          />
-        </div>
-        <div className="mp-foot-row">
-          <div className="mp-session-meta">
+      <div className="med-focus-shell">
+        <div className="med-focus-core">
+          <div className="med-player-clock med-focus-clock">
+            <ClockDisplay
+              variant={focusClockVariant}
+              accent={scene.accent}
+              scale={clockScale}
+              colors={clockColors}
+              frameless
+            />
+          </div>
+          <div className="mp-session-meta med-focus-meta">
+            <span className="mp-scene-name">{sceneLabel}</span>
+            <span className="mp-sound-state">{s(`meditation.sounds.${sound}`)}</span>
             <span className="mp-remaining mono" style={{ color: scene.accent }}>
               {isInfinite ? "∞ " : ""}
               {timeLabel}
             </span>
-            <span className="mp-scene-name">{sceneLabel}</span>
-            <span className="mp-sound-state">{s(`meditation.sounds.${sound}`)}</span>
           </div>
-          <span className="grow" />
+        </div>
+
+        <div className="med-focus-controls" role="toolbar" aria-label={s("meditation.player_controls")}>
           <button
             className="mp-primary-control"
             type="button"
+            data-control="session"
             onClick={paused ? resumeSession : pauseSession}
             aria-label={paused ? s("meditation.resume") : s("meditation.pause")}
           >
@@ -199,7 +260,19 @@ export function MeditationPlayer({
           <button
             className="mp-sound-toggle"
             type="button"
-            onClick={() => setControlsOpen((open) => !open)}
+            data-control="fullscreen"
+            onClick={toggleFullscreen}
+            aria-pressed={isFullscreen}
+            aria-label={isFullscreen ? s("meditation.exit_fullscreen") : s("meditation.fullscreen")}
+          >
+            <Icon name={isFullscreen ? "fullscreenExit" : "fullscreen"} size={13} />
+            {isFullscreen ? s("meditation.exit_fullscreen") : s("meditation.fullscreen")}
+          </button>
+          <button
+            className="mp-sound-toggle"
+            type="button"
+            data-control="settings"
+            onClick={toggleControlsPanel}
             aria-pressed={controlsOpen}
             aria-label={s("meditation.player_controls")}
           >
@@ -210,6 +283,7 @@ export function MeditationPlayer({
             {s("meditation.end")}
           </button>
         </div>
+
         {controlsOpen && (
           <div className="mp-control-panel">
           <button

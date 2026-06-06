@@ -25,6 +25,8 @@ export interface ClockDisplayProps {
   scale?: ClockScale;
   colors?: ClockColorPalette;
   mini?: boolean;
+  /** Remove panel / ring styling when the clock is used as a focus display. */
+  frameless?: boolean;
   /**
    * If true: time is frozen at 03:44:17 and no setInterval is started.
    * Prop is named `staticMode` because `static` is a reserved word in
@@ -53,6 +55,7 @@ export function ClockDisplay({
   scale = "normal",
   colors,
   mini = false,
+  frameless = false,
   staticMode = false,
 }: ClockDisplayProps): JSX.Element | null {
   const [now, setNow] = useState<Date>(staticMode ? FROZEN_TIME : new Date());
@@ -81,7 +84,7 @@ export function ClockDisplay({
     "--clk-highlight": palette.highlight,
     "--clk-ring": palette.ring,
   } as CSSProperties;
-  const classSuffix = `${mini ? " mini" : ""} clock-scale-${scale} clock-variant-${variant}`;
+  const classSuffix = `${mini ? " mini" : ""}${frameless ? " frameless" : ""} clock-scale-${scale} clock-variant-${variant}`;
   const base = baseClockClass(variant);
 
   if (base === "split") {

@@ -27,6 +27,8 @@ export type MeditationIconName =
   | "save"
   | "plus"
   | "dots"
+  | "fullscreen"
+  | "fullscreenExit"
   | "close";
 
 export interface IconProps {
@@ -144,6 +146,20 @@ export function Icon({ name, size = 16, style }: IconProps): JSX.Element {
           <circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" />
           <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
           <circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "fullscreen":
+      return (
+        <svg {...common}>
+          <path d="M8 4H4v4M16 4h4v4M20 16v4h-4M4 16v4h4" />
+          <path d="M9 9 4 4M15 9l5-5M15 15l5 5M9 15l-5 5" />
+        </svg>
+      );
+    case "fullscreenExit":
+      return (
+        <svg {...common}>
+          <path d="M4 9h5V4M20 9h-5V4M15 20v-5h5M9 20v-5H4" />
+          <path d="M9 4 4 9M15 4l5 5M20 15l-5 5M4 15l5 5" />
         </svg>
       );
     case "close":

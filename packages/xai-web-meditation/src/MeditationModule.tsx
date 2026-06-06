@@ -277,7 +277,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   return (
-    <div className="module module-meditation">
+    <div className={"module module-meditation" + (active ? " is-playing" : "")}>
       {!active && (
       <div className="med-config">
         <header className="module-head">

@@ -1,5 +1,5 @@
 /**
- * MeditationPlayer — fullscreen overlay + countdown + progress + exit.
+ * MeditationPlayer — fullscreen focus overlay + countdown + exit.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
@@ -62,10 +62,11 @@ describe("MeditationPlayer", () => {
     expect(particles).toHaveLength(18);
   });
 
-  it("AC-PLAYER-4: central clock matches selected variant (analog -> svg.clk-analog)", () => {
+  it("AC-PLAYER-4: focus mode uses a frameless digital clock for analog variants", () => {
     const { container } = renderPlayer({ clock: "analog" });
-    const clock = container.querySelector(".med-player-clock svg.clk-analog");
+    const clock = container.querySelector(".med-player-clock .clk-digital.frameless");
     expect(clock).not.toBeNull();
+    expect(container.querySelector(".med-player-clock svg.clk-analog")).toBeNull();
   });
 
   it("AC-PLAYER-5: countdown decreases after 60s (15:00 -> 14:00)", () => {
@@ -77,22 +78,17 @@ describe("MeditationPlayer", () => {
     expect(screen.getByText("14:00")).toBeInTheDocument();
   });
 
-  it("AC-PLAYER-6: progress bar width grows with elapsed time", () => {
+  it("AC-PLAYER-6: focus mode hides progress chrome", () => {
     const { container } = renderPlayer();
-    const bar = container.querySelector(".mp-progress-bar") as HTMLElement;
-    expect(bar.style.width).toBe("0%");
-    act(() => {
-      vi.advanceTimersByTime(5 * 60_000);
-    });
-    const width = parseFloat(bar.style.width);
-    expect(width).toBeGreaterThan(30);
-    expect(width).toBeLessThan(40);
+    expect(container.querySelector(".mp-progress")).toBeNull();
+    expect(container.querySelector(".mp-progress-bar")).toBeNull();
+    expect(container.querySelector(".med-focus-core")).not.toBeNull();
   });
 
   it("AC-PLAYER-7: clicking the exit button calls onExit", () => {
     const onExit = vi.fn();
     renderPlayer({ onExit });
-    fireEvent.click(screen.getByRole("button", { name: /Exit/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^Exit$/i }));
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
@@ -114,18 +110,54 @@ describe("MeditationPlayer", () => {
     expect(screen.getByText("00:00")).toBeInTheDocument();
   });
 
-  it("renders breathing label with EN copy", () => {
+  it("keeps the active player free of breathing-ring chrome", () => {
     renderPlayer();
-    expect(screen.getByText("Breathe")).toBeInTheDocument();
+    expect(screen.queryByText("Breathe")).not.toBeInTheDocument();
   });
 
-  it("renders breathing label with ZH copy", () => {
+  it("keeps the active player free of breathing-ring chrome in ZH", () => {
     renderPlayer({ lang: "zh" });
-    expect(screen.getByText("呼吸")).toBeInTheDocument();
+    expect(screen.queryByText("呼吸")).not.toBeInTheDocument();
+  });
+
+  it("renders a full-screen control in the focused toolbar", () => {
+    renderPlayer();
+    expect(screen.getByRole("button", { name: "Full screen" })).toBeInTheDocument();
+  });
+
+  it("keeps focus controls hidden until pointer activity reveals them temporarily", () => {
+    const { container } = renderPlayer();
+    const player = container.querySelector(".med-player") as HTMLElement;
+
+    expect(player).not.toHaveClass("controls-visible");
+    fireEvent.pointerMove(player);
+    expect(player).toHaveClass("controls-visible");
+
+    act(() => {
+      vi.advanceTimersByTime(2500);
+    });
+    expect(player).not.toHaveClass("controls-visible");
+  });
+
+  it("keeps the popup controls visible while the control panel is open", () => {
+    const { container } = renderPlayer();
+    const player = container.querySelector(".med-player") as HTMLElement;
+
+    fireEvent.pointerMove(player);
+    fireEvent.click(screen.getByRole("button", { name: "Controls" }));
+    expect(player).toHaveClass("controls-open");
+
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    expect(player).toHaveClass("controls-visible");
+    expect(screen.getByRole("button", { name: "Play ambient sound" })).toBeInTheDocument();
   });
 
   it("labels the ambient sound toggle with play/pause intent", () => {
-    renderPlayer();
+    const { container } = renderPlayer();
+    const player = container.querySelector(".med-player") as HTMLElement;
+    fireEvent.pointerMove(player);
     fireEvent.click(screen.getByRole("button", { name: "Controls" }));
     expect(screen.getByRole("button", { name: "Play ambient sound" })).toBeInTheDocument();
   });
