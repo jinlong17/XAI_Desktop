@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_REVIEW |
+| **Current Phase** | FEATURE_BUILD — Phase 1 DONE, Phase 2 PENDING |
 | **Status** | APPROVED |
-| **Executor** | claude-opus-4-8 (feature-review) |
-| **Updated** | 2026-06-06 |
-| **Suggested Next** | feature-build |
+| **Executor** | claude-sonnet-4-6 (feature-build) |
+| **Updated** | 2026-06-06 02:05 |
+| **Suggested Next** | feature-build (Phase 2) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -112,7 +112,45 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
   host is the only candidate `connect-src` addition and MUST follow the ADR-0008 extension protocol
   (amend record → extend `_headers` → update snippet → write csp guard test). Keep slice #1 mock.
 
+## Phase Progress
+
+| Phase | Status | Commit |
+|---|---|---|
+| P1 — Scaffold isolated app + deploy boundary | DONE | `1c35a99` |
+| P2 — Admin auth gate (the core boundary) | PENDING | — |
+| P3 — Typed read-model interfaces + mock adapters + fixtures | PENDING | — |
+| P4 — Page port (structural) + destructive UI | PENDING | — |
+| P5 — Security + build guards | PENDING | — |
+
 ## Work Log (append-only)
+
+### Round 3 — 2026-06-06 02:05 · feature-build Phase 1
+
+- **Executor**: claude-sonnet-4-6 (feature-build)
+- **Phase**: P1 — Scaffold isolated `apps/admin/` app + deploy boundary
+- **Action**: Implemented the full Phase 1 scaffold as specified in the APPROVED Phase Plan.
+  Files created:
+  - `apps/admin/package.json` (@repo/admin, own deps, React 19, react-router v7, @repo/plugin-web-tokens, @repo/ui, @repo/web-auth-device-session)
+  - `apps/admin/tsconfig.json` (extends @repo/typescript-config/base.json, bundler moduleResolution)
+  - `apps/admin/vite.config.ts` (own Vite config; vendor-react + vendor-router chunks; ADR-lite #1 note)
+  - `apps/admin/vitest.config.ts` (jsdom, src/**/*.test.{ts,tsx})
+  - `apps/admin/wrangler.toml` (pages_build_output_dir = "./dist"; separate Pages project "xai-admin-dashboard")
+  - `apps/admin/index.html` (no nonce placeholder; CSP via _headers)
+  - `apps/admin/public/_headers` (tight CSP: connect-src 'self' only, frame-ancestors 'none', object-src 'none'; HSTS, nosniff, DENY, Referrer, Permissions)
+  - `apps/admin/.env.example` (VITE_ADMIN_MOCK_CLAIM=true, VITE_ADMIN_AUTH_MODE=mock-authenticated)
+  - `apps/admin/src/main.tsx` (React 19 StrictMode entry, isolated from apps/web)
+  - `apps/admin/src/App.tsx` (Phase 1 scaffold stub; guard + pages in Phase 2+)
+  - `apps/admin/src/__tests__/csp.test.ts` (TT-CSP-GUARD: 9 assertions; CSP present, connect-src 'self'-only, no external origins, frame-ancestors, HSTS, nosniff, DENY, Referrer, Permissions, object-src)
+  - `apps/admin/src/__tests__/no-secret.test.ts` (TT-NO-SECRET-SRC: 4 patterns; Stripe sk_test_/sk_live_, SUPABASE_SERVICE_ROLE_KEY, service_role:; precedent path corrected per REC-1)
+  - Planning docs (design.md, api.md, test.md, dev_log.md)
+  - pnpm-lock.yaml updated
+- **Tests run**: `pnpm --filter @repo/admin test` → **13 passed** (TT-CSP-GUARD x9, TT-NO-SECRET-SRC x4)
+- **Build**: `pnpm --filter @repo/admin build` → **dist/ produced, 709 ms** (TT-BUILD green)
+- **Regression check**: `pnpm --filter @repo/web build` → **green, unaffected** (no admin module rail in apps/web)
+- **REC-1 applied**: no-secret guard clones the precedent from `packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts` (not apps/web) — path corrected.
+- **REC-3 applied**: mock-authenticated posture confirmed in .env.example + App.tsx comment; real auth deferred to row #2 per ADR-0008 extension protocol.
+- **Commits**: `1c35a99` feat(admin): Phase 1 — scaffold isolated apps/admin/ app + deploy boundary
+- **Next step**: feature-build Phase 2 — Admin auth gate (AdminClaim predicate + AdminRouteGate + resolveAdminRouteGuard).
 
 ### Round 2 — 2026-06-06 · feature-review (APPROVED)
 - **Executor**: claude-opus-4-8 (feature-review)
