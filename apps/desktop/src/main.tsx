@@ -10,6 +10,7 @@ import { registerAccountPlugin } from "@repo/plugin-account";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
 import { registerConsolePlugin } from "@repo/plugin-console";
 import { registerLabelsPlugin } from "@repo/plugin-labels";
+import { registerOrganizerPlugin } from "@repo/plugin-organizer";
 import { registerProductivityPlugin } from "@repo/plugin-productivity";
 
 /**
@@ -52,6 +53,7 @@ function Router() {
 // Static plugin registration — above createRoot (red line #1/#8: registration only, no sync logic)
 registerAccountPlugin();
 registerAiCubePlugin();
+registerOrganizerPlugin();
 registerProductivityPlugin();
 registerLabelsPlugin();
 registerConsolePlugin();

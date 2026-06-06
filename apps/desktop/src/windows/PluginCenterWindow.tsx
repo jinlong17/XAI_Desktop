@@ -1,11 +1,15 @@
-import type { PluginCenterWindowFrame } from "@repo/core/types";
+import type {
+  PluginCenterEntry,
+  PluginCenterWindowFrame,
+} from "@repo/core/types";
 import { invoke } from "@tauri-apps/api/core";
 import {
   getCurrentWindow,
   LogicalPosition,
   LogicalSize,
 } from "@tauri-apps/api/window";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { getBuiltInPluginCenterEntries } from "../plugin-center/catalog";
 
 const shellTokens = {
   color: {
@@ -27,6 +31,31 @@ const shellTokens = {
   },
 } as const;
 
+function statusLabel(status: PluginCenterEntry["status"]): string {
+  switch (status) {
+    case "available":
+      return "Available";
+    case "planned":
+      return "Planned";
+    case "disabled":
+      return "Disabled";
+    case "shipped":
+      return "Shipped";
+    case "unavailable":
+      return "Unavailable";
+    default:
+      return status;
+  }
+}
+
+function addEligibilityLabel(entry: PluginCenterEntry): string {
+  return entry.canAddToDesktop ? "Eligible" : "Locked";
+}
+
+function formatList(values: readonly string[]): string {
+  return values.length > 0 ? values.join(", ") : "None";
+}
+
 async function captureCurrentFrame(): Promise<PluginCenterWindowFrame> {
   const currentWindow = getCurrentWindow();
   const [position, size, isFullscreen] = await Promise.all([
@@ -45,6 +74,12 @@ async function captureCurrentFrame(): Promise<PluginCenterWindowFrame> {
 }
 
 export function PluginCenterWindow() {
+  const entries = useMemo(() => getBuiltInPluginCenterEntries(), []);
+  const availableCount = entries.filter(
+    (entry) => entry.canAddToDesktop,
+  ).length;
+  const lockedCount = entries.length - availableCount;
+
   useEffect(() => {
     let cancelled = false;
 
@@ -233,17 +268,126 @@ export function PluginCenterWindow() {
             >
               <dt>Registry source</dt>
               <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
-                Pending
+                Built-in
               </dd>
               <dt>Available</dt>
               <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
-                0
+                {availableCount}
               </dd>
-              <dt>Desktop instances</dt>
+              <dt>Locked</dt>
               <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
-                0
+                {lockedCount}
               </dd>
             </dl>
+          </section>
+
+          <section
+            style={{
+              border: `1px solid ${shellTokens.color.borderSubtle}`,
+              borderRadius: shellTokens.radius.md,
+              background: shellTokens.color.surfaceGlass,
+              overflow: "hidden",
+            }}
+          >
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+              }}
+            >
+              <thead>
+                <tr style={{ color: shellTokens.color.textSecondary }}>
+                  {["Plugin", "Status", "Surfaces", "Content", "Desktop"].map(
+                    (heading) => (
+                      <th
+                        key={heading}
+                        scope="col"
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          fontWeight: shellTokens.typography.fontWeightMedium,
+                          padding: "10px 12px",
+                          textAlign: "left",
+                        }}
+                      >
+                        {heading}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {entries.map((entry) => (
+                  <tr key={entry.pluginName}>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: shellTokens.color.textPrimary,
+                          fontWeight: shellTokens.typography.fontWeightSemibold,
+                        }}
+                      >
+                        {entry.displayName}
+                      </div>
+                      <div
+                        style={{
+                          color: shellTokens.color.textSecondary,
+                          fontSize: 12,
+                          marginTop: 4,
+                        }}
+                      >
+                        {entry.pluginName}
+                      </div>
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        color: shellTokens.color.textPrimary,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {statusLabel(entry.status)}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        color: shellTokens.color.textSecondary,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {formatList(entry.supportedSurfaces)}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        color: shellTokens.color.textSecondary,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {formatList(entry.contentTypes)}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        color: shellTokens.color.textPrimary,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {addEligibilityLabel(entry)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </section>
         </div>
       </section>
