@@ -82,8 +82,10 @@ History row and updates the Traceability section; existing prose is preserved.
 ## Workflow
 
 1. Resolve `Scope` + `Features` (use the package→feature map; confirm if derived).
-   - `site` and `admin` are PROPOSED lines: in `audit`/`draft`, document prototypes and
-     impact notes only unless the operator has explicitly activated the line.
+   - `site` is PROPOSED: in `audit`/`draft`, document prototypes and impact notes only
+     unless the operator has explicitly activated the line.
+   - `admin` is operator-activated but roadmap-gated: production-facing dossiers must
+     point at the admin roadmap slice and must not imply live admin writes before gates.
    - `project-system` is for dashboard / workflow / skill governance records, not user-facing
      product PRDs; use it for traceability audits and release-log consistency, not canonical
      customer-feature PRD creation unless a human-facing operator feature exists.

@@ -49,10 +49,13 @@ Web 集中 3 天 → 一句话触发多条同步 → 多窗口并行处理 → �
    一句话即可派发。
 2. **并行化"检查 / 适配 / 草案 / 回执"这层开销**——而**不是**并行化"落地源码"。
 
-**硬约束(来自 ADR-0010 / ADR-0013,本 ADR 不改)**:`site`/`admin` 是 PROPOSED,
-`sync`/`plugin` 是 P2 PAUSED(until G1 SHIPPED)。这四条线在解冻前**只能产出
-diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**。因此真实形态是
-**半自动:检测 → 提议 → 产回执 → 挂在 operator 解冻门后**,不是全自动 merge。
+**硬约束(来自 ADR-0010 / ADR-0013,本 ADR 不改)**:`site` 是 PROPOSED,
+`sync`/`plugin` 是 P2 PAUSED(until G1 SHIPPED);`admin` 已由 operator 于
+2026-06-05 激活为 roadmap-gated。这意味着 site/sync/plugin 在解冻前**只能产出
+diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**;admin 则只能经
+`docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` 的切片落地,
+且不得绕过 shell/RBAC/审计/secret/deploy gates。因此真实形态是
+**半自动:检测 → 提议 → 产回执 → 挂在对应 operator / roadmap gate 后**,不是全自动 merge。
 
 ### S2.3 已存在、可复用的零件(避免重造)
 
@@ -114,7 +117,7 @@ diff / 草案 / 检查回执,不能落地产品源码、不能开实作分支**�
 | `desktop_release_gate` | Mac Desktop W4 发布 gate | 🆕 `xai-desktop-release-gate` | **否(receipt-only)** | ✅ | `d3_web_to_desktop` |
 | `d4_account_sync_scope_check` | account-sync D4 范围+9 项检查 | 🆕 `xai-account-sync-scope-check` | **否(receipt-only)** | ✅ | — |
 | `release_and_dashboard_sync` | release-log 追加 + dashboard 镜像同步(收口) | ✅ `xai-release-log` + `xai-dev-dashboard-sync` | 否 | ❌ | 前置 gates |
-| `frozen_line_impact_brief` | site/admin/plugin 影响草案 | ✅ `xai-feature-brief` | **否(brief-only)** | ✅ | — |
+| `frozen_line_impact_brief` | site/plugin 影响草案 + admin roadmap-gated impact note | ✅ `xai-feature-brief` / `xai-admin-control-plane-sync` | **否(brief-only)** | ✅ | — |
 
 **被砍/降级**(均按 Codex,经复验同意):
 - `web_to_plugin` → 并入 `d3_web_to_desktop` 的 optional impact note,不单列。
@@ -187,7 +190,7 @@ skill-surface 的 lane 完成**,而非只等三条。
 | **1** | 建 `xai-account-sync-scope-check`：权威 = `account-sync-verification-gates.md`,只产 check receipt,默认禁止源码落地;首个用例 = clipboard 漂移(见 S6) | 中(最高 ROI) | ✅ 已完成 |
 | **1b** | 建 Web deploy / Desktop W4 两个 release gate：`xai-web-deploy-preflight` + `xai-desktop-release-gate`,均为 receipt-only | 中 | ✅ 已完成 |
 | **2** | 建派发器 `xai-sync-fanout-dispatch`：走 registry 语义规则,输出多窗口 prompt 或 spawn subagent | 中 | ✅ 已完成 |
-| **3** | 收口复用 `xai-dev-dashboard-sync` + `.githooks` 做 mirror lint;Cursor `.mdc` mirror 同步纳入 registry;site/admin/plugin 专属实现 skill **等 operator 解冻后再建** | 低 | ✅ 已完成 / 专属实现 skill 仍 deferred |
+| **3** | 收口复用 `xai-dev-dashboard-sync` + `.githooks` 做 mirror lint;Cursor `.mdc` mirror 同步纳入 registry;site/plugin 专属实现 skill **等 operator 解冻后再建**;admin 通过已激活的 roadmap + `xai-admin-control-plane-sync` 承接 | 低 | ✅ 已完成 / site/plugin 专属实现 skill 仍 deferred |
 
 ### S5.1 目标运行时形态
 
@@ -224,7 +227,7 @@ skill-surface 的 lane 完成**,而非只等三条。
 ### 负面 / 风险
 - 语义规则需人工维护(路径/关键字漂移会漏触发)——靠 D5 复核 + Phase 3 mirror lint 缓解。
 - `release_and_dashboard_sync` 是串行收口瓶颈(刻意,为防镜像链并发写)。
-- site/admin/plugin 的"真正建设"仍受冻结约束;本编排只把它们的**待办草案**前置,不解冻。
+- site/plugin 的"真正建设"仍受冻结约束;admin 的建设受 roadmap gates 约束。本编排只把跨线影响**待办草案/roadmap note**前置,不绕过任何 gate。
 
 ### S6.1 首个被发现的真实漂移(D4 第一个用例)
 

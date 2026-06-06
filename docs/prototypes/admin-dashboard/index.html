@@ -188,6 +188,35 @@
     cursor:pointer;color:transparent;font-size:14px;font-weight:800;transition:.15s}
   .check.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-2)}
   .check:hover{border-color:var(--accent)}
+  .check.locked{opacity:.55;cursor:not-allowed}
+
+  /* ---- admin contract guardrails ---- */
+  .guardrail{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border-strong);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;box-shadow:var(--shadow)}
+  .guardrail b{display:block;font-size:14px;margin-bottom:2px}
+  .guardrail p{margin:0;color:var(--muted);font-size:12.5px}
+  .guardrail .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .guard-chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:4px 9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--muted);white-space:nowrap}
+  .guard-chip.warn{color:var(--warning);background:var(--warning-soft);border-color:color-mix(in srgb,var(--warning) 35%,transparent)}
+  .guard-chip.ok{color:var(--success);background:var(--success-soft);border-color:color-mix(in srgb,var(--success) 35%,transparent)}
+  .contract-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .contract-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+  .contract-card b{display:block;font-size:12.5px;margin-bottom:3px}
+  .contract-card span{display:block;color:var(--faint);font-size:11.5px;line-height:1.4}
+  .contract-note{color:var(--faint);font-size:12px;line-height:1.5}
+  .actor-box{display:flex;align-items:center;gap:10px;border:1px solid var(--border);background:var(--panel);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px}
+  .actor-box .who{font-weight:700}
+  .actor-box .meta{color:var(--faint);font-size:12px}
+  .actor-box select{margin-left:auto}
+  .perm-key{display:block;color:var(--faint);font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-top:2px;font-weight:500}
+  .secret-state{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;margin-bottom:8px}
+  .secret-state .bd{width:7px;height:7px;border-radius:50%;background:var(--success)}
+  .secret-handle{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);background:var(--panel-2);
+    border:1px solid var(--border);border-radius:7px;padding:6px 10px;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .secret-handle.locked{color:var(--faint);border-style:dashed}
+  .status-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--faint);font-size:11.5px;margin-top:8px}
+  .muted-action{opacity:.55}
 
   /* ---- provider cards ---- */
   .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
@@ -421,9 +450,21 @@
   .tw-sw:hover{transform:scale(1.08)}
   .tw-sw.on{border-color:var(--text)}
 
-  @media(max-width:1200px){.pgrid{grid-template-columns:repeat(2,1fr)}.role-grid{grid-template-columns:repeat(3,1fr)}.queue-grid{grid-template-columns:1fr}}
-  @media(max-width:1100px){.grid-kpi{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-  @media(max-width:760px){.sidebar{display:none}}
+  @media(max-width:1200px){.pgrid{grid-template-columns:repeat(2,1fr)}.role-grid{grid-template-columns:repeat(3,1fr)}.queue-grid{grid-template-columns:1fr}.contract-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:1100px){.grid-kpi{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.guardrail{grid-template-columns:1fr}.guardrail .chips{justify-content:flex-start}}
+  @media(max-width:760px){
+    .sidebar{display:none}
+    .topbar{height:auto;min-height:60px;padding:10px 14px;gap:8px;flex-wrap:wrap;align-items:center}
+    .crumb{white-space:nowrap;min-width:0;flex:1}
+    .search{order:3;flex:1 0 100%;max-width:none;margin-left:0}
+    .top-actions{margin-left:auto;gap:6px}
+    .env{padding:6px 9px}
+    .content{padding:16px 14px 48px}
+    .grid-kpi,.contract-grid,.pgrid,.role-grid,.grid-2b{grid-template-columns:1fr!important}
+    .page-head{align-items:flex-start}
+    .seg{max-width:100%;overflow:auto}
+    .guardrail{padding:14px}
+  }
 </style>
 </head>
 <body class="light">
@@ -480,7 +521,7 @@
     </div>
     <div class="side-foot">
       <div class="av">JL</div>
-      <div class="meta"><b>Jinlong</b><br><span>超级管理员</span></div>
+      <div class="meta"><b>Jinlong</b><br><span id="sideRole">超级管理员</span></div>
     </div>
   </aside>
 
@@ -494,7 +535,7 @@
         <span class="kbd">⌘K</span>
       </label>
       <div class="top-actions">
-        <div class="env"><span class="pulse"></span>Production</div>
+        <div class="env"><span class="pulse"></span>Prototype · Mock</div>
         <button class="icon-btn" title="告警"><span class="dot"></span>
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
         </button>
@@ -505,6 +546,18 @@
     </header>
 
     <div class="content">
+      <div class="guardrail">
+        <div>
+          <b>Prototype Control Plane · PROPOSED</b>
+          <p>当前页面是 Admin 线的高保真控制台原型。所有数据与 mutation 均为本地 mock contract;真实落地前仍需确认独立 apps/admin 或隔离 /admin、CSP/env/deploy、服务端 RBAC 与审计 API。</p>
+        </div>
+        <div class="chips">
+          <span class="guard-chip warn">非生产后台</span>
+          <span class="guard-chip ok">浏览器无 service-role</span>
+          <span class="guard-chip ok">Provider 仅显示 secret handle</span>
+          <span class="guard-chip warn">写操作待 Workflow V2</span>
+        </div>
+      </div>
       <!-- ===== Dashboard (multi-level) ===== -->
       <section class="view active" id="view-dashboard">
         <div class="page-head">
@@ -693,8 +746,14 @@
       <!-- ===== Providers ===== -->
       <section class="view" id="view-providers">
         <div class="page-head">
-          <div><h1>Provider 配置中心</h1><p>对接 secretStore 管理密钥;并为不同套餐分配可用模型与配额</p></div>
-          <div style="display:flex;gap:10px"><button class="btn btn--sm">同步 secretStore</button><button class="btn btn--sm btn--primary">+ 接入 Provider</button></div>
+          <div><h1>Provider 配置中心</h1><p>浏览器只读取服务端加密 secret handle 的状态;模型权限与路由策略均走 RBAC + 审计</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm" id="syncSecretsBtn">同步 secret handles</button><button class="btn btn--sm btn--primary" id="addProviderBtn">+ 接入 Provider</button></div>
+        </div>
+        <div class="contract-grid">
+          <div class="contract-card"><b>Secret material</b><span>真实密钥仅在服务端加密存储;前端不显示、不缓存、不写 localStorage。</span></div>
+          <div class="contract-card"><b>Mutation contract</b><span>Provider 开关、模型权限、路由策略必须先过 permission check。</span></div>
+          <div class="contract-card"><b>Audit append</b><span>每次配置变更追加 actor/action/target/IP/result 到审计表。</span></div>
+          <div class="contract-card"><b>Production blocker</b><span>真实接入依赖 xai-admin-data-contracts-rbac 与 server API。</span></div>
         </div>
         <div class="pgrid" id="providerCards"></div>
         <div class="card" style="margin-bottom:22px">
@@ -722,9 +781,16 @@
           <div><h1>角色与权限</h1><p>定义管理员角色,精确控制谁能操作哪些功能、模型与数据(RBAC)</p></div>
           <div style="display:flex;gap:10px"><button class="btn btn--sm">权限模板</button><button class="btn btn--sm btn--primary">+ 新建角色</button></div>
         </div>
+        <div class="actor-box">
+          <div>
+            <div class="who">当前操作者: <span id="actorName">Jinlong</span></div>
+            <div class="meta">权限模拟只影响本地原型;拒绝会写入失败审计,用于验证 allow/deny 体验。</div>
+          </div>
+          <select class="sel" id="actorRole"></select>
+        </div>
         <div class="role-grid" id="roleCards"></div>
         <div class="card">
-          <div class="card-head"><div><h3>权限矩阵</h3><div class="sub">勾选 = 该角色拥有此权限 · 超级管理员锁定全选 · 点击单元格切换</div></div></div>
+          <div class="card-head"><div><h3>权限矩阵</h3><div class="sub">每行包含不可变 permission key · 超级管理员锁定全选 · 点击单元格会写回 mock RBAC 并追加审计</div></div></div>
           <div class="table-wrap" style="border:0">
             <table><thead><tr id="permHead"></tr></thead><tbody id="permRows"></tbody></table>
           </div>
@@ -803,6 +869,12 @@
           <select class="sel" id="auditRange"><option value="">全部时间</option><option value="today">今天</option><option value="7d">近 7 天</option><option value="30d">近 30 天</option></select>
           <div class="spacer"></div>
           <span style="font-size:12px;color:var(--faint)">🔒 日志只读 · 不可删改</span>
+        </div>
+        <div class="contract-grid">
+          <div class="contract-card"><b>Append-only</b><span>本地原型使用 unshift 模拟追加;生产需 hash-chain 或等价完整性保护。</span></div>
+          <div class="contract-card"><b>Failure visible</b><span>权限拒绝、未授权切换和 destructive action 失败同样进入审计。</span></div>
+          <div class="contract-card"><b>Mutation source</b><span>用户封禁、批量封禁、功能下线、Provider/RBAC/设置变更都会追加事件。</span></div>
+          <div class="contract-card"><b>Retention</b><span>原型展示 180 天口径;真实保留策略由 admin deploy/runbook 决定。</span></div>
         </div>
         <div class="table-wrap">
           <table><thead><tr><th style="width:160px">时间</th><th>操作人</th><th>操作</th><th>对象</th><th>IP</th><th style="width:90px">结果</th></tr></thead><tbody id="auditRows"></tbody></table>
@@ -944,6 +1016,8 @@
 </div>
 
 <script>
+  const CURRENT_ACTOR={name:"Jinlong",role:"super",ip:"103.21.7.5"};
+
   // ===== Users =====
   const USERS=[
     {n:"Diego Vega",e:"diego@acme.io",s:"活跃",p:"Enterprise",u:6.2,c:"#f0a868",t:"8 分钟前",days:0,cost:412,mfa:false,risk:"high",role:"管理员",over:true},
@@ -1006,7 +1080,7 @@
     if(!rows.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--faint);padding:28px">没有符合条件的用户</td></tr>';return;}
     rows.forEach(u=>{
       const tr=document.createElement("tr");
-      tr.innerHTML=`<td><input type="checkbox" class="rowck"/></td>
+      tr.innerHTML=`<td><input type="checkbox" class="rowck" value="${u.e}"/></td>
         <td><div class="u"><div class="av" style="background:linear-gradient(135deg,${u.c},${u.c}aa)">${initials(u.n)}</div><div><div class="nm">${u.n}</div><div class="em">${u.e}</div></div></div></td>
         <td><span class="badge ${BADGE[u.s]}"><span class="bd"></span>${u.s}</span></td>
         <td><span class="plan ${PLAN[u.p]}">${u.p}</span></td>
@@ -1020,7 +1094,8 @@
   }
   document.getElementById("userSearch").addEventListener("input",renderUsers);
   renderUserViews(); renderUsers();
-  function updateBulk(){const n=[...document.querySelectorAll(".rowck")].filter(c=>c.checked).length;document.getElementById("bulkCount").textContent=n;document.getElementById("bulkbar").classList.toggle("show",n>0);}
+  function selectedUsers(){return [...document.querySelectorAll(".rowck")].filter(c=>c.checked).map(c=>USERS.find(u=>u.e===c.value)).filter(Boolean);}
+  function updateBulk(){const n=selectedUsers().length;document.getElementById("bulkCount").textContent=n;document.getElementById("bulkbar").classList.toggle("show",n>0);}
   document.getElementById("selAll").addEventListener("change",e=>{document.querySelectorAll(".rowck").forEach(c=>c.checked=e.target.checked);updateBulk();});
 
   // ===== Features (analytics + management) =====
@@ -1097,9 +1172,13 @@
         <td><div class="toggle ${on?'on':''}"></div></td>
         <td>${scope}</td>${qcell(f.q.free)}${qcell(f.q.pro)}${qcell(f.q.team)}
         <td><button class="btn btn--sm">管理</button></td>`;
-      tr.querySelector(".toggle").addEventListener("click",e=>{e.stopPropagation();const tg=e.currentTarget;
-        if(tg.classList.contains("on")){openConfirm({title:"下线「"+f.name+"」？",body:"下线后所有套餐用户将不可见该功能,可随时重新上线。此操作会被审计记录。",tone:"warning",confirmLabel:"下线",onConfirm:()=>{tg.classList.remove("on");toast("已下线 "+f.name);}});}
-        else{tg.classList.add("on");toast("已上线 "+f.name);}});
+      tr.querySelector(".toggle").addEventListener("click",e=>{e.stopPropagation();
+        if(f.status!=="off"){
+          openConfirm({title:"下线「"+f.name+"」？",body:"下线后所有套餐用户将不可见该功能。高危功能开关需输入确认词,并会追加审计记录。",tone:"warning",requireType:"OFFLINE",confirmLabel:"下线",onConfirm:()=>setFeatureStatus(f,"off",0)});
+        }else{
+          setFeatureStatus(f,"on",100);
+        }
+      });
       tr.addEventListener("click",()=>openFeature(f));
       box.appendChild(tr);
     });
@@ -1108,22 +1187,22 @@
 
   // ===== Providers =====
   const PROVIDERS=[
-    {key:"gemini", name:"Google Gemini", color:"#6d5efc", status:"on", keyMask:"AIza••••••3kf9", usage:"194M", cost:"$1,420", def:"gemini-3.1-flash-lite", models:[
+    {key:"gemini", name:"Google Gemini", color:"#6d5efc", status:"on", secretHandle:"handle://admin/provider/gemini/live", secretState:"verified", rotation:"14 天前", usage:"194M", cost:"$1,420", def:"gemini-3.1-flash-lite", models:[
       {id:"gemini-3.1-flash-lite", tag:"极快·省", tiers:{free:1,pro:1,team:1}},
       {id:"gemini-3.1-flash",      tag:"均衡",    tiers:{free:0,pro:1,team:1}},
       {id:"gemini-3.1-pro",        tag:"高质量",  tiers:{free:0,pro:0,team:1}},
     ]},
-    {key:"openai", name:"OpenAI", color:"#60a5fa", status:"on", keyMask:"sk-••••••a82e", usage:"128M", cost:"$2,180", def:"gpt-4o-mini", models:[
+    {key:"openai", name:"OpenAI", color:"#60a5fa", status:"on", secretHandle:"handle://admin/provider/openai/live", secretState:"verified", rotation:"7 天前", usage:"128M", cost:"$2,180", def:"gpt-4o-mini", models:[
       {id:"gpt-4o-mini", tag:"快·省", tiers:{free:1,pro:1,team:1}},
       {id:"gpt-4o",      tag:"旗舰",  tiers:{free:0,pro:1,team:1}},
       {id:"o3-mini",     tag:"推理",  tiers:{free:0,pro:0,team:1}},
     ]},
-    {key:"claude", name:"Anthropic Claude", color:"#34d399", status:"on", keyMask:"sk-ant-••••7c", usage:"74M", cost:"$1,060", def:"claude-haiku-4.5", models:[
+    {key:"claude", name:"Anthropic Claude", color:"#34d399", status:"on", secretHandle:"handle://admin/provider/claude/live", secretState:"verified", rotation:"21 天前", usage:"74M", cost:"$1,060", def:"claude-haiku-4.5", models:[
       {id:"claude-haiku-4.5",  tag:"快",   tiers:{free:1,pro:1,team:1}},
       {id:"claude-sonnet-4.6", tag:"均衡", tiers:{free:0,pro:1,team:1}},
       {id:"claude-opus-4.8",   tag:"最强", tiers:{free:0,pro:0,team:1}},
     ]},
-    {key:"deepseek", name:"DeepSeek", color:"#71717a", status:"off", keyMask:"未配置", usage:"—", cost:"—", def:"—", models:[
+    {key:"deepseek", name:"DeepSeek", color:"#71717a", status:"off", secretHandle:"not-configured", secretState:"missing", rotation:"—", usage:"—", cost:"—", def:"—", models:[
       {id:"deepseek-v3", tag:"省", tiers:{free:0,pro:0,team:0}},
     ]},
   ];
@@ -1133,10 +1212,19 @@
       const on=p.status==="on";
       const c=document.createElement("div"); c.className="pcard"+(on?"":" off");
       c.innerHTML=`<div class="pc-head"><div class="pc-nm"><span class="dot" style="width:11px;height:11px;background:${p.color}"></span>${p.name}</div><div class="toggle ${on?'on':''}"></div></div>
-        <div class="pc-key">🔑 ${p.keyMask}</div>
+        <div class="secret-state ${p.secretState==='missing'?'muted-action':''}"><span class="bd" style="background:${p.secretState==='missing'?'var(--faint)':'var(--success)'}"></span>${p.secretState==='missing'?'未配置 secret handle':'服务端 secret handle 已验证'}</div>
+        <div class="secret-handle ${p.secretState==='missing'?'locked':''}">${p.secretHandle}</div>
         <div class="pc-stats"><span>本月 <b>${p.usage}</b> tokens</span><span>成本 <b>${p.cost}</b></span><span>默认 <b>${p.def}</b></span></div>
-        <button class="btn btn--sm">管理密钥与限速</button>`;
-      c.querySelector(".toggle").addEventListener("click",e=>e.currentTarget.classList.toggle("on"));
+        <div class="status-line"><span>最近轮换 ${p.rotation}</span><span>浏览器无密钥材料</span></div>
+        <button class="btn btn--sm">管理 handle 与限速</button>`;
+      c.querySelector(".toggle").addEventListener("click",e=>{
+        e.stopPropagation();
+        if(p.status==="on"){
+          openConfirm({title:"停用 "+p.name+"？",body:"停用后路由会跳到兜底模型。Provider 变更必须写入审计。",tone:"warning",requireType:"PROVIDER",confirmLabel:"停用",onConfirm:()=>setProviderStatus(p,"off")});
+        }else{
+          setProviderStatus(p,"on");
+        }
+      });
       cards.appendChild(c);
     });
     const mx=document.getElementById("modelMatrix"); mx.innerHTML="";
@@ -1147,21 +1235,28 @@
         <td><span class="dot" style="display:inline-block;background:${p.color};margin-right:7px"></span>${p.name}</td>
         <td><span class="spill s-on" style="background:var(--panel-2);color:var(--muted)">${m.tag}</span></td>
         ${cell(m.tiers.free)}${cell(m.tiers.pro)}${cell(m.tiers.team)}`;
-      tr.querySelectorAll(".check").forEach(ch=>ch.addEventListener("click",()=>{ch.classList.toggle("on");ch.textContent=ch.classList.contains("on")?"✓":"";}));
+      tr.querySelectorAll(".check").forEach((ch,i)=>ch.addEventListener("click",()=>{
+        const tier=["free","pro","team"][i];
+        setModelTier(p,m,tier,!m.tiers[tier]);
+      }));
       mx.appendChild(tr);
     }));
   }
 
   // ===== User drawer =====
   const drawer=document.getElementById("drawer"),fdrawer=document.getElementById("fdrawer"),odrawer=document.getElementById("odrawer"),scrim=document.getElementById("scrim");
+  let currentUser=null;
+  let currentFeature=null;
   function openUser(u){
     if(userLayout==="page"){ showUserDetail(u); return; }
+    currentUser=u;
     const a=document.getElementById("dAv");a.textContent=initials(u.n);a.style.background=`linear-gradient(135deg,${u.c},${u.c}aa)`;
     document.getElementById("dName").textContent=u.n;document.getElementById("dEmail").textContent=u.e;
     document.getElementById("dStatus").textContent=u.s;document.getElementById("dPlan").textContent=u.p;
     drawer.classList.add("show");scrim.classList.add("show");
   }
   function openFeature(f){
+    currentFeature=f;
     document.getElementById("fIcon").textContent=f.ic;
     document.getElementById("fName").textContent=f.name;
     document.getElementById("fCat").textContent=f.cat+" · "+f.key;
@@ -1192,23 +1287,30 @@
   }));
   // feature drawer interactions
   document.querySelectorAll("#fStatusSeg button").forEach(b=>b.addEventListener("click",()=>{
-    document.querySelectorAll("#fStatusSeg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    if(!currentFeature) return;
     const ro=b.dataset.st==="on"?100:b.dataset.st==="beta"?25:0;
-    document.getElementById("fSliderFill").style.width=ro+"%";document.getElementById("fSliderKnob").style.left=ro+"%";
-    document.getElementById("fRollout").textContent=ro===100?"全量 100%":ro===0?"未发布 0%":"灰度 "+ro+"%";
+    if(b.dataset.st==="off"){
+      openConfirm({title:"下线「"+currentFeature.name+"」？",body:"抽屉内下线同样属于高危操作,需要确认词并写入审计。",tone:"warning",requireType:"OFFLINE",confirmLabel:"下线",onConfirm:()=>setFeatureStatus(currentFeature,"off",0)});
+    }else{
+      setFeatureStatus(currentFeature,b.dataset.st,ro);
+    }
   }));
   document.querySelectorAll("#fdrawer .stepper button").forEach(btn=>btn.addEventListener("click",()=>{
-    const val=btn.parent, span=btn.parentElement.querySelector(".val");
-    let cur=span.textContent.trim();
-    if(cur==="无限"){span.textContent=btn.dataset.d==="-1"?"500":"无限";return;}
-    let n=parseInt(cur)||0; n=Math.max(0,n+parseInt(btn.dataset.d)*10);
-    span.textContent=n>=1000?"无限":String(n);
+    if(!currentFeature || !requirePerm("quota.write","调整功能配额")) return;
+    const wrap=btn.parentElement, tier=wrap.dataset.tier, span=wrap.querySelector(".val");
+    const before=currentFeature.q[tier];
+    let next=before===-1 ? (btn.dataset.d==="-1"?500:-1) : Math.max(0,before+parseInt(btn.dataset.d)*10);
+    if(next>=1000) next=-1;
+    currentFeature.q[tier]=next;
+    span.textContent=qLabelShort(next);
+    addAudit({type:"config",act:"配额调整",obj:`${currentFeature.name} ${tier} ${qLabelShort(before)}→${qLabelShort(next)}`,ok:1});
+    renderFeatTable();
   }));
 
   // ===== Feature drawer extras: deps + gray rules =====
   function tierList(f){const t=[];if(f.q.free!==0)t.push("Free");if(f.q.pro!==0)t.push("Pro");if(f.q.team!==0)t.push("Team");return t.join(" / ")||"—";}
   function renderFeatureExtras(f){
-    const base = f.cat==="AI" ? [["AI Provider(Gemini / OpenAI)",1],["secretStore 密钥",1],["用量计费服务",1]]
+    const base = f.cat==="AI" ? [["AI Provider(Gemini / OpenAI)",1],["server-side secret handle",1],["用量计费服务",1]]
               : f.cat==="效率" ? [["工作区 / 存储服务",1],["数据同步引擎",1]]
               : [["本地渲染层",1]];
     if(f.key==="ai-cube") base.push(["多窗口框架",1]);
@@ -1261,10 +1363,28 @@
     {t:"2026-05-28 15:20",who:"Jinlong",type:"danger",act:"功能下线",obj:"冥想空间",ip:"103.21.7.5",ok:1},
   ];
   const ACTCLS={create:"act-create",config:"act-config",danger:"act-danger",auth:"act-auth",billing:"act-billing"};
+  function nowStamp(){
+    const d=new Date();
+    const pad=n=>String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function addAudit({type,act,obj,ok=1,who=CURRENT_ACTOR.name,ip=CURRENT_ACTOR.ip}){
+    AUDIT.unshift({t:nowStamp(),who,type,act,obj,ip,ok});
+    renderAudit();
+  }
   function renderAudit(){
     const box=document.getElementById("auditRows"); if(!box) return; box.innerHTML="";
     const q=document.getElementById("auditSearch").value.toLowerCase(), tf=document.getElementById("auditType").value, rf=document.getElementById("auditRange").value;
-    const dayOk=a=>{if(!rf)return true;const d=+a.t.slice(8,10);if(rf==="today")return d===30;if(rf==="7d")return d>=23;if(rf==="30d")return d>=1;return true;};
+    const dayOk=a=>{
+      if(!rf) return true;
+      const at=new Date(a.t.replace(" ","T"));
+      if(Number.isNaN(at.getTime())) return true;
+      const now=new Date();
+      const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      if(rf==="today") return at>=start;
+      const days=rf==="7d"?7:30;
+      return at>=new Date(start.getTime()-(days-1)*86400000);
+    };
     AUDIT.filter(a=>(!q||a.who.toLowerCase().includes(q)||a.act.includes(q)||a.obj.toLowerCase().includes(q))&&(!tf||a.type===tf)&&dayOk(a)).forEach(a=>{
       const tr=document.createElement("tr"); tr.style.cursor="default";
       tr.innerHTML=`<td class="mono">${a.t}</td><td>${a.who}</td><td><span class="act ${ACTCLS[a.type]}">${a.act}</span></td><td>${a.obj}</td><td class="mono">${a.ip}</td><td>${a.ok?'<span class="badge b-success"><span class="bd"></span>成功</span>':'<span class="badge b-danger"><span class="bd"></span>失败</span>'}</td>`;
@@ -1282,33 +1402,71 @@
     {key:"audit",name:"只读审计",members:3,color:"#a1a1aa",ic:"审",ds:"只读全站 + 审计日志"},
   ];
   const PERMS=[
-    {name:"查看看板",        r:{super:1,ops:1,support:1,finance:1,audit:1}},
-    {name:"用户管理",        r:{super:1,ops:1,support:1,finance:0,audit:0}},
-    {name:"封禁用户",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
-    {name:"模拟登录",        r:{super:1,ops:0,support:1,finance:0,audit:0}},
-    {name:"功能上下线 / 灰度", r:{super:1,ops:1,support:0,finance:0,audit:0}},
-    {name:"配额调整",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
-    {name:"Provider / 模型配置",r:{super:1,ops:0,support:0,finance:0,audit:0}},
-    {name:"查看审计日志",    r:{super:1,ops:0,support:0,finance:0,audit:1}},
-    {name:"计费管理",        r:{super:1,ops:0,support:0,finance:1,audit:0}},
-    {name:"角色与权限管理",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"dashboard.read",name:"查看看板",        r:{super:1,ops:1,support:1,finance:1,audit:1}},
+    {key:"users.read",name:"用户管理",        r:{super:1,ops:1,support:1,finance:0,audit:0}},
+    {key:"users.ban",name:"封禁用户",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"users.impersonate",name:"模拟登录",        r:{super:1,ops:0,support:1,finance:0,audit:0}},
+    {key:"features.write",name:"功能上下线 / 灰度", r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"quota.write",name:"配额调整",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"providers.write",name:"Provider / 模型配置",r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"audit.read",name:"查看审计日志",    r:{super:1,ops:0,support:0,finance:0,audit:1}},
+    {key:"billing.write",name:"计费管理",        r:{super:1,ops:0,support:0,finance:1,audit:0}},
+    {key:"rbac.write",name:"角色与权限管理",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"orgs.transfer",name:"转移组织所有权",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"settings.write",name:"系统安全设置",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
   ];
+  function roleName(key){return (ROLES.find(r=>r.key===key)||{}).name||key;}
+  function hasPerm(key,role=CURRENT_ACTOR.role){
+    if(role==="super") return true;
+    const p=PERMS.find(x=>x.key===key);
+    return Boolean(p && p.r[role]);
+  }
+  function requirePerm(key,label){
+    if(hasPerm(key)) return true;
+    addAudit({type:"auth",act:"权限拒绝",obj:`${label} · ${key} · ${roleName(CURRENT_ACTOR.role)}`,ok:0});
+    toast("权限不足: "+label);
+    return false;
+  }
+  function renderActorControl(){
+    const sel=document.getElementById("actorRole"); if(!sel) return;
+    if(!sel.options.length){
+      sel.innerHTML=ROLES.map(r=>`<option value="${r.key}">${r.name}</option>`).join("");
+      sel.addEventListener("change",()=>{
+        CURRENT_ACTOR.role=sel.value;
+        document.getElementById("sideRole").textContent=roleName(sel.value);
+        addAudit({type:"auth",act:"切换权限模拟",obj:roleName(sel.value),ok:1});
+        renderRoles();
+      });
+    }
+    sel.value=CURRENT_ACTOR.role;
+    const side=document.getElementById("sideRole"); if(side) side.textContent=roleName(CURRENT_ACTOR.role);
+  }
   function renderRoles(){
+    renderActorControl();
     const grid=document.getElementById("roleCards"); if(!grid) return; grid.innerHTML="";
     ROLES.forEach(r=>{
       const c=document.createElement("div"); c.className="role-card";
-      c.innerHTML=`<div class="ic" style="background:${r.color}">${r.ic}</div><h4>${r.name}</h4><div class="mc">${r.members} 名成员</div><div class="ds">${r.ds}</div>`;
+      c.innerHTML=`<div class="ic" style="background:${r.color}">${r.ic}</div><h4>${r.name}</h4><div class="mc">${r.members} 名成员</div><div class="ds">${r.ds}</div><div class="status-line"><span>${r.key}</span>${CURRENT_ACTOR.role===r.key?'<span class="guard-chip ok">当前模拟</span>':''}</div>`;
       grid.appendChild(c);
     });
     document.getElementById("permHead").innerHTML=`<th>权限点</th>`+ROLES.map(r=>`<th style="text-align:center">${r.name}</th>`).join("");
     const body=document.getElementById("permRows"); body.innerHTML="";
     PERMS.forEach(p=>{
       const tr=document.createElement("tr"); tr.style.cursor="default";
-      tr.innerHTML=`<td style="font-weight:600">${p.name}</td>`+ROLES.map(r=>{
+      tr.innerHTML=`<td style="font-weight:600">${p.name}<span class="perm-key">${p.key}</span></td>`+ROLES.map(r=>{
         const on=p.r[r.key], locked=r.key==="super";
-        return `<td style="text-align:center"><span class="check ${on?'on':''}"${locked?' style="opacity:.55;cursor:not-allowed"':''}>${on?'✓':''}</span></td>`;
+        return `<td style="text-align:center"><span class="check ${on?'on':''} ${locked?'locked':''}">${on?'✓':''}</span></td>`;
       }).join("");
-      tr.querySelectorAll(".check").forEach((ch,i)=>{ if(ROLES[i].key==="super")return; ch.addEventListener("click",()=>{ch.classList.toggle("on");ch.textContent=ch.classList.contains("on")?"✓":"";});});
+      tr.querySelectorAll(".check").forEach((ch,i)=>{
+        const role=ROLES[i];
+        if(role.key==="super") return;
+        ch.addEventListener("click",()=>{
+          if(!requirePerm("rbac.write","修改角色权限")) return;
+          p.r[role.key]=p.r[role.key]?0:1;
+          addAudit({type:"config",act:"RBAC 权限变更",obj:`${role.name} · ${p.key} → ${p.r[role.key]?"allow":"deny"}`,ok:1});
+          renderRoles();
+        });
+      });
       body.appendChild(tr);
     });
   }
@@ -1357,6 +1515,15 @@
     {n:"Pixel Forge",s:"PF",plan:"Pro",used:14,cap:20,cost:"$1,980",st:"active",owner:"Tom Murphy",c:"#7bb8d8",created:"2025-08-12",req:"121k",tokens:"11.4M"},
     {n:"Meridian Studio",s:"MS",plan:"Pro",used:9,cap:15,cost:"$420",st:"active",owner:"Elsa Sokol",c:"#8fbf6a",created:"2025-09-03",req:"34k",tokens:"3.1M"},
   ];
+  function ownerDisplay(o){
+    if(o.transferState==="pending"&&o.pendingTransferTo){
+      return `${o.owner} <span class="badge b-warning"><span class="bd"></span>→ ${o.pendingTransferTo} · 待确认</span>`;
+    }
+    return o.owner;
+  }
+  function ownerUsageLabel(o){
+    return o.transferState==="pending"&&o.pendingTransferTo?`${o.owner} · 待转移至 ${o.pendingTransferTo}`:o.owner;
+  }
   function renderOrgs(){
     const box=document.getElementById("orgRows"); if(!box) return; box.innerHTML="";
     ORGS.forEach(o=>{
@@ -1367,7 +1534,7 @@
         <td><div class="seat">${o.used} / ${o.cap} 席位 ${over?'<span style="color:var(--danger);font-weight:700">· 超员</span>':''}<div class="sbar"><i style="width:${pct}%;background:${over?'var(--danger)':'var(--accent)'}"></i></div></div></td>
         <td style="font-weight:600">${o.cost}</td>
         <td><span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span></td>
-        <td style="color:var(--muted)">${o.owner}</td>
+        <td style="color:var(--muted)">${ownerDisplay(o)}</td>
         <td><button class="btn btn--sm">管理</button></td>`;
       tr.style.cursor="pointer";
       tr.addEventListener("click",()=>openOrg(o));
@@ -1420,10 +1587,65 @@
   document.getElementById("cmConfirm").addEventListener("click",()=>{const b=document.getElementById("cmConfirm");if(b.disabled)return;closeConfirm();confirmCb&&confirmCb();});
   let toastT=null;
   function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2200);}
+  function syncFeatureDrawer(f){
+    document.querySelectorAll("#fStatusSeg button").forEach(b=>b.classList.toggle("on",b.dataset.st===f.status));
+    const fill=document.getElementById("fSliderFill"),knob=document.getElementById("fSliderKnob");
+    fill.style.width=f.rollout+"%";knob.style.left=f.rollout+"%";
+    document.getElementById("fRollout").textContent=f.rollout===100?"全量 100%":f.rollout===0?"未发布 0%":"灰度 "+f.rollout+"%";
+    renderFeatureExtras(f);
+  }
+  function setFeatureStatus(f,status,rollout){
+    if(!requirePerm("features.write","变更功能状态")) return;
+    const before=f.status;
+    f.status=status; f.rollout=rollout;
+    addAudit({type:status==="off"?"danger":"config",act:status==="off"?"功能下线":"功能状态变更",obj:`${f.name} ${before}→${status} · ${rollout}%`,ok:1});
+    renderFeatTable();renderRank();renderHeat(document.getElementById("heatFeat")?.value||"");
+    if(currentFeature===f && fdrawer.classList.contains("show")) syncFeatureDrawer(f);
+    toast((status==="off"?"已下线 ":"已更新 ")+f.name);
+  }
+  function setProviderStatus(p,status){
+    if(!requirePerm("providers.write","变更 Provider")) return;
+    const before=p.status;
+    if(status==="on" && p.secretState==="missing"){
+      p.secretState="pending";
+      p.secretHandle=`handle://admin/provider/${p.key}/pending`;
+      p.rotation="刚刚";
+    }
+    p.status=status;
+    addAudit({type:"config",act:"Provider 状态变更",obj:`${p.name} ${before}→${status} · ${p.secretHandle}`,ok:1});
+    renderProviders();
+    toast(`${p.name} 已${status==="on"?"启用":"停用"}`);
+  }
+  function setModelTier(p,m,tier,next){
+    if(!requirePerm("providers.write","变更模型权限")) return;
+    m.tiers[tier]=next?1:0;
+    addAudit({type:"config",act:"模型权限变更",obj:`${m.id} · ${tier} → ${next?"allow":"deny"}`,ok:1});
+    renderProviders();
+  }
+  function banUser(u,after){
+    if(!u) return;
+    if(!requirePerm("users.ban","封禁用户")) return;
+    if(u.s==="已封禁"){toast("用户已处于封禁状态");return;}
+    u.s="已封禁";u.risk="high";u.over=false;
+    addAudit({type:"danger",act:"封禁用户",obj:`${u.e} (${u.n})`,ok:1});
+    renderUserViews();renderUsers();
+    after&&after();
+    toast("已封禁 "+u.n);
+  }
+  function bulkBan(list){
+    if(!list.length){toast("请先选择用户");return;}
+    if(!requirePerm("users.ban","批量封禁用户")) return;
+    const changed=list.filter(u=>u.s!=="已封禁");
+    changed.forEach(u=>{u.s="已封禁";u.risk="high";u.over=false;});
+    addAudit({type:"danger",act:"批量封禁用户",obj:`${changed.length}/${list.length} users · ${list.map(u=>u.e).join(", ")}`,ok:1});
+    document.getElementById("selAll").checked=false;
+    renderUserViews();renderUsers();updateBulk();
+    toast("已批量封禁 "+changed.length+" 个用户");
+  }
   const banBtn=document.getElementById("banBtn");
-  if(banBtn) banBtn.addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+document.getElementById("dName").textContent+" 将立即失去访问权限,可随时恢复。此操作会被审计记录。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>{closeDrawers();toast("已封禁 "+document.getElementById("dName").textContent);}}));
+  if(banBtn) banBtn.addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+document.getElementById("dName").textContent+" 将立即失去访问权限,可随时恢复。此操作会被审计记录。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>banUser(currentUser,closeDrawers)}));
   const bulkBanBtn=document.getElementById("bulkBanBtn");
-  if(bulkBanBtn) bulkBanBtn.addEventListener("click",()=>{const n=document.getElementById("bulkCount").textContent;openConfirm({title:"批量封禁 "+n+" 个用户？",body:"这些用户将立即失去访问权限。批量高危操作需输入确认词。",tone:"danger",requireType:"BAN",confirmLabel:"全部封禁",onConfirm:()=>toast("已批量封禁 "+n+" 个用户")});});
+  if(bulkBanBtn) bulkBanBtn.addEventListener("click",()=>{const list=selectedUsers();if(!list.length){toast("请先选择用户");return;}openConfirm({title:"批量封禁 "+list.length+" 个用户？",body:"这些用户将立即失去访问权限。批量高危操作需输入确认词,并写入审计。",tone:"danger",requireType:"BAN",confirmLabel:"全部封禁",onConfirm:()=>bulkBan(list)});});
 
   // ===== Billing =====
   const BILLING=[
@@ -1446,7 +1668,28 @@
     });
   }
   // settings toggles
-  document.querySelectorAll(".toggle[data-set]").forEach(t=>t.addEventListener("click",()=>t.classList.toggle("on")));
+  document.querySelectorAll(".toggle[data-set]").forEach(t=>t.addEventListener("click",()=>{
+    const label=t.closest(".setrow")?.querySelector("b")?.textContent||"系统设置";
+    if(!requirePerm("settings.write","修改系统设置")) return;
+    t.classList.toggle("on");
+    addAudit({type:"config",act:"系统设置变更",obj:`${label} → ${t.classList.contains("on")?"on":"off"}`,ok:1});
+  }));
+  document.getElementById("syncSecretsBtn")?.addEventListener("click",()=>{
+    if(!requirePerm("providers.write","同步 secret handles")) return;
+    PROVIDERS.filter(p=>p.secretState==="pending").forEach(p=>{p.secretState="verified";p.rotation="刚刚";});
+    addAudit({type:"config",act:"同步 secret handles",obj:"provider handles refresh",ok:1});
+    renderProviders();toast("secret handles 已同步");
+  });
+  document.getElementById("addProviderBtn")?.addEventListener("click",()=>{
+    if(!requirePerm("providers.write","接入 Provider")) return;
+    const target=PROVIDERS.find(p=>p.secretState==="missing")||PROVIDERS.find(p=>p.secretState==="pending");
+    if(!target){toast("暂无待接入 Provider");return;}
+    target.secretState="pending";
+    target.secretHandle=`handle://admin/provider/${target.key}/pending`;
+    target.rotation="刚刚";
+    addAudit({type:"create",act:"创建 Provider secret handle",obj:`${target.name} · ${target.secretHandle}`,ok:1});
+    renderProviders();toast(target.name+" handle 已创建为 pending");
+  });
 
   // ===== Tweaks panel (OKLCH re-theme + density + theme + layout A/B) =====
   const TW_ACCENTS=[["Gemini 蓝",260],["靛紫",280],["祖母绿",160],["玫瑰",18],["琥珀",70]];
@@ -1477,6 +1720,7 @@
 
   // ===== Org detail drawer =====
   var userLayout="drawer";
+  let currentOrg=null;
   const MEMBER_POOL=[["Lena Okafor","管理员","#6aa6ff"],["Marco Rossi","成员","#5ec8a8"],["Priya Patel","财务","#f0a868"],["Yuki Tanaka","成员","#c08ce0"],["Tom Webb","只读","#7bb8d8"]];
   const ini2=n=>n.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
   function genMembers(o){
@@ -1484,16 +1728,21 @@
     const k=Math.max(2,Math.min(4,o.used%5));
     return [owner,...MEMBER_POOL.slice(0,k).map(m=>({n:m[0],r:m[1],c:m[2],t:"今天"}))];
   }
+  function transferTarget(o){
+    const m=genMembers(o).find(x=>x.n!==o.owner);
+    return m?m.n:"Lena Okafor";
+  }
   function openOrg(o){
+    currentOrg=o;
     const av=document.getElementById("oAv"); av.textContent=o.s; av.style.background=`linear-gradient(135deg,${o.c},${o.c}aa)`;
     document.getElementById("oName").textContent=o.n;
     const st=ORGSTATUS[o.st], over=o.used>o.cap, pct=Math.round(o.used/o.cap*100);
-    document.getElementById("oMeta").innerHTML=`<span class="plan ${PLANCLS[o.plan]}">${o.plan}</span> · 所有者 ${o.owner} · <span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span>`;
+    document.getElementById("oMeta").innerHTML=`<span class="plan ${PLANCLS[o.plan]}">${o.plan}</span> · 所有者 ${ownerDisplay(o)} · <span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span>`;
     document.getElementById("oKv").innerHTML=`
       <div><div class="k">组织 ID</div><div class="v">org_${o.s.toLowerCase()}${o.cap}</div></div>
       <div><div class="k">套餐</div><div class="v">${o.plan}</div></div>
       <div><div class="k">状态</div><div class="v">${st[0]}</div></div>
-      <div><div class="k">所有者</div><div class="v">${o.owner}</div></div>
+      <div><div class="k">所有者</div><div class="v">${ownerDisplay(o)}</div></div>
       <div><div class="k">创建时间</div><div class="v">${o.created}</div></div>
       <div><div class="k">本月成本</div><div class="v">${o.cost}</div></div>
       <div><div class="k">本月请求</div><div class="v">${o.req}</div></div>
@@ -1503,7 +1752,7 @@
     const bar=document.getElementById("oSeatBar"); bar.style.width=Math.min(100,pct)+"%"; bar.style.background=over?"var(--danger)":"var(--accent)";
     document.getElementById("oMembers").innerHTML=genMembers(o).map(m=>`<div class="qrow" style="padding:9px 2px"><div class="u"><div class="av" style="width:30px;height:30px;font-size:11px;background:linear-gradient(135deg,${m.c},${m.c}aa)">${ini2(m.n)}</div><div><div class="nm" style="font-size:13px">${m.n}</div><div class="em">${m.r}</div></div></div><span class="qr-meta">${m.t}</span></div>`).join("");
     document.getElementById("oUsage").innerHTML=
-      `<div class="bar-row"><div class="top"><span class="nm">${o.owner}</span><b>1.2M</b></div><div class="track"><i style="width:72%;background:var(--accent)"></i></div></div>`+
+      `<div class="bar-row"><div class="top"><span class="nm">${ownerUsageLabel(o)}</span><b>1.2M</b></div><div class="track"><i style="width:72%;background:var(--accent)"></i></div></div>`+
       `<div class="bar-row"><div class="top"><span class="nm">Marco Rossi</span><b>640K</b></div><div class="track"><i style="width:40%;background:var(--info)"></i></div></div>`+
       `<div class="bar-row"><div class="top"><span class="nm">其他成员合计</span><b>${o.tokens}</b></div><div class="track"><i style="width:26%;background:var(--faint)"></i></div></div>`;
     document.getElementById("oBill").innerHTML=
@@ -1518,11 +1767,21 @@
     document.querySelectorAll("#odrawer .tabpane").forEach(p=>p.classList.toggle("on",p.dataset.opane===b.dataset.otab));
   }));
   document.getElementById("oClose").addEventListener("click",closeDrawers);
-  document.getElementById("oTransferBtn").addEventListener("click",()=>openConfirm({title:"转移所有权？",body:"组织 "+document.getElementById("oName").textContent+" 的所有权将被转移,原所有者降级为管理员。高危操作需输入确认。",tone:"danger",requireType:"TRANSFER",confirmLabel:"转移",onConfirm:()=>{closeDrawers();toast("已发起所有权转移");}}));
+  document.getElementById("oTransferBtn").addEventListener("click",()=>openConfirm({title:"记录所有权转移请求？",body:"组织 "+document.getElementById("oName").textContent+" 将进入所有权转移待确认状态。真实落地需后端完成成员校验、通知与最终写入。",tone:"danger",requireType:"TRANSFER",confirmLabel:"记录请求",onConfirm:()=>{
+    if(!requirePerm("orgs.transfer","转移组织所有权")) return;
+    const org=currentOrg||ORGS.find(o=>o.n===document.getElementById("oName").textContent);
+    if(!org) return;
+    if(org.transferState==="pending"){toast("该组织已有待确认转移请求");return;}
+    org.transferState="pending";
+    org.pendingTransferTo=transferTarget(org);
+    org.transferRequestedAt=nowStamp();
+    addAudit({type:"danger",act:"转移所有权请求",obj:`${org.n}: ${org.owner} → ${org.pendingTransferTo}`,ok:1});
+    renderOrgs();openOrg(org);toast("已记录所有权转移请求");
+  }}));
 
   // ===== User detail page (A/B with drawer) =====
   function backToUsers(){document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-users"));document.getElementById("crumb").textContent="用户管理";}
-  function showUserDetail(u){ renderUserPage(u); document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-userdetail")); document.getElementById("crumb").textContent="用户管理 / "+u.n; }
+  function showUserDetail(u){ currentUser=u; renderUserPage(u); document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-userdetail")); document.getElementById("crumb").textContent="用户管理 / "+u.n; }
   function renderUserPage(u){
     const v=document.getElementById("view-userdetail");
     const rk=u.risk==="high"?'<span style="color:var(--danger)">高风险</span>':u.risk==="watch"?'<span style="color:var(--warning)">关注</span>':"正常";
@@ -1558,7 +1817,7 @@
         <div class="ti"><span class="d"></span><div><div class="t">登录 · IP 103.21.x.x</div><div class="tm">2 小时前</div></div></div>
       </div></div></div>`;
     v.querySelector("#udBack").addEventListener("click",backToUsers);
-    v.querySelector("#udBan").addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+u.n+" 将立即失去访问权限,可随时恢复。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>{backToUsers();toast("已封禁 "+u.n);}}));
+    v.querySelector("#udBan").addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+u.n+" 将立即失去访问权限,可随时恢复。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>banUser(u,backToUsers)}));
   }
 
   // ===== Nav & dashboard tabs =====

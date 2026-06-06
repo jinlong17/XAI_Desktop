@@ -146,7 +146,7 @@ Phase D - Workflow and governance:
 - Ship rows #9-#10.
 - Add verification gates and decide whether to unpause any runtime sync-v1 Phase 5 work.
 
-No phase authorizes `site` or `admin` implementation branches by itself. Those modules remain PROPOSED until operator confirmation.
+No phase authorizes `site` implementation branches by itself. `admin` is operator-activated but roadmap-gated, so account-cloud work may only feed its roadmap/contracts and does not authorize production admin writes.
 
 ### R9. Verification gates
 

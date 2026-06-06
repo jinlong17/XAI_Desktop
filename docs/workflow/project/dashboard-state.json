@@ -287,11 +287,11 @@
         "platform": "Admin prototype / future app target",
         "target": "控制面、用量、审计、AI 配置",
         "branch": "codex/admin/<feature>",
-        "next": "确认 admin 线优先级、package/deploy 目标和 RBAC 契约",
+        "next": "启动 admin roadmap 第一切片 xai-admin-dashboard-shell,确认 package/deploy 目标和 RBAC 契约",
         "issues": [
           {
             "severity": "pending",
-            "text": "admin 线为 PROPOSED，仅原型存在，尚未确认部署目标。"
+            "text": "admin 线已于 2026-06-05 operator 激活为 roadmap-gated;仍仅原型+roadmap manifest,尚未确认生产部署目标。"
           }
         ]
       }
@@ -752,9 +752,9 @@
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
-          "skill": "xai-feature-brief",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
+          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
+          "skill": "xai-feature-brief 或 xai-roadmap-loop",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
         }
       ],
       "impacts": [
@@ -776,7 +776,7 @@
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
         }
       ]
     },
@@ -1064,7 +1064,7 @@
         "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
         "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -1245,7 +1245,7 @@
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
+          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
         }
       ],
       "impacts": [
@@ -1262,7 +1262,7 @@
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
         }
       ]
     },
@@ -1406,11 +1406,11 @@
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "proposed",
-      "status": "控制面候选",
+      "badge": "roadmap-gated",
+      "status": "已激活 · roadmap gated",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
+      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -1440,11 +1440,11 @@
         "release_aliases": ["admin", "admin-dashboard", "control plane", "rbac", "usage", "audit", "ai-config", "权限", "用量", "审计", "运营", "ai 配置"]
       },
       "features": [
-        { "name": "AI 配置", "status": "proposed" },
-        { "name": "权限 / RBAC", "status": "proposed" },
-        { "name": "用量统计", "status": "proposed" },
-        { "name": "审计日志", "status": "proposed" },
-        { "name": "运营入口", "status": "proposed" }
+        { "name": "AI 配置", "status": "roadmap-gated" },
+        { "name": "权限 / RBAC", "status": "roadmap-gated" },
+        { "name": "用量统计", "status": "roadmap-gated" },
+        { "name": "审计日志", "status": "roadmap-gated" },
+        { "name": "运营入口", "status": "roadmap-gated" }
       ],
       "points": [
         [
@@ -1457,10 +1457,10 @@
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
+          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -1472,11 +1472,11 @@
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -1494,24 +1494,24 @@
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
-        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
+        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {

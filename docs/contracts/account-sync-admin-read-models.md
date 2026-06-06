@@ -52,8 +52,9 @@ payload plaintext to browser-delivered code.
    sync semantics.
 7. ADR-0013 D4 remains the topology rule: Web and App do not sync to each
    other; both sync through one account cloud layer.
-8. The `admin` product module remains PROPOSED. This contract is a control-
-   plane boundary document only.
+8. The `admin` product module is operator-activated but roadmap-gated. This
+   contract is a control-plane boundary document only and does not authorize
+   production admin writes outside the admin roadmap gates.
 
 ## 3. Control-plane data-source rules
 

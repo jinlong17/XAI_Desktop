@@ -158,7 +158,7 @@ release/desktop/<version>  ephemeral, freeze-only (sign / notarize / dmg / updat
 
 **Product lines** (ADR-0013 §D1) — importance ≠ current dev-focus: web (P0·maintenance) ·
 mac App (P1·**active**) · organizer plugins (P2·paused) · account cloud-sync (P2·paused) ·
-official website (PROPOSED) · admin-dashboard (PROPOSED).
+official website (PROPOSED) · admin-dashboard (operator-activated · roadmap-gated).
 
 ## 4. Three-Faces Architecture
 
