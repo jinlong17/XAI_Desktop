@@ -180,7 +180,7 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 | P1 — Audit-event contract + append-only hash-chain | DONE | `84c82ef` |
 | P2 — Audit-on-mutation enforcement + tests | DONE | `1df087b` |
 | P3 — Ops-queue read model + severity contract | DONE | `b251ee3` |
-| P4 — Wire pages to typed mock adapters + secret/build re-run | DONE | `_(set below)_` |
+| P4 — Wire pages to typed mock adapters + secret/build re-run | DONE | `d1c96e5` |
 
 ## Work Log (append-only)
 
@@ -439,7 +439,7 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
   over the new `audit/`+`opsQueue/` modules; full admin suite **284 passed / 21 files** (191 + 31 + 27 + 19 +
   16); regression boundary **`pnpm --filter @repo/web build` → 0** (unaffected). Slice #1 (`adapters.test.ts`
   18 / `adminApi.test.ts` 14 / `pages.smoke` 11) + row #2 all green.
-- **Commits**: `<P4_HASH>` (`feat(admin): row #5 P4 — wire ops-queue + audit page to typed mock adapters`).
+- **Commits**: `d1c96e5` (`feat(admin): row #5 P4 — wire ops-queue + audit page to typed mock adapters`).
 - **Tests**: P4 unit 16/16 · full admin suite 284/284 · TT-NO-INLINE-MOCK 21/21 · no-secret src+bundle 14/14 ·
   vite build 0 · @repo/web build 0 · tsc clean.
 - **Next step**: feature-verify — independently verify all 4 phases + the Verification Gate ("every admin
