@@ -314,6 +314,8 @@ import {
 } from "../contracts/adminApi";
 import type { AdminRole } from "../authz/rbac";
 import type {
+  OrgDetail as OrgsReadSeamOrgDetail,
+  OrgRow as OrgsReadSeamOrgRow,
   UserDetail as UsersReadSeamUserDetail,
   UserQuery as UsersReadSeamUserQuery,
   UserRow as UsersReadSeamUserRow,
@@ -337,4 +339,13 @@ export const usersReadSeam = {
   ): Promise<AdminApiResult<UsersReadSeamUserDetail | null>> =>
     adminApiClient.getUser(email),
   // savedViews()/filterChips() stay sourced from the slice #1 usersAdapter (sync UI config) — do NOT add them here.
+};
+
+export const orgsReadSeam = {
+  list: (): Promise<AdminApiResult<OrgsReadSeamOrgRow[]>> =>
+    adminApiClient.getOrgs(),
+  get: (
+    name: string,
+  ): Promise<AdminApiResult<OrgsReadSeamOrgDetail | null>> =>
+    adminApiClient.getOrg(name),
 };

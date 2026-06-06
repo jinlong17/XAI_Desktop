@@ -177,3 +177,98 @@ describe("TT-CMD-GUARDED-IS-ADDITIVE", () => {
     expect(guarded.commands).not.toBe(mockAdminCommandAdapter);
   });
 });
+
+describe("TT-CMD-GUARDED-ALLOW-transferOwnership", () => {
+  it("super role can transferOwnership; granted call returns applied:false + auditId and appends one event", async () => {
+    const { commands, chain } = createGuardedCommandAdapter({ role: "super" });
+    const before = chain.length;
+    const res = await commands.transferOwnership({
+      org: "Acme",
+      toMember: "x",
+    });
+
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      expect(res.data.applied).toBe(false);
+      expect(typeof res.data.auditId).toBe("string");
+    }
+    expect(chain.length).toBe(before + 1);
+  });
+});
+
+describe("TT-CMD-GUARDED-DENY-transferOwnership", () => {
+  it.each(["ops", "support", "finance", "audit"] as const)(
+    "%s role cannot transferOwnership and appends zero events",
+    async (role) => {
+      const { commands, chain } = createGuardedCommandAdapter({ role });
+
+      const res = await commands.transferOwnership({
+        org: "Acme",
+        toMember: "x",
+      });
+
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.error.code).toBe("forbidden");
+      expect(chain.length).toBe(0);
+    },
+  );
+
+  it("no role fails transferOwnership closed as unauthorized and appends zero events", async () => {
+    const { commands, chain } = createGuardedCommandAdapter();
+
+    const res = await commands.transferOwnership({
+      org: "Acme",
+      toMember: "x",
+    });
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error.code).toBe("unauthorized");
+    expect(chain.length).toBe(0);
+  });
+});
+
+describe("TT-CMD-AUDIT-ON-MUTATION-transferOwnership", () => {
+  it("transferOwnership appends exactly one event with family, permission, and ok result", async () => {
+    const { commands, chain } = createGuardedCommandAdapter({ role: "super" });
+
+    await commands.transferOwnership({
+      org: "Acme",
+      toMember: "x",
+    });
+
+    expect(chain.length).toBe(1);
+    const event = chain.list()[0]!;
+    expect(event.mutationFamily).toBe("transferOwnership");
+    expect(event.permissionKey).toBe(MUTATION_PERMISSION.transferOwnership);
+    expect(event.permissionKey).toBe("admin.orgs.transfer_ownership");
+    expect(event.result).toBe("ok");
+  });
+});
+
+describe("TT-CMD-CHAIN-AFTER-N", () => {
+  it("keeps the audit chain valid after a mixed granted and denied command sequence", async () => {
+    const granted = createGuardedCommandAdapter({ role: "super" });
+    const denied = createGuardedCommandAdapter({ role: "audit" });
+
+    await granted.commands.banUser({ email: "spam_bot_91@mail.ru" });
+    await denied.commands.banUser({ email: "x@example.test" });
+    await granted.commands.bulkBan({
+      emails: ["spam_one@mail.ru", "spam_two@mail.ru"],
+    });
+    await denied.commands.bulkBan({ emails: ["x@example.test"] });
+    await granted.commands.transferOwnership({
+      org: "Acme",
+      toMember: "x",
+    });
+    await denied.commands.transferOwnership({
+      org: "Acme",
+      toMember: "x",
+    });
+
+    expect(() => granted.chain.verify()).not.toThrow();
+    expect(() => denied.chain.verify()).not.toThrow();
+    expect(granted.chain.list()).toHaveLength(3);
+    expect(denied.chain.list()).toHaveLength(0);
+    expect(granted.chain.length + denied.chain.length).toBe(3);
+  });
+});

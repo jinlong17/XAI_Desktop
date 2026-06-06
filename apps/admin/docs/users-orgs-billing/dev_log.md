@@ -13,10 +13,10 @@
 | **Target** | xai-admin-users-orgs-billing |
 | **Title** | Admin Users / Organizations / Billing wiring (typed read-model adapters · RBAC+audit-gated guarded mutations · Billing read-only with frozen Stripe gate) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1 DONE; P2/P3/P4 PENDING |
+| **Status** | APPROVED — P1+P2 DONE; P3/P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → feature-auto-build host) · impl via `codex exec` (D-Codex) |
-| **Updated** | 2026-06-06 22:54 |
-| **Suggested Next** | feature-auto-build (P2) |
+| **Updated** | 2026-06-06 23:06 |
+| **Suggested Next** | feature-auto-build (P3) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #3 default) |
 | **Verify Cross-vendor** | yes (manifest row #3 default) |
@@ -148,8 +148,8 @@
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Users read seam + guarded ban/bulk-ban | DONE | _(pending commit hash, set below)_ |
-| P2 — Organizations read seam + guarded owner-transfer | PENDING | — |
+| P1 — Users read seam + guarded ban/bulk-ban | DONE | `d5c8ff6` |
+| P2 — Organizations read seam + guarded owner-transfer | DONE | _(pending commit hash, set below)_ |
 | P3 — Billing read seam + explicit Stripe-gate deferral | PENDING | — |
 | P4 — Wire pages + injection swap + carried-guard re-run | PENDING | — |
 
@@ -305,3 +305,33 @@
 - **Risks**: R1/R3/R6 mitigations holding (distinct guarded type; additive; pages not yet touched — P4). R9 (async
   RTL) deferred to P4.
 - **Next step**: feature-auto-build P2 — Organizations read seam + SUPER-ONLY `transferOwnership` on the guarded adapter.
+
+### Round 4 — 2026-06-06 23:06 · feature-auto-build (P2) [feature-dev-loop · D-Codex]
+
+- **Executor**: claude-opus-4-8 (feature-auto-build host) — implementation delegated to **`codex exec`** (D-Codex);
+  host reviewed diff + ran gates + committed.
+- **Mode**: Run — continuing the auto-loop; P1 DONE, P2 next.
+- **Action (P2 — Organizations read seam + guarded owner-transfer)**:
+  - **EDIT (append-only)** `src/adapters/index.ts` — added `orgsReadSeam` (`list`/`get` →
+    `adminApiClient.getOrgs`/`getOrg`, `AdminApiResult<OrgRow[]>`/`<OrgDetail|null>`). Merged the `./types` import
+    (no duplicate). Everything above (P1 block + slice #1 + row #5) UNCHANGED (verified via `git diff`).
+  - `transferOwnership` was ALREADY on `GuardedCommandAdapter` from P1 (per the P1 spec) — P2 added only the
+    Orgs read seam + the transfer-specific tests.
+  - **NEW** `src/adapters/orgsReadSeam.test.ts` (2). **EDIT (append-only)** `src/adapters/guardedCommands.test.ts`
+    (10 → 18; +8 transfer cases). No existing test altered.
+- **Gate evidence (P2 — host-run)**:
+  - `TT-WIRE-ORGS-READ` → `orgsReadSeam.test.ts` GREEN (delegates to `adminApiClient.getOrgs`/`getOrg`; data =
+    fixture-backed `OrgRow[]`/`OrgDetail`).
+  - `TT-CMD-GUARDED-ALLOW-transferOwnership` (super → `{applied:false, auditId}`, chain +1),
+    `TT-CMD-GUARDED-DENY-transferOwnership` (**`it.each(["ops","support","finance","audit"])` → all 4 non-super
+    `forbidden` + ZERO append**; no-role → `unauthorized` + ZERO append — SUPER-ONLY REC-1 proven),
+    `TT-CMD-AUDIT-ON-MUTATION-transferOwnership` (one event; `permissionKey === MUTATION_PERMISSION.transferOwnership`
+    = `admin.orgs.transfer_ownership`; `result:"ok"`), `TT-CMD-CHAIN-AFTER-N` (granted vs denied adapters;
+    `chain.verify()` green; length === granted count) → GREEN.
+  - `check-types` clean; full suite **307 passed / 24 files** (= 297 UNCHANGED + 10 new). AC-3, AC-4, AC-7 covered.
+- **Commits**: P2 — `feat(admin): row #3 P2 — Organizations read seam + SUPER-ONLY guarded owner-transfer`
+  (hash in Phase Progress).
+- **Tests**: `pnpm --filter @repo/admin test` → 307/307; `check-types` clean.
+- **Risks**: R3 holding (additive; no existing test edited). R5 (scope bleed) holding — only Orgs read + transfer
+  touched; setFeatureRollout/setProviderRouting/setQuota NOT surfaced.
+- **Next step**: feature-auto-build P3 — Billing READ-ONLY seam + structural Stripe-gate guard (no billing mutation family).
