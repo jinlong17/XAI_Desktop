@@ -9,6 +9,9 @@ const servePath = resolve(scriptDir, "serve.mjs");
 const args = process.argv.slice(2);
 const noBrowser = args.includes("--no-browser") || process.env.DASHBOARD_NO_BROWSER === "1";
 const exitAfterOpen = args.includes("--exit-after-open") || process.env.DASHBOARD_EXIT_AFTER_OPEN === "1";
+const autoStartWeb = !args.includes("--no-start-web") && process.env.DASHBOARD_START_WEB !== "0";
+const openWebAfterStart = args.includes("--open-web") || process.env.DASHBOARD_OPEN_WEB === "1";
+const webStartAction = process.env.DASHBOARD_WEB_START_ACTION || "web:start-mock";
 const requestedHash = args.find(arg => arg.startsWith("#")) || process.env.DASHBOARD_OPEN_HASH || "#overview";
 let opened = false;
 let stopping = false;
@@ -32,6 +35,41 @@ function openUrl(url) {
   child.unref();
 }
 
+async function requestJson(baseUrl, path, options = {}) {
+  const url = new URL(path, baseUrl);
+  const response = await fetch(url, {
+    cache: "no-store",
+    ...options
+  });
+  const data = await response.json();
+  if (!response.ok || data.ok === false) {
+    throw new Error(data.error || data.reason || `request failed: ${url.pathname}`);
+  }
+  return data;
+}
+
+async function startWebService(baseUrl) {
+  if (!autoStartWeb) return;
+  try {
+    console.log(`[dashboard:open] ensuring Web service is running via ${webStartAction}...`);
+    const data = await requestJson(
+      baseUrl,
+      `/api/ops/start?action=${encodeURIComponent(webStartAction)}`,
+      { method: "POST" }
+    );
+    if (data.skipped) {
+      console.log(`[dashboard:open] Web service start skipped: ${data.reason || "already-running"}`);
+    } else {
+      console.log("[dashboard:open] Web service start requested.");
+    }
+    if (openWebAfterStart) {
+      await requestJson(baseUrl, "/api/ops/open?target=web&route=/app/dashboard", { method: "POST" });
+    }
+  } catch (error) {
+    console.error(`[dashboard:open] Web service auto-start failed: ${error.message}`);
+  }
+}
+
 function shutdown(child, code = 0) {
   if (stopping) return;
   stopping = true;
@@ -47,9 +85,10 @@ function shutdown(child, code = 0) {
 function scheduleOpen(child, url) {
   pendingUrl = url;
   if (pendingOpenTimer) clearTimeout(pendingOpenTimer);
-  pendingOpenTimer = setTimeout(() => {
+  pendingOpenTimer = setTimeout(async () => {
     if (opened) return;
     opened = true;
+    await startWebService(pendingUrl);
     console.log(`[dashboard:open] opening ${pendingUrl}`);
     openUrl(pendingUrl);
     if (exitAfterOpen) shutdown(child, 0);

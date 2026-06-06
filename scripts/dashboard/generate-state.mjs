@@ -899,7 +899,7 @@ function buildOverviewModules(productLines) {
       running: "正常运行",
       recent_update: "Web Console / Dashboard rows 接入真实 roadmap 计数",
       todo_fallback: "D3 gate 后再同步到 Desktop",
-      target: { type: "url", href: "http://localhost:5173/app/dashboard", label: "打开 /app/dashboard" }
+      target: { type: "url", href: "http://localhost:3000/app/dashboard", label: "打开 /app/dashboard" }
     },
     app: {
       title: "桌面版本",

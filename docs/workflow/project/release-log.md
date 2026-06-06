@@ -6,6 +6,15 @@
 
 ## 2026-06-05
 
+### 个人开发看板启动 Web 服务自动化
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `dev` / local working tree
+- User-visible change: 主目录新增可双击的 `open-dashboard.command` 入口；打开个人开发看板时会自动请求启动 Web mock 服务；看板内「使用和操作」页可直接打开 Web 首页和 Web App(`/app/dashboard`)，不再需要先手动进终端启动 Web 再手动输入网址。
+- Developer/system delta: `open.mjs` 默认调用 dashboard ops API 启动 `web:start-mock`，保留 `DASHBOARD_START_WEB=0` / `--no-start-web` 关闭开关；`serve.mjs` 会补齐 nvm/Homebrew/local PATH 并解析 `pnpm` / `corepack pnpm`，`/api/ops/open` 支持 route；`usage-ops.js` 支持按 route 打开目标；Overview Web 入口从旧 `5173` 改到 ops 目标端口 `3000/app/dashboard`。
+- Verification: `node --check scripts/dashboard/open.mjs` passed；`node --check scripts/dashboard/serve.mjs` passed；`node --check scripts/dashboard/generate-state.mjs` passed；`node --check docs/prototypes/dev-dashboard/js/usage-ops.js` passed；`node --check docs/prototypes/dev-dashboard/js/overview.js` passed；`zsh -n open-dashboard.command` passed；`zsh -n docs/prototypes/dev-dashboard/open-dashboard.command` passed；`git diff --check` passed；`node scripts/dashboard/open.mjs` no-browser smoke passed and detected the existing Web service as `already-running`；`./open-dashboard.command` no-browser smoke passed；`docs/prototypes/dev-dashboard/open-dashboard.command` no-browser smoke passed；narrow-PATH `.command` smoke passed；generated state confirmed Web App target `http://localhost:3000/app/dashboard`。
+- Risk / follow-up: Web 服务启动依赖本机存在 `pnpm` 或 `corepack pnpm`；如果 3000 已由外部服务占用，看板会跳过重复启动并把该服务标记为 external。
+
 ### 个人开发看板一键启动脚本
 
 - Product line: project-system / dev-dashboard

@@ -118,11 +118,29 @@ function setUsageOpsBusy(value){
   renderUsageOpsTarget(usageOpsState.target);
 }
 
-async function openUsageOpsTarget(targetId){
-  const target = usageOpsState.target;
-  const url = target?.url || "http://localhost:3000";
+function usageOpsTargetUrl(target, route = ""){
+  const base = target?.url || "http://localhost:3000";
+  const routePath = String(route || "").trim();
+  if(!routePath) return base;
   try{
-    await usageOpsFetch(`/api/ops/open?target=${encodeURIComponent(targetId)}`, { method:"POST" });
+    const url = new URL(base);
+    if(routePath.startsWith("/") && !routePath.startsWith("//")){
+      url.pathname = routePath;
+      url.search = "";
+      url.hash = "";
+      return url.toString();
+    }
+  }catch{
+    return base;
+  }
+  return base;
+}
+
+async function openUsageOpsTarget(targetId, route = ""){
+  const target = usageOpsState.target;
+  const url = usageOpsTargetUrl(target, route);
+  try{
+    await usageOpsFetch(`/api/ops/open?target=${encodeURIComponent(targetId)}&route=${encodeURIComponent(route || "")}`, { method:"POST" });
   }catch{
     // Browser fallback still opens the URL when macOS open is unavailable.
   }
@@ -144,7 +162,7 @@ async function startUsageOps(actionId, openAfter){
     await usageOpsFetch(`/api/ops/start?action=${encodeURIComponent(actionId)}`, { method:"POST" });
     const target = openAfter ? await waitForUsageOpsRunning() : await refreshUsageOpsStatus();
     if(openAfter && target?.state === "running"){
-      await openUsageOpsTarget(target.id);
+      await openUsageOpsTarget(target.id, "/app/dashboard");
     }
   }catch(error){
     renderUsageOpsLogs([{ at:new Date().toISOString(), line:`[error] ${error.message}` }]);
@@ -171,7 +189,7 @@ function initUsageOpsControls(){
     button.addEventListener("click", () => startUsageOps(button.dataset.opsStart, button.dataset.opsOpenAfter === "true"));
   });
   document.querySelectorAll("[data-ops-open]").forEach(button => {
-    button.addEventListener("click", () => openUsageOpsTarget(button.dataset.opsOpen));
+    button.addEventListener("click", () => openUsageOpsTarget(button.dataset.opsOpen, button.dataset.opsRoute || ""));
   });
   document.querySelectorAll("[data-ops-refresh]").forEach(button => {
     button.addEventListener("click", () => refreshUsageOpsStatus());
