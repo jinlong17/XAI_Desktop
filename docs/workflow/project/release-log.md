@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Native Host Menu Entry
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。
+- Developer/system delta: 将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。
+- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{"build":{"beforeBuildCommand":""}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.
+- Risk / follow-up: 这只解决真实 App smoke 的原生入口，不等于完成 manual smoke；仍需在前台 `.app` 中验证菜单点击、重启后的 host mode 生效，以及 Plugin Center 内容是否由正确 frontend bundle 提供。
+
 ### Desktop Plugin Phase 2 Host Smoke Typecheck Preflight
 
 - Product line: desktop-plugin
