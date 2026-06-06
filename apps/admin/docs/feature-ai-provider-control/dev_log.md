@@ -13,11 +13,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-feature-ai-provider-control |
 | **Title** | Admin Feature-flags / AI-usage-&-quota / Provider-config wiring (typed read-model adapters · RBAC+audit-gated guarded CONFIG mutations · provider secret-handle read model + provider-key no-leak guard) |
-| **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_TO_SHIP — P1–P4 DONE, feature-verify PASS |
-| **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-verify) |
-| **Updated** | 2026-06-06 |
-| **Suggested Next** | ship (human-confirmed push) |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | claude-sonnet-4-6 (ship) |
+| **Updated** | 2026-06-06 15:00 |
+| **Suggested Next** | xai-admin-deploy-observability (row #6 — final row; depends on #5 SHIPPED) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #4 default) |
 | **Verify Cross-vendor** | yes (manifest row #4 default) |
@@ -527,3 +527,24 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 - **Commits**: — (verify only; no code change). The verify-result dev_log update is committed as a docs commit.
 - **Next step**: ship — verify commit integrity, push to remote, mark SHIPPED (requires explicit human confirmation;
   feature-dev-loop STOPS before ship).
+
+### Round 8 — 2026-06-06 · ship (claude-sonnet-4-6)
+
+- **Executor**: claude-sonnet-4-6 (ship)
+- **Mode**: Ship — Status=READY_TO_SHIP confirmed; operator standing auto-ship authorization for remaining admin roadmap rows.
+- **Integrity checks** (all PASS):
+  - Working tree: clean (no uncommitted changes).
+  - Branch: claude/frosty-nash-c4bf16, ahead of origin/claude/frosty-nash-c4bf16 by 6 commits.
+  - Commit chain confirmed: 9f76ef9 (P1) -> 70ea017 (P2) -> 2be5864 (P3) -> 1663901 (P4) -> 29449fd (READY_FOR_VERIFY) -> 989a19e (verify PASS).
+  - Scope: only apps/admin/** + docs/reviews/xai-admin-feature-ai-provider-control/** changed across row #4 range. Zero diff over apps/web/, packages/core/, apps/desktop/. Zero @repo/web-auth-device-session modification. Zero @repo/audit-log-integrity import (references are absence-proving doc text only).
+  - Sensitive files: no .env*, .pem, .key, or service-role file in diff.
+  - Provider secret check: apiKey token in diff is Supabase Realtime vendored-lib field name (documentation text in dev_log) — NOT provider key material. Zero sk-, sk-ant-, AIza, service_role, or bullet-mask values in diff. TT-PROVIDER-NO-KEY-MATERIAL re-confirmed clean.
+  - Row #3 pages: UsersPage.tsx, OrgsPage.tsx, BillingPage.tsx diff = 0 bytes (byte-identical).
+- **Push**: git push origin claude/frosty-nash-c4bf16 -> fast-forward c89fc97..989a19e — SUCCESS.
+- **Commits pushed**: 9f76ef9, 70ea017, 2be5864, 1663901, 29449fd, 989a19e (row #4 full chain).
+- **Residuals (non-blocking)**:
+  - ESLint flat-config gap (task_1a68bff9) — pre-existing known non-blocking residual; not introduced by row #4.
+  - Real service-role feature/quota/provider endpoints + real provider routing effect + real server-side encrypted secret-handle vault + runtime credential fetch — deferred (OQ-D, later/production row).
+  - Manual browser smoke of the 3 wired pages on real hardware — standard pre-production step, not a blocker for the unit/contract gate.
+  - PR/merge into dev/main/web — deferred operator decision; W0 classification, feature branch push only.
+- **Next step**: xai-admin-deploy-observability (row #6 — final row; depends on #5 SHIPPED).
