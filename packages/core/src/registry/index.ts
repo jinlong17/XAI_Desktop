@@ -15,6 +15,13 @@ export {
   createWebStoragePluginInstanceAdapter,
   migratePluginInstanceStoreSnapshot,
 } from './plugin-instance-store';
+export {
+  createPluginWindowAdapter,
+  gridIdToPluginInstanceId,
+  gridSnapshotToPluginWindowSnapshot,
+  normalizeCommandError,
+  pluginInstanceIdToGridId,
+} from './plugin-window-adapter';
 export type {
   CreateAddToDesktopRequestOptions,
   CreatePluginCenterEntriesOptions,
@@ -28,3 +35,9 @@ export type {
   PluginInstanceStore,
   PluginInstanceStoreSnapshot,
 } from './plugin-instance-store';
+export type {
+  PluginWindowAdapter,
+  PluginWindowAdapterOptions,
+  PluginWindowCommand,
+  PluginWindowCommandInvoker,
+} from './plugin-window-adapter';

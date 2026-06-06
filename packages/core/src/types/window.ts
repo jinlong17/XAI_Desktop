@@ -15,6 +15,10 @@ export type WindowLabel =
 
 export type GridWindowLabel = `grid_${string}`;
 
+export type PluginHostWindowSurface = 'grid';
+
+export type PluginWindowCommandSourceLabel = 'main' | 'control';
+
 /** Window configuration */
 export interface WindowConfig {
   label: WindowLabel;
@@ -46,6 +50,24 @@ export interface GridWindowSnapshot {
   label: GridWindowLabel;
   rect: GridWindowRect;
   visible: boolean;
+}
+
+export interface PluginWindowSnapshot {
+  instanceId: string;
+  label: GridWindowLabel;
+  surface: PluginHostWindowSurface;
+  rect: GridWindowRect;
+  visible: boolean;
+}
+
+export interface CreatePluginWindowInput {
+  instanceId: string;
+  rect: GridWindowRect;
+}
+
+export interface UpdatePluginWindowInput {
+  instanceId: string;
+  rect: GridWindowRect;
 }
 
 export interface ConsoleWindowFrame {
