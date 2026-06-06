@@ -1800,3 +1800,116 @@
     max-height: 180px;
   }
 }
+
+/* ---- 2026 UI refresh: readable dashboard widgets ---------------------- */
+.widget-shell,
+.w-clock,
+.w-stat,
+.w-weather,
+.w-mini-cal,
+.w-upcoming,
+.w-sticky,
+.w-mail,
+.w-time-tracker,
+.w-world-clocks {
+  color: var(--text-1);
+}
+
+.widget-shell h3,
+.widget-shell .ww-head,
+.widget-shell .ws-label,
+.widget-shell .mini-title,
+.widget-shell .upc-title,
+.widget-shell .mail-title,
+.widget-shell .sticky-title {
+  font-size: var(--fs-sm);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.widget-shell .tiny,
+.widget-shell .upc-m,
+.widget-shell .tz-card-foot,
+.widget-shell .mail-meta,
+.sticky-composer-source-hint,
+.sticky-composer-source-meta span {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+
+.sticky-composer-filter,
+.sticky-composer-btn,
+.sticky-composer-source-card-title {
+  font-size: var(--fs-sm);
+}
+
+.sticky-composer-filter,
+.sticky-composer-btn {
+  min-height: 34px;
+}
+
+.sticky-composer-source-card {
+  min-height: 60px;
+  border-radius: var(--r-md);
+}
+
+.sticky-del,
+.sticky-resize {
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.clk-tz-btn,
+.ww-edit-btn,
+.clk-style-toggle button,
+.tz-view-toggle button,
+.icon-btn,
+.mc-nav,
+.mc-jump,
+.tz-remove,
+.widget-open-btn {
+  min-width: 30px;
+  min-height: 30px;
+  font-size: var(--fs-xs);
+}
+
+.mc-wd,
+.tz-meta,
+.tz-day,
+.tz-offset,
+.tz-divider,
+.tz-ampm,
+.tz-card-foot,
+.mail-badge {
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+}
+
+.mail-badge {
+  min-width: 22px;
+  min-height: 22px;
+}
+
+.tz-remove {
+  min-width: 34px;
+  min-height: 34px;
+}
+
+@media (max-width: 760px) {
+  .sticky-composer-filter,
+  .sticky-composer-btn,
+  .sticky-del,
+  .sticky-resize,
+  .clk-tz-btn,
+  .ww-edit-btn,
+  .clk-style-toggle button,
+  .tz-view-toggle button,
+  .icon-btn,
+  .mc-nav,
+  .mc-jump,
+  .tz-remove,
+  .widget-open-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

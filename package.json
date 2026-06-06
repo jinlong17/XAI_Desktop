@@ -8,7 +8,8 @@
     "dashboard:verify-modules": "node scripts/dashboard/verify-product-modules.mjs",
     "dashboard:serve": "node scripts/dashboard/serve.mjs",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint && node scripts/web/check-design-colors.mjs",
+    "web:check-colors": "node scripts/web/check-design-colors.mjs",
     "typecheck": "pnpm check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

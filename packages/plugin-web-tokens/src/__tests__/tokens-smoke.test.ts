@@ -26,33 +26,33 @@ const cssText = fs.readFileSync(TOKENS_CSS_PATH, "utf-8");
 describe("Token smoke — CSS file fidelity (fs-level)", () => {
   // ---- Sentinel token substring assertions (AC-T1..AC-T15) ----
 
-  it("AC-T1: --bg-app contains oklch(96.5% 0.018 158)", () => {
+  it("AC-T1: --bg-app contains oklch(97.2% 0.006 235)", () => {
     expect(cssText).toContain("--bg-app:");
-    expect(cssText).toContain("oklch(96.5% 0.018 158)");
+    expect(cssText).toContain("oklch(97.2% 0.006 235)");
   });
 
   it("AC-T2: --accent-hue default value 165", () => {
     expect(cssText).toContain("--accent-hue: 165");
   });
 
-  it("AC-T3: --accent-chroma default value 0.10", () => {
-    expect(cssText).toContain("--accent-chroma: 0.10");
+  it("AC-T3: --accent-chroma default value 0.085", () => {
+    expect(cssText).toContain("--accent-chroma: 0.085");
   });
 
-  it("AC-T4: --text-1 contains oklch(22% 0.012 220)", () => {
-    expect(cssText).toContain("--text-1: oklch(22% 0.012 220)");
+  it("AC-T4: --text-1 contains oklch(21% 0.012 230)", () => {
+    expect(cssText).toContain("--text-1: oklch(21% 0.012 230)");
   });
 
-  it("AC-T5: --fs-md comfortable 13.5px", () => {
-    expect(cssText).toContain("--fs-md:  13.5px");
+  it("AC-T5: --fs-md comfortable 14.5px", () => {
+    expect(cssText).toContain("--fs-md:  14.5px");
   });
 
   it("AC-T6: --s-4 is 16px", () => {
     expect(cssText).toContain("--s-4: 16px");
   });
 
-  it("AC-T7: --r-md is 8px", () => {
-    expect(cssText).toContain("--r-md: 8px");
+  it("AC-T7: --r-md is 10px", () => {
+    expect(cssText).toContain("--r-md: 10px");
   });
 
   it("AC-T8: --shadow-2 contains 14px", () => {
@@ -60,20 +60,20 @@ describe("Token smoke — CSS file fidelity (fs-level)", () => {
     expect(cssText).toMatch(/--shadow-2:[^;]*14px/);
   });
 
-  it("AC-T9: --dur-fast is 140ms", () => {
-    expect(cssText).toContain("--dur-fast: 140ms");
+  it("AC-T9: --dur-fast is 180ms", () => {
+    expect(cssText).toContain("--dur-fast: 180ms");
   });
 
-  it("AC-T10: --ease-out is cubic-bezier(.22, 1, .36, 1)", () => {
-    expect(cssText).toContain("--ease-out: cubic-bezier(.22, 1, .36, 1)");
+  it("AC-T10: --ease-out is cubic-bezier(.32, .72, 0, 1)", () => {
+    expect(cssText).toContain("--ease-out: cubic-bezier(.32, .72, 0, 1)");
   });
 
-  it("AC-T11: --rail-w is 56px", () => {
-    expect(cssText).toContain("--rail-w: 56px");
+  it("AC-T11: --rail-w is 62px", () => {
+    expect(cssText).toContain("--rail-w: 62px");
   });
 
-  it("AC-T12: --topbar-h is 48px", () => {
-    expect(cssText).toContain("--topbar-h: 48px");
+  it("AC-T12: --topbar-h is 52px", () => {
+    expect(cssText).toContain("--topbar-h: 52px");
   });
 
   it("AC-T13: --font-sans contains Manrope and Noto Sans SC", () => {
@@ -121,28 +121,28 @@ describe("Token smoke — override selectors (jsdom injected CSS)", () => {
   });
 
   // AC-T16
-  it("AC-T16: compact density — tokens.css declares --fs-md: 12.5px override", () => {
+  it("AC-T16: compact density — tokens.css declares --fs-md: 13.5px override", () => {
     // Verify the rule exists in the CSS text (jsdom doesn't support [data-density] well)
     expect(cssText).toContain('[data-density="compact"]');
-    expect(cssText).toContain("--fs-md: 12.5px");
+    expect(cssText).toContain("--fs-md: 13.5px");
   });
 
   // AC-T17
-  it("AC-T17: compact density — tokens.css declares --row-h: 30px override", () => {
+  it("AC-T17: compact density — tokens.css declares --row-h: 34px override", () => {
     expect(cssText).toContain('[data-density="compact"]');
-    expect(cssText).toContain("--row-h: 30px");
+    expect(cssText).toContain("--row-h: 34px");
   });
 
   // AC-T18
-  it("AC-T18: compact density — tokens.css declares --card-pad-y: 7px override", () => {
+  it("AC-T18: compact density — tokens.css declares --card-pad-y: 9px override", () => {
     expect(cssText).toContain('[data-density="compact"]');
-    expect(cssText).toContain("--card-pad-y: 7px");
+    expect(cssText).toContain("--card-pad-y: 9px");
   });
 
   // AC-T19
-  it("AC-T19: dark theme — tokens.css declares --bg-app: oklch(20% 0.012 200) override", () => {
+  it("AC-T19: dark theme — tokens.css declares --bg-app: oklch(16.5% 0.012 230) override", () => {
     expect(cssText).toContain('[data-theme="dark"]');
-    expect(cssText).toContain("--bg-app:        oklch(20% 0.012 200)");
+    expect(cssText).toContain("--bg-app:        oklch(16.5% 0.012 230)");
   });
 
   // AC-T20

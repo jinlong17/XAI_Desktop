@@ -1087,3 +1087,82 @@
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
+
+/* ---- 2026 UI refresh: calmer habit tracking surface ------------------- */
+.module-habits {
+  gap: 18px;
+  padding: 18px 20px 22px;
+  background: var(--bg-app);
+}
+
+.panel,
+.habits-list,
+.stat-card,
+.progress-card,
+.log-card,
+.stats-panel,
+.habit-directory-card {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.module-title,
+.detail-title {
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.habit-view-tabs button,
+.wd-name,
+.wd-num,
+.cal-h,
+.habit-tooltip-layer {
+  font-size: var(--fs-xs);
+  letter-spacing: 0;
+}
+
+.habit-title {
+  font-size: var(--fs-md);
+  line-height: 1.35;
+}
+
+.habit-stats,
+.habit-row-subtitle,
+.habit-all-subtitle,
+.stat-label,
+.progress-sub,
+.log-empty {
+  font-size: var(--fs-sm);
+}
+
+.habit-row,
+.habit-all-row {
+  min-height: 70px;
+  border-radius: var(--r-lg);
+}
+
+.hcell,
+.habit-check-cell {
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.hb-btn,
+.habit-view-tabs button,
+.icon-btn {
+  min-height: 38px;
+}
+
+@media (max-width: 680px) {
+  .module-habits {
+    padding: 12px;
+  }
+
+  .hb-btn,
+  .habit-view-tabs button,
+  .icon-btn {
+    min-height: 44px;
+  }
+}

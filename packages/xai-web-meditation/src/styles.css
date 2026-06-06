@@ -1169,3 +1169,43 @@
     transition: none;
   }
 }
+
+/* ---- 2026 UI refresh: quieter meditation module ----------------------- */
+.module-meditation,
+.med-shell,
+.med-home {
+  background: var(--bg-app);
+  color: var(--text-1);
+}
+
+.med-card,
+.med-panel,
+.med-session-card,
+.med-library-card {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+  box-shadow: var(--shadow-1);
+}
+
+.breathe-label {
+  font-size: var(--fs-sm);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.mp-remaining {
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.mp-info,
+.mp-sound-note {
+  font-size: var(--fs-sm);
+}
+
+.med-exit,
+.med-play,
+.med-filter,
+.med-chip,
+.med-session-card {
+  min-height: 44px;
+}

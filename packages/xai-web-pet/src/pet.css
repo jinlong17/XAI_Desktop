@@ -198,8 +198,20 @@
   padding: 8px 10px;
   font-size: 12px;
   line-height: 1.4;
-  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  pointer-events: none;
   z-index: 1;
+  transition:
+    opacity var(--dur-fast, 180ms) var(--ease-out, ease),
+    transform var(--dur-fast, 180ms) var(--ease-out, ease);
+}
+
+.pet-wrap:hover .pet-bubble,
+.pet-wrap:focus-within .pet-bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 .pet-bubble::after {
@@ -251,10 +263,10 @@
 
 .pet-swap-btn {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: color-mix(in oklch, var(--bg-panel, #fff) 90%, transparent);
   border: 1px solid var(--border-1, rgba(0, 0, 0, 0.1));
@@ -267,6 +279,24 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   pointer-events: auto;
   z-index: 2;
+}
+
+@media (max-width: 760px) {
+  .pet-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pet-bubble {
+    display: none;
+  }
+
+  .pet-swap-btn {
+    top: -8px;
+    right: -8px;
+    width: 44px;
+    height: 44px;
+  }
 }
 .pet-swap-btn:hover {
   background: var(--bg-panel, #fff);

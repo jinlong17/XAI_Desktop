@@ -275,8 +275,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: 1px solid var(--dash-control-border);
   border-radius: 999px;
@@ -478,8 +478,8 @@
   position: absolute;
   top: 22px;
   right: -10px;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: 1px solid rgb(118 132 145 / 0.28);
   border-radius: 999px;
@@ -665,8 +665,8 @@
   top: -10px;
   right: -10px;
   /* Sizing. */
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   /* Reset native button chrome. */
   border: 0;
@@ -929,4 +929,105 @@
   display: flex;
   justify-content: flex-end;
   padding-top: 4px;
+}
+
+/* ---- 2026 UI refresh: quieter Apple/Linear dashboard shell ------------ */
+.module-dashboard {
+  --dash-control-bg: color-mix(in oklch, var(--bg-panel) 88%, transparent);
+  --dash-control-bg-hover: var(--bg-panel);
+  --dash-control-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-control-shadow: var(--shadow-1);
+  --dash-card-bg: color-mix(in oklch, var(--bg-panel) 92%, transparent);
+  --dash-card-bg-hover: var(--bg-panel);
+  --dash-card-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-card-border-hover: color-mix(in oklch, var(--accent) 28%, var(--border-1));
+  --dash-card-shadow: var(--shadow-1);
+  --dash-card-shadow-hover: var(--shadow-2);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--bg-panel) 28%, transparent), transparent 46%),
+    var(--bg-app);
+}
+
+[data-theme="dark"] .module-dashboard {
+  --dash-control-bg: color-mix(in oklch, var(--bg-panel) 82%, transparent);
+  --dash-control-bg-hover: color-mix(in oklch, var(--bg-panel) 94%, white 4%);
+  --dash-control-border: color-mix(in oklch, var(--border-2) 82%, transparent);
+  --dash-card-bg: color-mix(in oklch, var(--bg-panel) 90%, transparent);
+  --dash-card-bg-hover: color-mix(in oklch, var(--bg-panel) 96%, white 3%);
+  --dash-card-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-card-border-hover: color-mix(in oklch, var(--accent) 34%, var(--border-2));
+  background: var(--bg-app);
+}
+
+.module-dashboard .dash-head {
+  gap: 20px;
+}
+
+.module-dashboard .dash-note {
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+}
+
+.module-dashboard .dash-note:hover,
+.module-dashboard .dash-note:focus-within,
+.module-dashboard .dash-note.is-editing,
+.module-dashboard .dash-note.has-note:hover,
+.module-dashboard .dash-note.has-note:focus-within {
+  background: color-mix(in oklch, var(--bg-panel) 92%, transparent);
+  border-color: var(--dash-card-border-hover);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: none;
+}
+
+.module-dashboard .dash-note__label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.module-dashboard .dash-note__text,
+.module-dashboard .dash-note__placeholder,
+.module-dashboard .dash-note__input {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+}
+
+.module-dashboard .widget-shell {
+  border-radius: var(--r-xl);
+}
+
+.module-dashboard .widget-shell__chrome,
+.module-dashboard .widget-shell__appearance,
+.module-dashboard .widget-shell__resize {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.module-dashboard .widget-shell__appearance,
+.module-dashboard .widget-shell__resize {
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 11px;
+}
+
+.module-dashboard .awp-card {
+  min-height: 112px;
+}
+
+@media (max-width: 780px) {
+  .module-dashboard {
+    padding: 14px 12px 20px;
+  }
+
+  .module-dashboard .dash-head {
+    gap: 14px;
+  }
+
+  .module-dashboard .dash-add,
+  .module-dashboard .widget-shell__remove,
+  .module-dashboard .widget-shell__appearance,
+  .module-dashboard .widget-shell__resize {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }

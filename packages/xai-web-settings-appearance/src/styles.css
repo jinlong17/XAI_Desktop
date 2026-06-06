@@ -348,3 +348,33 @@
   color: var(--text-2);
   min-width: 36px;
 }
+
+/* ---- 2026 UI refresh: appearance controls ----------------------------- */
+.appearance-pane .pane-intro,
+.theme-card-name,
+.density-card-name,
+.bgt-name,
+.rp-label,
+.slider-val {
+  font-size: var(--fs-sm);
+  letter-spacing: 0;
+}
+
+.theme-card,
+.density-card,
+.bg-tone-card,
+.rail-pos-card {
+  min-height: 112px;
+  border-radius: var(--r-lg);
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+}
+
+@media (max-width: 760px) {
+  .rail-pos-card,
+  .theme-card,
+  .density-card,
+  .bg-tone-card {
+    min-height: 44px;
+  }
+}
