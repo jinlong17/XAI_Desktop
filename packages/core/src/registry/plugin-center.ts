@@ -57,6 +57,12 @@ export interface CreatePluginInstanceOptions {
   lifecycleState?: PluginInstance['lifecycleState'];
 }
 
+export interface CreatePluginCenterEntriesOptions {
+  statusByPluginName?: Record<string, PluginCenterEntryStatus>;
+  defaultContentTypeByPluginName?: Record<string, ContentType>;
+  unavailableReasonByPluginName?: Record<string, string>;
+}
+
 export function getPluginSupportedSurfaces(manifest: PluginManifest): PluginWindowSurface[] {
   return (['overlay', 'control', 'grid', 'console'] as const).filter(
     (surface) => manifest.windows[surface],
@@ -86,6 +92,20 @@ export function createPluginCenterEntry(
     canOpenSettings: Boolean(registration.components.SettingsPanel),
     unavailableReason: options.unavailableReason,
   };
+}
+
+export function createPluginCenterEntries(
+  registrations: PluginRegistration[],
+  options: CreatePluginCenterEntriesOptions = {},
+): PluginCenterEntry[] {
+  return registrations.map((registration) => {
+    const pluginName = registration.manifest.name;
+    return createPluginCenterEntry(registration, {
+      status: options.statusByPluginName?.[pluginName],
+      defaultContentType: options.defaultContentTypeByPluginName?.[pluginName],
+      unavailableReason: options.unavailableReasonByPluginName?.[pluginName],
+    });
+  });
 }
 
 export function createAddToDesktopRequest(

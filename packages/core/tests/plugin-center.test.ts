@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   createAddToDesktopRequest,
+  createPluginCenterEntries,
   createPluginCenterEntry,
   createPluginInstance,
   getPluginSupportedSurfaces,
@@ -67,6 +68,63 @@ describe('plugin center contract', () => {
       canAddToDesktop: true,
       canOpenSettings: false,
     });
+  });
+
+  it('creates Plugin Center entries for built-in manifests without auto-enabling planned packages', () => {
+    const organizer = createRegistration({
+      name: 'organizer',
+      version: '1.0.0',
+      displayName: '智能桌面整理',
+      enabled: true,
+      contentTypes: ['normal-window-organizer'],
+      windows: {},
+    });
+    const widgets = createRegistration({
+      name: 'widgets',
+      enabled: false,
+      contentTypes: ['widget'],
+      windows: { overlay: true, control: true },
+    });
+    const clipboard = createRegistration({
+      name: 'clipboard',
+      enabled: false,
+      contentTypes: ['clipboard-entry'],
+      windows: { control: true },
+    });
+
+    const entries = createPluginCenterEntries([organizer, widgets, clipboard], {
+      statusByPluginName: {
+        widgets: 'planned',
+      },
+      unavailableReasonByPluginName: {
+        widgets: 'Platform runtime is not ready yet',
+      },
+    });
+
+    expect(entries).toEqual([
+      expect.objectContaining({
+        pluginName: 'organizer',
+        status: 'available',
+        enabledByManifest: true,
+        defaultContentType: 'normal-window-organizer',
+        canAddToDesktop: true,
+      }),
+      expect.objectContaining({
+        pluginName: 'widgets',
+        status: 'planned',
+        enabledByManifest: false,
+        supportedSurfaces: ['overlay', 'control'],
+        canAddToDesktop: false,
+        unavailableReason: 'Platform runtime is not ready yet',
+      }),
+      expect.objectContaining({
+        pluginName: 'clipboard',
+        status: 'disabled',
+        enabledByManifest: false,
+        supportedSurfaces: ['control'],
+        canAddToDesktop: false,
+      }),
+    ]);
   });
 
   it('keeps planned or disabled manifests out of add-to-desktop by default', () => {
