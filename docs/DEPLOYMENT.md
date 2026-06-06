@@ -38,7 +38,7 @@
 | 层 | 成熟度 | 判断 |
 |---|---:|---|
 | **Web 静态产品（Demo/Preview）** | 🟢 ~95%（设施）/ 62%（完整产品） | Vite 7 + React 19 + RR7；`apps/web/wrangler.toml`、`.github/workflows/deploy-web.yml`、`apps/web/public/_headers`(CSP/HSTS)、`docs/runbooks/cloudflare.md` 全部就绪。mock-authenticated 模式下零后端即可发完整可用 Demo（ADR-0008 已拍板此上线姿态）。 |
-| **Web 真实账号登录** | 🟡 ~45% | Auth 边界 + 凭据/登录编排已 ship，但 `plugin-account` 的 `LoginPage.tsx` 仍是 mock stub，Supabase Auth 集成 deferred；CI 当前固定 `VITE_WEB_AUTH_MODE=mock-authenticated`。 |
+| **Web 真实账号登录** | 🟡 ~45% | Auth 边界 + 凭据/登录编排已 ship，但 `plugin-account` 的 `LoginPage.tsx` 仍是 mock stub，Supabase Auth 集成 deferred；CI 对**所有**构建（含生产）固定 `VITE_WEB_AUTH_MODE=mock-authenticated`（不是"生产用 live"）；且账号删除函数 `account-delete` **未随仓库 shipped**（隐私合规阻塞）。 |
 | **账号云同步层** | 🟡 ~30%（代码完成、未部署） | 加密原语（AES-256-GCM / HPKE / Ed25519）、outbox、SQLCipher、Supabase Edge Functions（`sync-push`/`sync-pull`/`recovery-proof`/`onboarding-backfill`）、Postgres migrations + RLS **代码均已写完**（sync-v1 #1–#36），但**未部署到任何真实 Supabase 实例**，整条线按 P0 优先级 PAUSED。 |
 | **Mac / iOS / Android 数据接入** | 🔴 ~25% | `syncScope` 契约 + local-first + repository 边界已实现；客户端运行时接入未落地。iOS / Android **当前仓库尚无 app**（仅 web + desktop）。 |
 | **桌面插件同步** | 🔴 ~30% | 插件须经 repository/runtime adapter 的边界清楚，但账号插件与实时同步仍 In-Dev / Deferred。 |
@@ -51,7 +51,7 @@
 1. **生产部署源分支未定**：GitHub Actions 现绑定 `main`，但 Web 主线是 `web`，`web` 比 `main` 多出大量产品提交 → 直接发会发出**落后版本**。（§5.0 / §12-A）
 2. **首发模式未定**：Public Demo（mock-auth）还是 Real-Auth Private Beta。（§12-B）
 3. **Supabase 实例未开通**（sync-v1 #9，纯外部人工任务）→ 阻塞所有真实 Auth 与同步部署。
-4. **隐私合规未闭环**：隐私政策 / 用户协议 / 账号删除 / 数据导出说明缺失。
+4. **隐私合规未闭环（Real-Auth 阻塞，Demo 不受影响）**：隐私政策 / 用户协议 / 数据导出说明缺失；且**账号删除 `account-delete` Edge Function 未随仓库 shipped**（`apps/web/deploy/README.md` 明确说明，需单独实现+部署），是 Real-Auth Private Beta 的硬前置（账号删除是合规要求）。
 
 ---
 
@@ -168,7 +168,7 @@ pnpm --filter @repo/web build:secure  # 带 Sentry sourcemap 的生产构建
 - DB migration 必须**单独**有 rollback 策略（§9）。
 
 ### 5.6 日志 / 监控
-- 前端错误 + web-vitals → Sentry（`build:secure` 自动上传 sourcemap 并打 release mark）。
+- 前端错误 + web-vitals → Sentry。注意脚本口径：`build:secure` = 构建 + 上传/校验/清理 sourcemap；**打 deploy mark 是单独步骤**，在 `build:secure:with-deploy`（= `build:secure` + `sourcemaps:deploy:mark`）里。当前 CI（`deploy-web.yml`）用的是**普通 `pnpm --filter @repo/web build`**，尚未接 `build:secure` 链路 —— 接生产监控时需明确选用哪个脚本。
 - 部署事件 → GitHub Actions summary。
 - 后端 → Supabase Dashboard（Edge Function logs + Postgres logs）+ Cloudflare Analytics。
 
@@ -221,7 +221,7 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 
 1. 🔓 开通 staging + prod Supabase 项目（sync-v1 #9，外部人工，**总闸**）。
 2. 部署已写好的 migrations + RLS + Edge Functions（`apps/release-site/supabase/`）。
-3. 把 `LoginPage.tsx` 的 mock stub 换成真 Supabase Auth。
+3. 把 `LoginPage.tsx` 的 mock stub 换成真 Supabase Auth；并**补实现并部署 `account-delete` Edge Function**（未随仓库 shipped，合规硬前置）。
 4. 过 hardening 准入门（#37，10 项 PRD checklist）。
 5. 先把 **1 个实体**（如 `productivity.todo`）走通「双设备 30 分钟 100% 一致」验收（#56），再批量接。
 
@@ -317,6 +317,7 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 > 每阶段：完成即 commit · 输出阶段性结果 · 更新本文 + 看板 + 部署记录。
 
 ### 阶段 1 — 部署架构落地（DevOps 闭环）
+- [ ] **前置（§12-D）**：若 `web` 做 release source，先把部署文档/runbook/dashboard state 同步到 `web`，再动 CI；否则保持治理源在 `dev`、不改 CI。
 - [ ] 决策并固化生产部署源分支（§12-A）；对齐 `deploy-web.yml` 触发分支。
 - [ ] 跑一次真实「部署 → 登记 → 回滚」闭环；补 1 条 `deployment.records`。
 - [ ] CI 加部署前置 gate（lint/typecheck/test）。
@@ -367,10 +368,10 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 
 | # | 决策 | 选项 | 建议 |
 |---|---|---|---|
-| **A** | Web 生产部署源分支 | (a) `web` 提升/合并到 `main` 再发；(b) Cloudflare Production 直接部署 `web` | 先在 runbook 写清；倾向把 `web` 定为权威 Web release source，并调整 `deploy-web.yml` 触发分支 |
-| **B** | 首发模式 | Public Demo（mock-auth）/ Real-Auth Private Beta | **先发 Demo 拿反馈**，账号同步并行推进 |
-| **C** | Supabase 实例开通时机 | 立即 / 等 Demo 反馈后 | 越早开通越早解冻同步代码；属纯人工动作 |
-| **D** | 本轮文档提交分支 | `dev`（当前，治理/看板工作所在）/ 新 docs 分支 / `web` | 治理文档跨六模块，倾向随看板工作落 `dev`，但需 operator 确认（ADR-0013：触及 `dev` 需显式确认） |
+| **A** | Web 生产部署源分支 | (a) `web` 提升/合并到 `main` 再发；(b) Cloudflare Production 直接部署 `web` | 把 `web` 定为权威 Web release source，并调整 `deploy-web.yml` 触发分支。⚠️ `web…dev` 当前是 **~204/5 大分叉**，不是小差异。 |
+| **B** | 首发模式 | Public Demo（mock-auth）/ Real-Auth Private Beta | **先发 Demo 拿反馈**，账号同步并行推进。**不要把 Real-Auth 当首发条件**（它还卡 Supabase + `account-delete` + 隐私合规）。 |
+| **C** | Supabase 实例开通时机 | 立即 / 先开 staging，prod 等 Demo+真实登录 smoke 后 | 先开 **staging**；production 等 Demo 反馈 + 真实登录 smoke 通过后再开。 |
+| **D** | 治理源 vs 发布执行源 | `dev`=治理/看板记录源；`web`=发布执行源 | 本轮两笔部署文档已落 `dev`（治理记录源，operator 已确认）。但**若决策 A 选 `web` 做 release source，进 Step 3 阶段 1（改 CI / 真实部署）前，必须先把这两笔部署文档 + runbook + dashboard state 同步/cherry-pick 到 `web`（或从 `web` 派生 deployment 分支执行）**，不能让"治理源在 dev、发布源在 web"长期分裂。 |
 
 ---
 

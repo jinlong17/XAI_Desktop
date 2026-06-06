@@ -116,7 +116,7 @@
         },
         {
           "label": "构建",
-          "detail": "安装依赖后执行 pnpm --filter @repo/web build；PR 使用 mock-authenticated，生产使用 live auth。",
+          "detail": "安装依赖后执行 pnpm --filter @repo/web build；当前 CI 对所有构建（PR preview + push main 生产）都固定 VITE_WEB_AUTH_MODE=mock-authenticated（ADR-0008 D2，ship 全部 24 模块、CI 不放密钥）。live auth 是未来阶段，需先开通 Supabase 并按 §12-B 决策切换。",
           "owner": "@repo/web build"
         },
         {
@@ -192,6 +192,8 @@
         "Cloudflare secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID",
         "Production auth env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY",
         "账号云同步: 先开通 Supabase staging/prod 并部署 migrations+RLS+Edge Functions（runbooks/supabase.md）",
+        "Real-Auth Beta 前: 补实现并部署 account-delete Edge Function（未随仓库 shipped，合规硬前置）",
+        "口径: 当前 CI 对所有构建固定 mock-authenticated；live auth 是后续阶段，勿误判生产已支持真实账号",
         "Web build green: pnpm --filter @repo/web build",
         "CSP / security tests remain green",
         "数据兜底: Web 提供导出/导入 JSON；接 Supabase 后做一次 restore drill",
@@ -332,9 +334,9 @@
         "status": "success",
         "environment": "docs",
         "platform": "docs/DEPLOYMENT.md",
-        "version": "deploy-arch-v1",
-        "target": "部署架构文档沉淀 + 看板同步",
-        "summary": "沉淀权威部署架构文档 docs/DEPLOYMENT.md + Supabase runbook；同步部署 Tab / 产品结构图 / 文档库 / skill 说明。属文档治理记录，不代表云端产品已上线。",
+        "version": "deploy-arch-v1.1",
+        "target": "部署架构文档沉淀 + 看板同步 + 双向交叉核查修正",
+        "summary": "沉淀权威部署架构文档 docs/DEPLOYMENT.md + Supabase runbook；同步部署 Tab / 产品结构图 / 文档库 / skill 说明。经 Claude 对抗核查（39 verified / 8 fixed：表名/函数名/HSTS/test 计数）+ Codex 复审修正（CI 全 mock 口径、account-delete 未 shipped、CF 带宽配额、build:secure 口径、release source 对齐）。属文档治理记录，不代表云端产品已上线。",
         "commit": ""
       },
       {
