@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-05
+
+### 个人开发看板一键启动脚本
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `codex/web/dev-dashboard-one-click-launcher` / local working tree
+- User-visible change: 新增可双击的 `docs/prototypes/dev-dashboard/open-dashboard.command` 和 `node scripts/dashboard/open.mjs`，自动刷新看板、启动本地服务并打开浏览器；默认 4177 被占用时沿用 server 的自动顺延端口并打开实际 URL。
+- Developer/system delta: 新增 `scripts/dashboard/open.mjs` 作为启动器，复用 `scripts/dashboard/serve.mjs` 的生成与端口 fallback；新增 `pnpm dashboard:open` 别名并更新 Usage 页面说明。
+- Verification: `node --check scripts/dashboard/open.mjs` passed；`node scripts/dashboard/open.mjs --no-browser --exit-after-open` passed；4177 occupied smoke passed and selected `http://127.0.0.1:4178/#overview`；`DASHBOARD_NO_BROWSER=1 DASHBOARD_EXIT_AFTER_OPEN=1 docs/prototypes/dev-dashboard/open-dashboard.command` passed；`node --check scripts/dashboard/generate-state.mjs` passed。
+- Risk / follow-up: 双击 `.command` 会打开 Terminal 窗口承载本地 server；关闭该窗口即停止看板服务。
+
 ## 2026-05-31
 
 ### 发布记录看板升级
