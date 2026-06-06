@@ -12,10 +12,10 @@
 | **Target** | xai-admin-data-contracts-rbac |
 | **Title** | Admin Data + Permission Contracts (read models · permission keys · RBAC · API boundary) |
 | **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_FOR_VERIFY — P1–P4 DONE |
-| **Executor** | claude (feature-auto-build, inline via feature-dev-loop) |
-| **Updated** | 2026-06-06 16:05 |
-| **Suggested Next** | feature-verify |
+| **Status** | READY_TO_SHIP — verify PASS |
+| **Executor** | claude (feature-verify, inline via feature-dev-loop) |
+| **Updated** | 2026-06-06 16:20 |
+| **Suggested Next** | ship |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #2 of 6** (preserves dep order for #3–#6) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch) |
@@ -357,6 +357,49 @@ untouched; record the choice in P4.
   added no shared module; `@repo/web-auth-device-session` untouched).
 - **Boundary self-check**: W0 — admin-local only; no shared `@repo/*` change; no typed events; no Tauri; no
   `syncScope` entity; no new runtime dependency (contract-heavy row, zero deps added — `@tanstack/react-table` not needed).
-- **Commits**: see Phase Progress table (recorded below after commit).
+- **Commits**: `88c7acd` + doc-hash fix `1a81056` (see Phase Progress table).
 - **Next step**: feature-verify — independent verification of all 4 phases against the row #2 plan, contracts, and
   test.md; review commit history; confirm READY_TO_SHIP or BLOCKED.
+
+### Round 7 — 2026-06-06 16:20 · feature-verify (Verify) — inline via feature-dev-loop
+
+- **Executor**: claude (feature-verify, inline-executed by the feature-dev-loop orchestrator — independent gate;
+  did NOT trust the build worker's self-reported greens, re-ran everything from clean).
+- **Action**: independently verified all 4 phases against the APPROVED plan, design/api/test contracts, and the
+  brief-level requirement; inspected every phase commit boundary; ran the full verification set fresh.
+- **Verification results (re-run independently)**:
+  - `pnpm --filter @repo/admin test` → **191 passed (14 files)** (slice #1's 96 + row #2's 95: readModels 8 +
+    permissionKeys 23 + rbac 50 + adminApi 14). NOTE: one EARLIER full-suite run hit a **transient 5000ms timeout
+    flake** on the slice-#1 `pages.smoke.test.tsx > 用户管理 (users)` (file took 18.8s under load); confirmed a flake —
+    that smoke file passed **11/11 in 3 consecutive isolated re-runs** and the full suite passed 191/191 on re-run.
+    NOT a row #2 regression (row #2 modules are deterministic; the flaky test is untouched slice #1 UI smoke).
+  - `tsc --noEmit` (check-types) → **exit 0** (clean).
+  - `pnpm --filter @repo/admin build` → **exit 0**; 2 `dist/assets/*.js`; **0 `.map`** (sourcemap:false retained).
+  - `pnpm --filter @repo/web build` → **exit 0** — regression boundary unaffected (admin is a separate app).
+- **AC → gate verification (all PASS)**: AC-1 TT-READMODEL-CONTRACT/ANNOTATION; AC-2 TT-PERMKEY-UNIQUE/PATTERN/
+  APPEND-ONLY; AC-3 TT-PERMKEY-MUTATION-COVERAGE; AC-4 TT-RBAC-ALLOW ×6 + TT-RBAC-DENY ×6 (verbose reporter
+  confirmed BOTH allow+deny emitted for ALL 6 families) + TT-RBAC-READ-GRANTS; AC-5 TT-RBAC-FAILCLOSED +
+  TT-RBAC-ADVISORY-NOTE; AC-6 TT-API-CONTRACT-SHAPE/FAILCLOSED/SERVER-AUTHORITATIVE (no-I/O spy-asserted); AC-7
+  TT-NO-SECRET-SRC + TT-NO-SECRET-BUNDLE (re-run green over new authz/+contracts/); AC-8 TT-BUILD + full suite.
+- **Commit-boundary review**: 5 commits (P1 cba8e5e, P2 411d6ca, P3 3949e9d, P4 88c7acd, doc-fix 1a81056) — each
+  single-intent, within its phase scope (P2/P3/P4 touch ONLY their one source pair + dev_log; P1 carries the doc
+  baseline + readModels), convention-compliant (`type(scope): summary` + Why/What/Scope/Risk/Docs/Tests).
+- **Hard-constraint audit (all hold)**:
+  - **W0**: the ONLY non-`apps/admin/` change in the whole range is the discovery-review doc; NO shared `@repo/*`,
+    NO `apps/web`, NO `packages/core`, NO `@repo/core/src/events`, NO Tauri. `@repo/web-auth-device-session` untouched (A2).
+  - **C2**: rbac.ts (advisory ×7) + adminApi.ts (server ×16) document server-authoritative / browser-advisory;
+    TT-RBAC-ADVISORY-NOTE + TT-API-SERVER-AUTHORITATIVE enforce it; mock fails closed + does no I/O (R1 guarded).
+  - **REC-3**: readModels.ts is 2 re-export blocks + **0 read-model re-declarations** (single source proven by
+    type-identity test).
+  - **Secret invariant**: 0 secret/service-role literals in authz/+contracts/; carried guards green.
+  - **No syncScope / no new dependency / contract-only** (no real backend, no real mutation — mock `applied:false`).
+  - **REC-1 / REC-2 / OQ-F**: synthesized `ORG_TRANSFER_OWNER` super-only (allow/deny tested); read returns bound
+    to §2 contract (no fork); slice #1 command-adapter rewire deferred to row #3 (tested it is NOT rewired).
+- **Verdict**: **PASS → READY_TO_SHIP**. 0 blockers.
+- **Residual risks (non-blocking)**:
+  - R-flake: the slice-#1 `pages.smoke.test.tsx` users-page render can time out under heavy parallel load (5s
+    default). Pre-existing slice #1 behavior, not introduced by row #2; consider raising that test's timeout in a
+    future slice-#1 maintenance pass (out of scope here).
+  - Live claim key (OQ-C) + real server runtime/secret-handle (OQ-D) + real mutations/transport = rows #3–#5 (by design).
+- **Commits**: — (verify only; no code change; no push).
+- **Next step**: ship — verify commit completeness, push to remote, mark SHIPPED (requires human confirmation).
