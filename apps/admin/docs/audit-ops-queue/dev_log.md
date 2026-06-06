@@ -13,10 +13,10 @@
 | **Target** | xai-admin-audit-ops-queue |
 | **Title** | Admin Audit Log + Ops Queue (append-only audit-event contract · audit-on-mutation invariant · ops-queue severity read model) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
+| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
 | **Executor** | feature-dev-loop (inline feature-auto-build · claude-opus-4-8) |
-| **Updated** | 2026-06-06 19:25 |
-| **Suggested Next** | feature-auto-build (P3) |
+| **Updated** | 2026-06-06 19:45 |
+| **Suggested Next** | feature-auto-build (P4) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #5 of 6** (preserves dep order; #6 depends on #5) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch; worktree `claude/frosty-nash-c4bf16`) |
@@ -178,8 +178,8 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Audit-event contract + append-only hash-chain | DONE | `84c82ef` |
-| P2 — Audit-on-mutation enforcement + tests | DONE | `_(set below)_` |
-| P3 — Ops-queue read model + severity contract | PENDING | — |
+| P2 — Audit-on-mutation enforcement + tests | DONE | `1df087b` |
+| P3 — Ops-queue read model + severity contract | DONE | `_(set below)_` |
 | P4 — Wire pages to typed mock adapters + secret/build re-run | PENDING | — |
 
 ## Work Log (append-only)
@@ -351,8 +351,46 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 - **Acceptance (P2 gate)**: AC-4 / AC-5 / AC-6 covered — `pnpm exec vitest run src/audit/auditedMutation.test.ts`
   → **27 passed**; `tsc --noEmit` clean; full suite **249 passed / 17 files** (222 + 27) — row #2's
   `adminApi.test.ts` (14) + slice #1 unaffected.
-- **Commits**: `<P2_HASH>` (`feat(admin): row #5 P2 — audit-on-mutation invariant on the mock path`).
+- **Commits**: `1df087b` (`feat(admin): row #5 P2 — audit-on-mutation invariant on the mock path`).
 - **Tests**: P2 unit 27/27 · full admin suite 249/249 · tsc clean.
 - **Next step**: P3 — ops-queue read model + deterministic severity (`OpsSeverity` ordinal + `toSeverity` +
   `severityRank` severity-desc-then-count-desc + `createOpsQueueReadModel().ranked()`), built on slice #1's
   unchanged `OpsQueueItem` over the `QUEUES` fixture.
+
+### Round 5 — 2026-06-06 19:45 · feature-dev-loop → feature-auto-build (P3)
+
+- **Executor**: feature-dev-loop (inline feature-auto-build role · claude-opus-4-8).
+- **Mode**: Run (continuation). Re-read dev_log; P1–P2 DONE (`84c82ef`, `1df087b`); proceeded to P3.
+- **Phase**: **P3 — Ops-queue read model + severity contract**.
+- **Action**:
+  - `src/opsQueue/severity.ts` — typed `OpsSeverity` (`critical|high|warning|info`) + total
+    `SEVERITY_ORDER` (3/2/1/0) + pure `toSeverity(item)` (deterministic tone(+count)→severity:
+    `danger` → `critical` at/above the PINNED `DANGER_CRITICAL_THRESHOLD = 12` else `high`;
+    `warning`→`warning`; `info`/`muted`→`info`) + pure `severityRank` comparator (severity desc, then
+    count desc — disambiguates the verified `danger`×2 / `warning`×2 / `info`(info+muted)×2 collisions
+    in `QUEUES`). Derived from existing fixture fields — NO production data invented, NO fixture rewritten.
+  - `src/opsQueue/opsQueueReadModel.ts` — `RankedOpsQueueItem extends OpsQueueItem` (additive, no fork)
+    + `createOpsQueueReadModel(source?)` whose `ranked()` returns severity-ranked items (built ON slice #1's
+    `overviewAdapter.getOpsQueue()` by default — composes the existing Overview seam, does NOT re-reach into
+    fixtures; pure, operates on a copy; stable; never drops/adds).
+  - `src/opsQueue/severity.test.ts` (10) — TT-OPS-SEVERITY-MAP (threshold escalation; total order;
+    purity) / TT-OPS-SEVERITY-COVERS-ALL-QUEUES (all 6 mapped; documented per-queue map
+    risk→critical/highcost→high/dunning,overage→warning/tickets,dormant→info) / TT-OPS-RANK-DETERMINISTIC
+    (severity-then-count; idempotent; antisymmetric over the fixture; documented ranked order
+    risk→highcost→dunning→overage→tickets→dormant).
+  - `src/opsQueue/opsQueueReadModel.test.ts` (9) — TT-OPS-READMODEL-RANKED (default + explicit source;
+    monotonic non-increasing severity then count) / TT-OPS-STABLE-SORT (ties keep input order;
+    info+muted tie) / TT-OPS-READMODEL-CONTRACT-SHAPE (all 7 `OpsQueueItem` fields intact + defined
+    `severity`; out len === in len; source not mutated; outputs are copies).
+  - Self-check: additive over slice #1's UNCHANGED `OpsQueueItem`; W0 held; pure functions; no I/O; no secret.
+  - One test-only fix (code was correct): the antisymmetry assertion tripped on `Object.is(0, -0)` for the
+    self/tie diagonal; rewrote it as `sign(ab) + sign(ba) === 0`. `severityRank` itself unchanged.
+- **Acceptance (P3 gate)**: AC-7 / AC-8 covered — `pnpm exec vitest run src/opsQueue/*.test.ts` →
+  **19 passed**; `tsc --noEmit` clean; full suite **268 passed / 19 files** (249 + 19) — slice #1 + row #2
+  + P1 + P2 unaffected.
+- **Commits**: `<P3_HASH>` (`feat(admin): row #5 P3 — ops-queue severity read model`).
+- **Tests**: P3 unit 19/19 · full admin suite 268/268 · tsc clean.
+- **Next step**: P4 — wire pages through the `../adapters` seam (R-1): re-back `auditAdapter` with the
+  chain projection + `overviewAdapter` ops queue with the ranked read model so `DashboardPage`/`AuditPage`
+  keep importing `../adapters` (TT-NO-INLINE-MOCK stays green; ADD it to the P4 gate); re-run no-secret
+  guards (src + bundle) + `vite build` + full suite.
