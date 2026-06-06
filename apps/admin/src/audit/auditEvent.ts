@@ -162,6 +162,9 @@ export function deriveAuditType(event: AdminAuditEvent): AuditType {
       return "billing";
     case "feature":
       return "create";
+    case "danger":
+      // a non-mutation destructive admin action seeded with an explicit danger kind
+      return "danger";
     default:
       return "config";
   }
@@ -197,5 +200,41 @@ export function eventToAuditRow(event: AdminAuditEvent): AuditRow {
     object,
     ip: event.ip,
     ok: event.result === "ok",
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * Inverse seed map: slice #1 display AuditRow → AdminAuditEventInput
+ * ------------------------------------------------------------------ */
+
+/**
+ * `AuditType` → the seed `target.kind` that `deriveAuditType` maps BACK to the same type.
+ * This lets the existing `AUDIT` display fixture seed the event store while preserving each
+ * row's display type through the projection round-trip. (`danger` rounds through the explicit
+ * `"danger"` kind — see deriveAuditType.)
+ */
+const TYPE_TO_SEED_KIND: Record<AuditType, string> = {
+  config: "config",
+  auth: "auth",
+  billing: "billing",
+  create: "feature",
+  danger: "danger",
+};
+
+/**
+ * Pure inverse field-map: a slice #1 display `AuditRow` → `AdminAuditEventInput` (the
+ * chain-independent content the chain's `append` consumes). Used ONLY to SEED the event store
+ * from the existing `AUDIT` fixture at load. This is NOT a general two-way mapper (the event
+ * stays the source of truth, A2) — it is a deterministic, lossy-display → structured-seed
+ * adapter so the demo chain has realistic content. `time → tsMs` via the pure `parseAuditTime`.
+ */
+export function auditRowToSeedInput(row: AuditRow): AdminAuditEventInput {
+  return {
+    tsMs: parseAuditTime(row.time),
+    actor: { id: row.who },
+    action: row.action,
+    target: { kind: TYPE_TO_SEED_KIND[row.type], id: row.object },
+    ip: row.ip,
+    result: row.ok ? "ok" : "error",
   };
 }

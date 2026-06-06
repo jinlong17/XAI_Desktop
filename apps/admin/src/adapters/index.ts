@@ -278,3 +278,28 @@ export const adminReadModels: AdminReadModels = {
 };
 
 export type { AdminReadModels } from "./types";
+
+/* ------------------------------------------------------------------ *
+ * Row #5 composed seams — ADDITIVE (slice #1 adapters above UNCHANGED)
+ * ------------------------------------------------------------------ *
+ * These compose the row #5 audit/ + opsQueue/ modules so the Dashboard ops queue and the
+ * Audit page can read the severity-ranked + chain-backed contracts THROUGH this `../adapters`
+ * seam (R-1: pages keep importing `../adapters`; TT-NO-INLINE-MOCK stays green). They do NOT
+ * mutate `overviewAdapter`/`auditAdapter` or slice #1's `adminReadModels`, so the slice #1 +
+ * row #2 suites (adapters.test.ts, pages.smoke) are unaffected.
+ */
+
+/** Severity-ranked Overview ops-queue read model (P3) — composes `overviewAdapter.getOpsQueue()`. */
+export { createOpsQueueReadModel } from "../opsQueue/opsQueueReadModel";
+export type {
+  OpsQueueReadModel,
+  RankedOpsQueueItem,
+} from "../opsQueue/opsQueueReadModel";
+export { toSeverity, severityRank, type OpsSeverity } from "../opsQueue/severity";
+
+/** Pre-built ranked ops-queue read model the Dashboard consumes (default fixture source). */
+import { createOpsQueueReadModel as _createOpsQueueReadModel } from "../opsQueue/opsQueueReadModel";
+export const opsQueueReadModel = _createOpsQueueReadModel();
+
+/** Chain-backed Audit read model (P1/P2/P4) — the fixture-seeded append-only chain projection. */
+export { auditChainReadModel, adminAuditChain } from "../audit/auditStore";

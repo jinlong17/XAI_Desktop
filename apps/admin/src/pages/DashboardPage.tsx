@@ -1,14 +1,19 @@
 /**
  * Dashboard (总览看板) — KPIs, operational queues, feature ranking, usage heatmap.
- * Reads through `overviewAdapter` (../adapters). No inline mock data.
+ * Reads through the typed adapters (../adapters). No inline mock data.
+ *
+ * Row #5: the ops queue is now SEVERITY-RANKED via `opsQueueReadModel` (../adapters),
+ * which composes the row #5 ops-queue severity read model over slice #1's Overview seam
+ * (severity desc, then count desc). Wiring stays inside the `../adapters` seam so the
+ * carried TT-NO-INLINE-MOCK guard holds (no inline fixtures, no direct `../opsQueue` import).
  */
 import { useState } from "react";
-import { overviewAdapter, featuresAdapter } from "../adapters";
+import { overviewAdapter, featuresAdapter, opsQueueReadModel } from "../adapters";
 import { Panel, MiniBar } from "../components/primitives";
 
 export function DashboardPage(): React.ReactElement {
   const kpis = overviewAdapter.getKpis();
-  const queues = overviewAdapter.getOpsQueue();
+  const queues = opsQueueReadModel.ranked();
   const ranking = overviewAdapter.getFeatureRanking();
   const features = featuresAdapter.list();
   const [heatFeat, setHeatFeat] = useState("");
@@ -34,7 +39,11 @@ export function DashboardPage(): React.ReactElement {
       <h2 className="section-head">运营队列</h2>
       <div className="grid-queues">
         {queues.map((q) => (
-          <div className={`queue queue--${q.tone}`} key={q.key}>
+          <div
+            className={`queue queue--${q.tone}`}
+            key={q.key}
+            data-severity={q.severity}
+          >
             <div className="queue-head">
               <span className="q-ico" aria-hidden>
                 {q.icon}

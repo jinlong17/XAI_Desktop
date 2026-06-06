@@ -1,10 +1,15 @@
 /**
  * Audit log (审计日志) — read-only filtered log table (text + type + range).
- * Reads through `auditAdapter` (../adapters). No inline mock data.
- * (Real append-on-mutation audit is row #5; this is a read-only view.)
+ * Reads through `auditChainReadModel` (../adapters). No inline mock data.
+ *
+ * Row #5: the rows are now PROJECTED from the append-only audit hash-chain
+ * (`auditChainReadModel.query`, fixture-seeded, integrity-verifiable) instead of the flat
+ * slice #1 fixture adapter — the chain is the source of truth, `AuditRow` is its one-way
+ * display projection. Wiring stays inside the `../adapters` seam so the carried
+ * TT-NO-INLINE-MOCK guard holds (no inline fixtures, no direct `../audit` import).
  */
 import { useMemo, useState } from "react";
-import { auditAdapter } from "../adapters";
+import { auditChainReadModel } from "../adapters";
 import type { AuditRow, AuditType } from "../adapters/types";
 import { Badge, DataTable, type Column } from "../components/primitives";
 
@@ -27,7 +32,10 @@ export function AuditPage(): React.ReactElement {
   const [text, setText] = useState("");
   const [type, setType] = useState<AuditType | "">("");
   const [range, setRange] = useState<"" | "today" | "7d" | "30d">("");
-  const rows = useMemo(() => auditAdapter.query({ text, type, range }), [text, type, range]);
+  const rows = useMemo(
+    () => auditChainReadModel.query({ text, type, range }),
+    [text, type, range],
+  );
 
   const cols: Column<AuditRow>[] = [
     { header: "时间", cell: (a) => <span className="mono">{a.time}</span> },

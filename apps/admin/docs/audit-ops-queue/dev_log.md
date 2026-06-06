@@ -12,11 +12,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-audit-ops-queue |
 | **Title** | Admin Audit Log + Ops Queue (append-only audit-event contract · audit-on-mutation invariant · ops-queue severity read model) |
-| **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
+| **Current Phase** | FEATURE_VERIFY |
+| **Status** | READY_FOR_VERIFY — all 4 phases DONE |
 | **Executor** | feature-dev-loop (inline feature-auto-build · claude-opus-4-8) |
-| **Updated** | 2026-06-06 19:45 |
-| **Suggested Next** | feature-auto-build (P4) |
+| **Updated** | 2026-06-06 20:10 |
+| **Suggested Next** | feature-verify |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #5 of 6** (preserves dep order; #6 depends on #5) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch; worktree `claude/frosty-nash-c4bf16`) |
@@ -179,8 +179,8 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 |---|---|---|
 | P1 — Audit-event contract + append-only hash-chain | DONE | `84c82ef` |
 | P2 — Audit-on-mutation enforcement + tests | DONE | `1df087b` |
-| P3 — Ops-queue read model + severity contract | DONE | `_(set below)_` |
-| P4 — Wire pages to typed mock adapters + secret/build re-run | PENDING | — |
+| P3 — Ops-queue read model + severity contract | DONE | `b251ee3` |
+| P4 — Wire pages to typed mock adapters + secret/build re-run | DONE | `_(set below)_` |
 
 ## Work Log (append-only)
 
@@ -388,9 +388,60 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 - **Acceptance (P3 gate)**: AC-7 / AC-8 covered — `pnpm exec vitest run src/opsQueue/*.test.ts` →
   **19 passed**; `tsc --noEmit` clean; full suite **268 passed / 19 files** (249 + 19) — slice #1 + row #2
   + P1 + P2 unaffected.
-- **Commits**: `<P3_HASH>` (`feat(admin): row #5 P3 — ops-queue severity read model`).
+- **Commits**: `b251ee3` (`feat(admin): row #5 P3 — ops-queue severity read model`).
 - **Tests**: P3 unit 19/19 · full admin suite 268/268 · tsc clean.
 - **Next step**: P4 — wire pages through the `../adapters` seam (R-1): re-back `auditAdapter` with the
   chain projection + `overviewAdapter` ops queue with the ranked read model so `DashboardPage`/`AuditPage`
   keep importing `../adapters` (TT-NO-INLINE-MOCK stays green; ADD it to the P4 gate); re-run no-secret
   guards (src + bundle) + `vite build` + full suite.
+
+### Round 6 — 2026-06-06 20:10 · feature-dev-loop → feature-auto-build (P4)
+
+- **Executor**: feature-dev-loop (inline feature-auto-build role · claude-opus-4-8).
+- **Mode**: Run (final phase). Re-read dev_log; P1–P3 DONE (`84c82ef`, `1df087b`, `b251ee3`); proceeded to P4.
+- **Phase**: **P4 — Wire Overview ops queue + Audit page to typed mock adapters + secret/build re-run**.
+- **R-1 (MUST) honored — design decision recorded.** The carried `TT-NO-INLINE-MOCK` guard asserts every
+  `src/pages/*.tsx` imports from `../adapters` (and never `../fixtures`). To wire WITHOUT breaking it AND
+  WITHOUT breaking slice #1's `auditAdapter` (which `adapters.test.ts` pins to 12 rows + `type:"danger"` +
+  `text:"封禁"`), I did NOT re-back the existing `overviewAdapter`/`auditAdapter`. Instead I added **additive
+  composed seams** in `src/adapters/index.ts` and routed the pages through them:
+  - `opsQueueReadModel` (= `createOpsQueueReadModel()`, severity-ranked) — re-exported from `../adapters`.
+  - `auditChainReadModel` (chain-backed, fixture-seeded) — re-exported from `../adapters` (via `audit/auditStore`).
+  `DashboardPage` now imports `opsQueueReadModel` from `../adapters` and renders `.ranked()`; `AuditPage` now
+  imports `auditChainReadModel` from `../adapters`. Both pages STILL import `../adapters` → `TT-NO-INLINE-MOCK`
+  green (added to the P4 gate per R-1). No page imports `../audit`/`../opsQueue` directly. `overviewAdapter`/
+  `auditAdapter`/`adminReadModels` UNCHANGED (R-4: slice #1 + row #2 suites untouched).
+- **Action**:
+  - `src/audit/auditEvent.ts` — added pure inverse seed map `auditRowToSeedInput` (display `AuditRow` →
+    `AdminAuditEventInput`; `time→tsMs` via `parseAuditTime`; `type→seed kind` so the projection round-trip
+    preserves each fixture row's display type) + a `"danger"` kind case in `deriveAuditType` (makes the
+    danger round-trip well-defined). The event stays the source of truth (A2; this is a one-directional
+    SEED adapter, not a general `rowToEvent`).
+  - `src/audit/auditStore.ts` — `buildSeededAuditChain()` (append the `AUDIT` fixture oldest-first → seq
+    monotonic) + the canonical `adminAuditChain` + `auditChainReadModel` (`query` = `projectAudit`,
+    newest-first + AuditFilter; `verify` = `verifyAuditReadModel`). In-memory only; NO real store/DB/network.
+  - `src/adapters/index.ts` — additive composed exports (`createOpsQueueReadModel`/`opsQueueReadModel`,
+    `OpsSeverity`/`toSeverity`/`severityRank`, `auditChainReadModel`/`adminAuditChain`). Slice #1 adapters
+    above untouched.
+  - `src/pages/DashboardPage.tsx` — `queues = opsQueueReadModel.ranked()` (severity-ranked) via `../adapters`;
+    each queue card carries `data-severity`. `src/pages/AuditPage.tsx` — `auditChainReadModel.query(...)` via
+    `../adapters` (chain-backed projection).
+  - `src/audit/auditStore.test.ts` (10) — TT-AUDIT-READ-PROJECTION (12 rows; AuditRow shape; newest-first;
+    type round-trip; type/text/range filters) + TT-AUDIT-READ-VERIFY (seeded chain verifies; tamper → E3025;
+    seq monotonic oldest-first).
+  - `src/pages/wiring.test.tsx` (6) — TT-WIRE-DASHBOARD-OPS (6 cards; rendered order === `ranked()`;
+    `data-severity` per card; top = critical risk queue) + TT-WIRE-AUDIT-PAGE (chain-backed row count;
+    newest-first first row; toolbar filters present; reads through `../adapters`).
+- **Acceptance (P4 gate, R-1 ADDED)**: AC-9 / AC-10 / AC-11 covered —
+  `pnpm exec vitest run src/audit/auditStore.test.ts src/pages/wiring.test.tsx` → **16 passed**;
+  **TT-NO-INLINE-MOCK 21/21** (R-1 — both pages still import `../adapters`); `tsc --noEmit` clean;
+  `pnpm exec vite build` → 0 (dist refreshed, no `.map`); **TT-NO-SECRET-SRC 4/4 + TT-NO-SECRET-BUNDLE 10/10**
+  over the new `audit/`+`opsQueue/` modules; full admin suite **284 passed / 21 files** (191 + 31 + 27 + 19 +
+  16); regression boundary **`pnpm --filter @repo/web build` → 0** (unaffected). Slice #1 (`adapters.test.ts`
+  18 / `adminApi.test.ts` 14 / `pages.smoke` 11) + row #2 all green.
+- **Commits**: `<P4_HASH>` (`feat(admin): row #5 P4 — wire ops-queue + audit page to typed mock adapters`).
+- **Tests**: P4 unit 16/16 · full admin suite 284/284 · TT-NO-INLINE-MOCK 21/21 · no-secret src+bundle 14/14 ·
+  vite build 0 · @repo/web build 0 · tsc clean.
+- **Next step**: feature-verify — independently verify all 4 phases + the Verification Gate ("every admin
+  mutation appends an immutable audit event") + the carried no-inline-mock / no-secret guards; give
+  READY_TO_SHIP or BLOCKED.
