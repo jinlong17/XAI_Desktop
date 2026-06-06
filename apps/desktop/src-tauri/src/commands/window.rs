@@ -8,6 +8,8 @@ use super::super::ConsoleWindowFrameState;
 use super::super::GridWindowRect;
 use super::super::GridWindowSnapshot;
 use super::super::GridWindowsState;
+use super::super::PluginCenterWindowFrame;
+use super::super::PluginCenterWindowFrameState;
 
 /// Windows allowed to invoke window lifecycle commands
 /// (`create_grid_window` / `update_grid_window` / `close_grid_window` /
@@ -24,8 +26,12 @@ use super::super::GridWindowsState;
 /// other grid windows.
 pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
 pub(crate) const CONSOLE_WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+pub(crate) const PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS: &[&str] =
+    &["main", "control", "plugin-center"];
 const CONSOLE_WINDOW_LABEL: &str = "console";
 const CONSOLE_WINDOW_URL: &str = "/#/console";
+const PLUGIN_CENTER_WINDOW_LABEL: &str = "plugin-center";
+const PLUGIN_CENTER_WINDOW_URL: &str = "/#/plugin-center";
 
 fn default_console_frame() -> ConsoleWindowFrame {
     ConsoleWindowFrame {
@@ -33,6 +39,17 @@ fn default_console_frame() -> ConsoleWindowFrame {
         y: 120.0,
         width: 1240.0,
         height: 820.0,
+        is_fullscreen: false,
+        nav_state_version: 1,
+    }
+}
+
+fn default_plugin_center_frame() -> PluginCenterWindowFrame {
+    PluginCenterWindowFrame {
+        x: 220.0,
+        y: 140.0,
+        width: 860.0,
+        height: 640.0,
         is_fullscreen: false,
         nav_state_version: 1,
     }
@@ -64,6 +81,20 @@ fn ensure_console_window_command_allowed(label: &str) -> Result<(), CommandError
             "WINDOW_CAPABILITY_DENIED",
             format!(
                 "window `{label}` is not allowed to invoke console window lifecycle commands"
+            ),
+            false,
+        ))
+    }
+}
+
+fn ensure_plugin_center_window_command_allowed(label: &str) -> Result<(), CommandError> {
+    if PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS.contains(&label) {
+        Ok(())
+    } else {
+        Err(command_error(
+            "WINDOW_CAPABILITY_DENIED",
+            format!(
+                "window `{label}` is not allowed to invoke plugin center window lifecycle commands"
             ),
             false,
         ))
@@ -217,6 +248,75 @@ fn capture_console_window_frame(
         .map_err(|e| native_error(format!("Failed to read console fullscreen state: {}", e)))?;
 
     Ok(ConsoleWindowFrame {
+        x: position.x as f64,
+        y: position.y as f64,
+        width: size.width as f64,
+        height: size.height as f64,
+        is_fullscreen,
+        nav_state_version: default_frame.nav_state_version,
+    })
+}
+
+fn read_plugin_center_frame(app: &AppHandle) -> Result<PluginCenterWindowFrame, CommandError> {
+    if let Some(state) = app.try_state::<PluginCenterWindowFrameState>() {
+        let frame = state.frame.lock().map_err(state_error)?;
+        Ok(frame.clone())
+    } else {
+        Ok(default_plugin_center_frame())
+    }
+}
+
+fn write_plugin_center_frame(
+    app: &AppHandle,
+    frame: PluginCenterWindowFrame,
+) -> Result<(), CommandError> {
+    if let Some(state) = app.try_state::<PluginCenterWindowFrameState>() {
+        let mut stored = state.frame.lock().map_err(state_error)?;
+        *stored = frame;
+    }
+    Ok(())
+}
+
+fn validate_plugin_center_frame(frame: &PluginCenterWindowFrame) -> Result<(), CommandError> {
+    if frame.width < 640.0 || frame.height < 480.0 {
+        return Err(command_error(
+            "INVALID_PLUGIN_CENTER_FRAME",
+            "plugin center frame must be at least 640x480",
+            true,
+        ));
+    }
+    if frame.width > 8192.0 || frame.height > 8192.0 {
+        return Err(command_error(
+            "INVALID_PLUGIN_CENTER_FRAME",
+            "plugin center frame dimensions exceed allowed maximum",
+            true,
+        ));
+    }
+    Ok(())
+}
+
+fn capture_plugin_center_window_frame(
+    app: &AppHandle,
+    default_frame: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    let Some(window) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) else {
+        return Ok(default_frame);
+    };
+
+    let position = window
+        .outer_position()
+        .map_err(|e| native_error(format!("Failed to read plugin center position: {}", e)))?;
+    let size = window
+        .outer_size()
+        .map_err(|e| native_error(format!("Failed to read plugin center size: {}", e)))?;
+    let is_fullscreen = window.is_fullscreen().map_err(|e| {
+        native_error(format!(
+            "Failed to read plugin center fullscreen state: {}",
+            e
+        ))
+    })?;
+
+    Ok(PluginCenterWindowFrame {
         x: position.x as f64,
         y: position.y as f64,
         width: size.width as f64,
@@ -597,6 +697,145 @@ pub async fn set_console_window_frame(
     Ok(frame)
 }
 
+/// Open or focus the dedicated Plugin Center window.
+#[tauri::command]
+pub async fn open_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let stored = read_plugin_center_frame(&app)?;
+    validate_plugin_center_frame(&stored)?;
+
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        existing
+            .show()
+            .map_err(|e| native_error(format!("Failed to show plugin center window: {}", e)))?;
+        existing
+            .set_focus()
+            .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+        let live = capture_plugin_center_window_frame(&app, stored)?;
+        write_plugin_center_frame(&app, live.clone())?;
+        return Ok(live);
+    }
+
+    let builder = WebviewWindowBuilder::new(
+        &app,
+        PLUGIN_CENTER_WINDOW_LABEL,
+        WebviewUrl::App(PLUGIN_CENTER_WINDOW_URL.into()),
+    )
+    .title("XAI Plugin Center")
+    .inner_size(stored.width, stored.height)
+    .position(stored.x, stored.y)
+    .decorations(true)
+    .resizable(true)
+    .visible(true);
+
+    let created = builder
+        .build()
+        .map_err(|e| native_error(format!("Failed to create plugin center window: {}", e)))?;
+
+    if stored.is_fullscreen {
+        created
+            .set_fullscreen(true)
+            .map_err(|e| native_error(format!("Failed to set plugin center fullscreen: {}", e)))?;
+    }
+
+    created
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+
+    let live = capture_plugin_center_window_frame(&app, stored)?;
+    write_plugin_center_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Close the dedicated Plugin Center window and persist its latest frame.
+#[tauri::command]
+pub async fn close_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<(), CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let stored = read_plugin_center_frame(&app)?;
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        let live = capture_plugin_center_window_frame(&app, stored)?;
+        write_plugin_center_frame(&app, live)?;
+        existing
+            .close()
+            .map_err(|e| native_error(format!("Failed to close plugin center window: {}", e)))?;
+    }
+    Ok(())
+}
+
+/// Focus the dedicated Plugin Center window, creating it if needed.
+#[tauri::command]
+pub async fn focus_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    if app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL).is_none() {
+        return open_plugin_center_window(window, app).await;
+    }
+    let existing = app
+        .get_webview_window(PLUGIN_CENTER_WINDOW_LABEL)
+        .ok_or_else(|| native_error("Plugin Center window not found after open check"))?;
+    existing
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+
+    let stored = read_plugin_center_frame(&app)?;
+    let live = capture_plugin_center_window_frame(&app, stored)?;
+    write_plugin_center_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Return the latest persisted Plugin Center frame snapshot.
+#[tauri::command]
+pub async fn get_plugin_center_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let stored = read_plugin_center_frame(&app)?;
+    let live = capture_plugin_center_window_frame(&app, stored)?;
+    write_plugin_center_frame(&app, live.clone())?;
+    Ok(live)
+}
+
+/// Persist and apply a Plugin Center frame snapshot.
+#[tauri::command]
+pub async fn set_plugin_center_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+    frame: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    validate_plugin_center_frame(&frame)?;
+
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        existing
+            .set_position(tauri::Position::Logical(tauri::LogicalPosition {
+                x: frame.x,
+                y: frame.y,
+            }))
+            .map_err(|e| native_error(format!("Failed to set plugin center position: {}", e)))?;
+        existing
+            .set_size(tauri::Size::Logical(tauri::LogicalSize {
+                width: frame.width,
+                height: frame.height,
+            }))
+            .map_err(|e| native_error(format!("Failed to set plugin center size: {}", e)))?;
+        existing
+            .set_fullscreen(frame.is_fullscreen)
+            .map_err(|e| native_error(format!("Failed to set plugin center fullscreen: {}", e)))?;
+    }
+
+    write_plugin_center_frame(&app, frame.clone())?;
+    Ok(frame)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -624,6 +863,7 @@ mod tests {
             "pet",
             "ai_cube",
             "console",
+            "plugin-center",
             "account",
             "unknown",
         ] {
@@ -660,6 +900,40 @@ mod tests {
     fn console_frame_validation_accepts_default_frame() {
         let frame = default_console_frame();
         assert!(validate_console_frame(&frame).is_ok());
+    }
+
+    #[test]
+    fn plugin_center_window_allowlist_admits_plugin_center_label() {
+        for label in PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS {
+            assert!(ensure_plugin_center_window_command_allowed(label).is_ok());
+        }
+    }
+
+    #[test]
+    fn plugin_center_window_allowlist_rejects_grid_widget_labels() {
+        for label in ["grid_xxx", "widget_clock", "pet", "console", "unknown"] {
+            let err = ensure_plugin_center_window_command_allowed(label).unwrap_err();
+            assert_eq!(err.code, "WINDOW_CAPABILITY_DENIED");
+            assert!(
+                err.message.contains(label),
+                "error message `{}` should mention `{label}`",
+                err.message
+            );
+        }
+    }
+
+    #[test]
+    fn plugin_center_frame_validation_rejects_too_small_frames() {
+        let mut frame = default_plugin_center_frame();
+        frame.height = 320.0;
+        let err = validate_plugin_center_frame(&frame).unwrap_err();
+        assert_eq!(err.code, "INVALID_PLUGIN_CENTER_FRAME");
+    }
+
+    #[test]
+    fn plugin_center_frame_validation_accepts_default_frame() {
+        let frame = default_plugin_center_frame();
+        assert!(validate_plugin_center_frame(&frame).is_ok());
     }
 
     #[test]

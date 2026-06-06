@@ -8,13 +8,22 @@ import type {
 } from './plugin';
 
 /** Window type classification */
-export type WindowType = 'main' | 'control' | 'grid' | 'console' | 'account' | 'widget' | 'pet';
+export type WindowType =
+  | 'main'
+  | 'control'
+  | 'grid'
+  | 'console'
+  | 'plugin-center'
+  | 'account'
+  | 'widget'
+  | 'pet';
 
 /** Window label patterns */
 export type WindowLabel =
   | 'main'
   | 'control'
   | 'console'
+  | 'plugin-center'
   | 'account'
   | 'pet'
   | `grid_${string}`
@@ -90,6 +99,15 @@ export interface UpdatePluginWindowInput {
 }
 
 export interface ConsoleWindowFrame {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isFullscreen: boolean;
+  navStateVersion: number;
+}
+
+export interface PluginCenterWindowFrame {
   x: number;
   y: number;
   width: number;

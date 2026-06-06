@@ -14,6 +14,7 @@ export type {
   CreatePluginWindowInput,
   UpdatePluginWindowInput,
   ConsoleWindowFrame,
+  PluginCenterWindowFrame,
   CommandError,
 } from './window';
 export type { DroppedFile, EventMap, WebModuleId, WebPreferenceKey, WebPreferenceChange } from './events';

@@ -4,6 +4,7 @@ import App from "./App";
 import { GridWindow } from "./windows/GridWindow";
 import { ControlWindow } from "./windows/ControlWindow";
 import { ConsoleWindow } from "./windows/ConsoleWindow";
+import { PluginCenterWindow } from "./windows/PluginCenterWindow";
 import "./index.css";
 import { registerAccountPlugin } from "@repo/plugin-account";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
@@ -17,6 +18,7 @@ import { registerProductivityPlugin } from "@repo/plugin-productivity";
  * Grid windows load "/#/grid?id=xxx" route
  * Control window loads "/#/control" route
  * Console window loads "/#/console" route
+ * Plugin Center window loads "/#/plugin-center" route
  */
 function Router() {
   const hash = window.location.hash;
@@ -37,6 +39,10 @@ function Router() {
 
   if (hash.startsWith("#/console")) {
     return <ConsoleWindow />;
+  }
+
+  if (hash.startsWith("#/plugin-center")) {
+    return <PluginCenterWindow />;
   }
 
   // Default: main app
