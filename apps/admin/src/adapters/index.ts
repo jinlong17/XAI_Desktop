@@ -314,6 +314,9 @@ import {
 } from "../contracts/adminApi";
 import type { AdminRole } from "../authz/rbac";
 import type {
+  BillingMetrics as BillingReadSeamMetrics,
+  PlanShare as BillingReadSeamPlanShare,
+  TxnRow as BillingReadSeamTxnRow,
   OrgDetail as OrgsReadSeamOrgDetail,
   OrgRow as OrgsReadSeamOrgRow,
   UserDetail as UsersReadSeamUserDetail,
@@ -348,4 +351,14 @@ export const orgsReadSeam = {
     name: string,
   ): Promise<AdminApiResult<OrgsReadSeamOrgDetail | null>> =>
     adminApiClient.getOrg(name),
+};
+
+/** Billing read seam — READ-ONLY. No mutation method exists (Stripe gate). */
+export const billingReadSeam = {
+  metrics: (): Promise<AdminApiResult<BillingReadSeamMetrics>> =>
+    adminApiClient.getBillingMetrics(),
+  planDistribution: (): Promise<AdminApiResult<BillingReadSeamPlanShare[]>> =>
+    adminApiClient.getPlanDistribution(),
+  transactions: (): Promise<AdminApiResult<BillingReadSeamTxnRow[]>> =>
+    adminApiClient.getTransactions(),
 };

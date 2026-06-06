@@ -13,10 +13,10 @@
 | **Target** | xai-admin-users-orgs-billing |
 | **Title** | Admin Users / Organizations / Billing wiring (typed read-model adapters · RBAC+audit-gated guarded mutations · Billing read-only with frozen Stripe gate) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1+P2 DONE; P3/P4 PENDING |
+| **Status** | APPROVED — P1+P2+P3 DONE; P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → feature-auto-build host) · impl via `codex exec` (D-Codex) |
-| **Updated** | 2026-06-06 23:06 |
-| **Suggested Next** | feature-auto-build (P3) |
+| **Updated** | 2026-06-06 23:18 |
+| **Suggested Next** | feature-auto-build (P4) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #3 default) |
 | **Verify Cross-vendor** | yes (manifest row #3 default) |
@@ -149,8 +149,8 @@
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Users read seam + guarded ban/bulk-ban | DONE | `d5c8ff6` |
-| P2 — Organizations read seam + guarded owner-transfer | DONE | _(pending commit hash, set below)_ |
-| P3 — Billing read seam + explicit Stripe-gate deferral | PENDING | — |
+| P2 — Organizations read seam + guarded owner-transfer | DONE | `8cfa374` |
+| P3 — Billing read seam + explicit Stripe-gate deferral | DONE | _(pending commit hash, set below)_ |
 | P4 — Wire pages + injection swap + carried-guard re-run | PENDING | — |
 
 ## Work Log (append-only)
@@ -335,3 +335,37 @@
 - **Risks**: R3 holding (additive; no existing test edited). R5 (scope bleed) holding — only Orgs read + transfer
   touched; setFeatureRollout/setProviderRouting/setQuota NOT surfaced.
 - **Next step**: feature-auto-build P3 — Billing READ-ONLY seam + structural Stripe-gate guard (no billing mutation family).
+
+### Round 5 — 2026-06-06 23:18 · feature-auto-build (P3) [feature-dev-loop · D-Codex]
+
+- **Executor**: claude-opus-4-8 (feature-auto-build host) — implementation delegated to **`codex exec`** (D-Codex);
+  host reviewed diff + ran gates + committed.
+- **Mode**: Run — P1+P2 DONE, P3 next (the row's distinctive Stripe-gate constraint).
+- **Action (P3 — Billing READ-ONLY seam + explicit Stripe-gate deferral)**:
+  - **EDIT (append-only)** `src/adapters/index.ts` — added `billingReadSeam` (READ-ONLY:
+    `metrics`/`planDistribution`/`transactions` → `getBillingMetrics`/`getPlanDistribution`/`getTransactions`).
+    NO mutation method. Everything above UNCHANGED (verified via `git diff`).
+  - **NEW** `src/adapters/billingReadSeam.test.ts` (9) — read coverage + the hard Stripe gate.
+  - **NO** billing mutation family added anywhere (`AdminApiClient`/`MutationFamily`/`MUTATION_PERMISSION`/
+    `GuardedCommandAdapter` unchanged). `BILLING_MANAGE` left catalogued-but-unwired.
+- **Gate evidence (P3 — host-run, gate test inspected for rigor, not vacuity)**:
+  - `TT-WIRE-BILLING-READ` → all 3 reads delegate to `adminApiClient` (spied); data = fixture shapes;
+    `Object.keys(billingReadSeam) === ["metrics","planDistribution","transactions"]` (read-only; no write-shaped name).
+  - `TT-BILLING-GATE-NO-MUTATION` (HARD) → runtime: real `createMockAdminApiClient` mutation keys ⊆ the fixed
+    6-family allowlist with NONE matching `/billing/i`; `MUTATION_PERMISSION` has no billing key and does NOT wire
+    `admin.billing.manage`; `GuardedCommandAdapter` keys === `["banUser","bulkBan","transferOwnership"]`.
+    **+ type-level**: `expectTypeOf<keyof GuardedCommandAdapter>` pinned to the 3-family union and
+    `expectTypeOf<MutationFamily>` pinned to the 6-family union (a billing member would fail compile). Cannot
+    silently regress.
+  - `TT-BILLING-KEY-CATALOGUED-UNWIRED` → `PERMISSION_KEYS.BILLING_MANAGE === "admin.billing.manage"` AND not in
+    `MUTATION_PERMISSION` values.
+  - `check-types` clean; full suite **316 passed / 25 files** (= 307 UNCHANGED + 9 new). AC-5 + AC-6 covered.
+  - Gate precondition documented in api.md §6 (server-side webhook-backed idempotent Stripe-mirror +
+    reconciliation + server RBAC + audit) — unmet (D4 PAUSED; no server); browser holds no Stripe secret.
+- **Commits**: P3 — `feat(admin): row #3 P3 — Billing READ-ONLY seam + structural Stripe-gate guard` (also carries
+  the P2 hash backfill in Phase Progress).
+- **Tests**: `pnpm --filter @repo/admin test` → 316/316; `check-types` clean.
+- **Risks**: R2 (Stripe gate silently regressing) MITIGATED + proven (runtime + type-level gate). R7 (secret in
+  billing fixtures) holding — display-only.
+- **Next step**: feature-auto-build P4 — wire the 3 pages to the `../adapters` seams + swap the `AdminUiContext`
+  injection to the guarded adapter; re-run carried no-secret + no-inline-mock guards + build (RTL async via findBy*/waitFor).
