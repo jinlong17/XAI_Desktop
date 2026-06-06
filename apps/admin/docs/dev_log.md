@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_BUILD — Phase 3 DONE, Phase 4 PENDING |
+| **Current Phase** | FEATURE_BUILD — Phase 4 DONE, Phase 5 PENDING |
 | **Status** | APPROVED |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build) |
-| **Updated** | 2026-06-06 02:30 |
-| **Suggested Next** | feature-auto-build (Phase 4) |
+| **Updated** | 2026-06-06 02:40 |
+| **Suggested Next** | feature-auto-build (Phase 5) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -118,11 +118,36 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 |---|---|---|
 | P1 — Scaffold isolated app + deploy boundary | DONE | `1c35a99` |
 | P2 — Admin auth gate (the core boundary) | DONE | `8d177e9` |
-| P3 — Typed read-model interfaces + mock adapters + fixtures | DONE | (this commit) |
-| P4 — Page port (structural) + destructive UI | PENDING | — |
+| P3 — Typed read-model interfaces + mock adapters + fixtures | DONE | `fe9ea96` |
+| P4 — Page port (structural) + destructive UI | DONE | (this commit) |
 | P5 — Security + build guards | PENDING | — |
 
 ## Work Log (append-only)
+
+### Round 6 — 2026-06-06 02:40 · feature-auto-build Phase 4 (via feature-dev-loop)
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline feature-auto-build worker)
+- **Phase**: P4 — Page port (structural) + destructive UI
+- **Action**: Structurally ported all 10 prototype pages reading ONLY through the typed adapters, with type-to-confirm destructive UI wired to NO-OP commands.
+  Files created:
+  - `apps/admin/src/components/ConfirmModal.tsx` — type-to-confirm modal (port of prototype openConfirm/updateCmBtn): confirm button disabled until exact `requireType` word; CSP-clean (no inline `<style>`).
+  - `apps/admin/src/components/AdminUiContext.tsx` — `AdminUiProvider` + `useAdminUi` exposing `requestConfirm`, `toast`, and the NO-OP `mockAdminCommandAdapter`; mounts the ConfirmModal + toast.
+  - `apps/admin/src/components/primitives.tsx` — admin-business primitives (Panel/Badge/PlanTag/MiniBar/DataTable<T>/statusTone). Hand-built headless DataTable (REC-2: TanStack NOT added).
+  - `apps/admin/src/components/AdminLayout.tsx` — sidebar nav rail + topbar + active-page outlet; wraps pages in AdminUiProvider.
+  - `apps/admin/src/pages/{Dashboard,Users,Orgs,Features,AiUsage,Providers,Roles,Billing,Audit,Settings}Page.tsx` — 10 pages, each importing its adapter from `../adapters`. Destructive flows: Users ban + bulk-ban(type "BAN"), Orgs transfer-ownership(type "TRANSFER"), Features take-offline — all via no-op commands. Providers renders keyStatus ONLY.
+  - `apps/admin/src/pages/index.ts` — page registry (10 keys = prototype views; Tweaks EXCLUDED).
+  - `apps/admin/src/__tests__/no-inline-mock.test.ts` — TT-NO-INLINE-MOCK: each page imports `../adapters` AND does NOT import `../fixtures` (precise seam boundary; robust vs UI `Column[]` configs). 21 tests.
+  - `apps/admin/src/components/ConfirmModal.test.tsx` — TT-CONFIRM-RENDERS: title/body render, disabled-until-exact-word (case-insensitive), wrong-word stays locked, confirm invokes the NO-OP bulkBan (asserted no-write + result shape), null→renders nothing. 5 tests.
+  - `apps/admin/src/pages/pages.smoke.test.tsx` — AC-2: all 10 pages mount through AdminUiProvider without throwing + registry-keys exact (Tweaks excluded). 11 tests.
+  Files modified:
+  - `apps/admin/src/App.tsx` — replaced Phase-2 placeholder shell with `<AdminLayout/>` behind the guard.
+  - `apps/admin/src/styles/admin.css` — full Phase-4 styling (rail/topbar/panels/tables/badges/drawers/modal/toast) on canonical token vars + a compatibility alias block (--text/--muted/--faint/--success/etc.).
+- **Tests run**: `pnpm exec vitest run` (apps/admin) → **86 passed / 86** (P1 13 + P2 16 + P3 20 + P4 37: TT-NO-INLINE-MOCK x21, TT-CONFIRM-RENDERS x5, pages smoke x11). `tsc --noEmit` → clean. `vite build` → green (112 modules; CSS 12.85 kB; bundle clean of secret + masked-key literals).
+- **Evidence (AC-2, AC-4)**: pages.smoke renders all 10 pages; TT-NO-INLINE-MOCK proves no page touches raw fixtures (reads via adapter). TT-CONFIRM-RENDERS proves the type-to-confirm UI is present, gated on the exact word, and invokes a no-op (no write) on confirm. Bundle grep: zero `sk_*`/service-role/masked-key literals in dist/.
+- **Decisions recorded**: REC-2 (TanStack NOT added; hand-built DataTable) + `@repo/ui` starter-stub note added to design.md ADR-lite #2.
+- **Boundary self-check**: all UI is admin-local; no shared-package change; providers page is keyStatus-only; Tweaks excluded; no @repo/core/events; no Tauri. D3 = W0 holds.
+- **Commits**: (recorded on commit below)
+- **Next step**: feature-auto-build Phase 5 — finalize the bundle/source no-secret guards (src + dist), final TT-CSP-GUARD, full green build + tests; set READY_FOR_VERIFY.
 
 ### Round 5 — 2026-06-06 02:30 · feature-auto-build Phase 3 (via feature-dev-loop)
 

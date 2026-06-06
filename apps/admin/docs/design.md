@@ -34,6 +34,20 @@
   Tailwind as the admin styling base and **reject** `@tremor/react` as a runtime dependency (Vercel
   acquisition → copy-paste pivot → legacy dep path). Headless `@tanstack/react-table` v8 (pinned) is
   an allowed targeted addition for dense Users/Orgs/Audit tables; hand-built fallback recorded.
+  - **Build resolution (P4, REC-2):** the hand-built fallback was taken — `@tanstack/react-table`
+    was **NOT added** as a dependency. The dense tables use a local headless `DataTable<T>` primitive
+    (`src/components/primitives.tsx`: typed `Column<T>` config with `cell`/`header`/`align`, optional
+    `onRowClick`, empty-state). Rationale: slice #1 tables are read-only with simple filter/search/saved-view
+    needs already satisfied by the adapters; no sorting/virtualization/column-resize requirement yet, so a
+    dependency-free primitive keeps the bundle lean and avoids the v8 staleness risk (R5). If a later admin
+    slice needs sort/virtualize/resize, headless `@tanstack/react-table` v8 remains the pre-approved upgrade
+    path behind this same `DataTable` seam.
+  - **`@repo/ui` note (P4):** the `@repo/ui` package ships Turborepo *starter* components (`Button` alerts;
+    `Card` is an external utm link), so the binding ADR-lite #2 reuse is the **`@repo/plugin-web-tokens`
+    OKLCH token layer** (imported globally in `main.tsx`). Admin-business presentational primitives
+    (Panel/Badge/PlanTag/MiniBar/DataTable) live inside the admin surface per the code-boundary rule
+    "business components → inside the owning surface". `@repo/ui` remains a declared design-system-family
+    dependency; its starter components are intentionally not forced into admin pages.
 
 ## Frozen assumptions (lock at plan acceptance — change requires Revise or a follow-up row)
 

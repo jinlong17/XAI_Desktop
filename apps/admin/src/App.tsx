@@ -10,12 +10,12 @@
  * `"unconfigured"` and the guard FAILS CLOSED (renders the forbidden fallback)
  * unless a session + admin claim are present. This proves the fail-closed default.
  *
- * Phase 3 adds typed read-model adapters; Phase 4 ports the 10 pages behind this
- * same guard.
+ * Phase 4 ports the 10 pages behind this same guard via AdminLayout.
  */
 import React from "react";
 import { WebAuthSessionProvider } from "@repo/web-auth-device-session";
 import { AdminRouteGate } from "./auth/AdminRouteGate";
+import { AdminLayout } from "./components/AdminLayout";
 
 function ForbiddenFallback(): React.ReactElement {
   return (
@@ -29,23 +29,11 @@ function ForbiddenFallback(): React.ReactElement {
   );
 }
 
-function AdminShell(): React.ReactElement {
-  return (
-    <div className="admin-shell">
-      <h1>XAI Admin Dashboard</h1>
-      <p>Permission boundary active — pages wired in Phase 4.</p>
-      <p className="admin-shell__hint">
-        Isolated surface · Independent CSP/deploy boundary · typed mock adapters
-      </p>
-    </div>
-  );
-}
-
 export default function App(): React.ReactElement {
   return (
     <WebAuthSessionProvider>
       <AdminRouteGate fallback={<ForbiddenFallback />}>
-        <AdminShell />
+        <AdminLayout />
       </AdminRouteGate>
     </WebAuthSessionProvider>
   );
