@@ -1,0 +1,56 @@
+/**
+ * apps/admin/src/styles/admin.css — admin surface styles.
+ *
+ * ADR-lite #2: reuse the @repo/plugin-web-tokens OKLCH token model. This file
+ * references the imported token CSS custom properties (--bg-app, --bg-panel,
+ * --text, --border, --accent, --danger, etc.) and supplies the admin-specific
+ * class styles. It is an EXTERNAL stylesheet (bundled by Vite → served as
+ * `'self'`), keeping the surface CSP-clean under `style-src 'self'`.
+ *
+ * Phase 2 scope: shell + fail-closed gate fallback. Phase 4 extends this with
+ * the page-port layout / table / drawer / modal styles.
+ */
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-app, #0e0f13);
+  color: var(--text, #e7e7ea);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+/* ---- Phase 2: shell + fail-closed fallback ---- */
+
+.admin-shell,
+.admin-gate-fallback {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-shell h1,
+.admin-gate-fallback h1 {
+  font-size: var(--fs-xl, 1.5rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.admin-shell p,
+.admin-gate-fallback p {
+  color: var(--muted, #9aa0aa);
+  margin: 0.25rem 0;
+}
+
+.admin-shell__hint,
+.admin-gate-fallback__hint {
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--faint, #6b7280);
+  margin-top: 1rem;
+}
+
+.admin-gate-fallback h1 {
+  color: var(--danger, #ef4444);
+}

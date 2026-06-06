@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_BUILD — Phase 1 DONE, Phase 2 PENDING |
+| **Current Phase** | FEATURE_BUILD — Phase 2 DONE, Phase 3 PENDING |
 | **Status** | APPROVED |
-| **Executor** | claude-sonnet-4-6 (feature-build) |
-| **Updated** | 2026-06-06 02:05 |
-| **Suggested Next** | feature-build (Phase 2) |
+| **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build) |
+| **Updated** | 2026-06-06 02:20 |
+| **Suggested Next** | feature-auto-build (Phase 3) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -117,12 +117,32 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Scaffold isolated app + deploy boundary | DONE | `1c35a99` |
-| P2 — Admin auth gate (the core boundary) | PENDING | — |
+| P2 — Admin auth gate (the core boundary) | DONE | (this commit) |
 | P3 — Typed read-model interfaces + mock adapters + fixtures | PENDING | — |
 | P4 — Page port (structural) + destructive UI | PENDING | — |
 | P5 — Security + build guards | PENDING | — |
 
 ## Work Log (append-only)
+
+### Round 4 — 2026-06-06 02:20 · feature-auto-build Phase 2 (via feature-dev-loop)
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline feature-auto-build worker — nested Task spawn unavailable in this runtime, fell back to inline execution per the dev-loop Cursor-style path)
+- **Phase**: P2 — Admin auth gate (the core permission boundary)
+- **Action**: Implemented the admin-claim predicate + route guard and wired them into the shell.
+  Files created:
+  - `apps/admin/src/auth/adminClaim.ts` — `AdminClaim` interface + `AdminClaimPredicate` type + `mockAdminClaimPredicate` (fails closed). `Session` type surfaced via `NonNullable<WebAuthSessionContextValue["session"]>` (the upstream read-only contract) WITHOUT adding `@supabase/supabase-js` as a new direct admin dependency. Mock-claim escape hatch reads `import.meta.env.VITE_ADMIN_MOCK_CLAIM` directly (pure; no I/O). Never throws.
+  - `apps/admin/src/auth/AdminRouteGate.tsx` — `AdminGuardResolution` (extends upstream `GuardResolution` by adding `"not_admin"` reason), `resolveAdminRouteGuard(state, claim, nextPath?)` pure resolver (fail-closed at every branch), and `AdminRouteGate` component (mirrors upstream `AppRouteGate` `maybeRedirect`/`useEffect` pattern; injectable `predicate`/`navigate` for testing).
+  - `apps/admin/src/styles/admin.css` — admin stylesheet referencing `@repo/plugin-web-tokens` OKLCH token vars (ADR-lite #2 reuse); external stylesheet → CSP-clean under `style-src 'self'`. Phase-2 scope: shell + fail-closed fallback classes.
+  - `apps/admin/src/auth/adminClaim.test.ts` — TT-PREDICATE-NULL, TT-PREDICATE-NON-ADMIN, TT-PREDICATE-ADMIN, TT-PREDICATE-MOCK-FLAG (+ FAILS-CLOSED variant), TT-PREDICATE-NO-THROW, TT-PREDICATE-PURE (7 tests).
+  - `apps/admin/src/auth/AdminRouteGate.test.tsx` — resolver: TT-GUARD-LOADING, TT-GUARD-UNAUTH, TT-GUARD-UNCONFIGURED, TT-GUARD-DENY (core AC-1 negative), TT-GUARD-ALLOW (core AC-1 positive); component: ALLOW-RENDER, DENY-RENDER (navigate /forbidden), UNAUTH-RENDER (navigate /auth/login), LOADING-RENDER (9 tests). Upstream `useWebAuthSession` mocked to inject deterministic session state (seam-only).
+  Files modified:
+  - `apps/admin/src/App.tsx` — mounts `WebAuthSessionProvider` + wraps shell in `AdminRouteGate` with a `ForbiddenFallback`. mock-authenticated posture: no real Supabase config → `state="unconfigured"` → guard fails closed by default.
+  - `apps/admin/src/main.tsx` — added `import "@repo/plugin-web-tokens"` + `import "./styles/admin.css"` side-effects; fixed `./App.tsx` → `./App` (tsconfig `allowImportingTsExtensions: false`).
+- **Tests run**: `pnpm exec vitest run` (in apps/admin) → **29 passed / 29** (P1: TT-CSP-GUARD x9 + TT-NO-SECRET-SRC x4; P2: TT-PREDICATE x7 + TT-GUARD x9). `tsc --noEmit` → clean. `vite build` → green (94 modules; `dist/` incl. admin CSS chunk).
+- **Evidence (AC-1)**: TT-GUARD-DENY asserts authenticated non-admin → `{allow:false, redirectTo:"/forbidden", reason:"not_admin"}`; TT-GUARD-ALLOW asserts authenticated admin → `{allow:true}`. Component DENY-RENDER asserts `navigate("/forbidden")` fired and secret content NOT rendered. AC-6 (predicate unit tested) satisfied.
+- **Boundary self-check**: no `@repo/web-auth-device-session` source change (consumed read-only via `useWebAuthSession` + its exported context-value type); no `@repo/core/src/events`; no Tauri; admin not in apps/web rail; no new direct dep added. D3 = W0 holds.
+- **Commits**: (recorded on commit below)
+- **Next step**: feature-auto-build Phase 3 — typed read-model interfaces + mock adapters + fixtures (10 pages) + no-op command adapters.
 
 ### Round 3 — 2026-06-06 02:05 · feature-build Phase 1
 

@@ -11,7 +11,10 @@
  */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+// ADR-lite #2: reuse the OKLCH design system (tokens.css + layout.css side-effects).
+import "@repo/plugin-web-tokens";
+import "./styles/admin.css";
+import App from "./App";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
