@@ -128,8 +128,8 @@ through `usePref("xai_countdowns")`. No edits to `@repo/plugin-web-storage`,
 - **User-upload of cover images** — deferred to DESIGN.md §13 Future.
 - **Notification on countdown reaching zero** — `web-notifications` not in
   this roadmap.
-- **Drag-reorder of cards** — prototype doesn't include reorder; not in
-  acceptance signal. Cards render in insertion order.
+- **Drag-reorder of cards** — added in V2.1 via persisted `sort_order` for the
+  active cards view/list/timeline surfaces.
 - **Multi-card import/export** — not in acceptance signal.
 - **Lunar / non-Gregorian calendar support** — prototype's `2/6 正月初一`
   compound string is intentionally not reproduced; ISO-only.
@@ -175,3 +175,60 @@ and replaces the existing `placeholder("countdown", ...)` row in
 - `docs/adr/0007-xai-web-console-build-form.md` §S5 (JSX→TSX 10 rules — full conformance)
 - `docs/adr/0007-xai-web-console-build-form.md` §S7 (cross-module via `@repo/core/events` only — but this row emits nothing in v1)
 - `docs/adr/0007-xai-web-console-build-form.md` §S8 (`xai_countdowns` proposed key kept; v1 uses it verbatim)
+
+---
+
+## V2 Countdown System Upgrade — 2026-06-04
+
+### Product intent
+
+Upgrade Countdown from a simple card grid into a formal time-planning module:
+default presets, full post-create editing, multiple display styles, composable
+countdown/progress modules, card/list/timeline/calendar/history views, and
+history-safe persistence under the existing `xai_countdowns` key.
+
+### Reference synthesis
+
+- Apple HIG picker guidance: keep date/time editing in context and use compact
+or graphical date entry according to space. Countdown V2 keeps native date/time
+inputs inside the edit dialog instead of route-switching.
+- Apple HIG progress guidance: countdown progress is determinate because start
+and target dates are known. V2 uses exact clamped progress ratios and avoids
+spinners for time progress.
+- Segmented progress references popular document-style progress bars without
+  exposing third-party product names in the app UI. V2 includes segmented,
+  standard linear, and ring progress styles, all derived from the same
+  `start_date` → target range.
+- Mainstream countdown apps: V2 adds default date presets, per-card colors/icons,
+pin/hide/copy/delete, progress bars, and history restore/copy flows.
+
+### New UX surfaces
+
+- Default presets: Christmas, New Year's Day, New year, Spring Festival,
+  end of this month, start of next month, next year, quarter end, end of year.
+- Views: Cards, Compact list, Timeline, Calendar, History.
+- Card modules: countdown only, progress only, or countdown + progress.
+- Layout options: stacked (top/bottom) or split (left/right).
+- Display styles: digital, date, progress, segmented progress, ring, minimal,
+  big number, festival, timeline, compact.
+- History: deleted, hidden, and completed records can be restored or copied as
+  a new countdown.
+
+### V2.1 interaction polish
+
+- The overview metrics and view tabs are a sticky control strip so switching to
+  compact list, timeline, calendar, or history never strands the user.
+- Non-card views include an explicit Back to board control.
+- Low-frequency card actions fade in on hover/focus for desktop users while
+  remaining visible and touch-friendly on coarse-pointer devices.
+- Card hover uses a restrained transform, tinted shadow, and accent hairline;
+  drag/drop adds a dashed in-card placeholder without shifting layout.
+- Create/edit validation uses a quiet inline panel with specific missing-field
+  messages instead of browser alerts or silent disabled states.
+
+### Visual direction
+
+Quiet Apple/Linear-style utility UI: restrained neutral surfaces, low-saturation
+accent tokens, compact controls, tabular numbers, clear progress hierarchy, and
+responsive grid/list density. No emoji field; icon choices use local light-line
+SVG glyphs to match adjacent Web modules.

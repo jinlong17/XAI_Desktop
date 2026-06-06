@@ -27,10 +27,18 @@ describe("index-barrel", () => {
     expect(barrel.IMAGE_PRESETS.length).toBeGreaterThan(0);
   });
 
-  it("B3: known runtime exports are CountdownModule, countdownWebModuleRegistration, IMAGE_PRESETS", () => {
+  it("B3: known runtime exports include module, registration, presets, and v2 option tables", () => {
     // Types don't appear at runtime — only runtime values
     const runtimeKeys = Object.keys(barrel).filter((k) => k !== "default");
-    const expected = new Set(["CountdownModule", "countdownWebModuleRegistration", "IMAGE_PRESETS"]);
+    const expected = new Set([
+      "CountdownModule",
+      "countdownWebModuleRegistration",
+      "IMAGE_PRESETS",
+      "COUNTDOWN_CATEGORIES",
+      "COUNTDOWN_COLORS",
+      "COUNTDOWN_ICONS",
+      "COUNTDOWN_STYLES",
+    ]);
     for (const key of runtimeKeys) {
       expect(expected.has(key)).toBe(true);
     }

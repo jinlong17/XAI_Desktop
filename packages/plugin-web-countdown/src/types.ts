@@ -18,6 +18,45 @@
  */
 export type CountdownVariant = "image" | "light";
 
+export type CountdownCategory = "holiday" | "month" | "quarter" | "year" | "custom";
+
+export type CountdownColorId =
+  | "red"
+  | "amber"
+  | "green"
+  | "teal"
+  | "blue"
+  | "indigo"
+  | "slate";
+
+export type CountdownIconId =
+  | "calendar"
+  | "gift"
+  | "spark"
+  | "flag"
+  | "moon"
+  | "ring"
+  | "target"
+  | "pin";
+
+export type CountdownDisplayStyle =
+  | "digital"
+  | "date"
+  | "progress"
+  | "notion"
+  | "ring"
+  | "minimal"
+  | "hero"
+  | "festival"
+  | "timeline"
+  | "compact";
+
+export type CountdownLayout = "stacked" | "split";
+
+export type CountdownStatus = "active" | "deleted";
+
+export type CountdownViewMode = "cards" | "list" | "timeline" | "calendar" | "history";
+
 // --------------------------------------------------------------------------
 // CountdownCard — locked schema (byte-for-byte storage shape)
 // --------------------------------------------------------------------------
@@ -50,6 +89,57 @@ export interface CountdownCard {
    *       * (future) a real URL — out of scope for v1 but the parser tolerates it.
    */
   cover_url: string | null;
+  /**
+   * Optional local target time in "HH:mm". Null means end-of-day/date-only
+   * semantics for progress and remaining-time displays.
+   */
+  target_time?: string | null;
+  /** Optional start date for progress calculations. Defaults to created day. */
+  start_date?: string | null;
+  category?: CountdownCategory;
+  color?: CountdownColorId;
+  icon?: CountdownIconId;
+  note?: string;
+  is_pinned?: boolean;
+  is_hidden?: boolean;
+  show_countdown?: boolean;
+  show_progress?: boolean;
+  display_style?: CountdownDisplayStyle;
+  layout?: CountdownLayout;
+  status?: CountdownStatus;
+  source?: "preset" | "custom";
+  preset_id?: string | null;
+  sort_order?: number;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface CountdownColorOption {
+  readonly id: CountdownColorId;
+  readonly label_en: string;
+  readonly label_zh: string;
+  readonly accent: string;
+  readonly soft: string;
+  readonly ink: string;
+}
+
+export interface CountdownIconOption {
+  readonly id: CountdownIconId;
+  readonly label_en: string;
+  readonly label_zh: string;
+}
+
+export interface CountdownCategoryOption {
+  readonly id: CountdownCategory;
+  readonly label_en: string;
+  readonly label_zh: string;
+}
+
+export interface CountdownDisplayStyleOption {
+  readonly id: CountdownDisplayStyle;
+  readonly label_en: string;
+  readonly label_zh: string;
 }
 
 // --------------------------------------------------------------------------
