@@ -1,11 +1,12 @@
 /**
  * Orgs / spaces (组织 / 空间 — nav key "boards") — org table with seats/usage and
  * a detail drawer carrying the destructive transfer-ownership flow (type-to-confirm,
- * wired to NO-OP commands).
- * Reads through `orgsAdapter` (../adapters). No inline mock data.
+ * wired through AdminUiContext commands).
+ * Reads table rows through `orgsReadSeam`; drawer sync lookup stays on
+ * `orgsAdapter` (../adapters). No inline mock data.
  */
-import { useState } from "react";
-import { orgsAdapter } from "../adapters";
+import { useEffect, useState } from "react";
+import { orgsAdapter, orgsReadSeam } from "../adapters";
 import type { OrgRow } from "../adapters/types";
 import { useAdminUi } from "../components/AdminUiContext";
 import { Badge, DataTable, MiniBar, PlanTag, statusTone, type Column } from "../components/primitives";
@@ -15,7 +16,18 @@ const STATUS_LABEL: Record<string, string> = { active: "正常", overage: "超�
 export function OrgsPage(): React.ReactElement {
   const { requestConfirm, toast, commands } = useAdminUi();
   const [detail, setDetail] = useState<OrgRow | null>(null);
-  const rows = orgsAdapter.list();
+  const [rows, setRows] = useState<OrgRow[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    orgsReadSeam.list().then((res) => {
+      if (!alive) return;
+      setRows(res.ok ? res.data : []);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   function transferOwnership(o: OrgRow): void {
     requestConfirm({

@@ -12,11 +12,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-users-orgs-billing |
 | **Title** | Admin Users / Organizations / Billing wiring (typed read-model adapters · RBAC+audit-gated guarded mutations · Billing read-only with frozen Stripe gate) |
-| **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1+P2+P3 DONE; P4 PENDING |
+| **Current Phase** | FEATURE_VERIFY |
+| **Status** | READY_FOR_VERIFY — P1+P2+P3+P4 DONE |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → feature-auto-build host) · impl via `codex exec` (D-Codex) |
-| **Updated** | 2026-06-06 23:18 |
-| **Suggested Next** | feature-auto-build (P4) |
+| **Updated** | 2026-06-06 23:40 |
+| **Suggested Next** | feature-verify |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #3 default) |
 | **Verify Cross-vendor** | yes (manifest row #3 default) |
@@ -150,8 +150,8 @@
 |---|---|---|
 | P1 — Users read seam + guarded ban/bulk-ban | DONE | `d5c8ff6` |
 | P2 — Organizations read seam + guarded owner-transfer | DONE | `8cfa374` |
-| P3 — Billing read seam + explicit Stripe-gate deferral | DONE | _(pending commit hash, set below)_ |
-| P4 — Wire pages + injection swap + carried-guard re-run | PENDING | — |
+| P3 — Billing read seam + explicit Stripe-gate deferral | DONE | `268dd12` |
+| P4 — Wire pages + injection swap + carried-guard re-run | DONE | _(pending commit hash, set below)_ |
 
 ## Work Log (append-only)
 
@@ -369,3 +369,54 @@
   billing fixtures) holding — display-only.
 - **Next step**: feature-auto-build P4 — wire the 3 pages to the `../adapters` seams + swap the `AdminUiContext`
   injection to the guarded adapter; re-run carried no-secret + no-inline-mock guards + build (RTL async via findBy*/waitFor).
+
+### Round 6 — 2026-06-06 23:40 · feature-auto-build (P4 + corrective P4b) [feature-dev-loop · D-Codex]
+
+- **Executor**: claude-opus-4-8 (feature-auto-build host) — implementation delegated to **`codex exec`** (D-Codex)
+  in TWO passes (P4 + a host-directed corrective P4b); host reviewed both diffs + ran gates + committed.
+- **Mode**: Run — final phase; all build phases complete after this.
+- **Action (P4 — wire 3 pages + injection swap)**:
+  - **EDIT** `src/components/AdminUiContext.tsx` — swapped the injected `commands` to a COMBINED surface
+    `AdminCommands` = guarded `banUser`/`bulkBan`/`transferOwnership` (`AdminApiResult<MutationAck>`, via
+    `createGuardedCommandAdapter`, fail-closed `VITE_ADMIN_MOCK_ROLE`) **+** slice #1 no-op
+    `setFeatureRollout`/`setProviderRouting`/`setQuota` (`NoOpResult`, via `mockAdminCommandAdapter`). Added a
+    `commandsOverride?: Partial<AdminCommands>` test seam (merged over the base) so page tests inject spies
+    without env.
+  - **EDIT** `src/pages/UsersPage.tsx` — main table rows now load via async `usersReadSeam.list(...)`
+    (`useEffect`+state, `res.ok` handled); `savedViews()`/`filterChips()` + per-view-tab counts KEPT on the
+    sync slice #1 `usersAdapter` (documented sync-config split, P1 precaution 2). ban/bulk-ban unchanged
+    (`commands.banUser`/`bulkBan`, now guarded).
+  - **EDIT** `src/pages/OrgsPage.tsx` — table rows via async `orgsReadSeam.list()`; drawer `orgId` via sync
+    `orgsAdapter.get`; `commands.transferOwnership` unchanged (now guarded, SUPER-ONLY).
+  - **EDIT** `src/pages/BillingPage.tsx` — metrics/planDistribution/transactions via async `billingReadSeam`
+    (state); STRICTLY read-only (zero `commands.*`).
+  - **NEW** `src/pages/wiring.users-orgs-billing.test.tsx` (3) — RTL async (`findBy*`/`waitFor`) +
+    `commandsOverride` spy.
+- **Corrective P4b (host-caught scope defect — R5):** the initial P4 narrowed `AdminUiContext.commands` to the
+  3-family `GuardedCommandAdapter` and, to satisfy `tsc`, **deleted** `commands.setQuota(...)` from `AiUsagePage`
+  and `commands.setFeatureRollout(...)` from `FeaturesPage` — pages that **rows #4 own** and that row #3 must NOT
+  touch. The host rejected that diff and directed codex to (1) make `AdminUiContext` serve BOTH adapters (the
+  combined `AdminCommands` above) and (2) **revert** the two page edits verbatim. Verified: `git diff 268dd12 --
+  AiUsagePage.tsx FeaturesPage.tsx` is now EMPTY (byte-identical to pre-P4); their slice #1 no-op calls restored.
+- **Gate evidence (P4 — host-run, full P4 gate)**:
+  - `TT-WIRE-USERS-PAGE` / `TT-WIRE-ORGS-PAGE` / `TT-WIRE-BILLING-PAGE` → `wiring.users-orgs-billing.test.tsx`
+    GREEN: pages render seam-backed rows (async `findBy*`); ban/bulk-ban reach `commands.banUser`/`bulkBan`;
+    transfer reaches `commands.transferOwnership`; Billing reaches NONE (`.btn--danger` null; spy 0 calls).
+  - `TT-NO-INLINE-MOCK` (21) GREEN — page count === 10; every page imports `../adapters`, none imports
+    `../fixtures` or a client module directly (UsersPage/OrgsPage/BillingPage verified to import only
+    `../adapters` + `../adapters/types`).
+  - `TT-CMD-NOOP` (slice #1 `commands.test.ts`, 2) GREEN — `mockAdminCommandAdapter` UNCHANGED.
+  - `TT-NO-SECRET-SRC` (4) + `TT-NO-SECRET-BUNDLE` (10) GREEN over the larger src/+dist/. `TT-CSP-GUARD` (9) green.
+  - slice #1 `pages.smoke` (11) + slice #1 `wiring.test` (6) GREEN (AdminUiProvider still mounts; combined
+    commands hold no I/O).
+  - `check-types` clean; `pnpm --filter @repo/admin build` exits 0 (no `.map`; `dist/index-*.js` 265.56 kB);
+    full suite **319 passed / 26 files** (= 316 prior UNCHANGED + 3 new wiring tests). AC-9, AC-10, AC-11, AC-12 covered.
+  - **`@repo/web` build** (regression boundary) — checked separately below before verify.
+  - Forbidden-import/secret scan across all P4-touched files CLEAN.
+- **Commits**: P4 — `feat(admin): row #3 P4 — wire Users/Orgs/Billing pages to typed seams + guarded injection`
+  (single logical commit incl. the corrective combined-surface; hash in Phase Progress).
+- **Tests**: `pnpm --filter @repo/admin test` → 319/319; `check-types` clean; `build` green.
+- **Risks**: R4 (TT-NO-INLINE-MOCK regression) MITIGATED — page count 10, all `../adapters`. R5 (scope bleed)
+  initially TRIPPED by codex, then CORRECTED (AiUsage/Features reverted). R6 (return-type ripple) handled by the
+  combined `AdminCommands` surface. R9 (async RTL flake) mitigated — microtask-resolving mock + `findBy*`.
+- **Next step**: feature-verify — independently verify all 4 phases + Verification Gates; then ship (separate, no push here).

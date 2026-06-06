@@ -1,11 +1,12 @@
 /**
  * Users (用户管理) — dense table with saved views, filter chips, search, a user
  * detail drawer, and the destructive ban / bulk-ban flows (type-to-confirm,
- * wired to NO-OP commands).
- * Reads through `usersAdapter` (../adapters). No inline mock data.
+ * wired through AdminUiContext commands).
+ * Reads table rows through `usersReadSeam`; sync UI config stays on
+ * `usersAdapter` (../adapters). No inline mock data.
  */
-import { useMemo, useState } from "react";
-import { usersAdapter } from "../adapters";
+import { useEffect, useState } from "react";
+import { usersAdapter, usersReadSeam } from "../adapters";
 import type { UserRow } from "../adapters/types";
 import { useAdminUi } from "../components/AdminUiContext";
 import {
@@ -26,11 +27,18 @@ export function UsersPage(): React.ReactElement {
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [detail, setDetail] = useState<UserRow | null>(null);
+  const [rows, setRows] = useState<UserRow[]>([]);
 
-  const rows = useMemo(
-    () => usersAdapter.list({ view, chips: activeChips, text }),
-    [view, activeChips, text],
-  );
+  useEffect(() => {
+    let alive = true;
+    usersReadSeam.list({ view, chips: activeChips, text }).then((res) => {
+      if (!alive) return;
+      setRows(res.ok ? res.data : []);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [view, activeChips, text]);
 
   function toggleChip(key: string): void {
     setActiveChips((prev) =>
