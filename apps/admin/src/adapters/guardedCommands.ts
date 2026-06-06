@@ -14,6 +14,7 @@ import {
 } from "../audit/auditedMutation";
 import type { AdminAuditChain } from "../audit/hashChain";
 import type { AdminApiResult, MutationAck } from "../contracts/adminApi";
+import type { PlanTier } from "./types";
 
 export const GUARDED_COMMAND_ADVISORY_NOTE =
   "Guarded admin commands are browser advisory only. The server is the real enforcer " +
@@ -36,6 +37,10 @@ export interface GuardedCommandAdapter {
     subject: string;
     quota: number;
   }): Promise<AdminApiResult<MutationAck>>;
+  setProviderRouting(input: {
+    plan: PlanTier;
+    model: string;
+  }): Promise<AdminApiResult<MutationAck>>;
 }
 
 export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
@@ -49,6 +54,7 @@ export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
     transferOwnership: (input) => client.transferOwnership(input),
     setFeatureRollout: (input) => client.setFeatureRollout(input),
     setQuota: (input) => client.setQuota(input),
+    setProviderRouting: (input) => client.setProviderRouting(input),
   };
 
   return { commands, chain };

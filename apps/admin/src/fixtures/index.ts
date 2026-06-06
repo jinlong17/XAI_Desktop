@@ -6,8 +6,8 @@
  * only by the mock adapters in `../adapters/*` — NOT inline page globals
  * (enforced by TT-NO-INLINE-MOCK). No production data, no network, no secret.
  *
- * SECURITY: the prototype carried provider `keyMask` display strings
- * (e.g. "sk-••••••a82e"). Those are intentionally DROPPED here — provider
+ * SECURITY: the prototype carried provider masked-key display strings.
+ * Those are intentionally DROPPED here — provider
  * fixtures expose `keyStatus` only, never key material (TT-PROVIDERS-NO-KEY,
  * api.md §6).
  */

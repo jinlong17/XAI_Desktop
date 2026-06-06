@@ -273,6 +273,24 @@ export interface ProvidersReadModel {
   modelPlanMatrix(): ModelPlanCell[];
 }
 
+/**
+ * Opaque, NON-secret provider secret-handle status (row #4). Holds NO key/secret material.
+ * The browser receives a handle + status + non-secret metadata ONLY; real secret storage is
+ * server-side (a vault / one-way hash). There is intentionally NO maskedTail / key / secret field.
+ */
+export interface ProviderSecretHandle {
+  /** provider key (matches ProviderCard.key), e.g. "gemini" — a SLUG, not a secret */
+  provider: string;
+  /** opaque NON-secret reference id (a handle, NOT the key), e.g. "pk_ref_gemini_01" */
+  handleId: string;
+  /** configured status only (the slice #1 keyStatus, retained) */
+  status: ProviderKeyStatus;
+  /** optional ISO date of last rotation (non-secret metadata) */
+  lastRotated?: string;
+  /** vault/reference LABEL (non-secret path label), e.g. "vault:admin/providers/gemini" — NOT a secret value */
+  vaultRef?: string;
+}
+
 /* ------------------------------------------------------------------ *
  * 7. Roles & permissions (角色与权限 RBAC)
  * ------------------------------------------------------------------ */

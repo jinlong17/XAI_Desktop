@@ -322,6 +322,9 @@ import type {
   FeatureFlag as FeaturesReadSeamFeatureFlag,
   QuotaPolicy as AiUsageReadSeamQuotaPolicy,
   SpenderRow as AiUsageReadSeamSpenderRow,
+  ProviderCard as ProvidersReadSeamProviderCard,
+  ModelPlanCell as ProvidersReadSeamModelPlanCell,
+  ProviderSecretHandle as ProvidersReadSeamSecretHandle,
   OrgDetail as OrgsReadSeamOrgDetail,
   OrgRow as OrgsReadSeamOrgRow,
   UserDetail as UsersReadSeamUserDetail,
@@ -387,4 +390,31 @@ export const aiUsageReadSeam = {
     adminApiClient.getQuotaPolicies(),
   topSpenders: (): Promise<AdminApiResult<AiUsageReadSeamSpenderRow[]>> =>
     adminApiClient.getTopSpenders(),
+};
+
+/**
+ * Providers read seam — secret-handle / STATUS only (NO key material; api.md §4).
+ * list()/modelPlanMatrix() delegate to the AdminApiClient. secretHandles() derives an OPAQUE,
+ * NON-secret handle + status per provider from the providers read model's existing keyStatus —
+ * it reads/serializes NO real key. Real secret storage is server-side (out of scope).
+ */
+export const providersReadSeam = {
+  list: (): Promise<AdminApiResult<ProvidersReadSeamProviderCard[]>> =>
+    adminApiClient.getProviders(),
+  modelPlanMatrix: (): Promise<AdminApiResult<ProvidersReadSeamModelPlanCell[]>> =>
+    adminApiClient.getModelPlanMatrix(),
+  /** Opaque NON-secret secret-handle projection (handle/status/metadata only). */
+  secretHandles: async (): Promise<AdminApiResult<ProvidersReadSeamSecretHandle[]>> => {
+    const res = await adminApiClient.getProviders();
+    if (!res.ok) return res;
+    const handles = res.data.map((p) => ({
+      provider: p.key,
+      handleId: `pk_ref_${p.key}_01`,
+      status: p.keyStatus,
+      ...(p.keyStatus === "configured"
+        ? { lastRotated: "2026-05-01", vaultRef: `vault:admin/providers/${p.key}` }
+        : {}),
+    }));
+    return { ok: true, data: handles };
+  },
 };

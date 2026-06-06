@@ -14,10 +14,10 @@
 | **Target** | xai-admin-feature-ai-provider-control |
 | **Title** | Admin Feature-flags / AI-usage-&-quota / Provider-config wiring (typed read-model adapters · RBAC+audit-gated guarded CONFIG mutations · provider secret-handle read model + provider-key no-leak guard) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
+| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-auto-build host; impl via `codex exec`) |
 | **Updated** | 2026-06-06 |
-| **Suggested Next** | feature-build (P3) — or continue the loop |
+| **Suggested Next** | feature-build (P4) — or continue the loop |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #4 default) |
 | **Verify Cross-vendor** | yes (manifest row #4 default) |
@@ -205,8 +205,8 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Feature-flags read seam + guarded setFeatureRollout | DONE | `9f76ef9` |
-| P2 — AI-quota read seam + guarded setQuota | DONE | `<P2-HASH>` |
-| P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | PENDING | — |
+| P2 — AI-quota read seam + guarded setQuota | DONE | `70ea017` |
+| P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | DONE | `<P3-HASH>` |
 | P4 — Wire pages + injection flip + carried-guard re-run | PENDING | — |
 
 ## Work Log (append-only)
@@ -265,12 +265,55 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
   - Forced shape-assertion update: `billingReadSeam.test.ts` key-set + `keyof GuardedCommandAdapter` assertion
     now include `setQuota` (billing-exclusion intent preserved). **Row #3 + the 3 CONFIG PAGES byte-identical**
     (`git diff --stat HEAD` empty over all 6 pages; pages are wired in P4, not P2).
-- **Commits**: `<P2-HASH>` — `feat(admin): row #4 P2 — AI-quota read seam + guarded setQuota`.
+- **Commits**: `70ea017` — `feat(admin): row #4 P2 — AI-quota read seam + guarded setQuota`.
 - **Tests**: `pnpm --filter @repo/admin test` → **339 passed (28 files)** (329 prior + 10 new); tsc --noEmit clean.
 - **Gate evidence (P2)**: AC-3 (TT-WIRE-AIUSAGE-READ) ✓; AC-4 (TT-CMD-GUARDED-ALLOW/DENY + AUDIT-ON-MUTATION-setQuota) ✓;
   AC-9 (applied:false / no-IO / setQuota in APPLIED-FALSE loop) ✓. Final independent re-run deferred to feature-verify.
 - **Next step**: feature-auto-build P3 — Provider config read (secret-handles) + SUPER-ONLY `setProviderRouting`
   + the `TT-PROVIDER-NO-KEY-MATERIAL` provider-key no-leak guard.
+
+### Round 5 — 2026-06-06 · feature-auto-build P3 (inline host · `codex exec`) — SECURITY-CRITICAL
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop, inline `feature-auto-build` host). D-Codex: impl via `codex exec`.
+- **Phase**: P3 — Provider config read (secret-handles) + SUPER-ONLY `setProviderRouting` + provider-key no-leak guard.
+- **Action**:
+  - `adapters/types.ts`: ADD `ProviderSecretHandle` (`provider`/`handleId`/`status`/optional `lastRotated`/`vaultRef`)
+    — handle/status/metadata ONLY; **NO key/secret/maskedTail field** (N-2 / OQ-C OMIT honored). slice #1
+    `ProviderCard`/`ProvidersReadModel` UNCHANGED.
+  - `adapters/index.ts`: ADD `providersReadSeam` (`list`→getProviders, `modelPlanMatrix`→getModelPlanMatrix,
+    `secretHandles()`→derives opaque `pk_ref_<key>_01` + non-secret `vaultRef`/`lastRotated` from `keyStatus`;
+    reads/serializes NO real key). No new transport method.
+  - `adapters/guardedCommands.ts`: EXTEND `GuardedCommandAdapter` with `setProviderRouting(input:{plan,model})`
+    (imports `PlanTier` from `./types`) → row #5 audited `client.setProviderRouting`. **SUPER-ONLY** enforced by
+    the unchanged row #2 RBAC (`PROVIDER_ROUTING` ∈ super only).
+  - New `adapters/providersReadSeam.test.ts` (TT-WIRE-PROVIDERS-READ + TT-PROVIDER-HANDLE-SHAPE + TT-READ-NO-IO).
+  - Appended provider-routing describe blocks to `guardedCommands.test.ts`
+    (TT-CMD-GUARDED-ALLOW-setProviderRouting super · **DENY `it.each(["ops","support","finance","audit"])` ALL →
+    forbidden + ZERO append** — proves SUPER-ONLY, even ops denied · no-role → unauthorized · AUDIT-ON-MUTATION
+    asserts `admin.providers.routing`); added `setProviderRouting` to `GUARDED_CALLS`.
+  - **NEW headline guard `__tests__/no-provider-key.test.ts` — `TT-PROVIDER-NO-KEY-MATERIAL` (3 facets, all PASS)**:
+    (1) read-model facet — recursively scans live `providersReadSeam.list()`+`secretHandles()` output: zero
+    denylisted secret field-names + zero key-value shapes (`sk-`/`sk-ant-`/`AIza`/bullet-mask); (2) fixture facet —
+    scans `fixtures/index.ts` PROVIDERS block: zero key-value shapes + zero denylisted field-name properties;
+    (3) bundle facet — self-building `dist/**` scan. **Denylist = `apiKey`/`secret`/`secretKey`/`token`/`credential`/
+    `privateKey`/`keyMaterial`/`keyMask`/`maskedTail` — `vaultRef` deliberately EXCLUDED (N-1: non-secret label);
+    bare `key` EXCLUDED (ProviderCard.key = provider slug, allowed).**
+  - Forced shape-assertion update: `billingReadSeam.test.ts` key-set + `keyof GuardedCommandAdapter` assertion now
+    include `setProviderRouting` (reformatted multi-line; billing-exclusion `BILLING_RE` intent preserved).
+  - **COMMENT-ONLY** fixtures edit: removed the masked-key example literal (`"sk-••••••a82e"`) from the SECURITY
+    doc comment in `fixtures/index.ts` so the new fixture-facet text scanner does not false-positive on its own
+    documentation. **Zero fixture DATA changed** (all `keyStatus` provider rows byte-identical; verified via
+    `git diff`). All 6 PAGES byte-identical (wired in P4).
+- **Commits**: `<P3-HASH>` — `feat(admin): row #4 P3 — provider secret-handle read + super-only setProviderRouting + no-key guard`.
+- **Tests**: `pnpm --filter @repo/admin test` → **353 passed (30 files)** (339 prior + 14 new); tsc --noEmit clean.
+  Headline guard + providers seam isolated run: 7 passed (3 + 4).
+- **Gate evidence (P3)**: AC-5 (TT-WIRE-PROVIDERS-READ + TT-PROVIDER-HANDLE-SHAPE) ✓; AC-6 (ALLOW super / DENY
+  ops+support+finance+audit ZERO append / AUDIT-ON-MUTATION-setProviderRouting — SUPER-ONLY proven) ✓;
+  **AC-7 (TT-PROVIDER-NO-KEY-MATERIAL — read-model + fixture + bundle facets all green) ✓ [HEADLINE]**.
+  Final independent re-run deferred to feature-verify.
+- **Next step**: feature-auto-build P4 — wire the 3 CONFIG pages to `../adapters` seams + flip `AdminUiContext`
+  injection (3 CONFIG families no-op → guarded) + ProvidersPage routing affordance (status only, NO key) + re-run
+  carried guards (no-secret / no-inline-mock / TT-CMD-NOOP) + full build + `@repo/web` build + row #3 byte-identical.
 
 ### Round 1 — 2026-06-06 · feature-plan (Fresh)
 
