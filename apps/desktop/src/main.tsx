@@ -16,10 +16,10 @@ import { registerProductivityPlugin } from "@repo/plugin-productivity";
 /**
  * Simple hash router for multi-window architecture.
  * Main window loads "/" route
- * Grid windows load "/#/grid?id=xxx" route
- * Control window loads "/#/control" route
- * Console window loads "/#/console" route
- * Plugin Center window loads "/#/plugin-center" route
+ * Grid windows load "/desktop-host/index.html#/grid?id=xxx" route
+ * Control window loads "/desktop-host/index.html#/control" route
+ * Console window loads "/desktop-host/index.html#/console" route
+ * Plugin Center window loads "/desktop-host/index.html#/plugin-center" route
  */
 function Router() {
   const hash = window.location.hash;

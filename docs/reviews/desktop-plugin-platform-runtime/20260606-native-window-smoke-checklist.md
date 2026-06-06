@@ -3,7 +3,7 @@
 > Date: 2026-06-06
 > Module: `plugin`
 > Phase: Phase 2 host smoke gate
-> Status: checklist refreshed for Phase 2; native Plugin Center menu entry added; native smoke not executed in this slice
+> Status: checklist refreshed for Phase 2; native Plugin Center menu entry and desktop-host sub-bundle added; native smoke not executed in this slice
 
 ## Purpose
 
@@ -24,6 +24,8 @@ In scope:
 - open / focus Plugin Center
 - open / focus Plugin Center from `Desktop Plugins > Open Plugin Center`
 - enable / disable desktop plugin runtime host mode from the native menu
+- load Plugin Center / grid / control / console routes from the packaged
+  `/desktop-host/index.html#/...` sub-bundle
 - list built-in plugin entries
 - add host-local `sample-widget` from Plugin Center
 - persist a device-local `PluginInstance`
@@ -78,6 +80,7 @@ bf7ab16 add-to-desktop flow
 aba6415 native behavior application
 65d1778 sample widget host flow
 current native menu entry for Plugin Center and host-mode toggles
+current desktop plugin host sub-bundle for Plugin Center / grid / control / console routes
 ```
 
 Current preflight status before a clean desktop build/dev gate:
@@ -96,6 +99,10 @@ Current preflight status before a clean desktop build/dev gate:
   Center` plus restart-required enable / disable actions for the desktop plugin
   runtime. Use this native entry for P2-HS-1 instead of relying on DevTools or
   hidden Webview IPC calls.
+- The Tauri main window still packages `apps/web/dist`. Desktop plugin host
+  routes are packaged under `apps/web/dist/desktop-host` and loaded via
+  `/desktop-host/index.html#/plugin-center`, `/desktop-host/index.html#/grid`,
+  `/desktop-host/index.html#/control`, and `/desktop-host/index.html#/console`.
 - If any App-lane issue reappears, record the fixing commit before claiming this
   plugin smoke gate.
 
@@ -144,6 +151,7 @@ Record:
 |---|---|---|---|---|
 | P2-HS-1 | Open Plugin Center | Use `Desktop Plugins > Open Plugin Center` from the macOS menu, then use it again while the window is open. | Plugin Center window opens; repeated open/focus does not create duplicates. | Pending |
 | P2-HS-1A | Host mode native toggle | Use `Desktop Plugins > Enable Desktop Plugin Runtime (Restart Required)`, quit/relaunch, then use `Desktop Plugins > Disable Desktop Plugin Runtime (Restart Required)` and relaunch again. | Persisted `hostMode` changes between `overlay_v2` and `normal`; menu enable state flips; restart requirement is explicit. | Pending |
+| P2-HS-1B | Desktop host bundle routing | Inspect the Plugin Center / grid window URL or rendered content in the packaged `.app`. | Plugin windows render the `apps/desktop` Plugin Center / GridWindow UI from `/desktop-host/index.html#/...`, not the main Web router or NotFound page. | Pending |
 | P2-HS-2 | Built-in list status | Inspect built-in entries. | `organizer` and `sample-widget` are addable; `widgets` / `clipboard` / `calendar` / `pet` are planned or disabled and cannot be added. | Pending |
 | P2-HS-3 | Add sample widget | Click add for `sample-widget`. | A device-local `PluginInstance` is created and a `grid_<instanceId>` window appears. | Pending |
 | P2-HS-4 | Sample content routing | Inspect the created grid window. | Window renders Sample Widget content, not organizer fallback; title-bar drag area still works. | Pending |

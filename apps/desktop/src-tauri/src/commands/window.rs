@@ -32,9 +32,14 @@ pub(crate) const CONSOLE_WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", 
 pub(crate) const PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS: &[&str] =
     &["main", "control", "plugin-center"];
 const CONSOLE_WINDOW_LABEL: &str = "console";
-const CONSOLE_WINDOW_URL: &str = "/#/console";
 const PLUGIN_CENTER_WINDOW_LABEL: &str = "plugin-center";
-const PLUGIN_CENTER_WINDOW_URL: &str = "/#/plugin-center";
+const DESKTOP_PLUGIN_HOST_ENTRY: &str = "/desktop-host/index.html";
+const CONSOLE_WINDOW_URL: &str = "/desktop-host/index.html#/console";
+const PLUGIN_CENTER_WINDOW_URL: &str = "/desktop-host/index.html#/plugin-center";
+
+fn grid_window_url(grid_id: &str) -> String {
+    format!("{DESKTOP_PLUGIN_HOST_ENTRY}#/grid?id={grid_id}")
+}
 
 fn default_console_frame() -> ConsoleWindowFrame {
     ConsoleWindowFrame {
@@ -383,7 +388,7 @@ pub async fn create_grid_window(
     );
 
     let label = grid_label(&gridId);
-    let url = format!("/#/grid?id={}", gridId);
+    let url = grid_window_url(&gridId);
 
     // Check if window already exists
     if app.get_webview_window(&label).is_some() {
@@ -1030,6 +1035,19 @@ mod tests {
     fn plugin_center_frame_validation_accepts_default_frame() {
         let frame = default_plugin_center_frame();
         assert!(validate_plugin_center_frame(&frame).is_ok());
+    }
+
+    #[test]
+    fn plugin_host_window_urls_target_desktop_host_bundle() {
+        assert_eq!(CONSOLE_WINDOW_URL, "/desktop-host/index.html#/console");
+        assert_eq!(
+            PLUGIN_CENTER_WINDOW_URL,
+            "/desktop-host/index.html#/plugin-center"
+        );
+        assert_eq!(
+            grid_window_url("sample-widget-1"),
+            "/desktop-host/index.html#/grid?id=sample-widget-1"
+        );
     }
 
     #[test]

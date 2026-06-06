@@ -4,9 +4,9 @@
   "version": "1.0.0-rc.1",
   "identifier": "com.jinlong.desktop",
   "build": {
-    "beforeDevCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web dev",
+    "beforeDevCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated node ./scripts/dev-tauri-assets.mjs",
     "devUrl": "http://localhost:3000",
-    "beforeBuildCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build",
+    "beforeBuildCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated node ./scripts/build-tauri-assets.mjs",
     "frontendDist": "../../web/dist"
   },
   "app": {

@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Host Sub-Bundle Routing
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。
+- Developer/system delta: 保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。
+- Verification: `apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.
+- Risk / follow-up: 仍需前台 `.app` 手动 smoke 证明菜单点击后实际渲染 Plugin Center，且重启恢复、native behavior、sample widget 添加仍未形成完整 host smoke PASS。`desktop-host` 是 Tauri build 注入到 local `apps/web/dist` 的桌面专用子 bundle；Web 发布前必须重新跑 Web build，让 Vite 清空 dist 并重新执行 browser-safety。
+
 ### Desktop Plugin Native Host Menu Entry
 
 - Product line: desktop-plugin

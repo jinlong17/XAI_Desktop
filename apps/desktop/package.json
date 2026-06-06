@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev --features crypto",
+    "dev:tauri-assets": "node ./scripts/dev-tauri-assets.mjs",
     "build": "tauri build --debug --features crypto --bundles app",
+    "build:tauri-assets": "node ./scripts/build-tauri-assets.mjs",
     "build:dmg": "tauri build --debug --features crypto --bundles dmg",
     "build:web": "pnpm --filter @repo/web build",
     "preview:web": "pnpm --filter @repo/web preview",
