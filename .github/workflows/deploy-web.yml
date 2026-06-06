@@ -54,13 +54,27 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: 4.98.0
-          workingDirectory: apps/web
-          command: pages deploy ./dist --project-name=xai-web-console --branch=${{ github.head_ref || github.ref_name }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+          DEPLOY_SHA: ${{ github.sha }}
+          DEPLOY_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title || github.sha }}
+        run: |
+          set -euo pipefail
+          log_file="$(mktemp)"
+
+          pnpm dlx wrangler@4.98.0 pages deploy ./apps/web/dist \
+            --project-name=xai-web-console \
+            --branch="$DEPLOY_BRANCH" \
+            --commit-hash="$DEPLOY_SHA" \
+            --commit-message="$DEPLOY_MESSAGE" | tee "$log_file"
+
+          deployment_url="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' "$log_file" | tail -n 1 || true)"
+          {
+            echo "deployment-url=${deployment_url}"
+            echo "pages-deployment-alias-url=${deployment_url}"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Deployment summary
         if: always()
