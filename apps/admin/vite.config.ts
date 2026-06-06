@@ -16,11 +16,19 @@ import react from "@vitejs/plugin-react";
  *   ADR-0008 §S6 extension protocol applies to the admin _headers too.
  *
  * No nonce-strip plugin needed for Phase 1 (no CSP nonce placeholder used).
+ *
+ * Phase 5 security hardening: sourcemaps are DISABLED for the admin production
+ * build. The admin surface ships to its own public Cloudflare Pages origin; a
+ * sourcemap embeds full original source (comments, fixtures, test-pattern
+ * strings) and, even when "hidden" (emitted but unreferenced), the `.map` file
+ * is still fetchable from that public origin — an unnecessary information-
+ * disclosure surface for an admin control plane. Disabling emission removes the
+ * artifact entirely and lets the TT-NO-SECRET-BUNDLE guard scan dist/** uniformly.
  */
 export default defineConfig({
   plugins: [react()],
   build: {
-    sourcemap: "hidden",
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id) {

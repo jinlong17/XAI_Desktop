@@ -51,8 +51,14 @@
   contain no inline mock data arrays (enforces AC-2 "no inline mock globals").
 - **TT-NO-SECRET-SRC**: source-text scan of `apps/admin/src/**` asserts no `sk_`/service-role/`SUPABASE_SERVICE_ROLE`/
   provider-key-shaped literals (mirrors the `apps/web` `no-stripe-secret-key.test.ts` precedent).
-- **TT-NO-SECRET-BUNDLE**: after `vite build`, source-text scan of `apps/admin/dist/**/*.js` asserts no
-  service-role/provider-secret literal is present (enforces AC-3 — the build-output guard).
+- **TT-NO-SECRET-BUNDLE**: after `vite build`, source-text scan of `apps/admin/dist/**` (`.js`/`.css`/
+  `.html`) asserts no service-role / provider-secret / Stripe-secret / provider-key-shaped / masked-key
+  literal is present (enforces AC-3 — the build-output guard). The guard is **self-building** (runs
+  `vite build` in a `beforeAll` if `dist/` is absent, so a fresh checkout / CI-before-build still scans a
+  real bundle). **P5 hardening:** the admin production build sets `sourcemap: false` (was `"hidden"`) so no
+  `.map` artifact is emitted — a sourcemap would embed full original source (comments / fixtures / the
+  guard's own pattern strings) and be publicly fetchable from the admin Cloudflare Pages origin even when
+  unreferenced. Removing it eliminates that disclosure surface and lets the guard scan `dist/**` uniformly.
 - **TT-CSP-GUARD**: source-text scan of `apps/admin/public/_headers` asserts the CSP is present, is
   fail-tight (`connect-src` limited to `'self'` + at most the Supabase session host), and carries the
   ADR-0008-parity non-CSP headers (HSTS/nosniff/DENY/Referrer/Permissions). Cloned from

@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_BUILD — Phase 4 DONE, Phase 5 PENDING |
-| **Status** | APPROVED |
+| **Current Phase** | FEATURE_VERIFY — all 5 build phases DONE |
+| **Status** | READY_FOR_VERIFY |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build) |
-| **Updated** | 2026-06-06 02:40 |
-| **Suggested Next** | feature-auto-build (Phase 5) |
+| **Updated** | 2026-06-06 02:45 |
+| **Suggested Next** | feature-verify |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -119,10 +119,29 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 | P1 — Scaffold isolated app + deploy boundary | DONE | `1c35a99` |
 | P2 — Admin auth gate (the core boundary) | DONE | `8d177e9` |
 | P3 — Typed read-model interfaces + mock adapters + fixtures | DONE | `fe9ea96` |
-| P4 — Page port (structural) + destructive UI | DONE | (this commit) |
-| P5 — Security + build guards | PENDING | — |
+| P4 — Page port (structural) + destructive UI | DONE | `047e759` |
+| P5 — Security + build guards | DONE | (this commit) |
 
 ## Work Log (append-only)
+
+### Round 7 — 2026-06-06 02:45 · feature-auto-build Phase 5 (via feature-dev-loop)
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline feature-auto-build worker)
+- **Phase**: P5 — Security + build guards (final build phase)
+- **Action**: Finalized the no-secret bundle invariant and hardened the production build.
+  Files created:
+  - `apps/admin/src/__tests__/no-secret-bundle.test.ts` — TT-NO-SECRET-BUNDLE: scans `dist/**` (.js/.css/.html) for 8 secret/key-shaped patterns (Stripe sk_test_/sk_live_, Supabase service-role assignment, service_role bearer, OpenAI sk-…, Anthropic sk-ant-…, Google AIza…, bullet-masked provider key). **Self-building** (`beforeAll` runs `vite build` if dist absent) → hermetic on fresh checkout/CI. 10 tests.
+  Files modified:
+  - `apps/admin/vite.config.ts` — `sourcemap: "hidden"` → **`sourcemap: false`**. SECURITY: a sourcemap embeds full original source (comments, fixtures, the guard's own pattern strings) and is publicly fetchable from the admin Pages origin even when unreferenced. Investigation found the masked `sk-••••••` / `service_role` strings appeared ONLY in `.js.map` (the runtime `.js`/`.css`/`.html` were already clean); disabling sourcemap emission removes the disclosure surface and lets the bundle guard scan `dist/**` uniformly with zero false positives.
+- **Tests run**: `pnpm exec vitest run` (apps/admin) → **96 passed / 96** (P1 13 + P2 16 + P3 20 + P4 37 + P5 10). `tsc --noEmit` → clean.
+- **Build (TT-BUILD)**: `pnpm --filter @repo/admin build` → green (112 modules; NO `.map` files emitted; dist = index.html + 1 CSS + 2 JS chunks).
+- **Regression boundary**: `pnpm --filter @repo/web build` → **green, exit 0, 952 modules — UNAFFECTED** (admin is a physically separate app; no shared module rail; adding it did not change apps/web's bundle). Confirms AC-5 + the hard constraint.
+- **Hermetic-guard proof**: deleted `dist/`, ran `vitest run src/__tests__/no-secret-bundle.test.ts` alone → 10/10 pass; test self-built a sourcemap-free dist.
+- **Evidence (AC-3, AC-5)**: TT-NO-SECRET-BUNDLE (10) + TT-NO-SECRET-SRC (4) + TT-CSP-GUARD (9) all green; manual dist grep across all 8 patterns → zero hits in served bundle. apps/web build green.
+- **Boundary self-check**: only admin-local files + admin vite.config touched; no shared package; no @repo/core/events; no Tauri; no `dev` promotion. D3 = W0 holds.
+- **Status transition**: all 5 build phases DONE → `Current Phase = FEATURE_VERIFY`, `Status = READY_FOR_VERIFY`, `Suggested Next = feature-verify`.
+- **Commits**: (recorded on commit below)
+- **Next step**: feature-verify — independent verification against the brief AC-1..AC-6, plan, contracts, docs; produce READY_TO_SHIP or BLOCKED.
 
 ### Round 6 — 2026-06-06 02:40 · feature-auto-build Phase 4 (via feature-dev-loop)
 
