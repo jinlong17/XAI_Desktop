@@ -19,6 +19,16 @@
  * Design authority: apps/admin/docs/design.md §ADR-lite #1.
  * Test strategy: apps/admin/docs/test.md §3 (TT-CSP-GUARD).
  * Phase: P1 (scaffold + deploy boundary).
+ *
+ * --- row #6 (deploy-observability) EXTENSION (AC-2) ---
+ * The original 9 TT-CSP-GUARD assertions above stay byte-identical. Row #6 ADDS a
+ * second describe block (TT-CSP-TIGHT) that hardens the remaining CSP posture:
+ * default-src/script-src/base-uri/form-action/upgrade-insecure-requests present, and
+ * NO 'unsafe-inline'/'unsafe-eval'/bare `*` host token anywhere in the CSP line.
+ * Crux: the admin CSP must NOT inherit web's `https://*.ingest.sentry.io` ingest host
+ * (ADR-0008 §S6 added that to the WEB CSP only) — the no-wildcard + connect-self
+ * assertions keep the admin surface free of any external ingest origin.
+ * Authority: apps/admin/docs/deploy-observability/{api.md §4.1, test.md §4}.
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -135,5 +145,64 @@ describe("TT-CSP-GUARD: admin _headers CSP source-text guard", () => {
       cspLine,
       "CSP must contain object-src 'none'"
     ).toContain("object-src 'none'");
+  });
+});
+
+/**
+ * TT-CSP-TIGHT — row #6 (deploy-observability) CSP hardening extension (AC-2).
+ *
+ * Asserts the remaining tight-CSP directives and the no-wildcard / no-unsafe posture.
+ * These do not overlap the original TT-CSP-GUARD assertions; together they prove the
+ * admin surface keeps a maximally-tight CSP and never inherits an external ingest host.
+ */
+describe("TT-CSP-TIGHT: admin _headers tight-CSP hardening (AC-2)", () => {
+  /** The single CSP line from _headers. */
+  function cspLine(): string {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const line = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(line, "_headers has no CSP line").toBeTruthy();
+    return line!;
+  }
+
+  it("TT-CSP-DEFAULT-SRC: default-src 'self' present", () => {
+    expect(cspLine(), "CSP must contain default-src 'self'").toContain("default-src 'self'");
+  });
+
+  it("TT-CSP-SCRIPT-SRC-TIGHT: script-src 'self' present with no unsafe-inline/unsafe-eval/wildcard", () => {
+    const line = cspLine();
+    const scriptSrcMatch = line.match(/script-src([^;]*)/);
+    expect(scriptSrcMatch, "CSP has no script-src directive").toBeTruthy();
+    const scriptSrc = scriptSrcMatch![1] ?? "";
+    expect(scriptSrc, "script-src must include 'self'").toContain("'self'");
+    expect(scriptSrc, "script-src must NOT allow 'unsafe-inline'").not.toContain("'unsafe-inline'");
+    expect(scriptSrc, "script-src must NOT allow 'unsafe-eval'").not.toContain("'unsafe-eval'");
+    expect(scriptSrc, "script-src must NOT allow a wildcard host").not.toContain("*");
+  });
+
+  it("TT-CSP-BASE-URI: base-uri 'self' present (no base-tag hijack)", () => {
+    expect(cspLine(), "CSP must contain base-uri 'self'").toContain("base-uri 'self'");
+  });
+
+  it("TT-CSP-FORM-ACTION: form-action 'self' present (no off-origin form posts)", () => {
+    expect(cspLine(), "CSP must contain form-action 'self'").toContain("form-action 'self'");
+  });
+
+  it("TT-CSP-UPGRADE: upgrade-insecure-requests present", () => {
+    expect(cspLine(), "CSP must contain upgrade-insecure-requests").toContain("upgrade-insecure-requests");
+  });
+
+  it("TT-CSP-NO-WILDCARD: the CSP line carries no bare '*' host token and no 'unsafe-' token", () => {
+    const line = cspLine();
+    // Strip the leading "Content-Security-Policy:" key so the header name can't false-match.
+    const policy = line.replace(/^.*Content-Security-Policy:\s*/i, "");
+    // No 'unsafe-...' source expression anywhere (covers unsafe-inline / unsafe-eval / unsafe-hashes).
+    expect(policy, "CSP must contain no 'unsafe-' source expression").not.toMatch(/'unsafe-/);
+    // No bare wildcard host token. A bare `*` is delimited by whitespace or a directive boundary;
+    // `data:`/`'self'` etc. do not contain `*`, so any `*` here is a wildcard host/scheme.
+    expect(policy, "CSP must contain no wildcard '*' host token").not.toMatch(/(^|\s)\*(\s|;|$)/);
+    // Defense-in-depth: the web-only Sentry ingest host must never appear in the admin CSP.
+    expect(policy, "admin CSP must NOT inherit web's Sentry ingest host").not.toContain("ingest.sentry.io");
   });
 });
