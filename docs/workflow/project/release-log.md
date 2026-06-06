@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Native Behavior Application
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 的桌面插件实例设置现在可以通过 grid window command contract 真实传递 opacity、click-through、pinned 和 all-spaces 行为；最后窗口状态会根据 Rust 回传的 `nativeApplied` 区分已应用与 fallback。
+- Developer/system delta: 扩展 `create_grid_window` / `update_grid_window` 的可选 `native` payload；Rust 侧应用 `set_ignore_cursor_events`、`set_always_on_top`、`set_visible_on_all_workspaces` 和 macOS `NSWindow.setAlphaValue_`；`GridWindowSnapshot` 回传 native application state；core adapter 从 `PluginInstanceConfig` 派生 native options；同步 SDK、Tauri command contract、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（12 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: pinned 当前映射为 Tauri always-on-top，all-spaces 映射为 visible-on-all-workspaces；桌面级 pin / Space 真实行为仍需 macOS 手动 smoke。下一步做低风险 sample widget 完整流程，不解冻 clipboard / pet 等具体插件包。
+
 ### Desktop Plugin Phase 2 Capability Denial 展示
 
 - Product line: desktop-plugin

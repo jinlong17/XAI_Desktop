@@ -29,6 +29,7 @@ export {
   gridIdToPluginInstanceId,
   gridSnapshotToPluginWindowSnapshot,
   normalizeCommandError,
+  pluginInstanceConfigToGridNativeOptions,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
   summarizePluginWindowCapabilityError,

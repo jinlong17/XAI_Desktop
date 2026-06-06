@@ -97,7 +97,7 @@ Phase 1 completion means the platform runtime foundation and governance docs are
 | P2-1 | Restart restore for enabled instances | Complete: `restoreEnabledPluginInstancesOnDesktop()` loads device-local instances and recreates windows only for `enabled` instances. |
 | P2-2 | Native fallback display | Complete: `summarizePluginWindowNativeApplication()` and Plugin Center show applied / fallback / not-requested state for placement, size, opacity, click-through, pinned and all-spaces. |
 | P2-3 | Capability denial display | Complete: `summarizePluginWindowCapabilityError()` and Plugin Center show code, severity, recoverable state and capability scope for denied or failed window lifecycle commands. |
-| P2-4 | Pin / click-through / all-spaces native application | Planned: fields already persist and report no-op fallback through `nativeApplied`. |
+| P2-4 | Pin / click-through / all-spaces / opacity native application | Complete: grid commands accept optional `native` options, Rust applies click-through / pinned / all-spaces / opacity, and snapshots report `nativeApplied`. |
 | P2-5 | Low-risk sample widget complete flow | Planned |
 
 ## 5. Required Interfaces

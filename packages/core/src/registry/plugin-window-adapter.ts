@@ -1,5 +1,6 @@
 import type {
   CommandError,
+  GridWindowNativeOptions,
   CreatePluginWindowInput,
   GridWindowSnapshot,
   PluginWindowCommandSourceLabel,
@@ -104,6 +105,7 @@ export function createPluginWindowAdapter(
       const snapshot = await invokeGridCommand<GridWindowSnapshot>('create_grid_window', {
         gridId,
         rect,
+        native: pluginInstanceConfigToGridNativeOptions(input.config),
       });
       return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId, input.config);
     },
@@ -113,6 +115,7 @@ export function createPluginWindowAdapter(
       const snapshot = await invokeGridCommand<GridWindowSnapshot>('update_grid_window', {
         gridId,
         rect,
+        native: pluginInstanceConfigToGridNativeOptions(input.config),
       });
       return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId, input.config);
     },
@@ -172,10 +175,10 @@ export function gridSnapshotToPluginWindowSnapshot(
     nativeApplied: {
       placement: true,
       size: true,
-      opacity: false,
-      clickThrough: false,
-      pinned: false,
-      allSpaces: false,
+      opacity: snapshot.nativeApplied?.opacity ?? false,
+      clickThrough: snapshot.nativeApplied?.clickThrough ?? false,
+      pinned: snapshot.nativeApplied?.pinned ?? false,
+      allSpaces: snapshot.nativeApplied?.allSpaces ?? false,
     },
   };
 }
@@ -186,6 +189,17 @@ export function pluginInstanceConfigToGridRect(config: PluginInstanceConfig): Gr
     y: config.placement.y,
     width: config.size.width,
     height: config.size.height,
+  };
+}
+
+export function pluginInstanceConfigToGridNativeOptions(
+  config: PluginInstanceConfig,
+): GridWindowNativeOptions {
+  return {
+    opacity: config.style.opacity,
+    clickThrough: config.behavior.clickThrough,
+    pinned: config.behavior.pinned,
+    allSpaces: config.behavior.allSpaces,
   };
 }
 

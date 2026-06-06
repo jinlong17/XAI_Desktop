@@ -51,14 +51,30 @@ export interface WindowConfig {
 
 export type GridWindowRect = Rect;
 
+export interface GridWindowNativeOptions {
+  opacity: number;
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
+}
+
+export interface GridWindowNativeApplied {
+  opacity: boolean;
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
+}
+
 export interface CreateGridWindowInput {
   gridId: string;
   rect: GridWindowRect;
+  native?: GridWindowNativeOptions;
 }
 
 export interface UpdateGridWindowInput {
   gridId: string;
   rect: GridWindowRect;
+  native?: GridWindowNativeOptions;
 }
 
 export interface GridWindowSnapshot {
@@ -66,6 +82,7 @@ export interface GridWindowSnapshot {
   label: GridWindowLabel;
   rect: GridWindowRect;
   visible: boolean;
+  nativeApplied?: GridWindowNativeApplied;
 }
 
 export interface PluginWindowSnapshot {

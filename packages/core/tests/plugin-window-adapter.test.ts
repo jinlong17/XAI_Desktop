@@ -4,6 +4,7 @@ import {
   createPluginWindowAdapter,
   gridSnapshotToPluginWindowSnapshot,
   normalizeCommandError,
+  pluginInstanceConfigToGridNativeOptions,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
   summarizePluginWindowCapabilityError,
@@ -12,6 +13,12 @@ import {
 import type { CommandError, GridWindowSnapshot } from '../src/types';
 
 const RECT = { x: 10, y: 20, width: 320, height: 240 };
+const NATIVE = {
+  opacity: 0.66,
+  clickThrough: true,
+  pinned: true,
+  allSpaces: true,
+};
 const CONFIG = createPluginInstanceConfig({
   placement: {
     x: RECT.x,
@@ -42,6 +49,12 @@ function gridSnapshot(gridId = 'instance-1'): GridWindowSnapshot {
     label: `grid_${gridId}`,
     rect: RECT,
     visible: true,
+    nativeApplied: {
+      opacity: false,
+      clickThrough: false,
+      pinned: false,
+      allSpaces: false,
+    },
   };
 }
 
@@ -58,6 +71,7 @@ describe('plugin window adapter', () => {
     expect(invoke).toHaveBeenCalledWith('create_grid_window', {
       gridId: 'instance-1',
       rect: RECT,
+      native: NATIVE,
     });
     expect(snapshot).toEqual({
       instanceId: 'instance-1',
@@ -92,6 +106,7 @@ describe('plugin window adapter', () => {
     expect(invoke).toHaveBeenCalledWith('create_grid_window', {
       gridId: 'instance-1',
       rect: RECT,
+      native: NATIVE,
     });
   });
 
@@ -112,6 +127,7 @@ describe('plugin window adapter', () => {
     expect(invoke).toHaveBeenNthCalledWith(1, 'update_grid_window', {
       gridId: 'instance-1',
       rect: RECT,
+      native: NATIVE,
     });
     expect(invoke).toHaveBeenNthCalledWith(2, 'focus_grid_window', {
       gridId: 'instance-1',
@@ -125,6 +141,10 @@ describe('plugin window adapter', () => {
 
   it('derives grid rect from placement and size config', () => {
     expect(pluginInstanceConfigToGridRect(CONFIG)).toEqual(RECT);
+  });
+
+  it('derives grid native options from behavior and style config', () => {
+    expect(pluginInstanceConfigToGridNativeOptions(CONFIG)).toEqual(NATIVE);
   });
 
   it('rejects invalid plugin instance ids before invoking host commands', async () => {
@@ -220,7 +240,21 @@ describe('plugin window adapter', () => {
 
   it('exports stable id and snapshot mappers', () => {
     expect(pluginInstanceIdToGridId('abc_123-xyz')).toBe('abc_123-xyz');
-    expect(gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc', CONFIG)).toEqual({
+    expect(
+      gridSnapshotToPluginWindowSnapshot(
+        {
+          ...gridSnapshot('abc'),
+          nativeApplied: {
+            opacity: true,
+            clickThrough: true,
+            pinned: true,
+            allSpaces: true,
+          },
+        },
+        'abc',
+        CONFIG,
+      ),
+    ).toEqual({
       instanceId: 'abc',
       label: 'grid_abc',
       surface: 'grid',
@@ -233,10 +267,10 @@ describe('plugin window adapter', () => {
       nativeApplied: {
         placement: true,
         size: true,
-        opacity: false,
-        clickThrough: false,
-        pinned: false,
-        allSpaces: false,
+        opacity: true,
+        clickThrough: true,
+        pinned: true,
+        allSpaces: true,
       },
     });
   });

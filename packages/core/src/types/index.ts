@@ -5,6 +5,8 @@ export type {
   WindowConfig,
   GridWindowLabel,
   GridWindowRect,
+  GridWindowNativeOptions,
+  GridWindowNativeApplied,
   PluginHostWindowSurface,
   PluginWindowCommandSourceLabel,
   CreateGridWindowInput,

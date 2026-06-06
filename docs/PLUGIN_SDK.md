@@ -656,6 +656,28 @@ export interface PluginWindowSnapshot {
   };
 }
 
+export interface GridWindowNativeOptions {
+  opacity: number;
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
+}
+
+export interface GridWindowNativeApplied {
+  opacity: boolean;
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
+}
+
+export interface GridWindowSnapshot {
+  gridId: string;
+  label: `grid_${string}`;
+  rect: { x: number; y: number; width: number; height: number };
+  visible: boolean;
+  nativeApplied?: GridWindowNativeApplied;
+}
+
 export type PluginWindowNativeApplicationStatus =
   | "applied"
   | "fallback"
@@ -711,7 +733,7 @@ export async function restoreEnabledPluginInstancesOnDesktop(
 4. MVP 添加方式是点击 `添加到桌面` 后自动落位；拖拽添加、多显示器 Space 绑定和复杂布局编辑器延后。
 5. 禁用实例保留配置；删除实例才移除配置。
 6. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
-7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。如果当前 host bridge 尚未把某字段映射到原生能力，`PluginWindowSnapshot.nativeApplied` 必须显式返回 `false`，禁止伪装成已生效。
+7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。`opacity`、`clickThrough`、`pinned`、`allSpaces` 必须作为 `native` options 进入 `create_grid_window` / `update_grid_window`；host bridge 尚未支持的字段必须在 `PluginWindowSnapshot.nativeApplied` 中显式返回 `false`，禁止伪装成已生效。
 8. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
 9. `restoreEnabledPluginInstancesOnDesktop()` 是 Phase 2 的重启恢复入口：它从 device-local store 加载全部实例，只为 `lifecycleState: "enabled"` 的实例重建窗口；`disabled` / `hidden` / `destroyed` 实例必须保留配置但不自动建窗。
 10. 窗口生命周期命令被拒绝或 native bridge 失败时，host UI 必须通过 `summarizePluginWindowCapabilityError()` 展示结构化状态，至少包含 `code`、`severity`、`recoverable` 和 `capability`，禁止只显示不可追踪的纯文本错误。
@@ -757,7 +779,7 @@ Phase 2 common capability status:
 | Restart restore for enabled instances | Complete (`restoreEnabledPluginInstancesOnDesktop`) |
 | Native fallback display for pin / click-through / all-spaces / opacity | Complete (`summarizePluginWindowNativeApplication`) |
 | Capability denial display | Complete (`summarizePluginWindowCapabilityError`) |
-| Pin / click-through / all-spaces native application | Planned; fields persist, unsupported native application still reports fallback |
+| Pin / click-through / all-spaces / opacity native application | Complete: adapter passes `native` options and Rust applies opacity, click-through, pinned and all-spaces state |
 | Low-risk sample widget end-to-end | Planned |
 
 Commit message shape:

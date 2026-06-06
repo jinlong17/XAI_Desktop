@@ -5,8 +5,11 @@ use crate::platform;
 use super::super::CommandError;
 use super::super::ConsoleWindowFrame;
 use super::super::ConsoleWindowFrameState;
+use super::super::GridWindowNativeApplied;
+use super::super::GridWindowNativeOptions;
 use super::super::GridWindowRect;
 use super::super::GridWindowSnapshot;
+use super::super::GridWindowState;
 use super::super::GridWindowsState;
 use super::super::PluginCenterWindowFrame;
 use super::super::PluginCenterWindowFrameState;
@@ -167,10 +170,47 @@ fn validate_grid_id(grid_id: &str) -> Result<(), CommandError> {
     }
 }
 
+fn normalize_grid_window_native_options(
+    native: Option<GridWindowNativeOptions>,
+) -> GridWindowNativeOptions {
+    let mut native = native.unwrap_or_default();
+    native.opacity = native.opacity.clamp(0.35, 1.0);
+    native
+}
+
+fn apply_grid_window_native_options(
+    window: &tauri::WebviewWindow,
+    native: &GridWindowNativeOptions,
+) -> Result<GridWindowNativeApplied, CommandError> {
+    #[cfg(target_os = "macos")]
+    let opacity_applied = platform::macos::set_window_opacity(window, native.opacity);
+
+    #[cfg(not(target_os = "macos"))]
+    let opacity_applied = false;
+
+    window
+        .set_ignore_cursor_events(native.click_through)
+        .map_err(|e| native_error(format!("Failed to set click-through: {}", e)))?;
+    window
+        .set_always_on_top(native.pinned)
+        .map_err(|e| native_error(format!("Failed to set pinned state: {}", e)))?;
+    window
+        .set_visible_on_all_workspaces(native.all_spaces)
+        .map_err(|e| native_error(format!("Failed to set all-spaces state: {}", e)))?;
+
+    Ok(GridWindowNativeApplied {
+        opacity: opacity_applied,
+        click_through: true,
+        pinned: true,
+        all_spaces: true,
+    })
+}
+
 fn window_snapshot(
     app: &AppHandle,
     grid_id: &str,
     rect: GridWindowRect,
+    native_applied: GridWindowNativeApplied,
 ) -> GridWindowSnapshot {
     let label = grid_label(grid_id);
     let visible = app
@@ -183,6 +223,7 @@ fn window_snapshot(
         label,
         rect,
         visible,
+        native_applied,
     }
 }
 
@@ -334,13 +375,17 @@ pub async fn create_grid_window(
     #[allow(non_snake_case)]
     gridId: String,
     rect: GridWindowRect,
+    native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
     validate_grid_id(&gridId)?;
+    let native = normalize_grid_window_native_options(native);
 
-    println!("🪟 Creating grid window: {} at ({}, {}) size {}x{}",
-             gridId, rect.x, rect.y, rect.width, rect.height);
+    println!(
+        "🪟 Creating grid window: {} at ({}, {}) size {}x{}",
+        gridId, rect.x, rect.y, rect.width, rect.height
+    );
 
     let label = grid_label(&gridId);
     let url = format!("/#/grid?id={}", gridId);
@@ -351,7 +396,7 @@ pub async fn create_grid_window(
         // Internal call after the caller's window-origin check already
         // passed — bypass the public allow-list by going through
         // `update_grid_window_internal`.
-        return update_grid_window_internal(app, gridId, rect).await;
+        return update_grid_window_internal(app, gridId, rect, native).await;
     }
 
     // Create the window with grid-specific settings.
@@ -371,7 +416,7 @@ pub async fn create_grid_window(
         .skip_taskbar(true)
         .resizable(false)
         .visible(true)
-        .always_on_top(false)
+        .always_on_top(native.pinned)
         .build()
         .map_err(|e| native_error(format!("Failed to create window: {}", e)))?;
 
@@ -384,15 +429,25 @@ pub async fn create_grid_window(
         });
     }
 
+    let native_applied = apply_grid_window_native_options(&window, &native)?;
+
     // Store window state
     if let Some(state) = app.try_state::<GridWindowsState>() {
         let mut windows = state.windows.lock().map_err(state_error)?;
-        windows.insert(gridId.clone(), rect.clone());
+        windows.insert(
+            gridId.clone(),
+            GridWindowState {
+                rect: rect.clone(),
+                native_applied: native_applied.clone(),
+            },
+        );
     }
 
-    println!("✅ Grid window created successfully: {} at ({}, {}) size {}x{}",
-             label, rect.x, rect.y, rect.width, rect.height);
-    Ok(window_snapshot(&app, &gridId, rect))
+    println!(
+        "✅ Grid window created successfully: {} at ({}, {}) size {}x{}",
+        label, rect.x, rect.y, rect.width, rect.height
+    );
+    Ok(window_snapshot(&app, &gridId, rect, native_applied))
 }
 
 /// Update an existing grid window's position and size
@@ -403,10 +458,17 @@ pub async fn update_grid_window(
     #[allow(non_snake_case)]
     gridId: String,
     rect: GridWindowRect,
+    native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
-    update_grid_window_internal(app, gridId, rect).await
+    update_grid_window_internal(
+        app,
+        gridId,
+        rect,
+        normalize_grid_window_native_options(native),
+    )
+    .await
 }
 
 /// Internal update path used by both `update_grid_window` (with origin
@@ -416,6 +478,7 @@ async fn update_grid_window_internal(
     app: AppHandle,
     grid_id: String,
     rect: GridWindowRect,
+    native: GridWindowNativeOptions,
 ) -> Result<GridWindowSnapshot, CommandError> {
     validate_grid_id(&grid_id)?;
 
@@ -436,15 +499,25 @@ async fn update_grid_window_internal(
             }))
             .map_err(|e| native_error(format!("Failed to set size: {}", e)))?;
 
+        let native_applied = apply_grid_window_native_options(&window, &native)?;
+
         // Update stored state
         if let Some(state) = app.try_state::<GridWindowsState>() {
             let mut windows = state.windows.lock().map_err(state_error)?;
-            windows.insert(grid_id.clone(), rect.clone());
+            windows.insert(
+                grid_id.clone(),
+                GridWindowState {
+                    rect: rect.clone(),
+                    native_applied: native_applied.clone(),
+                },
+            );
         }
 
-        println!("📐 Updated grid window: {} to ({}, {}) size {}x{}",
-                 label, rect.x, rect.y, rect.width, rect.height);
-        Ok(window_snapshot(&app, &grid_id, rect))
+        println!(
+            "📐 Updated grid window: {} to ({}, {}) size {}x{}",
+            label, rect.x, rect.y, rect.width, rect.height
+        );
+        Ok(window_snapshot(&app, &grid_id, rect, native_applied))
     } else {
         Err(command_error(
             "WINDOW_NOT_FOUND",
@@ -502,7 +575,14 @@ pub async fn list_grid_windows(
     let windows = state.windows.lock().map_err(state_error)?;
     let mut snapshots = windows
         .iter()
-        .map(|(grid_id, rect)| window_snapshot(&app, grid_id, rect.clone()))
+        .map(|(grid_id, state)| {
+            window_snapshot(
+                &app,
+                grid_id,
+                state.rect.clone(),
+                state.native_applied.clone(),
+            )
+        })
         .collect::<Vec<_>>();
     snapshots.sort_by(|a, b| a.grid_id.cmp(&b.grid_id));
     Ok(snapshots)
@@ -535,12 +615,15 @@ pub async fn focus_grid_window(
 
     let rect = if let Some(state) = app.try_state::<GridWindowsState>() {
         let windows = state.windows.lock().map_err(state_error)?;
-        windows.get(&gridId).cloned().unwrap_or(GridWindowRect {
-            x: 0.0,
-            y: 0.0,
-            width: 0.0,
-            height: 0.0,
-        })
+        windows
+            .get(&gridId)
+            .map(|state| state.rect.clone())
+            .unwrap_or(GridWindowRect {
+                x: 0.0,
+                y: 0.0,
+                width: 0.0,
+                height: 0.0,
+            })
     } else {
         GridWindowRect {
             x: 0.0,
@@ -550,7 +633,17 @@ pub async fn focus_grid_window(
         }
     };
 
-    Ok(window_snapshot(&app, &gridId, rect))
+    let native_applied = if let Some(state) = app.try_state::<GridWindowsState>() {
+        let windows = state.windows.lock().map_err(state_error)?;
+        windows
+            .get(&gridId)
+            .map(|state| state.native_applied.clone())
+            .unwrap_or_default()
+    } else {
+        GridWindowNativeApplied::default()
+    };
+
+    Ok(window_snapshot(&app, &gridId, rect, native_applied))
 }
 
 /// Open or focus the dedicated Console window.
@@ -943,5 +1036,36 @@ mod tests {
         let details = err.details.expect("details should be present");
         assert_eq!(details["requestedMode"], "overlay_v2");
         assert_eq!(details["activeMode"], "normal");
+    }
+
+    #[test]
+    fn grid_native_options_default_to_no_behavior_requests() {
+        let native = normalize_grid_window_native_options(None);
+        assert_eq!(native.opacity, 1.0);
+        assert!(!native.click_through);
+        assert!(!native.pinned);
+        assert!(!native.all_spaces);
+    }
+
+    #[test]
+    fn grid_native_options_clamp_opacity_to_supported_range() {
+        let low = normalize_grid_window_native_options(Some(GridWindowNativeOptions {
+            opacity: 0.1,
+            click_through: true,
+            pinned: true,
+            all_spaces: true,
+        }));
+        assert_eq!(low.opacity, 0.35);
+        assert!(low.click_through);
+        assert!(low.pinned);
+        assert!(low.all_spaces);
+
+        let high = normalize_grid_window_native_options(Some(GridWindowNativeOptions {
+            opacity: 1.6,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }));
+        assert_eq!(high.opacity, 1.0);
     }
 }

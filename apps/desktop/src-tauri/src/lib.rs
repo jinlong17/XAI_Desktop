@@ -21,6 +21,48 @@ pub struct GridWindowRect {
     pub height: f64,
 }
 
+/// Requested native behavior/style inputs for grid-hosted plugin windows.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GridWindowNativeOptions {
+    pub opacity: f64,
+    pub click_through: bool,
+    pub pinned: bool,
+    pub all_spaces: bool,
+}
+
+impl Default for GridWindowNativeOptions {
+    fn default() -> Self {
+        Self {
+            opacity: 1.0,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }
+    }
+}
+
+/// Native behavior/style application state returned by grid window commands.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GridWindowNativeApplied {
+    pub opacity: bool,
+    pub click_through: bool,
+    pub pinned: bool,
+    pub all_spaces: bool,
+}
+
+impl Default for GridWindowNativeApplied {
+    fn default() -> Self {
+        Self {
+            opacity: false,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }
+    }
+}
+
 /// Stable Grid window lifecycle snapshot returned by window commands.
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct GridWindowSnapshot {
@@ -29,6 +71,8 @@ pub struct GridWindowSnapshot {
     pub label: String,
     pub rect: GridWindowRect,
     pub visible: bool,
+    #[serde(rename = "nativeApplied")]
+    pub native_applied: GridWindowNativeApplied,
 }
 
 /// Structured command error shape for UI-safe handling.
@@ -67,8 +111,14 @@ pub struct PluginCenterWindowFrame {
 }
 
 /// State to track all grid windows.
+#[derive(Clone, Debug)]
+pub struct GridWindowState {
+    pub rect: GridWindowRect,
+    pub native_applied: GridWindowNativeApplied,
+}
+
 pub struct GridWindowsState {
-    pub windows: Mutex<HashMap<String, GridWindowRect>>,
+    pub windows: Mutex<HashMap<String, GridWindowState>>,
 }
 
 impl Default for GridWindowsState {
