@@ -75,8 +75,13 @@ npx supabase@latest test db                  # runs apps/release-site/supabase/t
 2. Enable OAuth providers (Google / Notion / Linear — already CSP-allowed in
    `apps/web/public/_headers`); set redirect URLs to the Pages domain
    (`/app/settings/integrations/callback`).
-3. Deploy the account-delete Edge Function (`/functions/v1/account-delete`,
-   referenced by `apps/web/deploy/README.md`).
+3. **`[BLOCKER — not shipped]`** Deploy the `account-delete` Edge Function
+   (`/functions/v1/account-delete`). Per `apps/web/deploy/README.md` this function
+   is **NOT shipped in this repository** — `apps/release-site/supabase/functions/`
+   contains only `sync-push` / `sync-pull` / `recovery-proof` / `onboarding-backfill`.
+   It must be **implemented and deployed separately** before Real-Auth Private Beta
+   (account-deletion is a privacy/compliance requirement, §7 法务). Public Demo is
+   unaffected (no real accounts to delete).
 4. Flip the web app to live auth:
    - `VITE_WEB_AUTH_MODE=live`
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`

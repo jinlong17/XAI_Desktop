@@ -183,7 +183,7 @@ Cloudflare Pages free tier limits:
 | Metric | Free tier limit | Action when approaching |
 |--------|----------------|------------------------|
 | Builds / month | 500 | See §5.1 below |
-| Bandwidth / month | 100 GB | Upgrade plan or add CDN cache |
+| Static asset requests / bandwidth | Free & unlimited | None — Pages 静态资源请求与带宽在 free/paid 下都不计费/不限量；仅 **Pages Functions** 调用才计入 Workers quota（本项目当前无 Pages Functions）。来源：CF Pages limits / Functions pricing 文档 |
 | Files per deploy | 20,000 | See §5.2 below |
 | File size | 25 MiB per file | Split large assets or exclude sourcemaps |
 
