@@ -10,6 +10,13 @@ export {
 } from './plugin-center';
 export { addPluginCenterEntryToDesktop } from './plugin-center-runtime';
 export {
+  deletePluginInstanceOnDesktop,
+  disablePluginInstanceOnDesktop,
+  enablePluginInstanceOnDesktop,
+  hidePluginInstanceOnDesktop,
+  updatePluginInstanceConfigOnDesktop,
+} from './plugin-instance-runtime';
+export {
   PLUGIN_INSTANCE_STORE_KEY,
   PLUGIN_INSTANCE_STORE_SCHEMA_VERSION,
   createPluginInstanceStore,
@@ -34,6 +41,10 @@ export type {
   AddPluginCenterEntryToDesktopOptions,
   AddPluginCenterEntryToDesktopResult,
 } from './plugin-center-runtime';
+export type {
+  PluginInstanceRuntimeOptions,
+  PluginInstanceRuntimeResult,
+} from './plugin-instance-runtime';
 export type {
   CreatePluginInstanceStoreOptions,
   PluginInstancePersistenceAdapter,
