@@ -2,8 +2,8 @@
   "schema_version": 1,
   "policy": "Web CSS may define raw color literals only in packages/plugin-web-tokens/src/tokens.css. This file quarantines pre-existing legacy literals so new feature work cannot add more.",
   "token_source": "packages/plugin-web-tokens/src/tokens.css",
-  "generated_at": "2026-06-06T00:20:58.321Z",
-  "violation_count": 934,
+  "generated_at": "2026-06-06T08:35:15.737Z",
+  "violation_count": 918,
   "files": [
     {
       "file": "packages/plugin-web-tokens/src/layout.css",
@@ -40,10 +40,6 @@
     {
       "file": "packages/plugin-web-board-workspaces/src/styles.css",
       "count": 22
-    },
-    {
-      "file": "packages/xai-web-meditation/src/styles.css",
-      "count": 16
     },
     {
       "file": "packages/xai-web-tasks/src/styles.css",
@@ -909,22 +905,6 @@
     "dd1e7ae76f69478c",
     "3e7d33f4a470a04c",
     "ddff8d6ce2939bd2",
-    "3b74f057eeb856c0",
-    "ba46eff2759694c2",
-    "2d5ae1d3d37a7c4c",
-    "20d9bed0ad570243",
-    "b869c7d5d2c9902d",
-    "6f559ae063f48c9a",
-    "145dfea12eb7c02d",
-    "3b74f057eeb856c0",
-    "78a3b91f57fb5fed",
-    "833eb7941288a94b",
-    "74abb53ab54e44a9",
-    "05d3855bc2b9a94a",
-    "f303da3ee2ae5b7b",
-    "42a209e29b8e84ae",
-    "20d9bed0ad570243",
-    "dc3816e8c2e67616",
     "051ede54f817c66f",
     "e12fb6a8c4000811",
     "676b6612b8a71ae0",
