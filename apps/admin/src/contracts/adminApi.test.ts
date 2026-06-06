@@ -11,7 +11,6 @@ import { describe, it, expect, expectTypeOf, vi, beforeEach, afterEach } from "v
 
 import {
   createMockAdminApiClient,
-  type AdminApiClient,
   type AdminApiResult,
   type AdminApiError,
   type AdminApiErrorCode,

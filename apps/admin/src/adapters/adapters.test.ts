@@ -37,7 +37,12 @@ describe("TT-ADAPTER-OVERVIEW", () => {
     expect(heat.length).toBe(7);
     expect(heat[0]!.length).toBe(8);
     // cells are bounded 0..4
-    for (const row of heat) for (const c of row) expect(c).toBeGreaterThanOrEqual(0), expect(c).toBeLessThanOrEqual(4);
+    for (const row of heat) {
+      for (const c of row) {
+        expect(c).toBeGreaterThanOrEqual(0);
+        expect(c).toBeLessThanOrEqual(4);
+      }
+    }
   });
   it("heatmap is deterministic and feature-key reshapes it", () => {
     expect(overviewAdapter.getUsageHeatmap("ai-write")).toEqual(overviewAdapter.getUsageHeatmap("ai-write"));

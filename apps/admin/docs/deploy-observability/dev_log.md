@@ -10,11 +10,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-deploy-observability |
 | **Title** | Admin Deploy Isolation + CSP/Env Hardening + Observability Scaffold + Promotion-Gate Runbook (row #6, FINAL) |
-| **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1+P2+P3 DONE, P4 PENDING |
+| **Current Phase** | FEATURE_VERIFY |
+| **Status** | READY_FOR_VERIFY — all 4 phases DONE |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build, no-spawn runtime) |
-| **Updated** | 2026-06-06 07:44 |
-| **Suggested Next** | feature-auto-build (continue P4 — final) |
+| **Updated** | 2026-06-06 07:48 |
+| **Suggested Next** | feature-verify |
 | **Automation Mode** | inline-host (Task/agent-spawn tool unavailable this runtime; orchestrator inline-executes worker role) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · roadmap row #6 of 6 (FINAL) |
@@ -133,8 +133,8 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
 |---|---|---|
 | P1 — Deploy isolation + CSP/env checks | DONE | `362000b` |
 | P2 — Observability scaffold (no-op, secret-free) | DONE | `752c999` |
-| P3 — Manual-smoke checklist + release/operator runbook docs | DONE | `__P3_HASH__` |
-| P4 — ESLint flat config (RR-1) + final full gate | PENDING | — |
+| P3 — Manual-smoke checklist + release/operator runbook docs | DONE | `07ae45b` |
+| P4 — ESLint flat config (RR-1) + final full gate | DONE | `__P4_HASH__` |
 
 ## Work Log (append-only)
 
@@ -314,9 +314,52 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
   files under `src/`. Crux cited correctly: ADR-0008 §S6 added `https://*.ingest.sentry.io` to the WEB
   CSP only (2026-06-01 amendment, verified in the ADR); admin stays `connect-src 'self'`.
 - **Tests**: `pnpm --filter @repo/admin test` → **36 files / 389 passed** (unchanged — docs only).
-- **Commit**: `__P3_HASH__` — `docs(admin): row #6 P3 — manual-smoke checklist + operator runbook`
+- **Commit**: `07ae45b` — `docs(admin): row #6 P3 — manual-smoke checklist + operator runbook`
   (also folds the P2 dev_log hash correction __P2_HASH__→752c999 after the P2 commit).
 - **Risks**: none. R4 (runbook drift vs cloudflare.md) mitigated by cross-reference (no duplication).
   R5 (promotion ambiguity) addressed by the explicit HARD SCOPE banner + §5 operator-gated gate.
 - **Next step**: P4 — `apps/admin/eslint.config.js` (RR-1, clears task_1a68bff9) + the final full
   quality gate (lint --max-warnings 0 / tsc / test / admin build / web build). Sets READY_FOR_VERIFY.
+
+### Round 6 — 2026-06-06 07:48 · feature-dev-loop (inline feature-auto-build) · P4 DONE → READY_FOR_VERIFY
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline-hosting feature-auto-build).
+- **Phase**: **P4 — ESLint flat config (RR-1) + final full gate** (the FINAL phase of the FINAL row).
+- **Action**:
+  - **NEW** `apps/admin/eslint.config.js` — ESLint 9 flat config mirroring `apps/web/eslint.config.js`,
+    extends `@repo/eslint-config/react-internal` (→ base.js `dist/**` ignore + `only-warn` +
+    typescript-eslint + react/react-hooks). Clears RR-1 / task_1a68bff9: `pnpm --filter @repo/admin
+    lint` previously had no config and could not run.
+  - **First lint run surfaced 5 pre-existing findings** in rows #1–#5 source (all `no-unused-vars` /
+    `no-unused-expressions`; `only-warn` downgrades them to warnings, but `--max-warnings 0` gates).
+    Per R1 / D4 discipline these were fixed in CODE (no global rule-off, no inline disables, no
+    scoped override needed):
+    1. `__tests__/no-secret.test.ts` — dropped unused `statSync` from the `fs` import.
+    2. `adapters/adapters.test.ts` — replaced a comma-operator `expect(),expect()` one-liner with a
+       proper nested block of two assertion statements (behaviour identical).
+    3. `contracts/adminApi.test.ts` — dropped unused `type AdminApiClient` import.
+    4. `fixtures/index.ts` — dropped unused `FeatureRank` type import.
+    5. `pages/FeaturesPage.tsx` — removed a dead `const scope = SCOPE_LABEL[...]` (verified
+       `SCOPE_LABEL` still used at the Badge tone/label below, so no orphan).
+  - No row-#6 file tripped a rule; the eslint config required no admin-specific override (the web
+    mirror's `worker-configuration.d.ts` ignore + cross-package import restriction are web-specific
+    and not needed for admin).
+- **FINAL QUALITY GATE (all green):**
+  - `pnpm --filter @repo/admin lint` → **exit 0, 0 warnings** at `--max-warnings 0`. (RR-1 cleared.)
+  - `pnpm --filter @repo/admin check-types` (`tsc --noEmit`) → **exit 0**.
+  - `pnpm --filter @repo/admin test` → **36 files / 389 passed** (the 5 code fixes broke nothing).
+  - `pnpm --filter @repo/admin build` → **exit 0**; **zero `.map`** emitted (`sourcemap:false`
+    intact); `dist/_headers` **parity OK** (identical to `public/_headers`).
+  - `pnpm --filter @repo/web build` → **exit 0** (regression boundary green; web sourcemaps are web's
+    own config, unaffected). All prior rows' pages byte-identical + suites green.
+- **AC coverage at end of build**: AC-1 (TT-ISO-* 5/5), AC-2 (TT-CSP-* 15/15 + TT-ENV-NO-SECRET-* ),
+  AC-3 (TT-TELEMETRY-* + TT-ERRORBOUNDARY-* + TT-NO-TELEMETRY-SECRET-*), AC-4 (manual-smoke-checklist.md),
+  AC-5 (release-operator-runbook.md), AC-6 (lint exit 0 + full gate green). All mapped + green pending
+  the independent feature-verify pass + the manual-smoke human execution.
+- **Commit**: `__P4_HASH__` — `chore(admin): row #6 P4 — eslint flat config (RR-1) + final gate green`
+  (also folds the P3 dev_log hash correction __P3_HASH__→07ae45b after the P3 commit).
+- **Status transition**: all 4 phases DONE → `Status = READY_FOR_VERIFY`, `Current Phase = FEATURE_VERIFY`,
+  `Suggested Next = feature-verify`.
+- **Next step**: feature-verify — independently verify all 4 phases + AC-1..AC-6 + the Verification
+  Gates (deploy isolation, CSP/env, secret safety incl. telemetry, no-inline-mock, lint green) and
+  collect the manual-smoke checklist as a documented gate. This is the FINAL roadmap row (#6 of 6).

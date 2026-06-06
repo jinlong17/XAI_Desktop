@@ -66,7 +66,6 @@ export function FeaturesPage(): React.ReactElement {
     {
       header: "状态",
       cell: (f) => {
-        const scope = SCOPE_LABEL[f.status]!;
         const on = f.status !== "off";
         return (
           <button

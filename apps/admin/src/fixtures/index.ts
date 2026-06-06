@@ -14,7 +14,6 @@
 import type {
   KpiCard,
   OpsQueueItem,
-  FeatureRank,
   UserRow,
   SavedView,
   OrgRow,
