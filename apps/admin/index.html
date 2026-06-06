@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAI Admin</title>
+    <!-- Admin surface: isolated from apps/web. CSP delivered via public/_headers. -->
+    <!-- ADR-lite #1: own deploy target, own _headers, no nonce placeholder needed. -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

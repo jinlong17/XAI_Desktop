@@ -1,0 +1,8 @@
+name = "xai-admin-dashboard"
+compatibility_date = "2026-06-06"
+pages_build_output_dir = "./dist"
+
+# ADR-lite #1: separate Cloudflare Pages project for the admin surface.
+# This is independent from the apps/web "xai-web-console" Pages project.
+# Custom domain/DNS deferred to row #6; ships at *.pages.dev this slice.
+# CSP is delivered via public/_headers (not via Cloudflare Transform Rules).
