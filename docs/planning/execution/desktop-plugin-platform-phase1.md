@@ -1,9 +1,9 @@
 # Desktop Plugin Platform Phase 1 — System Foundation
 
-> Status: ready for planning / implementation after operator confirms the `desktop-plugin-next` branch base.
+> Status: Phase 1 system foundation complete on `codex/plugin/platform-runtime-phase1`; ready for Phase 2 planning after review/merge to `desktop-plugin-next`.
 > Scope: system-level desktop plugin platform only. Do not build concrete clipboard / widgets / pet / meditation features in this phase.
 > Module: `plugin`
-> Branch: `codex/plugin/<feature>` -> `desktop-plugin-next` -> `desktop-next` when ready
+> Branch: `codex/plugin/platform-runtime-phase1` -> `desktop-plugin-next` -> `desktop-next` when ready
 
 ## 1. Classification Receipt
 
@@ -11,21 +11,21 @@
 |---|---|
 | Verdict | `plugin` · high confidence |
 | Why | The work is desktop plugin platform runtime: multi-window / overlay / Plugin Center / Widget Host / SDK / instance lifecycle. Tauri code may physically live in `apps/desktop`, but product ownership is `plugin`. |
-| Frozen? | Platform runtime / G1 active gate is not frozen. Concrete plugin packages stay paused until this phase closes. |
+| Frozen? | Platform runtime / G1 active gate is not frozen and Phase 1 foundation is implemented. Concrete plugin packages remain paused until Phase 2/3 are explicitly started. |
 | Doc division | PRD: `docs/planning/sub-prds/plugin/PRD.md`; boundary: `docs/MODULE_BOUNDARIES.md`; SDK: `docs/PLUGIN_SDK.md`; dashboard: `docs/workflow/project/dashboard-state.json`; branch policy: ADR-0013. |
-| Dashboard update | Product line `plugin` should show `Phase 1 ready`, `desktop-plugin-next` defined-not-created, and concrete plugin packages paused. |
+| Dashboard update | Product line `plugin` should show `Phase 1 foundation complete`, `desktop-plugin-next` as the long plugin line, current short branch `codex/plugin/platform-runtime-phase1`, and concrete plugin packages paused. |
 
 ## 2. Goal
 
 Make the desktop plugin platform usable before adding more plugin features.
 
-The first usable milestone is:
+The first usable milestone is now implemented as a system foundation:
 
 1. App can open a lightweight Plugin Center.
 2. Plugin Center can list built-in plugins from manifest-derived entries.
 3. User can create one `PluginInstance`.
 4. Host can create, focus, move, resize, hide, disable, and delete that instance.
-5. Instance configuration persists locally and restores after restart.
+5. Instance configuration persists in the device-local store and is ready for restart/manual smoke.
 6. Concrete plugin packages remain mock-first until this platform path is proven.
 
 ## 3. Non-Goals
@@ -36,7 +36,7 @@ The first usable milestone is:
 - Do not add third-party plugin marketplace or remote install.
 - Do not sync plugin instance state to the account cloud by default.
 - Do not merge Web changes directly into `dev`.
-- Do not create `desktop-plugin-next`, `desktop-next`, or touch `dev` without operator confirmation.
+- Do not touch `desktop-next` or `dev` without operator confirmation.
 
 ## 4. Phase Order
 
@@ -72,6 +72,23 @@ The first usable milestone is:
 | P1D-1 | PRD / SDK / module map updated with real implementation status | No doc still says the entire plugin line is frozen |
 | P1D-2 | Dashboard refreshed | Product line shows platform runtime progress and package paused status |
 | P1D-3 | Release log entry | Verification and risk are recorded without claiming user-facing plugin features shipped |
+
+### Phase 1 closeout evidence (2026-06-06)
+
+| Step | Commit | Current result |
+|---|---|---|
+| P1A-1 | `ed9c10e` | `PluginInstance`, `PluginCenterEntry`, `AddToDesktopRequest`, config and lifecycle types landed in `packages/core`. |
+| P1A-2 | `78d7b86` | Manifest-to-center adapter maps registered plugins into center entries; planned/disabled entries do not auto-mount. |
+| P1A-3 | `64c6434` | Device-local instance store supports create / update / enable / disable / hide / delete / migration. |
+| P1B-1 | `8958966` | Generic plugin window adapter wraps grid window commands with typed snapshots and source allowlist. |
+| P1B-2 | `ec4f2d3` | Placement / behavior / style model carries opacity, click-through, pinned, all-spaces, size, display and Space fields; unsupported native fields report no-op fallback in `nativeApplied`. |
+| P1B-3 | `d185463` | Native smoke checklist exists for create, move, resize, focus, close, restart restore, multi-display / Space, click-through and pin fallback. |
+| P1C-1 | `201e8cf` | App host can open/focus the Plugin Center shell window. |
+| P1C-2 | `68957f9` | Built-in catalog lists organizer as addable and planned plugin families as locked/unavailable. |
+| P1C-3 | `bf7ab16` | Plugin Center add flow creates a low-risk persisted instance and creates a window through the adapter. |
+| P1C-4 | `5a410de` | Instance actions cover enable, disable, hide, delete, reset position, size preset, opacity and style mode. |
+
+Phase 1 completion means the platform runtime foundation and governance docs are closed. It does not mean clipboard, widgets, pet, meditation, quick bookkeeping, time tracking, task glance, calendar glance, sticky notes, folder widgets or shortcut widgets are feature-complete. Those remain Phase 2/3 work.
 
 ## 5. Required Interfaces
 

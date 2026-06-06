@@ -4,7 +4,7 @@
 > 只有状态为 Stable 或 Production 的 Plugin 才能被作为稳定依赖。
 > 状态为 In-Dev / Testing 的 Plugin 必须使用 Mock 数据解耦。
 >
-> 最后更新: 2026-06-04
+> 最后更新: 2026-06-06
 
 ---
 
@@ -14,17 +14,17 @@
 |---|---|---|---|
 | **P0** | Web Console | **Active Web mainline** | `apps/web/` + `xai-web-*` + `plugin-web-*` — `web` is the Web product mainline; new feature and bug-fix work are permitted without a P0 carve-out. Changes that may affect Desktop require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`. |
 | **P1** | macOS Desktop client | **Active App lane — G1 native foundation phase** | `apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch) |
-| **P2** | Desktop plugin platform & organizer plugins | **Platform runtime active gate; concrete plugin packages paused** | Plugin platform runtime / G1 anchors (multi-window, window-command, grid persistence, Widget Host / SDK, Plugin Center contract) may proceed on `desktop-plugin-next` after operator branch confirmation; concrete packages `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet` remain paused until the platform runtime closes. `plugin-organizer` is the shipped reference plugin. |
+| **P2** | Desktop plugin platform & organizer plugins | **Phase 1 platform foundation complete; concrete plugin packages paused** | Plugin platform runtime / G1 anchors (multi-window, window-command, grid persistence, Widget Host / SDK, Plugin Center contract) completed Phase 1 on `codex/plugin/platform-runtime-phase1`; concrete packages `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet` remain paused until Phase 2 common plugin capability proof. `plugin-organizer` is the shipped reference plugin and low-risk add target. |
 
 Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old maintenance-only reading for Web while preserving the independent P1 App lane.
 Predecessor authority: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23 + ADR-0007 + ADR-0008.
-Current rule: Web new work is permitted on the `web` line; P1/G1 native foundation work is permitted on the App lane; plugin platform runtime work is permitted as the G1 active gate, while concrete greenfield plugin packages stay paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md` + ADR-0013 D3 branch gate + `docs/planning/execution/desktop-plugin-platform-phase1.md`.
+Current rule: Web new work is permitted on the `web` line; P1/G1 native foundation work is permitted on the App lane; plugin platform runtime Phase 1 is complete on the plugin line, while concrete greenfield plugin packages stay paused. Full rationale: `docs/adr/0010-p1-desktop-resume-plan.md` + ADR-0013 D3 branch gate + `docs/planning/execution/desktop-plugin-platform-phase1.md`.
 
 ---
 
 ## Roadmap / CI Gate Anchors
 
-> **P0 WEB + G0/G1 APP LANES ACTIVE (2026-05-30, per ADR-0010 amendment).** `web` remains the Web product mainline. P1 desktop foundation work also remains active on the App lane. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). Plugin platform runtime / G1 anchors may proceed as an active gate; sync-v1 crypto stack + G2 data-security and concrete plugin packages stay PAUSED until the platform runtime closes.
+> **P0 WEB + G0/G1 APP LANES ACTIVE (2026-05-30, per ADR-0010 amendment; plugin Phase 1 closed 2026-06-06).** `web` remains the Web product mainline. P1 desktop foundation work also remains active on the App lane. G0 (window spike, rows G0.1-G0.5) SHIPPED 2026-05-19 on `origin/spike/window-ground-truth` per `xai-g0-window-spike.md`; G0.6 BLOCKED_EXTERNAL (Apple Developer signing). Plugin platform runtime / G1 Phase 1 foundation is complete; sync-v1 crypto stack + G2 data-security and concrete plugin packages stay PAUSED until Phase 2 common plugin capability proof.
 
 > These are NOT plugins. They are roadmap workflow anchors (`packages/<slug>/docs/`)
 > that track supply-chain / infra rows. Code boundary: Cargo.toml / CI only.
@@ -86,7 +86,7 @@ Current rule: Web new work is permitted on the `web` line; P1/G1 native foundati
 
 ## Plugins
 
-> **Status per ADR-0010 (amended 2026-05-30) + 2026-06-04 plugin-platform clarification.** Rows below are P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. **P1 (account / console / productivity / ai-cube / calendar / labels / project + G0/G1 native-foundation anchors) is an ACTIVE App lane**; **plugin platform runtime / G1 anchors are active as plugin-product work with host execution**, while **concrete P2 desktop-organizer plugins (clipboard / widgets / pet / meditation) + sync-v1 + G2 stay PAUSED until the platform runtime closes**. `organizer` is a delivered/graduated flagship plugin (Stable/shipped) — NOT part of the P2-paused freeze; P-level per `docs/adr/0015-desktop-plugin-scope-and-organizer-level.md` (web-side Accepted; dev ADR-0011 reconcile pending). Module/surface routing: `docs/MODULE_BOUNDARIES.md`. Refer to "Current Priority" at the top of this file.
+> **Status per ADR-0010 (amended 2026-05-30) + 2026-06-06 plugin-platform closeout.** Rows below are P1/P2 Desktop scope. Web Modules (P0) are listed in the "Web Modules" section further down. **P1 (account / console / productivity / ai-cube / calendar / labels / project + G0/G1 native-foundation anchors) is an ACTIVE App lane**; **plugin platform runtime / G1 Phase 1 foundation is complete as plugin-product work with host execution**, while **concrete P2 desktop-organizer plugins (clipboard / widgets / pet / meditation) + sync-v1 + G2 stay PAUSED until Phase 2 common plugin capability proof**. `organizer` is a delivered/graduated flagship plugin (Stable/shipped) — NOT part of the P2-paused freeze; P-level per `docs/adr/0015-desktop-plugin-scope-and-organizer-level.md` (web-side Accepted; dev ADR-0011 reconcile pending). Module/surface routing: `docs/MODULE_BOUNDARIES.md`. Refer to "Current Priority" at the top of this file.
 
 | Plugin | 目录 | 状态 | PRD 章节 | 对外依赖 | 最后更新 |
 |--------|------|------|---------|---------|---------|

@@ -241,19 +241,19 @@
       {
         "key": "plugin",
         "title": "桌面插件",
-        "status": "not_deployed",
-        "progress": 18,
+        "status": "platform_foundation_complete",
+        "progress": 42,
         "environment": "desktop-plugin-next",
         "last_deployed_at": "",
         "version": "未登记",
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "等待 App 插件平台恢复排期，再登记插件包版本与宿主版本",
+        "next": "Phase 1 系统底座已完成；下一步从 desktop-plugin-next 切 Phase 2 短分支验证通用插件能力",
         "issues": [
           {
             "severity": "pending",
-            "text": "插件平台暂停，当前没有独立云端部署目标。"
+            "text": "插件平台不需要独立云端部署目标；具体插件包仍 paused，需 Phase 2 通用能力和 host smoke 后解冻。"
           }
         ]
       },
@@ -738,7 +738,7 @@
         {
           "to": "app",
           "trigger": "Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3",
-          "branch": "desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认)",
+          "branch": "desktop-next（defined-not-yet-created）/ desktop-plugin-next（已创建）",
           "skill": "xai-feature-full-loop",
           "note": "W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。"
         },
@@ -897,9 +897,9 @@
         {
           "to": "plugin",
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
-          "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
+          "branch": "desktop-plugin-next / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。平台运行时 / Phase 1 底座可作为 active gate 推进；clipboard/widgets/pet/meditation 等具体插件包在底座闭环前仍 paused。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座已完成；clipboard/widgets/pet/meditation 等具体插件包在 Phase 2 common capability proof 前仍 paused。"
         },
         {
           "to": "sync",
@@ -944,12 +944,12 @@
       "order": 3,
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
-      "badge": "G1 runtime active · packages paused",
-      "status": "Phase 1 platform foundation ready · concrete plugin packages paused",
+      "badge": "Phase 1 complete · Phase 2 next",
+      "status": "Phase 1 platform foundation complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "创建或确认 desktop-plugin-next 后先做系统底座：实例模型、Plugin Center、通用窗口桥、本地配置；具体插件包继续 paused。",
-      "tracker": "Phase 1 执行文档已补齐；平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待底座闭环后解冻。",
+      "next": "从 desktop-plugin-next 切 Phase 2 短分支，验证重启恢复、pin、位置/尺寸/透明度、capability denial 和一个 sample widget。",
+      "tracker": "Phase 1 系统底座已完成：typed contract、device-local store、window adapter、Plugin Center shell/catalog、add-to-desktop flow 和 instance actions 已落地；clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -960,11 +960,11 @@
         "icon": "P"
       },
       "overview": {
-        "phase": "Phase 1 ready · packages paused",
-        "running": "系统底座可按 active gate 开始 · 插件包未开工",
-        "progress_fallback": 24,
-        "recent_update": "Phase 1 execution pack / commit flow / goal prompt 已写入文档",
-        "todo_fallback": "先执行平台运行时和 Plugin Center contract；再做通用插件动作；最后做具体插件。",
+        "phase": "Phase 1 complete · Phase 2 next",
+        "running": "系统底座已完成 · 插件包未开工",
+        "progress_fallback": 42,
+        "recent_update": "Phase 1 runtime foundation closeout 已写入 PRD / SDK / boundary / release-log",
+        "todo_fallback": "下一步先做通用插件能力：重启恢复、固定、位置、尺寸、透明度、capability denial、sample widget。",
         "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
@@ -974,8 +974,8 @@
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-ready", "note": "G1 锚点;产品归属为 plugin；先做系统底座和 host bridge" },
-        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "phase-1-ready", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;Phase 1 做 contract 和基础 UI shell" },
+        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-complete", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行" },
+        { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
         { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
         { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "Phase 1 底座闭环后进入 Phase 2/3；不抢跑具体插件" },
@@ -994,7 +994,7 @@
         ],
         [
           "独立跟踪",
-          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；平台底座可走 active gate，插件包在底座闭环前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座已完成，具体插件包在 Phase 2 common capability proof 前只做 brief / PRD / SDK contract 对齐。"
         ],
         [
           "风险",
@@ -1016,7 +1016,7 @@
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
-        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
+        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；进入 desktop-next 需 operator 确认）",
         "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
@@ -1053,7 +1053,7 @@
         },
         {
           "label": "插件平台/SDK 一条龙",
-          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next <-> desktop-next，均已定义但尚未创建），不改 web 产品线 UI。\n约束：若是 G1 平台运行时/SDK 锚点，可作为 active gate 推进；若是第三方或具体插件包 SDK 能力，则随插件包冻结等 G1 SHIPPED 后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
+          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next；如需进入 desktop-next 需 operator 确认），不改 web 产品线 UI。\n约束：Phase 1 系统底座已完成；Phase 2 先做通用插件能力和 sample widget，第三方或具体插件包 SDK 能力仍等解冻后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
         },
         {
           "label": "插件平台运行时（多窗口 / grid / window-command）",
@@ -1061,8 +1061,8 @@
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），平台底座闭环前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
-        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 已完成，后续进入 Phase 2 通用插件能力；若是具体插件包（clipboard/widgets/pet/meditation），Phase 2 common capability proof 前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；进入 desktop-next / dev 需 operator 确认），按对应管线推进：Phase 2 通用插件能力走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
         "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
@@ -1089,7 +1089,7 @@
           "trigger": "某 Web 改动经 D3 判定为 W3 native-bridge-needed，需要新增 Tauri/Rust 命令或原生能力来支撑插件平台",
           "branch": "desktop-plugin-next",
           "skill": "xai-feature-full-loop",
-          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-next/desktop-plugin-next 上做原生 delta，并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已在 D2 定义但尚未创建。"
+          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-plugin-next 上做插件平台原生 delta；若需进入 desktop-next，则另经 operator 确认并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已创建。"
         }
       ],
       "impacts": [
@@ -1238,7 +1238,7 @@
           "trigger": "同步层需要新的 Tauri/Rust 原生增量(crypto_* IPC、SQLCipher 打开路径、Keychain ACL)或 App SQLite 侧落地",
           "branch": "codex/desktop/<feature>",
           "skill": "xai-web-to-desktop-sync",
-          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next/desktop-plugin-next 承接,二者均为 defined, not yet created(创建需操作者确认,触及 dev 需显式确认)。"
+          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接；触及 dev 需显式确认。"
         },
         {
           "to": "admin",
@@ -1533,7 +1533,7 @@
           "trigger": "operator 明确要求把 admin 控制面以原生壳/桌面运行时承载(几乎不会发生,admin 默认是浏览器端隔离 surface);若真需 Tauri/Rust 原生桥接才触发",
           "branch": "codex/desktop/<feature>(经 desktop-next,defined, not yet created)",
           "skill": "xai-web-to-desktop-sync(D3 W0–W4 分类)然后 /xai-feature-full-loop",
-          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next / desktop-plugin-next(均 defined, not yet created)走 App 线。"
+          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接。"
         }
       ],
       "impacts": [

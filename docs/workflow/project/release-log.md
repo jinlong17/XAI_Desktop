@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-06
+
+### Desktop Plugin Phase 1 系统底座收口
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/plugin/platform-runtime-phase1` / `ed9c10e..5a410de` + P1D closeout commit in this branch
+- User-visible change: Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet / meditation / 快速记账 / 时间追踪等具体插件功能已完成。
+- Developer/system delta: 同步更新 Plugin PRD、Phase 1 执行路线、MODULE_BOUNDARIES、PRODUCT_MODULE_MAP、PLUGIN_MAP、PLUGIN_SDK、module-classification registry、dashboard-state 和 release-log；把状态从 “Phase 1 ready / 未实现” 改为 “Phase 1 foundation complete / Phase 2 common capability next / concrete packages paused”，并把 SDK 文档对齐实际 `lifecycleState + config{placement,size,behavior,style}` contract 与 `nativeApplied` fallback。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 46 tests，使用 Codex bundled Node 绕过本机 Rollup optional native code-signature 问题）；`packages/plugin-organizer` `tsc --noEmit` passed；`packages/plugin-organizer` `src/register-plugin.test.ts` passed（1 file / 2 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails on existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: Real macOS manual smoke is still required before claiming native window runtime ship quality: create/move/resize/focus/close, restart restore, multi-display/Space, click-through and pin fallback. Phase 2 should start from `desktop-plugin-next` in a new short branch and focus on common plugin capabilities before any concrete plugin feature package.
+
 ## 2026-06-04
 
 ### Desktop Plugin Phase 1 系统底座文档包

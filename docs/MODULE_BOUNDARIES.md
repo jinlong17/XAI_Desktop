@@ -6,7 +6,7 @@
 > **权威基线**：ADR-0010（amended 2026-05-30，active-focus 顺序）、ADR-0013（分支拓扑 + Web→Desktop D3 闸门 + 账号云同步 D4）、ADR-0015（桌面插件范围 + organizer P 级 reconcile，Proposed）。
 > **配套文档**：`docs/PRODUCT_MODULE_MAP.md`（六模块任务路由）、`docs/PLUGIN_MAP.md`（插件状态机）、`docs/PLUGIN_SDK.md`（插件 SDK 契约蓝图）、`docs/planning/sub-prds/plugin/PRD.md`（桌面插件开发范围）、`docs/workflow/project/module-classification.json`（机器可读分类注册表）。
 >
-> 最后更新：2026-06-02
+> 最后更新：2026-06-06
 
 ---
 
@@ -27,8 +27,8 @@
 | 层 | 实质 | 归属模块 | 谁拥有 | 现状 |
 |---|---|---|---|---|
 | **A1. Mac 壳（Web 容器）** | 承载 Web SPA 的主窗口 + 原生 chrome：菜单栏、托盘、离线缓存、账号/Keychain、自动更新、系统通知、深链、开机启动、`桌面插件` 入口按钮 | **P1 Mac 桌面壳**（`app`） | App 层（`apps/desktop/` + `src-tauri/` 外壳） | 壳身份 = "把 Web 装进原生窗 + 原生便利"，**不是桌面整理器** |
-| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | G1 平台运行时为 active gate；Plugin Center / 通用实例模型尚未实现 |
-| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | 平台运行时 / Phase 1 底座 active；organizer 已 Stable；其余具体插件包 Planned/stub 且 paused；入口模型已决，具体功能实现未开工 |
+| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | Phase 1 系统底座已完成：Plugin Center shell、内置 catalog、`PluginInstance` store、window adapter、placement/behavior/style model 和 instance actions 已落地；真实 macOS smoke 仍按清单执行 |
+| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | organizer 已 Stable 且作为 Phase 1 低风险 add target；clipboard/widgets/pet 仍 Planned/stub 且 paused；meditation 未建包；具体功能实现未开工 |
 | **C. Web 同名组件** | `xai-web-pet`、`dashboard-widgets`、`dashboard-grid` 等 | **P0 Web**（`web`） | `packages/{xai-web-*,plugin-web-*}` | 已 SHIPPED，是网页内组件，**与桌面插件零代码共享** |
 
 > **一句话**：Mac 壳（A1）只把 Web 装进原生窗 + 原生便利；多窗口运行时（A2）物理在 host、**产品归插件平台**；真正的桌面插件（B）骑在 A2 上，多数还没做且被 Paused；Web 的同名组件（C）只是借用了相同词汇。
@@ -43,7 +43,7 @@
 |---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/` + `xai-web-*` + `plugin-web-*` | `web` | **P0 active mainline** |
 | 2 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
-| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **平台运行时 / G1 active gate；具体插件包 paused** |
+| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **Phase 1 系统底座完成；Phase 2 通用能力 next；具体插件包 paused** |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
 | 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` | (proposed) | PROPOSED |
@@ -92,7 +92,7 @@
 | **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **独立包 plugin-pet**(ADR-0015 Accepted;非 widgets 子模块) |
 | **meditation** | 冥想 / 专注 | Planned（**未建包**） | 全屏覆盖 | Web 形态已 ship 为 `xai-web-meditation` |
 
-> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 **Paused until G1 / 平台运行时闭环**。但 multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate，可按 `plugin` 产品线推进系统底座。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
+> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 **Paused until platform foundation + Phase 2 common capability proof**。multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate；Phase 1 系统底座已在 `codex/plugin/platform-runtime-phase1` 完成。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
 
 ---
 

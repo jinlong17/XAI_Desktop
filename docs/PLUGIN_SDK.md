@@ -9,7 +9,7 @@
 > - `CORE_INFRA.md` — 基础设施 API 文件路径
 > - `PLUGIN_MAP.md` — 各 Plugin 当前状态
 >
-> 最后更新:2026-06-04 · 对齐 Plugin Phase-1 platform runtime / Plugin Center contract
+> 最后更新:2026-06-06 · 对齐 Plugin Phase-1 runtime closeout / Plugin Center MVP contract
 
 ---
 
@@ -522,7 +522,7 @@ import '@repo/plugin-ai/register';
 
 ### 3.5 PluginInstance / PluginCenter / AddToDesktop 契约（桌面入口模型）
 
-> 本节定义 `桌面插件` 入口的 SDK 语义。2026-06-04 起，它是**第一阶段系统底座的实现 contract**：Plugin Center、`PluginInstance`、`AddToDesktop` 和实例配置应优先落地；具体插件包功能仍等平台运行时闭环后再开 feature-build。
+> 本节定义 `桌面插件` 入口的 SDK 语义。2026-06-06 起，它是**已落地的第一阶段系统底座 contract**：Plugin Center、`PluginInstance`、`AddToDesktop`、device-local instance store、window adapter、placement/behavior/style snapshot 和通用 instance actions 已进入代码；具体插件包功能仍等 Phase 2/3 再开 feature-build。
 
 #### 3.5.1 归属边界
 
@@ -537,95 +537,123 @@ import '@repo/plugin-ai/register';
 #### 3.5.2 类型定义
 
 ```typescript
-export type PluginInstanceStatus = "enabled" | "disabled" | "hidden";
-export type PluginInstanceSize = "small" | "medium" | "large";
-export type PluginWindowKind = "overlay" | "grid" | "dedicated";
-export type PluginStyleMode = "system" | "light" | "dark" | "minimal";
+export type PluginCenterEntryStatus =
+  | "available"
+  | "disabled"
+  | "planned"
+  | "shipped"
+  | "unavailable";
 
-export interface PluginPlacement {
+export type PluginWindowSurface = "overlay" | "control" | "grid" | "console";
+
+export type PluginInstanceLifecycleState =
+  | "enabled"
+  | "disabled"
+  | "hidden"
+  | "destroyed";
+
+export type PluginInstanceSyncScope = "device-local";
+export type PluginInstanceSizePreset = "small" | "medium" | "large";
+export type PluginInstanceStyleMode = "system" | "light" | "dark" | "minimal";
+
+export interface PluginInstancePlacement {
   x: number;
   y: number;
-  width: number;
-  height: number;
   displayId?: string;
   spaceId?: string;
 }
 
-export interface PluginDataSource {
-  /**
-   * Plugin-owned selector, for example:
-   * - time-progress.today
-   * - countdown.<id>
-   * - organizer.grid.<id>
-   * - clipboard.local-history
-   */
-  type: string;
-  params?: Record<string, unknown>;
+export interface PluginInstanceSize {
+  preset: PluginInstanceSizePreset;
+  width: number;
+  height: number;
 }
 
 export interface PluginInstanceBehavior {
-  clickAction?: "open-app" | "open-plugin-center" | "none";
-  clickThrough?: boolean;
-  pinned?: boolean;
-  visibleOnAllSpaces?: boolean;
+  pinned: boolean;
+  clickThrough: boolean;
+  allSpaces: boolean;
+  clickAction: "focus" | "open-settings" | "none";
 }
 
 export interface PluginInstanceStyle {
-  mode: PluginStyleMode;
+  mode: PluginInstanceStyleMode;
   opacity: number; // 0.35..1
-  accent?: string;
+}
+
+export interface PluginInstanceConfig {
+  placement: PluginInstancePlacement;
+  size: PluginInstanceSize;
+  behavior: PluginInstanceBehavior;
+  style: PluginInstanceStyle;
+  dataSource?: Record<string, unknown>;
+}
+
+export interface PluginInstanceConfigInput {
+  placement?: Partial<PluginInstancePlacement>;
+  size?: Partial<PluginInstanceSize>;
+  behavior?: Partial<PluginInstanceBehavior>;
+  style?: Partial<PluginInstanceStyle>;
+  dataSource?: Record<string, unknown>;
 }
 
 export interface PluginInstance {
   id: string;
   pluginName: string;             // manifest.name
   contentType: string;            // manifest.contentTypes[n]
-  windowKind: PluginWindowKind;
-  status: PluginInstanceStatus;
-  size: PluginInstanceSize;
-  placement: PluginPlacement;
-  dataSource: PluginDataSource;
-  style: PluginInstanceStyle;
-  behavior: PluginInstanceBehavior;
+  lifecycleState: PluginInstanceLifecycleState;
+  config: PluginInstanceConfig;
   schemaVersion: 1;
-  syncScope: "device-local";
+  syncScope: PluginInstanceSyncScope;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface PluginSettingField {
-  key: string;
-  label: string;
-  type: "select" | "toggle" | "slider" | "color" | "data-source";
-  defaultValue: unknown;
-  options?: Array<{ label: string; value: string }>;
 }
 
 export interface PluginCenterEntry {
   pluginName: string;
   displayName: string;
   description: string;
-  status: "available" | "enabled" | "disabled" | "unavailable";
-  maturity: "stable" | "planned" | "stub";
-  category: "organizer" | "widgets" | "clipboard" | "pet" | "meditation";
-  primaryAction: "add-to-desktop" | "enable" | "configure" | "unavailable";
-  permissionWarnings?: string[];
-  nativeRequirements?: string[];
-  settingsSchema: PluginSettingField[];
+  version: string;
+  status: PluginCenterEntryStatus;
+  enabledByManifest: boolean;
+  contentTypes: string[];
+  supportedSurfaces: PluginWindowSurface[];
+  defaultContentType?: string;
+  canAddToDesktop: boolean;
+  canOpenSettings: boolean;
+  unavailableReason?: string;
 }
 
 export interface AddToDesktopRequest {
   pluginName: string;
   contentType: string;
-  size?: PluginInstanceSize;
-  dataSource?: PluginDataSource;
-  style?: Partial<PluginInstanceStyle>;
-  behavior?: Partial<PluginInstanceBehavior>;
+  source: "plugin-center" | "deep-link" | "restore" | "test";
+  config: PluginInstanceConfig;
 }
 
-export interface AddToDesktopResult {
+export interface AddPluginCenterEntryToDesktopResult {
   instance: PluginInstance;
-  createdWindowLabel: string;
+  window?: PluginWindowSnapshot;
+}
+
+export interface PluginWindowSnapshot {
+  instanceId: string;
+  label: `grid_${string}`;
+  surface: "grid";
+  rect: { x: number; y: number; width: number; height: number };
+  visible: boolean;
+  placement: PluginInstancePlacement;
+  size: PluginInstanceSize;
+  behavior: PluginInstanceBehavior;
+  style: PluginInstanceStyle;
+  nativeApplied: {
+    placement: boolean;
+    size: boolean;
+    opacity: boolean;
+    clickThrough: boolean;
+    pinned: boolean;
+    allSpaces: boolean;
+  };
 }
 ```
 
@@ -637,6 +665,8 @@ export interface AddToDesktopResult {
 4. MVP 添加方式是点击 `添加到桌面` 后自动落位；拖拽添加、多显示器 Space 绑定和复杂布局编辑器延后。
 5. 禁用实例保留配置；删除实例才移除配置。
 6. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
+7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。如果当前 host bridge 尚未把某字段映射到原生能力，`PluginWindowSnapshot.nativeApplied` 必须显式返回 `false`，禁止伪装成已生效。
+8. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
 
 #### 3.5.4 Plugin Center 信息架构
 
@@ -660,6 +690,17 @@ export interface AddToDesktopResult {
 | P1-S4 | Plugin Center shell | `apps/desktop/src/windows/*` 或 plugin-center package | component test；manual Tauri smoke |
 | P1-S5 | AddToDesktop flow | contract + App bridge + one low-risk built-in entry | Add → hide → disable → delete → restart restore smoke |
 | P1-S6 | dashboard / release-log sync | dashboard registry + release-log | `pnpm dashboard`；dashboard verifier；release-log entry |
+
+Phase 1 implementation status:
+
+| Step | Status |
+|---|---|
+| P1-S1 typed contract | Complete (`ed9c10e`) |
+| P1-S2 instance store | Complete (`64c6434`) |
+| P1-S3 generic window adapter + behavior snapshot | Complete (`8958966`, `ec4f2d3`) |
+| P1-S4 Plugin Center shell/catalog | Complete (`201e8cf`, `68957f9`) |
+| P1-S5 AddToDesktop + instance actions | Complete (`bf7ab16`, `5a410de`) |
+| P1-S6 docs/dashboard/release-log | Complete in P1D closeout; specific plugin features still not shipped |
 
 Commit message shape:
 
