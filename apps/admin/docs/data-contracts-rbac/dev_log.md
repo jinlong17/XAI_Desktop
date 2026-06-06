@@ -11,11 +11,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-data-contracts-rbac |
 | **Title** | Admin Data + Permission Contracts (read models · permission keys · RBAC · API boundary) |
-| **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_TO_SHIP — verify PASS |
-| **Executor** | claude (feature-verify, inline via feature-dev-loop) |
-| **Updated** | 2026-06-06 16:20 |
-| **Suggested Next** | ship |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | claude-sonnet-4-6 (ship) |
+| **Updated** | 2026-06-06 16:40 |
+| **Suggested Next** | row #3 xai-admin-users-orgs-billing (next manifest wave); PR targeting deferred to operator |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #2 of 6** (preserves dep order for #3–#6) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch) |
@@ -403,3 +403,34 @@ untouched; record the choice in P4.
   - Live claim key (OQ-C) + real server runtime/secret-handle (OQ-D) + real mutations/transport = rows #3–#5 (by design).
 - **Commits**: — (verify only; no code change; no push).
 - **Next step**: ship — verify commit completeness, push to remote, mark SHIPPED (requires human confirmation).
+
+### Round 8 — 2026-06-06 16:40 · ship (claude-sonnet-4-6)
+
+- **Executor**: claude-sonnet-4-6 (ship)
+- **Action**: Integrity check + push to remote + SHIPPED state write.
+  - Confirmed dev_log Status = READY_TO_SHIP before proceeding.
+  - Working tree clean (git status: no uncommitted changes).
+  - Verified all 6 row #2 commits present on branch `claude/frosty-nash-c4bf16`:
+    - P1 read-model contract freeze: `cba8e5e`
+    - P2 immutable permission-key catalog: `411d6ca`
+    - P3 RBAC role map + pure advisory predicate: `3949e9d`
+    - P4 typed mockable admin API boundary + secret invariant: `88c7acd`
+    - doc-fix (P4 hash record): `1a81056`
+    - verify PASS + READY_TO_SHIP dev_log: `2261ee1`
+  - Boundary check PASS: all row #2 changes are strictly `apps/admin/**` +
+    `docs/reviews/xai-admin-data-contracts-rbac/**` — W0. No `apps/web`,
+    `packages/core`, or `@repo/web-auth-device-session` changes confirmed.
+  - No sensitive files detected (.env*, *.pem, *.key, service-role secrets).
+  - Pushed branch `claude/frosty-nash-c4bf16` → `origin/claude/frosty-nash-c4bf16`
+    (fast-forward; no rebase, no force-push, no merge to main/dev/web).
+  - Known non-blocking flake: slice #1 `pages.smoke.test.tsx` users-page render
+    (5000ms timeout; pre-existing slice #1 behavior; passed 11/11 isolated re-runs;
+    not introduced by row #2; deferred to future slice #1 maintenance pass).
+- **Commits pushed**: `cba8e5e`, `411d6ca`, `3949e9d`, `88c7acd`, `1a81056`, `2261ee1`
+  + this SHIPPED dev_log update commit.
+- **Push result**: `claude/frosty-nash-c4bf16` → `origin/claude/frosty-nash-c4bf16`
+- **Post-ship follow-ups (deferred to operator)**:
+  - PR target (web vs standalone admin line vs rename to codex/admin/*) = deferred operator decision.
+  - Row #3 `xai-admin-users-orgs-billing` = next manifest wave (next roadmap row).
+  - Release-log / dashboard-sync = pending operator cadence.
+- **Next step**: operator decides PR target + row #3 kick-off.
