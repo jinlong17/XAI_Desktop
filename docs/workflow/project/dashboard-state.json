@@ -84,13 +84,14 @@
     "summary": {
       "current_online_version": "未登记线上版本",
       "latest_deployed_at": "未登记",
-      "overall_status": "部署登记已建立，云端上线状态待确认",
+      "overall_status": "部署架构已沉淀为权威文档 docs/DEPLOYMENT.md；Web 设施就绪待真实生产登记，账号云同步代码完成待 Supabase 开通",
       "default_environment": "production / preview",
-      "source": "manual deployment registry"
+      "source": "docs/DEPLOYMENT.md + manual deployment registry",
+      "authority_doc": "docs/DEPLOYMENT.md"
     },
     "flow": {
       "title": "Web / Cloudflare 部署流程",
-      "summary": "当前已经有 Cloudflare Pages、GitHub Actions、CSP / service worker 和部署安全库等部署相关开发；这里把上线链路、目标环境和涉及文件集中到一个流程卡。",
+      "summary": "权威设计见 docs/DEPLOYMENT.md。当前已有 Cloudflare Pages、GitHub Actions、CSP / service worker 和部署安全库；这里把上线链路、目标环境和涉及文件集中到一个流程卡。账号云同步后端（Supabase）部署见 docs/runbooks/supabase.md。",
       "targets": [
         {
           "label": "Preview",
@@ -103,7 +104,7 @@
           "label": "Production",
           "destination": "Cloudflare Pages project xai-web-console",
           "trigger": "push to main",
-          "branch": "main",
+          "branch": "main（待决策：应否改为 web 主线，见 DEPLOYMENT.md §12-A）",
           "output": "Production URL"
         }
       ],
@@ -169,13 +170,31 @@
           "label": "Sentry deploy mark",
           "path": "apps/web/scripts/sourcemaps-deploy-mark.mjs",
           "note": "将 release/environment 登记到 Sentry deploys。"
+        },
+        {
+          "label": "部署架构权威文档",
+          "path": "docs/DEPLOYMENT.md",
+          "note": "六产品线部署矩阵、Web 两模式上线流程、账号云同步落地路径、4 阶段执行路线图。"
+        },
+        {
+          "label": "Cloudflare 运维手册",
+          "path": "docs/runbooks/cloudflare.md",
+          "note": "Web 前端 setup / rotate / rollback / manual deploy。"
+        },
+        {
+          "label": "Supabase 运维手册",
+          "path": "docs/runbooks/supabase.md",
+          "note": "账号云开通、migrations/RLS/Edge Functions 部署、备份恢复、staging→prod 提升。"
         }
       ],
       "gates": [
+        "生产部署源分支确认（main vs web 主线，DEPLOYMENT.md §12-A）",
         "Cloudflare secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID",
         "Production auth env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY",
+        "账号云同步: 先开通 Supabase staging/prod 并部署 migrations+RLS+Edge Functions（runbooks/supabase.md）",
         "Web build green: pnpm --filter @repo/web build",
         "CSP / security tests remain green",
+        "数据兜底: Web 提供导出/导入 JSON；接 Supabase 后做一次 restore drill",
         "部署后登记 URL、deployment id、版本、commit、smoke 结果",
         "失败时登记 rollback / failed 状态和处理人"
       ]
@@ -211,11 +230,15 @@
         "platform": "Cloudflare Pages / GitHub Actions",
         "target": "apps/web SPA",
         "branch": "web",
-        "next": "补齐线上 URL、最近 deploy id、版本标签和 smoke 结果",
+        "next": "确认生产部署源分支（main vs web，DEPLOYMENT.md §12-A）→ 跑一次真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
         "issues": [
           {
             "severity": "pending",
-            "text": "仓库已有 Web 部署设施，但看板尚未登记最近一次真实线上部署。"
+            "text": "部署设施就绪度约 95%（CF Pages + Actions + _headers + runbook 齐全）；62% 指含账号同步的完整产品，两个概念勿混淆。"
+          },
+          {
+            "severity": "pending",
+            "text": "生产部署源仍绑定 main，但 Web 主线是 web；直接发会发出落后版本（DEPLOYMENT.md §12-A）。"
           }
         ]
       },
@@ -261,18 +284,22 @@
         "key": "sync",
         "title": "账号云同步层",
         "status": "not_deployed",
-        "progress": 20,
+        "progress": 30,
         "environment": "account-sync",
         "last_deployed_at": "",
-        "version": "未登记",
-        "platform": "Cloud sync backend",
-        "target": "账号、设备会话、push/pull、冲突处理",
+        "version": "v1 protocol（代码完成 #1–#36，未 provision）",
+        "platform": "Supabase（Edge Functions + Postgres + RLS）",
+        "target": "账号、设备会话、push/pull、冲突处理（端到端加密）",
         "branch": "codex/sync/<feature>",
-        "next": "确认 syncScope、后端部署目标、迁移和两设备 smoke gate",
+        "next": "开通 Supabase staging/prod（#9）→ 部署 migrations+RLS+Edge Functions → 过 hardening 门（#37）→ 单实体双设备 smoke（#56）。流程见 runbooks/supabase.md",
         "issues": [
           {
             "severity": "pending",
-            "text": "sync 线暂停，只允许 account-sync 范围登记。"
+            "text": "客户端 + 后端代码已完成（crypto/outbox/Edge Functions/RLS），但未部署到任何真实 Supabase；整条线按 P0 优先级 PAUSED。"
+          },
+          {
+            "severity": "pending",
+            "text": "总闸是 Supabase 实例开通（sync-v1 #9，纯外部人工任务）。"
           }
         ]
       },
@@ -297,6 +324,19 @@
       }
     ],
     "records": [
+      {
+        "id": "2026-06-06-deployment-architecture-doc",
+        "date": "2026-06-06",
+        "module": "web",
+        "module_title": "部署体系（全线）",
+        "status": "success",
+        "environment": "docs",
+        "platform": "docs/DEPLOYMENT.md",
+        "version": "deploy-arch-v1",
+        "target": "部署架构文档沉淀 + 看板同步",
+        "summary": "沉淀权威部署架构文档 docs/DEPLOYMENT.md + Supabase runbook；同步部署 Tab / 产品结构图 / 文档库 / skill 说明。属文档治理记录，不代表云端产品已上线。",
+        "commit": ""
+      },
       {
         "id": "2026-05-31-dev-dashboard-deployment-registry",
         "date": "2026-05-31",
@@ -1124,7 +1164,7 @@
       "status": "基建合同",
       "branch": "sync-v1 roadmap wave",
       "dependency": "连接 Web / App / Plugin",
-      "next": "Post-G1 恢复同步开发。",
+      "next": "代码完成（#1–#36）；总闸是开通 Supabase（#9）。部署路径见 docs/DEPLOYMENT.md §6 + docs/runbooks/supabase.md。Post-G1 / operator 解冻后恢复实体接入。",
       "tracker": "syncScope、push/pull、冲突、两设备 smoke。",
       "labels": {
         "overview": "账号云同步层",

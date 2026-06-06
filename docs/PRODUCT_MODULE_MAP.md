@@ -19,6 +19,7 @@
 - `admin` 已由 operator 于 2026-06-05 激活为 **roadmap-gated**：可开 `codex/admin/<feature>`，但必须经 [`xai-admin-dashboard-system-integration.md`](workflow/roadmap/xai-admin-dashboard-system-integration.md) 从 `xai-admin-dashboard-shell` 开始推进；不得绕过 RBAC/审计/secret/deploy 闸门直接做生产后台写入。
 - `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` **已定义但尚未创建**；创建是独立的 operator 确认步骤，任何触及 `dev` 的操作都需显式确认。
 - 站内（同一条 Web 线）的部署/CSP 改动（`apps/web/wrangler.toml`、`apps/web/public/_headers`）走 **ADR-0008 扩展协议 + feature-plan/review**，**不走 D3**（D3 只判定 Web 变更对 App 的影响）。
+- **部署体系的权威设计文档是 [`docs/DEPLOYMENT.md`](DEPLOYMENT.md)**（六产品线部署矩阵、平台组合、Web 两模式上线流程、账号云同步落地路径、执行路线图）；运维步骤见 [`docs/runbooks/cloudflare.md`](runbooks/cloudflare.md) + [`docs/runbooks/supabase.md`](runbooks/supabase.md)。本文只做任务归属导航，部署结论以 `DEPLOYMENT.md` 为准。
 
 ## 0. 任务归属速查（routing table）
 
@@ -592,3 +593,4 @@ Verify Cross-vendor: yes
 - 路由规则的跨平台同步：本文 ↔ [`CLAUDE.md`](../CLAUDE.md) §Product module map ↔ [`AGENTS.md`](../AGENTS.md) §3 ↔ [`.cursor/rules/product-module-routing.mdc`](../.cursor/rules/product-module-routing.mdc)。
 - 边界 / 分支 / 闸门的事实变更以 [ADR-0013](adr/0013-branch-sync-governance.md) 为准；本文只做导航编排，不改治理结论。
 - **跨模块同步扇出**（完成一个模块后,同步/适配/检查下游模块）以 [ADR-0014](adr/0014-cross-module-sync-orchestration.md) + 机读 [`sync-registry.json`](workflow/project/sync-registry.json) 为准。入口 = `xai-sync-fanout-dispatch`（读 registry 语义规则派发,触发语:「Web 版本功能已完成，执行后续同步 workflow」）；边动作复用 `xai-web-to-desktop-sync`（D3）/ `xai-web-deploy-preflight`（Web deploy gate）/ `xai-desktop-release-gate`（Desktop W4 gate）/ `xai-account-sync-scope-check`（D4,receipt-only）/ `xai-release-log`+`xai-dev-dashboard-sync`（收口）/ `xai-feature-brief`（site/plugin 冻结线草案）/ `xai-admin-control-plane-sync`（admin roadmap-gated impact note）。冻结线只产 receipt/草案,admin 只经 roadmap gates 落地。
+- 部署 / 上线 / 云平台 / 数据同步落地的事实变更以 [`docs/DEPLOYMENT.md`](DEPLOYMENT.md) 为准（镜像到 dev-dashboard 部署 Tab / `dashboard-state.json` 的 `deployment`）；本文只引用，不改部署结论。
