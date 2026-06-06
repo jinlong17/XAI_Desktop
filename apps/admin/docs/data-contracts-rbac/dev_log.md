@@ -11,11 +11,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-data-contracts-rbac |
 | **Title** | Admin Data + Permission Contracts (read models · permission keys · RBAC · API boundary) |
-| **Current Phase** | FEATURE_BUILD (P1–P3 DONE) |
-| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
+| **Current Phase** | FEATURE_VERIFY |
+| **Status** | READY_FOR_VERIFY — P1–P4 DONE |
 | **Executor** | claude (feature-auto-build, inline via feature-dev-loop) |
-| **Updated** | 2026-06-06 15:50 |
-| **Suggested Next** | feature-auto-build (P4) |
+| **Updated** | 2026-06-06 16:05 |
+| **Suggested Next** | feature-verify |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #2 of 6** (preserves dep order for #3–#6) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch) |
@@ -155,8 +155,8 @@ untouched; record the choice in P4.
 |---|---|---|
 | P1 — Read-model contract freeze + live/mock/deferred map | DONE | cba8e5e |
 | P2 — Immutable permission-key catalog | DONE | 411d6ca |
-| P3 — RBAC role map + predicate | DONE | (pending hash) |
-| P4 — Admin API-boundary contract + secret invariant | PENDING | — |
+| P3 — RBAC role map + predicate | DONE | 3949e9d |
+| P4 — Admin API-boundary contract + secret invariant | DONE | (pending hash) |
 
 ## Work Log (append-only)
 
@@ -310,6 +310,53 @@ untouched; record the choice in P4.
   AC-4 (TT-RBAC-ALLOW/DENY ×6 + READ-GRANTS) + AC-5 (TT-RBAC-FAILCLOSED + ADVISORY-NOTE) GREEN.
 - **Boundary self-check**: W0 — admin-local pure functions; no shared `@repo/*`; no events/Tauri/syncScope; no secret;
   no new dependency. C2 server-authoritative posture documented + tested (R1 guard).
-- **Commits**: see Phase Progress table (recorded below after commit).
+- **Commits**: `3949e9d` (see Phase Progress table).
 - **Next step**: P4 — typed mockable AdminApiClient + server-authoritative + fail-closed contract; re-run carried
   no-secret guards + build over the now-larger src/dist (DEFER the slice #1 mockAdminCommandAdapter rewire to row #3 — OQ-F).
+
+### Round 6 — 2026-06-06 16:05 · feature-auto-build P4 (inline via feature-dev-loop)
+
+- **Executor**: claude (feature-auto-build, inline-executed by the feature-dev-loop orchestrator).
+- **Phase**: P4 — Admin API-boundary contract (mockable transport) + secret invariant.
+- **Action**:
+  - Created `apps/admin/src/contracts/adminApi.ts`:
+    - `AdminApiResult<T>` discriminated union (`AdminApiOk`/`AdminApiErr`) + `AdminApiErrorCode` (6 codes) +
+      `AdminApiError` + `MutationAck { applied; auditId? }`.
+    - `AdminApiClient` interface — **18 read methods** (one per page read model; returns BOUND to the §2 contract
+      types — REC-2, no fork; `getOverview` returns an `OverviewPayload` composite of the real `OverviewReadModel`
+      returns) + the **6 mutation methods** with inputs matching slice #1 `AdminCommandAdapter` EXACTLY; documented
+      server-RE-AUTHORIZES.
+    - `createMockAdminApiClient(ctx?: { role? })` — reads → slice-#1 fixtures via `adminReadModels` (no I/O);
+      mutations → no role ⇒ `unauthorized`, ungranted role ⇒ `forbidden`, granted ⇒ `{ ok:true, data:{ applied:false } }`
+      (NO real write); performs NO network/persistence.
+    - Server-authoritative posture banner + hard secret invariant re-asserted (browser holds no service-role
+      credential; providers key-STATUS-only).
+  - Created `apps/admin/src/contracts/adminApi.test.ts` — TT-API-CONTRACT-SHAPE (6 mutations === `keyof
+    AdminCommandAdapter`; read-per-page-model present; read returns === §2 contract shapes incl. 1-D
+    `ModelPlanCell[]`/`RbacRow[]`; discriminated union + error-code union; mutation inputs param-identical to slice #1),
+    TT-API-FAILCLOSED (no role ⇒ unauthorized for all 6; audit ⇒ banUser forbidden; reads still fixture-only; never
+    throws), TT-API-SERVER-AUTHORITATIVE (super ⇒ applied:false for all 6 + no auditId; ops allow/deny split; **fetch
+    + localStorage.setItem spies assert NO network/persistence** across reads+mutations).
+  - Fixed one `tsc` strict-cast error in the OQ-F test (`MutationAck` → `unknown` → `Record`).
+- **OQ-F handling (RECORDED — DEFERRED)**: slice #1's `mockAdminCommandAdapter` is **NOT rewired** to delegate to
+  the new mock `AdminApiClient` this row (kept purely additive; slice #1's `TT-CMD-NOOP` untouched). A test asserts
+  the new result is the typed `MutationAck` (not slice #1's `NoOpResult`). `TT-CMD-DELEGATION` deferred to row #3.
+- **REC-2 handling (RECORDED)**: read returns reuse the §2 `readModels.ts` contract types; `OverviewPayload` is a
+  composite of the real `OverviewReadModel` returns, NOT a forked read model. TT-API-CONTRACT-SHAPE asserts the bind.
+- **Carried secret invariant + build re-run over the now-larger src/dist**:
+  - **TT-NO-SECRET-SRC** (slice #1 whole-`src` guard) re-run → **green** (covers new `authz/`+`contracts/` modules).
+  - **TT-NO-SECRET-BUNDLE** (slice #1 self-building `dist/` guard) re-run → **green** (new modules' compiled output
+    carries no secret/masked-key literal).
+  - **TT-BUILD**: `pnpm --filter @repo/admin build` exit 0; `dist/assets/*.js` produced; **0 `.map` files**
+    (sourcemap:false retained).
+- **Tests (full suite)**: `pnpm --filter @repo/admin test` → **191 passed (14 files)** = slice #1's 96 + row #2's 95
+  (8 readModels + 23 permissionKeys + 50 rbac + 14 adminApi). `tsc --noEmit` → **exit 0**. Acceptance gates AC-6
+  (TT-API-CONTRACT-SHAPE/FAILCLOSED/SERVER-AUTHORITATIVE) + AC-7 (TT-NO-SECRET-SRC/BUNDLE) + AC-8 (TT-BUILD + full
+  suite) GREEN.
+- **Regression boundary**: `pnpm --filter @repo/web build` → exit 0, **unaffected** (admin is a separate app; row #2
+  added no shared module; `@repo/web-auth-device-session` untouched).
+- **Boundary self-check**: W0 — admin-local only; no shared `@repo/*` change; no typed events; no Tauri; no
+  `syncScope` entity; no new runtime dependency (contract-heavy row, zero deps added — `@tanstack/react-table` not needed).
+- **Commits**: see Phase Progress table (recorded below after commit).
+- **Next step**: feature-verify — independent verification of all 4 phases against the row #2 plan, contracts, and
+  test.md; review commit history; confirm READY_TO_SHIP or BLOCKED.
