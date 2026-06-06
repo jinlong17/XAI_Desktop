@@ -317,6 +317,9 @@ import type {
   BillingMetrics as BillingReadSeamMetrics,
   PlanShare as BillingReadSeamPlanShare,
   TxnRow as BillingReadSeamTxnRow,
+  FeatureCategory as FeaturesReadSeamFeatureCategory,
+  FeatureDetail as FeaturesReadSeamFeatureDetail,
+  FeatureFlag as FeaturesReadSeamFeatureFlag,
   OrgDetail as OrgsReadSeamOrgDetail,
   OrgRow as OrgsReadSeamOrgRow,
   UserDetail as UsersReadSeamUserDetail,
@@ -361,4 +364,17 @@ export const billingReadSeam = {
     adminApiClient.getPlanDistribution(),
   transactions: (): Promise<AdminApiResult<BillingReadSeamTxnRow[]>> =>
     adminApiClient.getTransactions(),
+};
+
+/** Features read seam — delegates to the AdminApiClient (no new transport method, no fork). */
+export const featuresReadSeam = {
+  list: (
+    query?: { text?: string; category?: FeaturesReadSeamFeatureCategory | "" },
+  ): Promise<AdminApiResult<FeaturesReadSeamFeatureFlag[]>> =>
+    adminApiClient.getFeatures(query),
+  get: (
+    key: string,
+  ): Promise<AdminApiResult<FeaturesReadSeamFeatureDetail | null>> =>
+    adminApiClient.getFeature(key),
+  // categories() stays sync UI config on the slice #1 featuresAdapter — do NOT add it here.
 };

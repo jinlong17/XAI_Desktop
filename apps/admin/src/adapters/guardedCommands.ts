@@ -28,6 +28,10 @@ export interface GuardedCommandAdapter {
     org: string;
     toMember: string;
   }): Promise<AdminApiResult<MutationAck>>;
+  setFeatureRollout(input: {
+    key: string;
+    rollout: number;
+  }): Promise<AdminApiResult<MutationAck>>;
 }
 
 export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
@@ -39,6 +43,7 @@ export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
     banUser: (input) => client.banUser(input),
     bulkBan: (input) => client.bulkBan(input),
     transferOwnership: (input) => client.transferOwnership(input),
+    setFeatureRollout: (input) => client.setFeatureRollout(input),
   };
 
   return { commands, chain };

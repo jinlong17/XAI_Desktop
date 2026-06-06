@@ -7,8 +7,7 @@
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { AdminUiProvider } from "../components/AdminUiContext";
-import type { GuardedCommandAdapter } from "../adapters/guardedCommands";
+import { AdminUiProvider, type AdminCommands } from "../components/AdminUiContext";
 import { billingReadSeam, orgsReadSeam, usersReadSeam } from "../adapters";
 import { BillingPage } from "./BillingPage";
 import { OrgsPage } from "./OrgsPage";
@@ -19,19 +18,27 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function makeSpyCommands(): GuardedCommandAdapter {
+function makeSpyCommands(): AdminCommands {
   const ack = { ok: true, data: { applied: false, auditId: "test" } } as const;
+  const noop = {
+    ok: true,
+    noop: true,
+    reason: "slice-1-mock-no-write",
+  } as const;
   return {
     banUser: vi.fn(async () => ack),
     bulkBan: vi.fn(async () => ack),
     transferOwnership: vi.fn(async () => ack),
+    setFeatureRollout: vi.fn(async () => noop),
+    setProviderRouting: vi.fn(async () => noop),
+    setQuota: vi.fn(async () => noop),
   };
 }
 
 function renderWithCommands(
   node: React.ReactElement,
   commands = makeSpyCommands(),
-): { commands: GuardedCommandAdapter; container: HTMLElement } {
+): { commands: AdminCommands; container: HTMLElement } {
   const { container } = render(
     <AdminUiProvider commandsOverride={commands}>{node}</AdminUiProvider>,
   );

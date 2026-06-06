@@ -20,6 +20,8 @@ const GUARDED_CALLS: Record<
     commands.bulkBan({ emails: ["spam_one@mail.ru", "spam_two@mail.ru"] }),
   transferOwnership: (commands) =>
     commands.transferOwnership({ org: "Acme Robotics", toMember: "alice@acme.io" }),
+  setFeatureRollout: (commands) =>
+    commands.setFeatureRollout({ key: "ai-write", rollout: 0 }),
 };
 
 describe("TT-CMD-GUARDED-ALLOW-banUser / -bulkBan", () => {
@@ -241,6 +243,76 @@ describe("TT-CMD-AUDIT-ON-MUTATION-transferOwnership", () => {
     expect(event.mutationFamily).toBe("transferOwnership");
     expect(event.permissionKey).toBe(MUTATION_PERMISSION.transferOwnership);
     expect(event.permissionKey).toBe("admin.orgs.transfer_ownership");
+    expect(event.result).toBe("ok");
+  });
+});
+
+describe("TT-CMD-GUARDED-ALLOW-setFeatureRollout", () => {
+  it.each(["super", "ops"] as const)(
+    "%s role can setFeatureRollout; granted call returns applied:false + auditId and appends one event",
+    async (role) => {
+      const { commands, chain } = createGuardedCommandAdapter({ role });
+      const before = chain.length;
+      const res = await commands.setFeatureRollout({
+        key: "ai-write",
+        rollout: 0,
+      });
+
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        expect(res.data.applied).toBe(false);
+        expect(typeof res.data.auditId).toBe("string");
+      }
+      expect(chain.length).toBe(before + 1);
+    },
+  );
+});
+
+describe("TT-CMD-GUARDED-DENY-setFeatureRollout", () => {
+  it.each(["support", "finance", "audit"] as const)(
+    "%s role cannot setFeatureRollout and appends zero events",
+    async (role) => {
+      const { commands, chain } = createGuardedCommandAdapter({ role });
+
+      const res = await commands.setFeatureRollout({
+        key: "ai-write",
+        rollout: 0,
+      });
+
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.error.code).toBe("forbidden");
+      expect(chain.length).toBe(0);
+    },
+  );
+
+  it("no role fails setFeatureRollout closed as unauthorized and appends zero events", async () => {
+    const { commands, chain } = createGuardedCommandAdapter();
+
+    const res = await commands.setFeatureRollout({
+      key: "ai-write",
+      rollout: 0,
+    });
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error.code).toBe("unauthorized");
+    expect(chain.length).toBe(0);
+  });
+});
+
+describe("TT-CMD-AUDIT-ON-MUTATION-setFeatureRollout", () => {
+  it("setFeatureRollout appends exactly one event with family, permission, and ok result", async () => {
+    const { commands, chain } = createGuardedCommandAdapter({ role: "super" });
+
+    await commands.setFeatureRollout({
+      key: "ai-write",
+      rollout: 0,
+    });
+
+    expect(chain.length).toBe(1);
+    const event = chain.list()[0]!;
+    expect(event.mutationFamily).toBe("setFeatureRollout");
+    expect(event.permissionKey).toBe(MUTATION_PERMISSION.setFeatureRollout);
+    expect(event.permissionKey).toBe("admin.features.rollout");
     expect(event.result).toBe("ok");
   });
 });
