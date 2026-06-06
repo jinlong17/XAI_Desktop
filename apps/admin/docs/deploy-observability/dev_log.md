@@ -11,10 +11,10 @@
 | **Target** | xai-admin-deploy-observability |
 | **Title** | Admin Deploy Isolation + CSP/Env Hardening + Observability Scaffold + Promotion-Gate Runbook (row #6, FINAL) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1+P2 DONE, P3–P4 PENDING |
+| **Status** | APPROVED — P1+P2+P3 DONE, P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build, no-spawn runtime) |
-| **Updated** | 2026-06-06 07:40 |
-| **Suggested Next** | feature-auto-build (continue P3) |
+| **Updated** | 2026-06-06 07:44 |
+| **Suggested Next** | feature-auto-build (continue P4 — final) |
 | **Automation Mode** | inline-host (Task/agent-spawn tool unavailable this runtime; orchestrator inline-executes worker role) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · roadmap row #6 of 6 (FINAL) |
@@ -132,8 +132,8 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Deploy isolation + CSP/env checks | DONE | `362000b` |
-| P2 — Observability scaffold (no-op, secret-free) | DONE | `__P2_HASH__` |
-| P3 — Manual-smoke checklist + release/operator runbook docs | PENDING | — |
+| P2 — Observability scaffold (no-op, secret-free) | DONE | `752c999` |
+| P3 — Manual-smoke checklist + release/operator runbook docs | DONE | `__P3_HASH__` |
 | P4 — ESLint flat config (RR-1) + final full gate | PENDING | — |
 
 ## Work Log (append-only)
@@ -279,9 +279,44 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
 - **Tests**: rebuilt `dist/` fresh (captures the App.tsx wiring) — build exit 0, **zero `.map`**
   emitted (`sourcemap:false` unchanged), `dist/_headers` present. `pnpm --filter @repo/admin test`
   → **36 files / 389 passed** (was 33/375; +3 files, +14 tests, none removed). `tsc --noEmit` → exit 0.
-- **Commit**: `__P2_HASH__` — `feat(admin): row #6 P2 — no-op telemetry seam + error boundary`
+- **Commit**: `752c999` — `feat(admin): row #6 P2 — no-op telemetry seam + error boundary`
   (also folds the P1 dev_log hash correction cc6c9f6→362000b after the P1 commit was amended).
 - **Risks**: none surfaced. R2 (scaffold adds secret/network) mitigated + proven by TT-TELEMETRY-NOOP
   + TT-NO-TELEMETRY-SECRET-{SRC,BUNDLE}.
 - **Next step**: P3 — `manual-smoke-checklist.md` (10-page scenarios) + `release-operator-runbook.md`
   (deploy/rotate/rollback + Promotion Gate). Docs only; the slice does not promote.
+
+### Round 5 — 2026-06-06 07:44 · feature-dev-loop (inline feature-auto-build) · P3 DONE
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline-hosting feature-auto-build).
+- **Phase**: **P3 — Manual-smoke checklist + release/operator runbook docs**.
+- **Action**: Wrote the two operator docs under `apps/admin/docs/deploy-observability/` (docs only —
+  the slice does NOT promote):
+  - **NEW** `manual-smoke-checklist.md` (AC-4) — human-runnable cross-vendor smoke checklist for all
+    10 ported prototype pages (Dashboard/Users/Orgs/Features/AiUsage/Providers/Roles/Billing/Audit/
+    Settings) sourced from the prototype README's IA, plus cross-cutting C1 fail-closed guard, C2
+    error-boundary fallback, C3 CSP/no-ingest, C4 focus-trap. Each row has PASS/FAIL × {Chromium,
+    Firefox, WebKit, Mobile} columns + a browser-version matrix; `[auto]` rows cross-link the existing
+    TT-* coverage (pages.smoke/wiring/ConfirmModal/no-provider-key/AdminRouteGate + the row-#6
+    telemetry/boundary/csp/no-telemetry-secret tests); `[manual]` rows are the real cross-vendor work.
+    States explicitly that a blank checklist is NOT evidence (collected at feature-verify).
+  - **NEW** `release-operator-runbook.md` (AC-5) — promotion-gate runbook: §0 in-repo facts already
+    locked by P1 tests; §1 first-time setup (admin Pages project + admin-scoped CI secret + server-side
+    secret deferral); §2 deploy; §3 rotate; §4 rollback — all cross-referencing `docs/runbooks/cloudflare.md`
+    (web runbook) for shared mechanics, NOT duplicating them. §5 **Promotion Gate** is the core: 5.1
+    deferred PR/merge + branch-topology decision (ADR-0013 §D2 DEFINED-not-created / §D5 independent
+    focus branches; admin is W0, NOT a Web→Desktop D3 promotion), 5.2 server-side-only secret setup,
+    5.3 isolation re-check, 5.4 NO ADR-0008 amendment (OQ5). Explicit HARD SCOPE banner: documents
+    promotion, performs none of it; every deploy/PR/secret step is operator-gated.
+- **Self-checks**: docs reference `ingest.sentry.io` / `VITE_*_DSN` in prose, but they live under
+  `apps/admin/docs/` — OUTSIDE the `src/`-scoped TT-NO-TELEMETRY-SECRET-SRC scan and the `.env*`-scoped
+  TT-ENV-NO-SECRET scan, so they do not (and must not) trip those guards. Verified P3 touched ZERO
+  files under `src/`. Crux cited correctly: ADR-0008 §S6 added `https://*.ingest.sentry.io` to the WEB
+  CSP only (2026-06-01 amendment, verified in the ADR); admin stays `connect-src 'self'`.
+- **Tests**: `pnpm --filter @repo/admin test` → **36 files / 389 passed** (unchanged — docs only).
+- **Commit**: `__P3_HASH__` — `docs(admin): row #6 P3 — manual-smoke checklist + operator runbook`
+  (also folds the P2 dev_log hash correction __P2_HASH__→752c999 after the P2 commit).
+- **Risks**: none. R4 (runbook drift vs cloudflare.md) mitigated by cross-reference (no duplication).
+  R5 (promotion ambiguity) addressed by the explicit HARD SCOPE banner + §5 operator-gated gate.
+- **Next step**: P4 — `apps/admin/eslint.config.js` (RR-1, clears task_1a68bff9) + the final full
+  quality gate (lint --max-warnings 0 / tsc / test / admin build / web build). Sets READY_FOR_VERIFY.
