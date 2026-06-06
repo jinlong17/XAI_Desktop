@@ -19,7 +19,7 @@
     var(--shadow-2);
   --pomo-timer-ink: oklch(42% calc(var(--accent-chroma, .10) + .02) var(--accent-hue));
   --pomo-timer-shadow:
-    0 1px 0 color-mix(in oklch, white 56%, transparent),
+    0 1px 0 color-mix(in oklch, var(--text-on-accent) 56%, transparent),
     0 18px 48px color-mix(in oklch, var(--accent) 18%, transparent);
   display: flex;
   flex-direction: column;
@@ -94,7 +94,7 @@
   --pomo-stage-size: clamp(320px, min(58vw, 62vh), 540px);
   --pomo-timer-ink: oklch(44% calc(var(--accent-chroma, .10) + .03) var(--accent-hue));
   --pomo-timer-shadow:
-    0 1px 0 color-mix(in oklch, white 58%, transparent),
+    0 1px 0 color-mix(in oklch, var(--text-on-accent) 58%, transparent),
     0 22px 68px color-mix(in oklch, var(--accent) 26%, transparent);
   position: fixed;
   inset: 0;
@@ -383,7 +383,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), color-mix(in oklch, var(--accent) 70%, white 30%));
+  background: linear-gradient(90deg, var(--accent), color-mix(in oklch, var(--accent) 70%, var(--text-on-accent) 30%));
   transition: width var(--dur-med) linear;
 }
 
