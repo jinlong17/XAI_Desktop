@@ -7,6 +7,7 @@ import {
   disablePluginInstanceOnDesktop,
   enablePluginInstanceOnDesktop,
   hidePluginInstanceOnDesktop,
+  restoreEnabledPluginInstancesOnDesktop,
   updatePluginInstanceConfigOnDesktop,
 } from "@repo/core/registry";
 import type {
@@ -158,11 +159,17 @@ export function PluginCenterWindow() {
     if (!instanceStore) return;
     let cancelled = false;
 
-    void instanceStore
-      .load()
-      .then((loadedInstances) => {
+    void restoreEnabledPluginInstancesOnDesktop({
+      store: instanceStore,
+      windowAdapter,
+    })
+      .then((result) => {
         if (!cancelled) {
-          setInstances(loadedInstances);
+          setInstances(result.instances);
+          const lastRestored = result.restored[result.restored.length - 1];
+          if (lastRestored?.window) {
+            setLastWindow(lastRestored.window);
+          }
         }
       })
       .catch((error) => {
@@ -174,7 +181,7 @@ export function PluginCenterWindow() {
     return () => {
       cancelled = true;
     };
-  }, [instanceStore]);
+  }, [instanceStore, windowAdapter]);
 
   const handleAddToDesktop = useCallback(
     async (entry: PluginCenterEntry) => {

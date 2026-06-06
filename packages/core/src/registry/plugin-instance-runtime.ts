@@ -17,6 +17,34 @@ export interface PluginInstanceRuntimeResult {
   window?: PluginWindowSnapshot;
 }
 
+export interface PluginInstanceRestoreResult {
+  instances: PluginInstance[];
+  restored: PluginInstanceRuntimeResult[];
+  skipped: PluginInstance[];
+}
+
+export async function restoreEnabledPluginInstancesOnDesktop(
+  options: PluginInstanceRuntimeOptions,
+): Promise<PluginInstanceRestoreResult> {
+  const instances = await options.store.load();
+  const restored: PluginInstanceRuntimeResult[] = [];
+  const skipped: PluginInstance[] = [];
+
+  for (const instance of instances) {
+    if (instance.lifecycleState !== 'enabled') {
+      skipped.push(instance);
+      continue;
+    }
+    const window = await options.windowAdapter.create({
+      instanceId: instance.id,
+      config: instance.config,
+    });
+    restored.push({ instance, window });
+  }
+
+  return { instances, restored, skipped };
+}
+
 export async function enablePluginInstanceOnDesktop(
   id: PluginInstanceId,
   options: PluginInstanceRuntimeOptions,

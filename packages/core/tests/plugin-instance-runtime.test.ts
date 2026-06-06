@@ -7,6 +7,7 @@ import {
   disablePluginInstanceOnDesktop,
   enablePluginInstanceOnDesktop,
   hidePluginInstanceOnDesktop,
+  restoreEnabledPluginInstancesOnDesktop,
   updatePluginInstanceConfigOnDesktop,
 } from '../src/registry';
 import type { PluginWindowAdapter } from '../src/registry';
@@ -38,6 +39,7 @@ function createRegistration(overrides: Partial<PluginManifest> = {}): PluginRegi
 
 function createRuntime() {
   let value: unknown = null;
+  let nextId = 1;
   const store = createPluginInstanceStore({
     adapter: {
       async read() {
@@ -47,7 +49,7 @@ function createRuntime() {
         value = snapshot;
       },
     },
-    idFactory: () => 'instance-1',
+    idFactory: () => `instance-${nextId++}`,
     now: () => '2026-06-06T12:00:00.000Z',
   });
   const windowAdapter = {
@@ -112,6 +114,30 @@ async function seedInstance(runtime: ReturnType<typeof createRuntime>) {
 }
 
 describe('plugin instance runtime actions', () => {
+  it('restores enabled instances while preserving disabled and hidden config', async () => {
+    const runtime = createRuntime();
+    await seedInstance(runtime);
+    await seedInstance(runtime);
+    await seedInstance(runtime);
+    await runtime.store.disable('instance-2');
+    await runtime.store.hide('instance-3');
+
+    const result = await restoreEnabledPluginInstancesOnDesktop(runtime);
+
+    expect(result.instances.map((instance) => instance.id)).toEqual([
+      'instance-1',
+      'instance-2',
+      'instance-3',
+    ]);
+    expect(result.restored.map(({ instance }) => instance.id)).toEqual(['instance-1']);
+    expect(result.skipped.map((instance) => instance.id)).toEqual(['instance-2', 'instance-3']);
+    expect(runtime.windowAdapter.create).toHaveBeenCalledTimes(1);
+    expect(runtime.windowAdapter.create).toHaveBeenCalledWith({
+      instanceId: 'instance-1',
+      config: result.instances[0].config,
+    });
+  });
+
   it('enables an instance and recreates its window', async () => {
     const runtime = createRuntime();
     await seedInstance(runtime);

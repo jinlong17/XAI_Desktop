@@ -90,6 +90,15 @@ The first usable milestone is now implemented as a system foundation:
 
 Phase 1 completion means the platform runtime foundation and governance docs are closed. It does not mean clipboard, widgets, pet, meditation, quick bookkeeping, time tracking, task glance, calendar glance, sticky notes, folder widgets or shortcut widgets are feature-complete. Those remain Phase 2/3 work.
 
+## 8. Phase 2 Progress
+
+| Step | Output | Status |
+|---|---|---|
+| P2-1 | Restart restore for enabled instances | Complete: `restoreEnabledPluginInstancesOnDesktop()` loads device-local instances and recreates windows only for `enabled` instances. |
+| P2-2 | Pin / click-through / all-spaces native application | Planned: fields already persist and report no-op fallback through `nativeApplied`. |
+| P2-3 | Capability denial display | Planned |
+| P2-4 | Low-risk sample widget complete flow | Planned |
+
 ## 5. Required Interfaces
 
 | Interface | Owner | Notes |

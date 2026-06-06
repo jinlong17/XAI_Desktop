@@ -14,6 +14,7 @@ export {
   disablePluginInstanceOnDesktop,
   enablePluginInstanceOnDesktop,
   hidePluginInstanceOnDesktop,
+  restoreEnabledPluginInstancesOnDesktop,
   updatePluginInstanceConfigOnDesktop,
 } from './plugin-instance-runtime';
 export {
@@ -44,6 +45,7 @@ export type {
 export type {
   PluginInstanceRuntimeOptions,
   PluginInstanceRuntimeResult,
+  PluginInstanceRestoreResult,
 } from './plugin-instance-runtime';
 export type {
   CreatePluginInstanceStoreOptions,

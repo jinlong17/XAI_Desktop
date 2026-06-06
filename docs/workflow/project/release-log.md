@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 重启恢复通用能力
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 重新打开后会读取 device-local plugin instance store，并恢复 `enabled` 桌面插件实例窗口；`disabled` / `hidden` 实例继续保留配置但不会自动出现在桌面。
+- Developer/system delta: 新增 `restoreEnabledPluginInstancesOnDesktop()` runtime API，导出 `PluginInstanceRestoreResult`，Plugin Center mount/load path 改为调用 restore API；补 core unit test，更新 SDK、Plugin PRD、Phase 1/2 执行路线和 dashboard-state。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 47 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.
+- Risk / follow-up: This restores windows through the existing grid-window adapter; real macOS restart smoke is still required. Next Phase 2 slice should cover pin / click-through / all-spaces native fallback display or capability denial.
+
 ### Desktop Plugin Phase 1 系统底座收口
 
 - Product line: desktop-plugin / project-system

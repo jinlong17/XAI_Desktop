@@ -655,6 +655,16 @@ export interface PluginWindowSnapshot {
     allSpaces: boolean;
   };
 }
+
+export interface PluginInstanceRestoreResult {
+  instances: PluginInstance[];
+  restored: Array<{ instance: PluginInstance; window?: PluginWindowSnapshot }>;
+  skipped: PluginInstance[];
+}
+
+export async function restoreEnabledPluginInstancesOnDesktop(
+  options: PluginInstanceRuntimeOptions,
+): Promise<PluginInstanceRestoreResult>;
 ```
 
 #### 3.5.3 MVP 行为规则
@@ -667,6 +677,7 @@ export interface PluginWindowSnapshot {
 6. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
 7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。如果当前 host bridge 尚未把某字段映射到原生能力，`PluginWindowSnapshot.nativeApplied` 必须显式返回 `false`，禁止伪装成已生效。
 8. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
+9. `restoreEnabledPluginInstancesOnDesktop()` 是 Phase 2 的重启恢复入口：它从 device-local store 加载全部实例，只为 `lifecycleState: "enabled"` 的实例重建窗口；`disabled` / `hidden` / `destroyed` 实例必须保留配置但不自动建窗。
 
 #### 3.5.4 Plugin Center 信息架构
 
@@ -701,6 +712,15 @@ Phase 1 implementation status:
 | P1-S4 Plugin Center shell/catalog | Complete (`201e8cf`, `68957f9`) |
 | P1-S5 AddToDesktop + instance actions | Complete (`bf7ab16`, `5a410de`) |
 | P1-S6 docs/dashboard/release-log | Complete in P1D closeout; specific plugin features still not shipped |
+
+Phase 2 common capability status:
+
+| Capability | Status |
+|---|---|
+| Restart restore for enabled instances | Complete (`restoreEnabledPluginInstancesOnDesktop`) |
+| Pin / click-through / all-spaces native application | Planned; fields persist, native fallback still explicit |
+| Capability denial display | Planned |
+| Low-risk sample widget end-to-end | Planned |
 
 Commit message shape:
 
