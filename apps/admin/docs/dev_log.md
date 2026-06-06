@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_VERIFY — all 5 build phases DONE |
-| **Status** | READY_FOR_VERIFY |
-| **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build) |
-| **Updated** | 2026-06-06 02:45 |
-| **Suggested Next** | feature-verify |
+| **Current Phase** | FEATURE_VERIFY — PASS |
+| **Status** | READY_TO_SHIP |
+| **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-verify) |
+| **Updated** | 2026-06-06 02:48 |
+| **Suggested Next** | ship |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -120,9 +120,35 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 | P2 — Admin auth gate (the core boundary) | DONE | `8d177e9` |
 | P3 — Typed read-model interfaces + mock adapters + fixtures | DONE | `fe9ea96` |
 | P4 — Page port (structural) + destructive UI | DONE | `047e759` |
-| P5 — Security + build guards | DONE | (this commit) |
+| P5 — Security + build guards | DONE | `fbec02f` |
 
 ## Work Log (append-only)
+
+### Round 8 — 2026-06-06 02:48 · feature-verify (via feature-dev-loop) → PASS
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline feature-verify worker — read-only role; no code written)
+- **Action**: Independent verification of phases 2–5 against the feature brief (AC-1..AC-6), the APPROVED plan, the api.md/test.md contracts, and the doc set.
+- **Commits reviewed**: `8d177e9` (P2 auth gate), `fe9ea96` (P3 adapters), `047e759` (P4 page port), `fbec02f` (P5 security guards). All four: single-intent, admin-source-only scope (verified `git diff --name-only` → every changed file under `apps/admin/`; `pnpm-lock.yaml` belongs to Phase 1 `1c35a99`, not this range), commit messages follow type(scope): summary + Why/What/Scope/Risk/Docs/Tests.
+- **Verification set run (fresh, from cold dist)**:
+  - `pnpm exec vitest run` (apps/admin) → **96 passed / 96** (10 files). Bundle guard self-built from deleted dist and passed.
+  - `pnpm exec tsc --noEmit` → **clean**.
+  - `pnpm --filter @repo/admin build` → **green** (112 modules; no `.map` emitted).
+  - `pnpm --filter @repo/web build` → **green, exit 0, 952 modules — UNAFFECTED** (regression boundary holds).
+- **AC verdicts**:
+  - **AC-1 PASS** — fail-closed guard: TT-PREDICATE-NULL + TT-PREDICATE-NON-ADMIN (mandatory negatives) + TT-GUARD-DENY (authed non-admin → /forbidden) + TT-GUARD-ALLOW (authed admin → allow), incl. component render/redirect.
+  - **AC-2 PASS** — 10 page components, all 10 import from `../adapters`; TT-NO-INLINE-MOCK (no page imports raw fixtures); pages smoke renders all 10 behind AdminUiProvider; Tweaks excluded.
+  - **AC-3 PASS** — TT-NO-SECRET-SRC (src) + TT-NO-SECRET-BUNDLE (dist/**, 8 patterns, sourcemap-free, self-building). Manual grep: zero secret/masked-key literals in served bundle.
+  - **AC-4 PASS** — 6 commands resolve `{ok,noop,reason:"slice-1-mock-no-write"}` with no write/network (TT-CMD-NOOP); type-to-confirm UI present + gated on exact word + invokes no-op (TT-CONFIRM-RENDERS).
+  - **AC-5 PASS** — own `wrangler.toml` + tight `_headers` (`connect-src 'self'`, `object-src 'none'`, `frame-ancestors 'none'`); admin NOT referenced anywhere in `apps/web/src`; apps/web build unaffected.
+  - **AC-6 PASS** — unit tests for the predicate + all 10 adapters; vite build + vitest green.
+- **Boundary / D3**: no `@repo/web-auth-device-session` source change (consumed read-only); no new `@repo/core/src/events`; no Tauri; not in apps/web rail; no `dev` promotion. **D3 = W0** confirmed.
+- **Residual risks (non-blocking)**:
+  - **RR-1 (Phase 1 scaffold gap, LOW):** `apps/admin` declares a `lint` script + `@repo/eslint-config` dep but has NO `eslint.config.js`, so `pnpm --filter @repo/admin lint` errors. NOT in any AC or named test gate (AC-6 = vite build + vitest); `tsc --noEmit` enforces type safety. Follow-up task spawned to add the flat config (mirror apps/web, extend `@repo/eslint-config/base`). Does not block ship.
+  - **RR-2 (deferred by row, expected):** real admin-claim source, real RBAC enforcement, real audit/billing/provider config, server secret backend = rows #2–#6. Out of slice #1 scope by design.
+  - **RR-3 (manual gate, deferred to ship/human):** cross-vendor browser smoke (tables/filters/drawers/type-to-confirm/focus/mobile) on real browsers — roadmap "Browser smoke" gate; not runnable headless here.
+- **Verdict**: **PASS** — 0 blockers; all 6 ACs satisfied + test-mapped; scope/security/boundary discipline tight.
+- **Commits**: — (verify only; the Status-Panel/Work-Log dev_log update is committed as a docs commit below)
+- **Next step**: ship — check commit integrity, push to remote, mark SHIPPED (requires human confirmation).
 
 ### Round 7 — 2026-06-06 02:45 · feature-auto-build Phase 5 (via feature-dev-loop)
 
