@@ -124,6 +124,7 @@ const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
 const DAY_RECORDS_COLLAPSED_KEY = "xai_tt_day_records_collapsed_v1";
+const TIME_STATUS_HIDDEN_KEY = "xai_tt_time_status_hidden_v1";
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -304,6 +305,61 @@ function startOfYear(ts: number): number {
   return d.getTime();
 }
 
+function startOfNextMonth(ts: number): number {
+  const d = new Date(startOfMonth(ts));
+  d.setMonth(d.getMonth() + 1);
+  return d.getTime();
+}
+
+function startOfNextYear(ts: number): number {
+  const d = new Date(startOfYear(ts));
+  d.setFullYear(d.getFullYear() + 1);
+  return d.getTime();
+}
+
+function clampProgress(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function progressText(value: number): string {
+  return `${Math.round(clampProgress(value) * 100)}%`;
+}
+
+function weekdayLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `星期${["日", "一", "二", "三", "四", "五", "六"][d.getDay()] ?? ""}`;
+  return d.toLocaleDateString("en-US", { weekday: "long" });
+}
+
+function monthLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`;
+  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function daysLeftText(days: number, lang: Lang): string {
+  if (lang === "zh") return `${days} ${ttCopy(lang, "daysLeft")}`;
+  return `${days} ${ttCopy(lang, days === 1 ? "dayLeft" : "daysLeft")}`;
+}
+
+function leftDetail(days: number, label: CopyKey, lang: Lang): string {
+  if (lang === "zh") return `${ttCopy(lang, label)} · ${daysLeftText(days, lang)}`;
+  return `${daysLeftText(days, lang)} · ${ttCopy(lang, label)}`;
+}
+
+function calendarDayIndex(ts: number): number {
+  const d = new Date(startOfDay(ts));
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS;
+}
+
+function daysLeftAfterToday(endExclusiveMs: number, nowMs: number): number {
+  return Math.max(0, calendarDayIndex(endExclusiveMs) - calendarDayIndex(nowMs) - 1);
+}
+
+function todayRemainingMs(nowMs: number): number {
+  return Math.max(0, startOfDay(nowMs) + DAY_MS - nowMs);
+}
+
 function dateInputValue(ts: number): string {
   return dayKey(ts);
 }
@@ -377,6 +433,11 @@ function readDayRecordsCollapsed(): boolean {
   return window.localStorage.getItem(DAY_RECORDS_COLLAPSED_KEY) === "1";
 }
 
+function readTimeStatusHidden(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(TIME_STATUS_HIDDEN_KEY) === "1";
+}
+
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
@@ -391,6 +452,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
   const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
   const [dayRecordsCollapsed, setDayRecordsCollapsed] = useState(readDayRecordsCollapsed);
+  const [timeStatusHidden, setTimeStatusHidden] = useState(readTimeStatusHidden);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
@@ -416,6 +478,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     window.localStorage.setItem(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0");
   }, [dayRecordsCollapsed]);
 
+  useEffect(() => {
+    window.localStorage.setItem(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0");
+  }, [timeStatusHidden]);
+
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
   const weekStart = startOfWeek(nowMs);
@@ -430,6 +496,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const selectedByCategory = useMemo(() => totalByCategory(selectedEntries, nowMs), [nowMs, selectedEntries]);
   const selectedTotal = useMemo(() => selectedEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, selectedEntries]);
   const todayEntries = useMemo(() => liveEntries.filter((entry) => dayKey(entryStart(entry)) === todayKey), [liveEntries, todayKey]);
+  const todayTotal = useMemo(() => todayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, todayEntries]);
   const weekTotal = useMemo(
     () => liveEntries.filter((entry) => entryStart(entry) >= weekStart).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
     [liveEntries, nowMs, weekStart],
@@ -644,6 +711,17 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                 </div>
               </section>
             )}
+
+            <TimeStatusPanel
+              lang={lang}
+              nowMs={nowMs}
+              todayTotal={todayTotal}
+              todayRemaining={todayRemainingMs(nowMs)}
+              activeEntries={activeEntries}
+              categoryMap={categoryMap}
+              hidden={timeStatusHidden}
+              onSetHidden={setTimeStatusHidden}
+            />
 
             <section className="tt-panel tt-category-panel">
               <div className="tt-section-head">
@@ -868,6 +946,136 @@ function subcategoryColor(sub: TimeTrackerSubcategory | undefined, category: Tim
 
 function subcategoryIcon(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
   return sub?.icon ?? category?.icon ?? "timer";
+}
+
+function activeEntryStatusLabel(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang): string {
+  const sub = findSubcategory(category, entry.subId);
+  const primary = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
+  const parent = textName(category?.name, lang);
+  if (primary === "") return ttCopy(lang, "running");
+  return sub !== undefined && parent !== "" ? `${primary} · ${parent}` : primary;
+}
+
+function TimeStatusPanel({
+  lang,
+  nowMs,
+  todayTotal,
+  todayRemaining,
+  activeEntries,
+  categoryMap,
+  hidden,
+  onSetHidden,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly todayTotal: number;
+  readonly todayRemaining: number;
+  readonly activeEntries: readonly TimeTrackerEntry[];
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+  readonly hidden: boolean;
+  readonly onSetHidden: (hidden: boolean) => void;
+}) {
+  const monthStart = startOfMonth(nowMs);
+  const nextMonth = startOfNextMonth(nowMs);
+  const yearStart = startOfYear(nowMs);
+  const nextYear = startOfNextYear(nowMs);
+  const monthProgress = clampProgress((nowMs - monthStart) / Math.max(1, nextMonth - monthStart));
+  const yearProgress = clampProgress((nowMs - yearStart) / Math.max(1, nextYear - yearStart));
+  const monthDaysLeft = daysLeftAfterToday(nextMonth, nowMs);
+  const yearDaysLeft = daysLeftAfterToday(nextYear, nowMs);
+  const activeLabels = activeEntries.map((entry) => activeEntryStatusLabel(entry, categoryMap.get(entry.categoryId), lang));
+  const activeValue = activeEntries.length === 0
+    ? ttCopy(lang, "noActiveTimer")
+    : activeEntries.length === 1
+      ? ttCopy(lang, "running")
+      : `${activeEntries.length} ${ttCopy(lang, "runningCount")}`;
+  const activeDetail = activeEntries.length === 0 ? ttCopy(lang, "readyToStart") : activeLabels.slice(0, 2).join(" · ");
+  const cards = [
+    {
+      key: "date",
+      icon: "calendar",
+      label: ttCopy(lang, "currentDate"),
+      value: weekdayLabel(nowMs, lang),
+      detail: `${monthLabel(nowMs, lang)} · ${formatDayLabel(nowMs, lang)}`,
+    },
+    {
+      key: "month",
+      icon: "chart",
+      label: ttCopy(lang, "monthProgress"),
+      value: progressText(monthProgress),
+      detail: leftDetail(monthDaysLeft, "leftThisMonth", lang),
+      progress: monthProgress,
+    },
+    {
+      key: "year",
+      icon: "target",
+      label: ttCopy(lang, "yearProgress"),
+      value: progressText(yearProgress),
+      detail: leftDetail(yearDaysLeft, "leftThisYear", lang),
+      progress: yearProgress,
+    },
+    {
+      key: "today",
+      icon: "timer",
+      label: ttCopy(lang, "todayTotal"),
+      value: formatDuration(todayTotal),
+      detail: `${ttCopy(lang, "todayRemaining")}: ${formatDuration(todayRemaining)}`,
+    },
+    {
+      key: "active",
+      icon: activeEntries.length > 0 ? "play" : "clock",
+      label: ttCopy(lang, "currentRunning"),
+      value: activeValue,
+      detail: activeDetail,
+      running: activeEntries.length > 0,
+    },
+  ] as const;
+
+  if (hidden) {
+    return (
+      <section className="tt-panel tt-time-status-panel is-hidden">
+        <div className="tt-time-status-hidden">
+          <span className="tt-time-status-hidden-icon"><IconGlyph name="calendar" size={15} /></span>
+          <strong>{ttCopy(lang, "timeStatusHidden")}</strong>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+          <button type="button" className="tt-btn tt-btn-subtle" onClick={() => onSetHidden(false)}>
+            {ttCopy(lang, "showTimeStatus")}
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="tt-panel tt-time-status-panel">
+      <div className="tt-section-head tt-time-status-head">
+        <div>
+          <h2>{ttCopy(lang, "timeStatus")}</h2>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+        </div>
+        <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideTimeStatus")} onClick={() => onSetHidden(true)}>
+          <IconGlyph name="chevD" size={14} />
+        </button>
+      </div>
+      <div className="tt-time-card-grid">
+        {cards.map((card) => (
+          <article key={card.key} className={`tt-time-card${"running" in card && card.running === true ? " is-running" : ""}`}>
+            <span className="tt-time-card-icon"><IconGlyph name={card.icon} size={15} /></span>
+            <span className="tt-time-card-copy">
+              <em>{card.label}</em>
+              <strong>{card.value}</strong>
+              <small>{card.detail}</small>
+            </span>
+            {"progress" in card && (
+              <span className="tt-time-progress" aria-label={`${card.label} ${card.value}`}>
+                <span style={{ width: card.value }} />
+              </span>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 type InsightBarRow = {

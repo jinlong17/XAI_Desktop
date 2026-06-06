@@ -334,6 +334,145 @@
   vertical-align: middle;
 }
 
+.tt-time-status-panel {
+  padding: 10px;
+}
+
+.tt-time-status-panel.is-hidden {
+  padding: 8px 10px;
+}
+
+.tt-time-status-head {
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.tt-time-status-head > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tt-time-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 142px), 1fr));
+  gap: 7px;
+}
+
+.tt-time-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: start;
+  min-width: 0;
+  min-height: 74px;
+  padding: 8px;
+  border: 1px solid var(--border-1);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, color-mix(in oklch, var(--accent) 5%, transparent), transparent 68%),
+    color-mix(in oklch, var(--bg-panel) 84%, var(--bg-panel-2));
+}
+
+.tt-time-card.is-running {
+  border-color: color-mix(in oklch, var(--accent) 38%, var(--border-1));
+  background:
+    linear-gradient(145deg, color-mix(in oklch, var(--accent) 12%, transparent), transparent 70%),
+    color-mix(in oklch, var(--accent) 7%, var(--bg-panel));
+}
+
+.tt-time-card-icon,
+.tt-time-status-hidden-icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 11%, var(--bg-panel-2));
+}
+
+.tt-time-card-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tt-time-card-copy em {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-time-card-copy strong {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 15px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-time-card-copy small {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: 11px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-time-progress {
+  grid-column: 1 / -1;
+  height: 4px;
+  overflow: hidden;
+  align-self: end;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--accent) 10%, var(--bg-panel-2));
+}
+
+.tt-time-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), color-mix(in oklch, var(--accent) 66%, var(--text-1)));
+}
+
+.tt-time-status-hidden {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.tt-time-status-hidden-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.tt-time-status-hidden strong {
+  color: var(--text-1);
+  font-size: 13px;
+}
+
+.tt-time-status-hidden span:not(.tt-time-status-hidden-icon) {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-time-status-hidden .tt-btn {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
 .tt-active-list,
 .tt-record-list,
 .tt-detail-list,

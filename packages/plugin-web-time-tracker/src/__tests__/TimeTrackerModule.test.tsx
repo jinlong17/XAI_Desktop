@@ -20,6 +20,38 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByRole("heading", { name: "学习" })).toBeInTheDocument();
   });
 
+  it("renders and persists the compact time status cards", () => {
+    const { unmount } = render(<TimeTrackerModule lang="en" />);
+
+    expect(screen.getByText("Time status")).toBeInTheDocument();
+    expect(screen.getByText("Saturday")).toBeInTheDocument();
+    expect(screen.getByText("May 2026 · May 23")).toBeInTheDocument();
+    expect(screen.getByText("8 days left · left this month")).toBeInTheDocument();
+    expect(screen.getByText("222 days left · left this year")).toBeInTheDocument();
+    expect(screen.getByText("Today remaining: 13h 30m")).toBeInTheDocument();
+    expect(screen.getByText("No active timer")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Hide time status"));
+    });
+
+    expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
+    expect(screen.getByText("Time status hidden")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("1");
+
+    unmount();
+    render(<TimeTrackerModule lang="en" />);
+    expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
+    expect(screen.getByText("Time status hidden")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByText("Show time status"));
+    });
+
+    expect(screen.getByText("Saturday")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("0");
+  });
+
   it("starts, pauses, resumes, and stops a tracked entry", () => {
     render(<TimeTrackerModule lang="en" />);
 
