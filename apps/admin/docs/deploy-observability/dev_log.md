@@ -10,11 +10,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-deploy-observability |
 | **Title** | Admin Deploy Isolation + CSP/Env Hardening + Observability Scaffold + Promotion-Gate Runbook (row #6, FINAL) |
-| **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_TO_SHIP — verify PASS (all 4 phases) |
-| **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-verify, no-spawn runtime) |
-| **Updated** | 2026-06-06 07:52 |
-| **Suggested Next** | ship |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | claude-sonnet-4-6 (ship) |
+| **Updated** | 2026-06-06 08:30 |
+| **Suggested Next** | — (SHIPPED; roadmap complete — see deferred operator items in roadmap manifest) |
 | **Automation Mode** | inline-host (Task/agent-spawn tool unavailable this runtime; orchestrator inline-executes worker role) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · roadmap row #6 of 6 (FINAL) |
@@ -420,3 +420,30 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
 - **Commits**: — (verify is read-only; this dev_log verdict write also records the final P4 commit hash d31ced3 (left pending after the P4 commit was created)).
 - **Next step**: ship — verify commit integrity (P1–P4), push the branch, mark row #6 SHIPPED in the
   manifest + PLUGIN_MAP. Requires explicit human action (feature-dev-loop STOPS before ship; no push).
+
+### Round 8 — 2026-06-06 08:30 · ship · SHIPPED (FINAL row, roadmap complete)
+
+- **Executor**: claude-sonnet-4-6 (ship)
+- **Action**: Integrity gate, push, and close-out for the FINAL roadmap row (#6 of 6,
+  `xai-admin-dashboard-system-integration` complete).
+- **Integrity checks passed**:
+  - `dev_log.md` confirmed `Status: READY_TO_SHIP` before push.
+  - Working tree clean (`git status --short` — no uncommitted changes).
+  - All 5 row-#6 commits (`362000b`, `752c999`, `07ae45b`, `d31ced3`, `a114b57`) present
+    and stacked on baseline `c282b00` (last pushed commit of prior rows).
+  - Changed files scope: `apps/admin/**` + `docs/reviews/xai-admin-deploy-observability/**` only.
+    No `apps/web`, no `packages/core`, no `apps/desktop`, no `@repo/web-auth-device-session`,
+    no `@repo/audit-log-integrity`, no `.env*`, no `*.pem`/`*.key`, no real Sentry DSN.
+  - Prior rows' pages byte-identical (confirmed by P4 quality gate + feature-verify).
+  - W0 boundary held throughout.
+- **Branch**: `claude/frosty-nash-c4bf16` (feature branch only — NOT merged to main/web/dev).
+- **Push**: fast-forward to `origin/claude/frosty-nash-c4bf16`.
+- **Row #6 commit range**: `362000b` (P1) → `752c999` (P2) → `07ae45b` (P3) → `d31ced3` (P4) → `a114b57` (verify) → (this doc commit).
+- **Roadmap**: ALL 6 ROWS SHIPPED. Roadmap manifest `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` updated (all rows → SHIPPED, deferred operator items recorded).
+- **Deferred operator items (NOT performed by ship)**:
+  - PR/merge target — branch is pushed but NOT merged into main/web/dev.
+  - Promotion beyond prototype — operator-gated per ADR-0013 §D2/§D5; see `release-operator-runbook.md` §5.
+  - Server-side secret setup (Cloudflare Pages CI secret, real telemetry DSN if desired).
+  - Branch topology creation (`desktop-next` / `desktop-plugin-next` / `release/*`).
+  - Manual browser smoke checklist (human-on-real-hardware; `manual-smoke-checklist.md` cells unfilled).
+- **Next step**: — (roadmap complete). Parent session runs wrap-up (release-log + dashboard-sync).
