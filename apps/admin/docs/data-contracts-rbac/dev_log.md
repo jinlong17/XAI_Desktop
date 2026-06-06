@@ -156,7 +156,7 @@ untouched; record the choice in P4.
 | P1 — Read-model contract freeze + live/mock/deferred map | DONE | cba8e5e |
 | P2 — Immutable permission-key catalog | DONE | 411d6ca |
 | P3 — RBAC role map + predicate | DONE | 3949e9d |
-| P4 — Admin API-boundary contract + secret invariant | DONE | 4257478 |
+| P4 — Admin API-boundary contract + secret invariant | DONE | 88c7acd |
 
 ## Work Log (append-only)
 
