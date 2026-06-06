@@ -1,4 +1,11 @@
 import type { Rect } from './grid';
+import type {
+  PluginInstanceBehavior,
+  PluginInstanceConfig,
+  PluginInstancePlacement,
+  PluginInstanceSize,
+  PluginInstanceStyle,
+} from './plugin';
 
 /** Window type classification */
 export type WindowType = 'main' | 'control' | 'grid' | 'console' | 'account' | 'widget' | 'pet';
@@ -58,16 +65,28 @@ export interface PluginWindowSnapshot {
   surface: PluginHostWindowSurface;
   rect: GridWindowRect;
   visible: boolean;
+  placement: PluginInstancePlacement;
+  size: PluginInstanceSize;
+  behavior: PluginInstanceBehavior;
+  style: PluginInstanceStyle;
+  nativeApplied: {
+    placement: boolean;
+    size: boolean;
+    opacity: boolean;
+    clickThrough: boolean;
+    pinned: boolean;
+    allSpaces: boolean;
+  };
 }
 
 export interface CreatePluginWindowInput {
   instanceId: string;
-  rect: GridWindowRect;
+  config: PluginInstanceConfig;
 }
 
 export interface UpdatePluginWindowInput {
   instanceId: string;
-  rect: GridWindowRect;
+  config: PluginInstanceConfig;
 }
 
 export interface ConsoleWindowFrame {

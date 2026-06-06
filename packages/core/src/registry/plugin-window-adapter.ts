@@ -6,6 +6,7 @@ import type {
   PluginWindowSnapshot,
   UpdatePluginWindowInput,
 } from '../types/window';
+import type { PluginInstanceConfig } from '../types/plugin';
 
 export type PluginWindowCommand =
   | 'create_grid_window'
@@ -68,19 +69,21 @@ export function createPluginWindowAdapter(
   return {
     async create(input) {
       const gridId = pluginInstanceIdToGridId(input.instanceId);
+      const rect = pluginInstanceConfigToGridRect(input.config);
       const snapshot = await invokeGridCommand<GridWindowSnapshot>('create_grid_window', {
         gridId,
-        rect: input.rect,
+        rect,
       });
-      return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId);
+      return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId, input.config);
     },
     async update(input) {
       const gridId = pluginInstanceIdToGridId(input.instanceId);
+      const rect = pluginInstanceConfigToGridRect(input.config);
       const snapshot = await invokeGridCommand<GridWindowSnapshot>('update_grid_window', {
         gridId,
-        rect: input.rect,
+        rect,
       });
-      return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId);
+      return gridSnapshotToPluginWindowSnapshot(snapshot, input.instanceId, input.config);
     },
     async focus(instanceId) {
       const gridId = pluginInstanceIdToGridId(instanceId);
@@ -122,13 +125,36 @@ export function gridIdToPluginInstanceId(gridId: string): string {
 export function gridSnapshotToPluginWindowSnapshot(
   snapshot: GridWindowSnapshot,
   instanceId: string,
+  config?: PluginInstanceConfig,
 ): PluginWindowSnapshot {
+  const fallbackConfig = config ?? gridSnapshotToPluginInstanceConfig(snapshot);
   return {
     instanceId,
     label: snapshot.label,
     surface: 'grid',
     rect: snapshot.rect,
     visible: snapshot.visible,
+    placement: fallbackConfig.placement,
+    size: fallbackConfig.size,
+    behavior: fallbackConfig.behavior,
+    style: fallbackConfig.style,
+    nativeApplied: {
+      placement: true,
+      size: true,
+      opacity: false,
+      clickThrough: false,
+      pinned: false,
+      allSpaces: false,
+    },
+  };
+}
+
+export function pluginInstanceConfigToGridRect(config: PluginInstanceConfig): GridWindowSnapshot['rect'] {
+  return {
+    x: config.placement.x,
+    y: config.placement.y,
+    width: config.size.width,
+    height: config.size.height,
   };
 }
 
@@ -169,5 +195,29 @@ function createCommandError(
     message,
     recoverable,
     details,
+  };
+}
+
+function gridSnapshotToPluginInstanceConfig(snapshot: GridWindowSnapshot): PluginInstanceConfig {
+  return {
+    placement: {
+      x: snapshot.rect.x,
+      y: snapshot.rect.y,
+    },
+    size: {
+      preset: 'medium',
+      width: snapshot.rect.width,
+      height: snapshot.rect.height,
+    },
+    behavior: {
+      pinned: false,
+      clickThrough: false,
+      allSpaces: false,
+      clickAction: 'focus',
+    },
+    style: {
+      mode: 'system',
+      opacity: 1,
+    },
   };
 }

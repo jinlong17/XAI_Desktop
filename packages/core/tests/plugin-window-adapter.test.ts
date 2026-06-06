@@ -1,13 +1,38 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  createPluginInstanceConfig,
   createPluginWindowAdapter,
   gridSnapshotToPluginWindowSnapshot,
   normalizeCommandError,
+  pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
 } from '../src/registry';
 import type { CommandError, GridWindowSnapshot } from '../src/types';
 
 const RECT = { x: 10, y: 20, width: 320, height: 240 };
+const CONFIG = createPluginInstanceConfig({
+  placement: {
+    x: RECT.x,
+    y: RECT.y,
+    displayId: 'display-1',
+    spaceId: 'space-1',
+  },
+  size: {
+    preset: 'large',
+    width: RECT.width,
+    height: RECT.height,
+  },
+  behavior: {
+    pinned: true,
+    clickThrough: true,
+    allSpaces: true,
+    clickAction: 'open-settings',
+  },
+  style: {
+    mode: 'minimal',
+    opacity: 0.66,
+  },
+});
 
 function gridSnapshot(gridId = 'instance-1'): GridWindowSnapshot {
   return {
@@ -25,7 +50,7 @@ describe('plugin window adapter', () => {
 
     const snapshot = await adapter.create({
       instanceId: 'instance-1',
-      rect: RECT,
+      config: CONFIG,
     });
 
     expect(invoke).toHaveBeenCalledWith('create_grid_window', {
@@ -38,6 +63,18 @@ describe('plugin window adapter', () => {
       surface: 'grid',
       rect: RECT,
       visible: true,
+      placement: CONFIG.placement,
+      size: CONFIG.size,
+      behavior: CONFIG.behavior,
+      style: CONFIG.style,
+      nativeApplied: {
+        placement: true,
+        size: true,
+        opacity: false,
+        clickThrough: false,
+        pinned: false,
+        allSpaces: false,
+      },
     });
   });
 
@@ -50,7 +87,7 @@ describe('plugin window adapter', () => {
       .mockResolvedValueOnce([gridSnapshot('instance-1'), gridSnapshot('instance-2')]);
     const adapter = createPluginWindowAdapter({ invoke, sourceLabel: 'main' });
 
-    await adapter.update({ instanceId: 'instance-1', rect: RECT });
+    await adapter.update({ instanceId: 'instance-1', config: CONFIG });
     await adapter.focus('instance-1');
     await adapter.close('instance-1');
     const listed = await adapter.list();
@@ -69,11 +106,15 @@ describe('plugin window adapter', () => {
     expect(listed.map((snapshot) => snapshot.instanceId)).toEqual(['instance-1', 'instance-2']);
   });
 
+  it('derives grid rect from placement and size config', () => {
+    expect(pluginInstanceConfigToGridRect(CONFIG)).toEqual(RECT);
+  });
+
   it('rejects invalid plugin instance ids before invoking host commands', async () => {
     const invoke = vi.fn();
     const adapter = createPluginWindowAdapter({ invoke, sourceLabel: 'control' });
 
-    await expect(adapter.create({ instanceId: 'bad id', rect: RECT })).rejects.toMatchObject({
+    await expect(adapter.create({ instanceId: 'bad id', config: CONFIG })).rejects.toMatchObject({
       code: 'INVALID_PLUGIN_INSTANCE_ID',
       recoverable: true,
     });
@@ -123,12 +164,47 @@ describe('plugin window adapter', () => {
 
   it('exports stable id and snapshot mappers', () => {
     expect(pluginInstanceIdToGridId('abc_123-xyz')).toBe('abc_123-xyz');
-    expect(gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc')).toEqual({
+    expect(gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc', CONFIG)).toEqual({
       instanceId: 'abc',
       label: 'grid_abc',
       surface: 'grid',
       rect: RECT,
       visible: true,
+      placement: CONFIG.placement,
+      size: CONFIG.size,
+      behavior: CONFIG.behavior,
+      style: CONFIG.style,
+      nativeApplied: {
+        placement: true,
+        size: true,
+        opacity: false,
+        clickThrough: false,
+        pinned: false,
+        allSpaces: false,
+      },
+    });
+  });
+
+  it('uses rect-derived fallback config when no instance config is supplied', () => {
+    expect(gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc')).toMatchObject({
+      placement: {
+        x: RECT.x,
+        y: RECT.y,
+      },
+      size: {
+        preset: 'medium',
+        width: RECT.width,
+        height: RECT.height,
+      },
+      behavior: {
+        pinned: false,
+        clickThrough: false,
+        allSpaces: false,
+      },
+      style: {
+        mode: 'system',
+        opacity: 1,
+      },
     });
   });
 });

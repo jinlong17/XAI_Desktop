@@ -20,6 +20,7 @@ export {
   gridIdToPluginInstanceId,
   gridSnapshotToPluginWindowSnapshot,
   normalizeCommandError,
+  pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
 } from './plugin-window-adapter';
 export type {
