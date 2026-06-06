@@ -65,10 +65,83 @@ export const STR_BOTTOM_SWITCHER = {
 export const STR_HEADER = {
   overview: { en: "Overview", zh: "总览" },
   filter: { en: "Filter", zh: "筛选" },
+  archived: { en: "Archived", zh: "已归档" },
+  automation: { en: "Automate", zh: "自动化" },
+  private: { en: "Private", zh: "私有" },
+  shared: { en: "Shared", zh: "共享" },
   share: { en: "Share", zh: "分享" },
   totalSuffix: { en: "cards", zh: "张卡片" },
   viewBoard: { en: "Board", zh: "看板" },
 } as const;
 
+export const STR_ARCHIVED_LISTS = {
+  title: { en: "Archived lists", zh: "已归档列" },
+  empty: { en: "No archived lists", zh: "暂无已归档列" },
+  restore: { en: "Restore", zh: "恢复" },
+  deletePermanent: { en: "Delete", zh: "删除" },
+  deleteConfirm: {
+    en: "Permanently delete this archived list and its cards?",
+    zh: "永久删除该归档列及其卡片？",
+  },
+  cards: { en: "cards", zh: "张卡片" },
+} as const;
+
+export const STR_ARCHIVED_CARDS = {
+  toolbar: { en: "Archived cards", zh: "已归档卡片" },
+  title: { en: "Archived cards", zh: "已归档卡片" },
+  empty: { en: "No archived cards", zh: "暂无已归档卡片" },
+  restore: { en: "Restore", zh: "恢复" },
+  deletePermanent: { en: "Delete", zh: "删除" },
+  deleteConfirm: {
+    en: "Permanently delete this archived card?",
+    zh: "永久删除该归档卡片？",
+  },
+} as const;
+
 /** Bilingual day-name table (Mon-first localized labels). */
 export const PLANNER_WEEKDAYS_ZH: readonly string[] = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+
+/**
+ * STR_DELETE_CONFIRM — bilingual strings for BoardDeleteConfirmDialog.
+ *
+ * Audit Option A §5 fix — B-12 (BoardSwitcher delete board) + B-28 (InboxPanel card delete).
+ * Local STR pattern: no plugin-web-tokens edit.
+ *
+ * Note: STR_SWITCHER.deleteConfirm is superseded for B-12 after wiring;
+ * kept for back-compat (no existing test depends on it being removed).
+ */
+export const STR_DELETE_CONFIRM = {
+  titleBoard:   { en: "Delete board?",                zh: "删除看板？"         },
+  titleCard:    { en: "Delete card?",                 zh: "删除卡片？"         },
+  descBoard: {
+    en: "Deleting this board will permanently remove all its lists and cards.",
+    zh: "删除该看板将永久移除其中所有列表和卡片。",
+  },
+  descCard: {
+    en: "Deleting this card is permanent and cannot be undone.",
+    zh: "删除该卡片后无法撤销。",
+  },
+  cancel:       { en: "Cancel",                       zh: "取消"              },
+  confirmBoard: { en: "Delete board",                 zh: "删除看板"          },
+  confirmCard:  { en: "Delete card",                  zh: "删除卡片"          },
+} as const;
+
+/**
+ * STR_CARD_DETAIL — bilingual strings for CardDetailDialog.
+ *
+ * Audit Top-10 #5 fix — B-23/B-29/B-32/B-34/B-36 + Map view.
+ * Local STR pattern: no plugin-web-tokens edit.
+ */
+export const STR_CARD_DETAIL = {
+  /** Dialog heading is the card title itself; this is the dialog accessible label. */
+  dialogLabel:  { en: "Card detail",  zh: "卡片详情"  },
+  listLabel:    { en: "List",         zh: "所属列"     },
+  dueLabel:     { en: "Due",          zh: "截止日"     },
+  startLabel:   { en: "Start",        zh: "开始日"     },
+  lateLabel:    { en: "Late",         zh: "已逾期"     },
+  labelsLabel:  { en: "Labels",       zh: "标签"       },
+  membersLabel: { en: "Members",      zh: "成员"       },
+  checklistLabel: { en: "Checklist",  zh: "核对表"     },
+  attachLabel:  { en: "Attachments",  zh: "附件"       },
+  close:        { en: "Close",        zh: "关闭"       },
+} as const;

@@ -40,7 +40,7 @@ describe("DesktopPet bubble side-flip", () => {
   }
 
   it("bubble gets pet-bubble-right when pos.x is small (24px, far from right)", () => {
-    // Default pos {x:24, y:24} is well below threshold 1000
+    // Seeded pos {x:24, y:24} is well below threshold 1000
     localStorage.setItem("xai_pet_pos", JSON.stringify({ x: 24, y: 24 }));
     const { container } = render(<DesktopPet on={true} lang="en" />);
     triggerBubble(container);

@@ -15,16 +15,10 @@
  * API contract: packages/xai-web-ai-chat/docs/api.md §12.2
  */
 
-import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
-import {
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import { getPref } from "@repo/plugin-web-storage";
-import {
-  policySnapshotToLlmError,
-  readBrowserOnlineState,
-  resolveAiProviderPolicy,
-} from "./providerPolicy.js";
+import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
+import { resolveProvider } from "./llmProvider.js";
+import { classifyError, type LlmError } from "./llmErrors.js";
 
 // ---- Types -----------------------------------------------------------------
 
@@ -47,7 +41,7 @@ export interface AiKeyStorage {
   /** Removes the stored entry for the given provider. Idempotent. */
   clearKey(provider: AiProvider): Promise<void>;
   /** Issues a 1-token messages request to validate the stored key. Returns LlmError on failure. */
-  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: import("./llmErrors.js").LlmError }>;
+  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: LlmError }>;
 }
 
 // ---- IDB store -------------------------------------------------------------
@@ -246,66 +240,30 @@ export const aiKeyStorage: AiKeyStorage = {
   },
 
   async testConnection(provider) {
-    const { classifyError } = await import("./llmErrors.js");
-    const importEnv =
-      (import.meta as unknown as { env?: Record<string, string | undefined> }).env ??
-      {};
-    const processEnv =
-      typeof process !== "undefined"
-        ? (process.env as Record<string, string | undefined>)
-        : {};
-    const runtimeProfile = resolveWebRuntimeProfile({
-      ...importEnv,
-      ...processEnv,
-    });
-    const baseUrl = provider === "openai-compatible"
-      ? ((getPref("xai_ai_base_url") as string) || "")
-      : "";
     const plaintext = await aiKeyStorage.loadKey(provider);
-    const policy = resolveAiProviderPolicy({
-      provider,
-      baseUrl,
-      hasSavedKey: !!plaintext,
-      runtimeProfile,
-      isOnline: readBrowserOnlineState(),
-    });
-    if (policy.state !== "ready") {
-      return { ok: false, error: policySnapshotToLlmError(policy) };
+    if (!plaintext) {
+      const err: LlmError = {
+        kind: "BadKey",
+        status: 401,
+        detail: "not-set",
+      };
+      return { ok: false, error: err };
     }
-
-    // Policy-ready implies key presence.
-    if (!plaintext) return { ok: false, error: { kind: "BadKey", status: 401, detail: "not-set" } };
-
     try {
-      // A minimal 1-token validation request — provider-specific.
-      const url = provider === "anthropic"
-        ? "https://api.anthropic.com/v1/messages"
-        : `${baseUrl.replace(/\/$/, "")}/chat/completions`;
-      const headers: Record<string, string> = provider === "anthropic"
-        ? {
-            "x-api-key": plaintext,
-            "anthropic-version": "2023-06-01",
-            "anthropic-dangerous-direct-browser-access": "true",
-            "content-type": "application/json",
-          }
-        : {
-            "authorization": `Bearer ${plaintext}`,
-            "content-type": "application/json",
-          };
-      const body = provider === "anthropic"
-        ? {
-            model: "claude-haiku-4-5-20251101",
-            max_tokens: 1,
-            messages: [{ role: "user", content: "hi" }],
-          }
-        : {
-            model: "haiku",
-            max_tokens: 1,
-            messages: [{ role: "user", content: "hi" }],
-          };
-      const res = await fetch(url, {
+      const config = resolveProvider(plaintext);
+      const modelId =
+        provider === "anthropic"
+          ? config.resolveModelId("haiku")
+          : String(getPref("xai_ai_model_default") || "gpt-4o-mini");
+      const body = config.buildBody({
+        modelId,
+        messages: [{ role: "user", content: "hi" }],
+        stream: false,
+        maxTokens: 1,
+      });
+      const res = await fetch(config.url, {
         method: "POST",
-        headers,
+        headers: config.headers,
         body: JSON.stringify(body),
       });
       if (!res.ok) {

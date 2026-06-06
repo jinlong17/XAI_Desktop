@@ -64,7 +64,6 @@ function makeMockOrchestrator(
 }
 
 beforeEach(() => {
-  vi.unstubAllEnvs();
   HTMLDialogElement.prototype.showModal = vi.fn();
   HTMLDialogElement.prototype.close = vi.fn();
   // Default mock orchestrator returns idle/no-error/live-auth
@@ -322,16 +321,6 @@ describe("DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth bann
     expect(banner).toBeInTheDocument();
     // Non-dismissible: no button inside the banner
     expect(banner.querySelector("button")).toBeNull();
-  });
-
-  it("DEL-MOCK-BANNER-4: desktop offline runtime profile banner uses offline-specific wording", () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    mockUseOrchestrator.mockReturnValue(makeMockOrchestrator({ isMockAuth: true }));
-    renderModal({ lang: "en" });
-    fireEvent.click(screen.getByTestId("dam-continue-btn"));
-    expect(screen.getByTestId("dam-mock-banner")).toHaveTextContent(
-      "Desktop offline delete (no cloud RPC) — this only clears local data.",
-    );
   });
 
   // ---- DEL-IDB-LIST-1: frozen IDB list ----

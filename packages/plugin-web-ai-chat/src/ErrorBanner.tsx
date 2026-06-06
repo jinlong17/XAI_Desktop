@@ -69,16 +69,6 @@ export function ErrorBanner({
         body = zh
           ? "AI 功能需要 Anthropic 或兼容 OpenAI 的密钥。"
           : "AI features require an Anthropic or OpenAI-compatible key.";
-      } else if (error.detail === "no-url-configured") {
-        title = zh ? "请先配置 Base URL" : "Base URL is required";
-        body = zh
-          ? "OpenAI 兼容服务需要有效的 Base URL。"
-          : "OpenAI-compatible provider requires a valid Base URL.";
-      } else if (error.detail === "local-provider-not-enabled") {
-        title = zh ? "本地 Provider 尚未启用" : "Local provider is not enabled";
-        body = zh
-          ? "本行功能尚未启用本地地址执行，请使用云端服务地址。"
-          : "Local/loopback provider execution is deferred for this row. Use a cloud endpoint.";
       } else {
         title = zh ? "API 密钥无效" : "Your API key was rejected";
         body = zh
@@ -100,22 +90,10 @@ export function ErrorBanner({
       break;
     case "Network":
       showRetry = true;
-      if (error.detail === "offline_runtime") {
-        title = zh ? "需要联网环境" : "Network is required";
-        body = zh
-          ? "桌面离线模式下不允许发送或测试 AI 请求。"
-          : "Desktop offline runtime blocks AI send/test operations.";
-      } else if (error.detail === "browser_offline") {
-        title = zh ? "当前网络离线" : "Browser is offline";
-        body = zh
-          ? "请恢复网络连接后重试。"
-          : "Reconnect to the network and try again.";
-      } else {
-        title = zh ? "网络不可用" : "Network unavailable";
-        body = zh
-          ? "请检查网络连接后重试。"
-          : "Check your connection and try again.";
-      }
+      title = zh ? "网络不可用" : "Network unavailable";
+      body = zh
+        ? "请检查网络连接后重试。"
+        : "Check your connection and try again.";
       break;
     case "Server":
       showRetry = true;

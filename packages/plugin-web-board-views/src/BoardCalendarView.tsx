@@ -1,8 +1,8 @@
 /**
  * BoardCalendarView — month grid with HTML5 DnD-to-change-due.
  *
- * Hard constraint: card drop rewrites card.due via updateCard (same persistence
- * path as board-core, verbatim patch from prototype line 758).
+ * Hard constraint: card drop rewrites card.dueDate via updateCard (same
+ * persistence path as board-core).
  *
  * Row anchor: xai-web-board-views (#8, Wave W2e)
  * API contract: packages/xai-web-board-views/docs/api.md §4
@@ -10,6 +10,8 @@
 
 import { useState } from "react";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { getBoardCardDateMeta } from "@repo/plugin-web-board-core";
+import { calendarDayInMonth, calendarDayToIso } from "./internal/dateOps.js";
 import type { Lang } from "./internal/i18n.js";
 
 export interface BoardCalendarViewProps {
@@ -44,16 +46,9 @@ export function BoardCalendarView({
   const byDay: Record<number, DayEntry[]> = {};
   lists.forEach((list) => {
     list.cards.forEach((card) => {
-      if (!card.due) return;
-      const due = card.due;
-      let day: number | undefined;
-      const m = String(due).match(/^(\d+)\/(\d+)/);
-      if (m) {
-        day = parseInt(m[2]!, 10);
-      } else if (due === "Today" || due === "今天") {
-        day = todayDate;
-      }
-      if (day !== undefined) {
+      const dateMeta = getBoardCardDateMeta(card, { now: today });
+      const day = calendarDayInMonth(dateMeta.dueDate, year, month + 1);
+      if (day !== null) {
         if (!byDay[day]) byDay[day] = [];
         byDay[day]!.push({ card, list });
       }
@@ -113,9 +108,9 @@ export function BoardCalendarView({
         return; // malformed payload — silent no-op
       }
       const { cardId, listId } = payload as { cardId: string; listId: string };
-      const newDue = `${month + 1}/${day}`;
-      // Hard constraint: verbatim patch from prototype line 758
-      updateCard(listId, cardId, { due: newDue, dueEn: undefined, dueLate: false });
+      const dueDate = calendarDayToIso(year, month + 1, day);
+      if (!dueDate) return;
+      updateCard(listId, cardId, { dueDate });
     } catch {
       // malformed JSON — silent no-op
     }

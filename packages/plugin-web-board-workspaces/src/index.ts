@@ -75,11 +75,26 @@ export type { BoardCreatorProps } from "./BoardCreator.js";
 export { StatusOverviewBanner } from "./StatusOverviewBanner.js";
 export type { StatusOverviewBannerProps } from "./StatusOverviewBanner.js";
 
+export { ArchivedListsManager } from "./ArchivedListsManager.js";
+export type { ArchivedListsManagerProps } from "./ArchivedListsManager.js";
+
+export { ArchivedCardsManager } from "./ArchivedCardsManager.js";
+export type { ArchivedCardsManagerProps } from "./ArchivedCardsManager.js";
+
 export { InboxPanel } from "./InboxPanel.js";
 export type { InboxPanelProps } from "./InboxPanel.js";
 
 export { PlannerPanel, computePlannerSlots } from "./PlannerPanel.js";
 export type { PlannerPanelProps } from "./PlannerPanel.js";
+
+export {
+  BoardCardDetailModal,
+  BoardCardDetailSurface,
+} from "./BoardCardDetailModal.js";
+export type {
+  BoardCardDetailModalProps,
+  BoardCardDetailSurfaceProps,
+} from "./BoardCardDetailModal.js";
 
 // ---- gap-closure row #6 additions ----------------------------------------
 export { FilterPopover } from "./FilterPopover.js";
@@ -97,9 +112,9 @@ export type { BoardWorkspacesModuleProps } from "./BoardWorkspacesModule.js";
 // ---- Shell slot registration --------------------------------------------
 export { boardWorkspacesWebModuleRegistration } from "./registration.js";
 
+// ---- Desktop App compatibility seam --------------------------------------
+// Browser-safe cache status reader retained for the desktop runtime badge.
 export {
-  BOARD_CACHE_STORAGE_KEY,
-  isReadableBoardCachePayload,
   readDesktopBoardCacheStatusFromRaw,
   readDesktopBoardCacheStatusFromStorage,
 } from "./desktopCache.js";

@@ -1,45 +1,58 @@
 /**
- * @internal — pure date-offset helpers for Calendar and Timeline views.
+ * @internal — pure ISO date-offset helpers for Calendar and Timeline views.
  *
  * All functions operate relative to a caller-supplied `today` Date so they
- * can be tested deterministically without touching the system clock.
+ * can be tested deterministically without touching the system clock. Parsing
+ * and date formatting delegate to board-core's typed date contract.
  */
+
+import { isoDateFromOffset, parseIsoDateOnly } from "@repo/plugin-web-board-core";
 
 const DAYS = 30;
 
 /**
- * Parse a due string into a day-offset from `today` (0 = today).
- *
- * Accepted formats:
- *  - "M/D"   — matched by /^(\d+)\/(\d+)/
- *  - "Today" or "今天" — returns 0
- *  - anything else → null
+ * Parse an ISO date-only string into a day-offset from `today` (0 = today).
  */
-export function parseDay(due: string | undefined | null, today: Date): number | null {
-  if (!due) return null;
-  const m = String(due).match(/^(\d+)\/(\d+)/);
-  if (m) {
-    const monthDate = new Date(
-      today.getFullYear(),
-      parseInt(m[1]!, 10) - 1,
-      parseInt(m[2]!, 10),
-    );
-    return Math.round(
-      (monthDate.getTime() -
-        new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) /
-        86_400_000,
-    );
-  }
-  if (due === "Today" || due === "今天") return 0;
-  return null;
+export function parseDay(isoDate: string | undefined | null, today: Date): number | null {
+  const parts = parseIsoDateOnly(isoDate);
+  if (!parts) return null;
+  const date = new Date(parts.year, parts.month - 1, parts.day);
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return Math.round((date.getTime() - todayStart.getTime()) / 86_400_000);
 }
 
 /**
- * Convert a day-offset back to "M/D" format.
+ * Convert a day-offset back to an ISO date-only string.
  */
 export function dayToStr(offset: number, today: Date): string {
-  const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset);
-  return `${d.getMonth() + 1}/${d.getDate()}`;
+  return isoDateFromOffset(offset, today);
+}
+
+/**
+ * Parse a valid ISO date into current-month calendar day.
+ */
+export function calendarDayInMonth(
+  isoDate: string | undefined,
+  year: number,
+  month: number,
+): number | null {
+  const parts = parseIsoDateOnly(isoDate);
+  if (!parts) return null;
+  if (parts.year !== year || parts.month !== month) {
+    return null;
+  }
+  return parts.day;
+}
+
+/**
+ * Convert a calendar day in the supplied month to an ISO date-only string.
+ */
+export function calendarDayToIso(year: number, month: number, day: number): string | null {
+  const candidate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  if (!parseIsoDateOnly(candidate)) {
+    return null;
+  }
+  return candidate;
 }
 
 /**

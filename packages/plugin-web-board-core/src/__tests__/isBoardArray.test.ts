@@ -40,6 +40,12 @@ describe("isBoardArray", () => {
     expect(isBoard(board)).toBe(false);
   });
 
+  test("V6c isBoard accepts private/shared visibility and rejects malformed visibility", () => {
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "private" })).toBe(true);
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "shared" })).toBe(true);
+    expect(isBoard({ ...makeDefaultBoards()[0]!, visibility: "team" })).toBe(false);
+  });
+
   test("V7 isBoardList accepts a list with key + empty cards", () => {
     expect(
       isBoardList({
@@ -57,17 +63,26 @@ describe("isBoardArray", () => {
         key: null,
         customName: { en: "C", zh: "自定义" },
         color: "blue",
+        archived: true,
         cards: [],
       }),
     ).toBe(true);
   });
 
-  test("V7c isBoardList rejects list with invalid color id", () => {
+  test("V7c isBoardList rejects list with invalid color id or archived shape", () => {
     expect(
       isBoardList({
         id: "l1",
         key: null,
         color: "magenta", // not in LIST_COLOR_IDS
+        cards: [],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardList({
+        id: "l1",
+        key: null,
+        archived: "yes",
         cards: [],
       }),
     ).toBe(false);
@@ -87,17 +102,180 @@ describe("isBoardArray", () => {
       isBoardCard({
         id: "c1",
         title: { en: "a", zh: "b" },
+        archived: true,
+        completedAt: "2026-06-03T12:00:00.000Z",
+        description: "Detail text",
         labels: ["l1"],
         members: ["u1"],
         checklist: { done: 1, total: 2 },
+        checklistItems: [
+          { id: "i1", text: "Item 1", done: true },
+          { id: "i2", text: "Item 2", done: false },
+        ],
+        attachments: [
+          {
+            id: "a1",
+            url: "https://example.com",
+            title: "Spec",
+            source: {
+              kind: "integration",
+              providerId: "github",
+              providerName: "GitHub",
+              externalId: "GH-1",
+            },
+          },
+        ],
+        activity: [
+          {
+            id: "act1",
+            kind: "comment",
+            body: "Updated",
+            createdAt: "2026-06-03T00:00:00.000Z",
+            authorId: "u1",
+            authorName: "Alice",
+          },
+        ],
+        taskLink: {
+          source: "xai-web-tasks",
+          taskId: "bt-b-default-bc1",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
         due: "5/26",
         dueEn: "Today",
         start: "5/20",
+        startDate: "2026-05-20",
+        dueDate: "2026-05-26",
         dueLate: true,
         attach: 2,
         cover: "linear-gradient(...)",
       }),
     ).toBe(true);
+  });
+
+  test("V8be isBoardCard rejects malformed completedAt", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        completedAt: 123,
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bf isBoardCard rejects malformed activity entries", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        activity: [
+          {
+            id: "act1",
+            kind: "system",
+            body: "Unsupported",
+            createdAt: "2026-06-03T00:00:00.000Z",
+          },
+        ],
+      }),
+    ).toBe(false);
+
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        activity: [
+          {
+            id: "act1",
+            kind: "comment",
+            body: "Updated",
+            createdAt: "2026-06-03T00:00:00.000Z",
+            authorName: 123,
+          },
+        ],
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bc isBoardCard rejects malformed archived card shape", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        archived: "yes",
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bb isBoardCard rejects malformed detail arrays", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        checklistItems: [{ id: "i1", text: "Missing done" }],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        attachments: [{ id: "a1" }],
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        dueDate: "05/26/2026",
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        dueDate: "2026-02-31",
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        attachments: [
+          {
+            id: "a1",
+            url: "https://example.com",
+            source: {
+              kind: "integration",
+              providerId: "notion",
+              providerName: "Notion",
+            },
+          },
+        ],
+      }),
+    ).toBe(false);
+  });
+
+  test("V8bd isBoardCard rejects malformed task link", () => {
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        taskLink: {
+          source: "xai-web-tasks",
+          taskId: "",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
+      }),
+    ).toBe(false);
+    expect(
+      isBoardCard({
+        id: "c1",
+        title: { en: "a", zh: "b" },
+        taskLink: {
+          source: "other",
+          taskId: "bt-b-default-bc1",
+          createdAt: "2026-06-03T00:00:00.000Z",
+        },
+      }),
+    ).toBe(false);
   });
 
   test("V8c isBoardCard rejects card with malformed checklist", () => {

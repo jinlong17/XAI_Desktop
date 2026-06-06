@@ -8,11 +8,14 @@
  */
 
 import type { JSX } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
+import type { UserCalEvent } from "./internal/eventStore/types.js";
+import type { CalendarEventsByDate } from "./internal/boardCalendarFeed.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
 import { HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
+import { mergeEventsForWindow } from "./internal/eventStore/mergeEventsForViewport.js";
 import { TimeGrid } from "./TimeGrid.js";
 
 export interface DayViewProps {
@@ -20,13 +23,29 @@ export interface DayViewProps {
   events: CalEventsByDay;
   todayKey: string;
   lang: Lang;
+  feedEventsByDate?: CalendarEventsByDate;
+  /**
+   * User-created events to merge with the fixture (event-create extension).
+   * P3: accepted but not yet wired into rendering (P4 lands integration).
+   */
+  userEvents?: Record<string, UserCalEvent>;
+  /** Click handler for user-source event blocks (wired in P4). */
+  onUserEventClick?: (userId: string) => void;
 }
 
 /** Short weekday names for the single column header. */
 const DOW_NAMES_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DOW_NAMES_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
-export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): JSX.Element {
+export function DayView({
+  activeDate,
+  events,
+  todayKey,
+  lang,
+  feedEventsByDate = {},
+  userEvents = {},
+  onUserEventClick,
+}: DayViewProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Scroll-to-current-hour on mount.
@@ -47,6 +66,22 @@ export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): J
   const isZh = lang === "zh";
   const dayName = isZh ? DOW_NAMES_ZH[dow] : DOW_NAMES_EN[dow];
   const dayLabel = `${dayName ?? ""} ${day}`;
+  const mergedEventsByDateKey = useMemo(() => {
+    const merged = mergeEventsForWindow(
+      events,
+      { year, month },
+      userEvents,
+      activeDate,
+      activeDate,
+    );
+    return {
+      ...merged,
+      [activeDate]: [
+        ...(merged[activeDate] ?? []),
+        ...(feedEventsByDate[activeDate] ?? []),
+      ],
+    };
+  }, [events, year, month, userEvents, activeDate, feedEventsByDate]);
 
   return (
     <div ref={containerRef} data-testid="cal-day-view">
@@ -54,10 +89,11 @@ export function DayView({ activeDate, events, todayKey, lang }: DayViewProps): J
         columns={1}
         dayKeys={[activeDate]}
         dayLabels={[dayLabel]}
-        events={events}
+        eventsByDateKey={mergedEventsByDateKey}
         activeDate={activeDate}
         todayKey={todayKey}
         lang={lang === "zh" ? "zh" : "en"}
+        onUserEventClick={onUserEventClick}
       />
     </div>
   );

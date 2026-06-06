@@ -17,6 +17,7 @@
 import type { JSX } from "react";
 import { useMemo } from "react";
 import type { CalEventsByDay } from "./internal/sampleEvents.js";
+import type { MergedCalEvent } from "./internal/eventStore/mergeEventsForViewport.js";
 import { buildHourLabels, HOUR_HEIGHT_PX } from "./internal/timeGridMath.js";
 import { placeEventBlocks } from "./internal/placeEventBlocks.js";
 import { parseDateKey } from "./internal/parseDateKey.js";
@@ -27,19 +28,29 @@ export interface TimeGridProps {
   columns: number;
   dayKeys: string[];
   dayLabels: string[];
-  events: CalEventsByDay;
+  /**
+   * Legacy fixture by-day source (1..31) used by pre-P4 tests/callers.
+   * When `eventsByDateKey` is provided, it takes precedence.
+   */
+  events?: CalEventsByDay;
+  /** P4 source: pre-merged fixture+user rows keyed by YYYY-MM-DD. */
+  eventsByDateKey?: Record<string, MergedCalEvent[]>;
   activeDate: string;
   todayKey: string;
   lang: "en" | "zh";
+  /** Click handler for user events (fixture events remain non-editable). */
+  onUserEventClick?: (userId: string) => void;
 }
 
 export function TimeGrid({
   dayKeys,
   dayLabels,
   events,
+  eventsByDateKey,
   activeDate,
   todayKey,
   lang,
+  onUserEventClick,
 }: TimeGridProps): JSX.Element {
   // Build hour labels for the first column (representative day for DST table)
   // For a week view, each day may technically have different DST, but our table
@@ -55,12 +66,16 @@ export function TimeGrid({
   const blocksByDay = useMemo(() => {
     const map = new Map<string, ReturnType<typeof placeEventBlocks>>();
     for (const dk of dayKeys) {
-      const { day } = parseDateKey(dk);
-      const dayEvents = events[day] ?? [];
+      const dayEvents = eventsByDateKey
+        ? (eventsByDateKey[dk] ?? [])
+        : (() => {
+            const { day } = parseDateKey(dk);
+            return (events?.[day] ?? []) as MergedCalEvent[];
+          })();
       map.set(dk, placeEventBlocks(dayEvents, dk));
     }
     return map;
-  }, [dayKeys, events]);
+  }, [dayKeys, events, eventsByDateKey]);
 
   // Now-line position: current hour + minute offset for today
   const nowLineTopPx = useMemo(() => {
@@ -94,6 +109,7 @@ export function TimeGrid({
         dayKeys={dayKeys}
         blocksByDay={blocksByDay}
         lang={lang}
+        onUserEventClick={onUserEventClick}
       />
 
       {/* Scrollable hour grid */}
@@ -131,6 +147,7 @@ export function TimeGrid({
                   hourLabels={labels}
                   lang={lang}
                   nowLineTopPx={isToday ? nowLineTopPx : null}
+                  onUserEventClick={onUserEventClick}
                 />
               );
             })}

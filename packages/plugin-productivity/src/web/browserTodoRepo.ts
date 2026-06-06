@@ -28,9 +28,12 @@ export interface TodoCryptoSnapshot {
   dekBase64?: string;
   keyId?: number;
   encryptionDeviceId?: string;
+  nextCounter?: number;
+  leaseEnd?: number;
 }
 
 const DEFAULT_NAMESPACE = "plugin-productivity-web-todos";
+const MAX_GCM_COUNTER = 0xffffffff;
 
 let cachedDekBase64: string | null = null;
 let cachedDekKey: CryptoKey | null = null;
@@ -59,12 +62,18 @@ function coerceTodoCryptoSnapshot(input: unknown): TodoCryptoSnapshot | null {
   const encryptionDeviceId = typeof input.encryptionDeviceId === "string" && input.encryptionDeviceId.length > 0
     ? input.encryptionDeviceId
     : undefined;
+  const nextCounter = typeof input.nextCounter === "number" && Number.isInteger(input.nextCounter) && input.nextCounter >= 0 && input.nextCounter <= MAX_GCM_COUNTER
+    ? input.nextCounter
+    : undefined;
+  const leaseEnd = typeof input.leaseEnd === "number" && Number.isInteger(input.leaseEnd) && input.leaseEnd >= 0 && input.leaseEnd <= MAX_GCM_COUNTER
+    ? input.leaseEnd
+    : undefined;
 
   if (!dekBase64 || !keyId) {
     return null;
   }
 
-  return { dekBase64, keyId, encryptionDeviceId };
+  return { dekBase64, keyId, encryptionDeviceId, nextCounter, leaseEnd };
 }
 
 export function getTodoCryptoSnapshot(): TodoCryptoSnapshot {
@@ -135,25 +144,92 @@ function decodeBase64(encoded: string): Uint8Array {
   throw new Error("base64_decode_unavailable");
 }
 
-function splitIvCiphertext(payload: Uint8Array): { iv: Uint8Array; ciphertext: Uint8Array } {
-  if (payload.byteLength < 13) {
-    throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_blob_invalid");
-  }
-
-  const iv = payload.slice(0, 12);
-  const ciphertext = payload.slice(12);
-  return { iv, ciphertext };
+function u32Le(value: number): number[] {
+  return [
+    value & 0xff,
+    (value >> 8) & 0xff,
+    (value >> 16) & 0xff,
+    (value >> 24) & 0xff,
+  ];
 }
 
-function encodeEnvelope(iv: Uint8Array, ciphertext: Uint8Array): string {
-  const payload = new Uint8Array(iv.byteLength + ciphertext.byteLength);
-  payload.set(iv, 0);
-  payload.set(ciphertext, iv.byteLength);
+function u64Le(value: bigint): number[] {
+  const out: number[] = [];
+  let next = value;
+  for (let index = 0; index < 8; index += 1) {
+    out.push(Number(next & 0xffn));
+    next >>= 8n;
+  }
+  return out;
+}
+
+function readU32Le(bytes: Uint8Array, offset: number): number {
+  return (
+    bytes[offset]! |
+    (bytes[offset + 1]! << 8) |
+    (bytes[offset + 2]! << 16) |
+    (bytes[offset + 3]! << 24)
+  ) >>> 0;
+}
+
+function readU64Le(bytes: Uint8Array, offset: number): bigint {
+  let value = 0n;
+  for (let index = 7; index >= 0; index -= 1) {
+    value = (value << 8n) | BigInt(bytes[offset + index]!);
+  }
+  return value;
+}
+
+function encodeNonce(encryptionDeviceId: bigint, counter: number): Uint8Array {
+  return Uint8Array.from([...u64Le(encryptionDeviceId), ...u32Le(counter)]);
+}
+
+function splitEnvelope(payload: Uint8Array): {
+  keyId: number;
+  encryptionDeviceId: bigint;
+  counter: number;
+  iv: Uint8Array;
+  ciphertext: Uint8Array;
+} {
+  if (payload.byteLength < 31) {
+    throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_blob_invalid");
+  }
+  if (payload[0] !== 1 || payload[1] !== 1) {
+    throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_blob_unsupported_envelope");
+  }
+
+  return {
+    keyId: readU32Le(payload, 2),
+    encryptionDeviceId: readU64Le(payload, 6),
+    counter: readU32Le(payload, 14),
+    iv: payload.slice(18, 30),
+    ciphertext: payload.slice(30),
+  };
+}
+
+function encodeEnvelope(input: {
+  keyId: number;
+  encryptionDeviceId: bigint;
+  counter: number;
+  iv: Uint8Array;
+  ciphertext: Uint8Array;
+}): string {
+  const header = Uint8Array.from([
+    1,
+    1,
+    ...u32Le(input.keyId),
+    ...u64Le(input.encryptionDeviceId),
+    ...u32Le(input.counter),
+  ]);
+  const payload = new Uint8Array(header.byteLength + input.iv.byteLength + input.ciphertext.byteLength);
+  payload.set(header, 0);
+  payload.set(input.iv, header.byteLength);
+  payload.set(input.ciphertext, header.byteLength + input.iv.byteLength);
   return encodeBase64(payload);
 }
 
-function decodeEnvelope(blobBase64: string): { iv: Uint8Array; ciphertext: Uint8Array } {
-  return splitIvCiphertext(decodeBase64(blobBase64));
+function decodeEnvelope(blobBase64: string): ReturnType<typeof splitEnvelope> {
+  return splitEnvelope(decodeBase64(blobBase64));
 }
 
 function makeAad(input: {
@@ -209,11 +285,20 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
     return snapshot.keyId;
   };
 
-  const readEncryptionDeviceId = (snapshot: TodoCryptoSnapshot, fallback: string): string => {
-    if (typeof snapshot.encryptionDeviceId === "string" && snapshot.encryptionDeviceId.length > 0) {
-      return snapshot.encryptionDeviceId;
+  const readEnvelopeContext = (snapshot: TodoCryptoSnapshot): { encryptionDeviceId: bigint; counter: number } => {
+    if (typeof snapshot.encryptionDeviceId !== "string" || !/^(0|[1-9]\d*)$/.test(snapshot.encryptionDeviceId)) {
+      throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_nonce_lease_missing");
     }
-    return fallback;
+    if (typeof snapshot.nextCounter !== "number" || !Number.isInteger(snapshot.nextCounter) || snapshot.nextCounter < 0 || snapshot.nextCounter > MAX_GCM_COUNTER) {
+      throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_nonce_lease_missing");
+    }
+    if (typeof snapshot.leaseEnd !== "number" || !Number.isInteger(snapshot.leaseEnd) || snapshot.nextCounter > snapshot.leaseEnd) {
+      throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_nonce_lease_missing");
+    }
+    return {
+      encryptionDeviceId: BigInt(snapshot.encryptionDeviceId),
+      counter: snapshot.nextCounter,
+    };
   };
 
   return {
@@ -221,7 +306,8 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
       const snapshot = getTodoCryptoSnapshot();
       const key = await resolveDekKey(snapshot);
       const subtle = getAesGcm();
-      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const envelopeContext = readEnvelopeContext(snapshot);
+      const iv = encodeNonce(envelopeContext.encryptionDeviceId, envelopeContext.counter);
       const aad = makeAad({
         accountId,
         entityType: input.record.entityType,
@@ -230,7 +316,7 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
         keyId: input.keyId,
         deletedFlag: input.deletedFlag,
         schemaVersion: input.record.schemaVersion,
-        encryptionDeviceId: readEncryptionDeviceId(snapshot, input.encryptionDeviceId),
+        encryptionDeviceId: envelopeContext.encryptionDeviceId.toString(),
       });
       const plaintext = encoder.encode(JSON.stringify(input.record));
 
@@ -246,8 +332,22 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
           toArrayBuffer(plaintext),
         );
 
+        setTodoCryptoSnapshot({
+          ...snapshot,
+          nextCounter:
+            envelopeContext.counter >= (snapshot.leaseEnd ?? -1)
+              ? undefined
+              : envelopeContext.counter + 1,
+        });
+
         return {
-          blobBase64: encodeEnvelope(iv, new Uint8Array(encrypted)),
+          blobBase64: encodeEnvelope({
+            keyId: input.keyId,
+            encryptionDeviceId: envelopeContext.encryptionDeviceId,
+            counter: envelopeContext.counter,
+            iv,
+            ciphertext: new Uint8Array(encrypted),
+          }),
         };
       } catch (cause) {
         throw new SyncBlobError("E_SYNC_BLOB_CRYPTO", "todo_encrypt_failed", cause);
@@ -267,7 +367,7 @@ function createSyncBlobCryptoAdapter(accountId: string): SyncBlobCryptoAdapter<W
         keyId: input.keyId,
         deletedFlag: input.deletedFlag,
         schemaVersion: 1,
-        encryptionDeviceId: readEncryptionDeviceId(snapshot, input.encryptionDeviceId),
+        encryptionDeviceId: payload.encryptionDeviceId.toString(),
       });
 
       try {
@@ -377,5 +477,16 @@ export function isDeleted(record: WebTodoRecord): boolean {
 
 export function isTodoWriteReady(): boolean {
   const snapshot = getTodoCryptoSnapshot();
-  return Boolean(snapshot.dekBase64) && typeof snapshot.keyId === "number" && snapshot.keyId > 0;
+  return Boolean(snapshot.dekBase64) &&
+    typeof snapshot.keyId === "number" &&
+    snapshot.keyId > 0 &&
+    typeof snapshot.encryptionDeviceId === "string" &&
+    /^(0|[1-9]\d*)$/.test(snapshot.encryptionDeviceId) &&
+    typeof snapshot.nextCounter === "number" &&
+    Number.isInteger(snapshot.nextCounter) &&
+    snapshot.nextCounter >= 0 &&
+    snapshot.nextCounter <= MAX_GCM_COUNTER &&
+    typeof snapshot.leaseEnd === "number" &&
+    Number.isInteger(snapshot.leaseEnd) &&
+    snapshot.nextCounter <= snapshot.leaseEnd;
 }

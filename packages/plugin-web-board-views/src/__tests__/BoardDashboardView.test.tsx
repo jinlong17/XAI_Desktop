@@ -8,6 +8,7 @@ import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BoardDashboardView } from "../BoardDashboardView.js";
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { isoDateFromOffset } from "@repo/plugin-web-board-core";
 
 function makeCard(overrides: Partial<BoardCardData> = {}): BoardCardData {
   return {
@@ -39,13 +40,13 @@ describe("BoardDashboardView", () => {
     expect(vals[0]!.textContent).toBe("3");
   });
 
-  test("BD2 KPI 'Due today' counts cards with due==='Today'", () => {
+  test("BD2 KPI 'Due today' counts typed dueDate and recoverable legacy today", () => {
     const lists = [
       makeList({
         cards: [
-          makeCard({ due: "Today" }),
+          makeCard({ dueDate: isoDateFromOffset(0, new Date()) }),
           makeCard({ due: "今天" }),
-          makeCard({ due: "5/24" }),
+          makeCard({ dueDate: isoDateFromOffset(1, new Date()) }),
         ],
       }),
     ];
@@ -54,13 +55,13 @@ describe("BoardDashboardView", () => {
     expect(vals[1]!.textContent).toBe("2");
   });
 
-  test("BD3 KPI 'Overdue' counts cards with dueLate===true", () => {
+  test("BD3 KPI 'Overdue' counts cards with typed dueDate before today", () => {
     const lists = [
       makeList({
         cards: [
+          makeCard({ dueDate: "2000-01-01" }),
+          makeCard({ dueDate: "2000-01-02" }),
           makeCard({ dueLate: true }),
-          makeCard({ dueLate: true }),
-          makeCard({ dueLate: false }),
         ],
       }),
     ];

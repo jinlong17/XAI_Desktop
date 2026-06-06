@@ -18,19 +18,29 @@
  * Kanban canvas.
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import { BoardView } from "./BoardView.js";
 import {
-  addCardToList,
+  addCardToListById,
   addNewList,
+  archiveCard as archiveCardOp,
+  archiveList as archiveListOp,
+  canManageBoardList,
+  deleteList as deleteListOp,
+  getActiveBoardLists,
+  moveCardWithinListByOffset as moveCardWithinListByOffsetOp,
   moveCardToList as moveCardOp,
+  moveListByOffset as moveListByOffsetOp,
+  renameCard as renameCardOp,
+  renameList as renameListOp,
   setListColor as setListColorOp,
 } from "./internal/boardOps.js";
 import {
   loadBoardsOrDefault,
   pickActiveBoard,
 } from "./internal/persistence.js";
+import { preserveBoardStorageFormat } from "./internal/storageContract.js";
 import { makeDefaultBoards } from "./internal/seed/board-data.js";
 import type { Board, BoardList, BoardListColorId } from "./types.js";
 
@@ -46,7 +56,12 @@ export function BoardModule({ lang }: BoardModuleProps) {
   // Narrow unknown → Board[] with default fallback.
   const boards: Board[] = loadBoardsOrDefault(rawBoards);
   const activeBoard = pickActiveBoard(boards, activeBoardId);
-  const lists: BoardList[] = activeBoard.lists;
+  const rawLists: BoardList[] = activeBoard.lists;
+  const lists: BoardList[] = getActiveBoardLists(rawLists);
+  const mutationCtx = useMemo(
+    () => ({ template: activeBoard.template }),
+    [activeBoard.template],
+  );
 
   // Persist boards via a unified updater so a DnD + add-card race writes once.
   const writeLists = useCallback(
@@ -59,9 +74,9 @@ export function BoardModule({ lang }: BoardModuleProps) {
       // setRawBoards is typed `unknown` → `unknown` at the registry boundary
       // (BoardsState = unknown). A valid `Board[]` is acceptable; widen via
       // an explicit unknown cast.
-      setRawBoards(nextBoards as unknown);
+      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
-    [boards, activeBoard.id, setRawBoards],
+    [boards, activeBoard.id, rawBoards, setRawBoards],
   );
 
   // Defensive: if the persisted active id doesn't match any board, sync it.
@@ -78,23 +93,24 @@ export function BoardModule({ lang }: BoardModuleProps) {
   }
 
   // ---- In-memory composer / menu state -----------------------------------
-  const [draftListIdx, setDraftListIdx] = useState<number | null>(null);
+  const [draftListId, setDraftListId] = useState<string | null>(null);
   const [composerText, setComposerText] = useState<string>("");
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
   const [listMenu, setListMenu] = useState<string | null>(null);
+  const [cardMenu, setCardMenu] = useState<string | null>(null);
 
   // ---- Operations --------------------------------------------------------
   const addCard = useCallback(
-    (listIdx: number) => {
+    (listId: string) => {
       const text = composerText.trim();
       if (!text) {
-        setDraftListIdx(null);
+        setDraftListId(null);
         return;
       }
-      writeLists((prev) => addCardToList(prev, listIdx, text));
+      writeLists((prev) => addCardToListById(prev, listId, text));
       setComposerText("");
-      setDraftListIdx(null);
+      setDraftListId(null);
     },
     [composerText, writeLists],
   );
@@ -124,6 +140,76 @@ export function BoardModule({ lang }: BoardModuleProps) {
     [writeLists],
   );
 
+  const canMoveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) =>
+      moveCardWithinListByOffsetOp(rawLists, listId, cardId, offset) !== rawLists,
+    [rawLists],
+  );
+
+  const renameCard = useCallback(
+    (listId: string, cardId: string, title: string) => {
+      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+    },
+    [writeLists],
+  );
+
+  const moveCardWithinListByOffset = useCallback(
+    (listId: string, cardId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+    },
+    [writeLists],
+  );
+
+  const archiveCard = useCallback(
+    (listId: string, cardId: string) => {
+      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+      setCardMenu(null);
+    },
+    [writeLists],
+  );
+
+  const canManageList = useCallback(
+    (listId: string) => {
+      const list = rawLists.find((entry) => entry.id === listId);
+      return list ? canManageBoardList(list, mutationCtx) : false;
+    },
+    [mutationCtx, rawLists],
+  );
+
+  const canMoveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) =>
+      moveListByOffsetOp(rawLists, listId, offset, mutationCtx) !== rawLists,
+    [mutationCtx, rawLists],
+  );
+
+  const renameList = useCallback(
+    (listId: string, name: string) => {
+      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const moveListByOffset = useCallback(
+    (listId: string, offset: -1 | 1) => {
+      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const archiveList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
+  const deleteList = useCallback(
+    (listId: string) => {
+      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+    },
+    [mutationCtx, writeLists],
+  );
+
   // ---- Render ------------------------------------------------------------
   return (
     <div className="board-module" data-testid="board-module">
@@ -136,8 +222,8 @@ export function BoardModule({ lang }: BoardModuleProps) {
         <BoardView
           lists={lists}
           lang={lang}
-          draftListIdx={draftListIdx}
-          setDraftListIdx={setDraftListIdx}
+          draftListId={draftListId}
+          setDraftListId={setDraftListId}
           composerText={composerText}
           setComposerText={setComposerText}
           showListComposer={showListComposer}
@@ -148,8 +234,20 @@ export function BoardModule({ lang }: BoardModuleProps) {
           addList={addList}
           setListColor={setListColor}
           moveCardToList={moveCardToList}
+          canManageList={canManageList}
+          canMoveListByOffset={canMoveListByOffset}
+          renameList={renameList}
+          moveListByOffset={moveListByOffset}
+          archiveList={archiveList}
+          deleteList={deleteList}
+          canMoveCardWithinListByOffset={canMoveCardWithinListByOffset}
+          renameCard={renameCard}
+          moveCardWithinListByOffset={moveCardWithinListByOffset}
+          archiveCard={archiveCard}
           listMenu={listMenu}
           setListMenu={setListMenu}
+          cardMenu={cardMenu}
+          setCardMenu={setCardMenu}
         />
       </div>
     </div>

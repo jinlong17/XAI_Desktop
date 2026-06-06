@@ -17,10 +17,6 @@
  */
 
 import * as React from "react";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { localI18n } from "./localI18n.js";
 import { useAccountDeleteOrchestrator } from "./useAccountDeleteOrchestrator.js";
@@ -52,11 +48,6 @@ export function DeleteAccountConfirmModal({
 
   const orchestrator = useAccountDeleteOrchestrator();
   const { isMockAuth } = orchestrator;
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   // Sync orchestrator state into local modal step machine.
   React.useEffect(() => {
@@ -195,11 +186,7 @@ export function DeleteAccountConfirmModal({
                 role="note"
                 data-testid="dam-mock-banner"
               >
-                {isDesktopOfflineRuntime
-                  ? (lang === "zh"
-                    ? "桌面离线模式删除（无云端调用） — 仅清除本地数据。"
-                    : "Desktop offline delete (no cloud RPC) — this only clears local data.")
-                  : t("deleteModal.mock_banner")}
+                {t("deleteModal.mock_banner")}
               </div>
             )}
 

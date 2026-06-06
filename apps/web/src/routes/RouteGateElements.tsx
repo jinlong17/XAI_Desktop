@@ -1,5 +1,6 @@
 import { AppRouteGate, AuthRouteGate } from "@repo/web-auth-device-session/web";
-import { useLocation, useNavigate, useParams } from "react-router";
+import type { PropsWithChildren } from "react";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router";
 import { createWebConsoleCapabilities } from "../host/capabilities";
 import { AuthPage } from "../pages/AuthPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
@@ -8,9 +9,20 @@ import { webModuleRouteRegistrations } from "./modules/shellRegistrations";
 // AppShellPage is kept in place for row #21 (settings-shell) to delete later.
 // P4: AppRouteElement no longer routes to AppShellPage; module content renders directly.
 
+export function resolveMockAuthenticatedAuthRedirect(
+  env: Record<string, string | undefined> = import.meta.env as Record<string, string | undefined>
+): string | null {
+  return env.VITE_WEB_AUTH_MODE === "mock-authenticated" ? "/app" : null;
+}
+
 export function AuthRouteElement() {
   const location = useLocation();
   const navigate = useNavigate();
+  const mockAuthRedirect = resolveMockAuthenticatedAuthRedirect();
+
+  if (mockAuthRedirect) {
+    return <Navigate to={mockAuthRedirect} replace />;
+  }
 
   return (
     <AuthRouteGate
@@ -62,6 +74,21 @@ export function AppRouteElement() {
           capabilities={capabilities}
         />
       ) : null}
+    </AppRouteGate>
+  );
+}
+
+export function ProtectedAppRouteElement({ children }: PropsWithChildren) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  return (
+    <AppRouteGate
+      path={`${location.pathname}${location.search}`}
+      fallback={<main className="host-page"><p>Checking session...</p></main>}
+      navigate={(path) => navigate(path, { replace: true })}
+    >
+      {children}
     </AppRouteGate>
   );
 }

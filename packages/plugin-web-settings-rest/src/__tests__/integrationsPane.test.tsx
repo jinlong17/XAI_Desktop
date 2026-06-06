@@ -17,7 +17,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
 
@@ -185,28 +184,5 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
     // Badge should NOT have an inline style with hex color
     const inlineStyle = badge?.getAttribute("style") ?? "";
     expect(inlineStyle).not.toMatch(/#[0-9a-fA-F]{3,8}/);
-  });
-
-  it("IN-EXT-13: desktop offline profile shows callback-disabled note and disables connect buttons", () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    render(integrationsPane.render({ lang: "en" }));
-    expect(screen.getByTestId("int-offline-note")).toHaveTextContent(
-      "Connect callbacks are disabled in desktop offline mode.",
-    );
-    const connectBtns = screen.getAllByRole("button", { name: /Connect/i });
-    expect(connectBtns.length).toBe(3);
-    connectBtns.forEach((btn) => expect(btn).toBeDisabled());
-  });
-
-  it("IN-EXT-14: gcal card shows syncability state separate from connected badge", () => {
-    localStorage.setItem("xai_pref_integrations_connected_gcal", "true");
-    render(integrationsPane.render({ lang: "en" }));
-    expect(screen.getByTestId("int-gcal-sync-state")).toHaveTextContent(
-      "Connected, syncable",
-    );
-    expect(screen.getByTestId("int-gcal-sync-state")).toHaveAttribute(
-      "data-syncable",
-      "true",
-    );
   });
 });

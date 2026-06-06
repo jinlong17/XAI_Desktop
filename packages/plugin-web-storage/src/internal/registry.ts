@@ -59,12 +59,12 @@ export type RailItemId =
   | "calendar"
   | "matrix"
   | "pomodoro"
+  | "timetrack"
   | "habits"
   | "meditation"
   | "countdown"
   | "ai"
-  | "statistics"
-  | "settings";
+  | "statistics";
 
 export type PetId =
   | "mochi"
@@ -85,6 +85,7 @@ export type TaskColsState = Record<string, boolean>;
 export type BoardsState = unknown;
 export type BoardPanelState = unknown;
 export type InboxCard = unknown;
+export type BoardFilterByIdState = Record<string, unknown>;
 export type DashWidgetId = string;
 export type AiConvo = unknown;
 export type PomodoroSession = unknown;
@@ -110,26 +111,29 @@ const DEFAULT_RAIL_ORDER: RailItemId[] = [
   "calendar",
   "matrix",
   "pomodoro",
+  "timetrack",
   "habits",
   "meditation",
   "countdown",
   "ai",
   "statistics",
-  "settings",
 ];
 
 const DEFAULT_DASH_ORDER: DashWidgetId[] = [
   "clock",
-  "minicalendar",
-  "worldclocks",
+  "stat-tasks",
+  "stat-streak",
+  "stat-pomos",
+  "timetrack",
   "weather",
+  "mini-cal",
+  "timezones",
   "stickies",
   "mail",
   "upcoming",
-  "stats",
 ];
 
-const DEFAULT_PET_POS: PetPos = { x: 24, y: 24 };
+const DEFAULT_PET_POS: PetPos = { x: 24, y: 520 };
 
 // ---------------------------------------------------------------------------
 // PREF_REGISTRY — 18 explicit + 2 proposed = 20 typed entries
@@ -419,6 +423,18 @@ export const PREF_REGISTRY = {
     owner: "xai-web-board-views row #8",
     category: "module",
   } satisfies PrefEntry<Record<string, string>>,
+
+  // ---- Board saved filters (§S8 — declared by xai-web-board-saved-filters #10) ----
+  // Shape: Record<boardId, SavedBoardFilter>. Canonical declarations live in
+  // @repo/plugin-web-board-workspaces. Defaults to {} (no saved filters).
+  xai_board_filter_by_id: {
+    key: "xai_board_filter_by_id",
+    codec: "json",
+    default: {} as BoardFilterByIdState,
+    schemaVersion: 1,
+    owner: "xai-web-board-saved-filters",
+    category: "module",
+  } satisfies PrefEntry<BoardFilterByIdState>,
 
   // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
   // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.
@@ -875,6 +891,39 @@ export const PREF_REGISTRY = {
     owner: "xai-web-calendar",
     category: "module",
   } satisfies PrefEntry<string>,
+
+  // ---- Calendar events (§S8 — extension 2026-05-27 by xai-web-calendar-event-create) ----
+  // User-created calendar events. Indexed by event.id (UUID).
+  xai_calendar_events: {
+    key: "xai_calendar_events",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-calendar",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
+
+  // ---- Dashboard stickies (extension 2026-05-28 by xai-web-dashboard-stickies-create) ----
+  // User-created sticky notes. Indexed by sticky.id (UUID).
+  xai_dashboard_stickies: {
+    key: "xai_dashboard_stickies",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
+
+  // ---- Dashboard weather (extension 2026-05-29 by xai-web-dashboard-weather-mail) ----
+  // SINGLETON: stores one UserWeather | null under xai_dashboard_weather.
+  xai_dashboard_weather: {
+    key: "xai_dashboard_weather",
+    codec: "json",
+    default: null as null,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<null>,
 
   // ---- Integrations OAuth stub (extension 2026-05-25 — gap-closure row #7) ----
   // 3 boolean flags marking per-provider "connected (stub)" state.

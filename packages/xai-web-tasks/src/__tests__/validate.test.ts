@@ -1,7 +1,7 @@
 /**
- * validate.test.ts — T-VAL-1..4
+ * validate.test.ts — T-VAL-1..4 + T-VAL-DONE (T-10 bugfix)
  *
- * Phase: P2
+ * Phase: P2 (T-VAL-1..4) + T-10-bugfix (T-VAL-DONE)
  */
 
 import { describe, it, expect } from "vitest";
@@ -53,5 +53,45 @@ describe("isTaskCard", () => {
 
   it("T-VAL-4c: valid minimal card → true", () => {
     expect(isTaskCard({ id: "x", title: { en: "Test", zh: "测试" } })).toBe(true);
+  });
+
+  it("T-VAL-SOURCE: accepts valid Board card source and rejects malformed source", () => {
+    const seed = SEED_TASK_COLS[0]!.tasks[0]!;
+    expect(isTaskCard({
+      ...seed,
+      source: {
+        type: "board-card",
+        boardId: "b-default",
+        listId: "l-today",
+        cardId: "c1",
+      },
+    })).toBe(true);
+    expect(isTaskCard({
+      ...seed,
+      source: {
+        type: "board-card",
+        boardId: "",
+        listId: "l-today",
+        cardId: "c1",
+      },
+    })).toBe(false);
+    expect(isTaskCard({
+      ...seed,
+      source: {
+        type: "calendar-event",
+        boardId: "b-default",
+        listId: "l-today",
+        cardId: "c1",
+      },
+    })).toBe(false);
+  });
+
+  // T-VAL-DONE (T-10 bugfix): isTaskCard accepts done:boolean, rejects done:"yes"
+  it("T-VAL-DONE: done:true → true; done:false → true; done:'yes' → false", () => {
+    const seed = SEED_TASK_COLS[0]!.tasks[0]!;
+    expect(isTaskCard({ ...seed, done: true })).toBe(true);
+    expect(isTaskCard({ ...seed, done: false })).toBe(true);
+    expect(isTaskCard({ ...seed, done: "yes" })).toBe(false);
+    expect(isTaskCard({ ...seed, done: 1 })).toBe(false);
   });
 });

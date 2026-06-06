@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolveWebBuildSourcemapPolicy } from "./src/config/sourcemapPolicy";
 
 /**
  * Vite plugin — strips __XAI_CSP_NONCE__ placeholders from index.html at
@@ -36,10 +35,68 @@ function stripCspNoncePlaceholder() {
 export default defineConfig({
   plugins: [react(), stripCspNoncePlaceholder()],
   build: {
-    sourcemap: resolveWebBuildSourcemapPolicy(),
+    sourcemap: "hidden",
     // Enable Vite manifest so BM-BUNDLE tests can assert real chunk split.
     // Generates dist/.vite/manifest.json after `pnpm build`.
     // Verify B5: gap-closure row #6 bundle-budget acceptance gate.
     manifest: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            return "vendor-react";
+          }
+          if (id.includes("node_modules/react-router")) {
+            return "vendor-router";
+          }
+          if (id.includes("node_modules/@sentry") || id.includes("node_modules/web-vitals")) {
+            return "vendor-observability";
+          }
+          if (id.includes("/packages/plugin-web-ai-chat/")) {
+            return "feature-ai-chat";
+          }
+          if (id.includes("/packages/plugin-web-board-views/src/MapView.tsx")) {
+            return "map-view";
+          }
+          if (
+            id.includes("/packages/plugin-web-board-core/") ||
+            id.includes("/packages/plugin-web-board-views/") ||
+            id.includes("/packages/plugin-web-board-workspaces/")
+          ) {
+            return "feature-board";
+          }
+          if (
+            id.includes("/packages/plugin-web-dashboard-grid/") ||
+            id.includes("/packages/plugin-web-dashboard-widgets/")
+          ) {
+            return "feature-dashboard";
+          }
+          if (
+            id.includes("/packages/plugin-web-settings-shell/") ||
+            id.includes("/packages/plugin-web-settings-features-panel/") ||
+            id.includes("/packages/plugin-web-settings-appearance/") ||
+            id.includes("/packages/plugin-web-settings-rest/")
+          ) {
+            return "feature-settings";
+          }
+          if (
+            id.includes("/packages/xai-web-tasks/") ||
+            id.includes("/packages/xai-web-calendar/") ||
+            id.includes("/packages/xai-web-matrix/")
+          ) {
+            return "feature-planning";
+          }
+          if (
+            id.includes("/packages/plugin-web-pomodoro/") ||
+            id.includes("/packages/plugin-web-habits/") ||
+            id.includes("/packages/plugin-web-meditation/") ||
+            id.includes("/packages/plugin-web-countdown/") ||
+            id.includes("/packages/plugin-web-statistics/")
+          ) {
+            return "feature-wellbeing";
+          }
+        },
+      },
+    },
   },
 });

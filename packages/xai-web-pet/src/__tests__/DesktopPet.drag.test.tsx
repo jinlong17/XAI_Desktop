@@ -21,9 +21,9 @@ describe("DesktopPet drag", () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
 
-    // pointerdown at (100, 100) — pos starts at default {x:24, y:24}
+    // pointerdown at (100, 100) — pos starts at default {x:24, y:520}
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 124 });
+      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
     });
 
     // pointerup immediately without move
@@ -43,13 +43,13 @@ describe("DesktopPet drag", () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
 
-    // Default position: {x:24, y:24}
+    // Default position: {x:24, y:520}
     const wrapBefore = container.querySelector(".pet-wrap") as HTMLElement;
-    expect(wrapBefore.style.transform).toBe("translate(24px, 24px)");
+    expect(wrapBefore.style.transform).toBe("translate(24px, 520px)");
 
-    // pointerDown: sets drag offset (ox = 124 - 24 = 100, oy = 124 - 24 = 100)
+    // pointerDown: sets drag offset (ox = 124 - 24 = 100, oy = 620 - 520 = 100)
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 124 });
+      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
     });
 
     // Dispatch a native PointerEvent with movementX set so the moved flag works
@@ -76,7 +76,7 @@ describe("DesktopPet drag", () => {
 
     // Start drag
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 124 });
+      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
     });
 
     // Move with significant movement using native PointerEvent (movementX > 1)
@@ -107,7 +107,7 @@ describe("DesktopPet drag", () => {
     const body = container.querySelector(".pet-body") as HTMLElement;
 
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 124 });
+      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
     });
 
     act(() => {

@@ -2,7 +2,7 @@
  * ShareModal — native <dialog> share URL modal.
  *
  * Gap-closure row #6: Board Share feature (P4).
- * HC2: Mock URL only. No real backend.
+ * Row #11: explicit mock share contract. No real backend access grant.
  * HC9: Emit-before-close pattern (mirrors row #5 precedent).
  *
  * API contract: packages/xai-web-board-workspaces/docs/api.md §S15.2
@@ -10,11 +10,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
-import type { Board } from "@repo/plugin-web-board-core";
-import { generateShareUrl } from "./internal/shareUrl.js";
+import type { Board, BoardVisibility } from "@repo/plugin-web-board-core";
+import {
+  createMockBoardShareEnvelope,
+  type BoardShareEnvelope,
+} from "./internal/shareContract.js";
 
 export interface ShareModalProps {
   board: Board;
+  visibility: BoardVisibility;
   lang: "en" | "zh";
   onClose: () => void;
 }
@@ -26,11 +30,20 @@ const STR = {
   copied: { en: "Copied!", zh: "已复制" },
   close: { en: "Close", zh: "关闭" },
   generating: { en: "Generating…", zh: "生成中…" },
+  stubBadge: { en: "Mock link", zh: "模拟链接" },
+  stubMessage: {
+    en: "Planning-only link. It does not grant access until sharing backend is connected.",
+    zh: "仅用于规划展示。分享后端接入前，此链接不会授予访问权限。",
+  },
+  permission: { en: "Permission: view-only", zh: "权限：仅查看" },
+  visibility: { en: "Visibility", zh: "可见性" },
+  visibilityPrivate: { en: "Private", zh: "私有" },
+  visibilityShared: { en: "Shared", zh: "共享" },
 } as const;
 
-export function ShareModal({ board, lang, onClose }: ShareModalProps) {
+export function ShareModal({ board, visibility, lang, onClose }: ShareModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [url, setUrl] = useState<string | null>(null);
+  const [envelope, setEnvelope] = useState<BoardShareEnvelope | null>(null);
   const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
 
   // Open dialog on mount
@@ -38,23 +51,30 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
     dialogRef.current?.showModal();
   }, []);
 
-  // Generate share URL asynchronously
+  // Generate explicit mock share envelope asynchronously
   useEffect(() => {
     let cancelled = false;
-    generateShareUrl(board.id).then((generated) => {
-      if (!cancelled) setUrl(generated);
+    createMockBoardShareEnvelope(board.id, visibility).then((generated) => {
+      if (!cancelled) setEnvelope(generated);
     });
     return () => { cancelled = true; };
-  }, [board.id]);
+  }, [board.id, visibility]);
 
   const t = (key: keyof typeof STR) => STR[key][lang];
+  const visibilityLabel =
+    visibility === "shared" ? t("visibilityShared") : t("visibilityPrivate");
 
   function handleClose() {
     // Emit-before-close: fire event BEFORE calling dialog.close() and onClose()
     emitWebEvent("web:board:share-requested", {
       boardId: board.id,
-      url: url ?? "",
+      url: envelope?.url ?? "",
       source: "header",
+      mode: "mock",
+      visibility,
+      permission: "view",
+      expiresAt: null,
+      backend: "unimplemented",
     });
     dialogRef.current?.close();
     onClose();
@@ -67,9 +87,9 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
   }
 
   async function handleCopy() {
-    if (!url) return;
+    if (!envelope) return;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(envelope.url);
       setCopyState("copied");
       setTimeout(() => setCopyState("idle"), 2000);
     } catch {
@@ -88,7 +108,7 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
     dialog.addEventListener("cancel", onCancel);
     return () => dialog.removeEventListener("cancel", onCancel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [envelope]);
 
   return (
     <dialog
@@ -100,15 +120,31 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
       <div className="sm-body">
         <h2 className="sm-heading" data-testid="sm-heading">{t("heading")}</h2>
 
+        <div className="sm-stub-banner" data-testid="sm-stub-banner">
+          <strong data-testid="sm-stub-badge">{t("stubBadge")}</strong>
+          <span>{t("stubMessage")}</span>
+          <span className="mono" data-testid="sm-share-contract">
+            {envelope
+              ? `${envelope.mode}/${envelope.backend}/${envelope.permission}`
+              : "mock/unimplemented/view"}
+          </span>
+        </div>
+
         <div className="sm-url-row">
           <label className="sm-url-label">{t("urlLabel")}</label>
           <input
             type="text"
             className="sm-url-input"
             data-testid="sm-url-input"
-            value={url ?? t("generating")}
+            value={envelope?.url ?? t("generating")}
             readOnly
           />
+          <p className="sm-permission-note" data-testid="sm-permission-note">
+            {t("permission")}
+          </p>
+          <p className="sm-permission-note" data-testid="sm-visibility-note">
+            {t("visibility")}: {visibilityLabel}
+          </p>
         </div>
 
         <div className="sm-actions">
@@ -117,7 +153,7 @@ export function ShareModal({ board, lang, onClose }: ShareModalProps) {
             className="sm-copy-btn"
             data-testid="sm-copy-btn"
             onClick={handleCopy}
-            disabled={!url}
+            disabled={!envelope}
           >
             {copyState === "copied" ? t("copied") : t("copy")}
           </button>

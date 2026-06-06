@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   BOARD_TEMPLATES,
+  BOARD_MEMBER_OPTIONS,
   DEFAULT_WORKSPACES,
   PM_LABELS,
   makeDefaultBoards,
@@ -96,6 +97,21 @@ describe("seed/board-data", () => {
       "pm-billing",
       "pm-research",
     ]);
+  });
+
+  test("S10b BOARD_MEMBER_OPTIONS covers seed card member ids", () => {
+    const memberIds = new Set(BOARD_MEMBER_OPTIONS.map((m) => m.id));
+    expect(Array.from(memberIds)).toEqual(["u1", "u2", "u3"]);
+
+    for (const board of makeDefaultBoards()) {
+      for (const list of board.lists) {
+        for (const card of list.cards) {
+          for (const memberId of card.members ?? []) {
+            expect(memberIds.has(memberId)).toBe(true);
+          }
+        }
+      }
+    }
   });
 
   test("S11 default kanban list `b-default` references only LIST_COLOR_IDS-valid colors (or undefined)", () => {

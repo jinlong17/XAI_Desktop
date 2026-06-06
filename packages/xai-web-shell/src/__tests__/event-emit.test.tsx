@@ -117,9 +117,15 @@ describe("Event emits (E1..E5)", () => {
     });
   });
 
-  it("E3 — Topbar Settings icon click emits web:shell:module-change with source 'shortcut'", () => {
-    renderShellWithNav();
-    const settingsBtn = screen.getByTitle("Settings");
+  it("E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut'", () => {
+    const { container } = renderShellWithNav();
+    const prefsBtn = container.querySelector<HTMLButtonElement>(".topbar-pref-trigger");
+    if (prefsBtn) {
+      act(() => {
+        fireEvent.click(prefsBtn);
+      });
+    }
+    const settingsBtn = screen.getByRole("button", { name: "Settings" });
     act(() => {
       fireEvent.click(settingsBtn);
     });

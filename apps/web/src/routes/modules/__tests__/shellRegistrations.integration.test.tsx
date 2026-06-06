@@ -1,5 +1,5 @@
 /**
- * AC-SHELL-3: webShellModuleRegistrations has 13 entries with
+ * AC-SHELL-3: webShellModuleRegistrations has 14 entries with
  * moduleId="matrix" at index 5 (railOrder 6).
  *
  * Verifies that the matrix placeholder was swapped for the real registration.
@@ -8,8 +8,8 @@ import { describe, it, expect } from "vitest";
 import { webShellModuleRegistrations } from "../shellRegistrations.js";
 
 describe("shellRegistrations integration", () => {
-  it("AC-SHELL-3: has exactly 13 entries", () => {
-    expect(webShellModuleRegistrations).toHaveLength(13);
+  it("AC-SHELL-3: has exactly 14 entries", () => {
+    expect(webShellModuleRegistrations).toHaveLength(14);
   });
 
   it("AC-SHELL-3: matrix registration is at index 5 with moduleId='matrix'", () => {
@@ -25,19 +25,11 @@ describe("shellRegistrations integration", () => {
     expect(matrixReg.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
   });
 
-  it("AC-SHELL-3: all 13 entries have a moduleId", () => {
+  it("AC-SHELL-3: all 14 entries have a moduleId", () => {
     for (const reg of webShellModuleRegistrations) {
       expect(typeof reg.moduleId).toBe("string");
       expect(reg.moduleId.length).toBeGreaterThan(0);
     }
-  });
-
-  it("AC-SHELL-3 organizer row #20: organizer registration exists with nav key and rail order", () => {
-    const organizer = webShellModuleRegistrations.find((r) => r.moduleId === "organizer");
-    expect(organizer).toBeDefined();
-    expect(organizer!.i18nKey).toBe("nav.organizer");
-    expect(organizer!.railOrder).toBe(12);
-    expect(organizer!.showInRail).toBe(true);
   });
 
   it("AC-SHELL-2 (meditation row #16): meditation slot is swapped (not a placeholder)", () => {
@@ -47,6 +39,25 @@ describe("shellRegistrations integration", () => {
     expect(meditation!.railOrder).toBe(9);
     expect(meditation!.showInRail).toBe(true);
     expect(meditation!.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
+  });
+
+  it("AC-TIMETRACK: time tracker slot is registered after pomodoro", () => {
+    const timetrack = webShellModuleRegistrations.find((r) => r.moduleId === "timetrack");
+    expect(timetrack).toBeDefined();
+    expect(timetrack!.icon).toBe("timer");
+    expect(timetrack!.railOrder).toBe(7.5);
+    expect(timetrack!.showInRail).toBe(true);
+    expect(timetrack!.i18nKey).toBe("nav.timetrack");
+  });
+
+  it("AC-BOOKKEEPING: bookkeeping slot is registered after time tracker", () => {
+    const bookkeeping = webShellModuleRegistrations.find((r) => r.moduleId === "bookkeeping");
+    expect(bookkeeping).toBeDefined();
+    expect(bookkeeping!.icon).toBe("wallet");
+    expect(bookkeeping!.railOrder).toBe(7.6);
+    expect(bookkeeping!.showInRail).toBe(true);
+    expect(bookkeeping!.i18nKey).toBe("nav.bookkeeping");
+    expect(bookkeeping!.children[0]!.render.name).not.toBe("ModuleRoutePlaceholderPage");
   });
 
   // AC-HOST-1..4 (dashboard-grid row #10)

@@ -66,15 +66,4 @@ describe("PremiumUpgradeButton", () => {
     vi.unstubAllEnvs();
     fetchSpy.mockRestore();
   });
-
-  it("PUB-5: desktop offline profile keeps button disabled even when payment link is configured", () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    vi.stubEnv("VITE_STRIPE_PAYMENT_LINK_URL", "https://buy.stripe.com/test_abc123");
-    render(<PremiumUpgradeButton lang="en" />);
-    const btn = screen.getByTestId("premium-upgrade-btn-disabled");
-    expect((btn as HTMLButtonElement).disabled).toBe(true);
-    fireEvent.click(btn);
-    expect(mockAssign).not.toHaveBeenCalled();
-    vi.unstubAllEnvs();
-  });
 });

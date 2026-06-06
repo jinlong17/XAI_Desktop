@@ -30,6 +30,7 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
   "calendar",
   "matrix",
   "countdown",
+  "timetrack",
   "settings",
   "board",
   "dashboard",
@@ -39,7 +40,21 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
   "search",
 ]);
 
-// Row #11 (xai-web-dashboard-widgets) supplies the full 10-entry registrations
+function navigateToModule(moduleId: WebModuleId): void {
+  if (typeof window === "undefined") return;
+  const nextPath = `/app/${moduleId}`;
+  const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (currentPath === nextPath) return;
+
+  window.history.pushState(null, "", nextPath);
+  const event =
+    typeof PopStateEvent === "function"
+      ? new PopStateEvent("popstate", { state: null })
+      : new Event("popstate");
+  window.dispatchEvent(event);
+}
+
+// Row #11 (xai-web-dashboard-widgets) supplies the full widget registrations
 // array. EMPTY_WIDGETS is no longer used directly but kept as a typed const for
 // any future fallback path; current host always passes dashboardWidgetRegistrations.
 const EMPTY_WIDGETS: WidgetRegistration[] = [];
@@ -55,6 +70,7 @@ export function DashboardSlotHost() {
       moduleId: moduleId as WebModuleId,
       source: "mini-cal",
     });
+    navigateToModule(moduleId as WebModuleId);
   }, []);
 
   return <DashboardModule lang={lang} widgets={dashboardWidgetRegistrations} goTo={goTo} />;

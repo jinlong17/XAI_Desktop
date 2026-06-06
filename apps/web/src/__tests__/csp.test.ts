@@ -155,4 +155,34 @@ describe("CSP source-text guards", () => {
       "frame-src must NOT be present in the CSP — embedded Checkout iframe is not used in v1 stub; update ADR-0008 §S3 D3 reasoning if this changes",
     ).not.toContain("frame-src");
   });
+
+  it("CSP5: connect-src includes https://generativelanguage.googleapis.com (Gemini via openai-compatible provider)", () => {
+    // Gemini is reachable through the SHIPPED openai-compatible provider path
+    // (base URL https://generativelanguage.googleapis.com/v1beta/openai/). The
+    // adapter issues fetch/XHR (connect-src) to that host, so it must be
+    // allowlisted or production (Cloudflare Pages enforces _headers) blocks it.
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(
+      cspLine,
+      "_headers does not contain a Content-Security-Policy directive",
+    ).toBeTruthy();
+    expect(
+      cspLine,
+      "connect-src does not include https://generativelanguage.googleapis.com — Gemini (openai-compatible) requests are blocked; update ADR-0008 §S3 D3 + _headers",
+    ).toContain("https://generativelanguage.googleapis.com");
+  });
+
+  it("CSP6: connect-src includes supported OpenAI-compatible and Sentry ingest hosts", () => {
+    const content = readFileSync(HEADERS_PATH, "utf-8");
+    const cspLine = content
+      .split("\n")
+      .find((l) => l.includes("Content-Security-Policy:"));
+    expect(cspLine).toBeTruthy();
+    expect(cspLine).toContain("https://api.openai.com");
+    expect(cspLine).toContain("https://api.groq.com");
+    expect(cspLine).toContain("https://*.ingest.sentry.io");
+  });
 });

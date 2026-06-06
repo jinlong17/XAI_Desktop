@@ -28,7 +28,6 @@ function anthropicDelta(text: string) {
 
 beforeEach(async () => {
   localStorage.clear();
-  vi.unstubAllEnvs();
   // Set provider back to anthropic
   localStorage.setItem("xai_ai_provider", JSON.stringify("anthropic"));
   // Set a fake key so tests that need a key get one.
@@ -37,19 +36,6 @@ beforeEach(async () => {
 });
 
 describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
-  it("CS0: desktop offline profile fails closed with Network error and no fetch", async () => {
-    vi.stubEnv("VITE_WEB_RUNTIME_PROFILE", "desktop-phase1-offline");
-    const fetchStub = vi.spyOn(globalThis, "fetch");
-    await expect(
-      (async () => {
-        for await (const _chunk of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
-          // consume
-        }
-      })(),
-    ).rejects.toMatchObject({ kind: "Network", detail: "offline_runtime" });
-    expect(fetchStub).not.toHaveBeenCalled();
-  });
-
   it("CS1: happy path Anthropic stream — yields 3 chunks then done", async () => {
     const fetchStub = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
@@ -79,7 +65,7 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
 
   it("CS2: happy path OpenAI-compatible — yields 2 chunks then done", async () => {
     localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.example.com/v1"));
+    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
     await aiKeyStorage.saveKey("openai-compatible", "oai-test-key");
 
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
@@ -103,46 +89,6 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
     }
     expect(chunks.at(-1)?.done).toBe(true);
     expect(chunks.at(-1)?.accumulated).toBe("Hi there");
-  });
-
-  it("CS2b: openai-compatible loopback URL is deferred and does not call fetch", async () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("http://localhost:11434/v1"));
-    await aiKeyStorage.saveKey("openai-compatible", "oai-test-key");
-    const fetchStub = vi.spyOn(globalThis, "fetch");
-
-    await expect(
-      (async () => {
-        for await (const _c of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
-          // consume
-        }
-      })(),
-    ).rejects.toMatchObject({
-      kind: "BadKey",
-      status: 403,
-      detail: "local-provider-not-enabled",
-    });
-    expect(fetchStub).not.toHaveBeenCalled();
-  });
-
-  it("CS2c: openai-compatible missing base URL fails before fetch", async () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.removeItem("xai_ai_base_url");
-    await aiKeyStorage.saveKey("openai-compatible", "oai-test-key");
-    const fetchStub = vi.spyOn(globalThis, "fetch");
-
-    await expect(
-      (async () => {
-        for await (const _c of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
-          // consume
-        }
-      })(),
-    ).rejects.toMatchObject({
-      kind: "BadKey",
-      status: 401,
-      detail: "no-url-configured",
-    });
-    expect(fetchStub).not.toHaveBeenCalled();
   });
 
   it("CS3: mid-stream abort via AbortController.abort() — iterator returns early; no throw", async () => {
@@ -283,14 +229,15 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
     expect(chunks.at(-1)?.accumulated).toBe("valid");
   });
 
-  it("CS9: streaming disabled parses non-streaming JSON", async () => {
+  it("CS9: streaming disabled — parses non-streaming provider JSON", async () => {
     localStorage.setItem("xai_ai_streaming", JSON.stringify(false));
+
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
-          content: [{ type: "text", text: "plain-response" }],
+          content: [{ type: "text", text: "non-streamed response" }],
         }),
-        { status: 200 },
+        { status: 200, headers: { "content-type": "application/json" } },
       ),
     );
 
@@ -298,10 +245,9 @@ describe("claudeStreamAdapter streamCompleteChat (CS)", () => {
     for await (const chunk of streamCompleteChat({ text: "hi", lang: "en", model: "haiku" })) {
       chunks.push(chunk);
     }
-    // Should yield one final chunk with done=true.
     expect(chunks).toHaveLength(1);
     expect(chunks[0]?.done).toBe(true);
-    expect(chunks[0]?.accumulated).toBe("plain-response");
+    expect(chunks[0]?.accumulated).toBe("non-streamed response");
   });
 
   it("CS10: no key configured — throws LlmError({kind:'BadKey', detail:'not-set'})", async () => {

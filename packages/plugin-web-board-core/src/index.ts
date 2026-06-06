@@ -21,12 +21,23 @@ import "./styles.css";
 // consumers will import them), we re-export the schema interfaces under
 // `BoardCardData` / `BoardListData` aliases.
 export type {
+  ArchivedBoardCardRecord,
+  BoardAttachmentIntegrationSource,
   Board,
   BoardCard as BoardCardData,
+  BoardCardActivityEntry,
+  BoardCardActivityKind,
+  BoardCardAttachmentLink,
+  BoardCardTaskLink,
+  BoardChecklistItem,
   BoardList as BoardListData,
   BoardListColorId,
+  BoardListMutationContext,
+  BoardMemberOption,
   BoardTemplate,
+  BoardVisibility,
   BoardWorkspace,
+  BoardIntegrationProviderId,
   BilingualText,
   CardChecklist,
   CardLocation,
@@ -50,6 +61,7 @@ export {
 // ---- Seed (typed; consumed at first run + by row #9 board-workspaces) ----
 export {
   BOARD_TEMPLATES,
+  BOARD_MEMBER_OPTIONS,
   DEFAULT_WORKSPACES,
   PM_LABELS,
   makeDefaultBoards,
@@ -61,18 +73,137 @@ export type {
 
 // ---- Pure helpers (re-exported for #8 / #9 reuse) ------------------------
 export {
+  addCardToListById,
   addCardToList,
   addNewList,
+  archiveCard,
+  archiveList,
+  canManageBoardList,
+  deleteCard,
+  deleteList,
+  getActiveBoardCardLists,
+  getActiveBoardCards,
+  getActiveBoardLists,
+  getArchivedBoardCards,
+  getArchivedBoardLists,
+  mergeBoardCardPatch,
+  moveCardWithinListByOffset,
+  moveListByOffset,
   moveCardToList,
+  normalizeBoardCardDetail,
+  renameCard,
+  renameList,
+  restoreCard,
+  restoreList,
   setListColor,
   updateCardInList,
 } from "./internal/boardOps.js";
+
+export {
+  compareIsoDateOnly,
+  formatIsoDateOnly,
+  getBoardCardDateCompatibilityPatch,
+  getBoardCardDateMeta,
+  isoDateFromOffset,
+  isIsoDateOnly,
+  normalizeBoardCardDates,
+  parseIsoDateOnly,
+} from "./internal/dateModel.js";
+export type {
+  BoardCardDateMeta,
+  BoardDateLabel,
+  BoardDateOptions,
+  BoardDateSource,
+  BoardIsoDate,
+  DateOnlyParts,
+} from "./internal/dateModel.js";
+
+export {
+  BOARD_AUTOMATION_DUE_SOON_DAYS,
+  BOARD_AUTOMATION_URGENT_LABEL_ID,
+  applyBoardAutomationLite,
+} from "./internal/automationLite.js";
+export type {
+  BoardAutomationLiteOptions,
+  BoardAutomationLiteResult,
+  BoardAutomationLiteStats,
+} from "./internal/automationLite.js";
+
+export {
+  createBoardCardActivityNote,
+  createBoardCardComment,
+} from "./internal/activityEntries.js";
+export type {
+  BoardCardActivityInput,
+  BoardCardActivityResult,
+} from "./internal/activityEntries.js";
+
+export {
+  BOARD_VISIBILITY_VALUES,
+  getBoardVisibility,
+  isBoardVisibility,
+  setBoardVisibility,
+} from "./internal/boardVisibility.js";
+
+export {
+  BOARD_INTEGRATION_PROVIDER_IDS,
+  BOARD_INTEGRATION_PROVIDERS,
+  createBoardIntegrationAttachment,
+  getBoardIntegrationProvider,
+  isBoardIntegrationProviderId,
+} from "./internal/integrationAdapters.js";
+export type {
+  BoardIntegrationAttachmentInput,
+  BoardIntegrationAttachmentResult,
+  BoardIntegrationProvider,
+} from "./internal/integrationAdapters.js";
 
 // ---- Persistence helpers -------------------------------------------------
 export {
   loadBoardsOrDefault,
   pickActiveBoard,
 } from "./internal/persistence.js";
+
+export {
+  BOARD_EXPORT_PAYLOAD_KIND,
+  BOARD_EXPORT_PAYLOAD_SCHEMA_VERSION,
+  boardImportStorageValueFromPayload,
+  createBoardExportPayload,
+  readBoardExportPayload,
+} from "./internal/exportImport.js";
+export type {
+  BoardExportPayloadReadResult,
+  BoardExportPayloadResult,
+  BoardExportPayloadV1,
+  BoardImportStorageValueResult,
+} from "./internal/exportImport.js";
+
+export {
+  BOARD_STORAGE_ENVELOPE_KIND,
+  BOARD_STORAGE_ENTITY_SCHEMA_VERSION,
+  BOARD_STORAGE_KEY,
+  BOARD_STORAGE_SCHEMA_VERSION,
+  createBoardStorageEnvelope,
+  isBoardStorageEnvelopeV1,
+  migrateBoardStorageRawToEnvelope,
+  preserveBoardStorageFormat,
+  projectBoardStorageEntities,
+  readBoardStorage,
+} from "./internal/storageContract.js";
+export type {
+  BoardStorageBoardEntity,
+  BoardStorageCardEntity,
+  BoardStorageEntityType,
+  BoardStorageEnvelopeV1,
+  BoardStorageListEntity,
+  BoardStorageLogicalEntities,
+  BoardStorageLogicalEntity,
+  BoardStorageMigrationResult,
+  BoardStorageReadResult,
+  BoardStorageRecordBase,
+  BoardStorageSource,
+  BoardStorageValue,
+} from "./internal/storageContract.js";
 
 // ---- React components ----------------------------------------------------
 export { BoardCard, BOARD_CARD_DND_MIME } from "./BoardCard.js";

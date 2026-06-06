@@ -1,0 +1,15 @@
+{
+  "name": "@repo/plugin-web-time-tracker",
+  "slug": "plugin-web-time-tracker",
+  "version": "0.0.0",
+  "status": "Stable",
+  "type": "ui",
+  "owner": "xai-web-time-tracker",
+  "description": "Web Console Time Tracker module - category-based start flow, single/multi active sessions, pause/resume/end, manual records, local persistence, and dashboard summary widget.",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/xai-web-shell"
+  ]
+}

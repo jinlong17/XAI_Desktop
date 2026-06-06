@@ -15,6 +15,7 @@ function makeCard(
     labels: string[];
     members: string[];
     due: string;
+    dueDate: string;
     dueLate: boolean;
   }> = {},
 ) {
@@ -33,10 +34,12 @@ function makeLists(cards1: ReturnType<typeof makeCard>[], cards2: ReturnType<typ
 }
 
 const TODAY = new Date(2026, 4, 25); // 2026-05-25
+const TODAY_ISO = "2026-05-25";
 const TODAY_MD = "5/25";
-const TOMORROW_MD = "5/26";
-const IN_5_DAYS_MD = "5/30";
-const IN_8_DAYS_MD = "6/2";
+const OVERDUE_ISO = "2026-05-24";
+const TOMORROW_ISO = "2026-05-26";
+const IN_5_DAYS_ISO = "2026-05-30";
+const IN_8_DAYS_ISO = "2026-06-02";
 
 // ---- Tests ------------------------------------------------------------------
 
@@ -114,11 +117,11 @@ describe("applyFilter", () => {
     expect(ids).toEqual(["c1"]);
   });
 
-  test("FIL-6 dueRange: 'overdue' — only cards with dueLate === true", () => {
+  test("FIL-6 dueRange: 'overdue' — only cards with typed dueDate before today", () => {
     const cards = [
-      makeCard("c1", { dueLate: true }),
-      makeCard("c2", { dueLate: false }),
-      makeCard("c3"),
+      makeCard("c1", { dueDate: OVERDUE_ISO }),
+      makeCard("c2", { dueDate: TODAY_ISO }),
+      makeCard("c3", { dueLate: true }),
     ];
     const filter: FilterState = {
       labels: new Set(),
@@ -130,12 +133,12 @@ describe("applyFilter", () => {
     expect(ids).toEqual(["c1"]);
   });
 
-  test("FIL-7 dueRange: 'today' — matches 'Today' / '今天' / today's M/D", () => {
+  test("FIL-7 dueRange: 'today' — matches typed dueDate plus recoverable legacy today", () => {
     const cards = [
-      makeCard("c1", { due: "Today" }),
+      makeCard("c1", { dueDate: TODAY_ISO }),
       makeCard("c2", { due: "今天" }),
       makeCard("c3", { due: TODAY_MD }),
-      makeCard("c4", { due: TOMORROW_MD }),
+      makeCard("c4", { dueDate: TOMORROW_ISO }),
     ];
     const filter: FilterState = {
       labels: new Set(),
@@ -150,13 +153,13 @@ describe("applyFilter", () => {
     expect(ids).not.toContain("c4");
   });
 
-  test("FIL-8 dueRange: 'week' — matches due parseable to [today, today+7)", () => {
+  test("FIL-8 dueRange: 'week' — matches dueDate inside [today, today+7)", () => {
     const cards = [
-      makeCard("c1", { due: TODAY_MD }),        // day 0 — IN
-      makeCard("c2", { due: TOMORROW_MD }),      // day 1 — IN
-      makeCard("c3", { due: IN_5_DAYS_MD }),     // day 5 — IN
-      makeCard("c4", { due: IN_8_DAYS_MD }),     // day 8 — OUT
-      makeCard("c5"),                             // no due — OUT
+      makeCard("c1", { dueDate: TODAY_ISO }),       // day 0 — IN
+      makeCard("c2", { dueDate: TOMORROW_ISO }),    // day 1 — IN
+      makeCard("c3", { dueDate: IN_5_DAYS_ISO }),   // day 5 — IN
+      makeCard("c4", { dueDate: IN_8_DAYS_ISO }),   // day 8 — OUT
+      makeCard("c5"),                               // no due — OUT
     ];
     const filter: FilterState = {
       labels: new Set(),

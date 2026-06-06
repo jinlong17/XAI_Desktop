@@ -1,14 +1,14 @@
 /**
  * PlannerPanel — today's time-slot view (320px wide; hours 8am..7pm).
  *
- * Slots are seeded from cards with `due === "Today" / "今天" / "M/D"` (where
- * M/D matches the injected `now`). When no due-today cards exist, 3 sample
- * slots render.
+ * Slots are seeded from cards whose board-core typed date meta is due today.
+ * When no due-today cards exist, 3 sample slots render.
  *
  * Port of `web design/module-board.jsx` lines 1222..1277.
  */
 
 import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import { getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 import { STR_PLANNER, PLANNER_WEEKDAYS_ZH, type Lang } from "./internal/strings.js";
 
 export interface PlannerPanelProps {
@@ -59,13 +59,6 @@ function formatDateLabel(now: Date, lang: Lang): string {
   return `${monthDay}, ${weekday}`;
 }
 
-function isDueToday(due: string | null | undefined, now: Date): boolean {
-  if (!due) return false;
-  if (due === "Today" || due === "今天") return true;
-  const todayMd = `${now.getMonth() + 1}/${now.getDate()}`;
-  return due === todayMd;
-}
-
 export function computePlannerSlots(
   lists: readonly BoardListData[],
   now: Date,
@@ -74,7 +67,7 @@ export function computePlannerSlots(
   const dueToday: { card: BoardCardData; listId: string }[] = [];
   for (const l of lists) {
     for (const card of l.cards) {
-      if (isDueToday(card.due, now)) {
+      if (getBoardCardDateMeta(card, { now }).isDueToday) {
         dueToday.push({ card, listId: l.id });
       }
     }

@@ -161,7 +161,7 @@ Importable only from within the package. Consumers MUST go through `index.ts`.
 | Trigger | Outcome |
 |---|---|
 | `on` prop transitions `true → false` | Pet body unmounts on next render. Bubble cleared. PetPicker stays open if it was open. |
-| `on` prop transitions `false → true` | Pet body mounts at persisted `pos`. Tip rotation effect restarts (initial bubble after 0 ms; dismiss at 5.5 s). |
+| `on` prop transitions `false → true` | Pet body mounts at persisted `pos`. Tip rotation effect restarts, but waits one 12 s cycle before showing the first automatic bubble; click tips still show immediately. |
 | `web:shell:pet-toggle` event with `on: false` | `internalOn` becomes `false`; same effect as prop change. On next render, prop `on` is reconciled — if prop is still `true`, body mounts again. (Use case: external future emitter wants to hide; if host still says `on=true`, prop wins. This is documented edge-case behavior.) |
 | `web:shell:pet-toggle` event with `on: true` | Symmetric. |
 
@@ -192,9 +192,10 @@ in `drag.test.ts`.)
 
 | Phase | Time | Action |
 |---|---|---|
-| Mount when `on === true && !pickerOpen` | t=0 | `setBubble(tips[0])` |
-| First dismiss | t=5500 ms | `setBubble(null)` |
-| Cycle tick | every 12000 ms | `setBubble(null)`; 400 ms later `setBubble(tips[(i+1)%n])`; i++ |
+| Mount when `on === true && !pickerOpen` | t=0 | No bubble; schedule the first automatic tip. |
+| First automatic tip | t=12000 ms | `setBubble(tips[0])` |
+| First dismiss | t=17500 ms | `setBubble(null)` |
+| Cycle tick | every 12000 ms after first tip | `setBubble(null)`; 400 ms later `setBubble(tips[(i+1)%n])`; i++ |
 
 Tips array: `[s("pet.hello"), s("pet.tip1"), s("pet.tip2"), s("pet.tip3"), s("pet.tip4")]`
 — total 5 strings, cycles indefinitely.
@@ -242,7 +243,7 @@ anchors it to the left.
 | Edge case | Behaviour |
 |---|---|
 | `petId` from storage is unknown (corrupted) | `PET_DEFS.find(p => p.id === petId) || PET_DEFS[0]` — fallback to Mochi. Matches prototype line 269. |
-| `pos` from storage is corrupted (e.g. NaN coords) | `usePref` returns the registry default `{x:24, y:24}` (codec failure path). Verified in `usePref` tests in `@repo/plugin-web-storage`. |
+| `pos` from storage is corrupted (e.g. NaN coords) | `usePref` returns the registry default `{x:24, y:520}` (codec failure path). Verified in `usePref` tests in `@repo/plugin-web-storage`. |
 | Window resize shrinks viewport below pet pos | `useEffect(resize)` re-clamps and persists. |
 | Click on the small `.pet-swap-btn` | `e.stopPropagation()` prevents pointer-down from registering as drag-start. Opens picker. |
 | Event payload `web:shell:pet-toggle` with mismatched type | TypeScript type-guarded at compile time (channel name is the type key); runtime guard not needed. |
@@ -279,7 +280,7 @@ const [petId, setPetId] = usePref("xai_pet_id"); // PetId = "mochi" | ... | "emb
 ```
 
 Both keys already declared in `PREF_REGISTRY` with `owner: "xai-web-pet"`,
-schemaVersion 1. Defaults: `{x:24, y:24}` for `xai_pet_pos`, `"mochi"` for
+schemaVersion 1. Defaults: `{x:24, y:520}` for `xai_pet_pos`, `"mochi"` for
 `xai_pet_id`. No registry edits in this row.
 
 ### 4.4 i18n

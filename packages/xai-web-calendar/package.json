@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Calendar module for XAI Web Console (W2 row #12) — Month grid + 4-color event chips + view switcher + deep-link receive on web:shell:module-change.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -20,8 +23,9 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
@@ -37,6 +41,7 @@
     "@testing-library/user-event": "^14",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
+    "@vitest/coverage-v8": "^3.2.1",
     "jsdom": "^26",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

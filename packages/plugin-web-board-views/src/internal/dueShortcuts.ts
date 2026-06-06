@@ -9,6 +9,7 @@
  */
 
 import type { Lang } from "./i18n.js";
+import { isoDateFromOffset } from "@repo/plugin-web-board-core";
 
 /** Emit the "Today" quick-shortcut label in the current language. */
 export function todayShortcut(lang: Lang): string {
@@ -46,4 +47,19 @@ export function nextMondayShortcut(
   const daysUntilMon = dow === 0 ? 1 : dow === 1 ? 7 : 8 - dow;
   const d = new Date(year, month - 1, day + daysUntilMon);
   return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+export function todayShortcutDate(now = new Date()): string {
+  return isoDateFromOffset(0, now);
+}
+
+export function tomorrowShortcutDate(now = new Date()): string {
+  return isoDateFromOffset(1, now);
+}
+
+export function nextMondayShortcutDate(now = new Date()): string {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dow = today.getDay();
+  const daysUntilMon = dow === 0 ? 1 : dow === 1 ? 7 : 8 - dow;
+  return isoDateFromOffset(daysUntilMon, today);
 }

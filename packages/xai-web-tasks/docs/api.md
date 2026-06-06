@@ -386,3 +386,297 @@ Provisional new keys we **may** need (P2 will confirm):
 - `tasks.drop_zone_empty` — empty-column placeholder. **Fallback**: same inline pattern as above.
 
 Adding either key to `@repo/plugin-web-tokens` is a one-line additive change to two language bundles — out of scope for this row unless P2 review insists otherwise.
+
+---
+
+# Extension — xai-web-tasks-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 contract above (§0–§9) is unchanged.
+> Discovery: `docs/reviews/xai-web-tasks-card-create/20260528-discovery-review.md`.
+
+## E.0 New public surface delta (`src/index.ts`)
+
+```ts
+// Public types — ADD:
+export type { NewTaskDraft } from "./types.js";
+```
+
+`TaskComposer` stays internal to the module in v1 (rendered only by `TasksModule`); it is NOT exported. `createTaskId` and `addCard` stay internal (`src/internal/**`).
+
+## E.1 New type — `NewTaskDraft`
+
+```ts
+export interface NewTaskDraft {
+  /** Raw title string typed by the user; trimmed by addCard. Fills BOTH title.en + title.zh. */
+  readonly title: string;
+  /** Optional tag preset — omitted means "no tag". */
+  readonly tag?: TaskTagId;
+  /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
+  readonly withDate: boolean;
+}
+```
+
+## E.2 New internal helper — `createTaskId()`
+
+```ts
+// src/internal/ids.ts
+export function createTaskId(): string;
+```
+
+Returns a fresh opaque id. Modern path: `crypto.randomUUID()`. Fallback (jsdom / old runtimes): `"t-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,10)`. Structurally disjoint from seed ids (`t1`…`t26`, `c1`…`c6`) so a generated id can never collide with the fixture. Mirrors `packages/xai-web-calendar/src/internal/eventStore/ids.ts` (pattern only — not imported).
+
+## E.3 New reducer action — `addCard`
+
+```ts
+// src/internal/tasksReducer.ts
+export function addCard(
+  prev: TaskCol[],
+  draft: NewTaskDraft,
+  targetBucket: BucketId,
+  now?: Date,
+): TaskCol[];
+```
+
+Pure. Returns a new `TaskCol[]` where a freshly-built `TaskCard` is **prepended** to `targetBucket.tasks` (top of column = index 0, matching `moveCard`'s prepend convention). Behaviour:
+
+- Builds the card: `id = createTaskId()`; `title = { en: draft.title.trim(), zh: draft.title.trim() }`; `tag` set only when `draft.tag` is defined; `date`+`dateZh` set only when `draft.withDate === true` AND `targetBucket !== "nodate"` (via `dateForCol(targetBucket, now)`); no `sub`/`dateLabel`/`inbox` on user-created cards.
+- `targetBucket`'s `count` becomes `count + 1`.
+- All other columns pass through untouched (referential equality preserved — same discipline as `moveCard`).
+- **Guard**: if `draft.title.trim().length === 0`, returns `prev` unchanged (the composer also blocks empty titles with an inline error, so this is a defensive boundary).
+- **Guard**: if `targetBucket` is not found in `prev`, returns `prev` unchanged.
+- The result passes `isTaskColsArray` (so the persistence round-trip is valid).
+
+### Example
+
+```ts
+addCard(
+  taskCols,
+  { title: "Email the reviewers", tag: "work", withDate: true },
+  "next7",
+  new Date("2026-05-28T12:00:00"),
+);
+// → next7.tasks[0] = {
+//     id: "<uuid>", title: { en: "Email the reviewers", zh: "Email the reviewers" },
+//     tag: "work", date: "5/30", dateZh: "5 月 30 日"
+//   }
+// → next7.count incremented; other 3 columns referentially identical to input.
+```
+
+## E.4 New component — `TaskComposer` (internal)
+
+```ts
+export interface TaskComposerProps {
+  /** Controls visibility: true → showModal(), false → close(). */
+  open: boolean;
+  /** Active language for STR_TASK_COMPOSER labels + the inline error. */
+  lang: Lang;
+  /** Bucket pre-selected when the dialog opens (the column whose + was clicked). */
+  defaultBucket: BucketId;
+  /** Called after validation passes with the draft + chosen bucket. */
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
+  /** Called on ESC / backdrop click / Cancel (changes discarded). */
+  onClose: () => void;
+}
+
+export function TaskComposer(props: TaskComposerProps): ReactElement | null;
+```
+
+Behaviour (mirrors `EventComposer.tsx`):
+
+- On open: `title=""`, `bucket=defaultBucket`, `tag=undefined` ("None" radio selected), `withDate=false`. Form resets via `useEffect` keyed on `[open, defaultBucket]`.
+- Open/close imperatively: `open` → `showModal()` + autofocus title via `setTimeout(0)`; `!open` → `close()`.
+- ESC: native `cancel` event listener → `onClose`.
+- Backdrop: `onClick` where `e.target === dialogRef.current` → `onClose`.
+- Save: trims title; if empty → inline `err_title_required` shown + dialog stays open; else `onSave({ title, tag, withDate }, bucket)`.
+- Tag picker: `role="radiogroup"`; options = `["none","study","work","personal","todo","other"]`; "none" maps to `tag=undefined`.
+- Bucket picker: `role="radiogroup"` over the 4 `BucketId`s; default = `defaultBucket`.
+- Date opt-in: a single checkbox "give this a date for the bucket" → `withDate`; hidden/no-op semantics when bucket is `nodate` (date can't apply).
+
+a11y: `aria-modal="true"` + `aria-labelledby="task-composer-title"`; title input `aria-required` + `aria-describedby` when error present; each radio carries `aria-checked`.
+
+## E.5 Wiring delta — `TaskColumn` + `TasksModule`
+
+### `TaskColumn` (new optional prop)
+
+```ts
+export interface TaskColumnProps {
+  // …existing props unchanged…
+  onAddCard?: (bucketId: BucketId) => void;  // NEW
+}
+```
+
+The `col.action === "add"` button (`TaskColumn.tsx:68-74`) gains `onClick={() => onAddCard?.(col.id)}`. The `overdue` column keeps its `postpone` action (unchanged; decorative per original Q1). The button keeps its existing `aria-label={s("common.add")}`.
+
+### `TasksModule` (new state — no new event channel)
+
+```ts
+const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
+  open: false, bucket: "next7",
+});
+
+function handleAddCard(bucketId: BucketId) {
+  setComposer({ open: true, bucket: bucketId });
+}
+
+function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+  const next = addCard(taskCols, draft, targetBucket);
+  setRawCols(next as unknown as Parameters<typeof setRawCols>[0]); // SHIPPED boundary cast
+  setComposer((c) => ({ ...c, open: false }));
+}
+```
+
+`<TaskComposer open={composer.open} lang={lang} defaultBucket={composer.bucket} onSave={handleComposerSave} onClose={...} />` renders once at the module root. Persistence + re-render reuse the SHIPPED `usePref` path entirely — no new channel, no `core` edit.
+
+## E.6 Persistence contract (extension)
+
+Unchanged from §4. `addCard`'s output is written via the same `setRawCols` boundary cast as `moveCard`. First create on an empty install materializes seed + new card together (the resolved `taskCols` is already seed-or-persisted via the SHIPPED `useMemo`), identical to the first DnD today. The written array passes `isTaskColsArray`.
+
+## E.7 i18n (extension)
+
+New strings live in `src/internal/strings.ts` as `STR_TASK_COMPOSER` (en+zh), mirroring `calendar/internal/strings.ts`. Shape: `Record<string, { en: string; zh: string }>`; access `STR_TASK_COMPOSER.key[lang]`. Expected keys: `title_create`, `field_title`, `field_tag`, `field_bucket`, `field_add_date`, `tag_none`, `bucket_overdue`, `bucket_next7`, `bucket_later`, `bucket_nodate`, `btn_save`, `btn_cancel`, `err_title_required`. Tag labels themselves continue via the existing tokens `tag.*` keys through `useI18n`. **No `plugin-web-tokens` edit.**
+
+## E.8 Error semantics (extension)
+
+| Boundary | Failure mode | Behaviour |
+|---|---|---|
+| Composer Save with empty/whitespace title | `title.trim().length === 0` | Inline `err_title_required`; dialog stays open; no `onSave`. |
+| `addCard` called with empty title (defensive) | `draft.title.trim().length === 0` | Returns `prev` unchanged. |
+| `addCard` with unknown `targetBucket` | bucket not found in `prev` | Returns `prev` unchanged. |
+| `withDate === true` on `nodate` target | date can't apply | No date fields written (the `dateForCol("nodate")` → null path). |
+| `setRawCols` write fails (quota) | storage layer returns false | Silent (same as SHIPPED `usePref` contract). |
+
+No error UI beyond the inline title-required message in v1.
+
+---
+
+# Extension — xai-web-tasks-smartlist-filter (2026-05-28)
+
+> APPENDED extension (Iteration 3). The SHIPPED v1 contract (§0–§9) and the
+> card-create extension (§E.0–§E.8) above are unchanged.
+> Discovery: `docs/reviews/xai-web-tasks-smartlist-filter/20260528-discovery-review.md`.
+
+## F.0 Public surface delta (`src/index.ts`)
+
+```ts
+// Public types — MAY add (review decides; v1 default keeps it internal):
+// export type { SmartListId } from "./types.js";
+```
+
+`filterCardsByList` stays internal (`src/internal/**`). `SmartListId` export is optional (the type is currently a local alias in `TasksSidebar.tsx:39`); promote to the barrel only if a consumer needs it. Default v1 = internal-to-module.
+
+## F.1 New type — `SmartListId`
+
+```ts
+// src/types.ts (additive; lifted from TasksSidebar.tsx:39)
+export type SmartListId = "all" | "today" | "tomorrow" | "next7" | "inbox" | "summary";
+```
+
+Closed set — the 6 smart-list rows. Custom-list ids (`research`/`personal`/`career`/`reminders`) and tag ids are NOT `SmartListId`s and do NOT drive the filter (discovery Q1 defer).
+
+## F.2 New internal helper — `filterCardsByList`
+
+```ts
+// src/internal/filterCardsByList.ts
+export function filterCardsByList(
+  cols: TaskCol[],
+  list: SmartListId,
+  now?: Date,
+): TaskCol[];
+```
+
+**PURE** — returns a new `TaskCol[]` view shape. NEVER mutates `cols`; NEVER writes `localStorage`; NEVER calls `moveCard`/`toggleComplete`/`addCard`. Always returns all 4 columns (so headers + empty states render); only each column's `tasks` (and `completed`) arrays are filtered, and each returned column's `count` is recomputed to match its filtered `tasks.length` (a *derived display value* — the persisted `count` in `xai_task_cols` is untouched).
+
+Per-list behaviour (discovery §3):
+
+| `list` | Returned cols |
+|---|---|
+| `all` | `cols` unchanged (identity; columns returned by reference). |
+| `inbox` | every column: `tasks.filter(t => t.inbox === true)`; `completed?.filter(t => t.inbox === true)`. |
+| `next7` | column `next7` keeps its cards; every other column → `tasks: []`, `completed: []`. |
+| `today` | column `overdue` keeps its cards; every other column → `tasks: []`, `completed: []`. **(bucket approximation — see note)** |
+| `tomorrow` | column `next7` keeps its cards; every other column → `tasks: []`, `completed: []`. **(bucket approximation — see note)** |
+| `summary` | `cols` unchanged (identity, v1 treat-as-all — discovery Q2). |
+
+> **Bucket-approximation note (Q-T):** `TaskCard.date` is a year-less display string in two formats and `next7` cards carry no `date` at all (discovery §1.2), so a precise per-calendar-day "today"/"tomorrow" predicate is not derivable from the stored shape without a forbidden schema change. `today`→`overdue` and `tomorrow`→`next7` are *bucket approximations* of those labels, derived from the board's existing persisted date semantics (`dateForCol`: overdue=today−3d, next7=today+2d). This is the single reviewer-confirmable design judgment (Q-T).
+
+`now` is threaded for testability + future-proofing (a real `due` field would make `today`/`tomorrow` clock-dependent); v1 predicates are bucket-based and do not yet read `now`.
+
+### Example
+
+```ts
+filterCardsByList(taskCols, "inbox");
+// → every column with only inbox:true cards retained;
+//   overdue keeps its 10 inbox cards; nodate keeps t26 + 6 completed; next7/later → tasks:[].
+filterCardsByList(taskCols, "all");      // → taskCols (referentially identical)
+filterCardsByList(taskCols, "next7");    // → only next7 column has cards
+```
+
+## F.3 Component contract delta — `TasksSidebar` (controlled)
+
+```ts
+export interface TasksSidebarProps {
+  lang: Lang;
+  activeList: SmartListId;                 // NEW — controlled value (was local useState)
+  onSelectList: (id: SmartListId) => void; // NEW — selection callback to TasksModule
+}
+```
+
+- The local `const [activeList, setActiveList] = useState("all")` (TasksSidebar.tsx:56) is REMOVED; the value + setter now flow from `TasksModule`.
+- Smart-list rows call `onSelectList(item.id)` (item.id is a `SmartListId`).
+- Custom-list rows + tag rows become **non-selecting** (Q1 defer): they keep their decorative look but do NOT call `onSelectList` (or call it with no effect). Only the 6 smart-list ids drive the filter. `data-active` highlight stays in sync for the smart-list rows.
+
+## F.4 Component contract delta — `TasksModule`
+
+```ts
+const [activeList, setActiveList] = useState<SmartListId>("all"); // session-only (Q3)
+
+const viewCols = useMemo<TaskCol[]>(
+  () => filterCardsByList(taskCols, activeList),
+  [taskCols, activeList],
+);
+```
+
+- Renders `viewCols` (the filtered shape) in the column map.
+- Passes `activeList` + `setActiveList` to `<TasksSidebar>`.
+- **CRITICAL:** every mutation handler (`handleDrop`, `handleToggle`, `handleComposerSave`) continues to operate on the UNFILTERED `taskCols` and writes via the SHIPPED `setRawCols` boundary cast. The filter is read-only and never participates in a write.
+- When `activeList !== "all"` and `viewCols` yields zero cards board-wide, render a board-level honest empty state (F.6 STR).
+
+## F.5 Component contract delta — `TaskColumn`
+
+```ts
+export interface TaskColumnProps {
+  // …existing props unchanged…
+  filterActive?: boolean; // NEW — when true, suppress the per-column "drop here" hint
+}
+```
+
+The `isEmpty` placeholder ("Drop tasks here", TaskColumn.tsx:97-102) is suppressed when `filterActive` is true (a "drop here" prompt is misleading under a read-only filter). Reviewer may simplify to a board-level empty state only and drop this prop.
+
+## F.6 i18n (extension)
+
+New empty-state strings append to `src/internal/strings.ts` (en+zh), mirroring the SHIPPED `STR_TASK_COMPOSER` pattern. Proposed keys (final wording at build):
+
+| Key | en | zh |
+|---|---|---|
+| `empty_filtered` | "Nothing in {list}" | "{list} 里没有任务" |
+| `empty_today` | "Nothing due today" | "今天没有到期任务" |
+| `empty_tomorrow` | "Nothing due tomorrow" | "明天没有到期任务" |
+| `empty_next7` | "Nothing in the next 7 days" | "最近 7 天没有任务" |
+| `empty_inbox` | "Inbox is empty" | "收件箱是空的" |
+
+(Exact key set finalized at build; may collapse to one parameterized `empty_filtered` + a per-list label.) **No `plugin-web-tokens` edit.** Existing tokens keys (`common.*`, smart-list labels) keep flowing through `useI18n`.
+
+## F.7 Persistence contract (extension)
+
+**Read-only.** This feature does NOT write `xai_task_cols` and adds NO registry key. `activeList` is `useState` (session-only — discovery Q3). The selector reads the resolved `taskCols` (seed-or-persisted via the SHIPPED `useMemo`) and projects a view; the SHIPPED write path (`setRawCols` boundary cast) is untouched and reachable only from the mutation handlers operating on the unfiltered board.
+
+## F.8 Error semantics (extension)
+
+| Boundary | Failure mode | Behaviour |
+|---|---|---|
+| `filterCardsByList` with unknown `list` value | not a `SmartListId` | Defensive: return `cols` unchanged (identity) — never throws, never empties the board. |
+| Filter yields zero cards | every column empty after filter | Board-level honest empty state (F.6); NO write; All restores full board. |
+| `now` omitted | default | v1 predicates are bucket-based and ignore `now`; no clock dependency. |
+| Any filter applied | always | `localStorage.getItem("xai_task_cols")` is byte-identical before/after (T-FILT-NOMUT). The filter writes nothing. |
+
+No error UI beyond the honest empty state.

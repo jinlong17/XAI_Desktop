@@ -20,7 +20,7 @@ The registry IS the §9.2 table. Byte-for-byte parity is a Hard Constraint.
 | `xai_rail_pos` | string | `"left" \| "right" \| "top" \| "bottom"` | `"left"` | xai-web-settings-appearance | 389 |
 | `xai_bg_tone` | string | `"default" \| "sage" \| "cream" \| "mist" \| "lavender" \| "peach" \| "graphite"` | `"default"` | xai-web-settings-appearance | 390 |
 | `xai_rail_order` | json | `RailItemId[]` | `["tasks","board","dashboard","calendar","matrix","pomodoro","habits","meditation","countdown","ai","statistics","settings"]` | xai-web-shell | 391 |
-| `xai_pet_pos` | json | `{ x: number; y: number }` | `{ x: 24, y: 24 }` | xai-web-pet | 392 |
+| `xai_pet_pos` | json | `{ x: number; y: number }` | `{ x: 24, y: 520 }` | xai-web-pet | 392 |
 | `xai_pet_id` | string | `"mochi" \| "pip" \| "sprout" \| "lumi" \| "drip" \| "pebble" \| "star" \| "ember"` | `"mochi"` | xai-web-pet | 392 |
 | `xai_task_cols` | json | `Record<string, boolean>` (column collapsed/expanded) | `{}` | xai-web-tasks | 393 |
 | `xai_boards_v2` | json | `BoardsState` (board+card schema; declared by xai-web-board-core) | `null` | xai-web-board-core | 394 |

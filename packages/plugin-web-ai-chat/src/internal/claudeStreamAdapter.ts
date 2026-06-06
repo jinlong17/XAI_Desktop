@@ -14,9 +14,6 @@
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
-import {
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import { getPref } from "@repo/plugin-web-storage";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import type { AiModelId } from "../types.js";
@@ -24,11 +21,8 @@ import { aiKeyStorage } from "./secretStore.js";
 import { resolveProvider } from "./llmProvider.js";
 import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
-import {
-  policySnapshotToLlmError,
-  readBrowserOnlineState,
-  resolveAiProviderPolicy,
-} from "./providerPolicy.js";
+import { buildTodayContext } from "./contextProvider.js";
+import type { AnthropicToolDef, ContentBlock, ToolUseResult } from "./toolUseTypes.js";
 
 // ---- Public types ----------------------------------------------------------
 
@@ -41,6 +35,26 @@ export interface StreamRequest {
   model: AiModelId;
   /** Optional abort signal — when aborted, the underlying fetch is aborted. */
   signal?: AbortSignal;
+  /**
+   * Optional injected today context from contextProvider.buildTodayContext().
+   * When provided (and non-empty), prepended to the first user message.
+   * P1 feature: READ-ONLY context injection.
+   */
+  contextText?: string;
+  /**
+   * P2: Optional tool definitions to include in the request.
+   * Sent on BOTH providers when a key is configured: Anthropic receives the
+   * verbatim AnthropicToolDef format (input_schema); openai-compatible receives
+   * the translated OpenAI function format (via toOpenAiTools). Each buildBody
+   * branch serializes appropriately.
+   */
+  tools?: AnthropicToolDef[];
+  /**
+   * P2: Optional history of prior messages for tool round-trip (tool_result turn).
+   * Content may be string or ContentBlock[]. Replaces the single-user-turn
+   * messages build when provided.
+   */
+  priorMessages?: Array<{ role: "user" | "assistant"; content: string | unknown[] }>;
 }
 
 export interface StreamChunk {
@@ -48,6 +62,12 @@ export interface StreamChunk {
   accumulated: string;
   /** True on the final chunk before the iterator returns. */
   done: boolean;
+  /**
+   * P2 additive (Rec1 from feature-review): if the model's turn ended with a tool call,
+   * this field carries the fully-parsed ToolUseResult. Undefined for normal text-only chunks.
+   * Text-only consumers stay byte-for-byte unaffected (R1 backward compat).
+   */
+  toolUse?: ToolUseResult;
 }
 
 // ---- streamCompleteChat ----------------------------------------------------
@@ -56,44 +76,23 @@ export interface StreamChunk {
  * Streams a completion from the configured LLM provider.
  *
  * If no API key is configured, throws LlmError({kind:"BadKey",detail:"not-set"}).
- * On non-streaming responses, parses provider-specific JSON and yields one final chunk.
+ * On streaming-unavailable, falls back to completeChat and yields one final chunk.
  */
 export async function* streamCompleteChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
   const { text, model, signal } = req;
-  const importEnv =
-    (import.meta as unknown as { env?: Record<string, string | undefined> }).env ??
-    {};
-  const processEnv =
-    typeof process !== "undefined"
-      ? (process.env as Record<string, string | undefined>)
-      : {};
-  const runtimeProfile = resolveWebRuntimeProfile({
-    ...importEnv,
-    ...processEnv,
-  });
 
+  // 1. Load the API key.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
   const providerKind = (provider === "openai-compatible" ? "openai-compatible" : "anthropic") as
     | "anthropic"
     | "openai-compatible";
-  const baseUrl = (getPref("xai_ai_base_url") as string) || "";
   const apiKey = await aiKeyStorage.loadKey(providerKind);
-  const policy = resolveAiProviderPolicy({
-    provider: providerKind,
-    baseUrl,
-    hasSavedKey: !!apiKey,
-    runtimeProfile,
-    isOnline: readBrowserOnlineState(),
-  });
-  if (policy.state !== "ready") {
-    throw policySnapshotToLlmError(policy);
-  }
 
-  // Policy-ready implies key exists, but keep an explicit guard for defensive safety.
   if (!apiKey) {
-    throw { kind: "BadKey", status: 401, detail: "not-set" } as LlmError;
+    const err: LlmError = { kind: "BadKey", status: 401, detail: "not-set" };
+    throw err;
   }
 
   // 2. Resolve provider config.
@@ -102,10 +101,39 @@ export async function* streamCompleteChat(
   const streamingEnabled = getPref("xai_ai_streaming") !== false;
 
   // 3. Build request body.
+  // P1 context injection: prepend today's context snapshot to the user prompt.
+  // Reads context lazily here (not from req.contextText) so it's always fresh.
+  // contextText param is kept for override/test purposes.
+  let contextText = req.contextText;
+  if (contextText === undefined) {
+    // Only inject context when a key is configured (avoids reading prefs for no-key path).
+    try {
+      const ctx = buildTodayContext();
+      contextText = ctx.isEmpty ? "" : ctx.text;
+    } catch {
+      contextText = "";
+    }
+  }
+
+  const userContent =
+    contextText && contextText.length > 0
+      ? `${contextText}\n\n---\n\nUser question: ${text}`
+      : text;
+
+  // Build messages: use priorMessages if provided (tool round-trip), else single user turn.
+  const messages = req.priorMessages
+    ? (req.priorMessages as Array<{ role: "user" | "assistant"; content: string | unknown[] }>)
+    : [{ role: "user" as const, content: userContent }];
+
+  // Both providers now receive the tools array; each buildBody branch serializes
+  // appropriately (Anthropic: verbatim AnthropicToolDef; openai: toOpenAiTools format).
+  const tools = req.tools;
+
   const body = config.buildBody({
     modelId,
-    messages: [{ role: "user", content: text }],
+    messages: messages as Array<{ role: "user" | "assistant"; content: string | ContentBlock[] }>,
     stream: streamingEnabled,
+    tools,
   });
 
   // 4. Issue the fetch.
@@ -142,16 +170,38 @@ export async function* streamCompleteChat(
     throw llmErr;
   }
 
-  // 6. Handle streaming response.
+  // 6. Handle non-streaming response.
   if (!response.body || !streamingEnabled) {
-    // Fallback: no streaming body available or streaming disabled.
-    const textOut = await extractNonStreamingText(response, providerKind);
-    yield { accumulated: textOut, done: true };
-    return;
+    try {
+      const json = await response.json();
+      yield parseNonStreamingCompletion(json, providerKind);
+      return;
+    } catch (err) {
+      const llmErr = await classifyError(err instanceof Error ? err : new Error(String(err)));
+      _emitError(llmErr, providerKind);
+      throw llmErr;
+    }
   }
 
   // 7. Parse SSE stream.
+  // P2: loop-local state for tool_use block accumulation (Rec2 from feature-review).
+  // Per-block-index partial_json concatenator; JSON.parse ONCE at content_block_stop.
+  // Avoids widening the pure extractDelta helper.
   let accumulated = "";
+  let stopReason: string | undefined;
+
+  // Anthropic tool use accumulator: maps content-block index → { id, name, partialJson }
+  interface ToolAccumEntry { id: string; name: string; partialJson: string }
+  const toolAccum: Record<number, ToolAccumEntry> = {};
+
+  // OpenAI tool_calls accumulator: maps tool_calls[].index → { id, name, argsJson }
+  // index-keyed per discovery §2.3: first delta carries id+name, subsequent deltas carry argsJson only.
+  interface OpenAiToolAccumEntry { id: string; name: string; argsJson: string }
+  const openAiToolAccum: Record<number, OpenAiToolAccumEntry> = {};
+
+  // Final parsed tool use result (if any).
+  let toolUseResult: ToolUseResult | undefined;
+
   try {
     for await (const sseEvent of parseSseStream(response)) {
       if (signal?.aborted) {
@@ -164,19 +214,151 @@ export async function* streamCompleteChat(
         break;
       }
 
-      // Parse the delta from the SSE event data.
-      let delta = "";
+      // Parse the raw SSE data.
+      let parsed: Record<string, unknown>;
       try {
-        const parsed = JSON.parse(sseEvent.data) as Record<string, unknown>;
-        delta = extractDelta(parsed, providerKind);
+        parsed = JSON.parse(sseEvent.data) as Record<string, unknown>;
       } catch {
-        // Malformed JSON in a chunk — skip silently (partial accumulation).
+        // Malformed JSON in a chunk — skip silently.
         continue;
       }
 
-      if (delta) {
-        accumulated += delta;
-        yield { accumulated, done: false };
+      // Determine event type: prefer JSON data "type" field, fall back to SSE event field.
+      // Rationale: the Anthropic API includes "type" in the JSON data body. The SHIPPED
+      // tests use the SSE event: line for backward compat (both are valid).
+      const eventType = (parsed["type"] as string | undefined) ?? sseEvent.event;
+
+      // ---- Anthropic streaming event handling ----
+      if (providerKind === "anthropic") {
+        if (eventType === "content_block_start") {
+          // A new content block has started. If it's a tool_use block, record it.
+          const idx = parsed["index"] as number | undefined;
+          const block = parsed["content_block"] as Record<string, unknown> | undefined;
+          if (typeof idx === "number" && block && block["type"] === "tool_use") {
+            const id = block["id"] as string ?? "";
+            const name = block["name"] as string ?? "";
+            toolAccum[idx] = { id, name, partialJson: "" };
+          }
+          continue;
+        }
+
+        if (eventType === "content_block_delta") {
+          const idx = parsed["index"] as number | undefined;
+          const delta = parsed["delta"] as Record<string, unknown> | undefined;
+          if (!delta) continue;
+
+          if (delta["type"] === "text_delta" && typeof delta["text"] === "string") {
+            // Normal text delta.
+            accumulated += delta["text"] as string;
+            yield ({ accumulated, done: false });
+          } else if (delta["type"] === "input_json_delta" && typeof idx === "number") {
+            // Tool use partial JSON — accumulate per block index; DO NOT parse here.
+            const partial = delta["partial_json"] as string ?? "";
+            if (toolAccum[idx]) {
+              toolAccum[idx]!.partialJson += partial;
+            }
+          }
+          continue;
+        }
+
+        if (eventType === "content_block_stop") {
+          // A block has ended. If it was a tool_use block, parse its JSON now (ONCE).
+          const idx = parsed["index"] as number | undefined;
+          if (typeof idx === "number" && toolAccum[idx]) {
+            const entry = toolAccum[idx]!;
+            try {
+              const parsedInput = JSON.parse(
+                entry.partialJson || "{}",
+              ) as Record<string, unknown>;
+              // Keep the LAST tool use result (in practice there is only one per v1).
+              toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+            } catch {
+              // Malformed input JSON — skip tool use (graceful degradation).
+            }
+          }
+          continue;
+        }
+
+        if (eventType === "message_delta") {
+          // message_delta carries stop_reason for the turn (e.g. "tool_use" or "end_turn").
+          const delta = parsed["delta"] as Record<string, unknown> | undefined;
+          if (delta && typeof delta["stop_reason"] === "string") {
+            stopReason = delta["stop_reason"] as string;
+          }
+          continue;
+        }
+
+        if (eventType === "message_stop") {
+          // End of the streaming message. Break the loop.
+          break;
+        }
+
+        // Other event types (e.g. message_start, ping) — skip.
+        continue;
+      }
+
+      // ---- OpenAI-compatible streaming ----
+      // Read finish_reason (may be "tool_calls" if the model called a tool).
+      const choices = parsed["choices"] as Array<Record<string, unknown>> | undefined;
+      if (Array.isArray(choices) && choices.length > 0) {
+        const choice = choices[0]!;
+        const finishReason = choice["finish_reason"] as string | null | undefined;
+
+        // Accumulate tool_calls fragments if present in this delta.
+        const oaiDelta = choice["delta"] as Record<string, unknown> | undefined;
+        if (oaiDelta) {
+          const toolCallsArr = oaiDelta["tool_calls"] as Array<Record<string, unknown>> | undefined;
+          if (Array.isArray(toolCallsArr)) {
+            for (const tc of toolCallsArr) {
+              // OpenAI proper sends `index` on every tool_call delta. Some
+              // openai-compatible servers OMIT it for a single tool call —
+              // VERIFIED with Gemini (gemini-3.1-flash-lite) 2026-05-29 live
+              // smoke: the tool_call delta has no `index` field. Default a
+              // missing index to 0 (single-tool v1 parity) instead of skipping
+              // the call entirely (which dropped the whole tool_use → no card).
+              const idx = typeof tc["index"] === "number" ? (tc["index"] as number) : 0;
+
+              // First delta of a tool call carries id and function.name.
+              const fn = tc["function"] as Record<string, unknown> | undefined;
+              if (!openAiToolAccum[idx]) {
+                const id = (tc["id"] as string | undefined) ?? "";
+                const name = (fn?.["name"] as string | undefined) ?? "";
+                openAiToolAccum[idx] = { id, name, argsJson: "" };
+              }
+              // Always accumulate function.arguments (may be "" on first delta).
+              if (fn && typeof fn["arguments"] === "string") {
+                openAiToolAccum[idx]!.argsJson += fn["arguments"] as string;
+              }
+            }
+          }
+
+          // Normal text delta (when no tool_calls present).
+          if (!toolCallsArr && typeof oaiDelta["content"] === "string") {
+            accumulated += oaiDelta["content"] as string;
+            yield ({ accumulated, done: false });
+          } else if (!toolCallsArr) {
+            // content may be null when tool is being called; skip.
+          }
+        }
+
+        // finish_reason:"tool_calls" signals a tool turn.
+        // Defensive: also surface if any tool calls accumulated by stream-end
+        // (some openai-compatible servers mis-set finish_reason to "stop").
+        if (finishReason === "tool_calls") {
+          // Parse the lowest-index accumulated entry (single-tool v1 parity with Anthropic).
+          const indices = Object.keys(openAiToolAccum).map(Number).sort((a, b) => a - b);
+          if (indices.length > 0) {
+            const firstIdx = indices[0]!;
+            const entry = openAiToolAccum[firstIdx]!;
+            try {
+              const parsedInput = JSON.parse(entry.argsJson || "{}") as Record<string, unknown>;
+              toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+            } catch {
+              // Malformed arguments JSON — graceful degradation (no toolUse surfaced).
+            }
+          }
+          break;
+        }
       }
     }
   } catch (err) {
@@ -186,68 +368,33 @@ export async function* streamCompleteChat(
     throw llmErr;
   }
 
-  // Emit the final chunk.
-  yield { accumulated, done: true };
-}
-
-async function extractNonStreamingText(
-  response: Response,
-  provider: "anthropic" | "openai-compatible",
-): Promise<string> {
-  const text = await response.text();
-  if (!text.trim()) {
-    throw {
-      kind: "Malformed",
-      where: "shape",
-      detail: "empty non-streaming response body",
-    } as LlmError;
-  }
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    throw {
-      kind: "Malformed",
-      where: "json-parse",
-      detail: "non-streaming response is not valid JSON",
-    } as LlmError;
-  }
-
-  if (provider === "anthropic") {
-    const content = (parsed as Record<string, unknown>)["content"];
-    if (Array.isArray(content)) {
-      for (const item of content) {
-        if (
-          item &&
-          typeof item === "object" &&
-          (item as Record<string, unknown>)["type"] === "text" &&
-          typeof (item as Record<string, unknown>)["text"] === "string"
-        ) {
-          return (item as Record<string, unknown>)["text"] as string;
-        }
-      }
+  // Emit the final chunk, including tool_use result when either:
+  // - Anthropic: stop_reason was "tool_use" AND toolUseResult was accumulated.
+  // - OpenAI: toolUseResult was set from delta.tool_calls accumulation.
+  // Defensive: also surface openai toolUseResult when accumulated by stream-end
+  // even if finish_reason was not exactly "tool_calls" (compat-server robustness).
+  const openAiToolDetected =
+    providerKind === "openai-compatible" &&
+    toolUseResult === undefined &&
+    Object.keys(openAiToolAccum).length > 0;
+  if (openAiToolDetected) {
+    // Defensive fallback: server returned tools but didn't set finish_reason:"tool_calls".
+    const indices = Object.keys(openAiToolAccum).map(Number).sort((a, b) => a - b);
+    const firstIdx = indices[0]!;
+    const entry = openAiToolAccum[firstIdx]!;
+    try {
+      const parsedInput = JSON.parse(entry.argsJson || "{}") as Record<string, unknown>;
+      toolUseResult = { id: entry.id, name: entry.name, input: parsedInput };
+    } catch {
+      // Malformed — no toolUse.
     }
-    throw {
-      kind: "Malformed",
-      where: "shape",
-      detail: "anthropic non-streaming response missing text content",
-    } as LlmError;
   }
 
-  const choices = (parsed as Record<string, unknown>)["choices"];
-  if (Array.isArray(choices) && choices.length > 0) {
-    const first = choices[0] as Record<string, unknown>;
-    const message = first?.["message"] as Record<string, unknown> | undefined;
-    const content = message?.["content"];
-    if (typeof content === "string") return content;
+  if ((stopReason === "tool_use" || toolUseResult !== undefined) && toolUseResult) {
+    yield ({ accumulated, done: true, toolUse: toolUseResult });
+  } else {
+    yield ({ accumulated, done: true });
   }
-
-  throw {
-    kind: "Malformed",
-    where: "shape",
-    detail: "openai-compatible non-streaming response missing message content",
-  } as LlmError;
 }
 
 // ---- Helpers ---------------------------------------------------------------
@@ -277,34 +424,54 @@ function _emitError(err: LlmError, provider: "anthropic" | "openai-compatible"):
   });
 }
 
-/**
- * Extracts the text delta from a parsed SSE data chunk based on provider format.
- *
- * Anthropic format:
- *   content_block_delta: { delta: { type: "text_delta", text: "..." } }
- *
- * OpenAI-compatible format:
- *   choices[0].delta.content: "..."
- */
-function extractDelta(
-  parsed: Record<string, unknown>,
+function parseNonStreamingCompletion(
+  json: unknown,
   provider: "anthropic" | "openai-compatible",
-): string {
+): StreamChunk {
   if (provider === "anthropic") {
-    const delta = parsed["delta"] as Record<string, unknown> | undefined;
-    if (delta && typeof delta["text"] === "string") {
-      return delta["text"];
+    const obj = asRecord(json);
+    const content = Array.isArray(obj?.["content"]) ? obj["content"] : [];
+    let accumulated = "";
+    let toolUse: ToolUseResult | undefined;
+    for (const block of content) {
+      const item = asRecord(block);
+      if (!item) continue;
+      if (item["type"] === "text" && typeof item["text"] === "string") {
+        accumulated += item["text"];
+      } else if (item["type"] === "tool_use") {
+        const id = typeof item["id"] === "string" ? item["id"] : "";
+        const name = typeof item["name"] === "string" ? item["name"] : "";
+        const input = asRecord(item["input"]) ?? {};
+        toolUse = { id, name, input };
+      }
     }
-    return "";
+    return toolUse ? { accumulated, done: true, toolUse } : { accumulated, done: true };
   }
 
-  // OpenAI-compatible
-  const choices = parsed["choices"] as Array<Record<string, unknown>> | undefined;
-  if (Array.isArray(choices) && choices.length > 0) {
-    const delta = choices[0]?.["delta"] as Record<string, unknown> | undefined;
-    if (delta && typeof delta["content"] === "string") {
-      return delta["content"];
+  const obj = asRecord(json);
+  const choices = Array.isArray(obj?.["choices"]) ? obj["choices"] : [];
+  const firstChoice = asRecord(choices[0]);
+  const message = asRecord(firstChoice?.["message"]);
+  const accumulated = typeof message?.["content"] === "string" ? message["content"] : "";
+  const toolCalls = Array.isArray(message?.["tool_calls"]) ? message["tool_calls"] : [];
+  const firstToolCall = asRecord(toolCalls[0]);
+  const fn = asRecord(firstToolCall?.["function"]);
+  if (firstToolCall && fn) {
+    const id = typeof firstToolCall["id"] === "string" ? firstToolCall["id"] : "";
+    const name = typeof fn["name"] === "string" ? fn["name"] : "";
+    const argsRaw = typeof fn["arguments"] === "string" ? fn["arguments"] : "{}";
+    try {
+      const input = JSON.parse(argsRaw || "{}") as Record<string, unknown>;
+      return { accumulated, done: true, toolUse: { id, name, input } };
+    } catch {
+      return { accumulated, done: true };
     }
   }
-  return "";
+  return { accumulated, done: true };
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
 }

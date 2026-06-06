@@ -24,10 +24,6 @@
 
 import * as React from "react";
 import { useNavigate } from "react-router";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import { localI18n } from "./internal/localI18n.js";
 
 const PREMIUM_SETTINGS_PATH = "/app/settings/premium";
@@ -36,11 +32,6 @@ const CANCEL_REDIRECT_MS = 3000;
 function CheckoutCancelPageInner(): React.ReactElement {
   const navigate = useNavigate();
   const t = localI18n("en");
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
@@ -63,7 +54,7 @@ function CheckoutCancelPageInner(): React.ReactElement {
         role="status"
         data-testid="premium-cb-banner-cancelled"
       >
-        <p>{isDesktopOfflineRuntime ? "Checkout callback is unavailable in desktop offline mode" : t("premium.cb.cancel")}</p>
+        <p>{t("premium.cb.cancel")}</p>
         <p className="premium-cb-redirect">{t("premium.cb.redirect_notice")}</p>
       </div>
     </div>

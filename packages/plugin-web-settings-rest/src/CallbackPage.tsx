@@ -20,10 +20,6 @@
 
 import * as React from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import { usePref } from "@repo/plugin-web-storage";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { validateAndConsumeState } from "./internal/oauthState.js";
@@ -50,7 +46,7 @@ function scrubOAuthQuery(): void {
   window.history.replaceState(window.history.state, "", url.toString());
 }
 
-type CallbackStatus = "success" | "invalid" | "cancelled" | "offline" | "pending";
+type CallbackStatus = "success" | "invalid" | "cancelled" | "pending";
 
 interface CallbackStatusState {
   status: CallbackStatus;
@@ -104,11 +100,6 @@ function CallbackPageInner(): React.ReactElement {
   // rendering with a wrapped lang context.
   const lang = "en" as const;
   const t = localI18n(lang);
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   const [state, setState] = React.useState<CallbackStatusState>({
     status: "pending",
@@ -116,17 +107,9 @@ function CallbackPageInner(): React.ReactElement {
   });
 
   React.useEffect(() => {
-    if (isDesktopOfflineRuntime) {
-      setState({ status: "offline", providerId: null });
-      scrubOAuthQuery();
-      const timer = setTimeout(() => {
-        void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-
     const errorParam = searchParams.get("error");
     const stateParam = searchParams.get("state");
+    const codeParam = searchParams.get("code");
 
     if (errorParam) {
       // Provider returned an error (e.g. access_denied)
@@ -165,7 +148,16 @@ function CallbackPageInner(): React.ReactElement {
       return () => clearTimeout(timer);
     }
 
-    // Valid state — extract providerId from state prefix
+    if (!codeParam) {
+      setState({ status: "invalid", providerId: null });
+      scrubOAuthQuery();
+      const timer = setTimeout(() => {
+        void navigate(SETTINGS_INTEGRATIONS_PATH, { replace: true });
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+
+    // Valid state and code — extract providerId from state prefix
     const dotIndex = stateParam.indexOf(".");
     const providerId = stateParam.slice(0, dotIndex) as IntegrationProviderId;
 
@@ -201,7 +193,7 @@ function CallbackPageInner(): React.ReactElement {
     }, 2000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDesktopOfflineRuntime, navigate, searchParams, setGcalConnected, setLinearConnected, setNotionConnected]);
+  }, []);
 
   const { status } = state;
 
@@ -226,12 +218,6 @@ function CallbackPageInner(): React.ReactElement {
       {status === "cancelled" && (
         <div className="oauth-cb-banner oauth-cb-banner--cancelled" role="status">
           <span>{t("oauth.cb.cancelled")}</span>
-          <span className="oauth-cb-redirect">{t("oauth.cb.redirect_notice")}</span>
-        </div>
-      )}
-      {status === "offline" && (
-        <div className="oauth-cb-banner oauth-cb-banner--error" role="alert">
-          <span>Authorization callback is unavailable in desktop offline mode</span>
           <span className="oauth-cb-redirect">{t("oauth.cb.redirect_notice")}</span>
         </div>
       )}

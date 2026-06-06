@@ -31,10 +31,6 @@
 
 import * as React from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { localI18n } from "./internal/localI18n.js";
 import { usePremiumTier } from "./internal/usePremiumTier.js";
@@ -43,30 +39,17 @@ const PREMIUM_SETTINGS_PATH = "/app/settings/premium";
 const SUCCESS_REDIRECT_MS = 2000;
 const INVALID_REDIRECT_MS = 3000;
 
-type CheckoutSuccessStatus = "pending" | "success" | "invalid" | "offline";
+type CheckoutSuccessStatus = "pending" | "success" | "invalid";
 
 function CheckoutSuccessPageInner(): React.ReactElement {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const t = localI18n("en");
   const { setTier, setStartedAt, effectiveTier } = usePremiumTier();
-  const runtimeProfile = resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
 
   const [status, setStatus] = React.useState<CheckoutSuccessStatus>("pending");
 
   React.useEffect(() => {
-    if (isDesktopOfflineRuntime) {
-      setStatus("offline");
-      const timer = setTimeout(() => {
-        void navigate(PREMIUM_SETTINGS_PATH, { replace: true });
-      }, INVALID_REDIRECT_MS);
-      return () => clearTimeout(timer);
-    }
-
     const sessionId = searchParams.get("session_id");
 
     if (!sessionId || sessionId.trim().length === 0) {
@@ -101,7 +84,7 @@ function CheckoutSuccessPageInner(): React.ReactElement {
     }, SUCCESS_REDIRECT_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDesktopOfflineRuntime]);
+  }, []);
 
   if (status === "pending") {
     return <div className="premium-cb-page" data-testid="premium-cb-page" />;
@@ -126,16 +109,6 @@ function CheckoutSuccessPageInner(): React.ReactElement {
           data-testid="premium-cb-banner-invalid"
         >
           <p>{t("premium.cb.invalid")}</p>
-          <p className="premium-cb-redirect">{t("premium.cb.redirect_notice")}</p>
-        </div>
-      )}
-      {status === "offline" && (
-        <div
-          className="premium-cb-banner premium-cb-banner--invalid"
-          role="alert"
-          data-testid="premium-cb-banner-offline"
-        >
-          <p>Checkout callback is unavailable in desktop offline mode</p>
           <p className="premium-cb-redirect">{t("premium.cb.redirect_notice")}</p>
         </div>
       )}

@@ -9,13 +9,15 @@
  * The grid itself does NOT know widget internals — it calls
  * registration.render(ctx) and renders the result inside <WidgetShell>.
  */
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, type PointerEvent as ReactPointerEvent } from "react";
 
 import type { Lang } from "@repo/plugin-web-tokens";
 
 import { useDashOrder } from "./internal/useDashOrder.js";
 import { useFlipReorder } from "./internal/useFlipReorder.js";
 import { useGridDrag } from "./internal/useGridDrag.js";
+import { useWidgetAppearance } from "./internal/useWidgetAppearance.js";
+import { layoutFromResize, useWidgetLayout } from "./internal/useWidgetLayout.js";
 import type { WidgetRegistration, WidgetRenderContext } from "./types.js";
 import { WidgetGhost } from "./WidgetGhost.js";
 import { WidgetShell } from "./WidgetShell.js";
@@ -29,6 +31,12 @@ export interface DashboardGridProps {
   now: Date;
   /** Optional deep-link callback. */
   goTo: (moduleId: string) => void;
+  /**
+   * Optional remove callback — forwarded to each WidgetShell as onRemove.
+   * When provided, each shell renders a remove button.
+   * Owned by DashboardModule (uses rawSetOrder directly to bypass sanitize).
+   */
+  onRemove?: (id: string) => void;
 }
 
 /**
@@ -56,7 +64,7 @@ function useRegistryMap(widgets: WidgetRegistration[]): Map<string, WidgetRegist
   }, [widgets]);
 }
 
-export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) {
+export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardGridProps) {
   const registryMap = useRegistryMap(widgets);
 
   // Deduped widgets in their original registration order (used by sanitizeOrder).
@@ -66,9 +74,35 @@ export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) 
 
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const lastRects = useRef<Record<string, DOMRect>>({});
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
   useFlipReorder(order, itemRefs, lastRects);
   const { drag, startDrag } = useGridDrag({ order, setOrder, itemRefs });
+  const { getLayout, setWidgetLayout, createResizeSnapshot } = useWidgetLayout(dedupedWidgets);
+  const { getAppearance, setWidgetAppearance, resetWidgetAppearance } =
+    useWidgetAppearance(dedupedWidgets);
+
+  const startResize = useCallback(
+    (id: string, event: ReactPointerEvent<HTMLButtonElement>) => {
+      const reg = registryMap.get(id);
+      if (!reg) return;
+      const snapshot = createResizeSnapshot(id, reg.span, event, gridRef.current);
+
+      const onMove = (moveEvent: PointerEvent) => {
+        setWidgetLayout(id, layoutFromResize(snapshot, moveEvent.clientX, moveEvent.clientY));
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+      };
+
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    },
+    [createResizeSnapshot, registryMap, setWidgetLayout],
+  );
 
   const ctx: WidgetRenderContext = { lang, now, goTo };
 
@@ -76,10 +110,16 @@ export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) 
 
   return (
     <>
-      <div className={`dash-grid${drag ? " is-dragging" : ""}`} data-testid="dash-grid">
+      <div
+        ref={gridRef}
+        className={`dash-grid${drag ? " is-dragging" : ""}`}
+        data-testid="dash-grid"
+      >
         {order.map((id) => {
           const reg = registryMap.get(id);
           if (!reg) return null;
+          const layout = getLayout(id, reg.span);
+          const appearance = getAppearance(id);
           return (
             <WidgetShell
               key={id}
@@ -92,6 +132,12 @@ export function DashboardGrid({ widgets, lang, now, goTo }: DashboardGridProps) 
                 itemRefs.current[rid] = el;
               }}
               onPointerDown={startDrag}
+              onRemove={onRemove}
+              layout={layout}
+              onResizePointerDown={startResize}
+              appearance={appearance}
+              onAppearanceChange={setWidgetAppearance}
+              onAppearanceReset={resetWidgetAppearance}
             >
               {reg.render(ctx)}
             </WidgetShell>

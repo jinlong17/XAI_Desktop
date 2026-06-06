@@ -269,7 +269,7 @@ This row's App.tsx delta is intentionally minimal: one import + one JSX line.
 
 | Constraint | Plan satisfies? | Evidence |
 |---|---|---|
-| Pet identity → `xai_pet_id`, position → `xai_pet_pos` | YES | api.md §4.3 + verified in `packages/plugin-web-storage/src/internal/registry.ts:169-185` (both keys present with `owner: "xai-web-pet"`, schemaVersion 1, defaults `{x:24,y:24}` + `"mochi"`) |
+| Pet identity → `xai_pet_id`, position → `xai_pet_pos` | YES | api.md §4.3 + verified in `packages/plugin-web-storage/src/internal/registry.ts:169-185` (both keys present with `owner: "xai-web-pet"`, schemaVersion 1, defaults `{x:24,y:520}` + `"mochi"`) |
 | CSS transforms only (no JS animation loop) | YES | D2 Option A, api.md §1.4 (7 `@keyframes` + class rules with `will-change: transform`); no `framer-motion`/`react-spring` peer dep |
 | PetPicker preview MUST show animation (not static frame) | YES | D3 Option A — reuses `pet-anim-<animid>` class on each row avatar; AC-PET-8 + `PetPicker.preview.test.tsx` |
 | Bilingual tip-bubble strings | YES (with deliberate naming divergence — see Rec-1) | i18n keys `pet.hello`, `pet.tip1..4`, `pet.working`, `pet.idle` verified present in BOTH EN (`i18n.ts:199-207`) AND ZH (`i18n.ts:393-401`) bundles |
@@ -292,7 +292,7 @@ Verified `apps/web/src/App.tsx:39-104` is the host root, owns `petOn` + `lang` v
 
 ### Persistence keys (verified live in registry)
 
-`xai_pet_pos` (PrefEntry<PetPos>, default `{x:24,y:24}`) + `xai_pet_id` (PrefEntry<PetId>, default `"mochi"`) both present in `packages/plugin-web-storage/src/internal/registry.ts:169-185` with `owner: "xai-web-pet"`. Types `PetId` + `PetPos` re-exported from `packages/plugin-web-storage/src/index.ts:24-26`. No registry edit required from this row — frozen-assumption §1 holds.
+`xai_pet_pos` (PrefEntry<PetPos>, default `{x:24,y:520}`) + `xai_pet_id` (PrefEntry<PetId>, default `"mochi"`) both present in `packages/plugin-web-storage/src/internal/registry.ts:169-185` with `owner: "xai-web-pet"`. Types `PetId` + `PetPos` re-exported from `packages/plugin-web-storage/src/index.ts:24-26`. The D3 parity receipt updates the default y-offset to keep the first-run pet clear of shell chrome and top-of-page headings; persisted user positions remain authoritative.
 
 ### Icons (verified)
 
