@@ -11,11 +11,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-data-contracts-rbac |
 | **Title** | Admin Data + Permission Contracts (read models · permission keys · RBAC · API boundary) |
-| **Current Phase** | FEATURE_BUILD (P1–P2 DONE) |
-| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
+| **Current Phase** | FEATURE_BUILD (P1–P3 DONE) |
+| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
 | **Executor** | claude (feature-auto-build, inline via feature-dev-loop) |
-| **Updated** | 2026-06-06 15:40 |
-| **Suggested Next** | feature-auto-build (P3) |
+| **Updated** | 2026-06-06 15:50 |
+| **Suggested Next** | feature-auto-build (P4) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #2 of 6** (preserves dep order for #3–#6) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch) |
@@ -154,8 +154,8 @@ untouched; record the choice in P4.
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Read-model contract freeze + live/mock/deferred map | DONE | cba8e5e |
-| P2 — Immutable permission-key catalog | DONE | (pending hash) |
-| P3 — RBAC role map + predicate | PENDING | — |
+| P2 — Immutable permission-key catalog | DONE | 411d6ca |
+| P3 — RBAC role map + predicate | DONE | (pending hash) |
 | P4 — Admin API-boundary contract + secret invariant | PENDING | — |
 
 ## Work Log (append-only)
@@ -280,5 +280,36 @@ untouched; record the choice in P4.
   gates AC-2 (TT-PERMKEY-UNIQUE/PATTERN/APPEND-ONLY) + AC-3 (TT-PERMKEY-MUTATION-COVERAGE) GREEN.
 - **Boundary self-check**: W0 — admin-local pure data; no shared `@repo/*`; no events/Tauri/syncScope; no secret
   literal (the new module is auto-covered by slice #1's whole-`src` TT-NO-SECRET-SRC, re-run in P4); no new dependency.
-- **Commits**: see Phase Progress table (recorded below after commit).
+- **Commits**: `411d6ca` (see Phase Progress table).
 - **Next step**: P3 — RBAC role→permission grant map + pure advisory predicate (allow/deny per mutation family).
+
+### Round 5 — 2026-06-06 15:50 · feature-auto-build P3 (inline via feature-dev-loop)
+
+- **Executor**: claude (feature-auto-build, inline-executed by the feature-dev-loop orchestrator).
+- **Phase**: P3 — RBAC role map + predicate.
+- **Action**:
+  - Created `apps/admin/src/authz/rbac.ts`:
+    - `AdminRole` (`super`/`ops`/`support`/`finance`/`audit`) + `ADMIN_ROLES`.
+    - `ROLE_GRANTS: Record<AdminRole, ReadonlySet<PermissionKey>>` normalized **1:1** from the prototype `RBAC`
+      matrix (verified against ../fixtures `RBAC`): super = FULL catalog (so any future appended key is auto-granted
+      — append-only safety); ops = dashboard+manage+ban+rollout+quota; support = dashboard+manage+impersonate;
+      finance = dashboard+billing; audit = dashboard+view-audit (read-only).
+    - Pure `can(role, key)` + `canMutate(role, family)` — ADVISORY/UX only; fail-closed on null/undefined/unknown;
+      never throw; no I/O.
+    - `RBAC_ADVISORY_NOTE` + `RBAC_SERVER_AUTHORITATIVE` + a posture banner documenting C2 (server re-authorizes;
+      browser never the boundary).
+  - Created `apps/admin/src/authz/rbac.test.ts` — **TT-RBAC-ALLOW-<family>** (×6, granted roles) +
+    **TT-RBAC-DENY-<family>** (×6, mandatory negatives; allow ∪ deny covers all 5 roles per family) +
+    **TT-RBAC-READ-GRANTS** (audit read-only proven; super has every key; finance billing-only; ops/support match
+    matrix) + **TT-RBAC-FAILCLOSED** (null/undefined/unknown → false, pure across all role×key) +
+    **TT-RBAC-ADVISORY-NOTE** (flag + note + rbac.ts source banner + api.md both document advisory/server-authoritative).
+- **REC-1 handling (RECORDED)**: `transferOwnership` → `ORG_TRANSFER_OWNER` granted **SUPER-ONLY**; explicit
+  TT-RBAC-ALLOW-transferOwnership (super) + TT-RBAC-DENY-transferOwnership (ops/support/finance/audit) cases prove
+  it is a synthesized super-only grant, not a seeded one.
+- **Tests**: `vitest run src/authz/rbac.test.ts` → **50 passed**. `tsc --noEmit` → **exit 0**. Acceptance gates
+  AC-4 (TT-RBAC-ALLOW/DENY ×6 + READ-GRANTS) + AC-5 (TT-RBAC-FAILCLOSED + ADVISORY-NOTE) GREEN.
+- **Boundary self-check**: W0 — admin-local pure functions; no shared `@repo/*`; no events/Tauri/syncScope; no secret;
+  no new dependency. C2 server-authoritative posture documented + tested (R1 guard).
+- **Commits**: see Phase Progress table (recorded below after commit).
+- **Next step**: P4 — typed mockable AdminApiClient + server-authoritative + fail-closed contract; re-run carried
+  no-secret guards + build over the now-larger src/dist (DEFER the slice #1 mockAdminCommandAdapter rewire to row #3 — OQ-F).
