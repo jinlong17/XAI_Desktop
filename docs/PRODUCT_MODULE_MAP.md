@@ -15,7 +15,8 @@
 
 - `web → app` **只能经 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动直接合进 `dev`。
 - `sync` **只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4，9 项完整性清单）。
-- `site` / `admin` 为 **PROPOSED（owner-deferred）**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线，先用 `xai-feature-brief` 规范化占位。
+- `site` 为 **PROPOSED（owner-deferred）**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线，先用 `xai-feature-brief` 规范化占位。
+- `admin` 已由 operator 于 2026-06-05 激活为 **roadmap-gated**：可开 `codex/admin/<feature>`，但必须经 [`xai-admin-dashboard-system-integration.md`](workflow/roadmap/xai-admin-dashboard-system-integration.md) 从 `xai-admin-dashboard-shell` 开始推进；不得绕过 RBAC/审计/secret/deploy 闸门直接做生产后台写入。
 - `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` **已定义但尚未创建**；创建是独立的 operator 确认步骤，任何触及 `dev` 的操作都需显式确认。
 - 站内（同一条 Web 线）的部署/CSP 改动（`apps/web/wrangler.toml`、`apps/web/public/_headers`）走 **ADR-0008 扩展协议 + feature-plan/review**，**不走 D3**（D3 只判定 Web 变更对 App 的影响）。
 
@@ -28,7 +29,7 @@
 | 3 | 桌面整理插件 / Widget | `plugin` | desktop-plugin-next | 改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包；需求提到 桌面整理 / Smart Container / Grid 容器 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想；即使运行时代码物理在 host，产品归属仍是 plugin | G1 runtime active · packages P2 paused |
 | 4 | 账号云同步层 | `sync` | sync-v1 roadmap wave | 实体出现 syncScope: account-sync / device-local 字段,或要在 packages/core-data/src/entities.ts 注册新 entityType(形如 productivity.todo,须匹配 ^[a-z]+\.[a-z_]+$)；涉及 /sync/push、/sync/pull、加密信封(envelope)、outbox、commit_seq 游标、nonce lease、AES-256-GCM、HPKE、device_id / encryption_device_id 等同步协议要素；需求是 Web IndexedDB ⇄ 服务端 encrypted blobs ⇄ App SQLite/SQLCipher 之间收敛,而非 Web 单端 UI 或 App 原生壳本身 | P2 · paused |
 | 5 | 官方网页 | `site` | codex/site/<feature> | 关键词命中:官方网页 / 官网 / marketing 站 / 下载页 / download page / 自动更新 / auto-update / updater / appcast / 发布说明 / release notes / 落地页 landing；分发与发布产物:.dmg / installer / 安装包 / updater metadata / latest.json / appcast.xml,且来源绑定 release/desktop/<version> 与 tag vX.Y.Z(ADR-0013 D2,该分支为 defined-not-yet-created)；部署设施复用:apps/web/wrangler.toml、apps/web/deploy/*、Cloudflare Pages、apps/web/public/_headers / CSP 仅为站点本身(ADR-0008),而非 apps/web/ 的 24 个产品模块 | proposed |
-| 6 | Admin Dashboard | `admin` | codex/admin/<feature> | 路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支；关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志；AI 治理类:Provider 配置、模型×套餐权限矩阵、套餐分层路由、AI 用量配额、成本上限、provider secret handle(服务端加密密钥句柄,浏览器只拿状态不拿密钥) | proposed |
+| 6 | Admin Dashboard | `admin` | codex/admin/<feature> | 路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支；关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志；AI 治理类:Provider 配置、模型×套餐权限矩阵、套餐分层路由、AI 用量配额、成本上限、provider secret handle(服务端加密密钥句柄,浏览器只拿状态不拿密钥) | operator-activated · roadmap-gated |
 
 > 完整的归属信号、prompt 模板与 workflow 见下方各模块详情。
 
@@ -113,7 +114,7 @@ Start the bug-diagnose agent.
 | Mac 桌面版 App（`app`） | 一个已落地的 Web 改动触碰共享 UI / @repo/core 接缝、或在 desktop 运行时(VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline)行为不同,需要带入 Desktop App | web → desktop-next(经 D3 gate;desktop-next 已定义但尚未创建,创建需 operator 确认) | `xai-web-to-desktop-sync` | 跑 D3 分级:W0 仅记录、W1 合入 desktop-next 跑 web build+tauri build 门、W2 加 desktop 离线/运行时/profile 测试,产出 Parity Receipt(NO_APP_CHANGE\|GATE_ONLY\|DESKTOP_DELTA_REQUIRED\|BLOCKED)。这是 Web 改动流向 App 的唯一通道,不是把 dev 拉成 web 的子集。 |
 | Mac 桌面版 App（`app`） | Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3 | desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认) | `xai-feature-full-loop` | W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。 |
 | 官方网页（`site`） | 需求落在官方网页/下载页/自动更新宿主(marketing + download + auto-update host),复用 Cloudflare 部署基建但与 release/desktop/<version> 绑定 | codex/site/<feature>(site 线 PROPOSED,owner-deferred;短分支约定已定,实际开工尚未授权) | `xai-feature-brief` | site 与 web 共用 Cloudflare 部署基建与 ADR-0008,但属独立产品线且为 PROPOSED/owner-deferred(ADR-0013 §S7 #2,本轮治理 out of scope、未授权开工):先用 brief 规范化占位,勿在 apps/web/ Console 内塞下载/官网逻辑,勿当作已批准的 active work 直接推进。 |
-| Admin Dashboard（`admin`） | 需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面 | codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工) | `xai-feature-brief` | admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。 |
+| Admin Dashboard（`admin`） | 需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面 | codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target) | `xai-feature-brief` 或 `xai-roadmap-loop` | admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 `xai-admin-dashboard-shell` 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。 |
 
 **影响 / 需同步更新的模块**
 
@@ -122,7 +123,7 @@ Start the bug-diagnose agent.
 | Mac 桌面版 App（`app`） | Web 改动落在共享 UI / @repo/core 事件或类型、或 desktop 运行时敏感的代码(W1/W2/W3/W4),且需要带入 Desktop App | 在 web→desktop-next 之前运行 xai-web-to-desktop-sync 做 W0–W4 分级并产出 Parity Receipt;W3 需在 desktop-next/desktop-plugin-next 经 xai-feature-full-loop 补原生 delta,W4 需 xai-desktop-release-gate(含 macOS 手动 smoke、签名/公证/DMG/updater 证据)。这是 Web→App 的唯一通道(D3 gate),非分支对齐。 |
 | 账号云同步层（`sync`） | Web 新增/修改 account-sync 实体(syncScope: account-sync,如任务卡片、看板、习惯打卡的远端同步形态),改动 Web IndexedDB 侧的 outbox/push/pull 形态 | 注意:web↔sync 不是分支 promotion,而是 ADR-0013 D4 的实体作用域闸门(只有 syncScope: account-sync 实体才同步,device-local 永不同步)。按 D4 九项完整性清单补齐:entityType(注册到 packages/core-data/src/entities.ts)、schemaVersion、本地存储映射、push 信封、pull apply 规则、冲突策略(非静默 LWW)、Web IndexedDB 测试 + App SQLite 测试 + 双设备同步 smoke;device-local 实体严禁进远端 outbox。 |
 | 官方网页（`site`） | Web Console 发布管线/Cloudflare 部署配置(wrangler.toml、apps/web/deploy/、_headers、CSP)发生变更,而官网下载页复用同一套部署基建 | 同步评估官方网页(site 线,PROPOSED/owner-deferred)的 Cloudflare 部署/CSP 配置与下载/自动更新宿主,确保与 ADR-0008 + release/desktop/<version> 产物保持一致;site 尚未授权开工,仅做兼容性评估,不在本模块内落官网逻辑。 |
-| Admin Dashboard（`admin`） | Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集 | 记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。 |
+| Admin Dashboard（`admin`） | Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集 | 记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 `xai-admin-control-plane-sync` 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。 |
 
 ---
 
@@ -245,7 +246,7 @@ Start the bug-diagnose agent.
 1. 先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。
 2. active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。
 3. 数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。
-4. 插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。
+4. 插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。
 5. Plugin Center 拆分判定：`桌面插件`入口按钮、Plugin Center window、实例 placement、pin、click-through、permissions 属 app；插件目录、AddToDesktop contract、实例 settings schema 和 `packages/plugin-*` 内容属 plugin。一个 feature 同时触及时，先在 plan 中拆 App delta 与 Plugin delta，不把入口需求写进 Web 工作台。
 6. 若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。
 7. 每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。
@@ -397,7 +398,7 @@ Start the feature-plan agent.
 |---|---|---|---|---|
 | Web（`web`） | 同步层改动需要在 Web 端落地承载它的 UI/IndexedDB 适配(如 Console 同步状态页、冲突恢复 UI、设备列表) | codex/web/<feature> | `feature-plan` | Web 是端到端验收的写入/读取入口;sync 协议稳定后,Web 侧 UI 与 IndexedDB 映射在 web 线独立推进,二者通过 account-sync 契约对接而非互相直连(D4:Web 与 App 不互相同步,都汇入同一账号云)。 |
 | Mac 桌面版 App（`app`） | 同步层需要新的 Tauri/Rust 原生增量(crypto_* IPC、SQLCipher 打开路径、Keychain ACL)或 App SQLite 侧落地 | codex/desktop/<feature> | `xai-web-to-desktop-sync` | 属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next/desktop-plugin-next 承接,二者均为 defined, not yet created(创建需操作者确认,触及 dev 需显式确认)。 |
-| Admin Dashboard（`admin`） | 需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理 | codex/admin/<feature> | `feature-plan` | Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。 |
+| Admin Dashboard（`admin`） | 需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理 | codex/admin/<feature> | `feature-plan` | Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。 |
 
 **影响 / 需同步更新的模块**
 
@@ -405,7 +406,7 @@ Start the feature-plan agent.
 |---|---|---|
 | Mac 桌面版 App（`app`） | 新增/修改 account-sync 实体的 schemaVersion 或字段,改变服务端 encrypted blob 或 outbox 信封格式 | 在 apps/desktop 的 App SQLite/SQLCipher 侧同步列映射与 migration,并补 App SQLite/outbox 测试,确保 App 仍能解析新信封;经 ADR-0013 D3(W2/W3)分类评估原生影响,W3 原生 delta 走 /xai-feature-full-loop。 |
 | Web（`web`） | 新增/修改 account-sync 实体或冲突策略 | 在 apps/web 的 IndexedDB 本地映射与 pull apply 规则同步更新,补 Web IndexedDB 测试,并在涉及冲突时提供 conflict shadow 恢复 UI 入口。 |
-| Admin Dashboard（`admin`） | 新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list) | 更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。 |
+| Admin Dashboard（`admin`） | 新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list) | 更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。 |
 
 ---
 
@@ -497,10 +498,10 @@ Start the bug-diagnose agent for site.
 
 ### 6. Admin Dashboard （`admin`）
 
-- **状态**：proposed · 控制面候选
+- **状态**：operator-activated · roadmap-gated
 - **推荐 branch**：codex/admin/<feature>
 - **关键依赖**：依赖账号、权限、计量和审计合同
-- **开发目标**：把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。
+- **开发目标**：把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 `xai-admin-dashboard-shell`,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。
 
 **任务归属信号**
 
@@ -513,20 +514,20 @@ Start the bug-diagnose agent for site.
 
 **推荐 skill / agent**
 
-- `xai-feature-brief` — 把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。
-- `xai-feature-full-loop` — operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。
+- `xai-feature-brief` — 把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。
+- `xai-feature-full-loop` — admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。
 - `xai-roadmap-loop` — 已确认要批量推进 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的 6 行 manifest(shell→契约/RBAC→users/orgs/billing→AI/provider→audit/ops→deploy)时,init 解析后逐波 dispatch。
 - `xai-release-log` — 任一 admin 可见增量(隔离 shell、路由守卫、某页接通 typed adapter、审计链落地)完成后,记录 release-log。
 - `bug-diagnose` — admin 原型或已落地 admin 面出现缺陷(如路由守卫漏放非管理员、type-to-confirm 失效、审计未追加、密钥泄漏到浏览器 bundle)时,作为 bugfix 流水线入口。
 
 **开发 workflow**
 
-1. 前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。
-2. 确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。
+1. 前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 `xai-admin-dashboard-shell`;package/deploy target 仍由 shell 切片决策。
+2. 每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。
 3. 单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。
 4. 批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。
 5. 每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。
-6. 全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。
+6. 全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。
 
 **常用 prompt（可直接复制）**
 
@@ -535,7 +536,7 @@ Start the bug-diagnose agent for site.
 ```text
 /xai-feature-brief
 需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。
-背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。
+背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。
 约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。
 参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。
 ```
@@ -550,7 +551,7 @@ Requirement: Implement the first Admin Dashboard system integration slice: isola
 Suggested Feature Slug: xai-admin-dashboard-shell
 Automation Mode: D-Codex
 Verify Cross-vendor: yes
-约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。
+约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。
 ```
 
 </details>
@@ -561,7 +562,7 @@ Verify Cross-vendor: yes
 /xai-roadmap-loop mode: init
 Roadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md
 Verify Cross-vendor: yes
-说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。
+说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。
 ```
 
 </details>
@@ -590,4 +591,4 @@ Verify Cross-vendor: yes
 - 本文与 `dashboard-state.json` 的 `product_lines` Product Module Registry 同源；改模块定义时必须同步 `labels`、`visual`、`overview`、`tracking`、`features`、`goal`、`routing`、`skills`、`prompts`、`workflow`、`transitions`、`impacts`，避免总览和产品结构图重新分叉。
 - 路由规则的跨平台同步：本文 ↔ [`CLAUDE.md`](../CLAUDE.md) §Product module map ↔ [`AGENTS.md`](../AGENTS.md) §3 ↔ [`.cursor/rules/product-module-routing.mdc`](../.cursor/rules/product-module-routing.mdc)。
 - 边界 / 分支 / 闸门的事实变更以 [ADR-0013](adr/0013-branch-sync-governance.md) 为准；本文只做导航编排，不改治理结论。
-- **跨模块同步扇出**（完成一个模块后,同步/适配/检查下游模块）以 [ADR-0014](adr/0014-cross-module-sync-orchestration.md) + 机读 [`sync-registry.json`](workflow/project/sync-registry.json) 为准。入口 = `xai-sync-fanout-dispatch`（读 registry 语义规则派发,触发语:「Web 版本功能已完成，执行后续同步 workflow」）；边动作复用 `xai-web-to-desktop-sync`（D3）/ `xai-web-deploy-preflight`（Web deploy gate）/ `xai-desktop-release-gate`（Desktop W4 gate）/ `xai-account-sync-scope-check`（D4,receipt-only）/ `xai-release-log`+`xai-dev-dashboard-sync`（收口）/ `xai-feature-brief`（site/admin/plugin 冻结线草案）。冻结线只产 receipt/草案,不落源码。
+- **跨模块同步扇出**（完成一个模块后,同步/适配/检查下游模块）以 [ADR-0014](adr/0014-cross-module-sync-orchestration.md) + 机读 [`sync-registry.json`](workflow/project/sync-registry.json) 为准。入口 = `xai-sync-fanout-dispatch`（读 registry 语义规则派发,触发语:「Web 版本功能已完成，执行后续同步 workflow」）；边动作复用 `xai-web-to-desktop-sync`（D3）/ `xai-web-deploy-preflight`（Web deploy gate）/ `xai-desktop-release-gate`（Desktop W4 gate）/ `xai-account-sync-scope-check`（D4,receipt-only）/ `xai-release-log`+`xai-dev-dashboard-sync`（收口）/ `xai-feature-brief`（site/plugin 冻结线草案）/ `xai-admin-control-plane-sync`（admin roadmap-gated impact note）。冻结线只产 receipt/草案,admin 只经 roadmap gates 落地。

@@ -41,7 +41,7 @@ candidates and ask — do not guess silently.
 1. **Plan/route-only.** Hand each fired action to its owning skill (see registry `actions[].skill`).
    Do not run the action logic inline and do not write product source.
 2. **Honor `governance.hard_rules`.** `web→app` only via the D3 gate (never merge web into `dev`);
-   frozen lines (`site`/`admin` PROPOSED, `sync`/`plugin` P2 PAUSED) get receipt/draft actions only;
+   frozen lines (`site` PROPOSED, `sync`/`plugin` P2 PAUSED) get receipt/draft actions only; admin is operator-activated but roadmap-gated and must route through its roadmap slices;
    creating `desktop-next`/`desktop-plugin-next`/`release/*` and any `dev` touch or line unfreeze are
    operator-confirmed steps that go in the operator-gated section, NOT a parallel wave.
 3. **Single-writer waves.** Use registry `file_ownership[]`: never place two actions that write the

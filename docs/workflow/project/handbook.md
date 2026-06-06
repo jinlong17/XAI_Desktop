@@ -29,7 +29,7 @@ continues on its independent App lane.
 | 3 | desktop organizer plugins / widgets | `apps/desktop/` plugin slots | P2 | paused | Resume after G1 ships. |
 | 4 | account cloud-sync layer | sync-v1 stack + server | P2 | paused | Resume after G1. Governed by ADR-0013 §D4. |
 | 5 | official website | not yet a package | PROPOSED | proposed | Distribution/download/updater host; start trigger still operator-confirmed. |
-| 6 | admin-dashboard | `docs/prototypes/admin-dashboard/index.html` | PROPOSED | proposed | Prototype only; no package or roadmap yet. |
+| 6 | admin-dashboard | `docs/prototypes/admin-dashboard/index.html` + `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` | P3 roadmap-gated | operator-activated | Start with `xai-admin-dashboard-shell`; no production writes before RBAC/audit/secret/deploy gates. |
 
 ## Branch Topology
 

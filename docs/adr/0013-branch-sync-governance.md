@@ -6,7 +6,7 @@
 |---|---|
 | ADR # | 0013 |
 | Title | Branch Topology, Web→Desktop Sync Gate & Account Cloud-Sync Governance |
-| 状态 / Status | **Accepted** — 2026-06-01 (operator-confirmed by Jinlong; was Proposed 2026-05-30). §S7 #2–#7 remain tracked deferred follow-ups, not reopened by acceptance. |
+| 状态 / Status | **Accepted** — 2026-06-01 (operator-confirmed by Jinlong; was Proposed 2026-05-30). §S7 #3 was resolved on 2026-06-05 by operator activation of the admin-dashboard line as roadmap-gated; §S7 #2 and #4–#7 remain tracked deferred follow-ups, not reopened by acceptance. |
 | 日期 / Date | 2026-05-30 |
 | 决策者 / Author | Claude Opus 4.8 (1M context) — drafted at operator (Jinlong) request |
 | Supersedes | none |
@@ -134,8 +134,9 @@ account cloud-sync per-feature rule on top of `syncScope`.
 **Cons:**
 - Branch topology committed in an ADR is harder to change later (needs a
   follow-up ADR/amendment).
-- Some slots (official website, admin-dashboard) are PROPOSED, not yet
-  operator-confirmed, so the ADR carries open items.
+- Some slots started as PROPOSED, so the ADR carries open items: official website
+  remains operator-deferred, while admin-dashboard was operator-activated on
+  2026-06-05 and remains roadmap-gated.
 
 ### Option B — Leave topology + sync flow as informal convention
 
@@ -185,15 +186,20 @@ they never get conflated again.
 | 3 | **desktop organizer plugins / widgets** | `apps/desktop/` plugin slots | `packages/plugin-{organizer, clipboard, widgets, meditation, pet}` | P2 | **paused** — resumes when G1 ships (ADR-0010 §D2). |
 | 4 | **account cloud-sync layer** (3 surfaces → one account) | sync-v1 stack + server | sync-v1 crypto stack (~50 pkgs), `@repo/core-data` `syncScope`, `plugin-account` push/pull engines | P2 | **paused** — post-G1 per ADR-0010 §D2 (sync-v1 stays PAUSED until G1 SHIPPED). Contract governed by D4 below. |
 | 5 | **official website** (marketing + download + auto-update host) | NEW line — not yet a package | proposed: reuse P0 Cloudflare deploy infra (`apps/web/deploy/*`, `wrangler.toml`) + a `release/*`-fed download/updater surface | **PROPOSED** (gates App distribution) | **proposed** — see Open Questions §S7; tie to `release/desktop/<version>` (D2) + ADR-0008 deploy target. |
-| 6 | **admin-dashboard / Control Plane** | NEW line — prototype only | prototype at `docs/prototypes/admin-dashboard/index.html` | **PROPOSED** (lowest of the six) | **proposed** — Admin Control Plane for AI config, usage, permissions, audit, and operational controls; no package, no roadmap yet. |
+| 6 | **admin-dashboard / Control Plane** | NEW line — prototype + roadmap manifest | prototype at `docs/prototypes/admin-dashboard/index.html`; roadmap at `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` | **P3 roadmap-gated** (lowest active product line) | **operator-activated 2026-06-05, roadmap-gated** — first authorized slice is `xai-admin-dashboard-shell`; no production data access, provider secrets, service-role credentials, or destructive writes before Workflow V2 gates are satisfied. |
 
 Rules attached to D1:
 
 - Lines 1–4 inherit their dev-status from amended ADR-0010; this ADR governs
   how active lines move changes between branches.
-- Lines 5 and 6 are **PROPOSED**: their exact priority slot and start trigger
-  require operator confirmation (Open Questions §S7). Until confirmed they
-  carry no active-focus claim and no new-work authorization.
+- Line 5 remains **PROPOSED**: its exact priority slot and start trigger require
+  operator confirmation (Open Questions §S7). Until confirmed it carries no
+  active-focus claim and no new-work authorization.
+- Line 6 is **operator-activated but roadmap-gated** as of 2026-06-05: work may
+  start only through `codex/admin/<feature>` and
+  `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`, beginning
+  with `xai-admin-dashboard-shell`. This activation does not authorize production
+  admin writes or promotion to `dev`.
 - "Product-priority" answers *how important is this product*; "current
   dev-status" answers *which branch/lane owns work right now*. Cite the right
   column for the right question.
@@ -417,10 +423,11 @@ Anti-patterns (do **not** do these):
 
 - **Topology is now ADR-committed.** Renaming/restructuring branches later needs
   a follow-up ADR or amendment.
-- **Carries open items.** Lines 5–6 (official website, admin-dashboard) and the
-  branch-creation timing remain PROPOSED/deferred under §S7; the ADR itself is now
-  **Accepted** (operator-confirmed 2026-06-01) with those items tracked as deferred
-  follow-ups, not Acceptance blockers.
+- **Carries open items.** Line 5 (official website) and the branch-creation
+  timing remain PROPOSED/deferred under §S7; line 6 (admin-dashboard) was
+  operator-activated on 2026-06-05 but remains roadmap-gated. The ADR itself is
+  **Accepted** (operator-confirmed 2026-06-01) with remaining items tracked as
+  deferred follow-ups, not Acceptance blockers.
 - **Two-place discipline for account-sync.** D4 must stay consistent with
   `data-repository-v0` and sync-v1; if `syncScope` or the protocol changes there,
   D4's wording must be revisited.
@@ -491,10 +498,15 @@ Anti-patterns (do **not** do these):
    ADR-0013 Acceptance.** It gates App distribution (download + auto-update host)
    and should tie to `release/desktop/<version>` (D2) + the ADR-0008 Cloudflare
    deploy target. Revisit its priority slot + start trigger in a later round.
-3. **Admin-dashboard priority (line 6).** **Owner-deferred — out of scope for
-   this governance round; stays PROPOSED (lowest of the six); does NOT block
-   ADR-0013 Acceptance.** Prototype at `docs/prototypes/admin-dashboard/index.html`;
-   revisit whether/when it becomes a real package + roadmap in a later round.
+3. **Admin-dashboard priority (line 6) — RESOLVED 2026-06-05:
+   operator-activated, roadmap-gated.** The Admin Dashboard line is now allowed
+   to start through `codex/admin/<feature>` and
+   `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`, beginning
+   with `xai-admin-dashboard-shell`. It is still the lowest active product line
+   and still has no production package/deploy target until the shell slice decides
+   that boundary. Browser code must never receive service-role credentials or
+   provider secret material, and destructive admin writes remain blocked until the
+   RBAC/data-contract/audit gates are green.
 4. **When to actually create `desktop-next` / `desktop-plugin-next` /
    `release/*`.** D2 defines them but creates none. **Open:** operator confirms
    the creation step, each branch's base commit, and the first D3 gate run
@@ -520,8 +532,9 @@ Anti-patterns (do **not** do these):
   (Jinlong) request.
 - **Status:** **Accepted** (operator-confirmed by Jinlong 2026-06-01; was Proposed 2026-05-30). §S7 **#1** (numbering) is **RESOLVED** — renumbered
   **0013**, convention = "repo-wide reserved numbers". Remaining gate = **operator
-  final confirmation of this governance round** — now MET (operator-confirmed 2026-06-01). §S7 **#2–#3** (official-website /
-  admin-dashboard), **#4** (branch creation), **#5** (runtime-profile authority),
+  final confirmation of this governance round** — now MET (operator-confirmed 2026-06-01). §S7 **#3** (admin-dashboard)
+  is **RESOLVED** as operator-activated/roadmap-gated on 2026-06-05. §S7 **#2** (official-website),
+  **#4** (branch creation), **#5** (runtime-profile authority),
   **#6** (sync dev's ADR files), **#7** (reconcile D1 vs dev's ADR-0011) are all
   **deferred follow-ups, NOT Acceptance blockers**.
 - **Two-machine note:** because `web` and `dev` are authored on independent

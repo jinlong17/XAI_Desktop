@@ -1515,6 +1515,15 @@
     {n:"Pixel Forge",s:"PF",plan:"Pro",used:14,cap:20,cost:"$1,980",st:"active",owner:"Tom Murphy",c:"#7bb8d8",created:"2025-08-12",req:"121k",tokens:"11.4M"},
     {n:"Meridian Studio",s:"MS",plan:"Pro",used:9,cap:15,cost:"$420",st:"active",owner:"Elsa Sokol",c:"#8fbf6a",created:"2025-09-03",req:"34k",tokens:"3.1M"},
   ];
+  function ownerDisplay(o){
+    if(o.transferState==="pending"&&o.pendingTransferTo){
+      return `${o.owner} <span class="badge b-warning"><span class="bd"></span>→ ${o.pendingTransferTo} · 待确认</span>`;
+    }
+    return o.owner;
+  }
+  function ownerUsageLabel(o){
+    return o.transferState==="pending"&&o.pendingTransferTo?`${o.owner} · 待转移至 ${o.pendingTransferTo}`:o.owner;
+  }
   function renderOrgs(){
     const box=document.getElementById("orgRows"); if(!box) return; box.innerHTML="";
     ORGS.forEach(o=>{
@@ -1525,7 +1534,7 @@
         <td><div class="seat">${o.used} / ${o.cap} 席位 ${over?'<span style="color:var(--danger);font-weight:700">· 超员</span>':''}<div class="sbar"><i style="width:${pct}%;background:${over?'var(--danger)':'var(--accent)'}"></i></div></div></td>
         <td style="font-weight:600">${o.cost}</td>
         <td><span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span></td>
-        <td style="color:var(--muted)">${o.owner}</td>
+        <td style="color:var(--muted)">${ownerDisplay(o)}</td>
         <td><button class="btn btn--sm">管理</button></td>`;
       tr.style.cursor="pointer";
       tr.addEventListener("click",()=>openOrg(o));
@@ -1711,6 +1720,7 @@
 
   // ===== Org detail drawer =====
   var userLayout="drawer";
+  let currentOrg=null;
   const MEMBER_POOL=[["Lena Okafor","管理员","#6aa6ff"],["Marco Rossi","成员","#5ec8a8"],["Priya Patel","财务","#f0a868"],["Yuki Tanaka","成员","#c08ce0"],["Tom Webb","只读","#7bb8d8"]];
   const ini2=n=>n.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
   function genMembers(o){
@@ -1718,16 +1728,21 @@
     const k=Math.max(2,Math.min(4,o.used%5));
     return [owner,...MEMBER_POOL.slice(0,k).map(m=>({n:m[0],r:m[1],c:m[2],t:"今天"}))];
   }
+  function transferTarget(o){
+    const m=genMembers(o).find(x=>x.n!==o.owner);
+    return m?m.n:"Lena Okafor";
+  }
   function openOrg(o){
+    currentOrg=o;
     const av=document.getElementById("oAv"); av.textContent=o.s; av.style.background=`linear-gradient(135deg,${o.c},${o.c}aa)`;
     document.getElementById("oName").textContent=o.n;
     const st=ORGSTATUS[o.st], over=o.used>o.cap, pct=Math.round(o.used/o.cap*100);
-    document.getElementById("oMeta").innerHTML=`<span class="plan ${PLANCLS[o.plan]}">${o.plan}</span> · 所有者 ${o.owner} · <span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span>`;
+    document.getElementById("oMeta").innerHTML=`<span class="plan ${PLANCLS[o.plan]}">${o.plan}</span> · 所有者 ${ownerDisplay(o)} · <span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span>`;
     document.getElementById("oKv").innerHTML=`
       <div><div class="k">组织 ID</div><div class="v">org_${o.s.toLowerCase()}${o.cap}</div></div>
       <div><div class="k">套餐</div><div class="v">${o.plan}</div></div>
       <div><div class="k">状态</div><div class="v">${st[0]}</div></div>
-      <div><div class="k">所有者</div><div class="v">${o.owner}</div></div>
+      <div><div class="k">所有者</div><div class="v">${ownerDisplay(o)}</div></div>
       <div><div class="k">创建时间</div><div class="v">${o.created}</div></div>
       <div><div class="k">本月成本</div><div class="v">${o.cost}</div></div>
       <div><div class="k">本月请求</div><div class="v">${o.req}</div></div>
@@ -1737,7 +1752,7 @@
     const bar=document.getElementById("oSeatBar"); bar.style.width=Math.min(100,pct)+"%"; bar.style.background=over?"var(--danger)":"var(--accent)";
     document.getElementById("oMembers").innerHTML=genMembers(o).map(m=>`<div class="qrow" style="padding:9px 2px"><div class="u"><div class="av" style="width:30px;height:30px;font-size:11px;background:linear-gradient(135deg,${m.c},${m.c}aa)">${ini2(m.n)}</div><div><div class="nm" style="font-size:13px">${m.n}</div><div class="em">${m.r}</div></div></div><span class="qr-meta">${m.t}</span></div>`).join("");
     document.getElementById("oUsage").innerHTML=
-      `<div class="bar-row"><div class="top"><span class="nm">${o.owner}</span><b>1.2M</b></div><div class="track"><i style="width:72%;background:var(--accent)"></i></div></div>`+
+      `<div class="bar-row"><div class="top"><span class="nm">${ownerUsageLabel(o)}</span><b>1.2M</b></div><div class="track"><i style="width:72%;background:var(--accent)"></i></div></div>`+
       `<div class="bar-row"><div class="top"><span class="nm">Marco Rossi</span><b>640K</b></div><div class="track"><i style="width:40%;background:var(--info)"></i></div></div>`+
       `<div class="bar-row"><div class="top"><span class="nm">其他成员合计</span><b>${o.tokens}</b></div><div class="track"><i style="width:26%;background:var(--faint)"></i></div></div>`;
     document.getElementById("oBill").innerHTML=
@@ -1752,11 +1767,16 @@
     document.querySelectorAll("#odrawer .tabpane").forEach(p=>p.classList.toggle("on",p.dataset.opane===b.dataset.otab));
   }));
   document.getElementById("oClose").addEventListener("click",closeDrawers);
-  document.getElementById("oTransferBtn").addEventListener("click",()=>openConfirm({title:"转移所有权？",body:"组织 "+document.getElementById("oName").textContent+" 的所有权将被转移,原所有者降级为管理员。高危操作需输入确认。",tone:"danger",requireType:"TRANSFER",confirmLabel:"转移",onConfirm:()=>{
+  document.getElementById("oTransferBtn").addEventListener("click",()=>openConfirm({title:"记录所有权转移请求？",body:"组织 "+document.getElementById("oName").textContent+" 将进入所有权转移待确认状态。真实落地需后端完成成员校验、通知与最终写入。",tone:"danger",requireType:"TRANSFER",confirmLabel:"记录请求",onConfirm:()=>{
     if(!requirePerm("orgs.transfer","转移组织所有权")) return;
-    const org=document.getElementById("oName").textContent;
-    addAudit({type:"danger",act:"转移组织所有权",obj:org,ok:1});
-    closeDrawers();toast("已发起所有权转移");
+    const org=currentOrg||ORGS.find(o=>o.n===document.getElementById("oName").textContent);
+    if(!org) return;
+    if(org.transferState==="pending"){toast("该组织已有待确认转移请求");return;}
+    org.transferState="pending";
+    org.pendingTransferTo=transferTarget(org);
+    org.transferRequestedAt=nowStamp();
+    addAudit({type:"danger",act:"转移所有权请求",obj:`${org.n}: ${org.owner} → ${org.pendingTransferTo}`,ok:1});
+    renderOrgs();openOrg(org);toast("已记录所有权转移请求");
   }}));
 
   // ===== User detail page (A/B with drawer) =====

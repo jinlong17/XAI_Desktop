@@ -3,7 +3,7 @@
 高保真、零依赖、**单文件**可点原型,用于在实现前验证管理中台(运营后台)的信息架构、交互与视觉。
 
 - **文件**：[`index.html`](./index.html)(单文件:手写 CSS 设计 token + 原生 JS + 内联 SVG,无构建、无外部依赖)
-- **状态**：设计原型 / pre-plan 探索,**非已发布产品代码**。
+- **状态**：设计原型 / roadmap-gated 接入入口,**非已发布产品代码**。
 - **默认视觉**：Gemini 风蓝白浅色(light + 主色 OKLCH hue 260)。
 
 ## 如何查看
@@ -62,5 +62,5 @@ Provider/AI 配置只展示 server-side encrypted secret handle 的状态与轮�
 - 真实落地:建议作为独立 `apps/admin/` surface(与用户端 `apps/web/` 隔离权限与部署),技术栈 shadcn/ui + TanStack Table + Tremor。
 - 系统接入计划: [`INTEGRATION_PLAN.md`](./INTEGRATION_PLAN.md) 梳理页面审查、数据/功能模块矩阵、系统边界和开发阶段。
 - Roadmap manifest: [`docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`](../../workflow/roadmap/xai-admin-dashboard-system-integration.md) 是正式接入的 Workflow V2 入口。
-- 同步 skill: `xai-admin-control-plane-sync` 用于 Admin 线被激活后,检查 AI provider、RBAC、用量、审计、用户/组织/计费控制面是否与 Web/Desktop 变化保持一致;当前只作为治理/审查入口,不授权生产开发。
-- **治理**:管理中台是 ADR-0013 D1 的 Proposed Control Plane;实际实现前需先确认 admin line 的优先级、package/deploy target,再按 Workflow V2 roadmap 执行。原型阶段(本目录)无需。
+- 同步 skill: `xai-admin-control-plane-sync` 用于检查 AI provider、RBAC、用量、审计、用户/组织/计费控制面是否与 Web/Desktop 变化保持一致;它只同步/修正 docs、prototype、roadmap、skill 与 dashboard 记录,生产代码仍必须走 admin roadmap 切片。
+- **治理**:operator 已于 2026-06-05 激活 Admin line,当前状态为 roadmap-gated。实际实现从 `xai-admin-dashboard-shell` 开始,先确认 package/deploy target 与路由守卫;在 RBAC/data-contract/audit/secret/deploy gates 完成前,本原型不得被当作生产后台或真实数据接入口。

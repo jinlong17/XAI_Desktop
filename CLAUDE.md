@@ -57,7 +57,7 @@ dev-dashboard 产品结构图 (`docs/prototypes/dev-dashboard/`). Authority: ADR
 | 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 + 插件平台运行时 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、**多窗口引擎/原生窗口/grid 持久化/window-command/G1 native foundation/点击穿透**(代码物理在 host,产品归插件平台)、桌面整理、单插件功能 | 平台运行时/G1=active · 插件包=P2 paused |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
-| 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` | (proposed) / `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | PROPOSED |
+| 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` + roadmap manifest | `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | ACTIVE roadmap-gated |
 
 Routing rules (do not violate):
 
@@ -66,7 +66,10 @@ Routing rules (do not violate):
 - **`web` → `app` 只能走 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动
   直接合进 `dev`。
 - **`sync` 只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4）。
-- **`site` / `admin` 是 PROPOSED**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线。
+- **`site` 仍是 PROPOSED**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线。
+- **`admin` 已由 operator 于 2026-06-05 激活为 roadmap-gated**：只允许经 `codex/admin/<feature>` +
+  `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` 推进，首个切片是
+  `xai-admin-dashboard-shell`；不得绕过 RBAC/审计/secret 边界直接做生产后台写入。
 - `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` 目前**已定义但尚未创建**，创建是
   独立的 operator 确认步骤（任何触及 `dev` 的操作都需显式确认）。
 

@@ -46,7 +46,8 @@ Scope: <optional — limit scan to a path, e.g. packages/plugin-*>  # scan mode
 3. **Apply hard rules** from MODULE_BOUNDARIES §4: physical host implementation is not product ownership; Mac shell/native chrome = `app`; desktop multi-window/overlay/plugin runtime product ownership = `plugin`; plugin packages consume native commands and do not implement Tauri commands; don't re-do a Web-covered module inside a plugin; data defaults `device-local`; resolve the same-name trap (web DOM vs desktop overlay).
 4. **Frozen-line check.** Use `module-classification.json.governance.frozen_lines`:
    - `plugin` platform-runtime / G1 native-foundation anchor (multi-window engine, grid persistence, window-command) is the ACTIVE gate, not frozen; route it as plugin-platform product work with P1 App-lane execution.
-   - `plugin` packages (clipboard/widgets/pet/meditation), `sync`, `site`, and `admin` remain frozen/proposed unless the operator unfreezes them; route those to brief/queue only.
+   - `plugin` packages (clipboard/widgets/pet/meditation), `sync`, and `site` remain frozen/proposed unless the operator unfreezes them; route those to brief/queue only.
+   - `admin` was operator-activated on 2026-06-05 but remains roadmap-gated; route admin source work only through `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`, starting with `xai-admin-dashboard-shell`.
 5. **Emit the receipt** (below).
 
 ## Scan mode — drift checks
@@ -55,7 +56,7 @@ Walk `drift_checks` from the registry and report each hit with file evidence:
 - **phantom_package** — a `packages/*` path cited in docs that does not exist on disk (e.g. `plugin-meditation`, `plugin-settings`).
 - **syncscope_drift** — a plugin entity without a `syncScope` in `packages/core-data/src/entities.ts`, or a `device-local` entity reachable by the outbox (delegate the proof to `xai-account-sync-scope-check`).
 - **same_name_trap** — a feature/package named pet/widgets/grid/dashboard that is ambiguous between web-DOM and desktop-native.
-- **frozen_line_landing** — source landing on a PAUSED/PROPOSED line without an operator unfreeze.
+- **frozen_line_landing** — source landing on a PAUSED/PROPOSED line without an operator unfreeze, or admin source landing outside the activated roadmap gates.
 - **window_product_ownership_drift** — docs or code comments that treat Mac shell identity as desktop organizer/overlay product, or classify plugin platform runtime as App product only because code lives in the host.
 - **future_surface_landing** — iPhone / iPad / Apple Watch / Android / browser-extension work presented as active module work instead of planning-only `future_surfaces`.
 - **unknown_classification** — a feature matching no module signal, or 2+ with equal weight → escalate.
@@ -66,7 +67,7 @@ Walk `drift_checks` from the registry and report each hit with file evidence:
 ## Module Classification Receipt — <feature | scan>  (<YYYYMMDD>)
 Verdict: <module key> · <confidence high/med/low>      # or: DRIFT FOUND / NEEDS-OPERATOR
 Why: <signals matched + flow steps + hard rules applied>
-Frozen?: <no | ACTIVE plugin-runtime/G1 | PAUSED plugin-package/sync | PROPOSED site/admin> → <route/queue note>
+Frozen?: <no | ACTIVE plugin-runtime/G1 | PAUSED plugin-package/sync | PROPOSED site | ADMIN roadmap-gated> → <route/queue note>
 Doc division: <which docs to add/update — e.g. sub-prds/<key>/PRD.md, MODULE_BOUNDARIES note, ADR if a real decision>
 Dashboard update: <which product_lines[key] fields to touch — links/rows/copy only, via xai-dev-dashboard-sync>
 Drift (scan): <phantom/syncscope/same-name/frozen/unknown hits with file:line>

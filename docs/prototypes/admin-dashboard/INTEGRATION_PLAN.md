@@ -64,7 +64,7 @@ user Web Console module.
 | Data contracts | Introduce typed admin read models for each page before replacing mock arrays. |
 | Mutations | Every mutation must have RBAC check, type-to-confirm where destructive, audit append, and explicit success/failure state. |
 | Audit | Admin audit is append-only and separate from user sync audit, while reusing the hash-chain precedent where practical. |
-| Branching | Use `codex/admin/<feature>` short branches. Keep the line Proposed until an operator confirms priority and package/deploy target. |
+| Branching | Use `codex/admin/<feature>` short branches. The operator activated the admin line on 2026-06-05, but it remains roadmap-gated; the first slice must decide the package/deploy target before production access exists. |
 
 Prototype-specific guardrail: `index.html` may simulate `mutation -> RBAC -> type-to-confirm -> audit append -> success/failure state` entirely in the browser for design validation. Production implementation must replace that local flow with server-side permission predicates, typed mutation contracts, persistent audit append, and explicit success/failure responses before any admin write action is exposed.
 

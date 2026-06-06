@@ -46,7 +46,7 @@
 | 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **P2 paused（等 G1）** |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
-| 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` | (proposed) | PROPOSED |
+| 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` + roadmap `xai-admin-dashboard-system-integration.md` | `codex/admin/<feature>` | **ACTIVE roadmap-gated** |
 
 ---
 

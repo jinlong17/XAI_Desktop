@@ -12,14 +12,14 @@
     ],
     "hard_rules": [
       "web->app always via the D3 gate (xai-web-to-desktop-sync); never merge web directly into dev",
-      "frozen lines (site/admin PROPOSED, sync/plugin P2 PAUSED) produce receipts/drafts ONLY — never land source, never open implementation branches",
+      "frozen lines (site PROPOSED, sync/plugin P2 PAUSED) produce receipts/drafts ONLY — never land source, never open implementation branches; admin is operator-activated but roadmap-gated and must route source work through its roadmap slices",
       "creating desktop-next / desktop-plugin-next / release/* and anything touching dev are SEPARATE operator-confirmed steps",
       "device-local entities NEVER enter the remote outbox (ADR-0013 D4)",
       "before locking any cross-cutting design or this registry, run one independent `codex exec -s read-only` adversarial review (see ADR-0014 D5)"
     ],
     "frozen_lines": {
       "site": "PROPOSED — brief/check only",
-      "admin": "PROPOSED — brief/check only",
+      "admin": "OPERATOR-ACTIVATED 2026-06-05 — roadmap-gated; route through xai-admin-dashboard-system-integration.md",
       "sync": "P2 PAUSED until G1 SHIPPED — check receipt only, no source landing",
       "plugin": "P2 PAUSED until G1 SHIPPED — impact note only, no source landing"
     }
@@ -188,6 +188,6 @@
     "phase_0": "Expose xai-release-log (symlink — DONE) + author this registry (DONE). No frozen-line changes.",
     "phase_1": "Build xai-account-sync-scope-check (D4; authority = account-sync-verification-gates.md; receipt-only) plus deploy/release preflight gates.",
     "phase_2": "Build xai-sync-fanout-dispatch driven by this registry's semantic rules.",
-    "phase_3": "Close-out reuses xai-dev-dashboard-sync + .githooks for mirror lint; site/admin/plugin dedicated implementation skills wait for operator unfreeze."
+    "phase_3": "Close-out reuses xai-dev-dashboard-sync + .githooks for mirror lint; site/plugin dedicated implementation skills wait for operator unfreeze; admin uses its activated roadmap plus xai-admin-control-plane-sync."
   }
 }

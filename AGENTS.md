@@ -127,11 +127,12 @@ router (the six-module table with task-attribution signals, plus the
 - `plugin` → desktop plugin platform/runtime + widget/plugin packages (multi-window / overlay / click-through / grid persistence product ownership lives here even when code is physically in the Tauri host), branch `codex/plugin/<feature>`→`desktop-plugin-next`; G1 platform-runtime/window-command anchor is active gate, concrete plugin packages are paused until G1 ships.
 - `sync` → account cloud-sync, branch `codex/sync/<feature>` (paused; only `syncScope: account-sync`).
 - `site` → official website (Cloudflare), branch `codex/site/<feature>` (PROPOSED — needs operator OK).
-- `admin` → Admin/Control Plane prototype, branch `codex/admin/<feature>` (PROPOSED — needs operator OK).
+- `admin` → Admin/Control Plane prototype + roadmap, branch `codex/admin/<feature>` (operator-activated · roadmap-gated; start with `xai-admin-dashboard-shell`).
 
 `web→app` only flows through the D3 gate (`xai-web-to-desktop-sync`); never merge
-Web changes straight into `dev`. Do not open new work branches for `site`/`admin`
-without operator confirmation. Future iPhone / iPad / Apple Watch / Android /
+Web changes straight into `dev`. Do not open new work branches for `site`
+without operator confirmation. Admin work is operator-confirmed but must stay
+inside the admin roadmap gates. Future iPhone / iPad / Apple Watch / Android /
 browser-extension surfaces are planning-only in
 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
 module targets or open work branches without operator confirmation.

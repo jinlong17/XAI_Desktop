@@ -2,13 +2,13 @@
 
 - Roadmap Source: `docs/prototypes/admin-dashboard/README.md` + `docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md`
 - Surface: Admin Dashboard / Control Plane (`codex/admin/<feature>`)
-- Current Authority: ADR-0013 D1 marks admin-dashboard as **PROPOSED** and prototype-only.
+- Current Authority: ADR-0013 D1 marks admin-dashboard as **operator-activated, roadmap-gated** as of 2026-06-05; the prototype is still non-production.
 - Init Path: roadmap; each row is a separate feature-sized slice.
 - Generated: 2026-05-31
 - Default Automation Mode: **D-Codex**
 - Default Verify Cross-vendor: **yes**
 - Governance: no production code should receive service-role credentials in the browser; all admin mutations require RBAC and audit logging.
-- Related Skill: `xai-admin-control-plane-sync` audits Admin Control Plane drift once the admin line is activated; before activation it is report/brief-only and does not authorize production work.
+- Related Skill: `xai-admin-control-plane-sync` audits Admin Control Plane drift for the activated roadmap-gated line; it does not authorize production code outside this roadmap's Workflow V2 slices.
 
 ## Features
 
@@ -27,7 +27,7 @@
 2. Complete RBAC/data contracts before any destructive mutation.
 3. Integrate read-heavy pages before write-heavy pages.
 4. Add mutation flows only when the audit append contract is covered by tests.
-5. Keep this roadmap out of `dev` promotion until an operator explicitly activates the admin-dashboard line.
+5. Keep this roadmap out of `dev` promotion until package/deploy target, RBAC/data contracts, audit append, secret handling, and deployment isolation gates are complete.
 
 ## Verification Gates
 
