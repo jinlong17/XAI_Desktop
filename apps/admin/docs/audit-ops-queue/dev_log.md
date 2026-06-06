@@ -12,11 +12,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-audit-ops-queue |
 | **Title** | Admin Audit Log + Ops Queue (append-only audit-event contract · audit-on-mutation invariant · ops-queue severity read model) |
-| **Current Phase** | FEATURE_REVIEW |
-| **Status** | APPROVED |
-| **Executor** | claude-opus-4-8 (feature-review) |
-| **Updated** | 2026-06-06 18:10 |
-| **Suggested Next** | feature-build |
+| **Current Phase** | FEATURE_BUILD |
+| **Status** | APPROVED — P1 DONE, P2–P4 PENDING |
+| **Executor** | feature-dev-loop (inline feature-auto-build · claude-opus-4-8) |
+| **Updated** | 2026-06-06 19:05 |
+| **Suggested Next** | feature-auto-build (P2) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #5 of 6** (preserves dep order; #6 depends on #5) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch; worktree `claude/frosty-nash-c4bf16`) |
@@ -177,7 +177,7 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Audit-event contract + append-only hash-chain | PENDING | — |
+| P1 — Audit-event contract + append-only hash-chain | DONE | _(set below)_ |
 | P2 — Audit-on-mutation enforcement + tests | PENDING | — |
 | P3 — Ops-queue read model + severity contract | PENDING | — |
 | P4 — Wire pages to typed mock adapters + secret/build re-run | PENDING | — |
@@ -270,3 +270,49 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 - **Next step**: feature-build — implement P1 (audit-event contract + append-only injectable-digest hash-chain),
   then stop for confirmation. Honor R-1 when P4 is reached. OR run feature-auto-build / feature-dev-loop to batch
   the phases per the operator's chosen automation mode (manifest default D-Codex).
+
+### Round 3 — 2026-06-06 19:05 · feature-dev-loop → feature-auto-build (P1)
+
+- **Executor**: feature-dev-loop (inline feature-auto-build role · claude-opus-4-8). Platform = Claude Code
+  WITHOUT native sub-agent spawn (`Task` tool unavailable) → orchestrator falls into the inline-execution
+  branch: adopts the feature-auto-build worker role within the session, builds + tests + commits each phase,
+  re-reads dev_log between phases. Operator requested auto-run all phases P1→P4 then feature-verify, no
+  per-phase confirmation, STOP before ship.
+- **Mode**: Run — `Status = APPROVED`, all 4 phases PENDING. Established green baseline first
+  (`pnpm --filter @repo/admin test` → **191 passed / 14 files**, matching row #2's documented end state).
+  Committed the previously-uncommitted APPROVED planning set as the build baseline (`7914655`).
+- **Phase**: **P1 — Audit-event contract + append-only injectable-digest hash-chain**.
+- **Action**:
+  - `src/audit/auditEvent.ts` — canonical machine-first `AdminAuditEvent`
+    (`seq·tsMs·actor·action·target·ip·result·previousHash·hash` + optional `permissionKey`/`mutationFamily`);
+    structured `AuditActor`/`AuditTarget`; `AuditResult`. Pure one-way `eventToAuditRow()` projection to
+    slice #1's display `AuditRow` (no reverse `rowToEvent` — A2/ADR-lite #1). `deriveAuditType()`
+    (destructive families → `danger`, config families → `config`, non-mutation kinds → auth/billing/create).
+    R-3: pure deterministic `parseAuditTime`/`formatAuditTime` (UTC, no locale drift) round-trip the
+    `AUDIT` fixture `time` ↔ `tsMs` at minute granularity.
+  - `src/audit/hashChain.ts` — admin-local `AdminAuditChain` (PORTED from `packages/audit-log-integrity`,
+    cited in a banner; **NOT imported** — `node:crypto` + sync-line account audit would break the browser
+    bundle, couple to the PAUSED sync line, conflict with the admin-audit-separate rule, risk W0/D4).
+    Injectable `DigestFn`; default pure `deterministicDigest` (FNV-1a-style 64-bit hex; no secret, no I/O).
+    Append-only by construction (only mutator = `append`; no edit/delete; `list()` returns copies);
+    `verify()` walks seq-monotonic / previousHash-link / hash invariants → `AdminAuditIntegrityError`
+    (`code="E3025"`). `canonicalEventJson` is fixed-order (reproducible digest).
+  - `src/audit/auditEvent.test.ts` (15) — TT-AUDIT-EVENT-SHAPE / PROJECTION (incl. one-way no-`rowToEvent`
+    assertion) / type-derivation / time round-trip / TT-AUDIT-NO-SECRET-EVENT (8 secret shapes over the
+    `AUDIT` fixture).
+  - `src/audit/hashChain.test.ts` (16) — TT-AUDIT-APPEND-ONLY (no edit/delete on the prototype surface;
+    list/append return copies) / SEQ-MONOTONIC / VERIFY-OK / VERIFY-TAMPER (hash mismatch, sequence gap,
+    reorder, previousHash tamper — all E3025) / DIGEST-INJECTABLE / NO-PKG-IMPORT (source-text guard:
+    no `@repo/audit-log-integrity` / `audit-log-integrity` / `node:crypto` / `crypto` import; precedent
+    citation present).
+  - Self-check: W0 boundary held (admin-local only; no shared `@repo/*` change; no typed events; no Tauri;
+    no `syncScope`). `index.ts`/contract surfaces untouched. No `manifest.json` in this app.
+- **Acceptance (P1 gate)**: AC-1 / AC-2 / AC-3 covered — `pnpm exec vitest run src/audit/*.test.ts` →
+  **31 passed**; `tsc --noEmit` clean; full suite **222 passed / 16 files** (191 baseline + 31 P1) — slice #1
+  + row #2 unaffected; carried `TT-NO-SECRET-SRC`/`BUNDLE` green over the new `audit/` module;
+  `TT-NO-INLINE-MOCK` unchanged (21 tests, 10 pages).
+- **Commits**: `<P1_HASH>` (`feat(admin): row #5 P1 — append-only audit-event contract + ported hash-chain`).
+- **Tests**: P1 unit 31/31 · full admin suite 222/222 · tsc clean.
+- **Next step**: P2 — audit-on-mutation enforcement (`appendThenAck` + `createAuditedMockAdminApiClient`):
+  granted append-then-ack (`applied:false` + resolving `auditId`), denied zero-append; allow×6 + deny×6 +
+  id-resolves + applied-false + chain-after-N + no-io + advisory-note.
