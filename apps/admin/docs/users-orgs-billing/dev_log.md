@@ -12,11 +12,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-users-orgs-billing |
 | **Title** | Admin Users / Organizations / Billing wiring (typed read-model adapters · RBAC+audit-gated guarded mutations · Billing read-only with frozen Stripe gate) |
-| **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_TO_SHIP |
-| **Executor** | claude-opus-4-8 (feature-dev-loop → feature-verify) |
-| **Updated** | 2026-06-06 23:52 |
-| **Suggested Next** | ship |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | claude-sonnet-4-6 (ship) |
+| **Updated** | 2026-06-06 23:59 |
+| **Suggested Next** | feature-plan (row #4 xai-admin-feature-ai-provider-control) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #3 default) |
 | **Verify Cross-vendor** | yes (manifest row #3 default) |
@@ -474,3 +474,39 @@
 - **Tests**: `pnpm --filter @repo/admin test` → 319/319; `check-types` clean; `build` green; `@repo/web` build green.
 - **Next step**: ship — verify commit integrity, push to remote, mark SHIPPED (requires explicit operator action;
   feature-dev-loop STOPS here per instruction — no push).
+
+### Round 8 — 2026-06-06 23:59 · ship
+
+- **Executor**: claude-sonnet-4-6 (ship)
+- **Mode**: Ship — `Status = READY_TO_SHIP` confirmed at start of run; operator granted standing auto-ship authorization for admin roadmap rows.
+- **Action**:
+  - Read dev_log — `Status = READY_TO_SHIP`, `Suggested Next = ship`, all 4 phases DONE; commit chain confirmed
+    (`d5c8ff6` P1, `8cfa374` P2, `268dd12` P3, `d6b9181` P4, `4af3af7` verify PASS).
+  - **Integrity check PASS**:
+    - Working tree clean (no uncommitted changes).
+    - All 5 unpushed commits scoped exclusively to `apps/admin/**` + `docs/reviews/xai-admin-users-orgs-billing/**` —
+      ZERO changes to `apps/web`, `apps/desktop`, `packages/core`, `@repo/web-auth-device-session`, or any
+      `@repo/audit-log-integrity` import.
+    - Row #4 pages (`AiUsagePage.tsx`, `FeaturesPage.tsx`, `ProvidersPage.tsx`) byte-identical to pre-row-#3
+      (`git diff 268dd12 -- <pages>` empty) — the P4b corrective revert is confirmed in the committed history.
+    - Secret scan over the diff: no `sk_test_`, `sk_live_`, `service-role`, `.pem`, `.key` literals; matches
+      are doc-comment prose only.
+    - No sensitive files (`.env*`, `*.pem`, `*.key`) in changeset.
+  - **Push**: `git push origin claude/frosty-nash-c4bf16` → fast-forward
+    `8c9890a..4af3af7`; branch `claude/frosty-nash-c4bf16` → `origin/claude/frosty-nash-c4bf16`.
+    W0 constraint honored — NO merge/rebase into `dev`/`main`/`web`.
+  - Updated Status Panel: `Current Phase = SHIP`, `Status = SHIPPED`, `Executor`, `Updated`, `Suggested Next`.
+  - **SHIPPED dev_log committed and pushed**: see commit below.
+- **Commits pushed (row #3)**:
+  - `d5c8ff6` — feat(admin): row #3 P1 — Users read seam + guarded ban/bulk-ban (RBAC+audit, applied:false)
+  - `8cfa374` — feat(admin): row #3 P2 — Organizations read seam + SUPER-ONLY guarded owner-transfer
+  - `268dd12` — feat(admin): row #3 P3 — Billing READ-ONLY seam + structural Stripe-gate guard
+  - `d6b9181` — feat(admin): row #3 P4 — wire Users/Orgs/Billing pages to typed seams + guarded injection
+  - `4af3af7` — docs(admin): record feature-verify PASS — row #3 READY_TO_SHIP
+  - (this commit) — docs(admin): mark row #3 xai-admin-users-orgs-billing SHIPPED
+- **Residuals (non-blocking)**:
+  - `pnpm --filter @repo/admin lint` non-functional — `apps/admin` has no `eslint.config.*` for ESLint 9.
+    PRE-EXISTING from row #5 SHIPPED baseline (tracked as task_1a68bff9); NOT introduced by row #3; not a
+    row #3 gate. Separate chore to add ESLint flat config remains open.
+  - PR/merge target deferred — no PR opened; operator decision pending on merge topology.
+- **Next step**: feature-plan — row #4 `xai-admin-feature-ai-provider-control`.
