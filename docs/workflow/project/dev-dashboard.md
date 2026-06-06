@@ -133,6 +133,10 @@ roadmap, release, branch, priority, or product-governance state.
 Commands:
 
 ```bash
+node scripts/dashboard/open.mjs
+```
+
+```bash
 pnpm dashboard
 ```
 
@@ -142,6 +146,12 @@ pnpm dashboard:serve
 
 `dashboard:serve` binds only to `127.0.0.1`, runs the generator on start, and
 exposes `/api/refresh` for manual refresh from the browser.
+`scripts/dashboard/open.mjs` wraps the same server, reads the actual local URL
+printed by `serve.mjs`, and opens the browser automatically. The macOS
+double-click entry is `docs/prototypes/dev-dashboard/open-dashboard.command`; it
+keeps the server in the Terminal window and benefits from `serve.mjs` port
+fallback when 4177 is already occupied. `pnpm dashboard:open` is a package-script
+alias for terminals that have pnpm on PATH.
 
 ## What Machines May Update
 

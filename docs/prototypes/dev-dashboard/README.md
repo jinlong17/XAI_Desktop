@@ -10,12 +10,16 @@
 
 | 方式 | 命令 | 能力 |
 |---|---|---|
+| **一键打开（推荐）** | 双击 `open-dashboard.command`，或运行 `node scripts/dashboard/open.mjs` | 刷新快照、启动本地服务、自动打开浏览器；4177 被占用时自动顺延并打开实际端口 |
 | **静态（file://）** | 直接在浏览器打开 `index.html` | 只读快照；无目录树/搜索/刷新（降级提示） |
 | **本地服务（推荐）** | `pnpm dashboard:serve` → 访问 `http://127.0.0.1:4177/` | 解锁文档库目录树、搜索、刷新、原始文件读取、进程控制 |
 | **刷新数据快照** | `pnpm dashboard` | 重新从 git / dev_log / release-log / roadmap / skill 文件生成 `state.generated.js` |
 
 - `state.generated.js` 是**每机器本地构建产物**，已 gitignore；换机器克隆后先跑 `pnpm dashboard`。
 - serve 仅绑定 `127.0.0.1`（无依赖、纯 Node stdlib）。
+- 双击脚本会打开一个 Terminal 窗口承载本地服务；关闭该窗口会停止看板服务。需要固定端口时可设置
+  `DASHBOARD_PORT=4177 node scripts/dashboard/open.mjs`，但固定端口被占用时不会顺延。安装了 pnpm 的终端也可用
+  `pnpm dashboard:open` 作为别名。
 
 ## 页面地图（11 页 / 5 组）
 

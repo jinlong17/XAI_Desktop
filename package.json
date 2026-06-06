@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "dashboard": "node scripts/dashboard/generate-state.mjs",
+    "dashboard:open": "node scripts/dashboard/open.mjs",
     "dashboard:verify-static": "node scripts/dashboard/verify-static.mjs",
     "dashboard:verify-modules": "node scripts/dashboard/verify-product-modules.mjs",
     "dashboard:serve": "node scripts/dashboard/serve.mjs",
