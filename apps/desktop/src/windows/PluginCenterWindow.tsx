@@ -8,6 +8,8 @@ import {
   enablePluginInstanceOnDesktop,
   hidePluginInstanceOnDesktop,
   restoreEnabledPluginInstancesOnDesktop,
+  summarizePluginWindowNativeApplication,
+  type PluginWindowNativeApplicationStatus,
   updatePluginInstanceConfigOnDesktop,
 } from "@repo/core/registry";
 import type {
@@ -110,6 +112,32 @@ function formatError(error: unknown): string {
   return typeof error === "string" ? error : "Unknown Plugin Center error";
 }
 
+function nativeStatusLabel(status: PluginWindowNativeApplicationStatus): string {
+  switch (status) {
+    case "applied":
+      return "Applied";
+    case "fallback":
+      return "Fallback";
+    case "not-requested":
+      return "Not requested";
+    default:
+      return status;
+  }
+}
+
+function nativeStatusColor(status: PluginWindowNativeApplicationStatus): string {
+  switch (status) {
+    case "applied":
+      return "#166534";
+    case "fallback":
+      return "#92400e";
+    case "not-requested":
+      return shellTokens.color.textSecondary;
+    default:
+      return shellTokens.color.textSecondary;
+  }
+}
+
 async function captureCurrentFrame(): Promise<PluginCenterWindowFrame> {
   const currentWindow = getCurrentWindow();
   const [position, size, isFullscreen] = await Promise.all([
@@ -154,6 +182,11 @@ export function PluginCenterWindow() {
     (entry) => entry.canAddToDesktop,
   ).length;
   const lockedCount = entries.length - availableCount;
+  const lastWindowNativeStates = useMemo(
+    () =>
+      lastWindow ? summarizePluginWindowNativeApplication(lastWindow) : [],
+    [lastWindow],
+  );
 
   useEffect(() => {
     if (!instanceStore) return;
@@ -562,6 +595,32 @@ export function PluginCenterWindow() {
                     style={{ margin: 0, color: shellTokens.color.textPrimary }}
                   >
                     {lastWindow.instanceId}
+                  </dd>
+                  <dt>Native state</dt>
+                  <dd
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 6,
+                      margin: 0,
+                    }}
+                  >
+                    {lastWindowNativeStates.map((state) => (
+                      <span
+                        key={state.key}
+                        style={{
+                          border: `1px solid ${shellTokens.color.borderSubtle}`,
+                          borderRadius: shellTokens.radius.md,
+                          color: nativeStatusColor(state.status),
+                          fontSize: 11,
+                          lineHeight: 1.2,
+                          padding: "4px 6px",
+                        }}
+                        title={`${state.label}: ${state.value}`}
+                      >
+                        {state.label}: {nativeStatusLabel(state.status)}
+                      </span>
+                    ))}
                   </dd>
                 </>
               ) : null}

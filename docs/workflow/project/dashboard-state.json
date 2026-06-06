@@ -242,14 +242,14 @@
         "key": "plugin",
         "title": "桌面插件",
         "status": "common_capabilities_in_progress",
-        "progress": 46,
+        "progress": 50,
         "environment": "desktop-plugin-next",
         "last_deployed_at": "",
         "version": "未登记",
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "Phase 2 通用插件能力已启动；重启恢复已完成，下一步做 pin/click-through/native fallback 展示和 capability denial",
+        "next": "Phase 2 通用插件能力继续推进；重启恢复与 native fallback 展示已完成，下一步做 capability denial 或 sample widget",
         "issues": [
           {
             "severity": "pending",
@@ -948,8 +948,8 @@
       "status": "Phase 2 common plugin capabilities in progress · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "继续 Phase 2：pin/click-through/native fallback 展示、capability denial 和一个 sample widget。",
-      "tracker": "Phase 1 系统底座已完成；Phase 2 第一项重启恢复已完成，Plugin Center 加载时只恢复 enabled instances。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
+      "next": "继续 Phase 2：capability denial 和一个 sample widget。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复与 native fallback 展示已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -961,10 +961,10 @@
       },
       "overview": {
         "phase": "Phase 2 common capabilities",
-        "running": "重启恢复已完成 · 插件包未开工",
-        "progress_fallback": 46,
-        "recent_update": "Phase 2 restart restore 已接入 core runtime 与 Plugin Center load path",
-        "todo_fallback": "下一步做固定、点击穿透、native fallback 展示、capability denial、sample widget。",
+        "running": "重启恢复与 native fallback 展示已完成 · 插件包未开工",
+        "progress_fallback": 50,
+        "recent_update": "Phase 2 native fallback display 已接入 core helper 与 Plugin Center",
+        "todo_fallback": "下一步做 capability denial、sample widget。",
         "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
@@ -977,6 +977,7 @@
         { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-complete", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行" },
         { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3" },
         { "name": "重启恢复 / enabled instance restore", "status": "phase-2-complete", "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗" },
+        { "name": "Native fallback 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
         { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
         { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "Phase 2 common capability proof 后进入 sample widget；不抢跑具体插件功能" },

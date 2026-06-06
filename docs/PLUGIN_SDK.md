@@ -656,6 +656,24 @@ export interface PluginWindowSnapshot {
   };
 }
 
+export type PluginWindowNativeApplicationStatus =
+  | "applied"
+  | "fallback"
+  | "not-requested";
+
+export interface PluginWindowNativeApplicationState {
+  key: keyof PluginWindowSnapshot["nativeApplied"];
+  label: string;
+  requested: boolean;
+  applied: boolean;
+  status: PluginWindowNativeApplicationStatus;
+  value: string;
+}
+
+export function summarizePluginWindowNativeApplication(
+  snapshot: PluginWindowSnapshot,
+): PluginWindowNativeApplicationState[];
+
 export interface PluginInstanceRestoreResult {
   instances: PluginInstance[];
   restored: Array<{ instance: PluginInstance; window?: PluginWindowSnapshot }>;
@@ -718,7 +736,8 @@ Phase 2 common capability status:
 | Capability | Status |
 |---|---|
 | Restart restore for enabled instances | Complete (`restoreEnabledPluginInstancesOnDesktop`) |
-| Pin / click-through / all-spaces native application | Planned; fields persist, native fallback still explicit |
+| Native fallback display for pin / click-through / all-spaces / opacity | Complete (`summarizePluginWindowNativeApplication`) |
+| Pin / click-through / all-spaces native application | Planned; fields persist, unsupported native application still reports fallback |
 | Capability denial display | Planned |
 | Low-risk sample widget end-to-end | Planned |
 

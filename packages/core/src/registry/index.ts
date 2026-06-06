@@ -31,6 +31,7 @@ export {
   normalizeCommandError,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
+  summarizePluginWindowNativeApplication,
 } from './plugin-window-adapter';
 export type {
   CreateAddToDesktopRequestOptions,
@@ -59,4 +60,7 @@ export type {
   PluginWindowAdapterOptions,
   PluginWindowCommand,
   PluginWindowCommandInvoker,
+  PluginWindowNativeApplicationKey,
+  PluginWindowNativeApplicationState,
+  PluginWindowNativeApplicationStatus,
 } from './plugin-window-adapter';

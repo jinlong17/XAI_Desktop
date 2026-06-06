@@ -85,7 +85,7 @@
 | 第二阶段：插件基础能力 | 验证任何内置插件都能被平台管理，而不是只服务 organizer | 添加、删除、启用 / 禁用、隐藏、固定到桌面、调整位置、调整尺寸、透明度 / 样式设置、重启恢复、capability denial 展示 | 下一阶段：至少一个低风险 sample widget 走完整添加到桌面流程；重启后实例配置恢复；所有动作有 package test + host smoke |
 | 第三阶段：具体功能插件 | 在稳定平台上补轻量、可瞥见、可快速操作的插件 | 快速记账、时间追踪、任务 glance、日历 glance、便签、文件夹挂件、快捷入口；clipboard / pet 延后到需要的原生命令和 AI 接口明确后 | 每个插件有独立 PRD / design / api / test / dev_log，默认 `device-local`，只复用 Web/App 业务逻辑，不重做完整 Web 模块 |
 
-2026-06-06 Phase 2 start：`restoreEnabledPluginInstancesOnDesktop()` 已作为第一项通用能力落地。Plugin Center 加载 device-local store 后只恢复 `enabled` 实例窗口，`disabled` / `hidden` 实例保留配置但不自动建窗。后续继续做 pin/click-through/native fallback 展示、capability denial 和 sample widget。
+2026-06-06 Phase 2 start：`restoreEnabledPluginInstancesOnDesktop()` 已作为第一项通用能力落地。Plugin Center 加载 device-local store 后只恢复 `enabled` 实例窗口，`disabled` / `hidden` 实例保留配置但不自动建窗。`summarizePluginWindowNativeApplication()` 已作为第二项通用能力落地，Plugin Center 可展示 placement / size 已应用，以及 opacity / click-through / pinned / all-spaces 的 fallback / not-requested 状态。后续继续做真实 native application、capability denial 和 sample widget。
 
 ### 3.2 第一阶段系统能力拆分
 

@@ -95,9 +95,10 @@ Phase 1 completion means the platform runtime foundation and governance docs are
 | Step | Output | Status |
 |---|---|---|
 | P2-1 | Restart restore for enabled instances | Complete: `restoreEnabledPluginInstancesOnDesktop()` loads device-local instances and recreates windows only for `enabled` instances. |
-| P2-2 | Pin / click-through / all-spaces native application | Planned: fields already persist and report no-op fallback through `nativeApplied`. |
-| P2-3 | Capability denial display | Planned |
-| P2-4 | Low-risk sample widget complete flow | Planned |
+| P2-2 | Native fallback display | Complete: `summarizePluginWindowNativeApplication()` and Plugin Center show applied / fallback / not-requested state for placement, size, opacity, click-through, pinned and all-spaces. |
+| P2-3 | Pin / click-through / all-spaces native application | Planned: fields already persist and report no-op fallback through `nativeApplied`. |
+| P2-4 | Capability denial display | Planned |
+| P2-5 | Low-risk sample widget complete flow | Planned |
 
 ## 5. Required Interfaces
 

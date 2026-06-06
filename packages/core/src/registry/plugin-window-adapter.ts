@@ -8,6 +8,19 @@ import type {
 } from '../types/window';
 import type { PluginInstanceConfig } from '../types/plugin';
 
+export type PluginWindowNativeApplicationKey = keyof PluginWindowSnapshot['nativeApplied'];
+
+export type PluginWindowNativeApplicationStatus = 'applied' | 'fallback' | 'not-requested';
+
+export interface PluginWindowNativeApplicationState {
+  key: PluginWindowNativeApplicationKey;
+  label: string;
+  requested: boolean;
+  applied: boolean;
+  status: PluginWindowNativeApplicationStatus;
+  value: string;
+}
+
 export type PluginWindowCommand =
   | 'create_grid_window'
   | 'update_grid_window'
@@ -162,6 +175,52 @@ export function pluginInstanceConfigToGridRect(config: PluginInstanceConfig): Gr
   };
 }
 
+export function summarizePluginWindowNativeApplication(
+  snapshot: PluginWindowSnapshot,
+): PluginWindowNativeApplicationState[] {
+  return [
+    createNativeApplicationState(snapshot, 'placement', 'Placement', true, [
+      Math.round(snapshot.placement.x),
+      Math.round(snapshot.placement.y),
+    ].join(', ')),
+    createNativeApplicationState(
+      snapshot,
+      'size',
+      'Size',
+      true,
+      `${Math.round(snapshot.size.width)}x${Math.round(snapshot.size.height)}`,
+    ),
+    createNativeApplicationState(
+      snapshot,
+      'opacity',
+      'Opacity',
+      snapshot.style.opacity < 1,
+      `${Math.round(snapshot.style.opacity * 100)}%`,
+    ),
+    createNativeApplicationState(
+      snapshot,
+      'clickThrough',
+      'Click-through',
+      snapshot.behavior.clickThrough,
+      snapshot.behavior.clickThrough ? 'requested' : 'off',
+    ),
+    createNativeApplicationState(
+      snapshot,
+      'pinned',
+      'Pinned',
+      snapshot.behavior.pinned,
+      snapshot.behavior.pinned ? 'requested' : 'off',
+    ),
+    createNativeApplicationState(
+      snapshot,
+      'allSpaces',
+      'All Spaces',
+      snapshot.behavior.allSpaces,
+      snapshot.behavior.allSpaces ? 'requested' : 'off',
+    ),
+  ];
+}
+
 export function normalizeCommandError(error: unknown): CommandError {
   if (isCommandError(error)) {
     return error;
@@ -199,6 +258,24 @@ function createCommandError(
     message,
     recoverable,
     details,
+  };
+}
+
+function createNativeApplicationState(
+  snapshot: PluginWindowSnapshot,
+  key: PluginWindowNativeApplicationKey,
+  label: string,
+  requested: boolean,
+  value: string,
+): PluginWindowNativeApplicationState {
+  const applied = snapshot.nativeApplied[key];
+  return {
+    key,
+    label,
+    requested,
+    applied,
+    status: applied ? 'applied' : requested ? 'fallback' : 'not-requested',
+    value,
   };
 }
 

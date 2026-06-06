@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Native Fallback 展示
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 的最后窗口状态现在显示 placement / size / opacity / click-through / pinned / all-spaces 的原生应用状态，区分 Applied、Fallback 和 Not requested，避免把 no-op fallback 误读成已生效。
+- Developer/system delta: 新增 `summarizePluginWindowNativeApplication()` core helper 与 `PluginWindowNativeApplicationState` 类型；Plugin Center 使用该 helper 渲染 native state chips；补 core unit tests，并同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 49 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.
+- Risk / follow-up: 本次仍是 fallback 展示，不是实际启用 click-through / pinned / all-spaces 原生能力；下一步继续做 capability denial 展示或低风险 sample widget。
+
 ### Desktop Plugin Phase 2 重启恢复通用能力
 
 - Product line: desktop-plugin

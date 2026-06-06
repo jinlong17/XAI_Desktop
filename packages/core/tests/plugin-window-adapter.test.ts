@@ -6,6 +6,7 @@ import {
   normalizeCommandError,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
+  summarizePluginWindowNativeApplication,
 } from '../src/registry';
 import type { CommandError, GridWindowSnapshot } from '../src/types';
 
@@ -221,5 +222,32 @@ describe('plugin window adapter', () => {
         opacity: 1,
       },
     });
+  });
+
+  it('summarizes applied, fallback, and not-requested native window states', () => {
+    const snapshot = gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc', CONFIG);
+    const states = summarizePluginWindowNativeApplication(snapshot);
+
+    expect(states.map(({ key, status, value }) => ({ key, status, value }))).toEqual([
+      { key: 'placement', status: 'applied', value: '10, 20' },
+      { key: 'size', status: 'applied', value: '320x240' },
+      { key: 'opacity', status: 'fallback', value: '66%' },
+      { key: 'clickThrough', status: 'fallback', value: 'requested' },
+      { key: 'pinned', status: 'fallback', value: 'requested' },
+      { key: 'allSpaces', status: 'fallback', value: 'requested' },
+    ]);
+  });
+
+  it('does not report fallback for native behavior that was not requested', () => {
+    const snapshot = gridSnapshotToPluginWindowSnapshot(gridSnapshot('abc'), 'abc');
+
+    expect(summarizePluginWindowNativeApplication(snapshot)).toMatchObject([
+      { key: 'placement', status: 'applied' },
+      { key: 'size', status: 'applied' },
+      { key: 'opacity', status: 'not-requested' },
+      { key: 'clickThrough', status: 'not-requested' },
+      { key: 'pinned', status: 'not-requested' },
+      { key: 'allSpaces', status: 'not-requested' },
+    ]);
   });
 });
