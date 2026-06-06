@@ -36,6 +36,18 @@ const PLUGIN_CENTER_WINDOW_LABEL: &str = "plugin-center";
 const DESKTOP_PLUGIN_HOST_ENTRY: &str = "/desktop-host/index.html";
 const CONSOLE_WINDOW_URL: &str = "/desktop-host/index.html#/console";
 const PLUGIN_CENTER_WINDOW_URL: &str = "/desktop-host/index.html#/plugin-center";
+const PLUGIN_CENTER_MIN_WIDTH: f64 = 640.0;
+const PLUGIN_CENTER_MIN_HEIGHT: f64 = 480.0;
+const PLUGIN_CENTER_MAX_WIDTH: f64 = 8192.0;
+const PLUGIN_CENTER_MAX_HEIGHT: f64 = 8192.0;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct LogicalMonitorBounds {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
 
 fn grid_window_url(grid_id: &str) -> String {
     format!("{DESKTOP_PLUGIN_HOST_ENTRY}#/grid?id={grid_id}")
@@ -320,20 +332,143 @@ fn write_plugin_center_frame(
 }
 
 fn validate_plugin_center_frame(frame: &PluginCenterWindowFrame) -> Result<(), CommandError> {
-    if frame.width < 640.0 || frame.height < 480.0 {
+    if frame.width < PLUGIN_CENTER_MIN_WIDTH || frame.height < PLUGIN_CENTER_MIN_HEIGHT {
         return Err(command_error(
             "INVALID_PLUGIN_CENTER_FRAME",
             "plugin center frame must be at least 640x480",
             true,
         ));
     }
-    if frame.width > 8192.0 || frame.height > 8192.0 {
+    if frame.width > PLUGIN_CENTER_MAX_WIDTH || frame.height > PLUGIN_CENTER_MAX_HEIGHT {
         return Err(command_error(
             "INVALID_PLUGIN_CENTER_FRAME",
             "plugin center frame dimensions exceed allowed maximum",
             true,
         ));
     }
+    Ok(())
+}
+
+fn monitor_to_logical_bounds(monitor: &tauri::Monitor) -> LogicalMonitorBounds {
+    let work_area = monitor.work_area();
+    let scale_factor = monitor.scale_factor();
+    let position = tauri::LogicalPosition::<f64>::from_physical(work_area.position, scale_factor);
+    let size = tauri::LogicalSize::<f64>::from_physical(work_area.size, scale_factor);
+    LogicalMonitorBounds {
+        x: position.x,
+        y: position.y,
+        width: size.width,
+        height: size.height,
+    }
+}
+
+fn preferred_plugin_center_monitor_bounds(
+    app: &AppHandle,
+) -> Result<Option<LogicalMonitorBounds>, CommandError> {
+    let Some(window) = app
+        .get_webview_window("main")
+        .or_else(|| app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL))
+    else {
+        return Ok(None);
+    };
+
+    if let Some(monitor) = window
+        .current_monitor()
+        .map_err(|e| native_error(format!("Failed to read current monitor: {}", e)))?
+    {
+        return Ok(Some(monitor_to_logical_bounds(&monitor)));
+    }
+
+    let monitors = window
+        .available_monitors()
+        .map_err(|e| native_error(format!("Failed to read monitors: {}", e)))?;
+    Ok(monitors.first().map(monitor_to_logical_bounds))
+}
+
+fn normalize_plugin_center_frame(
+    requested: PluginCenterWindowFrame,
+    bounds: Option<LogicalMonitorBounds>,
+) -> PluginCenterWindowFrame {
+    let mut width = if requested.width.is_finite() {
+        requested.width
+    } else {
+        PLUGIN_CENTER_MIN_WIDTH
+    }
+    .clamp(PLUGIN_CENTER_MIN_WIDTH, PLUGIN_CENTER_MAX_WIDTH);
+    let mut height = if requested.height.is_finite() {
+        requested.height
+    } else {
+        PLUGIN_CENTER_MIN_HEIGHT
+    }
+    .clamp(PLUGIN_CENTER_MIN_HEIGHT, PLUGIN_CENTER_MAX_HEIGHT);
+
+    let (x, y) = if let Some(bounds) = bounds {
+        width = width.min(bounds.width.max(PLUGIN_CENTER_MIN_WIDTH));
+        height = height.min(bounds.height.max(PLUGIN_CENTER_MIN_HEIGHT));
+
+        let centered_x = bounds.x + (bounds.width - width).max(0.0) / 2.0;
+        let centered_y = bounds.y + (bounds.height - height).max(0.0) / 2.0;
+        let raw_x = if requested.x.is_finite() {
+            requested.x
+        } else {
+            centered_x
+        };
+        let raw_y = if requested.y.is_finite() {
+            requested.y
+        } else {
+            centered_y
+        };
+        let max_x = bounds.x + (bounds.width - width).max(0.0);
+        let max_y = bounds.y + (bounds.height - height).max(0.0);
+        (raw_x.clamp(bounds.x, max_x), raw_y.clamp(bounds.y, max_y))
+    } else {
+        let x = if requested.x.is_finite() {
+            requested.x
+        } else {
+            default_plugin_center_frame().x
+        };
+        let y = if requested.y.is_finite() {
+            requested.y
+        } else {
+            default_plugin_center_frame().y
+        };
+        (x, y)
+    };
+
+    PluginCenterWindowFrame {
+        x,
+        y,
+        width,
+        height,
+        is_fullscreen: requested.is_fullscreen,
+        nav_state_version: requested.nav_state_version,
+    }
+}
+
+fn normalized_plugin_center_frame_for_app(
+    app: &AppHandle,
+    requested: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    let bounds = preferred_plugin_center_monitor_bounds(app)?;
+    Ok(normalize_plugin_center_frame(requested, bounds))
+}
+
+fn apply_plugin_center_window_frame(
+    window: &tauri::WebviewWindow,
+    frame: &PluginCenterWindowFrame,
+) -> Result<(), CommandError> {
+    window
+        .set_size(tauri::Size::Logical(tauri::LogicalSize {
+            width: frame.width,
+            height: frame.height,
+        }))
+        .map_err(|e| native_error(format!("Failed to set plugin center size: {}", e)))?;
+    window
+        .set_position(tauri::Position::Logical(tauri::LogicalPosition {
+            x: frame.x,
+            y: frame.y,
+        }))
+        .map_err(|e| native_error(format!("Failed to set plugin center position: {}", e)))?;
     Ok(())
 }
 
@@ -351,6 +486,11 @@ fn capture_plugin_center_window_frame(
     let size = window
         .outer_size()
         .map_err(|e| native_error(format!("Failed to read plugin center size: {}", e)))?;
+    let scale_factor = window
+        .scale_factor()
+        .map_err(|e| native_error(format!("Failed to read plugin center scale factor: {}", e)))?;
+    let logical_position = tauri::LogicalPosition::<f64>::from_physical(position, scale_factor);
+    let logical_size = tauri::LogicalSize::<f64>::from_physical(size, scale_factor);
     let is_fullscreen = window.is_fullscreen().map_err(|e| {
         native_error(format!(
             "Failed to read plugin center fullscreen state: {}",
@@ -359,10 +499,10 @@ fn capture_plugin_center_window_frame(
     })?;
 
     Ok(PluginCenterWindowFrame {
-        x: position.x as f64,
-        y: position.y as f64,
-        width: size.width as f64,
-        height: size.height as f64,
+        x: logical_position.x,
+        y: logical_position.y,
+        width: logical_size.width,
+        height: logical_size.height,
         is_fullscreen,
         nav_state_version: default_frame.nav_state_version,
     })
@@ -791,10 +931,12 @@ pub async fn set_console_window_frame(
 pub fn open_plugin_center_window_for_app(
     app: &AppHandle,
 ) -> Result<PluginCenterWindowFrame, CommandError> {
-    let stored = read_plugin_center_frame(app)?;
+    let stored = normalized_plugin_center_frame_for_app(app, read_plugin_center_frame(app)?)?;
     validate_plugin_center_frame(&stored)?;
+    write_plugin_center_frame(app, stored.clone())?;
 
     if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        apply_plugin_center_window_frame(&existing, &stored)?;
         existing
             .show()
             .map_err(|e| native_error(format!("Failed to show plugin center window: {}", e)))?;
@@ -878,7 +1020,8 @@ pub fn focus_plugin_center_window_for_app(
         .set_focus()
         .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
 
-    let stored = read_plugin_center_frame(app)?;
+    let stored = normalized_plugin_center_frame_for_app(app, read_plugin_center_frame(app)?)?;
+    apply_plugin_center_window_frame(&existing, &stored)?;
     let live = capture_plugin_center_window_frame(app, stored)?;
     write_plugin_center_frame(app, live.clone())?;
     Ok(live)
@@ -900,10 +1043,11 @@ pub async fn get_plugin_center_window_frame(
     app: AppHandle,
 ) -> Result<PluginCenterWindowFrame, CommandError> {
     ensure_plugin_center_window_command_allowed(window.label())?;
-    let stored = read_plugin_center_frame(&app)?;
+    let stored = normalized_plugin_center_frame_for_app(&app, read_plugin_center_frame(&app)?)?;
     let live = capture_plugin_center_window_frame(&app, stored)?;
-    write_plugin_center_frame(&app, live.clone())?;
-    Ok(live)
+    let normalized = normalized_plugin_center_frame_for_app(&app, live)?;
+    write_plugin_center_frame(&app, normalized.clone())?;
+    Ok(normalized)
 }
 
 /// Persist and apply a Plugin Center frame snapshot.
@@ -914,21 +1058,11 @@ pub async fn set_plugin_center_window_frame(
     frame: PluginCenterWindowFrame,
 ) -> Result<PluginCenterWindowFrame, CommandError> {
     ensure_plugin_center_window_command_allowed(window.label())?;
+    let frame = normalized_plugin_center_frame_for_app(&app, frame)?;
     validate_plugin_center_frame(&frame)?;
 
     if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
-        existing
-            .set_position(tauri::Position::Logical(tauri::LogicalPosition {
-                x: frame.x,
-                y: frame.y,
-            }))
-            .map_err(|e| native_error(format!("Failed to set plugin center position: {}", e)))?;
-        existing
-            .set_size(tauri::Size::Logical(tauri::LogicalSize {
-                width: frame.width,
-                height: frame.height,
-            }))
-            .map_err(|e| native_error(format!("Failed to set plugin center size: {}", e)))?;
+        apply_plugin_center_window_frame(&existing, &frame)?;
         existing
             .set_fullscreen(frame.is_fullscreen)
             .map_err(|e| native_error(format!("Failed to set plugin center fullscreen: {}", e)))?;
@@ -1048,6 +1182,60 @@ mod tests {
             grid_window_url("sample-widget-1"),
             "/desktop-host/index.html#/grid?id=sample-widget-1"
         );
+    }
+
+    #[test]
+    fn plugin_center_frame_normalization_recovers_offscreen_physical_capture() {
+        let requested = PluginCenterWindowFrame {
+            x: 1760.0,
+            y: -1410.0,
+            width: 6880.0,
+            height: 1410.0,
+            is_fullscreen: false,
+            nav_state_version: 1,
+        };
+        let normalized = normalize_plugin_center_frame(
+            requested,
+            Some(LogicalMonitorBounds {
+                x: 0.0,
+                y: 0.0,
+                width: 1440.0,
+                height: 900.0,
+            }),
+        );
+
+        assert_eq!(normalized.x, 0.0);
+        assert_eq!(normalized.y, 0.0);
+        assert_eq!(normalized.width, 1440.0);
+        assert_eq!(normalized.height, 900.0);
+        assert!(!normalized.is_fullscreen);
+        assert_eq!(normalized.nav_state_version, 1);
+    }
+
+    #[test]
+    fn plugin_center_frame_normalization_centers_non_finite_position() {
+        let requested = PluginCenterWindowFrame {
+            x: f64::NAN,
+            y: f64::NAN,
+            width: 860.0,
+            height: 640.0,
+            is_fullscreen: false,
+            nav_state_version: 1,
+        };
+        let normalized = normalize_plugin_center_frame(
+            requested,
+            Some(LogicalMonitorBounds {
+                x: 100.0,
+                y: 50.0,
+                width: 1200.0,
+                height: 800.0,
+            }),
+        );
+
+        assert_eq!(normalized.x, 270.0);
+        assert_eq!(normalized.y, 130.0);
+        assert_eq!(normalized.width, 860.0);
+        assert_eq!(normalized.height, 640.0);
     }
 
     #[test]
