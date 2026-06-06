@@ -28,6 +28,10 @@ const UNAVAILABLE_REASON_BY_PLUGIN_NAME: Record<string, string> = {
   pet: "Waiting for native overlay behavior controls.",
 };
 
+const DEFAULT_CONTENT_TYPE_BY_PLUGIN_NAME: Record<string, string> = {
+  organizer: "normal-window-organizer",
+};
+
 const PLANNED_MANIFESTS: PluginManifest[] = [
   {
     name: "widgets",
@@ -130,6 +134,7 @@ export function getBuiltInPluginCenterEntries(): PluginCenterEntry[] {
 
   for (const entry of PluginRegistry.getPluginCenterEntries({
     statusByPluginName: STATUS_BY_PLUGIN_NAME,
+    defaultContentTypeByPluginName: DEFAULT_CONTENT_TYPE_BY_PLUGIN_NAME,
     unavailableReasonByPluginName: UNAVAILABLE_REASON_BY_PLUGIN_NAME,
   })) {
     if (

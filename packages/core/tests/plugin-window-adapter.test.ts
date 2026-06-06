@@ -78,6 +78,21 @@ describe('plugin window adapter', () => {
     });
   });
 
+  it('admits plugin-center as a trusted plugin window command source', async () => {
+    const invoke = vi.fn(async () => gridSnapshot());
+    const adapter = createPluginWindowAdapter({ invoke, sourceLabel: 'plugin-center' });
+
+    await adapter.create({
+      instanceId: 'instance-1',
+      config: CONFIG,
+    });
+
+    expect(invoke).toHaveBeenCalledWith('create_grid_window', {
+      gridId: 'instance-1',
+      rect: RECT,
+    });
+  });
+
   it('maps update, focus, close, and list to grid lifecycle commands', async () => {
     const invoke = vi
       .fn()

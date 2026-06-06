@@ -1,6 +1,14 @@
+import {
+  addPluginCenterEntryToDesktop,
+  createPluginInstanceStore,
+  createPluginWindowAdapter,
+  createWebStoragePluginInstanceAdapter,
+} from "@repo/core/registry";
 import type {
   PluginCenterEntry,
   PluginCenterWindowFrame,
+  PluginInstance,
+  PluginWindowSnapshot,
 } from "@repo/core/types";
 import { invoke } from "@tauri-apps/api/core";
 import {
@@ -8,7 +16,7 @@ import {
   LogicalPosition,
   LogicalSize,
 } from "@tauri-apps/api/window";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getBuiltInPluginCenterEntries } from "../plugin-center/catalog";
 
 const shellTokens = {
@@ -56,6 +64,13 @@ function formatList(values: readonly string[]): string {
   return values.length > 0 ? values.join(", ") : "None";
 }
 
+function formatError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return typeof error === "string" ? error : "Unknown Plugin Center error";
+}
+
 async function captureCurrentFrame(): Promise<PluginCenterWindowFrame> {
   const currentWindow = getCurrentWindow();
   const [position, size, isFullscreen] = await Promise.all([
@@ -75,10 +90,84 @@ async function captureCurrentFrame(): Promise<PluginCenterWindowFrame> {
 
 export function PluginCenterWindow() {
   const entries = useMemo(() => getBuiltInPluginCenterEntries(), []);
+  const instanceStore = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return createPluginInstanceStore({
+      adapter: createWebStoragePluginInstanceAdapter(window.localStorage),
+    });
+  }, []);
+  const windowAdapter = useMemo(
+    () =>
+      createPluginWindowAdapter({
+        sourceLabel: "plugin-center",
+        invoke: (command, args) => invoke(command, args),
+      }),
+    [],
+  );
+  const [instances, setInstances] = useState<PluginInstance[]>([]);
+  const [busyPluginName, setBusyPluginName] = useState<string | null>(null);
+  const [lastWindow, setLastWindow] = useState<PluginWindowSnapshot | null>(
+    null,
+  );
+  const [addError, setAddError] = useState<string | null>(null);
   const availableCount = entries.filter(
     (entry) => entry.canAddToDesktop,
   ).length;
   const lockedCount = entries.length - availableCount;
+
+  useEffect(() => {
+    if (!instanceStore) return;
+    let cancelled = false;
+
+    void instanceStore
+      .load()
+      .then((loadedInstances) => {
+        if (!cancelled) {
+          setInstances(loadedInstances);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setAddError(formatError(error));
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [instanceStore]);
+
+  const handleAddToDesktop = useCallback(
+    async (entry: PluginCenterEntry) => {
+      if (!entry.canAddToDesktop || !instanceStore) return;
+      setBusyPluginName(entry.pluginName);
+      setAddError(null);
+      try {
+        const result = await addPluginCenterEntryToDesktop(entry, {
+          store: instanceStore,
+          windowAdapter,
+          config: {
+            placement: {
+              x: 120 + instances.length * 24,
+              y: 120 + instances.length * 24,
+            },
+            size: {
+              preset: "medium",
+              width: 320,
+              height: 240,
+            },
+          },
+        });
+        setInstances(instanceStore.list());
+        setLastWindow(result.window);
+      } catch (error) {
+        setAddError(formatError(error));
+      } finally {
+        setBusyPluginName(null);
+      }
+    },
+    [instanceStore, instances.length, windowAdapter],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -278,7 +367,33 @@ export function PluginCenterWindow() {
               <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
                 {lockedCount}
               </dd>
+              <dt>Desktop instances</dt>
+              <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
+                {instances.length}
+              </dd>
+              {lastWindow ? (
+                <>
+                  <dt>Last window</dt>
+                  <dd
+                    style={{ margin: 0, color: shellTokens.color.textPrimary }}
+                  >
+                    {lastWindow.instanceId}
+                  </dd>
+                </>
+              ) : null}
             </dl>
+            {addError ? (
+              <div
+                role="alert"
+                style={{
+                  color: "#991b1b",
+                  fontSize: 12,
+                  lineHeight: 1.4,
+                }}
+              >
+                {addError}
+              </div>
+            ) : null}
           </section>
 
           <section
@@ -298,22 +413,27 @@ export function PluginCenterWindow() {
             >
               <thead>
                 <tr style={{ color: shellTokens.color.textSecondary }}>
-                  {["Plugin", "Status", "Surfaces", "Content", "Desktop"].map(
-                    (heading) => (
-                      <th
-                        key={heading}
-                        scope="col"
-                        style={{
-                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
-                          fontWeight: shellTokens.typography.fontWeightMedium,
-                          padding: "10px 12px",
-                          textAlign: "left",
-                        }}
-                      >
-                        {heading}
-                      </th>
-                    ),
-                  )}
+                  {[
+                    "Plugin",
+                    "Status",
+                    "Surfaces",
+                    "Content",
+                    "Desktop",
+                    "Action",
+                  ].map((heading) => (
+                    <th
+                      key={heading}
+                      scope="col"
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        fontWeight: shellTokens.typography.fontWeightMedium,
+                        padding: "10px 12px",
+                        textAlign: "left",
+                      }}
+                    >
+                      {heading}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -383,6 +503,49 @@ export function PluginCenterWindow() {
                       }}
                     >
                       {addEligibilityLabel(entry)}
+                    </td>
+                    <td
+                      style={{
+                        borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                        padding: "12px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        disabled={
+                          !entry.canAddToDesktop ||
+                          busyPluginName === entry.pluginName
+                        }
+                        onClick={() => {
+                          void handleAddToDesktop(entry);
+                        }}
+                        style={{
+                          border: `1px solid ${shellTokens.color.borderSubtle}`,
+                          borderRadius: shellTokens.radius.md,
+                          background: entry.canAddToDesktop
+                            ? shellTokens.color.textPrimary
+                            : "transparent",
+                          color: entry.canAddToDesktop
+                            ? shellTokens.color.surfaceCanvas
+                            : shellTokens.color.textSecondary,
+                          cursor: entry.canAddToDesktop
+                            ? "pointer"
+                            : "not-allowed",
+                          fontSize: 12,
+                          minHeight: 30,
+                          minWidth: 64,
+                          padding: "0 10px",
+                          opacity:
+                            busyPluginName === entry.pluginName ? 0.72 : 1,
+                        }}
+                      >
+                        {busyPluginName === entry.pluginName
+                          ? "Adding"
+                          : entry.canAddToDesktop
+                            ? "Add"
+                            : "Locked"}
+                      </button>
                     </td>
                   </tr>
                 ))}

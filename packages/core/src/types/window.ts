@@ -33,7 +33,7 @@ export type GridWindowLabel = `grid_${string}`;
 
 export type PluginHostWindowSurface = 'grid';
 
-export type PluginWindowCommandSourceLabel = 'main' | 'control';
+export type PluginWindowCommandSourceLabel = 'main' | 'control' | 'plugin-center';
 
 /** Window configuration */
 export interface WindowConfig {

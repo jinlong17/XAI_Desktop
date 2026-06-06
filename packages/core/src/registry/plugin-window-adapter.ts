@@ -34,7 +34,11 @@ export interface PluginWindowAdapter {
   list(): Promise<PluginWindowSnapshot[]>;
 }
 
-const DEFAULT_ALLOWED_SOURCE_LABELS: PluginWindowCommandSourceLabel[] = ['main', 'control'];
+const DEFAULT_ALLOWED_SOURCE_LABELS: PluginWindowCommandSourceLabel[] = [
+  'main',
+  'control',
+  'plugin-center',
+];
 
 export function createPluginWindowAdapter(
   options: PluginWindowAdapterOptions,

@@ -8,6 +8,7 @@ export {
   createPluginInstance,
   getPluginSupportedSurfaces,
 } from './plugin-center';
+export { addPluginCenterEntryToDesktop } from './plugin-center-runtime';
 export {
   PLUGIN_INSTANCE_STORE_KEY,
   PLUGIN_INSTANCE_STORE_SCHEMA_VERSION,
@@ -29,6 +30,10 @@ export type {
   CreatePluginCenterEntryOptions,
   CreatePluginInstanceOptions,
 } from './plugin-center';
+export type {
+  AddPluginCenterEntryToDesktopOptions,
+  AddPluginCenterEntryToDesktopResult,
+} from './plugin-center-runtime';
 export type {
   CreatePluginInstanceStoreOptions,
   PluginInstancePersistenceAdapter,

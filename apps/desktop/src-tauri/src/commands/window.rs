@@ -24,7 +24,7 @@ use super::super::PluginCenterWindowFrameState;
 /// can request lifecycle changes for themselves via cross-window events
 /// routed through `control`, but they cannot directly spawn / close
 /// other grid windows.
-pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
+pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "plugin-center"];
 pub(crate) const CONSOLE_WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
 pub(crate) const PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS: &[&str] =
     &["main", "control", "plugin-center"];
@@ -841,7 +841,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn window_allowlist_admits_main_control() {
+    fn window_allowlist_admits_system_host_windows() {
         for label in WINDOW_ALLOWED_WINDOWS {
             assert!(
                 is_window_command_allowed(label),
@@ -854,8 +854,8 @@ mod tests {
     #[test]
     fn window_allowlist_rejects_grid_widget() {
         // Grid windows themselves are NOT allowed to invoke window lifecycle
-        // commands — they must route through `control`. Widgets / pet /
-        // ai-cube / console are also rejected.
+        // commands — they must route through a system host window. Widgets /
+        // pet / ai-cube / console are also rejected.
         for label in [
             "grid_xxx",
             "grid_",
@@ -863,7 +863,6 @@ mod tests {
             "pet",
             "ai_cube",
             "console",
-            "plugin-center",
             "account",
             "unknown",
         ] {
