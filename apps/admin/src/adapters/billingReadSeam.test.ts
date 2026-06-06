@@ -126,14 +126,14 @@ describe("TT-BILLING-GATE-NO-MUTATION", () => {
     const commandKeys = Object.keys(commands).sort();
 
     expect(commandKeys).toEqual(
-      ["banUser", "bulkBan", "setFeatureRollout", "transferOwnership"].sort(),
+      ["banUser", "bulkBan", "setFeatureRollout", "setQuota", "transferOwnership"].sort(),
     );
     expect(commandKeys.some((key) => BILLING_RE.test(key))).toBe(false);
   });
 
   it("type-level guard excludes billing from guarded commands and mutation families", () => {
     expectTypeOf<keyof GuardedCommandAdapter>().toEqualTypeOf<
-      "banUser" | "bulkBan" | "setFeatureRollout" | "transferOwnership"
+      "banUser" | "bulkBan" | "setFeatureRollout" | "setQuota" | "transferOwnership"
     >();
     expectTypeOf<MutationFamily>().toEqualTypeOf<
       | "banUser"

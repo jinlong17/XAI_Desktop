@@ -32,6 +32,10 @@ export interface GuardedCommandAdapter {
     key: string;
     rollout: number;
   }): Promise<AdminApiResult<MutationAck>>;
+  setQuota(input: {
+    subject: string;
+    quota: number;
+  }): Promise<AdminApiResult<MutationAck>>;
 }
 
 export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
@@ -44,6 +48,7 @@ export function createGuardedCommandAdapter(ctx?: AuditedMockContext): {
     bulkBan: (input) => client.bulkBan(input),
     transferOwnership: (input) => client.transferOwnership(input),
     setFeatureRollout: (input) => client.setFeatureRollout(input),
+    setQuota: (input) => client.setQuota(input),
   };
 
   return { commands, chain };

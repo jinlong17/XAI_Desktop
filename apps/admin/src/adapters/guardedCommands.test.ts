@@ -22,6 +22,8 @@ const GUARDED_CALLS: Record<
     commands.transferOwnership({ org: "Acme Robotics", toMember: "alice@acme.io" }),
   setFeatureRollout: (commands) =>
     commands.setFeatureRollout({ key: "ai-write", rollout: 0 }),
+  setQuota: (commands) =>
+    commands.setQuota({ subject: "Acme Robotics", quota: 500 }),
 };
 
 describe("TT-CMD-GUARDED-ALLOW-banUser / -bulkBan", () => {
@@ -342,5 +344,75 @@ describe("TT-CMD-CHAIN-AFTER-N", () => {
     expect(granted.chain.list()).toHaveLength(3);
     expect(denied.chain.list()).toHaveLength(0);
     expect(granted.chain.length + denied.chain.length).toBe(3);
+  });
+});
+
+describe("TT-CMD-GUARDED-ALLOW-setQuota", () => {
+  it.each(["super", "ops"] as const)(
+    "%s role can setQuota; granted call returns applied:false + auditId and appends one event",
+    async (role) => {
+      const { commands, chain } = createGuardedCommandAdapter({ role });
+      const before = chain.length;
+      const res = await commands.setQuota({
+        subject: "Acme Robotics",
+        quota: 500,
+      });
+
+      expect(res.ok).toBe(true);
+      if (res.ok) {
+        expect(res.data.applied).toBe(false);
+        expect(typeof res.data.auditId).toBe("string");
+      }
+      expect(chain.length).toBe(before + 1);
+    },
+  );
+});
+
+describe("TT-CMD-GUARDED-DENY-setQuota", () => {
+  it.each(["support", "finance", "audit"] as const)(
+    "%s role cannot setQuota and appends zero events",
+    async (role) => {
+      const { commands, chain } = createGuardedCommandAdapter({ role });
+
+      const res = await commands.setQuota({
+        subject: "Acme Robotics",
+        quota: 500,
+      });
+
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.error.code).toBe("forbidden");
+      expect(chain.length).toBe(0);
+    },
+  );
+
+  it("no role fails setQuota closed as unauthorized and appends zero events", async () => {
+    const { commands, chain } = createGuardedCommandAdapter();
+
+    const res = await commands.setQuota({
+      subject: "Acme Robotics",
+      quota: 500,
+    });
+
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error.code).toBe("unauthorized");
+    expect(chain.length).toBe(0);
+  });
+});
+
+describe("TT-CMD-AUDIT-ON-MUTATION-setQuota", () => {
+  it("setQuota appends exactly one event with family, permission, and ok result", async () => {
+    const { commands, chain } = createGuardedCommandAdapter({ role: "super" });
+
+    await commands.setQuota({
+      subject: "Acme Robotics",
+      quota: 500,
+    });
+
+    expect(chain.length).toBe(1);
+    const event = chain.list()[0]!;
+    expect(event.mutationFamily).toBe("setQuota");
+    expect(event.permissionKey).toBe(MUTATION_PERMISSION.setQuota);
+    expect(event.permissionKey).toBe("admin.quota.set");
+    expect(event.result).toBe("ok");
   });
 });

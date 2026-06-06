@@ -14,10 +14,10 @@
 | **Target** | xai-admin-feature-ai-provider-control |
 | **Title** | Admin Feature-flags / AI-usage-&-quota / Provider-config wiring (typed read-model adapters · RBAC+audit-gated guarded CONFIG mutations · provider secret-handle read model + provider-key no-leak guard) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1 DONE, P2–P4 PENDING |
+| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-auto-build host; impl via `codex exec`) |
 | **Updated** | 2026-06-06 |
-| **Suggested Next** | feature-build (P2) — or continue the loop |
+| **Suggested Next** | feature-build (P3) — or continue the loop |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #4 default) |
 | **Verify Cross-vendor** | yes (manifest row #4 default) |
@@ -204,8 +204,8 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Feature-flags read seam + guarded setFeatureRollout | DONE | `<P1-HASH>` |
-| P2 — AI-quota read seam + guarded setQuota | PENDING | — |
+| P1 — Feature-flags read seam + guarded setFeatureRollout | DONE | `9f76ef9` |
+| P2 — AI-quota read seam + guarded setQuota | DONE | `<P2-HASH>` |
 | P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | PENDING | — |
 | P4 — Wire pages + injection flip + carried-guard re-run | PENDING | — |
 
@@ -238,7 +238,7 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
     **Row #3 PAGES (Users/Orgs/Billing) are byte-identical** (`git diff --stat` empty over the 3 page files).
   - Codex note: used the real fixture feature key `ai-write` (the planner's illustrative `ai_translate` is not
     in this checkout's fixtures).
-- **Commits**: `<P1-HASH>` — `feat(admin): row #4 P1 — features read seam + guarded setFeatureRollout`.
+- **Commits**: `9f76ef9` — `feat(admin): row #4 P1 — features read seam + guarded setFeatureRollout`.
 - **Tests**: `pnpm --filter @repo/admin test` → **329 passed (27 files)** (319 row-#3 baseline preserved + 10
   new); `pnpm --filter @repo/admin exec tsc --noEmit` clean.
 - **Gate evidence (P1)**: AC-1 (TT-WIRE-FEATURES-READ + TT-READ-NO-IO) ✓; AC-2 (TT-CMD-GUARDED-ALLOW/DENY +
@@ -246,6 +246,31 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
   added to APPLIED-FALSE loop) ✓; AC-11 (TT-CMD-GUARDED-IS-ADDITIVE; slice #1 `mockAdminCommandAdapter`+`TT-CMD-NOOP`
   unchanged; row #3 pages byte-identical) ✓. Final independent re-run deferred to feature-verify.
 - **Next step**: feature-auto-build P2 — AI-quota read seam + guarded `setQuota`.
+
+### Round 4 — 2026-06-06 · feature-auto-build P2 (inline host · `codex exec`)
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop, inline `feature-auto-build` host). D-Codex: impl via `codex exec`.
+- **Phase**: P2 — Entitlements / AI-quota read seam + guarded `setQuota`.
+- **Action**:
+  - Added `aiUsageReadSeam` to `adapters/index.ts` (ADDITIVE; `.quotaPolicies()`→`adminApiClient.getQuotaPolicies`,
+    `.topSpenders()`→`adminApiClient.getTopSpenders`; returns slice-#1 `QuotaPolicy[]`/`SpenderRow[]` via
+    `AdminApiResult<T>`). No new transport method.
+  - EXTENDED `GuardedCommandAdapter` with `setQuota(input:{subject,quota})` → row #5 audited
+    `client.setQuota` (already wired). super+ops allowed.
+  - New `adapters/aiUsageReadSeam.test.ts` (TT-WIRE-AIUSAGE-READ + TT-READ-NO-IO).
+  - Appended quota describe blocks to `adapters/guardedCommands.test.ts`
+    (TT-CMD-GUARDED-ALLOW-setQuota super/ops · DENY support/finance/audit + no-role ZERO append ·
+    AUDIT-ON-MUTATION asserts `mutationFamily==="setQuota"` + `permissionKey==="admin.quota.set"`);
+    added `setQuota` to `GUARDED_CALLS` (TT-CMD-APPLIED-FALSE coverage).
+  - Forced shape-assertion update: `billingReadSeam.test.ts` key-set + `keyof GuardedCommandAdapter` assertion
+    now include `setQuota` (billing-exclusion intent preserved). **Row #3 + the 3 CONFIG PAGES byte-identical**
+    (`git diff --stat HEAD` empty over all 6 pages; pages are wired in P4, not P2).
+- **Commits**: `<P2-HASH>` — `feat(admin): row #4 P2 — AI-quota read seam + guarded setQuota`.
+- **Tests**: `pnpm --filter @repo/admin test` → **339 passed (28 files)** (329 prior + 10 new); tsc --noEmit clean.
+- **Gate evidence (P2)**: AC-3 (TT-WIRE-AIUSAGE-READ) ✓; AC-4 (TT-CMD-GUARDED-ALLOW/DENY + AUDIT-ON-MUTATION-setQuota) ✓;
+  AC-9 (applied:false / no-IO / setQuota in APPLIED-FALSE loop) ✓. Final independent re-run deferred to feature-verify.
+- **Next step**: feature-auto-build P3 — Provider config read (secret-handles) + SUPER-ONLY `setProviderRouting`
+  + the `TT-PROVIDER-NO-KEY-MATERIAL` provider-key no-leak guard.
 
 ### Round 1 — 2026-06-06 · feature-plan (Fresh)
 

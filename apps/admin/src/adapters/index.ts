@@ -320,6 +320,8 @@ import type {
   FeatureCategory as FeaturesReadSeamFeatureCategory,
   FeatureDetail as FeaturesReadSeamFeatureDetail,
   FeatureFlag as FeaturesReadSeamFeatureFlag,
+  QuotaPolicy as AiUsageReadSeamQuotaPolicy,
+  SpenderRow as AiUsageReadSeamSpenderRow,
   OrgDetail as OrgsReadSeamOrgDetail,
   OrgRow as OrgsReadSeamOrgRow,
   UserDetail as UsersReadSeamUserDetail,
@@ -377,4 +379,12 @@ export const featuresReadSeam = {
   ): Promise<AdminApiResult<FeaturesReadSeamFeatureDetail | null>> =>
     adminApiClient.getFeature(key),
   // categories() stays sync UI config on the slice #1 featuresAdapter — do NOT add it here.
+};
+
+/** AI usage / quota read seam — delegates to the AdminApiClient (no new transport method). */
+export const aiUsageReadSeam = {
+  quotaPolicies: (): Promise<AdminApiResult<AiUsageReadSeamQuotaPolicy[]>> =>
+    adminApiClient.getQuotaPolicies(),
+  topSpenders: (): Promise<AdminApiResult<AiUsageReadSeamSpenderRow[]>> =>
+    adminApiClient.getTopSpenders(),
 };
