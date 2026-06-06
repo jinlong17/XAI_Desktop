@@ -11,10 +11,10 @@
 | **Target** | xai-admin-deploy-observability |
 | **Title** | Admin Deploy Isolation + CSP/Env Hardening + Observability Scaffold + Promotion-Gate Runbook (row #6, FINAL) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1 DONE, P2–P4 PENDING |
+| **Status** | APPROVED — P1+P2 DONE, P3–P4 PENDING |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build, no-spawn runtime) |
-| **Updated** | 2026-06-06 07:34 |
-| **Suggested Next** | feature-auto-build (continue P2) |
+| **Updated** | 2026-06-06 07:40 |
+| **Suggested Next** | feature-auto-build (continue P3) |
 | **Automation Mode** | inline-host (Task/agent-spawn tool unavailable this runtime; orchestrator inline-executes worker role) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · roadmap row #6 of 6 (FINAL) |
@@ -131,8 +131,8 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Deploy isolation + CSP/env checks | DONE | `cc6c9f6` |
-| P2 — Observability scaffold (no-op, secret-free) | PENDING | — |
+| P1 — Deploy isolation + CSP/env checks | DONE | `362000b` |
+| P2 — Observability scaffold (no-op, secret-free) | DONE | `__P2_HASH__` |
 | P3 — Manual-smoke checklist + release/operator runbook docs | PENDING | — |
 | P4 — ESLint flat config (RR-1) + final full gate | PENDING | — |
 
@@ -238,10 +238,50 @@ OQ5 runbook cross-reference only, NO ADR-0008 amendment (correct — row #6 does
   +19 tests, none removed). P1 trio in isolation: deploy-isolation 5/5, csp 15/15, env-no-secret 8/8.
   `tsc --noEmit` → exit 0 (fixed one strict `string | undefined` capture-group access in
   env-no-secret with `varMatch?.[1]` + falsy guard — runtime unaffected).
-- **Commit**: `cc6c9f6` — `test(admin): row #6 P1 — deploy isolation + tight-CSP + env secret guards`
+- **Commit**: `362000b` — `test(admin): row #6 P1 — deploy isolation + tight-CSP + env secret guards`
   (includes the row-#6 four-piece + discovery review as the row's first commit).
 - **Risks**: none surfaced. R3 (parity brittleness) is the intended behaviour and is mitigated by the
   trimmed self-building compare. R1 (eslint) deferred to P4 as planned.
 - **Next step**: P2 — observability scaffold (no-op `AdminTelemetrySink` + `noopTelemetrySink` +
   `AdminErrorBoundary` wired below `AdminRouteGate`) + telemetry/boundary tests + no-telemetry-secret
   guard. (loop continues automatically; no human gate between phases.)
+
+### Round 4 — 2026-06-06 07:40 · feature-dev-loop (inline feature-auto-build) · P2 DONE
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline-hosting feature-auto-build).
+- **Phase**: **P2 — Observability scaffold (no-op, secret-free)**.
+- **Action**: Added the ONLY new runtime surface for row #6 — a pluggable, provably no-op,
+  secret-free telemetry seam + error boundary:
+  - **NEW** `src/observability/telemetry.ts` — `TelemetryContext`, `AdminTelemetrySink` (interface
+    with NO DSN/endpoint/token field), `noopTelemetrySink` (default; `captureError`/`captureEvent`
+    do nothing, accept+`void` their args, never throw). Exact api.md §1 signatures.
+  - **NEW** `src/observability/AdminErrorBoundary.tsx` — class boundary; `getDerivedStateFromError`
+    + `componentDidCatch` forwards to the injected sink (default `noopTelemetrySink`, wrapped in a
+    try/catch so a misbehaving custom sink can't re-crash); `render()` returns a CSP-clean fallback
+    (`DefaultErrorFallback`, token-styled `.admin-error-fallback`, no inline style/script).
+  - **MODIFIED** `src/App.tsx` — wraps `<AdminLayout/>` in `<AdminErrorBoundary>` mounted BELOW
+    `AdminRouteGate` (so a render error never exposes admin UI on a non-admin session — guard fails
+    closed first). Confirmed against the SHIPPED App.tsx where `AdminRouteGate` is the outer wrapper.
+  - **MODIFIED** `src/styles/admin.css` — added `.admin-error-fallback*` selectors folded into the
+    existing `.admin-gate-fallback` token rules (OKLCH `--danger`/`--text-2`/`--text-3`; no new dep).
+  - **NEW tests**: `telemetry.test.ts` (TT-TELEMETRY-NOOP spies fetch+localStorage+sessionStorage /
+    NO-THROW on Error|null|string|undefined / NO-SECRET-FIELD structural); `AdminErrorBoundary.test.tsx`
+    (TT-ERRORBOUNDARY-CATCH forwards to spy sink + renders fallback / PASSTHROUGH / FALLBACK-CLEAN
+    no inline style|script / DEFAULT-SINK falls back to noop); `no-telemetry-secret.test.ts`
+    (TT-NO-TELEMETRY-SECRET-SRC over runtime src + TT-NO-TELEMETRY-SECRET-BUNDLE self-building over dist).
+- **Self-checks**: secret-free crux holds — `AdminTelemetrySink` has no transport field; CSP stays
+  `connect-src 'self'` (P1 TT-CSP-NO-WILDCARD asserts no `ingest.sentry.io`); the DSN guard scans
+  runtime src + the fresh-built dist. W0 boundary intact. **"exactly 10 pages" invariant preserved**
+  (observability lives under `src/observability/`, not `src/pages/`).
+- **Guard-scope note**: TT-NO-TELEMETRY-SECRET-SRC excludes `*.test.ts(x)` — sibling guards
+  (csp/env-no-secret) legitimately name the Sentry host inside detection patterns/comments and are
+  never bundled; the BUNDLE scan (test files are not in dist) is the authoritative browser check.
+- **Tests**: rebuilt `dist/` fresh (captures the App.tsx wiring) — build exit 0, **zero `.map`**
+  emitted (`sourcemap:false` unchanged), `dist/_headers` present. `pnpm --filter @repo/admin test`
+  → **36 files / 389 passed** (was 33/375; +3 files, +14 tests, none removed). `tsc --noEmit` → exit 0.
+- **Commit**: `__P2_HASH__` — `feat(admin): row #6 P2 — no-op telemetry seam + error boundary`
+  (also folds the P1 dev_log hash correction cc6c9f6→362000b after the P1 commit was amended).
+- **Risks**: none surfaced. R2 (scaffold adds secret/network) mitigated + proven by TT-TELEMETRY-NOOP
+  + TT-NO-TELEMETRY-SECRET-{SRC,BUNDLE}.
+- **Next step**: P3 — `manual-smoke-checklist.md` (10-page scenarios) + `release-operator-runbook.md`
+  (deploy/rotate/rollback + Promotion Gate). Docs only; the slice does not promote.

@@ -43,31 +43,36 @@ body {
 /* ---- Phase 2: shell + fail-closed fallback ---- */
 
 .admin-shell,
-.admin-gate-fallback {
+.admin-gate-fallback,
+.admin-error-fallback {
   max-width: 640px;
   margin: 0 auto;
   padding: 2rem;
 }
 
 .admin-shell h1,
-.admin-gate-fallback h1 {
+.admin-gate-fallback h1,
+.admin-error-fallback h1 {
   font-size: var(--fs-xl, 1.5rem);
   font-weight: 700;
   margin: 0 0 0.5rem;
 }
 
-.admin-gate-fallback p {
+.admin-gate-fallback p,
+.admin-error-fallback p {
   color: var(--text-2);
   margin: 0.25rem 0;
 }
 
-.admin-gate-fallback__hint {
+.admin-gate-fallback__hint,
+.admin-error-fallback__hint {
   font-size: var(--fs-xs, 0.75rem);
   color: var(--text-3);
   margin-top: 1rem;
 }
 
-.admin-gate-fallback h1 {
+.admin-gate-fallback h1,
+.admin-error-fallback h1 {
   color: var(--danger);
 }
 

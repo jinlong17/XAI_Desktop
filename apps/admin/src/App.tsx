@@ -11,11 +11,18 @@
  * unless a session + admin claim are present. This proves the fail-closed default.
  *
  * Phase 4 ports the 10 pages behind this same guard via AdminLayout.
+ *
+ * Row #6 (deploy-observability) P2: wraps the admin content in `AdminErrorBoundary`, mounted
+ * BELOW `AdminRouteGate`. A render error inside the admin tree is caught + forwarded to the
+ * injected telemetry sink (default no-op, secret-free) and a CSP-clean fallback renders instead
+ * of crashing. Mounting below the guard means a render error never exposes admin UI on a
+ * non-admin session (the guard still fails closed first). See api.md §2.
  */
 import React from "react";
 import { WebAuthSessionProvider } from "@repo/web-auth-device-session";
 import { AdminRouteGate } from "./auth/AdminRouteGate";
 import { AdminLayout } from "./components/AdminLayout";
+import { AdminErrorBoundary } from "./observability/AdminErrorBoundary";
 
 function ForbiddenFallback(): React.ReactElement {
   return (
@@ -33,7 +40,9 @@ export default function App(): React.ReactElement {
   return (
     <WebAuthSessionProvider>
       <AdminRouteGate fallback={<ForbiddenFallback />}>
-        <AdminLayout />
+        <AdminErrorBoundary>
+          <AdminLayout />
+        </AdminErrorBoundary>
       </AdminRouteGate>
     </WebAuthSessionProvider>
   );
