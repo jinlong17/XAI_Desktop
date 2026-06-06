@@ -23,7 +23,7 @@
   align-items: flex-start;
   justify-content: center;
   padding-top: 10vh;
-  background: var(--bg-overlay, oklch(20% 0.01 220 / 0.42));
+  background: var(--bg-overlay);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -36,12 +36,10 @@
   max-height: 480px;
   display: flex;
   flex-direction: column;
-  background: var(--bg-panel, #ffffff);
+  background: var(--bg-panel);
   border: 1px solid var(--border-1);
   border-radius: 12px;
-  box-shadow:
-    0 4px 6px -1px oklch(20% 0.012 220 / 0.08),
-    0 20px 40px -8px oklch(20% 0.012 220 / 0.20);
+  box-shadow: var(--shadow-3);
   overflow: hidden;
 }
 

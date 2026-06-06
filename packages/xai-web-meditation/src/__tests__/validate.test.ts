@@ -33,7 +33,7 @@ describe("validatePrefs", () => {
     expect(result.duration).toBe(25);
   });
 
-  it("AC-PERSIST-6: unknown schemaVersion still loads (v1 ignores schema mismatch and clamps)", () => {
+  it("AC-PERSIST-6: unknown schemaVersion still loads and migrates to schema v3", () => {
     const result = validatePrefs({
       schemaVersion: 999,
       scene: "forest",
@@ -41,8 +41,11 @@ describe("validatePrefs", () => {
       sound: "waves",
       duration: 10,
     });
-    expect(result.schemaVersion).toBe(1);
+    expect(result.schemaVersion).toBe(3);
     expect(result.scene).toBe("forest");
+    expect(result.durationMode).toBe("preset");
+    expect(result.customFixedDurations).toEqual([]);
+    expect(result.customScenes).toEqual([]);
   });
 
   it("clamps unknown clock to split", () => {
@@ -53,8 +56,9 @@ describe("validatePrefs", () => {
     expect(validatePrefs({ sound: "drums" }).sound).toBe(DEFAULT_PREFS.sound);
   });
 
-  it("clamps unknown duration to 15", () => {
-    expect(validatePrefs({ duration: 999 }).duration).toBe(DEFAULT_PREFS.duration);
+  it("clamps numeric duration to the supported 1-240 minute range", () => {
+    expect(validatePrefs({ duration: 999 }).duration).toBe(240);
+    expect(validatePrefs({ duration: "999" }).duration).toBe(DEFAULT_PREFS.duration);
   });
 
   it("does not mutate input", () => {
@@ -63,14 +67,56 @@ describe("validatePrefs", () => {
     expect(raw).toEqual({ scene: "mars" });
   });
 
-  it("preserves all valid prefs unchanged", () => {
+  it("preserves all valid schema v2 prefs unchanged", () => {
     const input = {
-      schemaVersion: 1,
+      schemaVersion: 3,
       scene: "night" as const,
       clock: "minimal" as const,
       sound: "forest" as const,
-      duration: 45 as const,
+      volume: 0.4,
+      duration: 60,
+      customFixedDurations: [60, 90],
+      durationMode: "custom" as const,
+      customDuration: 33,
+      clockScale: "large" as const,
+      clockColors: DEFAULT_PREFS.clockColors,
+      customScenes: [],
     };
     expect(validatePrefs(input)).toEqual(input);
+  });
+
+  it("keeps a valid custom scene and selected custom id", () => {
+    const result = validatePrefs({
+      ...DEFAULT_PREFS,
+      scene: "custom:calm01",
+      customScenes: [
+        {
+          id: "custom:calm01",
+          name: "Calm room",
+          background: "#101820",
+          gradientFrom: "#406070",
+          gradientTo: "#101820",
+          animation: "aurora",
+          sound: "whiteNoise",
+          clock: "analogZen",
+          clockScale: "larger",
+          clockColors: DEFAULT_PREFS.clockColors,
+          durationMode: "infinite",
+          duration: 25,
+          customDuration: 44,
+        },
+      ],
+    });
+    expect(result.scene).toBe("custom:calm01");
+    expect(result.customScenes).toHaveLength(1);
+    expect(result.customScenes[0]?.sound).toBe("whiteNoise");
+  });
+
+  it("deduplicates and sorts user fixed durations", () => {
+    const result = validatePrefs({
+      ...DEFAULT_PREFS,
+      customFixedDurations: [60, 10, 90, 60, 0, 241, "x"],
+    });
+    expect(result.customFixedDurations).toEqual([60, 90]);
   });
 });

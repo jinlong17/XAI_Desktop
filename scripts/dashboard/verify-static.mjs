@@ -79,14 +79,6 @@ function git(args) {
   }).trim();
 }
 
-function gitOptional(args) {
-  try {
-    return git(args);
-  } catch {
-    return "";
-  }
-}
-
 function gitLines(args) {
   const output = git(args);
   return output ? output.split(/\r?\n/).filter(Boolean) : [];
@@ -119,8 +111,8 @@ function currentDirtyCount() {
   return gitLines(["status", "--short"]).length;
 }
 
-function changedFileCount(ref) {
-  return gitLines(["diff-tree", "--no-commit-id", "--name-only", "-r", ref]).length;
+function generatedSnapshotDirty() {
+  return gitLines(["status", "--short", "--", relative(repoRoot, generatedPath)]).length > 0;
 }
 
 assert(existsSync(htmlPath), `missing dashboard HTML: ${relative(repoRoot, htmlPath)}`);
@@ -176,22 +168,13 @@ assert(state.repo_root === repoRoot, `repo_root must be ${repoRoot}; got ${state
 
 const currentBranch = git(["branch", "--show-current"]);
 const currentCommit = git(["log", "-1", "--format=%h %s"]);
-const parentCommit = gitOptional(["log", "-1", "--format=%h %s", "HEAD^"]);
-const dirtyCount = currentDirtyCount();
-const generatedCommit = state.git?.latest_commit || "";
-const generatedDirtyCount = state.sync_status?.dirty?.total;
-const cleanCommittedSnapshot =
-  dirtyCount === 0 &&
-  parentCommit &&
-  generatedCommit === parentCommit &&
-  generatedDirtyCount === changedFileCount("HEAD");
 assert(state.git?.branch === currentBranch, `generated branch is stale: expected ${currentBranch}, got ${state.git?.branch || "<missing>"}`);
+assert(state.git?.latest_commit === currentCommit, `generated commit is stale: expected ${currentCommit}, got ${state.git?.latest_commit || "<missing>"}`);
+const dirtyCount = currentDirtyCount();
+const generatedDirtyDelta = generatedSnapshotDirty() ? 1 : 0;
 assert(
-  generatedCommit === currentCommit || cleanCommittedSnapshot,
-  `generated commit is stale: expected ${currentCommit}, got ${generatedCommit || "<missing>"}`
-);
-assert(
-  generatedDirtyCount === dirtyCount || cleanCommittedSnapshot,
+  state.sync_status?.dirty?.total === dirtyCount ||
+    state.sync_status?.dirty?.total === dirtyCount - generatedDirtyDelta,
   "generated dirty-file count is stale; run pnpm dashboard"
 );
 

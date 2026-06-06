@@ -78,7 +78,7 @@ Scope: <full | changed | since <ref>>   Snapshot fresh?: <HEAD==snapshot? dirty 
 - Do NOT write anything during detection (Mode=report is read-only except the report file).
 - Do NOT fix code — code violations (HR1/HR2/HR5) are reported to the feature/app workflow.
 - Do NOT auto-change priority/branch/release/ship/roadmap or touch the dev line — `needs-operator`.
-- Do NOT land work on frozen lines (plugin/sync PAUSED, site/admin PROPOSED) — impact-note only.
+- Do NOT land work on frozen lines (plugin/sync PAUSED, site PROPOSED) — impact-note only. Admin is activated but roadmap-gated, so report any admin source work outside `xai-admin-dashboard-system-integration.md` slices.
 - Do NOT bypass owning skills: dashboard writes go through xai-dev-dashboard-sync's allowed-field rules; PRD via xai-feature-dossier-sync; D4 via xai-account-sync-scope-check; D3 via xai-web-to-desktop-sync.
 - On any ambiguous/multi-match classification, STOP and ask the operator.
 

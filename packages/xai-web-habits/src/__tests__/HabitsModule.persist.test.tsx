@@ -104,6 +104,9 @@ describe("HabitsModule persistence", () => {
       window.dispatchEvent(event);
     });
     // After storage event, the new habit should appear
-    expect(document.querySelector(".habit-title")?.textContent).toContain("External habit");
+    const titles = Array.from(document.querySelectorAll(".habit-row .habit-title")).map(
+      (el) => el.textContent,
+    );
+    expect(titles).toContain("External habit");
   });
 });

@@ -157,6 +157,7 @@ interface PushRecord {
   mutation_id: string;
   base_revision: string | null;
   proposed_revision: string;
+  originator_device_id: string;
   blob: string;
   client_updated_at: number;
   soft_delete: boolean;
@@ -169,6 +170,16 @@ const DEFAULT_RETRY_POLICY: RetryPolicy = {
   maxDelayMs: 1500,
   jitterRatio: 0.2,
 };
+
+function assertAccountSyncRecord(record: RepoRecord): void {
+  if (record.syncScope === "account-sync") {
+    return;
+  }
+  throw new SyncBlobError(
+    "E_SYNC_BLOB_PROTOCOL",
+    `sync-blob repo only accepts account-sync records; ${record.entityType}/${record.id} has syncScope ${record.syncScope}`,
+  );
+}
 
 export function createSyncBlobRepo<T extends RepoRecord>(
   options: CreateSyncBlobRepoOptions<T>,
@@ -437,6 +448,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
         }
 
         assertRepoRecord(decrypted);
+        assertAccountSyncRecord(decrypted);
         mirror.set(decrypted.id, decrypted);
         mirrorState.set(decrypted.id, {
           revision: row.revision,
@@ -460,6 +472,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
+    assertAccountSyncRecord(record);
     const current = stateView.get(record.id);
     const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
@@ -502,6 +515,7 @@ export function createSyncBlobRepo<T extends RepoRecord>(
     record: T,
     stateView: Map<string, MirrorState> = mirrorState,
   ): Promise<PendingMutation<T>> {
+    assertAccountSyncRecord(record);
     const current = stateView.get(record.id);
     const proposedRevision = nextRevision(current?.revision ?? null);
     const keyId = options.crypto.getCurrentKeyId();
@@ -552,7 +566,10 @@ export function createSyncBlobRepo<T extends RepoRecord>(
             "Content-Type": "application/json",
           }),
           body: JSON.stringify({
-            records: batch.map(toPushRecord),
+            accountId: options.accountId,
+            records: batch.map((mutation) =>
+              toPushRecord(mutation, options.deviceId),
+            ),
           }),
         },
       );
@@ -863,6 +880,7 @@ async function safeReadJson(
 
 function toPushRecord<T extends RepoRecord>(
   mutation: PendingMutation<T>,
+  deviceId: string,
 ): PushRecord {
   return {
     entity_type: mutation.entityType,
@@ -870,6 +888,7 @@ function toPushRecord<T extends RepoRecord>(
     mutation_id: mutation.mutationId,
     base_revision: mutation.baseRevision,
     proposed_revision: mutation.proposedRevision,
+    originator_device_id: deviceId,
     blob: mutation.blobBase64,
     client_updated_at: mutation.clientUpdatedAt,
     soft_delete: mutation.softDelete,

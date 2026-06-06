@@ -6,15 +6,17 @@
  * impossible at runtime when `id` comes from a validated MeditationPrefs.
  */
 
-import type { Scene, SceneId } from "../types.js";
-import { SCENES } from "./scenes.js";
+import type { CustomScene, Scene, SceneId } from "../types.js";
+import { SCENES, sceneFromCustom } from "./scenes.js";
 
 /** Resolve a SceneId → Scene. Falls back to "ocean" (SCENES[1]) on miss. */
-export function getScene(id: SceneId): Scene {
+export function getScene(id: SceneId, customScenes: readonly CustomScene[] = []): Scene {
+  if (id.startsWith("custom:")) {
+    const custom = customScenes.find((scene) => scene.id === id);
+    if (custom) return sceneFromCustom(custom);
+  }
   const found = SCENES.find((s) => s.id === id);
   if (!found) {
-    // Safety net — should be unreachable at runtime since SceneId is a
-    // literal union and the persisted blob is validated by validatePrefs.
     return SCENES[1]!;
   }
   return found;

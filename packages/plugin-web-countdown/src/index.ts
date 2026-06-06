@@ -21,9 +21,22 @@ export { countdownWebModuleRegistration } from "./registration.js";
 export type {
   CountdownCard,
   CountdownVariant,
+  CountdownCategory,
+  CountdownColorId,
+  CountdownIconId,
+  CountdownDisplayStyle,
+  CountdownLayout,
+  CountdownStatus,
+  CountdownViewMode,
   ImagePresetId,
   ImagePreset,
 } from "./types.js";
 
 // ---- Constants -------------------------------------------------------------
 export { IMAGE_PRESETS } from "./internal/presets.js";
+export {
+  COUNTDOWN_CATEGORIES,
+  COUNTDOWN_COLORS,
+  COUNTDOWN_ICONS,
+  COUNTDOWN_STYLES,
+} from "./internal/options.js";

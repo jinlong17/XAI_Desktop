@@ -52,3 +52,6 @@ web design/
 .wrangler/
 # Wrangler autogen types file — regenerated on every `wrangler types` invocation; lint-tripping
 apps/web/worker-configuration.d.ts
+
+# Local dashboard snapshot (machine-specific git branch/commit/timestamp)
+docs/prototypes/dev-dashboard/state.generated.js

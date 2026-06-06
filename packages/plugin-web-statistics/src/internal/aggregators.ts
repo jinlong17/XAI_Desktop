@@ -2,7 +2,7 @@
  * @internal — pure aggregator functions.
  *
  * Inputs: pomodoro session log (filtered to focus mode) + habits state +
- * week-start preference + clock `now` + language.
+ * week-start preference + clock `now` + language + raw `xai_task_cols` value.
  *
  * Outputs: a fully-populated RangeAggregate (see ../types.ts).
  *
@@ -12,11 +12,17 @@
  * api.md §5.2..§5.8.
  *
  * @remarks
- * `aggregateTasksFromSessions` is currently a proxy: it counts focus
- * sessions as "tasks completed" because no `xai_tasks_completed_log`
- * storage key exists today. A future row (Tasks #6 extension) may add
- * a real Tasks completion log; swap this proxy out at that time without
- * touching any chart or KPI component.
+ * Tasks metric: `kpis.tasksTotal` is the REAL count of `done === true` cards
+ * in `xai_task_cols` (current board, range-invariant — no completion timestamp
+ * on `TaskCard`). `kpis.tasksTrend` is always `"—"` (honest: no prior-window
+ * baseline for a timestamp-less count). The pomodoro-as-tasks proxy has been
+ * retired. Statistics NEVER writes `xai_task_cols`.
+ *
+ * `taskBuckets` is an honest current-state total fill: the real `done` count
+ * is placed in the last bucket, all others are zero. This is NOT a time series
+ * — the array length equals `labels.length` so the BarChart leaf is unchanged.
+ * The Tasks BarChart panel header carries a user-visible "current board" marker
+ * (REC-1 / B1 Path 1) that frames this honestly.
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
@@ -29,6 +35,7 @@ import type {
   StatisticsKpis,
 } from "../types.js";
 import { RING_PALETTE } from "./colors.js";
+import { countDoneTasks } from "./countDoneTasks.js";
 import { type HabitsStateRecord } from "./isHabitsStateRecord.js";
 import { type PomodoroSessionRecord } from "./isPomodoroSession.js";
 import {
@@ -102,31 +109,38 @@ export function aggregateRange(
   weekStart: WeekStart,
   now: Date,
   lang: Lang,
+  rawTaskCols: unknown = undefined,
 ): RangeAggregate {
   const w = rangeWindow(range, now, weekStart, lang);
   const focusSessions = rawSessions.filter((s) => s.mode === "focus");
 
-  // Current-window buckets
+  // Current-window buckets (focus only — tasks metric is now real, NOT session-derived)
   const focusBuckets = new Array<number>(w.labels.length).fill(0);
-  const taskBuckets = new Array<number>(w.labels.length).fill(0);
   for (const s of focusSessions) {
     const t = Date.parse(s.finishedAt);
     if (!Number.isFinite(t)) continue;
     const idx = bucketIndexFor(t, w.bucketBoundaries, w.end);
     if (idx >= 0) {
       focusBuckets[idx] = (focusBuckets[idx] ?? 0) + minutesOf(s);
-      taskBuckets[idx] = (taskBuckets[idx] ?? 0) + 1;
     }
+  }
+
+  // Real tasks done count (current board, range-invariant).
+  // The proxy (counting focus sessions as tasks) has been retired.
+  // Statistics NEVER writes xai_task_cols — read-only aggregator.
+  const currentTasksTotal = countDoneTasks(rawTaskCols);
+
+  // Honest taskBuckets fill: place the real total in the last bucket,
+  // zeros elsewhere. NOT a time series. JSDoc above explains why.
+  const taskBuckets = new Array<number>(w.labels.length).fill(0);
+  if (w.labels.length > 0 && currentTasksTotal > 0) {
+    taskBuckets[w.labels.length - 1] = currentTasksTotal;
   }
 
   // KPIs derived from current vs prior window totals
   const currentFocusMinutes = focusBuckets.reduce((a, b) => a + b, 0);
-  const currentTasksTotal = taskBuckets.reduce((a, b) => a + b, 0);
   const priorFocusMinutes = focusSessions.reduce((acc, s) => {
     return isInRange(s, w.priorStart, w.priorEnd) ? acc + minutesOf(s) : acc;
-  }, 0);
-  const priorTasksTotal = focusSessions.reduce((acc, s) => {
-    return isInRange(s, w.priorStart, w.priorEnd) ? acc + 1 : acc;
   }, 0);
 
   const dailyAvgMinutes = w.labels.length > 0
@@ -158,7 +172,9 @@ export function aggregateRange(
     focusMinutesTotal: currentFocusMinutes,
     habitsKeptStr,
     dailyAvgMinutes,
-    tasksTrend: trendPercent(currentTasksTotal, priorTasksTotal),
+    // tasksTrend is always "—": no honest prior-window for a timestamp-less
+    // current-board count. The proxy's fabricated +N% trend has been retired.
+    tasksTrend: "—",
     focusTrend: trendPercent(currentFocusMinutes, priorFocusMinutes),
     habitsKeptTrend:
       totalHabits > 0 && keptCurrent === totalHabits ? "100%" : habitsKeptStr,

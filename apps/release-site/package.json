@@ -13,6 +13,7 @@
     "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
     "test:nonce:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/nonce-lease.test.ts",
     "test:push": "vitest run supabase/tests/sync-push.test.ts",
+    "test:pull": "vitest run supabase/tests/sync-pull.test.ts",
     "test:recovery": "vitest run supabase/tests/recovery-proof.test.ts",
     "test:audit": "vitest run supabase/tests/audit-log.test.ts",
     "test:audit:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/audit-log.test.ts",

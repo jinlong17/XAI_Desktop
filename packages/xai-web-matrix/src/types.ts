@@ -43,3 +43,19 @@ export interface MatrixModuleProps {
   /** Active UI language. Drives `useI18n(lang)` inside the module. */
   lang: Lang;
 }
+
+/**
+ * Draft for creating a new matrix card.
+ *
+ * Single bilingual title — one input fills both title.en + title.zh.
+ * No date model in v1 (date/dateZh stay undefined on user-created cards).
+ * taskId stays undefined (reserved for future xai-web-tasks join).
+ *
+ * Design: design.md §E.1 #4
+ */
+export interface NewMatrixCardDraft {
+  /** Single string; stored as both en + zh on the created card. */
+  title: string;
+  /** Optional tag/label class — matches the prototype's `t.tag` field. */
+  tag?: string;
+}

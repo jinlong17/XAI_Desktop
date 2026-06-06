@@ -14,16 +14,21 @@
 
 import { describe, it, expect } from "vitest";
 import { render, fireEvent, act } from "@testing-library/react";
-import { DesktopPet } from "../DesktopPet.js";
+import { DesktopPet, resolveDefaultPetPos } from "../DesktopPet.js";
 
 describe("DesktopPet drag", () => {
   it("pointer-down then pointer-up without movement is a click (not drag)", async () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
 
-    // pointerdown at (100, 100) — pos starts at default {x:24, y:520}
+    const defaultPos = resolveDefaultPetPos();
+
+    // pointerdown without movement should be treated as a click.
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
+      fireEvent.pointerDown(body, {
+        clientX: defaultPos.x + 100,
+        clientY: defaultPos.y + 100,
+      });
     });
 
     // pointerup immediately without move
@@ -42,14 +47,18 @@ describe("DesktopPet drag", () => {
     // The drag useEffect attaches window listeners; we fire them directly.
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
+    const defaultPos = resolveDefaultPetPos();
 
-    // Default position: {x:24, y:520}
     const wrapBefore = container.querySelector(".pet-wrap") as HTMLElement;
-    expect(wrapBefore.style.transform).toBe("translate(24px, 520px)");
+    expect(wrapBefore.style.transform).toBe(
+      `translate(${defaultPos.x}px, ${defaultPos.y}px)`,
+    );
 
-    // pointerDown: sets drag offset (ox = 124 - 24 = 100, oy = 620 - 520 = 100)
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
+      fireEvent.pointerDown(body, {
+        clientX: defaultPos.x + 100,
+        clientY: defaultPos.y + 100,
+      });
     });
 
     // Dispatch a native PointerEvent with movementX set so the moved flag works
@@ -73,10 +82,14 @@ describe("DesktopPet drag", () => {
     // After drag (moved=true), the pointerUp handler should NOT set mood=happy.
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
+    const defaultPos = resolveDefaultPetPos();
 
     // Start drag
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
+      fireEvent.pointerDown(body, {
+        clientX: defaultPos.x + 100,
+        clientY: defaultPos.y + 100,
+      });
     });
 
     // Move with significant movement using native PointerEvent (movementX > 1)
@@ -105,9 +118,13 @@ describe("DesktopPet drag", () => {
   it("persists new position to localStorage after drag", () => {
     const { container } = render(<DesktopPet on={true} lang="en" />);
     const body = container.querySelector(".pet-body") as HTMLElement;
+    const defaultPos = resolveDefaultPetPos();
 
     act(() => {
-      fireEvent.pointerDown(body, { clientX: 124, clientY: 620 });
+      fireEvent.pointerDown(body, {
+        clientX: defaultPos.x + 100,
+        clientY: defaultPos.y + 100,
+      });
     });
 
     act(() => {

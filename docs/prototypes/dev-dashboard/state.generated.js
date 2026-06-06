@@ -287,11 +287,11 @@ window.XAI_DASHBOARD_STATE = {
         "platform": "Admin prototype / future app target",
         "target": "控制面、用量、审计、AI 配置",
         "branch": "codex/admin/<feature>",
-        "next": "确认 admin 线优先级、package/deploy 目标和 RBAC 契约",
+        "next": "启动 admin roadmap 第一切片 xai-admin-dashboard-shell,确认 package/deploy 目标和 RBAC 契约",
         "issues": [
           {
             "severity": "pending",
-            "text": "admin 线为 PROPOSED，仅原型存在，尚未确认部署目标。"
+            "text": "admin 线已于 2026-06-05 operator 激活为 roadmap-gated;仍仅原型+roadmap manifest,尚未确认生产部署目标。"
           }
         ]
       }
@@ -1440,9 +1440,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
-          "skill": "xai-feature-brief",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
+          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
+          "skill": "xai-feature-brief 或 xai-roadmap-loop",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
         }
       ],
       "impacts": [
@@ -1464,7 +1464,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
         }
       ],
       "region": "主产品链",
@@ -1474,7 +1474,7 @@ window.XAI_DASHBOARD_STATE = {
       "deployment_title": "Web 版本",
       "release_title": "Web 分支",
       "phase": "主线开发",
-      "progress": 75,
+      "progress": 73,
       "running": "正常运行",
       "recent_update": "Web Console / Dashboard rows 接入真实 roadmap 计数",
       "todo": "5 个阻塞需处理",
@@ -1487,11 +1487,18 @@ window.XAI_DASHBOARD_STATE = {
       "tracking_badge": "needs attention",
       "status_counts": {
         "SHIPPED": 40,
+        "NEEDS_REVIEW": 6,
         "BLOCKED_EXTERNAL": 5,
-        "PENDING": 10
+        "PENDING": 10,
+        "READY_FOR_VERIFY": 1,
+        "APPROVED": 1
       },
-      "status_summary": "55 rows · SHIPPED:40 · PENDING:10 · BLOCKED_EXTERNAL:5",
+      "status_summary": "63 rows · SHIPPED:40 · READY_FOR_VERIFY:1 · NEEDS_REVIEW:6 · PENDING:10 · BLOCKED_EXTERNAL:5 · APPROVED:1",
       "related_docs": [
+        {
+          "label": "Web Spec",
+          "path": "web design/DESIGN.md"
+        },
         {
           "label": "ADR-0013 分支治理",
           "path": "docs/adr/0013-branch-sync-governance.md"
@@ -1505,8 +1512,16 @@ window.XAI_DASHBOARD_STATE = {
           "path": "docs/workflow/roadmap/xai-web-console-gap-closure.md"
         },
         {
+          "label": "xai-web-dashboard-real-data",
+          "path": "docs/workflow/roadmap/xai-web-dashboard-real-data.md"
+        },
+        {
           "label": "web-ticktick-parity",
           "path": "docs/workflow/roadmap/web-ticktick-parity.md"
+        },
+        {
+          "label": "xai-web-calendar-event-create",
+          "path": "docs/workflow/roadmap/xai-web-calendar-event-create.md"
         }
       ],
       "testing": {
@@ -2078,7 +2093,7 @@ window.XAI_DASHBOARD_STATE = {
         "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
         "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -2146,15 +2161,13 @@ window.XAI_DASHBOARD_STATE = {
       },
       "tracking_badge": "tracked",
       "status_counts": {
-        "ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH": 1,
-        "DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED": 1,
+        "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
+        "PAUSED_UNTIL_P1_BETA": 1,
         "STABLE": 1,
         "IN-DEV": 7,
-        "PLANNED": 2,
-        "MIGRATING": 2,
-        "DEPRECATED": 1
+        "PLANNED": 4
       },
-      "status_summary": "15 rows · ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH:1 · DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED:1 · DEPRECATED:1 · IN-DEV:7 · MIGRATING:2 · PLANNED:2 · STABLE:1",
+      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PAUSED_UNTIL_P1_BETA:1 · PLANNED:4 · STABLE:1",
       "related_docs": [
         {
           "label": "Plugin PRD",
@@ -2403,7 +2416,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
+          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
         }
       ],
       "impacts": [
@@ -2420,7 +2433,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
         }
       ],
       "region": "主产品链",
@@ -2754,11 +2767,11 @@ window.XAI_DASHBOARD_STATE = {
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "proposed",
-      "status": "控制面候选",
+      "badge": "roadmap-gated",
+      "status": "已激活 · roadmap gated",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
+      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -2818,23 +2831,23 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "AI 配置",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "权限 / RBAC",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "用量统计",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "审计日志",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "运营入口",
-          "status": "proposed"
+          "status": "roadmap-gated"
         }
       ],
       "points": [
@@ -2848,10 +2861,10 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
+          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -2863,11 +2876,11 @@ window.XAI_DASHBOARD_STATE = {
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -2885,24 +2898,24 @@ window.XAI_DASHBOARD_STATE = {
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
-        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
+        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {
@@ -2956,22 +2969,36 @@ window.XAI_DASHBOARD_STATE = {
       "deployment_title": "管理者 Dashboard",
       "release_title": "管理者 Dashboard",
       "phase": "控制面原型",
-      "progress": 22,
+      "progress": 15,
       "running": "原型可打开",
       "recent_update": "Dev Dashboard 与 Admin prototype 分离",
-      "todo": "权限、用量、审计、AI 配置接入计划",
+      "todo": "6 个待排期",
       "target": {
         "type": "file",
         "href": "../admin-dashboard/index.html",
         "label": "打开 Admin 原型"
       },
-      "tracking_badge": "tracked",
-      "status_counts": {},
-      "status_summary": "0 manifest rows · prototype only",
+      "tracking_badge": "work queued",
+      "status_counts": {
+        "PENDING": 6
+      },
+      "status_summary": "6 rows · PENDING:6",
       "related_docs": [
+        {
+          "label": "Admin README",
+          "path": "docs/prototypes/admin-dashboard/README.md"
+        },
+        {
+          "label": "接入计划",
+          "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"
+        },
         {
           "label": "ADR-0013 控制面",
           "path": "docs/adr/0013-branch-sync-governance.md"
+        },
+        {
+          "label": "xai-admin-dashboard-system-integration",
+          "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md"
         }
       ],
       "testing": {
@@ -3129,48 +3156,46 @@ window.XAI_DASHBOARD_STATE = {
     "note": "Per-module dev-navigation. Mirror of PRODUCT_MODULE_MAP.md; rendered by dev-dashboard 产品结构图 detail panel."
   },
   "repo_root": "/Users/jinlong/Desktop/jinlong_project/XAI_Desktop",
-  "generated_at": "2026-06-04T10:21:15.988Z",
+  "generated_at": "2026-06-06T11:18:06.150Z",
   "git": {
     "branch": "dev",
-    "latest_commit": "7d4f8274 fix(desktop): harden native capability adapter bootstrap",
+    "latest_commit": "f2bbf1a0 merge: web desktop D3 parity into dev",
     "divergence": {
-      "web_only": 422,
+      "web_only": 443,
       "dev_only": 190
     }
   },
   "sync_status": {
     "status": "working-tree-dirty",
     "status_label": "有未提交变更",
-    "generated_at": "2026-06-04T10:21:15.988Z",
+    "generated_at": "2026-06-06T11:18:06.150Z",
     "refresh_command": "pnpm dashboard",
     "serve_command": "pnpm dashboard:serve",
     "branch": "dev",
-    "latest_commit": "7d4f8274 fix(desktop): harden native capability adapter bootstrap",
+    "latest_commit": "f2bbf1a0 merge: web desktop D3 parity into dev",
     "dirty": {
-      "total": 107,
+      "total": 504,
       "buckets": {
-        "skills-agents": 44,
-        "docs": 26,
-        "dashboard-docs": 5,
-        "dashboard-ui": 23,
+        "other": 31,
+        "skills-agents": 27,
+        "product-code": 258,
+        "docs": 186,
         "dashboard-state": 1,
-        "release-log": 1,
-        "other": 2,
-        "dashboard-generator": 5
+        "dashboard-generator": 1
       },
       "notable": [
-        ".claude/skills/xai-account-sync-scope-check",
+        ".claude/skills/skill-workflow-router/SKILL.md",
+        ".claude/skills/xai-admin-control-plane-sync/SKILL.md",
         ".claude/skills/xai-consistency-audit/SKILL.md",
-        ".claude/skills/xai-desktop-release-gate",
-        ".claude/skills/xai-dev-dashboard-sync",
-        ".claude/skills/xai-feature-dossier-sync",
         ".claude/skills/xai-module-classify/SKILL.md",
-        ".claude/skills/xai-release-log",
-        ".claude/skills/xai-sync-fanout-dispatch",
-        ".claude/skills/xai-web-deploy-preflight",
-        ".claude/skills/xai-web-to-desktop-sync",
-        ".codex/skills/xai-account-sync-scope-check",
-        ".codex/skills/xai-consistency-audit/SKILL.md"
+        ".codex/agents/bugfix-full-loop.toml",
+        ".codex/agents/feature-auto-build.toml",
+        ".codex/agents/feature-full-loop.toml",
+        ".codex/agents/skill-workflow-router.toml",
+        ".codex/skills/workflow-router/SKILL.md",
+        ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+        ".codex/skills/xai-consistency-audit/SKILL.md",
+        ".codex/skills/xai-module-classify/SKILL.md"
       ]
     },
     "sync_skill": {
@@ -3186,95 +3211,95 @@ window.XAI_DASHBOARD_STATE = {
         "label": "manual state",
         "path": "docs/workflow/project/dashboard-state.json",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.210Z",
+        "updated_at": "2026-06-06T11:12:44.698Z",
         "tracked": true
       },
       {
         "label": "dashboard readme",
         "path": "docs/prototypes/dev-dashboard/README.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "tracked": true
       },
       {
         "label": "machine contract",
         "path": "docs/workflow/project/dev-dashboard.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.211Z",
+        "updated_at": "2026-06-06T11:09:10.669Z",
         "tracked": true
       },
       {
         "label": "template",
         "path": "docs/prototypes/dev-dashboard/TEMPLATE.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.205Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "tracked": true
       },
       {
         "label": "boundaries",
         "path": "docs/prototypes/dev-dashboard/BOUNDARIES.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.631Z",
         "tracked": true
       },
       {
         "label": "release log",
         "path": "docs/workflow/project/release-log.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.212Z",
+        "updated_at": "2026-06-06T11:09:10.670Z",
         "tracked": true
       },
       {
         "label": "branch policy",
         "path": "docs/workflow/project/branch-policy.json",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.210Z",
+        "updated_at": "2026-06-06T11:09:10.667Z",
         "tracked": true
       },
       {
         "label": "dashboard design",
         "path": "docs/prototypes/dev-dashboard/DESIGN.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "tracked": true
       },
       {
         "label": "sync skill",
         "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
         "exists": true,
-        "updated_at": "2026-06-04T10:15:26.195Z",
+        "updated_at": "2026-06-06T11:09:10.604Z",
         "tracked": true
       }
     ],
     "skill_agent_registry": {
-      "total": 60,
-      "skills": 35,
+      "total": 66,
+      "skills": 41,
       "agents": 25,
-      "complete": 60,
-      "incomplete": 0,
-      "all_complete": true,
+      "complete": 65,
+      "incomplete": 1,
+      "all_complete": false,
       "missing_intro": 0,
       "missing_note": 0,
-      "unclear_category": 0,
+      "unclear_category": 1,
       "missing_workflow": 0,
       "missing_docs": 0,
-      "unresolved": 0,
+      "unresolved": 1,
       "source_complete": 1,
-      "source_backfill": 59,
+      "source_backfill": 65,
       "source_completeness": {
         "status": "backfilled",
-        "total": 60,
+        "total": 66,
         "complete": 1,
-        "backfilled": 59,
-        "ratio": 0.017,
-        "detail": "59 个条目仍依赖生成器补齐，可后续回写源文件。"
+        "backfilled": 65,
+        "ratio": 0.015,
+        "detail": "65 个条目仍依赖生成器补齐，可后续回写源文件。"
       },
-      "generated_note": 59,
-      "generated_input": 44,
-      "generated_output": 40,
-      "changed": 15,
+      "generated_note": 65,
+      "generated_input": 48,
+      "generated_output": 46,
+      "changed": 14,
       "new_items": 0,
-      "modified_items": 15
+      "modified_items": 14
     }
   },
   "skills_found": [
@@ -3283,6 +3308,16 @@ window.XAI_DASHBOARD_STATE = {
       "description": "Classify an XAI persisted-entity change against ADR-0013 D4 and the account-sync verification gates, then emit a D4 scope check receipt. Use for account-sync completeness checks, device-local-never-syncs (outbox-exclusion) proofs, entityType/syncScope drift detection, syncScope classification, the D4 9-item gate, and routing entity changes before they reach the paused sync line. Receipt-only — it does not implement sync, unpause sync-v1, merge, ship, or write entities.ts / plugin types.ts.",
       "triggers": [],
       "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
+      "present": true,
+      "tracked": true
+    },
+    {
+      "name": "xai-admin-control-plane-sync",
+      "description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+      "triggers": [
+        "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+      ],
+      "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
       "present": true,
       "tracked": true
     },
@@ -3599,13 +3634,22 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "XAI Workflow Skills",
       "summary": "项目级 feature / roadmap / release / web-to-desktop 能力。",
-      "count": 13,
+      "count": 14,
       "items": [
         {
           "name": "xai-account-sync-scope-check",
           "description": "Classify an XAI persisted-entity change against ADR-0013 D4 and the account-sync verification gates, then emit a D4 scope check receipt. Use for account-sync completeness checks, device-local-never-syncs (outbox-exclusion) proofs, entityType/syncScope drift detection, syncScope classification, the D4 9-item gate, and routing entity changes before they reach the paused sync line. Receipt-only — it does not implement sync, unpause sync-v1, merge, ship, or write entities.ts / plugin types.ts.",
           "triggers": [],
           "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
+          "tracked": true
+        },
+        {
+          "name": "xai-admin-control-plane-sync",
+          "description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+          "triggers": [
+            "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+          ],
+          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
           "tracked": true
         },
         {
@@ -3732,7 +3776,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "Codex Public Skills",
       "summary": "Codex 本地可复用开发技能，覆盖前端、CI、规划和安全。",
-      "count": 12,
+      "count": 17,
       "items": [
         {
           "name": "agent-behavioral-guidelines",
@@ -3774,6 +3818,13 @@ window.XAI_DASHBOARD_STATE = {
           "tracked": true
         },
         {
+          "name": "Frontend Responsive Design Standards",
+          "description": "Build responsive, mobile-first layouts using fluid containers, flexible units, media queries, and touch-friendly design that works across all screen sizes. Use this skill when creating or modifying UI layouts, responsive grids, breakpoint styles, mobile navigation, or any interface that needs to adapt to different screen sizes. Apply when working with responsive CSS, media queries, viewport settings, flexbox/grid layouts, mobile-first styling, breakpoint definitions (mobile, tablet, desktop), touch target sizing, relative units (rem, em, %), image optimization for different screens, or testing layouts across multiple devices. Use for any task involving multi-device support, responsive design patterns, or adaptive layouts.",
+          "triggers": [],
+          "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+          "tracked": true
+        },
+        {
           "name": "frontend-dev",
           "description": "Use when building or refining a frontend page or component — drives MiniMax's upstream \"frontend-dev\" pattern (Tailwind utility-first, Framer Motion for transitions, semantic component composition). Triggers — build a frontend page, framer motion, tailwind UI, refine this component, frontend polish pass.",
           "triggers": [
@@ -3800,6 +3851,13 @@ window.XAI_DASHBOARD_STATE = {
           "tracked": true
         },
         {
+          "name": "high-end-visual-design",
+          "description": "Teaches the AI to design like a high-end agency. Defines the exact fonts, spacing, shadows, card structures, and animations that make a website feel expensive. Blocks all the common defaults that make AI designs look cheap or generic.",
+          "triggers": [],
+          "path": ".codex/skills/soft-skill/SKILL.md",
+          "tracked": true
+        },
+        {
           "name": "planning-with-files",
           "description": "Use when a multi-step task needs a persistent plan file that survives context resets — drives the upstream \"Planning with Files\" task_plan.md discipline (long-running plan + checkbox progress + per-step rationale). Triggers — persistent plan, task_plan.md, /plan, long-running task plan, plan-as-file.",
           "triggers": [
@@ -3810,6 +3868,13 @@ window.XAI_DASHBOARD_STATE = {
             "\"plan-as-file\""
           ],
           "path": ".codex/skills/planning-with-files/SKILL.md",
+          "tracked": true
+        },
+        {
+          "name": "redesign-existing-projects",
+          "description": "Upgrades existing websites and apps to premium quality. Audits current design, identifies generic AI patterns, and applies high-end design standards without breaking functionality. Works with any CSS framework or vanilla CSS.",
+          "triggers": [],
+          "path": ".codex/skills/redesign-skill/SKILL.md",
           "tracked": true
         },
         {
@@ -3839,6 +3904,13 @@ window.XAI_DASHBOARD_STATE = {
           "tracked": true
         },
         {
+          "name": "stitch-design-taste",
+          "description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-accelerated performance.",
+          "triggers": [],
+          "path": ".codex/skills/stitch-skill/SKILL.md",
+          "tracked": true
+        },
+        {
           "name": "superpowers",
           "description": "Use when planning, designing, or implementing a non-trivial change — adopts a plan-first, subagent-driven discipline that breaks the task down before any code is written. Triggers — plan first, design before code, subagent-driven, multi-step planning, decompose this task.",
           "triggers": [
@@ -3863,6 +3935,15 @@ window.XAI_DASHBOARD_STATE = {
             "prompt for Codex"
           ],
           "path": ".codex/skills/workflow-router/SKILL.md",
+          "tracked": true
+        },
+        {
+          "name": "xai-admin-control-plane-sync",
+          "description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+          "triggers": [
+            "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+          ],
+          "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
           "tracked": true
         },
         {
@@ -4813,47 +4894,47 @@ window.XAI_DASHBOARD_STATE = {
       "note"
     ],
     "conclusion": {
-      "status": "resolved",
-      "title": "Skill / Agent 知识库字段已自动补齐",
-      "detail": "所有 60 个 Skill / Agent 条目均已具备看板所需字段；59 个条目使用了自动补齐内容，可后续按需回写源文件。"
+      "status": "needs-action",
+      "title": "仍有需要人工判断的 Skill / Agent 条目",
+      "detail": "1 个条目仍缺少无法确定的分类或定义字段。"
     },
     "source_completeness": {
       "status": "backfilled",
-      "total": 60,
+      "total": 66,
       "complete": 1,
-      "backfilled": 59,
-      "ratio": 0.017,
-      "detail": "59 个条目仍依赖生成器补齐，可后续回写源文件。"
+      "backfilled": 65,
+      "ratio": 0.015,
+      "detail": "65 个条目仍依赖生成器补齐，可后续回写源文件。"
     },
     "summary": {
-      "total": 60,
-      "skills": 35,
+      "total": 66,
+      "skills": 41,
       "agents": 25,
-      "complete": 60,
-      "incomplete": 0,
-      "all_complete": true,
+      "complete": 65,
+      "incomplete": 1,
+      "all_complete": false,
       "missing_intro": 0,
       "missing_note": 0,
-      "unclear_category": 0,
+      "unclear_category": 1,
       "missing_workflow": 0,
       "missing_docs": 0,
-      "unresolved": 0,
+      "unresolved": 1,
       "source_complete": 1,
-      "source_backfill": 59,
+      "source_backfill": 65,
       "source_completeness": {
         "status": "backfilled",
-        "total": 60,
+        "total": 66,
         "complete": 1,
-        "backfilled": 59,
-        "ratio": 0.017,
-        "detail": "59 个条目仍依赖生成器补齐，可后续回写源文件。"
+        "backfilled": 65,
+        "ratio": 0.015,
+        "detail": "65 个条目仍依赖生成器补齐，可后续回写源文件。"
       },
-      "generated_note": 59,
-      "generated_input": 44,
-      "generated_output": 40,
-      "changed": 15,
+      "generated_note": 65,
+      "generated_input": 48,
+      "generated_output": 46,
+      "changed": 14,
       "new_items": 0,
-      "modified_items": 15
+      "modified_items": 14
     },
     "gap_labels": {
       "missing_intro": "缺少明确介绍",
@@ -4883,17 +4964,17 @@ window.XAI_DASHBOARD_STATE = {
       "missing_explicit_note": 0,
       "missing_related_workflow": 0,
       "missing_related_docs": 0,
-      "unclear_category": 0,
+      "unclear_category": 1,
       "untracked_or_local": 0,
       "mirror_missing": 0
     },
     "source_note_counts": {
       "generated_intro": 0,
-      "generated_input": 44,
-      "generated_output": 40,
-      "generated_note": 59,
+      "generated_input": 48,
+      "generated_output": 46,
+      "generated_note": 65,
       "generated_workflow": 10,
-      "definition_only_doc": 8,
+      "definition_only_doc": 12,
       "untracked_or_local": 0,
       "mirror_missing": 0
     },
@@ -4929,10 +5010,10 @@ window.XAI_DASHBOARD_STATE = {
         "summary": "把粗需求、roadmap manifest 和长期任务转成可执行批次。",
         "scenario": "批量推进路线图、生成目标 prompt、保持长任务计划和自动化节奏。",
         "tone": "purple",
-        "count": 11,
-        "complete": 11,
+        "count": 15,
+        "complete": 15,
         "gaps": 0,
-        "source_notes": 36
+        "source_notes": 44
       },
       {
         "key": "governance",
@@ -4941,10 +5022,10 @@ window.XAI_DASHBOARD_STATE = {
         "summary": "跨模块同步、发布记录、ship 收口和 handoff 展示规则。",
         "scenario": "Web 改动进入 Desktop、发布前收口、更新 release log 或同步平台规则。",
         "tone": "cyan",
-        "count": 9,
-        "complete": 9,
+        "count": 7,
+        "complete": 7,
         "gaps": 0,
-        "source_notes": 15
+        "source_notes": 11
       },
       {
         "key": "quality",
@@ -4953,10 +5034,10 @@ window.XAI_DASHBOARD_STATE = {
         "summary": "CI、架构冷读、安全审查和质量风险识别。",
         "scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
         "tone": "yellow",
-        "count": 14,
-        "complete": 14,
+        "count": 16,
+        "complete": 16,
         "gaps": 0,
-        "source_notes": 46
+        "source_notes": 54
       },
       {
         "key": "authoring",
@@ -4965,10 +5046,22 @@ window.XAI_DASHBOARD_STATE = {
         "summary": "创建、维护、镜像和使用可复用 skill / agent 能力。",
         "scenario": "新增 SKILL.md、调整 agent 定义、维护前端/组合/小修类工程辅助。",
         "tone": "green",
-        "count": 12,
-        "complete": 12,
+        "count": 13,
+        "complete": 13,
         "gaps": 0,
-        "source_notes": 39
+        "source_notes": 43
+      },
+      {
+        "key": "reference",
+        "title": "Reference / Support",
+        "workflow": "project reference",
+        "summary": "不直接绑定单一 workflow，但属于项目可查阅能力。",
+        "scenario": "查找辅助能力、理解本地与 portable 定义来源或补充上下文。",
+        "tone": "gray",
+        "count": 1,
+        "complete": 0,
+        "gaps": 1,
+        "source_notes": 4
       }
     ],
     "entries": [
@@ -5492,6 +5585,61 @@ window.XAI_DASHBOARD_STATE = {
         ]
       },
       {
+        "id": "skill:Frontend Responsive Design Standards",
+        "name": "Frontend Responsive Design Standards",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "authoring",
+        "category_label": "Skill / Agent Authoring",
+        "category_suggestion": "",
+        "usage_scenario": "新增 SKILL.md、调整 agent 定义、维护前端/组合/小修类工程辅助。",
+        "function_description": "Build responsive, mobile-first layouts using fluid containers, flexible units, media queries, and touch-friendly design that works across all screen sizes. Use this skill when creating or modifying UI layouts, responsive grids, breakpoint styles, mobile navigation, or any interface that needs to adapt to different screen sizes. Apply when working with responsive CSS, media queries, viewport settings, flexbox/grid layouts, mobile-first styling, breakpoint definitions (mobile, tablet, desktop), touch target sizing, relative units (rem, em, %), image optimization for different screens, or testing layouts across multiple devices. Use for any task involving multi-device support, responsive design patterns, or adaptive layouts.",
+        "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "按需：评审、创作或专项治理时使用",
+        "related_workflow": "skill authoring / reusable engineering helpers",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+            "role": "definition"
+          }
+        ],
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T04:08:09-07:00",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+        "tracked": true,
+        "changed": false,
+        "change_status": "tracked",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_input",
+          "generated_output",
+          "generated_note",
+          "definition_only_doc"
+        ],
+        "source_note_labels": [
+          "输入说明已自动补齐",
+          "输出说明已自动补齐",
+          "注释已自动补齐",
+          "仅有关联定义文档"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": []
+      },
+      {
         "id": "skill:frontend-dev",
         "name": "frontend-dev",
         "kind": "skill",
@@ -5934,8 +6082,8 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-21T00:11:05-07:00",
         "note": "该 Agent 是 roadmap-loop 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
@@ -5951,8 +6099,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -6296,15 +6444,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-21T00:11:05-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/workflow-router/SKILL.md",
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -6389,15 +6537,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-20T23:35:15-07:00",
         "note": "Roadmap / Automation 分类下的辅助能力；必要时补充显式注释。",
         "note_source": "generated",
         "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -6423,6 +6571,368 @@ window.XAI_DASHBOARD_STATE = {
           "route this requirement",
           "prompt for Claude",
           "prompt for Codex"
+        ]
+      },
+      {
+        "id": "skill:xai-admin-control-plane-sync",
+        "name": "xai-admin-control-plane-sync",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Project Skill",
+        "category": "automation",
+        "category_label": "Roadmap / Automation",
+        "category_suggestion": "",
+        "usage_scenario": "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked",
+        "function_description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+        "inputs": "/xai-admin-control-plane-sync Mode: report | apply # default report Scope: changed | since <ref> | full Trigger Change: <short description or paths>",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "中：按项目治理或功能推进使用",
+        "related_workflow": "roadmap-loop",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+            "role": "definition"
+          },
+          {
+            "label": "README.md",
+            "path": "docs/prototypes/admin-dashboard/README.md",
+            "role": "related"
+          },
+          {
+            "label": "INTEGRATION_PLAN.md",
+            "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md",
+            "role": "related"
+          },
+          {
+            "label": "xai-admin-dashboard-system-integration.md",
+            "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+            "role": "related"
+          },
+          {
+            "label": "PRODUCT_MODULE_MAP.md",
+            "path": "docs/PRODUCT_MODULE_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "module-classification.json",
+            "path": "docs/workflow/project/module-classification.json",
+            "role": "related"
+          },
+          {
+            "label": "PLUGIN_MAP.md",
+            "path": "docs/PLUGIN_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "0013-branch-sync-governance.md",
+            "path": "docs/adr/0013-branch-sync-governance.md",
+            "role": "related"
+          }
+        ],
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
+        "last_updated": "2026-06-06T11:10:50.821Z",
+        "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
+        "note_source": "generated",
+        "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+        "tracked": true,
+        "changed": true,
+        "change_status": "modified",
+        "mirror_status": {
+          "status": "aligned",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_output",
+          "generated_note"
+        ],
+        "source_note_labels": [
+          "输出说明已自动补齐",
+          "注释已自动补齐"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": [
+          "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+        ]
+      },
+      {
+        "id": "skill:xai-admin-control-plane-sync",
+        "name": "xai-admin-control-plane-sync",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "automation",
+        "category_label": "Roadmap / Automation",
+        "category_suggestion": "",
+        "usage_scenario": "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked",
+        "function_description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+        "inputs": "/xai-admin-control-plane-sync Mode: report | apply # default report Scope: changed | since <ref> | full Trigger Change: <short description or paths>",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "低/按需：参考或辅助场景使用",
+        "related_workflow": "roadmap-loop",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+            "role": "definition"
+          },
+          {
+            "label": "README.md",
+            "path": "docs/prototypes/admin-dashboard/README.md",
+            "role": "related"
+          },
+          {
+            "label": "INTEGRATION_PLAN.md",
+            "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md",
+            "role": "related"
+          },
+          {
+            "label": "xai-admin-dashboard-system-integration.md",
+            "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+            "role": "related"
+          },
+          {
+            "label": "PRODUCT_MODULE_MAP.md",
+            "path": "docs/PRODUCT_MODULE_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "module-classification.json",
+            "path": "docs/workflow/project/module-classification.json",
+            "role": "related"
+          },
+          {
+            "label": "PLUGIN_MAP.md",
+            "path": "docs/PLUGIN_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "0013-branch-sync-governance.md",
+            "path": "docs/adr/0013-branch-sync-governance.md",
+            "role": "related"
+          }
+        ],
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
+        "last_updated": "2026-06-06T11:10:50.816Z",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+        "tracked": true,
+        "changed": true,
+        "change_status": "modified",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_output",
+          "generated_note"
+        ],
+        "source_note_labels": [
+          "输出说明已自动补齐",
+          "注释已自动补齐"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": [
+          "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+        ]
+      },
+      {
+        "id": "skill:xai-module-classify",
+        "name": "xai-module-classify",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Project Skill",
+        "category": "automation",
+        "category_label": "Roadmap / Automation",
+        "category_suggestion": "",
+        "usage_scenario": "功能分类",
+        "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
+        "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "中：按项目治理或功能推进使用",
+        "related_workflow": "dashboard sync / project-system",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".teams/skills/xai-module-classify/SKILL.md",
+            "role": "definition"
+          },
+          {
+            "label": "MODULE_BOUNDARIES.md",
+            "path": "docs/MODULE_BOUNDARIES.md",
+            "role": "related"
+          },
+          {
+            "label": "module-classification.json",
+            "path": "docs/workflow/project/module-classification.json",
+            "role": "related"
+          },
+          {
+            "label": "PRODUCT_MODULE_MAP.md",
+            "path": "docs/PRODUCT_MODULE_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "PLUGIN_MAP.md",
+            "path": "docs/PLUGIN_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "CLAUDE.md",
+            "path": "CLAUDE.md",
+            "role": "related"
+          },
+          {
+            "label": "AGENTS.md",
+            "path": "AGENTS.md",
+            "role": "related"
+          },
+          {
+            "label": "xai-admin-dashboard-system-integration.md",
+            "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+            "role": "related"
+          }
+        ],
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
+        "last_updated": "2026-06-04T03:23:18-07:00",
+        "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
+        "note_source": "generated",
+        "path": ".teams/skills/xai-module-classify/SKILL.md",
+        "tracked": true,
+        "changed": true,
+        "change_status": "modified",
+        "mirror_status": {
+          "status": "aligned",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_output",
+          "generated_note"
+        ],
+        "source_note_labels": [
+          "输出说明已自动补齐",
+          "注释已自动补齐"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": [
+          "功能分类",
+          "这个功能归哪个模块",
+          "module classification",
+          "classify this feature",
+          "模块归类",
+          "新功能归哪类"
+        ]
+      },
+      {
+        "id": "skill:xai-module-classify",
+        "name": "xai-module-classify",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "automation",
+        "category_label": "Roadmap / Automation",
+        "category_suggestion": "",
+        "usage_scenario": "功能分类",
+        "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
+        "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "低/按需：参考或辅助场景使用",
+        "related_workflow": "dashboard sync / project-system",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/xai-module-classify/SKILL.md",
+            "role": "definition"
+          },
+          {
+            "label": "MODULE_BOUNDARIES.md",
+            "path": "docs/MODULE_BOUNDARIES.md",
+            "role": "related"
+          },
+          {
+            "label": "module-classification.json",
+            "path": "docs/workflow/project/module-classification.json",
+            "role": "related"
+          },
+          {
+            "label": "PRODUCT_MODULE_MAP.md",
+            "path": "docs/PRODUCT_MODULE_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "PLUGIN_MAP.md",
+            "path": "docs/PLUGIN_MAP.md",
+            "role": "related"
+          },
+          {
+            "label": "CLAUDE.md",
+            "path": "CLAUDE.md",
+            "role": "related"
+          },
+          {
+            "label": "AGENTS.md",
+            "path": "AGENTS.md",
+            "role": "related"
+          },
+          {
+            "label": "xai-admin-dashboard-system-integration.md",
+            "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+            "role": "related"
+          }
+        ],
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
+        "last_updated": "2026-06-04T03:23:18-07:00",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/xai-module-classify/SKILL.md",
+        "tracked": true,
+        "changed": true,
+        "change_status": "modified",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_output",
+          "generated_note"
+        ],
+        "source_note_labels": [
+          "输出说明已自动补齐",
+          "注释已自动补齐"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": [
+          "功能分类",
+          "这个功能归哪个模块",
+          "module classification",
+          "classify this feature",
+          "模块归类",
+          "新功能归哪类"
         ]
       },
       {
@@ -6467,15 +6977,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-21T03:00:19-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-roadmap-loop/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -6545,15 +7055,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.198Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-web-deploy-preflight/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -6991,8 +7501,8 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-24T01:24:41-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
@@ -7032,8 +7542,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -7229,8 +7739,8 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-23T00:09:34-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
@@ -7270,8 +7780,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -7589,8 +8099,8 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "tracked",
-        "maintenance_code": "tracked",
+        "maintenance_status": "已修改未提交",
+        "maintenance_code": "modified",
         "last_updated": "2026-05-24T01:24:41-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
@@ -7630,8 +8140,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": false,
-        "change_status": "tracked",
+        "changed": true,
+        "change_status": "modified",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -7945,15 +8455,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-18T00:06:10-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-feature-brief/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8017,7 +8527,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         "maintenance_status": "已修改未提交",
         "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.196Z",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
@@ -8088,15 +8598,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-18T16:24:33-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-feature-full-loop/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8289,15 +8799,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.195Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8370,15 +8880,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.195Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8456,15 +8966,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.195Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "This skill is the dashboard freshness and knowledge-registry sync gate. It may refresh generated facts and factual docs, but it must not decide roadmap, branch, release, priority,…",
         "note_source": "explicit",
         "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8484,182 +8994,6 @@ window.XAI_DASHBOARD_STATE = {
           "refresh dev-dashboard Overview",
           "sync dashboard branch docs release-log",
           "sync dashboard test results"
-        ]
-      },
-      {
-        "id": "skill:xai-module-classify",
-        "name": "xai-module-classify",
-        "kind": "skill",
-        "type": "Skill",
-        "subtype": "Project Skill",
-        "category": "governance",
-        "category_label": "Governance / Release",
-        "category_suggestion": "",
-        "usage_scenario": "功能分类",
-        "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
-        "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
-        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
-        "usage_frequency": "中：按项目治理或功能推进使用",
-        "related_workflow": "dashboard sync / project-system",
-        "related_docs": [
-          {
-            "label": "SKILL.md",
-            "path": ".teams/skills/xai-module-classify/SKILL.md",
-            "role": "definition"
-          },
-          {
-            "label": "MODULE_BOUNDARIES.md",
-            "path": "docs/MODULE_BOUNDARIES.md",
-            "role": "related"
-          },
-          {
-            "label": "module-classification.json",
-            "path": "docs/workflow/project/module-classification.json",
-            "role": "related"
-          },
-          {
-            "label": "PRODUCT_MODULE_MAP.md",
-            "path": "docs/PRODUCT_MODULE_MAP.md",
-            "role": "related"
-          },
-          {
-            "label": "PLUGIN_MAP.md",
-            "path": "docs/PLUGIN_MAP.md",
-            "role": "related"
-          },
-          {
-            "label": "CLAUDE.md",
-            "path": "CLAUDE.md",
-            "role": "related"
-          },
-          {
-            "label": "AGENTS.md",
-            "path": "AGENTS.md",
-            "role": "related"
-          }
-        ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.197Z",
-        "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
-        "note_source": "generated",
-        "path": ".teams/skills/xai-module-classify/SKILL.md",
-        "tracked": true,
-        "changed": true,
-        "change_status": "modified",
-        "mirror_status": {
-          "status": "aligned",
-          "missing": []
-        },
-        "gaps": [],
-        "gap_labels": [],
-        "source_notes": [
-          "generated_output",
-          "generated_note"
-        ],
-        "source_note_labels": [
-          "输出说明已自动补齐",
-          "注释已自动补齐"
-        ],
-        "source_complete": false,
-        "source_completion_status": "backfilled",
-        "completion_status": "resolved",
-        "is_complete": true,
-        "triggers": [
-          "功能分类",
-          "这个功能归哪个模块",
-          "module classification",
-          "classify this feature",
-          "模块归类",
-          "新功能归哪类"
-        ]
-      },
-      {
-        "id": "skill:xai-module-classify",
-        "name": "xai-module-classify",
-        "kind": "skill",
-        "type": "Skill",
-        "subtype": "Codex Skill",
-        "category": "governance",
-        "category_label": "Governance / Release",
-        "category_suggestion": "",
-        "usage_scenario": "功能分类",
-        "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
-        "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
-        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
-        "usage_frequency": "低/按需：参考或辅助场景使用",
-        "related_workflow": "dashboard sync / project-system",
-        "related_docs": [
-          {
-            "label": "SKILL.md",
-            "path": ".codex/skills/xai-module-classify/SKILL.md",
-            "role": "definition"
-          },
-          {
-            "label": "MODULE_BOUNDARIES.md",
-            "path": "docs/MODULE_BOUNDARIES.md",
-            "role": "related"
-          },
-          {
-            "label": "module-classification.json",
-            "path": "docs/workflow/project/module-classification.json",
-            "role": "related"
-          },
-          {
-            "label": "PRODUCT_MODULE_MAP.md",
-            "path": "docs/PRODUCT_MODULE_MAP.md",
-            "role": "related"
-          },
-          {
-            "label": "PLUGIN_MAP.md",
-            "path": "docs/PLUGIN_MAP.md",
-            "role": "related"
-          },
-          {
-            "label": "CLAUDE.md",
-            "path": "CLAUDE.md",
-            "role": "related"
-          },
-          {
-            "label": "AGENTS.md",
-            "path": "AGENTS.md",
-            "role": "related"
-          }
-        ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.193Z",
-        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
-        "note_source": "generated",
-        "path": ".codex/skills/xai-module-classify/SKILL.md",
-        "tracked": true,
-        "changed": true,
-        "change_status": "modified",
-        "mirror_status": {
-          "status": "not-required",
-          "missing": []
-        },
-        "gaps": [],
-        "gap_labels": [],
-        "source_notes": [
-          "generated_output",
-          "generated_note"
-        ],
-        "source_note_labels": [
-          "输出说明已自动补齐",
-          "注释已自动补齐"
-        ],
-        "source_complete": false,
-        "source_completion_status": "backfilled",
-        "completion_status": "resolved",
-        "is_complete": true,
-        "triggers": [
-          "功能分类",
-          "这个功能归哪个模块",
-          "module classification",
-          "classify this feature",
-          "模块归类",
-          "新功能归哪类"
         ]
       },
       {
@@ -8704,15 +9038,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.197Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-release-log/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -8787,7 +9121,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         "maintenance_status": "已修改未提交",
         "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.197Z",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
@@ -8863,15 +9197,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.198Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-web-to-desktop-sync/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -9712,6 +10046,116 @@ window.XAI_DASHBOARD_STATE = {
         ]
       },
       {
+        "id": "skill:high-end-visual-design",
+        "name": "high-end-visual-design",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "quality",
+        "category_label": "Quality / Security",
+        "category_suggestion": "",
+        "usage_scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
+        "function_description": "Teaches the AI to design like a high-end agency. Defines the exact fonts, spacing, shadows, card structures, and animations that make a website feel expensive. Blocks all the common defaults that make AI designs look cheap or generic.",
+        "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "按需：评审、创作或专项治理时使用",
+        "related_workflow": "Feature Workflow V2",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/soft-skill/SKILL.md",
+            "role": "definition"
+          }
+        ],
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T04:08:09-07:00",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/soft-skill/SKILL.md",
+        "tracked": true,
+        "changed": false,
+        "change_status": "tracked",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_input",
+          "generated_output",
+          "generated_note",
+          "definition_only_doc"
+        ],
+        "source_note_labels": [
+          "输入说明已自动补齐",
+          "输出说明已自动补齐",
+          "注释已自动补齐",
+          "仅有关联定义文档"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": []
+      },
+      {
+        "id": "skill:redesign-existing-projects",
+        "name": "redesign-existing-projects",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "quality",
+        "category_label": "Quality / Security",
+        "category_suggestion": "",
+        "usage_scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
+        "function_description": "Upgrades existing websites and apps to premium quality. Audits current design, identifies generic AI patterns, and applies high-end design standards without breaking functionality. Works with any CSS framework or vanilla CSS.",
+        "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "按需：评审、创作或专项治理时使用",
+        "related_workflow": "Feature Workflow V2",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/redesign-skill/SKILL.md",
+            "role": "definition"
+          }
+        ],
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T04:08:09-07:00",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/redesign-skill/SKILL.md",
+        "tracked": true,
+        "changed": false,
+        "change_status": "tracked",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [],
+        "gap_labels": [],
+        "source_notes": [
+          "generated_input",
+          "generated_output",
+          "generated_note",
+          "definition_only_doc"
+        ],
+        "source_note_labels": [
+          "输入说明已自动补齐",
+          "输出说明已自动补齐",
+          "注释已自动补齐",
+          "仅有关联定义文档"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "resolved",
+        "is_complete": true,
+        "triggers": []
+      },
+      {
         "id": "skill:security-skills-claude-code",
         "name": "security-skills-claude-code",
         "kind": "skill",
@@ -9902,7 +10346,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         "maintenance_status": "已修改未提交",
         "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.195Z",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-consistency-audit/SKILL.md",
@@ -9994,7 +10438,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         "maintenance_status": "已修改未提交",
         "maintenance_code": "modified",
-        "last_updated": "2026-06-04T10:15:26.192Z",
+        "last_updated": "2026-06-04T03:23:18-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/xai-consistency-audit/SKILL.md",
@@ -10026,6 +10470,65 @@ window.XAI_DASHBOARD_STATE = {
           "**pre-release** → run as an RC/ship pre-flight; report then confirm before any apply.",
           "> Concurrency note: when the dashboard generator/HTML are being refactored on the same branch, run report-only and defer `apply` (dashboard writes) until that lands — single-writer discipline."
         ]
+      },
+      {
+        "id": "skill:stitch-design-taste",
+        "name": "stitch-design-taste",
+        "kind": "skill",
+        "type": "Skill",
+        "subtype": "Codex Skill",
+        "category": "reference",
+        "category_label": "Reference / Support",
+        "category_suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。",
+        "usage_scenario": "查找辅助能力、理解本地与 portable 定义来源或补充上下文。",
+        "function_description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-accelerated performance.",
+        "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+        "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+        "usage_frequency": "低/按需：参考或辅助场景使用",
+        "related_workflow": "Feature Workflow V2",
+        "related_docs": [
+          {
+            "label": "SKILL.md",
+            "path": ".codex/skills/stitch-skill/SKILL.md",
+            "role": "definition"
+          }
+        ],
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-04T04:08:09-07:00",
+        "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+        "note_source": "generated",
+        "path": ".codex/skills/stitch-skill/SKILL.md",
+        "tracked": true,
+        "changed": false,
+        "change_status": "tracked",
+        "mirror_status": {
+          "status": "not-required",
+          "missing": []
+        },
+        "gaps": [
+          "unclear_category"
+        ],
+        "gap_labels": [
+          "分类不清晰"
+        ],
+        "source_notes": [
+          "generated_input",
+          "generated_output",
+          "generated_note",
+          "definition_only_doc"
+        ],
+        "source_note_labels": [
+          "输入说明已自动补齐",
+          "输出说明已自动补齐",
+          "注释已自动补齐",
+          "仅有关联定义文档"
+        ],
+        "source_complete": false,
+        "source_completion_status": "backfilled",
+        "completion_status": "needs-action",
+        "is_complete": false,
+        "triggers": []
       }
     ],
     "report": {
@@ -10112,6 +10615,17 @@ window.XAI_DASHBOARD_STATE = {
             "输入说明已自动补齐",
             "输出说明已自动补齐",
             "注释已自动补齐"
+          ]
+        },
+        {
+          "name": "Frontend Responsive Design Standards",
+          "type": "Skill",
+          "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+          "notes": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
           ]
         },
         {
@@ -10245,6 +10759,42 @@ window.XAI_DASHBOARD_STATE = {
           "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
           "notes": [
             "输入说明已自动补齐",
+            "注释已自动补齐"
+          ]
+        },
+        {
+          "name": "xai-admin-control-plane-sync",
+          "type": "Skill",
+          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+          "notes": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ]
+        },
+        {
+          "name": "xai-admin-control-plane-sync",
+          "type": "Skill",
+          "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+          "notes": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ]
+        },
+        {
+          "name": "xai-module-classify",
+          "type": "Skill",
+          "path": ".teams/skills/xai-module-classify/SKILL.md",
+          "notes": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ]
+        },
+        {
+          "name": "xai-module-classify",
+          "type": "Skill",
+          "path": ".codex/skills/xai-module-classify/SKILL.md",
+          "notes": [
+            "输出说明已自动补齐",
             "注释已自动补齐"
           ]
         },
@@ -10418,24 +10968,6 @@ window.XAI_DASHBOARD_STATE = {
           ]
         },
         {
-          "name": "xai-module-classify",
-          "type": "Skill",
-          "path": ".teams/skills/xai-module-classify/SKILL.md",
-          "notes": [
-            "输出说明已自动补齐",
-            "注释已自动补齐"
-          ]
-        },
-        {
-          "name": "xai-module-classify",
-          "type": "Skill",
-          "path": ".codex/skills/xai-module-classify/SKILL.md",
-          "notes": [
-            "输出说明已自动补齐",
-            "注释已自动补齐"
-          ]
-        },
-        {
           "name": "xai-release-log",
           "type": "Skill",
           "path": ".teams/skills/xai-release-log/SKILL.md",
@@ -10566,6 +11098,28 @@ window.XAI_DASHBOARD_STATE = {
           ]
         },
         {
+          "name": "high-end-visual-design",
+          "type": "Skill",
+          "path": ".codex/skills/soft-skill/SKILL.md",
+          "notes": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ]
+        },
+        {
+          "name": "redesign-existing-projects",
+          "type": "Skill",
+          "path": ".codex/skills/redesign-skill/SKILL.md",
+          "notes": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ]
+        },
+        {
           "name": "security-skills-claude-code",
           "type": "Skill",
           "path": ".codex/skills/security-skills-claude-code/SKILL.md",
@@ -10604,56 +11158,56 @@ window.XAI_DASHBOARD_STATE = {
             "输出说明已自动补齐",
             "注释已自动补齐"
           ]
+        },
+        {
+          "name": "stitch-design-taste",
+          "type": "Skill",
+          "path": ".codex/skills/stitch-skill/SKILL.md",
+          "notes": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ]
         }
       ],
-      "classification_suggestions": [],
+      "classification_suggestions": [
+        {
+          "name": "stitch-design-taste",
+          "type": "Skill",
+          "path": ".codex/skills/stitch-skill/SKILL.md",
+          "suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。"
+        }
+      ],
       "changed_items": [
         {
-          "name": "xai-roadmap-loop",
-          "type": "Skill",
-          "path": ".teams/skills/xai-roadmap-loop/SKILL.md",
+          "name": "workflow-router",
+          "type": "Agent",
+          "path": ".codex/agents/skill-workflow-router.toml",
           "status": "已修改未提交"
         },
         {
-          "name": "xai-web-deploy-preflight",
+          "name": "workflow-router",
           "type": "Skill",
-          "path": ".teams/skills/xai-web-deploy-preflight/SKILL.md",
+          "path": ".codex/skills/workflow-router/SKILL.md",
           "status": "已修改未提交"
         },
         {
-          "name": "xai-feature-brief",
+          "name": "workflow-router",
           "type": "Skill",
-          "path": ".teams/skills/xai-feature-brief/SKILL.md",
+          "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
           "status": "已修改未提交"
         },
         {
-          "name": "xai-feature-dossier-sync",
+          "name": "xai-admin-control-plane-sync",
           "type": "Skill",
-          "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
+          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
           "status": "已修改未提交"
         },
         {
-          "name": "xai-feature-full-loop",
+          "name": "xai-admin-control-plane-sync",
           "type": "Skill",
-          "path": ".teams/skills/xai-feature-full-loop/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-account-sync-scope-check",
-          "type": "Skill",
-          "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-desktop-release-gate",
-          "type": "Skill",
-          "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-dev-dashboard-sync",
-          "type": "Skill",
-          "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
+          "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
           "status": "已修改未提交"
         },
         {
@@ -10669,21 +11223,33 @@ window.XAI_DASHBOARD_STATE = {
           "status": "已修改未提交"
         },
         {
-          "name": "xai-release-log",
+          "name": "bugfix-full-loop",
+          "type": "Agent",
+          "path": ".agents/templates/bugfix-full-loop.md",
+          "status": "已修改未提交"
+        },
+        {
+          "name": "feature-auto-build",
+          "type": "Agent",
+          "path": ".agents/templates/feature-auto-build.md",
+          "status": "已修改未提交"
+        },
+        {
+          "name": "feature-full-loop",
+          "type": "Agent",
+          "path": ".agents/templates/feature-full-loop.md",
+          "status": "已修改未提交"
+        },
+        {
+          "name": "xai-feature-dossier-sync",
           "type": "Skill",
-          "path": ".teams/skills/xai-release-log/SKILL.md",
+          "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
           "status": "已修改未提交"
         },
         {
           "name": "xai-sync-fanout-dispatch",
           "type": "Skill",
           "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-web-to-desktop-sync",
-          "type": "Skill",
-          "path": ".teams/skills/xai-web-to-desktop-sync/SKILL.md",
           "status": "已修改未提交"
         },
         {
@@ -10723,8 +11289,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:15:26.213Z",
-          "size_bytes": 29554,
+          "updated_at": "2026-06-06T11:12:44.700Z",
+          "size_bytes": 29743,
           "tracked": true
         },
         {
@@ -10738,7 +11304,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-04T10:15:26.204Z",
+          "updated_at": "2026-06-06T11:09:10.632Z",
           "size_bytes": 2600,
           "tracked": true
         },
@@ -10753,7 +11319,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.211Z",
+          "updated_at": "2026-06-06T11:09:10.669Z",
           "size_bytes": 16230,
           "tracked": true
         },
@@ -10768,7 +11334,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-04T10:15:26.204Z",
+          "updated_at": "2026-06-06T11:09:10.631Z",
           "size_bytes": 32516,
           "tracked": true
         },
@@ -10782,8 +11348,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:15:26.211Z",
-          "size_bytes": 7705,
+          "updated_at": "2026-06-06T11:12:44.699Z",
+          "size_bytes": 7848,
           "tracked": true
         },
         {
@@ -10796,8 +11362,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:00:41.797Z",
-          "size_bytes": 8834,
+          "updated_at": "2026-06-06T11:10:50.855Z",
+          "size_bytes": 9685,
           "tracked": true
         },
         {
@@ -10838,8 +11404,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:00:41.799Z",
-          "size_bytes": 46498,
+          "updated_at": "2026-06-06T11:10:50.856Z",
+          "size_bytes": 46686,
           "tracked": true
         }
       ],
@@ -10866,8 +11432,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:00:41.724Z",
-          "size_bytes": 15289,
+          "updated_at": "2026-06-06T11:13:08.757Z",
+          "size_bytes": 21391,
           "tracked": true
         },
         {
@@ -10880,8 +11446,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:00:41.724Z",
-          "size_bytes": 4259,
+          "updated_at": "2026-06-06T11:10:50.822Z",
+          "size_bytes": 8513,
           "tracked": true
         },
         {
@@ -10894,8 +11460,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:00:41.753Z",
-          "size_bytes": 52250,
+          "updated_at": "2026-06-06T11:12:44.694Z",
+          "size_bytes": 55761,
           "tracked": true
         },
         {
@@ -10908,8 +11474,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-04T10:15:26.199Z",
-          "size_bytes": 35153,
+          "updated_at": "2026-06-06T11:12:44.695Z",
+          "size_bytes": 36345,
           "tracked": true
         },
         {
@@ -10936,7 +11502,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "系统级",
-          "updated_at": "2026-06-04T10:15:26.201Z",
+          "updated_at": "2026-06-06T11:09:10.621Z",
           "size_bytes": 2458,
           "tracked": true
         },
@@ -10950,7 +11516,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "dir",
           "kind": "Folder",
           "importance": "参考",
-          "updated_at": "2026-06-04T10:00:41.965Z",
+          "updated_at": "2026-06-06T11:10:50.891Z",
           "size_bytes": 0,
           "tracked": true
         },
@@ -10964,7 +11530,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.204Z",
+          "updated_at": "2026-06-06T11:09:10.632Z",
           "size_bytes": 12823,
           "tracked": true
         },
@@ -10979,7 +11545,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-04T10:15:26.205Z",
+          "updated_at": "2026-06-06T11:09:10.632Z",
           "size_bytes": 37894,
           "tracked": true
         },
@@ -10994,7 +11560,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-04T10:15:26.204Z",
+          "updated_at": "2026-06-06T11:09:10.631Z",
           "size_bytes": 32516,
           "tracked": true
         }
@@ -11021,7 +11587,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-27T06:51:35.950Z",
+          "updated_at": "2026-06-06T11:09:10.678Z",
           "size_bytes": 25564,
           "tracked": true
         },
@@ -11035,7 +11601,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:00:41.802Z",
+          "updated_at": "2026-06-06T11:09:12.881Z",
           "size_bytes": 5745,
           "tracked": true
         },
@@ -11049,7 +11615,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-27T06:51:35.944Z",
+          "updated_at": "2026-06-06T11:09:10.674Z",
           "size_bytes": 38684,
           "tracked": true
         },
@@ -11063,7 +11629,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.212Z",
+          "updated_at": "2026-06-06T11:09:10.670Z",
           "size_bytes": 35230,
           "tracked": true
         },
@@ -11087,7 +11653,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "key": "skills",
       "title": "Skill 文档",
-      "summary": "35 个 skill，按项目级、Codex、本地 portable 分层。",
+      "summary": "41 个 skill，按项目级、Codex、本地 portable 分层。",
       "tags": [
         "Skill",
         "Project",
@@ -11105,8 +11671,22 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.195Z",
+          "updated_at": "2026-06-06T11:09:10.603Z",
           "size_bytes": 8964,
+          "tracked": true
+        },
+        {
+          "label": "xai-admin-control-plane-sync",
+          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+          "summary": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+          "tags": [
+            "XAI Workflow Skills"
+          ],
+          "type": "file",
+          "kind": "Markdown",
+          "importance": "必要",
+          "updated_at": "2026-06-06T11:10:50.821Z",
+          "size_bytes": 5133,
           "tracked": true
         },
         {
@@ -11119,8 +11699,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.195Z",
-          "size_bytes": 7233,
+          "updated_at": "2026-06-06T11:12:44.692Z",
+          "size_bytes": 7357,
           "tracked": true
         },
         {
@@ -11133,22 +11713,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.195Z",
+          "updated_at": "2026-06-06T11:09:10.604Z",
           "size_bytes": 6185,
-          "tracked": true
-        },
-        {
-          "label": "xai-dev-dashboard-sync",
-          "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
-          "summary": "Refresh and verify the XAI personal developer dashboard, including Overview state, the machine-facing dashboard contract, reusable dashboard template, and concrete page/card boundary spec. Use when the operator asks whether the dev-dashboard is current, wants branch/code/doc/release state synchronized, or needs Codex/Claude to align dashboard docs before trusting the personal project console.",
-          "tags": [
-            "XAI Workflow Skills"
-          ],
-          "type": "file",
-          "kind": "Markdown",
-          "importance": "必要",
-          "updated_at": "2026-06-04T10:15:26.195Z",
-          "size_bytes": 11860,
           "tracked": true
         },
         {
@@ -11194,17 +11760,17 @@ window.XAI_DASHBOARD_STATE = {
           "tracked": true
         },
         {
-          "label": "frontend-dev",
-          "path": ".codex/skills/frontend-dev/SKILL.md",
-          "summary": "Use when building or refining a frontend page or component — drives MiniMax's upstream \"frontend-dev\" pattern (Tailwind utility-first, Framer Motion for transitions, semantic component composition). Triggers — build a frontend page, framer motion, tailwind UI, refine this component, frontend polish pass.",
+          "label": "Frontend Responsive Design Standards",
+          "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+          "summary": "Build responsive, mobile-first layouts using fluid containers, flexible units, media queries, and touch-friendly design that works across all screen sizes. Use this skill when creating or modifying UI layouts, responsive grids, breakpoint styles, mobile navigation, or any interface that needs to adapt to different screen sizes. Apply when working with responsive CSS, media queries, viewport settings, flexbox/grid layouts, mobile-first styling, breakpoint definitions (mobile, tablet, desktop), touch target sizing, relative units (rem, em, %), image optimization for different screens, or testing layouts across multiple devices. Use for any task involving multi-device support, responsive design patterns, or adaptive layouts.",
           "tags": [
             "Codex Public Skills"
           ],
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.283Z",
-          "size_bytes": 1344,
+          "updated_at": "2026-06-06T11:09:12.679Z",
+          "size_bytes": 10353,
           "tracked": true
         },
         {
@@ -11287,8 +11853,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:00:41.719Z",
-          "size_bytes": 15647,
+          "updated_at": "2026-06-06T11:10:50.815Z",
+          "size_bytes": 15841,
           "tracked": true
         },
         {
@@ -11329,8 +11895,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-06-04T10:00:41.720Z",
-          "size_bytes": 29709,
+          "updated_at": "2026-06-06T11:10:50.815Z",
+          "size_bytes": 29769,
           "tracked": true
         },
         {
@@ -11433,7 +11999,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:12:44.694Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11447,7 +12013,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.796Z",
+        "updated_at": "2026-06-06T11:10:50.855Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11461,7 +12027,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:16:23.424Z",
+        "updated_at": "2026-06-06T11:09:12.840Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11475,7 +12041,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:15:26.200Z",
+        "updated_at": "2026-06-06T11:13:08.757Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11489,7 +12055,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.965Z",
+        "updated_at": "2026-06-06T11:10:50.891Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11503,7 +12069,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.198Z",
+        "updated_at": "2026-06-06T11:10:50.821Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11518,7 +12084,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:15:26.193Z",
+        "updated_at": "2026-06-06T11:10:50.816Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11533,7 +12099,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.720Z",
+        "updated_at": "2026-06-06T11:10:50.816Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11548,7 +12114,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:00:41.716Z",
+        "updated_at": "2026-06-06T11:10:50.812Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11563,7 +12129,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:00:41.718Z",
+        "updated_at": "2026-06-06T11:10:50.813Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11578,7 +12144,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:00:41.721Z",
+        "updated_at": "2026-06-06T11:10:50.817Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11593,7 +12159,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.194Z",
+        "updated_at": "2026-06-06T11:12:44.691Z",
         "size_bytes": 0,
         "tracked": true
       }
@@ -11616,7 +12182,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.211Z",
+            "updated_at": "2026-06-06T11:09:10.669Z",
             "size_bytes": 16230,
             "tracked": true
           },
@@ -11631,7 +12197,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.204Z",
+            "updated_at": "2026-06-06T11:09:10.632Z",
             "size_bytes": 2600,
             "tracked": true
           },
@@ -11646,7 +12212,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.205Z",
+            "updated_at": "2026-06-06T11:09:10.632Z",
             "size_bytes": 37894,
             "tracked": true
           },
@@ -11661,7 +12227,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.204Z",
+            "updated_at": "2026-06-06T11:09:10.631Z",
             "size_bytes": 32516,
             "tracked": true
           },
@@ -11676,7 +12242,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.204Z",
+            "updated_at": "2026-06-06T11:09:10.632Z",
             "size_bytes": 9125,
             "tracked": true
           },
@@ -11691,8 +12257,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:00:41.724Z",
-            "size_bytes": 4259,
+            "updated_at": "2026-06-06T11:10:50.822Z",
+            "size_bytes": 8513,
             "tracked": true
           },
           {
@@ -11706,8 +12272,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:00:41.724Z",
-            "size_bytes": 15289,
+            "updated_at": "2026-06-06T11:13:08.757Z",
+            "size_bytes": 21391,
             "tracked": true
           },
           {
@@ -11721,8 +12287,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.213Z",
-            "size_bytes": 29554,
+            "updated_at": "2026-06-06T11:12:44.700Z",
+            "size_bytes": 29743,
             "tracked": true
           },
           {
@@ -11735,8 +12301,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:15:26.211Z",
-            "size_bytes": 7705,
+            "updated_at": "2026-06-06T11:12:44.699Z",
+            "size_bytes": 7848,
             "tracked": true
           },
           {
@@ -11750,8 +12316,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:00:41.753Z",
-            "size_bytes": 52250,
+            "updated_at": "2026-06-06T11:12:44.694Z",
+            "size_bytes": 55761,
             "tracked": true
           }
         ],
@@ -11774,8 +12340,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:00:41.797Z",
-            "size_bytes": 8834,
+            "updated_at": "2026-06-06T11:10:50.855Z",
+            "size_bytes": 9685,
             "tracked": true
           },
           {
@@ -11816,7 +12382,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.212Z",
+            "updated_at": "2026-06-06T11:09:10.670Z",
             "size_bytes": 35230,
             "tracked": true
           },
@@ -11831,7 +12397,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.197Z",
+            "updated_at": "2026-06-06T11:09:10.605Z",
             "size_bytes": 3318,
             "tracked": true
           }
@@ -11855,8 +12421,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:15:26.199Z",
-            "size_bytes": 35153,
+            "updated_at": "2026-06-06T11:12:44.695Z",
+            "size_bytes": 36345,
             "tracked": true
           },
           {
@@ -11884,7 +12450,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:15:26.201Z",
+            "updated_at": "2026-06-06T11:09:10.621Z",
             "size_bytes": 2458,
             "tracked": true
           },
@@ -11898,8 +12464,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:00:41.799Z",
-            "size_bytes": 46498,
+            "updated_at": "2026-06-06T11:10:50.856Z",
+            "size_bytes": 46686,
             "tracked": true
           },
           {
@@ -11913,7 +12479,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "JSON",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:15:26.210Z",
+            "updated_at": "2026-06-06T11:09:10.667Z",
             "size_bytes": 5925,
             "tracked": true
           },
@@ -11928,7 +12494,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:15:26.205Z",
+            "updated_at": "2026-06-06T11:09:10.632Z",
             "size_bytes": 37894,
             "tracked": true
           },
@@ -11943,7 +12509,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-04T10:15:26.204Z",
+            "updated_at": "2026-06-06T11:09:10.631Z",
             "size_bytes": 32516,
             "tracked": true
           }
@@ -11967,8 +12533,23 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.195Z",
+            "updated_at": "2026-06-06T11:09:10.603Z",
             "size_bytes": 8964,
+            "tracked": true
+          },
+          {
+            "label": "xai-admin-control-plane-sync",
+            "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+            "summary": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+            "tags": [
+              "skill",
+              "XAI Workflow Skills"
+            ],
+            "type": "file",
+            "kind": "Markdown",
+            "importance": "必要",
+            "updated_at": "2026-06-06T11:10:50.821Z",
+            "size_bytes": 5133,
             "tracked": true
           },
           {
@@ -11982,23 +12563,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.195Z",
-            "size_bytes": 7233,
-            "tracked": true
-          },
-          {
-            "label": "xai-desktop-release-gate",
-            "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
-            "summary": "Run the XAI Mac Desktop W4 release readiness gate before dev promotion, release/desktop/<version>, DMG, signing, notarization, updater metadata, or public download handoff is treated as releasable. Use for Tauri build/signing/notarization checks, macOS manual smoke gates, updater/appcast/latest.json metadata, release artifact provenance, and site download handoff. Receipt-only — it does not create release branches, touch dev, sign, notarize, tag, upload, or ship without operator confirmation.",
-            "tags": [
-              "skill",
-              "XAI Workflow Skills"
-            ],
-            "type": "file",
-            "kind": "Markdown",
-            "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.195Z",
-            "size_bytes": 6185,
+            "updated_at": "2026-06-06T11:12:44.692Z",
+            "size_bytes": 7357,
             "tracked": true
           },
           {
@@ -12102,8 +12668,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:00:41.719Z",
-            "size_bytes": 15647,
+            "updated_at": "2026-06-06T11:10:50.815Z",
+            "size_bytes": 15841,
             "tracked": true
           },
           {
@@ -12147,8 +12713,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:00:41.720Z",
-            "size_bytes": 29709,
+            "updated_at": "2026-06-06T11:10:50.815Z",
+            "size_bytes": 29769,
             "tracked": true
           },
           {
@@ -12231,7 +12797,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.197Z",
+            "updated_at": "2026-06-06T11:09:10.605Z",
             "size_bytes": 5581,
             "tracked": true
           },
@@ -12246,7 +12812,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.195Z",
+            "updated_at": "2026-06-06T11:09:10.604Z",
             "size_bytes": 11860,
             "tracked": true
           },
@@ -12261,7 +12827,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.197Z",
+            "updated_at": "2026-06-06T11:09:10.605Z",
             "size_bytes": 31959,
             "tracked": true
           },
@@ -12276,7 +12842,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:15:26.198Z",
+            "updated_at": "2026-06-06T11:09:10.606Z",
             "size_bytes": 7152,
             "tracked": true
           },
@@ -12291,8 +12857,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-04T10:00:41.801Z",
-            "size_bytes": 48979,
+            "updated_at": "2026-06-06T11:10:50.861Z",
+            "size_bytes": 49235,
             "tracked": true
           }
         ],
@@ -12314,8 +12880,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:00:41.724Z",
-            "size_bytes": 4259,
+            "updated_at": "2026-06-06T11:10:50.822Z",
+            "size_bytes": 8513,
             "tracked": true
           },
           {
@@ -12328,8 +12894,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-04T10:00:41.724Z",
-            "size_bytes": 15289,
+            "updated_at": "2026-06-06T11:13:08.757Z",
+            "size_bytes": 21391,
             "tracked": true
           },
           {
@@ -12376,7 +12942,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:12:44.694Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12390,7 +12956,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.796Z",
+        "updated_at": "2026-06-06T11:10:50.855Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12404,7 +12970,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:16:23.424Z",
+        "updated_at": "2026-06-06T11:09:12.840Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12418,7 +12984,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:15:26.200Z",
+        "updated_at": "2026-06-06T11:13:08.757Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12432,7 +12998,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.965Z",
+        "updated_at": "2026-06-06T11:10:50.891Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12446,7 +13012,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.198Z",
+        "updated_at": "2026-06-06T11:10:50.821Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12461,7 +13027,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:15:26.193Z",
+        "updated_at": "2026-06-06T11:10:50.816Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12476,7 +13042,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.720Z",
+        "updated_at": "2026-06-06T11:10:50.816Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12491,7 +13057,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:00:41.716Z",
+        "updated_at": "2026-06-06T11:10:50.812Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12506,7 +13072,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:00:41.718Z",
+        "updated_at": "2026-06-06T11:10:50.813Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12521,7 +13087,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-04T10:00:41.721Z",
+        "updated_at": "2026-06-06T11:10:50.817Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12536,7 +13102,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.194Z",
+        "updated_at": "2026-06-06T11:12:44.691Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12551,7 +13117,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.211Z",
+        "updated_at": "2026-06-06T11:09:10.669Z",
         "size_bytes": 16230,
         "tracked": true
       },
@@ -12566,7 +13132,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "size_bytes": 2600,
         "tracked": true
       },
@@ -12581,7 +13147,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.205Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "size_bytes": 37894,
         "tracked": true
       },
@@ -12596,7 +13162,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.631Z",
         "size_bytes": 32516,
         "tracked": true
       },
@@ -12611,7 +13177,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.204Z",
+        "updated_at": "2026-06-06T11:09:10.632Z",
         "size_bytes": 9125,
         "tracked": true
       },
@@ -12626,8 +13192,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:00:41.724Z",
-        "size_bytes": 4259,
+        "updated_at": "2026-06-06T11:10:50.822Z",
+        "size_bytes": 8513,
         "tracked": true
       },
       "CLAUDE.md": {
@@ -12641,8 +13207,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:00:41.724Z",
-        "size_bytes": 15289,
+        "updated_at": "2026-06-06T11:13:08.757Z",
+        "size_bytes": 21391,
         "tracked": true
       },
       "docs/workflow/project/usage-guide.md": {
@@ -12656,8 +13222,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.213Z",
-        "size_bytes": 29554,
+        "updated_at": "2026-06-06T11:12:44.700Z",
+        "size_bytes": 29743,
         "tracked": true
       },
       "docs/workflow/project/handbook.md": {
@@ -12670,8 +13236,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:15:26.211Z",
-        "size_bytes": 7705,
+        "updated_at": "2026-06-06T11:12:44.699Z",
+        "size_bytes": 7848,
         "tracked": true
       },
       "docs/PLUGIN_MAP.md": {
@@ -12685,8 +13251,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-04T10:00:41.753Z",
-        "size_bytes": 52250,
+        "updated_at": "2026-06-06T11:12:44.694Z",
+        "size_bytes": 55761,
         "tracked": true
       },
       "docs/workflow/SUBAGENT_WORKFLOW_V2.md": {
@@ -12700,8 +13266,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.797Z",
-        "size_bytes": 8834,
+        "updated_at": "2026-06-06T11:10:50.855Z",
+        "size_bytes": 9685,
         "tracked": true
       },
       "docs/workflow/SOP_NEW_FEATURE.md": {
@@ -12742,7 +13308,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.212Z",
+        "updated_at": "2026-06-06T11:09:10.670Z",
         "size_bytes": 35230,
         "tracked": true
       },
@@ -12757,7 +13323,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.197Z",
+        "updated_at": "2026-06-06T11:09:10.605Z",
         "size_bytes": 3318,
         "tracked": true
       },
@@ -12772,8 +13338,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:15:26.199Z",
-        "size_bytes": 35153,
+        "updated_at": "2026-06-06T11:12:44.695Z",
+        "size_bytes": 36345,
         "tracked": true
       },
       "docs/adr/0007-xai-web-console-build-form.md": {
@@ -12801,7 +13367,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:15:26.201Z",
+        "updated_at": "2026-06-06T11:09:10.621Z",
         "size_bytes": 2458,
         "tracked": true
       },
@@ -12815,8 +13381,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:00:41.799Z",
-        "size_bytes": 46498,
+        "updated_at": "2026-06-06T11:10:50.856Z",
+        "size_bytes": 46686,
         "tracked": true
       },
       "docs/workflow/project/branch-policy.json": {
@@ -12830,7 +13396,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "JSON",
         "importance": "系统级",
-        "updated_at": "2026-06-04T10:15:26.210Z",
+        "updated_at": "2026-06-06T11:09:10.667Z",
         "size_bytes": 5925,
         "tracked": true
       },
@@ -12845,8 +13411,23 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.195Z",
+        "updated_at": "2026-06-06T11:09:10.603Z",
         "size_bytes": 8964,
+        "tracked": true
+      },
+      ".teams/skills/xai-admin-control-plane-sync/SKILL.md": {
+        "label": "xai-admin-control-plane-sync",
+        "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+        "summary": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+        "tags": [
+          "skill",
+          "XAI Workflow Skills"
+        ],
+        "type": "file",
+        "kind": "Markdown",
+        "importance": "必要",
+        "updated_at": "2026-06-06T11:10:50.821Z",
+        "size_bytes": 5133,
         "tracked": true
       },
       ".teams/skills/xai-consistency-audit/SKILL.md": {
@@ -12860,23 +13441,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.195Z",
-        "size_bytes": 7233,
-        "tracked": true
-      },
-      ".teams/skills/xai-desktop-release-gate/SKILL.md": {
-        "label": "xai-desktop-release-gate",
-        "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
-        "summary": "Run the XAI Mac Desktop W4 release readiness gate before dev promotion, release/desktop/<version>, DMG, signing, notarization, updater metadata, or public download handoff is treated as releasable. Use for Tauri build/signing/notarization checks, macOS manual smoke gates, updater/appcast/latest.json metadata, release artifact provenance, and site download handoff. Receipt-only — it does not create release branches, touch dev, sign, notarize, tag, upload, or ship without operator confirmation.",
-        "tags": [
-          "skill",
-          "XAI Workflow Skills"
-        ],
-        "type": "file",
-        "kind": "Markdown",
-        "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.195Z",
-        "size_bytes": 6185,
+        "updated_at": "2026-06-06T11:12:44.692Z",
+        "size_bytes": 7357,
         "tracked": true
       },
       ".codex/skills/agent-behavioral-guidelines/SKILL.md": {
@@ -12980,8 +13546,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.719Z",
-        "size_bytes": 15647,
+        "updated_at": "2026-06-06T11:10:50.815Z",
+        "size_bytes": 15841,
         "tracked": true
       },
       ".codex/agents/feature-build.toml": {
@@ -13025,8 +13591,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.720Z",
-        "size_bytes": 29709,
+        "updated_at": "2026-06-06T11:10:50.815Z",
+        "size_bytes": 29769,
         "tracked": true
       },
       ".codex/agents/feature-phase-review.toml": {
@@ -13100,7 +13666,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.197Z",
+        "updated_at": "2026-06-06T11:09:10.605Z",
         "size_bytes": 5581,
         "tracked": true
       },
@@ -13115,7 +13681,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.195Z",
+        "updated_at": "2026-06-06T11:09:10.604Z",
         "size_bytes": 11860,
         "tracked": true
       },
@@ -13130,7 +13696,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.197Z",
+        "updated_at": "2026-06-06T11:09:10.605Z",
         "size_bytes": 31959,
         "tracked": true
       },
@@ -13145,7 +13711,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:15:26.198Z",
+        "updated_at": "2026-06-06T11:09:10.606Z",
         "size_bytes": 7152,
         "tracked": true
       },
@@ -13160,8 +13726,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-04T10:00:41.801Z",
-        "size_bytes": 48979,
+        "updated_at": "2026-06-06T11:10:50.861Z",
+        "size_bytes": 49235,
         "tracked": true
       },
       ".cursor/rules/handoff.mdc": {
@@ -13202,6 +13768,16 @@ window.XAI_DASHBOARD_STATE = {
         "description": "Classify an XAI persisted-entity change against ADR-0013 D4 and the account-sync verification gates, then emit a D4 scope check receipt. Use for account-sync completeness checks, device-local-never-syncs (outbox-exclusion) proofs, entityType/syncScope drift detection, syncScope classification, the D4 9-item gate, and routing entity changes before they reach the paused sync line. Receipt-only — it does not implement sync, unpause sync-v1, merge, ship, or write entities.ts / plugin types.ts.",
         "triggers": [],
         "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
+        "present": true,
+        "tracked": true
+      },
+      {
+        "name": "xai-admin-control-plane-sync",
+        "description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+        "triggers": [
+          "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+        ],
+        "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
         "present": true,
         "tracked": true
       },
@@ -13532,47 +14108,47 @@ window.XAI_DASHBOARD_STATE = {
         "note"
       ],
       "conclusion": {
-        "status": "resolved",
-        "title": "Skill / Agent 知识库字段已自动补齐",
-        "detail": "所有 60 个 Skill / Agent 条目均已具备看板所需字段；59 个条目使用了自动补齐内容，可后续按需回写源文件。"
+        "status": "needs-action",
+        "title": "仍有需要人工判断的 Skill / Agent 条目",
+        "detail": "1 个条目仍缺少无法确定的分类或定义字段。"
       },
       "source_completeness": {
         "status": "backfilled",
-        "total": 60,
+        "total": 66,
         "complete": 1,
-        "backfilled": 59,
-        "ratio": 0.017,
-        "detail": "59 个条目仍依赖生成器补齐，可后续回写源文件。"
+        "backfilled": 65,
+        "ratio": 0.015,
+        "detail": "65 个条目仍依赖生成器补齐，可后续回写源文件。"
       },
       "summary": {
-        "total": 60,
-        "skills": 35,
+        "total": 66,
+        "skills": 41,
         "agents": 25,
-        "complete": 60,
-        "incomplete": 0,
-        "all_complete": true,
+        "complete": 65,
+        "incomplete": 1,
+        "all_complete": false,
         "missing_intro": 0,
         "missing_note": 0,
-        "unclear_category": 0,
+        "unclear_category": 1,
         "missing_workflow": 0,
         "missing_docs": 0,
-        "unresolved": 0,
+        "unresolved": 1,
         "source_complete": 1,
-        "source_backfill": 59,
+        "source_backfill": 65,
         "source_completeness": {
           "status": "backfilled",
-          "total": 60,
+          "total": 66,
           "complete": 1,
-          "backfilled": 59,
-          "ratio": 0.017,
-          "detail": "59 个条目仍依赖生成器补齐，可后续回写源文件。"
+          "backfilled": 65,
+          "ratio": 0.015,
+          "detail": "65 个条目仍依赖生成器补齐，可后续回写源文件。"
         },
-        "generated_note": 59,
-        "generated_input": 44,
-        "generated_output": 40,
-        "changed": 15,
+        "generated_note": 65,
+        "generated_input": 48,
+        "generated_output": 46,
+        "changed": 14,
         "new_items": 0,
-        "modified_items": 15
+        "modified_items": 14
       },
       "gap_labels": {
         "missing_intro": "缺少明确介绍",
@@ -13602,17 +14178,17 @@ window.XAI_DASHBOARD_STATE = {
         "missing_explicit_note": 0,
         "missing_related_workflow": 0,
         "missing_related_docs": 0,
-        "unclear_category": 0,
+        "unclear_category": 1,
         "untracked_or_local": 0,
         "mirror_missing": 0
       },
       "source_note_counts": {
         "generated_intro": 0,
-        "generated_input": 44,
-        "generated_output": 40,
-        "generated_note": 59,
+        "generated_input": 48,
+        "generated_output": 46,
+        "generated_note": 65,
         "generated_workflow": 10,
-        "definition_only_doc": 8,
+        "definition_only_doc": 12,
         "untracked_or_local": 0,
         "mirror_missing": 0
       },
@@ -13648,10 +14224,10 @@ window.XAI_DASHBOARD_STATE = {
           "summary": "把粗需求、roadmap manifest 和长期任务转成可执行批次。",
           "scenario": "批量推进路线图、生成目标 prompt、保持长任务计划和自动化节奏。",
           "tone": "purple",
-          "count": 11,
-          "complete": 11,
+          "count": 15,
+          "complete": 15,
           "gaps": 0,
-          "source_notes": 36
+          "source_notes": 44
         },
         {
           "key": "governance",
@@ -13660,10 +14236,10 @@ window.XAI_DASHBOARD_STATE = {
           "summary": "跨模块同步、发布记录、ship 收口和 handoff 展示规则。",
           "scenario": "Web 改动进入 Desktop、发布前收口、更新 release log 或同步平台规则。",
           "tone": "cyan",
-          "count": 9,
-          "complete": 9,
+          "count": 7,
+          "complete": 7,
           "gaps": 0,
-          "source_notes": 15
+          "source_notes": 11
         },
         {
           "key": "quality",
@@ -13672,10 +14248,10 @@ window.XAI_DASHBOARD_STATE = {
           "summary": "CI、架构冷读、安全审查和质量风险识别。",
           "scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
           "tone": "yellow",
-          "count": 14,
-          "complete": 14,
+          "count": 16,
+          "complete": 16,
           "gaps": 0,
-          "source_notes": 46
+          "source_notes": 54
         },
         {
           "key": "authoring",
@@ -13684,10 +14260,22 @@ window.XAI_DASHBOARD_STATE = {
           "summary": "创建、维护、镜像和使用可复用 skill / agent 能力。",
           "scenario": "新增 SKILL.md、调整 agent 定义、维护前端/组合/小修类工程辅助。",
           "tone": "green",
-          "count": 12,
-          "complete": 12,
+          "count": 13,
+          "complete": 13,
           "gaps": 0,
-          "source_notes": 39
+          "source_notes": 43
+        },
+        {
+          "key": "reference",
+          "title": "Reference / Support",
+          "workflow": "project reference",
+          "summary": "不直接绑定单一 workflow，但属于项目可查阅能力。",
+          "scenario": "查找辅助能力、理解本地与 portable 定义来源或补充上下文。",
+          "tone": "gray",
+          "count": 1,
+          "complete": 0,
+          "gaps": 1,
+          "source_notes": 4
         }
       ],
       "entries": [
@@ -14211,6 +14799,61 @@ window.XAI_DASHBOARD_STATE = {
           ]
         },
         {
+          "id": "skill:Frontend Responsive Design Standards",
+          "name": "Frontend Responsive Design Standards",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "authoring",
+          "category_label": "Skill / Agent Authoring",
+          "category_suggestion": "",
+          "usage_scenario": "新增 SKILL.md、调整 agent 定义、维护前端/组合/小修类工程辅助。",
+          "function_description": "Build responsive, mobile-first layouts using fluid containers, flexible units, media queries, and touch-friendly design that works across all screen sizes. Use this skill when creating or modifying UI layouts, responsive grids, breakpoint styles, mobile navigation, or any interface that needs to adapt to different screen sizes. Apply when working with responsive CSS, media queries, viewport settings, flexbox/grid layouts, mobile-first styling, breakpoint definitions (mobile, tablet, desktop), touch target sizing, relative units (rem, em, %), image optimization for different screens, or testing layouts across multiple devices. Use for any task involving multi-device support, responsive design patterns, or adaptive layouts.",
+          "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "按需：评审、创作或专项治理时使用",
+          "related_workflow": "skill authoring / reusable engineering helpers",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+              "role": "definition"
+            }
+          ],
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T04:08:09-07:00",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+          "tracked": true,
+          "changed": false,
+          "change_status": "tracked",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_input",
+            "generated_output",
+            "generated_note",
+            "definition_only_doc"
+          ],
+          "source_note_labels": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": []
+        },
+        {
           "id": "skill:frontend-dev",
           "name": "frontend-dev",
           "kind": "skill",
@@ -14653,8 +15296,8 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-21T00:11:05-07:00",
           "note": "该 Agent 是 roadmap-loop 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
@@ -14670,8 +15313,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -15015,15 +15658,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-21T00:11:05-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/workflow-router/SKILL.md",
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -15108,15 +15751,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-20T23:35:15-07:00",
           "note": "Roadmap / Automation 分类下的辅助能力；必要时补充显式注释。",
           "note_source": "generated",
           "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -15142,6 +15785,368 @@ window.XAI_DASHBOARD_STATE = {
             "route this requirement",
             "prompt for Claude",
             "prompt for Codex"
+          ]
+        },
+        {
+          "id": "skill:xai-admin-control-plane-sync",
+          "name": "xai-admin-control-plane-sync",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Project Skill",
+          "category": "automation",
+          "category_label": "Roadmap / Automation",
+          "category_suggestion": "",
+          "usage_scenario": "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked",
+          "function_description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+          "inputs": "/xai-admin-control-plane-sync Mode: report | apply # default report Scope: changed | since <ref> | full Trigger Change: <short description or paths>",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "中：按项目治理或功能推进使用",
+          "related_workflow": "roadmap-loop",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+              "role": "definition"
+            },
+            {
+              "label": "README.md",
+              "path": "docs/prototypes/admin-dashboard/README.md",
+              "role": "related"
+            },
+            {
+              "label": "INTEGRATION_PLAN.md",
+              "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md",
+              "role": "related"
+            },
+            {
+              "label": "xai-admin-dashboard-system-integration.md",
+              "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+              "role": "related"
+            },
+            {
+              "label": "PRODUCT_MODULE_MAP.md",
+              "path": "docs/PRODUCT_MODULE_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "module-classification.json",
+              "path": "docs/workflow/project/module-classification.json",
+              "role": "related"
+            },
+            {
+              "label": "PLUGIN_MAP.md",
+              "path": "docs/PLUGIN_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "0013-branch-sync-governance.md",
+              "path": "docs/adr/0013-branch-sync-governance.md",
+              "role": "related"
+            }
+          ],
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
+          "last_updated": "2026-06-06T11:10:50.821Z",
+          "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
+          "note_source": "generated",
+          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+          "tracked": true,
+          "changed": true,
+          "change_status": "modified",
+          "mirror_status": {
+            "status": "aligned",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_output",
+            "generated_note"
+          ],
+          "source_note_labels": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": [
+            "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+          ]
+        },
+        {
+          "id": "skill:xai-admin-control-plane-sync",
+          "name": "xai-admin-control-plane-sync",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "automation",
+          "category_label": "Roadmap / Automation",
+          "category_suggestion": "",
+          "usage_scenario": "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked",
+          "function_description": "Audit and synchronize Admin Dashboard / Control Plane assumptions after Web, Desktop, billing, AI provider, RBAC, usage, audit, user, organization, or entitlement changes. Use when work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked. Admin is operator-activated but roadmap-gated; apply-on-confirm only for docs/prototype/roadmap/skill/dashboard records, never production code.",
+          "inputs": "/xai-admin-control-plane-sync Mode: report | apply # default report Scope: changed | since <ref> | full Trigger Change: <short description or paths>",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "低/按需：参考或辅助场景使用",
+          "related_workflow": "roadmap-loop",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+              "role": "definition"
+            },
+            {
+              "label": "README.md",
+              "path": "docs/prototypes/admin-dashboard/README.md",
+              "role": "related"
+            },
+            {
+              "label": "INTEGRATION_PLAN.md",
+              "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md",
+              "role": "related"
+            },
+            {
+              "label": "xai-admin-dashboard-system-integration.md",
+              "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+              "role": "related"
+            },
+            {
+              "label": "PRODUCT_MODULE_MAP.md",
+              "path": "docs/PRODUCT_MODULE_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "module-classification.json",
+              "path": "docs/workflow/project/module-classification.json",
+              "role": "related"
+            },
+            {
+              "label": "PLUGIN_MAP.md",
+              "path": "docs/PLUGIN_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "0013-branch-sync-governance.md",
+              "path": "docs/adr/0013-branch-sync-governance.md",
+              "role": "related"
+            }
+          ],
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
+          "last_updated": "2026-06-06T11:10:50.816Z",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+          "tracked": true,
+          "changed": true,
+          "change_status": "modified",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_output",
+            "generated_note"
+          ],
+          "source_note_labels": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": [
+            "work touches admin-dashboard, control plane, AI 配置, Provider, RBAC, 权限, 用量, 审计, 运营后台, 用户/组织管理, 计费管理, or when Admin line drift must be checked"
+          ]
+        },
+        {
+          "id": "skill:xai-module-classify",
+          "name": "xai-module-classify",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Project Skill",
+          "category": "automation",
+          "category_label": "Roadmap / Automation",
+          "category_suggestion": "",
+          "usage_scenario": "功能分类",
+          "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
+          "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "中：按项目治理或功能推进使用",
+          "related_workflow": "dashboard sync / project-system",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".teams/skills/xai-module-classify/SKILL.md",
+              "role": "definition"
+            },
+            {
+              "label": "MODULE_BOUNDARIES.md",
+              "path": "docs/MODULE_BOUNDARIES.md",
+              "role": "related"
+            },
+            {
+              "label": "module-classification.json",
+              "path": "docs/workflow/project/module-classification.json",
+              "role": "related"
+            },
+            {
+              "label": "PRODUCT_MODULE_MAP.md",
+              "path": "docs/PRODUCT_MODULE_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "PLUGIN_MAP.md",
+              "path": "docs/PLUGIN_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "CLAUDE.md",
+              "path": "CLAUDE.md",
+              "role": "related"
+            },
+            {
+              "label": "AGENTS.md",
+              "path": "AGENTS.md",
+              "role": "related"
+            },
+            {
+              "label": "xai-admin-dashboard-system-integration.md",
+              "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+              "role": "related"
+            }
+          ],
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
+          "last_updated": "2026-06-04T03:23:18-07:00",
+          "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
+          "note_source": "generated",
+          "path": ".teams/skills/xai-module-classify/SKILL.md",
+          "tracked": true,
+          "changed": true,
+          "change_status": "modified",
+          "mirror_status": {
+            "status": "aligned",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_output",
+            "generated_note"
+          ],
+          "source_note_labels": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": [
+            "功能分类",
+            "这个功能归哪个模块",
+            "module classification",
+            "classify this feature",
+            "模块归类",
+            "新功能归哪类"
+          ]
+        },
+        {
+          "id": "skill:xai-module-classify",
+          "name": "xai-module-classify",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "automation",
+          "category_label": "Roadmap / Automation",
+          "category_suggestion": "",
+          "usage_scenario": "功能分类",
+          "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
+          "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "低/按需：参考或辅助场景使用",
+          "related_workflow": "dashboard sync / project-system",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/xai-module-classify/SKILL.md",
+              "role": "definition"
+            },
+            {
+              "label": "MODULE_BOUNDARIES.md",
+              "path": "docs/MODULE_BOUNDARIES.md",
+              "role": "related"
+            },
+            {
+              "label": "module-classification.json",
+              "path": "docs/workflow/project/module-classification.json",
+              "role": "related"
+            },
+            {
+              "label": "PRODUCT_MODULE_MAP.md",
+              "path": "docs/PRODUCT_MODULE_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "PLUGIN_MAP.md",
+              "path": "docs/PLUGIN_MAP.md",
+              "role": "related"
+            },
+            {
+              "label": "CLAUDE.md",
+              "path": "CLAUDE.md",
+              "role": "related"
+            },
+            {
+              "label": "AGENTS.md",
+              "path": "AGENTS.md",
+              "role": "related"
+            },
+            {
+              "label": "xai-admin-dashboard-system-integration.md",
+              "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+              "role": "related"
+            }
+          ],
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
+          "last_updated": "2026-06-04T03:23:18-07:00",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/xai-module-classify/SKILL.md",
+          "tracked": true,
+          "changed": true,
+          "change_status": "modified",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_output",
+            "generated_note"
+          ],
+          "source_note_labels": [
+            "输出说明已自动补齐",
+            "注释已自动补齐"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": [
+            "功能分类",
+            "这个功能归哪个模块",
+            "module classification",
+            "classify this feature",
+            "模块归类",
+            "新功能归哪类"
           ]
         },
         {
@@ -15186,15 +16191,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-21T03:00:19-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-roadmap-loop/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -15264,15 +16269,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.198Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-web-deploy-preflight/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -15710,8 +16715,8 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-24T01:24:41-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
@@ -15751,8 +16756,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -15948,8 +16953,8 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-23T00:09:34-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
@@ -15989,8 +16994,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -16308,8 +17313,8 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "tracked",
-          "maintenance_code": "tracked",
+          "maintenance_status": "已修改未提交",
+          "maintenance_code": "modified",
           "last_updated": "2026-05-24T01:24:41-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
@@ -16349,8 +17354,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": false,
-          "change_status": "tracked",
+          "changed": true,
+          "change_status": "modified",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -16664,15 +17669,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-18T00:06:10-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-feature-brief/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -16736,7 +17741,7 @@ window.XAI_DASHBOARD_STATE = {
           ],
           "maintenance_status": "已修改未提交",
           "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.196Z",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
@@ -16807,15 +17812,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-18T16:24:33-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-feature-full-loop/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -17008,15 +18013,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.195Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -17089,15 +18094,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.195Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -17175,15 +18180,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.195Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "This skill is the dashboard freshness and knowledge-registry sync gate. It may refresh generated facts and factual docs, but it must not decide roadmap, branch, release, priority,…",
           "note_source": "explicit",
           "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -17203,182 +18208,6 @@ window.XAI_DASHBOARD_STATE = {
             "refresh dev-dashboard Overview",
             "sync dashboard branch docs release-log",
             "sync dashboard test results"
-          ]
-        },
-        {
-          "id": "skill:xai-module-classify",
-          "name": "xai-module-classify",
-          "kind": "skill",
-          "type": "Skill",
-          "subtype": "Project Skill",
-          "category": "governance",
-          "category_label": "Governance / Release",
-          "category_suggestion": "",
-          "usage_scenario": "功能分类",
-          "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
-          "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
-          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
-          "usage_frequency": "中：按项目治理或功能推进使用",
-          "related_workflow": "dashboard sync / project-system",
-          "related_docs": [
-            {
-              "label": "SKILL.md",
-              "path": ".teams/skills/xai-module-classify/SKILL.md",
-              "role": "definition"
-            },
-            {
-              "label": "MODULE_BOUNDARIES.md",
-              "path": "docs/MODULE_BOUNDARIES.md",
-              "role": "related"
-            },
-            {
-              "label": "module-classification.json",
-              "path": "docs/workflow/project/module-classification.json",
-              "role": "related"
-            },
-            {
-              "label": "PRODUCT_MODULE_MAP.md",
-              "path": "docs/PRODUCT_MODULE_MAP.md",
-              "role": "related"
-            },
-            {
-              "label": "PLUGIN_MAP.md",
-              "path": "docs/PLUGIN_MAP.md",
-              "role": "related"
-            },
-            {
-              "label": "CLAUDE.md",
-              "path": "CLAUDE.md",
-              "role": "related"
-            },
-            {
-              "label": "AGENTS.md",
-              "path": "AGENTS.md",
-              "role": "related"
-            }
-          ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.197Z",
-          "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
-          "note_source": "generated",
-          "path": ".teams/skills/xai-module-classify/SKILL.md",
-          "tracked": true,
-          "changed": true,
-          "change_status": "modified",
-          "mirror_status": {
-            "status": "aligned",
-            "missing": []
-          },
-          "gaps": [],
-          "gap_labels": [],
-          "source_notes": [
-            "generated_output",
-            "generated_note"
-          ],
-          "source_note_labels": [
-            "输出说明已自动补齐",
-            "注释已自动补齐"
-          ],
-          "source_complete": false,
-          "source_completion_status": "backfilled",
-          "completion_status": "resolved",
-          "is_complete": true,
-          "triggers": [
-            "功能分类",
-            "这个功能归哪个模块",
-            "module classification",
-            "classify this feature",
-            "模块归类",
-            "新功能归哪类"
-          ]
-        },
-        {
-          "id": "skill:xai-module-classify",
-          "name": "xai-module-classify",
-          "kind": "skill",
-          "type": "Skill",
-          "subtype": "Codex Skill",
-          "category": "governance",
-          "category_label": "Governance / Release",
-          "category_suggestion": "",
-          "usage_scenario": "功能分类",
-          "function_description": "Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.",
-          "inputs": "/xai-module-classify Mode: classify | scan # default: classify if a feature is described, else scan Feature: <one-paragraph description of the new feature/idea> # classify mode Changed paths: <optional list of…",
-          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
-          "usage_frequency": "低/按需：参考或辅助场景使用",
-          "related_workflow": "dashboard sync / project-system",
-          "related_docs": [
-            {
-              "label": "SKILL.md",
-              "path": ".codex/skills/xai-module-classify/SKILL.md",
-              "role": "definition"
-            },
-            {
-              "label": "MODULE_BOUNDARIES.md",
-              "path": "docs/MODULE_BOUNDARIES.md",
-              "role": "related"
-            },
-            {
-              "label": "module-classification.json",
-              "path": "docs/workflow/project/module-classification.json",
-              "role": "related"
-            },
-            {
-              "label": "PRODUCT_MODULE_MAP.md",
-              "path": "docs/PRODUCT_MODULE_MAP.md",
-              "role": "related"
-            },
-            {
-              "label": "PLUGIN_MAP.md",
-              "path": "docs/PLUGIN_MAP.md",
-              "role": "related"
-            },
-            {
-              "label": "CLAUDE.md",
-              "path": "CLAUDE.md",
-              "role": "related"
-            },
-            {
-              "label": "AGENTS.md",
-              "path": "AGENTS.md",
-              "role": "related"
-            }
-          ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.193Z",
-          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
-          "note_source": "generated",
-          "path": ".codex/skills/xai-module-classify/SKILL.md",
-          "tracked": true,
-          "changed": true,
-          "change_status": "modified",
-          "mirror_status": {
-            "status": "not-required",
-            "missing": []
-          },
-          "gaps": [],
-          "gap_labels": [],
-          "source_notes": [
-            "generated_output",
-            "generated_note"
-          ],
-          "source_note_labels": [
-            "输出说明已自动补齐",
-            "注释已自动补齐"
-          ],
-          "source_complete": false,
-          "source_completion_status": "backfilled",
-          "completion_status": "resolved",
-          "is_complete": true,
-          "triggers": [
-            "功能分类",
-            "这个功能归哪个模块",
-            "module classification",
-            "classify this feature",
-            "模块归类",
-            "新功能归哪类"
           ]
         },
         {
@@ -17423,15 +18252,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.197Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-release-log/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -17506,7 +18335,7 @@ window.XAI_DASHBOARD_STATE = {
           ],
           "maintenance_status": "已修改未提交",
           "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.197Z",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
@@ -17582,15 +18411,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.198Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-web-to-desktop-sync/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -18431,6 +19260,116 @@ window.XAI_DASHBOARD_STATE = {
           ]
         },
         {
+          "id": "skill:high-end-visual-design",
+          "name": "high-end-visual-design",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "quality",
+          "category_label": "Quality / Security",
+          "category_suggestion": "",
+          "usage_scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
+          "function_description": "Teaches the AI to design like a high-end agency. Defines the exact fonts, spacing, shadows, card structures, and animations that make a website feel expensive. Blocks all the common defaults that make AI designs look cheap or generic.",
+          "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "按需：评审、创作或专项治理时使用",
+          "related_workflow": "Feature Workflow V2",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/soft-skill/SKILL.md",
+              "role": "definition"
+            }
+          ],
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T04:08:09-07:00",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/soft-skill/SKILL.md",
+          "tracked": true,
+          "changed": false,
+          "change_status": "tracked",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_input",
+            "generated_output",
+            "generated_note",
+            "definition_only_doc"
+          ],
+          "source_note_labels": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": []
+        },
+        {
+          "id": "skill:redesign-existing-projects",
+          "name": "redesign-existing-projects",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "quality",
+          "category_label": "Quality / Security",
+          "category_suggestion": "",
+          "usage_scenario": "检查失败、PR 复核、安全评审、安全建模和结构风险复盘。",
+          "function_description": "Upgrades existing websites and apps to premium quality. Audits current design, identifies generic AI patterns, and applies high-end design standards without breaking functionality. Works with any CSS framework or vanilla CSS.",
+          "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "按需：评审、创作或专项治理时使用",
+          "related_workflow": "Feature Workflow V2",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/redesign-skill/SKILL.md",
+              "role": "definition"
+            }
+          ],
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T04:08:09-07:00",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/redesign-skill/SKILL.md",
+          "tracked": true,
+          "changed": false,
+          "change_status": "tracked",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [],
+          "gap_labels": [],
+          "source_notes": [
+            "generated_input",
+            "generated_output",
+            "generated_note",
+            "definition_only_doc"
+          ],
+          "source_note_labels": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "resolved",
+          "is_complete": true,
+          "triggers": []
+        },
+        {
           "id": "skill:security-skills-claude-code",
           "name": "security-skills-claude-code",
           "kind": "skill",
@@ -18621,7 +19560,7 @@ window.XAI_DASHBOARD_STATE = {
           ],
           "maintenance_status": "已修改未提交",
           "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.195Z",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-consistency-audit/SKILL.md",
@@ -18713,7 +19652,7 @@ window.XAI_DASHBOARD_STATE = {
           ],
           "maintenance_status": "已修改未提交",
           "maintenance_code": "modified",
-          "last_updated": "2026-06-04T10:15:26.192Z",
+          "last_updated": "2026-06-04T03:23:18-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/xai-consistency-audit/SKILL.md",
@@ -18745,6 +19684,65 @@ window.XAI_DASHBOARD_STATE = {
             "**pre-release** → run as an RC/ship pre-flight; report then confirm before any apply.",
             "> Concurrency note: when the dashboard generator/HTML are being refactored on the same branch, run report-only and defer `apply` (dashboard writes) until that lands — single-writer discipline."
           ]
+        },
+        {
+          "id": "skill:stitch-design-taste",
+          "name": "stitch-design-taste",
+          "kind": "skill",
+          "type": "Skill",
+          "subtype": "Codex Skill",
+          "category": "reference",
+          "category_label": "Reference / Support",
+          "category_suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。",
+          "usage_scenario": "查找辅助能力、理解本地与 portable 定义来源或补充上下文。",
+          "function_description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-accelerated performance.",
+          "inputs": "未显式登记；请在 SKILL.md 添加 `## Inputs` 或等价说明。",
+          "outputs": "未显式登记；请在 SKILL.md 添加 `## Output` 或等价说明。",
+          "usage_frequency": "低/按需：参考或辅助场景使用",
+          "related_workflow": "Feature Workflow V2",
+          "related_docs": [
+            {
+              "label": "SKILL.md",
+              "path": ".codex/skills/stitch-skill/SKILL.md",
+              "role": "definition"
+            }
+          ],
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-04T04:08:09-07:00",
+          "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
+          "note_source": "generated",
+          "path": ".codex/skills/stitch-skill/SKILL.md",
+          "tracked": true,
+          "changed": false,
+          "change_status": "tracked",
+          "mirror_status": {
+            "status": "not-required",
+            "missing": []
+          },
+          "gaps": [
+            "unclear_category"
+          ],
+          "gap_labels": [
+            "分类不清晰"
+          ],
+          "source_notes": [
+            "generated_input",
+            "generated_output",
+            "generated_note",
+            "definition_only_doc"
+          ],
+          "source_note_labels": [
+            "输入说明已自动补齐",
+            "输出说明已自动补齐",
+            "注释已自动补齐",
+            "仅有关联定义文档"
+          ],
+          "source_complete": false,
+          "source_completion_status": "backfilled",
+          "completion_status": "needs-action",
+          "is_complete": false,
+          "triggers": []
         }
       ],
       "report": {
@@ -18831,6 +19829,17 @@ window.XAI_DASHBOARD_STATE = {
               "输入说明已自动补齐",
               "输出说明已自动补齐",
               "注释已自动补齐"
+            ]
+          },
+          {
+            "name": "Frontend Responsive Design Standards",
+            "type": "Skill",
+            "path": ".codex/skills/frontend-responsive-ui/SKILL.md",
+            "notes": [
+              "输入说明已自动补齐",
+              "输出说明已自动补齐",
+              "注释已自动补齐",
+              "仅有关联定义文档"
             ]
           },
           {
@@ -18964,6 +19973,42 @@ window.XAI_DASHBOARD_STATE = {
             "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
             "notes": [
               "输入说明已自动补齐",
+              "注释已自动补齐"
+            ]
+          },
+          {
+            "name": "xai-admin-control-plane-sync",
+            "type": "Skill",
+            "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
+            "notes": [
+              "输出说明已自动补齐",
+              "注释已自动补齐"
+            ]
+          },
+          {
+            "name": "xai-admin-control-plane-sync",
+            "type": "Skill",
+            "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
+            "notes": [
+              "输出说明已自动补齐",
+              "注释已自动补齐"
+            ]
+          },
+          {
+            "name": "xai-module-classify",
+            "type": "Skill",
+            "path": ".teams/skills/xai-module-classify/SKILL.md",
+            "notes": [
+              "输出说明已自动补齐",
+              "注释已自动补齐"
+            ]
+          },
+          {
+            "name": "xai-module-classify",
+            "type": "Skill",
+            "path": ".codex/skills/xai-module-classify/SKILL.md",
+            "notes": [
+              "输出说明已自动补齐",
               "注释已自动补齐"
             ]
           },
@@ -19137,24 +20182,6 @@ window.XAI_DASHBOARD_STATE = {
             ]
           },
           {
-            "name": "xai-module-classify",
-            "type": "Skill",
-            "path": ".teams/skills/xai-module-classify/SKILL.md",
-            "notes": [
-              "输出说明已自动补齐",
-              "注释已自动补齐"
-            ]
-          },
-          {
-            "name": "xai-module-classify",
-            "type": "Skill",
-            "path": ".codex/skills/xai-module-classify/SKILL.md",
-            "notes": [
-              "输出说明已自动补齐",
-              "注释已自动补齐"
-            ]
-          },
-          {
             "name": "xai-release-log",
             "type": "Skill",
             "path": ".teams/skills/xai-release-log/SKILL.md",
@@ -19285,6 +20312,28 @@ window.XAI_DASHBOARD_STATE = {
             ]
           },
           {
+            "name": "high-end-visual-design",
+            "type": "Skill",
+            "path": ".codex/skills/soft-skill/SKILL.md",
+            "notes": [
+              "输入说明已自动补齐",
+              "输出说明已自动补齐",
+              "注释已自动补齐",
+              "仅有关联定义文档"
+            ]
+          },
+          {
+            "name": "redesign-existing-projects",
+            "type": "Skill",
+            "path": ".codex/skills/redesign-skill/SKILL.md",
+            "notes": [
+              "输入说明已自动补齐",
+              "输出说明已自动补齐",
+              "注释已自动补齐",
+              "仅有关联定义文档"
+            ]
+          },
+          {
             "name": "security-skills-claude-code",
             "type": "Skill",
             "path": ".codex/skills/security-skills-claude-code/SKILL.md",
@@ -19323,56 +20372,56 @@ window.XAI_DASHBOARD_STATE = {
               "输出说明已自动补齐",
               "注释已自动补齐"
             ]
+          },
+          {
+            "name": "stitch-design-taste",
+            "type": "Skill",
+            "path": ".codex/skills/stitch-skill/SKILL.md",
+            "notes": [
+              "输入说明已自动补齐",
+              "输出说明已自动补齐",
+              "注释已自动补齐",
+              "仅有关联定义文档"
+            ]
           }
         ],
-        "classification_suggestions": [],
+        "classification_suggestions": [
+          {
+            "name": "stitch-design-taste",
+            "type": "Skill",
+            "path": ".codex/skills/stitch-skill/SKILL.md",
+            "suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。"
+          }
+        ],
         "changed_items": [
           {
-            "name": "xai-roadmap-loop",
-            "type": "Skill",
-            "path": ".teams/skills/xai-roadmap-loop/SKILL.md",
+            "name": "workflow-router",
+            "type": "Agent",
+            "path": ".codex/agents/skill-workflow-router.toml",
             "status": "已修改未提交"
           },
           {
-            "name": "xai-web-deploy-preflight",
+            "name": "workflow-router",
             "type": "Skill",
-            "path": ".teams/skills/xai-web-deploy-preflight/SKILL.md",
+            "path": ".codex/skills/workflow-router/SKILL.md",
             "status": "已修改未提交"
           },
           {
-            "name": "xai-feature-brief",
+            "name": "workflow-router",
             "type": "Skill",
-            "path": ".teams/skills/xai-feature-brief/SKILL.md",
+            "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
             "status": "已修改未提交"
           },
           {
-            "name": "xai-feature-dossier-sync",
+            "name": "xai-admin-control-plane-sync",
             "type": "Skill",
-            "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
+            "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
             "status": "已修改未提交"
           },
           {
-            "name": "xai-feature-full-loop",
+            "name": "xai-admin-control-plane-sync",
             "type": "Skill",
-            "path": ".teams/skills/xai-feature-full-loop/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-account-sync-scope-check",
-            "type": "Skill",
-            "path": ".teams/skills/xai-account-sync-scope-check/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-desktop-release-gate",
-            "type": "Skill",
-            "path": ".teams/skills/xai-desktop-release-gate/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-dev-dashboard-sync",
-            "type": "Skill",
-            "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
+            "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
             "status": "已修改未提交"
           },
           {
@@ -19388,21 +20437,33 @@ window.XAI_DASHBOARD_STATE = {
             "status": "已修改未提交"
           },
           {
-            "name": "xai-release-log",
+            "name": "bugfix-full-loop",
+            "type": "Agent",
+            "path": ".agents/templates/bugfix-full-loop.md",
+            "status": "已修改未提交"
+          },
+          {
+            "name": "feature-auto-build",
+            "type": "Agent",
+            "path": ".agents/templates/feature-auto-build.md",
+            "status": "已修改未提交"
+          },
+          {
+            "name": "feature-full-loop",
+            "type": "Agent",
+            "path": ".agents/templates/feature-full-loop.md",
+            "status": "已修改未提交"
+          },
+          {
+            "name": "xai-feature-dossier-sync",
             "type": "Skill",
-            "path": ".teams/skills/xai-release-log/SKILL.md",
+            "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
             "status": "已修改未提交"
           },
           {
             "name": "xai-sync-fanout-dispatch",
             "type": "Skill",
             "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-web-to-desktop-sync",
-            "type": "Skill",
-            "path": ".teams/skills/xai-web-to-desktop-sync/SKILL.md",
             "status": "已修改未提交"
           },
           {
@@ -19425,22 +20486,22 @@ window.XAI_DASHBOARD_STATE = {
     "source": "docs/PLUGIN_MAP.md",
     "entries": [
       {
-        "name": "**P1**",
-        "path": "`apps/desktop/` (Phase 1 scaffold rewrite scoped to first feature `desktop-tauri-web-dist-normal-window`); reuses `apps/web/` + `packages/{xai-web-*, plugin-web-*}` as Phase 1 UI source; `plugin-account` reframed to \"Phase 1 local-session-only\" per ADR-0011 §D4. First wave (4 features, Codex audit Part 4): `desktop-tauri-web-dist-normal-window`, `desktop-web-auth-offline-mode`, `desktop-phase1-build-packaging-pipeline`, `web-external-runtime-offline-gates`.",
-        "status": "ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH",
-        "raw_status": "**Active — Phase 1: Tauri-wrap of `apps/web` dist + normal Mac window + offline UI launch**"
-      },
-      {
         "name": "**P0**",
-        "path": "`xai-web-*` (rows 1-24 + 9 gap-closure) + `plugin-web-*` + `apps/web/` — all SHIPPED; also wrapped by Tauri as Phase 1 Mac app UI; bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 (still active).",
-        "status": "MAINTENANCE-ONLY",
-        "raw_status": "Maintenance-only"
+        "path": "`apps/web/` + `xai-web-*` + `plugin-web-*` — `web` is the Web product mainline; new feature and bug-fix work are permitted without a P0 carve-out. Changes that may affect Desktop require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.",
+        "status": "ACTIVE_WEB_MAINLINE",
+        "raw_status": "**Active Web mainline**"
       },
       {
-        "name": "**P3 Future**",
-        "path": "`plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus the legacy transparent-overlay Tauri scaffold, plus sync-v1 crypto stack (W0/W1/W2/W3), plus G2 data-security foundation, plus G0.1–G0.5 / G1.1, G1.2, G1.4, G1.5, G1.6 anchors (Shipped rows retained as historical evidence, no new active work).",
-        "status": "DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED",
-        "raw_status": "**Deferred until Phase 3 local-first SHIPPED**"
+        "name": "**P1**",
+        "path": "`apps/desktop/`, `plugin-account`, `plugin-console`, `plugin-productivity`, `plugin-ai-cube`, `plugin-calendar`, `plugin-labels`, `plugin-project`, plus G0/G1 native foundation anchors (window-ground-truth / grid-window-prototype / click-through-matrix / finder-dnd-path / spaces-multimonitor-matrix all SHIPPED on spike branch)",
+        "status": "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE",
+        "raw_status": "**Active App lane — G1 native foundation phase**"
+      },
+      {
+        "name": "**P2**",
+        "path": "`plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G2 data-security foundation (stay paused till G1 SHIPPED per ADR-0010 §D2)",
+        "status": "PAUSED_UNTIL_P1_BETA",
+        "raw_status": "Paused until P1 beta"
       },
       {
         "name": "window-ground-truth",
@@ -19758,25 +20819,19 @@ window.XAI_DASHBOARD_STATE = {
         "name": "clipboard",
         "path": "packages/plugin-clipboard/",
         "status": "PLANNED",
-        "raw_status": "Planned (Deferred)"
+        "raw_status": "Planned"
       },
       {
         "name": "widgets",
         "path": "packages/plugin-widgets/",
-        "status": "MIGRATING",
-        "raw_status": "Migrating (Merge Target: Web Dashboard)"
+        "status": "PLANNED",
+        "raw_status": "Planned"
       },
       {
         "name": "meditation",
-        "path": "packages/plugin-meditation/ (absent)",
-        "status": "DEPRECATED",
-        "raw_status": "Deprecated (Retired)"
-      },
-      {
-        "name": "pet",
-        "path": "packages/plugin-pet/",
-        "status": "MIGRATING",
-        "raw_status": "Migrating (Merge Target: `@repo/plugin-web-pet`)"
+        "path": "`packages/plugin-meditation/` *(未建包 / no package yet — Planned row only; Web form shipped as `xai-web-meditation`)*",
+        "status": "PLANNED",
+        "raw_status": "Planned"
       },
       {
         "name": "ai-cube",
@@ -19786,7 +20841,7 @@ window.XAI_DASHBOARD_STATE = {
       },
       {
         "name": "settings",
-        "path": "packages/plugin-settings/",
+        "path": "`packages/plugin-settings/` *(未建包 / no package yet — Planned row only)*",
         "status": "PLANNED",
         "raw_status": "Planned"
       },
@@ -19805,6 +20860,12 @@ window.XAI_DASHBOARD_STATE = {
       {
         "name": "@repo/plugin-web-pomodoro",
         "path": "packages/plugin-web-pomodoro/",
+        "status": "STABLE",
+        "raw_status": "Stable"
+      },
+      {
+        "name": "@repo/plugin-web-time-tracker",
+        "path": "packages/plugin-web-time-tracker/",
         "status": "STABLE",
         "raw_status": "Stable"
       },
@@ -19930,19 +20991,87 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "status_counts": {
-      "ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH": 1,
-      "MAINTENANCE-ONLY": 1,
-      "DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED": 1,
+      "ACTIVE_WEB_MAINLINE": 1,
+      "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
+      "PAUSED_UNTIL_P1_BETA": 1,
       "SHIPPED": 40,
       "BLOCKED": 2,
-      "STABLE": 24,
+      "STABLE": 25,
       "IN-DEV": 10,
-      "PLANNED": 2,
-      "MIGRATING": 2,
-      "DEPRECATED": 1
+      "PLANNED": 4
     }
   },
   "roadmap_manifests": [
+    {
+      "filename": "account-cloud-sync-foundation.md",
+      "source": "docs/workflow/roadmap/account-cloud-sync-foundation.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "account-sync-architecture-charter",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T04:58:00-0700"
+        },
+        {
+          "number": "2",
+          "slug": "account-sync-entity-scope-matrix",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T05:21:59-0700"
+        },
+        {
+          "number": "3",
+          "slug": "account-device-identity-contract",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T05:34:50-0700"
+        },
+        {
+          "number": "4",
+          "slug": "account-sync-local-first-boundaries",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T05:59:00-0700"
+        },
+        {
+          "number": "5",
+          "slug": "account-sync-protocol-surface-contract",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T06:15:09-0700"
+        },
+        {
+          "number": "6",
+          "slug": "account-sync-surface-adapters",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T06:42:00-0700"
+        },
+        {
+          "number": "7",
+          "slug": "account-sync-admin-read-models",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T07:03:00-0700"
+        },
+        {
+          "number": "8",
+          "slug": "account-sync-site-entry-contract",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T07:26:00-0700"
+        },
+        {
+          "number": "9",
+          "slug": "account-sync-workflow-state-contract",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T07:51:06-0700"
+        },
+        {
+          "number": "10",
+          "slug": "account-sync-verification-gates",
+          "status": "SHIPPED",
+          "last_run": "2026-05-31T08:14:00-0700"
+        }
+      ],
+      "status_counts": {
+        "SHIPPED": 10
+      },
+      "total": 10
+    },
     {
       "filename": "sync-v1.md",
       "source": "docs/workflow/roadmap/sync-v1.md",
@@ -20455,6 +21584,52 @@ window.XAI_DASHBOARD_STATE = {
       "total": 25
     },
     {
+      "filename": "xai-admin-dashboard-system-integration.md",
+      "source": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-admin-dashboard-shell",
+          "status": "PENDING",
+          "last_run": "—"
+        },
+        {
+          "number": "2",
+          "slug": "xai-admin-data-contracts-rbac",
+          "status": "PENDING",
+          "last_run": "—"
+        },
+        {
+          "number": "3",
+          "slug": "xai-admin-users-orgs-billing",
+          "status": "PENDING",
+          "last_run": "—"
+        },
+        {
+          "number": "4",
+          "slug": "xai-admin-feature-ai-provider-control",
+          "status": "PENDING",
+          "last_run": "—"
+        },
+        {
+          "number": "5",
+          "slug": "xai-admin-audit-ops-queue",
+          "status": "PENDING",
+          "last_run": "—"
+        },
+        {
+          "number": "6",
+          "slug": "xai-admin-deploy-observability",
+          "status": "PENDING",
+          "last_run": "—"
+        }
+      ],
+      "status_counts": {
+        "PENDING": 6
+      },
+      "total": 6
+    },
+    {
       "filename": "xai-desktop-remaining-p2-p3-future.md",
       "source": "docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md",
       "rows": [
@@ -20685,6 +21860,22 @@ window.XAI_DASHBOARD_STATE = {
       "total": 6
     },
     {
+      "filename": "xai-web-calendar-event-create.md",
+      "source": "docs/workflow/roadmap/xai-web-calendar-event-create.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-calendar-event-create",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-27"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
+    },
+    {
       "filename": "xai-web-console-gap-closure.md",
       "source": "docs/workflow/roadmap/xai-web-console-gap-closure.md",
       "rows": [
@@ -20883,6 +22074,230 @@ window.XAI_DASHBOARD_STATE = {
         "SHIPPED": 21
       },
       "total": 21
+    },
+    {
+      "filename": "xai-web-dashboard-real-data.md",
+      "source": "docs/workflow/roadmap/xai-web-dashboard-real-data.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-dashboard-real-data",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-28"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-dashboard-stickies-create.md",
+      "source": "docs/workflow/roadmap/xai-web-dashboard-stickies-create.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-dashboard-stickies-create",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-28"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-dashboard-weather-mail.md",
+      "source": "docs/workflow/roadmap/xai-web-dashboard-weather-mail.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-dashboard-weather-mail",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-29"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-matrix-card-create.md",
+      "source": "docs/workflow/roadmap/xai-web-matrix-card-create.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-matrix-card-create",
+          "status": "READY_FOR_VERIFY",
+          "last_run": "2026-05-28"
+        }
+      ],
+      "status_counts": {
+        "READY_FOR_VERIFY": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-project-module.md",
+      "source": "docs/workflow/roadmap/xai-web-project-module.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-project-prd-sync",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "2",
+          "slug": "xai-web-board-card-detail",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "3",
+          "slug": "xai-web-board-date-model",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "4",
+          "slug": "xai-web-board-list-crud",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "5",
+          "slug": "xai-web-board-card-crud",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "6",
+          "slug": "xai-web-board-checklist-editor",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "7",
+          "slug": "xai-web-board-storage-contract",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "8",
+          "slug": "xai-web-board-task-link",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "9",
+          "slug": "xai-web-board-calendar-feed",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "10",
+          "slug": "xai-web-board-saved-filters",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "11",
+          "slug": "xai-web-board-share-contract",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "12",
+          "slug": "xai-web-board-responsive-smoke",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "13",
+          "slug": "xai-web-board-export-import",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "14",
+          "slug": "xai-web-board-automation-lite",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "15",
+          "slug": "xai-web-board-integrations",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "16",
+          "slug": "xai-web-board-comments-activity",
+          "status": "SHIPPED",
+          "last_run": ""
+        },
+        {
+          "number": "17",
+          "slug": "xai-web-board-permissions",
+          "status": "SHIPPED",
+          "last_run": ""
+        }
+      ],
+      "status_counts": {
+        "SHIPPED": 17
+      },
+      "total": 17
+    },
+    {
+      "filename": "xai-web-statistics-real-aggregation.md",
+      "source": "docs/workflow/roadmap/xai-web-statistics-real-aggregation.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-statistics-real-aggregation",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-29 (feature-plan REVISE)"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-tasks-card-create.md",
+      "source": "docs/workflow/roadmap/xai-web-tasks-card-create.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-tasks-card-create",
+          "status": "APPROVED",
+          "last_run": "2026-05-28"
+        }
+      ],
+      "status_counts": {
+        "APPROVED": 1
+      },
+      "total": 1
+    },
+    {
+      "filename": "xai-web-tasks-smartlist-filter.md",
+      "source": "docs/workflow/roadmap/xai-web-tasks-smartlist-filter.md",
+      "rows": [
+        {
+          "number": "1",
+          "slug": "xai-web-tasks-smartlist-filter",
+          "status": "NEEDS_REVIEW",
+          "last_run": "2026-05-28"
+        }
+      ],
+      "status_counts": {
+        "NEEDS_REVIEW": 1
+      },
+      "total": 1
     }
   ],
   "product_module_registry": {
@@ -22095,18 +23510,18 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "current": {
-      "web_only": 422,
+      "web_only": 443,
       "dev_only": 190,
       "drift_status": "符合预期",
       "drift_note": "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。",
       "gate_timeline": {
-        "web_last_commit": "2026-06-04",
+        "web_last_commit": "2026-06-06",
         "dev_last_commit": "2026-05-30",
         "shared_base": "2026-05-26",
         "last_release_tag": "（暂无 tag）",
-        "web_ahead": 422,
+        "web_ahead": 443,
         "dev_ahead": 190,
-        "reminder": "web 较共同基线领先 422 个提交、dev 领先 190 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
+        "reminder": "web 较共同基线领先 443 个提交、dev 领先 190 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
       }
     }
   },
@@ -22198,7 +23613,7 @@ window.XAI_DASHBOARD_STATE = {
     ],
     "hard_rules": [
       "web->app always via the D3 gate (xai-web-to-desktop-sync); never merge web directly into dev",
-      "frozen lines (site/admin PROPOSED, sync/plugin P2 PAUSED) produce receipts/drafts ONLY — never land source, never open implementation branches",
+      "frozen lines (site PROPOSED, sync/plugin P2 PAUSED) produce receipts/drafts ONLY — never land source, never open implementation branches; admin is operator-activated but roadmap-gated and must route source work through its roadmap slices",
       "creating desktop-next / desktop-plugin-next / release/* and anything touching dev are SEPARATE operator-confirmed steps",
       "device-local entities NEVER enter the remote outbox (ADR-0013 D4)",
       "before locking any cross-cutting design or this registry, run one independent `codex exec -s read-only` adversarial review (see ADR-0014 D5)"
@@ -22224,17 +23639,9 @@ window.XAI_DASHBOARD_STATE = {
   "development_data": {
     "source": "git",
     "scope": "all refs unless noted",
-    "today_commits": 11,
-    "seven_day_commits": 505,
+    "today_commits": 40,
+    "seven_day_commits": 332,
     "seven_day_trend": [
-      {
-        "date": "2026-05-29",
-        "commits": 119
-      },
-      {
-        "date": "2026-05-30",
-        "commits": 54
-      },
       {
         "date": "2026-05-31",
         "commits": 61
@@ -22253,7 +23660,15 @@ window.XAI_DASHBOARD_STATE = {
       },
       {
         "date": "2026-06-04",
-        "commits": 11
+        "commits": 25
+      },
+      {
+        "date": "2026-06-05",
+        "commits": 3
+      },
+      {
+        "date": "2026-06-06",
+        "commits": 40
       }
     ],
     "weekly_stats": [
@@ -22344,12 +23759,12 @@ window.XAI_DASHBOARD_STATE = {
       {
         "key": "week:2026-06-01",
         "type": "week",
-        "label": "06-01-06-04",
+        "label": "06-01-06-06",
         "start_date": "2026-06-01",
-        "end_date": "2026-06-04",
-        "commits": 184,
-        "active_days": 4,
-        "total_days": 4,
+        "end_date": "2026-06-06",
+        "commits": 241,
+        "active_days": 6,
+        "total_days": 6,
         "active_rate": 1,
         "is_current": true
       }
@@ -22420,128 +23835,130 @@ window.XAI_DASHBOARD_STATE = {
         "type": "month",
         "label": "2026-06",
         "start_date": "2026-06-01",
-        "end_date": "2026-06-04",
-        "commits": 184,
-        "active_days": 4,
-        "total_days": 4,
+        "end_date": "2026-06-06",
+        "commits": 241,
+        "active_days": 6,
+        "total_days": 6,
         "active_rate": 1,
         "is_current": true
       }
     ],
     "today_numstat": {
-      "added": 620,
-      "deleted": 225,
-      "files": 30
+      "added": 19050,
+      "deleted": 722,
+      "files": 122
     },
     "directory_changes": {
-      "apps/web": {
-        "added": 18,
-        "deleted": 25,
-        "files": 3
-      },
       "docs": {
-        "added": 523,
-        "deleted": 152,
-        "files": 28
+        "added": 4970,
+        "deleted": 171,
+        "files": 26
       },
       "other": {
-        "added": 44,
-        "deleted": 31,
-        "files": 11
+        "added": 12553,
+        "deleted": 523,
+        "files": 138
       },
-      ".cursor/rules": {
-        "added": 24,
-        "deleted": 10,
-        "files": 4
-      },
-      ".teams/skills": {
-        "added": 11,
-        "deleted": 7,
-        "files": 2
+      "apps/desktop": {
+        "added": 1527,
+        "deleted": 28,
+        "files": 13
       }
     },
     "branch_recent_commits": [
       {
-        "name": "web",
-        "date": "2026-06-04 02:47:08 -0700",
-        "commit": "2da9db05",
-        "subject": "fix(web): route root through global shell topbar"
+        "name": "origin/codex/plugin/platform-runtime-phase1",
+        "date": "2026-06-06 04:07:29 -0700",
+        "commit": "ae72888f",
+        "subject": "docs(plugin-platform): close phase 1 runtime foundation"
       },
       {
-        "name": "origin/web",
-        "date": "2026-06-04 02:47:08 -0700",
-        "commit": "2da9db05",
-        "subject": "fix(web): route root through global shell topbar"
-      },
-      {
-        "name": "origin/codex/web/dev-dashboard-authority-refactor",
-        "date": "2026-06-04 02:17:12 -0700",
-        "commit": "9ee5944a",
-        "subject": "docs(boundary): sync G1 plugin-runtime gate across routing mirrors"
-      },
-      {
-        "name": "origin/codex/xai-web-project-module-plan",
-        "date": "2026-06-04 00:01:09 -0700",
-        "commit": "6cae8625",
-        "subject": "docs(web-board-permissions): mark shipped"
-      },
-      {
-        "name": "origin/codex/web/dev-dashboard-test-results",
-        "date": "2026-06-02 23:39:38 -0700",
-        "commit": "0d95a824",
-        "subject": "dashboard: add test results surface"
-      },
-      {
-        "name": "origin/codex/web/bookkeeping",
-        "date": "2026-06-02 16:02:23 -0700",
-        "commit": "278dcd3b",
-        "subject": "feat(web): add bookkeeping module"
-      },
-      {
-        "name": "origin/codex/time-tracker-web",
-        "date": "2026-06-02 01:54:41 -0700",
-        "commit": "163f8b28",
-        "subject": "fix(time-tracker): add day records collapse toggle"
-      },
-      {
-        "name": "dev",
-        "date": "2026-05-30 03:47:21 -0700",
-        "commit": "7d4f8274",
-        "subject": "fix(desktop): harden native capability adapter bootstrap"
-      },
-      {
-        "name": "origin/dev",
-        "date": "2026-05-30 03:47:21 -0700",
-        "commit": "7d4f8274",
-        "subject": "fix(desktop): harden native capability adapter bootstrap"
-      },
-      {
-        "name": "origin",
-        "date": "2026-05-26 23:22:26 -0700",
-        "commit": "898f5baf",
-        "subject": "docs(plugin-map): reconcile G1 anchor rows with manifest truth (5 SHIPPED + 1 BLOCKED_EXTERNAL)"
-      },
-      {
-        "name": "origin/main",
-        "date": "2026-05-26 23:22:26 -0700",
-        "commit": "898f5baf",
-        "subject": "docs(plugin-map): reconcile G1 anchor rows with manifest truth (5 SHIPPED + 1 BLOCKED_EXTERNAL)"
+        "name": "origin/claude/frosty-nash-c4bf16",
+        "date": "2026-06-06 04:01:05 -0700",
+        "commit": "07d25809",
+        "subject": "docs(admin): mark row #2 xai-admin-data-contracts-rbac SHIPPED"
       },
       {
         "name": "main",
-        "date": "2026-05-24 03:29:49 -0700",
-        "commit": "af883932",
-        "subject": "docs(workflow): close 5 Codex POST_CORRECTION_BLOCKED items from 2026-05-24 cold-read"
+        "date": "2026-06-06 04:00:43 -0700",
+        "commit": "2258d376",
+        "subject": "ci(deploy): run Wrangler deploy through pnpm"
+      },
+      {
+        "name": "origin",
+        "date": "2026-06-06 04:00:43 -0700",
+        "commit": "2258d376",
+        "subject": "ci(deploy): run Wrangler deploy through pnpm"
+      },
+      {
+        "name": "origin/main",
+        "date": "2026-06-06 04:00:43 -0700",
+        "commit": "2258d376",
+        "subject": "ci(deploy): run Wrangler deploy through pnpm"
+      },
+      {
+        "name": "dev",
+        "date": "2026-06-06 03:50:44 -0700",
+        "commit": "f2bbf1a0",
+        "subject": "merge: web desktop D3 parity into dev"
+      },
+      {
+        "name": "web",
+        "date": "2026-06-06 03:30:41 -0700",
+        "commit": "65152f62",
+        "subject": "merge(web): land time tracker visual polish"
+      },
+      {
+        "name": "origin/web",
+        "date": "2026-06-06 03:30:41 -0700",
+        "commit": "65152f62",
+        "subject": "merge(web): land time tracker visual polish"
+      },
+      {
+        "name": "origin/codex/admin-dashboard-prototype-hardening",
+        "date": "2026-06-05 21:44:55 -0700",
+        "commit": "b803f001",
+        "subject": "fix(admin): activate roadmap gate"
+      },
+      {
+        "name": "origin/codex/web/ui-ux-system-refresh",
+        "date": "2026-06-05 17:21:20 -0700",
+        "commit": "3037fe99",
+        "subject": "Add Web color token enforcement gate"
+      },
+      {
+        "name": "origin/codex/web/countdown-system-upgrade",
+        "date": "2026-06-04 13:41:27 -0700",
+        "commit": "eb25338a",
+        "subject": "feat(plugin-web-countdown): polish interactions and drag sorting"
+      },
+      {
+        "name": "origin/codex/web/meditation-config",
+        "date": "2026-06-04 13:36:59 -0700",
+        "commit": "11400e30",
+        "subject": "feat(web): polish meditation controls"
+      },
+      {
+        "name": "codex/web-desktop-d3-parity",
+        "date": "2026-06-04 04:26:03 -0700",
+        "commit": "bec26298",
+        "subject": "fix(desktop): bypass mock auth login route"
+      },
+      {
+        "name": "origin/codex/plugin/platform-docs",
+        "date": "2026-06-04 04:19:37 -0700",
+        "commit": "dadaa071",
+        "subject": "docs(plugin): prepare desktop plugin platform phase 1"
       }
     ],
-    "uncommitted_files": 107,
+    "uncommitted_files": 504,
     "doc_vs_code": {
-      "docs_lines": 94937,
-      "code_lines": 109001,
-      "ratio": 0.87
+      "docs_lines": 129695,
+      "code_lines": 194632,
+      "ratio": 0.67
     },
     "recent_push_time": "2026-05-30T03:47:21-07:00",
-    "skill_change_commits": 18
+    "skill_change_commits": 20
   },
   "task_progress": {
     "items": [
@@ -23104,6 +24521,33 @@ window.XAI_DASHBOARD_STATE = {
         "path": "packages/plugin-productivity/docs/dev_log.md"
       },
       {
+        "package": "plugin-web-board-core",
+        "feature": "plugin-web-board-core",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-05-23",
+        "next": "— (SHIPPED)",
+        "path": "packages/plugin-web-board-core/docs/dev_log.md"
+      },
+      {
+        "package": "plugin-web-board-views",
+        "feature": "plugin-web-board-views",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-05-28 23:00",
+        "next": "— (workflow complete)",
+        "path": "packages/plugin-web-board-views/docs/dev_log.md"
+      },
+      {
+        "package": "plugin-web-board-workspaces",
+        "feature": "plugin-web-board-workspaces",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-05-23 18:55",
+        "next": "—",
+        "path": "packages/plugin-web-board-workspaces/docs/dev_log.md"
+      },
+      {
         "package": "plugin-web-pomodoro",
         "feature": "plugin-web-pomodoro",
         "status": "SHIPPED",
@@ -23117,9 +24561,18 @@ window.XAI_DASHBOARD_STATE = {
         "feature": "plugin-web-settings-rest",
         "status": "SHIPPED",
         "raw_status": "SHIPPED",
-        "updated": "2026-05-26 00:30",
-        "next": "ship",
+        "updated": "2026-05-28 02:00",
+        "next": "— (workflow complete)",
         "path": "packages/plugin-web-settings-rest/docs/dev_log.md"
+      },
+      {
+        "package": "plugin-web-settings-shell",
+        "feature": "plugin-web-settings-shell",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-05-23 19:35",
+        "next": "— (SHIPPED)",
+        "path": "packages/plugin-web-settings-shell/docs/dev_log.md"
       },
       {
         "package": "protocol-integrity-integration-tests",
@@ -23383,22 +24836,148 @@ window.XAI_DASHBOARD_STATE = {
         "path": "packages/xai-web-ai-chat/docs/dev_log.md"
       },
       {
-        "package": "xai-web-board-core",
-        "feature": "xai-web-board-core",
+        "package": "xai-web-board-automation-lite",
+        "feature": "xai-web-board-automation-lite",
         "status": "SHIPPED",
         "raw_status": "SHIPPED",
-        "updated": "2026-05-23",
-        "next": "— (SHIPPED)",
-        "path": "packages/xai-web-board-core/docs/dev_log.md"
+        "updated": "2026-06-03 23:20 PDT",
+        "next": "xai-web-board-integrations",
+        "path": "packages/xai-web-board-automation-lite/docs/dev_log.md"
       },
       {
-        "package": "xai-web-board-views",
-        "feature": "xai-web-board-views",
+        "package": "xai-web-board-calendar-feed",
+        "feature": "xai-web-board-calendar-feed",
         "status": "SHIPPED",
         "raw_status": "SHIPPED",
-        "updated": "2026-05-23",
-        "next": "— (workflow complete)",
-        "path": "packages/xai-web-board-views/docs/dev_log.md"
+        "updated": "2026-06-03 22:17 PDT",
+        "next": "xai-web-board-saved-filters",
+        "path": "packages/xai-web-board-calendar-feed/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-card-crud",
+        "feature": "xai-web-board-card-crud",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 21:31 PDT",
+        "next": "xai-web-board-checklist-editor",
+        "path": "packages/xai-web-board-card-crud/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-card-detail",
+        "feature": "xai-web-board-card-detail",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 19:07 PDT",
+        "next": "Next roadmap row: `xai-web-board-date-model` or browser-smoke follow-up if manual visual proof is required",
+        "path": "packages/xai-web-board-card-detail/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-checklist-editor",
+        "feature": "xai-web-board-checklist-editor",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 21:41 PDT",
+        "next": "`xai-web-board-storage-contract`",
+        "path": "packages/xai-web-board-checklist-editor/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-comments-activity",
+        "feature": "xai-web-board-comments-activity",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 23:44 PDT",
+        "next": "xai-web-board-permissions",
+        "path": "packages/xai-web-board-comments-activity/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-date-model",
+        "feature": "xai-web-board-date-model",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 20:03 PDT",
+        "next": "xai-web-board-list-crud or xai-web-board-card-crud",
+        "path": "packages/xai-web-board-date-model/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-export-import",
+        "feature": "xai-web-board-export-import",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 23:03 PDT",
+        "next": "xai-web-board-automation-lite",
+        "path": "packages/xai-web-board-export-import/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-integrations",
+        "feature": "xai-web-board-integrations",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 23:40 PDT",
+        "next": "xai-web-board-comments-activity",
+        "path": "packages/xai-web-board-integrations/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-list-crud",
+        "feature": "xai-web-board-list-crud",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 21:08 PDT",
+        "next": "xai-web-board-card-crud or xai-web-board-checklist-editor",
+        "path": "packages/xai-web-board-list-crud/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-permissions",
+        "feature": "xai-web-board-permissions",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 23:58 PDT",
+        "next": "Workflow complete",
+        "path": "packages/xai-web-board-permissions/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-responsive-smoke",
+        "feature": "xai-web-board-responsive-smoke",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 22:54 PDT",
+        "next": "xai-web-board-export-import",
+        "path": "packages/xai-web-board-responsive-smoke/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-saved-filters",
+        "feature": "xai-web-board-saved-filters",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 22:27 PDT",
+        "next": "xai-web-board-share-contract",
+        "path": "packages/xai-web-board-saved-filters/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-share-contract",
+        "feature": "xai-web-board-share-contract",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 22:34 PDT",
+        "next": "xai-web-board-responsive-smoke",
+        "path": "packages/xai-web-board-share-contract/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-storage-contract",
+        "feature": "xai-web-board-storage-contract",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 21:50 PDT",
+        "next": "`xai-web-board-task-link`",
+        "path": "packages/xai-web-board-storage-contract/docs/dev_log.md"
+      },
+      {
+        "package": "xai-web-board-task-link",
+        "feature": "xai-web-board-task-link",
+        "status": "SHIPPED",
+        "raw_status": "SHIPPED",
+        "updated": "2026-06-03 22:05 PDT",
+        "next": "`xai-web-board-calendar-feed`",
+        "path": "packages/xai-web-board-task-link/docs/dev_log.md"
       },
       {
         "package": "xai-web-board-workspaces",
@@ -23441,7 +25020,7 @@ window.XAI_DASHBOARD_STATE = {
         "feature": "xai-web-dashboard-grid",
         "status": "SHIPPED",
         "raw_status": "SHIPPED",
-        "updated": "2026-05-24 14:00",
+        "updated": "2026-05-28 15:00",
         "next": "— (workflow complete)",
         "path": "packages/xai-web-dashboard-grid/docs/dev_log.md"
       },
@@ -23495,8 +25074,8 @@ window.XAI_DASHBOARD_STATE = {
         "feature": "xai-web-meditation",
         "status": "SHIPPED",
         "raw_status": "SHIPPED",
-        "updated": "2026-05-23 19:14",
-        "next": "—",
+        "updated": "2026-05-28 23:00",
+        "next": "— (workflow complete)",
         "path": "packages/xai-web-meditation/docs/dev_log.md"
       },
       {
@@ -23507,33 +25086,6 @@ window.XAI_DASHBOARD_STATE = {
         "updated": "2026-05-23 19:25",
         "next": "— (complete)",
         "path": "packages/xai-web-pet/docs/dev_log.md"
-      },
-      {
-        "package": "xai-web-pomodoro",
-        "feature": "xai-web-pomodoro",
-        "status": "SHIPPED",
-        "raw_status": "SHIPPED",
-        "updated": "2026-05-23 19:07",
-        "next": "—",
-        "path": "packages/xai-web-pomodoro/docs/dev_log.md"
-      },
-      {
-        "package": "xai-web-settings-rest",
-        "feature": "xai-web-settings-rest",
-        "status": "SHIPPED",
-        "raw_status": "SHIPPED",
-        "updated": "2026-05-23 19:38",
-        "next": "— (complete)",
-        "path": "packages/xai-web-settings-rest/docs/dev_log.md"
-      },
-      {
-        "package": "xai-web-settings-shell",
-        "feature": "xai-web-settings-shell",
-        "status": "SHIPPED",
-        "raw_status": "SHIPPED",
-        "updated": "2026-05-23 19:35",
-        "next": "— (SHIPPED)",
-        "path": "packages/xai-web-settings-shell/docs/dev_log.md"
       },
       {
         "package": "xai-web-shell",
@@ -23564,37 +25116,37 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "counts": {
-      "SHIPPED": 102,
+      "SHIPPED": 117,
       "READY_TO_SHIP": 7,
       "BLOCKED": 3,
       "IN_PROGRESS": 1
     },
-    "source_count": 113,
-    "shipped": 102
+    "source_count": 128,
+    "shipped": 117
   },
   "signals": [
     {
       "label": "web↔dev 分叉",
       "badge": "正常差异",
-      "value": "422/190",
+      "value": "443/190",
       "note": "两条独立专注线，差异正常"
     },
     {
       "label": "Roadmap rows",
       "badge": "真实计数",
-      "value": "144",
-      "note": "105 已发布 · 0 待评审 · 29 待办"
+      "value": "185",
+      "note": "132 已发布 · 6 待评审 · 35 待办"
     },
     {
       "label": "Project skills",
       "badge": "tracked",
-      "value": "13",
+      "value": "14",
       "note": ".teams/skills/*/SKILL.md"
     },
     {
       "label": "Dashboard sync",
       "badge": "skill tracked",
-      "value": "107 dirty",
+      "value": "504 dirty",
       "note": "pnpm dashboard · 最新发布 Desktop Plugin 产品边界与长期平台路线落地"
     }
   ],
@@ -23602,7 +25154,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "question": "现在做什么",
       "answer": "继续 Web 主线；Desktop 走独立 App lane",
-      "detail": "55 行 · 0 待评审 · 0 待验证"
+      "detail": "63 行 · 6 待评审 · 1 待验证"
     },
     {
       "question": "在哪条线",
@@ -23617,7 +25169,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "question": "什么状态",
       "answer": "有未提交变更",
-      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 107"
+      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 504"
     }
   ],
   "overview_modules": [
@@ -23854,9 +25406,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
-          "skill": "xai-feature-brief",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
+          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
+          "skill": "xai-feature-brief 或 xai-roadmap-loop",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
         }
       ],
       "impacts": [
@@ -23878,7 +25430,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
         }
       ],
       "region": "主产品链",
@@ -23888,7 +25440,7 @@ window.XAI_DASHBOARD_STATE = {
       "deployment_title": "Web 版本",
       "release_title": "Web 分支",
       "phase": "主线开发",
-      "progress": 75,
+      "progress": 73,
       "running": "正常运行",
       "recent_update": "Web Console / Dashboard rows 接入真实 roadmap 计数",
       "todo": "5 个阻塞需处理",
@@ -23901,11 +25453,18 @@ window.XAI_DASHBOARD_STATE = {
       "tracking_badge": "needs attention",
       "status_counts": {
         "SHIPPED": 40,
+        "NEEDS_REVIEW": 6,
         "BLOCKED_EXTERNAL": 5,
-        "PENDING": 10
+        "PENDING": 10,
+        "READY_FOR_VERIFY": 1,
+        "APPROVED": 1
       },
-      "status_summary": "55 rows · SHIPPED:40 · PENDING:10 · BLOCKED_EXTERNAL:5",
+      "status_summary": "63 rows · SHIPPED:40 · READY_FOR_VERIFY:1 · NEEDS_REVIEW:6 · PENDING:10 · BLOCKED_EXTERNAL:5 · APPROVED:1",
       "related_docs": [
+        {
+          "label": "Web Spec",
+          "path": "web design/DESIGN.md"
+        },
         {
           "label": "ADR-0013 分支治理",
           "path": "docs/adr/0013-branch-sync-governance.md"
@@ -23919,8 +25478,16 @@ window.XAI_DASHBOARD_STATE = {
           "path": "docs/workflow/roadmap/xai-web-console-gap-closure.md"
         },
         {
+          "label": "xai-web-dashboard-real-data",
+          "path": "docs/workflow/roadmap/xai-web-dashboard-real-data.md"
+        },
+        {
           "label": "web-ticktick-parity",
           "path": "docs/workflow/roadmap/web-ticktick-parity.md"
+        },
+        {
+          "label": "xai-web-calendar-event-create",
+          "path": "docs/workflow/roadmap/xai-web-calendar-event-create.md"
         }
       ],
       "testing": {
@@ -24492,7 +26059,7 @@ window.XAI_DASHBOARD_STATE = {
         "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
         "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -24560,15 +26127,13 @@ window.XAI_DASHBOARD_STATE = {
       },
       "tracking_badge": "tracked",
       "status_counts": {
-        "ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH": 1,
-        "DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED": 1,
+        "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
+        "PAUSED_UNTIL_P1_BETA": 1,
         "STABLE": 1,
         "IN-DEV": 7,
-        "PLANNED": 2,
-        "MIGRATING": 2,
-        "DEPRECATED": 1
+        "PLANNED": 4
       },
-      "status_summary": "15 rows · ACTIVE_—_PHASE_1:_TAURI-WRAP_OF_APPS/WEB_DIST_+_NORMAL_MAC_WINDOW_+_OFFLINE_UI_LAUNCH:1 · DEFERRED_UNTIL_PHASE_3_LOCAL-FIRST_SHIPPED:1 · DEPRECATED:1 · IN-DEV:7 · MIGRATING:2 · PLANNED:2 · STABLE:1",
+      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PAUSED_UNTIL_P1_BETA:1 · PLANNED:4 · STABLE:1",
       "related_docs": [
         {
           "label": "Plugin PRD",
@@ -24817,7 +26382,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
+          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
         }
       ],
       "impacts": [
@@ -24834,7 +26399,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
         }
       ],
       "region": "主产品链",
@@ -25168,11 +26733,11 @@ window.XAI_DASHBOARD_STATE = {
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "proposed",
-      "status": "控制面候选",
+      "badge": "roadmap-gated",
+      "status": "已激活 · roadmap gated",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
+      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -25232,23 +26797,23 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "AI 配置",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "权限 / RBAC",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "用量统计",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "审计日志",
-          "status": "proposed"
+          "status": "roadmap-gated"
         },
         {
           "name": "运营入口",
-          "status": "proposed"
+          "status": "roadmap-gated"
         }
       ],
       "points": [
@@ -25262,10 +26827,10 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
+          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -25277,11 +26842,11 @@ window.XAI_DASHBOARD_STATE = {
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -25299,24 +26864,24 @@ window.XAI_DASHBOARD_STATE = {
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
-        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
+        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {
@@ -25370,22 +26935,36 @@ window.XAI_DASHBOARD_STATE = {
       "deployment_title": "管理者 Dashboard",
       "release_title": "管理者 Dashboard",
       "phase": "控制面原型",
-      "progress": 22,
+      "progress": 15,
       "running": "原型可打开",
       "recent_update": "Dev Dashboard 与 Admin prototype 分离",
-      "todo": "权限、用量、审计、AI 配置接入计划",
+      "todo": "6 个待排期",
       "target": {
         "type": "file",
         "href": "../admin-dashboard/index.html",
         "label": "打开 Admin 原型"
       },
-      "tracking_badge": "tracked",
-      "status_counts": {},
-      "status_summary": "0 manifest rows · prototype only",
+      "tracking_badge": "work queued",
+      "status_counts": {
+        "PENDING": 6
+      },
+      "status_summary": "6 rows · PENDING:6",
       "related_docs": [
+        {
+          "label": "Admin README",
+          "path": "docs/prototypes/admin-dashboard/README.md"
+        },
+        {
+          "label": "接入计划",
+          "path": "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"
+        },
         {
           "label": "ADR-0013 控制面",
           "path": "docs/adr/0013-branch-sync-governance.md"
+        },
+        {
+          "label": "xai-admin-dashboard-system-integration",
+          "path": "docs/workflow/roadmap/xai-admin-dashboard-system-integration.md"
         }
       ],
       "testing": {

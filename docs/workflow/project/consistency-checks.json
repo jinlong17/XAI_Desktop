@@ -16,14 +16,14 @@
       "APPLY only after explicit operator confirmation; record-drift fixes write docs + dashboard in ONE coherent pass so they stay aligned",
       "CODE violations (a plugin implementing native commands, re-doing a Web module, bypassing D3) are REPORT-ONLY — fixing code is feature-workflow territory, not this skill",
       "NEVER auto-change priority / branch / release / ship / roadmap — report needs-operator (dev-dashboard.md write-authority)",
-      "frozen lines (plugin/sync PAUSED, site/admin PROPOSED) get impact-note only, no source landing",
+      "frozen lines (plugin/sync PAUSED, site PROPOSED) get impact-note only, no source landing; admin is operator-activated but roadmap-gated, so source landing must stay within admin roadmap slices",
       "this skill detects + routes; it delegates real writes to owning skills where one exists (dashboard via xai-dev-dashboard-sync rules, PRD via xai-feature-dossier-sync, syncScope proof via xai-account-sync-scope-check)"
     ],
     "frozen_lines": {
       "plugin": "P2 PAUSED until G1 — impact-note only",
       "sync": "P2 PAUSED until G1 — receipt only",
       "site": "PROPOSED — owner-deferred",
-      "admin": "PROPOSED — owner-deferred"
+      "admin": "OPERATOR-ACTIVATED 2026-06-05 — roadmap-gated; no production writes outside admin roadmap gates"
     }
   },
   "check_groups": [

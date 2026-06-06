@@ -9,8 +9,9 @@ import type { UserWeather } from "../types.js";
 
 describe("Open-Meteo weather client", () => {
   it("searchOpenMeteoCities normalizes geocoding results", async () => {
-    const fetchImpl = vi.fn(async (_input: string | URL) =>
-      new Response(
+    const fetchImpl = vi.fn(async (input: string | URL) => {
+      void input;
+      return new Response(
         JSON.stringify({
           results: [
             {
@@ -27,8 +28,8 @@ describe("Open-Meteo weather client", () => {
           ],
         }),
         { status: 200 },
-      ),
-    );
+      );
+    });
 
     const results = await searchOpenMeteoCities(" Shanghai ", "zh", fetchImpl);
 
@@ -61,8 +62,9 @@ describe("Open-Meteo weather client", () => {
       country: "China",
       updatedAt: "2026-06-01T12:00:00.000Z",
     };
-    const fetchImpl = vi.fn(async (_input: string | URL) =>
-      new Response(
+    const fetchImpl = vi.fn(async (input: string | URL) => {
+      void input;
+      return new Response(
         JSON.stringify({
           timezone: "Asia/Shanghai",
           current: {
@@ -81,8 +83,8 @@ describe("Open-Meteo weather client", () => {
           },
         }),
         { status: 200 },
-      ),
-    );
+      );
+    });
 
     const draft = await fetchOpenMeteoWeather(location, fetchImpl);
 

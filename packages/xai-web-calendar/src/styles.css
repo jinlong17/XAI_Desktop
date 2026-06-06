@@ -875,8 +875,17 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
   color: var(--accent);
   font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .cal-banner .banner-upgrade {
+    min-height: 44px;
+  }
 }
 .cal-banner svg {
   color: var(--amber);
@@ -1176,5 +1185,124 @@
   .event-composer__row {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+}
+
+/* ---- 2026 UI refresh: calendar readability + low-noise hierarchy ------- */
+.module-cal {
+  padding: 18px 20px 22px;
+}
+
+.cal-grid.panel,
+.cal-year-view.panel,
+.cal-banner {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 92%, transparent);
+}
+
+.cal-weekday,
+.cal-year-weekdays {
+  font-size: var(--fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.cal-row {
+  min-height: 104px;
+}
+
+.cal-day {
+  border-radius: var(--r-md);
+  padding: 8px;
+  gap: 6px;
+}
+
+.cal-day-head {
+  min-height: 26px;
+}
+
+.cal-day-num,
+.cal-year-day-num {
+  font-size: var(--fs-md);
+  line-height: 1.1;
+}
+
+.cal-week-num,
+.cal-holiday,
+.cal-more,
+.cal-year-more,
+.cal-sample-badge {
+  font-size: var(--fs-xs);
+}
+
+.today-pill {
+  width: 26px;
+  height: 26px;
+  font-size: var(--fs-sm);
+}
+
+.cal-event,
+.cal-allday-event,
+.cal-event-block {
+  min-height: 24px;
+  padding: 3px 7px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+}
+
+.ev-time,
+.cal-event-time,
+.cal-event-block__time {
+  font-size: var(--fs-xs);
+}
+
+.event-composer__btn,
+.cal-toolbar__week-options button {
+  min-height: 40px;
+}
+
+[data-theme="dark"] .cal-grid.panel,
+[data-theme="dark"] .cal-year-view.panel,
+[data-theme="dark"] .cal-banner {
+  background: color-mix(in oklch, var(--bg-panel) 96%, transparent);
+  border-color: var(--border-1);
+}
+
+[data-theme="dark"] .cal-day,
+[data-theme="dark"] .cal-year-month {
+  background: color-mix(in oklch, var(--bg-panel-2) 86%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 80%, transparent);
+}
+
+@media (max-width: 680px) {
+  .module-cal {
+    padding: 12px;
+  }
+
+  .cal-toolbar .icon-btn,
+  .cal-toolbar__views button,
+  .cal-toolbar .btn-today,
+  .event-composer__btn {
+    width: 44px;
+    min-height: 44px;
+  }
+
+  .cal-toolbar__views button,
+  .cal-toolbar .btn-today,
+  .event-composer__btn {
+    width: auto;
+  }
+
+  .cal-grid.panel {
+    padding: 10px;
+  }
+
+  .cal-row {
+    min-height: 92px;
+  }
+
+  .cal-day {
+    padding: 6px;
   }
 }

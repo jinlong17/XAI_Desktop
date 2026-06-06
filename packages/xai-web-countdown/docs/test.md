@@ -295,3 +295,77 @@ our entry.
 6. Manual cross-vendor walkthrough §5
 
 All gates green ⇒ READY_FOR_VERIFY.
+
+---
+
+## §10 V2 Verification Addendum — 2026-06-04
+
+Additional automated coverage added for the formal countdown-system upgrade:
+
+- `presetCards.test.ts`: nine default presets, Spring Festival target date, and
+  deleted preset non-reinjection.
+- `cardsReducer.test.ts`: soft delete, hide, pin, duplicate, restore.
+- `CountdownModule.test.tsx`: default presets on empty storage, soft-delete
+  history state, persistence after create/edit, remount round trip.
+- Existing card/dialog tests updated for V2 fields while preserving legacy v1
+  storage fixtures.
+
+Current package verification:
+
+```bash
+pnpm --filter @repo/plugin-web-countdown typecheck
+pnpm --filter @repo/plugin-web-countdown test
+pnpm --filter @repo/plugin-web-countdown lint
+```
+
+Expected result after this addendum: 13 test files, 118 tests, 0 lint warnings,
+and clean TypeScript.
+
+Host/browser verification performed in the V2 session:
+
+```bash
+pnpm --filter @repo/web check-types
+pnpm --filter @repo/web test
+pnpm --filter @repo/web build
+pnpm --filter @repo/web dev:mock-auth
+```
+
+Chrome CDP smoke on `http://localhost:3002/app/countdown` covered:
+
+- Empty storage injects 9 dynamic presets.
+- Cards, compact list, timeline, calendar, and history views render.
+- Create, edit, copy, delete, hide, history restore, and reload persistence work.
+- Edited custom card persists `display_style="ring"` and `layout="split"` with
+  both countdown and progress enabled.
+- Deleted copies remain in history; deleted presets are not re-injected by the
+  preset merger.
+- Desktop card overflow guard: first 10 cards report
+  `scrollHeight <= clientHeight`; screenshots saved at
+  `/tmp/xai-countdown-desktop-fixed.png` and `/tmp/xai-countdown-mobile.png`.
+- Dark-theme guard: `xai_pref_theme="dark"` reload sets
+  `<html data-theme="dark">`, renders visible card titles, and reports 0 card
+  overflows.
+
+## §11 V2.1 Interaction Polish Addendum — 2026-06-04
+
+Additional coverage:
+
+- `cardsReducer.test.ts`: `reorderCards()` persists manual drag order by
+  updating `sort_order` without reordering the storage array.
+- `CountdownModule.test.tsx`: compact-list subview keeps overview/tabs visible,
+  exposes Back to board, and returns to the card board.
+- `CountdownModule.test.tsx`: drag/drop between active cards persists an order
+  where the dropped card's `sort_order` precedes the target card.
+- `CountdownEditDialog.test.tsx`: invalid saves use `aria-disabled` plus inline
+  guidance and do not call `onSave`; valid saves include required target time.
+
+Manual/browser gates for this polish:
+
+- Hover on a desktop card hides low-frequency actions at rest and fades them in
+  on hover/focus.
+- Switching to list/timeline/calendar/history keeps the sticky control strip and
+  Back to board entry visible.
+- Dragging a card shows a drop target placeholder and persists order after
+  reload.
+- Product UI labels use neutral progress naming; no third-party product names
+  are visible in card style chips or edit options.

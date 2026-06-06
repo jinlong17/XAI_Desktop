@@ -1,33 +1,102 @@
 # XAI_Desktop — AI Smart Desktop
 
-## Current Priority (2026-05-26 — P1 active per ADR-0011 Accepted, supersedes ADR-0010 §D1/§D2 in part)
+## Current Priority (2026-05-30 — Web mainline active; ADR-0010 amended)
 
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
-- **P1 — Desktop client (ACTIVE — Phase 1: Tauri-wrap of `apps/web` dist + normal Mac window + offline UI launch)** (`apps/desktop/` + reuses `apps/web/` + `packages/{xai-web-*, plugin-web-*}`): React+Tauri+Local-first hybrid app. Phase 1 goal (1–2 weeks): shippable `.dmg` that launches the full Web shell from bundled static assets, enters `/app` without network, shows clear offline degradation for online-only panels. Phase 2: notifications + status bar + global hotkeys + auto-update + full macOS menu. Phase 3: local-first data layer (own ADR). **Branch map:** machine A = `dev` (desktop Phase 1); machine B = `web` (Web optimisation + WEB-B non-blockers). First wave (Codex audit Part 4): `desktop-tauri-web-dist-normal-window` → `desktop-web-auth-offline-mode` → `desktop-phase1-build-packaging-pipeline` → `web-external-runtime-offline-gates`. Authority: `docs/adr/0011-p1-react-tauri-local-first-hybrid.md` (Accepted 2026-05-26).
-- **P0 — Web Console (MAINTENANCE-ONLY + Phase 1 UI source)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): 24/24 + 9/9 gap-closure SHIPPED; deployed to Cloudflare Pages. **Also serves as the Phase 1 UI source for P1 desktop wrap.** Bug-fix permitted; new feature plans require P0 carve-out commit citing ADR-0010 §D4 (still active). Deferred-by-carve-out items: Safari/Firefox/iOS Safari smoke + external-provider flows.
-- **P3 Future — Legacy overlay / file-organizer scope** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}` + transparent-overlay Tauri scaffold + `xai-g0-window-spike.md` + `xai-g1-native-foundation.md` anchors + `sync-v1` crypto stack + `xai-g2-data-security-foundation`): **Deferred until Phase 3 local-first SHIPPED** per ADR-0011 §D3. Legacy G0.1–G0.5 / G1.1, G1.2, G1.4, G1.5, G1.6 PLUGIN_MAP `Shipped` rows are retained as historical evidence; no new active work is dispatched against these roadmaps.
+- **P0 — Web Console (ACTIVE WEB MAINLINE)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): `web` is the Web product mainline and the most complete product surface. New Web feature and bug-fix work are permitted on `web` / `codex/web/<feature>` without a P0 carve-out. Web changes that may affect Desktop still require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.
+- **P1 — Desktop client (ACTIVE APP LANE)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri native shell that **hosts the Web SPA as a desktop app (Web container)** — menubar / tray / offline / account+Keychain / auto-update / notifications. **Multi-window, overlay, and desktop-widget capability is owned by the Desktop Plugin product (P2/P3), NOT the shell** (see `docs/MODULE_BOUNDARIES.md` + `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`). G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). G1 native foundation remains permitted on the independent App lane; it no longer freezes Web new work. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, amended 2026-05-30).
+- **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, pet}` — note `plugin-meditation` is a *Planned PLUGIN_MAP row, not yet a package*; its Web form ships as `xai-web-meditation` — plus sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED. **Gating split (avoid deadlock):** the plugin **platform-runtime / G1 native-foundation anchor** (multi-window engine, grid persistence, window-command) is the *active gate* — it executes on the P1 App lane and is plugin-platform product, but it is **NOT part of this P2 freeze**; the freeze is the plugin **packages** (clipboard/widgets/pet/meditation) + sync-v1 + G2, which resume once G1 ships. `organizer` is a delivered flagship plugin (Stable/shipped, NOT in the P2-paused freeze; ADR-0015 web-side Accepted, dev ADR-0011 reconcile pending). Surface/module boundary + desktop-plugin scope: `docs/MODULE_BOUNDARIES.md` + `docs/planning/sub-prds/plugin/PRD.md`.
 
-Authority basis: **ADR-0011 Accepted 2026-05-26** supersedes ADR-0010 §D1 (P1 surface definition) + §D2 (xai-g0/g1 unfreeze) + §D1 P2 row (legacy plugins demoted P3). ADR-0010 §D3 (SYSTEM_ARCHITECTURE enforcement) + §D4 (operational rules) + §D5 (G2 evidence protocol for Web P0 carve-out) remain Active. Predecessor: ADR-0009 §D2 + ADR-0008 §S3.
+Authority basis: **ADR-0010 Accepted 2026-05-26, amended 2026-05-30** supersedes the old "P0 Web maintenance-only / P0 carve-out required" reading. ADR-0013 governs branch topology and the Web to Desktop D3 gate.
+
+### Branch & sync governance (ADR-0013, Accepted 2026-06-01)
+
+`docs/adr/0013-branch-sync-governance.md` is the authority for branch topology,
+the Web→Desktop sync gate, and the account cloud-sync per-feature contract. It is
+**additive governance** — it does NOT change the amended ADR-0010 active-focus order
+above. Key rules (do not contradict; cite ADR-0013 §D-N):
+
+- **`web` and `dev` are two independent focus branches** (ADR-0013 §D5): `web`
+  focuses on the Web product, `dev` focuses on the macOS App. Each evolves in its
+  own direction, so **divergence between them is the normal, healthy state**
+  (2026-05-30: 147 web-only / 184 dev-only) — NOT drift, NOT a subset/superset.
+  Do NOT force-merge or rebase one onto the other to "make them equal"; they
+  reconcile at `main`, and specific changes are shared on-demand via the D3 gate.
+- **Branch topology** (ADR-0013 §D2, DEFINED not yet created): long-term `web`
+  (Web mainline) → `desktop-next` (Web→App sync integration) ↔
+  `desktop-plugin-next` (App plugin platform/SDK) → `dev` (Desktop stable / App
+  RC); ephemeral `release/desktop/<version>` (freeze-only). Forward flow:
+  `codex/web/<feature>` → `web` → (D3 gate) → `desktop-next` → `dev` →
+  `release/desktop/<version>` → tag. Creating `desktop-next` /
+  `desktop-plugin-next` / `release/*` is a SEPARATE operator-confirmed step
+  (anything touching `dev` needs explicit confirmation); none exist yet.
+- **Web→Desktop sync gate** (ADR-0013 §D3): every Web change is classified
+  W0–W4 before flowing `web → desktop-next`, emitting a parity receipt. The
+  `xai-web-to-desktop-sync` skill implements this gate; use manual D3 fallback
+  only if the skill is unavailable in the current runtime.
+- **Account cloud-sync** (ADR-0013 §D4, builds on `data-repository-v0` syncScope
+  + sync-v1): Web and App do NOT sync to each other; both sync to one account
+  cloud (Web IndexedDB ⇄ `/sync/push`,`/sync/pull` ⇄ server encrypted blobs ⇄
+  App SQLite). Only `syncScope: account-sync` entities sync; `device-local`
+  never does.
+
+### Product module map & task routing (READ FIRST when a task arrives)
+
+**Before starting ANY dev task, classify it into exactly one of the six product
+modules below, then use that module's branch + skill + workflow.** This is the
+single source for "which module does this requirement belong to". Full per-module
+navigation (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
+影响的模块) lives in **`docs/PRODUCT_MODULE_MAP.md`** and is mirrored in the
+dev-dashboard 产品结构图 (`docs/prototypes/dev-dashboard/`). Authority: ADR-0013 §D1/§D2.
+
+| # | 模块 | key | Surface | 主 / 短分支 | 任务归属信号（命中即归该模块） | 状态 |
+|---|---|---|---|---|---|---|
+| 1 | Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` 路由、Cloudflare Pages | P0 active |
+| 2 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri 壳、菜单栏/托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、承载 Web SPA 容器 | P1 active lane |
+| 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 + 插件平台运行时 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、**多窗口引擎/原生窗口/grid 持久化/window-command/G1 native foundation/点击穿透**(代码物理在 host,产品归插件平台)、桌面整理、单插件功能 | 平台运行时/G1=active · 插件包=P2 paused |
+| 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
+| 5 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
+| 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` + roadmap manifest | `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | ACTIVE roadmap-gated |
+
+Routing rules (do not violate):
+
+- **跨模块归属**：先按"任务归属信号"命中主模块；若改动会牵动其它模块，主模块照常开发，再按
+  `PRODUCT_MODULE_MAP.md` 的 transitions / impacts 决定联动（例如功能改了下载产物 → 同步更新 `site`）。
+- **`web` → `app` 只能走 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动
+  直接合进 `dev`。
+- **`sync` 只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4）。
+- **`site` 仍是 PROPOSED**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线。
+- **`admin` 已由 operator 于 2026-06-05 激活为 roadmap-gated**：只允许经 `codex/admin/<feature>` +
+  `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` 推进，首个切片是
+  `xai-admin-dashboard-shell`；不得绕过 RBAC/审计/secret 边界直接做生产后台写入。
+- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` 目前**已定义但尚未创建**，创建是
+  独立的 operator 确认步骤（任何触及 `dev` 的操作都需显式确认）。
 
 ## Project Overview
 
-Multi-face product — single monorepo, evolving from "Web-first + future Desktop overlay" into **"Web Console + React+Tauri+Local-first Mac desktop hybrid"** per ADR-0011 (2026-05-26):
+Multi-face product — single monorepo, three product surfaces:
 
-- **Web Console (P0, maintenance-only + Phase 1 UI source)** — Vite SPA at `apps/web/`, registers 12 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007). Also wrapped by Tauri as the Phase 1 Mac app UI.
-- **macOS Desktop (P1, active — Phase 1 hybrid app)** — Tauri 2 + React 19, normal Mac window (not transparent overlay), wraps `apps/web` static dist. Three-phase delivery per ADR-0011 §D1. Built in this monorepo (Turborepo + pnpm).
-- **Legacy overlay / organizer (P3 Future)** — Transparent click-through main window + per-grid native windows + Smart Container file organizer + `packages/plugin-{organizer, clipboard, widgets, meditation, pet}`. Code retained as historical reference; per-plugin disposition revisited only after Phase 3 local-first SHIPPED.
+- **Web Console (P0, active)** — Vite SPA at `apps/web/`, registers 24 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007).
+- **macOS Desktop shell (P1)** — Tauri 2 + React 19 **native shell that hosts the Web SPA as a desktop app (Web container)**: single main window + native chrome (menubar, tray, offline cache, account+Keychain, auto-update, system notifications, deep links, launch-at-login). Its product identity is "Web, natively wrapped" — **NOT** a desktop organizer. Built in this monorepo (Turborepo + pnpm).
+- **Desktop Plugin product (G1 runtime active · packages P2 paused)** — The macOS desktop-native superpower layer: the plugin **platform runtime** (multi-window engine, click-through, Spaces, grid persistence, Plugin Host/SDK — physical code lives in the Tauri host but its product attribution is *plugin*, not the shell) is the active G1 gate; the individual plugins under `packages/plugin-*/` (organizer / clipboard / widgets / pet / sticky notes / quick-entry & quick-action floating panels) remain package work, with organizer shipped and the rest paused until G1.
+- **长期平台路线 (planning-only)** — 未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展 等平台作为"同一产品的面（surface）"规划在 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`（仅规划，未授权开工；当前开发仍以 Web / Mac 壳 / 桌面插件三面为主）。
+
+Local project cockpit: `docs/prototypes/dev-dashboard/index.html` is the
+personal developer dashboard. Machine-facing rules for Codex / Claude Code live
+in `docs/workflow/project/dev-dashboard.md`; use `xai-dev-dashboard-sync` before
+trusting Overview freshness or when dashboard / workflow / skill / release-log
+changes need the machine contract and reusable template checked for alignment.
 
 ## Architecture
 
-- **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic. **Phase 1 transition:** the legacy `OrganizerLayer` / transparent overlay shell at `apps/desktop/src/App.tsx` + transparent-overlay `tauri.conf.json` will be replaced by a normal-window shell loading `apps/web` dist in the first Phase 1 feature (`desktop-tauri-web-dist-normal-window`).
+- **Host** (`apps/desktop/src/`): Tauri shell — routing + providers + window shells. Zero business logic.
 - **Core** (`packages/core/`): Shared infrastructure — types, typed events, PluginRegistry, hooks. Zero business logic.
-- **Web Plugins** (`packages/plugin-web-*/` + `packages/xai-web-*/`): Web Console business modules. **Reused by P1 desktop in Phase 1 directly** (per ADR-0011 §S5 short-term cross-surface coupling note).
-- **Legacy desktop plugins** (`packages/plugin-{organizer, clipboard, widgets, meditation, pet}/`): P3 Future; do not depend on these from new P1 work.
+- **Plugins** (`packages/plugin-*/`): Feature modules as React packages. All business logic lives here.
 - **UI Library** (`packages/ui/`): Shared components.
-- **Rust Backend** (`apps/desktop/src-tauri/`): Modular commands (`commands/`) + macOS platform adapters (`platform/`). **Phase 1 transition:** the legacy overlay setup in `lib.rs` / `platform/macos/window_ext.rs` is scoped for removal/refactor by the first Phase 1 feature.
+- **Rust Backend** (`apps/desktop/src-tauri/`): Modular commands (`commands/`) + macOS platform adapters (`platform/`).
 
-Multi-window (Phase 1): single normal Mac window loading `apps/web` dist. Multi-window overlay/grid (legacy P3 Future): main (transparent click-through) + control (AI Cube) + per-grid native windows.
+Multi-window: main (transparent click-through) + control (AI Cube) + per-grid native windows.
 Cross-window communication: Typed event layer (`@repo/core/events`) wrapping Tauri event system.
 
 ### Key Documents
@@ -58,6 +127,9 @@ bug-diagnose → bug-fix → bug-verify → ship
 - Every workflow write must maintain: Workflow, Executor, Updated, Suggested Next, Work Log
 - `feature-build` does ONE phase per run, then stops for human confirmation
 - `ship` requires READY_TO_SHIP status and human confirmation to push
+- Codex + Claude Code parallel-use rules live in
+  `docs/workflow/project/workflow.md`; use that file for cross-tool ownership,
+  branch, commit, review, and `A-Codex` / `D-Codex` semantics.
 
 ### Documentation Contract
 - `packages/plugin-*/docs/design.md` — Decision snapshot
@@ -209,6 +281,7 @@ Track and keep synchronized at minimum:
 - `.cursor/agents/`, `.cursor/rules/`
 - `.teams/skills/`
 - `docs/workflow/_portable/`
+- `docs/workflow/project/workflow.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Rules:
@@ -218,7 +291,7 @@ Rules:
 - Prefer changing `.agents/templates/` and `docs/workflow/_portable/` first,
   then regenerate platform outputs when applicable.
 - Before finishing an agent/skill change, run a tracking audit such as:
-  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable AGENTS.md CLAUDE.md`
+  `git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md`
   and resolve any project-level untracked files intentionally.
 - After committing, push the branch when the change is meant to be available on
   another machine.

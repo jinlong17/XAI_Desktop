@@ -1,0 +1,1849 @@
+<!doctype html>
+<html lang="zh-CN" class="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>XAI Admin · 管理中台原型</title>
+<style>
+  /* ============ Design tokens ============ */
+  :root{
+    --bg:#09090b; --bg-elev:#0f0f12; --panel:#141417; --panel-2:#18181c;
+    --border:rgba(255,255,255,.07); --border-strong:rgba(255,255,255,.12);
+    --text:#f4f4f5; --muted:#a1a1aa; --faint:#71717a;
+    --accent-hue:260; --accent:oklch(62% 0.20 var(--accent-hue)); --accent-2:oklch(71% 0.17 var(--accent-hue)); --accent-soft:oklch(62% 0.20 var(--accent-hue) / 0.20);
+    --success:#34d399; --success-soft:rgba(52,211,153,.12);
+    --warning:#fbbf24; --warning-soft:rgba(251,191,36,.12);
+    --danger:#f87171;  --danger-soft:rgba(248,113,113,.12);
+    --info:#60a5fa;    --info-soft:rgba(96,165,250,.12);
+    --radius:12px; --radius-sm:8px;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root.light{
+    --bg:#fbfdff; --bg-elev:#ffffff; --panel:#ffffff; --panel-2:#f3f7fd;
+    --border:rgba(26,71,148,.10); --border-strong:rgba(26,71,148,.20);
+    --text:#1f1f1f; --muted:#5f6368; --faint:#9aa0a6;
+    --accent-soft:oklch(62% 0.20 var(--accent-hue) / 0.12);
+    --success-soft:rgba(16,185,129,.12); --warning-soft:rgba(245,158,11,.14);
+    --danger-soft:rgba(239,68,68,.10); --info-soft:rgba(59,130,246,.10);
+    --shadow:0 1px 2px rgba(26,71,148,.06), 0 10px 30px rgba(26,71,148,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); font-size:14px; line-height:1.5;
+    -webkit-font-smoothing:antialiased; transition:background .25s,color .25s;
+  }
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:9px}
+  ::-webkit-scrollbar-track{background:transparent}
+  a{color:inherit;text-decoration:none}
+
+  /* ============ Shell ============ */
+  .app{display:flex;height:100vh;overflow:hidden}
+  .sidebar{width:248px;flex-shrink:0;background:var(--bg-elev);border-right:1px solid var(--border);
+    display:flex;flex-direction:column;padding:14px 12px;overflow-y:auto}
+  .brand{display:flex;align-items:center;gap:10px;padding:8px 10px 16px}
+  .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;font-weight:800;color:#fff;font-size:15px;box-shadow:0 4px 14px var(--accent-soft)}
+  .brand b{font-size:15px;letter-spacing:.2px}
+  .brand small{display:block;color:var(--faint);font-size:11px;font-weight:500;margin-top:-2px}
+  .nav-label{color:var(--faint);font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;padding:14px 12px 6px}
+  .nav-item{display:flex;align-items:center;gap:11px;padding:8px 11px;border-radius:var(--radius-sm);
+    color:var(--muted);cursor:pointer;font-weight:500;position:relative;transition:.15s;margin-bottom:1px}
+  .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.85}
+  .nav-item:hover{background:var(--panel);color:var(--text)}
+  .nav-item.active{background:var(--accent-soft);color:var(--accent-2)}
+  .nav-item.active svg{opacity:1}
+  .nav-item .tag{margin-left:auto;font-size:10px;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--faint);padding:1px 6px;border-radius:20px;font-weight:600}
+  .nav-item .count{margin-left:auto;font-size:11px;background:var(--danger);color:#fff;padding:0 6px;border-radius:20px;font-weight:700}
+  .side-foot{margin-top:auto;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:12px 8px 4px}
+  .side-foot .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#f472b6,#fb7185);display:grid;place-items:center;font-weight:700;color:#fff;font-size:12px}
+  .side-foot .meta{font-size:12px;line-height:1.3}
+  .side-foot .meta b{font-weight:600}
+  .side-foot .meta span{color:var(--faint)}
+
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .topbar{height:60px;flex-shrink:0;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--bg-elev) 80%,transparent);
+    backdrop-filter:blur(8px);display:flex;align-items:center;gap:16px;padding:0 24px}
+  .crumb{font-size:13px;color:var(--faint)}
+  .crumb b{color:var(--text);font-weight:600;font-size:15px;margin-left:2px}
+  .search{margin-left:8px;flex:1;max-width:380px;display:flex;align-items:center;gap:9px;background:var(--panel);
+    border:1px solid var(--border);border-radius:9px;padding:7px 11px;color:var(--faint);cursor:text;transition:.15s}
+  .search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .search input{border:0;background:transparent;color:var(--text);outline:0;flex:1;font-size:13px}
+  .search .kbd{font-size:11px;border:1px solid var(--border);border-radius:5px;padding:1px 5px;color:var(--faint)}
+  .top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--panel);
+    display:grid;place-items:center;cursor:pointer;color:var(--muted);transition:.15s;position:relative}
+  .icon-btn:hover{color:var(--text);border-color:var(--border-strong)}
+  .icon-btn .dot{position:absolute;top:8px;right:9px;width:6px;height:6px;border-radius:50%;background:var(--danger)}
+  .env{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);
+    border-radius:9px;padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+  .env .pulse{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px var(--success-soft)}
+
+  .content{flex:1;overflow:auto;padding:24px 28px 56px}
+  .view{display:none;animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:21px;margin:0 0 3px;letter-spacing:-.3px}
+  .page-head p{margin:0;color:var(--faint);font-size:13px}
+
+  .btn{display:inline-flex;align-items:center;gap:7px;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;
+    cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--text);transition:.15s;white-space:nowrap}
+  .btn:hover{border-color:var(--border-strong)}
+  .btn svg{width:15px;height:15px}
+  .btn--primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn--primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+  .btn--danger{color:var(--danger);border-color:var(--danger-soft)}
+  .btn--danger:hover{background:var(--danger-soft)}
+  .btn--sm{padding:6px 10px;font-size:12px}
+
+  .grid-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .kpi .lbl{color:var(--muted);font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:8px}
+  .kpi .lbl .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-2)}
+  .kpi .num{font-size:27px;font-weight:700;letter-spacing:-.6px;margin:12px 0 4px}
+  .delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;padding:2px 7px;border-radius:20px}
+  .delta.up{color:var(--success);background:var(--success-soft)}
+  .delta.down{color:var(--danger);background:var(--danger-soft)}
+  .delta.good-down{color:var(--success);background:var(--success-soft)}
+  .kpi .sub{color:var(--faint);font-size:12px;margin-left:6px}
+
+  .grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px}
+  .grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .card-head h3{margin:0;font-size:14.5px;font-weight:600}
+  .card-head .sub{color:var(--faint);font-size:12px;margin-top:2px}
+  .seg{display:flex;background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:2px}
+  .seg button{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:600;padding:5px 11px;border-radius:6px;cursor:pointer;white-space:nowrap}
+  .seg button.on{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+  .dpane{display:none}.dpane.on{display:block;animation:fade .25s}
+
+  .chart{width:100%;height:230px}
+  .axis-x{display:flex;justify-content:space-between;color:var(--faint);font-size:11px;margin-top:6px;padding:0 4px}
+
+  .bar-row{margin-bottom:15px}
+  .bar-row .top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
+  .bar-row .top .nm{display:flex;align-items:center;gap:8px;font-weight:500}
+  .bar-row .top b{font-weight:700}
+  .dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+  .track{height:7px;border-radius:20px;background:var(--panel-2);overflow:hidden}
+  .track i{display:block;height:100%;border-radius:20px}
+
+  .feed-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+  .feed-item:last-child{border:0}
+  .feed-item .d{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+  .feed-item .tx{font-size:13px}
+  .feed-item .tm{color:var(--faint);font-size:12px;margin-top:1px}
+  .health{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .health .h{padding:13px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel-2)}
+  .health .h .k{color:var(--faint);font-size:12px}
+  .health .h .v{font-size:19px;font-weight:700;margin-top:5px;letter-spacing:-.3px}
+
+  /* ---- feature ranking ---- */
+  .rank{display:grid;grid-template-columns:22px 168px 1fr 86px 74px 46px 60px;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .rank:last-child{border:0}
+  .rank .rk{color:var(--faint);font-weight:700;text-align:center}
+  .rank .rk-nm{display:flex;align-items:center;gap:8px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .rank .rk-bar{height:8px;border-radius:20px;background:var(--panel-2);overflow:hidden}
+  .rank .rk-bar i{display:block;height:100%;border-radius:20px}
+  .rank .rk-v{font-variant-numeric:tabular-nums;color:var(--text);font-weight:600;text-align:right}
+  .rank .rk-u{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;font-size:12px}
+  .rank .rk-p{color:var(--faint);text-align:right;font-size:12px}
+  .rank .rk-h{display:flex;justify-content:flex-end}
+  .col-h{display:grid;grid-template-columns:22px 168px 1fr 86px 74px 46px 60px;gap:10px;font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.4px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:2px}
+  .col-h span:nth-child(n+4){text-align:right}
+
+  /* ---- heatmap ---- */
+  .heatwrap{display:grid;grid-template-columns:34px repeat(8,1fr);gap:5px;align-items:center}
+  .heat-cell{height:24px;border-radius:6px;transition:.15s}
+  .heat-cell:hover{outline:2px solid var(--accent-2)}
+  .heat-lbl{font-size:11px;color:var(--faint)}
+  .heat-legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--faint);margin-top:14px}
+  .heat-legend i{width:18px;height:10px;border-radius:3px;display:inline-block}
+
+  /* ---- toggle switch ---- */
+  .toggle{position:relative;width:38px;height:22px;border-radius:20px;background:var(--panel-2);border:1px solid var(--border-strong);cursor:pointer;transition:.2s;flex-shrink:0}
+  .toggle:after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--faint);transition:.2s}
+  .toggle.on{background:var(--accent);border-color:var(--accent)}
+  .toggle.on:after{left:18px;background:#fff}
+
+  /* ---- status / quota pills ---- */
+  .spill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px}
+  .spill .bd{width:6px;height:6px;border-radius:50%}
+  .s-on{color:var(--success);background:var(--success-soft)} .s-on .bd{background:var(--success)}
+  .s-beta{color:var(--warning);background:var(--warning-soft)} .s-beta .bd{background:var(--warning)}
+  .s-off{color:var(--faint);background:var(--panel-2)} .s-off .bd{background:var(--faint)}
+  .qty{display:inline-block;font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--text);
+    border:1px dashed var(--border-strong);border-radius:7px;padding:3px 9px;cursor:pointer;transition:.15s}
+  .qty:hover{border-color:var(--accent);color:var(--accent-2)}
+  .qty.inf{color:var(--accent-2);border-style:solid;border-color:transparent;background:var(--accent-soft)}
+  .qty.zero{color:var(--faint);border-color:var(--border)}
+
+  /* ---- check (matrix) ---- */
+  .check{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;border:1px solid var(--border-strong);
+    cursor:pointer;color:transparent;font-size:14px;font-weight:800;transition:.15s}
+  .check.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-2)}
+  .check:hover{border-color:var(--accent)}
+  .check.locked{opacity:.55;cursor:not-allowed}
+
+  /* ---- admin contract guardrails ---- */
+  .guardrail{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;background:linear-gradient(135deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border-strong);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;box-shadow:var(--shadow)}
+  .guardrail b{display:block;font-size:14px;margin-bottom:2px}
+  .guardrail p{margin:0;color:var(--muted);font-size:12.5px}
+  .guardrail .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .guard-chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:4px 9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--muted);white-space:nowrap}
+  .guard-chip.warn{color:var(--warning);background:var(--warning-soft);border-color:color-mix(in srgb,var(--warning) 35%,transparent)}
+  .guard-chip.ok{color:var(--success);background:var(--success-soft);border-color:color-mix(in srgb,var(--success) 35%,transparent)}
+  .contract-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .contract-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+  .contract-card b{display:block;font-size:12.5px;margin-bottom:3px}
+  .contract-card span{display:block;color:var(--faint);font-size:11.5px;line-height:1.4}
+  .contract-note{color:var(--faint);font-size:12px;line-height:1.5}
+  .actor-box{display:flex;align-items:center;gap:10px;border:1px solid var(--border);background:var(--panel);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px}
+  .actor-box .who{font-weight:700}
+  .actor-box .meta{color:var(--faint);font-size:12px}
+  .actor-box select{margin-left:auto}
+  .perm-key{display:block;color:var(--faint);font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-top:2px;font-weight:500}
+  .secret-state{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;margin-bottom:8px}
+  .secret-state .bd{width:7px;height:7px;border-radius:50%;background:var(--success)}
+  .secret-handle{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);background:var(--panel-2);
+    border:1px solid var(--border);border-radius:7px;padding:6px 10px;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .secret-handle.locked{color:var(--faint);border-style:dashed}
+  .status-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--faint);font-size:11.5px;margin-top:8px}
+  .muted-action{opacity:.55}
+
+  /* ---- provider cards ---- */
+  .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+  .pcard{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .pcard.off{opacity:.6}
+  .pc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .pc-nm{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px}
+  .pc-key{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);background:var(--panel-2);border:1px solid var(--border);border-radius:7px;padding:6px 10px;margin-bottom:12px}
+  .pc-stats{display:flex;gap:14px;font-size:12px;color:var(--faint);margin-bottom:13px;flex-wrap:wrap}
+  .pc-stats b{color:var(--text);font-weight:700}
+
+  /* ---- toolbar / filters ---- */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .input{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:8px 11px;min-width:240px}
+  .input input{border:0;background:transparent;color:var(--text);outline:0;flex:1;font-size:13px}
+  .input svg{width:15px;height:15px;color:var(--faint)}
+  select.sel{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-size:13px;cursor:pointer;outline:0}
+  .spacer{flex:1}
+  .bulkbar{display:none;align-items:center;gap:14px;background:var(--accent-soft);border:1px solid var(--accent);
+    border-radius:9px;padding:8px 14px;margin-bottom:14px;font-size:13px}
+  .bulkbar.show{display:flex}
+  .bulkbar b{color:var(--accent-2)}
+  .bulkbar .x{margin-left:auto;display:flex;gap:8px}
+
+  /* ---- table ---- */
+  .table-wrap{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11.5px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.4px;
+    padding:11px 16px;border-bottom:1px solid var(--border);background:var(--panel-2)}
+  tbody td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+  tbody tr{cursor:pointer;transition:.12s}
+  tbody tr:hover{background:var(--panel-2)}
+  tbody tr.dim{opacity:.5}
+  tbody tr:last-child td{border-bottom:0}
+  .u{display:flex;align-items:center;gap:11px}
+  .u .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:12px;flex-shrink:0}
+  .u .fic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:17px;flex-shrink:0;background:var(--panel-2);border:1px solid var(--border)}
+  .u .nm{font-weight:600}
+  .u .em{color:var(--faint);font-size:12px}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid transparent}
+  .badge .bd{width:6px;height:6px;border-radius:50%}
+  .b-success{color:var(--success);background:var(--success-soft)} .b-success .bd{background:var(--success)}
+  .b-warning{color:var(--warning);background:var(--warning-soft)} .b-warning .bd{background:var(--warning)}
+  .b-danger{color:var(--danger);background:var(--danger-soft)} .b-danger .bd{background:var(--danger)}
+  .b-muted{color:var(--faint);background:var(--panel-2)} .b-muted .bd{background:var(--faint)}
+  .plan{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:6px;border:1px solid var(--border)}
+  .plan-free{color:var(--muted)}
+  .plan-pro{color:var(--accent-2);background:var(--accent-soft);border-color:transparent}
+  .plan-team{color:var(--info);background:var(--info-soft);border-color:transparent}
+  .usage{font-variant-numeric:tabular-nums}
+  .usage .mini{height:4px;width:80px;border-radius:20px;background:var(--panel-2);margin-top:5px;overflow:hidden}
+  .usage .mini i{display:block;height:100%;background:var(--accent);border-radius:20px}
+  input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+  .row-more{color:var(--faint);font-size:18px;line-height:1;padding:0 4px}
+  .tfoot{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;color:var(--faint);font-size:12.5px}
+  .pager{display:flex;gap:4px}
+  .pager button{width:30px;height:30px;border:1px solid var(--border);background:var(--panel);border-radius:7px;color:var(--muted);cursor:pointer;font-size:12px}
+  .pager button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .empty{display:grid;place-items:center;text-align:center;padding:70px 20px;color:var(--faint)}
+  .empty .bx{width:54px;height:54px;border-radius:14px;background:var(--panel);border:1px solid var(--border);display:grid;place-items:center;margin-bottom:16px;color:var(--accent-2)}
+  .empty h2{color:var(--text);font-size:16px;margin:0 0 6px}
+
+  /* ---- drawer ---- */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100vh;width:460px;max-width:92vw;background:var(--bg-elev);
+    border-left:1px solid var(--border);box-shadow:var(--shadow);transform:translateX(100%);transition:transform .28s cubic-bezier(.22,1,.36,1);
+    z-index:50;display:flex;flex-direction:column}
+  .drawer.show{transform:none}
+  .drawer-head{padding:20px 22px;border-bottom:1px solid var(--border)}
+  .drawer-head .row1{display:flex;align-items:center;gap:14px}
+  .drawer-head .av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:18px}
+  .drawer-head .fic{width:52px;height:52px;border-radius:13px;display:grid;place-items:center;font-size:26px;background:var(--panel);border:1px solid var(--border)}
+  .drawer-head h2{margin:0;font-size:17px}
+  .drawer-head .em{color:var(--faint);font-size:13px}
+  .close{margin-left:auto;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;display:grid;place-items:center}
+  .drawer-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .tabs{display:flex;gap:4px;padding:0 22px;border-bottom:1px solid var(--border)}
+  .tabs button{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;padding:12px 12px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+  .drawer-body{flex:1;overflow:auto;padding:20px 22px}
+  .tabpane{display:none}.tabpane.on{display:block;animation:fade .25s}
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;margin-bottom:20px}
+  .kv .k{color:var(--faint);font-size:12px;margin-bottom:3px}
+  .kv .v{font-size:13.5px;font-weight:600}
+  .sec-t{font-size:12px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 12px}
+  .usage-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
+  .usage-card .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px}
+  .timeline .ti{display:flex;gap:12px;padding-bottom:16px;position:relative}
+  .timeline .ti:before{content:"";position:absolute;left:5px;top:14px;bottom:0;width:1px;background:var(--border)}
+  .timeline .ti:last-child:before{display:none}
+  .timeline .ti .d{width:11px;height:11px;border-radius:50%;border:2px solid var(--bg-elev);background:var(--accent);margin-top:2px;flex-shrink:0;z-index:1}
+  .timeline .ti .t{font-size:13px}.timeline .ti .tm{color:var(--faint);font-size:12px;margin-top:1px}
+  /* feature drawer controls */
+  .seg-wide{display:flex;background:var(--panel-2);border:1px solid var(--border);border-radius:9px;padding:3px;margin-bottom:18px}
+  .seg-wide button{flex:1;border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;padding:7px;border-radius:7px;cursor:pointer}
+  .seg-wide button.on{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+  .seg-wide button.on[data-st="off"]{color:var(--faint)}
+  .slider{height:8px;border-radius:20px;background:var(--panel-2);position:relative;margin:14px 0 6px}
+  .slider i{display:block;height:100%;border-radius:20px;background:var(--accent)}
+  .slider .knob{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--accent);transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .qrow{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:9px;background:var(--panel)}
+  .qrow .ql{display:flex;align-items:center;gap:9px;font-weight:600;font-size:13px}
+  .stepper{display:flex;align-items:center;gap:0;border:1px solid var(--border-strong);border-radius:8px;overflow:hidden}
+  .stepper button{width:28px;height:28px;border:0;background:var(--panel-2);color:var(--text);cursor:pointer;font-size:15px;font-weight:700}
+  .stepper button:hover{background:var(--accent-soft);color:var(--accent-2)}
+  .stepper .val{min-width:74px;text-align:center;font-variant-numeric:tabular-nums;font-weight:700;font-size:13px}
+
+  /* ---- dependencies / gray rules (feature drawer) ---- */
+  .dep{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;font-size:13px;background:var(--panel)}
+  .dep .bd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .dep .meta{margin-left:auto;font-size:11px;color:var(--faint)}
+  .rule{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;font-size:13px;background:var(--panel)}
+  .rule .rk{color:var(--faint);font-size:12px;min-width:72px}
+  .rule .rv{font-weight:600}
+  /* ---- role cards (RBAC) ---- */
+  .role-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+  .role-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:15px;transition:.15s}
+  .role-card .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:700;margin-bottom:10px;font-size:14px}
+  .role-card h4{margin:0 0 3px;font-size:14px}
+  .role-card .mc{font-size:12px;color:var(--faint)}
+  .role-card .ds{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+  /* ---- audit action badges ---- */
+  .act{display:inline-flex;align-items:center;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:6px}
+  .act-create{color:var(--success);background:var(--success-soft)}
+  .act-config{color:var(--accent-2);background:var(--accent-soft)}
+  .act-danger{color:var(--danger);background:var(--danger-soft)}
+  .act-auth{color:var(--info);background:var(--info-soft)}
+  .act-billing{color:var(--warning);background:var(--warning-soft)}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+  /* ---- quota strategy cards ---- */
+  .qstrat{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  .qcard{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .qcard .pl{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .qcard .big{font-size:23px;font-weight:700;letter-spacing:-.4px}
+  .qcard .unit{color:var(--faint);font-size:12px;margin-top:2px}
+  .ubar{height:6px;border-radius:20px;background:var(--panel-2);overflow:hidden;margin-top:10px}
+  .ubar i{display:block;height:100%;border-radius:20px}
+
+  /* ---- KPI sparkline ---- */
+  .kpi{position:relative}
+  .kspark{position:absolute;right:16px;bottom:16px;opacity:.8}
+  /* ---- operational queues ---- */
+  .q-sec-head{display:flex;align-items:center;gap:10px;margin:2px 0 12px}
+  .q-sec-head h3{font-size:15px;margin:0;font-weight:650}
+  .pill-alert{font-size:11.5px;font-weight:700;color:var(--danger);background:var(--danger-soft);padding:2px 9px;border-radius:20px}
+  .queue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+  .queue{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+  .queue-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+  .queue-head .q-ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:15px;flex-shrink:0}
+  .queue-head .qh{line-height:1.25}.queue-head .qh b{font-size:13px;font-weight:650}.queue-head .qh span{display:block;font-size:11px;color:var(--faint)}
+  .queue-head .qbig{margin-left:auto;font-size:22px;font-weight:750;font-variant-numeric:tabular-nums}
+  .qrow{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);transition:.12s}
+  .qrow:hover{background:var(--panel-2)}
+  .qr-main{min-width:0;line-height:1.3}.qr-main b{font-size:12.5px;font-weight:600}.qr-main span{display:block;font-size:11px;color:var(--faint)}
+  .qr-meta{margin-left:auto;font-size:11px;color:var(--faint);font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+  .qfoot{margin-top:auto;padding:9px 14px;border-top:1px solid var(--border)}
+  .linkish{color:var(--accent-2);font-weight:600;font-size:12px;cursor:pointer}
+  /* ---- seat bar (orgs) ---- */
+  .seat{font-variant-numeric:tabular-nums}
+  .seat .sbar{height:5px;width:120px;border-radius:20px;background:var(--panel-2);margin-top:5px;overflow:hidden}
+  .seat .sbar i{display:block;height:100%;border-radius:20px}
+  /* ---- badge info + plan ent ---- */
+  .b-info{color:var(--info);background:var(--info-soft)} .b-info .bd{background:var(--info)}
+  .plan-ent{color:var(--accent-2);background:var(--accent-soft);border-color:transparent}
+  /* ---- confirm modal ---- */
+  .modal-wrap{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-wrap.show{display:flex}
+  .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+  .modal-card{position:relative;background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;width:440px;max-width:100%;box-shadow:var(--shadow);overflow:hidden;animation:fade .2s ease}
+  .mc-body{padding:22px 24px}
+  .mc-icon{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:22px;margin-bottom:14px}
+  .mc-icon.danger{background:var(--danger-soft)} .mc-icon.warning{background:var(--warning-soft)}
+  .mc-body h3{margin:0;font-size:17px;font-weight:700}
+  .mc-body p{margin:8px 0 0;color:var(--muted);font-size:13.5px;line-height:1.5}
+  .mc-confirm{margin-top:16px}
+  .cm-input{width:100%;height:34px;padding:0 11px;border:1px solid var(--border-strong);border-radius:8px;background:var(--panel);color:var(--text);outline:0;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+  .cm-input:focus{border-color:var(--accent)}
+  .mc-foot{display:flex;gap:10px;justify-content:flex-end;padding:14px 24px;border-top:1px solid var(--border);background:var(--panel)}
+  .cm-danger{background:var(--danger);border-color:var(--danger);color:#fff}
+  .cm-danger:hover{filter:brightness(1.08)}
+  /* ---- toast ---- */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:300}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---- saved views (Apple segmented control) + filter chips ---- */
+  .views{display:inline-flex;gap:3px;background:var(--panel-2);border:1px solid var(--border);border-radius:11px;padding:3px;margin-bottom:14px;max-width:100%;overflow-x:auto;vertical-align:top}
+  .view-tab{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;font-size:13px;font-weight:600;color:var(--muted);border:0;border-radius:8px;white-space:nowrap;cursor:pointer;background:transparent;transition:background .15s,color .15s,box-shadow .15s}
+  .view-tab:hover{color:var(--text)}
+  .view-tab.on{background:var(--panel);color:var(--accent-2);box-shadow:var(--shadow)}
+  .view-tab .vc{font-size:11px;color:var(--faint);font-family:ui-monospace,Menlo,monospace;font-weight:700}
+  .view-tab.on .vc{color:var(--accent-2)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .fchip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px dashed var(--border-strong);border-radius:9px;font-size:12.5px;color:var(--muted);background:var(--panel);cursor:pointer;transition:.15s}
+  .fchip:hover{border-color:var(--accent);color:var(--text)}
+  .fchip.on{border-style:solid;border-color:var(--accent);background:var(--accent-soft);color:var(--accent-2);font-weight:600}
+  /* ---- density (compact) ---- */
+  [data-density="compact"] .content{padding:18px 22px 48px}
+  [data-density="compact"] tbody td{padding:8px 16px}
+  [data-density="compact"] thead th{padding:8px 16px}
+  [data-density="compact"] .card{padding:14px}
+  [data-density="compact"] .kpi .num{font-size:23px;margin:8px 0 3px}
+  [data-density="compact"] .nav-item{padding:6px 11px}
+  [data-density="compact"] .grid-kpi,[data-density="compact"] .grid-2,[data-density="compact"] .grid-2b{gap:12px;margin-bottom:14px}
+  /* ---- page width ---- */
+  [data-width="center"] .content > .view{max-width:1320px;margin:0 auto}
+  /* ---- setrow (settings) ---- */
+  .setrow{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--border)}
+  .setrow:last-child{border-bottom:0}
+  .setrow .sr-txt{min-width:0}
+  .setrow .sr-txt b{font-size:13.5px;font-weight:650}
+  .setrow .sr-txt span{display:block;font-size:12px;color:var(--faint);margin-top:3px;max-width:60ch}
+  .setrow .sr-ctrl{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .sinput{height:34px;padding:0 11px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);outline:0;font-size:13px;min-width:220px}
+  .sinput:focus{border-color:var(--accent)}
+  .sselect{height:34px;padding:0 28px 0 11px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);outline:0;font-size:13px;cursor:pointer}
+  /* ---- tweaks panel ---- */
+  .tw-fab{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow);cursor:pointer;z-index:150;font-size:19px;border:0;transition:.15s}
+  .tw-fab:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .tweaks{position:fixed;right:22px;bottom:80px;width:288px;background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);z-index:150;padding:16px 18px;display:none}
+  .tweaks.show{display:block;animation:fade .2s ease}
+  .tweaks .tw-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+  .tweaks .tw-h b{font-size:14px}
+  .tweaks .tw-h .x{cursor:pointer;color:var(--faint);font-size:15px}
+  .tw-sec{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px}
+  .tw-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;font-size:13px;gap:10px}
+  .tw-row .seg{flex-shrink:0}
+  .tw-swatches{display:flex;gap:9px}
+  .tw-sw{width:28px;height:28px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.15s}
+  .tw-sw:hover{transform:scale(1.08)}
+  .tw-sw.on{border-color:var(--text)}
+
+  @media(max-width:1200px){.pgrid{grid-template-columns:repeat(2,1fr)}.role-grid{grid-template-columns:repeat(3,1fr)}.queue-grid{grid-template-columns:1fr}.contract-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:1100px){.grid-kpi{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.guardrail{grid-template-columns:1fr}.guardrail .chips{justify-content:flex-start}}
+  @media(max-width:760px){
+    .sidebar{display:none}
+    .topbar{height:auto;min-height:60px;padding:10px 14px;gap:8px;flex-wrap:wrap;align-items:center}
+    .crumb{white-space:nowrap;min-width:0;flex:1}
+    .search{order:3;flex:1 0 100%;max-width:none;margin-left:0}
+    .top-actions{margin-left:auto;gap:6px}
+    .env{padding:6px 9px}
+    .content{padding:16px 14px 48px}
+    .grid-kpi,.contract-grid,.pgrid,.role-grid,.grid-2b{grid-template-columns:1fr!important}
+    .page-head{align-items:flex-start}
+    .seg{max-width:100%;overflow:auto}
+    .guardrail{padding:14px}
+  }
+</style>
+</head>
+<body class="light">
+<div class="app">
+  <!-- ========== Sidebar ========== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">X</div>
+      <div><b>XAI Admin</b><small>管理中台 · v0.1</small></div>
+    </div>
+    <div class="nav-label">运营</div>
+    <div class="nav-item active" data-view="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      总览看板
+    </div>
+    <div class="nav-item" data-view="users">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M16.5 20a5.5 5.5 0 0 0-3-4.9"/></svg>
+      用户管理 <span class="tag">18.5K</span>
+    </div>
+    <div class="nav-item" data-view="boards">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      组织 / 空间
+    </div>
+    <div class="nav-label">功能与权益</div>
+    <div class="nav-item" data-view="features">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="1.6" fill="currentColor" stroke="none"/></svg>
+      功能管理 <span class="tag">11</span>
+    </div>
+    <div class="nav-label">AI</div>
+    <div class="nav-item" data-view="ai">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><rect x="7" y="7" width="10" height="10" rx="2.5"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+      AI 用量 &amp; 配额
+    </div>
+    <div class="nav-item" data-view="providers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h4M15 7h4a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-4M9 12h6"/></svg>
+      Provider 配置
+    </div>
+    <div class="nav-label">系统</div>
+    <div class="nav-item" data-view="billing">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+      订阅 / 计费
+    </div>
+    <div class="nav-item" data-view="audit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.4 8-8 9-4.6-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+      审计日志 <span class="count">3</span>
+    </div>
+    <div class="nav-item" data-view="roles">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h3a2 2 0 0 1 2 2v3M8 4H5a2 2 0 0 0-2 2v3M16 20h3a2 2 0 0 0 2-2v-3M8 20H5a2 2 0 0 1-2-2v-3"/><circle cx="12" cy="10" r="2.5"/><path d="M8.5 16a3.5 3.5 0 0 1 7 0"/></svg>
+      角色与权限
+    </div>
+    <div class="nav-item" data-view="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.9H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1A2 2 0 1 1 7.3 4.1l.1.1A1.6 1.6 0 0 0 10 3.3V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.6 1.6 0 0 0 20.7 10H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+      系统设置
+    </div>
+    <div class="side-foot">
+      <div class="av">JL</div>
+      <div class="meta"><b>Jinlong</b><br><span id="sideRole">超级管理员</span></div>
+    </div>
+  </aside>
+
+  <!-- ========== Main ========== -->
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">XAI <span style="opacity:.5">/</span> <b id="crumb">总览看板</b></div>
+      <label class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+        <input id="globalSearch" placeholder="搜索用户、功能、日志…" />
+        <span class="kbd">⌘K</span>
+      </label>
+      <div class="top-actions">
+        <div class="env"><span class="pulse"></span>Prototype · Mock</div>
+        <button class="icon-btn" title="告警"><span class="dot"></span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
+        </button>
+        <button class="icon-btn" id="themeBtn" title="切换主题">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="guardrail">
+        <div>
+          <b>Prototype Control Plane · PROPOSED</b>
+          <p>当前页面是 Admin 线的高保真控制台原型。所有数据与 mutation 均为本地 mock contract;真实落地前仍需确认独立 apps/admin 或隔离 /admin、CSP/env/deploy、服务端 RBAC 与审计 API。</p>
+        </div>
+        <div class="chips">
+          <span class="guard-chip warn">非生产后台</span>
+          <span class="guard-chip ok">浏览器无 service-role</span>
+          <span class="guard-chip ok">Provider 仅显示 secret handle</span>
+          <span class="guard-chip warn">写操作待 Workflow V2</span>
+        </div>
+      </div>
+      <!-- ===== Dashboard (multi-level) ===== -->
+      <section class="view active" id="view-dashboard">
+        <div class="page-head">
+          <div><h1>总览看板</h1><p>实时掌握增长、功能效率与 AI 成本 · 数据更新于 2 分钟前</p></div>
+          <div class="seg" id="dashTabs">
+            <button class="on" data-dtab="overview">概览</button>
+            <button data-dtab="growth">增长</button>
+            <button data-dtab="feature">功能效率</button>
+            <button data-dtab="aicost">AI 成本</button>
+            <button data-dtab="revenue">营收</button>
+          </div>
+        </div>
+
+        <!-- overview -->
+        <div class="dpane on" data-dpane="overview">
+          <div class="grid-kpi">
+            <div class="card kpi"><div class="lbl"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5"/></svg></span>总用户</div><div class="num">18,492</div><span class="delta up">▲ 12.4%</span><span class="sub">vs 上月</span></div>
+            <div class="card kpi"><div class="lbl"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>日活 DAU</div><div class="num">4,217</div><span class="delta up">▲ 6.8%</span><span class="sub">vs 昨日</span></div>
+            <div class="card kpi"><div class="lbl"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></span>今日 AI 调用</div><div class="num">86.3K</div><span class="delta up">▲ 18.2%</span><span class="sub">vs 昨日</span></div>
+            <div class="card kpi"><div class="lbl"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 6H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/></svg></span>今日 Token 成本</div><div class="num">$342</div><span class="delta good-down">▼ 4.1%</span><span class="sub">成本优化中</span></div>
+          </div>
+          <div class="q-sec-head"><h3>需要处理 · 运营队列</h3><span class="pill-alert">81 项待处理</span><span style="font-size:12px;color:var(--faint)">按重要度排序 · 让管理员一进来就知道做什么</span></div>
+          <div class="queue-grid" id="opsQueues"></div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-head"><div><h3>用户活跃趋势</h3><div class="sub">DAU 与 AI 调用量(近 30 天)</div></div><div class="seg"><button>7天</button><button class="on">30天</button><button>90天</button></div></div>
+              <svg class="chart" viewBox="0 0 680 230" preserveAspectRatio="none">
+                <defs><linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+                <line x1="0" y1="40" x2="680" y2="40" stroke="var(--border)"/><line x1="0" y1="95" x2="680" y2="95" stroke="var(--border)"/><line x1="0" y1="150" x2="680" y2="150" stroke="var(--border)"/><line x1="0" y1="205" x2="680" y2="205" stroke="var(--border)"/>
+                <path d="M10,165 L66,150 L122,158 L178,128 L234,138 L290,100 L346,112 L402,82 L458,96 L514,62 L570,76 L626,48 L670,40 L670,205 L10,205 Z" fill="url(#gA)"/>
+                <path d="M10,165 L66,150 L122,158 L178,128 L234,138 L290,100 L346,112 L402,82 L458,96 L514,62 L570,76 L626,48 L670,40" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="626" cy="48" r="4" fill="var(--accent)" stroke="var(--bg-elev)" stroke-width="2.5"/>
+              </svg>
+              <div class="axis-x"><span>5/01</span><span>5/06</span><span>5/11</span><span>5/16</span><span>5/21</span><span>5/26</span><span>今天</span></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h3>AI 用量分布</h3><div class="sub">按 Provider · 本月 412M tokens</div></div></div>
+              <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Gemini 3.1 Flash</span><b>47%</b></div><div class="track"><i style="width:47%;background:var(--accent)"></i></div></div>
+              <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>OpenAI GPT-4o</span><b>31%</b></div><div class="track"><i style="width:31%;background:var(--info)"></i></div></div>
+              <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--success)"></span>Claude Sonnet</span><b>18%</b></div><div class="track"><i style="width:18%;background:var(--success)"></i></div></div>
+              <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--faint)"></span>其他</span><b>4%</b></div><div class="track"><i style="width:4%;background:var(--faint)"></i></div></div>
+              <div class="health" style="margin-top:18px"><div class="h"><div class="k">AI 成功率</div><div class="v" style="color:var(--success)">99.4%</div></div><div class="h"><div class="k">平均延迟</div><div class="v">1.2s</div></div></div>
+            </div>
+          </div>
+          <div class="grid-2b">
+            <div class="card">
+              <div class="card-head"><h3>最近活动</h3><a style="color:var(--accent-2);font-size:12.5px;font-weight:600">查看全部 →</a></div>
+              <div class="feed-item"><span class="d" style="background:var(--danger)"></span><div><div class="tx">封禁用户 <b>spam_bot_91</b> · 触发滥用风控</div><div class="tm">2 分钟前 · by 风控系统</div></div></div>
+              <div class="feed-item"><span class="d" style="background:var(--warning)"></span><div><div class="tx">功能 <b>剪贴板历史</b> 灰度放量至 25%</div><div class="tm">31 分钟前 · by Jinlong</div></div></div>
+              <div class="feed-item"><span class="d" style="background:var(--info)"></span><div><div class="tx">Gemini provider 配额调至 <b>5M tokens/天</b></div><div class="tm">1 小时前 · by Jinlong</div></div></div>
+              <div class="feed-item"><span class="d" style="background:var(--success)"></span><div><div class="tx">新增 <b>Team</b> 订阅 · Olivia R.</div><div class="tm">2 小时前 · +$49/月</div></div></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>系统健康</h3><span class="badge b-success"><span class="bd"></span>全部正常</span></div>
+              <div class="health"><div class="h"><div class="k">API 延迟 (p95)</div><div class="v">142 ms</div></div><div class="h"><div class="k">错误率</div><div class="v">0.31%</div></div><div class="h"><div class="k">实时在线</div><div class="v">1,284</div></div><div class="h"><div class="k">待处理工单</div><div class="v" style="color:var(--warning)">7</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- growth -->
+        <div class="dpane" data-dpane="growth">
+          <div class="grid-kpi">
+            <div class="card kpi"><div class="lbl">本月新增</div><div class="num">2,041</div><span class="delta up">▲ 9.1%</span></div>
+            <div class="card kpi"><div class="lbl">激活率</div><div class="num">68.4%</div><span class="delta up">▲ 2.3%</span></div>
+            <div class="card kpi"><div class="lbl">次周留存</div><div class="num">41.2%</div><span class="delta up">▲ 1.1%</span></div>
+            <div class="card kpi"><div class="lbl">月流失率</div><div class="num">3.8%</div><span class="delta good-down">▼ 0.4%</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>新增与留存</h3><div class="sub">注册 → 激活 → 留存漏斗(近 30 天)</div></div></div>
+            <div class="bar-row"><div class="top"><span class="nm">注册</span><b>2,041</b></div><div class="track"><i style="width:100%;background:var(--accent)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm">完成引导</span><b>1,624 · 79.6%</b></div><div class="track"><i style="width:80%;background:var(--accent)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm">激活(创建首个 Board)</span><b>1,396 · 68.4%</b></div><div class="track"><i style="width:68%;background:var(--info)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm">次周留存</span><b>841 · 41.2%</b></div><div class="track"><i style="width:41%;background:var(--success)"></i></div></div>
+          </div>
+        </div>
+
+        <!-- feature efficiency -->
+        <div class="dpane" data-dpane="feature">
+          <div class="grid-kpi">
+            <div class="card kpi"><div class="lbl">人均使用功能数</div><div class="num">5.8</div><span class="delta up">▲ 0.6</span><span class="sub">个/周</span></div>
+            <div class="card kpi"><div class="lbl">最活跃功能</div><div class="num" style="font-size:20px">AI 写作助手</div><span class="sub">89% 渗透率</span></div>
+            <div class="card kpi"><div class="lbl">功能粘性 DAU/MAU</div><div class="num">34%</div><span class="delta up">▲ 3%</span></div>
+            <div class="card kpi"><div class="lbl">效率功能时长占比</div><div class="num">72%</div><span class="sub">vs 娱乐 28%</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-head"><div><h3>功能使用排行</h3><div class="sub">按调用量 · 近 30 天 · 主打效率类已置顶</div></div>
+                <div class="seg"><button class="on">全部</button><button>效率</button><button>AI</button></div></div>
+              <div class="col-h"><span></span><span>功能</span><span>使用量</span><span>调用</span><span>用户</span><span>渗透</span><span>环比</span></div>
+              <div id="featRank"></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h3>使用时段热力图</h3><div class="sub">效率高峰集中在工作日 9–18 点</div></div><select class="sel" id="heatFeat" style="padding:5px 10px;font-size:12px"></select></div>
+              <div class="heatwrap" id="heatmap"></div>
+              <div class="heat-legend">低<i style="background:var(--panel-2)"></i><i style="background:rgba(109,94,252,.28)"></i><i style="background:rgba(109,94,252,.5)"></i><i style="background:rgba(109,94,252,.74)"></i><i style="background:var(--accent)"></i>高</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ai cost -->
+        <div class="dpane" data-dpane="aicost">
+          <div class="grid-kpi">
+            <div class="card kpi"><div class="lbl">本月 AI 成本</div><div class="num">$4,660</div><span class="delta down">▲ 14%</span></div>
+            <div class="card kpi"><div class="lbl">人均成本</div><div class="num">$0.51</div><span class="delta good-down">▼ 6%</span></div>
+            <div class="card kpi"><div class="lbl">缓存命中率</div><div class="num">38%</div><span class="delta up">▲ 5%</span></div>
+            <div class="card kpi"><div class="lbl">毛利率</div><div class="num">71%</div><span class="delta up">▲ 2%</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>各 Provider 成本</h3><div class="sub">本月累计 · 含调用量与单价</div></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>OpenAI · 128M tokens</span><b>$2,180</b></div><div class="track"><i style="width:100%;background:var(--info)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Gemini · 194M tokens</span><b>$1,420</b></div><div class="track"><i style="width:65%;background:var(--accent)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--success)"></span>Claude · 74M tokens</span><b>$1,060</b></div><div class="track"><i style="width:49%;background:var(--success)"></i></div></div>
+          </div>
+        </div>
+
+        <!-- revenue -->
+        <div class="dpane" data-dpane="revenue">
+          <div class="grid-kpi">
+            <div class="card kpi"><div class="lbl">MRR 月经常性收入</div><div class="num">$38.2K</div><span class="delta up">▲ 11%</span></div>
+            <div class="card kpi"><div class="lbl">付费率</div><div class="num">7.4%</div><span class="delta up">▲ 0.5%</span></div>
+            <div class="card kpi"><div class="lbl">ARPPU</div><div class="num">$27.9</div><span class="delta up">▲ 3%</span></div>
+            <div class="card kpi"><div class="lbl">付费用户流失</div><div class="num">2.1%</div><span class="delta good-down">▼ 0.3%</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>套餐分布</h3><div class="sub">按付费用户数</div></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>Team ($49/月)</span><b>312 · 23%</b></div><div class="track"><i style="width:23%;background:var(--info)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Pro ($19/月)</span><b>1,056 · 77%</b></div><div class="track"><i style="width:77%;background:var(--accent)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--faint)"></span>Free</span><b>17,124</b></div><div class="track"><i style="width:100%;background:var(--faint)"></i></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Users ===== -->
+      <section class="view" id="view-users">
+        <div class="page-head">
+          <div><h1>用户管理</h1><p>共 18,492 名用户 · 本月新增 2,041</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">导出 CSV</button><button class="btn btn--sm btn--primary">+ 新建用户</button></div>
+        </div>
+        <div class="views" id="userViews"></div>
+        <div class="toolbar">
+          <label class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><input id="userSearch" placeholder="搜索姓名或邮箱…" /></label>
+          <div class="chips" id="userChips"></div>
+          <div class="spacer"></div>
+          <button class="btn btn--sm">列配置 ⚙</button>
+        </div>
+        <div class="bulkbar" id="bulkbar">已选 <b id="bulkCount">0</b> 项<div class="x"><button class="btn btn--sm">打标签</button><button class="btn btn--sm">导出</button><button class="btn btn--sm btn--danger" id="bulkBanBtn">批量封禁</button></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:40px"><input type="checkbox" id="selAll" /></th><th>用户</th><th>状态</th><th>套餐</th><th>本月 AI 用量</th><th>LLM 成本</th><th>最后活跃</th><th style="width:40px"></th></tr></thead>
+            <tbody id="userRows"></tbody>
+          </table>
+          <div class="tfoot"><span>显示 1–8 · 共 18,492 名用户</span><div class="pager"><button>‹</button><button class="on">1</button><button>2</button><button>3</button><button>…</button><button>2312</button><button>›</button></div></div>
+        </div>
+      </section>
+
+      <!-- ===== User Detail (page mode A/B) ===== -->
+      <section class="view" id="view-userdetail"></section>
+
+      <!-- ===== Feature Management ===== -->
+      <section class="view" id="view-features">
+        <div class="page-head">
+          <div><h1>功能管理</h1><p>统一管理功能的上线 / 灰度 / 下线,并为不同套餐设置可用配额 · 点任意功能进入管理面板</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">配额模板</button><button class="btn btn--sm btn--primary">+ 注册新功能</button></div>
+        </div>
+        <div class="grid-kpi" style="grid-template-columns:repeat(4,1fr)">
+          <div class="card kpi"><div class="lbl">已上线</div><div class="num" style="color:var(--success)">8</div><span class="sub">全量功能</span></div>
+          <div class="card kpi"><div class="lbl">灰度中</div><div class="num" style="color:var(--warning)">1</div><span class="sub">剪贴板历史 25%</span></div>
+          <div class="card kpi"><div class="lbl">已下线</div><div class="num" style="color:var(--faint)">2</div><span class="sub">冥想 / 宠物</span></div>
+          <div class="card kpi"><div class="lbl">付费墙功能</div><div class="num">6</div><span class="sub">仅 Pro/Team</span></div>
+        </div>
+        <div class="toolbar">
+          <label class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><input id="featSearch" placeholder="搜索功能…" /></label>
+          <select class="sel" id="featCat"><option value="">全部分类</option><option value="效率">效率</option><option value="AI">AI</option><option value="生活">生活</option></select>
+          <div class="spacer"></div>
+          <span style="font-size:12px;color:var(--faint)">配额列可点击编辑 · 开关即时上下线</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能</th><th style="width:90px">全局开关</th><th style="width:120px">发布范围</th><th style="text-align:center">Free</th><th style="text-align:center">Pro</th><th style="text-align:center">Team</th><th style="width:90px">管理</th></tr></thead>
+            <tbody id="featRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Providers ===== -->
+      <section class="view" id="view-providers">
+        <div class="page-head">
+          <div><h1>Provider 配置中心</h1><p>浏览器只读取服务端加密 secret handle 的状态;模型权限与路由策略均走 RBAC + 审计</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm" id="syncSecretsBtn">同步 secret handles</button><button class="btn btn--sm btn--primary" id="addProviderBtn">+ 接入 Provider</button></div>
+        </div>
+        <div class="contract-grid">
+          <div class="contract-card"><b>Secret material</b><span>真实密钥仅在服务端加密存储;前端不显示、不缓存、不写 localStorage。</span></div>
+          <div class="contract-card"><b>Mutation contract</b><span>Provider 开关、模型权限、路由策略必须先过 permission check。</span></div>
+          <div class="contract-card"><b>Audit append</b><span>每次配置变更追加 actor/action/target/IP/result 到审计表。</span></div>
+          <div class="contract-card"><b>Production blocker</b><span>真实接入依赖 xai-admin-data-contracts-rbac 与 server API。</span></div>
+        </div>
+        <div class="pgrid" id="providerCards"></div>
+        <div class="card" style="margin-bottom:22px">
+          <div class="card-head"><div><h3>套餐路由策略</h3><div class="sub">默认策略 → 套餐策略 → 组织覆盖 · 含成本/请求上限与超额行为(下层覆盖上层)</div></div>
+            <div class="seg"><button class="on">套餐策略</button><button>组织覆盖</button><button>成本策略</button></div></div>
+          <div class="table-wrap" style="border:0">
+            <table><thead><tr><th>套餐</th><th>默认模型</th><th>兜底模型</th><th>月度成本上限</th><th>请求上限</th><th>超额行为</th></tr></thead><tbody id="routingRows"></tbody></table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h3>模型 × 套餐 权限矩阵</h3><div class="sub">勾选 = 该套餐可调用此模型 · 点击单元格切换</div></div>
+            <div style="display:flex;gap:8px"><span class="spill s-on"><span class="bd"></span>启用</span><span class="spill s-off"><span class="bd"></span>停用</span></div></div>
+          <div class="table-wrap" style="border:0">
+            <table>
+              <thead><tr><th>模型</th><th>Provider</th><th>特性</th><th style="text-align:center;width:90px">Free</th><th style="text-align:center;width:90px">Pro</th><th style="text-align:center;width:90px">Team</th></tr></thead>
+              <tbody id="modelMatrix"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Roles & Permissions (RBAC) ===== -->
+      <section class="view" id="view-roles">
+        <div class="page-head">
+          <div><h1>角色与权限</h1><p>定义管理员角色,精确控制谁能操作哪些功能、模型与数据(RBAC)</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">权限模板</button><button class="btn btn--sm btn--primary">+ 新建角色</button></div>
+        </div>
+        <div class="actor-box">
+          <div>
+            <div class="who">当前操作者: <span id="actorName">Jinlong</span></div>
+            <div class="meta">权限模拟只影响本地原型;拒绝会写入失败审计,用于验证 allow/deny 体验。</div>
+          </div>
+          <select class="sel" id="actorRole"></select>
+        </div>
+        <div class="role-grid" id="roleCards"></div>
+        <div class="card">
+          <div class="card-head"><div><h3>权限矩阵</h3><div class="sub">每行包含不可变 permission key · 超级管理员锁定全选 · 点击单元格会写回 mock RBAC 并追加审计</div></div></div>
+          <div class="table-wrap" style="border:0">
+            <table><thead><tr id="permHead"></tr></thead><tbody id="permRows"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Placeholders ===== -->
+      <section class="view" id="view-boards">
+        <div class="page-head">
+          <div><h1>组织 / 空间</h1><p>多租户视角:管理组织、席位与用量,重点关注超额与催款</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">导出</button><button class="btn btn--sm btn--primary">+ 新建组织</button></div>
+        </div>
+        <div class="grid-kpi">
+          <div class="card kpi"><div class="lbl">组织总数</div><div class="num">312</div><span class="delta up">▲ 8</span><span class="sub">本月新增</span></div>
+          <div class="card kpi"><div class="lbl">席位 已用 / 总</div><div class="num">3,912<span style="font-size:15px;color:var(--faint)"> / 4,860</span></div><span class="sub">80.5% 使用率</span></div>
+          <div class="card kpi"><div class="lbl">超额组织</div><div class="num" style="color:var(--warning)">6</div><span class="sub">Token / 席位</span></div>
+          <div class="card kpi"><div class="lbl">催款中</div><div class="num" style="color:var(--danger)">9</div><span class="sub">付款失败</span></div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>组织</th><th>套餐</th><th>席位</th><th>本月成本</th><th>状态</th><th>所有者</th><th style="width:80px">操作</th></tr></thead><tbody id="orgRows"></tbody></table>
+        </div>
+      </section>
+      <section class="view" id="view-ai">
+        <div class="page-head">
+          <div><h1>AI 用量 &amp; 配额</h1><p>监控 token 消耗与成本,按套餐设默认配额,对高消耗用户单独调整或预警</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">导出用量</button><button class="btn btn--sm btn--primary">设置告警阈值</button></div>
+        </div>
+        <div class="grid-kpi">
+          <div class="card kpi"><div class="lbl">本月总用量</div><div class="num">412M</div><span class="delta up">▲ 16%</span><span class="sub">tokens</span></div>
+          <div class="card kpi"><div class="lbl">本月成本</div><div class="num">$4,660</div><span class="delta down">▲ 14%</span></div>
+          <div class="card kpi"><div class="lbl">人均用量</div><div class="num">45.7K</div><span class="sub">tokens/人</span></div>
+          <div class="card kpi"><div class="lbl">接近 / 超额用户</div><div class="num" style="color:var(--warning)">23</div><span class="sub">需关注</span></div>
+        </div>
+        <div class="sec-t">套餐默认配额(每月 token)</div>
+        <div class="qstrat">
+          <div class="qcard"><div class="pl"><span class="plan plan-free">Free</span><button class="btn btn--sm">编辑</button></div><div class="big">50K</div><div class="unit">超出 → 暂停 AI 功能</div><div class="ubar"><i style="width:34%;background:var(--success)"></i></div></div>
+          <div class="qcard"><div class="pl"><span class="plan plan-pro">Pro</span><button class="btn btn--sm">编辑</button></div><div class="big">5M</div><div class="unit">超出 → 降速 / 切低成本模型</div><div class="ubar"><i style="width:58%;background:var(--accent)"></i></div></div>
+          <div class="qcard"><div class="pl"><span class="plan plan-team">Team</span><button class="btn btn--sm">编辑</button></div><div class="big">50M</div><div class="unit">超出 → 可叠加购买包</div><div class="ubar"><i style="width:72%;background:var(--info)"></i></div></div>
+        </div>
+        <div class="card-head" style="margin-bottom:14px"><div><h3>消耗最高用户</h3><div class="sub">Top 消耗 · 可单独调整配额或预警</div></div><button class="btn btn--sm">查看全部</button></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>用户</th><th>套餐</th><th>用量 / 配额</th><th>状态</th><th>本月成本</th><th style="width:110px">操作</th></tr></thead><tbody id="aiConsumers"></tbody></table>
+        </div>
+      </section>
+      <section class="view" id="view-billing">
+        <div class="page-head"><div><h1>订阅 / 计费</h1><p>收入、套餐分布与最近交易 · 重点跟进付款失败</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">导出账单</button><button class="btn btn--sm btn--primary">收款设置</button></div></div>
+        <div class="grid-kpi">
+          <div class="card kpi"><div class="lbl">MRR 月经常收入</div><div class="num">$38.2K</div><span class="delta up">▲ 11%</span></div>
+          <div class="card kpi"><div class="lbl">付费组织</div><div class="num">1,284</div><span class="sub">试用 318</span></div>
+          <div class="card kpi"><div class="lbl">ARPPU</div><div class="num">$27.9</div><span class="delta up">▲ 3%</span></div>
+          <div class="card kpi"><div class="lbl">付款失败</div><div class="num" style="color:var(--danger)">9</div><span class="sub">催款中 $14.2K</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><div><h3>最近交易</h3><div class="sub">组织 · 金额 · 状态</div></div><a class="linkish">查看全部 →</a></div>
+            <div class="table-wrap" style="border:0"><table><thead><tr><th>组织</th><th>套餐</th><th>金额</th><th>状态</th><th>日期</th></tr></thead><tbody id="billRows"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>套餐分布</h3><div class="sub">按付费组织</div></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Pro $19/月</span><b>77%</b></div><div class="track"><i style="width:77%;background:var(--accent)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>Team $49/月</span><b>18%</b></div><div class="track"><i style="width:18%;background:var(--info)"></i></div></div>
+            <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent-2)"></span>Enterprise 自定义</span><b>5%</b></div><div class="track"><i style="width:5%;background:var(--accent-2)"></i></div></div>
+            <div class="health" style="margin-top:18px"><div class="h"><div class="k">本月新增收入</div><div class="v" style="color:var(--success)">+$3.8K</div></div><div class="h"><div class="k">净流失</div><div class="v">2.1%</div></div></div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-audit">
+        <div class="page-head">
+          <div><h1>审计日志</h1><p>不可篡改的操作流水 · 谁在何时对什么做了什么 · 留存 180 天</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm">导出 CSV</button></div>
+        </div>
+        <div class="toolbar">
+          <label class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><input id="auditSearch" placeholder="搜索操作人 / 操作 / 对象…" /></label>
+          <select class="sel" id="auditType"><option value="">全部类型</option><option value="create">新建 / 上线</option><option value="config">配置变更</option><option value="danger">高危操作</option><option value="auth">登录 / 认证</option><option value="billing">计费</option></select>
+          <select class="sel" id="auditRange"><option value="">全部时间</option><option value="today">今天</option><option value="7d">近 7 天</option><option value="30d">近 30 天</option></select>
+          <div class="spacer"></div>
+          <span style="font-size:12px;color:var(--faint)">🔒 日志只读 · 不可删改</span>
+        </div>
+        <div class="contract-grid">
+          <div class="contract-card"><b>Append-only</b><span>本地原型使用 unshift 模拟追加;生产需 hash-chain 或等价完整性保护。</span></div>
+          <div class="contract-card"><b>Failure visible</b><span>权限拒绝、未授权切换和 destructive action 失败同样进入审计。</span></div>
+          <div class="contract-card"><b>Mutation source</b><span>用户封禁、批量封禁、功能下线、Provider/RBAC/设置变更都会追加事件。</span></div>
+          <div class="contract-card"><b>Retention</b><span>原型展示 180 天口径;真实保留策略由 admin deploy/runbook 决定。</span></div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th style="width:160px">时间</th><th>操作人</th><th>操作</th><th>对象</th><th>IP</th><th style="width:90px">结果</th></tr></thead><tbody id="auditRows"></tbody></table>
+        </div>
+      </section>
+      <section class="view" id="view-settings">
+        <div class="page-head"><div><h1>系统设置</h1><p>组织信息、安全策略、通知 Webhook</p></div>
+          <div style="display:flex;gap:10px"><button class="btn btn--sm btn--primary">保存更改</button></div></div>
+        <div class="grid-2b" style="align-items:start">
+          <div class="card"><div class="card-head"><h3>组织信息</h3></div><div style="padding:4px 18px 14px">
+            <div class="setrow"><div class="sr-txt"><b>组织名称</b><span>显示在中台与邮件中</span></div><div class="sr-ctrl"><input class="sinput" value="XAI Inc." /></div></div>
+            <div class="setrow"><div class="sr-txt"><b>主域名</b><span>用于 SSO 与系统邮件</span></div><div class="sr-ctrl"><input class="sinput" value="xai.app" /></div></div>
+            <div class="setrow"><div class="sr-txt"><b>时区</b></div><div class="sr-ctrl"><select class="sselect"><option>Asia/Shanghai (UTC+8)</option><option>UTC</option><option>America/Los_Angeles</option></select></div></div>
+          </div></div>
+          <div class="card"><div class="card-head"><h3>安全</h3></div><div style="padding:4px 18px 14px">
+            <div class="setrow"><div class="sr-txt"><b>强制管理员 2FA</b><span>所有管理员下次登录必须绑定两步验证</span></div><div class="sr-ctrl"><div class="toggle on" data-set></div></div></div>
+            <div class="setrow"><div class="sr-txt"><b>会话超时</b><span>无操作自动登出</span></div><div class="sr-ctrl"><select class="sselect"><option>30 分钟</option><option>1 小时</option><option>8 小时</option></select></div></div>
+            <div class="setrow"><div class="sr-txt"><b>IP 白名单</b><span>仅允许指定网段访问中台</span></div><div class="sr-ctrl"><div class="toggle" data-set></div></div></div>
+            <div class="setrow"><div class="sr-txt"><b>单点登录 SSO</b><span>SAML / OIDC</span></div><div class="sr-ctrl"><div class="toggle on" data-set></div></div></div>
+          </div></div>
+        </div>
+        <div class="card" style="margin-top:16px"><div class="card-head"><h3>通知 / Webhook</h3><span class="sub" style="margin-left:auto">高危事件实时推送</span></div><div style="padding:4px 18px 14px">
+          <div class="setrow"><div class="sr-txt"><b>Webhook URL</b><span>事件以 POST JSON 推送到此地址(Slack / 飞书 / 自建)</span></div><div class="sr-ctrl"><input class="sinput" style="min-width:320px" value="https://hooks.slack.com/services/T0000/B0000/xxxx" /></div></div>
+          <div class="setrow"><div class="sr-txt"><b>异常登录告警</b><span>异地瞬移 / MFA 连续失败 / 新设备管理员</span></div><div class="sr-ctrl"><div class="toggle on" data-set></div></div></div>
+          <div class="setrow"><div class="sr-txt"><b>付款失败告警</b><span>扣款失败进入催款</span></div><div class="sr-ctrl"><div class="toggle on" data-set></div></div></div>
+          <div class="setrow"><div class="sr-txt"><b>用量超额告警</b><span>组织 Token / 席位 超额</span></div><div class="sr-ctrl"><div class="toggle" data-set></div></div></div>
+        </div></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ========== User Drawer ========== -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="row1"><div class="av" id="dAv">LM</div><div><h2 id="dName">李明</h2><div class="em" id="dEmail">liming@gmail.com</div></div><button class="close" id="dClose">✕</button></div>
+    <div class="drawer-actions"><button class="btn btn--sm">模拟登录</button><button class="btn btn--sm">重置密码</button><button class="btn btn--sm btn--danger" id="banBtn">封禁</button></div>
+  </div>
+  <div class="tabs"><button class="on" data-tab="overview">概览</button><button data-tab="usage">AI 用量</button><button data-tab="security">安全</button><button data-tab="log">操作日志</button></div>
+  <div class="drawer-body">
+    <div class="tabpane on" data-pane="overview">
+      <div class="kv"><div><div class="k">用户 ID</div><div class="v">usr_8f3a21</div></div><div><div class="k">状态</div><div class="v" id="dStatus">活跃</div></div><div><div class="k">套餐</div><div class="v" id="dPlan">Pro</div></div><div><div class="k">角色</div><div class="v">普通用户</div></div><div><div class="k">注册时间</div><div class="v">2025-11-08</div></div><div><div class="k">最后活跃</div><div class="v">5 分钟前</div></div><div><div class="k">Workspaces</div><div class="v">3 个</div></div><div><div class="k">登录设备</div><div class="v">2 台</div></div></div>
+      <div class="sec-t">本月 AI 用量</div>
+      <div class="usage-card"><div class="top"><span>1.24M / 5M tokens</span><b style="color:var(--accent-2)">24.8%</b></div><div class="track"><i style="width:24.8%;background:var(--accent)"></i></div></div>
+    </div>
+    <div class="tabpane" data-pane="usage">
+      <div class="sec-t">按 Provider</div>
+      <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Gemini</span><b>820K</b></div><div class="track"><i style="width:66%;background:var(--accent)"></i></div></div>
+      <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>OpenAI</span><b>310K</b></div><div class="track"><i style="width:25%;background:var(--info)"></i></div></div>
+      <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--success)"></span>Claude</span><b>110K</b></div><div class="track"><i style="width:9%;background:var(--success)"></i></div></div>
+    </div>
+    <div class="tabpane" data-pane="security"><div class="kv"><div><div class="k">两步验证</div><div class="v" style="color:var(--success)">已开启</div></div><div><div class="k">最近登录 IP</div><div class="v">103.21.x.x</div></div><div><div class="k">异常登录</div><div class="v">无</div></div><div><div class="k">登录失败 (7天)</div><div class="v">1 次</div></div></div></div>
+    <div class="tabpane" data-pane="log"><div class="timeline"><div class="ti"><span class="d"></span><div><div class="t">创建 board「产品路线图 Q3」</div><div class="tm">5 分钟前</div></div></div><div class="ti"><span class="d"></span><div><div class="t">调用 Gemini · 1,240 tokens</div><div class="tm">12 分钟前</div></div></div><div class="ti"><span class="d"></span><div><div class="t">升级到 Pro 套餐</div><div class="tm">昨天 14:22</div></div></div></div></div>
+  </div>
+</aside>
+
+<!-- ========== Feature Drawer ========== -->
+<aside class="drawer" id="fdrawer">
+  <div class="drawer-head">
+    <div class="row1"><div class="fic" id="fIcon">✍️</div><div><h2 id="fName">AI 写作助手</h2><div class="em" id="fCat">AI · ai-write</div></div><button class="close" id="fClose">✕</button></div>
+  </div>
+  <div class="drawer-body">
+    <div class="sec-t">全局状态</div>
+    <div class="seg-wide" id="fStatusSeg"><button data-st="on">已上线</button><button data-st="beta">灰度</button><button data-st="off">已下线</button></div>
+    <div class="sec-t">灰度发布范围</div>
+    <div class="slider"><i id="fSliderFill" style="width:100%"></i><span class="knob" id="fSliderKnob" style="left:100%"></span></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--faint)"><span>0%</span><span id="fRollout" style="color:var(--accent-2);font-weight:700">全量 100%</span><span>100%</span></div>
+
+    <div class="sec-t">灰度人群规则</div>
+    <div id="fGrayRules"></div>
+
+    <div class="sec-t">分套餐配额(次 / 月)</div>
+    <div class="qrow"><div class="ql"><span class="plan plan-free">Free</span>免费版</div><div class="stepper" data-tier="free"><button data-d="-1">−</button><span class="val">20</span><button data-d="1">+</button></div></div>
+    <div class="qrow"><div class="ql"><span class="plan plan-pro">Pro</span>专业版</div><div class="stepper" data-tier="pro"><button data-d="-1">−</button><span class="val">500</span><button data-d="1">+</button></div></div>
+    <div class="qrow"><div class="ql"><span class="plan plan-team">Team</span>团队版</div><div class="stepper" data-tier="team"><button data-d="-1">−</button><span class="val">无限</span><button data-d="1">+</button></div></div>
+
+    <div class="sec-t">依赖项</div>
+    <div id="fDeps"></div>
+
+    <div class="sec-t">本月使用</div>
+    <div class="kv"><div><div class="k">调用次数</div><div class="v" id="fUses">128,400</div></div><div><div class="k">使用用户</div><div class="v" id="fUsers">8,240</div></div><div><div class="k">渗透率</div><div class="v" id="fPen">89%</div></div><div><div class="k">人均频次</div><div class="v" id="fAvg">15.6 次</div></div></div>
+
+    <div class="sec-t">最近变更</div>
+    <div class="timeline"><div class="ti"><span class="d"></span><div><div class="t">Pro 配额 300 → 500 次/月</div><div class="tm">3 天前 · by Jinlong</div></div></div><div class="ti"><span class="d"></span><div><div class="t">全量上线</div><div class="tm">2 周前</div></div></div></div>
+  </div>
+</aside>
+
+<!-- ========== Org Drawer ========== -->
+<aside class="drawer" id="odrawer">
+  <div class="drawer-head">
+    <div class="row1"><div class="av" id="oAv" style="border-radius:11px">AR</div><div><h2 id="oName">Acme Robotics</h2><div class="em" id="oMeta"></div></div><button class="close" id="oClose">✕</button></div>
+    <div class="drawer-actions"><button class="btn btn--sm">升级套餐</button><button class="btn btn--sm">调整席位</button><button class="btn btn--sm btn--danger" id="oTransferBtn">转移所有权</button></div>
+  </div>
+  <div class="tabs" id="oTabs"><button class="on" data-otab="overview">概览</button><button data-otab="members">成员</button><button data-otab="usage">用量</button><button data-otab="bill">账单</button></div>
+  <div class="drawer-body">
+    <div class="tabpane on" data-opane="overview">
+      <div class="kv" id="oKv"></div>
+      <div class="sec-t">席位使用</div>
+      <div class="usage-card"><div class="top"><span id="oSeatTxt">52 / 40 席位</span><b id="oSeatPct">130%</b></div><div class="track"><i id="oSeatBar"></i></div></div>
+    </div>
+    <div class="tabpane" data-opane="members"><div id="oMembers"></div></div>
+    <div class="tabpane" data-opane="usage"><div class="sec-t">本月 Token(按成员 Top)</div><div id="oUsage"></div></div>
+    <div class="tabpane" data-opane="bill"><div class="sec-t">最近账单</div><div id="oBill"></div></div>
+  </div>
+</aside>
+
+<!-- ========== Confirm Modal + Toast ========== -->
+<div class="modal-wrap" id="confirmModal">
+  <div class="modal-backdrop" id="cmBackdrop"></div>
+  <div class="modal-card">
+    <div class="mc-body">
+      <div class="mc-icon danger" id="cmIcon">⚠️</div>
+      <h3 id="cmTitle">确认操作？</h3>
+      <p id="cmBody"></p>
+      <div class="mc-confirm" id="cmTypewrap" style="display:none">
+        <div id="cmTypeLabel" style="font-size:12px;color:var(--faint);margin-bottom:6px"></div>
+        <input class="cm-input" id="cmInput" />
+      </div>
+    </div>
+    <div class="mc-foot"><button class="btn btn--sm" id="cmCancel">取消</button><button class="btn cm-danger" id="cmConfirm">确认</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ========== Tweaks Panel ========== -->
+<button class="tw-fab" id="twFab" title="主题调校 Tweaks">🎨</button>
+<div class="tweaks" id="tweaks">
+  <div class="tw-h"><b>主题调校 · Tweaks</b><span class="x" id="twClose">✕</span></div>
+  <div style="font-size:12px;color:var(--faint)">OKLCH 单变量换肤 · 实时生效</div>
+  <div class="tw-sec">外观</div>
+  <div class="tw-row"><span>主色调</span><div class="tw-swatches" id="twAccent"></div></div>
+  <div class="tw-row"><span>密度</span><div class="seg" id="twDensity"><button data-v="comfortable" class="on">舒适</button><button data-v="compact">紧凑</button></div></div>
+  <div class="tw-row"><span>主题</span><div class="seg" id="twTheme"><button data-v="light" class="on">浅色</button><button data-v="dark">深色</button></div></div>
+  <div class="tw-sec">布局探索 (A·B)</div>
+  <div class="tw-row"><span>总览首屏</span><div class="seg" id="twOverview"><button data-v="queue" class="on">队列优先</button><button data-v="kpi">指标优先</button></div></div>
+  <div class="tw-row"><span>页面宽度</span><div class="seg" id="twWidth"><button data-v="full" class="on">全宽</button><button data-v="center">居中</button></div></div>
+  <div class="tw-row"><span>用户详情</span><div class="seg" id="twUsers"><button data-v="drawer" class="on">抽屉</button><button data-v="page">整页</button></div></div>
+</div>
+
+<script>
+  const CURRENT_ACTOR={name:"Jinlong",role:"super",ip:"103.21.7.5"};
+
+  // ===== Users =====
+  const USERS=[
+    {n:"Diego Vega",e:"diego@acme.io",s:"活跃",p:"Enterprise",u:6.2,c:"#f0a868",t:"8 分钟前",days:0,cost:412,mfa:false,risk:"high",role:"管理员",over:true},
+    {n:"李明",e:"liming@gmail.com",s:"活跃",p:"Pro",u:1.24,c:"#6d5efc",t:"5 分钟前",days:0,cost:18,mfa:true,risk:null,role:"成员"},
+    {n:"Sarah Chen",e:"sarah.c@outlook.com",s:"活跃",p:"Team",u:4.8,c:"#fb7185",t:"2 小时前",days:0,cost:182,mfa:true,risk:null,role:"管理员",over:true},
+    {n:"王伟",e:"wangwei@163.com",s:"活跃",p:"Free",u:0.082,c:"#34d399",t:"1 天前",days:1,cost:0,mfa:false,risk:null,role:"成员"},
+    {n:"spam_bot_91",e:"temp@mail.ru",s:"已封禁",p:"Free",u:0,c:"#71717a",t:"3 天前",days:3,cost:0,mfa:false,risk:"high",role:"成员"},
+    {n:"James Park",e:"jpark@company.io",s:"待验证",p:"Pro",u:0.34,c:"#60a5fa",t:"6 小时前",days:0,cost:5,mfa:false,risk:"watch",role:"成员"},
+    {n:"张晓",e:"zhangx@qq.com",s:"活跃",p:"Free",u:0.156,c:"#fbbf24",t:"22 分钟前",days:0,cost:2,mfa:true,risk:null,role:"成员"},
+    {n:"Mehmet Y.",e:"mehmet@startup.co",s:"休眠",p:"Pro",u:0.012,c:"#a78bfa",t:"48 天前",days:48,cost:1,mfa:true,risk:null,role:"管理员"},
+    {n:"Olivia R.",e:"olivia@design.studio",s:"活跃",p:"Team",u:3.1,c:"#22d3ee",t:"刚刚",days:0,cost:118,mfa:true,risk:null,role:"所有者",over:true},
+    {n:"Theo Mraz",e:"theo@northwind.com",s:"休眠",p:"Pro",u:0.02,c:"#8fbf6a",t:"91 天前",days:91,cost:1,mfa:true,risk:null,role:"安全"},
+  ];
+  const BADGE={"活跃":"b-success","待验证":"b-warning","已封禁":"b-danger","休眠":"b-muted"};
+  const PLAN={"Free":"plan-free","Pro":"plan-pro","Team":"plan-team","Enterprise":"plan-ent"};
+  const initials=n=>{const p=n.trim().split(/\s+/);return (p.length>1?p[0][0]+p[1][0]:n.slice(0,2)).toUpperCase();};
+  const fmtM=u=>u>=1?u.toFixed(2)+"M":(u*1000).toFixed(0)+"K";
+  const tbody=document.getElementById("userRows");
+  const VIEWS=[
+    {k:"all",label:"全部",pred:()=>true},
+    {k:"active",label:"活跃",pred:u=>u.s==="活跃"},
+    {k:"pending",label:"待验证",pred:u=>u.s==="待验证"},
+    {k:"banned",label:"已封禁",pred:u=>u.s==="已封禁"},
+    {k:"over",label:"超额",pred:u=>u.over===true},
+    {k:"highcost",label:"高成本",pred:u=>u.cost>=100},
+    {k:"dormant",label:"30天未登录",pred:u=>u.days>30},
+  ];
+  const UCHIPS=[{k:"Pro",label:"Pro"},{k:"Enterprise",label:"Enterprise"},{k:"admin",label:"管理员"},{k:"risk",label:"高风险"},{k:"nomfa",label:"无 MFA"}];
+  let activeView="all"; const activeChips=new Set();
+  function chipPass(u){
+    const plans=[...activeChips].filter(c=>c==="Pro"||c==="Enterprise");
+    if(plans.length && !plans.includes(u.p)) return false;
+    if(activeChips.has("admin") && !(u.role==="管理员"||u.role==="所有者")) return false;
+    if(activeChips.has("risk") && u.risk!=="high") return false;
+    if(activeChips.has("nomfa") && u.mfa!==false) return false;
+    return true;
+  }
+  function renderUserViews(){
+    const vb=document.getElementById("userViews"); if(!vb) return; vb.innerHTML="";
+    VIEWS.forEach(v=>{
+      const n=USERS.filter(v.pred).length;
+      const el=document.createElement("button"); el.className="view-tab"+(activeView===v.k?" on":"");
+      el.innerHTML=`${v.label} <span class="vc">${n}</span>`;
+      el.addEventListener("click",()=>{activeView=v.k;renderUserViews();renderUsers();});
+      vb.appendChild(el);
+    });
+    const cb=document.getElementById("userChips"); cb.innerHTML="";
+    UCHIPS.forEach(c=>{
+      const el=document.createElement("button"); el.className="fchip"+(activeChips.has(c.k)?" on":"");
+      el.textContent=c.label;
+      el.addEventListener("click",()=>{activeChips.has(c.k)?activeChips.delete(c.k):activeChips.add(c.k);renderUserViews();renderUsers();});
+      cb.appendChild(el);
+    });
+  }
+  function renderUsers(){
+    const q=document.getElementById("userSearch").value.toLowerCase();
+    const view=VIEWS.find(v=>v.k===activeView);
+    tbody.innerHTML="";
+    const rows=USERS.filter(u=>(!q||u.n.toLowerCase().includes(q)||u.e.toLowerCase().includes(q))&&view.pred(u)&&chipPass(u));
+    if(!rows.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--faint);padding:28px">没有符合条件的用户</td></tr>';return;}
+    rows.forEach(u=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td><input type="checkbox" class="rowck" value="${u.e}"/></td>
+        <td><div class="u"><div class="av" style="background:linear-gradient(135deg,${u.c},${u.c}aa)">${initials(u.n)}</div><div><div class="nm">${u.n}</div><div class="em">${u.e}</div></div></div></td>
+        <td><span class="badge ${BADGE[u.s]}"><span class="bd"></span>${u.s}</span></td>
+        <td><span class="plan ${PLAN[u.p]}">${u.p}</span></td>
+        <td><div class="usage">${fmtM(u.u)} tokens ${u.over?'<span class="badge b-warning" style="padding:1px 6px;font-size:10px;margin-left:4px">超额</span>':''}<div class="mini"><i style="width:${Math.min(100,u.u/5*100)}%"></i></div></div></td>
+        <td class="usage" style="font-weight:600;color:${u.cost>=100?'var(--warning)':'var(--text)'}">$${u.cost}</td>
+        <td style="color:var(--muted)">${u.t}</td><td><span class="row-more">⋯</span></td>`;
+      tr.querySelector(".rowck").addEventListener("click",e=>{e.stopPropagation();updateBulk();});
+      tr.addEventListener("click",()=>openUser(u));
+      tbody.appendChild(tr);
+    });
+  }
+  document.getElementById("userSearch").addEventListener("input",renderUsers);
+  renderUserViews(); renderUsers();
+  function selectedUsers(){return [...document.querySelectorAll(".rowck")].filter(c=>c.checked).map(c=>USERS.find(u=>u.e===c.value)).filter(Boolean);}
+  function updateBulk(){const n=selectedUsers().length;document.getElementById("bulkCount").textContent=n;document.getElementById("bulkbar").classList.toggle("show",n>0);}
+  document.getElementById("selAll").addEventListener("change",e=>{document.querySelectorAll(".rowck").forEach(c=>c.checked=e.target.checked);updateBulk();});
+
+  // ===== Features (analytics + management) =====
+  const CATCOLOR={"AI":"var(--accent)","效率":"var(--info)","生活":"var(--success)"};
+  const FEATURES=[
+    {key:"ai-write",  ic:"✍️", name:"AI 写作助手", cat:"AI",   status:"on",  rollout:100, uses:128400, users:8240, trend:22,  q:{free:20, pro:500, team:-1}},
+    {key:"smart-org", ic:"🗂️", name:"智能整理",     cat:"效率", status:"on",  rollout:100, uses:96200,  users:6910, trend:14,  q:{free:50, pro:-1,  team:-1}},
+    {key:"board",     ic:"📋", name:"看板 / Board", cat:"效率", status:"on",  rollout:100, uses:88100,  users:7320, trend:9,   q:{free:3,  pro:50,  team:-1}},
+    {key:"ai-sum",    ic:"📝", name:"AI 总结",      cat:"AI",   status:"on",  rollout:100, uses:74600,  users:5980, trend:31,  q:{free:10, pro:300, team:-1}},
+    {key:"calendar",  ic:"📅", name:"日历日程",     cat:"效率", status:"on",  rollout:100, uses:61200,  users:5210, trend:6,   q:{free:-1, pro:-1,  team:-1}},
+    {key:"labels",    ic:"🏷️", name:"智能标签",     cat:"效率", status:"on",  rollout:100, uses:52800,  users:4830, trend:11,  q:{free:100,pro:-1,  team:-1}},
+    {key:"focus",     ic:"🍅", name:"专注番茄钟",   cat:"效率", status:"on",  rollout:100, uses:41300,  users:3120, trend:18,  q:{free:-1, pro:-1,  team:-1}},
+    {key:"ai-cube",   ic:"🧊", name:"AI Cube",      cat:"AI",   status:"on",  rollout:100, uses:33900,  users:2870, trend:27,  q:{free:5,  pro:100, team:-1}},
+    {key:"clipboard", ic:"📎", name:"剪贴板历史",   cat:"效率", status:"beta",rollout:25,  uses:18700,  users:1240, trend:48,  q:{free:30, pro:200, team:-1}},
+    {key:"meditation",ic:"🧘", name:"冥想空间",     cat:"生活", status:"off", rollout:0,   uses:4200,   users:610,  trend:-12, q:{free:0,  pro:-1,  team:-1}},
+    {key:"pet",       ic:"🐾", name:"桌面宠物",     cat:"生活", status:"off", rollout:0,   uses:2100,   users:380,  trend:-8,  q:{free:0,  pro:-1,  team:-1}},
+  ];
+  const ACTIVE_BASE=9200;
+  const fmtN=n=>n>=1000?(n/1000).toFixed(n>=10000?0:1)+"K":n;
+  const qLabel=v=>v===-1?"无限":v===0?"—":v+" 次/月";
+
+  // -- dashboard: feature ranking --
+  function renderRank(){
+    const box=document.getElementById("featRank"); box.innerHTML="";
+    const max=Math.max(...FEATURES.map(f=>f.uses));
+    FEATURES.slice().sort((a,b)=>b.uses-a.uses).forEach((f,i)=>{
+      const pen=Math.round(f.users/ACTIVE_BASE*100);
+      const col=CATCOLOR[f.cat];
+      const dcls=f.trend>=0?"up":"down", darrow=f.trend>=0?"▲":"▼";
+      const r=document.createElement("div"); r.className="rank";
+      r.innerHTML=`<span class="rk">${i+1}</span>
+        <span class="rk-nm"><span class="dot" style="background:${col}"></span>${f.ic} ${f.name}</span>
+        <div class="rk-bar"><i style="width:${Math.round(f.uses/max*100)}%;background:${col}"></i></div>
+        <span class="rk-v">${fmtN(f.uses)} 次</span>
+        <span class="rk-u">${f.users.toLocaleString()} 人</span>
+        <span class="rk-p">${pen}%</span>
+        <span class="rk-h"><span class="delta ${dcls}">${darrow}${Math.abs(f.trend)}%</span></span>`;
+      box.appendChild(r);
+    });
+  }
+  // -- dashboard: heatmap --
+  function renderHeat(featKey){
+    const hm=document.getElementById("heatmap"); if(!hm) return;
+    const seed=featKey?[...featKey].reduce((a,c)=>a+c.charCodeAt(0),0):0;
+    const slots=["0","3","6","9","12","15","18","21"], days=["周一","周二","周三","周四","周五","周六","周日"];
+    const colors=["var(--panel-2)","rgba(109,94,252,.28)","rgba(109,94,252,.5)","rgba(109,94,252,.74)","var(--accent)"];
+    let h='<div class="heat-lbl"></div>';
+    slots.forEach(s=>h+=`<div class="heat-lbl" style="text-align:center">${s}</div>`);
+    days.forEach((dy,d)=>{
+      h+=`<div class="heat-lbl">${dy}</div>`;
+      for(let s=0;s<8;s++){
+        let base=[0,0,1,3,4,4,3,1][s];
+        if(d>=5) base=Math.max(0,base-2);
+        let v=Math.min(4,Math.max(0, base + (((d*3+s+seed)%4===0)?1:0) - ((seed%5===0&&s<2)?1:0)));
+        h+=`<div class="heat-cell" style="background:${colors[v]}" title="${dy} ${slots[s]}时 · 强度 ${v}/4"></div>`;
+      }
+    });
+    hm.innerHTML=h;
+  }
+
+  // -- feature management table --
+  function renderFeatTable(){
+    const box=document.getElementById("featRows"); box.innerHTML="";
+    const q=document.getElementById("featSearch").value.toLowerCase();
+    const cf=document.getElementById("featCat").value;
+    FEATURES.filter(f=>(!q||f.name.toLowerCase().includes(q)||f.key.includes(q))&&(!cf||f.cat===cf)).forEach(f=>{
+      const on=f.status!=="off";
+      let scope = f.status==="off" ? `<span class="spill s-off"><span class="bd"></span>已下线</span>`
+                : f.status==="beta" ? `<span class="spill s-beta"><span class="bd"></span>灰度 ${f.rollout}%</span>`
+                : `<span class="spill s-on"><span class="bd"></span>全量</span>`;
+      const qcell=v=>`<td style="text-align:center"><span class="qty ${v===-1?'inf':v===0?'zero':''}">${v===-1?'无限':v===0?'—':v}</span></td>`;
+      const tr=document.createElement("tr"); if(!on) tr.className="dim"; tr.dataset.fkey=f.key;
+      tr.innerHTML=`<td><div class="u"><div class="fic">${f.ic}</div><div><div class="nm">${f.name}</div><div class="em">${f.cat} · ${f.key}</div></div></div></td>
+        <td><div class="toggle ${on?'on':''}"></div></td>
+        <td>${scope}</td>${qcell(f.q.free)}${qcell(f.q.pro)}${qcell(f.q.team)}
+        <td><button class="btn btn--sm">管理</button></td>`;
+      tr.querySelector(".toggle").addEventListener("click",e=>{e.stopPropagation();
+        if(f.status!=="off"){
+          openConfirm({title:"下线「"+f.name+"」？",body:"下线后所有套餐用户将不可见该功能。高危功能开关需输入确认词,并会追加审计记录。",tone:"warning",requireType:"OFFLINE",confirmLabel:"下线",onConfirm:()=>setFeatureStatus(f,"off",0)});
+        }else{
+          setFeatureStatus(f,"on",100);
+        }
+      });
+      tr.addEventListener("click",()=>openFeature(f));
+      box.appendChild(tr);
+    });
+  }
+  ["featSearch","featCat"].forEach(id=>document.getElementById(id).addEventListener("input",renderFeatTable));
+
+  // ===== Providers =====
+  const PROVIDERS=[
+    {key:"gemini", name:"Google Gemini", color:"#6d5efc", status:"on", secretHandle:"handle://admin/provider/gemini/live", secretState:"verified", rotation:"14 天前", usage:"194M", cost:"$1,420", def:"gemini-3.1-flash-lite", models:[
+      {id:"gemini-3.1-flash-lite", tag:"极快·省", tiers:{free:1,pro:1,team:1}},
+      {id:"gemini-3.1-flash",      tag:"均衡",    tiers:{free:0,pro:1,team:1}},
+      {id:"gemini-3.1-pro",        tag:"高质量",  tiers:{free:0,pro:0,team:1}},
+    ]},
+    {key:"openai", name:"OpenAI", color:"#60a5fa", status:"on", secretHandle:"handle://admin/provider/openai/live", secretState:"verified", rotation:"7 天前", usage:"128M", cost:"$2,180", def:"gpt-4o-mini", models:[
+      {id:"gpt-4o-mini", tag:"快·省", tiers:{free:1,pro:1,team:1}},
+      {id:"gpt-4o",      tag:"旗舰",  tiers:{free:0,pro:1,team:1}},
+      {id:"o3-mini",     tag:"推理",  tiers:{free:0,pro:0,team:1}},
+    ]},
+    {key:"claude", name:"Anthropic Claude", color:"#34d399", status:"on", secretHandle:"handle://admin/provider/claude/live", secretState:"verified", rotation:"21 天前", usage:"74M", cost:"$1,060", def:"claude-haiku-4.5", models:[
+      {id:"claude-haiku-4.5",  tag:"快",   tiers:{free:1,pro:1,team:1}},
+      {id:"claude-sonnet-4.6", tag:"均衡", tiers:{free:0,pro:1,team:1}},
+      {id:"claude-opus-4.8",   tag:"最强", tiers:{free:0,pro:0,team:1}},
+    ]},
+    {key:"deepseek", name:"DeepSeek", color:"#71717a", status:"off", secretHandle:"not-configured", secretState:"missing", rotation:"—", usage:"—", cost:"—", def:"—", models:[
+      {id:"deepseek-v3", tag:"省", tiers:{free:0,pro:0,team:0}},
+    ]},
+  ];
+  function renderProviders(){
+    const cards=document.getElementById("providerCards"); cards.innerHTML="";
+    PROVIDERS.forEach(p=>{
+      const on=p.status==="on";
+      const c=document.createElement("div"); c.className="pcard"+(on?"":" off");
+      c.innerHTML=`<div class="pc-head"><div class="pc-nm"><span class="dot" style="width:11px;height:11px;background:${p.color}"></span>${p.name}</div><div class="toggle ${on?'on':''}"></div></div>
+        <div class="secret-state ${p.secretState==='missing'?'muted-action':''}"><span class="bd" style="background:${p.secretState==='missing'?'var(--faint)':'var(--success)'}"></span>${p.secretState==='missing'?'未配置 secret handle':'服务端 secret handle 已验证'}</div>
+        <div class="secret-handle ${p.secretState==='missing'?'locked':''}">${p.secretHandle}</div>
+        <div class="pc-stats"><span>本月 <b>${p.usage}</b> tokens</span><span>成本 <b>${p.cost}</b></span><span>默认 <b>${p.def}</b></span></div>
+        <div class="status-line"><span>最近轮换 ${p.rotation}</span><span>浏览器无密钥材料</span></div>
+        <button class="btn btn--sm">管理 handle 与限速</button>`;
+      c.querySelector(".toggle").addEventListener("click",e=>{
+        e.stopPropagation();
+        if(p.status==="on"){
+          openConfirm({title:"停用 "+p.name+"？",body:"停用后路由会跳到兜底模型。Provider 变更必须写入审计。",tone:"warning",requireType:"PROVIDER",confirmLabel:"停用",onConfirm:()=>setProviderStatus(p,"off")});
+        }else{
+          setProviderStatus(p,"on");
+        }
+      });
+      cards.appendChild(c);
+    });
+    const mx=document.getElementById("modelMatrix"); mx.innerHTML="";
+    PROVIDERS.forEach(p=>p.models.forEach(m=>{
+      const cell=on=>`<td style="text-align:center"><span class="check ${on?'on':''}">${on?'✓':''}</span></td>`;
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td style="font-family:ui-monospace,Menlo,monospace;font-weight:600">${m.id}</td>
+        <td><span class="dot" style="display:inline-block;background:${p.color};margin-right:7px"></span>${p.name}</td>
+        <td><span class="spill s-on" style="background:var(--panel-2);color:var(--muted)">${m.tag}</span></td>
+        ${cell(m.tiers.free)}${cell(m.tiers.pro)}${cell(m.tiers.team)}`;
+      tr.querySelectorAll(".check").forEach((ch,i)=>ch.addEventListener("click",()=>{
+        const tier=["free","pro","team"][i];
+        setModelTier(p,m,tier,!m.tiers[tier]);
+      }));
+      mx.appendChild(tr);
+    }));
+  }
+
+  // ===== User drawer =====
+  const drawer=document.getElementById("drawer"),fdrawer=document.getElementById("fdrawer"),odrawer=document.getElementById("odrawer"),scrim=document.getElementById("scrim");
+  let currentUser=null;
+  let currentFeature=null;
+  function openUser(u){
+    if(userLayout==="page"){ showUserDetail(u); return; }
+    currentUser=u;
+    const a=document.getElementById("dAv");a.textContent=initials(u.n);a.style.background=`linear-gradient(135deg,${u.c},${u.c}aa)`;
+    document.getElementById("dName").textContent=u.n;document.getElementById("dEmail").textContent=u.e;
+    document.getElementById("dStatus").textContent=u.s;document.getElementById("dPlan").textContent=u.p;
+    drawer.classList.add("show");scrim.classList.add("show");
+  }
+  function openFeature(f){
+    currentFeature=f;
+    document.getElementById("fIcon").textContent=f.ic;
+    document.getElementById("fName").textContent=f.name;
+    document.getElementById("fCat").textContent=f.cat+" · "+f.key;
+    document.querySelectorAll("#fStatusSeg button").forEach(b=>b.classList.toggle("on",b.dataset.st===f.status));
+    const fill=document.getElementById("fSliderFill"),knob=document.getElementById("fSliderKnob");
+    fill.style.width=f.rollout+"%";knob.style.left=f.rollout+"%";
+    document.getElementById("fRollout").textContent=f.rollout===100?"全量 100%":f.rollout===0?"未发布 0%":"灰度 "+f.rollout+"%";
+    const vals=document.querySelectorAll("#fdrawer .stepper");
+    vals[0].querySelector(".val").textContent=qLabelShort(f.q.free);
+    vals[1].querySelector(".val").textContent=qLabelShort(f.q.pro);
+    vals[2].querySelector(".val").textContent=qLabelShort(f.q.team);
+    document.getElementById("fUses").textContent=f.uses.toLocaleString();
+    document.getElementById("fUsers").textContent=f.users.toLocaleString();
+    document.getElementById("fPen").textContent=Math.round(f.users/ACTIVE_BASE*100)+"%";
+    document.getElementById("fAvg").textContent=(f.uses/f.users).toFixed(1)+" 次";
+    renderFeatureExtras(f);
+    fdrawer.classList.add("show");scrim.classList.add("show");
+  }
+  const qLabelShort=v=>v===-1?"无限":v===0?"0":String(v);
+  function closeDrawers(){drawer.classList.remove("show");fdrawer.classList.remove("show");odrawer.classList.remove("show");scrim.classList.remove("show");}
+  document.getElementById("dClose").addEventListener("click",closeDrawers);
+  document.getElementById("fClose").addEventListener("click",closeDrawers);
+  scrim.addEventListener("click",closeDrawers);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawers();});
+  document.querySelectorAll("#drawer .tabs button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll("#drawer .tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    document.querySelectorAll("#drawer .tabpane").forEach(p=>p.classList.toggle("on",p.dataset.pane===b.dataset.tab));
+  }));
+  // feature drawer interactions
+  document.querySelectorAll("#fStatusSeg button").forEach(b=>b.addEventListener("click",()=>{
+    if(!currentFeature) return;
+    const ro=b.dataset.st==="on"?100:b.dataset.st==="beta"?25:0;
+    if(b.dataset.st==="off"){
+      openConfirm({title:"下线「"+currentFeature.name+"」？",body:"抽屉内下线同样属于高危操作,需要确认词并写入审计。",tone:"warning",requireType:"OFFLINE",confirmLabel:"下线",onConfirm:()=>setFeatureStatus(currentFeature,"off",0)});
+    }else{
+      setFeatureStatus(currentFeature,b.dataset.st,ro);
+    }
+  }));
+  document.querySelectorAll("#fdrawer .stepper button").forEach(btn=>btn.addEventListener("click",()=>{
+    if(!currentFeature || !requirePerm("quota.write","调整功能配额")) return;
+    const wrap=btn.parentElement, tier=wrap.dataset.tier, span=wrap.querySelector(".val");
+    const before=currentFeature.q[tier];
+    let next=before===-1 ? (btn.dataset.d==="-1"?500:-1) : Math.max(0,before+parseInt(btn.dataset.d)*10);
+    if(next>=1000) next=-1;
+    currentFeature.q[tier]=next;
+    span.textContent=qLabelShort(next);
+    addAudit({type:"config",act:"配额调整",obj:`${currentFeature.name} ${tier} ${qLabelShort(before)}→${qLabelShort(next)}`,ok:1});
+    renderFeatTable();
+  }));
+
+  // ===== Feature drawer extras: deps + gray rules =====
+  function tierList(f){const t=[];if(f.q.free!==0)t.push("Free");if(f.q.pro!==0)t.push("Pro");if(f.q.team!==0)t.push("Team");return t.join(" / ")||"—";}
+  function renderFeatureExtras(f){
+    const base = f.cat==="AI" ? [["AI Provider(Gemini / OpenAI)",1],["server-side secret handle",1],["用量计费服务",1]]
+              : f.cat==="效率" ? [["工作区 / 存储服务",1],["数据同步引擎",1]]
+              : [["本地渲染层",1]];
+    if(f.key==="ai-cube") base.push(["多窗口框架",1]);
+    document.getElementById("fDeps").innerHTML=base.map(d=>`<div class="dep"><span class="bd" style="background:var(--success)"></span>${d[0]}<span class="meta">正常</span></div>`).join("");
+    let rules;
+    if(f.status==="off") rules=[["状态","已下线 · 所有人不可见"]];
+    else if(f.status==="on") rules=[["发布比例","100% 全量"],["套餐限定",tierList(f)],["命中人群","所有符合套餐的用户"]];
+    else rules=[["发布比例",f.rollout+"% 随机抽样"],["套餐限定",tierList(f)],["用户标签","beta-testers(内测白名单)"],["地区","不限"]];
+    document.getElementById("fGrayRules").innerHTML=rules.map(r=>`<div class="rule"><span class="rk">${r[0]}</span><span class="rv">${r[1]}</span></div>`).join("");
+  }
+
+  // ===== AI usage & quota =====
+  const AICONSUMERS=[
+    {n:"Acme Corp",plan:"Team",used:52.1,quota:50,cost:"$198",c:"#fb7185"},
+    {n:"Sarah Chen",plan:"Team",used:48.0,quota:50,cost:"$182",c:"#fb7185"},
+    {n:"Olivia R.",plan:"Team",used:31.0,quota:50,cost:"$118",c:"#22d3ee"},
+    {n:"DesignHub",plan:"Team",used:22.4,quota:50,cost:"$85",c:"#a78bfa"},
+    {n:"李明",plan:"Pro",used:1.24,quota:5,cost:"$18",c:"#6d5efc"},
+    {n:"James Park",plan:"Pro",used:0.34,quota:5,cost:"$5",c:"#60a5fa"},
+  ];
+  function renderAiUsage(){
+    const box=document.getElementById("aiConsumers"); if(!box) return; box.innerHTML="";
+    AICONSUMERS.forEach(u=>{
+      const pct=Math.round(u.used/u.quota*100), over=pct>=100, warn=pct>=80;
+      const col=over?"var(--danger)":warn?"var(--warning)":"var(--success)";
+      const st=over?`<span class="badge b-danger"><span class="bd"></span>已超额</span>`:warn?`<span class="badge b-warning"><span class="bd"></span>接近上限</span>`:`<span class="badge b-success"><span class="bd"></span>正常</span>`;
+      const tr=document.createElement("tr"); tr.style.cursor="default";
+      tr.innerHTML=`<td><div class="u"><div class="av" style="background:linear-gradient(135deg,${u.c},${u.c}aa)">${initials(u.n)}</div><div class="nm">${u.n}</div></div></td>
+        <td><span class="plan ${PLAN[u.plan]}">${u.plan}</span></td>
+        <td><div class="usage">${u.used}M / ${u.quota}M · ${pct}%<div class="mini" style="width:170px"><i style="width:${Math.min(100,pct)}%;background:${col}"></i></div></div></td>
+        <td>${st}</td><td style="font-weight:600">${u.cost}</td>
+        <td><button class="btn btn--sm">调整配额</button></td>`;
+      box.appendChild(tr);
+    });
+  }
+
+  // ===== Audit log =====
+  const AUDIT=[
+    {t:"2026-05-30 09:12",who:"Jinlong",type:"config",act:"调整席位",obj:"Acme Robotics 40→60",ip:"103.21.7.5",ok:1},
+    {t:"2026-05-30 08:40",who:"客服-小李",type:"auth",act:"模拟登录",obj:"usr_1008 (Diego Vega)",ip:"58.32.1.4",ok:1},
+    {t:"2026-05-29 14:32",who:"风控系统",type:"danger",act:"封禁用户",obj:"spam_bot_91",ip:"10.0.0.1",ok:1},
+    {t:"2026-05-29 14:01",who:"Jinlong",type:"config",act:"灰度放量",obj:"剪贴板历史 → 25%",ip:"103.21.7.5",ok:1},
+    {t:"2026-05-29 13:40",who:"Jinlong",type:"config",act:"模型权限变更",obj:"gemini-3.1-pro → 仅 Team",ip:"103.21.7.5",ok:1},
+    {t:"2026-05-29 11:20",who:"客服-小王",type:"auth",act:"重置密码",obj:"usr_8f3a21 (James Park)",ip:"58.32.1.9",ok:1},
+    {t:"2026-05-29 10:05",who:"Jinlong",type:"config",act:"配额调整",obj:"AI写作 Pro 300→500 次/月",ip:"103.21.7.5",ok:1},
+    {t:"2026-05-29 09:48",who:"admin@xai",type:"auth",act:"登录中台",obj:"管理中台",ip:"103.21.7.5",ok:1},
+    {t:"2026-05-28 22:14",who:"未知",type:"auth",act:"登录失败",obj:"admin · 密码错误×3",ip:"45.9.x.x",ok:0},
+    {t:"2026-05-28 18:30",who:"财务-李",type:"billing",act:"导出账单",obj:"2026-04 发票",ip:"58.32.1.2",ok:1},
+    {t:"2026-05-28 16:02",who:"运营-张",type:"create",act:"功能上线",obj:"专注番茄钟",ip:"58.32.1.7",ok:1},
+    {t:"2026-05-28 15:20",who:"Jinlong",type:"danger",act:"功能下线",obj:"冥想空间",ip:"103.21.7.5",ok:1},
+  ];
+  const ACTCLS={create:"act-create",config:"act-config",danger:"act-danger",auth:"act-auth",billing:"act-billing"};
+  function nowStamp(){
+    const d=new Date();
+    const pad=n=>String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function addAudit({type,act,obj,ok=1,who=CURRENT_ACTOR.name,ip=CURRENT_ACTOR.ip}){
+    AUDIT.unshift({t:nowStamp(),who,type,act,obj,ip,ok});
+    renderAudit();
+  }
+  function renderAudit(){
+    const box=document.getElementById("auditRows"); if(!box) return; box.innerHTML="";
+    const q=document.getElementById("auditSearch").value.toLowerCase(), tf=document.getElementById("auditType").value, rf=document.getElementById("auditRange").value;
+    const dayOk=a=>{
+      if(!rf) return true;
+      const at=new Date(a.t.replace(" ","T"));
+      if(Number.isNaN(at.getTime())) return true;
+      const now=new Date();
+      const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      if(rf==="today") return at>=start;
+      const days=rf==="7d"?7:30;
+      return at>=new Date(start.getTime()-(days-1)*86400000);
+    };
+    AUDIT.filter(a=>(!q||a.who.toLowerCase().includes(q)||a.act.includes(q)||a.obj.toLowerCase().includes(q))&&(!tf||a.type===tf)&&dayOk(a)).forEach(a=>{
+      const tr=document.createElement("tr"); tr.style.cursor="default";
+      tr.innerHTML=`<td class="mono">${a.t}</td><td>${a.who}</td><td><span class="act ${ACTCLS[a.type]}">${a.act}</span></td><td>${a.obj}</td><td class="mono">${a.ip}</td><td>${a.ok?'<span class="badge b-success"><span class="bd"></span>成功</span>':'<span class="badge b-danger"><span class="bd"></span>失败</span>'}</td>`;
+      box.appendChild(tr);
+    });
+  }
+  ["auditSearch","auditType","auditRange"].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener("input",renderAudit);});
+
+  // ===== Roles & permissions (RBAC) =====
+  const ROLES=[
+    {key:"super",name:"超级管理员",members:2,color:"#6d5efc",ic:"★",ds:"全部权限,含角色与系统配置"},
+    {key:"ops",name:"运营",members:5,color:"#60a5fa",ic:"运",ds:"用户、功能、看板与灰度发布"},
+    {key:"support",name:"客服",members:8,color:"#34d399",ic:"服",ds:"用户查看、重置密码、模拟登录"},
+    {key:"finance",name:"财务",members:2,color:"#fbbf24",ic:"财",ds:"计费、账单与发票导出"},
+    {key:"audit",name:"只读审计",members:3,color:"#a1a1aa",ic:"审",ds:"只读全站 + 审计日志"},
+  ];
+  const PERMS=[
+    {key:"dashboard.read",name:"查看看板",        r:{super:1,ops:1,support:1,finance:1,audit:1}},
+    {key:"users.read",name:"用户管理",        r:{super:1,ops:1,support:1,finance:0,audit:0}},
+    {key:"users.ban",name:"封禁用户",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"users.impersonate",name:"模拟登录",        r:{super:1,ops:0,support:1,finance:0,audit:0}},
+    {key:"features.write",name:"功能上下线 / 灰度", r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"quota.write",name:"配额调整",        r:{super:1,ops:1,support:0,finance:0,audit:0}},
+    {key:"providers.write",name:"Provider / 模型配置",r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"audit.read",name:"查看审计日志",    r:{super:1,ops:0,support:0,finance:0,audit:1}},
+    {key:"billing.write",name:"计费管理",        r:{super:1,ops:0,support:0,finance:1,audit:0}},
+    {key:"rbac.write",name:"角色与权限管理",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"orgs.transfer",name:"转移组织所有权",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+    {key:"settings.write",name:"系统安全设置",  r:{super:1,ops:0,support:0,finance:0,audit:0}},
+  ];
+  function roleName(key){return (ROLES.find(r=>r.key===key)||{}).name||key;}
+  function hasPerm(key,role=CURRENT_ACTOR.role){
+    if(role==="super") return true;
+    const p=PERMS.find(x=>x.key===key);
+    return Boolean(p && p.r[role]);
+  }
+  function requirePerm(key,label){
+    if(hasPerm(key)) return true;
+    addAudit({type:"auth",act:"权限拒绝",obj:`${label} · ${key} · ${roleName(CURRENT_ACTOR.role)}`,ok:0});
+    toast("权限不足: "+label);
+    return false;
+  }
+  function renderActorControl(){
+    const sel=document.getElementById("actorRole"); if(!sel) return;
+    if(!sel.options.length){
+      sel.innerHTML=ROLES.map(r=>`<option value="${r.key}">${r.name}</option>`).join("");
+      sel.addEventListener("change",()=>{
+        CURRENT_ACTOR.role=sel.value;
+        document.getElementById("sideRole").textContent=roleName(sel.value);
+        addAudit({type:"auth",act:"切换权限模拟",obj:roleName(sel.value),ok:1});
+        renderRoles();
+      });
+    }
+    sel.value=CURRENT_ACTOR.role;
+    const side=document.getElementById("sideRole"); if(side) side.textContent=roleName(CURRENT_ACTOR.role);
+  }
+  function renderRoles(){
+    renderActorControl();
+    const grid=document.getElementById("roleCards"); if(!grid) return; grid.innerHTML="";
+    ROLES.forEach(r=>{
+      const c=document.createElement("div"); c.className="role-card";
+      c.innerHTML=`<div class="ic" style="background:${r.color}">${r.ic}</div><h4>${r.name}</h4><div class="mc">${r.members} 名成员</div><div class="ds">${r.ds}</div><div class="status-line"><span>${r.key}</span>${CURRENT_ACTOR.role===r.key?'<span class="guard-chip ok">当前模拟</span>':''}</div>`;
+      grid.appendChild(c);
+    });
+    document.getElementById("permHead").innerHTML=`<th>权限点</th>`+ROLES.map(r=>`<th style="text-align:center">${r.name}</th>`).join("");
+    const body=document.getElementById("permRows"); body.innerHTML="";
+    PERMS.forEach(p=>{
+      const tr=document.createElement("tr"); tr.style.cursor="default";
+      tr.innerHTML=`<td style="font-weight:600">${p.name}<span class="perm-key">${p.key}</span></td>`+ROLES.map(r=>{
+        const on=p.r[r.key], locked=r.key==="super";
+        return `<td style="text-align:center"><span class="check ${on?'on':''} ${locked?'locked':''}">${on?'✓':''}</span></td>`;
+      }).join("");
+      tr.querySelectorAll(".check").forEach((ch,i)=>{
+        const role=ROLES[i];
+        if(role.key==="super") return;
+        ch.addEventListener("click",()=>{
+          if(!requirePerm("rbac.write","修改角色权限")) return;
+          p.r[role.key]=p.r[role.key]?0:1;
+          addAudit({type:"config",act:"RBAC 权限变更",obj:`${role.name} · ${p.key} → ${p.r[role.key]?"allow":"deny"}`,ok:1});
+          renderRoles();
+        });
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  // ===== Operational queues (overview, queue-first) =====
+  const QTONE={danger:["var(--danger)","var(--danger-soft)"],warning:["var(--warning)","var(--warning-soft)"],info:["var(--info)","var(--info-soft)"],muted:["var(--faint)","var(--panel-2)"]};
+  const QUEUES=[
+    {ic:"🛡️",tone:"danger", title:"异常登录 / 风险", sub:"待研判",       count:14, rows:[["Diego Vega","异地瞬移 · 中国→巴西 8 分钟","2m"],["Acme Robotics","12 次 MFA 失败","19m"],["Omar Hassan","新设备 · 管理员","1h"]]},
+    {ic:"🎫",tone:"info",   title:"未处理工单",      sub:"最久 3 天",     count:37, rows:[["#4821 Billing","团队版重复扣费","3d"],["#4830 AI","Opus 请求 500 报错","6h"],["#4835 Access","无法转移所有权","2h"]]},
+    {ic:"💳",tone:"warning",title:"付款失败 · 催款",  sub:"Dunning",      count:9,  rows:[["Quantum Health","扣款失败 · $1,440","1d"],["Cedar & Co","第 3 次重试 · 团队 x24","4h"]]},
+    {ic:"📈",tone:"warning",title:"超额组织",        sub:"Token / 席位",  count:6,  rows:[["Acme Robotics","Token 用量 218%","live"],["Helio Energy","席位 52 / 40","live"]]},
+    {ic:"🔥",tone:"danger", title:"高成本用户",      sub:"30 天 LLM 花费", count:11, rows:[["Diego Vega","$412 · 重度 Opus","$412"],["Mei Lin","$268 · 批处理","$268"]]},
+    {ic:"🌙",tone:"muted",  title:"沉睡管理员",      sub:"60 天+ 未登录",  count:4,  rows:[["Sara Kim","管理员 · 74 天前","74d"],["Theo Mraz","安全 · 91 天前","91d"]]},
+  ];
+  function renderQueues(){
+    const box=document.getElementById("opsQueues"); if(!box) return; box.innerHTML="";
+    QUEUES.forEach(q=>{
+      const tc=QTONE[q.tone], col=tc[0], soft=tc[1];
+      const c=document.createElement("div"); c.className="queue";
+      c.innerHTML=`<div class="queue-head"><div class="q-ico" style="background:${soft};color:${col}">${q.ic}</div>
+        <div class="qh"><b>${q.title}</b><span>${q.sub}</span></div><div class="qbig" style="color:${col}">${q.count}</div></div>
+        ${q.rows.map(r=>`<div class="qrow"><div class="qr-main"><b>${r[0]}</b><span>${r[1]}</span></div><span class="qr-meta">${r[2]}</span></div>`).join("")}
+        <div class="qfoot"><a class="linkish">查看全部 →</a></div>`;
+      box.appendChild(c);
+    });
+  }
+  function sparkSVG(data,color){
+    const w=64,h=22,max=Math.max(...data),min=Math.min(...data),rng=max-min||1;
+    const pts=data.map((v,i)=>`${(i/(data.length-1)*w).toFixed(1)},${(h-((v-min)/rng)*(h-3)-1.5).toFixed(1)}`).join(" ");
+    return `<svg class="kspark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none"><polyline points="${pts}" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+  function injectSparks(){
+    const S=[[12,18,15,22,19,26,24,30],[8,9,7,12,11,14,13,18],[14,16,15,20,22,21,26,28],[29,24,21,18,16,13,12,10]];
+    document.querySelectorAll('#view-dashboard [data-dpane="overview"] .grid-kpi .kpi').forEach((k,i)=>{ if(S[i]&&!k.querySelector(".kspark")) k.insertAdjacentHTML("beforeend",sparkSVG(S[i], i===3?"var(--success)":"var(--accent)")); });
+  }
+
+  // ===== Orgs / spaces =====
+  const ORGSTATUS={active:["正常","b-success"],overage:["超额","b-warning"],dunning:["催款中","b-danger"]};
+  const PLANCLS={Free:"plan-free",Pro:"plan-pro",Team:"plan-team",Enterprise:"plan-ent"};
+  const ORGS=[
+    {n:"Acme Robotics",s:"AR",plan:"Team",used:52,cap:40,cost:"$8,420",st:"overage",owner:"Aki Chen",c:"#6aa6ff",created:"2025-03-14",req:"482k",tokens:"41.2M"},
+    {n:"Quantum Health",s:"QH",plan:"Enterprise",used:47,cap:50,cost:"$12,640",st:"dunning",owner:"Priya Patel",c:"#c08ce0",created:"2025-01-09",req:"712k",tokens:"68.0M"},
+    {n:"Helio Energy",s:"HE",plan:"Team",used:52,cap:40,cost:"$9,210",st:"overage",owner:"Omar Hassan",c:"#f0a868",created:"2025-05-22",req:"531k",tokens:"49.8M"},
+    {n:"Northwind Labs",s:"NL",plan:"Team",used:22,cap:25,cost:"$3,120",st:"active",owner:"Marco Rossi",c:"#5ec8a8",created:"2025-06-30",req:"198k",tokens:"18.9M"},
+    {n:"Cedar & Co",s:"CC",plan:"Team",used:31,cap:35,cost:"$4,870",st:"active",owner:"Nina Diaz",c:"#e08aa8",created:"2025-02-18",req:"288k",tokens:"27.7M"},
+    {n:"Pixel Forge",s:"PF",plan:"Pro",used:14,cap:20,cost:"$1,980",st:"active",owner:"Tom Murphy",c:"#7bb8d8",created:"2025-08-12",req:"121k",tokens:"11.4M"},
+    {n:"Meridian Studio",s:"MS",plan:"Pro",used:9,cap:15,cost:"$420",st:"active",owner:"Elsa Sokol",c:"#8fbf6a",created:"2025-09-03",req:"34k",tokens:"3.1M"},
+  ];
+  function ownerDisplay(o){
+    if(o.transferState==="pending"&&o.pendingTransferTo){
+      return `${o.owner} <span class="badge b-warning"><span class="bd"></span>→ ${o.pendingTransferTo} · 待确认</span>`;
+    }
+    return o.owner;
+  }
+  function ownerUsageLabel(o){
+    return o.transferState==="pending"&&o.pendingTransferTo?`${o.owner} · 待转移至 ${o.pendingTransferTo}`:o.owner;
+  }
+  function renderOrgs(){
+    const box=document.getElementById("orgRows"); if(!box) return; box.innerHTML="";
+    ORGS.forEach(o=>{
+      const over=o.used>o.cap, pct=Math.min(100,o.used/o.cap*100), st=ORGSTATUS[o.st];
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td><div class="u"><div class="av" style="background:linear-gradient(135deg,${o.c},${o.c}aa);border-radius:9px">${o.s}</div><div class="nm">${o.n}</div></div></td>
+        <td><span class="plan ${PLANCLS[o.plan]}">${o.plan}</span></td>
+        <td><div class="seat">${o.used} / ${o.cap} 席位 ${over?'<span style="color:var(--danger);font-weight:700">· 超员</span>':''}<div class="sbar"><i style="width:${pct}%;background:${over?'var(--danger)':'var(--accent)'}"></i></div></div></td>
+        <td style="font-weight:600">${o.cost}</td>
+        <td><span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span></td>
+        <td style="color:var(--muted)">${ownerDisplay(o)}</td>
+        <td><button class="btn btn--sm">管理</button></td>`;
+      tr.style.cursor="pointer";
+      tr.addEventListener("click",()=>openOrg(o));
+      box.appendChild(tr);
+    });
+  }
+
+  // ===== AI routing policy =====
+  const OVERBADGE={block:["阻断","b-danger"],throttle:["降速","b-warning"],alert:["仅告警","b-info"]};
+  const ROUTING=[
+    {plan:"Free",model:"Gemini 3.1 Flash-Lite",fb:"GPT-4o-mini",cap:"$0",req:"200 / 天",over:"block"},
+    {plan:"Pro",model:"Gemini 3.1 Flash",fb:"Flash-Lite",cap:"$40 / 席位",req:"5k / 天",over:"throttle"},
+    {plan:"Team",model:"GPT-4o",fb:"Gemini Flash",cap:"$60 / 席位",req:"15k / 天",over:"throttle"},
+    {plan:"Enterprise",model:"Claude Opus 4.8",fb:"Sonnet 4.6",cap:"自定义",req:"无限",over:"alert"},
+  ];
+  function renderRouting(){
+    const box=document.getElementById("routingRows"); if(!box) return; box.innerHTML="";
+    ROUTING.forEach(r=>{
+      const ob=OVERBADGE[r.over];
+      const tr=document.createElement("tr"); tr.style.cursor="default";
+      tr.innerHTML=`<td><span class="plan ${PLANCLS[r.plan]}">${r.plan}</span></td>
+        <td style="font-family:ui-monospace,Menlo,monospace;font-weight:600">${r.model}</td>
+        <td class="mono" style="color:var(--muted);font-family:ui-monospace,Menlo,monospace">${r.fb}</td>
+        <td style="font-weight:600">${r.cap}</td><td style="font-family:ui-monospace,Menlo,monospace">${r.req}</td>
+        <td><span class="badge ${ob[1]}"><span class="bd"></span>${ob[0]}</span></td>`;
+      box.appendChild(tr);
+    });
+  }
+
+  // ===== Confirm modal + toast =====
+  const cmodal=document.getElementById("confirmModal");
+  let confirmCb=null, confirmType=null;
+  function openConfirm(o){
+    const ic=document.getElementById("cmIcon"); ic.textContent=o.icon||"⚠️"; ic.className="mc-icon "+(o.tone||"danger");
+    document.getElementById("cmTitle").textContent=o.title;
+    document.getElementById("cmBody").textContent=o.body||"";
+    const tw=document.getElementById("cmTypewrap"), inp=document.getElementById("cmInput");
+    if(o.requireType){tw.style.display="block";document.getElementById("cmTypeLabel").innerHTML='输入 <b style="color:var(--text);font-family:ui-monospace">'+o.requireType+'</b> 以确认';inp.value="";inp.placeholder=o.requireType;}
+    else tw.style.display="none";
+    confirmType=o.requireType||null; confirmCb=o.onConfirm||null;
+    const btn=document.getElementById("cmConfirm"); btn.textContent=o.confirmLabel||"确认"; btn.className="btn "+((o.tone||"danger")==="danger"?"cm-danger":"btn--primary");
+    updateCmBtn();
+    cmodal.classList.add("show"); if(o.requireType) setTimeout(()=>inp.focus(),50);
+  }
+  function updateCmBtn(){const ok=!confirmType||document.getElementById("cmInput").value.trim().toUpperCase()===confirmType.toUpperCase();const b=document.getElementById("cmConfirm");b.disabled=!ok;b.style.opacity=ok?"1":".4";b.style.cursor=ok?"pointer":"not-allowed";}
+  function closeConfirm(){cmodal.classList.remove("show");}
+  document.getElementById("cmInput").addEventListener("input",updateCmBtn);
+  document.getElementById("cmCancel").addEventListener("click",closeConfirm);
+  document.getElementById("cmBackdrop").addEventListener("click",closeConfirm);
+  document.getElementById("cmConfirm").addEventListener("click",()=>{const b=document.getElementById("cmConfirm");if(b.disabled)return;closeConfirm();confirmCb&&confirmCb();});
+  let toastT=null;
+  function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2200);}
+  function syncFeatureDrawer(f){
+    document.querySelectorAll("#fStatusSeg button").forEach(b=>b.classList.toggle("on",b.dataset.st===f.status));
+    const fill=document.getElementById("fSliderFill"),knob=document.getElementById("fSliderKnob");
+    fill.style.width=f.rollout+"%";knob.style.left=f.rollout+"%";
+    document.getElementById("fRollout").textContent=f.rollout===100?"全量 100%":f.rollout===0?"未发布 0%":"灰度 "+f.rollout+"%";
+    renderFeatureExtras(f);
+  }
+  function setFeatureStatus(f,status,rollout){
+    if(!requirePerm("features.write","变更功能状态")) return;
+    const before=f.status;
+    f.status=status; f.rollout=rollout;
+    addAudit({type:status==="off"?"danger":"config",act:status==="off"?"功能下线":"功能状态变更",obj:`${f.name} ${before}→${status} · ${rollout}%`,ok:1});
+    renderFeatTable();renderRank();renderHeat(document.getElementById("heatFeat")?.value||"");
+    if(currentFeature===f && fdrawer.classList.contains("show")) syncFeatureDrawer(f);
+    toast((status==="off"?"已下线 ":"已更新 ")+f.name);
+  }
+  function setProviderStatus(p,status){
+    if(!requirePerm("providers.write","变更 Provider")) return;
+    const before=p.status;
+    if(status==="on" && p.secretState==="missing"){
+      p.secretState="pending";
+      p.secretHandle=`handle://admin/provider/${p.key}/pending`;
+      p.rotation="刚刚";
+    }
+    p.status=status;
+    addAudit({type:"config",act:"Provider 状态变更",obj:`${p.name} ${before}→${status} · ${p.secretHandle}`,ok:1});
+    renderProviders();
+    toast(`${p.name} 已${status==="on"?"启用":"停用"}`);
+  }
+  function setModelTier(p,m,tier,next){
+    if(!requirePerm("providers.write","变更模型权限")) return;
+    m.tiers[tier]=next?1:0;
+    addAudit({type:"config",act:"模型权限变更",obj:`${m.id} · ${tier} → ${next?"allow":"deny"}`,ok:1});
+    renderProviders();
+  }
+  function banUser(u,after){
+    if(!u) return;
+    if(!requirePerm("users.ban","封禁用户")) return;
+    if(u.s==="已封禁"){toast("用户已处于封禁状态");return;}
+    u.s="已封禁";u.risk="high";u.over=false;
+    addAudit({type:"danger",act:"封禁用户",obj:`${u.e} (${u.n})`,ok:1});
+    renderUserViews();renderUsers();
+    after&&after();
+    toast("已封禁 "+u.n);
+  }
+  function bulkBan(list){
+    if(!list.length){toast("请先选择用户");return;}
+    if(!requirePerm("users.ban","批量封禁用户")) return;
+    const changed=list.filter(u=>u.s!=="已封禁");
+    changed.forEach(u=>{u.s="已封禁";u.risk="high";u.over=false;});
+    addAudit({type:"danger",act:"批量封禁用户",obj:`${changed.length}/${list.length} users · ${list.map(u=>u.e).join(", ")}`,ok:1});
+    document.getElementById("selAll").checked=false;
+    renderUserViews();renderUsers();updateBulk();
+    toast("已批量封禁 "+changed.length+" 个用户");
+  }
+  const banBtn=document.getElementById("banBtn");
+  if(banBtn) banBtn.addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+document.getElementById("dName").textContent+" 将立即失去访问权限,可随时恢复。此操作会被审计记录。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>banUser(currentUser,closeDrawers)}));
+  const bulkBanBtn=document.getElementById("bulkBanBtn");
+  if(bulkBanBtn) bulkBanBtn.addEventListener("click",()=>{const list=selectedUsers();if(!list.length){toast("请先选择用户");return;}openConfirm({title:"批量封禁 "+list.length+" 个用户？",body:"这些用户将立即失去访问权限。批量高危操作需输入确认词,并写入审计。",tone:"danger",requireType:"BAN",confirmLabel:"全部封禁",onConfirm:()=>bulkBan(list)});});
+
+  // ===== Billing =====
+  const BILLING=[
+    {org:"Acme Robotics",plan:"Enterprise",amt:"$8,420",st:"已付",stc:"b-success",date:"05-28"},
+    {org:"Quantum Health",plan:"Enterprise",amt:"$12,640",st:"失败",stc:"b-danger",date:"05-27"},
+    {org:"Northwind Labs",plan:"Team",amt:"$1,176",st:"已付",stc:"b-success",date:"05-27"},
+    {org:"Cedar & Co",plan:"Team",amt:"$1,176",st:"重试中",stc:"b-warning",date:"05-26"},
+    {org:"Pixel Forge",plan:"Pro",amt:"$266",st:"已付",stc:"b-success",date:"05-25"},
+    {org:"Helio Energy",plan:"Team",amt:"$1,470",st:"已付",stc:"b-success",date:"05-25"},
+  ];
+  function renderBilling(){
+    const box=document.getElementById("billRows"); if(!box) return; box.innerHTML="";
+    BILLING.forEach(b=>{
+      const tr=document.createElement("tr"); tr.style.cursor="default";
+      tr.innerHTML=`<td style="font-weight:600">${b.org}</td><td><span class="plan ${PLANCLS[b.plan]}">${b.plan}</span></td>
+        <td style="font-weight:700;font-variant-numeric:tabular-nums">${b.amt}</td>
+        <td><span class="badge ${b.stc}"><span class="bd"></span>${b.st}</span></td>
+        <td class="mono" style="color:var(--muted);font-family:ui-monospace,Menlo,monospace">${b.date}</td>`;
+      box.appendChild(tr);
+    });
+  }
+  // settings toggles
+  document.querySelectorAll(".toggle[data-set]").forEach(t=>t.addEventListener("click",()=>{
+    const label=t.closest(".setrow")?.querySelector("b")?.textContent||"系统设置";
+    if(!requirePerm("settings.write","修改系统设置")) return;
+    t.classList.toggle("on");
+    addAudit({type:"config",act:"系统设置变更",obj:`${label} → ${t.classList.contains("on")?"on":"off"}`,ok:1});
+  }));
+  document.getElementById("syncSecretsBtn")?.addEventListener("click",()=>{
+    if(!requirePerm("providers.write","同步 secret handles")) return;
+    PROVIDERS.filter(p=>p.secretState==="pending").forEach(p=>{p.secretState="verified";p.rotation="刚刚";});
+    addAudit({type:"config",act:"同步 secret handles",obj:"provider handles refresh",ok:1});
+    renderProviders();toast("secret handles 已同步");
+  });
+  document.getElementById("addProviderBtn")?.addEventListener("click",()=>{
+    if(!requirePerm("providers.write","接入 Provider")) return;
+    const target=PROVIDERS.find(p=>p.secretState==="missing")||PROVIDERS.find(p=>p.secretState==="pending");
+    if(!target){toast("暂无待接入 Provider");return;}
+    target.secretState="pending";
+    target.secretHandle=`handle://admin/provider/${target.key}/pending`;
+    target.rotation="刚刚";
+    addAudit({type:"create",act:"创建 Provider secret handle",obj:`${target.name} · ${target.secretHandle}`,ok:1});
+    renderProviders();toast(target.name+" handle 已创建为 pending");
+  });
+
+  // ===== Tweaks panel (OKLCH re-theme + density + theme + layout A/B) =====
+  const TW_ACCENTS=[["Gemini 蓝",260],["靛紫",280],["祖母绿",160],["玫瑰",18],["琥珀",70]];
+  function segSet(id,v){document.querySelectorAll("#"+id+" button").forEach(b=>b.classList.toggle("on", b.dataset.v===String(v)));}
+  function moveQueues(mode){
+    const dp=document.querySelector('#view-dashboard [data-dpane="overview"]');
+    const head=document.querySelector("#view-dashboard .q-sec-head"), grid=document.getElementById("opsQueues");
+    if(!dp||!head||!grid) return;
+    if(mode==="kpi"){ dp.appendChild(head); dp.appendChild(grid); }
+    else { const charts=dp.querySelector(".grid-2"); if(charts){ dp.insertBefore(head, charts); dp.insertBefore(grid, charts); } }
+  }
+  function applyTweak(k,v,save){
+    const r=document.documentElement;
+    if(k==="accent"){ r.style.setProperty("--accent-hue", v); document.querySelectorAll("#twAccent .tw-sw").forEach(s=>s.classList.toggle("on", s.dataset.hue===String(v))); }
+    else if(k==="density"){ r.setAttribute("data-density", v); segSet("twDensity", v); }
+    else if(k==="theme"){ if(v==="dark"){r.classList.add("dark");r.classList.remove("light");} else {r.classList.add("light");r.classList.remove("dark");} segSet("twTheme", v); }
+    else if(k==="overview"){ moveQueues(v); segSet("twOverview", v); }
+    else if(k==="width"){ r.setAttribute("data-width", v); segSet("twWidth", v); }
+    else if(k==="users"){ userLayout=v; segSet("twUsers", v); }
+    if(save!==false){try{localStorage.setItem("xai_tw_"+k, v);}catch(e){}}
+  }
+  const twA=document.getElementById("twAccent");
+  TW_ACCENTS.forEach(([name,hue])=>{ const s=document.createElement("div"); s.className="tw-sw"; s.dataset.hue=hue; s.style.background="oklch(63% 0.19 "+hue+")"; s.title=name; s.addEventListener("click",()=>applyTweak("accent",hue)); twA.appendChild(s); });
+  ["twDensity","twTheme","twOverview","twWidth","twUsers"].forEach(id=>document.querySelectorAll("#"+id+" button").forEach(b=>b.addEventListener("click",()=>applyTweak({twDensity:"density",twTheme:"theme",twOverview:"overview",twWidth:"width",twUsers:"users"}[id], b.dataset.v))));
+  document.getElementById("twFab").addEventListener("click",()=>document.getElementById("tweaks").classList.toggle("show"));
+  document.getElementById("twClose").addEventListener("click",()=>document.getElementById("tweaks").classList.remove("show"));
+  (function restoreTweaks(){ const def={accent:260,density:"comfortable",theme:"light",overview:"queue",width:"full",users:"drawer"}; Object.keys(def).forEach(k=>{ let v=null; try{v=localStorage.getItem("xai_tw_"+k);}catch(e){} applyTweak(k, v!=null?v:def[k], false); }); })();
+
+  // ===== Org detail drawer =====
+  var userLayout="drawer";
+  let currentOrg=null;
+  const MEMBER_POOL=[["Lena Okafor","管理员","#6aa6ff"],["Marco Rossi","成员","#5ec8a8"],["Priya Patel","财务","#f0a868"],["Yuki Tanaka","成员","#c08ce0"],["Tom Webb","只读","#7bb8d8"]];
+  const ini2=n=>n.trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+  function genMembers(o){
+    const owner={n:o.owner,r:"所有者",c:o.c,t:"在线"};
+    const k=Math.max(2,Math.min(4,o.used%5));
+    return [owner,...MEMBER_POOL.slice(0,k).map(m=>({n:m[0],r:m[1],c:m[2],t:"今天"}))];
+  }
+  function transferTarget(o){
+    const m=genMembers(o).find(x=>x.n!==o.owner);
+    return m?m.n:"Lena Okafor";
+  }
+  function openOrg(o){
+    currentOrg=o;
+    const av=document.getElementById("oAv"); av.textContent=o.s; av.style.background=`linear-gradient(135deg,${o.c},${o.c}aa)`;
+    document.getElementById("oName").textContent=o.n;
+    const st=ORGSTATUS[o.st], over=o.used>o.cap, pct=Math.round(o.used/o.cap*100);
+    document.getElementById("oMeta").innerHTML=`<span class="plan ${PLANCLS[o.plan]}">${o.plan}</span> · 所有者 ${ownerDisplay(o)} · <span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span>`;
+    document.getElementById("oKv").innerHTML=`
+      <div><div class="k">组织 ID</div><div class="v">org_${o.s.toLowerCase()}${o.cap}</div></div>
+      <div><div class="k">套餐</div><div class="v">${o.plan}</div></div>
+      <div><div class="k">状态</div><div class="v">${st[0]}</div></div>
+      <div><div class="k">所有者</div><div class="v">${ownerDisplay(o)}</div></div>
+      <div><div class="k">创建时间</div><div class="v">${o.created}</div></div>
+      <div><div class="k">本月成本</div><div class="v">${o.cost}</div></div>
+      <div><div class="k">本月请求</div><div class="v">${o.req}</div></div>
+      <div><div class="k">Token 用量</div><div class="v">${o.tokens}</div></div>`;
+    document.getElementById("oSeatTxt").textContent=`${o.used} / ${o.cap} 席位`+(over?" · 超员":"");
+    const pe=document.getElementById("oSeatPct"); pe.textContent=pct+"%"; pe.style.color=over?"var(--danger)":"var(--accent-2)";
+    const bar=document.getElementById("oSeatBar"); bar.style.width=Math.min(100,pct)+"%"; bar.style.background=over?"var(--danger)":"var(--accent)";
+    document.getElementById("oMembers").innerHTML=genMembers(o).map(m=>`<div class="qrow" style="padding:9px 2px"><div class="u"><div class="av" style="width:30px;height:30px;font-size:11px;background:linear-gradient(135deg,${m.c},${m.c}aa)">${ini2(m.n)}</div><div><div class="nm" style="font-size:13px">${m.n}</div><div class="em">${m.r}</div></div></div><span class="qr-meta">${m.t}</span></div>`).join("");
+    document.getElementById("oUsage").innerHTML=
+      `<div class="bar-row"><div class="top"><span class="nm">${ownerUsageLabel(o)}</span><b>1.2M</b></div><div class="track"><i style="width:72%;background:var(--accent)"></i></div></div>`+
+      `<div class="bar-row"><div class="top"><span class="nm">Marco Rossi</span><b>640K</b></div><div class="track"><i style="width:40%;background:var(--info)"></i></div></div>`+
+      `<div class="bar-row"><div class="top"><span class="nm">其他成员合计</span><b>${o.tokens}</b></div><div class="track"><i style="width:26%;background:var(--faint)"></i></div></div>`;
+    document.getElementById("oBill").innerHTML=
+      `<div class="usage-card" style="margin-bottom:8px"><div class="top"><span>本月 ${o.cost} · ${o.plan}</span><span class="badge ${st[1]}"><span class="bd"></span>${st[0]}</span></div></div>`+
+      `<div class="usage-card"><div class="top"><span>上月 ${o.cost} · ${o.plan}</span><span class="badge b-success"><span class="bd"></span>已付</span></div></div>`;
+    document.querySelectorAll("#odrawer .tabs button").forEach((b,i)=>b.classList.toggle("on",i===0));
+    document.querySelectorAll("#odrawer .tabpane").forEach((p,i)=>p.classList.toggle("on",i===0));
+    odrawer.classList.add("show"); scrim.classList.add("show");
+  }
+  document.querySelectorAll("#odrawer .tabs button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll("#odrawer .tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    document.querySelectorAll("#odrawer .tabpane").forEach(p=>p.classList.toggle("on",p.dataset.opane===b.dataset.otab));
+  }));
+  document.getElementById("oClose").addEventListener("click",closeDrawers);
+  document.getElementById("oTransferBtn").addEventListener("click",()=>openConfirm({title:"记录所有权转移请求？",body:"组织 "+document.getElementById("oName").textContent+" 将进入所有权转移待确认状态。真实落地需后端完成成员校验、通知与最终写入。",tone:"danger",requireType:"TRANSFER",confirmLabel:"记录请求",onConfirm:()=>{
+    if(!requirePerm("orgs.transfer","转移组织所有权")) return;
+    const org=currentOrg||ORGS.find(o=>o.n===document.getElementById("oName").textContent);
+    if(!org) return;
+    if(org.transferState==="pending"){toast("该组织已有待确认转移请求");return;}
+    org.transferState="pending";
+    org.pendingTransferTo=transferTarget(org);
+    org.transferRequestedAt=nowStamp();
+    addAudit({type:"danger",act:"转移所有权请求",obj:`${org.n}: ${org.owner} → ${org.pendingTransferTo}`,ok:1});
+    renderOrgs();openOrg(org);toast("已记录所有权转移请求");
+  }}));
+
+  // ===== User detail page (A/B with drawer) =====
+  function backToUsers(){document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-users"));document.getElementById("crumb").textContent="用户管理";}
+  function showUserDetail(u){ currentUser=u; renderUserPage(u); document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-userdetail")); document.getElementById("crumb").textContent="用户管理 / "+u.n; }
+  function renderUserPage(u){
+    const v=document.getElementById("view-userdetail");
+    const rk=u.risk==="high"?'<span style="color:var(--danger)">高风险</span>':u.risk==="watch"?'<span style="color:var(--warning)">关注</span>':"正常";
+    v.innerHTML=`
+      <button class="btn btn--sm" id="udBack" style="margin-bottom:16px">← 返回用户列表</button>
+      <div class="page-head">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:18px;background:linear-gradient(135deg,${u.c},${u.c}aa)">${initials(u.n)}</div>
+          <div><h1 style="margin:0">${u.n}</h1><div style="margin:3px 0 0;color:var(--faint);font-size:13px">${u.e} · <span class="badge ${BADGE[u.s]}"><span class="bd"></span>${u.s}</span> · <span class="plan ${PLAN[u.p]}">${u.p}</span></div></div>
+        </div>
+        <div class="page-actions" style="display:flex;gap:8px"><button class="btn btn--sm">模拟登录</button><button class="btn btn--sm">重置密码</button><button class="btn btn--sm btn--danger" id="udBan">封禁</button></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="card-head"><h3>账户信息</h3></div><div style="padding:4px 18px 16px"><div class="kv">
+          <div><div class="k">用户 ID</div><div class="v">usr_${(4096+u.n.length*7).toString(16)}</div></div>
+          <div><div class="k">角色</div><div class="v">${u.role}</div></div>
+          <div><div class="k">套餐</div><div class="v">${u.p}</div></div>
+          <div><div class="k">风险</div><div class="v">${rk}</div></div>
+          <div><div class="k">两步验证</div><div class="v" style="color:${u.mfa?'var(--success)':'var(--danger)'}">${u.mfa?'已开启':'未开启'}</div></div>
+          <div><div class="k">最后活跃</div><div class="v">${u.t}</div></div>
+          <div><div class="k">Workspaces</div><div class="v">3 个</div></div>
+          <div><div class="k">登录设备</div><div class="v">2 台</div></div>
+        </div></div></div>
+        <div class="card"><div class="card-head"><h3>本月 AI 用量</h3></div><div style="padding:4px 18px 16px">
+          <div class="usage-card" style="margin-bottom:12px"><div class="top"><span>${fmtM(u.u)} tokens</span><b style="color:${u.cost>=100?'var(--warning)':'var(--accent-2)'}">$${u.cost}</b></div><div class="track"><i style="width:${Math.min(100,u.u/5*100)}%;background:var(--accent)"></i></div></div>
+          <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--accent)"></span>Gemini</span><b>66%</b></div><div class="track"><i style="width:66%;background:var(--accent)"></i></div></div>
+          <div class="bar-row"><div class="top"><span class="nm"><span class="dot" style="background:var(--info)"></span>OpenAI</span><b>25%</b></div><div class="track"><i style="width:25%;background:var(--info)"></i></div></div>
+        </div></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-head"><h3>操作日志</h3></div><div style="padding:8px 18px 16px"><div class="timeline">
+        <div class="ti"><span class="d"></span><div><div class="t">创建 board「产品路线图 Q3」</div><div class="tm">5 分钟前</div></div></div>
+        <div class="ti"><span class="d"></span><div><div class="t">调用 Gemini · 1,240 tokens</div><div class="tm">12 分钟前</div></div></div>
+        <div class="ti"><span class="d"></span><div><div class="t">登录 · IP 103.21.x.x</div><div class="tm">2 小时前</div></div></div>
+      </div></div></div>`;
+    v.querySelector("#udBack").addEventListener("click",backToUsers);
+    v.querySelector("#udBan").addEventListener("click",()=>openConfirm({title:"封禁该用户？",body:"用户 "+u.n+" 将立即失去访问权限,可随时恢复。",tone:"danger",confirmLabel:"封禁",onConfirm:()=>banUser(u,backToUsers)}));
+  }
+
+  // ===== Nav & dashboard tabs =====
+  const titles={dashboard:"总览看板",users:"用户管理",boards:"组织 / 空间",features:"功能管理",ai:"AI 用量 & 配额",providers:"Provider 配置",roles:"角色与权限",billing:"订阅 / 计费",audit:"审计日志",settings:"系统设置"};
+  document.querySelectorAll(".nav-item").forEach(item=>item.addEventListener("click",()=>{
+    document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));item.classList.add("active");
+    const v=item.dataset.view;
+    document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-"+v));
+    document.getElementById("crumb").textContent=titles[v];
+    closeDrawers();
+  }));
+  document.querySelectorAll("#dashTabs button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll("#dashTabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    document.querySelectorAll("#view-dashboard .dpane").forEach(p=>p.classList.toggle("on",p.dataset.dpane===b.dataset.dtab));
+  }));
+
+  // theme + ⌘K
+  document.getElementById("themeBtn").addEventListener("click",()=>{document.documentElement.classList.toggle("light");document.documentElement.classList.toggle("dark");});
+  document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="k"){e.preventDefault();document.getElementById("globalSearch").focus();}});
+
+  // init
+  renderRank();renderHeat();renderFeatTable();renderProviders();renderAiUsage();renderAudit();renderRoles();
+  renderQueues();renderOrgs();renderRouting();renderBilling();injectSparks();
+  const hf=document.getElementById("heatFeat");
+  hf.innerHTML='<option value="">全部功能(汇总)</option>'+FEATURES.map(f=>`<option value="${f.key}">${f.ic} ${f.name}</option>`).join("");
+  hf.addEventListener("change",()=>renderHeat(hf.value));
+</script>
+</body>
+</html>

@@ -260,3 +260,99 @@ pnpm --filter @repo/web test
 
 Carried into `dev_log.md` Status Panel. Feature-verify will not flip to
 `READY_TO_SHIP` until §6.3 exit criteria are satisfied.
+
+---
+
+# Extension — xai-web-matrix-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 test plan above (§1–§8) is unchanged.
+> This block specifies the test strategy for the card-create feature only.
+> The SHIPPED 54 tests stay green throughout (regression budget = 0).
+
+## E.1 New test files + extensions
+
+| File | Status | Phase | Covers |
+|---|---|---|---|
+| `__tests__/ids.test.ts` | NEW | EP1 | `createMatrixId` shape + uniqueness + seed-namespace disjointness |
+| `__tests__/create.test.ts` | NEW | EP1 | `addCard` pure reducer (append, empty-title, bad-quadrant, immutability, no-emit-shape) |
+| `__tests__/types.test-d.ts` | EXTEND | EP1 | `NewMatrixCardDraft` compile-time shape |
+| `__tests__/MatrixComposer.test.tsx` | NEW | EP2 | dialog open/close/save/validation/tag/quadrant/a11y |
+| `__tests__/MatrixModule.create.test.tsx` | NEW | EP2 | M-01 + M-03 `+` wire → composer open → save → card appears + persists |
+| `__tests__/index-barrel.test.ts` | EXTEND | EP3 | `NewMatrixCardDraft` exported; internal helpers NOT exported |
+
+## E.2 Acceptance criteria → test mapping (extension)
+
+### E.2.1 Unit — `createMatrixId` (EP1)
+
+- **T-MID-1** — returns a non-empty string; two calls return distinct values.
+- **T-MID-2** — id does NOT match the seed pattern `^seed-\d+$` (namespace disjoint).
+
+### E.2.2 Unit — `addCard` pure reducer (EP1)
+
+- **T-MADD-1** — adds a card to an empty target quadrant; `state[to].length === 1`.
+- **T-MADD-2** — **appends** to a non-empty target quadrant; new card is at `state[to][length-1]` (LAST — Matrix append convention, NOT prepend).
+- **T-MADD-3** — adds to a previously empty quadrant when other quadrants are seeded (empty-quadrant affordance).
+- **T-MADD-4** — empty/whitespace title → returns the SAME state reference (no-op; defensive guard).
+- **T-MADD-5** — unknown `targetQuadrant` → returns the SAME state reference.
+- **T-MADD-6** — untouched quadrants preserve referential equality (identity check: `next.q2 === prev.q2` when adding to q1).
+- **T-MADD-7** — new card has `title.en === title.zh === trimmed` (single bilingual title); `tag` present only when draft.tag set; `date`/`dateZh`/`taskId` all undefined.
+- **T-MADD-8** — `schemaVersion` preserved (`1`); the card id passes a `createMatrixId`-shaped check.
+
+### E.2.3 Component — `MatrixComposer` (EP2)
+
+- **T-MC-1** — `open=false` → dialog not shown; `open=true` → `showModal` called; title input autofocused (setTimeout(0)).
+- **T-MC-2** — empty title + Save → inline `err_title_required` shown; `onSave` NOT called.
+- **T-MC-3** — valid title + Save → `onSave(draft, defaultQuadrant)` called with trimmed title.
+- **T-MC-4** — tag radiogroup: select a preset → draft carries `tag`; "None" → `tag` omitted.
+- **T-MC-5** — quadrant radiogroup: change selection → `onSave` carries the chosen quadrant (retarget works).
+- **T-MC-6** — ESC (native `cancel`) → `onClose` called, no save; backdrop click (`e.target===dialog`) → `onClose`; Cancel button → `onClose`.
+- **T-MC-7** — bilingual STR parity: EN labels render under `lang="en"`, ZH under `lang="zh"` for title/tag/quadrant/buttons/error.
+
+### E.2.4 Wire + persistence — `MatrixModule` (EP2)
+
+- **T-MWIRE-1** — clicking the M-01 header `+` opens the composer with `defaultQuadrant="q1"`.
+- **T-MWIRE-2** — clicking a quadrant's M-03 `+` opens the composer with `defaultQuadrant` = that quadrant.
+- **T-MCR-1** — save creates a card; it renders in the correct quadrant; `state[to]` count increments.
+- **T-MCR-2** — created card is written to `localStorage["xai_matrix_state"]` (round-trip read parses to a `MatrixState` containing the new id).
+- **T-MCR-3** — create into a previously EMPTY quadrant: card appears + the empty-state hint disappears.
+- **T-MNOEMIT-1** — creating a card does NOT emit `web:matrix:priority-tagged` (spy on `emitWebEvent`; assert 0 calls on the create path; contrast: a move still emits).
+
+### E.2.5 Integration + a11y + barrel (EP3)
+
+- **T-MCR-4** — create → unmount → remount (simulating refresh): the created card survives (re-read from persisted `xai_matrix_state`).
+- **T-MA11Y-1** — composer: `aria-modal`, `aria-labelledby`, title `aria-required`/`aria-describedby` on error, tag/quadrant `role="radiogroup"` + options `role="radio"`+`aria-checked`.
+- **T-MBAR-1** — `index.ts` exports `NewMatrixCardDraft`; does NOT export `createMatrixId` / `addCard` / `MatrixComposer` / `STR_MATRIX_COMPOSER` (internal).
+
+## E.3 Mock strategy (extension)
+
+- **localStorage**: cleared per test by the existing `__tests__/setup.ts` (SHIPPED). Create tests assert via `localStorage.getItem("xai_matrix_state")`.
+- **`crypto.randomUUID`**: may be absent in jsdom → `createMatrixId` falls back to the `m-<ts>-<rnd>` path; T-MID-* assert shape, not a specific algorithm.
+- **`emitWebEvent`**: spied (vi.spyOn) in T-MNOEMIT-1 to assert the create path is emit-free.
+- **No new DataTransfer shim needed** — create flow is click + dialog, not drag (reuses the SHIPPED `__tests__/setup.ts`).
+- **No cross-package mocks** — no registry / events / tokens edit, so no new contract mocks.
+
+## E.4 Coverage target (extension)
+
+New code (`internal/ids.ts`, `internal/create.ts`, `MatrixComposer.tsx`, the `addCard` hook method, the wire handlers) meets the SHIPPED §5 targets (90% statements / 85% branches / 95% functions / 90% lines). The pure `internal/create.ts` + `internal/ids.ts` should reach ~100% (small, fully-branched).
+
+## E.5 Cross-vendor manual smoke (EP3 — DEFERABLE per ADR-0008 §S3)
+
+Run `pnpm dev` in `apps/web/` on real macOS; for each vendor (Chrome / Safari 17+ / Firefox):
+
+| # | Check | Status |
+|---|---|---|
+| XV-CREATE-1 | Click header `+` → composer opens, title autofocused. | [ ] |
+| XV-CREATE-2 | Type title, pick a tag + quadrant, Add → card appears in the chosen quadrant. | [ ] |
+| XV-CREATE-3 | Click a quadrant `+` → composer opens pre-targeted to that quadrant; Add → card lands there (incl. an empty quadrant). | [ ] |
+| XV-CREATE-4 | Reload → created card persists. | [ ] |
+| XV-CREATE-5 | EN ↔ ZH toggle → composer labels + created card title switch correctly. | [ ] |
+| XV-CREATE-6 | ESC / backdrop / Cancel → dialog closes, no card created. | [ ] |
+| XV-CREATE-7 | No console errors/warnings in any vendor; existing drag-between still works + still emits. | [ ] |
+
+NOTE (if §3-R13 confirms feature-gating): Matrix must be ENABLED in settings for the `+`/composer to be reachable — note this so a tester does not file a false "composer won't open" bug.
+
+## E.6 Exit criteria (extension)
+
+- EP1: T-MID-1..2 + T-MADD-1..8 + types.test-d green; SHIPPED 54 green; matrix typecheck + lint clean.
+- EP2: T-MC-1..7 + T-MWIRE-1..2 + T-MCR-1..3 + T-MNOEMIT-1 green; `@repo/web` check-types clean.
+- EP3: T-MCR-4 + T-MA11Y-1 + T-MBAR-1 green; full matrix + web suites + build green; XV-CREATE-1..7 run OR formally deferred per ADR-0008 §S3 (checklist recorded in dev_log verify section); → `READY_FOR_VERIFY`.

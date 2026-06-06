@@ -216,8 +216,11 @@ For normal parallel work:
   `desktop-next` to `dev`.
 - Plugin work uses `codex/plugin/<feature>` and lands on
   `desktop-plugin-next` while that line is active.
-- `site` and `admin` remain PROPOSED; get operator confirmation before opening
-  new work branches.
+- `site` remains PROPOSED; get operator confirmation before opening new work
+  branches.
+- `admin` is operator-activated but roadmap-gated; use `codex/admin/<feature>`
+  only through `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`,
+  starting with `xai-admin-dashboard-shell`.
 
 ### Shared Worktree Rules
 

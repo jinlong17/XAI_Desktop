@@ -1,17 +1,23 @@
 /**
  * StatisticsModule.tsx — top-level composition for @repo/plugin-web-statistics.
  *
- * Reads three storage keys via usePref:
+ * Reads FOUR storage keys via usePref (READ-ONLY — never writes any key):
  *   - xai_pomodoro_sessions (PomodoroSession[])
  *   - xai_habits_state      (HabitsStateBlob)
  *   - xai_pref_week_start   (0 | 1)
+ *   - xai_task_cols         (Record<BucketId,TaskCol>) — for real done count
  *
  * Derives RangeAggregate + HeatmapCell[] via pure aggregators (no random,
  * deterministic, useMemo-keyed) and passes pre-computed data to leaf
  * components. Range tabs (本周 / 本月 / 全部) flip a useState; no event
  * bus listeners.
  *
- * api.md §0 / §5 / §7.
+ * "Tasks completed" KPI now reads the REAL `done === true` count from
+ * `xai_task_cols` (current board, range-invariant). A user-visible
+ * "current board" / "当前看板" sub-label on the KPI + BarChart panel
+ * header frames the number honestly (B1 / Path 1).
+ *
+ * api.md §0 / §5 / §7 / §SRA.
  */
 
 import * as React from "react";
@@ -34,6 +40,7 @@ import {
   isPomodoroSession,
   type PomodoroSessionRecord,
 } from "./internal/isPomodoroSession.js";
+import { strStats } from "./internal/strings.js";
 import { IconChart } from "./internal/icons.js";
 import { KpiCard } from "./KpiCard.js";
 import { LineChart } from "./LineChart.js";
@@ -76,6 +83,8 @@ export function StatisticsModule({
   const [rawSessions] = usePref("xai_pomodoro_sessions");
   const [rawHabits] = usePref("xai_habits_state");
   const [rawWeekStart] = usePref("xai_pref_week_start");
+  // READ-ONLY: Statistics never writes xai_task_cols.
+  const [rawTaskCols] = usePref("xai_task_cols");
 
   const sessions = useMemo(() => narrowSessions(rawSessions), [rawSessions]);
   const habits = useMemo(() => narrowHabitsState(rawHabits), [rawHabits]);
@@ -85,9 +94,12 @@ export function StatisticsModule({
   const now = useMemo(() => new Date(), []);
 
   const agg: RangeAggregate = useMemo(
-    () => aggregateRange(range, sessions, habits, weekStart, now, lang),
-    [range, sessions, habits, weekStart, now, lang],
+    () => aggregateRange(range, sessions, habits, weekStart, now, lang, rawTaskCols),
+    [range, sessions, habits, weekStart, now, lang, rawTaskCols],
   );
+
+  // Bilingual "current board" marker for the Tasks KPI + BarChart panel (B1 / Path 1).
+  const currentBoardLabel = strStats("current_board", lang === "zh" ? "zh" : "en");
 
   const cells = useMemo(
     () => heatmapCells(sessions, weekStart, now),
@@ -152,6 +164,7 @@ export function StatisticsModule({
             label={s("statistics.tasks_completed")}
             value={agg.kpis.tasksTotal}
             trend={agg.kpis.tasksTrend}
+            subLabel={currentBoardLabel}
           />
           <KpiCard
             cellId="focus"
@@ -200,11 +213,20 @@ export function StatisticsModule({
           />
         </div>
 
-        {/* Tasks bar chart */}
+        {/* Tasks bar chart — current board, range-invariant (B1 / Path 1 / REC-1) */}
         <div className="stats-chart panel">
           <div className="sc-head">
             <h3>{s("statistics.tasks_completed")}</h3>
-            <div className="sc-totals mono">{agg.kpis.tasksTotal}</div>
+            <div className="sc-totals mono">
+              {agg.kpis.tasksTotal}
+              <span
+                className="muted"
+                style={{ fontSize: "11px", marginLeft: "6px" }}
+                data-testid="tasks-barchart-marker"
+              >
+                {currentBoardLabel}
+              </span>
+            </div>
           </div>
           <BarChart
             labels={agg.labels}

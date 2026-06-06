@@ -14,7 +14,7 @@ import { processPushBatch, type ConflictShadowInput, type PushDatabase, type Pus
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(testDir, '../../../..');
-const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
 const accountId = 'acct-rekey';
 const deviceId = 'dev-rekey';
 
@@ -165,7 +165,7 @@ function u64Le(value: bigint): number[] {
 describe.skipIf(!process.env.SUPABASE_INTEGRATION_TESTS)('[integration] rekey two-phase server primitives', () => {
   const testDir = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(testDir, '../../../..');
-  const migrationsDir = path.join(repoRoot, 'apps/web/supabase/migrations');
+  const migrationsDir = path.join(repoRoot, 'apps/release-site/supabase/migrations');
   const containerName = `xai-sync-rekey-${process.pid}`;
 
   const accountId = '66666666-6666-4666-8666-666666666666';

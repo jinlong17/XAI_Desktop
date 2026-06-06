@@ -18,6 +18,7 @@
 1. SDK 总览(三个契约层)
 2. Plugin manifest.json 完整规范
 3. PluginRegistry / PluginHost 公开 API
+3.5. PluginInstance / PluginCenter / AddToDesktop 契约（桌面入口模型）
 4. EventMap — 跨 Plugin 事件契约表
 5. Tauri Commands 契约
 6. Plugin 内部标准目录结构
@@ -519,6 +520,134 @@ import '@repo/plugin-ai/register';
 // Host 此后只通过 PluginHost 渲染,不直接知道有哪些 plugin
 ```
 
+### 3.5 PluginInstance / PluginCenter / AddToDesktop 契约（桌面入口模型）
+
+> 本节定义未来 `桌面插件` 入口的 SDK 语义。它是**设计 / contract 层**，不是当前运行时实现。G1 SHIPPED 前保持文档对齐，不开插件功能开发。
+
+#### 3.5.1 归属边界
+
+| 能力 | Owner | 规则 |
+|---|---|---|
+| Mac App 控制面板的 `桌面插件` 入口 | `app` | App owns entry、窗口创建、位置、点击穿透、pin、权限提示 |
+| Plugin Center 的内容目录 | `plugin` | 从 manifest / `PluginCenterEntry` 读取可添加插件、状态、settings schema |
+| `添加到桌面` | `app` + `plugin` | App 创建窗口和 `PluginInstance`；插件只渲染实例内容 |
+| 实例配置 schema | `plugin` | 插件声明可配置项；App 持久化 device-local 实例记录 |
+| 第三方插件市场 | Future | MVP 不做 marketplace、远程安装、第三方包 |
+
+#### 3.5.2 类型定义
+
+```typescript
+export type PluginInstanceStatus = "enabled" | "disabled" | "hidden";
+export type PluginInstanceSize = "small" | "medium" | "large";
+export type PluginWindowKind = "overlay" | "grid" | "dedicated";
+export type PluginStyleMode = "system" | "light" | "dark" | "minimal";
+
+export interface PluginPlacement {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  displayId?: string;
+  spaceId?: string;
+}
+
+export interface PluginDataSource {
+  /**
+   * Plugin-owned selector, for example:
+   * - time-progress.today
+   * - countdown.<id>
+   * - organizer.grid.<id>
+   * - clipboard.local-history
+   */
+  type: string;
+  params?: Record<string, unknown>;
+}
+
+export interface PluginInstanceBehavior {
+  clickAction?: "open-app" | "open-plugin-center" | "none";
+  clickThrough?: boolean;
+  pinned?: boolean;
+  visibleOnAllSpaces?: boolean;
+}
+
+export interface PluginInstanceStyle {
+  mode: PluginStyleMode;
+  opacity: number; // 0.35..1
+  accent?: string;
+}
+
+export interface PluginInstance {
+  id: string;
+  pluginName: string;             // manifest.name
+  contentType: string;            // manifest.contentTypes[n]
+  windowKind: PluginWindowKind;
+  status: PluginInstanceStatus;
+  size: PluginInstanceSize;
+  placement: PluginPlacement;
+  dataSource: PluginDataSource;
+  style: PluginInstanceStyle;
+  behavior: PluginInstanceBehavior;
+  schemaVersion: 1;
+  syncScope: "device-local";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PluginSettingField {
+  key: string;
+  label: string;
+  type: "select" | "toggle" | "slider" | "color" | "data-source";
+  defaultValue: unknown;
+  options?: Array<{ label: string; value: string }>;
+}
+
+export interface PluginCenterEntry {
+  pluginName: string;
+  displayName: string;
+  description: string;
+  status: "available" | "enabled" | "disabled" | "unavailable";
+  maturity: "stable" | "planned" | "stub";
+  category: "organizer" | "widgets" | "clipboard" | "pet" | "meditation";
+  primaryAction: "add-to-desktop" | "enable" | "configure" | "unavailable";
+  permissionWarnings?: string[];
+  nativeRequirements?: string[];
+  settingsSchema: PluginSettingField[];
+}
+
+export interface AddToDesktopRequest {
+  pluginName: string;
+  contentType: string;
+  size?: PluginInstanceSize;
+  dataSource?: PluginDataSource;
+  style?: Partial<PluginInstanceStyle>;
+  behavior?: Partial<PluginInstanceBehavior>;
+}
+
+export interface AddToDesktopResult {
+  instance: PluginInstance;
+  createdWindowLabel: string;
+}
+```
+
+#### 3.5.3 MVP 行为规则
+
+1. `PluginInstance.syncScope` 默认且必须为 `device-local`。升为 `account-sync` 只能经 sync 线 D4 gate。
+2. `AddToDesktopRequest` 不直接创建原生能力；它只请求 App 使用现有窗口命令创建实例窗口。
+3. MVP 只支持内置插件；不支持 marketplace、远程安装、第三方 bundle、拖拽到桌面作为主路径。
+4. MVP 添加方式是点击 `添加到桌面` 后自动落位；拖拽添加、多显示器 Space 绑定和复杂布局编辑器延后。
+5. 禁用实例保留配置；删除实例才移除配置。
+6. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
+
+#### 3.5.4 Plugin Center 信息架构
+
+| 区域 | 数据来源 | MVP 内容 |
+|---|---|---|
+| 推荐 / 可添加 | `PluginCenterEntry[]` | 内置插件卡片、maturity、权限提示、主按钮 |
+| 已启用 | `PluginInstance[]` | 实例名、插件名、尺寸、位置、状态 |
+| 插件详情 | manifest + `PluginCenterEntry` | 预览、简介、`添加到桌面`、依赖、权限 |
+| 实例设置 | `PluginInstance` + `settingsSchema` | 尺寸、位置、透明度、样式、数据来源、行为 |
+| 全局偏好 | App Settings | 默认透明度、默认点击穿透、显示/隐藏所有桌面插件 |
+
 ---
 
 ## 4. EventMap — 跨 Plugin 事件契约表
@@ -958,13 +1087,17 @@ vi.mock('@repo/core-data', async () => {
 // 详见 ADR-0003 三个面架构
 ```
 
-### 9.9 AI 桌面宠物(归属 plugin-widgets,子模块)
+### 9.9 AI 桌面宠物(独立包 plugin-pet — ADR-0015)
+
+> **决策 ADR-0015(web 侧 Accepted 2026-06-02):桌宠是独立插件包 `packages/plugin-pet`,不是 plugin-widgets 的子模块。** 该包代码已存在(stateMachine / PetAvatar / PetBubble / PetPanel / PetAiReaction);它有自己的状态机 + AI persona 生命周期(FR-PET-09~11 依赖 ai-cube)+ 数据表 `pets` / `pet_memory`(主 PRD §5.16)。`desktop-pet` 不再列在 plugin-widgets 的 contentTypes 内。
 
 ```jsonc
 {
-  "name": "widgets",
-  "contentTypes": ["clock", "weather", "note", "progress-tracker", "meditation", "desktop-pet"],
-  "events": { "emit": ["widgets:*", "pet:*"], "listen": ["productivity:pomodoro-*", "account:sync-*", "ai:query-*"] }
+  "name": "pet",
+  "windows": { "overlay": true },
+  "contentTypes": ["desktop-pet"],
+  "events": { "emit": ["pet:*"], "listen": ["productivity:pomodoro-*", "account:sync-*", "ai:query-*"] },
+  "dependencies": ["@repo/core"]
 }
 ```
 
@@ -992,7 +1125,7 @@ vi.mock('@repo/core-data', async () => {
 }
 ```
 
-> 其余 5 个 sub-widget(冥想 / 时间进度条 / 时钟 / 天气 / 便签)归 plugin-widgets,在 manifest 用 contentTypes 列。
+> plugin-widgets 的 sub-widget(时钟 / 天气 / 便签 / 时间进度条 / 冥想)在其 manifest 用 contentTypes 列(`["clock","weather","note","progress-tracker","meditation"]`);**桌宠 desktop-pet 已移出 widgets,改由独立包 plugin-pet 承载**(见上 §9.9 / ADR-0015)。
 
 ---
 

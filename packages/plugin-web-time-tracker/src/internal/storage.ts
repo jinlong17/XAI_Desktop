@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TIME_TRACKER_CATEGORIES } from "./defaults.js";
 import { entryDuration, entryStart, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
 import type {
@@ -209,10 +209,17 @@ export function getTimeTrackerSnapshot(nowMs = Date.now()): TimeTrackerSnapshot 
 
 export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => void): readonly [T, (next: T | ((prev: T) => T)) => void] {
   const [value, setValue] = useState<T>(read);
+  const valueRef = useRef(value);
+
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
 
   useEffect(() => {
     function refresh(): void {
-      setValue(read());
+      const nextValue = read();
+      valueRef.current = nextValue;
+      setValue(nextValue);
     }
     window.addEventListener("storage", refresh);
     window.addEventListener(TIME_TRACKER_STORAGE_EVENT, refresh);
@@ -224,11 +231,10 @@ export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => voi
 
   const setStored = useCallback(
     (next: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const nextValue = typeof next === "function" ? (next as (prev: T) => T)(prev) : next;
-        write(nextValue);
-        return nextValue;
-      });
+      const nextValue = typeof next === "function" ? (next as (prev: T) => T)(valueRef.current) : next;
+      valueRef.current = nextValue;
+      write(nextValue);
+      setValue(nextValue);
     },
     [write],
   );

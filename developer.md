@@ -136,6 +136,30 @@ XAI_Desktop/
 
 ---
 
+## 3.5 Branch Map (ADR-0013, Proposed)
+
+> Added 2026-05-30. Branch topology + Web→Desktop sync flow. Authority: `docs/adr/0013-branch-sync-governance.md`.
+
+`web` leads, `dev` lags — **by design** (Web first, App follows). The lag is managed by
+the catch-up lanes + the D3 sync gate, not "fixed" by force-merging `dev` forward:
+
+```
+web                        Web mainline / Web release source (the line you develop on)
+  │  (D3 sync gate: classify each Web change W0–W4, emit a parity receipt)
+  ▼
+desktop-next               Web→App sync integration + Desktop next-step
+  │                        desktop-plugin-next ⇆ (App plugin platform / SDK, isolated)
+  ▼
+dev                        Desktop stable / App release candidate (intentionally lags web)
+  │
+  ▼
+release/desktop/<version>  ephemeral, freeze-only (sign / notarize / dmg / updater metadata)
+```
+
+**Product lines** (ADR-0013 §D1) — importance ≠ current dev-focus: web (P0·maintenance) ·
+mac App (P1·**active**) · organizer plugins (P2·paused) · account cloud-sync (P2·paused) ·
+official website (PROPOSED) · admin-dashboard (operator-activated · roadmap-gated).
+
 ## 4. Three-Faces Architecture
 
 Per `docs/adr/0003-three-faces-architecture.md`:

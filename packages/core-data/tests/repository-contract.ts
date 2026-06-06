@@ -8,9 +8,14 @@ export interface ContractRecord extends RepoRecord {
   tag: string;
 }
 
+interface RepositoryContractOptions {
+  allowDeviceLocalRecords?: boolean;
+}
+
 export function runRepositoryContractTests(
   name: string,
   createRepo: () => Repo<ContractRecord>,
+  options: RepositoryContractOptions = {},
 ): void {
   describe(name, () => {
     it("performs CRUD roundtrip and preserves metadata fields", async () => {
@@ -30,11 +35,18 @@ export function runRepositoryContractTests(
 
       await repo.put(makeRecord("todo-2", { priority: 2, tag: "work" }));
       await repo.put(makeRecord("todo-1", { priority: 1, tag: "work" }));
+      const nonTodoEntity =
+        options.allowDeviceLocalRecords === false
+          ? "productivity.note"
+          : "clipboard.item";
       await repo.put(
         makeRecord("clip-1", {
-          entityType: "clipboard.item",
+          entityType: nonTodoEntity,
           priority: 3,
-          syncScope: "device-local",
+          syncScope:
+            options.allowDeviceLocalRecords === false
+              ? "account-sync"
+              : "device-local",
           tag: "local",
         }),
       );

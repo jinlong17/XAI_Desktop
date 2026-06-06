@@ -13,6 +13,13 @@ import { render, screen, act, fireEvent } from "@testing-library/react";
 import { PomodoroModule } from "../PomodoroModule.js";
 import { onWebEvent } from "@repo/xai-web-event-bus";
 
+function selectOneMinuteCustomPreset() {
+  fireEvent.click(screen.getByTestId("preset-custom"));
+  fireEvent.change(screen.getByTestId("custom-minutes-input"), {
+    target: { value: "1" },
+  });
+}
+
 describe("PomodoroModule", () => {
   // M1: empty state (no sessions) — idle UI, all-zero counters, no records
   it("M1: renders idle state with zero counters and no records", () => {
@@ -40,11 +47,12 @@ describe("PomodoroModule", () => {
   // M3: tick to zero → session persisted
   it("M3: tick to zero writes session", () => {
     render(<PomodoroModule lang="en" />);
+    act(() => { selectOneMinuteCustomPreset(); });
     act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    // Advance time past 25 minutes
-    act(() => { vi.advanceTimersByTime(25 * 60 * 1000 + 2000); });
+    act(() => { vi.advanceTimersByTime(60 * 1000 + 2000); });
     // Module still renders without crash
     expect(document.querySelector(".module-pomo")).toBeTruthy();
+    expect(screen.getByTestId("completion-notice").textContent).toContain("complete");
   });
 
   // M4 / M15: mute icon toggles
@@ -99,20 +107,18 @@ describe("PomodoroModule", () => {
     expect(screen.getByTestId("start-btn")).toBeTruthy();
   });
 
-  // M8: mode-cycle advances after focus
-  it("M8: after focus ends, mode advances (away from focus)", () => {
+  // M8: stop keeps current mode; completed sessions advance by cycle
+  it("M8: Stop keeps focus mode; completed focus advances to break", () => {
     render(<PomodoroModule lang="en" />);
     act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
     act(() => { vi.advanceTimersByTime(5000); });
     act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
-    // After end-early focus with 0 prior completed focus sessions:
-    //   nextMode("focus", 0) → "long-break" (0 % 4 === 0)
-    // The focus pill button contains a span with the mode text
-    const focusPill = document.querySelector(".focus-pill");
-    // Mode has changed from "Focus" to a break mode
-    expect(focusPill?.textContent).not.toContain("Focus");
-    // Specifically it should be "Long Break" (0 completed pomos, so long-break first)
-    expect(focusPill?.textContent).toContain("Long Break");
+    expect(document.querySelector(".focus-pill")?.textContent).toContain("Focus");
+
+    act(() => { selectOneMinuteCustomPreset(); });
+    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
+    act(() => { vi.advanceTimersByTime(60 * 1000 + 2000); });
+    expect(document.querySelector(".focus-pill")?.textContent).toContain("Short Break");
   });
 
   // M9+M10: emits web:pomodoro:session-finished on End
@@ -193,11 +199,62 @@ describe("PomodoroModule", () => {
     warnSpy.mockRestore();
   });
 
+  it("M16: duration presets and custom minutes update the idle timer", () => {
+    render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.click(screen.getByTestId("preset-focus-30")); });
+    expect(screen.getByText("30:00")).toBeTruthy();
+
+    act(() => { selectOneMinuteCustomPreset(); });
+    expect(screen.getByText("1:00")).toBeTruthy();
+  });
+
+  it("M17: display style and theme color controls update selected state", () => {
+    render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.click(screen.getByTestId("style-minimal")); });
+    expect(document.querySelector(".module-pomo")?.getAttribute("data-display-style")).toBe("minimal");
+    expect(screen.getByTestId("style-minimal").getAttribute("aria-pressed")).toBe("true");
+
+    act(() => { fireEvent.click(screen.getByTestId("theme-blue")); });
+    expect(screen.getByTestId("theme-blue").getAttribute("aria-pressed")).toBe("true");
+    expect((document.querySelector(".module-pomo") as HTMLElement).style.getPropertyValue("--accent-hue")).toBe("245");
+  });
+
+  it("M19: fullscreen mode toggles and exits with Escape", () => {
+    render(<PomodoroModule lang="en" />);
+
+    const fullscreenBtn = screen.getByTestId("fullscreen-btn");
+    act(() => { fireEvent.click(fullscreenBtn); });
+    expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("true");
+    expect(fullscreenBtn.getAttribute("aria-label")).toBe("Exit fullscreen");
+
+    act(() => { fireEvent.keyDown(window, { key: "Escape" }); });
+    expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("false");
+  });
+
+  it("M18: sound selection, preview, and mute controls are interactive", () => {
+    render(<PomodoroModule lang="en" />);
+
+    const select = screen.getByTestId("sound-select") as HTMLSelectElement;
+    act(() => {
+      fireEvent.change(select, { target: { value: "bell" } });
+    });
+    expect(select.value).toBe("bell");
+
+    act(() => { fireEvent.click(screen.getByTestId("sound-preview-btn")); });
+
+    const muteBtn = screen.getByTestId("mute-btn");
+    act(() => { fireEvent.click(muteBtn); });
+    expect(muteBtn.getAttribute("aria-label")).toBe("Unmute");
+  });
+
   // AC-SCHEMA-6: elapsedMs === durationMs for completed sessions (strict equality)
   it("AC-SCHEMA-6: for tick-to-zero session, elapsedMs === durationMs (strict)", () => {
     render(<PomodoroModule lang="en" />);
+    act(() => { selectOneMinuteCustomPreset(); });
     act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(25 * 60 * 1000 + 500); });
+    act(() => { vi.advanceTimersByTime(60 * 1000 + 500); });
 
     const raw = localStorage.getItem("xai_pomodoro_sessions");
     if (raw) {
@@ -207,6 +264,7 @@ describe("PomodoroModule", () => {
         if (s.mode === "focus") {
           // Strict equality: elapsedMs === durationMs for tick-to-zero
           expect(s.elapsedMs).toBe(s.durationMs);
+          expect(s.durationMs).toBe(60 * 1000);
         }
       }
     }

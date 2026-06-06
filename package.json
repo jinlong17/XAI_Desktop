@@ -4,11 +4,12 @@
   "scripts": {
     "build": "turbo run build",
     "dashboard": "node scripts/dashboard/generate-state.mjs",
-    "dashboard:serve": "node scripts/dashboard/serve.mjs",
-    "dashboard:verify-modules": "node scripts/dashboard/verify-product-modules.mjs",
     "dashboard:verify-static": "node scripts/dashboard/verify-static.mjs",
+    "dashboard:verify-modules": "node scripts/dashboard/verify-product-modules.mjs",
+    "dashboard:serve": "node scripts/dashboard/serve.mjs",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint && node scripts/web/check-design-colors.mjs",
+    "web:check-colors": "node scripts/web/check-design-colors.mjs",
     "typecheck": "pnpm check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
@@ -22,11 +23,6 @@
     "typescript": "5.9.2"
   },
   "packageManager": "pnpm@9.0.0",
-  "pnpm": {
-    "overrides": {
-      "postcss": "8.5.15"
-    }
-  },
   "engines": {
     "node": ">=18"
   }

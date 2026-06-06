@@ -36,6 +36,18 @@ describe("ClockDisplay", () => {
     expect(container.querySelector("svg.clk-analog")).not.toBeNull();
   });
 
+  it("renders additional analog variants as distinct svg classes", () => {
+    const { container } = render(<ClockDisplay variant="analogZen" />);
+    const svg = container.querySelector("svg.clk-analog") as SVGElement;
+    expect(svg).not.toBeNull();
+    expect(svg.className.baseVal).toContain("clock-variant-analogZen");
+  });
+
+  it("renders meditation atmosphere clock as a breath ring", () => {
+    const { container } = render(<ClockDisplay variant="breathRing" />);
+    expect(container.querySelector(".clk-breath-ring")).not.toBeNull();
+  });
+
   it("AC-PICK-3: static mode freezes at 03:44:17", () => {
     render(<ClockDisplay variant="digital" staticMode />);
     expect(screen.getByText(/03:44/)).toBeInTheDocument();
@@ -74,10 +86,47 @@ describe("ClockDisplay", () => {
     expect(container.querySelector(".clk-split.mini")).not.toBeNull();
   });
 
-  it("analog svg uses the red second-hand oklch(70% 0.18 25)", () => {
-    const { container } = render(<ClockDisplay variant="analog" />);
+  it("analog svg uses the configured highlight color for second hand", () => {
+    const { container } = render(
+      <ClockDisplay
+        variant="analog"
+        colors={{
+          digits: "#ffffff",
+          hands: "#eeeeee",
+          ring: "#cccccc",
+          background: "#101820",
+          highlight: "#70d6ff",
+        }}
+      />,
+    );
     const svg = container.querySelector("svg.clk-analog");
     expect(svg).not.toBeNull();
-    expect(svg!.innerHTML).toContain("oklch(70% 0.18 25)");
+    expect(svg!.innerHTML).toContain("#70d6ff");
+  });
+
+  it("digital clock applies configured size and colors", () => {
+    const { container } = render(
+      <ClockDisplay
+        variant="digital"
+        scale="larger"
+        colors={{
+          digits: "#ffffff",
+          hands: "#eeeeee",
+          ring: "#cccccc",
+          background: "#101820",
+          highlight: "#70d6ff",
+        }}
+      />,
+    );
+    const el = container.querySelector(".clk-digital") as HTMLElement;
+    expect(el.className).toContain("clock-scale-larger");
+    expect(el.style.backgroundColor).toBe("rgb(16, 24, 32)");
+  });
+
+  it("non-mini preview keeps selected scale visible", () => {
+    const { container } = render(<ClockDisplay variant="split" scale="larger" />);
+    const el = container.querySelector(".clk-split") as HTMLElement;
+    expect(el.className).toContain("clock-scale-larger");
+    expect(el.className).not.toContain("mini");
   });
 });

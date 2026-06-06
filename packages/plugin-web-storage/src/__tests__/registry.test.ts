@@ -68,15 +68,16 @@ describe("AC-REG-2: Both proposed keys exist with proposed: true", () => {
   });
 });
 
-describe("AC-REG-3: All entries have schemaVersion: 1 in v1", () => {
-  it("every registry entry has schemaVersion === 1", () => {
+describe("AC-REG-3: Registry entries use the expected schemaVersion", () => {
+  it("every registry entry has the expected schemaVersion", () => {
     const entries = Object.values(PREF_REGISTRY);
     expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
+      const expected = entry.key === "xai_meditation_prefs" ? 3 : 1;
       expect(
         entry.schemaVersion,
-        `Entry ${entry.key} has schemaVersion ${entry.schemaVersion}, expected 1`,
-      ).toBe(1);
+        `Entry ${entry.key} has schemaVersion ${entry.schemaVersion}, expected ${expected}`,
+      ).toBe(expected);
     }
   });
 });

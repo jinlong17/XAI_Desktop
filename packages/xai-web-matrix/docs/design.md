@@ -505,3 +505,85 @@ Manual smoke matrix (P3):
 | Firefox (latest) | required | required | required | n/a (jsdom only) |
 
 The cross-vendor verify gate is documented in `test.md` §6.
+
+---
+
+# Extension — xai-web-matrix-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 content above (§1–§11) is unchanged.
+> Decision snapshot only — discovery detail lives in the review doc, not here.
+> NOTE: this extension REVERSES §10's "`+` button … no-op stub" parking-lot entry
+> for M-01 + M-03 (now WIRED to create). The §10 stub stance held for v1; the
+> P0 carve-out `b9334f7` authorizes wiring them.
+
+## E.0 Decision snapshot
+
+| Field | Value |
+|---|---|
+| Feature | `xai-web-matrix-card-create` (header/quadrant `+` → MatrixComposer → reducer create → persist) |
+| Selected Option | A1 (state lift in `MatrixModule`) + B1 (`addCard` pure reducer in `internal/create.ts`) + C1 (`usePersistedMatrix().addCard` dispatch) + D1 (single bilingual title) + E1 (native `<dialog>`) + F1 (Edit/Delete DEFERRED) |
+| Discovery / Review Doc | `docs/reviews/xai-web-matrix-card-create/20260528-discovery-review.md` |
+| Roadmap Manifest | `docs/workflow/roadmap/xai-web-matrix-card-create.md` |
+| Review Date / Version | 2026-05-28 (v1 — pending feature-review) |
+| Governing Authority | ADR-0010 §D4 P0 carve-out (`docs/reviews/_p0-carve-outs/20260528-matrix-card-create.md`, commit `b9334f7`) |
+| Mirror precedent | `xai-web-tasks-card-create` (SHIPPED 2026-05-28, ship `0ba69f0`) — Matrix is architecturally parallel to Tasks. |
+
+## E.1 Frozen assumptions (extension)
+
+Changing any of these requires re-running feature-plan, not a silent edit.
+
+1. **No new package** — all new code lands in `packages/xai-web-matrix/src/`.
+2. **New files**: `src/internal/ids.ts` (`createMatrixId`), `src/internal/create.ts` (`addCard`), `src/internal/strings.ts` (`STR_MATRIX_COMPOSER`), `src/MatrixComposer.tsx`.
+3. **One new pure reducer action** — `addCard(state, draft, targetQuadrant)`, pure, symmetric with `moveCardTo`. **APPENDS** to the target quadrant (`[...state[to], newCard]`) — the Matrix move-convention (`move.ts:73` appends), **divergent from Tasks `addCard` which prepends**. Returns `state` unchanged on empty-title / unknown-quadrant; referential equality for untouched quadrants. `move.ts` had ONLY `moveCardTo` before this feature (confirmed discovery R1/R2).
+4. **New exported type** — `NewMatrixCardDraft = { title: string; tag?: string }` (additive in `types.ts`). **NO `withDate`** — Matrix has no bucket-derived date model; `date`/`dateZh` stay `undefined` on user-created cards in v1.
+5. **Persistence reuse** — `xai_matrix_state` (registry; json codec; owner `xai-web-matrix`). NO `packages/plugin-web-storage` edit. Created card flows through the hook's existing `setState(next as unknown as RawBlob)` boundary cast (`usePersistedMatrix.ts:38`).
+6. **No new event channel** — composer state lifts into `MatrixModule` via `useState`; NO `packages/core/src/types/events.ts` edit (Calendar Q5-A precedent). Existing `web:matrix:priority-tagged` untouched; **create does NOT emit** (that channel is move-specific + consumer-less — discovery QE-D).
+7. **Composer** — native `<dialog>` + `showModal()`/`close()` + `cancel`(ESC) + backdrop-click (`e.target===dialogRef.current`) + `setTimeout(0)` autofocus, mirroring `TaskComposer.tsx` verbatim. Tag picker + quadrant picker are `role="radiogroup"`.
+8. **Single bilingual title** — one input fills both `title.en` + `title.zh`; label follows active UI lang.
+9. **Local STR** — `src/internal/strings.ts` `STR_MATRIX_COMPOSER` (en+zh). NO `plugin-web-tokens` edit. Tag labels reuse the in-file `translateTag` map (`Card.tsx:86-95`) / `useI18n`.
+10. **id** — `createMatrixId()` (`crypto.randomUUID()` + `m-<base36ts>-<rnd>` fallback) mirroring Tasks `ids.ts`. Disjoint from seed's `seed-<digit>` namespace.
+11. **Dispatch via the hook** — new `usePersistedMatrix().addCard(draft, to)` method (hook returns `{ state, setState, moveCard, addCard }`); single-sourced persistence boundary, mirroring how `moveCard` is wrapped. NO emit.
+12. **Default quadrant** — M-01 header `+` defaults `targetQuadrant` to `q1`; M-03 quadrant `+` defaults to the clicked quadrant; the composer's 4-quadrant radiogroup lets the user retarget.
+13. **Edit + Delete DEFERRED** — recorded as the recommended NEXT increment. NOTE divergence from Tasks: Matrix `Card.tsx` onClick is FREE (no onClick today, only `onDragStart`/`onKeyDown`), so a delete-only slice is cheaper here than it was for Tasks — flagged for reviewer override (discovery QE-A).
+14. **`MatrixCard.taskId`** stays `undefined` — reserved for the future `xai-web-tasks` join (separate ADR). Do NOT touch.
+15. **No host-shell edit** — the slot (`matrixSlotRegistration`, railOrder 6) already SHIPPED; create needs no registration change.
+
+## E.2 Dependency overview (extension)
+
+No new dependencies. Reuses the SHIPPED dep set (`@repo/core`, `@repo/plugin-web-tokens`, `@repo/plugin-web-storage`, `@repo/xai-web-event-bus`, `@repo/xai-web-shell`) — all `Stable`/`Production`. Internal reuse: `usePersistedMatrix` (extended), `usePref("xai_matrix_state")`, `useI18n`, the `translateTag` map. New internal precedent borrowed from `packages/xai-web-tasks/src/internal/ids.ts` + `TaskComposer.tsx` (pattern only — NOT an import; no inter-plugin import per ADR-0007 §S7 / CLAUDE.md boundaries).
+
+## E.3 Module structure delta
+
+```
+packages/xai-web-matrix/src/
+├─ MatrixComposer.tsx          ← NEW: native <dialog> create form (mirror TaskComposer)
+├─ types.ts                    ← +NewMatrixCardDraft (additive export)
+├─ MatrixModule.tsx            ← +composer state (open/targetQuadrant) + addCard dispatch + onAdd handlers; wire M-01 header + onClick (default q1)
+├─ Quadrant.tsx                ← +onAddCard?(quadrant) prop; wire M-03 +button onClick (default = this quadrant)
+├─ matrix.css                  ← +composer dialog rules (appended)
+└─ internal/
+   ├─ ids.ts                   ← NEW: createMatrixId()
+   ├─ create.ts                ← NEW: addCard pure action (appends to target quadrant)
+   ├─ strings.ts               ← NEW: STR_MATRIX_COMPOSER (en+zh)
+   └─ usePersistedMatrix.ts    ← +addCard(draft, to) method (calls create.ts addCard + setState; NO emit)
+```
+
+Public surface (`src/index.ts`) gains `NewMatrixCardDraft` type export. `MatrixComposer` stays internal to the module (surfaced only via `MatrixModule`).
+
+## E.4 Phase plan (extension — mirrors dev_log Phase Plan)
+
+- **EP1 — Data layer**: `internal/ids.ts` (`createMatrixId`), `addCard` in new `internal/create.ts`, `NewMatrixCardDraft` in `types.ts` + barrel export, `internal/strings.ts`. Unit tests (create addCard + ids shape). No UI yet. SHIPPED 54 tests stay green.
+- **EP2 — Composer + wire + persistence**: `MatrixComposer.tsx` (native dialog, single title input, tag radiogroup, quadrant radiogroup, inline title-required error, ESC/backdrop/Cancel). `onAddCard` prop on `Quadrant`; wire M-01 header `+` (default q1) + M-03 quadrant `+` (default = clicked). Composer state in `MatrixModule`; save → `usePersistedMatrix().addCard` → persist. RTL + persistence tests (create → localStorage round-trip; empty-quadrant create).
+- **EP3 — Integration + a11y + cross-vendor**: end-to-end create→persist→refresh test; a11y tests (autofocus, ESC, backdrop); index-barrel test for new `NewMatrixCardDraft` export; full matrix + web suites green; Codex cold-read (or deferred per ADR-0008 §S3); dev_log verify section; PLUGIN_MAP note at ship.
+
+Each phase ends with `feature-build` STOP per Workflow V2.
+
+## E.5 Out of scope (extension)
+
+- Edit / Delete card UI (deferred — E.1 #13; recommended next increment, cheaper here than Tasks).
+- Free-form / bucket-derived date entry (Matrix has no date model; `date` stays undefined on created cards).
+- `web:matrix:priority-tagged` emit on create (move-specific channel — QE-D).
+- M-02 header More / M-04 quadrant More-actions buttons (separate no-op controls; later HIDE/DISABLE batch).
+- `xai-web-tasks` join (`MatrixCard.taskId` stays undefined — separate ADR).
+- Statistics subscriber / sync / IndexedDB.
+- Any `plugin-web-storage`, `plugin-web-tokens`, `packages/core`, or host-shell edit.

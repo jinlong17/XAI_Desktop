@@ -124,6 +124,31 @@ const INSIGHTS_KEY = "xai_tt_insights_v1";
 const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
 const DAY_RECORDS_COLLAPSED_KEY = "xai_tt_day_records_collapsed_v1";
+const TIME_STATUS_HIDDEN_KEY = "xai_tt_time_status_hidden_v1";
+const TIME_STATUS_CARDS_KEY = "xai_tt_time_status_cards_v1";
+const TIME_STATUS_CUSTOM_CARDS_KEY = "xai_tt_time_status_custom_cards_v1";
+
+type TimeStatusStaticCardKey = "date" | "month" | "year" | "today" | "active";
+type TimeStatusCardKey = TimeStatusStaticCardKey | `custom:${string}`;
+type TimeStatusCardView = {
+  readonly key: TimeStatusCardKey;
+  readonly icon: string;
+  readonly label: string;
+  readonly value: string;
+  readonly detail: string;
+  readonly progress?: string;
+  readonly running?: boolean;
+  readonly custom?: boolean;
+};
+type TimeStatusCustomCard = {
+  readonly id: string;
+  readonly name: string;
+  readonly targetMs: number;
+  readonly createdAt: number;
+  readonly updatedAt: number;
+};
+
+const DEFAULT_TIME_STATUS_CARDS: readonly TimeStatusStaticCardKey[] = ["date", "month", "year", "today", "active"];
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -304,6 +329,56 @@ function startOfYear(ts: number): number {
   return d.getTime();
 }
 
+function startOfNextMonth(ts: number): number {
+  const d = new Date(startOfMonth(ts));
+  d.setMonth(d.getMonth() + 1);
+  return d.getTime();
+}
+
+function startOfNextYear(ts: number): number {
+  const d = new Date(startOfYear(ts));
+  d.setFullYear(d.getFullYear() + 1);
+  return d.getTime();
+}
+
+function clampProgress(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function progressText(value: number): string {
+  return `${Math.round(clampProgress(value) * 100)}%`;
+}
+
+function weekdayLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `星期${["日", "一", "二", "三", "四", "五", "六"][d.getDay()] ?? ""}`;
+  return d.toLocaleDateString("en-US", { weekday: "long" });
+}
+
+function monthLabel(ts: number, lang: Lang): string {
+  const d = new Date(ts);
+  if (lang === "zh") return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`;
+  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function daysLeftText(days: number, lang: Lang): string {
+  if (lang === "zh") return `${days}${ttCopy(lang, "daysLeft")}`;
+  return `${days} ${ttCopy(lang, days === 1 ? "dayLeft" : "daysLeft")}`;
+}
+
+function calendarDayIndex(ts: number): number {
+  const d = new Date(startOfDay(ts));
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS;
+}
+
+function daysLeftAfterToday(endExclusiveMs: number, nowMs: number): number {
+  return Math.max(0, calendarDayIndex(endExclusiveMs) - calendarDayIndex(nowMs) - 1);
+}
+
+function todayRemainingMs(nowMs: number): number {
+  return Math.max(0, startOfDay(nowMs) + DAY_MS - nowMs);
+}
+
 function dateInputValue(ts: number): string {
   return dayKey(ts);
 }
@@ -377,6 +452,59 @@ function readDayRecordsCollapsed(): boolean {
   return window.localStorage.getItem(DAY_RECORDS_COLLAPSED_KEY) === "1";
 }
 
+function readTimeStatusHidden(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(TIME_STATUS_HIDDEN_KEY) === "1";
+}
+
+function customTimeStatusKey(id: string): TimeStatusCardKey {
+  return `custom:${id}`;
+}
+
+function isTimeStatusStaticCardKey(value: unknown): value is TimeStatusStaticCardKey {
+  return typeof value === "string" && DEFAULT_TIME_STATUS_CARDS.includes(value as TimeStatusStaticCardKey);
+}
+
+function isTimeStatusCardKey(value: unknown): value is TimeStatusCardKey {
+  return isTimeStatusStaticCardKey(value) || (typeof value === "string" && value.startsWith("custom:") && value.length > "custom:".length);
+}
+
+function readTimeStatusCardKeys(): readonly TimeStatusCardKey[] {
+  if (typeof window === "undefined") return DEFAULT_TIME_STATUS_CARDS;
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CARDS_KEY) ?? "null") as unknown;
+    if (!Array.isArray(raw)) return DEFAULT_TIME_STATUS_CARDS;
+    const seen = new Set<TimeStatusCardKey>();
+    const keys = raw.filter((item): item is TimeStatusCardKey => {
+      if (!isTimeStatusCardKey(item) || seen.has(item)) return false;
+      seen.add(item);
+      return true;
+    });
+    return keys;
+  } catch {
+    return DEFAULT_TIME_STATUS_CARDS;
+  }
+}
+
+function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CUSTOM_CARDS_KEY) ?? "[]") as unknown;
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((item): item is TimeStatusCustomCard => {
+      if (typeof item !== "object" || item === null) return false;
+      if (!("id" in item) || typeof item.id !== "string" || item.id.trim() === "") return false;
+      if (!("name" in item) || typeof item.name !== "string" || item.name.trim() === "") return false;
+      if (!("targetMs" in item) || typeof item.targetMs !== "number" || !Number.isFinite(item.targetMs)) return false;
+      if (!("createdAt" in item) || typeof item.createdAt !== "number" || !Number.isFinite(item.createdAt)) return false;
+      if (!("updatedAt" in item) || typeof item.updatedAt !== "number" || !Number.isFinite(item.updatedAt)) return false;
+      return true;
+    });
+  } catch {
+    return [];
+  }
+}
+
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
@@ -391,6 +519,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [sidebarInsightsHidden, setSidebarInsightsHidden] = useState(readSidebarInsightsHidden);
   const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
   const [dayRecordsCollapsed, setDayRecordsCollapsed] = useState(readDayRecordsCollapsed);
+  const [timeStatusHidden, setTimeStatusHidden] = useState(readTimeStatusHidden);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
@@ -416,6 +545,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     window.localStorage.setItem(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0");
   }, [dayRecordsCollapsed]);
 
+  useEffect(() => {
+    window.localStorage.setItem(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0");
+  }, [timeStatusHidden]);
+
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
   const weekStart = startOfWeek(nowMs);
@@ -430,6 +563,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const selectedByCategory = useMemo(() => totalByCategory(selectedEntries, nowMs), [nowMs, selectedEntries]);
   const selectedTotal = useMemo(() => selectedEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, selectedEntries]);
   const todayEntries = useMemo(() => liveEntries.filter((entry) => dayKey(entryStart(entry)) === todayKey), [liveEntries, todayKey]);
+  const todayTotal = useMemo(() => todayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, todayEntries]);
   const weekTotal = useMemo(
     () => liveEntries.filter((entry) => entryStart(entry) >= weekStart).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
     [liveEntries, nowMs, weekStart],
@@ -645,7 +779,18 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
               </section>
             )}
 
-            <section className="tt-panel">
+            <TimeStatusPanel
+              lang={lang}
+              nowMs={nowMs}
+              todayTotal={todayTotal}
+              todayRemaining={todayRemainingMs(nowMs)}
+              activeEntries={activeEntries}
+              categoryMap={categoryMap}
+              hidden={timeStatusHidden}
+              onSetHidden={setTimeStatusHidden}
+            />
+
+            <section className="tt-panel tt-category-panel">
               <div className="tt-section-head">
                 <h2>{ttCopy(lang, "categories")}</h2>
                 <div className="tt-section-actions">
@@ -868,6 +1013,359 @@ function subcategoryColor(sub: TimeTrackerSubcategory | undefined, category: Tim
 
 function subcategoryIcon(sub: TimeTrackerSubcategory | undefined, category: TimeTrackerCategory | undefined): string {
   return sub?.icon ?? category?.icon ?? "timer";
+}
+
+function activeEntryStatusLabel(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang): string {
+  const sub = findSubcategory(category, entry.subId);
+  const primary = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
+  const parent = textName(category?.name, lang);
+  if (primary === "") return ttCopy(lang, "running");
+  return sub !== undefined && parent !== "" ? `${primary} · ${parent}` : primary;
+}
+
+function hourText(hours: number, lang: Lang): string {
+  if (lang === "zh") return `${hours}小时`;
+  return `${hours}h`;
+}
+
+function customTimeStatusValue(targetMs: number, nowMs: number, lang: Lang): string {
+  const remaining = targetMs - nowMs;
+  if (remaining <= 0) return ttCopy(lang, "timeReached");
+  const days = Math.floor(remaining / DAY_MS);
+  const hours = Math.floor((remaining - days * DAY_MS) / 3_600_000);
+  if (days > 0) return hours > 0 ? `${daysLeftText(days, lang)} ${hourText(hours, lang)}` : daysLeftText(days, lang);
+  return formatDuration(remaining);
+}
+
+function customTimeStatusDetail(targetMs: number, lang: Lang): string {
+  return `${ttCopy(lang, "targetTime")}: ${formatDayLabel(targetMs, lang)} ${formatClock(targetMs)}`;
+}
+
+function TimeStatusPanel({
+  lang,
+  nowMs,
+  todayTotal,
+  todayRemaining,
+  activeEntries,
+  categoryMap,
+  hidden,
+  onSetHidden,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly todayTotal: number;
+  readonly todayRemaining: number;
+  readonly activeEntries: readonly TimeTrackerEntry[];
+  readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
+  readonly hidden: boolean;
+  readonly onSetHidden: (hidden: boolean) => void;
+}) {
+  const [visibleCardKeys, setVisibleCardKeys] = useState(readTimeStatusCardKeys);
+  const [customCards, setCustomCards] = useState(readTimeStatusCustomCards);
+  const [customEditorOpen, setCustomEditorOpen] = useState(false);
+  const [dragKey, setDragKey] = useState<TimeStatusCardKey | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const dragKeyRef = useRef<TimeStatusCardKey | null>(null);
+  const monthStart = startOfMonth(nowMs);
+  const nextMonth = startOfNextMonth(nowMs);
+  const yearStart = startOfYear(nowMs);
+  const nextYear = startOfNextYear(nowMs);
+  const monthProgress = clampProgress((nowMs - monthStart) / Math.max(1, nextMonth - monthStart));
+  const yearProgress = clampProgress((nowMs - yearStart) / Math.max(1, nextYear - yearStart));
+  const monthDaysLeft = daysLeftAfterToday(nextMonth, nowMs);
+  const yearDaysLeft = daysLeftAfterToday(nextYear, nowMs);
+  const activeLabels = activeEntries.map((entry) => activeEntryStatusLabel(entry, categoryMap.get(entry.categoryId), lang));
+  const activeValue = activeEntries.length === 0
+    ? ttCopy(lang, "noActiveTimer")
+    : activeEntries.length === 1
+      ? ttCopy(lang, "running")
+      : `${activeEntries.length} ${ttCopy(lang, "runningCount")}`;
+  const activeDetail = activeEntries.length === 0 ? ttCopy(lang, "readyToStart") : activeLabels.slice(0, 2).join(" · ");
+  const allCards: Record<TimeStatusStaticCardKey, TimeStatusCardView> = {
+    date: {
+      key: "date",
+      icon: "calendar",
+      label: ttCopy(lang, "currentDate"),
+      value: weekdayLabel(nowMs, lang),
+      detail: `${monthLabel(nowMs, lang)} · ${formatDayLabel(nowMs, lang)}`,
+    },
+    month: {
+      key: "month",
+      icon: "chart",
+      label: ttCopy(lang, "monthProgress"),
+      value: daysLeftText(monthDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisMonth"),
+      progress: progressText(monthProgress),
+    },
+    year: {
+      key: "year",
+      icon: "target",
+      label: ttCopy(lang, "yearProgress"),
+      value: daysLeftText(yearDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisYear"),
+      progress: progressText(yearProgress),
+    },
+    today: {
+      key: "today",
+      icon: "timer",
+      label: ttCopy(lang, "todayTotal"),
+      value: formatDuration(todayTotal),
+      detail: `${ttCopy(lang, "todayRemaining")}: ${formatDuration(todayRemaining)}`,
+    },
+    active: {
+      key: "active",
+      icon: activeEntries.length > 0 ? "play" : "clock",
+      label: ttCopy(lang, "currentRunning"),
+      value: activeValue,
+      detail: activeDetail,
+      running: activeEntries.length > 0,
+    },
+  };
+  const customCardViews = customCards.map((card): TimeStatusCardView => ({
+    key: customTimeStatusKey(card.id),
+    icon: "alarm",
+    label: card.name,
+    value: customTimeStatusValue(card.targetMs, nowMs, lang),
+    detail: customTimeStatusDetail(card.targetMs, lang),
+    custom: true,
+  }));
+  const customCardViewMap = new Map(customCardViews.map((card) => [card.key, card]));
+  const cardForKey = (key: TimeStatusCardKey): TimeStatusCardView | undefined => {
+    if (isTimeStatusStaticCardKey(key)) return allCards[key];
+    return customCardViewMap.get(key);
+  };
+  const visibleCards = visibleCardKeys.map(cardForKey).filter((card): card is TimeStatusCardView => card !== undefined);
+  const hiddenCards = [
+    ...DEFAULT_TIME_STATUS_CARDS.filter((key) => !visibleCardKeys.includes(key)).map((key) => allCards[key]),
+    ...customCardViews.filter((card) => !visibleCardKeys.includes(card.key)),
+  ];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys));
+  }, [visibleCardKeys]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards));
+  }, [customCards]);
+
+  function removeCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => prev.filter((item) => item !== key));
+    setAddOpen(false);
+  }
+
+  function restoreCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => {
+      if (prev.includes(key)) return prev;
+      if (!isTimeStatusStaticCardKey(key)) return [...prev, key];
+      const restored = [...prev];
+      const defaultIndex = DEFAULT_TIME_STATUS_CARDS.indexOf(key);
+      const insertAt = restored.findIndex((item) => isTimeStatusStaticCardKey(item) && DEFAULT_TIME_STATUS_CARDS.indexOf(item) > defaultIndex);
+      if (insertAt < 0) return [...restored, key];
+      restored.splice(insertAt, 0, key);
+      return restored;
+    });
+    setAddOpen(false);
+  }
+
+  function createCustomCard(name: string, targetMs: number): void {
+    const stamp = Date.now();
+    const card: TimeStatusCustomCard = {
+      id: uid("status"),
+      name,
+      targetMs,
+      createdAt: stamp,
+      updatedAt: stamp,
+    };
+    setCustomCards((prev) => [...prev, card]);
+    setVisibleCardKeys((prev) => [...prev, customTimeStatusKey(card.id)]);
+    setCustomEditorOpen(false);
+    setAddOpen(false);
+  }
+
+  function reorderCard(overKey: TimeStatusCardKey): void {
+    const currentDragKey = dragKeyRef.current;
+    if (currentDragKey === null || currentDragKey === overKey) return;
+    setVisibleCardKeys((prev) => {
+      const from = prev.indexOf(currentDragKey);
+      const to = prev.indexOf(overKey);
+      if (from < 0 || to < 0 || from === to) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      if (moved === undefined) return prev;
+      next.splice(to, 0, moved);
+      return next;
+    });
+  }
+
+  if (hidden) {
+    return (
+      <section className="tt-panel tt-time-status-panel is-hidden">
+        <div className="tt-time-status-hidden">
+          <span className="tt-time-status-hidden-icon"><IconGlyph name="calendar" size={15} /></span>
+          <strong>{ttCopy(lang, "timeStatusHidden")}</strong>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+          <button type="button" className="tt-btn tt-btn-subtle" onClick={() => onSetHidden(false)}>
+            {ttCopy(lang, "showTimeStatus")}
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="tt-panel tt-time-status-panel">
+      <div className="tt-section-head tt-time-status-head">
+        <div>
+          <h2>{ttCopy(lang, "timeStatus")}</h2>
+          <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
+        </div>
+        <div className="tt-time-status-actions">
+          <div className="tt-time-add-wrap">
+            <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "addTimeStatusCard")} onClick={() => setAddOpen((open) => !open)}>
+              <IconGlyph name="plus" size={14} />
+            </button>
+            {addOpen && (
+              <div className="tt-time-add-menu" role="menu" aria-label={ttCopy(lang, "addTimeStatusCard")}>
+                <button type="button" className="tt-time-custom-add" role="menuitem" onClick={() => { setCustomEditorOpen(true); setAddOpen(false); }}>
+                  <IconGlyph name="plus" size={14} />
+                  <span>{ttCopy(lang, "customTimeStatus")}</span>
+                </button>
+                {hiddenCards.length > 0 ? hiddenCards.map((card) => (
+                  <button key={card.key} type="button" role="menuitem" onClick={() => restoreCard(card.key)}>
+                    <IconGlyph name={card.icon} size={14} />
+                    <span>{card.label}</span>
+                  </button>
+                )) : (
+                  <span>{ttCopy(lang, "noHiddenTimeStatusCards")}</span>
+                )}
+              </div>
+            )}
+          </div>
+          <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideTimeStatus")} onClick={() => onSetHidden(true)}>
+            <IconGlyph name="chevD" size={14} />
+          </button>
+        </div>
+      </div>
+      <div className="tt-time-card-grid">
+        {visibleCards.map((card) => (
+          <article
+            key={card.key}
+            className={`tt-time-card${card.running === true ? " is-running" : ""}${card.custom === true ? " is-custom" : ""}${dragKey === card.key ? " is-dragging" : ""}`}
+            draggable
+            onContextMenu={(event) => {
+              event.preventDefault();
+              removeCard(card.key);
+            }}
+            onDragStart={(event) => {
+              event.dataTransfer.effectAllowed = "move";
+              dragKeyRef.current = card.key;
+              setDragKey(card.key);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              reorderCard(card.key);
+            }}
+            onDragEnd={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+            onDrop={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+          >
+            <span className="tt-time-card-icon"><IconGlyph name={card.icon} size={15} /></span>
+            <span className="tt-time-card-copy">
+              <em>{card.label}</em>
+              <strong>{card.value}</strong>
+              <small>{card.detail}</small>
+            </span>
+            <button
+              type="button"
+              className="tt-time-card-remove"
+              aria-label={`${ttCopy(lang, "removeTimeStatusCard")} ${card.label}`}
+              onClick={() => removeCard(card.key)}
+            >
+              <IconGlyph name="close" size={12} />
+            </button>
+            {card.progress !== undefined && (
+              <span className="tt-time-progress-wrap">
+                <span className="tt-time-progress-meta">{card.progress}</span>
+                <span className="tt-time-progress" aria-label={`${card.label} ${card.progress}`}>
+                  <span style={{ width: card.progress }} />
+                </span>
+              </span>
+            )}
+          </article>
+        ))}
+      </div>
+      {customEditorOpen && (
+        <CustomTimeStatusEditor
+          lang={lang}
+          nowMs={nowMs}
+          onClose={() => setCustomEditorOpen(false)}
+          onSave={createCustomCard}
+        />
+      )}
+    </section>
+  );
+}
+
+function CustomTimeStatusEditor({
+  lang,
+  nowMs,
+  onClose,
+  onSave,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly onClose: () => void;
+  readonly onSave: (name: string, targetMs: number) => void;
+}) {
+  const [name, setName] = useState("");
+  const [targetValue, setTargetValue] = useState(() => toInputValue(nowMs + DAY_MS));
+  const targetMs = fromInputValue(targetValue, nowMs + DAY_MS);
+  const valid = name.trim() !== "" && Number.isFinite(targetMs);
+
+  function submit(event: FormEvent): void {
+    event.preventDefault();
+    if (!valid) return;
+    onSave(name.trim(), targetMs);
+  }
+
+  return (
+    <Modal title={ttCopy(lang, "customTimeStatus")} onClose={onClose} footer={(
+      <>
+        <span className="tt-head-spacer" />
+        <button type="button" className="tt-btn" onClick={onClose}>{ttCopy(lang, "cancel")}</button>
+        <button type="submit" form="tt-custom-time-status-form" className="tt-btn tt-btn-primary" disabled={!valid}>{ttCopy(lang, "save")}</button>
+      </>
+    )}>
+      <form id="tt-custom-time-status-form" className="tt-custom-time-form" onSubmit={submit}>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeName")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeName")}
+            value={name}
+            placeholder={ttCopy(lang, "customTimePlaceholder")}
+            onChange={(event) => setName(event.target.value)}
+            autoFocus
+          />
+        </label>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeTarget")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeTarget")}
+            type="datetime-local"
+            value={targetValue}
+            onChange={(event) => setTargetValue(event.target.value)}
+          />
+        </label>
+      </form>
+    </Modal>
+  );
 }
 
 type InsightBarRow = {
@@ -1139,35 +1637,47 @@ function CategoryCard({
       }}
       onDragEnd={() => onSetDragId(null)}
     >
-      <div className="tt-card-actions">
-        <button
-          type="button"
-          className="tt-card-collapse"
-          aria-expanded={!collapsed}
-          aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
-          onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
-        >
-          <IconGlyph name="chevD" size={14} />
-        </button>
-        <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
-          <IconGlyph name="plus" size={14} />
-        </button>
-        <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
-          <IconGlyph name="dots" size={15} />
-        </button>
-      </div>
-      <button type="button" className="tt-category-body" onClick={onDetail}>
-        <div className="tt-category-top">
-          <span className="tt-category-icon"><IconGlyph name={category.icon} size={18} /></span>
-          <div>
+      <div className="tt-card-head">
+        <button type="button" className="tt-category-body" onClick={onDetail}>
+          <span className="tt-category-icon"><IconGlyph name={category.icon} size={17} /></span>
+          <span className="tt-category-copy">
             <h3>{textName(category.name, lang)}</h3>
-            <p>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</p>
-          </div>
-          <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
-          {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+            <span>{formatDuration(todayMs)} / {category.goalMin}m {ttCopy(lang, "goal")}</span>
+          </span>
+        </button>
+        <div className="tt-card-actions">
+          <button
+            type="button"
+            className="tt-category-start"
+            disabled={!canStart}
+            aria-label={`${ttCopy(lang, "start")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onStart(category.id, null); }}
+          >
+            <IconGlyph name="play" size={13} />
+            <span>{ttCopy(lang, "start")}</span>
+          </button>
+          <button
+            type="button"
+            className="tt-card-collapse"
+            aria-expanded={!collapsed}
+            aria-label={`${ttCopy(lang, collapsed ? "showSubcategories" : "hideSubcategories")} ${textName(category.name, lang)}`}
+            onClick={(event) => { event.stopPropagation(); onToggleCollapsed(); }}
+          >
+            <IconGlyph name="chevD" size={13} />
+          </button>
+          <button type="button" className="tt-card-add-sub" aria-label={`${ttCopy(lang, "addSub")} ${textName(category.name, lang)}`} onClick={(event) => { event.stopPropagation(); onAddSub(); }}>
+            <IconGlyph name="plus" size={13} />
+          </button>
+          <button type="button" className="tt-card-menu" aria-label={ttCopy(lang, "editCategory")} onClick={(event) => { event.stopPropagation(); onEdit(); }}>
+            <IconGlyph name="dots" size={14} />
+          </button>
         </div>
-        <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
-      </button>
+      </div>
+      <div className="tt-category-meta-row">
+        <span className="tt-category-meta">{category.subs.length > 0 ? `${category.subs.length} ${ttCopy(lang, "subcategory")}` : ttCopy(lang, "whole")}</span>
+        {running && <span className="tt-run-tag"><span className="tt-live-dot" />{activeCount}</span>}
+      </div>
+      <div className="tt-progress"><span style={{ width: `${goalPct}%` }} /></div>
       {!collapsed && (
         <div className="tt-subcard-grid">
           {tiles.map((tile) => {
@@ -1188,7 +1698,11 @@ function CategoryCard({
                   <strong>{tile.name}</strong>
                   <em>{textName(category.name, lang)}</em>
                 </span>
-                {tileRunning && <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>}
+                {tileRunning ? (
+                  <span className="tt-run-tag"><span className="tt-live-dot" />{tileActive}</span>
+                ) : (
+                  <span className="tt-subcard-play" aria-hidden="true"><IconGlyph name="play" size={12} /></span>
+                )}
               </button>
             );
           })}
@@ -1233,11 +1747,11 @@ function ActiveSession({
       <b>{formatTimer(entryDuration(entry, nowMs))}</b>
       <div className="tt-active-actions" data-no-drag>
         {isPausedEntry(entry) ? (
-          <button type="button" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={14} /><span>{ttCopy(lang, "resume")}</span></button>
         ) : (
-          <button type="button" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={15} /></button>
+          <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onPause(entry.id)} aria-label={ttCopy(lang, "pause")}><IconGlyph name="pause" size={14} /><span>{ttCopy(lang, "pause")}</span></button>
         )}
-        <button type="button" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={15} /></button>
+        <button type="button" className="tt-action-pill tt-action-stop" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={14} /><span>{ttCopy(lang, "end")}</span></button>
       </div>
     </article>
   );

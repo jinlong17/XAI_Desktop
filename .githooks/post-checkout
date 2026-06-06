@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Dashboard auto-refresh on branch switch.
+# git passes: $1=prev-HEAD  $2=new-HEAD  $3=branch-flag (1=branch checkout, 0=file).
+# Only refresh on a real branch switch, and only when core.hooksPath=.githooks.
+cd "$(git rev-parse --show-toplevel)" 2>/dev/null || exit 0
+if [ "${3:-1}" = "1" ]; then
+  node scripts/dashboard/generate-state.mjs >/dev/null 2>&1 || true
+fi
+exit 0

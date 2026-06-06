@@ -1,37 +1,29 @@
-/**
- * @internal — CountdownEditDialog.tsx
- *
- * Native <dialog>-based modal for creating and editing countdown cards.
- * Opened via dialogRef.current.showModal() from CountdownModule.
- *
- * Features:
- * - Create mode: empty form; no Delete button
- * - Edit mode: pre-filled form; Delete button visible
- * - Title (EN + ZH side-by-side)
- * - Target date <input type="date">
- * - Variant radios ("image" / "light")
- * - PresetPicker sub-component (visible only when variant="image")
- * - Validation: empty title (both langs blank) disables Save
- * - Invalid date string disables Save
- * - Escape key closes dialog (native <dialog> behavior)
- * - Backdrop click closes dialog (scrim div)
- *
- * Design: packages/xai-web-countdown/docs/design.md §8
- * API contract: packages/xai-web-countdown/docs/api.md §2.2
- */
-
-import React, { useRef, useEffect, useState } from "react";
-import type { CountdownCard, CountdownVariant, ImagePreset } from "../types.js";
-import { IMAGE_PRESETS } from "./presets.js";
+import React, { useEffect, useRef, useState } from "react";
+import type {
+  CountdownCard,
+  CountdownCategory,
+  CountdownColorId,
+  CountdownDisplayStyle,
+  CountdownIconId,
+  CountdownLayout,
+  CountdownVariant,
+  ImagePreset,
+} from "../types.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-
-// --------------------------------------------------------------------------
-// Types
-// --------------------------------------------------------------------------
+import { IMAGE_PRESETS } from "./presets.js";
+import {
+  COUNTDOWN_CATEGORIES,
+  COUNTDOWN_COLORS,
+  COUNTDOWN_ICONS,
+  COUNTDOWN_STYLES,
+} from "./options.js";
+import { defaultDraft } from "./presetCards.js";
+import { IconGlyph } from "./icons.js";
+import { isValidDateString } from "./validate.js";
+import { isValidTime } from "./countdownMath.js";
 
 export interface CountdownEditDialogProps {
-  /** null = create mode; non-null = edit mode */
   card: CountdownCard | null;
   lang: Lang;
   onSave: (draft: Omit<CountdownCard, "id">) => void;
@@ -39,14 +31,14 @@ export interface CountdownEditDialogProps {
   onCancel: () => void;
 }
 
-// --------------------------------------------------------------------------
-// PresetPicker sub-component
-// --------------------------------------------------------------------------
-
 interface PresetPickerProps {
   selected: string | null;
   lang: Lang;
   onChange: (presetId: string) => void;
+}
+
+function label(en: string, zh: string, lang: Lang): string {
+  return lang === "zh" ? zh : en;
 }
 
 function PresetPicker({ selected, lang, onChange }: PresetPickerProps) {
@@ -72,30 +64,6 @@ function PresetPicker({ selected, lang, onChange }: PresetPickerProps) {
   );
 }
 
-// --------------------------------------------------------------------------
-// Date validation
-// --------------------------------------------------------------------------
-
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-function isValidDate(s: string): boolean {
-  if (!DATE_RE.test(s)) return false;
-  const parts = s.split("-").map(Number);
-  const y = parts[0] ?? 0;
-  const mo = parts[1] ?? 0;
-  const d = parts[2] ?? 0;
-  const dt = new Date(y, mo - 1, d);
-  return (
-    dt.getFullYear() === y &&
-    dt.getMonth() === mo - 1 &&
-    dt.getDate() === d
-  );
-}
-
-// --------------------------------------------------------------------------
-// CountdownEditDialog
-// --------------------------------------------------------------------------
-
 export function CountdownEditDialog({
   card,
   lang,
@@ -105,222 +73,254 @@ export function CountdownEditDialog({
 }: CountdownEditDialogProps) {
   const { t } = useI18n(lang);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const explicitCloseRef = useRef(false);
+  const base = card ?? defaultDraft();
   const isEdit = card !== null;
 
-  // Form state
-  const [titleEn, setTitleEn] = useState(card?.title.en ?? "");
-  const [titleZh, setTitleZh] = useState(card?.title.zh ?? "");
-  const [targetDate, setTargetDate] = useState(card?.target_date ?? "");
-  const [variant, setVariant] = useState<CountdownVariant>(card?.variant ?? "image");
+  const [titleEn, setTitleEn] = useState(base.title.en);
+  const [titleZh, setTitleZh] = useState(base.title.zh);
+  const [targetDate, setTargetDate] = useState(base.target_date);
+  const [targetTime, setTargetTime] = useState(base.target_time ?? "");
+  const [startDate, setStartDate] = useState(base.start_date ?? "");
+  const [category, setCategory] = useState<CountdownCategory>(base.category ?? "custom");
+  const [color, setColor] = useState<CountdownColorId>(base.color ?? "slate");
+  const [icon, setIcon] = useState<CountdownIconId>(base.icon ?? "calendar");
+  const [note, setNote] = useState(base.note ?? "");
+  const [isPinned, setIsPinned] = useState(base.is_pinned ?? false);
+  const [isHidden, setIsHidden] = useState(base.is_hidden ?? false);
+  const [showCountdown, setShowCountdown] = useState(base.show_countdown ?? true);
+  const [showProgress, setShowProgress] = useState(base.show_progress ?? true);
+  const [displayStyle, setDisplayStyle] = useState<CountdownDisplayStyle>(base.display_style ?? "digital");
+  const [layout, setLayout] = useState<CountdownLayout>(base.layout ?? "stacked");
+  const [variant, setVariant] = useState<CountdownVariant>(base.variant ?? "light");
   const [coverUrl, setCoverUrl] = useState<string | null>(
-    card?.cover_url ?? `preset:${IMAGE_PRESETS[0]?.id ?? "dusk"}`,
+    base.cover_url ?? `preset:${IMAGE_PRESETS[0]?.id ?? "dusk"}`,
   );
+  const [attemptedSave, setAttemptedSave] = useState(false);
 
-  // Validation
   const titleEmpty = titleEn.trim() === "" && titleZh.trim() === "";
-  const dateValid = isValidDate(targetDate);
-  const canSave = !titleEmpty && dateValid;
+  const dateMissing = targetDate.trim() === "";
+  const timeMissing = targetTime.trim() === "";
+  const dateValid = isValidDateString(targetDate);
+  const startDateValid = startDate === "" || isValidDateString(startDate);
+  const timeValid = isValidTime(targetTime);
+  const validationMessages = [
+    ...(titleEmpty ? [label("Add a title in at least one language.", "请至少填写一个标题。", lang)] : []),
+    ...(dateMissing ? [label("Choose a target date.", "请选择目标日期。", lang)] : []),
+    ...(!dateMissing && !dateValid ? [label("Use a valid target date.", "请输入有效的目标日期。", lang)] : []),
+    ...(timeMissing ? [label("Choose a target time.", "请选择目标时间。", lang)] : []),
+    ...(!timeMissing && !timeValid ? [label("Use a valid target time.", "请输入有效的目标时间。", lang)] : []),
+    ...(startDate !== "" && !startDateValid ? [label("Use a valid progress start date.", "请输入有效的进度开始日期。", lang)] : []),
+    ...(!showCountdown && !showProgress ? [label("Show countdown, progress, or both.", "请至少显示倒计时或进度条。", lang)] : []),
+  ];
+  const canSave = validationMessages.length === 0;
 
-  // Open dialog on mount
   useEffect(() => {
-    if (dialogRef.current) {
-      dialogRef.current.showModal();
-    }
+    dialogRef.current?.showModal();
   }, []);
 
-  // Track whether close was triggered by our own explicit close() call (Save / Cancel / Delete).
-  // If so, the "close" event handler should NOT call onCancel a second time.
-  const explicitCloseRef = React.useRef(false);
-
-  // Handle native close event (Escape key triggers this)
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
     const handleClose = () => {
-      // Only fire onCancel if this is a native close (Escape), not our explicit programmatic close
-      if (!explicitCloseRef.current) {
-        onCancel();
-      }
+      if (!explicitCloseRef.current) onCancel();
       explicitCloseRef.current = false;
     };
     el.addEventListener("close", handleClose);
-    return () => {
-      el.removeEventListener("close", handleClose);
-    };
+    return () => el.removeEventListener("close", handleClose);
   }, [onCancel]);
 
-  // When switching variant, update cover_url accordingly
-  function handleVariantChange(v: CountdownVariant) {
-    setVariant(v);
-    if (v === "light") {
+  function handleVariantChange(next: CountdownVariant) {
+    setVariant(next);
+    if (next === "light") {
       setCoverUrl(null);
-    } else if (v === "image" && !coverUrl) {
+    } else if (!coverUrl) {
       setCoverUrl(`preset:${IMAGE_PRESETS[0]?.id ?? "dusk"}`);
     }
   }
 
+  function closeWith(action: () => void) {
+    explicitCloseRef.current = true;
+    dialogRef.current?.close();
+    action();
+  }
+
   function handleSave() {
+    setAttemptedSave(true);
     if (!canSave) return;
+    const targetChanged = card !== null && (
+      targetDate !== card.target_date ||
+      (targetTime || null) !== (card.target_time ?? null)
+    );
+    const stamp = new Date().toISOString();
     const draft: Omit<CountdownCard, "id"> = {
       title: { en: titleEn.trim(), zh: titleZh.trim() },
       target_date: targetDate,
+      target_time: targetTime === "" ? null : targetTime,
+      start_date: startDate === "" ? null : startDate,
       variant,
       cover_url: variant === "light" ? null : coverUrl,
+      category,
+      color,
+      icon,
+      note: note.trim(),
+      is_pinned: isPinned,
+      is_hidden: isHidden,
+      show_countdown: showCountdown,
+      show_progress: showProgress,
+      display_style: displayStyle,
+      layout,
+      status: "active",
+      source: targetChanged ? "custom" : base.source ?? "custom",
+      preset_id: targetChanged ? null : base.preset_id ?? null,
+      created_at: base.created_at ?? stamp,
+      updated_at: stamp,
+      deleted_at: null,
     };
-    // Mark as explicit close to suppress redundant onCancel from the "close" event
-    explicitCloseRef.current = true;
-    dialogRef.current?.close();
-    onSave(draft);
+    closeWith(() => onSave(draft));
   }
 
-  function handleDelete() {
-    if (!card) return;
-    explicitCloseRef.current = true;
-    dialogRef.current?.close();
-    onDelete(card.id);
-  }
-
-  function handleCancel() {
-    explicitCloseRef.current = true;
-    dialogRef.current?.close();
-    onCancel();
-  }
-
-  // Backdrop click
-  function handleScrimClick() {
-    handleCancel();
-  }
-
-  const modalTitle = isEdit
-    ? lang === "zh" ? "编辑倒计时" : "Edit Countdown"
-    : lang === "zh" ? "新建倒计时" : "New Countdown";
+  const modalTitle = isEdit ? label("Edit Countdown", "编辑倒计时", lang) : label("New Countdown", "新建倒计时", lang);
 
   return (
     <>
-      {/* Scrim instead of ::backdrop for cross-vendor parity */}
-      <div
-        className="cd-dialog-scrim"
-        aria-hidden="true"
-        onClick={handleScrimClick}
-      />
+      <div className="cd-dialog-scrim" aria-hidden="true" onClick={() => closeWith(onCancel)} />
       <dialog ref={dialogRef} className="cd-dialog" aria-modal="true">
-        <h2 className="cd-dialog-title">{modalTitle}</h2>
+        <header className="cd-dialog-head">
+          <div>
+            <p>{label("Countdown settings", "倒计时设置", lang)}</p>
+            <h2 className="cd-dialog-title">{modalTitle}</h2>
+          </div>
+          <button type="button" className="cd-dialog-close" onClick={() => closeWith(onCancel)} aria-label={t.common.cancel}>
+            <IconGlyph name="eyeOff" size={14} />
+          </button>
+        </header>
 
-        {/* Title EN + ZH side-by-side */}
-        <div className="cd-form-row-inline">
+        <div className="cd-form-grid">
           <div className="cd-form-row">
-            <label htmlFor="cd-title-en">
-              {lang === "zh" ? "标题（英文）" : "Title (English)"}
-            </label>
-            <input
-              id="cd-title-en"
-              type="text"
-              value={titleEn}
-              onChange={(e) => setTitleEn(e.target.value)}
-              autoFocus
-            />
+            <label htmlFor="cd-title-en">{label("Title (English)", "标题（英文）", lang)}</label>
+            <input id="cd-title-en" type="text" value={titleEn} onChange={(event) => setTitleEn(event.target.value)} autoFocus />
           </div>
           <div className="cd-form-row">
-            <label htmlFor="cd-title-zh">
-              {lang === "zh" ? "标题（中文）" : "Title (Chinese)"}
-            </label>
-            <input
-              id="cd-title-zh"
-              type="text"
-              value={titleZh}
-              onChange={(e) => setTitleZh(e.target.value)}
-            />
+            <label htmlFor="cd-title-zh">{label("Title (Chinese)", "标题（中文）", lang)}</label>
+            <input id="cd-title-zh" type="text" value={titleZh} onChange={(event) => setTitleZh(event.target.value)} />
+          </div>
+          <div className="cd-form-row">
+            <label htmlFor="cd-target-date">{label("Target date", "目标日期", lang)}</label>
+            <input id="cd-target-date" type="date" value={targetDate} onChange={(event) => setTargetDate(event.target.value)} />
+          </div>
+          <div className="cd-form-row">
+            <label htmlFor="cd-target-time">{label("Target time", "目标时间", lang)}</label>
+            <input id="cd-target-time" type="time" value={targetTime} onChange={(event) => setTargetTime(event.target.value)} />
+          </div>
+          <div className="cd-form-row">
+            <label htmlFor="cd-start-date">{label("Start date", "进度开始日期", lang)}</label>
+            <input id="cd-start-date" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
+          </div>
+          <div className="cd-form-row">
+            <label htmlFor="cd-category">{label("Category", "分类", lang)}</label>
+            <select id="cd-category" value={category} onChange={(event) => setCategory(event.target.value as CountdownCategory)}>
+              {COUNTDOWN_CATEGORIES.map((item) => <option key={item.id} value={item.id}>{lang === "zh" ? item.label_zh : item.label_en}</option>)}
+            </select>
           </div>
         </div>
-        {titleEmpty && (
-          <p className="cd-validation-error">
-            {lang === "zh" ? "标题不能为空" : "Title cannot be empty"}
-          </p>
+
+        {attemptedSave && validationMessages.length > 0 && (
+          <div className="cd-validation-panel" role="alert">
+            <strong>{label("Check the required fields", "请检查必填信息", lang)}</strong>
+            <ul>
+              {validationMessages.map((message) => <li key={message}>{message}</li>)}
+            </ul>
+          </div>
         )}
 
-        {/* Target date */}
         <div className="cd-form-row">
-          <label htmlFor="cd-target-date">
-            {lang === "zh" ? "目标日期" : "Target date"}
-          </label>
-          <input
-            id="cd-target-date"
-            type="date"
-            value={targetDate}
-            onChange={(e) => {
-              const v = e.target.value;
-              // R-ADV-2: Safari fallback — validate format ourselves
-              setTargetDate(v);
-            }}
-          />
-          {targetDate !== "" && !dateValid && (
-            <p className="cd-validation-error">
-              {lang === "zh" ? "日期格式无效" : "Invalid date format"}
-            </p>
-          )}
-        </div>
-
-        {/* Variant radios */}
-        <div className="cd-form-row">
-          <label>{lang === "zh" ? "样式" : "Style"}</label>
-          <div className="cd-radio-group">
-            <label>
-              <input
-                type="radio"
-                name="cd-variant"
-                value="image"
-                checked={variant === "image"}
-                onChange={() => handleVariantChange("image")}
+          <label>{label("Color", "颜色", lang)}</label>
+          <div className="cd-color-grid">
+            {COUNTDOWN_COLORS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={item.id === color ? "selected" : ""}
+                style={{ "--cd-swatch": item.accent } as React.CSSProperties}
+                onClick={() => setColor(item.id)}
+                aria-label={lang === "zh" ? item.label_zh : item.label_en}
+                aria-pressed={item.id === color}
               />
-              {lang === "zh" ? "图片" : "Image"}
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="cd-variant"
-                value="light"
-                checked={variant === "light"}
-                onChange={() => handleVariantChange("light")}
-              />
-              {lang === "zh" ? "浅色" : "Light"}
-            </label>
+            ))}
           </div>
         </div>
 
-        {/* Cover preset picker — only when variant=image */}
+        <div className="cd-form-row">
+          <label>{label("Icon", "图标", lang)}</label>
+          <div className="cd-icon-grid">
+            {COUNTDOWN_ICONS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={item.id === icon ? "selected" : ""}
+                onClick={() => setIcon(item.id)}
+                aria-label={lang === "zh" ? item.label_zh : item.label_en}
+                aria-pressed={item.id === icon}
+              >
+                <IconGlyph name={item.id} size={16} />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="cd-form-grid">
+          <div className="cd-form-row">
+            <label htmlFor="cd-style">{label("Display style", "显示样式", lang)}</label>
+            <select id="cd-style" value={displayStyle} onChange={(event) => setDisplayStyle(event.target.value as CountdownDisplayStyle)}>
+              {COUNTDOWN_STYLES.map((item) => <option key={item.id} value={item.id}>{lang === "zh" ? item.label_zh : item.label_en}</option>)}
+            </select>
+          </div>
+          <div className="cd-form-row">
+            <label htmlFor="cd-layout">{label("Layout", "布局方式", lang)}</label>
+            <select id="cd-layout" value={layout} onChange={(event) => setLayout(event.target.value as CountdownLayout)}>
+              <option value="stacked">{label("Top / bottom", "上下布局", lang)}</option>
+              <option value="split">{label("Left / right", "左右布局", lang)}</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="cd-switch-grid">
+          <label><input type="checkbox" checked={isPinned} onChange={(event) => setIsPinned(event.target.checked)} />{label("Pinned", "固定到顶部", lang)}</label>
+          <label><input type="checkbox" checked={isHidden} onChange={(event) => setIsHidden(event.target.checked)} />{label("Hidden", "隐藏", lang)}</label>
+          <label><input type="checkbox" checked={showCountdown} onChange={(event) => setShowCountdown(event.target.checked)} />{label("Show countdown", "显示倒计时", lang)}</label>
+          <label><input type="checkbox" checked={showProgress} onChange={(event) => setShowProgress(event.target.checked)} />{label("Show progress", "显示进度条", lang)}</label>
+        </div>
+
+        <div className="cd-form-row">
+          <label>{label("Surface", "卡片表面", lang)}</label>
+          <div className="cd-radio-group">
+            <label><input type="radio" name="cd-variant" value="light" checked={variant === "light"} onChange={() => handleVariantChange("light")} />{label("Light", "浅色", lang)}</label>
+            <label><input type="radio" name="cd-variant" value="image" checked={variant === "image"} onChange={() => handleVariantChange("image")} />{label("Image", "图片", lang)}</label>
+          </div>
+        </div>
+
         {variant === "image" && (
           <div className="cd-form-row">
-            <label>{lang === "zh" ? "封面" : "Cover"}</label>
-            <PresetPicker
-              selected={coverUrl}
-              lang={lang}
-              onChange={(id) => setCoverUrl(id)}
-            />
+            <label>{label("Cover", "封面", lang)}</label>
+            <PresetPicker selected={coverUrl} lang={lang} onChange={setCoverUrl} />
           </div>
         )}
 
-        {/* Actions */}
+        <div className="cd-form-row">
+          <label htmlFor="cd-note">{label("Note", "备注", lang)}</label>
+          <textarea id="cd-note" rows={3} value={note} onChange={(event) => setNote(event.target.value)} />
+        </div>
+
         <div className="cd-dialog-actions">
           {isEdit && (
-            <button
-              type="button"
-              className="cd-btn danger"
-              onClick={handleDelete}
-            >
-              {lang === "zh" ? "删除" : "Delete"}
+            <button type="button" className="cd-btn danger" onClick={() => card && closeWith(() => onDelete(card.id))}>
+              <IconGlyph name="trash" size={13} />{label("Delete", "删除", lang)}
             </button>
           )}
-          <button type="button" className="cd-btn" onClick={handleCancel}>
-            {t.common.cancel}
-          </button>
-          <button
-            type="button"
-            className="cd-btn primary"
-            onClick={handleSave}
-            disabled={!canSave}
-          >
-            {t.common.save}
-          </button>
+          <span className="grow" />
+          <button type="button" className="cd-btn" onClick={() => closeWith(onCancel)}>{t.common.cancel}</button>
+          <button type="button" className="cd-btn primary" onClick={handleSave} aria-disabled={!canSave}>{t.common.save}</button>
         </div>
       </dialog>
     </>

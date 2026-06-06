@@ -16,39 +16,27 @@
 
 import "./styles.css";
 
-import React, { useState, useEffect } from "react";
-import type { HabitsModuleProps, HabitId, DateKey, MonthKey, WeekStart } from "./types.js";
-import {
-  isDesktopPhase1OfflineRuntime,
-  resolveWebRuntimeProfile,
-} from "@repo/core";
+import React, { useState, useEffect, useRef } from "react";
+import type {
+  HabitsModuleProps,
+  HabitId,
+  DateKey,
+  MonthKey,
+  WeekStart,
+  HabitViewMode,
+} from "./types.js";
 import { HabitList } from "./HabitList.js";
 import { HabitDetail } from "./HabitDetail.js";
 import { usePersistedHabits } from "./internal/usePersistedHabits.js";
 import { toggleCheckIn } from "./internal/toggle.js";
 import { emitCheckInRecorded } from "./internal/emit.js";
 import { createId } from "./internal/createId.js";
-import { AddHabitDialog } from "./internal/AddHabitDialog.js";
-import { readDesktopHabitsCacheStatusFromStorage } from "./desktopCache.js";
+import { AddHabitDialog, type HabitDraft } from "./internal/AddHabitDialog.js";
+import { TooltipLayer } from "./internal/TooltipLayer.js";
 
-export function HabitsModule({
-  lang,
-  weekStart = "sun",
-  runtimeProfileOverride,
-}: HabitsModuleProps) {
-  const runtimeProfile = runtimeProfileOverride ?? resolveWebRuntimeProfile(
-    import.meta.env as Record<string, string | undefined>,
-  );
-  const isDesktopOfflineRuntime =
-    isDesktopPhase1OfflineRuntime(runtimeProfile);
-  const desktopCacheStatus = isDesktopOfflineRuntime
-    ? readDesktopHabitsCacheStatusFromStorage()
-    : "readable";
-  const showUnreadableDesktopCache =
-    isDesktopOfflineRuntime && desktopCacheStatus === "unreadable";
-  const { state, setState } = usePersistedHabits({
-    enableSeedHydration: !isDesktopOfflineRuntime,
-  });
+export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
+  const { state, setState } = usePersistedHabits();
+  const moduleRef = useRef<HTMLDivElement>(null);
 
   const [selectedId, setSelectedId] = useState<HabitId>(
     () => state.habits[0]?.id ?? "",
@@ -60,6 +48,7 @@ export function HabitsModule({
     }),
   );
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<HabitViewMode>("calendar");
 
   // When seed hydration fires (habits go from [] to seeded), select the first habit.
   useEffect(() => {
@@ -75,6 +64,9 @@ export function HabitsModule({
   // Select a habit — reset displayed month to current
   function handleSelect(id: HabitId) {
     setSelectedId(id);
+    if (viewMode === "all") {
+      setViewMode("calendar");
+    }
     setDisplayedMonth({
       year: new Date().getUTCFullYear(),
       month0: new Date().getUTCMonth(),
@@ -121,16 +113,23 @@ export function HabitsModule({
   }
 
   // Add habit
-  function handleAddHabit(draft: { emoji: string; title: { en: string; zh: string } }) {
+  function handleAddHabit(draft: HabitDraft) {
     const newHabit = {
       id: createId(),
       emoji: draft.emoji,
+      icon: draft.icon,
+      color: draft.color,
+      category: draft.category,
+      startDate: draft.startDate,
+      reminder: draft.reminder,
+      frequency: draft.frequency,
       title: draft.title,
       createdAt: new Date().toISOString(),
     };
     const next = { ...state, habits: [newHabit, ...state.habits] };
     setState(next);
     setSelectedId(newHabit.id);
+    setViewMode("calendar");
     setDisplayedMonth({
       year: new Date().getUTCFullYear(),
       month0: new Date().getUTCMonth(),
@@ -139,35 +138,31 @@ export function HabitsModule({
   }
 
   return (
-    <div className="module module-habits">
-      {showUnreadableDesktopCache ? (
-        <div
-          className="habits-cache-state habits-cache-state-unreadable"
-          data-testid="habits-cache-unreadable"
-        >
-          {lang === "zh"
-            ? "检测到习惯缓存损坏，已切换到安全空状态。"
-            : "Habits cache is unreadable. Showing a safe empty state."}
-        </div>
-      ) : null}
+    <div ref={moduleRef} className="module module-habits">
       <HabitList
         habits={state.habits}
         checkIns={state.checkIns}
         selectedId={selectedId}
+        viewMode={viewMode}
         lang={lang}
         weekStart={weekStart as WeekStart}
         onSelect={handleSelect}
         onToggle={handleToggle}
+        onViewModeChange={setViewMode}
         onAddHabit={() => setAddDialogOpen(true)}
       />
 
       <HabitDetail
         habit={selectedHabit}
+        habits={state.habits}
         checkIns={selectedCheckIns}
+        allCheckIns={state.checkIns}
         diary={selectedDiary}
         lang={lang}
         weekStart={weekStart as WeekStart}
+        viewMode={viewMode}
         displayedMonth={displayedMonth}
+        onSelect={handleSelect}
         onToggle={handleToggle}
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
@@ -182,6 +177,7 @@ export function HabitsModule({
           onSave={handleAddHabit}
         />
       )}
+      <TooltipLayer rootRef={moduleRef} />
     </div>
   );
 }

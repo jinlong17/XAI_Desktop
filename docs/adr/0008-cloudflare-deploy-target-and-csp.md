@@ -7,7 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
-| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages; 2026-05-26 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com` (row `xai-web-settings-premium-stripe`, gap-closure #8, Stripe Payment Link same-tab redirect); `script-src` + `frame-src` NOT widened — no Stripe.js bundle, no Embedded Checkout iframe in v1 stub |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages; 2026-05-26 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com` (row `xai-web-settings-premium-stripe`, gap-closure #8, Stripe Payment Link same-tab redirect); `script-src` + `frame-src` NOT widened — no Stripe.js bundle, no Embedded Checkout iframe in v1 stub; 2026-06-01 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.openai.com`, `https://api.groq.com` (OpenAI + Groq openai-compatible provider hosts) and `https://*.ingest.sentry.io` (Sentry error-event ingestion); `script-src`/`frame-src` NOT widened; post-hoc gap-closure for the 2026-06-01 web batch surfaced by the web-sync D3 review (`docs/reviews/web-sync-2026-06-01/`); the §S6 snippet correction in this amendment also folds in the prior 2026-05-29 Gemini extension (which had updated §S3 only, leaving §S6/frontmatter stale) |
 
 ---
 
@@ -235,6 +235,73 @@ this pattern — amend ADR frontmatter, extend `_headers`, update §S6 snippet, 
 
 Operator runbook for `VITE_STRIPE_PAYMENT_LINK_URL` env var rotation: `apps/web/deploy/README.md`.
 
+**Amendment 2026-05-29 — `connect-src` Gemini (openai-compatible) extension (carve-out `xai-web-gemini-provider-enablement`):**
+
+The SHIPPED AI tool layer supports an `openai-compatible` provider. Gemini is
+reachable through that path via its OpenAI-compatible endpoint
+(`https://generativelanguage.googleapis.com/v1beta/openai/`); the adapter
+issues `fetch`/streaming requests (connect-src) to that host. The host is added
+to `connect-src` so production (where Cloudflare Pages enforces `_headers`)
+does not block Gemini requests. This is NOT a new provider kind — Gemini stays
+under the generic `openai-compatible` umbrella (base URL + model string are
+user-configured in Settings → AI).
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com` |
+
+**Security posture (Gemini):**
+- `https://generativelanguage.googleapis.com` — Google's canonical Generative
+  Language API host (Gemini's OpenAI-compatible endpoint lives at
+  `/v1beta/openai/` on this host); no subdomain wildcard.
+- `script-src` / `frame-src` NOT widened — Gemini is a `connect-src` fetch
+  target only (no SDK bundle, no iframe).
+- No `*` wildcard. No `'unsafe-inline'`. No `'unsafe-eval'`.
+- The API key is stored client-side in the existing `secretStore` (same as the
+  Anthropic key); it is NEVER committed to source. (The operator's smoke key
+  was pasted in a session transcript → operator rotates it post-smoke.)
+- Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP5 case asserts
+  `https://generativelanguage.googleapis.com` is present in `_headers`.
+
+Same **Extension rule** applies: future rows reaching additional
+openai-compatible provider hosts MUST follow this pattern — amend ADR
+frontmatter, extend `_headers`, update this §S6 snippet, write a csp.test.ts guard.
+
+**Amendment 2026-06-01 — `connect-src` OpenAI + Groq provider hosts and Sentry ingest extension (web batch `web-sync-2026-06-01`; post-hoc gap-closure):**
+
+Two additional openai-compatible provider hosts (OpenAI, Groq) and the Sentry
+error-event ingestion host are reached via `fetch`/streaming (`connect-src`).
+They were added to `apps/web/public/_headers` in the 2026-06-01 web batch, but
+§S6/frontmatter were not amended at the time; the gap was surfaced by the
+web→desktop D3 review (`docs/reviews/web-sync-2026-06-01/2026-06-01-site-impact-note.md`)
+and is closed here.
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com` | `'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io` |
+
+**Security posture (OpenAI / Groq / Sentry):**
+- `https://api.openai.com`, `https://api.groq.com` — canonical API hosts for the
+  OpenAI and Groq openai-compatible providers (same `openai-compatible` umbrella
+  as Gemini; base URL + model are user-configured in Settings → AI); no subdomain
+  wildcard.
+- `https://*.ingest.sentry.io` — Sentry error-event ingestion endpoint. The
+  subdomain wildcard is required because the ingest host is org/project-specific
+  (`https://<orgId>.ingest.sentry.io`). This is the ONLY wildcard `connect-src`
+  entry; it is a fetch target only (no script/frame).
+- `script-src` / `frame-src` NOT widened — all three are `connect-src` fetch
+  targets only (no SDK bundle, no iframe).
+- No `*` host wildcard beyond the Sentry org subdomain. No `'unsafe-inline'`, no
+  `'unsafe-eval'`. Provider API keys remain client-side in `secretStore`, never
+  committed to source (per the Anthropic/Gemini precedent).
+- Source-text guard test: `apps/web/src/__tests__/csp.test.ts` CSP6 case (added in
+  the same web batch) asserts the new hosts are present in `_headers`.
+
+NOTE: the §S6 snippet update tied to this amendment also corrects pre-existing
+drift — the §S6 snippet had not been refreshed for the 2026-05-29 Gemini
+extension (it still showed the superseded Stripe-era `connect-src`). The §S6
+snippet below now matches `apps/web/public/_headers` verbatim.
+
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
 called only in test files (`nonce.test.ts`). No production caller in
@@ -395,7 +462,7 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://js.stripe.com https://checkout.stripe.com https://buy.stripe.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -417,7 +484,17 @@ _(amended 2026-05-26: `connect-src` extended to include `https://js.stripe.com`,
 `https://checkout.stripe.com`, `https://buy.stripe.com` per gap-closure row #8
 Premium Stripe stub — see §S3 D3 FOURTH amendment above; `script-src` + `frame-src` NOT widened)_
 
-No `'unsafe-inline'`. No `'unsafe-eval'`. No `*` wildcard.
+_(amended 2026-05-29: `connect-src` extended to include `https://generativelanguage.googleapis.com`
+per carve-out `xai-web-gemini-provider-enablement` — Gemini openai-compatible host; see §S3 D3
+Gemini amendment above; `script-src` / `frame-src` NOT widened. Backfilled 2026-06-01.)_
+
+_(amended 2026-06-01: `connect-src` extended to include `https://api.openai.com`, `https://api.groq.com`
+(OpenAI + Groq openai-compatible hosts) and `https://*.ingest.sentry.io` (Sentry error-event ingestion)
+per the 2026-06-01 web batch — see §S3 D3 2026-06-01 amendment above; `script-src` / `frame-src` NOT
+widened. NOTE: the superseded Stripe-era hosts shown in earlier revisions of this snippet were removed
+upstream; the §S6 snippet above now matches `apps/web/public/_headers` verbatim.)_
+
+No `'unsafe-inline'`. No `'unsafe-eval'`. No bare `*` host wildcard — the sole wildcard is the org-scoped `https://*.ingest.sentry.io` Sentry ingest subdomain (added 2026-06-01).
 
 ### Nonce strip mechanism
 

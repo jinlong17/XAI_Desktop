@@ -6,16 +6,20 @@
  * - On first mount when storage is at the registered default (all quadrants empty),
  *   seeds state from internal/seed.ts (the prototype's 8 cards in Q4).
  * - If stored schemaVersion !== 1, falls back to default (v2 will register a migration).
- * - Exposes { state, setState, moveCard(cardId, to) } — the moveCard path calls
- *   the moveCardTo reducer + emitPriorityTagged so event-emit is always unified.
+ * - Exposes { state, setState, moveCard(cardId, to), addCard(draft, to) }
+ *   - moveCard calls moveCardTo reducer + emitPriorityTagged (unified emit path).
+ *   - addCard calls addCardReducer + setState; does NOT emit (QE-D: create ≠ move).
+ *
+ * Extension: xai-web-matrix-card-create (design.md §E.1 #11)
  */
 
 import { useEffect, useRef } from "react";
 import { usePref } from "@repo/plugin-web-storage";
 import type { WebPrefValue } from "@repo/plugin-web-storage";
-import type { MatrixState, Quadrant } from "../types.js";
+import type { MatrixState, Quadrant, NewMatrixCardDraft } from "../types.js";
 import { buildSeedState } from "./seed.js";
 import { moveCardTo } from "./move.js";
+import { addCard as addCardReducer } from "./create.js";
 import { emitPriorityTagged } from "./emit.js";
 
 const STORAGE_KEY = "xai_matrix_state" as const;
@@ -28,6 +32,8 @@ export interface UsePersistedMatrixResult {
   state: MatrixState;
   setState: (next: MatrixState) => void;
   moveCard: (cardId: string, to: Quadrant) => void;
+  /** Appends a new card to targetQuadrant. Does NOT emit web:matrix:priority-tagged. */
+  addCard: (draft: NewMatrixCardDraft, to: Quadrant) => void;
 }
 
 export function usePersistedMatrix(): UsePersistedMatrixResult {
@@ -64,22 +70,48 @@ export function usePersistedMatrix(): UsePersistedMatrixResult {
     emitPriorityTagged(cardId, from, to);
   };
 
-  return { state, setState, moveCard };
+  // addCard: creates a new card + persists; does NOT emit (QE-D — create ≠ move).
+  const addCard = (draft: NewMatrixCardDraft, to: Quadrant) => {
+    const next = addCardReducer(state, draft, to);
+    if (next === state) return; // no-op (empty title / bad quadrant)
+    setState(next);
+  };
+
+  return { state, setState, moveCard, addCard };
 }
 
 /** Casts a potentially unknown blob to MatrixState, falling back to empty default. */
 function asMatrixState(raw: unknown): MatrixState {
   if (
-    raw !== null &&
-    typeof raw === "object" &&
-    (raw as MatrixState).schemaVersion === 1 &&
-    Array.isArray((raw as MatrixState).q1) &&
-    Array.isArray((raw as MatrixState).q2) &&
-    Array.isArray((raw as MatrixState).q3) &&
-    Array.isArray((raw as MatrixState).q4)
+    isRecord(raw) &&
+    raw.schemaVersion === 1 &&
+    isMatrixCardArray(raw.q1) &&
+    isMatrixCardArray(raw.q2) &&
+    isMatrixCardArray(raw.q3) &&
+    isMatrixCardArray(raw.q4)
   ) {
-    return raw as MatrixState;
+    return raw as unknown as MatrixState;
   }
   // Corrupt blob or wrong schemaVersion — return empty default
   return { schemaVersion: 1, q1: [], q2: [], q3: [], q4: [] };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isMatrixCardArray(value: unknown): value is MatrixState["q1"] {
+  return Array.isArray(value) && value.every(isMatrixCard);
+}
+
+function isMatrixCard(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (typeof value.id !== "string" || value.id.length === 0) return false;
+  if (!isRecord(value.title)) return false;
+  if (typeof value.title.en !== "string" || typeof value.title.zh !== "string") return false;
+  if (value.date !== undefined && typeof value.date !== "string") return false;
+  if (value.dateZh !== undefined && typeof value.dateZh !== "string") return false;
+  if (value.tag !== undefined && typeof value.tag !== "string") return false;
+  if (value.taskId !== undefined && typeof value.taskId !== "string") return false;
+  return true;
 }

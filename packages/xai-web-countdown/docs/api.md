@@ -434,3 +434,84 @@ remains side-effect-free w.r.t. the bus.
   "owner": "xai-web-countdown row #17"
 }
 ```
+
+---
+
+## §12 V2 Extension — 2026-06-04
+
+The storage key remains `xai_countdowns`. V1 cards remain valid; V2 fields are
+optional and normalized at the storage boundary.
+
+```ts
+type CountdownCategory = "holiday" | "month" | "quarter" | "year" | "custom";
+type CountdownColorId = "red" | "amber" | "green" | "teal" | "blue" | "indigo" | "slate";
+type CountdownIconId = "calendar" | "gift" | "spark" | "flag" | "moon" | "ring" | "target" | "pin";
+type CountdownDisplayStyle =
+  | "digital" | "date" | "progress" | "notion" | "ring"
+  | "minimal" | "hero" | "festival" | "timeline" | "compact";
+type CountdownLayout = "stacked" | "split";
+type CountdownStatus = "active" | "deleted";
+type CountdownViewMode = "cards" | "list" | "timeline" | "calendar" | "history";
+
+interface CountdownCard {
+  id: string;
+  title: { en: string; zh: string };
+  target_date: string;
+  variant: "image" | "light";
+  cover_url: string | null;
+  target_time?: string | null;
+  start_date?: string | null;
+  category?: CountdownCategory;
+  color?: CountdownColorId;
+  icon?: CountdownIconId;
+  note?: string;
+  is_pinned?: boolean;
+  is_hidden?: boolean;
+  show_countdown?: boolean;
+  show_progress?: boolean;
+  display_style?: CountdownDisplayStyle;
+  layout?: CountdownLayout;
+  status?: CountdownStatus;
+  source?: "preset" | "custom";
+  preset_id?: string | null;
+  sort_order?: number;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+```
+
+New runtime exports:
+
+```ts
+export {
+  COUNTDOWN_CATEGORIES,
+  COUNTDOWN_COLORS,
+  COUNTDOWN_ICONS,
+  COUNTDOWN_STYLES,
+} from "./internal/options";
+```
+
+Mutation semantics:
+
+- `deleteCard()` is now a soft delete: `status="deleted"`, `is_hidden=true`,
+  `deleted_at=<iso>`.
+- `hideCard()`, `pinCard()`, `duplicateCard()`, and `restoreCard()` are pure
+  reducers for the UI actions.
+- `reorderCards(prev, orderedIds)` persists drag-and-drop order through
+  `sort_order`. Pinned cards still render above unpinned cards; within each
+  group, `sort_order` is the first sort key.
+- `mergePresetCountdowns()` injects missing default presets and updates active
+  preset target/start dates. Deleted presets are preserved and not re-added.
+
+V2.1 interaction contract:
+
+- The view controls and overview remain visible across cards/list/timeline/
+  calendar/history views.
+- Non-card views expose a "Back to board" action.
+- Card low-frequency actions are present in the DOM for accessibility, but on
+  fine-pointer devices they reveal on hover/focus instead of staying visually
+  prominent.
+- Create/edit validation is inline. Title, target date, target time, valid
+  optional start date, and at least one visible module are required before a
+  save writes to storage.

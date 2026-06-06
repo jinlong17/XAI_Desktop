@@ -37,10 +37,12 @@ describe("aggregateRange — empty inputs", () => {
 });
 
 describe("aggregateRange — single focus session current week", () => {
-  it("A2: one session current, none prior → focusTrend='—', tasksTotal=1", () => {
+  it("A2: one session current, none prior → focusTrend='—', tasksTotal=0 (no done tasks), tasksTrend='—'", () => {
     const sessions = [focus("2026-05-20T09:00:00Z", 25)]; // Wed inside current week
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
-    expect(agg.kpis.tasksTotal).toBe(1);
+    // tasksTotal comes from xai_task_cols now (not sessions), so 0 with no taskCols
+    expect(agg.kpis.tasksTotal).toBe(0);
+    expect(agg.kpis.tasksTrend).toBe("—");
     expect(agg.kpis.focusMinutesTotal).toBe(25);
     expect(agg.kpis.focusTrend).toBe("—");
     expect(agg.peakHour).toBe(9);
@@ -48,7 +50,7 @@ describe("aggregateRange — single focus session current week", () => {
 });
 
 describe("aggregateRange — sessions in current and prior week", () => {
-  it("A3: 3 current vs 2 prior → focusTrend='+50%'", () => {
+  it("A3: 3 current vs 2 prior → focusTrend='+50%', tasksTrend always '—' (real count, no prior-window)", () => {
     const sessions = [
       focus("2026-05-19T09:00:00Z", 25),
       focus("2026-05-20T09:00:00Z", 25),
@@ -58,10 +60,12 @@ describe("aggregateRange — sessions in current and prior week", () => {
       focus("2026-05-13T09:00:00Z", 25),
     ];
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
-    expect(agg.kpis.tasksTotal).toBe(3);
+    // tasksTotal is from real done count (0 here — no taskCols seeded)
+    expect(agg.kpis.tasksTotal).toBe(0);
     expect(agg.kpis.focusMinutesTotal).toBe(75);
     expect(agg.kpis.focusTrend).toBe("+50%");
-    expect(agg.kpis.tasksTrend).toBe("+50%");
+    // tasksTrend is ALWAYS "—" (no honest prior-window for a timestamp-less count)
+    expect(agg.kpis.tasksTrend).toBe("—");
   });
 });
 
@@ -200,15 +204,24 @@ describe("aggregateRange — month / all ranges", () => {
 });
 
 describe("aggregateRange — invariants", () => {
-  it("A14: tasksTotal === sum(taskBuckets) === count of focus sessions in range", () => {
+  it("A14: tasksTotal === sum(taskBuckets) === real done count from xai_task_cols (replaced proxy)", () => {
+    // With real taskCols: 2 done cards → tasksTotal = 2, placed in last bucket
+    const taskCols = {
+      overdue: { tasks: [{ done: true }, { done: false }] },
+      next7:   { tasks: [{ done: true }] },
+    };
     const sessions = [
       focus("2026-05-19T09:00:00Z"),
       focus("2026-05-20T09:00:00Z"),
       focus("2026-05-21T09:00:00Z"),
     ];
-    const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
-    expect(agg.kpis.tasksTotal).toBe(agg.taskBuckets.reduce((a, b) => a + b, 0));
-    expect(agg.kpis.tasksTotal).toBe(3);
+    const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
+    // tasksTotal = real count (2), not session count (3)
+    expect(agg.kpis.tasksTotal).toBe(2);
+    // taskBuckets sum equals tasksTotal
+    expect(agg.taskBuckets.reduce((a, b) => a + b, 0)).toBe(2);
+    // The total is placed in the last bucket (honest fill)
+    expect(agg.taskBuckets[agg.taskBuckets.length - 1]).toBe(2);
   });
 
   it("A15: focusMinutesTotal === sum(focusBuckets)", () => {
@@ -261,6 +274,57 @@ describe("aggregateRange — invariants", () => {
     const a1 = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
     const a2 = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
     expect(a1).toEqual(a2);
+  });
+
+  it("A21: range-invariant — tasksTotal same across week/month/all for same taskCols", () => {
+    const taskCols = {
+      overdue: { tasks: [{ done: true }, { done: true }] },
+      next7:   { tasks: [{ done: false }] },
+    };
+    const weekAgg  = aggregateRange("week",  [], EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
+    const monthAgg = aggregateRange("month", [], EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
+    const allAgg   = aggregateRange("all",   [], EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
+    expect(weekAgg.kpis.tasksTotal).toBe(2);
+    expect(monthAgg.kpis.tasksTotal).toBe(2);
+    expect(allAgg.kpis.tasksTotal).toBe(2);
+    // tasksTrend is always "—" regardless of range
+    expect(weekAgg.kpis.tasksTrend).toBe("—");
+    expect(monthAgg.kpis.tasksTrend).toBe("—");
+    expect(allAgg.kpis.tasksTrend).toBe("—");
+  });
+
+  it("A22: read-only — aggregateRange does NOT mutate the taskCols input", () => {
+    const taskCols = {
+      overdue: { tasks: [{ done: true }] },
+    };
+    const taskColsBefore = JSON.stringify(taskCols);
+    aggregateRange("week", [], EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
+    expect(JSON.stringify(taskCols)).toBe(taskColsBefore);
+  });
+
+  it("A23: pomodoro/habits regression — focus/habits KPIs unaffected by proxy retirement", () => {
+    // Ensure retiring the tasks proxy did NOT break focus or habits aggregation
+    const sessions = [
+      focus("2026-05-20T09:00:00Z", 30),
+      focus("2026-05-21T09:00:00Z", 30),
+    ];
+    const habits = {
+      habits: [makeHabit("h1", "💧", "Water", "饮水")] as unknown as [],
+      checkIns: {
+        h1: { "2026-05-18": true } as Record<string, boolean>,
+      } as Record<string, Record<string, boolean>>,
+      diaries: {} as Record<string, unknown>,
+    };
+    const agg = aggregateRange("week", sessions, habits, 0, NOW, "en");
+    // Focus KPI still works correctly
+    expect(agg.kpis.focusMinutesTotal).toBe(60);
+    expect(agg.focusBuckets.reduce((a, b) => a + b, 0)).toBe(60);
+    // Habits KPI still works correctly
+    expect(agg.kpis.habitsKeptStr).toBe("1/1");
+    expect(agg.kpis.habitsKeptTrend).toBe("100%");
+    // Tasks is now real (0 — no taskCols seeded)
+    expect(agg.kpis.tasksTotal).toBe(0);
+    expect(agg.kpis.tasksTrend).toBe("—");
   });
 });
 

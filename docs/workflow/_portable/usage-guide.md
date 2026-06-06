@@ -248,6 +248,7 @@ executor** — they do not change Layer 1 or the phase structure.
 | `feature-phase-review` is landed | only the phase-granularity Level 2 variants | `ls .claude/agents/feature-phase-review.md` |
 | the `<skill_prefix>roadmap-loop` skill is in place | Level 3 | `ls <skill_root>/<skill_prefix>roadmap-loop/SKILL.md` |
 | Claude Code Agent View / background sessions | Level 3 `dispatch: bg` | `claude --version` is new enough for Agent View, `claude agents` opens, and `claude --bg --name test "..."` can start a background session |
+| Claude bg hook dispatch | optional B/C cross-vendor Claude peer | after the smoke test above, set `CW_ENABLE_CLAUDE_BG=1` or `git config cowork.claudeBg true`; launch success is not a PASS until dev_log / receipt evidence appears |
 | the State Verification lint is wired | only when the project enforces State Verification mechanically (it is optional, project-level — `02` §4) | the project's State Verification lint script exists |
 | `<project_workflow_doc>` has every role registered in its write-authority matrix | all levels | check its Status Panel write-authority matrix |
 
@@ -398,9 +399,9 @@ Requirement:
 Constraints:
   - <hard constraint 1>
   - <hard constraint 2>
-Automation Mode: A-Claude
-  # one of 8 named variants — A-Claude / B-Codex / B-Cursor / C-Codex / C-Cursor /
-  #   D-Codex / D-Cursor / D-Codex+Cursor; see §5.2
+Automation Mode: A-Codex
+  # one of 9 named variants — A-Claude / A-Codex / B-Codex / B-Cursor /
+  #   C-Codex / C-Cursor / D-Codex / D-Cursor / D-Codex+Cursor; see §5.2
 ```
 
 The parent-session recipe then runs:
@@ -646,7 +647,7 @@ background session until `ship` reports that commits were pushed, the dev_log is
 post-ship cleanliness fields have been rendered. `ship` must report safe file cleanup, deleted local
 temporary branches, and deferred residual worktrees/sessions/branches; it must not run broad
 destructive cleanup such as `git clean -fdx` or force-delete branches by default. Agent View PR dots
-are UI hints only — `dev_log` + reconcile are the A2K truth. If a nested-session guard blocks direct
+are UI hints only — `dev_log` + reconcile are the project truth. If a nested-session guard blocks direct
 `claude --bg`, the skill emits a `scripts/cowork/roadmap_bg_run_*.sh` fallback script to run from a
 normal shell.
 
@@ -755,12 +756,12 @@ Start the feature-phase-review agent for <feature>.   # phase-granularity varian
   Commits: <first_hash>..<last_hash>
 
 # ── Level 2 — single-feature parent-session recipe ──
-# Automation Mode: one of 8 named variants (see §5.2) —
-#   A-Claude / B-Codex / B-Cursor / C-Codex / C-Cursor / D-Codex / D-Cursor / D-Codex+Cursor
+# Automation Mode: one of 9 named variants (see §5.2) —
+#   A-Claude / A-Codex / B-Codex / B-Cursor / C-Codex / C-Cursor / D-Codex / D-Cursor / D-Codex+Cursor
 /<skill_prefix>feature-full-loop
 Requirement: <your requirement, free text>
 Constraints: <optional hard constraints>
-Automation Mode: A-Claude
+Automation Mode: A-Codex
 
 Start the bugfix-full-loop agent.
 Bug: <symptom + repro>

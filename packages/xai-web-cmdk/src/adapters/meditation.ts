@@ -11,7 +11,7 @@
  * Hit kind: module-jump (single-screen module — no entity routing)
  *
  * Expected state shape (defensive):
- *   { scene?: string; sound?: string; duration?: number }
+ *   { scene?: string; sound?: string; duration?: number; durationMode?: string }
  *
  * test.md ME1..ME4
  */
@@ -32,7 +32,9 @@ const SCENE_ALIASES = [
 
 const SOUND_ALIASES = [
   "white noise", "rain sounds", "birds", "waves", "silence", "tibetan",
+  "flowing water", "water", "ocean waves", "thunder", "distant thunder", "forest birds",
   "白噪音", "雨声", "鸟鸣", "浪声", "静音", "藏钵",
+  "流水", "海浪", "雷鸣", "森林",
 ];
 
 function makeModuleJump(): SearchHit {

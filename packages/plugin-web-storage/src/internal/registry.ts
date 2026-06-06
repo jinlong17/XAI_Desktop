@@ -443,13 +443,26 @@ export const PREF_REGISTRY = {
     key: "xai_meditation_prefs",
     codec: "json",
     default: {
-      schemaVersion: 1,
+      schemaVersion: 3,
       scene: "ocean",
       clock: "split",
       sound: "water",
+      volume: 0.55,
       duration: 15,
+      customFixedDurations: [],
+      durationMode: "preset",
+      customDuration: 20,
+      clockScale: "normal",
+      clockColors: {
+        digits: "#f8fafc",
+        hands: "#e5edf4",
+        ring: "#c7d2dd",
+        background: "#0f1720",
+        highlight: "#9bd8f0",
+      },
+      customScenes: [],
     } as MeditationPrefsBlob,
-    schemaVersion: 1,
+    schemaVersion: 3,
     owner: "xai-web-meditation",
     category: "module",
   } satisfies PrefEntry<MeditationPrefsBlob>,
@@ -985,6 +998,7 @@ export const PREF_REGISTRY = {
     owner: "xai-web-settings-rest",
     category: "pref",
   } satisfies PrefEntry<number>,
+
 } as const;
 
 // ---------------------------------------------------------------------------

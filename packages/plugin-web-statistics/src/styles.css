@@ -249,3 +249,62 @@
     transition: none;
   }
 }
+
+/* ---- 2026 UI refresh: stronger data readability ----------------------- */
+.module-stats {
+  padding-bottom: 6px;
+}
+
+.module-stats .stats-grid {
+  gap: 14px;
+}
+
+.module-stats .panel,
+.module-stats .kpi,
+.module-stats .stats-chart,
+.module-stats .stats-donut,
+.module-stats .stats-heat,
+.module-stats .stats-habits,
+.module-stats .stats-insight {
+  background: color-mix(in oklch, var(--bg-panel) 94%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 90%, transparent);
+}
+
+.module-stats .kpi { padding: 16px 18px; }
+
+.module-stats .kpi-label,
+.module-stats .stats-insight h4 {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.module-stats .kpi-label,
+.module-stats .bar-val,
+.module-stats .bar-label,
+.module-stats .hbar-label,
+.module-stats .lc-labels,
+.module-stats .heat-legend {
+  font-size: var(--fs-xs);
+}
+
+.module-stats .kpi-val {
+  font-size: 32px;
+}
+
+.module-stats .bar-chart,
+.module-stats .hour-bar,
+.module-stats .line-chart svg {
+  min-height: 220px;
+}
+
+@media (max-width: 700px) {
+  .module-stats .kpi-row { grid-template-columns: 1fr; }
+  .module-stats .stats-donut,
+  .module-stats .stats-habits,
+  .module-stats .stats-insight { grid-column: span 12; }
+  .module-stats .bar-chart,
+  .module-stats .hour-bar,
+  .module-stats .line-chart svg {
+    min-height: 180px;
+  }
+}

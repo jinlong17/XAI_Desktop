@@ -131,20 +131,44 @@
   left: 0;
   z-index: 3;
   /* transform: translate(Xpx, Ypx) applied inline via React */
+  width: 84px;
+  height: 84px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.18));
+  touch-action: none;
   user-select: none;
   pointer-events: auto;
 }
 
 .pet-body {
   position: relative;
-  display: inline-block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: grab;
   will-change: transform;
+  transition: transform var(--dur-med, 280ms) var(--ease-out, ease);
+  transform-origin: center bottom;
   pointer-events: auto; /* R1: explicit override so Safari doesn't swallow on inner SVG paths */
 }
 
 .pet-body:active {
   cursor: grabbing;
+}
+
+.pet-body.mood-happy {
+  animation: pet-happy 0.6s ease-in-out 2 !important;
+}
+
+@keyframes pet-happy {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
 }
 
 .pet-shadow {
@@ -166,14 +190,28 @@
   position: absolute;
   bottom: calc(100% + 8px);
   max-width: 200px;
-  background: #fff;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, #333);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.08));
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   padding: 8px 10px;
   font-size: 12px;
   line-height: 1.4;
-  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  pointer-events: none;
   z-index: 1;
+  transition:
+    opacity var(--dur-fast, 180ms) var(--ease-out, ease),
+    transform var(--dur-fast, 180ms) var(--ease-out, ease);
+}
+
+.pet-wrap:hover .pet-bubble,
+.pet-wrap:focus-within .pet-bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 .pet-bubble::after {
@@ -182,7 +220,7 @@
   bottom: -6px;
   border-width: 6px 5px 0;
   border-style: solid;
-  border-color: #fff transparent transparent;
+  border-color: var(--bg-panel, #fff) transparent transparent;
 }
 
 /* Bubble anchored to the left when pet is near the right edge */
@@ -203,7 +241,7 @@
 
 .pet-bubble-text {
   margin: 0 0 4px;
-  color: #333;
+  color: var(--text-1, #333);
 }
 
 .pet-change-link {
@@ -213,25 +251,26 @@
   border: none;
   padding: 0;
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   cursor: pointer;
   text-align: left;
 }
 .pet-change-link:hover {
-  color: #555;
+  color: var(--text-2, #555);
 }
 
 /* ---- Swap button ---- */
 
 .pet-swap-btn {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: color-mix(in oklch, var(--bg-panel, #fff) 90%, transparent);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.1));
+  color: var(--text-2, currentColor);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -241,8 +280,27 @@
   pointer-events: auto;
   z-index: 2;
 }
+
+@media (max-width: 760px) {
+  .pet-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pet-bubble {
+    display: none;
+  }
+
+  .pet-swap-btn {
+    top: -8px;
+    right: -8px;
+    width: 44px;
+    height: 44px;
+  }
+}
 .pet-swap-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
 }
 
 /* ---- PetPicker modal ---- */
@@ -259,7 +317,9 @@
 }
 
 .pet-picker {
-  background: #fff;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
+  border: 1px solid var(--border-1, transparent);
   border-radius: 16px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
   width: 340px;
@@ -274,20 +334,20 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 16px 16px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
 }
 
 .pp-head h3 {
   margin: 0 0 2px;
   font-size: 15px;
   font-weight: 600;
-  color: #111;
+  color: var(--text-1, #111);
 }
 
 .pp-head p {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: var(--text-3, #888);
 }
 
 .pp-close-btn {
@@ -295,7 +355,7 @@
   border: none;
   cursor: pointer;
   padding: 2px;
-  color: #888;
+  color: var(--text-3, #888);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -303,8 +363,8 @@
   flex-shrink: 0;
 }
 .pp-close-btn:hover {
-  color: #333;
-  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-1, #333);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.06));
 }
 
 .pp-list {
@@ -323,15 +383,16 @@
   border: none;
   cursor: pointer;
   text-align: left;
+  color: var(--text-1, currentColor);
   transition: background 0.1s;
 }
 
 .pp-row:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.04));
 }
 
 .pp-row.current {
-  background: rgba(100, 180, 120, 0.08);
+  background: var(--accent-soft, rgba(100, 180, 120, 0.08));
 }
 
 .pp-avatar {
@@ -352,31 +413,31 @@
 .pp-name {
   font-size: 13px;
   font-weight: 600;
-  color: #111;
+  color: var(--text-1, #111);
 }
 
 .pp-desc {
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   margin-top: 1px;
 }
 
 .pp-btn {
   font-size: 11px;
-  color: #888;
+  color: var(--text-3, #888);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .pp-btn.selected {
-  color: #3a8a5a;
+  color: var(--accent-ink, #3a8a5a);
   font-weight: 600;
 }
 
 .pp-foot {
   padding: 8px 16px 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
   font-size: 11px;
-  color: #aaa;
+  color: var(--text-3, #aaa);
   text-align: center;
 }

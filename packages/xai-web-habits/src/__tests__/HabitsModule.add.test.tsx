@@ -62,9 +62,10 @@ describe("HabitsModule add-habit flow", () => {
     await act(async () => { fireEvent.click(addBtn); });
 
     // Fill the form
-    fireEvent.change(document.getElementById("hb-emoji")!, { target: { value: "🎯" } });
-    fireEvent.change(document.getElementById("hb-title-en")!, { target: { value: "New Habit" } });
-    fireEvent.change(document.getElementById("hb-title-zh")!, { target: { value: "新习惯" } });
+    fireEvent.change(document.getElementById("hb-title")!, { target: { value: "New Habit" } });
+    fireEvent.change(document.getElementById("hb-title-alt")!, { target: { value: "新习惯" } });
+    fireEvent.change(document.getElementById("hb-category")!, { target: { value: "learning" } });
+    fireEvent.change(document.getElementById("hb-frequency")!, { target: { value: "weekdays" } });
 
     const saveBtn = screen.getByText("Save");
     await act(async () => { fireEvent.click(saveBtn); });

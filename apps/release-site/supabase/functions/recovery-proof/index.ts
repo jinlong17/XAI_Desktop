@@ -4,7 +4,7 @@ import {
   verifyRecoveryPatch,
   type RecoveryProofDatabase,
   type RecoveryProofVerifier,
-} from './handler';
+} from './handler.ts';
 
 declare const Deno:
   | {

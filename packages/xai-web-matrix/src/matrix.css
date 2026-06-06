@@ -271,3 +271,114 @@
   background: var(--bg-panel-3);
   color: var(--text-1);
 }
+
+/* ---- MatrixComposer dialog -----------------------------------------*/
+
+.matrix-composer {
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  padding: 0;
+  background: var(--bg-panel-2);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--text-1) 16%, transparent);
+  color: var(--text-1);
+  max-width: min(28rem, 90vw);
+  width: 100%;
+}
+
+.matrix-composer::backdrop {
+  background: color-mix(in srgb, var(--text-1) 24%, transparent);
+}
+
+.matrix-composer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md, 0.75rem);
+  padding: var(--p-lg, 1.5rem);
+}
+
+.matrix-composer__title {
+  font-size: var(--fs-md, 1rem);
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-1);
+}
+
+.matrix-composer__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs, 0.25rem);
+}
+
+.matrix-composer__label {
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.matrix-composer__input {
+  padding: var(--p-sm, 0.5rem) var(--p-xs, 0.25rem);
+  border: 1.5px solid var(--border-mid);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: var(--bg-panel-1);
+  color: var(--text-1);
+  font-size: var(--fs-sm, 0.875rem);
+  outline: none;
+}
+
+.matrix-composer__input:focus {
+  border-color: var(--accent);
+}
+
+.matrix-composer__input--error {
+  border-color: var(--red);
+}
+
+.matrix-composer__error {
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--red);
+}
+
+.matrix-composer__radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs, 0.25rem);
+}
+
+.matrix-composer__btn {
+  padding: var(--p-xs, 0.25rem) var(--p-sm, 0.5rem);
+  border: 1.5px solid var(--border-mid);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: var(--bg-panel-1);
+  color: var(--text-2);
+  font-size: var(--fs-sm, 0.875rem);
+  cursor: pointer;
+}
+
+.matrix-composer__btn:hover {
+  background: var(--bg-panel-3);
+  color: var(--text-1);
+}
+
+.matrix-composer__btn--selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel-1));
+  color: var(--text-1);
+}
+
+.matrix-composer__btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg-panel-1);
+  font-weight: 600;
+}
+
+.matrix-composer__btn--primary:hover {
+  opacity: 0.88;
+}
+
+.matrix-composer__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-sm, 0.5rem);
+  margin-top: var(--gap-xs, 0.25rem);
+}

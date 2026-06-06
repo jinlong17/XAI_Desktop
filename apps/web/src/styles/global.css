@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans, "Manrope", "Noto Sans SC", "SF Pro Text", system-ui, sans-serif);
 }
 
 [data-theme="dark"] {
@@ -13,19 +13,23 @@
 
 body {
   margin: 0;
-  background: var(--bg-app, #f3f4f6);
-  color: var(--text-1, #111827);
+  background: var(--bg-app);
+  color: var(--text-1);
+  font-family: var(--font-sans, "Manrope", "Noto Sans SC", "SF Pro Text", system-ui, sans-serif);
+  font-size: var(--fs-md, 14.5px);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
 }
 
 .host-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-content: center;
   gap: 0.5rem;
   text-align: center;
   padding: 2rem;
-  background: var(--bg-app, #f3f4f6);
-  color: var(--text-1, #111827);
+  background: var(--bg-app);
+  color: var(--text-1);
 }
 
 .host-page__primary {
@@ -33,11 +37,11 @@ body {
   justify-self: center;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 16px;
   border-radius: 8px;
-  background: var(--accent, #111827);
-  color: var(--text-on-accent, #fff);
+  background: var(--accent);
+  color: var(--text-on-accent);
   font-weight: 600;
   text-decoration: none;
 }
@@ -49,32 +53,32 @@ body {
 }
 
 .auth-form input {
-  min-height: 40px;
-  border: 1px solid var(--border-1, #d1d5db);
+  min-height: 44px;
+  border: 1px solid var(--border-1);
   border-radius: 8px;
-  background: var(--bg-panel, #ffffff);
-  color: var(--text-1, #111827);
+  background: var(--bg-panel);
+  color: var(--text-1);
   padding: 0 12px;
   font: inherit;
 }
 
 .auth-form input::placeholder {
-  color: var(--text-4, #9ca3af);
+  color: var(--text-4);
 }
 
 .auth-form input:focus {
-  border-color: var(--accent, #111827);
-  outline: 2px solid color-mix(in oklch, var(--accent, #111827) 24%, transparent);
+  border-color: var(--accent);
+  outline: 2px solid color-mix(in oklch, var(--accent) 24%, transparent);
   outline-offset: 1px;
 }
 
 .auth-form button,
 .auth-actions button {
-  min-height: 36px;
-  border: 1px solid var(--border-1, #d1d5db);
+  min-height: 44px;
+  border: 1px solid var(--border-1);
   border-radius: 8px;
-  background: var(--bg-panel, #ffffff);
-  color: var(--text-1, #111827);
+  background: var(--bg-panel);
+  color: var(--text-1);
   padding: 0 12px;
   font: inherit;
   font-weight: 600;
@@ -82,9 +86,9 @@ body {
 }
 
 .auth-form button {
-  border-color: var(--accent, #111827);
-  background: var(--accent, #111827);
-  color: var(--text-on-accent, #ffffff);
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
 }
 
 .auth-actions {
@@ -96,6 +100,6 @@ body {
 
 .auth-actions button:hover,
 .auth-actions button:focus-visible {
-  background: var(--bg-hover, #e5e7eb);
+  background: var(--bg-hover);
   outline: none;
 }

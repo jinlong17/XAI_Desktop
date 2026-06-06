@@ -20,7 +20,7 @@ export type KpiCellId = "tasks" | "focus" | "habits" | "daily-avg";
  * or "—" when the prior window is empty. Never null.
  */
 export interface StatisticsKpis {
-  /** Total focus sessions in the active range (proxy for tasks completed — see api.md §0 Known Limitations). */
+  /** Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant — no completion timestamp on TaskCard; see api.md §0). */
   tasksTotal: number;
   /** Total focus minutes summed across the active range. */
   focusMinutesTotal: number;

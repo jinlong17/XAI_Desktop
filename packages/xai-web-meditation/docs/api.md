@@ -3,6 +3,23 @@
 > Roadmap row #16 · Interface contracts + error semantics
 > Design: `packages/xai-web-meditation/docs/design.md`
 
+## 0. 2026-06-04 schema v3 detail upgrade
+
+The current meditation module is no longer a static visual-only picker.
+
+- `MeditationPrefs.schemaVersion` is `3`. v1/v2/unknown blobs are accepted and
+  migrated by `validatePrefs`.
+- `AmbientSoundId` includes `none / water / rain / waves / thunder / forest /
+  whiteNoise`; non-silent sounds are generated with Web Audio, not fetched
+  from bundled files or remote URLs.
+- Clock configuration includes 12 variants, `clockScale`, and `clockColors`.
+- Duration configuration includes `durationMode: "preset" | "custom" |
+  "infinite"` plus `customDuration`.
+- `customFixedDurations` stores user-added fixed duration chips such as
+  `60` or `90`, separate from the built-in `5 / 10 / 15 / 25 / 45` presets.
+- `customScenes` stores user-created scenes with name, colors, animation,
+  sound, clock, clock colors, and default duration settings.
+
 ## 1. Public surface (`src/index.ts`)
 
 ### 1.1 Component exports
@@ -28,12 +45,20 @@ from "@repo/plugin-web-meditation"` syntax also works (matches habits).
 
 ```ts
 export type {
-  SceneId,                  // "forest" | "ocean" | "night" | "rain" | "void"
-  ClockVariant,             // "digital" | "split" | "analog" | "minimal"
-  AmbientSoundId,           // "none" | "water" | "rain" | "waves" | "forest"
-  Duration,                 // 5 | 10 | 15 | 25 | 45
-  Scene,                    // { id: SceneId; grad: string; accent: string }
-  MeditationPrefs,          // { schemaVersion: 1; scene; clock; sound; duration }
+  BaseSceneId,              // "forest" | "ocean" | "night" | "rain" | "void"
+  CustomSceneId,            // `custom:${string}`
+  SceneId,                  // BaseSceneId | CustomSceneId
+  ClockVariant,             // 12 variants across digital/split/analog/minimal/atmosphere styles
+  ClockScale,               // "compact" | "normal" | "large" | "larger"
+  ClockColorPalette,        // digits/hands/ring/background/highlight CSS colors
+  AmbientSoundId,           // "none" | "water" | "rain" | "waves" | "thunder" | "forest" | "whiteNoise"
+  PresetDuration,           // 5 | 10 | 15 | 25 | 45
+  Duration,                 // number, clamped to 1..240 minutes
+  DurationMode,             // "preset" | "custom" | "infinite"
+  SceneAnimation,           // "particles" | "rain" | "waves" | "aurora" | "still"
+  CustomScene,
+  Scene,
+  MeditationPrefs,          // schemaVersion 3 persisted blob
   MeditationModuleProps,
 } from "./types.js";
 ```
@@ -41,7 +66,7 @@ export type {
 ### 1.3 Constant exports
 
 ```ts
-export { MEDITATION_STORAGE_KEY } from "./constants.js";
+export { MEDITATION_STORAGE_KEY, PRESET_DURATIONS } from "./constants.js";
 // MEDITATION_STORAGE_KEY = "xai_meditation_prefs" as const
 ```
 
@@ -87,8 +112,8 @@ import "./styles.css";
 |---|---|
 | key | `"xai_meditation_prefs"` |
 | codec | `"json"` |
-| default | `{ schemaVersion: 1, scene: "ocean", clock: "split", sound: "water", duration: 15 }` |
-| schemaVersion | `1` |
+| default | `{ schemaVersion: 3, scene: "ocean", clock: "split", sound: "water", volume: 0.55, duration: 15, customFixedDurations: [], durationMode: "preset", customDuration: 20, clockScale: "normal", clockColors, customScenes: [] }` |
+| schemaVersion | `3` |
 | owner | `"xai-web-meditation"` |
 | category | `"module"` |
 | proposed | `false` (canonical — approved by worker brief #16) |
@@ -104,8 +129,9 @@ import "./styles.css";
 
 ### 2.3 Migration
 
-- `schemaVersion: 1` is the only known version. Future bumps add a
-  `migrate(prev, fromVersion)` branch in `internal/validate.ts`.
+- `schemaVersion: 3` is the current version.
+- v1, v2, and unknown-version blobs are treated as partial inputs; `validatePrefs`
+  fills new fields from `DEFAULT_PREFS`.
 
 ## 3. Component API details
 
@@ -114,9 +140,11 @@ import "./styles.css";
 ```ts
 interface ClockDisplayProps {
   variant: ClockVariant;
-  accent?: string;        // CSS color string (oklch from scene). default "currentColor"
-  mini?: boolean;         // smaller font + smaller svg
-  static?: boolean;       // freeze time at 2024-01-01T03:44:17 + skip setInterval
+  accent?: string;
+  scale?: ClockScale;
+  colors?: ClockColorPalette;
+  mini?: boolean;
+  staticMode?: boolean;
 }
 ```
 
@@ -124,26 +152,37 @@ interface ClockDisplayProps {
   fixed `new Date(2024, 0, 1, 3, 44, 17)`. Used for clock-picker previews.
 - When `static !== true` (default), a `setInterval(setNow, 1000)` ticks
   every second; cleared on unmount.
-- All four variants share the same internal time source.
-- Analog second-hand color is the hard-coded `oklch(70% 0.18 25)` (matches
-  prototype). Hour/minute hands use `accent`.
+- All variants share the same internal time source.
+- Analog digits/ring/hands/background/highlight are driven by
+  `ClockColorPalette`.
 
 ### 3.2 `<MeditationPlayer scene clock sound duration lang onExit>`
 
 ```ts
 interface MeditationPlayerProps {
-  scene:    Scene;              // resolved via getScene(prefs.scene)
-  clock:    ClockVariant;
-  sound:    AmbientSoundId;
-  duration: Duration;           // minutes
-  lang:     Lang;
-  onExit:   () => void;
+  scene: Scene;
+  sceneLabel: string;
+  clock: ClockVariant;
+  clockScale: ClockScale;
+  clockColors: ClockColorPalette;
+  sound: AmbientSoundId;
+  volume: number;
+  duration: Duration;
+  durationMode: DurationMode;
+  customDuration: number;
+  lang: Lang;
+  onExit: () => void;
+  onVolumeChange?: (volume: number) => void;
 }
 ```
 
 - Starts `elapsed: 0` and advances by `1` every second via a single
   `setInterval`. Cleared on unmount.
-- `total = duration * 60` seconds.
+- `total = resolveDurationSeconds(durationMode, duration, customDuration)`.
+  Infinite mode returns `null` and displays elapsed time until End/Exit.
+- Pause stops the elapsed timer and pauses ambient sound. Resume restarts both.
+- The default player surface shows only time, scene, sound status, pause,
+  controls, and end. The compact controls panel exposes sound toggle + volume.
 - `remaining = max(0, total - elapsed)`.
 - `progress = elapsed / total` (clamped 0..1 — never overshoots).
 - Renders `PARTICLE_COUNT = 18` particles with computed inline styles:
@@ -160,7 +199,8 @@ interface MeditationPlayerProps {
 - Reads `active` via local `useState<boolean>(false)`.
 - Picker handlers spread-update prefs and call `setPrefs(next)` —
   side-effect: localStorage write.
-- Start button: `onClick={() => setActive(true)}`.
+- Start button pauses preview audio, closes the settings panel, and mounts the
+  fullscreen player.
 - Renders `<MeditationPlayer ... onExit={() => setActive(false)}/>` only
   when `active === true`.
 
@@ -176,7 +216,9 @@ interface MeditationPlayerProps {
 |---|---|
 | `localStorage.getItem("xai_meditation_prefs")` returns `null` | Use `DEFAULT_PREFS`. No log. |
 | `JSON.parse` throws | Return `DEFAULT_PREFS` (via `usePref`'s built-in catch). No log. |
-| `validatePrefs(raw)` finds unknown `scene` / `clock` / `sound` / `duration` | Clamp the bad field to `DEFAULT_PREFS[field]`; preserve the rest. No log. |
+| `validatePrefs(raw)` finds unknown `scene` / `clock` / `sound` | Clamp the bad field to `DEFAULT_PREFS[field]`; preserve the rest. No log. |
+| `validatePrefs(raw)` finds numeric `duration` outside 1..240 | Clamp to the supported range. |
+| `validatePrefs(raw)` finds invalid `customFixedDurations` | Drop invalid, duplicate, and built-in values; sort the remaining custom values. |
 | `setPref` throws (quota / disabled storage) | `usePref` swallows + warns once in dev. UI continues using in-memory state. |
 | `setInterval` callback errors mid-tick | React error boundary at the route level catches. No crash; placeholder shown. |
 | `getScene(id)` finds nothing (impossible — id always known) | Returns `SCENES[1]` (= ocean) safety net. |
@@ -240,11 +282,13 @@ All present in `plugin-web-tokens/src/i18n.ts` lines 174–188 (EN) +
 1. `import "./styles.css"` in `src/index.ts` — globally applied CSS once.
 2. `setInterval` (max 2 simultaneously while player is active: 1 for
    `elapsed` counter, 1 for live `ClockDisplay`).
-3. `localStorage.setItem("xai_meditation_prefs", ...)` on every picker
-   click (via `setPref`).
-4. No DOM mutations outside the rendered subtree.
-5. No `fetch` / `XMLHttpRequest` / `WebSocket`.
-6. No `BroadcastChannel`. (Cross-tab sync happens automatically via the
+3. `localStorage.setItem("xai_meditation_prefs", ...)` on every picker,
+   setting, duration, volume, or custom-scene save/delete action.
+4. Web Audio `AudioContext` is created only in the browser after a user
+   play/start interaction. Tests and SSR degrade to no-op when unavailable.
+5. No DOM mutations outside the rendered subtree.
+6. No `fetch` / `XMLHttpRequest` / `WebSocket`.
+7. No `BroadcastChannel`. (Cross-tab sync happens automatically via the
    browser's `storage` event — `usePref` already wires it.)
 
 ## 10. Browser compatibility

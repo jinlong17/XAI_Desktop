@@ -22,12 +22,77 @@ export type MonthKey = string;
 /** Week-start preference. Default "sun"; Settings W4 (row #24) may flip to "mon". */
 export type WeekStart = "sun" | "mon";
 
+/** Module view modes. */
+export type HabitViewMode = "list" | "calendar" | "stats" | "all";
+
+/** Pomodoro-style stroke icon names used by habit creation and rendering. */
+export type HabitIconName =
+  | "run"
+  | "water"
+  | "book"
+  | "dumbbell"
+  | "code"
+  | "study"
+  | "sleep"
+  | "meditate"
+  | "coffee"
+  | "bike"
+  | "walk"
+  | "heart"
+  | "moon"
+  | "sun"
+  | "music"
+  | "journal"
+  | "language"
+  | "laptop"
+  | "paper"
+  | "calendar"
+  | "plant"
+  | "sparkle"
+  | "target"
+  | "timer";
+
+/** Token-backed color choices; values are resolved in the UI layer. */
+export type HabitColorName = "accent" | "blue" | "amber" | "red" | "pink";
+
+export type HabitCategory =
+  | "health"
+  | "fitness"
+  | "learning"
+  | "work"
+  | "mindfulness"
+  | "personal";
+
+export type HabitFrequencyName = "daily" | "weekdays" | "weekends" | "weekly";
+
+export interface HabitReminder {
+  readonly enabled: boolean;
+  /** 24-hour local wall-clock value, format HH:mm. */
+  readonly time: string;
+}
+
+export interface HabitFrequency {
+  readonly type: HabitFrequencyName;
+}
+
 /** A single habit definition (no check-in state — that's separate). */
 export interface Habit {
   /** Stable opaque id; consumer must not reuse across habits. */
   readonly id: HabitId;
   /** Emoji glyph string (1–8 chars typical). */
   readonly emoji: string;
+  /** Stroke icon name. Optional for backward compatibility with pre-upgrade state. */
+  readonly icon?: HabitIconName;
+  /** Token-backed color id. Optional for backward compatibility. */
+  readonly color?: HabitColorName;
+  /** Lightweight category id for filtering/grouping. */
+  readonly category?: HabitCategory;
+  /** UTC start day key, format YYYY-MM-DD. */
+  readonly startDate?: DateKey;
+  /** Reminder preference. Scheduling is handled by future notification rows. */
+  readonly reminder?: HabitReminder;
+  /** Check-in cadence. */
+  readonly frequency?: HabitFrequency;
   /** Bilingual title. Both langs MUST be present. */
   readonly title: { en: string; zh: string };
   /** ISO timestamp the habit was created; the "since" date for total counts. */

@@ -300,3 +300,199 @@ Backward-compat rules after ship:
 - Changing the persistence key name is breaking — would require a v1→v2
   migration entry in `internal/migrate.ts`.
 - Removing any exported name is breaking — would require deprecation row.
+
+---
+
+# Extension — xai-web-matrix-card-create (2026-05-28)
+
+> APPENDED extension. The SHIPPED v1 contract above (§1–§8) is unchanged.
+> This block specifies ONLY the additive contract surface for card-create.
+> All shapes are additive — no SHIPPED export changes type.
+
+## E.1 New exported type — `NewMatrixCardDraft`
+
+```ts
+// packages/xai-web-matrix/src/types.ts  (ADDITIVE)
+
+/**
+ * The data the user enters in MatrixComposer before saving.
+ * `title` fills BOTH `title.en` and `title.zh` (single-input bilingual design — design §E.1 #8).
+ * NO date field: Matrix has no bucket-derived date model; created cards leave
+ * `date`/`dateZh` undefined in v1.
+ */
+export interface NewMatrixCardDraft {
+  /** Raw title string typed by the user; trimmed by addCard. Fills BOTH title.en + title.zh. */
+  readonly title: string;
+  /** Optional tag preset — omitted means "no tag". One of: study|work|personal|todo|other. */
+  readonly tag?: string;
+}
+```
+
+Re-exported from `index.ts` (ADDITIVE):
+
+```ts
+export type { MatrixCard, MatrixState, Quadrant, MatrixModuleProps, NewMatrixCardDraft } from "./types.js";
+```
+
+## E.2 New internal helper — `createMatrixId()` (NOT exported via index.ts)
+
+```ts
+// packages/xai-web-matrix/src/internal/ids.ts  (NEW, @internal)
+
+/**
+ * Returns a fresh, opaque matrix card ID.
+ * - Modern path: crypto.randomUUID() (RFC 4122 v4 UUID).
+ * - Fallback (jsdom / old runtimes): "m-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,10)
+ * Namespace is structurally disjoint from seed ids (`seed-1`..`seed-8`).
+ */
+export function createMatrixId(): string;
+```
+
+Mirrors `packages/xai-web-tasks/src/internal/ids.ts` (`createTaskId`) — pattern only, NOT an import.
+
+## E.3 New pure reducer action — `addCard()` (NOT exported via index.ts)
+
+```ts
+// packages/xai-web-matrix/src/internal/create.ts  (NEW, @internal)
+
+import type { MatrixState, Quadrant, NewMatrixCardDraft } from "../types.js";
+
+/**
+ * Pure create: builds a new MatrixCard from a NewMatrixCardDraft and APPENDS it
+ * to state[targetQuadrant] (bottom of the quadrant — matches moveCardTo's append
+ * convention at move.ts:73, DIVERGENT from Tasks addCard which prepends).
+ *
+ * Returns `state` UNCHANGED when:
+ *  - draft.title.trim().length === 0 (defensive guard; composer also blocks this)
+ *  - targetQuadrant is not "q1".."q4" (defensive)
+ *
+ * All other quadrants pass through by reference (referential equality preserved).
+ * The new card: { id: createMatrixId(), title: { en: trimmed, zh: trimmed }, ...(tag ? {tag} : {}) }.
+ * `taskId` is NOT set (stays undefined — reserved for the future Tasks join).
+ */
+export function addCard(
+  state: MatrixState,
+  draft: NewMatrixCardDraft,
+  targetQuadrant: Quadrant,
+): MatrixState;
+```
+
+**Contract details:**
+
+| Aspect | Behavior |
+|---|---|
+| Insert position | **Append** (`[...state[to], newCard]`) — Matrix move-convention. |
+| Empty title | `state.title.trim() === ""` → return `state` unchanged (no new card). |
+| `schemaVersion` | Preserved (`1`). |
+| Untouched quadrants | Returned by reference (identity preserved — testable). |
+| `date`/`dateZh` | Never set on created cards (undefined). |
+| `taskId` | Never set (undefined). |
+| id | `createMatrixId()` — disjoint from seed namespace. |
+
+## E.4 Extended hook method — `usePersistedMatrix().addCard`
+
+```ts
+// packages/xai-web-matrix/src/internal/usePersistedMatrix.ts  (EXTENDED)
+
+export interface UsePersistedMatrixResult {
+  state: MatrixState;
+  setState: (next: MatrixState) => void;
+  moveCard: (cardId: string, to: Quadrant) => void;
+  /** NEW: create a card in the target quadrant + persist. NO event emit. */
+  addCard: (draft: NewMatrixCardDraft, to: Quadrant) => void;
+}
+```
+
+`addCard(draft, to)` implementation contract:
+
+```ts
+const addCard = (draft: NewMatrixCardDraft, to: Quadrant) => {
+  const next = addCardPure(state, draft, to);   // internal/create.ts
+  if (next === state) return;                    // no-op guard (empty title / bad quadrant)
+  setState(next);                                // SHIPPED boundary cast — single-sourced
+  // NO emitPriorityTagged — create does not emit web:matrix:priority-tagged (QE-D).
+};
+```
+
+**Divergence from `moveCard`:** `moveCard` calls `emitPriorityTagged`; `addCard` does NOT. The `web:matrix:priority-tagged` channel is move-specific (`from`/`to` payload) and consumer-less; the carve-out forbids touching it.
+
+## E.5 Composer component contract — `MatrixComposer` (internal to module)
+
+```ts
+// packages/xai-web-matrix/src/MatrixComposer.tsx  (NEW, surfaced only via MatrixModule)
+
+export interface MatrixComposerProps {
+  /** Controls visibility: true → showModal(), false → close(). */
+  open: boolean;
+  /** Active language for STR_MATRIX_COMPOSER labels + inline error. */
+  lang: Lang;
+  /** Quadrant pre-selected when the dialog opens (M-01 → q1; M-03 → clicked quadrant). */
+  defaultQuadrant: Quadrant;
+  /** Called after validation passes with the draft + chosen quadrant. */
+  onSave: (draft: NewMatrixCardDraft, targetQuadrant: Quadrant) => void;
+  /** Called on ESC / backdrop click / Cancel (changes discarded). */
+  onClose: () => void;
+}
+```
+
+a11y contract (mirror `TaskComposer`): `aria-modal="true"` + `aria-labelledby`; title input `aria-required` + `aria-describedby` when error present; tag + quadrant `role="radiogroup"`, each option `role="radio"` + `aria-checked`; ESC via native `cancel` event; backdrop close via `e.target === dialogRef.current`; `setTimeout(0)` autofocus on title input.
+
+## E.6 `MatrixModule` composer-state contract (lifted state, no channel)
+
+```ts
+// MatrixModule.tsx  (EXTENDED)
+const [composer, setComposer] = useState<{ open: boolean; quadrant: Quadrant }>({
+  open: false, quadrant: "q1",
+});
+// M-01 header + → setComposer({ open: true, quadrant: "q1" })
+// M-03 quadrant + → setComposer({ open: true, quadrant: <clicked> })  // via Quadrant onAddCard prop
+// onSave → addCard(draft, targetQuadrant); setComposer(c => ({...c, open:false}))
+// onClose → setComposer(c => ({...c, open:false}))
+```
+
+`Quadrant` gains an additive optional prop:
+
+```ts
+export interface QuadrantProps {
+  // ...existing
+  /** NEW: invoked when the quadrant header + is clicked (M-03). */
+  onAddCard?: (quadrant: QuadrantId) => void;
+}
+```
+
+## E.7 Local STR table — `STR_MATRIX_COMPOSER` (NOT exported)
+
+```ts
+// packages/xai-web-matrix/src/internal/strings.ts  (NEW, @internal)
+
+/** Record<string, { en: string; zh: string }> — access via STR_MATRIX_COMPOSER.key[lang]. */
+export const STR_MATRIX_COMPOSER = {
+  title_create:       { en: "New card",            zh: "新建卡片" },
+  field_title:        { en: "Title",               zh: "标题" },
+  field_tag:          { en: "Tag",                 zh: "标签" },
+  field_quadrant:     { en: "Quadrant",            zh: "象限" },
+  tag_none:           { en: "None",                zh: "无" },
+  q1_label:           { en: "Urgent & Important",       zh: "紧急且重要" },
+  q2_label:           { en: "Not Urgent & Important",   zh: "重要不紧急" },
+  q3_label:           { en: "Urgent & Unimportant",     zh: "紧急不重要" },
+  q4_label:           { en: "Not Urgent & Unimportant", zh: "不重要不紧急" },
+  btn_save:           { en: "Add",                 zh: "添加" },
+  btn_cancel:         { en: "Cancel",              zh: "取消" },
+  err_title_required: { en: "Title is required",   zh: "标题不能为空" },
+} as const;
+```
+
+NO `plugin-web-tokens` edit. Quadrant labels here are composer-local; the quadrant *titles* in the grid keep flowing through `useI18n` (`matrix.*` keys) unchanged. The build MAY reuse the existing `matrix.urgent_important` etc. i18n keys for the radiogroup labels instead of the local copies above — reviewer's call (recorded as a build-time nicety; either is constraint-compliant since no token edit is needed).
+
+## E.8 Error semantics (extension)
+
+| Condition | Behavior |
+|---|---|
+| Empty/whitespace title at composer save | Composer shows inline `err_title_required`; `onSave` NOT called. |
+| Empty title reaching `addCard` (defensive) | `addCard` returns `state` unchanged; no new card; no persist. |
+| Unknown `targetQuadrant` reaching `addCard` (defensive) | Returns `state` unchanged. |
+| `setState` / localStorage write failure | Same as SHIPPED `moveCard` path — `usePref`/storage layer handles; no new error surface introduced. |
+
+## E.9 Out of scope (extension contract)
+
+No new `index.ts` exports beyond `NewMatrixCardDraft`. No new registry key. No new EventMap channel. No `updateCard`/`deleteCard` (Edit/Delete deferred). `MatrixComposer` stays module-internal.

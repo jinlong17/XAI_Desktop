@@ -2,7 +2,7 @@
  * AC-RENDER-1..7: HabitsModule render correctness tests.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import React from "react";
 import { WebShellProvider } from "@repo/xai-web-shell";
 import { HabitsModule } from "../HabitsModule.js";
@@ -71,6 +71,18 @@ describe("HabitsModule render", () => {
     });
   });
 
+  it("AC-RENDER-3b: all habits row aligns to the same 7-day week grid", () => {
+    render(
+      <Wrapper>
+        <HabitsModule lang="en" />
+      </Wrapper>
+    );
+    const allRow = document.querySelector(".habit-all-row");
+    expect(allRow).toBeTruthy();
+    expect(allRow?.querySelector(".habit-all-week")).toBeTruthy();
+    expect(allRow?.querySelectorAll(".all-hcell")).toHaveLength(7);
+  });
+
   it("AC-RENDER-4: 4 stat cards render with correct labels (EN)", async () => {
     await act(async () => {
       render(
@@ -105,7 +117,7 @@ describe("HabitsModule render", () => {
     expect(sub).toBeTruthy();
   });
 
-  it("AC-RENDER-6: month calendar shows 7 weekday headers + 35 day cells + today", async () => {
+  it("AC-RENDER-6: month calendar shows 7 weekday headers + all visible day cells + today", async () => {
     await act(async () => {
       render(
         <Wrapper>
@@ -116,7 +128,7 @@ describe("HabitsModule render", () => {
     const calHeaders = document.querySelectorAll(".cal-h");
     expect(calHeaders).toHaveLength(7);
     const calCells = document.querySelectorAll(".cal-cell");
-    expect(calCells).toHaveLength(35);
+    expect(calCells).toHaveLength(42);
     const todayCells = document.querySelectorAll(".cal-cell.today");
     expect(todayCells).toHaveLength(1);
   });
@@ -131,5 +143,27 @@ describe("HabitsModule render", () => {
     });
     expect(screen.getByText("Habit Log")).toBeTruthy();
     expect(screen.getByText("No check-ins shared this month yet.")).toBeTruthy();
+  });
+
+  it("AC-RENDER-8: tooltip renders in a top-level layer outside clipped panels", async () => {
+    render(
+      <Wrapper>
+        <HabitsModule lang="en" />
+      </Wrapper>
+    );
+    const cell = document.querySelector(".habit-row .hcell")!;
+    await act(async () => {
+      fireEvent.pointerOver(cell);
+    });
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.classList.contains("habit-tooltip-layer")).toBe(true);
+    expect(document.querySelector(".module-habits .habit-tooltip-layer")).toBeFalsy();
+    expect(tooltip.textContent).toContain("2026-05");
+
+    await act(async () => {
+      fireEvent.pointerOut(cell);
+    });
+    expect(document.querySelector(".habit-tooltip-layer")).toBeFalsy();
   });
 });
