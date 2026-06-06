@@ -13,10 +13,10 @@
 | **Target** | xai-admin-users-orgs-billing |
 | **Title** | Admin Users / Organizations / Billing wiring (typed read-model adapters · RBAC+audit-gated guarded mutations · Billing read-only with frozen Stripe gate) |
 | **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_FOR_VERIFY — P1+P2+P3+P4 DONE |
-| **Executor** | claude-opus-4-8 (feature-dev-loop → feature-auto-build host) · impl via `codex exec` (D-Codex) |
-| **Updated** | 2026-06-06 23:40 |
-| **Suggested Next** | feature-verify |
+| **Status** | READY_TO_SHIP |
+| **Executor** | claude-opus-4-8 (feature-dev-loop → feature-verify) |
+| **Updated** | 2026-06-06 23:52 |
+| **Suggested Next** | ship |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #3 default) |
 | **Verify Cross-vendor** | yes (manifest row #3 default) |
@@ -151,7 +151,7 @@
 | P1 — Users read seam + guarded ban/bulk-ban | DONE | `d5c8ff6` |
 | P2 — Organizations read seam + guarded owner-transfer | DONE | `8cfa374` |
 | P3 — Billing read seam + explicit Stripe-gate deferral | DONE | `268dd12` |
-| P4 — Wire pages + injection swap + carried-guard re-run | DONE | _(pending commit hash, set below)_ |
+| P4 — Wire pages + injection swap + carried-guard re-run | DONE | `d6b9181` |
 
 ## Work Log (append-only)
 
@@ -420,3 +420,57 @@
   initially TRIPPED by codex, then CORRECTED (AiUsage/Features reverted). R6 (return-type ripple) handled by the
   combined `AdminCommands` surface. R9 (async RTL flake) mitigated — microtask-resolving mock + `findBy*`.
 - **Next step**: feature-verify — independently verify all 4 phases + Verification Gates; then ship (separate, no push here).
+
+### Round 7 — 2026-06-06 23:52 · feature-verify (PASS) [feature-dev-loop]
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop, acting as feature-verify — read-only independent verifier).
+- **Mode**: Verify — `Status = READY_FOR_VERIFY`; all 4 build phases committed.
+- **Action**: Independently reviewed the 4 phase commits + re-ran the full gate set from a clean tree (did not
+  trust the build-host's prior runs); inspected the named Verification Gates by explicit test title.
+  - **Commit-boundary review**: P1 `d5c8ff6` (Users read seam + guarded adapter + row #3 doc-set intro),
+    P2 `8cfa374` (Orgs read seam + transfer tests), P3 `268dd12` (Billing read seam + Stripe-gate test),
+    P4 `d6b9181` (3 page wirings + AdminUiContext combined surface + wiring test). Each is single-intent, stays
+    within its phase boundary, and follows `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests. **AiUsagePage/
+    FeaturesPage confirmed byte-identical to the row #5 SHIPPED state** (`git diff 8c9890a` empty) — the initial
+    P4 scope defect (R5) was caught by the build host and corrected before commit; the committed history carries
+    NO out-of-scope page change.
+  - **Build/type/test**: `check-types` clean; `pnpm --filter @repo/admin test` → **319 passed / 26 files**
+    (= slice #1 + row #2 + row #5 baseline 284 UNCHANGED + 35 new across P1–P4: guardedCommands 18, usersReadSeam
+    3, orgsReadSeam 2, billingReadSeam 9, wiring.users-orgs-billing 3); `pnpm --filter @repo/admin build` exits 0
+    (no `.map`); **`@repo/web` build green + unaffected** (regression boundary).
+  - **GATE — RBAC allow/deny per family + audit-on-mutation + applied:false** (`guardedCommands.test.ts`, 18):
+    `TT-CMD-GUARDED-ALLOW-banUser/-bulkBan` (ops → applied:false + auditId + 1 event), `-DENY-banUser/-bulkBan`
+    (support → forbidden ZERO; no-role → unauthorized ZERO), `TT-CMD-GUARDED-ALLOW-transferOwnership` (super),
+    `-DENY-transferOwnership` for **ops + support + finance + audit** (all forbidden ZERO) + no-role
+    (unauthorized ZERO) — SUPER-ONLY proven; `TT-CMD-AUDIT-ON-MUTATION-*` ×3 (exactly one event,
+    family/permissionKey/result/target), `TT-CMD-APPLIED-FALSE`, `TT-CMD-NO-IO`, `TT-CMD-ADVISORY-NOTE`,
+    `TT-CMD-GUARDED-IS-ADDITIVE`, `TT-CMD-CHAIN-AFTER-N`. ALL GREEN.
+  - **GATE — billing-gate-no-mutation** (`billingReadSeam.test.ts`, 9): `TT-BILLING-GATE-NO-MUTATION` (real
+    `createMockAdminApiClient` mutation keys ⊆ the fixed 6-family allowlist, none `/billing/i`;
+    `MUTATION_PERMISSION` no billing key + does not wire `admin.billing.manage`; `GuardedCommandAdapter` keys ===
+    banUser/bulkBan/transferOwnership; **type-level** `expectTypeOf` pins on `keyof GuardedCommandAdapter` +
+    `MutationFamily`), `TT-BILLING-KEY-CATALOGUED-UNWIRED`, `TT-WIRE-BILLING-READ` (read-only seam). ALL GREEN.
+  - **GATE — no-secret** (`no-secret.test.ts` 4 + `no-secret-bundle.test.ts` 10): every secret pattern
+    (sk_test/sk_live/service-role/SUPABASE_SERVICE_ROLE/sk-/sk-ant-/AIza/masked) zero across `src/` + self-built
+    `dist/`. Verifier's own independent grep over `src/`+`dist/` matched ONLY explanatory doc-comment prose
+    ("holds no service-role credential") + one fixture note string — NO secret literal. GREEN.
+  - **GATE — no-inline-mock** (`no-inline-mock.test.ts`, 21): 10 page components; all 10 import `../adapters`;
+    none imports `../fixtures`. Independent grep confirms page count 10, fixtures-importing pages 0. The 3 wired
+    pages import only `../adapters` + `../adapters/types` (no direct guarded/audited/mock-client import). GREEN.
+- **Findings**: 0 blockers. All AC-1..AC-12 satisfied. W0 boundary clean (no shared `@repo/*` change; no
+  `@repo/audit-log-integrity`/`@repo/core/src/events`/Tauri; no `syncScope`). Additive over slice #1 + row #2 +
+  row #5 (their suites UNCHANGED). Stripe gate structurally + type-level guarded. Mutations server-authoritative /
+  browser advisory / `applied:false`.
+- **Residual risks (non-blocking)**: (1) `pnpm --filter @repo/admin lint` is non-functional — `apps/admin` has no
+  `eslint.config.*` for ESLint 9 (PRE-EXISTING on the row #5 SHIPPED baseline, NOT introduced by row #3; lint is
+  not a row #3 acceptance gate). Recommend a separate chore to add the admin ESLint flat config. (2) Manual
+  browser smoke of the 3 wired pages (Users ban+bulk-ban confirm, Orgs transfer confirm SUPER-role, Billing
+  read-only) on real hardware before/at ship — standard for admin UI. (3) The async read seams resolve on a
+  microtask in the mock; the real-server transport (later row) must keep the `AdminApiResult` discriminated-union
+  handling the pages already implement.
+- **Verdict**: **PASS** → `Status = READY_TO_SHIP`, `Suggested Next = ship`.
+- **Commits**: verify result — `docs(admin): record feature-verify PASS — row #3 READY_TO_SHIP` (dev_log only;
+  no code). Phase commits reviewed: `d5c8ff6`, `8cfa374`, `268dd12`, `d6b9181`.
+- **Tests**: `pnpm --filter @repo/admin test` → 319/319; `check-types` clean; `build` green; `@repo/web` build green.
+- **Next step**: ship — verify commit integrity, push to remote, mark SHIPPED (requires explicit operator action;
+  feature-dev-loop STOPS here per instruction — no push).
