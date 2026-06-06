@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-06
+
+### 个人开发看板主目录启动入口
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / local cherry-pick
+- User-visible change: 主目录新增可双击的 `open-dashboard.command`；打开个人开发看板时会自动请求启动 Web mock 服务，看板内「使用和操作」页可直接打开 Web 首页和 Web App(`/app/dashboard`)。
+- Developer/system delta: 新增 `scripts/dashboard/open.mjs` 作为看板启动器；`serve.mjs` 补齐 nvm/Homebrew/local PATH 并解析 `pnpm` / `corepack pnpm`；使用页区分 Web 首页和 Web App route，启动 mock 后默认打开 `/app/dashboard`。
+- Verification: `node --check scripts/dashboard/open.mjs` passed；`node --check scripts/dashboard/serve.mjs` passed；`node --check scripts/dashboard/generate-state.mjs` passed；`node --check docs/prototypes/dev-dashboard/js/usage-ops.js` passed；`zsh -n open-dashboard.command` passed；`git diff --check HEAD^ HEAD` passed；`node scripts/dashboard/generate-state.mjs` passed；`node scripts/dashboard/verify-product-modules.mjs` passed；`node scripts/dashboard/verify-static.mjs` passed；`./open-dashboard.command` no-browser smoke passed with port fallback to 4178 during parallel run；narrow-PATH `./open-dashboard.command` no-browser smoke passed and detected Web as `already-running`。
+- Risk / follow-up: Web 服务启动依赖本机存在 `pnpm` 或 `corepack pnpm`；如果 3000 已由外部服务占用，看板会跳过重复启动并按 ops 状态展示。
+
 ## 2026-06-04
 
 ### Desktop Plugin 产品边界与长期平台路线落地
