@@ -207,7 +207,7 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 | P1 — Feature-flags read seam + guarded setFeatureRollout | DONE | `9f76ef9` |
 | P2 — AI-quota read seam + guarded setQuota | DONE | `70ea017` |
 | P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | DONE | `2be5864` |
-| P4 — Wire pages + injection flip + carried-guard re-run | DONE | `<P4-HASH>` |
+| P4 — Wire pages + injection flip + carried-guard re-run | DONE | `1663901` |
 
 ## Work Log (append-only)
 
@@ -339,7 +339,7 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
     stubs now return `ack` (`{applied:false,auditId}`) not `noop`, because `AdminCommands` CONFIG families are now
     `AdminApiResult<MutationAck>`. Row #3 page assertions (banUser/bulkBan/transferOwnership) unchanged. Row #3 PAGE
     files byte-identical.
-- **Commits**: `<P4-HASH>` — `feat(admin): row #4 P4 — wire CONFIG pages to seams + guarded injection flip`.
+- **Commits**: `1663901` — `feat(admin): row #4 P4 — wire CONFIG pages to seams + guarded injection flip`.
 - **Tests**: `pnpm --filter @repo/admin test` → **356 passed (31 files)** (353 prior + 3 wiring); tsc --noEmit clean.
 - **Gate evidence (P4)**: AC-8 (TT-WIRE-FEATURES/AIUSAGE/PROVIDERS-PAGE + TT-NO-INLINE-MOCK — pages import only
   `../adapters`, page count 10) ✓; AC-10 (TT-NO-SECRET-SRC/BUNDLE re-run green over wired pages + larger dist) ✓;
