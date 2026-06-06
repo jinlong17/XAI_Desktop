@@ -16,6 +16,7 @@
 - `site` / `admin` 为 **PROPOSED（owner-deferred）**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线，先用 `xai-feature-brief` 规范化占位。
 - `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` **已定义但尚未创建**；创建是独立的 operator 确认步骤，任何触及 `dev` 的操作都需显式确认。
 - 站内（同一条 Web 线）的部署/CSP 改动（`apps/web/wrangler.toml`、`apps/web/public/_headers`）走 **ADR-0008 扩展协议 + feature-plan/review**，**不走 D3**（D3 只判定 Web 变更对 App 的影响）。
+- **部署体系的权威设计文档是 [`docs/DEPLOYMENT.md`](DEPLOYMENT.md)**（六产品线部署矩阵、平台组合、Web 两模式上线流程、账号云同步落地路径、执行路线图）；运维步骤见 [`docs/runbooks/cloudflare.md`](runbooks/cloudflare.md) + [`docs/runbooks/supabase.md`](runbooks/supabase.md)。本文只做任务归属导航，部署结论以 `DEPLOYMENT.md` 为准。
 
 ## 0. 任务归属速查（routing table）
 
@@ -570,3 +571,4 @@ Verify Cross-vendor: yes
 - 本文与 `dashboard-state.json` 的 `product_lines.{goal,routing,skills,prompts,workflow,transitions,impacts}` 同源；改一处要同步另一处。
 - 路由规则的跨平台同步：本文 ↔ [`CLAUDE.md`](../CLAUDE.md) §Product module map ↔ [`AGENTS.md`](../AGENTS.md) §3 ↔ [`.cursor/rules/product-module-routing.mdc`](../.cursor/rules/product-module-routing.mdc)。
 - 边界 / 分支 / 闸门的事实变更以 [ADR-0013](adr/0013-branch-sync-governance.md) 为准；本文只做导航编排，不改治理结论。
+- 部署 / 上线 / 云平台 / 数据同步落地的事实变更以 [`docs/DEPLOYMENT.md`](DEPLOYMENT.md) 为准（镜像到 dev-dashboard 部署 Tab / `dashboard-state.json` 的 `deployment`）；本文只引用，不改部署结论。

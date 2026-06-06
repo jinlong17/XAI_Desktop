@@ -1,9 +1,16 @@
 # Runbook — Cloudflare Pages (XAI Web Console)
 
 > Operational procedures for the `xai-web-console` Cloudflare Pages project.
+> Architecture authority: `docs/DEPLOYMENT.md` (deployment matrix + launch flow)
 > Decision context: `docs/adr/0008-cloudflare-deploy-target-and-csp.md`
 > CI workflow: `.github/workflows/deploy-web.yml`
 > Feature row: `packages/xai-web-deploy-cloudflare/docs/`
+> Account-cloud backend runbook: `docs/runbooks/supabase.md`
+
+> ⚠️ **Open decision (DEPLOYMENT.md §12-A):** the production deploy is currently
+> wired to `main`, but the Web mainline is `web`. Confirm the production source
+> branch before treating a `main` deploy as the live product — otherwise you ship
+> a stale build.
 
 ---
 
