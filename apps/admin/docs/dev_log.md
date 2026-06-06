@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_BUILD — Phase 2 DONE, Phase 3 PENDING |
+| **Current Phase** | FEATURE_BUILD — Phase 3 DONE, Phase 4 PENDING |
 | **Status** | APPROVED |
 | **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-auto-build) |
-| **Updated** | 2026-06-06 02:20 |
-| **Suggested Next** | feature-auto-build (Phase 3) |
+| **Updated** | 2026-06-06 02:30 |
+| **Suggested Next** | feature-auto-build (Phase 4) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -117,12 +117,30 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 | Phase | Status | Commit |
 |---|---|---|
 | P1 — Scaffold isolated app + deploy boundary | DONE | `1c35a99` |
-| P2 — Admin auth gate (the core boundary) | DONE | (this commit) |
-| P3 — Typed read-model interfaces + mock adapters + fixtures | PENDING | — |
+| P2 — Admin auth gate (the core boundary) | DONE | `8d177e9` |
+| P3 — Typed read-model interfaces + mock adapters + fixtures | DONE | (this commit) |
 | P4 — Page port (structural) + destructive UI | PENDING | — |
 | P5 — Security + build guards | PENDING | — |
 
 ## Work Log (append-only)
+
+### Round 5 — 2026-06-06 02:30 · feature-auto-build Phase 3 (via feature-dev-loop)
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop orchestrator, inline feature-auto-build worker)
+- **Phase**: P3 — Typed read-model interfaces + mock adapters + fixtures
+- **Action**: Defined the 10 typed read-model interfaces and ported the prototype fixtures into typed mock adapters (Typed Contract Mock).
+  Files created:
+  - `apps/admin/src/adapters/types.ts` — 10 read-model interfaces (Overview/Users/Orgs/Features/AiUsage/Providers/Roles/Billing/Audit/Settings) + their value types + `AdminReadModels` registry + `NoOpResult` + `AdminCommandAdapter`. ProvidersReadModel exposes `keyStatus` ONLY (no `keyMask`/key field).
+  - `apps/admin/src/fixtures/index.ts` — typed fixtures ported from prototype consts (USERS/VIEWS/UCHIPS, FEATURES, AICONSUMERS, ROUTING, PROVIDERS, AUDIT, ROLES/PERMS, QUEUES, KPIS, ORGS, BILLING+metrics, SETTINGS). Provider `keyMask` display strings intentionally DROPPED (TT-PROVIDERS-NO-KEY).
+  - `apps/admin/src/adapters/index.ts` — 10 mock adapters implementing the interfaces from fixtures; ported the deterministic heatmap algorithm and the Users `VIEWS`/`chipPass` filter + audit filters. Exposes `adminReadModels` aggregate.
+  - `apps/admin/src/adapters/commands.ts` — `mockAdminCommandAdapter`: 6 destructive commands, each returns `{ok:true,noop:true,reason:"slice-1-mock-no-write"}` with no side effect.
+  - `apps/admin/src/adapters/adapters.test.ts` — TT-ADAPTER-OVERVIEW/USERS/ORGS/FEATURES/AI/PROVIDERS/ROLES/BILLING/AUDIT/SETTINGS (one block per page) + TT-PROVIDERS-NO-KEY (structural + value-level key-shape scan) + TT-ADAPTER-REGISTRY (10 keys). 18 tests.
+  - `apps/admin/src/adapters/commands.test.ts` — TT-CMD-NOOP (result shape + fetch/storage spy no-side-effect). 2 tests.
+- **Tests run**: `pnpm exec vitest run` (apps/admin) → **49 passed / 49** (P1 13 + P2 16 + P3 20). `tsc --noEmit` → clean. `vite build` → green (adapters/fixtures tree-shaken until P4 wires pages; tested directly).
+- **Evidence (AC-2 prep / AC-4)**: every page now has a typed read-model interface + mock adapter (AC-2 substrate; pages port in P4). TT-CMD-NOOP proves no production write from any command (AC-4). TT-PROVIDERS-NO-KEY proves provider read-model carries key STATUS only.
+- **Boundary self-check**: adapters/fixtures are admin-local; no shared-package change; no secret-shaped string in provider fixtures. D3 = W0 holds.
+- **Commits**: (recorded on commit below)
+- **Next step**: feature-auto-build Phase 4 — structural port of the 10 pages reading through these adapters + type-to-confirm ConfirmModal wired to the no-op command adapter.
 
 ### Round 4 — 2026-06-06 02:20 · feature-auto-build Phase 2 (via feature-dev-loop)
 
