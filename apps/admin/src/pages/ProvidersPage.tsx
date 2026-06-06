@@ -1,18 +1,44 @@
 /**
  * Providers (Provider 配置) — provider cards (KEY STATUS ONLY, never key material)
- * + a model × plan availability matrix, with a routing-policy no-op.
- * Reads through `providersAdapter` (../adapters). No inline mock data.
+ * + a model × plan availability matrix, with a guarded routing-policy command.
+ * Reads through `providersReadSeam` (../adapters). No inline mock data.
  *
  * SECURITY: renders `keyStatus` (configured / not-configured) ONLY. There is no
  * key, mask, or secret-shaped string anywhere on this page (api.md §6).
  */
-import { providersAdapter } from "../adapters";
-import type { ModelPlanCell } from "../adapters/types";
+import { useEffect, useState } from "react";
+import { providersReadSeam } from "../adapters";
+import type { ModelPlanCell, ProviderCard } from "../adapters/types";
+import { useAdminUi } from "../components/AdminUiContext";
 import { Badge, DataTable, Panel, type Column } from "../components/primitives";
 
 export function ProvidersPage(): React.ReactElement {
-  const cards = providersAdapter.list();
-  const matrix = providersAdapter.modelPlanMatrix();
+  const { requestConfirm, toast, commands } = useAdminUi();
+  const [cards, setCards] = useState<ProviderCard[]>([]);
+  const [matrix, setMatrix] = useState<ModelPlanCell[]>([]);
+
+  useEffect(() => {
+    void providersReadSeam.list().then((res) => {
+      if (res.ok) setCards(res.data);
+    });
+    void providersReadSeam.modelPlanMatrix().then((res) => {
+      if (res.ok) setMatrix(res.data);
+    });
+  }, []);
+
+  function manageRouting(p: ProviderCard): void {
+    requestConfirm({
+      title: `更新「${p.name}」默认路由？`,
+      body: "将 Pro 套餐默认模型切换到当前提供商的默认模型。此操作会被审计记录。",
+      tone: "warning",
+      confirmLabel: "更新路由",
+      requireType: "ROUTING",
+      onConfirm: async () => {
+        await commands.setProviderRouting({ plan: "Pro", model: p.defaultModel });
+        toast(`已提交 ${p.name} 路由策略`);
+      },
+    });
+  }
 
   const matrixCols: Column<ModelPlanCell>[] = [
     { header: "模型", cell: (m) => <span className="mono">{m.modelId}</span> },
@@ -62,7 +88,11 @@ export function ProvidersPage(): React.ReactElement {
                 默认 <b>{p.defaultModel}</b>
               </span>
             </div>
-            <button type="button" className="btn btn--sm">
+            <button
+              type="button"
+              className="btn btn--sm"
+              onClick={() => manageRouting(p)}
+            >
               管理限速与默认模型
             </button>
           </div>

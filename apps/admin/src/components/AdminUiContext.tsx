@@ -18,20 +18,16 @@ import {
   createGuardedCommandAdapter,
   type GuardedCommandAdapter,
 } from "../adapters/guardedCommands";
-import { mockAdminCommandAdapter } from "../adapters/commands";
-import type { AdminCommandAdapter } from "../adapters/types";
 import type { AdminRole } from "../authz/rbac";
 
 const MOCK_ROLE = import.meta.env.VITE_ADMIN_MOCK_ROLE as AdminRole | undefined;
 
 /**
- * Row #3 command surface: the 3 graduated families are RBAC+audit-guarded (AdminApiResult<MutationAck>);
- * the other 3 stay slice #1 no-op (NoOpResult) until rows #4 graduate them. Pages keep calling
- * useAdminUi().commands.<family> unchanged.
+ * Row #4 command surface: all six admin command families are RBAC+audit-guarded
+ * (AdminApiResult<MutationAck>). Pages keep calling useAdminUi().commands.<family>
+ * unchanged.
  */
-export type AdminCommands =
-  Pick<GuardedCommandAdapter, "banUser" | "bulkBan" | "transferOwnership"> &
-    Pick<AdminCommandAdapter, "setFeatureRollout" | "setProviderRouting" | "setQuota">;
+export type AdminCommands = GuardedCommandAdapter;
 
 interface AdminUiContextValue {
   requestConfirm: (req: ConfirmRequest) => void;
@@ -58,9 +54,9 @@ export function AdminUiProvider({
       banUser: guarded.banUser,
       bulkBan: guarded.bulkBan,
       transferOwnership: guarded.transferOwnership,
-      setFeatureRollout: mockAdminCommandAdapter.setFeatureRollout,
-      setProviderRouting: mockAdminCommandAdapter.setProviderRouting,
-      setQuota: mockAdminCommandAdapter.setQuota,
+      setFeatureRollout: guarded.setFeatureRollout,
+      setProviderRouting: guarded.setProviderRouting,
+      setQuota: guarded.setQuota,
     }),
     [guarded],
   );

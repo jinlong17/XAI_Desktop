@@ -20,18 +20,13 @@ afterEach(() => {
 
 function makeSpyCommands(): AdminCommands {
   const ack = { ok: true, data: { applied: false, auditId: "test" } } as const;
-  const noop = {
-    ok: true,
-    noop: true,
-    reason: "slice-1-mock-no-write",
-  } as const;
   return {
     banUser: vi.fn(async () => ack),
     bulkBan: vi.fn(async () => ack),
     transferOwnership: vi.fn(async () => ack),
-    setFeatureRollout: vi.fn(async () => noop),
-    setProviderRouting: vi.fn(async () => noop),
-    setQuota: vi.fn(async () => noop),
+    setFeatureRollout: vi.fn(async () => ack),
+    setProviderRouting: vi.fn(async () => ack),
+    setQuota: vi.fn(async () => ack),
   };
 }
 

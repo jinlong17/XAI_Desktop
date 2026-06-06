@@ -1,9 +1,10 @@
 /**
  * AI usage & quota (AI 用量 & 配额) — top spenders table (with a destructive-free
- * "adjust quota" no-op) + per-plan routing policy table.
- * Reads through `aiUsageAdapter` (../adapters). No inline mock data.
+ * "adjust quota" guarded command) + per-plan routing policy table.
+ * Reads through `aiUsageReadSeam` (../adapters). No inline mock data.
  */
-import { aiUsageAdapter } from "../adapters";
+import { useEffect, useState } from "react";
+import { aiUsageReadSeam } from "../adapters";
 import type { SpenderRow, QuotaPolicy } from "../adapters/types";
 import { useAdminUi } from "../components/AdminUiContext";
 import { Badge, DataTable, MiniBar, PlanTag, type Column } from "../components/primitives";
@@ -16,8 +17,17 @@ const OVER_BADGE: Record<string, { label: string; tone: "danger" | "warning" | "
 
 export function AiUsagePage(): React.ReactElement {
   const { toast, commands } = useAdminUi();
-  const spenders = aiUsageAdapter.topSpenders();
-  const policies = aiUsageAdapter.quotaPolicies();
+  const [spenders, setSpenders] = useState<SpenderRow[]>([]);
+  const [policies, setPolicies] = useState<QuotaPolicy[]>([]);
+
+  useEffect(() => {
+    void aiUsageReadSeam.topSpenders().then((res) => {
+      if (res.ok) setSpenders(res.data);
+    });
+    void aiUsageReadSeam.quotaPolicies().then((res) => {
+      if (res.ok) setPolicies(res.data);
+    });
+  }, []);
 
   async function adjustQuota(s: SpenderRow): Promise<void> {
     await commands.setQuota({ subject: s.name, quota: s.quotaM });

@@ -1,11 +1,11 @@
 /**
  * Features (功能管理) — feature-flag table with search/category filter and a
  * status toggle whose "take offline" path is a destructive type-to-confirm flow
- * wired to a NO-OP command.
- * Reads through `featuresAdapter` (../adapters). No inline mock data.
+ * wired through the guarded command seam.
+ * Reads through `featuresReadSeam` (../adapters). No inline mock data.
  */
-import { useMemo, useState } from "react";
-import { featuresAdapter } from "../adapters";
+import { useEffect, useState } from "react";
+import { featuresAdapter, featuresReadSeam } from "../adapters";
 import type { FeatureFlag, FeatureCategory } from "../adapters/types";
 import { useAdminUi } from "../components/AdminUiContext";
 import { Badge, DataTable, type Column } from "../components/primitives";
@@ -25,7 +25,13 @@ export function FeaturesPage(): React.ReactElement {
   const [text, setText] = useState("");
   const [category, setCategory] = useState<FeatureCategory | "">("");
   const categories = featuresAdapter.categories();
-  const rows = useMemo(() => featuresAdapter.list({ text, category }), [text, category]);
+  const [rows, setRows] = useState<FeatureFlag[]>([]);
+
+  useEffect(() => {
+    void featuresReadSeam.list({ text, category }).then((res) => {
+      if (res.ok) setRows(res.data);
+    });
+  }, [text, category]);
 
   function takeOffline(f: FeatureFlag): void {
     requestConfirm({

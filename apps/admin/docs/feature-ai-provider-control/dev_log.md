@@ -13,11 +13,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-feature-ai-provider-control |
 | **Title** | Admin Feature-flags / AI-usage-&-quota / Provider-config wiring (typed read-model adapters · RBAC+audit-gated guarded CONFIG mutations · provider secret-handle read model + provider-key no-leak guard) |
-| **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1–P3 DONE, P4 PENDING |
+| **Current Phase** | FEATURE_VERIFY |
+| **Status** | READY_FOR_VERIFY — P1–P4 DONE |
 | **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-auto-build host; impl via `codex exec`) |
 | **Updated** | 2026-06-06 |
-| **Suggested Next** | feature-build (P4) — or continue the loop |
+| **Suggested Next** | feature-verify (loop continues inline) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #4 default) |
 | **Verify Cross-vendor** | yes (manifest row #4 default) |
@@ -206,8 +206,8 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 |---|---|---|
 | P1 — Feature-flags read seam + guarded setFeatureRollout | DONE | `9f76ef9` |
 | P2 — AI-quota read seam + guarded setQuota | DONE | `70ea017` |
-| P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | DONE | `<P3-HASH>` |
-| P4 — Wire pages + injection flip + carried-guard re-run | PENDING | — |
+| P3 — Provider config read (secret-handles) + guarded setProviderRouting + provider-key no-leak guard | DONE | `2be5864` |
+| P4 — Wire pages + injection flip + carried-guard re-run | DONE | `<P4-HASH>` |
 
 ## Work Log (append-only)
 
@@ -304,7 +304,7 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
     doc comment in `fixtures/index.ts` so the new fixture-facet text scanner does not false-positive on its own
     documentation. **Zero fixture DATA changed** (all `keyStatus` provider rows byte-identical; verified via
     `git diff`). All 6 PAGES byte-identical (wired in P4).
-- **Commits**: `<P3-HASH>` — `feat(admin): row #4 P3 — provider secret-handle read + super-only setProviderRouting + no-key guard`.
+- **Commits**: `2be5864` — `feat(admin): row #4 P3 — provider secret-handle read + super-only setProviderRouting + no-key guard`.
 - **Tests**: `pnpm --filter @repo/admin test` → **353 passed (30 files)** (339 prior + 14 new); tsc --noEmit clean.
   Headline guard + providers seam isolated run: 7 passed (3 + 4).
 - **Gate evidence (P3)**: AC-5 (TT-WIRE-PROVIDERS-READ + TT-PROVIDER-HANDLE-SHAPE) ✓; AC-6 (ALLOW super / DENY
@@ -314,6 +314,42 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 - **Next step**: feature-auto-build P4 — wire the 3 CONFIG pages to `../adapters` seams + flip `AdminUiContext`
   injection (3 CONFIG families no-op → guarded) + ProvidersPage routing affordance (status only, NO key) + re-run
   carried guards (no-secret / no-inline-mock / TT-CMD-NOOP) + full build + `@repo/web` build + row #3 byte-identical.
+
+### Round 6 — 2026-06-06 · feature-auto-build P4 (inline host · `codex exec`) — FINAL BUILD PHASE
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop, inline `feature-auto-build` host). D-Codex: impl via `codex exec`.
+- **Phase**: P4 — wire the 3 CONFIG pages + `AdminUiContext` injection flip + carried-guard re-run.
+- **Action**:
+  - FLIPPED `components/AdminUiContext.tsx`: `AdminCommands = GuardedCommandAdapter` (was 3 guarded + 3 no-op);
+    `baseCommands` now binds all six families to `guarded.*` (the 3 CONFIG families flipped from
+    `mockAdminCommandAdapter.*` → `guarded.*`). slice #1 `mockAdminCommandAdapter` + `TT-CMD-NOOP` UNCHANGED.
+  - WIRED `pages/FeaturesPage.tsx` → `featuresReadSeam.list({text,category})` async (useEffect+useState; mirrors
+    row #3 UsersPage); `featuresAdapter.categories()` stays sync UI config. `commands.setFeatureRollout` call site
+    unchanged.
+  - WIRED `pages/AiUsagePage.tsx` → `aiUsageReadSeam.topSpenders()`/`.quotaPolicies()` async. `commands.setQuota`
+    call site unchanged.
+  - WIRED `pages/ProvidersPage.tsx` → `providersReadSeam.list()`/`.modelPlanMatrix()` async; added `useAdminUi()`;
+    wired the previously-INERT "管理限速与默认模型" button → `requestConfirm({requireType:"ROUTING", onConfirm: () =>
+    commands.setProviderRouting({plan:"Pro", model:p.defaultModel})})` (guarded, super-only, type-to-confirm).
+    Renders `keyStatus` STATUS badge ONLY — NO key/secret/mask field in the DOM.
+  - New `pages/wiring.feature-ai-provider.test.tsx` (TT-WIRE-FEATURES-PAGE + AIUSAGE-PAGE + PROVIDERS-PAGE; mirrors
+    the row #3 wiring test — `makeSpyCommands` all-6 typed `AdminCommands`, `commandsOverride`, async `findBy`/`waitFor`;
+    ProvidersPage asserts NO `sk-|sk-ant-|AIza|•{3,}` string in the DOM + routing reaches `commands.setProviderRouting`).
+  - Forced (R-RETURN-TYPE) test-harness update: `wiring.users-orgs-billing.test.tsx` `makeSpyCommands` CONFIG-family
+    stubs now return `ack` (`{applied:false,auditId}`) not `noop`, because `AdminCommands` CONFIG families are now
+    `AdminApiResult<MutationAck>`. Row #3 page assertions (banUser/bulkBan/transferOwnership) unchanged. Row #3 PAGE
+    files byte-identical.
+- **Commits**: `<P4-HASH>` — `feat(admin): row #4 P4 — wire CONFIG pages to seams + guarded injection flip`.
+- **Tests**: `pnpm --filter @repo/admin test` → **356 passed (31 files)** (353 prior + 3 wiring); tsc --noEmit clean.
+- **Gate evidence (P4)**: AC-8 (TT-WIRE-FEATURES/AIUSAGE/PROVIDERS-PAGE + TT-NO-INLINE-MOCK — pages import only
+  `../adapters`, page count 10) ✓; AC-10 (TT-NO-SECRET-SRC/BUNDLE re-run green over wired pages + larger dist) ✓;
+  AC-11 (TT-CMD-NOOP unchanged; row #3 Users/Orgs/Billing pages byte-identical via `git diff --stat` empty) ✓;
+  AC-12 (admin build exit 0, no `.map`; full suite 356 green; `pnpm --filter @repo/web build` exit 0 — regression
+  boundary holds) ✓.
+- **Build verification**: `pnpm --filter @repo/admin build` → exit 0, dist produced (266.67 kB index, no sourcemap);
+  `pnpm --filter @repo/web build` → exit 0 (unaffected).
+- **Next step**: feature-verify — independent verification of all 4 phases + the Verification Gates
+  (provider-no-key-material; RBAC allow/deny per family; audit-on-mutation; no-secret; no-inline-mock).
 
 ### Round 1 — 2026-06-06 · feature-plan (Fresh)
 
