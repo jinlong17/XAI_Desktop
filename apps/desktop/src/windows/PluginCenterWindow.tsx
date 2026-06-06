@@ -8,7 +8,10 @@ import {
   enablePluginInstanceOnDesktop,
   hidePluginInstanceOnDesktop,
   restoreEnabledPluginInstancesOnDesktop,
+  summarizePluginWindowCapabilityError,
   summarizePluginWindowNativeApplication,
+  type PluginWindowCapabilityErrorSeverity,
+  type PluginWindowCapabilityErrorState,
   type PluginWindowNativeApplicationStatus,
   updatePluginInstanceConfigOnDesktop,
 } from "@repo/core/registry";
@@ -105,13 +108,6 @@ function lifecycleLabel(instance: PluginInstance): string {
   }
 }
 
-function formatError(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return typeof error === "string" ? error : "Unknown Plugin Center error";
-}
-
 function nativeStatusLabel(status: PluginWindowNativeApplicationStatus): string {
   switch (status) {
     case "applied":
@@ -133,6 +129,36 @@ function nativeStatusColor(status: PluginWindowNativeApplicationStatus): string 
       return "#92400e";
     case "not-requested":
       return shellTokens.color.textSecondary;
+    default:
+      return shellTokens.color.textSecondary;
+  }
+}
+
+function capabilitySeverityLabel(
+  severity: PluginWindowCapabilityErrorSeverity,
+): string {
+  switch (severity) {
+    case "blocked":
+      return "Blocked";
+    case "warning":
+      return "Warning";
+    case "recoverable":
+      return "Recoverable";
+    default:
+      return severity;
+  }
+}
+
+function capabilitySeverityColor(
+  severity: PluginWindowCapabilityErrorSeverity,
+): string {
+  switch (severity) {
+    case "blocked":
+      return "#991b1b";
+    case "warning":
+      return "#92400e";
+    case "recoverable":
+      return "#1d4ed8";
     default:
       return shellTokens.color.textSecondary;
   }
@@ -177,7 +203,8 @@ export function PluginCenterWindow() {
   const [lastWindow, setLastWindow] = useState<PluginWindowSnapshot | null>(
     null,
   );
-  const [addError, setAddError] = useState<string | null>(null);
+  const [capabilityError, setCapabilityError] =
+    useState<PluginWindowCapabilityErrorState | null>(null);
   const availableCount = entries.filter(
     (entry) => entry.canAddToDesktop,
   ).length;
@@ -207,7 +234,7 @@ export function PluginCenterWindow() {
       })
       .catch((error) => {
         if (!cancelled) {
-          setAddError(formatError(error));
+          setCapabilityError(summarizePluginWindowCapabilityError(error));
         }
       });
 
@@ -220,7 +247,7 @@ export function PluginCenterWindow() {
     async (entry: PluginCenterEntry) => {
       if (!entry.canAddToDesktop || !instanceStore) return;
       setBusyPluginName(entry.pluginName);
-      setAddError(null);
+      setCapabilityError(null);
       try {
         const result = await addPluginCenterEntryToDesktop(entry, {
           store: instanceStore,
@@ -240,7 +267,7 @@ export function PluginCenterWindow() {
         setInstances(instanceStore.list());
         setLastWindow(result.window);
       } catch (error) {
-        setAddError(formatError(error));
+        setCapabilityError(summarizePluginWindowCapabilityError(error));
       } finally {
         setBusyPluginName(null);
       }
@@ -255,7 +282,7 @@ export function PluginCenterWindow() {
     ) => {
       if (!instanceStore) return;
       setBusyInstanceId(instanceId);
-      setAddError(null);
+      setCapabilityError(null);
       try {
         const result = await action();
         setInstances(instanceStore.list());
@@ -263,7 +290,7 @@ export function PluginCenterWindow() {
           setLastWindow(result.window);
         }
       } catch (error) {
-        setAddError(formatError(error));
+        setCapabilityError(summarizePluginWindowCapabilityError(error));
       } finally {
         setBusyInstanceId(null);
       }
@@ -625,16 +652,39 @@ export function PluginCenterWindow() {
                 </>
               ) : null}
             </dl>
-            {addError ? (
+            {capabilityError ? (
               <div
                 role="alert"
                 style={{
-                  color: "#991b1b",
+                  border: `1px solid ${shellTokens.color.borderSubtle}`,
+                  borderRadius: shellTokens.radius.md,
+                  color: shellTokens.color.textPrimary,
                   fontSize: 12,
                   lineHeight: 1.4,
+                  padding: "8px 10px",
                 }}
               >
-                {addError}
+                <div
+                  style={{
+                    color: capabilitySeverityColor(capabilityError.severity),
+                    fontWeight: shellTokens.typography.fontWeightSemibold,
+                  }}
+                >
+                  {capabilityError.title} ·{" "}
+                  {capabilitySeverityLabel(capabilityError.severity)}
+                </div>
+                <div style={{ marginTop: 4 }}>{capabilityError.message}</div>
+                <div
+                  style={{
+                    color: shellTokens.color.textSecondary,
+                    marginTop: 4,
+                  }}
+                >
+                  {capabilityError.code} · {capabilityError.capability} ·{" "}
+                  {capabilityError.recoverable
+                    ? "Recoverable"
+                    : "Not recoverable"}
+                </div>
               </div>
             ) : null}
           </section>

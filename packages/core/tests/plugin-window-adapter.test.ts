@@ -6,6 +6,7 @@ import {
   normalizeCommandError,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
+  summarizePluginWindowCapabilityError,
   summarizePluginWindowNativeApplication,
 } from '../src/registry';
 import type { CommandError, GridWindowSnapshot } from '../src/types';
@@ -175,6 +176,45 @@ describe('plugin window adapter', () => {
       message: 'Unknown window command error',
       recoverable: true,
       details: { unexpected: true },
+    });
+  });
+
+  it('summarizes denied plugin window capability errors', () => {
+    expect(
+      summarizePluginWindowCapabilityError({
+        code: 'WINDOW_CAPABILITY_DENIED',
+        message: 'window `grid_1` is not allowed',
+        recoverable: false,
+      }),
+    ).toEqual({
+      code: 'WINDOW_CAPABILITY_DENIED',
+      title: 'Window capability denied',
+      message: 'window `grid_1` is not allowed',
+      recoverable: false,
+      severity: 'blocked',
+      capability: 'plugin-window-lifecycle',
+    });
+  });
+
+  it('summarizes native and overlay runtime capability errors', () => {
+    expect(
+      summarizePluginWindowCapabilityError({
+        code: 'OVERLAY_MODE_DISABLED',
+        message: 'overlay lifecycle commands are disabled',
+        recoverable: true,
+      }),
+    ).toMatchObject({
+      title: 'Overlay runtime unavailable',
+      severity: 'recoverable',
+      recoverable: true,
+    });
+    expect(
+      summarizePluginWindowCapabilityError(new Error('native failed')),
+    ).toMatchObject({
+      code: 'WINDOW_NATIVE_ERROR',
+      title: 'Native window command failed',
+      severity: 'recoverable',
+      message: 'native failed',
     });
   });
 

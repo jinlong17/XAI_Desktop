@@ -31,6 +31,7 @@ export {
   normalizeCommandError,
   pluginInstanceConfigToGridRect,
   pluginInstanceIdToGridId,
+  summarizePluginWindowCapabilityError,
   summarizePluginWindowNativeApplication,
 } from './plugin-window-adapter';
 export type {
@@ -60,6 +61,8 @@ export type {
   PluginWindowAdapterOptions,
   PluginWindowCommand,
   PluginWindowCommandInvoker,
+  PluginWindowCapabilityErrorSeverity,
+  PluginWindowCapabilityErrorState,
   PluginWindowNativeApplicationKey,
   PluginWindowNativeApplicationState,
   PluginWindowNativeApplicationStatus,

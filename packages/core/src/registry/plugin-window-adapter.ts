@@ -21,6 +21,20 @@ export interface PluginWindowNativeApplicationState {
   value: string;
 }
 
+export type PluginWindowCapabilityErrorSeverity =
+  | 'blocked'
+  | 'warning'
+  | 'recoverable';
+
+export interface PluginWindowCapabilityErrorState {
+  code: string;
+  title: string;
+  message: string;
+  recoverable: boolean;
+  severity: PluginWindowCapabilityErrorSeverity;
+  capability: 'plugin-window-lifecycle';
+}
+
 export type PluginWindowCommand =
   | 'create_grid_window'
   | 'update_grid_window'
@@ -221,6 +235,39 @@ export function summarizePluginWindowNativeApplication(
   ];
 }
 
+export function summarizePluginWindowCapabilityError(
+  error: unknown,
+): PluginWindowCapabilityErrorState {
+  const commandError = normalizeCommandError(error);
+  switch (commandError.code) {
+    case 'WINDOW_CAPABILITY_DENIED':
+      return createCapabilityErrorState(commandError, {
+        title: 'Window capability denied',
+        severity: 'blocked',
+      });
+    case 'INVALID_PLUGIN_INSTANCE_ID':
+      return createCapabilityErrorState(commandError, {
+        title: 'Invalid plugin instance',
+        severity: 'warning',
+      });
+    case 'OVERLAY_MODE_DISABLED':
+      return createCapabilityErrorState(commandError, {
+        title: 'Overlay runtime unavailable',
+        severity: 'recoverable',
+      });
+    case 'WINDOW_NATIVE_ERROR':
+      return createCapabilityErrorState(commandError, {
+        title: 'Native window command failed',
+        severity: commandError.recoverable ? 'recoverable' : 'blocked',
+      });
+    default:
+      return createCapabilityErrorState(commandError, {
+        title: 'Plugin window capability error',
+        severity: commandError.recoverable ? 'recoverable' : 'blocked',
+      });
+  }
+}
+
 export function normalizeCommandError(error: unknown): CommandError {
   if (isCommandError(error)) {
     return error;
@@ -258,6 +305,23 @@ function createCommandError(
     message,
     recoverable,
     details,
+  };
+}
+
+function createCapabilityErrorState(
+  error: CommandError,
+  options: {
+    title: string;
+    severity: PluginWindowCapabilityErrorSeverity;
+  },
+): PluginWindowCapabilityErrorState {
+  return {
+    code: error.code,
+    title: options.title,
+    message: error.message,
+    recoverable: error.recoverable,
+    severity: options.severity,
+    capability: 'plugin-window-lifecycle',
   };
 }
 

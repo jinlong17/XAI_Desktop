@@ -674,6 +674,24 @@ export function summarizePluginWindowNativeApplication(
   snapshot: PluginWindowSnapshot,
 ): PluginWindowNativeApplicationState[];
 
+export type PluginWindowCapabilityErrorSeverity =
+  | "blocked"
+  | "warning"
+  | "recoverable";
+
+export interface PluginWindowCapabilityErrorState {
+  code: string;
+  title: string;
+  message: string;
+  recoverable: boolean;
+  severity: PluginWindowCapabilityErrorSeverity;
+  capability: "plugin-window-lifecycle";
+}
+
+export function summarizePluginWindowCapabilityError(
+  error: unknown,
+): PluginWindowCapabilityErrorState;
+
 export interface PluginInstanceRestoreResult {
   instances: PluginInstance[];
   restored: Array<{ instance: PluginInstance; window?: PluginWindowSnapshot }>;
@@ -696,6 +714,7 @@ export async function restoreEnabledPluginInstancesOnDesktop(
 7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。如果当前 host bridge 尚未把某字段映射到原生能力，`PluginWindowSnapshot.nativeApplied` 必须显式返回 `false`，禁止伪装成已生效。
 8. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
 9. `restoreEnabledPluginInstancesOnDesktop()` 是 Phase 2 的重启恢复入口：它从 device-local store 加载全部实例，只为 `lifecycleState: "enabled"` 的实例重建窗口；`disabled` / `hidden` / `destroyed` 实例必须保留配置但不自动建窗。
+10. 窗口生命周期命令被拒绝或 native bridge 失败时，host UI 必须通过 `summarizePluginWindowCapabilityError()` 展示结构化状态，至少包含 `code`、`severity`、`recoverable` 和 `capability`，禁止只显示不可追踪的纯文本错误。
 
 #### 3.5.4 Plugin Center 信息架构
 
@@ -737,8 +756,8 @@ Phase 2 common capability status:
 |---|---|
 | Restart restore for enabled instances | Complete (`restoreEnabledPluginInstancesOnDesktop`) |
 | Native fallback display for pin / click-through / all-spaces / opacity | Complete (`summarizePluginWindowNativeApplication`) |
+| Capability denial display | Complete (`summarizePluginWindowCapabilityError`) |
 | Pin / click-through / all-spaces native application | Planned; fields persist, unsupported native application still reports fallback |
-| Capability denial display | Planned |
 | Low-risk sample widget end-to-end | Planned |
 
 Commit message shape:

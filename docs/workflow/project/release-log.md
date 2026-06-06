@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Capability Denial 展示
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 现在用结构化提示展示插件窗口生命周期错误，区分 capability denied、overlay runtime disabled、native window error 等状态，并显示 code、severity、recoverable 和 capability scope。
+- Developer/system delta: 新增 `summarizePluginWindowCapabilityError()` core helper、`PluginWindowCapabilityErrorState` / severity 类型和 unit tests；Plugin Center 从纯文本错误改为消费结构化 capability error state；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 51 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: 本次只展示 capability denial 状态，不授予新原生能力，也不改变窗口 allowlist；下一步继续做真实 native application 或低风险 sample widget。
+
 ### Desktop Plugin Phase 2 Native Fallback 展示
 
 - Product line: desktop-plugin
