@@ -26,6 +26,7 @@ export type {
   PluginInstanceBehavior,
   PluginInstanceStyle,
   PluginInstanceConfig,
+  PluginInstanceConfigInput,
   PluginInstance,
   PluginCenterEntry,
   AddToDesktopRequest,

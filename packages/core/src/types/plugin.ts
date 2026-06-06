@@ -59,6 +59,14 @@ export interface PluginInstanceConfig {
   dataSource?: Record<string, unknown>;
 }
 
+export interface PluginInstanceConfigInput {
+  placement?: Partial<PluginInstancePlacement>;
+  size?: Partial<PluginInstanceSize>;
+  behavior?: Partial<PluginInstanceBehavior>;
+  style?: Partial<PluginInstanceStyle>;
+  dataSource?: Record<string, unknown>;
+}
+
 export interface PluginInstance {
   id: PluginInstanceId;
   pluginName: string;

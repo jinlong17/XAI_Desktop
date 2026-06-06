@@ -6,6 +6,7 @@ import type {
   PluginInstance,
   PluginInstanceBehavior,
   PluginInstanceConfig,
+  PluginInstanceConfigInput,
   PluginInstanceId,
   PluginInstancePlacement,
   PluginInstanceSize,
@@ -47,7 +48,7 @@ export interface CreatePluginCenterEntryOptions {
 export interface CreateAddToDesktopRequestOptions {
   contentType?: ContentType;
   source?: AddToDesktopRequest['source'];
-  config?: Partial<PluginInstanceConfig>;
+  config?: PluginInstanceConfigInput;
 }
 
 export interface CreatePluginInstanceOptions {
@@ -121,7 +122,7 @@ export function createAddToDesktopRequest(
     pluginName: entry.pluginName,
     contentType,
     source: options.source ?? 'plugin-center',
-    config: mergePluginInstanceConfig(options.config),
+    config: createPluginInstanceConfig(options.config),
   };
 }
 
@@ -136,14 +137,14 @@ export function createPluginInstance(
     schemaVersion: options.schemaVersion ?? 1,
     lifecycleState: options.lifecycleState ?? 'enabled',
     syncScope: 'device-local',
-    config: mergePluginInstanceConfig(request.config),
+    config: createPluginInstanceConfig(request.config),
     createdAt: options.now,
     updatedAt: options.now,
   };
 }
 
-function mergePluginInstanceConfig(
-  config: Partial<PluginInstanceConfig> = {},
+export function createPluginInstanceConfig(
+  config: PluginInstanceConfigInput = {},
 ): PluginInstanceConfig {
   return {
     placement: {

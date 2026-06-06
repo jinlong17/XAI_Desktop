@@ -4,12 +4,27 @@ export {
   createAddToDesktopRequest,
   createPluginCenterEntries,
   createPluginCenterEntry,
+  createPluginInstanceConfig,
   createPluginInstance,
   getPluginSupportedSurfaces,
 } from './plugin-center';
+export {
+  PLUGIN_INSTANCE_STORE_KEY,
+  PLUGIN_INSTANCE_STORE_SCHEMA_VERSION,
+  createPluginInstanceStore,
+  createWebStoragePluginInstanceAdapter,
+  migratePluginInstanceStoreSnapshot,
+} from './plugin-instance-store';
 export type {
   CreateAddToDesktopRequestOptions,
   CreatePluginCenterEntriesOptions,
   CreatePluginCenterEntryOptions,
   CreatePluginInstanceOptions,
 } from './plugin-center';
+export type {
+  CreatePluginInstanceStoreOptions,
+  PluginInstancePersistenceAdapter,
+  PluginInstanceStorageLike,
+  PluginInstanceStore,
+  PluginInstanceStoreSnapshot,
+} from './plugin-instance-store';
