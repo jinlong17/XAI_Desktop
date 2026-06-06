@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-06
+
+### Admin Dashboard 系统集成路线图 6/6 全部 SHIPPED（隔离 admin 控制面，contract/mock-only）
+
+- Product line: admin-dashboard
+- Branch / commit: `claude/frosty-nash-c4bf16`（已 push `origin`，**W0 web-only，未合并 `dev`/`main`/`web`**——PR/merge 为 operator 待定项）/ `1c35a99..538004c`（43 commits，6 行）
+- User-visible change: 新增独立的 Admin 控制面 App `apps/admin/`（独立 Cloudflare Pages project + 独立 CSP/env/deploy，不挂进 `apps/web` 模块栏）。管理员路由守卫 fail-closed（非管理员被拒，含负向测试）；原型 10 个页面（总览/用户/组织/功能/AI 用量/Provider/RBAC/计费/审计/系统设置）全部经 typed mock adapter 呈现；高危操作 type-to-confirm UI 接 no-op；Provider 配置只显示 secret handle/status（浏览器永不拿 provider key）；审计页 + 运营队列就位。**仍为 contract/mock 证明态——未接真实后端、无真实写入、未上生产。**
+- Developer/system delta: admin 线由 ADR-0013 PROPOSED 经 operator 于 2026-06-06 激活整条线后落地 `xai-admin-dashboard-system-integration` 全部 6 行——#1 shell；#2 read-model 契约 + 不可变 append-only 权限键 + server-authoritative RBAC + typed mockable `AdminApiClient`；#5 append-only `AdminAuditEvent` + ported hash-chain（零 `@repo/audit-log-integrity` import、node:crypto-free）+ audit-on-mutation 不变量（deny→0 append）+ ops-queue severity 读模型；#3 Users/Orgs/Billing 读 seam + ban/bulk-ban/super-only owner-transfer 升级为 RBAC&audit-gated mock + Billing 只读 Stripe-gate 守卫；#4 Features/AI-quota/Provider 读 seam + setFeatureRollout/setQuota/super-only setProviderRouting RBAC&audit-gated + `ProviderSecretHandle` 状态读模型 + `TT-PROVIDER-NO-KEY-MATERIAL` 守卫；#6 deploy-isolation + tight-CSP/env 守卫 + no-op 无密钥 telemetry seam + error boundary + manual-smoke 清单 + operator promotion runbook + RR-1 eslint flat config。每行 feature-plan→feature-review（APPROVED, 0 blockers）→feature-dev-loop（auto build P1..Pn + feature-verify PASS）→ship。docs 落于 `apps/admin/docs/<row>/` 四件套 + `docs/reviews/<row>/` discovery；roadmap manifest 6 行均标 SHIPPED。
+- Verification: `pnpm --filter @repo/admin test` 389 passed / 36 files；`lint` exit 0（`--max-warnings 0`，RR-1 cleared）；`tsc --noEmit` clean；`pnpm --filter @repo/admin build` exit 0（zero `.map`，`dist/_headers` parity OK）；`pnpm --filter @repo/web build` exit 0（回归边界全程不受影响）。门禁全绿：deploy-isolation、tight-CSP（admin 不继承 web 的 `*.ingest.sentry.io`）、secret-safety（无 service-role / provider key / telemetry secret 进 bundle）、RBAC allow/deny 每 mutation 族、audit-on-mutation、no-inline-mock。
+- Risk / follow-up: contract/mock-only——promotion-beyond-prototype 为 **operator-gated**（见 `apps/admin/docs/deploy-observability/release-operator-runbook.md`）。待 operator 决策：(1) PR/merge 目标分支（`web` / 独立 admin 线 / 重命名 `codex/admin/*`）；(2) 服务端真实落地（admin claim 签发侧、service-role API + RLS、Stripe webhook billing、provider secret server vault、真实 audit store、真实 telemetry DSN）；(3) `manual-smoke-checklist.md` 真机填写。边界 W0（admin-side only；无 shared `@repo/*` / `apps/web` / `packages/core` / `apps/desktop` / `@repo/web-auth-device-session` 改动；无 `@repo/core/src/events`；无 Tauri）。
+
 ## 2026-06-04
 
 ### Desktop Plugin 产品边界与长期平台路线落地
