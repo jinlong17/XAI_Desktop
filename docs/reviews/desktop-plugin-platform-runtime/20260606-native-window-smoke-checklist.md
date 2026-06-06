@@ -77,13 +77,17 @@ aba6415 native behavior application
 65d1778 sample widget host flow
 ```
 
-Current known blocker before a clean desktop build/typecheck gate:
+Current preflight status before a clean desktop build/dev gate:
 
-- `apps/desktop` typecheck currently fails on existing workspace issues:
-  missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, and
-  pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.
-- If the operator fixes those App-lane issues in a separate branch, record the
-  fixing commit before claiming this plugin smoke gate.
+- `apps/desktop` typecheck preflight is unblocked after declaring the existing
+  `@repo/plugin-labels` / `@repo/plugin-productivity` imports in the desktop
+  manifest and removing stale unused locals in
+  `packages/core-data/src/indexeddb-sync-blob.ts`.
+- In the current Codex shell, global `pnpm` is not installed, so
+  `pnpm --filter desktop build` and `pnpm --filter desktop dev` still require
+  the operator machine/package-manager environment before manual smoke can run.
+- If any App-lane issue reappears, record the fixing commit before claiming this
+  plugin smoke gate.
 
 ## Automated Gate Before Manual Smoke
 

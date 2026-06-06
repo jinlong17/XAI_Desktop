@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Host Smoke Typecheck Preflight
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: 无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。
+- Developer/system delta: `apps/desktop` manifest 补声明已在 `src/main.tsx` 注册的 `@repo/plugin-labels` / `@repo/plugin-productivity` workspace dependencies，并同步 `pnpm-lock.yaml`；清理 `packages/core-data/src/indexeddb-sync-blob.ts` 中阻断 desktop typecheck 的未使用导入、变量和 stale helper；更新 Phase 2 host smoke checklist 与 execution route。
+- Verification: `apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.
+- Risk / follow-up: 当前 Codex shell 无全局 `pnpm`，所以 `pnpm --filter desktop build` / `pnpm --filter desktop dev` 仍未执行；真实 host smoke 仍需 operator 环境启动 App 并记录 checklist evidence。
+
 ### Desktop Plugin Phase 2 Host Smoke Checklist Refresh
 
 - Product line: desktop-plugin

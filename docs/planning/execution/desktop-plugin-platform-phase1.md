@@ -99,7 +99,7 @@ Phase 1 completion means the platform runtime foundation and governance docs are
 | P2-3 | Capability denial display | Complete: `summarizePluginWindowCapabilityError()` and Plugin Center show code, severity, recoverable state and capability scope for denied or failed window lifecycle commands. |
 | P2-4 | Pin / click-through / all-spaces / opacity native application | Complete: grid commands accept optional `native` options, Rust applies click-through / pinned / all-spaces / opacity, and snapshots report `nativeApplied`. |
 | P2-5 | Low-risk sample widget complete flow | Complete: Plugin Center exposes host-local `sample-widget`; AddToDesktop persists the instance, opens a grid window and GridWindow renders sample content from the device-local instance store. |
-| P2-6 | Real macOS host smoke gate | Pending: checklist refreshed in `docs/reviews/desktop-plugin-platform-runtime/20260606-native-window-smoke-checklist.md`; execution blocked until the desktop host can build/run cleanly and operator records manual evidence. |
+| P2-6 | Real macOS host smoke gate | Pending: checklist refreshed in `docs/reviews/desktop-plugin-platform-runtime/20260606-native-window-smoke-checklist.md`; desktop typecheck preflight is unblocked, but build/dev smoke still requires an operator environment with `pnpm` and real macOS manual evidence. |
 
 ## 5. Required Interfaces
 
