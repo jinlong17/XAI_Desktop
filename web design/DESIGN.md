@@ -55,6 +55,31 @@ Token guidelines:
 - Use semantic tokens (`--red`, `--amber`, `--blue`, `--violet`, `--pink`) for meaning, not decoration.
 - Do not add raw color values in module components unless the module already has an explicit token test contract.
 
+## Color Governance
+
+Raw color literals are controlled by a static gate:
+
+```bash
+pnpm web:check-colors
+```
+
+The gate scans Web CSS under `apps/web/src`, `packages/plugin-web-*`, and `packages/xai-web-*`.
+New module work must not introduce raw `#hex`, `rgb(...)`, `rgba(...)`, `hsl(...)`, `oklch(...)`, `white`, or `black` values outside `packages/plugin-web-tokens/src/tokens.css`.
+
+Current legacy literals are quarantined in:
+
+```text
+docs/workflow/project/web-color-literal-baseline.json
+```
+
+Rules:
+
+- New UI colors must be added as semantic tokens in `packages/plugin-web-tokens/src/tokens.css`.
+- Module CSS should reference tokens through `var(--token-name)` or token-derived `color-mix(...)`.
+- Do not refresh the baseline to accept new color debt unless the change is explicitly reviewed as a legacy exception.
+- When removing old raw colors, refresh the baseline after review so the debt count only moves down.
+- `pnpm lint` includes this color gate; feature branches should pass it before commit.
+
 ## Typography
 
 Default stack:
@@ -258,5 +283,6 @@ Before shipping a Web UI change:
 - Verify text does not clip, overlap, or shrink below the standard.
 - Confirm touch targets are valid on mobile.
 - Use tokens instead of hard-coded colors.
+- Run `pnpm web:check-colors`; do not add new raw color literals.
 - Keep component and module CSS scoped to the owning package.
 - Update this document when introducing a reusable visual rule.
