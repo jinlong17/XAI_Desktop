@@ -40,10 +40,12 @@ function dotPosition(progress: number): { cx: number; cy: number } {
 // --------------------------------------------------------------------------
 
 export type TimerState =
-  | { kind: "idle"; mode: PomodoroMode; remainingMs: number }
+  | { kind: "idle"; mode: PomodoroMode; remainingMs: number; durationMs: number }
   | {
       kind: "running";
       mode: PomodoroMode;
+      /** configured duration for this session */
+      durationMs: number;
       /** epoch ms of when this run-segment started */
       startedAt: number;
       /** ms remaining when this run-segment started */
@@ -58,6 +60,8 @@ export type TimerState =
   | {
       kind: "paused";
       mode: PomodoroMode;
+      /** configured duration for this session */
+      durationMs: number;
       /** ms remaining at the moment of pause */
       remainingMs: number;
       sessionStartedAt: string;
@@ -75,8 +79,8 @@ export interface UseTimerTickReturn {
   timerState: TimerState;
   /** Displayed remaining ms (1 Hz gate — changes only on second boundary). */
   displayedRemainingMs: number;
-  /** Start from idle. */
-  start: () => void;
+  /** Start from idle. Optional duration overrides the idle state's duration. */
+  start: (durationMs?: number) => void;
   /** Pause from running. */
   pause: () => void;
   /** Resume from paused. */
@@ -87,18 +91,21 @@ export interface UseTimerTickReturn {
    */
   end: () => number;
   /** Reset to idle (called after session-end internally). */
-  reset: (nextMode: PomodoroMode) => void;
+  reset: (nextMode: PomodoroMode, durationMs?: number) => void;
 }
 
 export interface UseTimerTickOptions {
   /** Ref to the accent dot SVGCircleElement for direct DOM updates (60 Hz). */
   dotRef?: React.RefObject<SVGCircleElement | null>;
+  /** Whether the direct-DOM dot follows elapsed progress or remaining progress. */
+  dotProgressMode?: "elapsed" | "remaining";
   /**
    * Callback invoked when tick reaches zero.
    * Receives mode, elapsedMs (=== durationMs for completed), sessionId, and sessionStartedAt.
    */
   onTickToZero?: (
     mode: PomodoroMode,
+    durationMs: number,
     elapsedMs: number,
     sessionId: string,
     sessionStartedAt: string,
@@ -112,12 +119,13 @@ export interface UseTimerTickOptions {
 export function useTimerTick(
   options: UseTimerTickOptions = {},
 ): UseTimerTickReturn {
-  const { dotRef, onTickToZero } = options;
+  const { dotRef, dotProgressMode = "elapsed", onTickToZero } = options;
 
   const [timerState, setTimerState] = useState<TimerState>(() => ({
     kind: "idle",
     mode: "focus",
     remainingMs: DEFAULT_DURATIONS_MS["focus"],
+    durationMs: DEFAULT_DURATIONS_MS["focus"],
   }));
 
   // Displayed remaining ms (1 Hz gate)
@@ -165,7 +173,9 @@ export function useTimerTick(
       if (dotRef?.current) {
         const elapsed = state.remainingAtStartMs - remaining;
         const totalElapsed = state.elapsedBeforePauseMs + elapsed;
-        const progress = Math.min(1, totalElapsed / DEFAULT_DURATIONS_MS[state.mode]);
+        const elapsedProgress = Math.min(1, totalElapsed / state.durationMs);
+        const progress =
+          dotProgressMode === "remaining" ? 1 - elapsedProgress : elapsedProgress;
         const pos = dotPosition(progress);
         dotRef.current.setAttribute("cx", String(pos.cx));
         dotRef.current.setAttribute("cy", String(pos.cy));
@@ -181,9 +191,15 @@ export function useTimerTick(
       // Tick-to-zero detection
       if (remaining <= 0 && !tickToZeroFiredRef.current.has(state.sessionId)) {
         tickToZeroFiredRef.current.add(state.sessionId);
-        const elapsedMs = DEFAULT_DURATIONS_MS[state.mode]; // completed = elapsedMs === durationMs
+        const elapsedMs = state.durationMs; // completed = elapsedMs === durationMs
         if (onTickToZero) {
-          onTickToZero(state.mode, elapsedMs, state.sessionId, state.sessionStartedAt);
+          onTickToZero(
+            state.mode,
+            state.durationMs,
+            elapsedMs,
+            state.sessionId,
+            state.sessionStartedAt,
+          );
         }
         return; // caller's onTickToZero handles state transition
       }
@@ -191,7 +207,7 @@ export function useTimerTick(
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
-  }, [stopRaf, dotRef, onTickToZero]);
+  }, [stopRaf, dotRef, dotProgressMode, onTickToZero]);
 
   // ---- visibility recompute -----------------------------------------------
 
@@ -243,10 +259,11 @@ export function useTimerTick(
 
   // ---- Actions -------------------------------------------------------------
 
-  const start = useCallback(() => {
+  const start = useCallback((durationMs?: number) => {
     setTimerState((prev) => {
       if (prev.kind !== "idle") return prev;
       const now = Date.now();
+      const configuredDurationMs = durationMs ?? prev.durationMs;
       const sessionId =
         "pomo_" +
         Math.floor(Math.random() * 36 ** 8)
@@ -255,8 +272,9 @@ export function useTimerTick(
       return {
         kind: "running",
         mode: prev.mode,
+        durationMs: configuredDurationMs,
         startedAt: now,
-        remainingAtStartMs: prev.remainingMs,
+        remainingAtStartMs: configuredDurationMs,
         sessionStartedAt: new Date().toISOString(),
         sessionId,
         elapsedBeforePauseMs: 0,
@@ -273,6 +291,7 @@ export function useTimerTick(
       return {
         kind: "paused",
         mode: prev.mode,
+        durationMs: prev.durationMs,
         remainingMs: remaining,
         sessionStartedAt: prev.sessionStartedAt,
         sessionId: prev.sessionId,
@@ -288,6 +307,7 @@ export function useTimerTick(
       return {
         kind: "running",
         mode: prev.mode,
+        durationMs: prev.durationMs,
         startedAt: now,
         remainingAtStartMs: prev.remainingMs,
         sessionStartedAt: prev.sessionStartedAt,
@@ -312,19 +332,22 @@ export function useTimerTick(
       return {
         kind: "idle",
         mode: prev.kind !== "idle" ? prev.mode : prev.mode,
-        remainingMs: DEFAULT_DURATIONS_MS[prev.mode],
+        remainingMs: prev.durationMs,
+        durationMs: prev.durationMs,
       };
     });
     return elapsed;
   }, []);
 
-  const reset = useCallback((nextMode: PomodoroMode) => {
+  const reset = useCallback((nextMode: PomodoroMode, durationMs?: number) => {
+    const nextDurationMs = durationMs ?? DEFAULT_DURATIONS_MS[nextMode];
     setTimerState({
       kind: "idle",
       mode: nextMode,
-      remainingMs: DEFAULT_DURATIONS_MS[nextMode],
+      remainingMs: nextDurationMs,
+      durationMs: nextDurationMs,
     });
-    setDisplayedRemainingMs(DEFAULT_DURATIONS_MS[nextMode]);
+    setDisplayedRemainingMs(nextDurationMs);
   }, []);
 
   return {

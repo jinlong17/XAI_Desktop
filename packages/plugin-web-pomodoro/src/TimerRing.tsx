@@ -33,6 +33,8 @@ export interface TimerRingProps {
   progress: number;
   /** Whether the timer is actively running (accent dot pulses / rotates). */
   running: boolean;
+  /** Visual display style selected by the user. */
+  variant?: "digital" | "ring" | "clockwise" | "apple" | "minimal" | "focus";
 }
 
 /**
@@ -42,19 +44,24 @@ export interface TimerRingProps {
  * parent can perform direct DOM transforms at 60 Hz without React re-renders.
  */
 export const TimerRing = forwardRef<SVGCircleElement, TimerRingProps>(
-  function TimerRing({ progress, running }, dotRef) {
+  function TimerRing({ progress, running, variant = "clockwise" }, dotRef) {
     const clampedProgress = Math.max(0, Math.min(1, progress));
-    const dashOffset = CIRCUMFERENCE * (1 - clampedProgress);
+    const ringProgress = variant === "ring" ? 1 - clampedProgress : clampedProgress;
+    const dashOffset = CIRCUMFERENCE * (1 - ringProgress);
 
     // Dot angle in degrees (0 = top / 12 o'clock, clockwise)
-    const dotAngleDeg = clampedProgress * 360;
+    const dotAngleDeg = ringProgress * 360;
     // Dot position on circle at angle (measured from top, clockwise)
     const dotAngleRad = ((dotAngleDeg - 90) * Math.PI) / 180;
     const dotX = CX + R * Math.cos(dotAngleRad);
     const dotY = CY + R * Math.sin(dotAngleRad);
 
     return (
-      <div className="timer-ring" data-running={running ? "true" : "false"}>
+      <div
+        className="timer-ring"
+        data-running={running ? "true" : "false"}
+        data-variant={variant}
+      >
         <svg
           className="ring-svg"
           viewBox="0 0 320 320"
@@ -67,9 +74,21 @@ export const TimerRing = forwardRef<SVGCircleElement, TimerRingProps>(
             cy={CY}
             r={R}
             fill="none"
-            stroke="var(--border-1)"
-            strokeWidth={8}
+            stroke="var(--pomo-ring-track, var(--border-1))"
+            strokeWidth={variant === "apple" ? 12 : 8}
           />
+
+          {variant === "apple" && (
+            <circle
+              cx={CX}
+              cy={CY}
+              r={R - 24}
+              fill="none"
+              stroke="var(--pomo-ring-track, var(--border-1))"
+              strokeWidth={1}
+              strokeDasharray="2 14"
+            />
+          )}
 
           {/* Accent progress arc — fills clockwise from top */}
           <circle
@@ -78,7 +97,7 @@ export const TimerRing = forwardRef<SVGCircleElement, TimerRingProps>(
             r={R}
             fill="none"
             stroke="var(--accent)"
-            strokeWidth={8}
+            strokeWidth={variant === "apple" ? 12 : 8}
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={dashOffset}
@@ -91,7 +110,7 @@ export const TimerRing = forwardRef<SVGCircleElement, TimerRingProps>(
             ref={dotRef}
             cx={dotX}
             cy={dotY}
-            r={7}
+            r={variant === "minimal" || variant === "digital" ? 0 : 7}
             fill="var(--accent)"
             data-testid="ring-accent-dot"
             style={{ transform: "none" }}
