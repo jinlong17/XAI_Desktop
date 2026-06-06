@@ -4,9 +4,15 @@ import type {
   PluginCenterEntryStatus,
   PluginManifest,
 } from "@repo/core/types";
+import {
+  SAMPLE_WIDGET_CONTENT_TYPE,
+  SAMPLE_WIDGET_PLUGIN_NAME,
+  sampleWidgetManifest,
+} from "./sampleWidget";
 
 const BUILT_IN_PLUGIN_ORDER = [
   "organizer",
+  SAMPLE_WIDGET_PLUGIN_NAME,
   "widgets",
   "clipboard",
   "calendar",
@@ -15,6 +21,7 @@ const BUILT_IN_PLUGIN_ORDER = [
 
 const STATUS_BY_PLUGIN_NAME: Record<string, PluginCenterEntryStatus> = {
   organizer: "available",
+  [SAMPLE_WIDGET_PLUGIN_NAME]: "available",
   widgets: "planned",
   clipboard: "planned",
   calendar: "planned",
@@ -30,7 +37,10 @@ const UNAVAILABLE_REASON_BY_PLUGIN_NAME: Record<string, string> = {
 
 const DEFAULT_CONTENT_TYPE_BY_PLUGIN_NAME: Record<string, string> = {
   organizer: "normal-window-organizer",
+  [SAMPLE_WIDGET_PLUGIN_NAME]: SAMPLE_WIDGET_CONTENT_TYPE,
 };
+
+const HOST_LOCAL_MANIFESTS: PluginManifest[] = [sampleWidgetManifest];
 
 const PLANNED_MANIFESTS: PluginManifest[] = [
   {
@@ -144,6 +154,20 @@ export function getBuiltInPluginCenterEntries(): PluginCenterEntry[] {
     ) {
       entriesByName.set(entry.pluginName, entry);
     }
+  }
+
+  for (const manifest of HOST_LOCAL_MANIFESTS) {
+    if (entriesByName.has(manifest.name)) continue;
+    entriesByName.set(
+      manifest.name,
+      createPluginCenterEntry(
+        { manifest, components: {} },
+        {
+          status: STATUS_BY_PLUGIN_NAME[manifest.name],
+          defaultContentType: DEFAULT_CONTENT_TYPE_BY_PLUGIN_NAME[manifest.name],
+        },
+      ),
+    );
   }
 
   for (const manifest of PLANNED_MANIFESTS) {

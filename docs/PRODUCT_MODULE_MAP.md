@@ -25,7 +25,7 @@
 |---|---|---|---|---|---|
 | 1 | Web | `web` | web / codex/web/<feature> | 改动落在 apps/web/(Vite SPA host shell:App.tsx、main.tsx、routes、providers)或 packages/xai-web-*、packages/plugin-web-* 任一包内；涉及 24 个 Web 模块的 UI/交互:任务、看板(6 视图)、Dashboard 网格、日历、四象限、番茄、习惯、冥想、倒计时、统计、AI 对话、桌宠、设置(13 面板)、命令面板(cmdk)；涉及浏览器持久化:xai_* localStorage 键(如 xai_dash_order)、usePref/WebPrefRegistry、加密 IndexedDB 缓存,或 web:<module>:<verb>-<noun> 类型化事件总线(@repo/core/events,如 web:calendar:create-requested、web:habits:checkin-recorded) | P0 · active |
 | 2 | Mac 桌面版 App | `app` | desktop-next -> dev | 改动落在 apps/desktop/ 或 src-tauri/ 的 Mac 壳 / Web 容器 / native chrome：主窗口承载 Web SPA、菜单栏、托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、`桌面插件`入口按钮；物理 host 可实现 Tauri 命令，但产品身份不是桌面整理器 | P1 · active app lane |
-| 3 | 桌面整理插件 / Widget | `plugin` | desktop-plugin-next | 改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包；需求提到 桌面整理 / Smart Container / Grid 容器 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想；即使运行时代码物理在 host，产品归属仍是 plugin | Phase 1 foundation complete · Phase 2 next · packages paused |
+| 3 | 桌面整理插件 / Widget | `plugin` | desktop-plugin-next | 改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包；需求提到 桌面整理 / Smart Container / Grid 容器 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想；即使运行时代码物理在 host，产品归属仍是 plugin | Phase 1 foundation complete · Phase 2 code path complete · packages paused |
 | 4 | 账号云同步层 | `sync` | sync-v1 roadmap wave | 实体出现 syncScope: account-sync / device-local 字段,或要在 packages/core-data/src/entities.ts 注册新 entityType(形如 productivity.todo,须匹配 ^[a-z]+\.[a-z_]+$)；涉及 /sync/push、/sync/pull、加密信封(envelope)、outbox、commit_seq 游标、nonce lease、AES-256-GCM、HPKE、device_id / encryption_device_id 等同步协议要素；需求是 Web IndexedDB ⇄ 服务端 encrypted blobs ⇄ App SQLite/SQLCipher 之间收敛,而非 Web 单端 UI 或 App 原生壳本身 | P2 · paused |
 | 5 | 官方网页 | `site` | codex/site/<feature> | 关键词命中:官方网页 / 官网 / marketing 站 / 下载页 / download page / 自动更新 / auto-update / updater / appcast / 发布说明 / release notes / 落地页 landing；分发与发布产物:.dmg / installer / 安装包 / updater metadata / latest.json / appcast.xml,且来源绑定 release/desktop/<version> 与 tag vX.Y.Z(ADR-0013 D2,该分支为 defined-not-yet-created)；部署设施复用:apps/web/wrangler.toml、apps/web/deploy/*、Cloudflare Pages、apps/web/public/_headers / CSP 仅为站点本身(ADR-0008),而非 apps/web/ 的 24 个产品模块 | proposed |
 | 6 | Admin Dashboard | `admin` | codex/admin/<feature> | 路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支；关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志；AI 治理类:Provider 配置、模型×套餐权限矩阵、套餐分层路由、AI 用量配额、成本上限、provider secret handle(服务端加密密钥句柄,浏览器只拿状态不拿密钥) | proposed |
@@ -201,7 +201,7 @@ Start the bug-diagnose agent.
 
 | → 目标模块 | 触发条件 | branch | skill | 说明 |
 |---|---|---|---|---|
-| 桌面整理插件 / Widget（`plugin`） | 改动落在桌面插件平台运行时 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 Mac 壳/native chrome 本身 | desktop-plugin-next / codex/plugin/<feature> | `xai-feature-full-loop` | 插件平台线与 Mac 壳隔离,避免插件平台 churn 动摇 App RC；多窗口/overlay 运行时代码可物理落在 host，但产品归属是 plugin。Phase 1 系统底座已完成；clipboard/widgets/pet/meditation 等具体插件包在 Phase 2 common capability proof 前仍 paused。 |
+| 桌面整理插件 / Widget（`plugin`） | 改动落在桌面插件平台运行时 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 Mac 壳/native chrome 本身 | desktop-plugin-next / codex/plugin/<feature> | `xai-feature-full-loop` | 插件平台线与 Mac 壳隔离,避免插件平台 churn 动摇 App RC；多窗口/overlay 运行时代码可物理落在 host，但产品归属是 plugin。Phase 1 系统底座与 Phase 2 common capability code path 已完成；clipboard/widgets/pet/meditation 等具体插件包仍需真实 host smoke 和 operator 确认后解冻。 |
 | 账号云同步层（`sync`） | 需要新增/改动 account-sync 实体的端侧落地(App SQLite outbox、push/pull 应用规则、两端冲突策略) | codex/sync/<feature>(并入 desktop-next/dev 通道,均 defined, not yet created) | `xai-feature-full-loop` | 按 ADR-0013 D4:Web 与 App 不互相同步,都同步到一个账号云;只有 syncScope=account-sync 实体进 outbox,device-local 永不同步。sync-v1 线在 G1 SHIPPED 前 paused,需操作者解冻。 |
 | Web（`web`） | 诊断发现根因在共享 UI / @repo/core 源头,需回到 Web 主线修复(D3 反向 / hotfix back-merge) | web / codex/web/<feature> | `bug-diagnose` | App 与 Web 是两条独立聚焦分支,共享改动按需在 web 修复后再经 D3(/xai-web-to-desktop-sync)正向流回 desktop-next;不要为对齐而强行 force-merge 两条线。 |
 
@@ -212,16 +212,16 @@ Start the bug-diagnose agent.
 | Web（`web`） | App 侧诊断/集成发现共享 UI 或 @repo/core seam 的问题源自 Web 源码(App 以 Web 为 UI 源构建) | 在 web / codex/web/<feature> 修复源头,再经 D3(/xai-web-to-desktop-sync)产出 Parity Receipt 正向流回 desktop-next,而非只在 App 侧打补丁 |
 | 账号云同步层（`sync`） | App 新增/变更需要跨设备同步的 account-sync 实体,或改动 App SQLite 落地映射 | 在 codex/sync/<feature> 按 ADR-0013 D4 完整性补齐:entityType/schemaVersion/本地映射/push 格式/pull 应用规则/冲突策略 + Web IndexedDB 测试 + App SQLite 测试 + 两设备同步 smoke(builds on docs/contracts/data-repository-v0.md + sync-v1) |
 | 官方网页（`site`） | App 推进到 release/desktop/<version> 冻结并产出 DMG / updater 元数据 / 版本号 | 在 codex/site/<feature> 更新官方网页的下载页与自动更新 host(复用 ADR-0008 Cloudflare 部署基建,docs/adr/0008-cloudflare-deploy-target-and-csp.md),使其指向新的 release 工件。注意 site 线为 PROPOSED(owner-deferred,ADR-0013 Open Questions S7),无包无 roadmap,需操作者确认后才动工 |
-| 桌面整理插件 / Widget（`plugin`） | App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层 | 在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(Phase 1 系统底座已完成；具体插件包等 Phase 2 common capability proof 后再解冻) |
+| 桌面整理插件 / Widget（`plugin`） | App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层 | 在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(Phase 1 系统底座与 Phase 2 common capability code path 已完成；具体插件包等真实 host smoke 和 operator 确认后再解冻) |
 
 ---
 
 ### 3. 桌面整理插件 / Widget （`plugin`）
 
-- **状态**：Phase 1 系统底座完成 · Phase 2 通用能力 next · 插件包 paused
+- **状态**：Phase 1 系统底座完成 · Phase 2 common capability code path 完成 · 插件包 paused
 - **推荐 branch**：desktop-plugin-next
 - **关键依赖**：依赖桌面 App 插件平台
-- **开发目标**：拆成两层推进：**插件平台运行时/G1 锚点**（multi-window engine、grid persistence、window-command、Widget Host/SDK、Plugin Center contract）已完成 Phase 1 系统底座，产品归 plugin、物理执行可在 P1 App lane；**具体插件包**（clipboard/widgets/pet/meditation 等）仍属 paused，等 Phase 2 通用插件能力和 host smoke 证明后解冻。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。
+- **开发目标**：拆成两层推进：**插件平台运行时/G1 锚点**（multi-window engine、grid persistence、window-command、Widget Host/SDK、Plugin Center contract）已完成 Phase 1 系统底座，Phase 2 common capability code path 已用 sample-widget host flow 跑通，产品归 plugin、物理执行可在 P1 App lane；**具体插件包**（clipboard/widgets/pet/meditation 等）仍属 paused，等真实 macOS host smoke 和 operator 确认后解冻。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。
 
 **任务归属信号**
 
@@ -231,7 +231,7 @@ Start the bug-diagnose agent.
 - 涉及 Plugin Center 的**产品契约**（可添加插件目录、`PluginInstance`、`AddToDesktopRequest`、实例 settings schema、内置插件 maturity/status、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板按钮和必要的 host 容器命令归 app 物理实现
 - 插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层
 - 分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；触达 desktop-next / dev 仍需 operator 确认）
-- 状态线索：需求若是 multi-window engine / grid persistence / window-command / Widget Host-SDK 等 **G1 平台运行时锚点**，它是 active gate，不在 P2 冻结内；需求若是 clipboard/widgets/pet/meditation 等插件包，则仍是 P2 PAUSED，等 G1 ships 后再开工。
+- 状态线索：需求若是 multi-window engine / grid persistence / window-command / Widget Host-SDK 等 **G1 平台运行时锚点**，它是 active gate，不在 P2 冻结内；需求若是 clipboard/widgets/pet/meditation 等插件包，则仍是 P2 PAUSED，等真实 host smoke 和 operator 解冻确认后再开工。
 
 **推荐 skill / agent**
 
@@ -242,7 +242,7 @@ Start the bug-diagnose agent.
 
 **开发 workflow**
 
-1. 先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 已完成，后续按 Phase 2 通用插件能力继续；若是具体插件包（clipboard/widgets/pet/meditation），Phase 2 common capability proof 前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。
+1. 先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 与 Phase 2 common capability code path 已完成，后续先做真实 host smoke；若是具体插件包（clipboard/widgets/pet/meditation），operator 确认解冻前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。
 2. active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；凡触及 desktop-next / dev 需 operator 确认）。第一阶段执行路线见 `docs/planning/execution/desktop-plugin-platform-phase1.md`；每个小步只完成一个系统能力并用 scoped commit 记录 Why / What / Scope / Risk / Docs / Tests。
 3. 按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。
 4. 数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。

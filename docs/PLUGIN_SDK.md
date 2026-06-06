@@ -780,7 +780,7 @@ Phase 2 common capability status:
 | Native fallback display for pin / click-through / all-spaces / opacity | Complete (`summarizePluginWindowNativeApplication`) |
 | Capability denial display | Complete (`summarizePluginWindowCapabilityError`) |
 | Pin / click-through / all-spaces / opacity native application | Complete: adapter passes `native` options and Rust applies opacity, click-through, pinned and all-spaces state |
-| Low-risk sample widget end-to-end | Planned |
+| Low-risk sample widget end-to-end | Complete: host-local `sample-widget` creates a device-local `PluginInstance`, opens a grid window and renders through GridWindow instance routing |
 
 Commit message shape:
 

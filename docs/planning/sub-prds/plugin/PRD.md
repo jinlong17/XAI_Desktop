@@ -1,6 +1,6 @@
 # Plugin 子 PRD — XAI 桌面整理插件 / Widget
 
-> **当前开工结论（2026-06-06）**：桌面插件拆成两层推进。**插件平台运行时 / G1 锚点**（multi-window engine、overlay、click-through、grid persistence、Widget Host / SDK、Plugin Center contract）已完成 Phase 1 系统底座；**具体插件包**（clipboard / widgets / pet / meditation 等）仍保持 paused，等 Phase 2 通用插件能力验证后再进入 feature-build。
+> **当前开工结论（2026-06-06）**：桌面插件拆成两层推进。**插件平台运行时 / G1 锚点**（multi-window engine、overlay、click-through、grid persistence、Widget Host / SDK、Plugin Center contract）已完成 Phase 1 系统底座，Phase 2 common capability code path 已用 host-local `sample-widget` 跑通；**具体插件包**（clipboard / widgets / pet / meditation 等）仍保持 paused，等真实 macOS host smoke 和 operator 确认后再进入 feature-build。
 > **权威基线**：ADR-0010（amended 2026-05-30）、ADR-0013（D2 分支 / D3 闸门 / D4 同步）、ADR-0015（organizer P 级 + pet 归属，Proposed）。边界以 `docs/MODULE_BOUNDARIES.md` 为准。
 
 | 字段 | 值 |
@@ -9,10 +9,10 @@
 | 范围 | 桌面整理插件 / Widget 的开发范围、归属、MVP 顺序、解冻条件（**不**重复主 PRD 的 FR）|
 | 模块 key | `plugin`（PRODUCT_MODULE_MAP 模块 #3）|
 | Surface | `apps/desktop/` 插件槽位 + `packages/plugin-{organizer,clipboard,widgets,pet}` |
-| 主 / 短分支 | `desktop-plugin-next` / `codex/plugin/platform-runtime-phase1`（Phase 1） |
+| 主 / 短分支 | `desktop-plugin-next` / `codex/plugin/common-capabilities-phase2`（Phase 2） |
 | 文档作者 | Claude（subagent）|
 | 创建日期 | 2026-06-02 |
-| 状态 | v0.3-PHASE-1-RUNTIME-COMPLETE（系统底座完成；具体插件包仍等 Phase 2/3 解冻）|
+| 状态 | v0.4-PHASE-2-COMMON-CAPABILITY-CODE-PATH-COMPLETE（系统底座 + 通用能力代码路径完成；具体插件包等待 host smoke / operator 解冻）|
 
 ---
 
@@ -77,15 +77,15 @@
 
 ### 3.1 三阶段开发顺序（2026-06-04 确认）
 
-当前允许进入 **第一阶段：系统层级基础建设**。第二、三阶段只做文档、brief、contract 对齐，不写具体插件功能代码。
+当前已完成 **第一阶段：系统层级基础建设** 与 **第二阶段：插件基础能力 code path**。第三阶段具体插件包仍只做文档、brief、contract 对齐；真实 macOS host smoke 和 operator 解冻确认前，不写具体插件功能代码。
 
 | 阶段 | 目标 | 先做 / 后做 | 退出条件 |
 |---|---|---|---|
 | 第一阶段：系统层级基础建设 | 把桌面插件平台从 organizer 专用底座升级为可承载任意内置插件实例的平台 | 运行机制、插件容器、窗口管理、注册机制、生命周期、本地存储、Mac App 通信接口、插件配置管理 | **已完成系统底座**：Plugin Center MVP 能创建一个 `PluginInstance`，App 能按实例创建 / 关闭 / 聚焦 / 持久化窗口；禁用实例不丢配置；删除实例才清理配置 |
-| 第二阶段：插件基础能力 | 验证任何内置插件都能被平台管理，而不是只服务 organizer | 添加、删除、启用 / 禁用、隐藏、固定到桌面、调整位置、调整尺寸、透明度 / 样式设置、重启恢复、capability denial 展示 | 下一阶段：至少一个低风险 sample widget 走完整添加到桌面流程；重启后实例配置恢复；所有动作有 package test + host smoke |
+| 第二阶段：插件基础能力 | 验证任何内置插件都能被平台管理，而不是只服务 organizer | 添加、删除、启用 / 禁用、隐藏、固定到桌面、调整位置、调整尺寸、透明度 / 样式设置、重启恢复、capability denial 展示、低风险 sample widget 完整链路 | 退出条件：common capability code path 完成；真实 macOS host smoke 后，operator 再确认是否解冻具体插件包 |
 | 第三阶段：具体功能插件 | 在稳定平台上补轻量、可瞥见、可快速操作的插件 | 快速记账、时间追踪、任务 glance、日历 glance、便签、文件夹挂件、快捷入口；clipboard / pet 延后到需要的原生命令和 AI 接口明确后 | 每个插件有独立 PRD / design / api / test / dev_log，默认 `device-local`，只复用 Web/App 业务逻辑，不重做完整 Web 模块 |
 
-2026-06-06 Phase 2 progress：`restoreEnabledPluginInstancesOnDesktop()` 已作为第一项通用能力落地。Plugin Center 加载 device-local store 后只恢复 `enabled` 实例窗口，`disabled` / `hidden` 实例保留配置但不自动建窗。`summarizePluginWindowNativeApplication()` 已作为第二项通用能力落地，Plugin Center 可展示 placement / size 已应用，以及 opacity / click-through / pinned / all-spaces 的 fallback / not-requested 状态。`summarizePluginWindowCapabilityError()` 已作为第三项通用能力落地，Plugin Center 可展示 capability denial / native window error 的 code、severity、recoverable 和 capability scope。grid window commands 已作为第四项通用能力接受 `native` options，并在 Rust 侧应用 opacity / click-through / pinned / all-spaces。后续继续做至少一个低风险 sample widget。
+2026-06-06 Phase 2 progress：`restoreEnabledPluginInstancesOnDesktop()` 已作为第一项通用能力落地。Plugin Center 加载 device-local store 后只恢复 `enabled` 实例窗口，`disabled` / `hidden` 实例保留配置但不自动建窗。`summarizePluginWindowNativeApplication()` 已作为第二项通用能力落地，Plugin Center 可展示 placement / size 已应用，以及 opacity / click-through / pinned / all-spaces 的 fallback / not-requested 状态。`summarizePluginWindowCapabilityError()` 已作为第三项通用能力落地，Plugin Center 可展示 capability denial / native window error 的 code、severity、recoverable 和 capability scope。grid window commands 已作为第四项通用能力接受 `native` options，并在 Rust 侧应用 opacity / click-through / pinned / all-spaces。host-local `sample-widget` 已作为第五项通用能力跑通 Plugin Center → device-local `PluginInstance` → grid window → GridWindow content routing。后续先做真实 macOS host smoke，再由 operator 确认是否解冻具体插件包。
 
 ### 3.2 第一阶段系统能力拆分
 
@@ -179,9 +179,9 @@ MVP 不把“拖拽到桌面”作为主流程。拖拽添加可在高级版补�
 
 ## 7. 解冻条件（gate）
 
-- **平台运行时触发**：operator 已确认从 `origin/dev` 创建 `desktop-plugin-next` 并启动 `codex/plugin/platform-runtime-phase1`。第一阶段系统底座已完成；该工作是 `plugin` 产品归属，物理实现可落在 `apps/desktop` host，但不触碰 `dev`，不把 Web 改动直接合入 App。
+- **平台运行时触发**：operator 已确认从 `origin/dev` 创建 `desktop-plugin-next` 并启动 `codex/plugin/platform-runtime-phase1`。第一阶段系统底座已完成，第二阶段 common capability code path 已在 `codex/plugin/common-capabilities-phase2` 跑通；该工作是 `plugin` 产品归属，物理实现可落在 `apps/desktop` host，但不触碰 `dev`，不把 Web 改动直接合入 App。
 - **具体插件包解冻触发**：Phase 2 通用插件能力（重启恢复、pin、位置/尺寸/透明度、capability denial、sample widget 完整跑通）完成并有 host smoke 后，operator 再确认 clipboard / widgets / pet / meditation 等插件包进入 feature-plan。
-- **解冻动作**：将 Phase 1 审核后合入 `desktop-plugin-next`；用 `xai-feature-dossier-sync` 给 clipboard/widgets/pet 反向补 PRD 与现状差距；按 §3.1 顺序逐个走标准管线。
+- **解冻动作**：先完成 Phase 2 真实 macOS host smoke；operator 确认后，将平台分支审核并合入 `desktop-plugin-next`，再用 `xai-feature-dossier-sync` 给 clipboard/widgets/pet 反向补 PRD 与现状差距；按 §3.1 顺序逐个走标准管线。
 - **在插件包 Paused 期间允许的事**：用 `xai-feature-brief` 规范化需求入队、维护 PRD / SDK / MODULE_BOUNDARIES / ADR-0015 / dashboard 对齐；不写具体插件功能代码。
 
 ---

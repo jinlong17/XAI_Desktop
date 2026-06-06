@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Sample Widget Host Flow
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipboard` / `pet` 等具体插件包仍保持 planned / paused。
+- Developer/system delta: 新增 host-local sample widget manifest 和 grid content；Plugin Center built-in catalog 将 sample widget 标记为 addable；GridWindow 读取 `xai_plugin_instances_v1` 并按 `pluginName` / `contentType` 分发到 sample widget 或 organizer fallback；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. Rust window tests not rerun because this slice changes TS host routing/catalog/docs only.
+- Risk / follow-up: 这是平台 host flow proof，不是解冻完整 `plugin-widgets` 业务包；真实 macOS smoke 仍需验证 add / restore / drag / resize / opacity / click-through / pinned / all-spaces。
+
 ### Desktop Plugin Phase 2 Native Behavior Application
 
 - Product line: desktop-plugin

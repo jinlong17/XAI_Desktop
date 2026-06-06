@@ -242,14 +242,14 @@
         "key": "plugin",
         "title": "桌面插件",
         "status": "common_capabilities_in_progress",
-        "progress": 58,
+        "progress": 64,
         "environment": "desktop-plugin-next",
         "last_deployed_at": "",
         "version": "未登记",
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "Phase 2 通用插件能力继续推进；重启恢复、native fallback、capability denial 与 native behavior application 已完成，下一步做 sample widget",
+        "next": "Phase 2 common capability code path 已完成；下一步做真实 macOS host smoke，再确认是否解冻具体插件包",
         "issues": [
           {
             "severity": "pending",
@@ -899,7 +899,7 @@
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
           "branch": "desktop-plugin-next / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座已完成；clipboard/widgets/pet/meditation 等具体插件包在 Phase 2 common capability proof 前仍 paused。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座与 Phase 2 common capability code path 已完成；clipboard/widgets/pet/meditation 等具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         },
         {
           "to": "sync",
@@ -945,11 +945,11 @@
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
       "badge": "Phase 2 common capabilities",
-      "status": "Phase 2 common plugin capabilities in progress · concrete plugin packages paused",
+      "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "继续 Phase 2：一个低风险 sample widget。",
-      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示与 native behavior application 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
+      "next": "继续 Phase 2：真实 macOS host smoke，然后确认是否解冻具体插件包。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -961,10 +961,10 @@
       },
       "overview": {
         "phase": "Phase 2 common capabilities",
-        "running": "重启恢复、native fallback、capability denial 与 native behavior application 已完成 · 插件包未开工",
-        "progress_fallback": 58,
-        "recent_update": "Phase 2 native behavior application 已接入 grid window command contract",
-        "todo_fallback": "下一步做低风险 sample widget。",
+        "running": "Phase 2 common capability code path complete · 插件包未开工",
+        "progress_fallback": 64,
+        "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+        "todo_fallback": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
         "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
@@ -980,9 +980,10 @@
         { "name": "Native fallback 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态" },
         { "name": "Capability denial 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 denied/native window errors 的 code、severity、recoverable 与 capability scope" },
         { "name": "Native behavior application", "status": "phase-2-complete", "note": "grid window commands 接收 native options，并应用 opacity、click-through、pinned、all-spaces 后回传 nativeApplied" },
+        { "name": "Sample widget host flow", "status": "phase-2-complete", "note": "host-local sample-widget 可从 Plugin Center 添加，持久化为 device-local PluginInstance，并由 GridWindow 按 instance routing 渲染" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
         { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
-        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "Phase 2 common capability proof 后进入 sample widget；不抢跑具体插件功能" },
+        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "sample-widget 仅证明 host flow；package-level Widget Host MVP 仍需 operator 确认后单独开工" },
         { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
         { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
         { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
@@ -998,7 +999,7 @@
         ],
         [
           "独立跟踪",
-          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座已完成，具体插件包在 Phase 2 common capability proof 前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座与 Phase 2 common capability code path 已完成，具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         ],
         [
           "风险",
@@ -1021,7 +1022,7 @@
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
         "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；进入 desktop-next 需 operator 确认）",
-        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
+        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等真实 host smoke 和 operator 解冻确认后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
       "skills": [
@@ -1065,7 +1066,7 @@
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 已完成，后续进入 Phase 2 通用插件能力；若是具体插件包（clipboard/widgets/pet/meditation），Phase 2 common capability proof 前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 与 Phase 2 common capability code path 已完成，后续先做真实 host smoke；若是具体插件包（clipboard/widgets/pet/meditation），operator 确认解冻前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
         "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；进入 desktop-next / dev 需 operator 确认），按对应管线推进：Phase 2 通用插件能力走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
         "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",

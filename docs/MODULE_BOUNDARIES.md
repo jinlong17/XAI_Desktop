@@ -43,7 +43,7 @@
 |---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/` + `xai-web-*` + `plugin-web-*` | `web` | **P0 active mainline** |
 | 2 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
-| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **Phase 1 系统底座完成；Phase 2 通用能力 next；具体插件包 paused** |
+| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **Phase 1 系统底座完成；Phase 2 common capability code path 完成；具体插件包 paused** |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
 | 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` | (proposed) | PROPOSED |
@@ -92,7 +92,7 @@
 | **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **独立包 plugin-pet**(ADR-0015 Accepted;非 widgets 子模块) |
 | **meditation** | 冥想 / 专注 | Planned（**未建包**） | 全屏覆盖 | Web 形态已 ship 为 `xai-web-meditation` |
 
-> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 **Paused until platform foundation + Phase 2 common capability proof**。multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate；Phase 1 系统底座已在 `codex/plugin/platform-runtime-phase1` 完成。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
+> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 继续 paused，直到 Phase 2 common capability code path 完成后的真实 macOS host smoke 和 operator 确认通过。multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate；Phase 1 系统底座已在 `codex/plugin/platform-runtime-phase1` 完成，Phase 2 sample-widget host flow 已在 `codex/plugin/common-capabilities-phase2` 证明代码路径。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
 
 ---
 
