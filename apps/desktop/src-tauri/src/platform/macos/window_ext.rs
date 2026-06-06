@@ -1,4 +1,4 @@
-use cocoa::appkit::NSWindow;
+use cocoa::appkit::{CGFloat, NSWindow};
 use cocoa::base::{id, NO};
 
 unsafe fn with_ns_window<F>(window: &tauri::WebviewWindow, name: &str, mut f: F)
@@ -38,6 +38,18 @@ pub fn configure_grid_window(window: &tauri::WebviewWindow) {
             println!("🪟 Grid window configured for standard app behavior");
         });
     }
+}
+
+pub fn set_window_opacity(window: &tauri::WebviewWindow, opacity: f64) -> bool {
+    let opacity = opacity.clamp(0.35, 1.0) as CGFloat;
+    let mut applied = false;
+    unsafe {
+        with_ns_window(window, "set_window_opacity", |ns_window| {
+            ns_window.setAlphaValue_(opacity);
+            applied = true;
+        });
+    }
+    applied
 }
 
 pub mod legacy_overlay {

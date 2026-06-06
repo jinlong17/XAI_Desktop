@@ -1,12 +1,14 @@
 import type {
   PluginManifest,
   PluginComponents,
+  PluginCenterEntry,
   PluginRegistration,
   ConsoleSidebarEntry,
   ConsoleViewProps,
   ConsoleViewRegistration,
 } from '../types/plugin';
 import type { ComponentType } from 'react';
+import { createPluginCenterEntries, type CreatePluginCenterEntriesOptions } from './plugin-center';
 
 class PluginRegistryImpl {
   private plugins = new Map<string, PluginRegistration>();
@@ -20,8 +22,16 @@ class PluginRegistryImpl {
     return this.plugins.get(name);
   }
 
+  getAll(): PluginRegistration[] {
+    return [...this.plugins.values()];
+  }
+
   getAllEnabled(): PluginRegistration[] {
     return [...this.plugins.values()].filter((p) => p.manifest.enabled);
+  }
+
+  getPluginCenterEntries(options: CreatePluginCenterEntriesOptions = {}): PluginCenterEntry[] {
+    return createPluginCenterEntries(this.getAll(), options);
   }
 
   getOverlayLayers(): ComponentType[] {

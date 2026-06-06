@@ -33,11 +33,11 @@ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 labe
 
 | Command | Owner | Allowed windows | Input | Output |
 |---|---|---|---|---|
-| `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
-| `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
-| `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
+| `create_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId, rect, native? }` | `GridWindowSnapshot` |
+| `update_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId, rect, native? }` | `GridWindowSnapshot` |
+| `close_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId }` | `void` |
+| `list_grid_windows` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `void` | `GridWindowSnapshot[]` |
+| `focus_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId }` | `GridWindowSnapshot` |
 
 Target G1 output type:
 
@@ -47,6 +47,19 @@ interface GridWindowSnapshot {
   label: `grid_${string}`;
   rect: Rect;
   visible: boolean;
+  nativeApplied: {
+    opacity: boolean;
+    clickThrough: boolean;
+    pinned: boolean;
+    allSpaces: boolean;
+  };
+}
+
+interface GridWindowNativeOptions {
+  opacity: number; // clamped by Rust to 0.35..1
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
 }
 ```
 
@@ -56,8 +69,9 @@ G1.1 implementation notes:
 - Invalid `gridId` values return `INVALID_GRID_ID`.
 - Missing windows return `WINDOW_NOT_FOUND`.
 - Native window failures return `WINDOW_NATIVE_ERROR`.
+- `native` is optional for legacy organizer callers. When present, Rust applies opacity, click-through, pinned and all-spaces behavior and reports the applied state through `nativeApplied`.
 - Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
-  (`main`, `control`) enforces the table above at the IPC boundary
+  (`main`, `control`, `plugin-center`) enforces the table above at the IPC boundary
   with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
   excluded — a grid window must request lifecycle changes for itself
   via cross-window events routed through `control`, not by directly

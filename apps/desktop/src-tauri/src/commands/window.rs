@@ -1,13 +1,18 @@
 use crate::app_config::{self, DesktopHostMode};
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 use crate::platform;
+use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 
 use super::super::CommandError;
 use super::super::ConsoleWindowFrame;
 use super::super::ConsoleWindowFrameState;
+use super::super::GridWindowNativeApplied;
+use super::super::GridWindowNativeOptions;
 use super::super::GridWindowRect;
 use super::super::GridWindowSnapshot;
+use super::super::GridWindowState;
 use super::super::GridWindowsState;
+use super::super::PluginCenterWindowFrame;
+use super::super::PluginCenterWindowFrameState;
 
 /// Windows allowed to invoke window lifecycle commands
 /// (`create_grid_window` / `update_grid_window` / `close_grid_window` /
@@ -22,10 +27,31 @@ use super::super::GridWindowsState;
 /// can request lifecycle changes for themselves via cross-window events
 /// routed through `control`, but they cannot directly spawn / close
 /// other grid windows.
-pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control"];
+pub(crate) const WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "plugin-center"];
 pub(crate) const CONSOLE_WINDOW_ALLOWED_WINDOWS: &[&str] = &["main", "control", "console"];
+pub(crate) const PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS: &[&str] =
+    &["main", "control", "plugin-center"];
 const CONSOLE_WINDOW_LABEL: &str = "console";
-const CONSOLE_WINDOW_URL: &str = "/#/console";
+const PLUGIN_CENTER_WINDOW_LABEL: &str = "plugin-center";
+const DESKTOP_PLUGIN_HOST_ENTRY: &str = "/desktop-host/index.html";
+const CONSOLE_WINDOW_URL: &str = "/desktop-host/index.html#/console";
+const PLUGIN_CENTER_WINDOW_URL: &str = "/desktop-host/index.html#/plugin-center";
+const PLUGIN_CENTER_MIN_WIDTH: f64 = 640.0;
+const PLUGIN_CENTER_MIN_HEIGHT: f64 = 480.0;
+const PLUGIN_CENTER_MAX_WIDTH: f64 = 8192.0;
+const PLUGIN_CENTER_MAX_HEIGHT: f64 = 8192.0;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct LogicalMonitorBounds {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
+
+fn grid_window_url(grid_id: &str) -> String {
+    format!("{DESKTOP_PLUGIN_HOST_ENTRY}#/grid?id={grid_id}")
+}
 
 fn default_console_frame() -> ConsoleWindowFrame {
     ConsoleWindowFrame {
@@ -33,6 +59,17 @@ fn default_console_frame() -> ConsoleWindowFrame {
         y: 120.0,
         width: 1240.0,
         height: 820.0,
+        is_fullscreen: false,
+        nav_state_version: 1,
+    }
+}
+
+fn default_plugin_center_frame() -> PluginCenterWindowFrame {
+    PluginCenterWindowFrame {
+        x: 220.0,
+        y: 140.0,
+        width: 860.0,
+        height: 640.0,
         is_fullscreen: false,
         nav_state_version: 1,
     }
@@ -48,9 +85,7 @@ fn ensure_window_command_allowed(label: &str) -> Result<(), CommandError> {
     } else {
         Err(command_error(
             "WINDOW_CAPABILITY_DENIED",
-            format!(
-                "window `{label}` is not allowed to invoke window lifecycle commands"
-            ),
+            format!("window `{label}` is not allowed to invoke window lifecycle commands"),
             false,
         ))
     }
@@ -62,8 +97,20 @@ fn ensure_console_window_command_allowed(label: &str) -> Result<(), CommandError
     } else {
         Err(command_error(
             "WINDOW_CAPABILITY_DENIED",
+            format!("window `{label}` is not allowed to invoke console window lifecycle commands"),
+            false,
+        ))
+    }
+}
+
+fn ensure_plugin_center_window_command_allowed(label: &str) -> Result<(), CommandError> {
+    if PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS.contains(&label) {
+        Ok(())
+    } else {
+        Err(command_error(
+            "WINDOW_CAPABILITY_DENIED",
             format!(
-                "window `{label}` is not allowed to invoke console window lifecycle commands"
+                "window `{label}` is not allowed to invoke plugin center window lifecycle commands"
             ),
             false,
         ))
@@ -136,10 +183,47 @@ fn validate_grid_id(grid_id: &str) -> Result<(), CommandError> {
     }
 }
 
+fn normalize_grid_window_native_options(
+    native: Option<GridWindowNativeOptions>,
+) -> GridWindowNativeOptions {
+    let mut native = native.unwrap_or_default();
+    native.opacity = native.opacity.clamp(0.35, 1.0);
+    native
+}
+
+fn apply_grid_window_native_options(
+    window: &tauri::WebviewWindow,
+    native: &GridWindowNativeOptions,
+) -> Result<GridWindowNativeApplied, CommandError> {
+    #[cfg(target_os = "macos")]
+    let opacity_applied = platform::macos::set_window_opacity(window, native.opacity);
+
+    #[cfg(not(target_os = "macos"))]
+    let opacity_applied = false;
+
+    window
+        .set_ignore_cursor_events(native.click_through)
+        .map_err(|e| native_error(format!("Failed to set click-through: {}", e)))?;
+    window
+        .set_always_on_top(native.pinned)
+        .map_err(|e| native_error(format!("Failed to set pinned state: {}", e)))?;
+    window
+        .set_visible_on_all_workspaces(native.all_spaces)
+        .map_err(|e| native_error(format!("Failed to set all-spaces state: {}", e)))?;
+
+    Ok(GridWindowNativeApplied {
+        opacity: opacity_applied,
+        click_through: true,
+        pinned: true,
+        all_spaces: true,
+    })
+}
+
 fn window_snapshot(
     app: &AppHandle,
     grid_id: &str,
     rect: GridWindowRect,
+    native_applied: GridWindowNativeApplied,
 ) -> GridWindowSnapshot {
     let label = grid_label(grid_id);
     let visible = app
@@ -152,6 +236,7 @@ fn window_snapshot(
         label,
         rect,
         visible,
+        native_applied,
     }
 }
 
@@ -226,24 +311,224 @@ fn capture_console_window_frame(
     })
 }
 
+fn read_plugin_center_frame(app: &AppHandle) -> Result<PluginCenterWindowFrame, CommandError> {
+    if let Some(state) = app.try_state::<PluginCenterWindowFrameState>() {
+        let frame = state.frame.lock().map_err(state_error)?;
+        Ok(frame.clone())
+    } else {
+        Ok(default_plugin_center_frame())
+    }
+}
+
+fn write_plugin_center_frame(
+    app: &AppHandle,
+    frame: PluginCenterWindowFrame,
+) -> Result<(), CommandError> {
+    if let Some(state) = app.try_state::<PluginCenterWindowFrameState>() {
+        let mut stored = state.frame.lock().map_err(state_error)?;
+        *stored = frame;
+    }
+    Ok(())
+}
+
+fn validate_plugin_center_frame(frame: &PluginCenterWindowFrame) -> Result<(), CommandError> {
+    if frame.width < PLUGIN_CENTER_MIN_WIDTH || frame.height < PLUGIN_CENTER_MIN_HEIGHT {
+        return Err(command_error(
+            "INVALID_PLUGIN_CENTER_FRAME",
+            "plugin center frame must be at least 640x480",
+            true,
+        ));
+    }
+    if frame.width > PLUGIN_CENTER_MAX_WIDTH || frame.height > PLUGIN_CENTER_MAX_HEIGHT {
+        return Err(command_error(
+            "INVALID_PLUGIN_CENTER_FRAME",
+            "plugin center frame dimensions exceed allowed maximum",
+            true,
+        ));
+    }
+    Ok(())
+}
+
+fn monitor_to_logical_bounds(monitor: &tauri::Monitor) -> LogicalMonitorBounds {
+    let work_area = monitor.work_area();
+    let scale_factor = monitor.scale_factor();
+    let position = tauri::LogicalPosition::<f64>::from_physical(work_area.position, scale_factor);
+    let size = tauri::LogicalSize::<f64>::from_physical(work_area.size, scale_factor);
+    LogicalMonitorBounds {
+        x: position.x,
+        y: position.y,
+        width: size.width,
+        height: size.height,
+    }
+}
+
+fn preferred_plugin_center_monitor_bounds(
+    app: &AppHandle,
+) -> Result<Option<LogicalMonitorBounds>, CommandError> {
+    let Some(window) = app
+        .get_webview_window("main")
+        .or_else(|| app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL))
+    else {
+        return Ok(None);
+    };
+
+    if let Some(monitor) = window
+        .current_monitor()
+        .map_err(|e| native_error(format!("Failed to read current monitor: {}", e)))?
+    {
+        return Ok(Some(monitor_to_logical_bounds(&monitor)));
+    }
+
+    let monitors = window
+        .available_monitors()
+        .map_err(|e| native_error(format!("Failed to read monitors: {}", e)))?;
+    Ok(monitors.first().map(monitor_to_logical_bounds))
+}
+
+fn normalize_plugin_center_frame(
+    requested: PluginCenterWindowFrame,
+    bounds: Option<LogicalMonitorBounds>,
+) -> PluginCenterWindowFrame {
+    let mut width = if requested.width.is_finite() {
+        requested.width
+    } else {
+        PLUGIN_CENTER_MIN_WIDTH
+    }
+    .clamp(PLUGIN_CENTER_MIN_WIDTH, PLUGIN_CENTER_MAX_WIDTH);
+    let mut height = if requested.height.is_finite() {
+        requested.height
+    } else {
+        PLUGIN_CENTER_MIN_HEIGHT
+    }
+    .clamp(PLUGIN_CENTER_MIN_HEIGHT, PLUGIN_CENTER_MAX_HEIGHT);
+
+    let (x, y) = if let Some(bounds) = bounds {
+        width = width.min(bounds.width.max(PLUGIN_CENTER_MIN_WIDTH));
+        height = height.min(bounds.height.max(PLUGIN_CENTER_MIN_HEIGHT));
+
+        let centered_x = bounds.x + (bounds.width - width).max(0.0) / 2.0;
+        let centered_y = bounds.y + (bounds.height - height).max(0.0) / 2.0;
+        let raw_x = if requested.x.is_finite() {
+            requested.x
+        } else {
+            centered_x
+        };
+        let raw_y = if requested.y.is_finite() {
+            requested.y
+        } else {
+            centered_y
+        };
+        let max_x = bounds.x + (bounds.width - width).max(0.0);
+        let max_y = bounds.y + (bounds.height - height).max(0.0);
+        (raw_x.clamp(bounds.x, max_x), raw_y.clamp(bounds.y, max_y))
+    } else {
+        let x = if requested.x.is_finite() {
+            requested.x
+        } else {
+            default_plugin_center_frame().x
+        };
+        let y = if requested.y.is_finite() {
+            requested.y
+        } else {
+            default_plugin_center_frame().y
+        };
+        (x, y)
+    };
+
+    PluginCenterWindowFrame {
+        x,
+        y,
+        width,
+        height,
+        is_fullscreen: requested.is_fullscreen,
+        nav_state_version: requested.nav_state_version,
+    }
+}
+
+fn normalized_plugin_center_frame_for_app(
+    app: &AppHandle,
+    requested: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    let bounds = preferred_plugin_center_monitor_bounds(app)?;
+    Ok(normalize_plugin_center_frame(requested, bounds))
+}
+
+fn apply_plugin_center_window_frame(
+    window: &tauri::WebviewWindow,
+    frame: &PluginCenterWindowFrame,
+) -> Result<(), CommandError> {
+    window
+        .set_size(tauri::Size::Logical(tauri::LogicalSize {
+            width: frame.width,
+            height: frame.height,
+        }))
+        .map_err(|e| native_error(format!("Failed to set plugin center size: {}", e)))?;
+    window
+        .set_position(tauri::Position::Logical(tauri::LogicalPosition {
+            x: frame.x,
+            y: frame.y,
+        }))
+        .map_err(|e| native_error(format!("Failed to set plugin center position: {}", e)))?;
+    Ok(())
+}
+
+fn capture_plugin_center_window_frame(
+    app: &AppHandle,
+    default_frame: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    let Some(window) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) else {
+        return Ok(default_frame);
+    };
+
+    let position = window
+        .outer_position()
+        .map_err(|e| native_error(format!("Failed to read plugin center position: {}", e)))?;
+    let size = window
+        .outer_size()
+        .map_err(|e| native_error(format!("Failed to read plugin center size: {}", e)))?;
+    let scale_factor = window
+        .scale_factor()
+        .map_err(|e| native_error(format!("Failed to read plugin center scale factor: {}", e)))?;
+    let logical_position = tauri::LogicalPosition::<f64>::from_physical(position, scale_factor);
+    let logical_size = tauri::LogicalSize::<f64>::from_physical(size, scale_factor);
+    let is_fullscreen = window.is_fullscreen().map_err(|e| {
+        native_error(format!(
+            "Failed to read plugin center fullscreen state: {}",
+            e
+        ))
+    })?;
+
+    Ok(PluginCenterWindowFrame {
+        x: logical_position.x,
+        y: logical_position.y,
+        width: logical_size.width,
+        height: logical_size.height,
+        is_fullscreen,
+        nav_state_version: default_frame.nav_state_version,
+    })
+}
+
 /// Create a new grid window at the specified position
 #[tauri::command]
 pub async fn create_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
     rect: GridWindowRect,
+    native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
     validate_grid_id(&gridId)?;
+    let native = normalize_grid_window_native_options(native);
 
-    println!("🪟 Creating grid window: {} at ({}, {}) size {}x{}",
-             gridId, rect.x, rect.y, rect.width, rect.height);
+    println!(
+        "🪟 Creating grid window: {} at ({}, {}) size {}x{}",
+        gridId, rect.x, rect.y, rect.width, rect.height
+    );
 
     let label = grid_label(&gridId);
-    let url = format!("/#/grid?id={}", gridId);
+    let url = grid_window_url(&gridId);
 
     // Check if window already exists
     if app.get_webview_window(&label).is_some() {
@@ -251,7 +536,7 @@ pub async fn create_grid_window(
         // Internal call after the caller's window-origin check already
         // passed — bypass the public allow-list by going through
         // `update_grid_window_internal`.
-        return update_grid_window_internal(app, gridId, rect).await;
+        return update_grid_window_internal(app, gridId, rect, native).await;
     }
 
     // Create the window with grid-specific settings.
@@ -271,7 +556,7 @@ pub async fn create_grid_window(
         .skip_taskbar(true)
         .resizable(false)
         .visible(true)
-        .always_on_top(false)
+        .always_on_top(native.pinned)
         .build()
         .map_err(|e| native_error(format!("Failed to create window: {}", e)))?;
 
@@ -284,15 +569,25 @@ pub async fn create_grid_window(
         });
     }
 
+    let native_applied = apply_grid_window_native_options(&window, &native)?;
+
     // Store window state
     if let Some(state) = app.try_state::<GridWindowsState>() {
         let mut windows = state.windows.lock().map_err(state_error)?;
-        windows.insert(gridId.clone(), rect.clone());
+        windows.insert(
+            gridId.clone(),
+            GridWindowState {
+                rect: rect.clone(),
+                native_applied: native_applied.clone(),
+            },
+        );
     }
 
-    println!("✅ Grid window created successfully: {} at ({}, {}) size {}x{}",
-             label, rect.x, rect.y, rect.width, rect.height);
-    Ok(window_snapshot(&app, &gridId, rect))
+    println!(
+        "✅ Grid window created successfully: {} at ({}, {}) size {}x{}",
+        label, rect.x, rect.y, rect.width, rect.height
+    );
+    Ok(window_snapshot(&app, &gridId, rect, native_applied))
 }
 
 /// Update an existing grid window's position and size
@@ -300,13 +595,19 @@ pub async fn create_grid_window(
 pub async fn update_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
     rect: GridWindowRect,
+    native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
-    update_grid_window_internal(app, gridId, rect).await
+    update_grid_window_internal(
+        app,
+        gridId,
+        rect,
+        normalize_grid_window_native_options(native),
+    )
+    .await
 }
 
 /// Internal update path used by both `update_grid_window` (with origin
@@ -316,6 +617,7 @@ async fn update_grid_window_internal(
     app: AppHandle,
     grid_id: String,
     rect: GridWindowRect,
+    native: GridWindowNativeOptions,
 ) -> Result<GridWindowSnapshot, CommandError> {
     validate_grid_id(&grid_id)?;
 
@@ -336,15 +638,25 @@ async fn update_grid_window_internal(
             }))
             .map_err(|e| native_error(format!("Failed to set size: {}", e)))?;
 
+        let native_applied = apply_grid_window_native_options(&window, &native)?;
+
         // Update stored state
         if let Some(state) = app.try_state::<GridWindowsState>() {
             let mut windows = state.windows.lock().map_err(state_error)?;
-            windows.insert(grid_id.clone(), rect.clone());
+            windows.insert(
+                grid_id.clone(),
+                GridWindowState {
+                    rect: rect.clone(),
+                    native_applied: native_applied.clone(),
+                },
+            );
         }
 
-        println!("📐 Updated grid window: {} to ({}, {}) size {}x{}",
-                 label, rect.x, rect.y, rect.width, rect.height);
-        Ok(window_snapshot(&app, &grid_id, rect))
+        println!(
+            "📐 Updated grid window: {} to ({}, {}) size {}x{}",
+            label, rect.x, rect.y, rect.width, rect.height
+        );
+        Ok(window_snapshot(&app, &grid_id, rect, native_applied))
     } else {
         Err(command_error(
             "WINDOW_NOT_FOUND",
@@ -359,8 +671,7 @@ async fn update_grid_window_internal(
 pub async fn close_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
 ) -> Result<(), CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
@@ -402,7 +713,14 @@ pub async fn list_grid_windows(
     let windows = state.windows.lock().map_err(state_error)?;
     let mut snapshots = windows
         .iter()
-        .map(|(grid_id, rect)| window_snapshot(&app, grid_id, rect.clone()))
+        .map(|(grid_id, state)| {
+            window_snapshot(
+                &app,
+                grid_id,
+                state.rect.clone(),
+                state.native_applied.clone(),
+            )
+        })
         .collect::<Vec<_>>();
     snapshots.sort_by(|a, b| a.grid_id.cmp(&b.grid_id));
     Ok(snapshots)
@@ -413,8 +731,7 @@ pub async fn list_grid_windows(
 pub async fn focus_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
@@ -435,12 +752,15 @@ pub async fn focus_grid_window(
 
     let rect = if let Some(state) = app.try_state::<GridWindowsState>() {
         let windows = state.windows.lock().map_err(state_error)?;
-        windows.get(&gridId).cloned().unwrap_or(GridWindowRect {
-            x: 0.0,
-            y: 0.0,
-            width: 0.0,
-            height: 0.0,
-        })
+        windows
+            .get(&gridId)
+            .map(|state| state.rect.clone())
+            .unwrap_or(GridWindowRect {
+                x: 0.0,
+                y: 0.0,
+                width: 0.0,
+                height: 0.0,
+            })
     } else {
         GridWindowRect {
             x: 0.0,
@@ -450,7 +770,17 @@ pub async fn focus_grid_window(
         }
     };
 
-    Ok(window_snapshot(&app, &gridId, rect))
+    let native_applied = if let Some(state) = app.try_state::<GridWindowsState>() {
+        let windows = state.windows.lock().map_err(state_error)?;
+        windows
+            .get(&gridId)
+            .map(|state| state.native_applied.clone())
+            .unwrap_or_default()
+    } else {
+        GridWindowNativeApplied::default()
+    };
+
+    Ok(window_snapshot(&app, &gridId, rect, native_applied))
 }
 
 /// Open or focus the dedicated Console window.
@@ -597,12 +927,157 @@ pub async fn set_console_window_frame(
     Ok(frame)
 }
 
+/// Open or focus the dedicated Plugin Center window.
+pub fn open_plugin_center_window_for_app(
+    app: &AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    let stored = normalized_plugin_center_frame_for_app(app, read_plugin_center_frame(app)?)?;
+    validate_plugin_center_frame(&stored)?;
+    write_plugin_center_frame(app, stored.clone())?;
+
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        apply_plugin_center_window_frame(&existing, &stored)?;
+        existing
+            .show()
+            .map_err(|e| native_error(format!("Failed to show plugin center window: {}", e)))?;
+        existing
+            .set_focus()
+            .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+        let live = capture_plugin_center_window_frame(app, stored)?;
+        write_plugin_center_frame(app, live.clone())?;
+        return Ok(live);
+    }
+
+    let builder = WebviewWindowBuilder::new(
+        app,
+        PLUGIN_CENTER_WINDOW_LABEL,
+        WebviewUrl::App(PLUGIN_CENTER_WINDOW_URL.into()),
+    )
+    .title("XAI Plugin Center")
+    .inner_size(stored.width, stored.height)
+    .position(stored.x, stored.y)
+    .decorations(true)
+    .resizable(true)
+    .visible(true);
+
+    let created = builder
+        .build()
+        .map_err(|e| native_error(format!("Failed to create plugin center window: {}", e)))?;
+
+    if stored.is_fullscreen {
+        created
+            .set_fullscreen(true)
+            .map_err(|e| native_error(format!("Failed to set plugin center fullscreen: {}", e)))?;
+    }
+
+    created
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+
+    let live = capture_plugin_center_window_frame(app, stored)?;
+    write_plugin_center_frame(app, live.clone())?;
+    Ok(live)
+}
+
+#[tauri::command]
+pub async fn open_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    open_plugin_center_window_for_app(&app)
+}
+
+/// Close the dedicated Plugin Center window and persist its latest frame.
+#[tauri::command]
+pub async fn close_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<(), CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let stored = read_plugin_center_frame(&app)?;
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        let live = capture_plugin_center_window_frame(&app, stored)?;
+        write_plugin_center_frame(&app, live)?;
+        existing
+            .close()
+            .map_err(|e| native_error(format!("Failed to close plugin center window: {}", e)))?;
+    }
+    Ok(())
+}
+
+/// Focus the dedicated Plugin Center window, creating it if needed.
+pub fn focus_plugin_center_window_for_app(
+    app: &AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    if app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL).is_none() {
+        return open_plugin_center_window_for_app(app);
+    }
+    let existing = app
+        .get_webview_window(PLUGIN_CENTER_WINDOW_LABEL)
+        .ok_or_else(|| native_error("Plugin Center window not found after open check"))?;
+    existing
+        .set_focus()
+        .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
+
+    let stored = normalized_plugin_center_frame_for_app(app, read_plugin_center_frame(app)?)?;
+    apply_plugin_center_window_frame(&existing, &stored)?;
+    let live = capture_plugin_center_window_frame(app, stored)?;
+    write_plugin_center_frame(app, live.clone())?;
+    Ok(live)
+}
+
+#[tauri::command]
+pub async fn focus_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    focus_plugin_center_window_for_app(&app)
+}
+
+/// Return the latest persisted Plugin Center frame snapshot.
+#[tauri::command]
+pub async fn get_plugin_center_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let stored = normalized_plugin_center_frame_for_app(&app, read_plugin_center_frame(&app)?)?;
+    let live = capture_plugin_center_window_frame(&app, stored)?;
+    let normalized = normalized_plugin_center_frame_for_app(&app, live)?;
+    write_plugin_center_frame(&app, normalized.clone())?;
+    Ok(normalized)
+}
+
+/// Persist and apply a Plugin Center frame snapshot.
+#[tauri::command]
+pub async fn set_plugin_center_window_frame(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+    frame: PluginCenterWindowFrame,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    let frame = normalized_plugin_center_frame_for_app(&app, frame)?;
+    validate_plugin_center_frame(&frame)?;
+
+    if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
+        apply_plugin_center_window_frame(&existing, &frame)?;
+        existing
+            .set_fullscreen(frame.is_fullscreen)
+            .map_err(|e| native_error(format!("Failed to set plugin center fullscreen: {}", e)))?;
+    }
+
+    write_plugin_center_frame(&app, frame.clone())?;
+    Ok(frame)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn window_allowlist_admits_main_control() {
+    fn window_allowlist_admits_system_host_windows() {
         for label in WINDOW_ALLOWED_WINDOWS {
             assert!(
                 is_window_command_allowed(label),
@@ -615,8 +1090,8 @@ mod tests {
     #[test]
     fn window_allowlist_rejects_grid_widget() {
         // Grid windows themselves are NOT allowed to invoke window lifecycle
-        // commands — they must route through `control`. Widgets / pet /
-        // ai-cube / console are also rejected.
+        // commands — they must route through a system host window. Widgets /
+        // pet / ai-cube / console are also rejected.
         for label in [
             "grid_xxx",
             "grid_",
@@ -663,6 +1138,107 @@ mod tests {
     }
 
     #[test]
+    fn plugin_center_window_allowlist_admits_plugin_center_label() {
+        for label in PLUGIN_CENTER_WINDOW_ALLOWED_WINDOWS {
+            assert!(ensure_plugin_center_window_command_allowed(label).is_ok());
+        }
+    }
+
+    #[test]
+    fn plugin_center_window_allowlist_rejects_grid_widget_labels() {
+        for label in ["grid_xxx", "widget_clock", "pet", "console", "unknown"] {
+            let err = ensure_plugin_center_window_command_allowed(label).unwrap_err();
+            assert_eq!(err.code, "WINDOW_CAPABILITY_DENIED");
+            assert!(
+                err.message.contains(label),
+                "error message `{}` should mention `{label}`",
+                err.message
+            );
+        }
+    }
+
+    #[test]
+    fn plugin_center_frame_validation_rejects_too_small_frames() {
+        let mut frame = default_plugin_center_frame();
+        frame.height = 320.0;
+        let err = validate_plugin_center_frame(&frame).unwrap_err();
+        assert_eq!(err.code, "INVALID_PLUGIN_CENTER_FRAME");
+    }
+
+    #[test]
+    fn plugin_center_frame_validation_accepts_default_frame() {
+        let frame = default_plugin_center_frame();
+        assert!(validate_plugin_center_frame(&frame).is_ok());
+    }
+
+    #[test]
+    fn plugin_host_window_urls_target_desktop_host_bundle() {
+        assert_eq!(CONSOLE_WINDOW_URL, "/desktop-host/index.html#/console");
+        assert_eq!(
+            PLUGIN_CENTER_WINDOW_URL,
+            "/desktop-host/index.html#/plugin-center"
+        );
+        assert_eq!(
+            grid_window_url("sample-widget-1"),
+            "/desktop-host/index.html#/grid?id=sample-widget-1"
+        );
+    }
+
+    #[test]
+    fn plugin_center_frame_normalization_recovers_offscreen_physical_capture() {
+        let requested = PluginCenterWindowFrame {
+            x: 1760.0,
+            y: -1410.0,
+            width: 6880.0,
+            height: 1410.0,
+            is_fullscreen: false,
+            nav_state_version: 1,
+        };
+        let normalized = normalize_plugin_center_frame(
+            requested,
+            Some(LogicalMonitorBounds {
+                x: 0.0,
+                y: 0.0,
+                width: 1440.0,
+                height: 900.0,
+            }),
+        );
+
+        assert_eq!(normalized.x, 0.0);
+        assert_eq!(normalized.y, 0.0);
+        assert_eq!(normalized.width, 1440.0);
+        assert_eq!(normalized.height, 900.0);
+        assert!(!normalized.is_fullscreen);
+        assert_eq!(normalized.nav_state_version, 1);
+    }
+
+    #[test]
+    fn plugin_center_frame_normalization_centers_non_finite_position() {
+        let requested = PluginCenterWindowFrame {
+            x: f64::NAN,
+            y: f64::NAN,
+            width: 860.0,
+            height: 640.0,
+            is_fullscreen: false,
+            nav_state_version: 1,
+        };
+        let normalized = normalize_plugin_center_frame(
+            requested,
+            Some(LogicalMonitorBounds {
+                x: 100.0,
+                y: 50.0,
+                width: 1200.0,
+                height: 800.0,
+            }),
+        );
+
+        assert_eq!(normalized.x, 270.0);
+        assert_eq!(normalized.y, 130.0);
+        assert_eq!(normalized.width, 860.0);
+        assert_eq!(normalized.height, 640.0);
+    }
+
+    #[test]
     fn overlay_disabled_error_includes_mode_details() {
         let err = overlay_disabled_error(DesktopHostMode::Normal);
         assert_eq!(err.code, "OVERLAY_MODE_DISABLED");
@@ -670,5 +1246,36 @@ mod tests {
         let details = err.details.expect("details should be present");
         assert_eq!(details["requestedMode"], "overlay_v2");
         assert_eq!(details["activeMode"], "normal");
+    }
+
+    #[test]
+    fn grid_native_options_default_to_no_behavior_requests() {
+        let native = normalize_grid_window_native_options(None);
+        assert_eq!(native.opacity, 1.0);
+        assert!(!native.click_through);
+        assert!(!native.pinned);
+        assert!(!native.all_spaces);
+    }
+
+    #[test]
+    fn grid_native_options_clamp_opacity_to_supported_range() {
+        let low = normalize_grid_window_native_options(Some(GridWindowNativeOptions {
+            opacity: 0.1,
+            click_through: true,
+            pinned: true,
+            all_spaces: true,
+        }));
+        assert_eq!(low.opacity, 0.35);
+        assert!(low.click_through);
+        assert!(low.pinned);
+        assert!(low.all_spaces);
+
+        let high = normalize_grid_window_native_options(Some(GridWindowNativeOptions {
+            opacity: 1.6,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }));
+        assert_eq!(high.opacity, 1.0);
     }
 }

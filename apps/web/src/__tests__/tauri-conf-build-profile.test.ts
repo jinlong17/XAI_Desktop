@@ -43,6 +43,7 @@ const TAURI_CONF_PATH = resolve(
 interface TauriConfBuild {
   beforeBuildCommand?: string;
   beforeDevCommand?: string;
+  frontendDist?: string;
 }
 
 interface TauriConf {
@@ -121,4 +122,22 @@ describe("Tauri build profile injection guards (S1 regression — 2026-05-30)", 
       ).toContain("VITE_WEB_AUTH_MODE=mock-authenticated");
     },
   );
+
+  it("TC-TAURI-CONF-5: frontendDist stays on apps/web/dist", () => {
+    const conf = readTauriConf();
+    expect(
+      conf.build?.frontendDist,
+      "Plugin host assets must be added as a sub-bundle under apps/web/dist, not by replacing the main desktop Web bundle.",
+    ).toBe("../../web/dist");
+  });
+
+  it("TC-TAURI-CONF-6: build/dev commands use desktop asset scripts", () => {
+    const conf = readTauriConf();
+    expect(conf.build?.beforeBuildCommand ?? "").toContain(
+      "node ./scripts/build-tauri-assets.mjs",
+    );
+    expect(conf.build?.beforeDevCommand ?? "").toContain(
+      "node ./scripts/dev-tauri-assets.mjs",
+    );
+  });
 });

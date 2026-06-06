@@ -50,9 +50,15 @@ importers:
       '@repo/plugin-console':
         specifier: workspace:*
         version: link:../../packages/plugin-console
+      '@repo/plugin-labels':
+        specifier: workspace:*
+        version: link:../../packages/plugin-labels
       '@repo/plugin-organizer':
         specifier: workspace:*
         version: link:../../packages/plugin-organizer
+      '@repo/plugin-productivity':
+        specifier: workspace:*
+        version: link:../../packages/plugin-productivity
       '@tauri-apps/api':
         specifier: ^2
         version: 2.9.0

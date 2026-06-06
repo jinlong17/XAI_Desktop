@@ -39,6 +39,7 @@ describe("assertAiCubeControlBridge", () => {
         openClipboard() {},
         openPomodoro() {},
         openSearch() {},
+        openPluginCenter() {},
         openSettings() {},
       },
     };
