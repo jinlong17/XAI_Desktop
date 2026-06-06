@@ -303,3 +303,38 @@ export const opsQueueReadModel = _createOpsQueueReadModel();
 
 /** Chain-backed Audit read model (P1/P2/P4) — the fixture-seeded append-only chain projection. */
 export { auditChainReadModel, adminAuditChain } from "../audit/auditStore";
+
+/* ------------------------------------------------------------------ *
+ * Row #3 composed read seams — ADDITIVE (slice #1 adapters above UNCHANGED)
+ * ------------------------------------------------------------------ */
+import {
+  createMockAdminApiClient,
+  type AdminApiClient,
+  type AdminApiResult,
+} from "../contracts/adminApi";
+import type { AdminRole } from "../authz/rbac";
+import type {
+  UserDetail as UsersReadSeamUserDetail,
+  UserQuery as UsersReadSeamUserQuery,
+  UserRow as UsersReadSeamUserRow,
+} from "./types";
+
+// Build-time mock role; FAIL-CLOSED when absent (default least privilege / non-admin).
+const MOCK_ROLE: AdminRole | undefined =
+  (import.meta.env.VITE_ADMIN_MOCK_ROLE as AdminRole | undefined) ?? undefined;
+
+export const adminApiClient: AdminApiClient = createMockAdminApiClient(
+  MOCK_ROLE ? { role: MOCK_ROLE } : {},
+);
+
+export const usersReadSeam = {
+  list: (
+    query?: UsersReadSeamUserQuery,
+  ): Promise<AdminApiResult<UsersReadSeamUserRow[]>> =>
+    adminApiClient.getUsers(query),
+  get: (
+    email: string,
+  ): Promise<AdminApiResult<UsersReadSeamUserDetail | null>> =>
+    adminApiClient.getUser(email),
+  // savedViews()/filterChips() stay sourced from the slice #1 usersAdapter (sync UI config) — do NOT add them here.
+};
