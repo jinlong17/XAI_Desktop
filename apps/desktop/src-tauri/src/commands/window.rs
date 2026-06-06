@@ -1,6 +1,6 @@
 use crate::app_config::{self, DesktopHostMode};
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 use crate::platform;
+use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
 
 use super::super::CommandError;
 use super::super::ConsoleWindowFrame;
@@ -68,9 +68,7 @@ fn ensure_window_command_allowed(label: &str) -> Result<(), CommandError> {
     } else {
         Err(command_error(
             "WINDOW_CAPABILITY_DENIED",
-            format!(
-                "window `{label}` is not allowed to invoke window lifecycle commands"
-            ),
+            format!("window `{label}` is not allowed to invoke window lifecycle commands"),
             false,
         ))
     }
@@ -82,9 +80,7 @@ fn ensure_console_window_command_allowed(label: &str) -> Result<(), CommandError
     } else {
         Err(command_error(
             "WINDOW_CAPABILITY_DENIED",
-            format!(
-                "window `{label}` is not allowed to invoke console window lifecycle commands"
-            ),
+            format!("window `{label}` is not allowed to invoke console window lifecycle commands"),
             false,
         ))
     }
@@ -372,8 +368,7 @@ fn capture_plugin_center_window_frame(
 pub async fn create_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
     rect: GridWindowRect,
     native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
@@ -455,8 +450,7 @@ pub async fn create_grid_window(
 pub async fn update_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
     rect: GridWindowRect,
     native: Option<GridWindowNativeOptions>,
 ) -> Result<GridWindowSnapshot, CommandError> {
@@ -532,8 +526,7 @@ async fn update_grid_window_internal(
 pub async fn close_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
 ) -> Result<(), CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
@@ -593,8 +586,7 @@ pub async fn list_grid_windows(
 pub async fn focus_grid_window(
     window: tauri::WebviewWindow,
     app: AppHandle,
-    #[allow(non_snake_case)]
-    gridId: String,
+    #[allow(non_snake_case)] gridId: String,
 ) -> Result<GridWindowSnapshot, CommandError> {
     ensure_window_command_allowed(window.label())?;
     ensure_overlay_mode_enabled(&app)?;
@@ -791,13 +783,10 @@ pub async fn set_console_window_frame(
 }
 
 /// Open or focus the dedicated Plugin Center window.
-#[tauri::command]
-pub async fn open_plugin_center_window(
-    window: tauri::WebviewWindow,
-    app: AppHandle,
+pub fn open_plugin_center_window_for_app(
+    app: &AppHandle,
 ) -> Result<PluginCenterWindowFrame, CommandError> {
-    ensure_plugin_center_window_command_allowed(window.label())?;
-    let stored = read_plugin_center_frame(&app)?;
+    let stored = read_plugin_center_frame(app)?;
     validate_plugin_center_frame(&stored)?;
 
     if let Some(existing) = app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL) {
@@ -807,13 +796,13 @@ pub async fn open_plugin_center_window(
         existing
             .set_focus()
             .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
-        let live = capture_plugin_center_window_frame(&app, stored)?;
-        write_plugin_center_frame(&app, live.clone())?;
+        let live = capture_plugin_center_window_frame(app, stored)?;
+        write_plugin_center_frame(app, live.clone())?;
         return Ok(live);
     }
 
     let builder = WebviewWindowBuilder::new(
-        &app,
+        app,
         PLUGIN_CENTER_WINDOW_LABEL,
         WebviewUrl::App(PLUGIN_CENTER_WINDOW_URL.into()),
     )
@@ -838,9 +827,18 @@ pub async fn open_plugin_center_window(
         .set_focus()
         .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
 
-    let live = capture_plugin_center_window_frame(&app, stored)?;
-    write_plugin_center_frame(&app, live.clone())?;
+    let live = capture_plugin_center_window_frame(app, stored)?;
+    write_plugin_center_frame(app, live.clone())?;
     Ok(live)
+}
+
+#[tauri::command]
+pub async fn open_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    open_plugin_center_window_for_app(&app)
 }
 
 /// Close the dedicated Plugin Center window and persist its latest frame.
@@ -862,14 +860,11 @@ pub async fn close_plugin_center_window(
 }
 
 /// Focus the dedicated Plugin Center window, creating it if needed.
-#[tauri::command]
-pub async fn focus_plugin_center_window(
-    window: tauri::WebviewWindow,
-    app: AppHandle,
+pub fn focus_plugin_center_window_for_app(
+    app: &AppHandle,
 ) -> Result<PluginCenterWindowFrame, CommandError> {
-    ensure_plugin_center_window_command_allowed(window.label())?;
     if app.get_webview_window(PLUGIN_CENTER_WINDOW_LABEL).is_none() {
-        return open_plugin_center_window(window, app).await;
+        return open_plugin_center_window_for_app(app);
     }
     let existing = app
         .get_webview_window(PLUGIN_CENTER_WINDOW_LABEL)
@@ -878,10 +873,19 @@ pub async fn focus_plugin_center_window(
         .set_focus()
         .map_err(|e| native_error(format!("Failed to focus plugin center window: {}", e)))?;
 
-    let stored = read_plugin_center_frame(&app)?;
-    let live = capture_plugin_center_window_frame(&app, stored)?;
-    write_plugin_center_frame(&app, live.clone())?;
+    let stored = read_plugin_center_frame(app)?;
+    let live = capture_plugin_center_window_frame(app, stored)?;
+    write_plugin_center_frame(app, live.clone())?;
     Ok(live)
+}
+
+#[tauri::command]
+pub async fn focus_plugin_center_window(
+    window: tauri::WebviewWindow,
+    app: AppHandle,
+) -> Result<PluginCenterWindowFrame, CommandError> {
+    ensure_plugin_center_window_command_allowed(window.label())?;
+    focus_plugin_center_window_for_app(&app)
 }
 
 /// Return the latest persisted Plugin Center frame snapshot.
