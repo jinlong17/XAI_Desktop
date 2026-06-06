@@ -11,11 +11,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-data-contracts-rbac |
 | **Title** | Admin Data + Permission Contracts (read models · permission keys · RBAC · API boundary) |
-| **Current Phase** | FEATURE_BUILD (P1 DONE) |
-| **Status** | APPROVED — P1 DONE, P2–P4 PENDING |
+| **Current Phase** | FEATURE_BUILD (P1–P2 DONE) |
+| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
 | **Executor** | claude (feature-auto-build, inline via feature-dev-loop) |
-| **Updated** | 2026-06-06 15:30 |
-| **Suggested Next** | feature-auto-build (P2) |
+| **Updated** | 2026-06-06 15:40 |
+| **Suggested Next** | feature-auto-build (P3) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #2 of 6** (preserves dep order for #3–#6) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch) |
@@ -153,8 +153,8 @@ untouched; record the choice in P4.
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Read-model contract freeze + live/mock/deferred map | DONE | (pending hash) |
-| P2 — Immutable permission-key catalog | PENDING | — |
+| P1 — Read-model contract freeze + live/mock/deferred map | DONE | cba8e5e |
+| P2 — Immutable permission-key catalog | DONE | (pending hash) |
 | P3 — RBAC role map + predicate | PENDING | — |
 | P4 — Admin API-boundary contract + secret invariant | PENDING | — |
 
@@ -253,5 +253,32 @@ untouched; record the choice in P4.
   (type-level identity assertions compile). Acceptance gate AC-1 (TT-READMODEL-CONTRACT + TT-READMODEL-ANNOTATION) GREEN.
 - **Boundary self-check**: W0 — admin-local only; no shared `@repo/*` change; no typed events; no Tauri; no
   `syncScope`; no new runtime dependency; contract-only (no page change).
-- **Commits**: see Phase Progress table (recorded below after commit).
+- **Commits**: `cba8e5e` (see Phase Progress table).
 - **Next step**: P2 — immutable permission-key catalog.
+
+### Round 4 — 2026-06-06 15:40 · feature-auto-build P2 (inline via feature-dev-loop)
+
+- **Executor**: claude (feature-auto-build, inline-executed by the feature-dev-loop orchestrator).
+- **Phase**: P2 — Immutable permission-key catalog.
+- **Action**:
+  - Created `apps/admin/src/authz/permissionKeys.ts`:
+    - `PERMISSION_KEYS as const` — 11 immutable, append-only, dotted namespaced lowercase keys (the 10
+      prototype `PERMS` rows + 1 synthesized). `PermissionKey` = union of the values.
+    - `MutationFamily = keyof AdminCommandAdapter` (derived from the SHIPPED slice #1 interface, not hand-listed).
+    - `MUTATION_PERMISSION: Record<MutationFamily, PermissionKey>` — every one of the 6 families → exactly one
+      key (`banUser`+`bulkBan` deliberately share `USER_BAN`).
+    - `PERMISSION_KEYS_SNAPSHOT_V1` (frozen 11-key list) + `ALL_PERMISSION_KEYS` for the append-only guard.
+  - Created `apps/admin/src/authz/permissionKeys.test.ts` — TT-PERMKEY-UNIQUE (distinct values),
+    TT-PERMKEY-PATTERN (`^admin\.[a-z_]+(\.[a-z_]+)*$` per key + admin. namespace), TT-PERMKEY-MUTATION-COVERAGE
+    (family set === `keyof AdminCommandAdapter`, every value in catalog, single key per family, REC-1 case),
+    TT-PERMKEY-APPEND-ONLY (catalog ⊇ snapshot, no removal/rename, `as const` readonly at type level).
+- **REC-1 handling (RECORDED)**: `ORG_TRANSFER_OWNER` (`admin.orgs.transfer_ownership`) is **SYNTHESIZED** — the
+  prototype has the `transferOwnership` destructive action + slice #1 no-op command, but NO matching RBAC matrix
+  row. Made explicit in the `permissionKeys.ts` comment; mapped from `transferOwnership`; granted SUPER-ONLY in P3
+  (the safe fail-closed default). A dedicated test pins the key string + the mapping so it is not mistaken for a seed.
+- **Tests**: `vitest run src/authz/permissionKeys.test.ts` → **23 passed**. `tsc --noEmit` → **exit 0**. Acceptance
+  gates AC-2 (TT-PERMKEY-UNIQUE/PATTERN/APPEND-ONLY) + AC-3 (TT-PERMKEY-MUTATION-COVERAGE) GREEN.
+- **Boundary self-check**: W0 — admin-local pure data; no shared `@repo/*`; no events/Tauri/syncScope; no secret
+  literal (the new module is auto-covered by slice #1's whole-`src` TT-NO-SECRET-SRC, re-run in P4); no new dependency.
+- **Commits**: see Phase Progress table (recorded below after commit).
+- **Next step**: P3 — RBAC role→permission grant map + pure advisory predicate (allow/deny per mutation family).
