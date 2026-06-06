@@ -12,7 +12,7 @@
 - Branch / commit: `codex/plugin/common-capabilities-phase2` / this commit
 - User-visible change: Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。
 - Developer/system delta: Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。
-- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`.
+- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.
 - Risk / follow-up: 当前显示面被 macOS lock/screen-saver 遮挡，无法视觉确认 Plugin Center 内容；smoke verdict remains `PARTIAL`, not `PASS`. Sample widget add-to-desktop、restart restore、native behavior matrix仍未完成。
 
 ### Desktop Plugin Host Sub-Bundle Routing
