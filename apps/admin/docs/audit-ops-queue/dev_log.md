@@ -13,10 +13,10 @@
 | **Target** | xai-admin-audit-ops-queue |
 | **Title** | Admin Audit Log + Ops Queue (append-only audit-event contract · audit-on-mutation invariant · ops-queue severity read model) |
 | **Current Phase** | FEATURE_BUILD |
-| **Status** | APPROVED — P1 DONE, P2–P4 PENDING |
+| **Status** | APPROVED — P1–P2 DONE, P3–P4 PENDING |
 | **Executor** | feature-dev-loop (inline feature-auto-build · claude-opus-4-8) |
-| **Updated** | 2026-06-06 19:05 |
-| **Suggested Next** | feature-auto-build (P2) |
+| **Updated** | 2026-06-06 19:25 |
+| **Suggested Next** | feature-auto-build (P3) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #5 of 6** (preserves dep order; #6 depends on #5) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch; worktree `claude/frosty-nash-c4bf16`) |
@@ -177,8 +177,8 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
 
 | Phase | Status | Commit |
 |---|---|---|
-| P1 — Audit-event contract + append-only hash-chain | DONE | _(set below)_ |
-| P2 — Audit-on-mutation enforcement + tests | PENDING | — |
+| P1 — Audit-event contract + append-only hash-chain | DONE | `84c82ef` |
+| P2 — Audit-on-mutation enforcement + tests | DONE | `_(set below)_` |
 | P3 — Ops-queue read model + severity contract | PENDING | — |
 | P4 — Wire pages to typed mock adapters + secret/build re-run | PENDING | — |
 
@@ -311,8 +311,48 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
   **31 passed**; `tsc --noEmit` clean; full suite **222 passed / 16 files** (191 baseline + 31 P1) — slice #1
   + row #2 unaffected; carried `TT-NO-SECRET-SRC`/`BUNDLE` green over the new `audit/` module;
   `TT-NO-INLINE-MOCK` unchanged (21 tests, 10 pages).
-- **Commits**: `<P1_HASH>` (`feat(admin): row #5 P1 — append-only audit-event contract + ported hash-chain`).
+- **Commits**: `84c82ef` (`feat(admin): row #5 P1 — append-only audit-event contract + ported hash-chain`).
 - **Tests**: P1 unit 31/31 · full admin suite 222/222 · tsc clean.
 - **Next step**: P2 — audit-on-mutation enforcement (`appendThenAck` + `createAuditedMockAdminApiClient`):
   granted append-then-ack (`applied:false` + resolving `auditId`), denied zero-append; allow×6 + deny×6 +
   id-resolves + applied-false + chain-after-N + no-io + advisory-note.
+
+### Round 4 — 2026-06-06 19:25 · feature-dev-loop → feature-auto-build (P2)
+
+- **Executor**: feature-dev-loop (inline feature-auto-build role · claude-opus-4-8).
+- **Mode**: Run (continuation). Re-read dev_log; P1 DONE (`84c82ef`); proceeded to P2.
+- **Phase**: **P2 — Audit-on-mutation enforcement + tests**.
+- **Action**:
+  - `src/audit/auditedMutation.ts` — `createAuditedMockAdminApiClient(ctx)` returns
+    `{ client, chain }`. OQ-C **WRAP**: composes row #2's `createMockAdminApiClient({role})` for ALL 18
+    reads UNCHANGED (does NOT mutate the row #2 factory or `contracts/adminApi.test.ts`), and overrides
+    only the 6 mutations + re-backs `getAudit` with the chain projection. The structural `appendThenAck`
+    seam: (1) fail-closed authorize — no role → `unauthorized` (ZERO append); `!canMutate` → `forbidden`
+    (ZERO append); (2) granted → `chain.append` an `AdminAuditEvent` (`result:"ok"`,
+    `permissionKey = MUTATION_PERMISSION[family]`, `mutationFamily`, `target` derived from the family's
+    input) BEFORE the ack; (3) ack `{ applied:false, auditId: event.hash }` (no real write; `auditId`
+    fulfils row #2's `MutationAck.auditId`). Fixed deterministic clock (not `Date.now`). Also exports
+    `projectAudit(chain, filter)` (newest-first, AuditFilter-filtered, bound to slice #1 `AuditRow`) +
+    `verifyAuditReadModel(chain)` (§5; used by P4 wiring) + `AUDIT_ON_MUTATION_ADVISORY_NOTE`
+    (server = real enforcer).
+  - `src/audit/auditedMutation.test.ts` (27) — TT-AUDIT-ON-MUTATION-<family> ×6 (exactly one correct
+    event per granted family, derived from `ADMIN_ROLES`/`canMutate` so the grant matrix is ground-truth);
+    TT-AUDIT-DENY-NOAPPEND-<family> ×6 (every non-granted role → `forbidden` + ZERO append; +
+    no-role → `unauthorized` + ZERO) incl. the documented deny-matrix spot-check (audit/finance/support
+    cannot banUser; non-super cannot transferOwnership/setProviderRouting — REC-1 SUPER-ONLY); ID-RESOLVES;
+    APPLIED-FALSE (×6); CHAIN-AFTER-N (ops: exactly 4 granted / 2 denied, length === granted, verify green;
+    repeated calls each append — append-only ledger); NO-IO (fetch + `Storage.prototype.setItem` spies);
+    ADVISORY-NOTE; + audit-read-side projection (newest-first, type filter, AuditRow shape).
+  - Self-check: row #2's `createMockAdminApiClient` + `adminApi.test.ts` untouched (WRAP, not mutate).
+    W0 held; `applied:false` everywhere (no real write); no I/O; no secret; no `syncScope`.
+  - Fixed one tsc-only issue caught by `tsc --noEmit` (vitest/esbuild type-strips so it passed runtime):
+    `AuditFilter` is declared-but-not-re-exported by `contracts/adminApi.ts`; imported it from its canonical
+    source `../adapters/types` (alongside `AuditRow`). Re-ran tsc → clean.
+- **Acceptance (P2 gate)**: AC-4 / AC-5 / AC-6 covered — `pnpm exec vitest run src/audit/auditedMutation.test.ts`
+  → **27 passed**; `tsc --noEmit` clean; full suite **249 passed / 17 files** (222 + 27) — row #2's
+  `adminApi.test.ts` (14) + slice #1 unaffected.
+- **Commits**: `<P2_HASH>` (`feat(admin): row #5 P2 — audit-on-mutation invariant on the mock path`).
+- **Tests**: P2 unit 27/27 · full admin suite 249/249 · tsc clean.
+- **Next step**: P3 — ops-queue read model + deterministic severity (`OpsSeverity` ordinal + `toSeverity` +
+  `severityRank` severity-desc-then-count-desc + `createOpsQueueReadModel().ranked()`), built on slice #1's
+  unchanged `OpsQueueItem` over the `QUEUES` fixture.
