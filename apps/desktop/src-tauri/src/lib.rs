@@ -21,6 +21,48 @@ pub struct GridWindowRect {
     pub height: f64,
 }
 
+/// Requested native behavior/style inputs for grid-hosted plugin windows.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GridWindowNativeOptions {
+    pub opacity: f64,
+    pub click_through: bool,
+    pub pinned: bool,
+    pub all_spaces: bool,
+}
+
+impl Default for GridWindowNativeOptions {
+    fn default() -> Self {
+        Self {
+            opacity: 1.0,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }
+    }
+}
+
+/// Native behavior/style application state returned by grid window commands.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct GridWindowNativeApplied {
+    pub opacity: bool,
+    pub click_through: bool,
+    pub pinned: bool,
+    pub all_spaces: bool,
+}
+
+impl Default for GridWindowNativeApplied {
+    fn default() -> Self {
+        Self {
+            opacity: false,
+            click_through: false,
+            pinned: false,
+            all_spaces: false,
+        }
+    }
+}
+
 /// Stable Grid window lifecycle snapshot returned by window commands.
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct GridWindowSnapshot {
@@ -29,6 +71,8 @@ pub struct GridWindowSnapshot {
     pub label: String,
     pub rect: GridWindowRect,
     pub visible: bool,
+    #[serde(rename = "nativeApplied")]
+    pub native_applied: GridWindowNativeApplied,
 }
 
 /// Structured command error shape for UI-safe handling.
@@ -53,9 +97,28 @@ pub struct ConsoleWindowFrame {
     pub nav_state_version: u32,
 }
 
+/// Persisted frame snapshot for the Plugin Center window.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct PluginCenterWindowFrame {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    #[serde(rename = "isFullscreen")]
+    pub is_fullscreen: bool,
+    #[serde(rename = "navStateVersion")]
+    pub nav_state_version: u32,
+}
+
 /// State to track all grid windows.
+#[derive(Clone, Debug)]
+pub struct GridWindowState {
+    pub rect: GridWindowRect,
+    pub native_applied: GridWindowNativeApplied,
+}
+
 pub struct GridWindowsState {
-    pub windows: Mutex<HashMap<String, GridWindowRect>>,
+    pub windows: Mutex<HashMap<String, GridWindowState>>,
 }
 
 impl Default for GridWindowsState {
@@ -78,6 +141,25 @@ impl Default for ConsoleWindowFrameState {
                 y: 120.0,
                 width: 1240.0,
                 height: 820.0,
+                is_fullscreen: false,
+                nav_state_version: 1,
+            }),
+        }
+    }
+}
+
+pub struct PluginCenterWindowFrameState {
+    pub frame: Mutex<PluginCenterWindowFrame>,
+}
+
+impl Default for PluginCenterWindowFrameState {
+    fn default() -> Self {
+        Self {
+            frame: Mutex::new(PluginCenterWindowFrame {
+                x: 220.0,
+                y: 140.0,
+                width: 860.0,
+                height: 640.0,
                 is_fullscreen: false,
                 nav_state_version: 1,
             }),
@@ -126,6 +208,7 @@ pub fn run() {
         .manage(commands::bookmarks::BookmarkRegistry::default())
         .manage(GridWindowsState::default())
         .manage(ConsoleWindowFrameState::default())
+        .manage(PluginCenterWindowFrameState::default())
         .on_page_load(move |webview, payload| {
             if webview.label() == "main" && payload.event() == PageLoadEvent::Finished {
                 let _ = webview.eval(&page_load_adapter_script);
@@ -167,6 +250,11 @@ pub fn run() {
             commands::window::focus_console_window,
             commands::window::get_console_window_frame,
             commands::window::set_console_window_frame,
+            commands::window::open_plugin_center_window,
+            commands::window::close_plugin_center_window,
+            commands::window::focus_plugin_center_window,
+            commands::window::get_plugin_center_window_frame,
+            commands::window::set_plugin_center_window_frame,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]

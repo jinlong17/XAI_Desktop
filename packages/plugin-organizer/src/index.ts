@@ -1,4 +1,5 @@
 export * from "./types";
+export { registerOrganizerPlugin } from "./register-plugin";
 export * from "./mockData";
 export * from "./useGridSystem";
 export * from "./SmartContainer";

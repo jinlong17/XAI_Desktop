@@ -28,6 +28,7 @@ export interface AiCubeTrayActions {
   openClipboard(): void;
   openPomodoro(): void;
   openSearch(): void;
+  openPluginCenter(): void;
   openSettings(): void;
 }
 

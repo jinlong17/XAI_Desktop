@@ -181,6 +181,12 @@ function ControlWindowContent() {
           });
           setIsPanelOpen(false);
         },
+        openPluginCenter() {
+          void invoke("open_plugin_center_window").catch((error) => {
+            console.error("Failed to open plugin center window:", error);
+          });
+          setIsPanelOpen(false);
+        },
         openSettings() {
           setIsPanelOpen(true);
         },

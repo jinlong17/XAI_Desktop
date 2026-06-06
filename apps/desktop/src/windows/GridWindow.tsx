@@ -1,8 +1,20 @@
-import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { listen } from "@tauri-apps/api/event";
 import { emitEvent } from "@repo/core/events";
 import { currentMonitor, getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
 import { useTauriInvoke } from "@repo/core/hooks";
+import {
+  createPluginInstanceStore,
+  createWebStoragePluginInstanceAdapter,
+} from "@repo/core/registry";
+import type { PluginInstance } from "@repo/core/types";
 import {
   ORGANIZER_GRID_STATE_EVENT,
   ORGANIZER_GRID_UPDATE_EVENT,
@@ -17,9 +29,51 @@ import {
 } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
+import {
+  isSampleWidgetInstance,
+  SampleWidgetGridContent,
+} from "../plugin-center/sampleWidget";
 
 const DRAG_THRESHOLD_PX = 4;
 const NATIVE_MOVE_SYNC_DELAY_MS = 120;
+
+function usePluginInstanceForGrid(
+  gridId: string,
+): PluginInstance | null | undefined {
+  const [instance, setInstance] = useState<PluginInstance | null>();
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      setInstance(null);
+      return;
+    }
+    let cancelled = false;
+    setInstance(undefined);
+    const store = createPluginInstanceStore({
+      adapter: createWebStoragePluginInstanceAdapter(window.localStorage),
+    });
+
+    void store
+      .load()
+      .then(() => {
+        if (!cancelled) {
+          setInstance(store.get(gridId) ?? null);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          console.error("[GridWindow] plugin instance load failed:", error);
+          setInstance(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [gridId]);
+
+  return instance;
+}
 
 /**
  * Native Grid window shell.
@@ -30,6 +84,7 @@ const NATIVE_MOVE_SYNC_DELAY_MS = 120;
 function GridWindowShell({ gridId }: { gridId: string }) {
   const { gridOpacity, gridBlur } = useSettings();
   const { invoke } = useTauriInvoke();
+  const pluginInstance = usePluginInstanceForGrid(gridId);
   const nativeMoveSyncTimerRef = useRef<number | null>(null);
   const lastEmittedRectRef = useRef<NativeWindowRect | null>(null);
   const latestGridRef = useRef<{ isFolded: boolean; rect: NativeWindowRect } | null>(null);
@@ -56,7 +111,7 @@ function GridWindowShell({ gridId }: { gridId: string }) {
     const latestGrid = latestGridRef.current;
     const scaleFactor = monitor?.scaleFactor ?? dpr;
     const screen = window.screen as Screen & { availLeft?: number; availTop?: number };
-    const monitorBounds = monitor
+    const monitorBounds: NativeMonitorBounds = monitor
       ? {
           x: monitor.workArea.position.x / scaleFactor,
           y: monitor.workArea.position.y / scaleFactor,
@@ -210,12 +265,18 @@ function GridWindowShell({ gridId }: { gridId: string }) {
       onMouseDownCapture={handleHeaderDragStart}
       style={{ width: "100%", height: "100%" }}
     >
-      <OrganizerGridContent
-        gridId={gridId}
-        gridOpacity={gridOpacity}
-        gridBlur={gridBlur}
-        finderClient={finderClient}
-      />
+      {pluginInstance === undefined ? (
+        <div style={{ height: "100%", width: "100%" }} />
+      ) : isSampleWidgetInstance(pluginInstance) ? (
+        <SampleWidgetGridContent gridId={gridId} instance={pluginInstance} />
+      ) : (
+        <OrganizerGridContent
+          gridId={gridId}
+          gridOpacity={gridOpacity}
+          gridBlur={gridBlur}
+          finderClient={finderClient}
+        />
+      )}
     </div>
   );
 }

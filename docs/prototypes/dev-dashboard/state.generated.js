@@ -241,19 +241,19 @@ window.XAI_DASHBOARD_STATE = {
       {
         "key": "plugin",
         "title": "桌面插件",
-        "status": "not_deployed",
-        "progress": 18,
+        "status": "common_capabilities_in_progress",
+        "progress": 64,
         "environment": "desktop-plugin-next",
         "last_deployed_at": "",
         "version": "未登记",
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "等待 App 插件平台恢复排期，再登记插件包版本与宿主版本",
+        "next": "Phase 2 common capability code path 已完成；下一步做真实 macOS host smoke，再确认是否解冻具体插件包",
         "issues": [
           {
             "severity": "pending",
-            "text": "插件平台暂停，当前没有独立云端部署目标。"
+            "text": "插件平台不需要独立云端部署目标；具体插件包仍 paused，需 Phase 2 通用能力和 host smoke 后解冻。"
           }
         ]
       },
@@ -287,11 +287,11 @@ window.XAI_DASHBOARD_STATE = {
         "platform": "Admin prototype / future app target",
         "target": "控制面、用量、审计、AI 配置",
         "branch": "codex/admin/<feature>",
-        "next": "启动 admin roadmap 第一切片 xai-admin-dashboard-shell,确认 package/deploy 目标和 RBAC 契约",
+        "next": "确认 admin 线优先级、package/deploy 目标和 RBAC 契约",
         "issues": [
           {
             "severity": "pending",
-            "text": "admin 线已于 2026-06-05 operator 激活为 roadmap-gated;仍仅原型+roadmap manifest,尚未确认生产部署目标。"
+            "text": "admin 线为 PROPOSED，仅原型存在，尚未确认部署目标。"
           }
         ]
       }
@@ -314,7 +314,7 @@ window.XAI_DASHBOARD_STATE = {
   },
   "testing": {
     "summary": {
-      "latest_tested_at": "2026-06-04",
+      "latest_tested_at": "2026-06-06",
       "overall_status": "测试结果登记已建立，真实通过状态由 release-log Verification、报告文件和人工登记共同证明。",
       "source": "manual testing registry + release-log Verification + local report scan",
       "module_count": 6,
@@ -364,7 +364,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Web 版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "最近 Web 增量的 release-log Verification 显示 lint、typecheck、test、build 和 Browser smoke 有通过记录；完整主线 lint 仍可能被既有 warning 阻断时需在记录中标明。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
@@ -407,28 +407,8 @@ window.XAI_DASHBOARD_STATE = {
             "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "web"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test",
-            "e2e",
-            "frontend_page",
-            "build"
-          ],
-          "id": "release-2026-06-02-web-记账模块-cloud-design-正式接入",
-          "source": "release-log",
-          "module": "web",
-          "date": "2026-06-02",
-          "title": "Web 记账模块 Cloud Design 正式接入",
-          "status": "pass",
-          "conclusion": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 2,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter @repo/web check-types",
           "pnpm --filter @repo/web test",
@@ -442,7 +422,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Mac 桌面版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "桌面线已有 Tauri / Rust / supply-chain 测试入口，但 RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
         "failure_count": 0,
         "duration": "",
@@ -473,30 +453,36 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "桌面回归套件待随 G1/RC 建立。"
+          },
+          {
+            "key": "unit",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
           "pnpm --filter desktop build",
@@ -509,7 +495,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "桌面插件",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "插件包普遍有独立 vitest/check-types 约定，但桌面插件宿主暂停，缺少最近宿主集成和 widget smoke。",
         "failure_count": 0,
         "duration": "",
@@ -539,31 +525,37 @@ window.XAI_DASHBOARD_STATE = {
           {
             "key": "self_test",
             "status": "pass",
-            "detail": "Desktop Plugin 产品边界与长期平台路线落地"
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
+          },
+          {
+            "key": "backend",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "pnpm --filter @repo/plugin-* test",
           "pnpm --filter @repo/plugin-* check-types"
@@ -575,7 +567,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "账号云同步",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "同步线有 RLS、nonce、push/pull、rekey 等测试脚本和 D4 gate 要求；sync-v1 暂停，未登记最近端到端双设备 smoke。",
         "failure_count": 0,
         "duration": "",
@@ -601,33 +593,10 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "同步回归矩阵待恢复 sync-v1 后固定。"
-          },
-          {
-            "key": "self_test",
-            "status": "unknown",
-            "detail": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "sync",
-            "project-system"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test"
-          ],
-          "id": "release-2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-          "source": "release-log",
-          "module": "sync",
-          "date": "2026-06-02",
-          "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-          "status": "unknown",
-          "conclusion": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 1,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter release-site test:push",
           "pnpm --filter release-site test:pull",
@@ -720,6 +689,249 @@ window.XAI_DASHBOARD_STATE = {
       {
         "related_modules": [
           "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "self_test",
+          "unit",
+          "backend",
+          "build"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Center Frame Normalization Smoke",
+        "status": "pass",
+        "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend",
+          "build"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-host-sub-bundle-routing",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Host Sub-Bundle Routing",
+        "status": "pass",
+        "conclusion": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend",
+          "build"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-native-host-menu-entry",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Native Host Menu Entry",
+        "status": "pass",
+        "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{\"build\":{\"beforeBuildCommand\":\"\"}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-host-smoke-typecheck-preflight",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+        "status": "pass",
+        "conclusion": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "self_test"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-host-smoke-checklist-refresh",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Host Smoke Checklist Refresh",
+        "status": "pass",
+        "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；stale status / conflict-marker scan passed；`git diff --check` passed。",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-sample-widget-host-flow",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Sample Widget Host Flow",
+        "status": "pass",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. Rust window tests not rerun because this slice changes TS host routing/catalog/docs only.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-native-behavior-application",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Native Behavior Application",
+        "status": "partial",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（12 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-capability-denial-展示",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Capability Denial 展示",
+        "status": "partial",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 51 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-native-fallback-展示",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 Native Fallback 展示",
+        "status": "pass",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 49 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-2-重启恢复通用能力",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 2 重启恢复通用能力",
+        "status": "pass",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 47 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin",
+          "project-system"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "unit",
+          "backend"
+        ],
+        "id": "release-2026-06-06-desktop-plugin-phase-1-系统底座收口",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-06",
+        "title": "Desktop Plugin Phase 1 系统底座收口",
+        "status": "partial",
+        "conclusion": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 46 tests，使用 Codex bundled Node 绕过本机 Rollup optional native code-signature 问题）；`packages/plugin-organizer` `tsc --noEmit` passed；`packages/plugin-organizer` `src/register-plugin.test.ts` passed（1 file / 2 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails on existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
+          "plugin",
+          "project-system"
+        ],
+        "failure_count": 0,
+        "categories": [
+          "build"
+        ],
+        "id": "release-2026-06-04-desktop-plugin-phase-1-系统底座文档包",
+        "source": "release-log",
+        "module": "app",
+        "date": "2026-06-04",
+        "title": "Desktop Plugin Phase 1 系统底座文档包",
+        "status": "pass",
+        "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed；`git diff --check` passed。",
+        "duration": "",
+        "report_path": "docs/workflow/project/release-log.md"
+      },
+      {
+        "related_modules": [
+          "app",
           "plugin",
           "project-system"
         ],
@@ -800,203 +1012,6 @@ window.XAI_DASHBOARD_STATE = {
         ],
         "failure_count": 0,
         "categories": [
-          "build"
-        ],
-        "id": "release-2026-06-03-个人开发看板数据边界修复",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-03",
-        "title": "个人开发看板数据边界修复",
-        "status": "pass",
-        "conclusion": "`node --check` passed for dashboard generator, release-testing helper, static/module verifiers, and changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed dev-dashboard release entries under `project-system`, zero-failure testing record as `pass` with `failure_count=0`, Admin testing `failure_count=0`, `source_completeness` present, and release modules including separate `project-system` card；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-06-03-个人开发看板-skill-agent-知识库",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-03",
-        "title": "个人开发看板 Skill / Agent 知识库",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed；`node --check docs/prototypes/dev-dashboard/js/state.js` passed；`node --check docs/prototypes/dev-dashboard/js/skill-agent.js` passed；`pnpm dashboard` passed and generated `skill_agent_registry` with 58 entries, 33 skills, 25 agents, 13 required fields, category summaries, changed-item detection, and missing-metadata report；`pnpm dashboard:serve` served `http://127.0.0.1:4177`；served `state.generated.js` check passed；Safari visual smoke showed desktop Skill / Agent page with counts, categories, field cards and gap badges；Chrome headless 390px screenshot completed；Chrome CDP 390px metrics passed (`innerWidth=390`, `scrollWidth=390`, 58 entries, 6 count cards, 6 categories, required labels present, `xai-dev-dashboard-sync` entry present, no content overflow).",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "frontend_page",
-          "build",
-          "pre_deploy"
-        ],
-        "id": "release-2026-06-03-个人开发看板测试结果面板",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-03",
-        "title": "个人开发看板测试结果面板",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed；`node --check` passed for changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed 6 testing modules, 17 test records, 3 pipeline rows, 5 report sources, and `product_lines[*].testing` present；`pnpm dashboard:serve` served on `http://127.0.0.1:4178` because 4177 was already occupied by an older local server；Chrome/Playwright smoke passed for `#testing`, `#overview`, product detail, `#deployment`, `#release-log`, and 390px mobile with 6 testing cards, 0 horizontal overflow, 0 HTTP failures, and 0 console errors.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "web"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-06-02-web-记账模块-cloud-design-正式接入",
-        "source": "release-log",
-        "module": "web",
-        "date": "2026-06-02",
-        "title": "Web 记账模块 Cloud Design 正式接入",
-        "status": "pass",
-        "conclusion": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-06-02-个人开发看板开发数据周-月趋势",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-02",
-        "title": "个人开发看板开发数据周/月趋势",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/ops-panels.js` passed; `git diff --check` passed; `pnpm dashboard` passed; `pnpm dashboard:serve` served `http://127.0.0.1:4177/#dev-data`; Browser smoke confirmed desktop tabs + weekly/monthly/7-day/today chart switching and 390px weekly/monthly responsive views with no horizontal overflow.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "web"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test"
-        ],
-        "id": "release-2026-06-02-web-六大功能反向补建-canonical-prd-历史-shipped-补登",
-        "source": "release-log",
-        "module": "web",
-        "date": "2026-06-02",
-        "title": "Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登",
-        "status": "partial",
-        "conclusion": "来源核验（每条需求映射 dev_log SHIPPED block / commit SHA / discovery review，无来源项标 `待确认`）；未跑测试（纯文档变更）；calendar/dashboard/settings 多处 cross-vendor manual smoke 在历史 ship 时即标 DEFERRED（ADR-0008 §S3 24h carve-out），本轮如实保留为未闭合项，未声称已完成。",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "sync",
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test"
-        ],
-        "id": "release-2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-        "source": "release-log",
-        "module": "sync",
-        "date": "2026-06-02",
-        "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-        "status": "unknown",
-        "conclusion": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test"
-        ],
-        "id": "release-2026-06-02-治理基线对齐-adr-0013-接受-adr-0014-同步编排-adr-0008-csp-记账",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-02",
-        "title": "治理基线对齐：ADR-0013 接受 + ADR-0014 同步编排 + ADR-0008 CSP 记账",
-        "status": "unknown",
-        "conclusion": "`branch-policy.json` 校验为合法 JSON;ADR-0013 自身状态无残留 Proposed;ADR-0008 三个新 host 命中 + 通配声明已校正。",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "e2e",
-          "backend",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-06-02-文档库必读入口和绝对路径复制",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-02",
-        "title": "文档库必读入口和绝对路径复制",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/docs-library.js` passed; `git diff --check` passed; `pnpm dashboard` passed; dashboard API returned both target docs; Chrome headless DOM dump confirmed must-read entries, copy buttons, and absolute path rendering.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "build"
-        ],
-        "id": "release-2026-06-01-看板同步-skill-三层对齐",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-06-01",
-        "title": "看板同步 Skill 三层对齐",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed; `git diff --check` passed; Claude/Codex symlink discovery check passed; `pnpm dashboard` passed.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
           "self_test",
           "frontend_page",
           "build"
@@ -1008,49 +1023,6 @@ window.XAI_DASHBOARD_STATE = {
         "title": "个人开发看板 v0.5 本地验证",
         "status": "pass",
         "conclusion": "pnpm dashboard、dashboard:serve、headless Chrome DOM/screenshot smoke 通过，Overview 渲染 dashboard sync 状态和 release-log entry。",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-05-31-个人开发看板同步契约",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-05-31",
-        "title": "个人开发看板同步契约",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check` passed for updated dashboard JS files; `pnpm dashboard` passed; `pnpm dashboard:serve` served the dashboard locally; headless Chrome DOM/screenshot smoke at 1440px and 390px confirmed Overview renders Dashboard sync, last update time, dirty count, `xai-dev-dashboard-sync`, and latest release-log entry; staged refresh shows sync skill status as tracked.",
-        "duration": "",
-        "report_path": "docs/workflow/project/release-log.md"
-      },
-      {
-        "related_modules": [
-          "project-system"
-        ],
-        "failure_count": 0,
-        "categories": [
-          "self_test",
-          "e2e",
-          "backend",
-          "frontend_page",
-          "build"
-        ],
-        "id": "release-2026-05-31-发布记录看板升级",
-        "source": "release-log",
-        "module": "project-system",
-        "date": "2026-05-31",
-        "title": "发布记录看板升级",
-        "status": "pass",
-        "conclusion": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check scripts/dashboard/serve.mjs` passed; `node scripts/dashboard/generate-state.mjs` passed; local server `GET /api/raw?path=docs/workflow/project/release-log.md` returned 200 `text/markdown`; Playwright screenshot smoke rendered overall release cards, module cards, and detailed release rows at `#release-log`; follow-up screenshots confirmed the release page no longer stretches horizontally and the product-flow right detail panel is compact.",
         "duration": "",
         "report_path": "docs/workflow/project/release-log.md"
       }
@@ -1426,7 +1398,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "app",
           "trigger": "Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3",
-          "branch": "desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认)",
+          "branch": "desktop-next（defined-not-yet-created）/ desktop-plugin-next（已创建）",
           "skill": "xai-feature-full-loop",
           "note": "W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。"
         },
@@ -1440,9 +1412,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
-          "skill": "xai-feature-brief 或 xai-roadmap-loop",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
+          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
+          "skill": "xai-feature-brief",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
         }
       ],
       "impacts": [
@@ -1464,7 +1436,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
         }
       ],
       "region": "主产品链",
@@ -1529,7 +1501,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Web 版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "最近 Web 增量的 release-log Verification 显示 lint、typecheck、test、build 和 Browser smoke 有通过记录；完整主线 lint 仍可能被既有 warning 阻断时需在记录中标明。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
@@ -1572,28 +1544,8 @@ window.XAI_DASHBOARD_STATE = {
             "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "web"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test",
-            "e2e",
-            "frontend_page",
-            "build"
-          ],
-          "id": "release-2026-06-02-web-记账模块-cloud-design-正式接入",
-          "source": "release-log",
-          "module": "web",
-          "date": "2026-06-02",
-          "title": "Web 记账模块 Cloud Design 正式接入",
-          "status": "pass",
-          "conclusion": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 2,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter @repo/web check-types",
           "pnpm --filter @repo/web test",
@@ -1763,9 +1715,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "plugin",
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
-          "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
+          "branch": "desktop-plugin-next / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座与 Phase 2 common capability code path 已完成；clipboard/widgets/pet/meditation 等具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         },
         {
           "to": "sync",
@@ -1801,7 +1753,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "plugin",
           "when": "App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层",
-          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(注意 P2 插件线 G1 SHIPPED 前 paused,需操作者解冻)"
+          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(平台运行时 / Phase 1 底座可作为 active gate；具体插件包等底座闭环后再解冻)"
         }
       ],
       "region": "主产品链",
@@ -1846,7 +1798,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Mac 桌面版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "桌面线已有 Tauri / Rust / supply-chain 测试入口，但 RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
         "failure_count": 0,
         "duration": "",
@@ -1877,30 +1829,36 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "桌面回归套件待随 G1/RC 建立。"
+          },
+          {
+            "key": "unit",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
           "pnpm --filter desktop build",
@@ -1914,12 +1872,12 @@ window.XAI_DASHBOARD_STATE = {
       "order": 3,
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
-      "badge": "G1 runtime active · packages paused",
-      "status": "Platform runtime active gate · plugin packages paused until G1",
+      "badge": "Phase 2 common capabilities",
+      "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "G1 平台运行时可推进；插件包继续 PRD / SDK / 看板对齐，等 G1 后做 Widget Host MVP。",
-      "tracker": "入口设计已决；G1 平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待解冻。",
+      "next": "继续 Phase 2：真实 macOS host smoke，然后确认是否解冻具体插件包。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -1930,15 +1888,15 @@ window.XAI_DASHBOARD_STATE = {
         "icon": "P"
       },
       "overview": {
-        "phase": "Runtime active · packages paused",
-        "running": "G1 平台运行时可推进 · 插件包未开工",
-        "progress_fallback": 24,
-        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-        "todo_fallback": "G1 运行时走 active gate；插件包仅维护 brief / docs",
+        "phase": "Phase 2 common capabilities",
+        "running": "Phase 2 common capability code path complete · 插件包未开工",
+        "progress_fallback": 64,
+        "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+        "todo_fallback": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
         "target": {
           "type": "doc",
-          "path": "docs/planning/sub-prds/plugin/PRD.md",
-          "label": "打开 Plugin PRD"
+          "path": "docs/planning/execution/desktop-plugin-platform-phase1.md",
+          "label": "打开 Phase 1 执行路线"
         }
       },
       "tracking": {
@@ -1948,6 +1906,10 @@ window.XAI_DASHBOARD_STATE = {
           [
             "Plugin PRD",
             "docs/planning/sub-prds/plugin/PRD.md"
+          ],
+          [
+            "Phase 1 execution",
+            "docs/planning/execution/desktop-plugin-platform-phase1.md"
           ],
           [
             "PLUGIN_SDK",
@@ -1973,13 +1935,38 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)",
-          "status": "active-gate",
-          "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host"
+          "status": "phase-1-complete",
+          "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行"
         },
         {
-          "name": "Plugin Center / Entry Model(设计已决,未实现)",
-          "status": "planned",
-          "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only"
+          "name": "Plugin Center / Entry Model",
+          "status": "phase-1-complete",
+          "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3"
+        },
+        {
+          "name": "重启恢复 / enabled instance restore",
+          "status": "phase-2-complete",
+          "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗"
+        },
+        {
+          "name": "Native fallback 展示",
+          "status": "phase-2-complete",
+          "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态"
+        },
+        {
+          "name": "Capability denial 展示",
+          "status": "phase-2-complete",
+          "note": "Plugin Center 展示 denied/native window errors 的 code、severity、recoverable 与 capability scope"
+        },
+        {
+          "name": "Native behavior application",
+          "status": "phase-2-complete",
+          "note": "grid window commands 接收 native options，并应用 opacity、click-through、pinned、all-spaces 后回传 nativeApplied"
+        },
+        {
+          "name": "Sample widget host flow",
+          "status": "phase-2-complete",
+          "note": "host-local sample-widget 可从 Plugin Center 添加，持久化为 device-local PluginInstance，并由 GridWindow 按 instance routing 渲染"
         },
         {
           "name": "Smart Container 整理(organizer)",
@@ -1994,7 +1981,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "name": "Widget Host MVP(clock/time progress/countdown)",
           "status": "planned",
-          "note": "G1 后第一批低原生依赖插件"
+          "note": "sample-widget 仅证明 host flow；package-level Widget Host MVP 仍需 operator 确认后单独开工"
         },
         {
           "name": "剪贴板 clipboard MVP(历史/OCR)",
@@ -2023,7 +2010,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "独立跟踪",
-          "入口 App delta、G1 平台运行时 delta、具体插件包 delta 要拆开记录；G1 运行时可走 active gate，插件包 G1 前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座与 Phase 2 common capability code path 已完成，具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         ],
         [
           "风险",
@@ -2035,7 +2022,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "边界与文档",
-          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
+          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;Phase 1 执行路线见 docs/planning/execution/desktop-plugin-platform-phase1.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
       "goal": "为 macOS App 提供桌面原生超能力层：插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）+ 具体桌面整理插件 / Widget（Smart Container Grid、剪贴板、便签、宠物、冥想、快速入口/快速操作小窗等）。运行时代码物理可落在 apps/desktop host，但产品归属是 plugin；Mac 壳只负责 Web 容器 + native chrome。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
@@ -2045,8 +2032,8 @@ window.XAI_DASHBOARD_STATE = {
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
-        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
-        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
+        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；进入 desktop-next 需 operator 确认）",
+        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等真实 host smoke 和 operator 解冻确认后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
       "skills": [
@@ -2082,7 +2069,7 @@ window.XAI_DASHBOARD_STATE = {
         },
         {
           "label": "插件平台/SDK 一条龙",
-          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next <-> desktop-next，均已定义但尚未创建），不改 web 产品线 UI。\n约束：若是 G1 平台运行时/SDK 锚点，可作为 active gate 推进；若是第三方或具体插件包 SDK 能力，则随插件包冻结等 G1 SHIPPED 后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
+          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next；如需进入 desktop-next 需 operator 确认），不改 web 产品线 UI。\n约束：Phase 1 系统底座已完成；Phase 2 先做通用插件能力和 sample widget，第三方或具体插件包 SDK 能力仍等解冻后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
         },
         {
           "label": "插件平台运行时（多窗口 / grid / window-command）",
@@ -2090,10 +2077,10 @@ window.XAI_DASHBOARD_STATE = {
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
-        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 与 Phase 2 common capability code path 已完成，后续先做真实 host smoke；若是具体插件包（clipboard/widgets/pet/meditation），operator 确认解冻前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；进入 desktop-next / dev 需 operator 确认），按对应管线推进：Phase 2 通用插件能力走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -2118,7 +2105,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "某 Web 改动经 D3 判定为 W3 native-bridge-needed，需要新增 Tauri/Rust 命令或原生能力来支撑插件平台",
           "branch": "desktop-plugin-next",
           "skill": "xai-feature-full-loop",
-          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-next/desktop-plugin-next 上做原生 delta，并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已在 D2 定义但尚未创建。"
+          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-plugin-next 上做插件平台原生 delta；若需进入 desktop-next，则另经 operator 确认并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已创建。"
         }
       ],
       "impacts": [
@@ -2149,29 +2136,33 @@ window.XAI_DASHBOARD_STATE = {
       "overview_title": "桌面整理插件 / Widget",
       "deployment_title": "桌面插件",
       "release_title": "桌面插件",
-      "phase": "Runtime active · packages paused",
+      "phase": "Phase 2 common capabilities",
       "progress": 5,
-      "running": "G1 平台运行时可推进 · 插件包未开工",
-      "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-      "todo": "G1 运行时走 active gate；插件包仅维护 brief / docs",
+      "running": "Phase 2 common capability code path complete · 插件包未开工",
+      "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+      "todo": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
       "target": {
         "type": "doc",
-        "path": "docs/planning/sub-prds/plugin/PRD.md",
-        "label": "打开 Plugin PRD"
+        "path": "docs/planning/execution/desktop-plugin-platform-phase1.md",
+        "label": "打开 Phase 1 执行路线"
       },
       "tracking_badge": "tracked",
       "status_counts": {
         "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
-        "PAUSED_UNTIL_P1_BETA": 1,
+        "PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED": 1,
         "STABLE": 1,
         "IN-DEV": 7,
         "PLANNED": 4
       },
-      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PAUSED_UNTIL_P1_BETA:1 · PLANNED:4 · STABLE:1",
+      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED:1 · PLANNED:4 · STABLE:1",
       "related_docs": [
         {
           "label": "Plugin PRD",
           "path": "docs/planning/sub-prds/plugin/PRD.md"
+        },
+        {
+          "label": "Phase 1 execution",
+          "path": "docs/planning/execution/desktop-plugin-platform-phase1.md"
         },
         {
           "label": "PLUGIN_SDK",
@@ -2191,7 +2182,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "桌面插件",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "插件包普遍有独立 vitest/check-types 约定，但桌面插件宿主暂停，缺少最近宿主集成和 widget smoke。",
         "failure_count": 0,
         "duration": "",
@@ -2221,31 +2212,37 @@ window.XAI_DASHBOARD_STATE = {
           {
             "key": "self_test",
             "status": "pass",
-            "detail": "Desktop Plugin 产品边界与长期平台路线落地"
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
+          },
+          {
+            "key": "backend",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "pnpm --filter @repo/plugin-* test",
           "pnpm --filter @repo/plugin-* check-types"
@@ -2409,14 +2406,14 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "同步层需要新的 Tauri/Rust 原生增量(crypto_* IPC、SQLCipher 打开路径、Keychain ACL)或 App SQLite 侧落地",
           "branch": "codex/desktop/<feature>",
           "skill": "xai-web-to-desktop-sync",
-          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next/desktop-plugin-next 承接,二者均为 defined, not yet created(创建需操作者确认,触及 dev 需显式确认)。"
+          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接；触及 dev 需显式确认。"
         },
         {
           "to": "admin",
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
+          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
         }
       ],
       "impacts": [
@@ -2433,7 +2430,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
         }
       ],
       "region": "主产品链",
@@ -2475,7 +2472,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "账号云同步",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "同步线有 RLS、nonce、push/pull、rekey 等测试脚本和 D4 gate 要求；sync-v1 暂停，未登记最近端到端双设备 smoke。",
         "failure_count": 0,
         "duration": "",
@@ -2501,33 +2498,10 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "同步回归矩阵待恢复 sync-v1 后固定。"
-          },
-          {
-            "key": "self_test",
-            "status": "unknown",
-            "detail": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "sync",
-            "project-system"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test"
-          ],
-          "id": "release-2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-          "source": "release-log",
-          "module": "sync",
-          "date": "2026-06-02",
-          "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-          "status": "unknown",
-          "conclusion": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 1,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter release-site test:push",
           "pnpm --filter release-site test:pull",
@@ -2767,11 +2741,11 @@ window.XAI_DASHBOARD_STATE = {
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "roadmap-gated",
-      "status": "已激活 · roadmap gated",
+      "badge": "proposed",
+      "status": "控制面候选",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
+      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -2831,23 +2805,23 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "AI 配置",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "权限 / RBAC",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "用量统计",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "审计日志",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "运营入口",
-          "status": "roadmap-gated"
+          "status": "proposed"
         }
       ],
       "points": [
@@ -2861,10 +2835,10 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
+          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -2876,11 +2850,11 @@ window.XAI_DASHBOARD_STATE = {
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -2898,24 +2872,24 @@ window.XAI_DASHBOARD_STATE = {
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
-        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
+        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {
@@ -2937,7 +2911,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "operator 明确要求把 admin 控制面以原生壳/桌面运行时承载(几乎不会发生,admin 默认是浏览器端隔离 surface);若真需 Tauri/Rust 原生桥接才触发",
           "branch": "codex/desktop/<feature>(经 desktop-next,defined, not yet created)",
           "skill": "xai-web-to-desktop-sync(D3 W0–W4 分类)然后 /xai-feature-full-loop",
-          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next / desktop-plugin-next(均 defined, not yet created)走 App 线。"
+          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接。"
         }
       ],
       "impacts": [
@@ -3156,46 +3130,35 @@ window.XAI_DASHBOARD_STATE = {
     "note": "Per-module dev-navigation. Mirror of PRODUCT_MODULE_MAP.md; rendered by dev-dashboard 产品结构图 detail panel."
   },
   "repo_root": "/Users/jinlong/Desktop/jinlong_project/XAI_Desktop",
-  "generated_at": "2026-06-06T11:18:06.150Z",
+  "generated_at": "2026-06-06T23:28:30.109Z",
   "git": {
     "branch": "dev",
-    "latest_commit": "f2bbf1a0 merge: web desktop D3 parity into dev",
+    "latest_commit": "47d8f4e5 Merge branch 'web' into dev",
     "divergence": {
-      "web_only": 443,
-      "dev_only": 190
+      "web_only": 444,
+      "dev_only": 214
     }
   },
   "sync_status": {
     "status": "working-tree-dirty",
     "status_label": "有未提交变更",
-    "generated_at": "2026-06-06T11:18:06.150Z",
+    "generated_at": "2026-06-06T23:28:30.109Z",
     "refresh_command": "pnpm dashboard",
     "serve_command": "pnpm dashboard:serve",
     "branch": "dev",
-    "latest_commit": "f2bbf1a0 merge: web desktop D3 parity into dev",
+    "latest_commit": "47d8f4e5 Merge branch 'web' into dev",
     "dirty": {
-      "total": 504,
+      "total": 56,
       "buckets": {
-        "other": 31,
-        "skills-agents": 27,
-        "product-code": 258,
-        "docs": 186,
+        "other": 2,
+        "product-code": 41,
+        "docs": 11,
         "dashboard-state": 1,
-        "dashboard-generator": 1
+        "release-log": 1
       },
       "notable": [
-        ".claude/skills/skill-workflow-router/SKILL.md",
-        ".claude/skills/xai-admin-control-plane-sync/SKILL.md",
-        ".claude/skills/xai-consistency-audit/SKILL.md",
-        ".claude/skills/xai-module-classify/SKILL.md",
-        ".codex/agents/bugfix-full-loop.toml",
-        ".codex/agents/feature-auto-build.toml",
-        ".codex/agents/feature-full-loop.toml",
-        ".codex/agents/skill-workflow-router.toml",
-        ".codex/skills/workflow-router/SKILL.md",
-        ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
-        ".codex/skills/xai-consistency-audit/SKILL.md",
-        ".codex/skills/xai-module-classify/SKILL.md"
+        "docs/workflow/project/dashboard-state.json",
+        "docs/workflow/project/release-log.md"
       ]
     },
     "sync_skill": {
@@ -3205,13 +3168,13 @@ window.XAI_DASHBOARD_STATE = {
       "tracked": true,
       "status": "tracked"
     },
-    "release_log_latest": "Desktop Plugin 产品边界与长期平台路线落地",
+    "release_log_latest": "Desktop Plugin Center Frame Normalization Smoke",
     "sources": [
       {
         "label": "manual state",
         "path": "docs/workflow/project/dashboard-state.json",
         "exists": true,
-        "updated_at": "2026-06-06T11:12:44.698Z",
+        "updated_at": "2026-06-06T23:26:21.660Z",
         "tracked": true
       },
       {
@@ -3246,7 +3209,7 @@ window.XAI_DASHBOARD_STATE = {
         "label": "release log",
         "path": "docs/workflow/project/release-log.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.670Z",
+        "updated_at": "2026-06-06T23:26:21.660Z",
         "tracked": true
       },
       {
@@ -3297,9 +3260,9 @@ window.XAI_DASHBOARD_STATE = {
       "generated_note": 65,
       "generated_input": 48,
       "generated_output": 46,
-      "changed": 14,
+      "changed": 0,
       "new_items": 0,
-      "modified_items": 14
+      "modified_items": 0
     }
   },
   "skills_found": [
@@ -4932,9 +4895,9 @@ window.XAI_DASHBOARD_STATE = {
       "generated_note": 65,
       "generated_input": 48,
       "generated_output": 46,
-      "changed": 14,
+      "changed": 0,
       "new_items": 0,
-      "modified_items": 14
+      "modified_items": 0
     },
     "gap_labels": {
       "missing_intro": "缺少明确介绍",
@@ -6082,9 +6045,9 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-21T00:11:05-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "该 Agent 是 roadmap-loop 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
         "path": ".codex/agents/skill-workflow-router.toml",
@@ -6099,8 +6062,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -6444,15 +6407,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-21T00:11:05-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/workflow-router/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -6537,15 +6500,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-20T23:35:15-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "Roadmap / Automation 分类下的辅助能力；必要时补充显式注释。",
         "note_source": "generated",
         "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -6630,15 +6593,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-06T11:10:50.821Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -6718,15 +6681,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-06T11:10:50.816Z",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -6806,15 +6769,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-module-classify/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -6899,15 +6862,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/xai-module-classify/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -7501,9 +7464,9 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-24T01:24:41-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
         "path": ".agents/templates/bugfix-full-loop.md",
@@ -7542,8 +7505,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -7739,9 +7702,9 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-23T00:09:34-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
         "path": ".agents/templates/feature-auto-build.md",
@@ -7780,8 +7743,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -8099,9 +8062,9 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-05-24T01:24:41-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-05-31T04:18:34-07:00",
         "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
         "note_source": "generated",
         "path": ".agents/templates/feature-full-loop.md",
@@ -8140,8 +8103,8 @@ window.XAI_DASHBOARD_STATE = {
           }
         ],
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "platform-variants",
           "missing": []
@@ -8525,15 +8488,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -9119,15 +9082,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -10344,15 +10307,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
         "note_source": "generated",
         "path": ".teams/skills/xai-consistency-audit/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "aligned",
           "missing": []
@@ -10436,15 +10399,15 @@ window.XAI_DASHBOARD_STATE = {
             "role": "related"
           }
         ],
-        "maintenance_status": "已修改未提交",
-        "maintenance_code": "modified",
-        "last_updated": "2026-06-04T03:23:18-07:00",
+        "maintenance_status": "tracked",
+        "maintenance_code": "tracked",
+        "last_updated": "2026-06-05T21:44:55-07:00",
         "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
         "note_source": "generated",
         "path": ".codex/skills/xai-consistency-audit/SKILL.md",
         "tracked": true,
-        "changed": true,
-        "change_status": "modified",
+        "changed": false,
+        "change_status": "tracked",
         "mirror_status": {
           "status": "not-required",
           "missing": []
@@ -11179,92 +11142,7 @@ window.XAI_DASHBOARD_STATE = {
           "suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。"
         }
       ],
-      "changed_items": [
-        {
-          "name": "workflow-router",
-          "type": "Agent",
-          "path": ".codex/agents/skill-workflow-router.toml",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "workflow-router",
-          "type": "Skill",
-          "path": ".codex/skills/workflow-router/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "workflow-router",
-          "type": "Skill",
-          "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-admin-control-plane-sync",
-          "type": "Skill",
-          "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-admin-control-plane-sync",
-          "type": "Skill",
-          "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-module-classify",
-          "type": "Skill",
-          "path": ".teams/skills/xai-module-classify/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-module-classify",
-          "type": "Skill",
-          "path": ".codex/skills/xai-module-classify/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "bugfix-full-loop",
-          "type": "Agent",
-          "path": ".agents/templates/bugfix-full-loop.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "feature-auto-build",
-          "type": "Agent",
-          "path": ".agents/templates/feature-auto-build.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "feature-full-loop",
-          "type": "Agent",
-          "path": ".agents/templates/feature-full-loop.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-feature-dossier-sync",
-          "type": "Skill",
-          "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-sync-fanout-dispatch",
-          "type": "Skill",
-          "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-consistency-audit",
-          "type": "Skill",
-          "path": ".teams/skills/xai-consistency-audit/SKILL.md",
-          "status": "已修改未提交"
-        },
-        {
-          "name": "xai-consistency-audit",
-          "type": "Skill",
-          "path": ".codex/skills/xai-consistency-audit/SKILL.md",
-          "status": "已修改未提交"
-        }
-      ]
+      "changed_items": []
     }
   },
   "doc_collections": [
@@ -11460,8 +11338,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:12:44.694Z",
-          "size_bytes": 55761,
+          "updated_at": "2026-06-06T23:26:21.658Z",
+          "size_bytes": 56876,
           "tracked": true
         },
         {
@@ -11629,8 +11507,8 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.670Z",
-          "size_bytes": 35230,
+          "updated_at": "2026-06-06T23:26:21.660Z",
+          "size_bytes": 54613,
           "tracked": true
         },
         {
@@ -11999,7 +11877,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:12:44.694Z",
+        "updated_at": "2026-06-06T23:26:21.659Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12316,8 +12194,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:12:44.694Z",
-            "size_bytes": 55761,
+            "updated_at": "2026-06-06T23:26:21.658Z",
+            "size_bytes": 56876,
             "tracked": true
           }
         ],
@@ -12382,8 +12260,8 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.670Z",
-            "size_bytes": 35230,
+            "updated_at": "2026-06-06T23:26:21.660Z",
+            "size_bytes": 54613,
             "tracked": true
           },
           {
@@ -12942,7 +12820,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:12:44.694Z",
+        "updated_at": "2026-06-06T23:26:21.659Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -13251,8 +13129,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:12:44.694Z",
-        "size_bytes": 55761,
+        "updated_at": "2026-06-06T23:26:21.658Z",
+        "size_bytes": 56876,
         "tracked": true
       },
       "docs/workflow/SUBAGENT_WORKFLOW_V2.md": {
@@ -13308,8 +13186,8 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.670Z",
-        "size_bytes": 35230,
+        "updated_at": "2026-06-06T23:26:21.660Z",
+        "size_bytes": 54613,
         "tracked": true
       },
       ".teams/skills/xai-release-log/SKILL.md": {
@@ -14146,9 +14024,9 @@ window.XAI_DASHBOARD_STATE = {
         "generated_note": 65,
         "generated_input": 48,
         "generated_output": 46,
-        "changed": 14,
+        "changed": 0,
         "new_items": 0,
-        "modified_items": 14
+        "modified_items": 0
       },
       "gap_labels": {
         "missing_intro": "缺少明确介绍",
@@ -15296,9 +15174,9 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-21T00:11:05-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "该 Agent 是 roadmap-loop 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
           "path": ".codex/agents/skill-workflow-router.toml",
@@ -15313,8 +15191,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -15658,15 +15536,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-21T00:11:05-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/workflow-router/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -15751,15 +15629,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-20T23:35:15-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "Roadmap / Automation 分类下的辅助能力；必要时补充显式注释。",
           "note_source": "generated",
           "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -15844,15 +15722,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-06T11:10:50.821Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -15932,15 +15810,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-06T11:10:50.816Z",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -16020,15 +15898,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-module-classify/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -16113,15 +15991,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/xai-module-classify/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -16715,9 +16593,9 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-24T01:24:41-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
           "path": ".agents/templates/bugfix-full-loop.md",
@@ -16756,8 +16634,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -16953,9 +16831,9 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-23T00:09:34-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
           "path": ".agents/templates/feature-auto-build.md",
@@ -16994,8 +16872,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -17313,9 +17191,9 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-05-24T01:24:41-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-05-31T04:18:34-07:00",
           "note": "该 Agent 是 Feature Workflow V2 的执行单元，维护时需同步各平台定义。",
           "note_source": "generated",
           "path": ".agents/templates/feature-full-loop.md",
@@ -17354,8 +17232,8 @@ window.XAI_DASHBOARD_STATE = {
             }
           ],
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "platform-variants",
             "missing": []
@@ -17739,15 +17617,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -18333,15 +18211,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -19558,15 +19436,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "项目级 skill；维护时需同步 `.teams/skills` 源和 Claude/Codex/Cursor 镜像。",
           "note_source": "generated",
           "path": ".teams/skills/xai-consistency-audit/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "aligned",
             "missing": []
@@ -19650,15 +19528,15 @@ window.XAI_DASHBOARD_STATE = {
               "role": "related"
             }
           ],
-          "maintenance_status": "已修改未提交",
-          "maintenance_code": "modified",
-          "last_updated": "2026-06-04T03:23:18-07:00",
+          "maintenance_status": "tracked",
+          "maintenance_code": "tracked",
+          "last_updated": "2026-06-05T21:44:55-07:00",
           "note": "Codex 本地 skill；用于当前开发环境的可复用能力。",
           "note_source": "generated",
           "path": ".codex/skills/xai-consistency-audit/SKILL.md",
           "tracked": true,
-          "changed": true,
-          "change_status": "modified",
+          "changed": false,
+          "change_status": "tracked",
           "mirror_status": {
             "status": "not-required",
             "missing": []
@@ -20393,92 +20271,7 @@ window.XAI_DASHBOARD_STATE = {
             "suggestion": "建议确认是否应归入 Reference / Support 或更具体 workflow 分类。"
           }
         ],
-        "changed_items": [
-          {
-            "name": "workflow-router",
-            "type": "Agent",
-            "path": ".codex/agents/skill-workflow-router.toml",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "workflow-router",
-            "type": "Skill",
-            "path": ".codex/skills/workflow-router/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "workflow-router",
-            "type": "Skill",
-            "path": "docs/workflow/_portable/skills/workflow-router/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-admin-control-plane-sync",
-            "type": "Skill",
-            "path": ".teams/skills/xai-admin-control-plane-sync/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-admin-control-plane-sync",
-            "type": "Skill",
-            "path": ".codex/skills/xai-admin-control-plane-sync/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-module-classify",
-            "type": "Skill",
-            "path": ".teams/skills/xai-module-classify/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-module-classify",
-            "type": "Skill",
-            "path": ".codex/skills/xai-module-classify/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "bugfix-full-loop",
-            "type": "Agent",
-            "path": ".agents/templates/bugfix-full-loop.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "feature-auto-build",
-            "type": "Agent",
-            "path": ".agents/templates/feature-auto-build.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "feature-full-loop",
-            "type": "Agent",
-            "path": ".agents/templates/feature-full-loop.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-feature-dossier-sync",
-            "type": "Skill",
-            "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-sync-fanout-dispatch",
-            "type": "Skill",
-            "path": ".teams/skills/xai-sync-fanout-dispatch/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-consistency-audit",
-            "type": "Skill",
-            "path": ".teams/skills/xai-consistency-audit/SKILL.md",
-            "status": "已修改未提交"
-          },
-          {
-            "name": "xai-consistency-audit",
-            "type": "Skill",
-            "path": ".codex/skills/xai-consistency-audit/SKILL.md",
-            "status": "已修改未提交"
-          }
-        ]
+        "changed_items": []
       }
     }
   },
@@ -20499,9 +20292,9 @@ window.XAI_DASHBOARD_STATE = {
       },
       {
         "name": "**P2**",
-        "path": "`plugin-organizer`, `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet`, plus sync-v1 crypto stack (W0/W1/W2/W3) and G2 data-security foundation (stay paused till G1 SHIPPED per ADR-0010 §D2)",
-        "status": "PAUSED_UNTIL_P1_BETA",
-        "raw_status": "Paused until P1 beta"
+        "path": "Plugin platform runtime / G1 anchors (multi-window, window-command, grid persistence, Widget Host / SDK, Plugin Center contract) completed Phase 1 on `codex/plugin/platform-runtime-phase1`; Phase 2 common capabilities are code-path complete on `codex/plugin/common-capabilities-phase2` through restore, native fallback/denial/application and host-local sample-widget flow. Concrete packages `plugin-clipboard`, `plugin-widgets`, `plugin-meditation`, `plugin-pet` remain paused until real macOS host smoke and operator confirmation. `plugin-organizer` is the shipped reference plugin.",
+        "status": "PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED",
+        "raw_status": "**Phase 2 common capability code path complete; concrete plugin packages paused**"
       },
       {
         "name": "window-ground-truth",
@@ -20993,7 +20786,7 @@ window.XAI_DASHBOARD_STATE = {
     "status_counts": {
       "ACTIVE_WEB_MAINLINE": 1,
       "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
-      "PAUSED_UNTIL_P1_BETA": 1,
+      "PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED": 1,
       "SHIPPED": 40,
       "BLOCKED": 2,
       "STABLE": 25,
@@ -22315,55 +22108,346 @@ window.XAI_DASHBOARD_STATE = {
   },
   "release_rows": [
     [
-      "2026-06-04",
-      "Desktop Plugin 产品边界与长期平台路线落地",
-      "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…",
+      "2026-06-06",
+      "Desktop Plugin Center Frame Normalization Smoke",
+      "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
       "docs"
     ],
     [
-      "2026-06-04",
-      "Desktop Plugin 入口模型与看板状态对齐",
-      "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工…",
+      "2026-06-06",
+      "Desktop Plugin Host Sub-Bundle Routing",
+      "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
       "docs"
     ],
     [
-      "2026-06-04",
-      "项目 Skill 体系补齐：部署 / 桌面发布 gate + Cursor 镜像",
-      "个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI …",
-      "skill"
-    ],
-    [
-      "2026-06-03",
-      "个人开发看板边界规范闭环",
-      "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。",
+      "2026-06-06",
+      "Desktop Plugin Native Host Menu Entry",
+      "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。",
       "docs"
     ],
     [
-      "2026-06-03",
-      "个人开发看板数据边界修复",
-      "个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。",
+      "2026-06-06",
+      "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+      "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。",
       "docs"
     ],
     [
-      "2026-06-03",
-      "个人开发看板 Skill / Agent 知识库",
-      "个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-ac…",
-      "skill"
-    ],
-    [
-      "2026-06-03",
-      "个人开发看板测试结果面板",
-      "个人开发看板新增「测试结果」Tab，按 Web、Mac 桌面版本、桌面插件、账号云同步、官网、管理者 Dashboard 展示最近测试时间、结论、通过状态、失败项、分类测试结果、pipeline 状态、耗时和报告入口；总览模块卡片、产品结构详情、部署记录和发布记录也同步显示测试状态。",
+      "2026-06-06",
+      "Desktop Plugin Phase 2 Host Smoke Checklist Refresh",
+      "无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capabi…",
       "docs"
     ],
     [
-      "2026-06-02",
-      "Web 记账模块 Cloud Design 正式接入",
-      "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。",
+      "2026-06-06",
+      "Desktop Plugin Phase 2 Sample Widget Host Flow",
+      "Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipbo…",
+      "docs"
+    ],
+    [
+      "2026-06-06",
+      "Desktop Plugin Phase 2 Native Behavior Application",
+      "Plugin Center 的桌面插件实例设置现在可以通过 grid window command contract 真实传递 opacity、click-through、pinned 和 all-spaces 行为；最后窗口状态会根据 Rust 回传的 `nativeApplied` 区分已应…",
+      "docs"
+    ],
+    [
+      "2026-06-06",
+      "Desktop Plugin Phase 2 Capability Denial 展示",
+      "Plugin Center 现在用结构化提示展示插件窗口生命周期错误，区分 capability denied、overlay runtime disabled、native window error 等状态，并显示 code、severity、recoverable 和 capability …",
       "docs"
     ]
   ],
   "release_entries": [
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Center Frame Normalization Smoke",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / this commit",
+      "user_visible": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
+      "developer_delta": "Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。",
+      "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
+      "risk_followup": "当前显示面被 macOS lock/screen-saver 遮挡，无法视觉确认 Plugin Center 内容；smoke verdict remains `PARTIAL`, not `PASS`. Sample widget add-to-desktop、restart restore、native behavior matrix仍未完成。",
+      "id": "2026-06-06-desktop-plugin-center-frame-normalization-smoke",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "self_test",
+        "unit",
+        "backend",
+        "build"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Host Sub-Bundle Routing",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
+      "developer_delta": "保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。",
+      "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.",
+      "risk_followup": "仍需前台 `.app` 手动 smoke 证明菜单点击后实际渲染 Plugin Center，且重启恢复、native behavior、sample widget 添加仍未形成完整 host smoke PASS。`desktop-host` 是 Tauri build 注入到 local `apps/web/dist` 的桌面专用子 bundle；Web 发布前必须重新跑 Web build，让 Vite 清空 dist 并重新执行 browser-safety。",
+      "id": "2026-06-06-desktop-plugin-host-sub-bundle-routing",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit",
+        "backend",
+        "build"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Native Host Menu Entry",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。",
+      "developer_delta": "将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。",
+      "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{\"build\":{\"beforeBuildCommand\":\"\"}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.",
+      "risk_followup": "这只解决真实 App smoke 的原生入口，不等于完成 manual smoke；仍需在前台 `.app` 中验证菜单点击、重启后的 host mode 生效，以及 Plugin Center 内容是否由正确 frontend bundle 提供。",
+      "id": "2026-06-06-desktop-plugin-native-host-menu-entry",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit",
+        "backend",
+        "build"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。",
+      "developer_delta": "`apps/desktop` manifest 补声明已在 `src/main.tsx` 注册的 `@repo/plugin-labels` / `@repo/plugin-productivity` workspace dependencies，并同步 `pnpm-lock.yaml`；清理 `packages/core-data/src/indexeddb-sync-blob.ts` 中阻断 desktop typecheck 的未使用导入、变量和 stale helper；更新 Phase 2 host smoke checklist 与 execution route。",
+      "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.",
+      "risk_followup": "当前 Codex shell 无全局 `pnpm`，所以 `pnpm --filter desktop build` / `pnpm --filter desktop dev` 仍未执行；真实 host smoke 仍需 operator 环境启动 App 并记录 checklist evidence。",
+      "id": "2026-06-06-desktop-plugin-phase-2-host-smoke-typecheck-preflight",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Host Smoke Checklist Refresh",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capability denial。",
+      "developer_delta": "将 `desktop-plugin-platform-runtime` smoke checklist 从 Phase 1 fallback 版本更新为 Phase 2 gate；同步 module-classification 与 Phase 1/2 execution route，避免下个 agent 误读为 “Phase 2 common capability proof is next”。",
+      "verification": "`module-classification.json` / `dashboard-state.json` JSON parse passed；stale status / conflict-marker scan passed；`git diff --check` passed。",
+      "risk_followup": "这只是 smoke gate 文档更新，不是 manual smoke evidence；真实 macOS 验证仍需在 desktop host build/run 可用后记录结果。",
+      "id": "2026-06-06-desktop-plugin-phase-2-host-smoke-checklist-refresh",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "self_test"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capabi…"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Sample Widget Host Flow",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipboard` / `pet` 等具体插件包仍保持 planned / paused。",
+      "developer_delta": "新增 host-local sample widget manifest 和 grid content；Plugin Center built-in catalog 将 sample widget 标记为 addable；GridWindow 读取 `xai_plugin_instances_v1` 并按 `pluginName` / `contentType` 分发到 sample widget 或 organizer fallback；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. Rust window tests not rerun because this slice changes TS host routing/catalog/docs only.",
+      "risk_followup": "这是平台 host flow proof，不是解冻完整 `plugin-widgets` 业务包；真实 macOS smoke 仍需验证 add / restore / drag / resize / opacity / click-through / pinned / all-spaces。",
+      "id": "2026-06-06-desktop-plugin-phase-2-sample-widget-host-flow",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipbo…"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Native Behavior Application",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center 的桌面插件实例设置现在可以通过 grid window command contract 真实传递 opacity、click-through、pinned 和 all-spaces 行为；最后窗口状态会根据 Rust 回传的 `nativeApplied` 区分已应用与 fallback。",
+      "developer_delta": "扩展 `create_grid_window` / `update_grid_window` 的可选 `native` payload；Rust 侧应用 `set_ignore_cursor_events`、`set_always_on_top`、`set_visible_on_all_workspaces` 和 macOS `NSWindow.setAlphaValue_`；`GridWindowSnapshot` 回传 native application state；core adapter 从 `PluginInstanceConfig` 派生 native options；同步 SDK、Tauri command contract、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（12 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+      "risk_followup": "pinned 当前映射为 Tauri always-on-top，all-spaces 映射为 visible-on-all-workspaces；桌面级 pin / Space 真实行为仍需 macOS 手动 smoke。下一步做低风险 sample widget 完整流程，不解冻 clipboard / pet 等具体插件包。",
+      "id": "2026-06-06-desktop-plugin-phase-2-native-behavior-application",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "partial",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 的桌面插件实例设置现在可以通过 grid window command contract 真实传递 opacity、click-through、pinned 和 all-spaces 行为；最后窗口状态会根据 Rust 回传的 `nativeApplied` 区分已应…"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Capability Denial 展示",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center 现在用结构化提示展示插件窗口生命周期错误，区分 capability denied、overlay runtime disabled、native window error 等状态，并显示 code、severity、recoverable 和 capability scope。",
+      "developer_delta": "新增 `summarizePluginWindowCapabilityError()` core helper、`PluginWindowCapabilityErrorState` / severity 类型和 unit tests；Plugin Center 从纯文本错误改为消费结构化 capability error state；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 51 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+      "risk_followup": "本次只展示 capability denial 状态，不授予新原生能力，也不改变窗口 allowlist；下一步继续做真实 native application 或低风险 sample widget。",
+      "id": "2026-06-06-desktop-plugin-phase-2-capability-denial-展示",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "partial",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 现在用结构化提示展示插件窗口生命周期错误，区分 capability denied、overlay runtime disabled、native window error 等状态，并显示 code、severity、recoverable 和 capability …"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 Native Fallback 展示",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center 的最后窗口状态现在显示 placement / size / opacity / click-through / pinned / all-spaces 的原生应用状态，区分 Applied、Fallback 和 Not requested，避免把 no-op fallback 误读成已生效。",
+      "developer_delta": "新增 `summarizePluginWindowNativeApplication()` core helper 与 `PluginWindowNativeApplicationState` 类型；Plugin Center 使用该 helper 渲染 native state chips；补 core unit tests，并同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 49 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.",
+      "risk_followup": "本次仍是 fallback 展示，不是实际启用 click-through / pinned / all-spaces 原生能力；下一步继续做 capability denial 展示或低风险 sample widget。",
+      "id": "2026-06-06-desktop-plugin-phase-2-native-fallback-展示",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 的最后窗口状态现在显示 placement / size / opacity / click-through / pinned / all-spaces 的原生应用状态，区分 Applied、Fallback 和 Not requested，避免把 no-op fal…"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 2 重启恢复通用能力",
+      "product_line": "desktop-plugin",
+      "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+      "user_visible": "Plugin Center 重新打开后会读取 device-local plugin instance store，并恢复 `enabled` 桌面插件实例窗口；`disabled` / `hidden` 实例继续保留配置但不会自动出现在桌面。",
+      "developer_delta": "新增 `restoreEnabledPluginInstancesOnDesktop()` runtime API，导出 `PluginInstanceRestoreResult`，Plugin Center mount/load path 改为调用 restore API；补 core unit test，更新 SDK、Plugin PRD、Phase 1/2 执行路线和 dashboard-state。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 47 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.",
+      "risk_followup": "This restores windows through the existing grid-window adapter; real macOS restart smoke is still required. Next Phase 2 slice should cover pin / click-through / all-spaces native fallback display or capability denial.",
+      "id": "2026-06-06-desktop-plugin-phase-2-重启恢复通用能力",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Plugin Center 重新打开后会读取 device-local plugin instance store，并恢复 `enabled` 桌面插件实例窗口；`disabled` / `hidden` 实例继续保留配置但不会自动出现在桌面。"
+    },
+    {
+      "date": "2026-06-06",
+      "title": "Desktop Plugin Phase 1 系统底座收口",
+      "product_line": "desktop-plugin / project-system",
+      "branch_commit": "`codex/plugin/platform-runtime-phase1` / `ed9c10e..5a410de` + P1D closeout commit in this branch",
+      "user_visible": "Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet / meditation / 快速记账 / 时间追踪等具体插件功能已完成。",
+      "developer_delta": "同步更新 Plugin PRD、Phase 1 执行路线、MODULE_BOUNDARIES、PRODUCT_MODULE_MAP、PLUGIN_MAP、PLUGIN_SDK、module-classification registry、dashboard-state 和 release-log；把状态从 “Phase 1 ready / 未实现” 改为 “Phase 1 foundation complete / Phase 2 common capability next / concrete packages paused”，并把 SDK 文档对齐实际 `lifecycleState + config{placement,size,behavior,style}` contract 与 `nativeApplied` fallback。",
+      "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 46 tests，使用 Codex bundled Node 绕过本机 Rollup optional native code-signature 问题）；`packages/plugin-organizer` `tsc --noEmit` passed；`packages/plugin-organizer` `src/register-plugin.test.ts` passed（1 file / 2 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails on existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+      "risk_followup": "Real macOS manual smoke is still required before claiming native window runtime ship quality: create/move/resize/focus/close, restart restore, multi-display/Space, click-through and pin fallback. Phase 2 should start from `desktop-plugin-next` in a new short branch and focus on common plugin capabilities before any concrete plugin feature package.",
+      "id": "2026-06-06-desktop-plugin-phase-1-系统底座收口",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin",
+        "project-system"
+      ],
+      "type": "docs",
+      "testing_status": "partial",
+      "testing_categories": [
+        "unit",
+        "backend"
+      ],
+      "version_label": "snapshot 2026-06-06",
+      "summary": "Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet …"
+    },
+    {
+      "date": "2026-06-04",
+      "title": "Desktop Plugin Phase 1 系统底座文档包",
+      "product_line": "desktop-plugin / project-system",
+      "branch_commit": "`codex/plugin/platform-docs` / docs commit in this branch",
+      "user_visible": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。",
+      "developer_delta": "新增 `docs/planning/execution/desktop-plugin-platform-phase1.md`，给出 Phase 1/2/3 顺序、系统能力清单、Mac App bridge 边界、小步 commit 规则和可复制 goal prompt；同步更新 Plugin PRD、模块边界、产品模块图、Plugin map、Plugin SDK、module-classification registry、execution pack 索引和个人开发看板状态。",
+      "verification": "`module-classification.json` / `dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed；`git diff --check` passed。",
+      "risk_followup": "本次只完成文档、分类和看板同步；不创建 `desktop-plugin-next`，不触碰 `dev`，不实现 Plugin Center / plugin container / native window bridge。下一步开发应先确认或创建 `desktop-plugin-next`，再按一个系统能力一个 commit 的方式推进 Phase 1。",
+      "id": "2026-06-04-desktop-plugin-phase-1-系统底座文档包",
+      "module": "app",
+      "related_modules": [
+        "app",
+        "plugin",
+        "project-system"
+      ],
+      "type": "docs",
+      "testing_status": "pass",
+      "testing_categories": [
+        "build"
+      ],
+      "version_label": "snapshot 2026-06-04",
+      "summary": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。"
+    },
     {
       "date": "2026-06-04",
       "title": "Desktop Plugin 产品边界与长期平台路线落地",
@@ -22456,303 +22540,6 @@ window.XAI_DASHBOARD_STATE = {
       ],
       "version_label": "snapshot 2026-06-03",
       "summary": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。"
-    },
-    {
-      "date": "2026-06-03",
-      "title": "个人开发看板数据边界修复",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "user_visible": "个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。",
-      "developer_delta": "`release-testing.mjs` 抽出 release-log Verification 判定，先识别 `0 failures / 0 errors` 等零失败表达再匹配失败词；`generate-state.mjs` 将 `project-system/dev-dashboard` 拆成独立 release/testing 归类，收窄 Admin aliases，并为 `skill_agent_registry` 增加 `source_completeness`；`verify-static.mjs` 新增 release verdict fixture 和 `theme-bootstrap.js` 顺序检查；`verify-product-modules.mjs` 允许 release 卡展示 `project-system` 支持类，同时继续强制六个 Product Module Registry key。",
-      "verification": "`node --check` passed for dashboard generator, release-testing helper, static/module verifiers, and changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed dev-dashboard release entries under `project-system`, zero-failure testing record as `pass` with `failure_count=0`, Admin testing `failure_count=0`, `source_completeness` present, and release modules including separate `project-system` card；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed.",
-      "risk_followup": "`source_completeness` correctly reports most Skill / Agent entries still rely on generated backfill; this is now visible as a source-documentation follow-up, not a dashboard display gap.",
-      "id": "2026-06-03-个人开发看板数据边界修复",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-03",
-      "summary": "个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。"
-    },
-    {
-      "date": "2026-06-03",
-      "title": "个人开发看板 Skill / Agent 知识库",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "user_visible": "个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-action` 结论。自动补齐后的字段不再作为长期缺口显示，只作为源文件可回写提示。",
-      "developer_delta": "`generate-state.mjs` 新增 `skill_agent_registry`，扫描 `.teams/skills`、`.codex/skills`、portable skills、canonical agent templates 和 Codex/Claude/Cursor agent 变体，自动分类、提取/生成简介与注释、识别新增/修改项、维护状态、镜像状态、真正 unresolved 项和 source-backfill 项；`skill-agent.js` 改为从 registry 渲染知识库；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed；`node --check docs/prototypes/dev-dashboard/js/state.js` passed；`node --check docs/prototypes/dev-dashboard/js/skill-agent.js` passed；`pnpm dashboard` passed and generated `skill_agent_registry` with 58 entries, 33 skills, 25 agents, 13 required fields, category summaries, changed-item detection, and missing-metadata report；`pnpm dashboard:serve` served `http://127.0.0.1:4177`；served `state.generated.js` check passed；Safari visual smoke showed desktop Skill / Agent page with counts, categories, field cards and gap badges；Chrome headless 390px screenshot completed；Chrome CDP 390px metrics passed (`innerWidth=390`, `scrollWidth=390`, 58 entries, 6 count cards, 6 categories, required labels present, `xai-dev-dashboard-sync` entry present, no content overflow).",
-      "risk_followup": "当前 registry 已为所有条目生成可读字段并给出 resolved 结论；大多数 Skill / Agent 源文件仍缺显式 `Note` / 输入 / 输出段落，现作为 source-backfill 提示保留，后续可逐条回写源文件以减少自动生成依赖。",
-      "id": "2026-06-03-个人开发看板-skill-agent-知识库",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "skill",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-03",
-      "summary": "个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-ac…"
-    },
-    {
-      "date": "2026-06-03",
-      "title": "个人开发看板测试结果面板",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`codex/web/dev-dashboard-test-results` / local working tree",
-      "user_visible": "个人开发看板新增「测试结果」Tab，按 Web、Mac 桌面版本、桌面插件、账号云同步、官网、管理者 Dashboard 展示最近测试时间、结论、通过状态、失败项、分类测试结果、pipeline 状态、耗时和报告入口；总览模块卡片、产品结构详情、部署记录和发布记录也同步显示测试状态。",
-      "developer_delta": "`dashboard-state.json` 新增 `testing` registry；`generate-state.mjs` 合并人工测试登记、release-log `Verification` 派生记录、已知本地报告路径和 GitHub Actions workflow inventory，并把 `testing` 回填到 `product_lines`；新增 `testing.js` 渲染测试页和跨页面测试徽标；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。CI workflow 只标 `configured / not queried`，不会被伪造成通过。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed；`node --check` passed for changed dashboard JS files；`dashboard-state.json` JSON parse passed；`pnpm dashboard` passed；generated state confirmed 6 testing modules, 17 test records, 3 pipeline rows, 5 report sources, and `product_lines[*].testing` present；`pnpm dashboard:serve` served on `http://127.0.0.1:4178` because 4177 was already occupied by an older local server；Chrome/Playwright smoke passed for `#testing`, `#overview`, product detail, `#deployment`, `#release-log`, and 390px mobile with 6 testing cards, 0 horizontal overflow, 0 HTTP failures, and 0 console errors.",
-      "risk_followup": "看板现在能展示并同步测试状态，但远端 CI 最新结论仍需后续接 GitHub check 查询；当前只把 workflow 文件存在性标为 configured/not queried，符合“不伪造 green”的规则。",
-      "id": "2026-06-03-个人开发看板测试结果面板",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "frontend_page",
-        "build",
-        "pre_deploy"
-      ],
-      "version_label": "snapshot 2026-06-03",
-      "summary": "个人开发看板新增「测试结果」Tab，按 Web、Mac 桌面版本、桌面插件、账号云同步、官网、管理者 Dashboard 展示最近测试时间、结论、通过状态、失败项、分类测试结果、pipeline 状态、耗时和报告入口；总览模块卡片、产品结构详情、部署记录和发布记录也同步显示测试状态。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "Web 记账模块 Cloud Design 正式接入",
-      "product_line": "web",
-      "branch_commit": "`codex/web/bookkeeping` / local working tree",
-      "user_visible": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。",
-      "developer_delta": "新增 `@repo/plugin-web-bookkeeping` 包、Cloud Design 对齐 docs 四件套和 canonical PRD；host 接入 workspace dependency、shell registration、wallet icon、`nav.bookkeeping` i18n；看板 Web feature 列表从 proposed 更新为 in-dev。存储使用 `xai_bk_state_v2` + 4 个偏好键，adapter 标记 `syncStatus: \"device-local\"`，仅预留账号云同步接口，不写 sync entities；修复 dev/StrictMode 下保存一次重复写入两条记录的状态副作用问题。",
-      "verification": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-      "risk_followup": "full `pnpm --filter @repo/web lint` 仍被既有 `apps/web/src/App.tsx` restricted-import warning 阻断，非本次改动；账号云同步和 Desktop/App 下沉需后续分别走 D4 / D3 gate。",
-      "id": "2026-06-02-web-记账模块-cloud-design-正式接入",
-      "module": "web",
-      "related_modules": [
-        "web"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "个人开发看板开发数据周/月趋势",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "user_visible": "开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。",
-      "developer_delta": "`scripts/dashboard/generate-state.mjs` 新增 `weekly_stats`（最近 8 周）和 `monthly_stats`（最近 6 个月），每个周期记录 commit 数、活跃天数、活跃率和日期范围；`ops-panels.js` 渲染维度 tabs、摘要卡和柱状图；同步更新 dev-dashboard 模板与设计说明。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/ops-panels.js` passed; `git diff --check` passed; `pnpm dashboard` passed; `pnpm dashboard:serve` served `http://127.0.0.1:4177/#dev-data`; Browser smoke confirmed desktop tabs + weekly/monthly/7-day/today chart switching and 390px weekly/monthly responsive views with no horizontal overflow.",
-      "risk_followup": "`state.generated.js` 仍是本机快照；提交后再次运行 `pnpm dashboard` 可把 dirty count 降到提交后的真实状态。",
-      "id": "2026-06-02-个人开发看板开发数据周-月趋势",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登",
-      "product_line": "web",
-      "branch_commit": "`web` / `b569461`（tasks/board/calendar PRD 已提交）+ local working tree（pomodoro/dashboard/settings PRD + calendar 收口 + 本条目未提交）",
-      "user_visible": "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。",
-      "developer_delta": "用 `xai-feature-dossier-sync` 反向为 6 个已 SHIPPED 的 web 功能建立 `docs/product/<feature>/prd.md`（仓库首批功能级 canonical PRD）：清单 tasks、看板 board（3 包合 1）、日历 calendar、番茄钟 pomodoro、仪表盘 dashboard（grid+widgets 合 1）、设置 settings（主壳 + appearance/features/rest 3 子 PRD）。各功能历史 ship 日期/commit 见对应 PRD §7（tasks/board/calendar/pomodoro 于 2026-05-23~24；dashboard 系列 2026-05-23~29；settings W4 系列 2026-05-23~28）。同时收口 calendar 一处 traceability 异常：工具栏「+」按钮 bugfix（dev_log block3，停在 `FIX_READY`）查证为被 `xai-web-calendar-event-create`（Option B 真实 CRUD，SHIPPED `bc573b1`）取代，已标 `superseded` 并回写 dev_log + PRD。",
-      "verification": "来源核验（每条需求映射 dev_log SHIPPED block / commit SHA / discovery review，无来源项标 `待确认`）；未跑测试（纯文档变更）；calendar/dashboard/settings 多处 cross-vendor manual smoke 在历史 ship 时即标 DEFERRED（ADR-0008 §S3 24h carve-out），本轮如实保留为未闭合项，未声称已完成。",
-      "risk_followup": "release-log 此前缺这 6 个 web 功能的 ship 历史（本条补账）；dashboard 组件移除 AC-RM-1..7 仅存在于 dev_log 未进 test.md；多处 cross-vendor smoke 矩阵未闭合（pre-cloudflare-ship 前需补）；settings baseline ship commit SHA、AI pane 是否在 ai-chat 单独追溯等列为各 PRD §9 `待确认`；pomodoro/dashboard/settings PRD + calendar 收口本条目尚未提交。",
-      "id": "2026-06-02-web-六大功能反向补建-canonical-prd-历史-shipped-补登",
-      "module": "web",
-      "related_modules": [
-        "web"
-      ],
-      "type": "docs",
-      "testing_status": "partial",
-      "testing_categories": [
-        "self_test"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-      "product_line": "project-system / sync",
-      "branch_commit": "`web` / `7d26e51`",
-      "user_visible": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。",
-      "developer_delta": "新增机读 `docs/workflow/project/sync-registry.json`(语义触发规则 + 4 类可复用动作 + 单写者文件归属 + 波次);新增 skill `xai-account-sync-scope-check`(ADR-0013 D4 范围 / 9 项完备性检查,receipt-only)与 `xai-sync-fanout-dispatch`(语义派发入口),单源置于 `.teams/skills` 并镜像到 `.claude` / `.codex`;把 `xai-release-log` 暴露给 Claude(补 `.claude/skills` symlink);新增 review 回执 `docs/reviews/clipboard-entitytype-drift/`、`docs/reviews/web-sync-2026-06-01/`(D3=W0 record-only / site=none / admin=forward-compat)。",
-      "verification": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-      "risk_followup": "skill 为 receipt / plan-only,不实现同步、不解冻 paused 线、不写 entities.ts / 插件 types.ts;clipboard entityType 漂移(`clipboard.item` vs `clipboard.entry`)已开独立任务跟进。",
-      "id": "2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-      "module": "sync",
-      "related_modules": [
-        "sync",
-        "project-system"
-      ],
-      "type": "skill",
-      "testing_status": "unknown",
-      "testing_categories": [
-        "self_test"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "治理基线对齐：ADR-0013 接受 + ADR-0014 同步编排 + ADR-0008 CSP 记账",
-      "product_line": "project-system / governance",
-      "branch_commit": "`web` / `09d49e3`, `135183e`",
-      "user_visible": "分支与同步治理基线现在一致——ADR-0010 / ADR-0013 / ADR-0014 均为 Accepted;开发看板分支板的 `adr_status` 显示 Accepted。",
-      "developer_delta": "ADR-0013 翻为 Accepted(operator 确认,§S7 #2–#7 保留为 deferred follow-up);新增并接受 ADR-0014(跨模块同步编排:4 类动作 / 语义 registry / 单写者归属 / 冻结线护栏 / Codex 复核固化为标准一步);`branch-policy.json` `adr_status` Proposed→Accepted;`CLAUDE.md` §分支治理标题与 `PRODUCT_MODULE_MAP.md §维护` 同步;ADR-0008 补记 2026-06-01 web 批次的 `connect-src` 新 host(OpenAI / Groq / `*.ingest.sentry.io`),§S6 snippet 校正到与 `_headers` 一致并修正通配声明。",
-      "verification": "`branch-policy.json` 校验为合法 JSON;ADR-0013 自身状态无残留 Proposed;ADR-0008 三个新 host 命中 + 通配声明已校正。",
-      "risk_followup": "ADR-0008 文档暂领先代码——实现该 CSP 的 `apps/web/public/_headers` + `csp.test.ts`(CSP6)仍在未提交的 web 批次里,提交那批后代码与文档对齐;创建 desktop-next / 触及 dev 仍为 operator 确认步骤。",
-      "id": "2026-06-02-治理基线对齐-adr-0013-接受-adr-0014-同步编排-adr-0008-csp-记账",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "governance",
-      "testing_status": "unknown",
-      "testing_categories": [
-        "self_test"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "分支与同步治理基线现在一致——ADR-0010 / ADR-0013 / ADR-0014 均为 Accepted;开发看板分支板的 `adr_status` 显示 Accepted。"
-    },
-    {
-      "date": "2026-06-02",
-      "title": "文档库必读入口和绝对路径复制",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "user_visible": "文档库的必读文档现在直接显示看板机器说明和看板可复用模板；推荐卡片提供复制按钮，文档详情和全屏阅读器复制的是本机绝对路径。",
-      "developer_delta": "`scripts/dashboard/generate-state.mjs` 输出 `repo_root` 并把两份看板治理文档提升到 must-read；`docs-library.js` 统一将仓库相对路径转换为绝对路径再复制；同步更新看板机器说明和模板文档的文档库规则。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check docs/prototypes/dev-dashboard/js/docs-library.js` passed; `git diff --check` passed; `pnpm dashboard` passed; dashboard API returned both target docs; Chrome headless DOM dump confirmed must-read entries, copy buttons, and absolute path rendering.",
-      "risk_followup": "无。",
-      "id": "2026-06-02-文档库必读入口和绝对路径复制",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "e2e",
-        "backend",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-02",
-      "summary": "文档库的必读文档现在直接显示看板机器说明和看板可复用模板；推荐卡片提供复制按钮，文档详情和全屏阅读器复制的是本机绝对路径。"
-    },
-    {
-      "date": "2026-06-01",
-      "title": "看板同步 Skill 三层对齐",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "user_visible": "`xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。",
-      "developer_delta": "更新 `.teams/skills/xai-dev-dashboard-sync/SKILL.md` 的触发描述、同步范围、drift audit 和 sync receipt；新增 `.claude/skills/xai-dev-dashboard-sync` 镜像 symlink；同步更新 `CLAUDE.md`、`AGENTS.md`、`docs/workflow/project/dev-dashboard.md`、`docs/prototypes/dev-dashboard/TEMPLATE.md`、dashboard state 和 usage-guide。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed; `git diff --check` passed; Claude/Codex symlink discovery check passed; `pnpm dashboard` passed.",
-      "risk_followup": "无；Skill 仍只自动更新事实性契约/模板内容，不自动决定 roadmap、branch、priority、release gate 或 ship 状态。",
-      "id": "2026-06-01-看板同步-skill-三层对齐",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "skill",
-      "testing_status": "pass",
-      "testing_categories": [
-        "build"
-      ],
-      "version_label": "snapshot 2026-06-01",
-      "summary": "`xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。"
-    },
-    {
-      "date": "2026-05-31",
-      "title": "个人开发看板同步契约",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "version": "dev-dashboard v0.4 → v0.5",
-      "added": "新增 `xai-dev-dashboard-sync` 项目 Skill、机器可读的 `docs/workflow/project/dev-dashboard.md`、可复用的 `docs/prototypes/dev-dashboard/TEMPLATE.md`。",
-      "improved": "Overview 新增看板同步状态区，展示上次更新时间、当前快照、未提交变更、同步 Skill 状态、最新 release-log entry 和关键来源文件更新时间。",
-      "user_visible": "打开个人开发看板总览即可判断看板是否刚刷新、当前工作区是否有未提交变更，以及应该用哪个同步入口刷新。",
-      "developer_delta": "`scripts/dashboard/generate-state.mjs` 输出 `sync_status`，文档库收录看板机器说明、模板和同步 Skill；`AGENTS.md`、`CLAUDE.md`、handbook 和 usage-guide 增加看板契约入口。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check` passed for updated dashboard JS files; `pnpm dashboard` passed; `pnpm dashboard:serve` served the dashboard locally; headless Chrome DOM/screenshot smoke at 1440px and 390px confirmed Overview renders Dashboard sync, last update time, dirty count, `xai-dev-dashboard-sync`, and latest release-log entry; staged refresh shows sync skill status as tracked.",
-      "risk_followup": "`state.generated.js` 仍是本机生成快照，不作为跨机器事实源；提交后再次刷新会把 dirty count 降到剩余并行 Web 改动范围。",
-      "id": "2026-05-31-个人开发看板同步契约",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "dev-dashboard v0.4 → v0.5",
-      "summary": "打开个人开发看板总览即可判断看板是否刚刷新、当前工作区是否有未提交变更，以及应该用哪个同步入口刷新。"
-    },
-    {
-      "date": "2026-05-31",
-      "title": "发布记录看板升级",
-      "product_line": "project-system / dev-dashboard",
-      "branch_commit": "`web` / local working tree",
-      "version": "dev-dashboard v0.3 → v0.4",
-      "added": "发布记录页拆成「整体发布记录」「模块发布卡片」「详细发布记录」三个层级；模块覆盖 Web 分支、App / Mac 桌面版本、桌面插件、账号云同步、官网、管理者 / 开发者 Dashboard。",
-      "improved": "整体发布记录改成接近 GitHub Release 的摘要卡片，展示发布日期、版本标记、新增功能、优化内容、修复问题、影响范围和面向用户 / 开发者的说明；详细记录中的长验证信息改为两行摘要块，避免横向撑破页面。",
-      "fixed": "修复本地 dashboard server 下打开 `release-log.md` 可能落到 `/workflow/project/release-log.md` 并返回 not found 的链接路径问题。",
-      "impact": "个人开发看板、release-log 解析脚本、本地 dashboard server、`docs/workflow/project/release-log.md` 的结构化字段。",
-      "audience_note": "开发者可以按模块快速判断变更影响；产品使用者可以先看整体版本摘要，不必阅读细节 commit。",
-      "user_visible": "发布记录从单一时间线升级为模块化发布看板，并保留整体版本更新摘要。",
-      "developer_delta": "`scripts/dashboard/generate-state.mjs` 输出结构化 release entries / modules / overall releases；看板页面按新数据渲染多色模块卡片；server 增加 raw markdown 打开路径。",
-      "verification": "`node --check scripts/dashboard/generate-state.mjs` passed; `node --check scripts/dashboard/serve.mjs` passed; `node scripts/dashboard/generate-state.mjs` passed; local server `GET /api/raw?path=docs/workflow/project/release-log.md` returned 200 `text/markdown`; Playwright screenshot smoke rendered overall release cards, module cards, and detailed release rows at `#release-log`; follow-up screenshots confirmed the release page no longer stretches horizontally and the product-flow right detail panel is compact.",
-      "risk_followup": "旧历史条目未必都有 Version / Added / Fixed 字段，生成器会降级使用 User-visible change 和 Developer/system delta。",
-      "id": "2026-05-31-发布记录看板升级",
-      "module": "project-system",
-      "related_modules": [
-        "project-system"
-      ],
-      "type": "docs",
-      "testing_status": "pass",
-      "testing_categories": [
-        "self_test",
-        "e2e",
-        "backend",
-        "frontend_page",
-        "build"
-      ],
-      "version_label": "dev-dashboard v0.3 → v0.4",
-      "summary": "发布记录从单一时间线升级为模块化发布看板，并保留整体版本更新摘要。"
     }
   ],
   "release_modules": [
@@ -22760,117 +22547,119 @@ window.XAI_DASHBOARD_STATE = {
       "key": "web",
       "title": "Web 分支",
       "tone": "blue",
-      "count": 2,
-      "latest_date": "2026-06-02",
-      "latest_title": "Web 记账模块 Cloud Design 正式接入",
-      "latest_summary": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。",
-      "entries": [
-        {
-          "date": "2026-06-02",
-          "title": "Web 记账模块 Cloud Design 正式接入",
-          "product_line": "web",
-          "branch_commit": "`codex/web/bookkeeping` / local working tree",
-          "user_visible": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。",
-          "developer_delta": "新增 `@repo/plugin-web-bookkeeping` 包、Cloud Design 对齐 docs 四件套和 canonical PRD；host 接入 workspace dependency、shell registration、wallet icon、`nav.bookkeeping` i18n；看板 Web feature 列表从 proposed 更新为 in-dev。存储使用 `xai_bk_state_v2` + 4 个偏好键，adapter 标记 `syncStatus: \"device-local\"`，仅预留账号云同步接口，不写 sync entities；修复 dev/StrictMode 下保存一次重复写入两条记录的状态副作用问题。",
-          "verification": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-          "risk_followup": "full `pnpm --filter @repo/web lint` 仍被既有 `apps/web/src/App.tsx` restricted-import warning 阻断，非本次改动；账号云同步和 Desktop/App 下沉需后续分别走 D4 / D3 gate。",
-          "id": "2026-06-02-web-记账模块-cloud-design-正式接入",
-          "module": "web",
-          "related_modules": [
-            "web"
-          ],
-          "type": "docs",
-          "testing_status": "pass",
-          "testing_categories": [
-            "self_test",
-            "e2e",
-            "frontend_page",
-            "build"
-          ],
-          "version_label": "snapshot 2026-06-02",
-          "summary": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。"
-        },
-        {
-          "date": "2026-06-02",
-          "title": "Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登",
-          "product_line": "web",
-          "branch_commit": "`web` / `b569461`（tasks/board/calendar PRD 已提交）+ local working tree（pomodoro/dashboard/settings PRD + calendar 收口 + 本条目未提交）",
-          "user_visible": "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。",
-          "developer_delta": "用 `xai-feature-dossier-sync` 反向为 6 个已 SHIPPED 的 web 功能建立 `docs/product/<feature>/prd.md`（仓库首批功能级 canonical PRD）：清单 tasks、看板 board（3 包合 1）、日历 calendar、番茄钟 pomodoro、仪表盘 dashboard（grid+widgets 合 1）、设置 settings（主壳 + appearance/features/rest 3 子 PRD）。各功能历史 ship 日期/commit 见对应 PRD §7（tasks/board/calendar/pomodoro 于 2026-05-23~24；dashboard 系列 2026-05-23~29；settings W4 系列 2026-05-23~28）。同时收口 calendar 一处 traceability 异常：工具栏「+」按钮 bugfix（dev_log block3，停在 `FIX_READY`）查证为被 `xai-web-calendar-event-create`（Option B 真实 CRUD，SHIPPED `bc573b1`）取代，已标 `superseded` 并回写 dev_log + PRD。",
-          "verification": "来源核验（每条需求映射 dev_log SHIPPED block / commit SHA / discovery review，无来源项标 `待确认`）；未跑测试（纯文档变更）；calendar/dashboard/settings 多处 cross-vendor manual smoke 在历史 ship 时即标 DEFERRED（ADR-0008 §S3 24h carve-out），本轮如实保留为未闭合项，未声称已完成。",
-          "risk_followup": "release-log 此前缺这 6 个 web 功能的 ship 历史（本条补账）；dashboard 组件移除 AC-RM-1..7 仅存在于 dev_log 未进 test.md；多处 cross-vendor smoke 矩阵未闭合（pre-cloudflare-ship 前需补）；settings baseline ship commit SHA、AI pane 是否在 ai-chat 单独追溯等列为各 PRD §9 `待确认`；pomodoro/dashboard/settings PRD + calendar 收口本条目尚未提交。",
-          "id": "2026-06-02-web-六大功能反向补建-canonical-prd-历史-shipped-补登",
-          "module": "web",
-          "related_modules": [
-            "web"
-          ],
-          "type": "docs",
-          "testing_status": "partial",
-          "testing_categories": [
-            "self_test"
-          ],
-          "version_label": "snapshot 2026-06-02",
-          "summary": "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。"
-        }
-      ]
+      "count": 0,
+      "latest_date": "",
+      "latest_title": "暂无模块发布",
+      "latest_summary": "等待 release-log.md 写入该模块的发布说明。",
+      "entries": []
     },
     {
       "key": "app",
       "title": "App / Mac 桌面版本",
       "tone": "green",
-      "count": 2,
-      "latest_date": "2026-06-04",
-      "latest_title": "Desktop Plugin 产品边界与长期平台路线落地",
-      "latest_summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…",
+      "count": 14,
+      "latest_date": "2026-06-06",
+      "latest_title": "Desktop Plugin Center Frame Normalization Smoke",
+      "latest_summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
       "entries": [
         {
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
-          "product_line": "desktop-plugin / project-system",
-          "branch_commit": "`codex/web/dev-dashboard-authority-refactor` / local working tree",
-          "user_visible": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。",
-          "developer_delta": "新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。",
-          "verification": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
-          "risk_followup": "本次只落实治理、文档、分类和看板；不创建 `desktop-plugin-next`，不启动 feature-build，不实现 Plugin Center / Widget Host / 多窗口运行时代码。后续产品开发仍需等 G1 解冻和 operator 确认。",
-          "id": "2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / this commit",
+          "user_visible": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
+          "developer_delta": "Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。",
+          "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
+          "risk_followup": "当前显示面被 macOS lock/screen-saver 遮挡，无法视觉确认 Plugin Center 内容；smoke verdict remains `PARTIAL`, not `PASS`. Sample widget add-to-desktop、restart restore、native behavior matrix仍未完成。",
+          "id": "2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "module": "app",
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "type": "docs",
           "testing_status": "pass",
           "testing_categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "version_label": "snapshot 2026-06-04",
-          "summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…"
+          "version_label": "snapshot 2026-06-06",
+          "summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。"
         },
         {
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 入口模型与看板状态对齐",
-          "product_line": "desktop-plugin / project-system",
-          "branch_commit": "`codex/web/dev-dashboard-authority-refactor` / local working tree",
-          "user_visible": "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。",
-          "developer_delta": "`docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。",
-          "verification": "`docs/workflow/project/dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated `state.generated.js` confirmed plugin status/running/feature card values；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed。",
-          "risk_followup": "本次为 docs-only / contract-only，不解冻 P2、不实现 Plugin Center、不启动 feature-build。后续仍按 G1 后顺序推进：Organizer closeout → Widget Host MVP → Clipboard MVP（先修 `clipboard.item` vs `clipboard.entry` 契约漂移）→ Pet basic；Meditation desktop plugin 继续延后。",
-          "id": "2026-06-04-desktop-plugin-入口模型与看板状态对齐",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Host Sub-Bundle Routing",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
+          "developer_delta": "保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。",
+          "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.",
+          "risk_followup": "仍需前台 `.app` 手动 smoke 证明菜单点击后实际渲染 Plugin Center，且重启恢复、native behavior、sample widget 添加仍未形成完整 host smoke PASS。`desktop-host` 是 Tauri build 注入到 local `apps/web/dist` 的桌面专用子 bundle；Web 发布前必须重新跑 Web build，让 Vite 清空 dist 并重新执行 browser-safety。",
+          "id": "2026-06-06-desktop-plugin-host-sub-bundle-routing",
           "module": "app",
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "type": "docs",
           "testing_status": "pass",
           "testing_categories": [
+            "unit",
+            "backend",
             "build"
           ],
-          "version_label": "snapshot 2026-06-04",
-          "summary": "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工…"
+          "version_label": "snapshot 2026-06-06",
+          "summary": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。"
+        },
+        {
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Native Host Menu Entry",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。",
+          "developer_delta": "将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。",
+          "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{\"build\":{\"beforeBuildCommand\":\"\"}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.",
+          "risk_followup": "这只解决真实 App smoke 的原生入口，不等于完成 manual smoke；仍需在前台 `.app` 中验证菜单点击、重启后的 host mode 生效，以及 Plugin Center 内容是否由正确 frontend bundle 提供。",
+          "id": "2026-06-06-desktop-plugin-native-host-menu-entry",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin"
+          ],
+          "type": "docs",
+          "testing_status": "pass",
+          "testing_categories": [
+            "unit",
+            "backend",
+            "build"
+          ],
+          "version_label": "snapshot 2026-06-06",
+          "summary": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。"
+        },
+        {
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。",
+          "developer_delta": "`apps/desktop` manifest 补声明已在 `src/main.tsx` 注册的 `@repo/plugin-labels` / `@repo/plugin-productivity` workspace dependencies，并同步 `pnpm-lock.yaml`；清理 `packages/core-data/src/indexeddb-sync-blob.ts` 中阻断 desktop typecheck 的未使用导入、变量和 stale helper；更新 Phase 2 host smoke checklist 与 execution route。",
+          "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.",
+          "risk_followup": "当前 Codex shell 无全局 `pnpm`，所以 `pnpm --filter desktop build` / `pnpm --filter desktop dev` 仍未执行；真实 host smoke 仍需 operator 环境启动 App 并记录 checklist evidence。",
+          "id": "2026-06-06-desktop-plugin-phase-2-host-smoke-typecheck-preflight",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin"
+          ],
+          "type": "docs",
+          "testing_status": "pass",
+          "testing_categories": [
+            "unit"
+          ],
+          "version_label": "snapshot 2026-06-06",
+          "summary": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。"
         }
       ]
     },
@@ -22878,59 +22667,109 @@ window.XAI_DASHBOARD_STATE = {
       "key": "plugin",
       "title": "桌面插件",
       "tone": "purple",
-      "count": 2,
-      "latest_date": "2026-06-04",
-      "latest_title": "Desktop Plugin 产品边界与长期平台路线落地",
-      "latest_summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…",
+      "count": 14,
+      "latest_date": "2026-06-06",
+      "latest_title": "Desktop Plugin Center Frame Normalization Smoke",
+      "latest_summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
       "entries": [
         {
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
-          "product_line": "desktop-plugin / project-system",
-          "branch_commit": "`codex/web/dev-dashboard-authority-refactor` / local working tree",
-          "user_visible": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。",
-          "developer_delta": "新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。",
-          "verification": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
-          "risk_followup": "本次只落实治理、文档、分类和看板；不创建 `desktop-plugin-next`，不启动 feature-build，不实现 Plugin Center / Widget Host / 多窗口运行时代码。后续产品开发仍需等 G1 解冻和 operator 确认。",
-          "id": "2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / this commit",
+          "user_visible": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
+          "developer_delta": "Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。",
+          "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
+          "risk_followup": "当前显示面被 macOS lock/screen-saver 遮挡，无法视觉确认 Plugin Center 内容；smoke verdict remains `PARTIAL`, not `PASS`. Sample widget add-to-desktop、restart restore、native behavior matrix仍未完成。",
+          "id": "2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "module": "app",
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "type": "docs",
           "testing_status": "pass",
           "testing_categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "version_label": "snapshot 2026-06-04",
-          "summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…"
+          "version_label": "snapshot 2026-06-06",
+          "summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。"
         },
         {
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 入口模型与看板状态对齐",
-          "product_line": "desktop-plugin / project-system",
-          "branch_commit": "`codex/web/dev-dashboard-authority-refactor` / local working tree",
-          "user_visible": "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。",
-          "developer_delta": "`docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。",
-          "verification": "`docs/workflow/project/dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated `state.generated.js` confirmed plugin status/running/feature card values；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed。",
-          "risk_followup": "本次为 docs-only / contract-only，不解冻 P2、不实现 Plugin Center、不启动 feature-build。后续仍按 G1 后顺序推进：Organizer closeout → Widget Host MVP → Clipboard MVP（先修 `clipboard.item` vs `clipboard.entry` 契约漂移）→ Pet basic；Meditation desktop plugin 继续延后。",
-          "id": "2026-06-04-desktop-plugin-入口模型与看板状态对齐",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Host Sub-Bundle Routing",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
+          "developer_delta": "保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。",
+          "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.",
+          "risk_followup": "仍需前台 `.app` 手动 smoke 证明菜单点击后实际渲染 Plugin Center，且重启恢复、native behavior、sample widget 添加仍未形成完整 host smoke PASS。`desktop-host` 是 Tauri build 注入到 local `apps/web/dist` 的桌面专用子 bundle；Web 发布前必须重新跑 Web build，让 Vite 清空 dist 并重新执行 browser-safety。",
+          "id": "2026-06-06-desktop-plugin-host-sub-bundle-routing",
           "module": "app",
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "type": "docs",
           "testing_status": "pass",
           "testing_categories": [
+            "unit",
+            "backend",
             "build"
           ],
-          "version_label": "snapshot 2026-06-04",
-          "summary": "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工…"
+          "version_label": "snapshot 2026-06-06",
+          "summary": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。"
+        },
+        {
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Native Host Menu Entry",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。",
+          "developer_delta": "将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。",
+          "verification": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{\"build\":{\"beforeBuildCommand\":\"\"}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.",
+          "risk_followup": "这只解决真实 App smoke 的原生入口，不等于完成 manual smoke；仍需在前台 `.app` 中验证菜单点击、重启后的 host mode 生效，以及 Plugin Center 内容是否由正确 frontend bundle 提供。",
+          "id": "2026-06-06-desktop-plugin-native-host-menu-entry",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin"
+          ],
+          "type": "docs",
+          "testing_status": "pass",
+          "testing_categories": [
+            "unit",
+            "backend",
+            "build"
+          ],
+          "version_label": "snapshot 2026-06-06",
+          "summary": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。"
+        },
+        {
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+          "product_line": "desktop-plugin",
+          "branch_commit": "`codex/plugin/common-capabilities-phase2` / local commit in this branch",
+          "user_visible": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。",
+          "developer_delta": "`apps/desktop` manifest 补声明已在 `src/main.tsx` 注册的 `@repo/plugin-labels` / `@repo/plugin-productivity` workspace dependencies，并同步 `pnpm-lock.yaml`；清理 `packages/core-data/src/indexeddb-sync-blob.ts` 中阻断 desktop typecheck 的未使用导入、变量和 stale helper；更新 Phase 2 host smoke checklist 与 execution route。",
+          "verification": "`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.",
+          "risk_followup": "当前 Codex shell 无全局 `pnpm`，所以 `pnpm --filter desktop build` / `pnpm --filter desktop dev` 仍未执行；真实 host smoke 仍需 operator 环境启动 App 并记录 checklist evidence。",
+          "id": "2026-06-06-desktop-plugin-phase-2-host-smoke-typecheck-preflight",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin"
+          ],
+          "type": "docs",
+          "testing_status": "pass",
+          "testing_categories": [
+            "unit"
+          ],
+          "version_label": "snapshot 2026-06-06",
+          "summary": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。"
         }
       ]
     },
@@ -22938,35 +22777,11 @@ window.XAI_DASHBOARD_STATE = {
       "key": "sync",
       "title": "账号云同步",
       "tone": "cyan",
-      "count": 1,
-      "latest_date": "2026-06-02",
-      "latest_title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-      "latest_summary": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。",
-      "entries": [
-        {
-          "date": "2026-06-02",
-          "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-          "product_line": "project-system / sync",
-          "branch_commit": "`web` / `7d26e51`",
-          "user_visible": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。",
-          "developer_delta": "新增机读 `docs/workflow/project/sync-registry.json`(语义触发规则 + 4 类可复用动作 + 单写者文件归属 + 波次);新增 skill `xai-account-sync-scope-check`(ADR-0013 D4 范围 / 9 项完备性检查,receipt-only)与 `xai-sync-fanout-dispatch`(语义派发入口),单源置于 `.teams/skills` 并镜像到 `.claude` / `.codex`;把 `xai-release-log` 暴露给 Claude(补 `.claude/skills` symlink);新增 review 回执 `docs/reviews/clipboard-entitytype-drift/`、`docs/reviews/web-sync-2026-06-01/`(D3=W0 record-only / site=none / admin=forward-compat)。",
-          "verification": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-          "risk_followup": "skill 为 receipt / plan-only,不实现同步、不解冻 paused 线、不写 entities.ts / 插件 types.ts;clipboard entityType 漂移(`clipboard.item` vs `clipboard.entry`)已开独立任务跟进。",
-          "id": "2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-          "module": "sync",
-          "related_modules": [
-            "sync",
-            "project-system"
-          ],
-          "type": "skill",
-          "testing_status": "unknown",
-          "testing_categories": [
-            "self_test"
-          ],
-          "version_label": "snapshot 2026-06-02",
-          "summary": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。"
-        }
-      ]
+      "count": 0,
+      "latest_date": "",
+      "latest_title": "暂无模块发布",
+      "latest_summary": "等待 release-log.md 写入该模块的发布说明。",
+      "entries": []
     },
     {
       "key": "site",
@@ -22992,11 +22807,60 @@ window.XAI_DASHBOARD_STATE = {
       "key": "project-system",
       "title": "Project System / Dev Dashboard",
       "tone": "blue",
-      "count": 14,
-      "latest_date": "2026-06-04",
-      "latest_title": "Desktop Plugin 产品边界与长期平台路线落地",
-      "latest_summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…",
+      "count": 6,
+      "latest_date": "2026-06-06",
+      "latest_title": "Desktop Plugin Phase 1 系统底座收口",
+      "latest_summary": "Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet …",
       "entries": [
+        {
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Phase 1 系统底座收口",
+          "product_line": "desktop-plugin / project-system",
+          "branch_commit": "`codex/plugin/platform-runtime-phase1` / `ed9c10e..5a410de` + P1D closeout commit in this branch",
+          "user_visible": "Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet / meditation / 快速记账 / 时间追踪等具体插件功能已完成。",
+          "developer_delta": "同步更新 Plugin PRD、Phase 1 执行路线、MODULE_BOUNDARIES、PRODUCT_MODULE_MAP、PLUGIN_MAP、PLUGIN_SDK、module-classification registry、dashboard-state 和 release-log；把状态从 “Phase 1 ready / 未实现” 改为 “Phase 1 foundation complete / Phase 2 common capability next / concrete packages paused”，并把 SDK 文档对齐实际 `lifecycleState + config{placement,size,behavior,style}` contract 与 `nativeApplied` fallback。",
+          "verification": "`dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 46 tests，使用 Codex bundled Node 绕过本机 Rollup optional native code-signature 问题）；`packages/plugin-organizer` `tsc --noEmit` passed；`packages/plugin-organizer` `src/register-plugin.test.ts` passed（1 file / 2 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails on existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.",
+          "risk_followup": "Real macOS manual smoke is still required before claiming native window runtime ship quality: create/move/resize/focus/close, restart restore, multi-display/Space, click-through and pin fallback. Phase 2 should start from `desktop-plugin-next` in a new short branch and focus on common plugin capabilities before any concrete plugin feature package.",
+          "id": "2026-06-06-desktop-plugin-phase-1-系统底座收口",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin",
+            "project-system"
+          ],
+          "type": "docs",
+          "testing_status": "partial",
+          "testing_categories": [
+            "unit",
+            "backend"
+          ],
+          "version_label": "snapshot 2026-06-06",
+          "summary": "Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet …"
+        },
+        {
+          "date": "2026-06-04",
+          "title": "Desktop Plugin Phase 1 系统底座文档包",
+          "product_line": "desktop-plugin / project-system",
+          "branch_commit": "`codex/plugin/platform-docs` / docs commit in this branch",
+          "user_visible": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。",
+          "developer_delta": "新增 `docs/planning/execution/desktop-plugin-platform-phase1.md`，给出 Phase 1/2/3 顺序、系统能力清单、Mac App bridge 边界、小步 commit 规则和可复制 goal prompt；同步更新 Plugin PRD、模块边界、产品模块图、Plugin map、Plugin SDK、module-classification registry、execution pack 索引和个人开发看板状态。",
+          "verification": "`module-classification.json` / `dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed；`git diff --check` passed。",
+          "risk_followup": "本次只完成文档、分类和看板同步；不创建 `desktop-plugin-next`，不触碰 `dev`，不实现 Plugin Center / plugin container / native window bridge。下一步开发应先确认或创建 `desktop-plugin-next`，再按一个系统能力一个 commit 的方式推进 Phase 1。",
+          "id": "2026-06-04-desktop-plugin-phase-1-系统底座文档包",
+          "module": "app",
+          "related_modules": [
+            "app",
+            "plugin",
+            "project-system"
+          ],
+          "type": "docs",
+          "testing_status": "pass",
+          "testing_categories": [
+            "build"
+          ],
+          "version_label": "snapshot 2026-06-04",
+          "summary": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。"
+        },
         {
           "date": "2026-06-04",
           "title": "Desktop Plugin 产品边界与长期平台路线落地",
@@ -23045,83 +22909,106 @@ window.XAI_DASHBOARD_STATE = {
           ],
           "version_label": "snapshot 2026-06-04",
           "summary": "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工…"
-        },
-        {
-          "date": "2026-06-04",
-          "title": "项目 Skill 体系补齐：部署 / 桌面发布 gate + Cursor 镜像",
-          "product_line": "project-system / workflow governance",
-          "branch_commit": "`codex/web/dev-dashboard-authority-refactor` / local working tree",
-          "user_visible": "个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI 项目 skill 的 `.mdc` 镜像。",
-          "developer_delta": "新增 `.teams/skills/xai-web-deploy-preflight` 与 `.teams/skills/xai-desktop-release-gate`，并镜像到 `.claude/skills`、`.codex/skills`、`.cursor/rules`；把 `xai-feature-brief` 升级为六产品线 intake，把 `xai-feature-dossier-sync` Scope 扩到 `site/admin/project-system`，并让 `xai-dev-dashboard-sync` / `xai-consistency-audit` 显式检查 Cursor mirrors；更新 ADR-0014、`sync-registry.json`、`PRODUCT_MODULE_MAP.md`、`dashboard-state.json`、usage-guide、consistency checks 和 dashboard generator，让部署 / 桌面发布 gate 可被 fanout dispatch、看板和文档库发现。",
-          "verification": "`node --check scripts/dashboard/generate-state.mjs` passed；`sync-registry.json` / `dashboard-state.json` / `consistency-checks.json` JSON parse passed；XAI skill mirror check passed (`teams=13 missing=0`)；XAI skill content mirror check passed (`skills=13 failures=0`)；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；`python3 scripts/lint/check_portable_sync.py` passed。",
-          "risk_followup": "新增两个 gate 均为 receipt/preflight-only，不会自动部署、签名、公证、上传、创建 release 分支或触碰 `dev`；`xai-sync-fanout-dispatch` 仍是 planner/router，不是强制自动执行器。",
-          "id": "2026-06-04-项目-skill-体系补齐-部署-桌面发布-gate-cursor-镜像",
-          "module": "project-system",
-          "related_modules": [
-            "project-system"
-          ],
-          "type": "skill",
-          "testing_status": "fail",
-          "testing_categories": [
-            "build"
-          ],
-          "version_label": "snapshot 2026-06-04",
-          "summary": "个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI …"
-        },
-        {
-          "date": "2026-06-03",
-          "title": "个人开发看板边界规范闭环",
-          "product_line": "project-system / dev-dashboard",
-          "branch_commit": "`web` / local working tree",
-          "user_visible": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。",
-          "developer_delta": "将 `docs/prototypes/dev-dashboard/README.md` 和 `docs/prototypes/dev-dashboard/BOUNDARIES.md` 纳入 tracked scope；`xai-dev-dashboard-sync` 的项目源 skill 增加 README 和 Boundary spec 作为 Read First / drift audit 输入，并把 Boundary spec 作为第六个 alignment surface 和 receipt 字段；`docs/workflow/project/dev-dashboard.md` 同步记录六项 alignment check；`generate-state.mjs` 将 README / BOUNDARIES 加入必读文档、sync sources 和 dashboard-docs dirty bucket。",
-          "verification": "`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；generated state confirmed `README.md` and `BOUNDARIES.md` appear in must-read docs and sync sources；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed.",
-          "risk_followup": "`.claude/skills/xai-dev-dashboard-sync` and `.codex/skills/xai-dev-dashboard-sync` are symlink mirrors to `.teams/skills/xai-dev-dashboard-sync`, so the tracked source skill is the only file that needs committing.",
-          "id": "2026-06-03-个人开发看板边界规范闭环",
-          "module": "project-system",
-          "related_modules": [
-            "project-system"
-          ],
-          "type": "docs",
-          "testing_status": "pass",
-          "testing_categories": [
-            "build"
-          ],
-          "version_label": "snapshot 2026-06-03",
-          "summary": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。"
         }
       ]
     }
   ],
   "overall_releases": [
     {
-      "date": "2026-06-04",
-      "version_label": "project snapshot 2026-06-04",
-      "title": "Desktop Plugin 产品边界与长期平台路线落地",
-      "summary": "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro… / 无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工…",
+      "date": "2026-06-06",
+      "version_label": "project snapshot 2026-06-06",
+      "title": "Desktop Plugin Center Frame Normalization Smoke",
+      "summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。 / Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
       "modules": [
         "app",
         "plugin",
         "project-system"
       ],
       "added": [
-        "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。",
-        "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。",
-        "个人开发看板和产品结构导航现在能看到 13 个固定项目 skill；Web 部署相关改动有 `xai-web-deploy-preflight` 前置检查入口，Mac Desktop W4 发版风险有 `xai-desktop-release-gate` 入口，Cursor 也拥有全部 XAI 项目 skill 的 `.mdc` 镜像。"
+        "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。",
+        "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。",
+        "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。"
       ],
       "improved": [
-        "新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。",
-        "`docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。",
-        "新增 `.teams/skills/xai-web-deploy-preflight` 与 `.teams/skills/xai-desktop-release-gate`，并镜像到 `.claude/skills`、`.codex/skills`、`.cursor/rules`；把 `xai-feature-brief` 升级为六产品线 intake，把 `xai-feature-dossier-sync` Scope 扩到 `site/admin/project-system`，并让 `xai-dev-dashboard-sync` / `xai-consistency-audit` 显式检查 Cursor mirrors；更新 ADR-0014、`sync-registry.json`、`PRODUCT_MODULE_MAP.md`、`dashboard-state.json`、usage-guide、consistency checks 和 dashboard generator，让部署 / 桌面发布 gate 可被 fanout dispatch、看板和文档库发现。"
+        "Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。",
+        "保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。",
+        "将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。"
       ],
       "fixed": [],
       "impact": [
+        "desktop-plugin",
+        "desktop-plugin",
+        "desktop-plugin",
+        "desktop-plugin"
+      ],
+      "audience_note": "",
+      "entries": [
+        {
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
+          "module": "app",
+          "summary": "Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。"
+        },
+        {
+          "title": "Desktop Plugin Host Sub-Bundle Routing",
+          "module": "app",
+          "summary": "Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。"
+        },
+        {
+          "title": "Desktop Plugin Native Host Menu Entry",
+          "module": "app",
+          "summary": "macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。"
+        },
+        {
+          "title": "Desktop Plugin Phase 2 Host Smoke Typecheck Preflight",
+          "module": "app",
+          "summary": "无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。"
+        },
+        {
+          "title": "Desktop Plugin Phase 2 Host Smoke Checklist Refresh",
+          "module": "app",
+          "summary": "无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capabi…"
+        },
+        {
+          "title": "Desktop Plugin Phase 2 Sample Widget Host Flow",
+          "module": "app",
+          "summary": "Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipbo…"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-04",
+      "version_label": "project snapshot 2026-06-04",
+      "title": "Desktop Plugin Phase 1 系统底座文档包",
+      "summary": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。 / 无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Andro…",
+      "modules": [
+        "app",
+        "plugin",
+        "project-system"
+      ],
+      "added": [
+        "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。",
+        "无运行时功能变更。产品结构现在明确 Mac Desktop 是“Web 容器壳 + native chrome”，Desktop Plugin 承担“桌面原生超能力层”（多窗口/overlay/Widget/快速入口），未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展只进入 planning-only 路线图，不进入当前开发队列。",
+        "无运行时功能变更。产品文档与个人开发看板现在明确 Desktop Plugin 的未来入口是 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；看板的 Desktop Plugin 模块卡标明 `Paused until G1`、入口设计已决、实现未开工。"
+      ],
+      "improved": [
+        "新增 `docs/planning/execution/desktop-plugin-platform-phase1.md`，给出 Phase 1/2/3 顺序、系统能力清单、Mac App bridge 边界、小步 commit 规则和可复制 goal prompt；同步更新 Plugin PRD、模块边界、产品模块图、Plugin map、Plugin SDK、module-classification registry、execution pack 索引和个人开发看板状态。",
+        "新增 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；同步 `CLAUDE.md`、`AGENTS.md`、Cursor 路由规则、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、Plugin PRD、`module-classification.json`、`dashboard-state.json` 和 `xai-module-classify` 三端 skill/rule 镜像；个人开发看板产品结构图新增 `future_surfaces` 只读规划层。",
+        "`docs/planning/sub-prds/plugin/PRD.md` 新增 Plugin Center / Entry Model、MVP 添加流程、实例设置和风险顺序；`docs/PLUGIN_SDK.md` 新增 `PluginInstance` / `PluginCenterEntry` / `AddToDesktop` contract；`docs/MODULE_BOUNDARIES.md` 与 `docs/PRODUCT_MODULE_MAP.md` 明确“入口归 App、内容归 plugin”的路由；`dashboard-state.json` 更新 plugin 产品线状态卡，`docs/prototypes/dev-dashboard/BOUNDARIES.md` 固化状态卡只读 Product Module Registry 的边界。"
+      ],
+      "fixed": [],
+      "impact": [
+        "desktop-plugin / project-system",
         "desktop-plugin / project-system",
         "desktop-plugin / project-system",
         "project-system / workflow governance"
       ],
       "audience_note": "",
       "entries": [
+        {
+          "title": "Desktop Plugin Phase 1 系统底座文档包",
+          "module": "app",
+          "summary": "无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。"
+        },
         {
           "title": "Desktop Plugin 产品边界与长期平台路线落地",
           "module": "app",
@@ -23143,25 +23030,18 @@ window.XAI_DASHBOARD_STATE = {
       "date": "2026-06-03",
       "version_label": "project snapshot 2026-06-03",
       "title": "个人开发看板边界规范闭环",
-      "summary": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。 / 个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。",
+      "summary": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。",
       "modules": [
         "project-system"
       ],
       "added": [
-        "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。",
-        "个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。",
-        "个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-action` 结论。自动补齐后的字段不再作为长期缺口显示，只作为源文件可回写提示。"
+        "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。"
       ],
       "improved": [
-        "将 `docs/prototypes/dev-dashboard/README.md` 和 `docs/prototypes/dev-dashboard/BOUNDARIES.md` 纳入 tracked scope；`xai-dev-dashboard-sync` 的项目源 skill 增加 README 和 Boundary spec 作为 Read First / drift audit 输入，并把 Boundary spec 作为第六个 alignment surface 和 receipt 字段；`docs/workflow/project/dev-dashboard.md` 同步记录六项 alignment check；`generate-state.mjs` 将 README / BOUNDARIES 加入必读文档、sync sources 和 dashboard-docs dirty bucket。",
-        "`release-testing.mjs` 抽出 release-log Verification 判定，先识别 `0 failures / 0 errors` 等零失败表达再匹配失败词；`generate-state.mjs` 将 `project-system/dev-dashboard` 拆成独立 release/testing 归类，收窄 Admin aliases，并为 `skill_agent_registry` 增加 `source_completeness`；`verify-static.mjs` 新增 release verdict fixture 和 `theme-bootstrap.js` 顺序检查；`verify-product-modules.mjs` 允许 release 卡展示 `project-system` 支持类，同时继续强制六个 Product Module Registry key。",
-        "`generate-state.mjs` 新增 `skill_agent_registry`，扫描 `.teams/skills`、`.codex/skills`、portable skills、canonical agent templates 和 Codex/Claude/Cursor agent 变体，自动分类、提取/生成简介与注释、识别新增/修改项、维护状态、镜像状态、真正 unresolved 项和 source-backfill 项；`skill-agent.js` 改为从 registry 渲染知识库；同步更新 `xai-dev-dashboard-sync`、机器契约、模板、设计说明和 usage-guide。"
+        "将 `docs/prototypes/dev-dashboard/README.md` 和 `docs/prototypes/dev-dashboard/BOUNDARIES.md` 纳入 tracked scope；`xai-dev-dashboard-sync` 的项目源 skill 增加 README 和 Boundary spec 作为 Read First / drift audit 输入，并把 Boundary spec 作为第六个 alignment surface 和 receipt 字段；`docs/workflow/project/dev-dashboard.md` 同步记录六项 alignment check；`generate-state.mjs` 将 README / BOUNDARIES 加入必读文档、sync sources 和 dashboard-docs dirty bucket。"
       ],
       "fixed": [],
       "impact": [
-        "project-system / dev-dashboard",
-        "project-system / dev-dashboard",
-        "project-system / dev-dashboard",
         "project-system / dev-dashboard"
       ],
       "audience_note": "",
@@ -23170,153 +23050,13 @@ window.XAI_DASHBOARD_STATE = {
           "title": "个人开发看板边界规范闭环",
           "module": "project-system",
           "summary": "个人开发看板新增可跟踪的 `README.md` 入口和 `BOUNDARIES.md` 页面/卡片边界规范，并让同步 skill 在每次运行时核对它们，避免模板引用未纳入 Git 的配套文件。"
-        },
-        {
-          "title": "个人开发看板数据边界修复",
-          "module": "project-system",
-          "summary": "个人开发看板的测试结果、发布记录和模块健康结论不再把 `dev-dashboard` / `project-system` 证据归到 Admin；Skill / Agent 页新增源文件完整度指标，区分“展示字段已补齐”和“源文件已补齐”。"
-        },
-        {
-          "title": "个人开发看板 Skill / Agent 知识库",
-          "module": "project-system",
-          "summary": "个人开发看板「Skill 和 Agent」页升级为可维护知识库，不再只显示名称列表；每个 Skill / Agent 展示类型、分类、使用场景、功能说明、输入、输出、使用频率、关联 workflow、关联文档、维护状态、最近更新时间和简短注释，并给出 `resolved` / `needs-ac…"
-        },
-        {
-          "title": "个人开发看板测试结果面板",
-          "module": "project-system",
-          "summary": "个人开发看板新增「测试结果」Tab，按 Web、Mac 桌面版本、桌面插件、账号云同步、官网、管理者 Dashboard 展示最近测试时间、结论、通过状态、失败项、分类测试结果、pipeline 状态、耗时和报告入口；总览模块卡片、产品结构详情、部署记录和发布记录也同步显示测试状态。"
-        }
-      ]
-    },
-    {
-      "date": "2026-06-02",
-      "version_label": "project snapshot 2026-06-02",
-      "title": "Web 记账模块 Cloud Design 正式接入",
-      "summary": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。 / 开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。",
-      "modules": [
-        "web",
-        "project-system",
-        "sync"
-      ],
-      "added": [
-        "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。",
-        "开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。",
-        "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。"
-      ],
-      "improved": [
-        "新增 `@repo/plugin-web-bookkeeping` 包、Cloud Design 对齐 docs 四件套和 canonical PRD；host 接入 workspace dependency、shell registration、wallet icon、`nav.bookkeeping` i18n；看板 Web feature 列表从 proposed 更新为 in-dev。存储使用 `xai_bk_state_v2` + 4 个偏好键，adapter 标记 `syncStatus: \"device-local\"`，仅预留账号云同步接口，不写 sync entities；修复 dev/StrictMode 下保存一次重复写入两条记录的状态副作用问题。",
-        "`scripts/dashboard/generate-state.mjs` 新增 `weekly_stats`（最近 8 周）和 `monthly_stats`（最近 6 个月），每个周期记录 commit 数、活跃天数、活跃率和日期范围；`ops-panels.js` 渲染维度 tabs、摘要卡和柱状图；同步更新 dev-dashboard 模板与设计说明。",
-        "用 `xai-feature-dossier-sync` 反向为 6 个已 SHIPPED 的 web 功能建立 `docs/product/<feature>/prd.md`（仓库首批功能级 canonical PRD）：清单 tasks、看板 board（3 包合 1）、日历 calendar、番茄钟 pomodoro、仪表盘 dashboard（grid+widgets 合 1）、设置 settings（主壳 + appearance/features/rest 3 子 PRD）。各功能历史 ship 日期/commit 见对应 PRD §7（tasks/board/calendar/pomodoro 于 2026-05-23~24；dashboard 系列 2026-05-23~29；settings W4 系列 2026-05-23~28）。同时收口 calendar 一处 traceability 异常：工具栏「+」按钮 bugfix（dev_log block3，停在 `FIX_READY`）查证为被 `xai-web-calendar-event-create`（Option B 真实 CRUD，SHIPPED `bc573b1`）取代，已标 `superseded` 并回写 dev_log + PRD。"
-      ],
-      "fixed": [],
-      "impact": [
-        "web",
-        "project-system / dev-dashboard",
-        "web",
-        "project-system / sync"
-      ],
-      "audience_note": "",
-      "entries": [
-        {
-          "title": "Web 记账模块 Cloud Design 正式接入",
-          "module": "web",
-          "summary": "Web Console 新增 `/app/bookkeeping` 正式记账模块，rail 显示「记账」，可管理账本、账户、收支/转账/预付记录、分类、预算、资产、投资和周期账单；支持计算器金额输入、日历每日收支、明细搜索筛选、统计图表、CSV 导入导出和刷新后本地保留。"
-        },
-        {
-          "title": "个人开发看板开发数据周/月趋势",
-          "module": "project-system",
-          "summary": "开发数据页新增时间维度切换（今日 / 最近 7 天 / 按周 / 按月），并用图表展示周 commit 数对比、月 commit 数对比、周开发活跃度趋势、月开发活跃度趋势；不再只停留在今日和 7 日数字。"
-        },
-        {
-          "title": "Web 六大功能反向补建 canonical PRD + 历史 SHIPPED 补登",
-          "module": "web",
-          "summary": "无（纯文档治理；用户在产品上看不到变化）。本条为反向补账——下列功能均为**历史已 SHIPPED**，此前缺 canonical PRD 与 release-log 记录。"
-        },
-        {
-          "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-          "module": "sync",
-          "summary": "完成一个核心模块后,可用一句话「Web 版本功能已完成，执行后续同步 workflow」触发跨模块同步扇出;系统按语义规则判定该同步到哪些模块,并产出每条 lane 的 prompt / 回执,多窗口并行处理。"
-        },
-        {
-          "title": "治理基线对齐：ADR-0013 接受 + ADR-0014 同步编排 + ADR-0008 CSP 记账",
-          "module": "project-system",
-          "summary": "分支与同步治理基线现在一致——ADR-0010 / ADR-0013 / ADR-0014 均为 Accepted;开发看板分支板的 `adr_status` 显示 Accepted。"
-        },
-        {
-          "title": "文档库必读入口和绝对路径复制",
-          "module": "project-system",
-          "summary": "文档库的必读文档现在直接显示看板机器说明和看板可复用模板；推荐卡片提供复制按钮，文档详情和全屏阅读器复制的是本机绝对路径。"
-        }
-      ]
-    },
-    {
-      "date": "2026-06-01",
-      "version_label": "project snapshot 2026-06-01",
-      "title": "看板同步 Skill 三层对齐",
-      "summary": "`xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。",
-      "modules": [
-        "project-system"
-      ],
-      "added": [
-        "`xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。"
-      ],
-      "improved": [
-        "更新 `.teams/skills/xai-dev-dashboard-sync/SKILL.md` 的触发描述、同步范围、drift audit 和 sync receipt；新增 `.claude/skills/xai-dev-dashboard-sync` 镜像 symlink；同步更新 `CLAUDE.md`、`AGENTS.md`、`docs/workflow/project/dev-dashboard.md`、`docs/prototypes/dev-dashboard/TEMPLATE.md`、dashboard state 和 usage-guide。"
-      ],
-      "fixed": [],
-      "impact": [
-        "project-system / dev-dashboard"
-      ],
-      "audience_note": "",
-      "entries": [
-        {
-          "title": "看板同步 Skill 三层对齐",
-          "module": "project-system",
-          "summary": "`xai-dev-dashboard-sync` 现在明确把 Overview 同步、机器说明文档对齐、可复用模板对齐作为一次运行里的三层检查；Claude Code 和 Codex 都有项目 skill 入口。"
-        }
-      ]
-    },
-    {
-      "date": "2026-05-31",
-      "version_label": "dev-dashboard v0.4 → v0.5",
-      "title": "个人开发看板同步契约",
-      "summary": "打开个人开发看板总览即可判断看板是否刚刷新、当前工作区是否有未提交变更，以及应该用哪个同步入口刷新。 / 发布记录从单一时间线升级为模块化发布看板，并保留整体版本更新摘要。",
-      "modules": [
-        "project-system"
-      ],
-      "added": [
-        "新增 `xai-dev-dashboard-sync` 项目 Skill、机器可读的 `docs/workflow/project/dev-dashboard.md`、可复用的 `docs/prototypes/dev-dashboard/TEMPLATE.md`。",
-        "发布记录页拆成「整体发布记录」「模块发布卡片」「详细发布记录」三个层级；模块覆盖 Web 分支、App / Mac 桌面版本、桌面插件、账号云同步、官网、管理者 / 开发者 Dashboard。"
-      ],
-      "improved": [
-        "Overview 新增看板同步状态区，展示上次更新时间、当前快照、未提交变更、同步 Skill 状态、最新 release-log entry 和关键来源文件更新时间。",
-        "整体发布记录改成接近 GitHub Release 的摘要卡片，展示发布日期、版本标记、新增功能、优化内容、修复问题、影响范围和面向用户 / 开发者的说明；详细记录中的长验证信息改为两行摘要块，避免横向撑破页面。"
-      ],
-      "fixed": [
-        "修复本地 dashboard server 下打开 `release-log.md` 可能落到 `/workflow/project/release-log.md` 并返回 not found 的链接路径问题。"
-      ],
-      "impact": [
-        "project-system / dev-dashboard",
-        "个人开发看板、release-log 解析脚本、本地 dashboard server、`docs/workflow/project/release-log.md` 的结构化字段。"
-      ],
-      "audience_note": "开发者可以按模块快速判断变更影响；产品使用者可以先看整体版本摘要，不必阅读细节 commit。",
-      "entries": [
-        {
-          "title": "个人开发看板同步契约",
-          "module": "project-system",
-          "summary": "打开个人开发看板总览即可判断看板是否刚刷新、当前工作区是否有未提交变更，以及应该用哪个同步入口刷新。"
-        },
-        {
-          "title": "发布记录看板升级",
-          "module": "project-system",
-          "summary": "发布记录从单一时间线升级为模块化发布看板，并保留整体版本更新摘要。"
         }
       ]
     }
   ],
   "release_log": {
     "source": "docs/workflow/project/release-log.md",
-    "latest_entry": "Desktop Plugin 产品边界与长期平台路线落地"
+    "latest_entry": "Desktop Plugin Center Frame Normalization Smoke"
   },
   "branch_policy": {
     "schema_version": 1,
@@ -23510,18 +23250,18 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "current": {
-      "web_only": 443,
-      "dev_only": 190,
+      "web_only": 444,
+      "dev_only": 214,
       "drift_status": "符合预期",
       "drift_note": "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。",
       "gate_timeline": {
         "web_last_commit": "2026-06-06",
-        "dev_last_commit": "2026-05-30",
+        "dev_last_commit": "2026-06-06",
         "shared_base": "2026-05-26",
         "last_release_tag": "（暂无 tag）",
-        "web_ahead": 443,
-        "dev_ahead": 190,
-        "reminder": "web 较共同基线领先 443 个提交、dev 领先 190 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
+        "web_ahead": 444,
+        "dev_ahead": 214,
+        "reminder": "web 较共同基线领先 444 个提交、dev 领先 214 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
       }
     }
   },
@@ -23639,8 +23379,8 @@ window.XAI_DASHBOARD_STATE = {
   "development_data": {
     "source": "git",
     "scope": "all refs unless noted",
-    "today_commits": 40,
-    "seven_day_commits": 332,
+    "today_commits": 83,
+    "seven_day_commits": 345,
     "seven_day_trend": [
       {
         "date": "2026-05-31",
@@ -23668,7 +23408,7 @@ window.XAI_DASHBOARD_STATE = {
       },
       {
         "date": "2026-06-06",
-        "commits": 40
+        "commits": 83
       }
     ],
     "weekly_stats": [
@@ -23762,7 +23502,7 @@ window.XAI_DASHBOARD_STATE = {
         "label": "06-01-06-06",
         "start_date": "2026-06-01",
         "end_date": "2026-06-06",
-        "commits": 241,
+        "commits": 284,
         "active_days": 6,
         "total_days": 6,
         "active_rate": 1,
@@ -23836,7 +23576,7 @@ window.XAI_DASHBOARD_STATE = {
         "label": "2026-06",
         "start_date": "2026-06-01",
         "end_date": "2026-06-06",
-        "commits": 241,
+        "commits": 284,
         "active_days": 6,
         "total_days": 6,
         "active_rate": 1,
@@ -23844,28 +23584,81 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "today_numstat": {
-      "added": 19050,
-      "deleted": 722,
-      "files": 122
+      "added": 31737,
+      "deleted": 1295,
+      "files": 196
     },
     "directory_changes": {
       "docs": {
-        "added": 4970,
-        "deleted": 171,
-        "files": 26
+        "added": 6640,
+        "deleted": 356,
+        "files": 85
       },
       "other": {
-        "added": 12553,
-        "deleted": 523,
-        "files": 138
+        "added": 22442,
+        "deleted": 781,
+        "files": 272
       },
       "apps/desktop": {
-        "added": 1527,
-        "deleted": 28,
-        "files": 13
+        "added": 2636,
+        "deleted": 158,
+        "files": 33
+      },
+      "apps/web": {
+        "added": 19,
+        "deleted": 0,
+        "files": 1
       }
     },
     "branch_recent_commits": [
+      {
+        "name": "web",
+        "date": "2026-06-06 15:09:21 -0700",
+        "commit": "26ff5617",
+        "subject": "dashboard: auto-start web from launcher"
+      },
+      {
+        "name": "origin/web",
+        "date": "2026-06-06 15:09:21 -0700",
+        "commit": "26ff5617",
+        "subject": "dashboard: auto-start web from launcher"
+      },
+      {
+        "name": "origin/dev",
+        "date": "2026-06-06 14:43:34 -0700",
+        "commit": "022dc90b",
+        "subject": "merge(plugin-platform): integrate desktop plugin common capabilities"
+      },
+      {
+        "name": "origin/claude/frosty-nash-c4bf16",
+        "date": "2026-06-06 08:01:35 -0700",
+        "commit": "72902b7d",
+        "subject": "docs(project): record Admin Dashboard roadmap 6/6 SHIPPED + dashboard refresh"
+      },
+      {
+        "name": "origin/codex/plugin/common-capabilities-phase2",
+        "date": "2026-06-06 06:08:50 -0700",
+        "commit": "47bf5632",
+        "subject": "docs(plugin-platform): record locked host smoke recheck"
+      },
+      {
+        "name": "dev",
+        "date": "2026-06-06 04:31:53 -0700",
+        "commit": "47d8f4e5",
+        "subject": "Merge branch 'web' into dev"
+      },
+      {
+        "name": "origin",
+        "date": "2026-06-06 04:28:28 -0700",
+        "commit": "9a61669b",
+        "subject": "ci(deploy): keep Pages build in public demo auth"
+      },
+      {
+        "name": "origin/main",
+        "date": "2026-06-06 04:28:28 -0700",
+        "commit": "9a61669b",
+        "subject": "ci(deploy): keep Pages build in public demo auth"
+      },
       {
         "name": "origin/codex/plugin/platform-runtime-phase1",
         "date": "2026-06-06 04:07:29 -0700",
@@ -23873,46 +23666,16 @@ window.XAI_DASHBOARD_STATE = {
         "subject": "docs(plugin-platform): close phase 1 runtime foundation"
       },
       {
-        "name": "origin/claude/frosty-nash-c4bf16",
-        "date": "2026-06-06 04:01:05 -0700",
-        "commit": "07d25809",
-        "subject": "docs(admin): mark row #2 xai-admin-data-contracts-rbac SHIPPED"
+        "name": "origin/desktop-plugin-next",
+        "date": "2026-06-06 04:07:29 -0700",
+        "commit": "ae72888f",
+        "subject": "docs(plugin-platform): close phase 1 runtime foundation"
       },
       {
         "name": "main",
         "date": "2026-06-06 04:00:43 -0700",
         "commit": "2258d376",
         "subject": "ci(deploy): run Wrangler deploy through pnpm"
-      },
-      {
-        "name": "origin",
-        "date": "2026-06-06 04:00:43 -0700",
-        "commit": "2258d376",
-        "subject": "ci(deploy): run Wrangler deploy through pnpm"
-      },
-      {
-        "name": "origin/main",
-        "date": "2026-06-06 04:00:43 -0700",
-        "commit": "2258d376",
-        "subject": "ci(deploy): run Wrangler deploy through pnpm"
-      },
-      {
-        "name": "dev",
-        "date": "2026-06-06 03:50:44 -0700",
-        "commit": "f2bbf1a0",
-        "subject": "merge: web desktop D3 parity into dev"
-      },
-      {
-        "name": "web",
-        "date": "2026-06-06 03:30:41 -0700",
-        "commit": "65152f62",
-        "subject": "merge(web): land time tracker visual polish"
-      },
-      {
-        "name": "origin/web",
-        "date": "2026-06-06 03:30:41 -0700",
-        "commit": "65152f62",
-        "subject": "merge(web): land time tracker visual polish"
       },
       {
         "name": "origin/codex/admin-dashboard-prototype-hardening",
@@ -23931,33 +23694,15 @@ window.XAI_DASHBOARD_STATE = {
         "date": "2026-06-04 13:41:27 -0700",
         "commit": "eb25338a",
         "subject": "feat(plugin-web-countdown): polish interactions and drag sorting"
-      },
-      {
-        "name": "origin/codex/web/meditation-config",
-        "date": "2026-06-04 13:36:59 -0700",
-        "commit": "11400e30",
-        "subject": "feat(web): polish meditation controls"
-      },
-      {
-        "name": "codex/web-desktop-d3-parity",
-        "date": "2026-06-04 04:26:03 -0700",
-        "commit": "bec26298",
-        "subject": "fix(desktop): bypass mock auth login route"
-      },
-      {
-        "name": "origin/codex/plugin/platform-docs",
-        "date": "2026-06-04 04:19:37 -0700",
-        "commit": "dadaa071",
-        "subject": "docs(plugin): prepare desktop plugin platform phase 1"
       }
     ],
-    "uncommitted_files": 504,
+    "uncommitted_files": 56,
     "doc_vs_code": {
-      "docs_lines": 129695,
-      "code_lines": 194632,
+      "docs_lines": 132400,
+      "code_lines": 196975,
       "ratio": 0.67
     },
-    "recent_push_time": "2026-05-30T03:47:21-07:00",
+    "recent_push_time": "2026-06-06T14:43:34-07:00",
     "skill_change_commits": 20
   },
   "task_progress": {
@@ -25128,7 +24873,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "web↔dev 分叉",
       "badge": "正常差异",
-      "value": "443/190",
+      "value": "444/214",
       "note": "两条独立专注线，差异正常"
     },
     {
@@ -25146,8 +24891,8 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "Dashboard sync",
       "badge": "skill tracked",
-      "value": "504 dirty",
-      "note": "pnpm dashboard · 最新发布 Desktop Plugin 产品边界与长期平台路线落地"
+      "value": "56 dirty",
+      "note": "pnpm dashboard · 最新发布 Desktop Plugin Center Frame Normalization Smoke"
     }
   ],
   "cockpit": [
@@ -25169,7 +24914,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "question": "什么状态",
       "answer": "有未提交变更",
-      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 504"
+      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 56"
     }
   ],
   "overview_modules": [
@@ -25392,7 +25137,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "app",
           "trigger": "Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3",
-          "branch": "desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认)",
+          "branch": "desktop-next（defined-not-yet-created）/ desktop-plugin-next（已创建）",
           "skill": "xai-feature-full-loop",
           "note": "W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。"
         },
@@ -25406,9 +25151,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
-          "skill": "xai-feature-brief 或 xai-roadmap-loop",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
+          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
+          "skill": "xai-feature-brief",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
         }
       ],
       "impacts": [
@@ -25430,7 +25175,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
         }
       ],
       "region": "主产品链",
@@ -25495,7 +25240,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Web 版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "最近 Web 增量的 release-log Verification 显示 lint、typecheck、test、build 和 Browser smoke 有通过记录；完整主线 lint 仍可能被既有 warning 阻断时需在记录中标明。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
@@ -25538,28 +25283,8 @@ window.XAI_DASHBOARD_STATE = {
             "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "web"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test",
-            "e2e",
-            "frontend_page",
-            "build"
-          ],
-          "id": "release-2026-06-02-web-记账模块-cloud-design-正式接入",
-          "source": "release-log",
-          "module": "web",
-          "date": "2026-06-02",
-          "title": "Web 记账模块 Cloud Design 正式接入",
-          "status": "pass",
-          "conclusion": "`pnpm --filter @repo/plugin-web-bookkeeping lint` passed；`pnpm --filter @repo/plugin-web-bookkeeping check-types` passed；`pnpm --filter @repo/plugin-web-bookkeeping test` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/xai-web-shell check-types` passed；`pnpm --filter @repo/xai-web-shell lint` passed；`pnpm --filter @repo/plugin-web-tokens check-types` passed；host shell/router/rail filter targeted tests passed；changed Web files targeted eslint passed；`pnpm --filter @repo/web build` passed；Browser smoke at `/app/bookkeeping` passed（8 tabs、单次保存无重复、reload 持久化、390px 无横向溢出）。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 2,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter @repo/web check-types",
           "pnpm --filter @repo/web test",
@@ -25729,9 +25454,9 @@ window.XAI_DASHBOARD_STATE = {
         {
           "to": "plugin",
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
-          "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
+          "branch": "desktop-plugin-next / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座与 Phase 2 common capability code path 已完成；clipboard/widgets/pet/meditation 等具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         },
         {
           "to": "sync",
@@ -25767,7 +25492,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "plugin",
           "when": "App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层",
-          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(注意 P2 插件线 G1 SHIPPED 前 paused,需操作者解冻)"
+          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(平台运行时 / Phase 1 底座可作为 active gate；具体插件包等底座闭环后再解冻)"
         }
       ],
       "region": "主产品链",
@@ -25812,7 +25537,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "Mac 桌面版本",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "桌面线已有 Tauri / Rust / supply-chain 测试入口，但 RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
         "failure_count": 0,
         "duration": "",
@@ -25843,30 +25568,36 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "桌面回归套件待随 G1/RC 建立。"
+          },
+          {
+            "key": "unit",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml",
           "pnpm --filter desktop build",
@@ -25880,12 +25611,12 @@ window.XAI_DASHBOARD_STATE = {
       "order": 3,
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
-      "badge": "G1 runtime active · packages paused",
-      "status": "Platform runtime active gate · plugin packages paused until G1",
+      "badge": "Phase 2 common capabilities",
+      "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "G1 平台运行时可推进；插件包继续 PRD / SDK / 看板对齐，等 G1 后做 Widget Host MVP。",
-      "tracker": "入口设计已决；G1 平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待解冻。",
+      "next": "继续 Phase 2：真实 macOS host smoke，然后确认是否解冻具体插件包。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -25896,15 +25627,15 @@ window.XAI_DASHBOARD_STATE = {
         "icon": "P"
       },
       "overview": {
-        "phase": "Runtime active · packages paused",
-        "running": "G1 平台运行时可推进 · 插件包未开工",
-        "progress_fallback": 24,
-        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-        "todo_fallback": "G1 运行时走 active gate；插件包仅维护 brief / docs",
+        "phase": "Phase 2 common capabilities",
+        "running": "Phase 2 common capability code path complete · 插件包未开工",
+        "progress_fallback": 64,
+        "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+        "todo_fallback": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
         "target": {
           "type": "doc",
-          "path": "docs/planning/sub-prds/plugin/PRD.md",
-          "label": "打开 Plugin PRD"
+          "path": "docs/planning/execution/desktop-plugin-platform-phase1.md",
+          "label": "打开 Phase 1 执行路线"
         }
       },
       "tracking": {
@@ -25914,6 +25645,10 @@ window.XAI_DASHBOARD_STATE = {
           [
             "Plugin PRD",
             "docs/planning/sub-prds/plugin/PRD.md"
+          ],
+          [
+            "Phase 1 execution",
+            "docs/planning/execution/desktop-plugin-platform-phase1.md"
           ],
           [
             "PLUGIN_SDK",
@@ -25939,13 +25674,38 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)",
-          "status": "active-gate",
-          "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host"
+          "status": "phase-1-complete",
+          "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行"
         },
         {
-          "name": "Plugin Center / Entry Model(设计已决,未实现)",
-          "status": "planned",
-          "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only"
+          "name": "Plugin Center / Entry Model",
+          "status": "phase-1-complete",
+          "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3"
+        },
+        {
+          "name": "重启恢复 / enabled instance restore",
+          "status": "phase-2-complete",
+          "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗"
+        },
+        {
+          "name": "Native fallback 展示",
+          "status": "phase-2-complete",
+          "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态"
+        },
+        {
+          "name": "Capability denial 展示",
+          "status": "phase-2-complete",
+          "note": "Plugin Center 展示 denied/native window errors 的 code、severity、recoverable 与 capability scope"
+        },
+        {
+          "name": "Native behavior application",
+          "status": "phase-2-complete",
+          "note": "grid window commands 接收 native options，并应用 opacity、click-through、pinned、all-spaces 后回传 nativeApplied"
+        },
+        {
+          "name": "Sample widget host flow",
+          "status": "phase-2-complete",
+          "note": "host-local sample-widget 可从 Plugin Center 添加，持久化为 device-local PluginInstance，并由 GridWindow 按 instance routing 渲染"
         },
         {
           "name": "Smart Container 整理(organizer)",
@@ -25960,7 +25720,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "name": "Widget Host MVP(clock/time progress/countdown)",
           "status": "planned",
-          "note": "G1 后第一批低原生依赖插件"
+          "note": "sample-widget 仅证明 host flow；package-level Widget Host MVP 仍需 operator 确认后单独开工"
         },
         {
           "name": "剪贴板 clipboard MVP(历史/OCR)",
@@ -25989,7 +25749,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "独立跟踪",
-          "入口 App delta、G1 平台运行时 delta、具体插件包 delta 要拆开记录；G1 运行时可走 active gate，插件包 G1 前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座与 Phase 2 common capability code path 已完成，具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         ],
         [
           "风险",
@@ -26001,7 +25761,7 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "边界与文档",
-          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
+          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;Phase 1 执行路线见 docs/planning/execution/desktop-plugin-platform-phase1.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
       "goal": "为 macOS App 提供桌面原生超能力层：插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）+ 具体桌面整理插件 / Widget（Smart Container Grid、剪贴板、便签、宠物、冥想、快速入口/快速操作小窗等）。运行时代码物理可落在 apps/desktop host，但产品归属是 plugin；Mac 壳只负责 Web 容器 + native chrome。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
@@ -26011,8 +25771,8 @@ window.XAI_DASHBOARD_STATE = {
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
-        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
-        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
+        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；进入 desktop-next 需 operator 确认）",
+        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等真实 host smoke 和 operator 解冻确认后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
       "skills": [
@@ -26048,7 +25808,7 @@ window.XAI_DASHBOARD_STATE = {
         },
         {
           "label": "插件平台/SDK 一条龙",
-          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next <-> desktop-next，均已定义但尚未创建），不改 web 产品线 UI。\n约束：若是 G1 平台运行时/SDK 锚点，可作为 active gate 推进；若是第三方或具体插件包 SDK 能力，则随插件包冻结等 G1 SHIPPED 后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
+          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next；如需进入 desktop-next 需 operator 确认），不改 web 产品线 UI。\n约束：Phase 1 系统底座已完成；Phase 2 先做通用插件能力和 sample widget，第三方或具体插件包 SDK 能力仍等解冻后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
         },
         {
           "label": "插件平台运行时（多窗口 / grid / window-command）",
@@ -26056,10 +25816,10 @@ window.XAI_DASHBOARD_STATE = {
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
-        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 与 Phase 2 common capability code path 已完成，后续先做真实 host smoke；若是具体插件包（clipboard/widgets/pet/meditation），operator 确认解冻前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；进入 desktop-next / dev 需 operator 确认），按对应管线推进：Phase 2 通用插件能力走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -26084,7 +25844,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "某 Web 改动经 D3 判定为 W3 native-bridge-needed，需要新增 Tauri/Rust 命令或原生能力来支撑插件平台",
           "branch": "desktop-plugin-next",
           "skill": "xai-feature-full-loop",
-          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-next/desktop-plugin-next 上做原生 delta，并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已在 D2 定义但尚未创建。"
+          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-plugin-next 上做插件平台原生 delta；若需进入 desktop-next，则另经 operator 确认并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已创建。"
         }
       ],
       "impacts": [
@@ -26115,29 +25875,33 @@ window.XAI_DASHBOARD_STATE = {
       "overview_title": "桌面整理插件 / Widget",
       "deployment_title": "桌面插件",
       "release_title": "桌面插件",
-      "phase": "Runtime active · packages paused",
+      "phase": "Phase 2 common capabilities",
       "progress": 5,
-      "running": "G1 平台运行时可推进 · 插件包未开工",
-      "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-      "todo": "G1 运行时走 active gate；插件包仅维护 brief / docs",
+      "running": "Phase 2 common capability code path complete · 插件包未开工",
+      "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+      "todo": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
       "target": {
         "type": "doc",
-        "path": "docs/planning/sub-prds/plugin/PRD.md",
-        "label": "打开 Plugin PRD"
+        "path": "docs/planning/execution/desktop-plugin-platform-phase1.md",
+        "label": "打开 Phase 1 执行路线"
       },
       "tracking_badge": "tracked",
       "status_counts": {
         "ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE": 1,
-        "PAUSED_UNTIL_P1_BETA": 1,
+        "PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED": 1,
         "STABLE": 1,
         "IN-DEV": 7,
         "PLANNED": 4
       },
-      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PAUSED_UNTIL_P1_BETA:1 · PLANNED:4 · STABLE:1",
+      "status_summary": "14 rows · ACTIVE_APP_LANE_—_G1_NATIVE_FOUNDATION_PHASE:1 · IN-DEV:7 · PHASE_2_COMMON_CAPABILITY_CODE_PATH_COMPLETE;_CONCRETE_PLUGIN_PACKAGES_PAUSED:1 · PLANNED:4 · STABLE:1",
       "related_docs": [
         {
           "label": "Plugin PRD",
           "path": "docs/planning/sub-prds/plugin/PRD.md"
+        },
+        {
+          "label": "Phase 1 execution",
+          "path": "docs/planning/execution/desktop-plugin-platform-phase1.md"
         },
         {
           "label": "PLUGIN_SDK",
@@ -26157,7 +25921,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "桌面插件",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-04",
+        "latest_tested_at": "2026-06-06",
         "conclusion": "插件包普遍有独立 vitest/check-types 约定，但桌面插件宿主暂停，缺少最近宿主集成和 widget smoke。",
         "failure_count": 0,
         "duration": "",
@@ -26187,31 +25951,37 @@ window.XAI_DASHBOARD_STATE = {
           {
             "key": "self_test",
             "status": "pass",
-            "detail": "Desktop Plugin 产品边界与长期平台路线落地"
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
+          },
+          {
+            "key": "backend",
+            "status": "pass",
+            "detail": "Desktop Plugin Center Frame Normalization Smoke"
           }
         ],
         "latest_record": {
           "related_modules": [
             "app",
-            "plugin",
-            "project-system"
+            "plugin"
           ],
           "failure_count": 0,
           "categories": [
             "self_test",
+            "unit",
+            "backend",
             "build"
           ],
-          "id": "release-2026-06-04-desktop-plugin-产品边界与长期平台路线落地",
+          "id": "release-2026-06-06-desktop-plugin-center-frame-normalization-smoke",
           "source": "release-log",
           "module": "app",
-          "date": "2026-06-04",
-          "title": "Desktop Plugin 产品边界与长期平台路线落地",
+          "date": "2026-06-06",
+          "title": "Desktop Plugin Center Frame Normalization Smoke",
           "status": "pass",
-          "conclusion": "`module-classification.json` / `dashboard-state.json` JSON parse passed；dashboard JS and generator `node --check` passed；xai-module-classify Team/Codex/Claude mirrors match；`git diff --check` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed；local HTTP smoke on `http://127.0.0.1:4177` confirmed `futureSurfaces` container, `renderFutureSurfaces()` call, future-surface card script, generated `future_surfaces=5`, App goal contains Web SPA, and Plugin goal contains 插件平台运行时.",
+          "conclusion": "`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.",
           "duration": "",
           "report_path": "docs/workflow/project/release-log.md"
         },
-        "record_count": 2,
+        "record_count": 14,
         "commands": [
           "pnpm --filter @repo/plugin-* test",
           "pnpm --filter @repo/plugin-* check-types"
@@ -26375,14 +26145,14 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "同步层需要新的 Tauri/Rust 原生增量(crypto_* IPC、SQLCipher 打开路径、Keychain ACL)或 App SQLite 侧落地",
           "branch": "codex/desktop/<feature>",
           "skill": "xai-web-to-desktop-sync",
-          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next/desktop-plugin-next 承接,二者均为 defined, not yet created(创建需操作者确认,触及 dev 需显式确认)。"
+          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接；触及 dev 需显式确认。"
         },
         {
           "to": "admin",
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
+          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
         }
       ],
       "impacts": [
@@ -26399,7 +26169,7 @@ window.XAI_DASHBOARD_STATE = {
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
         }
       ],
       "region": "主产品链",
@@ -26441,7 +26211,7 @@ window.XAI_DASHBOARD_STATE = {
         "title": "账号云同步",
         "status": "partial",
         "passed": false,
-        "latest_tested_at": "2026-06-02",
+        "latest_tested_at": "",
         "conclusion": "同步线有 RLS、nonce、push/pull、rekey 等测试脚本和 D4 gate 要求；sync-v1 暂停，未登记最近端到端双设备 smoke。",
         "failure_count": 0,
         "duration": "",
@@ -26467,33 +26237,10 @@ window.XAI_DASHBOARD_STATE = {
             "key": "regression",
             "status": "unknown",
             "detail": "同步回归矩阵待恢复 sync-v1 后固定。"
-          },
-          {
-            "key": "self_test",
-            "status": "unknown",
-            "detail": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill"
           }
         ],
-        "latest_record": {
-          "related_modules": [
-            "sync",
-            "project-system"
-          ],
-          "failure_count": 0,
-          "categories": [
-            "self_test"
-          ],
-          "id": "release-2026-06-02-跨模块同步编排-v1-sync-registry-d4-扇出-skill",
-          "source": "release-log",
-          "module": "sync",
-          "date": "2026-06-02",
-          "title": "跨模块同步编排 v1：sync-registry + D4 / 扇出 skill",
-          "status": "unknown",
-          "conclusion": "`node -e` 校验 sync-registry.json 为合法 JSON;两个新 skill 的 `.claude` / `.codex` symlink 解析到 SKILL.md;skill 列表确认已注册;D4 / 派发 skill 已在真实 delta 上 dry-run 跑通。",
-          "duration": "",
-          "report_path": "docs/workflow/project/release-log.md"
-        },
-        "record_count": 1,
+        "latest_record": null,
+        "record_count": 0,
         "commands": [
           "pnpm --filter release-site test:push",
           "pnpm --filter release-site test:pull",
@@ -26733,11 +26480,11 @@ window.XAI_DASHBOARD_STATE = {
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "roadmap-gated",
-      "status": "已激活 · roadmap gated",
+      "badge": "proposed",
+      "status": "控制面候选",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
+      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -26797,23 +26544,23 @@ window.XAI_DASHBOARD_STATE = {
       "features": [
         {
           "name": "AI 配置",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "权限 / RBAC",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "用量统计",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "审计日志",
-          "status": "roadmap-gated"
+          "status": "proposed"
         },
         {
           "name": "运营入口",
-          "status": "roadmap-gated"
+          "status": "proposed"
         }
       ],
       "points": [
@@ -26827,10 +26574,10 @@ window.XAI_DASHBOARD_STATE = {
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
+          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -26842,11 +26589,11 @@ window.XAI_DASHBOARD_STATE = {
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -26864,24 +26611,24 @@ window.XAI_DASHBOARD_STATE = {
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
-        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
+        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {
@@ -26903,7 +26650,7 @@ window.XAI_DASHBOARD_STATE = {
           "trigger": "operator 明确要求把 admin 控制面以原生壳/桌面运行时承载(几乎不会发生,admin 默认是浏览器端隔离 surface);若真需 Tauri/Rust 原生桥接才触发",
           "branch": "codex/desktop/<feature>(经 desktop-next,defined, not yet created)",
           "skill": "xai-web-to-desktop-sync(D3 W0–W4 分类)然后 /xai-feature-full-loop",
-          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next / desktop-plugin-next(均 defined, not yet created)走 App 线。"
+          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接。"
         }
       ],
       "impacts": [

@@ -17,6 +17,7 @@
 | G8 | `G8-web-console.md` | epic/story/task |
 | G9 | `G9-sync-hardening-beta.md` | security gate |
 | G10 | `G10-release-ga.md` | release gate |
+| Plugin Phase 1 | `desktop-plugin-platform-phase1.md` | plugin 系统底座 / 小步 commit |
 
 ## 开工规则
 
@@ -33,3 +34,4 @@
 - `docs/planning/2026-05-12-product-development-plan-v1.md`
 - `docs/planning/REFACTORING_PLAN.md`
 - `docs/adr/0005-window-foundation.md`
+- `docs/planning/execution/desktop-plugin-platform-phase1.md`

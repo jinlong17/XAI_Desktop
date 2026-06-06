@@ -241,19 +241,19 @@
       {
         "key": "plugin",
         "title": "桌面插件",
-        "status": "not_deployed",
-        "progress": 18,
+        "status": "common_capabilities_in_progress",
+        "progress": 64,
         "environment": "desktop-plugin-next",
         "last_deployed_at": "",
         "version": "未登记",
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "等待 App 插件平台恢复排期，再登记插件包版本与宿主版本",
+        "next": "Phase 2 common capability code path 已完成；下一步做真实 macOS host smoke，再确认是否解冻具体插件包",
         "issues": [
           {
             "severity": "pending",
-            "text": "插件平台暂停，当前没有独立云端部署目标。"
+            "text": "插件平台不需要独立云端部署目标；具体插件包仍 paused，需 Phase 2 通用能力和 host smoke 后解冻。"
           }
         ]
       },
@@ -287,11 +287,11 @@
         "platform": "Admin prototype / future app target",
         "target": "控制面、用量、审计、AI 配置",
         "branch": "codex/admin/<feature>",
-        "next": "启动 admin roadmap 第一切片 xai-admin-dashboard-shell,确认 package/deploy 目标和 RBAC 契约",
+        "next": "确认 admin 线优先级、package/deploy 目标和 RBAC 契约",
         "issues": [
           {
             "severity": "pending",
-            "text": "admin 线已于 2026-06-05 operator 激活为 roadmap-gated;仍仅原型+roadmap manifest,尚未确认生产部署目标。"
+            "text": "admin 线为 PROPOSED，仅原型存在，尚未确认部署目标。"
           }
         ]
       }
@@ -738,7 +738,7 @@
         {
           "to": "app",
           "trigger": "Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3",
-          "branch": "desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认)",
+          "branch": "desktop-next（defined-not-yet-created）/ desktop-plugin-next（已创建）",
           "skill": "xai-feature-full-loop",
           "note": "W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。"
         },
@@ -752,9 +752,9 @@
         {
           "to": "admin",
           "trigger": "需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面",
-          "branch": "codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target)",
-          "skill": "xai-feature-brief 或 xai-roadmap-loop",
-          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 xai-admin-dashboard-shell 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。"
+          "branch": "codex/admin/<feature>(admin 线 PROPOSED,六线中最低优先级,owner-deferred;短分支约定已定,尚无包、无 roadmap、未授权开工)",
+          "skill": "xai-feature-brief",
+          "note": "admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线,目前仅原型(docs/prototypes/admin-dashboard/index.html),PROPOSED/owner-deferred(ADR-0013 §S7 #3):先用 brief 规范化占位,勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿当作已批准 active work。"
         }
       ],
       "impacts": [
@@ -776,7 +776,7 @@
         {
           "module": "admin",
           "when": "Web 改动触及与管理中台同源的 AI 配置/用量/权限/审计面(aiPane、secretStore、用量统计、权限模型),可能与 docs/prototypes/admin-dashboard/index.html 原型的 Control Plane 形态产生交集",
-          "action": "记录对 admin Control Plane(operator-activated · roadmap-gated,已有 roadmap manifest,尚无 package/deploy target)的潜在影响,保持配置/数据契约前向兼容;通过 xai-admin-control-plane-sync 或 admin roadmap 更新合同,不在 Web Console 内实现后台管理逻辑。"
+          "action": "记录对 admin Control Plane(PROPOSED,六线最低优先级,owner-deferred,仅原型无包)的潜在影响,保持配置/数据契约前向兼容;admin 尚无 roadmap、未授权开工,不在 Web Console 内实现后台管理逻辑。"
         }
       ]
     },
@@ -897,9 +897,9 @@
         {
           "to": "plugin",
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
-          "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
+          "branch": "desktop-plugin-next / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
-          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。"
+          "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。Phase 1 系统底座与 Phase 2 common capability code path 已完成；clipboard/widgets/pet/meditation 等具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         },
         {
           "to": "sync",
@@ -935,7 +935,7 @@
         {
           "module": "plugin",
           "when": "App host 改动了插件依赖的 SDK / 多窗口契约 / 窗口命令契约，或产品意图属于桌面原生超能力层",
-          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(注意 P2 插件线 G1 SHIPPED 前 paused,需操作者解冻)"
+          "action": "在 desktop-plugin-next / codex/plugin/<feature> 同步更新插件平台与受影响插件,就绪后 merge 回 desktop-next(平台运行时 / Phase 1 底座可作为 active gate；具体插件包等底座闭环后再解冻)"
         }
       ]
     },
@@ -944,12 +944,12 @@
       "order": 3,
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
-      "badge": "G1 runtime active · packages paused",
-      "status": "Platform runtime active gate · plugin packages paused until G1",
+      "badge": "Phase 2 common capabilities",
+      "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "G1 平台运行时可推进；插件包继续 PRD / SDK / 看板对齐，等 G1 后做 Widget Host MVP。",
-      "tracker": "入口设计已决；G1 平台运行时锚点为 active gate；clipboard/widgets/pet/meditation 等插件包等待解冻。",
+      "next": "继续 Phase 2：真实 macOS host smoke，然后确认是否解冻具体插件包。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -960,25 +960,30 @@
         "icon": "P"
       },
       "overview": {
-        "phase": "Runtime active · packages paused",
-        "running": "G1 平台运行时可推进 · 插件包未开工",
-        "progress_fallback": 24,
-        "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
-        "todo_fallback": "G1 运行时走 active gate；插件包仅维护 brief / docs",
-        "target": { "type": "doc", "path": "docs/planning/sub-prds/plugin/PRD.md", "label": "打开 Plugin PRD" }
+        "phase": "Phase 2 common capabilities",
+        "running": "Phase 2 common capability code path complete · 插件包未开工",
+        "progress_fallback": 64,
+        "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
+        "todo_fallback": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
+        "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
         "region": "主产品链",
         "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
-        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
+        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["Phase 1 execution", "docs/planning/execution/desktop-plugin-platform-phase1.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "active-gate", "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host" },
-        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "planned", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only" },
+        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-complete", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行" },
+        { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3" },
+        { "name": "重启恢复 / enabled instance restore", "status": "phase-2-complete", "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗" },
+        { "name": "Native fallback 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态" },
+        { "name": "Capability denial 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 denied/native window errors 的 code、severity、recoverable 与 capability scope" },
+        { "name": "Native behavior application", "status": "phase-2-complete", "note": "grid window commands 接收 native options，并应用 opacity、click-through、pinned、all-spaces 后回传 nativeApplied" },
+        { "name": "Sample widget host flow", "status": "phase-2-complete", "note": "host-local sample-widget 可从 Plugin Center 添加，持久化为 device-local PluginInstance，并由 GridWindow 按 instance routing 渲染" },
         { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
         { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
-        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "G1 后第一批低原生依赖插件" },
+        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "sample-widget 仅证明 host flow；package-level Widget Host MVP 仍需 operator 确认后单独开工" },
         { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
         { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
         { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
@@ -994,7 +999,7 @@
         ],
         [
           "独立跟踪",
-          "入口 App delta、G1 平台运行时 delta、具体插件包 delta 要拆开记录；G1 运行时可走 active gate，插件包 G1 前只做 brief / PRD / SDK contract 对齐。"
+          "入口 App delta、Phase 1 平台运行时 delta、具体插件包 delta 要拆开记录；Phase 1 平台底座与 Phase 2 common capability code path 已完成，具体插件包仍需真实 host smoke 和 operator 确认后解冻。"
         ],
         [
           "风险",
@@ -1006,7 +1011,7 @@
         ],
         [
           "边界与文档",
-          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
+          "三面反混淆(Mac 壳=Web 容器 / 插件平台运行时+挂件=plugin / Web 同名组件=web)与能力边界见 docs/MODULE_BOUNDARIES.md;开发范围与 MVP 顺序见 docs/planning/sub-prds/plugin/PRD.md;Phase 1 执行路线见 docs/planning/execution/desktop-plugin-platform-phase1.md;长期环境面规划见 docs/planning/LONG_TERM_PRODUCT_ROADMAP.md;机器可读分类注册表 docs/workflow/project/module-classification.json。"
         ]
       ],
       "goal": "为 macOS App 提供桌面原生超能力层：插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）+ 具体桌面整理插件 / Widget（Smart Container Grid、剪贴板、便签、宠物、冥想、快速入口/快速操作小窗等）。运行时代码物理可落在 apps/desktop host，但产品归属是 plugin；Mac 壳只负责 Web 容器 + native chrome。入口模型已拍板为 Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好；MVP 只做内置插件管理，不做市场、不做第三方、不把拖拽添加作为主路径。插件数据默认 syncScope: device-local（留本机、永不入远端 outbox），仅在显式标记 account-sync 时才经同步层跨设备。organizer 已 Stable/shipped 并接入桌面宿主,其余 clipboard/widgets/pet 为 Planned/stub、meditation 未建包;三面边界权威见 docs/MODULE_BOUNDARIES.md。",
@@ -1016,8 +1021,8 @@
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
-        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
-        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
+        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已创建；进入 desktop-next 需 operator 确认）",
+        "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等真实 host smoke 和 operator 解冻确认后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],
       "skills": [
@@ -1053,7 +1058,7 @@
         },
         {
           "label": "插件平台/SDK 一条龙",
-          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next <-> desktop-next，均已定义但尚未创建），不改 web 产品线 UI。\n约束：若是 G1 平台运行时/SDK 锚点，可作为 active gate 推进；若是第三方或具体插件包 SDK 能力，则随插件包冻结等 G1 SHIPPED 后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
+          "text": "/xai-feature-full-loop\n动机：Widget Host 需要一个稳定的插件注册/装载 SDK，让第三方 Widget 通过 manifest.json 声明槽位与生命周期。\n目标：在 desktop-plugin-next 上落地 Widget SDK 契约（注册表 + 槽位 API + manifest 校验），index.ts 为唯一公共出口。\n范围：plugin 平台线（desktop-plugin-next；如需进入 desktop-next 需 operator 确认），不改 web 产品线 UI。\n约束：Phase 1 系统底座已完成；Phase 2 先做通用插件能力和 sample widget，第三方或具体插件包 SDK 能力仍等解冻后启动。涉及 Tauri/Rust 原生桥（D3 判 W3）按 D3 走原生 delta 而非合并。"
         },
         {
           "label": "插件平台运行时（多窗口 / grid / window-command）",
@@ -1061,10 +1066,10 @@
         }
       ],
       "workflow": [
-        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），作为 active gate 进入 plugin-platform 流程；若是具体插件包（clipboard/widgets/pet/meditation），G1 SHIPPED 前保持 P2 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
-        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；该长分支与 desktop-next 均在 ADR-0013 D2 定义但尚未创建——创建需操作者显式确认，凡触及 dev 亦需确认），按对应管线推进：G1 平台运行时走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
+        "先分层：若是 G1 平台运行时锚点（multi-window / grid / window-command / Widget Host-SDK），Phase 1 与 Phase 2 common capability code path 已完成，后续先做真实 host smoke；若是具体插件包（clipboard/widgets/pet/meditation），operator 确认解冻前保持 PAUSED，先用 xai-feature-brief 规范化并入队，不开 feature-build。",
+        "active gate 或解冻后插件包开短分支 codex/plugin/<feature>（基于 desktop-plugin-next；进入 desktop-next / dev 需 operator 确认），按对应管线推进：Phase 2 通用插件能力走 xai-feature-full-loop；解冻后具体插件包走 feature-plan → feature-review → feature-build（每次一阶段后停下等人工确认）→ feature-verify → ship。",
         "数据落点判定：每个插件实体先在 packages/core-data/src/entities.ts 定 syncScope。device-local（已注册的如 clipboard.item；widgets.widget 为 ADR-0013 D4 示例、尚未注册）留本机、永不入远端 outbox；仅当确需跨设备才声明 account-sync 并交给 sync 线按 D4 九项清单补齐——本模块不自行实现同步。",
-        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不把插件实现分叉进 site；如影响 admin，只能登记给已激活但 roadmap-gated 的 admin 线处理。",
+        "插件间协作只走 @repo/core/events，业务逻辑全部在 packages/plugin-*，index.ts 为唯一公共出口；依赖前先查 PLUGIN_MAP，只有 Stable/Production（如 organizer）可直依，Planned/In-Dev（含 clipboard/widgets/pet 自身）须 mock。本模块只在 plugin 线推进，绝不分叉进 PROPOSED 的 site/admin 线（二者均未授权开工）。",
         "Plugin Center 实现阶段必须拆分：App 负责控制面板入口、Plugin Center 容器窗口、实例 placement/pin/click-through/权限；plugin 负责可添加内容、AddToDesktop contract、实例 settings schema 和具体插件渲染。",
         "若改动需要从 Web 侧拉取共享 UI/逻辑，或被判定为原生桥需求，走 D3（xai-web-to-desktop-sync）分类（W0–W4）后再在 desktop-next/desktop-plugin-next 上落地，并产出 Parity Receipt（Verdict: NO_APP_CHANGE | GATE_ONLY | DESKTOP_DELTA_REQUIRED | BLOCKED）。",
         "每个可见增量 ship 后用 xai-release-log 登记，保持 plugin 产品线进度可追溯。"
@@ -1089,7 +1094,7 @@
           "trigger": "某 Web 改动经 D3 判定为 W3 native-bridge-needed，需要新增 Tauri/Rust 命令或原生能力来支撑插件平台",
           "branch": "desktop-plugin-next",
           "skill": "xai-feature-full-loop",
-          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-next/desktop-plugin-next 上做原生 delta，并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已在 D2 定义但尚未创建。"
+          "note": "W3 是真实新原生工作而非合并：按 ADR-0013 D3 路由到 /xai-feature-full-loop 在 desktop-plugin-next 上做插件平台原生 delta；若需进入 desktop-next，则另经 operator 确认并产出 Parity Receipt（Verdict: DESKTOP_DELTA_REQUIRED）。desktop-plugin-next 已创建。"
         }
       ],
       "impacts": [
@@ -1238,14 +1243,14 @@
           "trigger": "同步层需要新的 Tauri/Rust 原生增量(crypto_* IPC、SQLCipher 打开路径、Keychain ACL)或 App SQLite 侧落地",
           "branch": "codex/desktop/<feature>",
           "skill": "xai-web-to-desktop-sync",
-          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next/desktop-plugin-next 承接,二者均为 defined, not yet created(创建需操作者确认,触及 dev 需显式确认)。"
+          "note": "属 D3 W3 native-bridge-needed:web→app 唯一通道是 D3 gate(由 xai-web-to-desktop-sync 分类并出 parity receipt);原生 delta 是真正新工作而非合并,经闸门后由 xai-feature-full-loop(/xai-feature-full-loop)在 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接；触及 dev 需显式确认。"
         },
         {
           "to": "admin",
           "trigger": "需要在控制台/管理面观测同步用量、审计日志(sync_audit_log)、配额限流或设备权限/吊销治理",
           "branch": "codex/admin/<feature>",
           "skill": "feature-plan",
-          "note": "Admin Dashboard 已由 operator 于 2026-06-05 激活为 roadmap-gated,但仍无 package/deploy target;治理/可视化在 admin 线承接,并须按 roadmap 先完成 shell 与 RBAC/data-contract gates。同步层只提供数据与事件。"
+          "note": "Admin Dashboard 为 PROPOSED(六线最低,无 package、无 roadmap,原型在 docs/prototypes/admin-dashboard/index.html);在 owner 将 ADR-0013 状态由 Proposed flip 为 Accepted 前无 active-work 授权,只先在原型/契约层登记。同步层只提供数据与事件,治理/可视化在 admin 线承接。"
         }
       ],
       "impacts": [
@@ -1262,7 +1267,7 @@
         {
           "module": "admin",
           "when": "新增 sync 审计/配额/设备治理相关字段或事件(如 sync_audit_log、quota、device list)",
-          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据;admin 当前为 operator-activated · roadmap-gated,实际接入必须经 shell 与 RBAC/data-contract gates。"
+          "action": "更新 Admin Control Plane 的用量/审计/权限视图数据契约,使其能读取并展示新增的同步治理数据(admin 当前为 PROPOSED 无 active-work 授权,先在原型/契约层登记)。"
         }
       ]
     },
@@ -1406,11 +1411,11 @@
       "order": 6,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
-      "badge": "roadmap-gated",
-      "status": "已激活 · roadmap gated",
+      "badge": "proposed",
+      "status": "控制面候选",
       "branch": "codex/admin/<feature>",
       "dependency": "依赖账号、权限、计量和审计合同",
-      "next": "启动 xai-admin-dashboard-shell;先确认隔离 surface、路由守卫和 typed mock adapter。",
+      "next": "先保留 prototype；等真实后台合同稳定后再开线。",
       "tracker": "AI 配置、权限、用量、审计日志、运营入口。",
       "labels": {
         "overview": "Admin Dashboard",
@@ -1440,11 +1445,11 @@
         "release_aliases": ["admin", "admin-dashboard", "control plane", "rbac", "usage", "audit", "ai-config", "权限", "用量", "审计", "运营", "ai 配置"]
       },
       "features": [
-        { "name": "AI 配置", "status": "roadmap-gated" },
-        { "name": "权限 / RBAC", "status": "roadmap-gated" },
-        { "name": "用量统计", "status": "roadmap-gated" },
-        { "name": "审计日志", "status": "roadmap-gated" },
-        { "name": "运营入口", "status": "roadmap-gated" }
+        { "name": "AI 配置", "status": "proposed" },
+        { "name": "权限 / RBAC", "status": "proposed" },
+        { "name": "用量统计", "status": "proposed" },
+        { "name": "审计日志", "status": "proposed" },
+        { "name": "运营入口", "status": "proposed" }
       ],
       "points": [
         [
@@ -1457,10 +1462,10 @@
         ],
         [
           "和主产品链关系",
-          "它服务产品运营和系统配置；已激活为 roadmap-gated,但只有在合同和隔离部署 gates 稳定后才进入生产写入。"
+          "它服务产品运营和系统配置；只有在合同稳定后才进入正式开发分支。"
         ]
       ],
-      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,按已激活的 Workflow V2 roadmap 落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营);第一步是 xai-admin-dashboard-shell,并在 shell/RBAC/审计/secret/deploy gates 通过前不接生产写入。",
+      "goal": "把 docs/prototypes/admin-dashboard/ 单文件管理中台原型,在 operator 确认优先级与 package/deploy 目标后,落地为与用户端隔离的 Admin 控制面(AI 配置、用量、权限、审计、运营),覆盖 AI 配置、用量、权限、审计与运营。",
       "routing": [
         "路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支",
         "关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志",
@@ -1472,11 +1477,11 @@
       "skills": [
         {
           "name": "xai-feature-brief",
-          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;激活后仍用于非 manifest 化的新切片入口。"
+          "when": "把某个 admin 页面/能力(如 admin shell、RBAC 契约、Provider 配置)的散乱想法规范化为结构化 brief,做依赖扫描与 mock 策略后再进 feature-plan;尤其当 owner 刚确认要不要启动 admin 线时。"
         },
         {
           "name": "xai-feature-full-loop",
-          "when": "admin 线已激活为 roadmap-gated 后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
+          "when": "operator 确认 admin 线优先级与 package/deploy 目标后,按单个 feature-sized 切片(第一个切片=xai-admin-dashboard-shell)端到端跑 plan→review→build→verify→ship。"
         },
         {
           "name": "xai-roadmap-loop",
@@ -1494,24 +1499,24 @@
       "prompts": [
         {
           "label": "规范化 admin shell 需求(入口 brief)",
-          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 已于 2026-06-05 将 admin 激活为 roadmap-gated(六线最低、当前仅原型+roadmap manifest),需先做依赖扫描与 mock 策略再进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
+          "text": "/xai-feature-brief\n需求:把 docs/prototypes/admin-dashboard/ 单文件原型落地为与 apps/web 隔离的 Admin 控制面第一切片——独立 admin surface(apps/admin/ 或隔离的 /admin 构建目标)+ 管理员路由守卫 + typed mock adapter 保留现有原型页面。\n背景:ADR-0013 D1 标记 admin 为 PROPOSED(六线最低、仅原型),需先做依赖扫描与 mock 策略再决定是否进 feature-plan。\n约束:不得抢占 Web/App 资源;浏览器永不接收 service-role 凭据或 provider 密钥;高危操作 type-to-confirm + 审计;分支用 codex/admin/<feature>。\n参考:docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md §3-§4、docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 第 1 行。"
         },
         {
           "label": "端到端跑第一个 admin 切片(operator 确认后)",
-          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线已激活但保持 roadmap-gated,不得绕过 gates 向 dev/生产推进。"
+          "text": "/xai-feature-full-loop\nRequirement: Implement the first Admin Dashboard system integration slice: isolated admin shell, admin-only route guard wired through @repo/web-auth-device-session with admin-claim negative tests, and typed mock adapters that preserve the current prototype pages without any production data access.\nSuggested Feature Slug: xai-admin-dashboard-shell\nAutomation Mode: D-Codex\nVerify Cross-vendor: yes\n约束:apps/admin/ 或隔离 /admin 构建目标,独立 CSP/env/deploy;浏览器不得拿到 service-role 凭据或 provider 密钥;codex/admin/<feature> 分支;admin 线保持 Proposed,未经 operator 确认不向 dev 推进。"
         },
         {
           "label": "批量推进 admin 接入 roadmap(已确认启动 admin 线)",
-          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 已可启动,但在 gates 完成前不得进入 dev/生产 promotion。"
+          "text": "/xai-roadmap-loop mode: init\nRoadmap Source: docs/workflow/roadmap/xai-admin-dashboard-system-integration.md\nVerify Cross-vendor: yes\n说明:六行切片按依赖顺序——1 shell → 2 数据契约/RBAC(写操作前必须 green)→ 3 users/orgs/billing(billing 变更先 gate)→ 4 功能/AI/provider 路由(只下发密钥句柄)→ 5 审计/运营队列(每次 mutation append actor/action/target/IP/result)→ 6 部署隔离/可观测/runbook。本 roadmap 在 operator 显式激活 admin 线前不得进入 dev promotion。"
         }
       ],
       "workflow": [
-        "前置门:admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;当前授权范围是 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 的切片,第一步必须是 xai-admin-dashboard-shell;package/deploy target 仍由 shell 切片决策。",
-        "每个目标切片先用 xai-feature-brief 规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
+        "前置门:admin 是 ADR-0013 D1 六线中最低的 PROPOSED(仅原型,无 package/active-roadmap),启动前必须 operator 确认 admin 线优先级 + package/deploy 目标;未确认则只停留在 docs/prototypes/admin-dashboard/ 原型阶段,不写生产代码、不授权新工作。",
+        "确认启动后,先用 xai-feature-brief 把目标切片规范化(依赖扫描:@repo/web-auth-device-session、plugin-web-ai-chat secret store、audit-log-integrity 等;凡 docs/PLUGIN_MAP.md 中为 In-Dev 的 owner 行先 mock 或裹在 admin 专用契约后)。",
         "单切片走标准 feature 流水线 feature-plan → feature-review → feature-build → feature-verify → ship,或用 xai-feature-full-loop 端到端;实现顺序固定:先 admin shell + 路由守卫,再数据契约/RBAC,再读多写少页面,最后受控 mutation。",
         "批量推进时用 xai-roadmap-loop 解析 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md(6 行 manifest),逐波 dispatch,严守依赖:写操作前 RBAC/契约必须 green,billing mutation 需 webhook-backed Stripe state,provider 只下发加密密钥句柄。",
         "每个可见增量完成后用 xai-release-log 记录;缺陷走 bug-diagnose → bug-fix → bug-verify → ship。",
-        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 package/deploy target、RBAC/data contract、审计和 secret gates 完成前,不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
+        "全程在 codex/admin/<feature> 分支;admin 工作天然 W0(web-only,与 App 运行时无关),除非确实改动共享 @repo/* seam 才需 D3 分类(由 xai-web-to-desktop-sync 实施);在 operator 显式激活前,admin roadmap 不得进入 web→desktop-next(defined, not yet created)→dev 的 promotion。"
       ],
       "transitions": [
         {
@@ -1533,7 +1538,7 @@
           "trigger": "operator 明确要求把 admin 控制面以原生壳/桌面运行时承载(几乎不会发生,admin 默认是浏览器端隔离 surface);若真需 Tauri/Rust 原生桥接才触发",
           "branch": "codex/desktop/<feature>(经 desktop-next,defined, not yet created)",
           "skill": "xai-web-to-desktop-sync(D3 W0–W4 分类)然后 /xai-feature-full-loop",
-          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next / desktop-plugin-next(均 defined, not yet created)走 App 线。"
+          "note": "admin 设计为浏览器端隔离 surface,通常与 App 无关(D3 判为 W0 web-only,record only);仅当出现 W3 native-bridge 需求时,原生增量才作为真实新工作经 desktop-next（defined-not-yet-created）或 desktop-plugin-next（已创建）承接。"
         }
       ],
       "impacts": [

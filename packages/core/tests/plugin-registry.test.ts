@@ -47,6 +47,34 @@ describe('PluginRegistry', () => {
     expect(names).not.toContain('disabled-plugin');
   });
 
+  it('should expose disabled manifests to Plugin Center without mounting them', async () => {
+    const { PluginRegistry } = await import('../src/registry/plugin-registry');
+    PluginRegistry.register(createMockManifest('center-organizer', true), {});
+    PluginRegistry.register(createMockManifest('center-widgets', false), {
+      OverlayLayer: (() => null) as any,
+    });
+
+    const centerEntries = PluginRegistry.getPluginCenterEntries({
+      statusByPluginName: {
+        'center-widgets': 'planned',
+      },
+    });
+    const organizerEntry = centerEntries.find((entry) => entry.pluginName === 'center-organizer');
+    const widgetsEntry = centerEntries.find((entry) => entry.pluginName === 'center-widgets');
+    const mountedOverlayCount = PluginRegistry.getOverlayLayers().length;
+
+    expect(organizerEntry).toMatchObject({
+      status: 'available',
+      canAddToDesktop: true,
+    });
+    expect(widgetsEntry).toMatchObject({
+      status: 'planned',
+      enabledByManifest: false,
+      canAddToDesktop: false,
+    });
+    expect(mountedOverlayCount).toBe(0);
+  });
+
   it('should expose console registrations from enabled console plugins only', async () => {
     const { PluginRegistry } = await import('../src/registry/plugin-registry');
     PluginRegistry.register(
