@@ -14,10 +14,10 @@
 | **Target** | xai-admin-feature-ai-provider-control |
 | **Title** | Admin Feature-flags / AI-usage-&-quota / Provider-config wiring (typed read-model adapters · RBAC+audit-gated guarded CONFIG mutations · provider secret-handle read model + provider-key no-leak guard) |
 | **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_FOR_VERIFY — P1–P4 DONE |
-| **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-auto-build host; impl via `codex exec`) |
+| **Status** | READY_TO_SHIP — P1–P4 DONE, feature-verify PASS |
+| **Executor** | claude-opus-4-8 (feature-dev-loop → inline feature-verify) |
 | **Updated** | 2026-06-06 |
-| **Suggested Next** | feature-verify (loop continues inline) |
+| **Suggested Next** | ship (human-confirmed push) |
 | **Blockers** | — |
 | **Automation Mode** | D-Codex (manifest row #4 default) |
 | **Verify Cross-vendor** | yes (manifest row #4 default) |
@@ -474,3 +474,56 @@ Builder notes (carry into build; non-blocking — already covered by plan OQs/ca
 - **Tests**: — (review phase; no tests run — gates verified by source inspection)
 - **Next step**: feature-build — implement P1 (Feature-flags read seam + guarded `setFeatureRollout`), ONE
   phase per run; or feature-auto-build / feature-dev-loop for batch execution.
+
+### Round 7 — 2026-06-06 · feature-verify (PASS · inline) — READY_TO_SHIP
+
+- **Executor**: claude-opus-4-8 (feature-dev-loop → inline `feature-verify`). Native sub-agent spawn was
+  unavailable in this runtime, so the loop ran the verify pass inline (read-only verification; no code written).
+- **Mode**: Verify — `Status = READY_FOR_VERIFY`, all 4 phases DONE. Independent verification of P1–P4 against the
+  plan / design / api / test contracts + the manifest Verification Gates, with EXTRA scrutiny on the provider
+  secret-handle invariant.
+- **Commits reviewed**: `9f76ef9` (P1), `70ea017` (P2), `2be5864` (P3), `1663901` (P4), `29449fd` (dev_log hashes).
+  Each commit has a single phase-scoped intent; no commit crosses a phase boundary or mixes unrelated changes;
+  messages follow `type(scope): summary` + Why/What/Scope/Risk/Docs/Tests.
+- **Independent gate results** (re-run fresh from clean — NOT trusting build-phase reports):
+  - **tsc --noEmit**: clean.
+  - **Full suite** `pnpm --filter @repo/admin test` → **356 passed (31 files)**; every row #4 gate file green:
+    `no-provider-key.test.ts` (3), `no-secret.test.ts` (4), `no-secret-bundle.test.ts` (10),
+    `no-inline-mock.test.ts` (21), `guardedCommands.test.ts` (39), `featuresReadSeam`/`aiUsageReadSeam`/
+    `providersReadSeam` (3/3/4), `wiring.feature-ai-provider.test.tsx` (3), `wiring.users-orgs-billing.test.tsx` (3).
+  - **Builds**: `pnpm --filter @repo/admin build` exit 0 (dist, no `.map`); `pnpm --filter @repo/web build` exit 0
+    (regression boundary — unaffected).
+  - **AC-7 HEADLINE (provider-no-key-material)**: PASS. Unit guard (read-model + fixture + bundle facets) green,
+    PLUS an adversarial direct grep over `dist/**`: ZERO provider-key VALUE shapes (`sk-`/`sk-ant-`/`AIza`/bullet-mask/
+    `service_role`). Investigated the bare token `apiKey` in the bundle → it is the **Supabase Realtime client
+    library's** internal connection-config field name (`this.socket.apiKey`, `apikey` HTTP header) — a generic
+    vendored-dep identifier, NOT provider key material and NOT on the providers read path; in admin SOURCE `apiKey`
+    appears ONLY inside the guard denylists + an `adapters.test.ts` "is undefined" assertion (i.e. used only to PROVE
+    absence). The carried `TT-NO-SECRET-BUNDLE` (key-VALUE + service-role scan) was green across rows #1–#5 with this
+    same lib present. Not a leak; not a blocker.
+  - **AC-2/4/6 (RBAC allow/deny + audit per family)**: PASS. `setFeatureRollout`/`setQuota` super+ops allow,
+    support/finance/audit + no-role deny (ZERO append); `setProviderRouting` SUPER-ONLY (`it.each(ops,support,
+    finance,audit)` ALL forbidden + ZERO append, no-role unauthorized); each granted call appends exactly one event
+    (`admin.features.rollout` / `admin.quota.set` / `admin.providers.routing`), `applied:false` + `auditId`.
+  - **AC-8 (wiring + no-inline-mock)**: PASS. 3 CONFIG pages read via `../adapters` seams; page count 10; none import
+    `../fixtures` or a client module; ProvidersPage renders STATUS only (no key/secret string in the DOM) and its
+    routing affordance reaches `commands.setProviderRouting`.
+  - **AC-11 (additive / byte-identical)**: PASS. slice #1 `mockAdminCommandAdapter` + `TT-CMD-NOOP` unchanged; row #3
+    Users/Orgs/Billing PAGES byte-identical across the WHOLE row #4 range (`git diff 9f76ef9^..HEAD` empty over the 3
+    page files).
+  - **AC-5/AC-1/AC-3 (read seams + handle shape)**: PASS. **AC-9 (advisory/applied:false/no-IO/chain-after-N)**: PASS.
+    **AC-10 / AC-12 (no-secret + builds)**: PASS.
+  - **W0 boundary**: PASS. Across the row #4 commit range (`9f76ef9^..HEAD`) the ONLY non-`apps/admin` file is this
+    row's `docs/reviews/xai-admin-feature-ai-provider-control/20260606-discovery-review.md`. No NEW shared `@repo/*`
+    change (the pre-existing `@repo/web-auth-device-session` imports in App.tsx/auth/* are slice #1/row #2 files,
+    untouched by row #4); no `@repo/audit-log-integrity` import (only absence-proving comments/tests); no
+    `@repo/core/src/events`; no Tauri.
+- **Verdict**: **PASS → READY_TO_SHIP.** 0 blockers. Residual (non-blocking): real service-role
+  feature/quota/provider endpoints + real provider routing effect + real server-side encrypted secret-handle vault +
+  runtime credential fetch are deferred (OQ-D, later/production row); manual browser smoke of the 3 wired pages
+  (Features take-offline [ops/super], AI-usage adjust-quota [ops/super], Providers routing [super-only] +
+  secret-handle status display with NO key) on real hardware is standard pre-ship for admin UI (non-blocking for the
+  unit/contract gate).
+- **Commits**: — (verify only; no code change). The verify-result dev_log update is committed as a docs commit.
+- **Next step**: ship — verify commit integrity, push to remote, mark SHIPPED (requires explicit human confirmation;
+  feature-dev-loop STOPS before ship).
