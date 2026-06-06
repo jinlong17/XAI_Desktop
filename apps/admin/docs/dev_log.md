@@ -9,11 +9,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-dashboard-shell |
 | **Title** | Admin Dashboard Shell (isolated admin surface + permission boundary) |
-| **Current Phase** | FEATURE_VERIFY — PASS |
-| **Status** | READY_TO_SHIP |
-| **Executor** | claude-opus-4-8 (feature-dev-loop · inline feature-verify) |
-| **Updated** | 2026-06-06 02:48 |
-| **Suggested Next** | ship |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | claude-sonnet-4-6 (ship) |
+| **Updated** | 2026-06-06 03:00 |
+| **Suggested Next** | — (SHIPPED; follow-ups: open PR · RR-1 eslint follow-up · row #2 wave) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · slice #1 of 6 |
 | **Branch** | `codex/admin/<feature>` |
@@ -293,3 +293,21 @@ Non-blocking recommendations (carry into feature-build, do NOT require a revise 
 - **Tests**: — (none run; planning phase)
 - **Risks**: see Risks section (R1/R2 HIGH).
 - **Handoff / Next step**: feature-review — review discovery report + design/api/test/dev_log; verify the two ADR-lite resolutions, the W0 boundary, the fail-closed guard contract, and the AC→test mapping; give APPROVED or REVISE.
+
+### Round 9 — 2026-06-06 03:00 · ship → SHIPPED
+
+- **Executor**: claude-sonnet-4-6 (ship)
+- **Action**: Integrity check, supplementary docs commit, push to remote, mark SHIPPED.
+- **Integrity check**:
+  - All 7 expected commits confirmed present: `1c35a99` (P1 scaffold), `c44ea27` (P1 dev_log), `8d177e9` (P2 auth gate), `fe9ea96` (P3 adapters), `047e759` (P4 pages), `fbec02f` (P5 security), `6858208` (verify PASS dev_log).
+  - All commits are admin-source-only (no stray `apps/web`, `packages/core`, or other changes).
+  - No sensitive files detected (no `.env*`, `*.pem`, `*.key`).
+  - Commit messages follow `type(scope): summary` convention throughout.
+- **Supplementary commit**: `99a6581` docs(admin): add feature brief + discovery review artifacts for xai-admin-dashboard-shell (untracked `docs/reviews/xai-admin-dashboard-shell/` files committed — planning artifacts not yet staged).
+- **Commits pushed**: `1c35a99`..`99a6581` (8 commits total on branch `claude/frosty-nash-c4bf16`).
+- **Push target**: `origin/claude/frosty-nash-c4bf16` (feature branch only; W0 — no merge into `dev`/`main`/`web`).
+- **Post-ship notes**:
+  - RR-1 (non-blocking): `apps/admin` missing `eslint.config.js` — follow-up task already recorded; `tsc` + `vitest` clean; does not block ship.
+  - Next: open PR `claude/frosty-nash-c4bf16 → web` (D3 = W0; admin is web-line only; no `dev` promotion).
+  - Subsequent waves: row #2 requires its own `feature-plan` per manifest dependency order.
+- **Next step**: — (workflow complete).
