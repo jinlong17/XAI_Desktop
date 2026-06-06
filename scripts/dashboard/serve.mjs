@@ -7,7 +7,8 @@ import {
   readdirSync,
   statSync
 } from "node:fs";
-import { basename, dirname, extname, relative, resolve } from "node:path";
+import { homedir } from "node:os";
+import { basename, delimiter, dirname, extname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -23,6 +24,8 @@ const dashboardAssetTypes = new Map([
   [".css", "text/css; charset=utf-8"],
   [".js", "application/javascript; charset=utf-8"]
 ]);
+const toolPath = buildToolPath();
+const packageRunner = resolvePackageRunner();
 const opsTargets = new Map([
   ["web", {
     id: "web",
@@ -35,19 +38,60 @@ const opsActions = new Map([
   ["web:start-mock", {
     target: "web",
     label: "启动 Web mock 登录",
-    command: "pnpm",
-    args: ["--filter", "@repo/web", "dev:mock-auth"]
+    command: packageRunner.command,
+    args: [...packageRunner.argsPrefix, "--filter", "@repo/web", "dev:mock-auth"]
   }],
   ["web:start-dev", {
     target: "web",
     label: "启动 Web 普通 dev",
-    command: "pnpm",
-    args: ["--filter", "@repo/web", "dev"]
+    command: packageRunner.command,
+    args: [...packageRunner.argsPrefix, "--filter", "@repo/web", "dev"]
   }]
 ]);
 const opsProcesses = new Map();
 const opsLogs = new Map();
 const maxOpsLogLines = 220;
+
+function buildToolPath() {
+  const bins = [
+    ...nvmNodeBins(),
+    "/opt/homebrew/bin",
+    "/usr/local/bin",
+    ...(process.env.PATH || "").split(delimiter)
+  ].filter(Boolean);
+  return [...new Set(bins)].join(delimiter);
+}
+
+function nvmNodeBins() {
+  const root = resolve(homedir(), ".nvm/versions/node");
+  if (!existsSync(root)) return [];
+  try {
+    return readdirSync(root)
+      .filter(name => name.startsWith("v"))
+      .sort()
+      .reverse()
+      .map(name => resolve(root, name, "bin"))
+      .filter(path => existsSync(path));
+  } catch {
+    return [];
+  }
+}
+
+function commandOnPath(command) {
+  for (const dir of toolPath.split(delimiter)) {
+    const candidate = resolve(dir, command);
+    if (existsSync(candidate)) return candidate;
+  }
+  return "";
+}
+
+function resolvePackageRunner() {
+  const pnpm = commandOnPath("pnpm");
+  if (pnpm) return { command: pnpm, argsPrefix: [] };
+  const corepack = commandOnPath("corepack");
+  if (corepack) return { command: corepack, argsPrefix: ["pnpm"] };
+  return { command: "pnpm", argsPrefix: [] };
+}
 
 function runGenerate() {
   execFileSync(process.execPath, [generatorPath], {
@@ -169,7 +213,7 @@ function startOpsAction(actionId) {
   appendOpsLog(action.target, `[cmd] ${action.command} ${action.args.join(" ")}`);
   const child = spawn(action.command, action.args, {
     cwd: repoRoot,
-    env: { ...process.env, FORCE_COLOR: "1" },
+    env: { ...process.env, PATH: toolPath, FORCE_COLOR: "1" },
     stdio: ["ignore", "pipe", "pipe"]
   });
   const record = {
@@ -210,18 +254,30 @@ function stopOpsTarget(targetId) {
   return { ok: true, target: opsTargetStatus(targetId) };
 }
 
-function openOpsTarget(targetId) {
+function opsTargetUrl(target, route = "") {
+  const routePath = String(route || "").trim();
+  if (!routePath) return target.url;
+  if (!routePath.startsWith("/") || routePath.startsWith("//")) return target.url;
+  const url = new URL(target.url);
+  url.pathname = routePath;
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+function openOpsTarget(targetId, route = "") {
   const target = opsTargets.get(targetId);
   if (!target) {
     throw Object.assign(new Error("Unknown ops target"), { status: 404 });
   }
-  const child = spawn("open", [target.url], {
+  const url = opsTargetUrl(target, route);
+  const child = spawn("open", [url], {
     cwd: repoRoot,
     detached: true,
     stdio: "ignore"
   });
   child.unref();
-  return { ok: true, url: target.url, target: opsTargetStatus(targetId) };
+  return { ok: true, url, target: opsTargetStatus(targetId) };
 }
 
 function opsLogsFor(targetId) {
@@ -483,7 +539,7 @@ function handleApi(url, res) {
     return true;
   }
   if (url.pathname === "/api/ops/open") {
-    sendJson(res, 200, openOpsTarget(url.searchParams.get("target") || ""));
+    sendJson(res, 200, openOpsTarget(url.searchParams.get("target") || "", url.searchParams.get("route") || ""));
     return true;
   }
   if (url.pathname === "/api/ops/logs") {

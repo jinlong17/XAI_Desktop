@@ -87,7 +87,7 @@ function buildOverviewModulesFallback(lines){
 
 function overviewTargetFor(key, label){
   const targets = {
-    web:{type:"url",href:"http://localhost:5173/app/dashboard",label},
+    web:{type:"url",href:"http://localhost:3000/app/dashboard",label},
     app:{type:"page",page:"product-flow",product_key:"app",label},
     plugin:{type:"doc",path:"docs/PLUGIN_MAP.md",label},
     sync:{type:"doc",path:"docs/workflow/roadmap/sync-v1.md",label},
