@@ -125,6 +125,30 @@ const SIDEBAR_INSIGHTS_KEY = "xai_tt_sidebar_insights_hidden_v1";
 const CATEGORY_COLLAPSED_KEY = "xai_tt_category_collapsed_v1";
 const DAY_RECORDS_COLLAPSED_KEY = "xai_tt_day_records_collapsed_v1";
 const TIME_STATUS_HIDDEN_KEY = "xai_tt_time_status_hidden_v1";
+const TIME_STATUS_CARDS_KEY = "xai_tt_time_status_cards_v1";
+const TIME_STATUS_CUSTOM_CARDS_KEY = "xai_tt_time_status_custom_cards_v1";
+
+type TimeStatusStaticCardKey = "date" | "month" | "year" | "today" | "active";
+type TimeStatusCardKey = TimeStatusStaticCardKey | `custom:${string}`;
+type TimeStatusCardView = {
+  readonly key: TimeStatusCardKey;
+  readonly icon: string;
+  readonly label: string;
+  readonly value: string;
+  readonly detail: string;
+  readonly progress?: string;
+  readonly running?: boolean;
+  readonly custom?: boolean;
+};
+type TimeStatusCustomCard = {
+  readonly id: string;
+  readonly name: string;
+  readonly targetMs: number;
+  readonly createdAt: number;
+  readonly updatedAt: number;
+};
+
+const DEFAULT_TIME_STATUS_CARDS: readonly TimeStatusStaticCardKey[] = ["date", "month", "year", "today", "active"];
 
 const INSIGHT_DEFS: ReadonlyArray<{ readonly type: InsightType; readonly span: 3 | 4 | 6 | 8; readonly icon: string }> = [
   { type: "today-total", span: 3, icon: "clock" },
@@ -338,13 +362,8 @@ function monthLabel(ts: number, lang: Lang): string {
 }
 
 function daysLeftText(days: number, lang: Lang): string {
-  if (lang === "zh") return `${days} ${ttCopy(lang, "daysLeft")}`;
+  if (lang === "zh") return `${days}${ttCopy(lang, "daysLeft")}`;
   return `${days} ${ttCopy(lang, days === 1 ? "dayLeft" : "daysLeft")}`;
-}
-
-function leftDetail(days: number, label: CopyKey, lang: Lang): string {
-  if (lang === "zh") return `${ttCopy(lang, label)} · ${daysLeftText(days, lang)}`;
-  return `${daysLeftText(days, lang)} · ${ttCopy(lang, label)}`;
 }
 
 function calendarDayIndex(ts: number): number {
@@ -436,6 +455,54 @@ function readDayRecordsCollapsed(): boolean {
 function readTimeStatusHidden(): boolean {
   if (typeof window === "undefined") return false;
   return window.localStorage.getItem(TIME_STATUS_HIDDEN_KEY) === "1";
+}
+
+function customTimeStatusKey(id: string): TimeStatusCardKey {
+  return `custom:${id}`;
+}
+
+function isTimeStatusStaticCardKey(value: unknown): value is TimeStatusStaticCardKey {
+  return typeof value === "string" && DEFAULT_TIME_STATUS_CARDS.includes(value as TimeStatusStaticCardKey);
+}
+
+function isTimeStatusCardKey(value: unknown): value is TimeStatusCardKey {
+  return isTimeStatusStaticCardKey(value) || (typeof value === "string" && value.startsWith("custom:") && value.length > "custom:".length);
+}
+
+function readTimeStatusCardKeys(): readonly TimeStatusCardKey[] {
+  if (typeof window === "undefined") return DEFAULT_TIME_STATUS_CARDS;
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CARDS_KEY) ?? "null") as unknown;
+    if (!Array.isArray(raw)) return DEFAULT_TIME_STATUS_CARDS;
+    const seen = new Set<TimeStatusCardKey>();
+    const keys = raw.filter((item): item is TimeStatusCardKey => {
+      if (!isTimeStatusCardKey(item) || seen.has(item)) return false;
+      seen.add(item);
+      return true;
+    });
+    return keys;
+  } catch {
+    return DEFAULT_TIME_STATUS_CARDS;
+  }
+}
+
+function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CUSTOM_CARDS_KEY) ?? "[]") as unknown;
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((item): item is TimeStatusCustomCard => {
+      if (typeof item !== "object" || item === null) return false;
+      if (!("id" in item) || typeof item.id !== "string" || item.id.trim() === "") return false;
+      if (!("name" in item) || typeof item.name !== "string" || item.name.trim() === "") return false;
+      if (!("targetMs" in item) || typeof item.targetMs !== "number" || !Number.isFinite(item.targetMs)) return false;
+      if (!("createdAt" in item) || typeof item.createdAt !== "number" || !Number.isFinite(item.createdAt)) return false;
+      if (!("updatedAt" in item) || typeof item.updatedAt !== "number" || !Number.isFinite(item.updatedAt)) return false;
+      return true;
+    });
+  } catch {
+    return [];
+  }
 }
 
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
@@ -956,6 +1023,24 @@ function activeEntryStatusLabel(entry: TimeTrackerEntry, category: TimeTrackerCa
   return sub !== undefined && parent !== "" ? `${primary} · ${parent}` : primary;
 }
 
+function hourText(hours: number, lang: Lang): string {
+  if (lang === "zh") return `${hours}小时`;
+  return `${hours}h`;
+}
+
+function customTimeStatusValue(targetMs: number, nowMs: number, lang: Lang): string {
+  const remaining = targetMs - nowMs;
+  if (remaining <= 0) return ttCopy(lang, "timeReached");
+  const days = Math.floor(remaining / DAY_MS);
+  const hours = Math.floor((remaining - days * DAY_MS) / 3_600_000);
+  if (days > 0) return hours > 0 ? `${daysLeftText(days, lang)} ${hourText(hours, lang)}` : daysLeftText(days, lang);
+  return formatDuration(remaining);
+}
+
+function customTimeStatusDetail(targetMs: number, lang: Lang): string {
+  return `${ttCopy(lang, "targetTime")}: ${formatDayLabel(targetMs, lang)} ${formatClock(targetMs)}`;
+}
+
 function TimeStatusPanel({
   lang,
   nowMs,
@@ -975,6 +1060,12 @@ function TimeStatusPanel({
   readonly hidden: boolean;
   readonly onSetHidden: (hidden: boolean) => void;
 }) {
+  const [visibleCardKeys, setVisibleCardKeys] = useState(readTimeStatusCardKeys);
+  const [customCards, setCustomCards] = useState(readTimeStatusCustomCards);
+  const [customEditorOpen, setCustomEditorOpen] = useState(false);
+  const [dragKey, setDragKey] = useState<TimeStatusCardKey | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const dragKeyRef = useRef<TimeStatusCardKey | null>(null);
   const monthStart = startOfMonth(nowMs);
   const nextMonth = startOfNextMonth(nowMs);
   const yearStart = startOfYear(nowMs);
@@ -990,38 +1081,38 @@ function TimeStatusPanel({
       ? ttCopy(lang, "running")
       : `${activeEntries.length} ${ttCopy(lang, "runningCount")}`;
   const activeDetail = activeEntries.length === 0 ? ttCopy(lang, "readyToStart") : activeLabels.slice(0, 2).join(" · ");
-  const cards = [
-    {
+  const allCards: Record<TimeStatusStaticCardKey, TimeStatusCardView> = {
+    date: {
       key: "date",
       icon: "calendar",
       label: ttCopy(lang, "currentDate"),
       value: weekdayLabel(nowMs, lang),
       detail: `${monthLabel(nowMs, lang)} · ${formatDayLabel(nowMs, lang)}`,
     },
-    {
+    month: {
       key: "month",
       icon: "chart",
       label: ttCopy(lang, "monthProgress"),
-      value: progressText(monthProgress),
-      detail: leftDetail(monthDaysLeft, "leftThisMonth", lang),
-      progress: monthProgress,
+      value: daysLeftText(monthDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisMonth"),
+      progress: progressText(monthProgress),
     },
-    {
+    year: {
       key: "year",
       icon: "target",
       label: ttCopy(lang, "yearProgress"),
-      value: progressText(yearProgress),
-      detail: leftDetail(yearDaysLeft, "leftThisYear", lang),
-      progress: yearProgress,
+      value: daysLeftText(yearDaysLeft, lang),
+      detail: ttCopy(lang, "leftThisYear"),
+      progress: progressText(yearProgress),
     },
-    {
+    today: {
       key: "today",
       icon: "timer",
       label: ttCopy(lang, "todayTotal"),
       value: formatDuration(todayTotal),
       detail: `${ttCopy(lang, "todayRemaining")}: ${formatDuration(todayRemaining)}`,
     },
-    {
+    active: {
       key: "active",
       icon: activeEntries.length > 0 ? "play" : "clock",
       label: ttCopy(lang, "currentRunning"),
@@ -1029,7 +1120,84 @@ function TimeStatusPanel({
       detail: activeDetail,
       running: activeEntries.length > 0,
     },
-  ] as const;
+  };
+  const customCardViews = customCards.map((card): TimeStatusCardView => ({
+    key: customTimeStatusKey(card.id),
+    icon: "alarm",
+    label: card.name,
+    value: customTimeStatusValue(card.targetMs, nowMs, lang),
+    detail: customTimeStatusDetail(card.targetMs, lang),
+    custom: true,
+  }));
+  const customCardViewMap = new Map(customCardViews.map((card) => [card.key, card]));
+  const cardForKey = (key: TimeStatusCardKey): TimeStatusCardView | undefined => {
+    if (isTimeStatusStaticCardKey(key)) return allCards[key];
+    return customCardViewMap.get(key);
+  };
+  const visibleCards = visibleCardKeys.map(cardForKey).filter((card): card is TimeStatusCardView => card !== undefined);
+  const hiddenCards = [
+    ...DEFAULT_TIME_STATUS_CARDS.filter((key) => !visibleCardKeys.includes(key)).map((key) => allCards[key]),
+    ...customCardViews.filter((card) => !visibleCardKeys.includes(card.key)),
+  ];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys));
+  }, [visibleCardKeys]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards));
+  }, [customCards]);
+
+  function removeCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => prev.filter((item) => item !== key));
+    setAddOpen(false);
+  }
+
+  function restoreCard(key: TimeStatusCardKey): void {
+    setVisibleCardKeys((prev) => {
+      if (prev.includes(key)) return prev;
+      if (!isTimeStatusStaticCardKey(key)) return [...prev, key];
+      const restored = [...prev];
+      const defaultIndex = DEFAULT_TIME_STATUS_CARDS.indexOf(key);
+      const insertAt = restored.findIndex((item) => isTimeStatusStaticCardKey(item) && DEFAULT_TIME_STATUS_CARDS.indexOf(item) > defaultIndex);
+      if (insertAt < 0) return [...restored, key];
+      restored.splice(insertAt, 0, key);
+      return restored;
+    });
+    setAddOpen(false);
+  }
+
+  function createCustomCard(name: string, targetMs: number): void {
+    const stamp = Date.now();
+    const card: TimeStatusCustomCard = {
+      id: uid("status"),
+      name,
+      targetMs,
+      createdAt: stamp,
+      updatedAt: stamp,
+    };
+    setCustomCards((prev) => [...prev, card]);
+    setVisibleCardKeys((prev) => [...prev, customTimeStatusKey(card.id)]);
+    setCustomEditorOpen(false);
+    setAddOpen(false);
+  }
+
+  function reorderCard(overKey: TimeStatusCardKey): void {
+    const currentDragKey = dragKeyRef.current;
+    if (currentDragKey === null || currentDragKey === overKey) return;
+    setVisibleCardKeys((prev) => {
+      const from = prev.indexOf(currentDragKey);
+      const to = prev.indexOf(overKey);
+      if (from < 0 || to < 0 || from === to) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      if (moved === undefined) return prev;
+      next.splice(to, 0, moved);
+      return next;
+    });
+  }
 
   if (hidden) {
     return (
@@ -1053,28 +1221,150 @@ function TimeStatusPanel({
           <h2>{ttCopy(lang, "timeStatus")}</h2>
           <span>{formatDayLabel(nowMs, lang)} · {formatClock(nowMs)}</span>
         </div>
-        <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideTimeStatus")} onClick={() => onSetHidden(true)}>
-          <IconGlyph name="chevD" size={14} />
-        </button>
+        <div className="tt-time-status-actions">
+          <div className="tt-time-add-wrap">
+            <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "addTimeStatusCard")} onClick={() => setAddOpen((open) => !open)}>
+              <IconGlyph name="plus" size={14} />
+            </button>
+            {addOpen && (
+              <div className="tt-time-add-menu" role="menu" aria-label={ttCopy(lang, "addTimeStatusCard")}>
+                <button type="button" className="tt-time-custom-add" role="menuitem" onClick={() => { setCustomEditorOpen(true); setAddOpen(false); }}>
+                  <IconGlyph name="plus" size={14} />
+                  <span>{ttCopy(lang, "customTimeStatus")}</span>
+                </button>
+                {hiddenCards.length > 0 ? hiddenCards.map((card) => (
+                  <button key={card.key} type="button" role="menuitem" onClick={() => restoreCard(card.key)}>
+                    <IconGlyph name={card.icon} size={14} />
+                    <span>{card.label}</span>
+                  </button>
+                )) : (
+                  <span>{ttCopy(lang, "noHiddenTimeStatusCards")}</span>
+                )}
+              </div>
+            )}
+          </div>
+          <button type="button" className="tt-icon-btn tt-mini-action" aria-label={ttCopy(lang, "hideTimeStatus")} onClick={() => onSetHidden(true)}>
+            <IconGlyph name="chevD" size={14} />
+          </button>
+        </div>
       </div>
       <div className="tt-time-card-grid">
-        {cards.map((card) => (
-          <article key={card.key} className={`tt-time-card${"running" in card && card.running === true ? " is-running" : ""}`}>
+        {visibleCards.map((card) => (
+          <article
+            key={card.key}
+            className={`tt-time-card${card.running === true ? " is-running" : ""}${card.custom === true ? " is-custom" : ""}${dragKey === card.key ? " is-dragging" : ""}`}
+            draggable
+            onContextMenu={(event) => {
+              event.preventDefault();
+              removeCard(card.key);
+            }}
+            onDragStart={(event) => {
+              event.dataTransfer.effectAllowed = "move";
+              dragKeyRef.current = card.key;
+              setDragKey(card.key);
+            }}
+            onDragOver={(event) => {
+              event.preventDefault();
+              reorderCard(card.key);
+            }}
+            onDragEnd={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+            onDrop={() => {
+              dragKeyRef.current = null;
+              setDragKey(null);
+            }}
+          >
             <span className="tt-time-card-icon"><IconGlyph name={card.icon} size={15} /></span>
             <span className="tt-time-card-copy">
               <em>{card.label}</em>
               <strong>{card.value}</strong>
               <small>{card.detail}</small>
             </span>
-            {"progress" in card && (
-              <span className="tt-time-progress" aria-label={`${card.label} ${card.value}`}>
-                <span style={{ width: card.value }} />
+            <button
+              type="button"
+              className="tt-time-card-remove"
+              aria-label={`${ttCopy(lang, "removeTimeStatusCard")} ${card.label}`}
+              onClick={() => removeCard(card.key)}
+            >
+              <IconGlyph name="close" size={12} />
+            </button>
+            {card.progress !== undefined && (
+              <span className="tt-time-progress-wrap">
+                <span className="tt-time-progress-meta">{card.progress}</span>
+                <span className="tt-time-progress" aria-label={`${card.label} ${card.progress}`}>
+                  <span style={{ width: card.progress }} />
+                </span>
               </span>
             )}
           </article>
         ))}
       </div>
+      {customEditorOpen && (
+        <CustomTimeStatusEditor
+          lang={lang}
+          nowMs={nowMs}
+          onClose={() => setCustomEditorOpen(false)}
+          onSave={createCustomCard}
+        />
+      )}
     </section>
+  );
+}
+
+function CustomTimeStatusEditor({
+  lang,
+  nowMs,
+  onClose,
+  onSave,
+}: {
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly onClose: () => void;
+  readonly onSave: (name: string, targetMs: number) => void;
+}) {
+  const [name, setName] = useState("");
+  const [targetValue, setTargetValue] = useState(() => toInputValue(nowMs + DAY_MS));
+  const targetMs = fromInputValue(targetValue, nowMs + DAY_MS);
+  const valid = name.trim() !== "" && Number.isFinite(targetMs);
+
+  function submit(event: FormEvent): void {
+    event.preventDefault();
+    if (!valid) return;
+    onSave(name.trim(), targetMs);
+  }
+
+  return (
+    <Modal title={ttCopy(lang, "customTimeStatus")} onClose={onClose} footer={(
+      <>
+        <span className="tt-head-spacer" />
+        <button type="button" className="tt-btn" onClick={onClose}>{ttCopy(lang, "cancel")}</button>
+        <button type="submit" form="tt-custom-time-status-form" className="tt-btn tt-btn-primary" disabled={!valid}>{ttCopy(lang, "save")}</button>
+      </>
+    )}>
+      <form id="tt-custom-time-status-form" className="tt-custom-time-form" onSubmit={submit}>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeName")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeName")}
+            value={name}
+            placeholder={ttCopy(lang, "customTimePlaceholder")}
+            onChange={(event) => setName(event.target.value)}
+            autoFocus
+          />
+        </label>
+        <label className="tt-field">
+          <span>{ttCopy(lang, "customTimeTarget")}</span>
+          <input
+            aria-label={ttCopy(lang, "customTimeTarget")}
+            type="datetime-local"
+            value={targetValue}
+            onChange={(event) => setTargetValue(event.target.value)}
+          />
+        </label>
+      </form>
+    </Modal>
   );
 }
 
