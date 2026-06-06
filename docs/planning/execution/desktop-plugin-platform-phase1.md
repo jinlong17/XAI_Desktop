@@ -1,9 +1,9 @@
 # Desktop Plugin Platform Phase 1 — System Foundation
 
-> Status: Phase 1 system foundation complete on `codex/plugin/platform-runtime-phase1`; ready for Phase 2 planning after review/merge to `desktop-plugin-next`.
+> Status: Phase 1 system foundation complete on `codex/plugin/platform-runtime-phase1`; Phase 2 common capability code path complete on `codex/plugin/common-capabilities-phase2`; next gate is real macOS host smoke before concrete plugin package unfreeze.
 > Scope: system-level desktop plugin platform only. Do not build concrete clipboard / widgets / pet / meditation features in this phase.
 > Module: `plugin`
-> Branch: `codex/plugin/platform-runtime-phase1` -> `desktop-plugin-next` -> `desktop-next` when ready
+> Branch: `codex/plugin/common-capabilities-phase2` -> `desktop-plugin-next` -> `desktop-next` only after operator confirmation
 
 ## 1. Classification Receipt
 
@@ -11,9 +11,9 @@
 |---|---|
 | Verdict | `plugin` · high confidence |
 | Why | The work is desktop plugin platform runtime: multi-window / overlay / Plugin Center / Widget Host / SDK / instance lifecycle. Tauri code may physically live in `apps/desktop`, but product ownership is `plugin`. |
-| Frozen? | Platform runtime / G1 active gate is not frozen and Phase 1 foundation is implemented. Concrete plugin packages remain paused until Phase 2/3 are explicitly started. |
+| Frozen? | Platform runtime / G1 active gate is not frozen. Phase 1 foundation and Phase 2 common capability code path are implemented. Concrete plugin packages remain paused until real macOS host smoke and operator confirmation. |
 | Doc division | PRD: `docs/planning/sub-prds/plugin/PRD.md`; boundary: `docs/MODULE_BOUNDARIES.md`; SDK: `docs/PLUGIN_SDK.md`; dashboard: `docs/workflow/project/dashboard-state.json`; branch policy: ADR-0013. |
-| Dashboard update | Product line `plugin` should show `Phase 1 foundation complete`, `desktop-plugin-next` as the long plugin line, current short branch `codex/plugin/platform-runtime-phase1`, and concrete plugin packages paused. |
+| Dashboard update | Product line `plugin` should show `Phase 2 common capability code path complete`, `desktop-plugin-next` as the long plugin line, current short branch `codex/plugin/common-capabilities-phase2`, and concrete plugin packages paused pending host smoke / operator confirmation. |
 
 ## 2. Goal
 
@@ -99,6 +99,7 @@ Phase 1 completion means the platform runtime foundation and governance docs are
 | P2-3 | Capability denial display | Complete: `summarizePluginWindowCapabilityError()` and Plugin Center show code, severity, recoverable state and capability scope for denied or failed window lifecycle commands. |
 | P2-4 | Pin / click-through / all-spaces / opacity native application | Complete: grid commands accept optional `native` options, Rust applies click-through / pinned / all-spaces / opacity, and snapshots report `nativeApplied`. |
 | P2-5 | Low-risk sample widget complete flow | Complete: Plugin Center exposes host-local `sample-widget`; AddToDesktop persists the instance, opens a grid window and GridWindow renders sample content from the device-local instance store. |
+| P2-6 | Real macOS host smoke gate | Pending: checklist refreshed in `docs/reviews/desktop-plugin-platform-runtime/20260606-native-window-smoke-checklist.md`; execution blocked until the desktop host can build/run cleanly and operator records manual evidence. |
 
 ## 5. Required Interfaces
 

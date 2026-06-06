@@ -6,6 +6,15 @@
 
 ## 2026-06-06
 
+### Desktop Plugin Phase 2 Host Smoke Checklist Refresh
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: 无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capability denial。
+- Developer/system delta: 将 `desktop-plugin-platform-runtime` smoke checklist 从 Phase 1 fallback 版本更新为 Phase 2 gate；同步 module-classification 与 Phase 1/2 execution route，避免下个 agent 误读为 “Phase 2 common capability proof is next”。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；stale status / conflict-marker scan passed；`git diff --check` passed。
+- Risk / follow-up: 这只是 smoke gate 文档更新，不是 manual smoke evidence；真实 macOS 验证仍需在 desktop host build/run 可用后记录结果。
+
 ### Desktop Plugin Phase 2 Sample Widget Host Flow
 
 - Product line: desktop-plugin
