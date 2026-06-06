@@ -12,11 +12,11 @@
 | **Workflow** | FEATURE_DEV |
 | **Target** | xai-admin-audit-ops-queue |
 | **Title** | Admin Audit Log + Ops Queue (append-only audit-event contract · audit-on-mutation invariant · ops-queue severity read model) |
-| **Current Phase** | FEATURE_VERIFY |
-| **Status** | READY_TO_SHIP — feature-verify PASS |
-| **Executor** | feature-dev-loop (inline feature-verify · claude-opus-4-8) |
-| **Updated** | 2026-06-06 20:30 |
-| **Suggested Next** | ship |
+| **Current Phase** | SHIP |
+| **Status** | SHIPPED |
+| **Executor** | ship (claude-sonnet-4-6) |
+| **Updated** | 2026-06-06 21:00 |
+| **Suggested Next** | feature-plan (row #3 xai-admin-users-orgs-billing) |
 | **Blockers** | — |
 | **Module** | `admin` (#6) · operator-activated whole line 2026-06-06 · **row #5 of 6** (preserves dep order; #6 depends on #5) |
 | **Branch** | `codex/admin/<feature>` (planning-only at this step; no code branch; worktree `claude/frosty-nash-c4bf16`) |
@@ -494,3 +494,16 @@ contract+tests (P1+P2) land BEFORE write-heavy rows (manifest Implementation-Ord
   Gate allow×6 + deny×6 green · vite build 0 · @repo/web build 0 · tsc clean.
 - **Next step**: ship — verify commit integrity, push to remote, mark SHIPPED. (feature-dev-loop STOPS here
   per the operator's instruction; ship handles push.)
+
+
+### Round 8 — 2026-06-06 21:00 · ship (claude-sonnet-4-6)
+
+- **Executor**: ship (claude-sonnet-4-6)
+- **Mode**: Push — `Status = READY_TO_SHIP`, all 4 phases DONE, feature-verify PASS. Operator granted standing auto-ship authorization for the admin roadmap; no per-row confirmation required.
+- **Integrity check**:
+  - Working tree: clean (no uncommitted changes).
+  - Row #5 commit chain on `claude/frosty-nash-c4bf16`: `7914655` (APPROVED plan) → `84c82ef` (P1) → `1df087b` (P2) → `b251ee3` (P3) → `d1c96e5` (P4) → `aaaedd7` (READY_FOR_VERIFY record) → `0d2ede5` (verify PASS / READY_TO_SHIP) — all 7 commits present and ahead of remote.
+  - Diff confined to `apps/admin/**` + `docs/reviews/xai-admin-audit-ops-queue/**` only. Zero changes to `apps/web/`, `packages/`, `apps/desktop/`. No `@repo/audit-log-integrity` or `node:crypto` import added. No `.env*`/`.pem`/`.key`/service-role files. W0 boundary confirmed: `git diff --stat 7914655^..HEAD -- packages/ apps/desktop/ apps/web/` = empty.
+- **Push**: `git push origin claude/frosty-nash-c4bf16` — fast-forward `07d2580..0d2ede5`. Feature branch only — no merge into dev/main/web per W0 / ADR-0013. Branch stacks slice #1 + row #2 + row #5 commits.
+- **Commits pushed (row #5 range)**: `7914655`..`0d2ede5` (7 commits: APPROVED plan + P1 + P2 + P3 + P4 + READY_FOR_VERIFY record + verify PASS record).
+- **Next step**: feature-plan for row #3 `xai-admin-users-orgs-billing` (operator noted: program continues with row #3 after this ship).
