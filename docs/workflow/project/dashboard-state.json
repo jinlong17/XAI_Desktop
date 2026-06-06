@@ -104,7 +104,7 @@
           "label": "Production",
           "destination": "Cloudflare Pages project xai-web-console",
           "trigger": "push to main",
-          "branch": "main（待决策：应否改为 web 主线，见 DEPLOYMENT.md §12-A）",
+          "branch": "main（已定为发布源，§12-A；由 web→main fast-forward 喂入，CI 不改）",
           "output": "Production URL"
         }
       ],
@@ -232,7 +232,7 @@
         "platform": "Cloudflare Pages / GitHub Actions",
         "target": "apps/web SPA",
         "branch": "web",
-        "next": "确认生产部署源分支（main vs web，DEPLOYMENT.md §12-A）→ 跑一次真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
+        "next": "发布源已定为 main（§12-A）→ 先 cherry-pick 3 笔部署文档 dev→web → web→main fast-forward promote → 跑真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
         "issues": [
           {
             "severity": "pending",
@@ -240,7 +240,7 @@
           },
           {
             "severity": "pending",
-            "text": "生产部署源仍绑定 main，但 Web 主线是 web；直接发会发出落后版本（DEPLOYMENT.md §12-A）。"
+            "text": "发布源 = main（已定），web 领先 main 439 commits；发布前需 web→main fast-forward promote，且先把部署文档 cherry-pick 到 web（DEPLOYMENT.md §12-D）。"
           }
         ]
       },

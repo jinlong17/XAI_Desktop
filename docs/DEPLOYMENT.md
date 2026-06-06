@@ -159,7 +159,7 @@ pnpm --filter @repo/web build:secure  # 带 Sentry sourcemap 的生产构建
 
 ### 5.4 Preview / Production
 - **Preview**：每个 PR 自动生成 `https://<hash>.xai-web-console.pages.dev`（已配）。
-- **Production**：push 生产源分支触发发布。⚠️ **先解决 §12-A 的 main-vs-web 来源分支问题**，否则发布语义混乱。
+- **Production**：发布源 = **`main`**（§12-A 已定）。CI 已触发 `main`，无需改 workflow。发布动作 = 把 `web` 通过 `web → main` **fast-forward** 喂入 `main`（含部署文档，先经 §12-D 的 `dev → web` cherry-pick）。
 
 ### 5.5 回滚
 - 首选：Cloudflare Pages 控制台 → Deployments → 选上一个绿色版本 → Rollback（秒级）。
@@ -317,8 +317,9 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 > 每阶段：完成即 commit · 输出阶段性结果 · 更新本文 + 看板 + 部署记录。
 
 ### 阶段 1 — 部署架构落地（DevOps 闭环）
-- [ ] **前置（§12-D）**：若 `web` 做 release source，先把部署文档/runbook/dashboard state 同步到 `web`，再动 CI；否则保持治理源在 `dev`、不改 CI。
-- [ ] 决策并固化生产部署源分支（§12-A）；对齐 `deploy-web.yml` 触发分支。
+- [x] 决策生产部署源分支（§12-A）= **`main`**，由 `web → main` ff 喂入；CI 触发分支（main）**不改**。
+- [ ] **前置（§12-D）**：先把三笔部署文档 cherry-pick `dev → web`（`591610a`、`548bf47`、`53ebb6a` + 本次决策记录），确认 `web → main` 仍是干净 ff。
+- [ ] promote：`git checkout main && git merge --ff-only web`（把 Web 产品 + 部署文档一并喂到发布源 main）。
 - [ ] 跑一次真实「部署 → 登记 → 回滚」闭环；补 1 条 `deployment.records`。
 - [ ] CI 加部署前置 gate（lint/typecheck/test）。
 - **退出条件**：看板出现 ≥1 条真实 Web 生产部署记录 + 回滚演练记录。
@@ -368,10 +369,10 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 
 | # | 决策 | 选项 | 建议 |
 |---|---|---|---|
-| **A** | Web 生产部署源分支 | (a) `web` 提升/合并到 `main` 再发；(b) Cloudflare Production 直接部署 `web` | 把 `web` 定为权威 Web release source，并调整 `deploy-web.yml` 触发分支。⚠️ `web…dev` 当前是 **~204/5 大分叉**，不是小差异。 |
-| **B** | 首发模式 | Public Demo（mock-auth）/ Real-Auth Private Beta | **先发 Demo 拿反馈**，账号同步并行推进。**不要把 Real-Auth 当首发条件**（它还卡 Supabase + `account-delete` + 隐私合规）。 |
-| **C** | Supabase 实例开通时机 | 立即 / 先开 staging，prod 等 Demo+真实登录 smoke 后 | 先开 **staging**；production 等 Demo 反馈 + 真实登录 smoke 通过后再开。 |
-| **D** | 治理源 vs 发布执行源 | `dev`=治理/看板记录源；`web`=发布执行源 | 本轮两笔部署文档已落 `dev`（治理记录源，operator 已确认）。但**若决策 A 选 `web` 做 release source，进 Step 3 阶段 1（改 CI / 真实部署）前，必须先把这两笔部署文档 + runbook + dashboard state 同步/cherry-pick 到 `web`（或从 `web` 派生 deployment 分支执行）**，不能让"治理源在 dev、发布源在 web"长期分裂。 |
+| **A** | Web 生产部署源分支 | (a) `main`（由 `web → main` 快进喂入）；(b) Cloudflare 直接部署 `web` | ✅ **DECIDED = `main`**（operator 2026-06-06）。发布 = `web → main` **fast-forward**：当前 `web` 领先 `main` **439 commits**、`main` 零落后 → ff 干净，**CI 触发分支（main）不用改**。`main` 同时是 `web`/`dev` 的共同祖先。 |
+| **B** | 首发模式 | Public Demo（mock-auth）/ Real-Auth Private Beta | **先发 Demo 拿反馈**，账号同步并行推进。**不要把 Real-Auth 当首发条件**（它还卡 Supabase + `account-delete` + 隐私合规）。（待 operator 最终确认） |
+| **C** | Supabase 实例开通时机 | 立即 / 先开 staging，prod 等 Demo+真实登录 smoke 后 | 先开 **staging**；production 等 Demo 反馈 + 真实登录 smoke 通过后再开。（待 operator 最终确认） |
+| **D** | 治理源 vs 发布执行源 | `dev`=治理/看板记录源；`main`=发布源（由 `web` 喂入） | 三笔部署文档现在 `dev`（治理记录源）。**A=main 下 `main` 由 `web → main` ff 喂入，而文档不在 `web`** → 进 Step 3 阶段 1（promote / 真实部署）前，必须先把这三笔部署文档 **cherry-pick `dev → web`**，再 `web → main` ff，否则 `main` 发布时不含部署治理文档。`dev` 保留治理副本，在 `main` 处与 `web` 一并 reconcile。 |
 
 ---
 
