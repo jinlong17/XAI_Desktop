@@ -523,13 +523,15 @@ import '@repo/plugin-ai/register';
 ### 3.5 PluginInstance / PluginCenter / AddToDesktop 契约（桌面入口模型）
 
 > 本节定义 `桌面插件` 入口的 SDK 语义。2026-06-06 起，它是**已落地的第一阶段系统底座 contract**：Plugin Center、`PluginInstance`、`AddToDesktop`、device-local instance store、window adapter、placement/behavior/style snapshot 和通用 instance actions 已进入代码；具体插件包功能仍等 Phase 2/3 再开 feature-build。
+>
+> 2026-06-07 形态修正：Plugin Center 是 Mac App 内的桌面插件管理 surface，不是独立 App / 独立产品线。它可以由独立 NSWindow 承载，以便管理桌面上的其他小窗和做 host smoke，但入口、窗口容器、权限提示和全局偏好仍归 Mac App；插件平台只拥有内容目录、实例 contract 和渲染能力。
 
 #### 3.5.1 归属边界
 
 | 能力 | Owner | 规则 |
 |---|---|---|
-| Mac App 控制面板的 `桌面插件` 入口 | `app` | App owns entry、窗口创建、位置、点击穿透、pin、权限提示 |
-| Plugin Center 的内容目录 | `plugin` | 从 manifest / `PluginCenterEntry` 读取可添加插件、状态、settings schema |
+| Mac App 控制面板的 `桌面插件` 入口 | `app` | App owns entry、Plugin Center 管理容器、窗口创建、位置、点击穿透、pin、权限提示 |
+| Plugin Center 的内容目录 | `plugin` | 从 manifest / `PluginCenterEntry` 读取可添加插件、状态、settings schema；不拥有独立 App 外壳 |
 | `添加到桌面` | `app` + `plugin` | App 创建窗口和 `PluginInstance`；插件只渲染实例内容 |
 | 实例配置 schema | `plugin` | 插件声明可配置项；App 持久化 device-local 实例记录 |
 | 第三方插件市场 | Future | MVP 不做 marketplace、远程安装、第三方包 |
@@ -730,15 +732,18 @@ export async function restoreEnabledPluginInstancesOnDesktop(
 1. `PluginInstance.syncScope` 默认且必须为 `device-local`。升为 `account-sync` 只能经 sync 线 D4 gate。
 2. `AddToDesktopRequest` 不直接创建原生能力；它只请求 App 使用现有窗口命令创建实例窗口。
 3. MVP 只支持内置插件；不支持 marketplace、远程安装、第三方 bundle、拖拽到桌面作为主路径。
-4. MVP 添加方式是点击 `添加到桌面` 后自动落位；拖拽添加、多显示器 Space 绑定和复杂布局编辑器延后。
-5. 禁用实例保留配置；删除实例才移除配置。
-6. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
-7. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。`opacity`、`clickThrough`、`pinned`、`allSpaces` 必须作为 `native` options 进入 `create_grid_window` / `update_grid_window`；host bridge 尚未支持的字段必须在 `PluginWindowSnapshot.nativeApplied` 中显式返回 `false`，禁止伪装成已生效。
-8. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
-9. `restoreEnabledPluginInstancesOnDesktop()` 是 Phase 2 的重启恢复入口：它从 device-local store 加载全部实例，只为 `lifecycleState: "enabled"` 的实例重建窗口；`disabled` / `hidden` / `destroyed` 实例必须保留配置但不自动建窗。
-10. 窗口生命周期命令被拒绝或 native bridge 失败时，host UI 必须通过 `summarizePluginWindowCapabilityError()` 展示结构化状态，至少包含 `code`、`severity`、`recoverable` 和 `capability`，禁止只显示不可追踪的纯文本错误。
+4. Plugin Center 必须被呈现为 Mac App 内的 `桌面插件` 管理 surface；即使运行在独立原生窗口中，也不得被文档或 UI 描述成独立 App / 独立产品线。
+5. MVP 添加方式是点击 `添加到桌面` 后自动落位；拖拽添加、多显示器 Space 绑定和复杂布局编辑器延后。
+6. 禁用实例保留配置；删除实例才移除配置。
+7. Clipboard MVP 前必须统一实体命名：core-data 当前以 `clipboard.item` 表达 device-local 剪贴板实体，`plugin-clipboard` 内出现的 `clipboard.entry` 需在实现前 reconcile。
+8. `opacity`、`clickThrough`、`pinned`、`allSpaces`、`displayId`、`spaceId` 必须保存在 `PluginInstance.config`。`opacity`、`clickThrough`、`pinned`、`allSpaces` 必须作为 `native` options 进入 `create_grid_window` / `update_grid_window`；host bridge 尚未支持的字段必须在 `PluginWindowSnapshot.nativeApplied` 中显式返回 `false`，禁止伪装成已生效。
+9. 当前 Phase 1 adapter 只承载 `grid` surface；Phase 2 若扩展 overlay / dedicated surface，先扩展 `PluginHostWindowSurface` 和 capability allowlist，再接具体插件。
+10. `restoreEnabledPluginInstancesOnDesktop()` 是 Phase 2 的重启恢复入口：它从 device-local store 加载全部实例，只为 `lifecycleState: "enabled"` 的实例重建窗口；`disabled` / `hidden` / `destroyed` 实例必须保留配置但不自动建窗。
+11. 窗口生命周期命令被拒绝或 native bridge 失败时，host UI 必须通过 `summarizePluginWindowCapabilityError()` 展示结构化状态，至少包含 `code`、`severity`、`recoverable` 和 `capability`，禁止只显示不可追踪的纯文本错误。
 
 #### 3.5.4 Plugin Center 信息架构
+
+Plugin Center 的信息架构服务于 Mac App 内的 `桌面插件` 管理入口。它可以独立成窗口以便和桌面小窗并行操作，但导航、文案和后续设计必须保持 Mac App-contained，不做独立 marketplace / 独立产品首页。
 
 | 区域 | 数据来源 | MVP 内容 |
 |---|---|---|

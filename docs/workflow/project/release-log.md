@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-07
+
+### Desktop Plugin Center Mac App-Contained Shape
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local working tree
+- User-visible change: 无运行时功能变更。产品文档现在明确 Plugin Center 是 Mac App 内的 `桌面插件` 管理 surface，可用独立原生窗口承载，但不是独立 App / 独立产品线。
+- Developer/system delta: 同步 `MODULE_BOUNDARIES`、Plugin PRD、Plugin SDK、Product Module Map、module-classification registry、Phase 1 execution route 和 dashboard-state，统一“入口 / 窗口容器归 App，目录 / AddToDesktop / PluginInstance contract 归 plugin”的边界。
+- Verification: docs-only；`node -e "JSON.parse(...)"` passed for `docs/workflow/project/module-classification.json` and `docs/workflow/project/dashboard-state.json`；targeted grep confirmed the Mac App-contained Plugin Center decision is present across the updated docs；`git diff --check` passed.
+- Risk / follow-up: 后续 UI/UX 可继续把入口收敛到 Mac App 控制面板或 sheet；本次不改变当前 Plugin Center window 实现，不声明 host smoke PASS。
+
 ## 2026-06-06
 
 ### Desktop Plugin Center Frame Normalization Smoke

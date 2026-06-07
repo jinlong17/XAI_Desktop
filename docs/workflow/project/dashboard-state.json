@@ -943,7 +943,7 @@
       "key": "plugin",
       "order": 3,
       "title": "桌面整理插件 / Widget",
-      "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
+      "subtitle": "桌面插件平台运行时 + Mac App 内置 Plugin Center",
       "badge": "Phase 2 common capabilities",
       "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
@@ -975,7 +975,7 @@
       },
       "features": [
         { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-complete", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行" },
-        { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "shell window、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3" },
+        { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "Mac App-contained 管理 surface、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3；不是独立 App / 独立产品线" },
         { "name": "重启恢复 / enabled instance restore", "status": "phase-2-complete", "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗" },
         { "name": "Native fallback 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态" },
         { "name": "Capability denial 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 denied/native window errors 的 code、severity、recoverable 与 capability scope" },
@@ -995,7 +995,7 @@
         ],
         [
           "入口模型",
-          "主入口为 Mac App 控制面板的“桌面插件”；Plugin Center 负责内置插件列表、已启用实例、添加到桌面和实例设置；设置页只放全局偏好。"
+          "主入口为 Mac App 控制面板的“桌面插件”；Plugin Center 是 Mac App 内置管理 surface，负责内置插件列表、已启用实例、添加到桌面和实例设置；可用独立窗口承载但不是独立 App；设置页只放全局偏好。"
         ],
         [
           "独立跟踪",
