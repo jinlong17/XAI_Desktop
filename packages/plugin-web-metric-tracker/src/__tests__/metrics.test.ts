@@ -35,4 +35,20 @@ describe("metric calculations", () => {
       "mw_20260521",
     ]);
   });
+
+  it("filters records by the previous calendar month", () => {
+    const state = createSeedMetricTrackerState("2026-05-25T08:30:00.000");
+    const range = rangeWindow("lastMonth", new Date("2026-06-09T08:30:00"));
+    expect(filterRecordsByRange(state.records, range).map((record) => record.id)).toEqual([
+      "mw_20260525",
+      "mw_20260523",
+      "mw_20260521",
+      "mw_20260518",
+      "mw_20260516",
+      "mw_20260514",
+      "mw_20260511",
+      "mw_20260509",
+      "mw_20260507",
+    ]);
+  });
 });

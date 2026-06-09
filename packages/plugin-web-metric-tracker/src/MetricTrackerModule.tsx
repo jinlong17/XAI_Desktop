@@ -39,9 +39,19 @@ interface RecordDraft {
 const RANGE_OPTIONS: readonly { id: RangeId; zh: string; en: string }[] = [
   { id: "7d", zh: "最近 7 天", en: "7 days" },
   { id: "30d", zh: "最近 30 天", en: "30 days" },
-  { id: "3m", zh: "最近 3 个月", en: "3 months" },
+  { id: "lastMonth", zh: "上个月", en: "Last month" },
+  { id: "3m", zh: "近三个月", en: "3 months" },
   { id: "year", zh: "今年", en: "This year" },
   { id: "all", zh: "全部时间", en: "All time" },
+  { id: "custom", zh: "自定义", en: "Custom" },
+];
+
+const PREVIEW_RANGE_OPTIONS: readonly { id: RangeId; zh: string; en: string }[] = [
+  { id: "30d", zh: "最近 30 天", en: "30 days" },
+  { id: "lastMonth", zh: "上个月", en: "Last month" },
+  { id: "3m", zh: "近三个月", en: "3 months" },
+  { id: "year", zh: "今年", en: "This year" },
+  { id: "all", zh: "全部", en: "All" },
   { id: "custom", zh: "自定义", en: "Custom" },
 ];
 
@@ -102,9 +112,13 @@ function isValidPositiveNumber(value: string): boolean {
 export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   const [state, setState] = useMetricTrackerState();
   const [range, setRange] = useState<RangeId>("30d");
+  const [previewRange, setPreviewRange] = useState<RangeId>("30d");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
+  const [previewCustomStart, setPreviewCustomStart] = useState("");
+  const [previewCustomEnd, setPreviewCustomEnd] = useState("");
+  const [entryOpen, setEntryOpen] = useState(false);
   const [draft, setDraft] = useState<RecordDraft>(() => makeInitialDraft(state.profile.preferredUnit));
   const [profileDraft, setProfileDraft] = useState(() => ({
     heightCm: String(state.profile.heightCm),
@@ -113,18 +127,24 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   }));
 
   const now = useMemo(() => new Date(), []);
-  const activeRange = rangeWindow(range, now, customStart, customEnd);
+  const activeRange = useMemo(() => rangeWindow(range, now, customStart, customEnd), [range, now, customStart, customEnd]);
+  const previewWindow = useMemo(() => rangeWindow(previewRange, now, previewCustomStart, previewCustomEnd), [previewRange, now, previewCustomStart, previewCustomEnd]);
   const rangeRecords = useMemo(() => filterRecordsByRange(state.records, activeRange), [state.records, activeRange]);
+  const previewRecords = useMemo(() => filterRecordsByRange(state.records, previewWindow), [state.records, previewWindow]);
   const sortedRecords = useMemo(() => sortRecords(rangeRecords, sortDirection), [rangeRecords, sortDirection]);
   const stats = useMemo(() => computeWeightStats(rangeRecords, state.profile), [rangeRecords, state.profile]);
-  const points = useMemo(() => chartPoints(rangeRecords, state.profile, lang), [rangeRecords, state.profile, lang]);
-  const comparison = useMemo(() => stageComparison(rangeRecords), [rangeRecords]);
+  const previewStats = useMemo(() => computeWeightStats(previewRecords, state.profile), [previewRecords, state.profile]);
+  const previewPoints = useMemo(() => chartPoints(previewRecords, state.profile, lang), [previewRecords, state.profile, lang]);
+  const previewComparison = useMemo(() => stageComparison(previewRecords), [previewRecords]);
   const groupedRecords = useMemo(() => groupRecords(sortedRecords, lang), [sortedRecords, lang]);
   const currentWeightKg = stats.current ? weightToKg(stats.current.value, stats.current.unit) : null;
+  const previewCurrentWeightKg = previewStats.current ? weightToKg(previewStats.current.value, previewStats.current.unit) : null;
   const bmiStatusResult = bmiStatus(stats.bmiCurrent, lang);
+  const previewBmiStatusResult = bmiStatus(previewStats.bmiCurrent, lang);
   const progress = currentWeightKg === null ? 0 : goalProgress(currentWeightKg, state.profile.targetWeightKg);
   const trendLabel = stats.trendKg === null ? "—" : `${stats.trendKg <= 0 ? "↓" : "↑"} ${Math.abs(stats.trendKg).toFixed(1)} kg`;
-  const currentRangeLabel = rangeLabel(range, lang);
+  const previewTrendLabel = previewStats.trendKg === null ? "—" : `${previewStats.trendKg <= 0 ? "↓" : "↑"} ${Math.abs(previewStats.trendKg).toFixed(1)} kg`;
+  const previewRangeLabel = rangeLabel(previewRange, lang, PREVIEW_RANGE_OPTIONS);
 
   function handleDateMode(nextMode: DateMode): void {
     setDraft((prev) => ({
@@ -136,6 +156,21 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
 
   function resetDraft(): void {
     setDraft(makeInitialDraft(state.profile.preferredUnit));
+  }
+
+  function openNewDraft(): void {
+    resetDraft();
+    setEntryOpen(true);
+  }
+
+  function openRecordDraft(record: WeightRecord): void {
+    setDraft(draftFromRecord(record));
+    setEntryOpen(true);
+  }
+
+  function closeEntry(): void {
+    setEntryOpen(false);
+    resetDraft();
   }
 
   function saveRecord(event: FormEvent<HTMLFormElement>): void {
@@ -152,6 +187,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
       createdAt: draft.createdAt,
     }, nowIso));
     resetDraft();
+    setEntryOpen(false);
   }
 
   function saveProfile(): void {
@@ -165,11 +201,11 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
 
   function downloadShareCard(): void {
     const url = createShareCardDataUrl({
-      currentWeight: currentWeightKg,
-      bmi: stats.bmiCurrent,
-      trendKg: stats.trendKg,
+      currentWeight: previewCurrentWeightKg,
+      bmi: previewStats.bmiCurrent,
+      trendKg: previewStats.trendKg,
       targetWeight: state.profile.targetWeightKg,
-      rangeLabel: currentRangeLabel,
+      rangeLabel: previewRangeLabel,
     });
     const link = document.createElement("a");
     link.href = url;
@@ -179,9 +215,9 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
 
   async function shareCard(): Promise<void> {
     const title = t(lang, "我的体重记录", "My weight record");
-    const text = currentWeightKg === null
+    const text = previewCurrentWeightKg === null
       ? t(lang, "我在 XAI 指标追踪记录体重。", "I track weight in XAI Metric Tracker.")
-      : `${title}: ${currentWeightKg.toFixed(1)}kg · BMI ${stats.bmiCurrent?.toFixed(1) ?? "—"}`;
+      : `${title}: ${previewCurrentWeightKg.toFixed(1)}kg · BMI ${previewStats.bmiCurrent?.toFixed(1) ?? "—"}`;
     if (navigator.share) {
       await navigator.share({ title, text }).catch(() => undefined);
       return;
@@ -196,7 +232,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
           <h1 className="mt-title"><Icon name="target" size={20} />{t(lang, "指标追踪", "Metric Tracker")}</h1>
           <p className="mt-subtitle">{t(lang, "记录长期关注的数字指标。第一版聚焦体重、BMI、目标进度和分享图片。", "Track long-term numeric metrics. V1 focuses on weight, BMI, goals, and share cards.")}</p>
         </div>
-        <button className="mt-primary" type="button" onClick={() => resetDraft()}>
+        <button className="mt-primary" type="button" onClick={openNewDraft}>
           <Icon name="plus" />{t(lang, "记一下", "Log")}
         </button>
       </header>
@@ -277,13 +313,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
               </button>
             </div>
           </div>
-          <div className="mt-range" role="tablist" aria-label={t(lang, "时间范围", "Range")}>
-            {RANGE_OPTIONS.map((option) => (
-              <button key={option.id} type="button" aria-selected={range === option.id} onClick={() => setRange(option.id)}>
-                {t(lang, option.zh, option.en)}
-              </button>
-            ))}
-          </div>
+          <RangeSelector lang={lang} value={range} options={RANGE_OPTIONS} ariaLabel={t(lang, "记录时间范围", "Record range")} onChange={setRange} />
           {range === "custom" ? (
             <div className="mt-custom-range">
               <input type="date" value={customStart} onChange={(event) => setCustomStart(event.target.value)} />
@@ -310,7 +340,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
                       <span className="mt-record-bmi">BMI {recordBmi?.toFixed(1) ?? "—"}</span>
                       <span className="mt-record-note">{record.note || t(lang, "未填写备注", "No note")}</span>
                       <div className="mt-row-actions">
-                        <button type="button" aria-label={t(lang, "编辑记录", "Edit record")} onClick={() => setDraft(draftFromRecord(record))}><Icon name="edit" /></button>
+                        <button type="button" aria-label={t(lang, "编辑记录", "Edit record")} onClick={() => openRecordDraft(record)}><Icon name="edit" /></button>
                         <button type="button" aria-label={t(lang, "删除记录", "Delete record")} onClick={() => setState((prev) => deleteWeightRecord(prev, record.id))}><Icon name="trash" /></button>
                       </div>
                     </div>
@@ -322,45 +352,6 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
         </main>
 
         <aside className="mt-side">
-          <form className="mt-panel mt-entry" onSubmit={saveRecord}>
-            <div className="mt-panel-head">
-              <div>
-                <h2>{draft.id ? t(lang, "更新记录", "Update log") : t(lang, "记一下", "Quick log")}</h2>
-                <p>{t(lang, "快速记录体重", "Quick weight logging")}</p>
-              </div>
-            </div>
-            <label className="mt-field">
-              <span>{t(lang, "体重", "Weight")}</span>
-              <div className="mt-weight-input">
-                <input value={draft.weight} onChange={(event) => setDraft((prev) => ({ ...prev, weight: event.target.value }))} inputMode="decimal" aria-label={t(lang, "体重数值", "Weight value")} />
-                <button type="button" aria-pressed={draft.unit === "kg"} onClick={() => setDraft((prev) => convertDraftUnit(prev, "kg"))}>kg</button>
-                <button type="button" aria-pressed={draft.unit === "jin"} onClick={() => setDraft((prev) => convertDraftUnit(prev, "jin"))}>斤</button>
-              </div>
-            </label>
-            <div className="mt-field">
-              <span>{t(lang, "日期", "Date")}</span>
-              <div className="mt-date-modes">
-                {(["today", "yesterday", "custom"] as const).map((mode) => (
-                  <button key={mode} type="button" aria-pressed={draft.dateMode === mode} onClick={() => handleDateMode(mode)}>
-                    {mode === "today" ? t(lang, "今天", "Today") : mode === "yesterday" ? t(lang, "昨天", "Yesterday") : t(lang, "自定义", "Custom")}
-                  </button>
-                ))}
-              </div>
-              {draft.dateMode === "custom" ? <input type="date" value={draft.date} onChange={(event) => setDraft((prev) => ({ ...prev, date: event.target.value }))} /> : null}
-            </div>
-            <label className="mt-field">
-              <span>{t(lang, "时间", "Time")}</span>
-              <input type="time" value={draft.time} onChange={(event) => setDraft((prev) => ({ ...prev, time: event.target.value }))} />
-            </label>
-            <label className="mt-field">
-              <span>{t(lang, "备注（可选）", "Note (optional)")}</span>
-              <textarea maxLength={200} value={draft.note} placeholder={t(lang, "例如：早餐前、运动后、睡前等…", "Before breakfast, after workout, before sleep…")} onChange={(event) => setDraft((prev) => ({ ...prev, note: event.target.value }))} />
-              <small>{draft.note.length}/200</small>
-            </label>
-            <button className="mt-save" type="submit" disabled={!isValidPositiveNumber(draft.weight)}>{draft.id ? t(lang, "保存修改", "Save changes") : t(lang, "保存记录", "Save record")}</button>
-            {draft.id ? <button className="mt-reset" type="button" onClick={resetDraft}>{t(lang, "取消编辑", "Cancel edit")}</button> : <button className="mt-reset" type="button" onClick={resetDraft}>{t(lang, "重置", "Reset")}</button>}
-          </form>
-
           <section className="mt-panel mt-share">
             <div className="mt-panel-head">
               <div>
@@ -368,16 +359,26 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
                 <p>{t(lang, "生成你的体重成果卡片", "Generate a progress card")}</p>
               </div>
             </div>
+            <div className="mt-preview-range">
+              <span>{t(lang, "数据预览范围", "Preview range")}</span>
+              <RangeSelector lang={lang} value={previewRange} options={PREVIEW_RANGE_OPTIONS} ariaLabel={t(lang, "数据预览时间范围", "Preview range")} onChange={setPreviewRange} />
+            </div>
+            {previewRange === "custom" ? (
+              <div className="mt-custom-range">
+                <input type="date" value={previewCustomStart} onChange={(event) => setPreviewCustomStart(event.target.value)} aria-label={t(lang, "预览开始日期", "Preview start date")} />
+                <input type="date" value={previewCustomEnd} onChange={(event) => setPreviewCustomEnd(event.target.value)} aria-label={t(lang, "预览结束日期", "Preview end date")} />
+              </div>
+            ) : null}
             <div className="mt-share-card" id="metric-share-card">
               <span>{t(lang, "我的体重记录", "My weight record")}</span>
               <div className="mt-share-main">
-                <strong>{currentWeightKg === null ? "—" : currentWeightKg.toFixed(1)}<small>kg</small></strong>
-                <em>BMI {stats.bmiCurrent?.toFixed(1) ?? "—"} · {bmiStatusResult.label}</em>
+                <strong>{previewCurrentWeightKg === null ? "—" : previewCurrentWeightKg.toFixed(1)}<small>kg</small></strong>
+                <em>BMI {previewStats.bmiCurrent?.toFixed(1) ?? "—"} · {previewBmiStatusResult.label}</em>
               </div>
-              <MiniShareLine points={points} />
+              <MiniShareLine points={previewPoints} />
               <div className="mt-share-foot">
-                <span>{currentRangeLabel}</span>
-                <strong>{trendLabel}</strong>
+                <span>{previewRangeLabel}</span>
+                <strong>{previewTrendLabel}</strong>
                 <span>{t(lang, "目标", "Goal")} {state.profile.targetWeightKg.toFixed(1)}kg</span>
               </div>
             </div>
@@ -389,32 +390,82 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
         </aside>
       </section>
 
+      {entryOpen ? (
+        <div className="mt-modal-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) closeEntry();
+        }}>
+          <section className="mt-panel mt-modal-card" role="dialog" aria-modal="true" aria-labelledby="mt-entry-title">
+            <div className="mt-panel-head">
+              <div>
+                <h2 id="mt-entry-title">{draft.id ? t(lang, "更新记录", "Update log") : t(lang, "记一下", "Quick log")}</h2>
+                <p>{t(lang, "快速记录体重", "Quick weight logging")}</p>
+              </div>
+              <button className="mt-close" type="button" aria-label={t(lang, "关闭", "Close")} onClick={closeEntry}><Icon name="x" /></button>
+            </div>
+            <form className="mt-entry" onSubmit={saveRecord}>
+              <label className="mt-field">
+                <span>{t(lang, "体重", "Weight")}</span>
+                <div className="mt-weight-input">
+                  <input autoFocus value={draft.weight} onChange={(event) => setDraft((prev) => ({ ...prev, weight: event.target.value }))} inputMode="decimal" aria-label={t(lang, "体重数值", "Weight value")} />
+                  <button type="button" aria-pressed={draft.unit === "kg"} onClick={() => setDraft((prev) => convertDraftUnit(prev, "kg"))}>kg</button>
+                  <button type="button" aria-pressed={draft.unit === "jin"} onClick={() => setDraft((prev) => convertDraftUnit(prev, "jin"))}>斤</button>
+                </div>
+              </label>
+              <div className="mt-field">
+                <span>{t(lang, "日期", "Date")}</span>
+                <div className="mt-date-modes">
+                  {(["today", "yesterday", "custom"] as const).map((mode) => (
+                    <button key={mode} type="button" aria-pressed={draft.dateMode === mode} onClick={() => handleDateMode(mode)}>
+                      {mode === "today" ? t(lang, "今天", "Today") : mode === "yesterday" ? t(lang, "昨天", "Yesterday") : t(lang, "自定义", "Custom")}
+                    </button>
+                  ))}
+                </div>
+                {draft.dateMode === "custom" ? <input type="date" value={draft.date} onChange={(event) => setDraft((prev) => ({ ...prev, date: event.target.value }))} /> : null}
+              </div>
+              <label className="mt-field">
+                <span>{t(lang, "时间", "Time")}</span>
+                <input type="time" value={draft.time} onChange={(event) => setDraft((prev) => ({ ...prev, time: event.target.value }))} />
+              </label>
+              <label className="mt-field">
+                <span>{t(lang, "备注（可选）", "Note (optional)")}</span>
+                <textarea maxLength={200} value={draft.note} placeholder={t(lang, "例如：早餐前、运动后、睡前等…", "Before breakfast, after workout, before sleep…")} onChange={(event) => setDraft((prev) => ({ ...prev, note: event.target.value }))} />
+                <small>{draft.note.length}/200</small>
+              </label>
+              <div className="mt-dialog-actions">
+                <button className="mt-reset" type="button" onClick={closeEntry}>{t(lang, "取消", "Cancel")}</button>
+                <button className="mt-save" type="submit" disabled={!isValidPositiveNumber(draft.weight)}>{draft.id ? t(lang, "保存修改", "Save changes") : t(lang, "保存记录", "Save record")}</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      ) : null}
+
       <section className="mt-panel mt-analytics">
         <div className="mt-panel-head">
-          <h2>{t(lang, "数据概览", "Analytics")} <small>{currentRangeLabel}</small></h2>
+          <h2>{t(lang, "数据概览", "Analytics")} <small>{previewRangeLabel}</small></h2>
         </div>
         <div className="mt-kpis">
-          <Kpi label={t(lang, "当前体重", "Current")} value={currentWeightKg === null ? "—" : `${currentWeightKg.toFixed(1)} kg`} tone="good" />
-          <Kpi label={t(lang, "最高体重", "Highest")} value={stats.highest ? `${weightToKg(stats.highest.value, stats.highest.unit).toFixed(1)} kg` : "—"} tone="risk" />
-          <Kpi label={t(lang, "最低体重", "Lowest")} value={stats.lowest ? `${weightToKg(stats.lowest.value, stats.lowest.unit).toFixed(1)} kg` : "—"} tone="info" />
-          <Kpi label={t(lang, "平均体重", "Average")} value={stats.averageKg === null ? "—" : `${stats.averageKg.toFixed(1)} kg`} />
-          <Kpi label={t(lang, "趋势", "Trend")} value={trendLabel} tone={stats.trendKg !== null && stats.trendKg <= 0 ? "good" : "risk"} />
+          <Kpi label={t(lang, "当前体重", "Current")} value={previewCurrentWeightKg === null ? "—" : `${previewCurrentWeightKg.toFixed(1)} kg`} tone="good" />
+          <Kpi label={t(lang, "最高体重", "Highest")} value={previewStats.highest ? `${weightToKg(previewStats.highest.value, previewStats.highest.unit).toFixed(1)} kg` : "—"} tone="risk" />
+          <Kpi label={t(lang, "最低体重", "Lowest")} value={previewStats.lowest ? `${weightToKg(previewStats.lowest.value, previewStats.lowest.unit).toFixed(1)} kg` : "—"} tone="info" />
+          <Kpi label={t(lang, "平均体重", "Average")} value={previewStats.averageKg === null ? "—" : `${previewStats.averageKg.toFixed(1)} kg`} />
+          <Kpi label={t(lang, "趋势", "Trend")} value={previewTrendLabel} tone={previewStats.trendKg !== null && previewStats.trendKg <= 0 ? "good" : "risk"} />
         </div>
         <div className="mt-charts">
           <div className="mt-chart-panel">
-            <div className="mt-chart-head"><h3>{t(lang, "体重曲线（kg）", "Weight curve")}</h3><span>{currentRangeLabel}</span></div>
-            <MetricLineChart points={points} mode="weight" colorVar="var(--accent)" />
+            <div className="mt-chart-head"><h3>{t(lang, "体重曲线（kg）", "Weight curve")}</h3><span>{previewRangeLabel}</span></div>
+            <MetricLineChart points={previewPoints} mode="weight" colorVar="var(--accent)" />
           </div>
           <div className="mt-chart-panel">
-            <div className="mt-chart-head"><h3>{t(lang, "BMI 曲线", "BMI curve")}</h3><span>{stats.bmiTrend === null ? "—" : `${stats.bmiTrend <= 0 ? "↓" : "↑"} ${Math.abs(stats.bmiTrend).toFixed(1)}`}</span></div>
-            <MetricLineChart points={points} mode="bmi" colorVar="var(--blue)" />
+            <div className="mt-chart-head"><h3>{t(lang, "BMI 曲线", "BMI curve")}</h3><span>{previewStats.bmiTrend === null ? "—" : `${previewStats.bmiTrend <= 0 ? "↓" : "↑"} ${Math.abs(previewStats.bmiTrend).toFixed(1)}`}</span></div>
+            <MetricLineChart points={previewPoints} mode="bmi" colorVar="var(--blue)" />
           </div>
           <div className="mt-chart-panel mt-stage">
             <div className="mt-chart-head"><h3>{t(lang, "阶段对比", "Stage comparison")}</h3><span>{t(lang, "按时间三段", "Three phases")}</span></div>
-            {comparison.map((item) => (
+            {previewComparison.map((item) => (
               <div className="mt-stage-row" key={item.label}>
                 <span>{item.label}</span>
-                <div><span style={{ width: `${Math.max(8, Math.min(100, (item.valueKg / Math.max(1, stats.highest ? weightToKg(stats.highest.value, stats.highest.unit) : item.valueKg)) * 100))}%` }} /></div>
+                <div><span style={{ width: `${Math.max(8, Math.min(100, (item.valueKg / Math.max(1, previewStats.highest ? weightToKg(previewStats.highest.value, previewStats.highest.unit) : item.valueKg)) * 100))}%` }} /></div>
                 <strong>{item.valueKg.toFixed(1)} kg</strong>
                 <em>{item.deltaKg <= 0 ? "↓" : "↑"} {Math.abs(item.deltaKg).toFixed(1)}</em>
               </div>
@@ -431,6 +482,30 @@ function Kpi({ label, value, tone }: { readonly label: string; readonly value: s
     <div className={`mt-kpi ${tone ?? ""}`}>
       <span>{label}</span>
       <strong>{value}</strong>
+    </div>
+  );
+}
+
+function RangeSelector({
+  lang,
+  value,
+  options,
+  ariaLabel,
+  onChange,
+}: {
+  readonly lang: Lang;
+  readonly value: RangeId;
+  readonly options: readonly { id: RangeId; zh: string; en: string }[];
+  readonly ariaLabel: string;
+  readonly onChange: (range: RangeId) => void;
+}) {
+  return (
+    <div className="mt-range" role="tablist" aria-label={ariaLabel}>
+      {options.map((option) => (
+        <button key={option.id} type="button" aria-selected={value === option.id} onClick={() => onChange(option.id)}>
+          {t(lang, option.zh, option.en)}
+        </button>
+      ))}
     </div>
   );
 }
@@ -454,8 +529,8 @@ function goalProgress(currentWeightKg: number, targetWeightKg: number): number {
   return Math.max(0, Math.min(100, ((start - currentWeightKg) / span) * 100));
 }
 
-function rangeLabel(id: RangeId, lang: Lang): string {
-  return RANGE_OPTIONS.find((option) => option.id === id)?.[lang] ?? RANGE_OPTIONS[1]![lang];
+function rangeLabel(id: RangeId, lang: Lang, options = RANGE_OPTIONS): string {
+  return options.find((option) => option.id === id)?.[lang] ?? options[0]![lang];
 }
 
 function convertDraftUnit(draft: RecordDraft, unit: WeightUnit): RecordDraft {

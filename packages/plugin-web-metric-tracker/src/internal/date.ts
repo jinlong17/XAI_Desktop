@@ -54,6 +54,11 @@ export function rangeWindow(id: RangeId, now = new Date(), customStart?: string,
     const end = customEnd ? new Date(`${customEnd}T23:59:59.999`) : null;
     return { id, start, end };
   }
+  if (id === "lastMonth") {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    return { id, start, end };
+  }
   const start = startOfDay(now);
   if (id === "7d") start.setDate(start.getDate() - 6);
   if (id === "30d") start.setDate(start.getDate() - 29);

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ChartPoint } from "../types.js";
 
 const W = 640;
@@ -11,24 +12,27 @@ interface LineChartProps {
 }
 
 export function MetricLineChart({ points, mode, colorVar }: LineChartProps) {
-  const values = points
-    .map((point) => (mode === "weight" ? point.weightKg : point.bmi))
-    .filter((value): value is number => typeof value === "number" && Number.isFinite(value));
-  if (values.length === 0) {
+  const [activePoint, setActivePoint] = useState<number | null>(null);
+  const plotted = points.flatMap((point) => {
+    const value = mode === "weight" ? point.weightKg : point.bmi;
+    return typeof value === "number" && Number.isFinite(value) ? [{ point, value }] : [];
+  });
+  if (plotted.length === 0) {
     return (
       <div className="mt-line-chart">
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true" />
       </div>
     );
   }
+  const values = plotted.map((item) => item.value);
   const max = Math.max(...values);
   const min = Math.min(...values);
   const span = max - min || 1;
-  const denom = Math.max(1, values.length - 1);
-  const pts = values.map((value, index) => {
+  const denom = Math.max(1, plotted.length - 1);
+  const pts = plotted.map(({ point: chartPoint, value }, index) => {
     const x = PAD + (index * (W - PAD * 2)) / denom;
     const y = H - PAD - ((value - min) / span) * (H - PAD * 2);
-    return { x, y, value };
+    return { x, y, value, chartPoint };
   });
   const linePath = pts.map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`).join(" ");
   const first = pts[0]!;
@@ -50,17 +54,47 @@ export function MetricLineChart({ points, mode, colorVar }: LineChartProps) {
         })}
         <path d={areaPath} fill={`url(#${gradientId})`} />
         <path d={linePath} fill="none" stroke={colorVar} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-        {pts.map((point, index) => (
-          <circle key={index} cx={point.x} cy={point.y} r="3.4" fill={colorVar} />
-        ))}
+        {pts.map((point, index) => {
+          const tooltip = formatTooltip(point.chartPoint, mode);
+          const tooltipWidth = mode === "weight" ? 132 : 122;
+          const tooltipX = point.x > W - tooltipWidth - PAD ? point.x - tooltipWidth - 10 : point.x + 10;
+          const tooltipY = point.y < 48 ? point.y + 14 : point.y - 40;
+          return (
+            <g key={`${point.chartPoint.label}-${index}`}>
+              <g
+                className="mt-chart-hit"
+                tabIndex={0}
+                aria-label={tooltip}
+                onFocus={() => setActivePoint(index)}
+                onBlur={() => setActivePoint((current) => (current === index ? null : current))}
+                onMouseEnter={() => setActivePoint(index)}
+                onMouseMove={() => setActivePoint(index)}
+                onMouseLeave={() => setActivePoint((current) => (current === index ? null : current))}
+              >
+                <title>{tooltip}</title>
+                <circle className="mt-chart-target" cx={point.x} cy={point.y} r="13" />
+                <circle cx={point.x} cy={point.y} r="3.4" fill={colorVar} />
+              </g>
+              <g className="mt-chart-tooltip" data-active={activePoint === index} transform={`translate(${tooltipX}, ${tooltipY})`} aria-hidden="true">
+                <rect width={tooltipWidth} height="30" rx="6" />
+                <text x="10" y="20">{tooltip}</text>
+              </g>
+            </g>
+          );
+        })}
       </svg>
       <div className="mt-chart-labels">
-        {points.map((point, index) => (
+        {plotted.map(({ point }, index) => (
           <span key={`${point.label}-${index}`}>{point.label}</span>
         ))}
       </div>
     </div>
   );
+}
+
+function formatTooltip(point: ChartPoint, mode: "weight" | "bmi"): string {
+  if (mode === "weight") return `${point.label} · ${point.weightKg.toFixed(1)} kg`;
+  return `${point.label} · BMI ${point.bmi?.toFixed(1) ?? "--"}`;
 }
 
 interface MiniShareLineProps {
