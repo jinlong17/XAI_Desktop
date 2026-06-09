@@ -14,8 +14,15 @@ pressure, study time, and custom numeric metrics.
   unit (`kg` or `斤`) is preserved on each record.
 - Profile data contains height, target weight, and preferred display unit.
 - The UI follows the selected Product Design option 3: goal progress left,
-  chronological log center, quick log plus share card right, and analytics
-  charts below.
+  chronological log center, share card right, and analytics charts below.
+  Quick logging is modal-only from the top `记一下` action so the form does not
+  stay permanently visible on the page.
+- The record log and data preview use separate range selectors. The preview
+  selector drives the share card, KPI board, weight curve, BMI curve, and stage
+  comparison with presets for recent 30 days, last month, recent 3 months, this
+  year, all time, and custom dates.
+- Weight and BMI curves expose per-day values on hover/focus so users can read
+  the exact value behind each point without leaving the chart.
 
 ## Persistence
 

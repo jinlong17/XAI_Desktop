@@ -1,7 +1,7 @@
 export type Lang = "en" | "zh";
 export type WeightUnit = "kg" | "jin";
 export type MetricTrendDirection = "higher" | "lower" | "range";
-export type RangeId = "7d" | "30d" | "3m" | "year" | "all" | "custom";
+export type RangeId = "7d" | "30d" | "lastMonth" | "3m" | "year" | "all" | "custom";
 
 export interface MetricDefinition {
   readonly id: string;

@@ -21,6 +21,7 @@ const PATHS: Record<string, ReactNode> = {
   activity: <path d="M4 13h4l2-6 4 12 2-6h4" />,
   lock: <><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>,
   chevron: <path d="m6 9 6 6 6-6" />,
+  x: <path d="M6 6l12 12M18 6 6 18" />,
 };
 
 export function Icon({ name, size = 16 }: IconProps) {

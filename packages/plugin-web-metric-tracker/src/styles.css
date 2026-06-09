@@ -31,8 +31,13 @@
 .mt-chart-head,
 .mt-stage-row,
 .mt-share-main,
-.mt-share-foot {
+.mt-share-foot,
+.mt-dialog-actions {
   display: flex;
+}
+
+.mt-preview-range {
+  display: grid;
 }
 
 .mt-top {
@@ -159,7 +164,6 @@
 
 .mt-goal,
 .mt-log,
-.mt-entry,
 .mt-share,
 .mt-analytics {
   padding: var(--s-4);
@@ -196,6 +200,7 @@
 .mt-row-actions button,
 .mt-share-actions button,
 .mt-current button,
+.mt-close,
 .mt-reset {
   display: inline-flex;
   align-items: center;
@@ -238,6 +243,7 @@
 .mt-record-note,
 .mt-profile span,
 .mt-field span,
+.mt-preview-range > span,
 .mt-share-card > span,
 .mt-kpi span,
 .mt-stage-row span {
@@ -522,7 +528,8 @@
 }
 
 .mt-row-actions button,
-.mt-current button {
+.mt-current button,
+.mt-close {
   width: 30px;
   padding: 0;
 }
@@ -534,6 +541,31 @@
 .mt-entry {
   display: grid;
   gap: var(--s-3);
+}
+
+.mt-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  overflow: auto;
+  padding: clamp(18px, 5vh, 48px) var(--s-4);
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
+}
+
+.mt-modal-card {
+  display: grid;
+  gap: var(--s-4);
+  width: min(100%, 460px);
+  padding: var(--s-4);
+  box-shadow: var(--shadow-3);
+}
+
+.mt-close {
+  flex: 0 0 auto;
 }
 
 .mt-weight-input,
@@ -579,9 +611,32 @@
   min-height: 34px;
 }
 
+.mt-dialog-actions {
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.mt-dialog-actions .mt-reset,
+.mt-dialog-actions .mt-save {
+  min-width: 112px;
+  padding: 0 var(--s-4);
+}
+
 .mt-share {
   display: grid;
   gap: var(--s-4);
+}
+
+.mt-preview-range {
+  gap: var(--s-2);
+}
+
+.mt-preview-range .mt-range {
+  padding: 0;
+}
+
+.mt-preview-range + .mt-custom-range {
+  padding: 0;
 }
 
 .mt-share-card {
@@ -700,6 +755,41 @@
 .mt-line-chart svg {
   width: 100%;
   height: 190px;
+}
+
+.mt-chart-hit {
+  outline: none;
+}
+
+.mt-chart-target {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.mt-chart-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .14s ease;
+}
+
+.mt-chart-tooltip[data-active="true"] {
+  opacity: 1;
+}
+
+.mt-chart-hit:focus-visible .mt-chart-target {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+}
+
+.mt-chart-tooltip rect {
+  fill: var(--bg-panel);
+  stroke: var(--border-1);
+}
+
+.mt-chart-tooltip text {
+  fill: var(--text-1);
+  font-size: var(--fs-xs);
+  font-weight: 700;
 }
 
 .mt-chart-labels {
