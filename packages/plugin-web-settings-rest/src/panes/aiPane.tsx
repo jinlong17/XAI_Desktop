@@ -2,8 +2,8 @@
  * aiPane — Settings → AI pane.
  *
  * Controls:
- *   - Provider picker (anthropic / openai-compatible)
- *   - Conditional Base URL field (shown for openai-compatible only)
+ *   - Provider picker (Anthropic / Gemini / DeepSeek / custom OpenAI-compatible)
+ *   - Conditional Base URL field (shown for custom OpenAI-compatible only)
  *   - API key paste input (password type) + Save + "Test Connection" + Delete
  *   - Model default picker (Haiku / Sonnet / Opus — bilingual labels)
  *   - Streaming toggle
@@ -24,7 +24,11 @@ import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shel
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
-import { aiKeyStorage } from "@repo/plugin-web-ai-chat";
+import {
+  AI_PROVIDER_PRESETS,
+  aiKeyStorage,
+  getAiProviderPreset,
+} from "@repo/plugin-web-ai-chat";
 import type { AiProvider, LlmError } from "@repo/plugin-web-ai-chat";
 
 // ---- Internal types ---------------------------------------------------------
@@ -65,25 +69,38 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [testState, setTestState] = useState<TestState>({ status: "idle" });
   const deleteDialogRef = useRef<HTMLDialogElement | null>(null);
+  const selectedPreset = getAiProviderPreset(provider || "anthropic");
 
-  // Load current key presence on mount.
+  // Load current key presence when the selected provider changes.
   useEffect(() => {
-    const prov = (provider || "anthropic") as AiProvider;
+    const prov = getAiProviderPreset(provider || "anthropic").id as AiProvider;
+    setKeyInput("");
+    setTestState({ status: "idle" });
     void aiKeyStorage.loadKey(prov).then((k) => {
       setHasSavedKey(k != null);
     });
     return () => {
       if (savedTimer.current != null) clearTimeout(savedTimer.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [provider]);
 
   // ---- Handlers ------------------------------------------------------------
+
+  const handleProviderChange = useCallback((next: string) => {
+    const preset = getAiProviderPreset(next);
+    setProvider(preset.id);
+    setModelDefault(preset.defaultModel);
+    if (preset.transport === "openai-compatible") {
+      setBaseUrl(preset.baseUrl);
+    } else {
+      setBaseUrl("");
+    }
+  }, [setBaseUrl, setModelDefault, setProvider]);
 
   const handleSaveKey = useCallback(async () => {
     const trimmed = keyInput.trim();
     if (!trimmed) return;
-    const prov = (provider || "anthropic") as AiProvider;
+    const prov = getAiProviderPreset(provider || "anthropic").id as AiProvider;
     await aiKeyStorage.saveKey(prov, trimmed);
     setHasSavedKey(true);
     setKeyInput("");
@@ -94,7 +111,7 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
 
   const handleTestConnection = useCallback(async () => {
     setTestState({ status: "testing" });
-    const prov = (provider || "anthropic") as AiProvider;
+    const prov = getAiProviderPreset(provider || "anthropic").id as AiProvider;
     try {
       const result = await aiKeyStorage.testConnection(prov);
       if (result.ok) {
@@ -112,7 +129,7 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   }, []);
 
   const handleDeleteConfirm = useCallback(async () => {
-    const prov = (provider || "anthropic") as AiProvider;
+    const prov = getAiProviderPreset(provider || "anthropic").id as AiProvider;
     await aiKeyStorage.clearKey(prov);
     setHasSavedKey(false);
     setKeyInput("");
@@ -124,7 +141,8 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
     deleteDialogRef.current?.close();
   }, []);
 
-  const providerIsOai = provider === "openai-compatible";
+  const providerNeedsBaseUrl =
+    selectedPreset.transport === "openai-compatible" && !selectedPreset.managedBaseUrl;
 
   // ---- Test status copy ----------------------------------------------------
   let testCopy: string | null = null;
@@ -155,21 +173,24 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         <SettingRow label={zh ? "AI 服务商" : "Provider"}>
           <select
             className="sl-select"
-            value={provider || "anthropic"}
-            onChange={(e) => setProvider(e.target.value)}
+            value={selectedPreset.id}
+            onChange={(e) => handleProviderChange(e.target.value)}
             aria-label={zh ? "AI 服务商" : "Provider"}
             data-testid="ai-provider-picker"
           >
-            <option value="anthropic">Anthropic</option>
-            <option value="openai-compatible">{zh ? "OpenAI 兼容" : "OpenAI-compatible"}</option>
+            {AI_PROVIDER_PRESETS.map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {zh ? preset.labelZh : preset.label}
+              </option>
+            ))}
           </select>
         </SettingRow>
-        {providerIsOai && (
+        {providerNeedsBaseUrl && (
           <SettingRow
             label={zh ? "Base URL" : "Base URL"}
             desc={zh
-              ? "支持 Gemini、OpenAI、Groq 等已在 CSP 放行的 OpenAI 兼容端点"
-              : "Supports Gemini, OpenAI, Groq, and other CSP-allowlisted OpenAI-compatible endpoints"}
+              ? "自定义端点必须已在 CSP 放行"
+              : "Custom endpoints must be allowlisted by CSP"}
           >
             <input
               type="url"
@@ -266,9 +287,11 @@ function AiPaneContent({ lang }: PaneRenderProps): React.ReactElement {
             aria-label={zh ? "默认模型" : "Default model"}
             data-testid="ai-model-picker"
           >
-            <option value="haiku">{zh ? "Haiku（快速）" : "Haiku (fast)"}</option>
-            <option value="sonnet">{zh ? "Sonnet（均衡）" : "Sonnet (balanced)"}</option>
-            <option value="opus">{zh ? "Opus（高级）" : "Opus (advanced)"}</option>
+            {selectedPreset.models.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.label} ({zh ? model.descZh : model.descEn})
+              </option>
+            ))}
           </select>
         </SettingRow>
       </SectionBlock>

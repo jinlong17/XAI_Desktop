@@ -20,6 +20,7 @@ import { getPref } from "@repo/plugin-web-storage";
 import { aiKeyStorage } from "./secretStore.js";
 import { streamCompleteChat } from "./claudeStreamAdapter.js";
 import { DEMO_REPLY_EN as _DEMO_EN, DEMO_REPLY_ZH as _DEMO_ZH } from "./demoReply.js";
+import { getAiProviderPreset } from "./providerPresets.js";
 
 export const ADAPTER_DELAY_MIN_MS = 600;
 export const ADAPTER_DELAY_MAX_MS = 1200;
@@ -41,11 +42,8 @@ export const DEMO_REPLY_ZH = _DEMO_ZH;
 export async function completeChat(text: string, lang: Lang): Promise<string> {
   // Check whether a real API key is configured.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
-  const providerKind =
-    provider === "openai-compatible" ? "openai-compatible" : "anthropic";
-  const apiKey = await aiKeyStorage.loadKey(
-    providerKind as "anthropic" | "openai-compatible",
-  );
+  const providerPreset = getAiProviderPreset(provider);
+  const apiKey = await aiKeyStorage.loadKey(providerPreset.id);
 
   if (!apiKey) {
     // No key configured — preserve Option A demo behaviour.
@@ -63,7 +61,7 @@ export async function completeChat(text: string, lang: Lang): Promise<string> {
   for await (const chunk of streamCompleteChat({
     text,
     lang,
-    model: (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? "haiku",
+    model: (getPref("xai_ai_model_default") as string) || providerPreset.defaultModel,
   })) {
     accumulated = chunk.accumulated;
     if (chunk.done) break;

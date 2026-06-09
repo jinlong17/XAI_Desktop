@@ -75,6 +75,32 @@ describe("llmProvider resolveProvider (LP)", () => {
     expect(oaiConfig.url).toContain("api.groq.com");
   });
 
+  it("LP4b: Gemini preset resolves to its OpenAI-compatible endpoint and model", () => {
+    localStorage.setItem("xai_ai_provider", JSON.stringify("gemini"));
+
+    const config = resolveProvider("gemini-test-key");
+
+    expect(config.provider).toBe("openai-compatible");
+    expect(config.url).toBe(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    );
+    expect(config.headers["authorization"]).toBe("Bearer gemini-test-key");
+    expect(config.resolveModelId("gemini-3.1-flash-lite")).toBe(
+      "gemini-3.1-flash-lite",
+    );
+  });
+
+  it("LP4c: DeepSeek preset resolves to its OpenAI-compatible endpoint and model", () => {
+    localStorage.setItem("xai_ai_provider", JSON.stringify("deepseek"));
+
+    const config = resolveProvider("deepseek-test-key");
+
+    expect(config.provider).toBe("openai-compatible");
+    expect(config.url).toBe("https://api.deepseek.com/chat/completions");
+    expect(config.headers["authorization"]).toBe("Bearer deepseek-test-key");
+    expect(config.resolveModelId("deepseek-v4-pro")).toBe("deepseek-v4-pro");
+  });
+
   it("LP5: Model picker override — body.model is sonnet real id", () => {
     const config = resolveProvider("sk-ant-test");
     const modelId = config.resolveModelId("sonnet");
