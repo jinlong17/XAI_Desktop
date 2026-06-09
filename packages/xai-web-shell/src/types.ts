@@ -27,6 +27,7 @@ export type WebShellIconName =
   | "grid4"      // matrix
   | "timer"      // pomodoro
   | "wallet"     // bookkeeping
+  | "target"     // metric tracker
   | "pin"        // habits
   | "leaf"       // meditation
   | "countdown"  // countdown

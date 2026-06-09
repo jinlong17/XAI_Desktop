@@ -166,7 +166,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   apps/web:
     dependencies:
@@ -215,6 +215,9 @@ importers:
       '@repo/plugin-web-meditation':
         specifier: workspace:*
         version: link:../../packages/xai-web-meditation
+      '@repo/plugin-web-metric-tracker':
+        specifier: workspace:*
+        version: link:../../packages/plugin-web-metric-tracker
       '@repo/plugin-web-pet':
         specifier: workspace:*
         version: link:../../packages/xai-web-pet
@@ -326,7 +329,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/core:
     dependencies:
@@ -354,7 +357,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/core-data:
     dependencies:
@@ -373,7 +376,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/ed25519-recovery-signing:
     devDependencies:
@@ -388,7 +391,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/eslint-config:
     devDependencies:
@@ -443,7 +446,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/nonce-lease-server:
     devDependencies:
@@ -455,7 +458,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-account:
     dependencies:
@@ -498,7 +501,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-ai-cube:
     dependencies:
@@ -526,7 +529,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-calendar:
     dependencies:
@@ -554,7 +557,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-clipboard:
     dependencies:
@@ -585,7 +588,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-console:
     dependencies:
@@ -616,7 +619,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-labels:
     dependencies:
@@ -647,7 +650,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-organizer:
     dependencies:
@@ -730,7 +733,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-productivity:
     dependencies:
@@ -761,7 +764,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-project:
     dependencies:
@@ -792,7 +795,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/plugin-web-ai-chat:
     dependencies:
@@ -1114,6 +1117,52 @@ importers:
       react-router:
         specifier: ^7.15.1
         version: 7.15.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^3.2.1
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
+
+  packages/plugin-web-metric-tracker:
+    dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/plugin-web-tokens':
+        specifier: workspace:*
+        version: link:../plugin-web-tokens
+      '@repo/xai-web-shell':
+        specifier: workspace:*
+        version: link:../xai-web-shell
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@testing-library/jest-dom':
+        specifier: ^6.0.0
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.0.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.2(@types/react@19.2.2)
+      jsdom:
+        specifier: ^26.0.0
+        version: 26.1.0
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: 5.9.2
         version: 5.9.2
@@ -1466,7 +1515,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/protocol-integrity-integration-tests:
     devDependencies:
@@ -1478,7 +1527,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/push-edge-function:
     devDependencies:
@@ -1490,7 +1539,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/realtime-private-channel-config:
     devDependencies:
@@ -1502,7 +1551,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/recovery-proof-edge-function:
     dependencies:
@@ -1518,7 +1567,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/recovery-rehearsal-3-rekey-kill9:
     dependencies:
@@ -1537,7 +1586,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/rekey-two-phase:
     dependencies:
@@ -1553,7 +1602,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/rls-fuzz-property:
     dependencies:
@@ -1569,7 +1618,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/rls-policies-and-tests:
     devDependencies:
@@ -1581,7 +1630,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/tla-protocol-model:
     devDependencies:
@@ -1593,7 +1642,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/typescript-config: {}
 
@@ -1657,7 +1706,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/web-browser-e2e-crypto-runtime:
     dependencies:
@@ -1679,7 +1728,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/x25519-device-keypair:
     devDependencies:
@@ -1694,7 +1743,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.1
-        version: 3.2.4(@types/node@22.15.3)(jsdom@29.1.1(@noble/hashes@2.2.0))
+        version: 3.2.4(@types/node@22.15.3)(jsdom@26.1.0)
 
   packages/xai-web-calendar:
     dependencies:
