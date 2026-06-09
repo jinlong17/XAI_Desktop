@@ -161,6 +161,83 @@ describe("TimeTrackerModule", () => {
     expect(readTimeTrackerEntries()[0]?.done).toBe(true);
   });
 
+  it("opens a fullscreen focus view from an active session and keeps timer actions intact", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
+    });
+    act(() => {
+      vi.advanceTimersByTime(5_000);
+    });
+
+    act(() => {
+      fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Code"));
+    });
+
+    const focusDialog = screen.getByRole("dialog", { name: "Focus mode" });
+    expect(focusDialog).toHaveTextContent("Code");
+    expect(focusDialog).toHaveTextContent("Study");
+    expect(focusDialog).toHaveTextContent("00:00:05");
+    expect(focusDialog).toHaveTextContent("Started");
+    expect(focusDialog).toHaveTextContent("Running");
+
+    act(() => {
+      fireEvent.click(within(focusDialog).getByLabelText("Pause"));
+    });
+    expect(readTimeTrackerEntries()[0]?.segments.at(-1)?.end).not.toBeNull();
+    expect(focusDialog).toHaveTextContent("Paused");
+
+    act(() => {
+      fireEvent.click(within(focusDialog).getByLabelText("Resume"));
+    });
+    expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(2);
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+    });
+    expect(screen.queryByRole("dialog", { name: "Focus mode" })).not.toBeInTheDocument();
+
+    act(() => {
+      fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Code"));
+    });
+    const reopenedDialog = screen.getByRole("dialog", { name: "Focus mode" });
+    act(() => {
+      fireEvent.click(within(reopenedDialog).getByLabelText("End and exit"));
+    });
+
+    expect(readTimeTrackerEntries()[0]?.done).toBe(true);
+    expect(screen.queryByRole("dialog", { name: "Focus mode" })).not.toBeInTheDocument();
+  });
+
+  it("hides and reveals focus controls after idle mouse movement", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    const restCard = screen.getByRole("heading", { name: "Rest" }).closest("article");
+    expect(restCard).not.toBeNull();
+    act(() => {
+      fireEvent.click(within(restCard!).getByRole("button", { name: "Start Whole category" }));
+    });
+    act(() => {
+      fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Rest"));
+    });
+
+    const focusDialog = screen.getByRole("dialog", { name: "Focus mode" });
+    expect(focusDialog).toHaveClass("controls-visible");
+
+    act(() => {
+      vi.advanceTimersByTime(2_300);
+    });
+    expect(focusDialog).not.toHaveClass("controls-visible");
+
+    act(() => {
+      fireEvent.mouseMove(focusDialog);
+    });
+    expect(focusDialog).toHaveClass("controls-visible");
+  });
+
   it("starts one entry per click under React StrictMode", () => {
     render(
       <StrictMode>

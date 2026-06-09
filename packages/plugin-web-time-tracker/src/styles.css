@@ -725,6 +725,289 @@
   background: color-mix(in oklch, #ff453a 10%, var(--bg-panel));
 }
 
+.tt-focus-overlay {
+  --tt-accent: var(--accent);
+  --tt-focus-blue: oklch(79% 0.075 235);
+  --tt-focus-cyan: oklch(87% 0.055 205);
+  --tt-focus-violet: oklch(78% 0.07 285);
+  --tt-focus-rose: oklch(88% 0.045 18);
+  --tt-focus-text: color-mix(in oklch, var(--text-1) 76%, oklch(54% 0.048 238));
+  --tt-focus-dim: color-mix(in oklch, var(--text-2) 78%, oklch(62% 0.04 235));
+  --tt-focus-muted: color-mix(in oklch, var(--text-3) 70%, oklch(70% 0.025 235));
+  --tt-focus-number: color-mix(in oklch, var(--text-1) 72%, oklch(48% 0.07 238));
+  --tt-focus-surface: color-mix(in oklch, white 54%, transparent);
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(18px, 4vw, 56px);
+  color: var(--tt-focus-text);
+  background:
+    radial-gradient(circle at 50% 34%, color-mix(in oklch, var(--tt-focus-cyan) 46%, transparent), transparent 31rem),
+    radial-gradient(circle at 18% 20%, color-mix(in oklch, var(--tt-focus-blue) 32%, transparent), transparent 29rem),
+    radial-gradient(circle at 84% 76%, color-mix(in oklch, var(--tt-focus-violet) 28%, transparent), transparent 34rem),
+    radial-gradient(circle at 76% 16%, color-mix(in oklch, var(--tt-focus-rose) 24%, transparent), transparent 24rem),
+    linear-gradient(145deg, color-mix(in oklch, var(--bg-app) 86%, white), color-mix(in oklch, var(--bg-panel) 76%, var(--tt-focus-blue)));
+  isolation: isolate;
+}
+
+[data-theme="dark"] .tt-focus-overlay {
+  --tt-focus-blue: oklch(46% 0.09 238);
+  --tt-focus-cyan: oklch(42% 0.07 205);
+  --tt-focus-violet: oklch(44% 0.085 285);
+  --tt-focus-rose: oklch(45% 0.06 18);
+  --tt-focus-text: color-mix(in oklch, var(--text-1) 86%, oklch(82% 0.035 235));
+  --tt-focus-dim: color-mix(in oklch, var(--text-2) 84%, oklch(75% 0.03 235));
+  --tt-focus-muted: color-mix(in oklch, var(--text-3) 78%, oklch(68% 0.025 235));
+  --tt-focus-number: color-mix(in oklch, var(--text-1) 82%, oklch(72% 0.055 235));
+  --tt-focus-surface: color-mix(in oklch, var(--bg-panel) 46%, transparent);
+}
+
+.tt-focus-overlay::before,
+.tt-focus-overlay::after {
+  position: absolute;
+  inset: auto;
+  z-index: -1;
+  border-radius: 999px;
+  content: "";
+  filter: blur(18px);
+  opacity: .36;
+  pointer-events: none;
+}
+
+.tt-focus-overlay::before {
+  right: 12vw;
+  bottom: 10vh;
+  width: min(34vw, 360px);
+  height: min(34vw, 360px);
+  background: color-mix(in oklch, var(--tt-focus-violet) 34%, transparent);
+}
+
+.tt-focus-overlay::after {
+  top: 9vh;
+  left: 11vw;
+  width: min(26vw, 260px);
+  height: min(26vw, 260px);
+  background: color-mix(in oklch, var(--tt-focus-cyan) 32%, transparent);
+}
+
+.tt-focus-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tt-focus-ambient span {
+  position: absolute;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--tt-focus-blue) 58%, white);
+  box-shadow: 0 0 28px color-mix(in oklch, var(--tt-focus-cyan) 42%, transparent);
+  opacity: .38;
+  animation: tt-focus-drift 12s linear infinite;
+}
+
+.tt-focus-ambient span:nth-child(1) {
+  left: 24%;
+  bottom: -8%;
+}
+
+.tt-focus-ambient span:nth-child(2) {
+  left: 58%;
+  bottom: -14%;
+  animation-delay: -4s;
+  animation-duration: 15s;
+}
+
+.tt-focus-ambient span:nth-child(3) {
+  left: 78%;
+  bottom: -5%;
+  animation-delay: -8s;
+  animation-duration: 18s;
+}
+
+@keyframes tt-focus-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(.8);
+  }
+  18% {
+    opacity: .34;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-22px, -112vh, 0) scale(1.28);
+  }
+}
+
+.tt-focus-core {
+  display: grid;
+  justify-items: center;
+  width: min(860px, 100%);
+  gap: clamp(10px, 1.6vw, 18px);
+  text-align: center;
+}
+
+.tt-focus-icon {
+  display: grid;
+  width: 74px;
+  height: 74px;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--tt-accent) 34%, transparent);
+  border-radius: 999px;
+  color: color-mix(in oklch, var(--tt-accent) 82%, var(--tt-focus-text));
+  background:
+    linear-gradient(180deg, color-mix(in oklch, white 70%, transparent), color-mix(in oklch, var(--tt-focus-cyan) 26%, transparent));
+  box-shadow:
+    0 20px 70px color-mix(in oklch, var(--tt-focus-blue) 22%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 72%, transparent);
+  backdrop-filter: blur(20px) saturate(1.3);
+}
+
+.tt-focus-kicker {
+  margin: 0;
+  color: var(--tt-focus-dim);
+  font-size: clamp(14px, 1.4vw, 17px);
+  font-weight: 650;
+}
+
+.tt-focus-core h2 {
+  overflow-wrap: anywhere;
+  max-width: 14ch;
+  margin: 0;
+  color: var(--tt-focus-text);
+  font-size: clamp(40px, 7vw, 92px);
+  font-weight: 680;
+  line-height: .98;
+  text-shadow: 0 10px 40px color-mix(in oklch, var(--tt-focus-blue) 18%, transparent);
+}
+
+.tt-focus-time {
+  color: var(--tt-focus-number);
+  font-family: var(--font-mono);
+  font-size: clamp(58px, 12vw, 168px);
+  font-weight: 660;
+  line-height: .9;
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 18px 58px color-mix(in oklch, var(--tt-focus-blue) 20%, transparent),
+    0 1px 0 color-mix(in oklch, white 24%, transparent);
+}
+
+.tt-focus-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: min(720px, 100%);
+  margin-top: 4px;
+}
+
+.tt-focus-meta span {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklch, white 42%, transparent);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, white 24%, transparent), color-mix(in oklch, var(--tt-focus-surface) 88%, transparent));
+  box-shadow:
+    0 14px 42px color-mix(in oklch, var(--tt-focus-blue) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 52%, transparent);
+  backdrop-filter: blur(22px) saturate(1.25);
+}
+
+.tt-focus-meta em {
+  overflow: hidden;
+  color: var(--tt-focus-muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tt-focus-meta b {
+  overflow: hidden;
+  color: var(--tt-focus-text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-focus-controls {
+  position: fixed;
+  right: clamp(14px, 3vw, 34px);
+  bottom: clamp(14px, 3vw, 32px);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  max-width: calc(100vw - 28px);
+  padding: 8px;
+  border: 1px solid color-mix(in oklch, white 38%, transparent);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, white 28%, transparent), color-mix(in oklch, var(--bg-panel) 50%, transparent));
+  box-shadow:
+    0 18px 58px color-mix(in oklch, var(--tt-focus-blue) 14%, rgb(0 0 0 / 18%)),
+    inset 0 1px 0 color-mix(in oklch, white 52%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity .24s ease, transform .24s ease;
+  backdrop-filter: blur(20px);
+}
+
+.tt-focus-overlay.controls-visible .tt-focus-controls,
+.tt-focus-controls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.tt-focus-action {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in oklch, white 42%, transparent);
+  border-radius: 8px;
+  color: var(--tt-focus-text);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, white 38%, transparent), color-mix(in oklch, var(--bg-panel) 60%, transparent));
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tt-focus-action:hover,
+.tt-focus-action:focus-visible {
+  border-color: color-mix(in oklch, var(--tt-accent) 44%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, white 46%, transparent), color-mix(in oklch, var(--tt-accent) 18%, var(--bg-panel)));
+}
+
+.tt-focus-action.primary {
+  color: color-mix(in oklch, var(--tt-accent) 62%, var(--tt-focus-text));
+}
+
+.tt-focus-action.danger {
+  color: color-mix(in oklch, #ff6b6b 68%, var(--tt-focus-text));
+}
+
 .tt-category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 282px), 1fr));
@@ -2364,6 +2647,27 @@
   .tt-active-row,
   .tt-record-row {
     align-items: start;
+  }
+
+  .tt-focus-core h2 {
+    max-width: 10ch;
+  }
+
+  .tt-focus-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-focus-controls {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tt-focus-action {
+    min-width: 0;
+    padding: 0 8px;
   }
 }
 

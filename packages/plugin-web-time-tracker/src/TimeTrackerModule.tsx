@@ -520,12 +520,14 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [collapsedCategoryIds, setCollapsedCategoryIds] = useState(readCollapsedCategoryIds);
   const [dayRecordsCollapsed, setDayRecordsCollapsed] = useState(readDayRecordsCollapsed);
   const [timeStatusHidden, setTimeStatusHidden] = useState(readTimeStatusHidden);
+  const [focusEntryId, setFocusEntryId] = useState<string | null>(null);
 
   const liveCategories = useMemo(() => categories.filter((category) => category.deleted !== true), [categories]);
   const categoryMap = useCategoryMap(liveCategories);
   const liveEntries = useMemo(() => entries.filter((entry) => entry.deleted !== true), [entries]);
   const activeEntries = useMemo(() => liveEntries.filter(isActiveEntry), [liveEntries]);
   const hasActive = activeEntries.length > 0;
+  const focusEntry = focusEntryId === null ? null : activeEntries.find((entry) => entry.id === focusEntryId) ?? null;
 
   useEffect(() => {
     if (!hasActive) return;
@@ -548,6 +550,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   useEffect(() => {
     window.localStorage.setItem(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0");
   }, [timeStatusHidden]);
+
+  useEffect(() => {
+    if (focusEntryId !== null && focusEntry === null) setFocusEntryId(null);
+  }, [focusEntry, focusEntryId]);
 
   const todayKey = dayKey(nowMs);
   const isToday = selectedKey === todayKey;
@@ -773,6 +779,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                       onResume={resumeEntry}
                       onStop={stopEntry}
                       onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                      onFocus={() => setFocusEntryId(entry.id)}
                     />
                   ))}
                 </div>
@@ -990,6 +997,21 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
           }}
         />
       )}
+      {focusEntry !== null && (
+        <FocusModeOverlay
+          entry={focusEntry}
+          category={categoryMap.get(focusEntry.categoryId)}
+          lang={lang}
+          nowMs={nowMs}
+          onPause={pauseEntry}
+          onResume={resumeEntry}
+          onStop={(entryId) => {
+            stopEntry(entryId);
+            setFocusEntryId(null);
+          }}
+          onClose={() => setFocusEntryId(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1021,6 +1043,13 @@ function activeEntryStatusLabel(entry: TimeTrackerEntry, category: TimeTrackerCa
   const parent = textName(category?.name, lang);
   if (primary === "") return ttCopy(lang, "running");
   return sub !== undefined && parent !== "" ? `${primary} · ${parent}` : primary;
+}
+
+function focusEntryNames(entry: TimeTrackerEntry, category: TimeTrackerCategory | undefined, lang: Lang) {
+  const sub = findSubcategory(category, entry.subId);
+  const parentName = textName(category?.name, lang) || ttCopy(lang, "category");
+  const taskName = sub !== undefined ? textName(sub.name, lang) : parentName;
+  return { taskName, parentName };
 }
 
 function hourText(hours: number, lang: Lang): string {
@@ -1721,6 +1750,7 @@ function ActiveSession({
   onResume,
   onStop,
   onEdit,
+  onFocus,
 }: {
   readonly entry: TimeTrackerEntry;
   readonly category: TimeTrackerCategory | undefined;
@@ -1730,6 +1760,7 @@ function ActiveSession({
   readonly onResume: (entryId: string) => void;
   readonly onStop: (entryId: string) => void;
   readonly onEdit: () => void;
+  readonly onFocus: () => void;
 }) {
   const running = isRunningEntry(entry);
   const sub = findSubcategory(category, entry.subId);
@@ -1737,15 +1768,58 @@ function ActiveSession({
   const icon = subcategoryIcon(sub, category);
   const primaryName = sub !== undefined ? textName(sub.name, lang) : textName(category?.name, lang);
   const parentName = textName(category?.name, lang);
+  const editTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (editTimerRef.current !== null) window.clearTimeout(editTimerRef.current);
+    };
+  }, []);
+
+  function clearPendingEdit(): void {
+    if (editTimerRef.current === null) return;
+    window.clearTimeout(editTimerRef.current);
+    editTimerRef.current = null;
+  }
+
+  function scheduleEdit(): void {
+    clearPendingEdit();
+    editTimerRef.current = window.setTimeout(() => {
+      editTimerRef.current = null;
+      onEdit();
+    }, 180);
+  }
+
+  function openFocus(): void {
+    clearPendingEdit();
+    onFocus();
+  }
+
   return (
-    <article className={`tt-active-row${running ? " is-running" : " is-paused"}`} style={{ "--tt-accent": accent } as CSSProperties}>
+    <article
+      className={`tt-active-row${running ? " is-running" : " is-paused"}`}
+      style={{ "--tt-accent": accent } as CSSProperties}
+      onDoubleClick={(event) => {
+        if ((event.target as HTMLElement).closest("[data-no-focus-open]") !== null) return;
+        openFocus();
+      }}
+    >
       <span className="tt-active-icon"><IconGlyph name={icon} size={18} /></span>
-      <button type="button" className="tt-active-body" onClick={onEdit}>
+      <button
+        type="button"
+        className="tt-active-body"
+        aria-label={`${ttCopy(lang, "enterFocusMode")} ${primaryName}`}
+        onClick={(event) => {
+          if (event.detail > 1) return;
+          scheduleEdit();
+        }}
+        onDoubleClick={openFocus}
+      >
         <strong>{primaryName}{sub !== undefined && <span> · {parentName}</span>}</strong>
         <span>{running ? <><span className="tt-live-dot" />{ttCopy(lang, "running")}</> : ttCopy(lang, "paused")} · {formatClock(entryStart(entry))}</span>
       </button>
       <b>{formatTimer(entryDuration(entry, nowMs))}</b>
-      <div className="tt-active-actions" data-no-drag>
+      <div className="tt-active-actions" data-no-drag data-no-focus-open>
         {isPausedEntry(entry) ? (
           <button type="button" className="tt-action-pill tt-action-primary" onClick={() => onResume(entry.id)} aria-label={ttCopy(lang, "resume")}><IconGlyph name="play" size={14} /><span>{ttCopy(lang, "resume")}</span></button>
         ) : (
@@ -1754,6 +1828,136 @@ function ActiveSession({
         <button type="button" className="tt-action-pill tt-action-stop" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "end")}><IconGlyph name="check" size={14} /><span>{ttCopy(lang, "end")}</span></button>
       </div>
     </article>
+  );
+}
+
+function FocusModeOverlay({
+  entry,
+  category,
+  lang,
+  nowMs,
+  onPause,
+  onResume,
+  onStop,
+  onClose,
+}: {
+  readonly entry: TimeTrackerEntry;
+  readonly category: TimeTrackerCategory | undefined;
+  readonly lang: Lang;
+  readonly nowMs: number;
+  readonly onPause: (entryId: string) => void;
+  readonly onResume: (entryId: string) => void;
+  readonly onStop: (entryId: string) => void;
+  readonly onClose: () => void;
+}) {
+  const running = isRunningEntry(entry);
+  const sub = findSubcategory(category, entry.subId);
+  const accent = subcategoryColor(sub, category);
+  const icon = subcategoryIcon(sub, category);
+  const { taskName, parentName } = focusEntryNames(entry, category, lang);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimerRef = useRef<number | null>(null);
+
+  const clearHideTimer = useMemo(() => {
+    return () => {
+      if (hideTimerRef.current === null) return;
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    };
+  }, []);
+
+  const scheduleHide = useMemo(() => {
+    return () => {
+      clearHideTimer();
+      hideTimerRef.current = window.setTimeout(() => {
+        setControlsVisible(false);
+        hideTimerRef.current = null;
+      }, 2200);
+    };
+  }, [clearHideTimer]);
+
+  useEffect(() => {
+    scheduleHide();
+    return clearHideTimer;
+  }, [clearHideTimer, scheduleHide]);
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent): void {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onClose();
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  function revealControls(): void {
+    setControlsVisible(true);
+    scheduleHide();
+  }
+
+  return (
+    <div
+      className={`tt-focus-overlay${controlsVisible ? " controls-visible" : ""}${running ? " is-running" : " is-paused"}`}
+      style={{ "--tt-accent": accent } as CSSProperties}
+      role="dialog"
+      aria-modal="true"
+      aria-label={ttCopy(lang, "focusMode")}
+      onMouseMove={revealControls}
+      onMouseLeave={() => {
+        clearHideTimer();
+        setControlsVisible(false);
+      }}
+      onPointerDown={revealControls}
+    >
+      <div className="tt-focus-ambient" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <main className="tt-focus-core">
+        <div className="tt-focus-icon"><IconGlyph name={icon} size={30} /></div>
+        <p className="tt-focus-kicker">{parentName}</p>
+        <h2>{taskName}</h2>
+        <strong className="tt-focus-time">{formatTimer(entryDuration(entry, nowMs))}</strong>
+        <div className="tt-focus-meta" aria-label={ttCopy(lang, "focusMode")}>
+          <span>
+            <em>{ttCopy(lang, "focusElapsed")}</em>
+            <b>{formatDuration(entryDuration(entry, nowMs))}</b>
+          </span>
+          <span>
+            <em>{ttCopy(lang, "focusStartedAt")}</em>
+            <b>{formatClockFull(entryStart(entry))}</b>
+          </span>
+          <span>
+            <em>{ttCopy(lang, "focusStatus")}</em>
+            <b>{running ? ttCopy(lang, "running") : ttCopy(lang, "paused")}</b>
+          </span>
+        </div>
+      </main>
+      <div className="tt-focus-controls" role="toolbar" aria-label={ttCopy(lang, "focusMode")} data-no-drag>
+        {isPausedEntry(entry) ? (
+          <button type="button" className="tt-focus-action primary" onClick={() => { onResume(entry.id); revealControls(); }} aria-label={ttCopy(lang, "resume")}>
+            <IconGlyph name="play" size={15} />
+            {ttCopy(lang, "resume")}
+          </button>
+        ) : (
+          <button type="button" className="tt-focus-action primary" onClick={() => { onPause(entry.id); revealControls(); }} aria-label={ttCopy(lang, "pause")}>
+            <IconGlyph name="pause" size={15} />
+            {ttCopy(lang, "pause")}
+          </button>
+        )}
+        <button type="button" className="tt-focus-action danger" onClick={() => onStop(entry.id)} aria-label={ttCopy(lang, "focusStopAndExit")}>
+          <IconGlyph name="check" size={15} />
+          {ttCopy(lang, "stop")}
+        </button>
+        <button type="button" className="tt-focus-action" onClick={onClose} aria-label={ttCopy(lang, "exitFocusMode")}>
+          <IconGlyph name="close" size={15} />
+          {ttCopy(lang, "exitFocusMode")}
+        </button>
+      </div>
+    </div>
   );
 }
 
