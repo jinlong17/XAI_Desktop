@@ -798,3 +798,187 @@
     animation-play-state: paused;
   }
 }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .ai-side.open {
+    width: clamp(248px, 30vw, 280px);
+  }
+
+  .ai-side-head,
+  .ai-search,
+  .ai-side-section {
+    min-width: 0;
+  }
+
+  .ai-new-btn,
+  .ai-search,
+  .ai-convo-row,
+  .ai-open-side,
+  .ai-new-corner,
+  .ai-icon-round,
+  .ai-send {
+    min-height: 44px;
+  }
+
+  .ai-search input,
+  .ai-input,
+  .ai-model-btn {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .ai-open-side,
+  .ai-new-corner,
+  .ai-icon-round,
+  .ai-send {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ai-insights-toggle {
+    min-height: 44px;
+    right: 72px;
+  }
+
+  .ai-stage,
+  .ai-aurora {
+    max-width: 100%;
+    overflow: clip;
+  }
+
+  .aurora-stream {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transform: scale(1.18);
+    transform-origin: center;
+  }
+
+  .orb {
+    width: min(54vw, 460px);
+    height: min(54vw, 460px);
+    max-width: 100%;
+    overflow: clip;
+    contain: paint;
+  }
+
+  .ai-welcome {
+    max-width: min(640px, 100%);
+    padding-inline: 18px;
+  }
+
+  .ai-welcome h1 {
+    font-size: clamp(32px, 5vw, 40px);
+    line-height: 1.08;
+  }
+
+  .ai-composer-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 767px) {
+  .module-ai {
+    overflow: hidden;
+  }
+
+  .ai-side {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: min(78vw, 320px);
+    max-width: 320px;
+    transform: translateX(calc(-100% - 12px));
+    transition: transform 320ms var(--ease-out);
+    box-shadow: 20px 0 54px color-mix(in oklch, black 20%, transparent);
+    z-index: 18;
+  }
+
+  .ai-side.open {
+    width: min(78vw, 320px);
+    transform: translateX(0);
+  }
+
+  .ai-side:not(.open) {
+    pointer-events: none;
+  }
+
+  .ai-side-head,
+  .ai-search,
+  .ai-side-section {
+    min-width: 0;
+  }
+
+  .ai-new-btn,
+  .ai-search,
+  .ai-convo-row {
+    min-height: 44px;
+  }
+
+  .ai-search input,
+  .ai-input,
+  .ai-model-btn {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .ai-main {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .ai-open-side,
+  .ai-new-corner,
+  .ai-icon-round,
+  .ai-send {
+    width: 44px;
+    height: 44px;
+  }
+
+  .ai-open-side,
+  .ai-new-corner {
+    top: 12px;
+    border-radius: 14px;
+  }
+
+  .ai-open-side {
+    left: 12px;
+  }
+
+  .ai-new-corner {
+    right: 12px;
+  }
+
+  .ai-insights-toggle {
+    top: 12px;
+    right: 64px;
+    min-height: 44px;
+    max-width: calc(100vw - 136px);
+  }
+
+  .ai-stage,
+  .ai-aurora {
+    max-width: 100%;
+    overflow: clip;
+  }
+
+  .aurora-stream {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.45);
+    transform-origin: center;
+  }
+
+  .orb {
+    width: min(68vw, 380px);
+    height: min(68vw, 380px);
+    max-width: 100%;
+    overflow: clip;
+    contain: paint;
+  }
+}

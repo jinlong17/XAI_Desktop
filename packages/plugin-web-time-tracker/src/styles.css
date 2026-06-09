@@ -2456,6 +2456,17 @@
     min-width: 44px;
     min-height: 44px;
   }
+
+  .tt-card-collapse,
+  .tt-card-add-sub,
+  .tt-card-menu,
+  .tt-active-actions button,
+  .tt-row-actions button,
+  .tt-mini-action,
+  .tt-time-card-remove {
+    width: 44px;
+    min-width: 44px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2549,5 +2560,116 @@
     width: calc(100vw - 24px);
     max-width: calc(100vw - 24px);
     max-height: calc(100dvh - 48px);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .module-timetrack {
+    overflow-x: hidden;
+    padding: 16px;
+  }
+
+  .tt-btn,
+  .tt-icon-btn,
+  .tt-segment button,
+  .tt-card-collapse,
+  .tt-card-add-sub,
+  .tt-card-menu,
+  .tt-category-body,
+  .tt-category-start,
+  .tt-side-link,
+  .tt-field input,
+  .tt-field select,
+  .tt-field textarea,
+  .tt-ins-head select,
+  .tt-input-static {
+    min-height: 44px;
+  }
+
+  .tt-icon-btn,
+  .tt-mini-action,
+  .tt-time-card-remove,
+  .tt-card-collapse,
+  .tt-card-add-sub,
+  .tt-card-menu,
+  .tt-active-actions button,
+  .tt-row-actions button {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .tt-time-card-copy,
+  .tt-time-card-copy strong,
+  .tt-time-card-copy small,
+  .tt-active-body,
+  .tt-active-body strong,
+  .tt-record-row strong,
+  .tt-category-copy,
+  .tt-category-card h3,
+  .tt-category-copy > span,
+  .tt-subcard-copy,
+  .tt-subcard-copy strong,
+  .tt-subcard-copy em,
+  .tt-legend strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tt-time-card-copy strong,
+  .tt-time-card-copy small,
+  .tt-active-body strong,
+  .tt-record-row strong,
+  .tt-category-card h3,
+  .tt-category-copy > span,
+  .tt-subcard-copy strong,
+  .tt-subcard-copy em,
+  .tt-legend strong {
+    white-space: normal;
+  }
+
+  .tt-category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .tt-mini-bars {
+    grid-template-columns: repeat(7, minmax(44px, 1fr));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tt-mini-bars::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tt-mini-bars button {
+    min-width: 44px;
+  }
+
+  .tt-mini-bars em,
+  .tt-hours em,
+  .tt-section-head h3 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .tt-layout,
+  .tt-field-grid,
+  .tt-report-head,
+  .tt-ins-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-toolbar {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1024px) {
+  .tt-layout {
+    grid-template-columns: 1fr;
   }
 }

@@ -1147,6 +1147,75 @@
   }
 }
 
+@media (min-width: 40.063rem) and (max-width: 64rem) {
+  .module-countdown {
+    overflow-x: hidden;
+  }
+
+  .cd-page-head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .cd-page-actions {
+    flex: 1 1 auto;
+  }
+
+  .cd-btn,
+  .cd-mini-action,
+  .cd-view-tabs button,
+  .cd-card__actions button,
+  .cd-history-view button,
+  .cd-calendar-view button,
+  .cd-add-card,
+  .cd-dialog-close,
+  .cd-dialog-actions .cd-btn,
+  .cd-color-grid button,
+  .cd-icon-grid button,
+  .cd-switch-grid label,
+  .cd-radio-group label {
+    min-height: 2.75rem;
+  }
+
+  .cd-mini-action,
+  .cd-card__actions button,
+  .cd-dialog-close,
+  .cd-color-grid button,
+  .cd-icon-grid button {
+    min-width: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .cd-card__actions button.danger,
+  .cd-card__actions .danger {
+    width: auto;
+    min-width: 3.5rem;
+    padding-inline: 0.75rem;
+  }
+
+  .cd-card,
+  .cd-card__chrome {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .cd-view-row,
+  .cd-board-controls,
+  .countdown-grid,
+  .cd-module-stack,
+  .cd-module-stack--split {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .cd-dialog {
+    width: min(42rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 3rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .module-countdown *,
   .module-countdown *::before,

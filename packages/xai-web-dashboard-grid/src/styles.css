@@ -1014,6 +1014,132 @@
   min-height: 112px;
 }
 
+@media (min-width: 781px) and (max-width: 1024px) {
+  .module-dashboard {
+    --dash-widget-min-height: 148px;
+    padding: 18px 16px 24px;
+    gap: 16px;
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .dash-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .module-dashboard .dash-note-lane {
+    grid-column: 1 / -1;
+    justify-content: stretch;
+    order: 3;
+  }
+
+  .module-dashboard .dash-note {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+    transform: none;
+  }
+
+  .module-dashboard .dash-note__display {
+    min-height: 44px;
+  }
+
+  .module-dashboard button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .module-dashboard .dash-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 14px;
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .widget-shell,
+  .module-dashboard .widget-shell > .widget,
+  .module-dashboard .widget-shell > .widget-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .module-dashboard .w-clock,
+  .module-dashboard .w-weather,
+  .module-dashboard .w-upcoming {
+    grid-column: span 8;
+  }
+
+  .module-dashboard .w-stat,
+  .module-dashboard .w-timetrack,
+  .module-dashboard .w-timezones,
+  .module-dashboard .w-stickies,
+  .module-dashboard .w-mail,
+  .module-dashboard .w-mini-cal {
+    grid-column: span 4;
+  }
+
+  .module-dashboard .clock-time,
+  .module-dashboard .clock-split {
+    font-size: clamp(56px, 8vw, 76px);
+  }
+
+  .module-dashboard .clock-min {
+    font-size: clamp(70px, 10vw, 96px);
+  }
+
+  .module-dashboard .pomo-dots {
+    width: 52px;
+  }
+
+  .module-dashboard .sticky-stack {
+    overflow: hidden;
+  }
+
+  .module-dashboard .sticky {
+    overflow-wrap: anywhere;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove,
+  .module-dashboard .widget-shell__appearance,
+  .module-dashboard .widget-shell__resize {
+    min-width: 44px;
+    min-height: 44px;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove {
+    top: 8px;
+    right: 58px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell__appearance {
+    top: 8px;
+    right: 8px;
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+
+  .module-dashboard .widget-shell__resize {
+    right: 8px;
+    bottom: 8px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell:hover .widget-shell__remove,
+  .module-dashboard .widget-shell:focus-within .widget-shell__remove,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__remove,
+  .module-dashboard .widget-shell:hover .widget-shell__resize,
+  .module-dashboard .widget-shell:focus-within .widget-shell__resize,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__resize {
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+}
+
 @media (max-width: 780px) {
   .module-dashboard {
     padding: 14px 12px 20px;
@@ -1046,23 +1172,96 @@
     height: 46px;
     min-width: 46px;
     min-height: 46px;
-    opacity: 1;
     transform: none;
   }
 
   .module-dashboard .widget-shell__remove {
     top: 8px;
-    right: 8px;
-    pointer-events: auto;
+    right: 60px;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .module-dashboard .widget-shell__appearance {
     top: 8px;
-    right: 60px;
+    right: 8px;
+    opacity: 0.82;
+    pointer-events: auto;
   }
 
   .module-dashboard .widget-shell__resize {
     right: 8px;
     bottom: 8px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell:hover .widget-shell__remove,
+  .module-dashboard .widget-shell:focus-within .widget-shell__remove,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__remove,
+  .module-dashboard .widget-shell:hover .widget-shell__resize,
+  .module-dashboard .widget-shell:focus-within .widget-shell__resize,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__resize {
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .module-dashboard button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .module-dashboard .dash-add {
+    width: auto !important;
+    min-width: 112px !important;
+    padding-inline: 14px !important;
+  }
+
+  .module-dashboard .clk-style-toggle button,
+  .module-dashboard .tz-view-toggle button,
+  .module-dashboard .ww-edit-btn {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .module-dashboard .clk-tz-btn,
+  .module-dashboard .mc-jump {
+    height: auto !important;
+    min-height: 44px !important;
+  }
+
+  .module-dashboard .pomo-dots {
+    width: 52px !important;
+    grid-template-columns: repeat(4, 8px);
+    justify-content: start;
+  }
+
+  .module-dashboard .ws-row {
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .module-dashboard .sticky-stack {
+    min-width: 0;
+    max-width: 100%;
+    overflow: clip;
+  }
+
+  .module-dashboard .sticky {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+    transform: none !important;
+  }
+
+  .module-dashboard .sticky--sample {
+    transform: none !important;
   }
 }
