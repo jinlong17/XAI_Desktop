@@ -2457,3 +2457,97 @@
     min-height: 44px;
   }
 }
+
+@media (max-width: 640px) {
+  .module-timetrack {
+    overflow-x: hidden;
+  }
+
+  .tt-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .tt-toolbar > *,
+  .tt-toolbar .tt-btn,
+  .tt-add-menu-wrap,
+  .tt-add-menu-wrap .tt-btn {
+    width: 100%;
+  }
+
+  .tt-segment button,
+  .tt-icon-btn,
+  .tt-mini-action,
+  .tt-time-card-remove,
+  .tt-side-link,
+  .tt-card-collapse,
+  .tt-card-add-sub,
+  .tt-card-menu,
+  .tt-category-body,
+  .tt-category-start {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .tt-category-card {
+    padding: 12px;
+  }
+
+  .tt-category-start {
+    padding: 0 12px;
+  }
+
+  .tt-mini-bars,
+  .tt-hours {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tt-mini-bars::-webkit-scrollbar,
+  .tt-hours::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tt-mini-bars .tt-tip,
+  .tt-hours .tt-tip {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .tt-sidebar,
+  .tt-layout,
+  .tt-field-grid,
+  .tt-report-head,
+  .tt-ins-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-card-head {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .tt-card-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .tt-time-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-time-card-copy,
+  .tt-time-card-copy strong,
+  .tt-time-card-copy small {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tt-dialog {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 48px);
+  }
+}

@@ -1128,10 +1128,72 @@
 @media (max-width: 640px) {
   .module-meditation {
     padding: var(--p-sm, 0.5rem);
+    overflow-x: hidden;
+  }
+
+  .med-layout,
+  .med-config,
+  .med-preview {
+    min-width: 0;
+  }
+
+  .med-preview {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 20rem;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  .med-preview > * {
+    max-width: 100%;
+  }
+
+  .med-preview .clk-digital,
+  .med-preview .clk-split,
+  .med-preview .clk-minimal {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-size: clamp(2.6rem, 14vw, 5rem);
   }
 
   .segmented {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dur-chip,
+  .dur-add input,
+  .dur-add button,
+  .segmented button,
+  .sound-card,
+  .module-meditation input,
+  .module-meditation select,
+  .field-grid input,
+  .field-grid select {
+    min-height: 44px;
+  }
+
+  .dur-add {
+    grid-template-columns: minmax(0, 1fr) 76px 44px;
+  }
+
+  .custom-scene-editor,
+  .field-grid {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .field-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+  }
+
+  .color-grid input[type="color"] {
+    min-height: 44px;
   }
 
   .mp-volume {

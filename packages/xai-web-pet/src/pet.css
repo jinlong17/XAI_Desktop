@@ -283,8 +283,9 @@
 
 @media (max-width: 760px) {
   .pet-wrap {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
+    z-index: 20;
   }
 
   .pet-bubble {

@@ -1017,17 +1017,52 @@
 @media (max-width: 780px) {
   .module-dashboard {
     padding: 14px 12px 20px;
+    overflow-x: hidden;
   }
 
   .module-dashboard .dash-head {
     gap: 14px;
   }
 
+  .module-dashboard .dash-grid,
+  .module-dashboard .widget-shell {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .module-dashboard .dash-grid {
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .dash-note__display {
+    min-height: 44px;
+  }
+
   .module-dashboard .dash-add,
   .module-dashboard .widget-shell__remove,
   .module-dashboard .widget-shell__appearance,
   .module-dashboard .widget-shell__resize {
-    min-width: 44px;
-    min-height: 44px;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    opacity: 1;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove {
+    top: 8px;
+    right: 8px;
+    pointer-events: auto;
+  }
+
+  .module-dashboard .widget-shell__appearance {
+    top: 8px;
+    right: 60px;
+  }
+
+  .module-dashboard .widget-shell__resize {
+    right: 8px;
+    bottom: 8px;
   }
 }

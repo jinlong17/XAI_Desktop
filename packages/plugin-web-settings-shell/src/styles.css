@@ -245,3 +245,80 @@
 .module-settings .toggle.on .toggle-knob {
   transform: translateX(20px);
 }
+
+@media (max-width: 640px) {
+  .module-settings {
+    overflow: auto;
+  }
+
+  .module-settings .settings-shell {
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .module-settings .settings-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--border-1);
+    padding: 12px 10px 8px;
+  }
+
+  .module-settings .settings-h {
+    margin: 2px 6px 10px;
+    font-size: var(--fs-xl);
+  }
+
+  .module-settings .settings-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .module-settings .list-row {
+    min-width: 0;
+    min-height: 44px;
+    padding: 9px 10px;
+  }
+
+  .module-settings .settings-detail {
+    width: 100%;
+    min-width: 0;
+    padding: 16px 14px 24px;
+    overflow: visible;
+  }
+
+  .module-settings .setting-block {
+    padding: 0 12px;
+    border-radius: var(--r-lg);
+  }
+
+  .module-settings .setting-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: flex-start;
+    padding: 14px 0;
+  }
+
+  .module-settings .setting-row > *:last-child {
+    justify-self: stretch;
+  }
+
+  .module-settings .pane-footer {
+    position: static;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    background: transparent;
+  }
+
+  .module-settings .pane-save {
+    width: 100%;
+    min-height: 44px;
+  }
+}

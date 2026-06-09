@@ -1089,6 +1089,64 @@
   }
 }
 
+@media (max-width: 40rem) {
+  .module-countdown {
+    overflow-x: hidden;
+  }
+
+  .cd-board-controls,
+  .cd-view-row {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .cd-view-tabs {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cd-view-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cd-view-tabs button {
+    flex: 1 0 auto;
+    min-width: 5rem;
+    min-height: 2.75rem;
+    padding: 0 0.65rem;
+  }
+
+  .cd-mini-action {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .cd-card__actions {
+    position: static;
+    opacity: 1;
+    transform: none;
+    justify-content: stretch;
+    margin-top: 0.75rem;
+  }
+
+  .cd-card__actions button {
+    flex: 1 1 auto;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .cd-dialog {
+    width: calc(100vw - 1.5rem);
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100dvh - 3rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .module-countdown *,
   .module-countdown *::before,
