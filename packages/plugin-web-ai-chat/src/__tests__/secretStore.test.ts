@@ -17,6 +17,8 @@ import { get as idbGet, createStore as idbCreateStore } from "idb-keyval";
 beforeEach(async () => {
   await aiKeyStorage.clearKey("anthropic");
   await aiKeyStorage.clearKey("openai-compatible");
+  await aiKeyStorage.clearKey("gemini");
+  await aiKeyStorage.clearKey("deepseek");
 });
 
 describe("secretStore (SC)", () => {
@@ -43,6 +45,14 @@ describe("secretStore (SC)", () => {
     await aiKeyStorage.clearKey("anthropic");
     const result = await aiKeyStorage.loadKey("anthropic");
     expect(result).toBeNull();
+  });
+
+  it("SC4b: Gemini and DeepSeek use independent encrypted key rows", async () => {
+    await aiKeyStorage.saveKey("gemini", "gemini-key");
+    await aiKeyStorage.saveKey("deepseek", "deepseek-key");
+
+    expect(await aiKeyStorage.loadKey("gemini")).toBe("gemini-key");
+    expect(await aiKeyStorage.loadKey("deepseek")).toBe("deepseek-key");
   });
 
   it("SC5: load with corrupted ciphertext — returns null (auto-clears row)", async () => {

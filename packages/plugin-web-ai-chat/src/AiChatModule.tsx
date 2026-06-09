@@ -287,7 +287,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         abortCtrlRef.current = ctrl;
 
         // Read model preference (non-React context: direct localStorage read per Rec2).
-        const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+        const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
         // Placeholder ID for streaming bubble mutation. The placeholder is NOT
         // appended until the first chunk arrives (so user bubbles always precede
@@ -546,7 +546,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [
@@ -701,7 +701,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [

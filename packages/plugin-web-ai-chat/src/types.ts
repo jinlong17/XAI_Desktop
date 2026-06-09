@@ -35,4 +35,11 @@ export interface AiConvoRecord {
   messages?: AiMessage[];
 }
 
-export type AiModelId = "haiku" | "sonnet" | "opus";
+export type AiModelId =
+  | "haiku"
+  | "sonnet"
+  | "opus"
+  | "gemini-3.5-flash"
+  | "gemini-3.1-flash-lite"
+  | "deepseek-v4-flash"
+  | "deepseek-v4-pro";
