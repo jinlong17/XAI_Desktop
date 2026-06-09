@@ -8,20 +8,18 @@ import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { AiComposer } from "../AiComposer.js";
-import type { AiAttachment, AiModelId } from "../types.js";
+import type { AiAttachment } from "../types.js";
 
 const noop = () => undefined;
 
 interface RenderOpts {
   input?: string;
   attachments?: AiAttachment[];
-  model?: AiModelId;
   voiceOn?: boolean;
   lang?: "en" | "zh";
   onInputChange?: (s: string) => void;
   onAttachFiles?: (files: File[]) => void;
   onRemoveAttachment?: (i: number) => void;
-  onModelChange?: (m: AiModelId) => void;
   onVoiceToggle?: () => void;
   onSend?: () => void;
 }
@@ -34,8 +32,6 @@ function renderComposer(opts: RenderOpts = {}) {
       attachments={opts.attachments ?? []}
       onAttachFiles={opts.onAttachFiles ?? noop}
       onRemoveAttachment={opts.onRemoveAttachment ?? noop}
-      model={opts.model ?? "haiku"}
-      onModelChange={opts.onModelChange ?? noop}
       voiceOn={opts.voiceOn ?? true}
       onVoiceToggle={opts.onVoiceToggle ?? noop}
       onSend={opts.onSend ?? noop}
@@ -77,25 +73,13 @@ describe("AiComposer (CO)", () => {
     expect(onSend).toHaveBeenCalledOnce();
   });
 
-  it("CO5: opening popover + selecting Sonnet invokes onModelChange", () => {
-    const onModelChange = vi.fn();
-    const { container } = renderComposer({ onModelChange });
-    fireEvent.click(container.querySelector(".ai-model-btn")!);
-    const items = container.querySelectorAll(".popover-item");
-    expect(items.length).toBe(3);
-    fireEvent.click(items[1]!); // sonnet
-    expect(onModelChange).toHaveBeenCalledWith("sonnet");
-  });
-
-  it("CO6: clicking .popover-scrim closes the popover", () => {
+  it("CO5: model picker is not exposed in the chat composer", () => {
     const { container } = renderComposer();
-    fireEvent.click(container.querySelector(".ai-model-btn")!);
-    expect(container.querySelector(".ai-model-popover")).not.toBeNull();
-    fireEvent.click(container.querySelector(".popover-scrim")!);
-    expect(container.querySelector(".ai-model-popover")).toBeNull();
+    expect(container.querySelector(".ai-model-btn")).toBeNull();
+    expect(container.textContent).not.toMatch(/Haiku|Sonnet|Opus|4\./i);
   });
 
-  it("CO7: voice mic toggle calls onVoiceToggle and swaps icons", () => {
+  it("CO6: voice mic toggle calls onVoiceToggle and swaps icons", () => {
     const onVoiceToggle = vi.fn();
     const { container, rerender } = renderComposer({
       voiceOn: true,
@@ -113,8 +97,6 @@ describe("AiComposer (CO)", () => {
         attachments={[]}
         onAttachFiles={noop}
         onRemoveAttachment={noop}
-        model="haiku"
-        onModelChange={noop}
         voiceOn={false}
         onVoiceToggle={onVoiceToggle}
         onSend={noop}
@@ -126,14 +108,14 @@ describe("AiComposer (CO)", () => {
     ).not.toBeNull();
   });
 
-  it("CO8: hidden file input exists with multiple attribute", () => {
+  it("CO7: hidden file input exists with multiple attribute", () => {
     const { container } = renderComposer();
     const fileInput = container.querySelector('input[type="file"]');
     expect(fileInput).not.toBeNull();
     expect(fileInput?.hasAttribute("multiple")).toBe(true);
   });
 
-  it("CO9: attachments render chips with working remove buttons", () => {
+  it("CO8: attachments render chips with working remove buttons", () => {
     const onRemoveAttachment = vi.fn();
     const { container } = renderComposer({
       attachments: [

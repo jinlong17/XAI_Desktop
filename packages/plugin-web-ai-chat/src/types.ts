@@ -25,6 +25,14 @@ export interface AiConvoRecord {
   title: string;
   /** Free-form display label — "刚刚"/"Just now"/"5/19" etc. */
   time: string;
+  /** Short preview of the latest message in this conversation. */
+  summary?: string;
+  /** ISO timestamp for stable sorting and restore-on-refresh. */
+  updatedAt?: string;
+  /** ISO timestamp of the last selected conversation. */
+  activeAt?: string;
+  /** Persisted message history for this conversation. */
+  messages?: AiMessage[];
 }
 
 export type AiModelId = "haiku" | "sonnet" | "opus";
