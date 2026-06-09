@@ -10,6 +10,7 @@ import type { Lang } from "@repo/plugin-web-tokens";
 import type { AiMessage } from "./types.js";
 import { STARTERS_EN, STARTERS_ZH } from "./internal/starters.js";
 import { IconPaperclip, IconSparkle } from "./internal/icons.js";
+import { MarkdownMessage } from "./MarkdownMessage.js";
 
 export interface AiThreadProps {
   messages: readonly AiMessage[];
@@ -66,7 +67,7 @@ export function AiThread({
             </span>
           )}
           <div className="ai-bubble">
-            {m.text}
+            {m.role === "assistant" ? <MarkdownMessage text={m.text} /> : m.text}
             {m.attachments && m.attachments.length > 0 && (
               <div className="ai-msg-attach">
                 {m.attachments.map((a, j) => (
