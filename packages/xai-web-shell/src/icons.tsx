@@ -26,6 +26,7 @@ const PATHS: Record<WebShellIconName, React.ReactNode> = {
   grid4:     <><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" /></>,
   timer:     <><circle cx="12" cy="13" r="7.5" /><path d="M12 13V8.5M9.5 3.5h5" /></>,
   wallet:    <><path d="M4 7h16v13H4z" /><path d="M4 7l3-3h13v3" /><path d="M16.5 13.5h.01" /></>,
+  target:    <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.2" /><circle cx="12" cy="12" r="1.2" /></>,
   pin:       <><path d="M12 21v-6.5" /><path d="M8 9V4h8v5l3 4.5H5L8 9z" /></>,
   leaf:      <><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z" /><path d="M5 19c4-4 8-8 14-14" /></>,
   countdown: <><rect x="4" y="3.5" width="16" height="17" rx="2.5" /><path d="M4 9h16M9 13l2 2 4-4" /></>,

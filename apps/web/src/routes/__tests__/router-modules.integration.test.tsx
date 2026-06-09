@@ -190,6 +190,7 @@ const realRenderCases: RealRenderCase[] = [
   { ac: "AC-W6-FIX-6", url: "/app/statistics", marker: "module-stats" },
   { ac: "AC-W6-FIX-7", url: "/app/settings",   marker: "module-settings" },
   { ac: "AC-BOOKKEEPING-1", url: "/app/bookkeeping", marker: "module-bk" },
+  { ac: "AC-METRICS-1", url: "/app/metrics", marker: "module-metrics" },
 ];
 
 describe("AC-W6-FIX-LB: deep links per wave render the REAL module (not placeholder)", () => {

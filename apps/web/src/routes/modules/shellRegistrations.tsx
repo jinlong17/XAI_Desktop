@@ -2,7 +2,7 @@
  * Shell module registrations — the concrete WebModuleSlotRegistration[] array.
  *
  * Satisfies @repo/xai-web-shell WebModuleSlotRegistration for each module id
- * in the rail. All 12 modules now ship as real registrations from their
+ * in the rail. All rail modules now ship as real registrations from their
  * owning packages (rows #6..#21); no placeholder entries remain.
  *
  * Design constraints:
@@ -29,6 +29,8 @@ import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
 import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
 // xai-web-bookkeeping · Cloud Design bookkeeping module merge
 import { bookkeepingWebModuleRegistration } from "@repo/plugin-web-bookkeeping";
+// xai-web-metric-tracker · weight + BMI metric tracker
+import { metricTrackerWebModuleRegistration } from "@repo/plugin-web-metric-tracker";
 // xai-web-ai-chat row #18
 import { aiChatWebModuleRegistration } from "@repo/plugin-web-ai-chat";
 // xai-web-meditation row #16
@@ -74,6 +76,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
   timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
   bookkeepingWebModuleRegistration,  // not toggleable in Settings V1; Cloud Design bookkeeping module
+  metricTrackerWebModuleRegistration,  // not toggleable in Settings V1; metric tracker V1
   withDisabledFallback(habitsSlotRegistration, "habits"),  // row #15
   withDisabledFallback(meditationSlotRegistration, "meditation"),  // row #16
   countdownWebModuleRegistration,  // not toggleable
