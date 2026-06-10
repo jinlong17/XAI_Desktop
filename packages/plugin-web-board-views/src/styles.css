@@ -90,6 +90,18 @@
   white-space: nowrap;
 }
 
+/* Sortable column headers (W3) — inherit th typography, add affordance. */
+.th-sort-btn {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+.th-sort-btn:hover { color: var(--text-1, oklch(25% 0.02 165)); }
+
 .board-table td {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));

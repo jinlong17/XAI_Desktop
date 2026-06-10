@@ -190,3 +190,44 @@ describe("TableView — priority column (W2)", () => {
     expect(updateCard).toHaveBeenCalledWith("lx", "cx", { priority: undefined });
   });
 });
+
+describe("TableView — column sorting (W3)", () => {
+  const sortLists = [
+    makeList({
+      id: "l1",
+      cards: [
+        makeCard({ id: "c-none", title: { en: "Bravo", zh: "B" } }),
+        makeCard({ id: "c-low", title: { en: "Alpha", zh: "A" }, priority: "low", dueDate: "2026-06-20" }),
+        makeCard({ id: "c-urgent", title: { en: "Charlie", zh: "C" }, priority: "urgent", dueDate: "2026-06-10" }),
+      ],
+    }),
+  ];
+  const rowIds = () =>
+    screen.getAllByTestId("board-table-row").map((row) =>
+      row.querySelector(".td-title span:last-child")!.textContent,
+    );
+
+  test("TV-S1 priority sort: first click urgent-first, missing priority last", () => {
+    render(<TableView lists={sortLists} lang="en" updateCard={() => {}} />);
+    fireEvent.click(screen.getByTestId("th-sort-priority"));
+    expect(rowIds()).toEqual(["Charlie", "Alpha", "Bravo"]);
+    // second click flips: low first, missing still last
+    fireEvent.click(screen.getByTestId("th-sort-priority"));
+    expect(rowIds()).toEqual(["Alpha", "Charlie", "Bravo"]);
+    // third click resets to natural order
+    fireEvent.click(screen.getByTestId("th-sort-priority"));
+    expect(rowIds()).toEqual(["Bravo", "Alpha", "Charlie"]);
+  });
+
+  test("TV-S2 due sort ascending puts earliest first and missing-due last", () => {
+    render(<TableView lists={sortLists} lang="en" updateCard={() => {}} />);
+    fireEvent.click(screen.getByTestId("th-sort-due"));
+    expect(rowIds()).toEqual(["Charlie", "Alpha", "Bravo"]);
+  });
+
+  test("TV-S3 title sort ascending is locale-alphabetical", () => {
+    render(<TableView lists={sortLists} lang="en" updateCard={() => {}} />);
+    fireEvent.click(screen.getByTestId("th-sort-title"));
+    expect(rowIds()).toEqual(["Alpha", "Bravo", "Charlie"]);
+  });
+});
