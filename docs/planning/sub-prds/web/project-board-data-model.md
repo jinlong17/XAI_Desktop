@@ -55,13 +55,13 @@ interface Workspace {            // 现 BoardWorkspace ✅（CRUD ⬜）
 }
 
 // ---- 项目/看板 ----
-interface Board {                // ✅ 存在；🟡 本次加 labels/members；⬜ icon/description
+interface Board {                // ✅ 存在；🟡 W1 加 labels/members；✅ W2 加 icon/description
   id: string;
   workspaceId: string;
-  name: BilingualText;           // ✅（改名 UI ⬜ Wave 3）
-  cover: string;                 // ✅ CSS 背景（换色 UI ⬜ Wave 3）
-  icon?: string;                 // ⬜ Wave 3
-  description?: BilingualText;   // ⬜ Wave 3
+  name: BilingualText;           // ✅ W2 设置弹窗可改名
+  cover: string;                 // ✅ W2 预设封面可换
+  icon?: string;                 // ✅ W2
+  description?: string;          // ✅ W2
   template: 'kanban' | 'pm' | 'blank';
   visibility?: 'private' | 'shared';   // ✅（本地态，非后端 ACL）
   labels?: BoardLabel[];         // 🟡 本次新增：看板级标签目录（缺省回退 DEFAULT_BOARD_LABELS）
@@ -136,9 +136,9 @@ type StatusCategory = 'backlog' | 'unstarted' | 'started' | 'completed' | 'cance
 | 视图 | 读取字段 | 投影规则 | 现状 |
 |---|---|---|---|
 | 看板 Board | list 分组 + 顺序 | 按列分组 | ✅ |
-| 表格 Table | 全字段 | 平铺行，可排序 | ✅（标签列仅"+Labels"占位，🟡 待补 chip）|
+| 表格 Table | 全字段 | 平铺行 | ✅（W2：标签/成员/优先级 chip + 行内编辑）|
 | 日历 Calendar | dueDate/startDate | 落日期格 | ✅ |
-| 仪表盘 Dashboard | 聚合 | 按状态/成员/标签统计 | ✅（🟡 待加优先级维度）|
+| 仪表盘 Dashboard | 聚合 | 按列/标签/优先级统计 | ✅（W2 加优先级维度）|
 
 **红线**：任何新视图都不得拷贝任务数据；只能产出 `{filter, sort, groupBy, layout}` 投影。
 
@@ -152,8 +152,8 @@ type StatusCategory = 'backlog' | 'unstarted' | 'started' | 'completed' | 'cance
 | 2 | 无优先级 | 全代码 0 处 `priority` | 缺最常用 PM 字段 | **W1 ✅ 已加** |
 | 3 | 标签不能新建/编辑/删除 | `PM_LABELS` 冻结常量 | 撞墙，无法真用 | **W1 ✅ 已加**（详情弹窗管理器）|
 | 4 | 成员不能新建/编辑 | `BOARD_MEMBER_OPTIONS` 冻结 | 撞墙 | **W1 ✅ 已加** |
-| 5 | 看板不能改名/换色/图标/描述 | 仅创建时设名；无编辑 UI | 像预制 Demo 板 | **W2 ⬜** |
-| 6 | Table/Calendar/Dashboard 未显示标签/优先级 chip | board-views 各视图 | 一致性差 | **W2 ⬜** |
+| 5 | 看板不能改名/换色/图标/描述 | 仅创建时设名；无编辑 UI | 像预制 Demo 板 | **W2 ✅ 已修** |
+| 6 | Table/Dashboard 未显示标签/优先级 chip | board-views 各视图 | 一致性差 | **W2 ✅ 已修**（含按优先级过滤） |
 | 7 | 附件仅链接，无文件上传；分享是前端 stub | `BoardCardDetailModal` / `ShareModal` | 能力受限 | Later |
 | 8 | 无云同步（仅 localStorage 单设备）| `usePref` → localStorage；`storageContract` 的 `syncScope:account-sync` 投影**已写好但未接** `/sync/push` | 不跨设备 | sync 线（暂停）|
 
@@ -164,7 +164,7 @@ type StatusCategory = 'backlog' | 'unstarted' | 'started' | 'completed' | 'cance
 **"真能用而非 Demo" 的及格线**：能建项目、建带真实字段的任务、拖动列且顺序刷新后还在、标签/成员/优先级可建可改可分配、同一批任务在看板+表格+日历可见。
 
 ### MUST（其中 W1 本次已交付）
-1. 项目/看板 建/删 ✅；**改名/换色/图标/描述** ⬜ W2
+1. 项目/看板 建/删 ✅；**改名/换色/图标/描述** ✅ W2
 2. 任务 CRUD + 核心字段（标题/描述/状态/成员/标签/优先级/起止日期/清单）✅（priority 本次补全）
 3. 拖拽换列 + 列内排序，持久化 ✅
 4. **标签可建/改/删**（看板级目录）✅ W1
@@ -174,11 +174,11 @@ type StatusCategory = 'backlog' | 'unstarted' | 'started' | 'completed' | 'cance
 8. 本地持久化（刷新存活）✅
 9. **卡片 chip 正确解析名称+颜色** ✅ W1
 
-### SHOULD（W2）
-- 看板元数据编辑（名/色/图标/描述）
-- Table/Calendar/Dashboard 显示标签 + 优先级 chip；Dashboard 增加优先级维度
-- 按优先级 排序/过滤/分组（`groupBy` 泛化）
-- 起止日期 range + 逾期派生样式（部分已有）
+### SHOULD（W2 — 2026-06-09 已交付，除标注外）
+- 看板元数据编辑（名/色/图标/描述）✅
+- Table/Dashboard 标签 + 优先级 chip；Dashboard 优先级维度 ✅
+- 按优先级 过滤 ✅（排序/`groupBy` 泛化 → Later）
+- 起止日期 range + 逾期派生样式（已有）
 
 ### LATER
 - `status.category` 语义 + 完成度统计；列即状态 → status 作为属性的架构演进

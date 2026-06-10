@@ -83,8 +83,8 @@
 | P0 | 优先级字段 + 详情选择器 + 卡片 chip | ✅ W1 |
 | P0 | 标签 新建/改名/换色/删除（看板级目录）| ✅ W1 |
 | P0 | 成员 新建/改名/分配（看板级目录）| ✅ W1 |
-| P1 | 看板元数据编辑（名/色/图标/描述）| ⬜ W2 |
-| P1 | Table/Calendar/Dashboard 显示标签+优先级 chip；Dashboard 加优先级维度 | ⬜ W2 |
+| P1 | 看板元数据编辑（名/色/图标/描述）| ✅ W2 |
+| P1 | Table/Dashboard 标签+优先级 chip；Dashboard 优先级维度；按优先级过滤 | ✅ W2 |
 | P2 | status.category 语义、分数索引 rank、文件上传、Workspace CRUD | ⬜ Later |
 | P2 | 账号云同步接线（sync 线解冻后）| ⬜ Later |
 
@@ -103,4 +103,15 @@
 
 **验证**：board-core 193/193、board-workspaces 267/267（含 6 条新解析/优先级断言 BC2b–f）；两包 tsc 干净；Vite 实测服务最新源；Table 视图已可视化确认成员解析（Alice/Bob/Carol 彩色头像）。
 
-> 备注：本次会话的 preview 浏览器因历史 service worker + bfcache 钉住了初始 chunk，看板视图截图仍显示旧 chip——该陷阱已由 dev 守卫根治，全新 `pnpm dev` / 干净浏览器即正常。Kanban 行为由上述确定性单测覆盖。
+> 备注：本次会话的 preview 浏览器因历史 service worker + bfcache 钉住了初始 chunk，W1 当时未能截到看板新渲染——该陷阱已由 dev 守卫根治；W2 验证时干净 preview 已确认全部新 UI 实际生效（彩色标签/头像/优先级 chip/设置弹窗均有截图证据）。
+
+---
+
+## 7. W2 已交付（2026-06-09 第二波）
+
+- **看板元数据编辑**：`Board.icon`/`Board.description` 字段 + 守卫；`BoardSettingsModal`（名称/图标/描述/8 预设封面 `BOARD_COVER_PRESETS`）；header ✎ 入口；标题与 BoardSwitcher 显示自定义图标与描述。
+- **优先级贯通多视图**：TableView 新增可编辑「优先级」列（chip + popover 设置/清除）；Dashboard 新增「按优先级分布」柱状图（无优先级卡片时隐藏）。
+- **按优先级过滤**：`FilterState.priorities` facet（板内 AND 跨 facet、OR facet 内、无优先级卡片不通过非空过滤）+ FilterPopover 优先级区 + 按板持久化（`xai_board_filter_by_id` 序列化含 `priorities`，旧存储宽容缺省）。
+- **顺带修复**：FilterPopover 的标签/成员行从渲染原始 id 改为目录解析显示名（未知 id 原样回退）。
+
+**验证**：board-core 204 / board-views 138 / board-workspaces 277 = **619 测试全绿**（新增 FIL-P1..3、TV-P1..2、BD-P1..2、FP-P1/FP-N1、BWM-SET-1..2、BWM-FILTER-P、V10）；3 包 tsc + lint 干净；干净 preview 实测：chip 解析、🚀 图标持久化、封面切换、Urgent 卡面 chip 全部生效。
