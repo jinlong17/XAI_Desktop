@@ -100,6 +100,8 @@ import type { BoardViewId, FilterState } from "@repo/plugin-web-board-views";
 
 import { BoardSwitcher } from "./BoardSwitcher.js";
 import { BoardCreator } from "./BoardCreator.js";
+import { BoardSettingsModal } from "./BoardSettingsModal.js";
+import type { BoardMetaPatch } from "./BoardSettingsModal.js";
 import { BoardDeleteConfirmDialog } from "./BoardDeleteConfirmDialog.js";
 import { BoardCardDetailModal } from "./BoardCardDetailModal.js";
 import { ArchivedListsManager } from "./ArchivedListsManager.js";
@@ -365,6 +367,22 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [writeActiveBoard],
   );
 
+  // ---- Board metadata editing (W2: name / icon / description / cover) ----
+  const updateBoardMeta = useCallback(
+    (patch: BoardMetaPatch) => {
+      writeActiveBoard((board) => ({
+        ...board,
+        ...(patch.name !== undefined
+          ? { name: { en: patch.name, zh: patch.name } }
+          : {}),
+        ...("icon" in patch ? { icon: patch.icon } : {}),
+        ...("description" in patch ? { description: patch.description } : {}),
+        ...(patch.cover !== undefined ? { cover: patch.cover } : {}),
+      }));
+    },
+    [writeActiveBoard],
+  );
+
   // ---- Filter state (row #10: persisted per board) ----------------------
   const [filter, setFilterState] = useState<FilterState>(() =>
     filterStateForBoard(savedFiltersById, activeBoard.id),
@@ -392,6 +410,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   // ---- Switcher / creator / overview state -------------------------------
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
@@ -847,8 +866,23 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           onClick={() => setSwitcherOpen(true)}
           data-testid="board-title-btn"
         >
+          {activeBoard.icon ? (
+            <span className="board-title-icon" data-testid="board-title-icon" aria-hidden="true">
+              {activeBoard.icon}
+            </span>
+          ) : null}
           <h1 className="module-title">{activeBoard.name[lang]}</h1>
           <span aria-hidden="true">▾</span>
+        </button>
+        <button
+          type="button"
+          className="board-icon-btn"
+          onClick={() => setSettingsOpen(true)}
+          aria-label={lang === "zh" ? "看板设置" : "Board settings"}
+          title={lang === "zh" ? "看板设置" : "Board settings"}
+          data-testid="board-settings-btn"
+        >
+          ✎
         </button>
 
         <div className="view-picker-wrap">
@@ -893,6 +927,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
               onChange={setFilter}
               onClose={() => setFilterOpen(false)}
               lang={lang}
+              labelCatalog={labelCatalog}
+              memberCatalog={memberCatalog}
             />
           )}
         </div>
@@ -1111,6 +1147,15 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           workspaces={workspaces}
           onCancel={() => setCreateOpen(false)}
           onCreate={createBoard}
+        />
+      )}
+
+      {settingsOpen && (
+        <BoardSettingsModal
+          board={activeBoard}
+          lang={lang}
+          onPatchBoard={updateBoardMeta}
+          onClose={() => setSettingsOpen(false)}
         />
       )}
 

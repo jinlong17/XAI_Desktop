@@ -12,6 +12,7 @@ function makeFilter(patch: Partial<FilterState> = {}): FilterState {
   return {
     labels: patch.labels ?? new Set(["l2", "l1"]),
     members: patch.members ?? new Set(["u2", "u1"]),
+    priorities: patch.priorities ?? new Set(),
     dueRange: patch.dueRange ?? "week",
   };
 }
@@ -51,6 +52,7 @@ describe("saved board filters", () => {
     expect(serializeFilterState(makeFilter())).toEqual({
       labels: ["l1", "l2"],
       members: ["u1", "u2"],
+      priorities: [],
       dueRange: "week",
     });
   });
@@ -61,6 +63,7 @@ describe("saved board filters", () => {
         "b-pm": {
           labels: ["pm-forms"],
           members: [],
+          priorities: [],
           dueRange: "overdue",
         },
       },
@@ -72,6 +75,7 @@ describe("saved board filters", () => {
     expect(next["b-default"]).toEqual({
       labels: ["l1", "l2"],
       members: ["u1", "u2"],
+      priorities: [],
       dueRange: "today",
     });
   });
