@@ -31,6 +31,59 @@ describe("BoardCard", () => {
     expect(container.querySelectorAll(".bc-label").length).toBe(0);
   });
 
+  test("BC2b resolves label ids to catalog name + color (not the raw id)", () => {
+    const { container } = render(
+      <BoardCard card={makeCard({ labels: ["l1", "l3"] })} lang="en" />,
+    );
+    // Default catalog resolves l1 -> Design, l3 -> Discovery.
+    expect(screen.getByText("Design")).toBeInTheDocument();
+    expect(screen.getByText("Discovery")).toBeInTheDocument();
+    expect(screen.queryByText("l1")).not.toBeInTheDocument();
+    const resolved = container.querySelectorAll(".bc-label.is-resolved");
+    expect(resolved.length).toBe(2);
+    expect((resolved[0] as HTMLElement).style.background).not.toBe("");
+  });
+
+  test("BC2c resolves member ids to initials + color (not the raw id)", () => {
+    const { container } = render(
+      <BoardCard card={makeCard({ members: ["u1", "u2"] })} lang="en" />,
+    );
+    const members = container.querySelectorAll(".bc-member");
+    expect(members.length).toBe(2);
+    // u1 -> Alice -> "AL"; chip carries the full name as a title + a bg color.
+    expect(members[0]!.textContent).toBe("AL");
+    expect(members[0]!.getAttribute("title")).toBe("Alice");
+    expect((members[0] as HTMLElement).style.background).not.toBe("");
+    expect(members[0]!.textContent).not.toBe("u1");
+  });
+
+  test("BC2d unknown label/member ids fall back to raw id (no crash)", () => {
+    const { container } = render(
+      <BoardCard card={makeCard({ labels: ["zzz"], members: ["nope"] })} lang="en" />,
+    );
+    expect(screen.getByText("zzz")).toBeInTheDocument();
+    expect(container.querySelector(".bc-label.is-resolved")).toBeNull();
+    expect(screen.getByText("nope")).toBeInTheDocument();
+  });
+
+  test("BC2e renders a priority chip resolved from BOARD_PRIORITIES", () => {
+    render(<BoardCard card={makeCard({ priority: "high" })} lang="en" />);
+    const chip = screen.getByTestId("bc-priority");
+    expect(chip.getAttribute("data-priority")).toBe("high");
+    expect(chip.textContent).toContain("High");
+  });
+
+  test("BC2f custom catalog overrides the default resolution", () => {
+    render(
+      <BoardCard
+        card={makeCard({ labels: ["custom"] })}
+        lang="en"
+        labelCatalog={[{ id: "custom", name: { en: "Spec", zh: "规格" }, color: "oklch(60% 0.1 200)" }]}
+      />,
+    );
+    expect(screen.getByText("Spec")).toBeInTheDocument();
+  });
+
   test("BC3 renders checklist count when card.checklist set", () => {
     render(
       <BoardCard

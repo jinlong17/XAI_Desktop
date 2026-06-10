@@ -28,6 +28,7 @@ export type {
   BoardCardActivityEntry,
   BoardCardActivityKind,
   BoardCardAttachmentLink,
+  BoardCardPriority,
   BoardCardTaskLink,
   BoardChecklistItem,
   BoardList as BoardListData,
@@ -70,6 +71,25 @@ export type {
   BoardLabel,
   BoardTemplateOption,
 } from "./internal/seed/board-data.js";
+
+// ---- Catalogs (label/member directories + priority metadata) -------------
+export {
+  KANBAN_LABELS,
+  DEFAULT_BOARD_LABELS,
+  DEFAULT_BOARD_MEMBERS,
+  BOARD_LABEL_PALETTE,
+  BOARD_MEMBER_PALETTE,
+  BOARD_PRIORITIES,
+  getPriorityMeta,
+  resolveBoardLabels,
+  resolveBoardMembers,
+  indexBoardLabels,
+  indexBoardMembers,
+  memberInitials,
+  stripLabelFromBoardLists,
+  stripMemberFromBoardLists,
+} from "./internal/catalogs.js";
+export type { BoardPriorityMeta } from "./internal/catalogs.js";
 
 // ---- Pure helpers (re-exported for #8 / #9 reuse) ------------------------
 export {

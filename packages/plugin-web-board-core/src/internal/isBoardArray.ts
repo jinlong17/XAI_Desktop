@@ -12,8 +12,11 @@ import type {
   BilingualText,
   Board,
   BoardCard,
+  BoardCardPriority,
+  BoardLabel,
   BoardList,
   BoardListColorId,
+  BoardMemberOption,
   BoardTemplate,
   BoardAttachmentIntegrationSource,
   BoardCardActivityEntry,
@@ -125,6 +128,32 @@ function isBoardTemplate(value: unknown): value is BoardTemplate {
   return (BOARD_TEMPLATES_LITERAL as readonly string[]).includes(value);
 }
 
+const CARD_PRIORITIES_LITERAL: readonly BoardCardPriority[] = [
+  "urgent",
+  "high",
+  "medium",
+  "low",
+];
+
+function isBoardCardPriority(value: unknown): value is BoardCardPriority {
+  if (!isString(value)) return false;
+  return (CARD_PRIORITIES_LITERAL as readonly string[]).includes(value);
+}
+
+function isBoardLabel(value: unknown): value is BoardLabel {
+  if (!isObject(value)) return false;
+  if (!isString(value.id)) return false;
+  if (!isBilingualText(value.name)) return false;
+  return isString(value.color);
+}
+
+function isBoardMemberOption(value: unknown): value is BoardMemberOption {
+  if (!isObject(value)) return false;
+  if (!isString(value.id)) return false;
+  if (!isString(value.name)) return false;
+  return isString(value.color);
+}
+
 export function isBoardCard(value: unknown): value is BoardCard {
   if (!isObject(value)) return false;
   if (!isString(value.id)) return false;
@@ -148,6 +177,9 @@ export function isBoardCard(value: unknown): value is BoardCard {
     Array.isArray(value.members) &&
     !value.members.every((entry) => isString(entry))
   ) {
+    return false;
+  }
+  if (value.priority !== undefined && !isBoardCardPriority(value.priority)) {
     return false;
   }
   if (value.checklist !== undefined && !isCardChecklist(value.checklist)) {
@@ -234,6 +266,14 @@ export function isBoard(value: unknown): value is Board {
     value.visibility !== undefined &&
     !isBoardVisibility(value.visibility)
   ) {
+    return false;
+  }
+  if (value.labels !== undefined && !Array.isArray(value.labels)) return false;
+  if (Array.isArray(value.labels) && !value.labels.every(isBoardLabel)) {
+    return false;
+  }
+  if (value.members !== undefined && !Array.isArray(value.members)) return false;
+  if (Array.isArray(value.members) && !value.members.every(isBoardMemberOption)) {
     return false;
   }
   if (!Array.isArray(value.lists)) return false;
