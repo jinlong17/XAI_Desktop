@@ -24,6 +24,12 @@ export interface BoardSwitcherProps {
    */
   onRequestDelete: (boardId: string) => void;
   onClose: () => void;
+  /** Workspace CRUD (W3). All four must be provided to enable the editor UI. */
+  onCreateWorkspace?: (name: string) => void;
+  onRenameWorkspace?: (id: string, name: string) => void;
+  onRecolorWorkspace?: (id: string) => void;
+  /** Host refuses deletion of non-empty or last workspaces; UI also hides it. */
+  onDeleteWorkspace?: (id: string) => void;
 }
 
 /** Compute the visible groups + filtered boards for the current search + scope. */
@@ -56,11 +62,42 @@ export function BoardSwitcher({
   onCreate,
   onRequestDelete,
   onClose,
+  onCreateWorkspace,
+  onRenameWorkspace,
+  onRecolorWorkspace,
+  onDeleteWorkspace,
 }: BoardSwitcherProps) {
   const [filter, setFilter] = useState("");
-  const [scope, setScope] = useState<"all" | string>("all");
+  const [rawScope, setScope] = useState<"all" | string>("all");
+  const [wsComposerOpen, setWsComposerOpen] = useState(false);
+  const [newWsName, setNewWsName] = useState("");
+  const [renamingWsId, setRenamingWsId] = useState<string | null>(null);
+  const [renameWsText, setRenameWsText] = useState("");
+  // A deleted workspace id may linger in local scope state — fall back to all.
+  const scope =
+    rawScope === "all" || workspaces.some((ws) => ws.id === rawScope)
+      ? rawScope
+      : "all";
   const { filtered, groupedByWs } = applyFilter(boards, workspaces, filter, scope, lang);
   const totalFiltered = groupedByWs.reduce((n, g) => n + g.boards.length, 0);
+  const wsEditable = Boolean(
+    onCreateWorkspace && onRenameWorkspace && onRecolorWorkspace && onDeleteWorkspace,
+  );
+
+  const submitNewWorkspace = () => {
+    const name = newWsName.trim();
+    if (!name || !onCreateWorkspace) return;
+    onCreateWorkspace(name);
+    setNewWsName("");
+    setWsComposerOpen(false);
+  };
+
+  const submitWsRename = () => {
+    if (renamingWsId && renameWsText.trim()) {
+      onRenameWorkspace?.(renamingWsId, renameWsText);
+    }
+    setRenamingWsId(null);
+  };
 
   // B-12 fix: request confirmation from host instead of using window.confirm().
   // Host owns the BoardDeleteConfirmDialog state (pendingDelete).
@@ -111,6 +148,16 @@ export function BoardSwitcher({
               {ws.name[lang]}
             </button>
           ))}
+          {wsEditable ? (
+            <button
+              type="button"
+              className="bs-ws-add"
+              onClick={() => setWsComposerOpen((open) => !open)}
+              data-testid="bs-new-workspace"
+            >
+              + {lang === "zh" ? "空间" : "Workspace"}
+            </button>
+          ) : null}
           <span className="grow"></span>
           <button
             type="button"
@@ -122,17 +169,98 @@ export function BoardSwitcher({
           </button>
         </div>
 
+        {wsComposerOpen && wsEditable ? (
+          <div className="bs-ws-composer" data-testid="bs-ws-composer">
+            <input
+              autoFocus
+              value={newWsName}
+              placeholder={lang === "zh" ? "新空间名称" : "New workspace name"}
+              onChange={(e) => setNewWsName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitNewWorkspace();
+                if (e.key === "Escape") setWsComposerOpen(false);
+              }}
+              data-testid="bs-ws-new-name"
+            />
+            <button
+              type="button"
+              className="btn primary"
+              onClick={submitNewWorkspace}
+              data-testid="bs-ws-new-add"
+            >
+              {lang === "zh" ? "添加" : "Add"}
+            </button>
+          </div>
+        ) : null}
+
         <div className="bs-body">
           {(scope === "all"
             ? groupedByWs
             : groupedByWs.filter((g) => g.ws.id === scope)
           ).map(({ ws, boards: wsBoards }) =>
-            wsBoards.length > 0 ? (
+            // Editable mode renders empty workspaces too — a freshly created
+            // workspace must be visible to be renamed/recolored/deleted.
+            wsBoards.length > 0 || (wsEditable && !filter) ? (
               <section key={ws.id} className="bs-group">
                 <header className="bs-group-h">
-                  <span className="ws-dot" style={{ background: ws.color }}></span>
-                  <h3>{ws.name[lang]}</h3>
+                  {wsEditable ? (
+                    <button
+                      type="button"
+                      className="ws-dot ws-dot-btn"
+                      style={{ background: ws.color }}
+                      onClick={() => onRecolorWorkspace?.(ws.id)}
+                      aria-label={lang === "zh" ? "更改颜色" : "Change color"}
+                      title={lang === "zh" ? "更改颜色" : "Change color"}
+                      data-testid={`bs-ws-recolor-${ws.id}`}
+                    />
+                  ) : (
+                    <span className="ws-dot" style={{ background: ws.color }}></span>
+                  )}
+                  {renamingWsId === ws.id ? (
+                    <input
+                      autoFocus
+                      className="bs-ws-rename"
+                      value={renameWsText}
+                      onChange={(e) => setRenameWsText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") submitWsRename();
+                        if (e.key === "Escape") setRenamingWsId(null);
+                      }}
+                      onBlur={submitWsRename}
+                      data-testid={`bs-ws-rename-input-${ws.id}`}
+                    />
+                  ) : (
+                    <h3>{ws.name[lang]}</h3>
+                  )}
                   <span className="muted">{wsBoards.length}</span>
+                  {wsEditable && renamingWsId !== ws.id ? (
+                    <span className="bs-ws-actions">
+                      <button
+                        type="button"
+                        className="icon-btn"
+                        onClick={() => {
+                          setRenamingWsId(ws.id);
+                          setRenameWsText(ws.name[lang]);
+                        }}
+                        aria-label={lang === "zh" ? "重命名空间" : "Rename workspace"}
+                        data-testid={`bs-ws-rename-${ws.id}`}
+                      >
+                        ✎
+                      </button>
+                      {boards.every((b) => b.workspaceId !== ws.id) &&
+                      workspaces.length > 1 ? (
+                        <button
+                          type="button"
+                          className="icon-btn danger"
+                          onClick={() => onDeleteWorkspace?.(ws.id)}
+                          aria-label={lang === "zh" ? "删除空间" : "Delete workspace"}
+                          data-testid={`bs-ws-delete-${ws.id}`}
+                        >
+                          🗑
+                        </button>
+                      ) : null}
+                    </span>
+                  ) : null}
                 </header>
                 <div className="bs-grid">
                   {wsBoards.map((b) => {

@@ -41,9 +41,9 @@ import {
 import {
   BoardView,
   BOARD_TEMPLATES,
-  DEFAULT_WORKSPACES,
   applyBoardAutomationLite,
   loadBoardsOrDefault,
+  loadWorkspacesOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
   addCardToListById,
@@ -85,6 +85,7 @@ import type {
   BoardMemberOption,
   BoardTemplate,
   BoardVisibility,
+  BoardWorkspace,
 } from "@repo/plugin-web-board-core";
 import type { BoardTaskLinkSource, BucketId } from "@repo/plugin-web-tasks";
 import {
@@ -202,6 +203,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   // ---- Persisted state ---------------------------------------------------
   const [rawBoards, setRawBoards] = usePref("xai_boards_v2");
   const [activeBoardId, setActiveBoardId] = usePref("xai_active_board");
+  const [rawWorkspaces, setRawWorkspaces] = usePref("xai_board_workspaces");
   const [rawPanels, setRawPanels] = usePref("xai_board_panels");
   const [rawInbox, setRawInbox] = usePref("xai_board_inbox");
   const [rawTaskCols, setRawTaskCols] = usePref("xai_task_cols");
@@ -234,7 +236,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [rawSavedFilters],
   );
 
-  const workspaces = DEFAULT_WORKSPACES;
+  const workspaces: BoardWorkspace[] = loadWorkspacesOrDefault(rawWorkspaces);
   const activeWorkspace =
     workspaces.find((w) => w.id === activeBoard.workspaceId) ?? workspaces[0]!;
   const totalCards = activeCardLists.reduce((n, l) => n + l.cards.length, 0);
@@ -365,6 +367,69 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       }));
     },
     [writeActiveBoard],
+  );
+
+  // ---- Workspace CRUD (W3) ------------------------------------------------
+  const writeWorkspaces = useCallback(
+    (updater: (prev: BoardWorkspace[]) => BoardWorkspace[]) => {
+      setRawWorkspaces(
+        updater(loadWorkspacesOrDefault(rawWorkspaces)) as unknown as typeof rawWorkspaces,
+      );
+    },
+    [rawWorkspaces, setRawWorkspaces],
+  );
+
+  const createWorkspace = useCallback(
+    (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      writeWorkspaces((prev) => {
+        const color =
+          BOARD_MEMBER_PALETTE[prev.length % BOARD_MEMBER_PALETTE.length]!;
+        const id = `ws-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        return [...prev, { id, name: { en: trimmed, zh: trimmed }, color }];
+      });
+    },
+    [writeWorkspaces],
+  );
+
+  const renameWorkspace = useCallback(
+    (id: string, name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      writeWorkspaces((prev) =>
+        prev.map((ws) =>
+          ws.id === id ? { ...ws, name: { en: trimmed, zh: trimmed } } : ws,
+        ),
+      );
+    },
+    [writeWorkspaces],
+  );
+
+  const recolorWorkspace = useCallback(
+    (id: string) => {
+      writeWorkspaces((prev) =>
+        prev.map((ws) => {
+          if (ws.id !== id) return ws;
+          const idx = BOARD_MEMBER_PALETTE.indexOf(ws.color);
+          const color =
+            BOARD_MEMBER_PALETTE[(idx + 1) % BOARD_MEMBER_PALETTE.length]!;
+          return { ...ws, color };
+        }),
+      );
+    },
+    [writeWorkspaces],
+  );
+
+  const deleteWorkspace = useCallback(
+    (id: string) => {
+      // Guard: never delete the last workspace or one that still holds boards.
+      if (boards.some((board) => board.workspaceId === id)) return;
+      writeWorkspaces((prev) =>
+        prev.length > 1 ? prev.filter((ws) => ws.id !== id) : prev,
+      );
+    },
+    [boards, writeWorkspaces],
   );
 
   // ---- Board metadata editing (W2: name / icon / description / cover) ----
@@ -1138,6 +1203,10 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           }}
           onRequestDelete={requestBoardDelete}
           onClose={() => setSwitcherOpen(false)}
+          onCreateWorkspace={createWorkspace}
+          onRenameWorkspace={renameWorkspace}
+          onRecolorWorkspace={recolorWorkspace}
+          onDeleteWorkspace={deleteWorkspace}
         />
       )}
 

@@ -1077,6 +1077,59 @@
   flex: 0 0 9px;
   display: inline-block;
 }
+
+/* ---- Workspace CRUD in switcher (W3) ---- */
+.bs-ws-add {
+  border: 1px dashed var(--border-1);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.bs-ws-add:hover { color: var(--text-1); border-color: var(--text-3); }
+.bs-ws-composer {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 0;
+}
+.bs-ws-composer input {
+  flex: 1;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+.ws-dot-btn {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.bs-ws-rename {
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.bs-ws-actions {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.bs-ws-actions .icon-btn { font-size: 12px; }
+.bs-ws-actions:hover { opacity: 1; }
 .cd-date-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

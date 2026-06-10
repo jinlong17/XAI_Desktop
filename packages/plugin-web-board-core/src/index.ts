@@ -57,6 +57,8 @@ export {
   isBoardArray,
   isBoardCard,
   isBoardList,
+  isBoardWorkspace,
+  isBoardWorkspaceArray,
 } from "./internal/isBoardArray.js";
 
 // ---- Seed (typed; consumed at first run + by row #9 board-workspaces) ----
@@ -182,6 +184,7 @@ export type {
 // ---- Persistence helpers -------------------------------------------------
 export {
   loadBoardsOrDefault,
+  loadWorkspacesOrDefault,
   pickActiveBoard,
 } from "./internal/persistence.js";
 
