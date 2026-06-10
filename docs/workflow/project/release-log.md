@@ -4,6 +4,35 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-09
+
+### Web 项目看板 W1：真实标签/成员目录 + 优先级 + chip 解析
+
+- Product line: web
+- Branch / commit: `claude/laughing-wright-d1e797` / `823ddf7..7181917` + `53c7ace`（已提交，未 push）
+- User-visible change: `/app/board` 卡片标签/成员不再显示成灰色乱码 id（`l1`/`u1`），改为彩色标签名 + 成员首字母头像；卡片新增优先级 chip；卡片详情弹窗可新建/改名/换色/删除标签（删除联动从所有卡片剥离引用）、新建/改名成员、设置四级优先级（urgent/high/medium/low）。修复看板模板 `l1..l5` 孤儿标签 id。
+- Developer/system delta: `Board.labels`/`Board.members` 看板级目录（缺省惰性回退 `DEFAULT_BOARD_LABELS`/`DEFAULT_BOARD_MEMBERS`，旧 localStorage 零迁移、纯增量）；`BoardCard.priority` + `BOARD_PRIORITIES`；`isBoardArray` 守卫扩展校验新字段（防持久化丢数据）；TableView/Dashboard 改从看板目录解析；`apps/web/src/service-worker/register.ts` 改为仅 PROD 注册（dev 主动反注册，根治 Vite dev 下 SW 缓存导致"改了不生效"）；新增 `docs/reviews/xai-web-project-module/20260609-board-usability-audit.md` 审查报告 + `docs/planning/sub-prds/web/project-board-data-model.md` 数据模型 PRD。
+- Verification: board-core + board-workspaces 全绿（含新增解析/优先级断言 BC2b–f、CAT1–8、V9）；两包 `typecheck` + `lint` 干净；Vite 实测服务最新源。备注：W1 当时 preview 浏览器被历史 service worker + bfcache 钉住初始 chunk 未能截图，已由 dev 守卫根治，W2 起干净 preview 实拍确认。
+- Risk / follow-up: 低——纯增量、旧数据零迁移。新增持久化字段落在 `syncScope: account-sync` 实体上，接同步前须过 `xai-account-sync-scope-check`（ADR-0013 §D4，sync 线 paused）。
+
+### Web 项目看板 W2：看板元数据编辑 + 优先级贯通多视图 + 按优先级过滤
+
+- Product line: web
+- Branch / commit: `claude/laughing-wright-d1e797` / `cf9231a..7db9393`（已提交，未 push）
+- User-visible change: 看板可改名/换图标/写描述/换封面（`BoardSettingsModal`，8 预设封面，header ✎ 入口；标题与切换器显示自定义图标/描述）；TableView 新增可编辑「优先级」列（chip + popover 设置/清除）；Dashboard 新增「按优先级分布」柱状图；Filter 支持按优先级过滤（按板持久化）。
+- Developer/system delta: `Board.icon`/`Board.description` 字段 + 守卫 + `BOARD_COVER_PRESETS`；`FilterState.priorities` facet（跨 facet AND、facet 内 OR）+ FilterPopover 优先级区 + `xai_board_filter_by_id` 序列化含 `priorities`（旧存储宽容缺省）；顺带修复 FilterPopover 标签/成员行从原始 id 改为目录解析显示名。
+- Verification: board-core 204 + board-views 138 + board-workspaces 277 = 619 测试全绿（新增 FIL-P1..3、TV-P1..2、BD-P1..2、FP-P1/N1、BWM-SET-1..2、BWM-FILTER-P、V10）；3 包 tsc + lint 干净；干净 preview 实拍确认 chip 解析、🚀 图标持久化、封面切换、Urgent 卡面 chip。
+- Risk / follow-up: 低——纯增量。
+
+### Web 项目看板 W3：Table 列排序 + Workspace CRUD（消灭最后一个冻结目录）
+
+- Product line: web
+- Branch / commit: `claude/laughing-wright-d1e797` / `f9cbf44..d6feef5`（已提交，未 push）
+- User-visible change: TableView 标题/优先级/截止日三列可点击排序（三态循环，缺值恒末位）；看板切换器内可新建工作空间、行内改名（✎）、换色（点色点轮换）、删除空空间（仅空且非最后一个）。工作空间不再是冻结的两个种子。
+- Developer/system delta: 新持久化键 `xai_board_workspaces`（PREF_REGISTRY + AC-REG-8/AC-PARITY owner-row 契约登记）；board-core `isBoardWorkspace`/`isBoardWorkspaceArray` 守卫 + `loadWorkspacesOrDefault`（null/malformed/empty → `DEFAULT_WORKSPACES`）；BoardSwitcher 可编辑态渲染空工作空间分组；审查/数据模型文档收尾 + 范围外项理由。
+- Verification: board-core 206 + board-views 141 + board-workspaces 281 = 628 测试全绿（新增 WSP-1/2、TV-S1..3、BWM-WS-1..4）；4 包 tsc + lint 干净；live 实拍：新建 "Client Projects" 空间出现在 scope 栏 + 分组（带 ✎/🗑），`Priority ▼` 排序置顶 Urgent 卡。
+- Risk / follow-up: 已知遗留（改动前即失败，已立独立任务卡）：`plugin-web-storage` 的 AC-PARITY-1/2 因 `web design/DESIGN.md` 缺 §9.2 键表而 fail。明确门禁外/未做：文件上传（需 IndexedDB 决策，localStorage 配额放不下 blob）、真实分享后端、账号云同步接线（ADR-0013 §D4，sync 线 paused，不得擅自解冻）。**跨机说明**：本批 14 commit 在 `web` 线、尚未 push；如需流向 Desktop 须走 ADR-0013 §D3 `xai-web-to-desktop-sync`（W0–W4 + parity receipt），禁止直接并入 `dev`。
+
 ## 2026-06-04
 
 ### Desktop Plugin 产品边界与长期平台路线落地
