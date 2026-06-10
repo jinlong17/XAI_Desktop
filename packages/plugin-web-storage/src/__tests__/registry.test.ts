@@ -234,6 +234,8 @@ const OWNER_ROW_ADDITIONS = [
   "xai_dashboard_stickies",
   // xai-web-dashboard-weather-mail extension 2026-05-29 — weather persistence
   "xai_dashboard_weather",
+  // plugin-web-board-workspaces W3 2026-06-09 — workspace directory CRUD
+  "xai_board_workspaces",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
