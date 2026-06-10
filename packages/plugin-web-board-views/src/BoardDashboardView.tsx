@@ -7,7 +7,11 @@
  */
 
 import type { BoardLabel, BoardListData } from "@repo/plugin-web-board-core";
-import { DEFAULT_BOARD_LABELS, getBoardCardDateMeta } from "@repo/plugin-web-board-core";
+import {
+  BOARD_PRIORITIES,
+  DEFAULT_BOARD_LABELS,
+  getBoardCardDateMeta,
+} from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 
 export interface BoardDashboardViewProps {
@@ -70,6 +74,13 @@ export function BoardDashboardView({
 
   const maxLabelCount = Math.max(1, ...labelData.map((d) => d.count));
 
+  // Per-priority counts
+  const priorityData = BOARD_PRIORITIES.map((p) => ({
+    priority: p,
+    count: allCards.filter((c) => c.priority === p.id).length,
+  })).filter((d) => d.count > 0);
+  const maxPriorityCount = Math.max(1, ...priorityData.map((d) => d.count));
+
   const KPIs = [
     {
       label: lang === "zh" ? "卡片总数" : "Total cards",
@@ -128,6 +139,46 @@ export function BoardDashboardView({
             })}
           </div>
         </div>
+
+        {/* Per-priority bar chart */}
+        {priorityData.length > 0 && (
+          <div className="bd-card panel" data-testid="bd-per-priority">
+            <h3>{lang === "zh" ? "按优先级分布" : "Cards by priority"}</h3>
+            <div className="bd-bars">
+              {priorityData.map(({ priority, count }) => {
+                const pct = (count / maxPriorityCount) * 100;
+                return (
+                  <div
+                    key={priority.id}
+                    className="bd-bar-row"
+                    data-testid="bd-bar-row-priority"
+                  >
+                    <div className="bd-bar-label">
+                      <span
+                        className="bc-priority"
+                        style={{ color: priority.color }}
+                      >
+                        <span
+                          className="bc-priority-dot"
+                          style={{ background: priority.color }}
+                        />
+                        {priority.name[lang]}
+                      </span>
+                    </div>
+                    <div className="bd-bar-track">
+                      <div
+                        className="bd-bar-fill"
+                        style={{ width: pct + "%", background: priority.color }}
+                        data-testid="bd-bar-fill-priority"
+                      />
+                    </div>
+                    <div className="bd-bar-val mono">{count}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Per-label bar chart */}
         <div className="bd-card panel" data-testid="bd-per-label">
