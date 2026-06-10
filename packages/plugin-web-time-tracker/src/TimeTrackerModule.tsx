@@ -1883,14 +1883,28 @@ function FocusModeOverlay({
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent): void {
-      if (event.key !== "Escape") return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== " " && event.key !== "Spacebar" && event.code !== "Space") return;
+      const target = event.target;
+      if (target instanceof HTMLElement && target.closest("button, a, input, textarea, select, [role='button'], [contenteditable='true']") !== null) return;
       event.preventDefault();
-      onClose();
+      if (running) {
+        onPause(entry.id);
+      } else {
+        onResume(entry.id);
+      }
+      setControlsVisible(true);
+      scheduleHide();
     }
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, [entry.id, onClose, onPause, onResume, running, scheduleHide]);
 
   function revealControls(): void {
     setControlsVisible(true);

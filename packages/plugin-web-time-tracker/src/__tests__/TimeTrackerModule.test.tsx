@@ -196,6 +196,18 @@ describe("TimeTrackerModule", () => {
     expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(2);
 
     act(() => {
+      fireEvent.keyDown(window, { key: " ", code: "Space" });
+    });
+    expect(readTimeTrackerEntries()[0]?.segments.at(-1)?.end).not.toBeNull();
+    expect(focusDialog).toHaveTextContent("Paused");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: " ", code: "Space" });
+    });
+    expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(3);
+    expect(focusDialog).toHaveTextContent("Running");
+
+    act(() => {
       fireEvent.keyDown(window, { key: "Escape" });
     });
     expect(screen.queryByRole("dialog", { name: "Focus mode" })).not.toBeInTheDocument();
