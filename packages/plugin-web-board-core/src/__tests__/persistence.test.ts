@@ -1,9 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
   loadBoardsOrDefault,
+  loadWorkspacesOrDefault,
   pickActiveBoard,
 } from "../internal/persistence.js";
-import { makeDefaultBoards } from "../internal/seed/board-data.js";
+import { DEFAULT_WORKSPACES, makeDefaultBoards } from "../internal/seed/board-data.js";
 import { createBoardStorageEnvelope } from "../internal/storageContract.js";
 
 describe("persistence", () => {
@@ -55,5 +56,19 @@ describe("persistence", () => {
 
   test("PE6 pickActiveBoard with empty boards throws", () => {
     expect(() => pickActiveBoard([], "anything")).toThrow();
+  });
+});
+
+describe("loadWorkspacesOrDefault (W3)", () => {
+  test("WSP-1 null/malformed/empty fall back to DEFAULT_WORKSPACES", () => {
+    expect(loadWorkspacesOrDefault(null)).toEqual([...DEFAULT_WORKSPACES]);
+    expect(loadWorkspacesOrDefault("junk")).toEqual([...DEFAULT_WORKSPACES]);
+    expect(loadWorkspacesOrDefault([])).toEqual([...DEFAULT_WORKSPACES]);
+    expect(loadWorkspacesOrDefault([{ id: "x" }])).toEqual([...DEFAULT_WORKSPACES]);
+  });
+
+  test("WSP-2 valid workspace array is identity-preserved", () => {
+    const ws = [{ id: "ws-a", name: { en: "A", zh: "甲" }, color: "red" }];
+    expect(loadWorkspacesOrDefault(ws)).toBe(ws);
   });
 });
