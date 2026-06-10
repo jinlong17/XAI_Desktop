@@ -18,6 +18,7 @@ import type {
   BoardListColorId,
   BoardMemberOption,
   BoardTemplate,
+  BoardWorkspace,
   BoardAttachmentIntegrationSource,
   BoardCardActivityEntry,
   BoardCardAttachmentLink,
@@ -287,4 +288,16 @@ export function isBoard(value: unknown): value is Board {
 export function isBoardArray(value: unknown): value is Board[] {
   if (!Array.isArray(value)) return false;
   return value.every(isBoard);
+}
+
+export function isBoardWorkspace(value: unknown): value is BoardWorkspace {
+  if (!isObject(value)) return false;
+  if (!isString(value.id) || value.id.length === 0) return false;
+  if (!isBilingualText(value.name)) return false;
+  return isString(value.color);
+}
+
+export function isBoardWorkspaceArray(value: unknown): value is BoardWorkspace[] {
+  if (!Array.isArray(value)) return false;
+  return value.every(isBoardWorkspace);
 }
