@@ -6,13 +6,15 @@
  * API contract: packages/xai-web-board-views/docs/api.md §5
  */
 
-import type { BoardListData } from "@repo/plugin-web-board-core";
-import { PM_LABELS, getBoardCardDateMeta } from "@repo/plugin-web-board-core";
+import type { BoardLabel, BoardListData } from "@repo/plugin-web-board-core";
+import { DEFAULT_BOARD_LABELS, getBoardCardDateMeta } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 
 export interface BoardDashboardViewProps {
   lists: readonly BoardListData[];
   lang: Lang;
+  /** Board label catalog; must match the other views so per-label stats agree. */
+  labelCatalog?: readonly BoardLabel[];
 }
 
 interface KpiProps {
@@ -41,7 +43,11 @@ function KpiCard({ label, value, color }: KpiProps) {
   );
 }
 
-export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
+export function BoardDashboardView({
+  lists,
+  lang,
+  labelCatalog = DEFAULT_BOARD_LABELS,
+}: BoardDashboardViewProps) {
   const total = lists.reduce((n, l) => n + l.cards.length, 0);
   const allCards = lists.flatMap((l) => l.cards);
   const now = new Date();
@@ -57,7 +63,7 @@ export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
     });
   });
 
-  const labelData = PM_LABELS.map((l) => ({
+  const labelData = labelCatalog.map((l) => ({
     label: l,
     count: labelCounts[l.id] ?? 0,
   })).filter((d) => d.count > 0);
