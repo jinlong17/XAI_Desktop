@@ -10,10 +10,15 @@
  */
 
 import { useState } from "react";
-import type { BoardListData, BoardCardData } from "@repo/plugin-web-board-core";
+import type {
+  BoardListData,
+  BoardCardData,
+  BoardLabel,
+  BoardMemberOption,
+} from "@repo/plugin-web-board-core";
 import {
-  BOARD_MEMBER_OPTIONS,
-  PM_LABELS,
+  DEFAULT_BOARD_LABELS,
+  DEFAULT_BOARD_MEMBERS,
   getBoardCardDateMeta,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
@@ -29,6 +34,10 @@ export interface TableViewProps {
   updateCard: (listId: string, cardId: string, patch: Partial<BoardCardData>) => void;
   /** Called when the user clicks the title cell. Row #9 will wire this to a card detail modal. */
   onOpenCard?: (card: BoardCardData, listId: string) => void;
+  /** Board label catalog; must match the Kanban view's catalog so chips agree. */
+  labelCatalog?: readonly BoardLabel[];
+  /** Board member directory; must match the Kanban view's catalog. */
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
 type EditingField = "labels" | "members" | "due";
@@ -43,7 +52,14 @@ const COL_HEADERS = {
   checklist: { en: "Checklist", zh: "核对表" },
 };
 
-export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProps) {
+export function TableView({
+  lists,
+  lang,
+  updateCard,
+  onOpenCard,
+  labelCatalog = DEFAULT_BOARD_LABELS,
+  memberCatalog = DEFAULT_BOARD_MEMBERS,
+}: TableViewProps) {
   const [editing, setEditing] = useState<EditingState>(null);
 
   const closeEditor = () => setEditing(null);
@@ -75,11 +91,11 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
               ? list.key
               : (list.customName?.[lang] ?? "");
             const labelObjs = (card.labels ?? [])
-              .map((id) => PM_LABELS.find((l) => l.id === id))
-              .filter(Boolean) as typeof PM_LABELS[number][];
+              .map((id) => labelCatalog.find((l) => l.id === id))
+              .filter(Boolean) as BoardLabel[];
             const memberObjs = (card.members ?? [])
-              .map((uid) => BOARD_MEMBER_OPTIONS.find((m) => m.id === uid))
-              .filter(Boolean) as typeof BOARD_MEMBER_OPTIONS[number][];
+              .map((uid) => memberCatalog.find((m) => m.id === uid))
+              .filter(Boolean) as BoardMemberOption[];
             const cl = card.checklist;
             const pct = cl ? Math.round((100 * cl.done) / Math.max(1, cl.total)) : null;
             const dateMeta = getBoardCardDateMeta(card, { now: today });
@@ -164,7 +180,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                           </button>
                         </header>
                         <div className="popover-list">
-                          {PM_LABELS.map((l) => {
+                          {labelCatalog.map((l) => {
                             const on = (card.labels ?? []).includes(l.id);
                             return (
                               <button
@@ -244,7 +260,7 @@ export function TableView({ lists, lang, updateCard, onOpenCard }: TableViewProp
                           </button>
                         </header>
                         <div className="popover-list">
-                          {BOARD_MEMBER_OPTIONS.map((u) => {
+                          {memberCatalog.map((u) => {
                             const on = (card.members ?? []).includes(u.id);
                             return (
                               <button
