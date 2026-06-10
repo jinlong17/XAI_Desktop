@@ -152,11 +152,16 @@ export function BoardSwitcher({
                         >
                           <div className="bs-cover" style={{ background: b.cover }}>
                             <span className="bs-cover-icon" aria-hidden="true">
-                              {b.template === "pm" ? "▤" : "▦"}
+                              {b.icon ?? (b.template === "pm" ? "▤" : "▦")}
                             </span>
                           </div>
                           <div className="bs-info">
                             <div className="bs-name">{b.name[lang]}</div>
+                            {b.description ? (
+                              <div className="bs-desc" title={b.description}>
+                                {b.description}
+                              </div>
+                            ) : null}
                             <div className="bs-meta mono">
                               {cardCount} {STR_SWITCHER.cards[lang]}
                             </div>

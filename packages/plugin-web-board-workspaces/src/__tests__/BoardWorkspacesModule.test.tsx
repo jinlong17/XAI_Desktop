@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
+import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
@@ -384,6 +384,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(stored["b-default"]).toEqual({
       labels: ["l1"],
       members: ["u1"],
+      priorities: [],
       dueRange: "today",
     });
     expect(localStorage.getItem("xai_boards_v2")).toBe(boardsBefore);
@@ -449,6 +450,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(getStoredBoardFilters()["b-default"]).toEqual({
       labels: [],
       members: [],
+      priorities: [],
       dueRange: "all",
     });
     expect(screen.getByTestId("fp-label-l1")).not.toBeChecked();
@@ -1651,5 +1653,65 @@ describe("BWM-CAT — label/member catalogs + priority", () => {
 
     const board = getStoredBoards()[0]!;
     expect(board.members!.find((m) => m.id === "u1")!.name).toBe("Alicia");
+  });
+});
+
+// ---- BWM-SET — Wave 2: board metadata editing + priority filter ------------
+
+describe("BWM-SET — board settings + priority filter", () => {
+  it("BWM-SET-1: settings modal renames the board and picks a cover preset, persisted", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+    expect(screen.getByTestId("board-settings-modal")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId("board-settings-name"), {
+      target: { value: "Sprint Board" },
+    });
+    fireEvent.click(screen.getByTestId("board-settings-cover-3"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.name.en).toBe("Sprint Board");
+    expect(board.cover).toBe(BOARD_COVER_PRESETS[3]);
+  });
+
+  it("BWM-SET-2: icon + description persist; icon renders in the header title", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+
+    fireEvent.change(screen.getByTestId("board-settings-icon"), {
+      target: { value: "🚀" },
+    });
+    fireEvent.change(screen.getByTestId("board-settings-description"), {
+      target: { value: "Quarterly launch work" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.icon).toBe("🚀");
+    expect(board.description).toBe("Quarterly launch work");
+    expect(screen.getByTestId("board-title-icon").textContent).toBe("🚀");
+  });
+
+  it("BWM-FILTER-P: priority filter narrows the board to matching cards and persists", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    // Give bc1 a priority through the card detail modal.
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    fireEvent.click(screen.getByTestId("card-detail-close"));
+    await act(async () => { await Promise.resolve(); });
+
+    const before = screen.getAllByTestId("board-card").length;
+    expect(before).toBeGreaterThan(1);
+
+    fireEvent.click(screen.getByTestId("filter-btn"));
+    fireEvent.click(screen.getByTestId("fp-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(screen.getAllByTestId("board-card")).toHaveLength(1);
+    expect(getStoredBoardFilters()["b-default"]).toMatchObject({
+      priorities: ["high"],
+    });
   });
 });
