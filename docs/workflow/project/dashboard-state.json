@@ -361,14 +361,38 @@
       "source": "manual testing registry + release-log Verification + local report scan"
     },
     "categories": [
-      { "key": "self_test", "label": "自测结果" },
-      { "key": "unit", "label": "单元测试" },
-      { "key": "e2e", "label": "端到端测试" },
-      { "key": "backend", "label": "后端测试" },
-      { "key": "frontend_page", "label": "前端页面测试" },
-      { "key": "build", "label": "构建测试" },
-      { "key": "pre_deploy", "label": "部署前检查" },
-      { "key": "regression", "label": "回归测试" }
+      {
+        "key": "self_test",
+        "label": "自测结果"
+      },
+      {
+        "key": "unit",
+        "label": "单元测试"
+      },
+      {
+        "key": "e2e",
+        "label": "端到端测试"
+      },
+      {
+        "key": "backend",
+        "label": "后端测试"
+      },
+      {
+        "key": "frontend_page",
+        "label": "前端页面测试"
+      },
+      {
+        "key": "build",
+        "label": "构建测试"
+      },
+      {
+        "key": "pre_deploy",
+        "label": "部署前检查"
+      },
+      {
+        "key": "regression",
+        "label": "回归测试"
+      }
     ],
     "pipelines": [
       {
@@ -377,7 +401,11 @@
         "path": "scripts/dashboard/generate-state.mjs",
         "status": "configured",
         "last_result": "local only",
-        "categories": ["self_test", "build", "frontend_page"]
+        "categories": [
+          "self_test",
+          "build",
+          "frontend_page"
+        ]
       }
     ],
     "report_sources": [
@@ -399,8 +427,8 @@
         "key": "web",
         "title": "Web 版本",
         "status": "pass",
-        "latest_tested_at": "",
-        "conclusion": "最近 Web 增量的 release-log Verification 显示 lint、typecheck、test、build 和 Browser smoke 有通过记录；完整主线 lint 仍可能被既有 warning 阻断时需在记录中标明。",
+        "latest_tested_at": "2026-06-09",
+        "conclusion": "最近一批（项目看板 W1–W3，2026-06-09）：board-core 206 + board-views 141 + board-workspaces 281 = 628 Vitest 全绿，4 包 typecheck + lint 干净，干净 preview 实拍确认。已知遗留：plugin-web-storage AC-PARITY-1/2 因 web design/DESIGN.md 缺 §9.2 而 fail（改动前即失败，已立独立任务）。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
         "pipeline_status": "configured",
@@ -412,13 +440,41 @@
           "Browser smoke at /app/*"
         ],
         "categories": [
-          { "key": "self_test", "status": "pass", "detail": "Browser smoke / manual smoke 由 release-log 记录。" },
-          { "key": "unit", "status": "pass", "detail": "Vitest package tests 按模块登记。" },
-          { "key": "e2e", "status": "pass", "detail": "Browser smoke 作为当前轻量 E2E 证据。" },
-          { "key": "frontend_page", "status": "pass", "detail": "390px / desktop 页面 smoke 在 dashboard 变更中必须验证。" },
-          { "key": "build", "status": "pass", "detail": "Web build gate 由 release-log Verification 记录。" },
-          { "key": "pre_deploy", "status": "partial", "detail": "Cloudflare 真实线上 URL / deploy id 仍需按部署记录补齐。" },
-          { "key": "regression", "status": "partial", "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。" }
+          {
+            "key": "self_test",
+            "status": "pass",
+            "detail": "Browser smoke / manual smoke 由 release-log 记录。"
+          },
+          {
+            "key": "unit",
+            "status": "pass",
+            "detail": "Vitest package tests 按模块登记。"
+          },
+          {
+            "key": "e2e",
+            "status": "pass",
+            "detail": "Browser smoke 作为当前轻量 E2E 证据。"
+          },
+          {
+            "key": "frontend_page",
+            "status": "pass",
+            "detail": "390px / desktop 页面 smoke 在 dashboard 变更中必须验证。"
+          },
+          {
+            "key": "build",
+            "status": "pass",
+            "detail": "Web build gate 由 release-log Verification 记录。"
+          },
+          {
+            "key": "pre_deploy",
+            "status": "partial",
+            "detail": "Cloudflare 真实线上 URL / deploy id 仍需按部署记录补齐。"
+          },
+          {
+            "key": "regression",
+            "status": "partial",
+            "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。"
+          }
         ],
         "next": "把每次 Web ship 的测试命令、通过数、失败数和 Browser smoke 写入 release-log Verification。"
       },
@@ -438,11 +494,31 @@
           "manual macOS smoke before RC"
         ],
         "categories": [
-          { "key": "backend", "status": "partial", "detail": "Rust cargo test / crypto vectors 有 CI 入口，最近 App RC 结果未登记。" },
-          { "key": "build", "status": "partial", "detail": "Tauri build gate 需在 desktop-next / dev RC 时登记。" },
-          { "key": "self_test", "status": "unknown", "detail": "真机 macOS smoke 结果未登记。" },
-          { "key": "pre_deploy", "status": "unknown", "detail": "签名、公证、DMG/updater gate 未进入当前发布。" },
-          { "key": "regression", "status": "unknown", "detail": "桌面回归套件待随 G1/RC 建立。" }
+          {
+            "key": "backend",
+            "status": "partial",
+            "detail": "Rust cargo test / crypto vectors 有 CI 入口，最近 App RC 结果未登记。"
+          },
+          {
+            "key": "build",
+            "status": "partial",
+            "detail": "Tauri build gate 需在 desktop-next / dev RC 时登记。"
+          },
+          {
+            "key": "self_test",
+            "status": "unknown",
+            "detail": "真机 macOS smoke 结果未登记。"
+          },
+          {
+            "key": "pre_deploy",
+            "status": "unknown",
+            "detail": "签名、公证、DMG/updater gate 未进入当前发布。"
+          },
+          {
+            "key": "regression",
+            "status": "unknown",
+            "detail": "桌面回归套件待随 G1/RC 建立。"
+          }
         ],
         "next": "进入 desktop-next/dev RC 前登记 tauri build、cargo test、离线 profile 和真机 smoke。"
       },
@@ -461,10 +537,26 @@
           "pnpm --filter @repo/plugin-* check-types"
         ],
         "categories": [
-          { "key": "unit", "status": "partial", "detail": "插件包级测试存在，但未汇总为统一最近结果。" },
-          { "key": "frontend_page", "status": "unknown", "detail": "widget / host 页面 smoke 等待平台恢复。" },
-          { "key": "build", "status": "partial", "detail": "包级 typecheck/build 需按插件登记。" },
-          { "key": "e2e", "status": "unknown", "detail": "宿主集成 E2E 未登记。" }
+          {
+            "key": "unit",
+            "status": "partial",
+            "detail": "插件包级测试存在，但未汇总为统一最近结果。"
+          },
+          {
+            "key": "frontend_page",
+            "status": "unknown",
+            "detail": "widget / host 页面 smoke 等待平台恢复。"
+          },
+          {
+            "key": "build",
+            "status": "partial",
+            "detail": "包级 typecheck/build 需按插件登记。"
+          },
+          {
+            "key": "e2e",
+            "status": "unknown",
+            "detail": "宿主集成 E2E 未登记。"
+          }
         ],
         "next": "插件平台恢复后，为每个 plugin/widget 登记 package test、host integration 和回归 smoke。"
       },
@@ -485,10 +577,26 @@
           "two-device sync smoke"
         ],
         "categories": [
-          { "key": "backend", "status": "partial", "detail": "Supabase/RLS/protocol 测试脚本存在，最近结果需按功能登记。" },
-          { "key": "e2e", "status": "unknown", "detail": "两设备同步 smoke 未登记。" },
-          { "key": "pre_deploy", "status": "partial", "detail": "D4 九项 gate 是上线前检查来源。" },
-          { "key": "regression", "status": "unknown", "detail": "同步回归矩阵待恢复 sync-v1 后固定。" }
+          {
+            "key": "backend",
+            "status": "partial",
+            "detail": "Supabase/RLS/protocol 测试脚本存在，最近结果需按功能登记。"
+          },
+          {
+            "key": "e2e",
+            "status": "unknown",
+            "detail": "两设备同步 smoke 未登记。"
+          },
+          {
+            "key": "pre_deploy",
+            "status": "partial",
+            "detail": "D4 九项 gate 是上线前检查来源。"
+          },
+          {
+            "key": "regression",
+            "status": "unknown",
+            "detail": "同步回归矩阵待恢复 sync-v1 后固定。"
+          }
         ],
         "next": "任何 account-sync 实体落地时同步登记 Web IndexedDB、App SQLite/outbox、两设备 smoke。"
       },
@@ -507,9 +615,21 @@
           "pnpm --filter release-site build"
         ],
         "categories": [
-          { "key": "frontend_page", "status": "unknown", "detail": "下载页/发布说明页面 smoke 未启动。" },
-          { "key": "build", "status": "unknown", "detail": "站点构建 gate 未登记。" },
-          { "key": "pre_deploy", "status": "unknown", "detail": "Cloudflare/site 发布检查需等 operator 解冻。" }
+          {
+            "key": "frontend_page",
+            "status": "unknown",
+            "detail": "下载页/发布说明页面 smoke 未启动。"
+          },
+          {
+            "key": "build",
+            "status": "unknown",
+            "detail": "站点构建 gate 未登记。"
+          },
+          {
+            "key": "pre_deploy",
+            "status": "unknown",
+            "detail": "Cloudflare/site 发布检查需等 operator 解冻。"
+          }
         ],
         "next": "site 线解冻后登记 release-site build、下载链接 smoke、updater feed 检查。"
       },
@@ -530,10 +650,26 @@
           "Browser smoke at #overview/#testing"
         ],
         "categories": [
-          { "key": "self_test", "status": "partial", "detail": "Admin 原型线尚未有独立控制面自测记录。" },
-          { "key": "frontend_page", "status": "partial", "detail": "Admin prototype 可打开；生产 admin surface 未启动。" },
-          { "key": "build", "status": "unknown", "detail": "Admin package/deploy 目标待确认。" },
-          { "key": "e2e", "status": "partial", "detail": "Admin 原型 E2E 待落地；个人开发看板 smoke 不计入 Admin 控制面证据。" }
+          {
+            "key": "self_test",
+            "status": "partial",
+            "detail": "Admin 原型线尚未有独立控制面自测记录。"
+          },
+          {
+            "key": "frontend_page",
+            "status": "partial",
+            "detail": "Admin prototype 可打开；生产 admin surface 未启动。"
+          },
+          {
+            "key": "build",
+            "status": "unknown",
+            "detail": "Admin package/deploy 目标待确认。"
+          },
+          {
+            "key": "e2e",
+            "status": "partial",
+            "detail": "Admin 原型 E2E 待落地；个人开发看板 smoke 不计入 Admin 控制面证据。"
+          }
         ],
         "next": "Admin 线确认 package/deploy 目标后补 RBAC、audit、provider secret handle 的负向测试。"
       }
@@ -543,14 +679,20 @@
         "id": "2026-05-31-dev-dashboard-local-smoke",
         "source": "manual",
         "module": "project-system",
-        "related_modules": ["project-system"],
+        "related_modules": [
+          "project-system"
+        ],
         "date": "2026-05-31",
         "title": "个人开发看板 v0.5 本地验证",
         "status": "pass",
         "conclusion": "pnpm dashboard、dashboard:serve、headless Chrome DOM/screenshot smoke 通过，Overview 渲染 dashboard sync 状态和 release-log entry。",
         "failure_count": 0,
         "duration": "",
-        "categories": ["self_test", "frontend_page", "build"],
+        "categories": [
+          "self_test",
+          "frontend_page",
+          "build"
+        ],
         "report_path": "docs/workflow/project/release-log.md"
       }
     ]
@@ -655,9 +797,14 @@
         "phase": "主线开发",
         "running": "正常运行",
         "progress_fallback": 78,
-        "recent_update": "Web Console / Dashboard rows 接入真实 roadmap 计数",
+        "recent_update": "项目看板 /app/board W1–W3：真实标签/成员目录+优先级+chip 解析、看板元数据编辑+优先级贯通多视图+过滤、Table 列排序+Workspace CRUD（628 包测试全绿）",
         "todo_fallback": "D3 gate 后再同步到 Desktop",
-        "target": { "type": "ops", "target": "web", "route": "/app/dashboard", "label": "打开 Web Dashboard" }
+        "target": {
+          "type": "ops",
+          "target": "web",
+          "route": "/app/dashboard",
+          "label": "打开 Web Dashboard"
+        }
       },
       "tracking": {
         "region": "主产品链",
@@ -672,31 +819,101 @@
           "xai-web-tasks-smartlist-filter.md",
           "xai-web-dashboard-stickies-create.md",
           "xai-web-dashboard-weather-mail.md",
-          "xai-web-statistics-real-aggregation.md"
+          "xai-web-statistics-real-aggregation.md",
+          "xai-web-project-module.md"
         ],
         "anchor_docs": [
-          ["Web Spec", "web design/DESIGN.md"],
-          ["ADR-0013 分支治理", "docs/adr/0013-branch-sync-governance.md"]
+          [
+            "Web Spec",
+            "web design/DESIGN.md"
+          ],
+          [
+            "ADR-0013 分支治理",
+            "docs/adr/0013-branch-sync-governance.md"
+          ],
+          [
+            "项目看板数据模型",
+            "docs/planning/sub-prds/web/project-board-data-model.md"
+          ]
         ],
-        "release_aliases": ["web", "xai-web", "web-console", "calendar", "tasks", "matrix", "statistics", "board"]
+        "release_aliases": [
+          "web",
+          "xai-web",
+          "web-console",
+          "calendar",
+          "tasks",
+          "matrix",
+          "statistics",
+          "board"
+        ]
       },
       "features": [
-        { "name": "工作台 Dashboard(网格 + 挂件)", "status": "shipped" },
-        { "name": "任务管理 Tasks(4 时间桶拖拽)", "status": "shipped" },
-        { "name": "项目看板 Boards(6 视图)", "status": "shipped" },
-        { "name": "日历 Calendar(月/周/日)", "status": "shipped" },
-        { "name": "四象限 Matrix", "status": "shipped" },
-        { "name": "番茄钟 Pomodoro", "status": "shipped" },
-        { "name": "习惯追踪 Habits", "status": "shipped" },
-        { "name": "冥想 Meditation", "status": "shipped" },
-        { "name": "倒数日 Countdown", "status": "shipped" },
-        { "name": "统计 Statistics", "status": "shipped" },
-        { "name": "AI 聊天 + 工具层", "status": "shipped" },
-        { "name": "设置 Settings(13 面板)", "status": "shipped" },
-        { "name": "桌宠 Pet(网页内 DOM)", "status": "shipped" },
-        { "name": "命令面板 Cmd+K", "status": "in-dev" },
-        { "name": "时间追踪 Time Tracker", "status": "in-dev", "note": "codex/time-tracker-web 进行中" },
-        { "name": "记账 Bookkeeping", "status": "in-dev", "note": "codex/web/bookkeeping 已建包并接入 Web shell；同步状态 device-local" }
+        {
+          "name": "工作台 Dashboard(网格 + 挂件)",
+          "status": "shipped"
+        },
+        {
+          "name": "任务管理 Tasks(4 时间桶拖拽)",
+          "status": "shipped"
+        },
+        {
+          "name": "项目看板 Boards(6 视图)",
+          "status": "shipped"
+        },
+        {
+          "name": "日历 Calendar(月/周/日)",
+          "status": "shipped"
+        },
+        {
+          "name": "四象限 Matrix",
+          "status": "shipped"
+        },
+        {
+          "name": "番茄钟 Pomodoro",
+          "status": "shipped"
+        },
+        {
+          "name": "习惯追踪 Habits",
+          "status": "shipped"
+        },
+        {
+          "name": "冥想 Meditation",
+          "status": "shipped"
+        },
+        {
+          "name": "倒数日 Countdown",
+          "status": "shipped"
+        },
+        {
+          "name": "统计 Statistics",
+          "status": "shipped"
+        },
+        {
+          "name": "AI 聊天 + 工具层",
+          "status": "shipped"
+        },
+        {
+          "name": "设置 Settings(13 面板)",
+          "status": "shipped"
+        },
+        {
+          "name": "桌宠 Pet(网页内 DOM)",
+          "status": "shipped"
+        },
+        {
+          "name": "命令面板 Cmd+K",
+          "status": "in-dev"
+        },
+        {
+          "name": "时间追踪 Time Tracker",
+          "status": "in-dev",
+          "note": "codex/time-tracker-web 进行中"
+        },
+        {
+          "name": "记账 Bookkeeping",
+          "status": "in-dev",
+          "note": "codex/web/bookkeeping 已建包并接入 Web shell；同步状态 device-local"
+        }
       ],
       "points": [
         [
@@ -848,22 +1065,65 @@
         "progress_fallback": 42,
         "recent_update": "Mac 壳身份收窄为 Web 容器 + native chrome",
         "todo_fallback": "主窗口 / 菜单栏 / 离线 / 账号 / 更新 / 通知 / RC gate",
-        "target": { "type": "page", "page": "product-flow", "product_key": "app", "label": "查看桌面详情" }
+        "target": {
+          "type": "page",
+          "page": "product-flow",
+          "product_key": "app",
+          "label": "查看桌面详情"
+        }
       },
       "tracking": {
         "region": "主产品链",
-        "roadmap_manifests": ["xai-g0-window-spike.md", "xai-g1-native-foundation.md"],
-        "anchor_docs": [["ADR-0010 P1 计划", "docs/adr/0010-p1-desktop-resume-plan.md"]],
-        "release_aliases": ["app", "mac", "desktop", "tauri", "native", "dmg", "mas"]
+        "roadmap_manifests": [
+          "xai-g0-window-spike.md",
+          "xai-g1-native-foundation.md"
+        ],
+        "anchor_docs": [
+          [
+            "ADR-0010 P1 计划",
+            "docs/adr/0010-p1-desktop-resume-plan.md"
+          ]
+        ],
+        "release_aliases": [
+          "app",
+          "mac",
+          "desktop",
+          "tauri",
+          "native",
+          "dmg",
+          "mas"
+        ]
       },
       "features": [
-        { "name": "Web 容器主窗口(复用 Web UI)", "status": "planned" },
-        { "name": "native chrome(菜单栏/托盘/深链/开机启动)", "status": "planned" },
-        { "name": "离线 profile / 本地缓存", "status": "planned" },
-        { "name": "账号 + Keychain", "status": "planned" },
-        { "name": "本地通知", "status": "planned" },
-        { "name": "自动更新 / App RC gate", "status": "planned" },
-        { "name": "G1 host command foundation", "status": "in-dev", "note": "物理 host 命令可支撑 Mac 壳与插件平台；产品归属按 app/plugin 边界拆分" }
+        {
+          "name": "Web 容器主窗口(复用 Web UI)",
+          "status": "planned"
+        },
+        {
+          "name": "native chrome(菜单栏/托盘/深链/开机启动)",
+          "status": "planned"
+        },
+        {
+          "name": "离线 profile / 本地缓存",
+          "status": "planned"
+        },
+        {
+          "name": "账号 + Keychain",
+          "status": "planned"
+        },
+        {
+          "name": "本地通知",
+          "status": "planned"
+        },
+        {
+          "name": "自动更新 / App RC gate",
+          "status": "planned"
+        },
+        {
+          "name": "G1 host command foundation",
+          "status": "in-dev",
+          "note": "物理 host 命令可支撑 Mac 壳与插件平台；产品归属按 app/plugin 边界拆分"
+        }
       ],
       "points": [
         [
@@ -1007,23 +1267,82 @@
         "progress_fallback": 24,
         "recent_update": "Plugin Center / Entry Model 已写入 PRD、SDK 和模块边界文档",
         "todo_fallback": "G1 运行时走 active gate；插件包仅维护 brief / docs",
-        "target": { "type": "doc", "path": "docs/planning/sub-prds/plugin/PRD.md", "label": "打开 Plugin PRD" }
+        "target": {
+          "type": "doc",
+          "path": "docs/planning/sub-prds/plugin/PRD.md",
+          "label": "打开 Plugin PRD"
+        }
       },
       "tracking": {
         "region": "主产品链",
         "plugin_path_regex": "plugin-(organizer|clipboard|widgets|meditation|pet|account|console|productivity|ai-cube|calendar|labels|project|settings)\\b",
-        "anchor_docs": [["Plugin PRD", "docs/planning/sub-prds/plugin/PRD.md"], ["PLUGIN_SDK", "docs/PLUGIN_SDK.md"], ["MODULE_BOUNDARIES", "docs/MODULE_BOUNDARIES.md"], ["PLUGIN_MAP", "docs/PLUGIN_MAP.md"]],
-        "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
+        "anchor_docs": [
+          [
+            "Plugin PRD",
+            "docs/planning/sub-prds/plugin/PRD.md"
+          ],
+          [
+            "PLUGIN_SDK",
+            "docs/PLUGIN_SDK.md"
+          ],
+          [
+            "MODULE_BOUNDARIES",
+            "docs/MODULE_BOUNDARIES.md"
+          ],
+          [
+            "PLUGIN_MAP",
+            "docs/PLUGIN_MAP.md"
+          ]
+        ],
+        "release_aliases": [
+          "plugin",
+          "widget",
+          "clipboard",
+          "organizer",
+          "ai-cube"
+        ]
       },
       "features": [
-        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "active-gate", "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host" },
-        { "name": "Plugin Center / Entry Model(设计已决,未实现)", "status": "planned", "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only" },
-        { "name": "Smart Container 整理(organizer)", "status": "shipped", "note": "已接入 App,短期只做收尾为稳定参考实现" },
-        { "name": "Organizer closeout", "status": "planned", "note": "G1 后补 finder tags 注册和真置顶 pin" },
-        { "name": "Widget Host MVP(clock/time progress/countdown)", "status": "planned", "note": "G1 后第一批低原生依赖插件" },
-        { "name": "剪贴板 clipboard MVP(历史/OCR)", "status": "planned", "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移" },
-        { "name": "桌宠 pet basic(独立包 plugin-pet)", "status": "planned", "note": "AI/事件集成延后" },
-        { "name": "Meditation desktop plugin", "status": "paused", "note": "暂不建桌面包;先保留 Web meditation" }
+        {
+          "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)",
+          "status": "active-gate",
+          "note": "G1 锚点;产品归属为 plugin；物理 Tauri 命令可落在 host"
+        },
+        {
+          "name": "Plugin Center / Entry Model(设计已决,未实现)",
+          "status": "planned",
+          "note": "控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好;G1 前 docs-only"
+        },
+        {
+          "name": "Smart Container 整理(organizer)",
+          "status": "shipped",
+          "note": "已接入 App,短期只做收尾为稳定参考实现"
+        },
+        {
+          "name": "Organizer closeout",
+          "status": "planned",
+          "note": "G1 后补 finder tags 注册和真置顶 pin"
+        },
+        {
+          "name": "Widget Host MVP(clock/time progress/countdown)",
+          "status": "planned",
+          "note": "G1 后第一批低原生依赖插件"
+        },
+        {
+          "name": "剪贴板 clipboard MVP(历史/OCR)",
+          "status": "planned",
+          "note": "需 App clipboard/OCR 命令;先修 clipboard.item vs clipboard.entry 契约漂移"
+        },
+        {
+          "name": "桌宠 pet basic(独立包 plugin-pet)",
+          "status": "planned",
+          "note": "AI/事件集成延后"
+        },
+        {
+          "name": "Meditation desktop plugin",
+          "status": "paused",
+          "note": "暂不建桌面包;先保留 Web meditation"
+        }
       ],
       "points": [
         [
@@ -1183,20 +1502,53 @@
         "progress_fallback": 28,
         "recent_update": "sync-v1 roadmap 作为恢复入口",
         "todo_fallback": "push/pull、冲突、两设备 smoke",
-        "target": { "type": "doc", "path": "docs/workflow/roadmap/sync-v1.md", "label": "打开 sync-v1" }
+        "target": {
+          "type": "doc",
+          "path": "docs/workflow/roadmap/sync-v1.md",
+          "label": "打开 sync-v1"
+        }
       },
       "tracking": {
         "region": "主产品链",
-        "roadmap_manifests": ["sync-v1.md"],
-        "anchor_docs": [["ADR-0013 同步", "docs/adr/0013-branch-sync-governance.md"]],
-        "release_aliases": ["sync", "cloud", "account", "auth", "device-session"]
+        "roadmap_manifests": [
+          "sync-v1.md"
+        ],
+        "anchor_docs": [
+          [
+            "ADR-0013 同步",
+            "docs/adr/0013-branch-sync-governance.md"
+          ]
+        ],
+        "release_aliases": [
+          "sync",
+          "cloud",
+          "account",
+          "auth",
+          "device-session"
+        ]
       },
       "features": [
-        { "name": "账号同步", "status": "paused" },
-        { "name": "配置同步", "status": "paused" },
-        { "name": "数据 push/pull + 冲突策略", "status": "paused", "note": "sync-v1 crypto stack 已建,运行时门 deferred" },
-        { "name": "两设备 smoke / device-local 边界", "status": "paused" },
-        { "name": "Workflow / Dashboard 同步(项目系统层)", "status": "proposed" }
+        {
+          "name": "账号同步",
+          "status": "paused"
+        },
+        {
+          "name": "配置同步",
+          "status": "paused"
+        },
+        {
+          "name": "数据 push/pull + 冲突策略",
+          "status": "paused",
+          "note": "sync-v1 crypto stack 已建,运行时门 deferred"
+        },
+        {
+          "name": "两设备 smoke / device-local 边界",
+          "status": "paused"
+        },
+        {
+          "name": "Workflow / Dashboard 同步(项目系统层)",
+          "status": "proposed"
+        }
       ],
       "points": [
         [
@@ -1334,19 +1686,44 @@
         "progress_fallback": 18,
         "recent_update": "release-site archive 保留官网/账号入口",
         "todo_fallback": "确认 package 和 Cloudflare 发布节奏",
-        "target": { "type": "url", "href": "http://localhost:3000", "label": "打开官网本地页" }
+        "target": {
+          "type": "url",
+          "href": "http://localhost:3000",
+          "label": "打开官网本地页"
+        }
       },
       "tracking": {
         "region": "项目系统区",
-        "roadmap_manifests": ["web-ticktick-parity.md"],
+        "roadmap_manifests": [
+          "web-ticktick-parity.md"
+        ],
         "anchor_docs": [],
-        "release_aliases": ["site", "official", "release-site", "cloudflare", "website", "官网"]
+        "release_aliases": [
+          "site",
+          "official",
+          "release-site",
+          "cloudflare",
+          "website",
+          "官网"
+        ]
       },
       "features": [
-        { "name": "下载页", "status": "proposed" },
-        { "name": "Release notes / 更新说明", "status": "proposed" },
-        { "name": "自动更新 host", "status": "proposed" },
-        { "name": "账号 / 对外入口", "status": "proposed" }
+        {
+          "name": "下载页",
+          "status": "proposed"
+        },
+        {
+          "name": "Release notes / 更新说明",
+          "status": "proposed"
+        },
+        {
+          "name": "自动更新 host",
+          "status": "proposed"
+        },
+        {
+          "name": "账号 / 对外入口",
+          "status": "proposed"
+        }
       ],
       "points": [
         [
@@ -1469,24 +1846,67 @@
         "progress_fallback": 22,
         "recent_update": "Dev Dashboard 与 Admin prototype 分离",
         "todo_fallback": "权限、用量、审计、AI 配置接入计划",
-        "target": { "type": "file", "href": "../admin-dashboard/index.html", "label": "打开 Admin 原型" }
+        "target": {
+          "type": "file",
+          "href": "../admin-dashboard/index.html",
+          "label": "打开 Admin 原型"
+        }
       },
       "tracking": {
         "region": "Control Plane",
-        "roadmap_manifests": ["xai-admin-dashboard-system-integration.md"],
-        "anchor_docs": [
-          ["Admin README", "docs/prototypes/admin-dashboard/README.md"],
-          ["接入计划", "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"],
-          ["ADR-0013 控制面", "docs/adr/0013-branch-sync-governance.md"]
+        "roadmap_manifests": [
+          "xai-admin-dashboard-system-integration.md"
         ],
-        "release_aliases": ["admin", "admin-dashboard", "control plane", "rbac", "usage", "audit", "ai-config", "权限", "用量", "审计", "运营", "ai 配置"]
+        "anchor_docs": [
+          [
+            "Admin README",
+            "docs/prototypes/admin-dashboard/README.md"
+          ],
+          [
+            "接入计划",
+            "docs/prototypes/admin-dashboard/INTEGRATION_PLAN.md"
+          ],
+          [
+            "ADR-0013 控制面",
+            "docs/adr/0013-branch-sync-governance.md"
+          ]
+        ],
+        "release_aliases": [
+          "admin",
+          "admin-dashboard",
+          "control plane",
+          "rbac",
+          "usage",
+          "audit",
+          "ai-config",
+          "权限",
+          "用量",
+          "审计",
+          "运营",
+          "ai 配置"
+        ]
       },
       "features": [
-        { "name": "AI 配置", "status": "roadmap-gated" },
-        { "name": "权限 / RBAC", "status": "roadmap-gated" },
-        { "name": "用量统计", "status": "roadmap-gated" },
-        { "name": "审计日志", "status": "roadmap-gated" },
-        { "name": "运营入口", "status": "roadmap-gated" }
+        {
+          "name": "AI 配置",
+          "status": "roadmap-gated"
+        },
+        {
+          "name": "权限 / RBAC",
+          "status": "roadmap-gated"
+        },
+        {
+          "name": "用量统计",
+          "status": "roadmap-gated"
+        },
+        {
+          "name": "审计日志",
+          "status": "roadmap-gated"
+        },
+        {
+          "name": "运营入口",
+          "status": "roadmap-gated"
+        }
       ],
       "points": [
         [
@@ -1610,19 +2030,30 @@
       {
         "key": "organize_plan",
         "label": "完整面",
-        "surfaces": ["Web", "Mac 壳", "iPad"],
+        "surfaces": [
+          "Web",
+          "Mac 壳",
+          "iPad"
+        ],
         "job": "大屏完整编辑、规划、编排"
       },
       {
         "key": "capture_glance",
         "label": "轻捕获面",
-        "surfaces": ["iPhone", "Android", "浏览器扩展"],
+        "surfaces": [
+          "iPhone",
+          "Android",
+          "浏览器扩展"
+        ],
         "job": "快进快出、速记、速览、提醒"
       },
       {
         "key": "ambient_micro",
         "label": "环境/微交互面",
-        "surfaces": ["Apple Watch", "桌面插件"],
+        "surfaces": [
+          "Apple Watch",
+          "桌面插件"
+        ],
         "job": "一瞥即走、单击操作、贴在环境里"
       }
     ],
@@ -1673,7 +2104,17 @@
         "not_for": "完整编辑"
       }
     ],
-    "priority_order": ["web", "mac-shell", "web-pwa", "desktop-plugin-platform", "browser-extension", "iphone-native", "apple-watch", "ipad-dedicated/catalyst", "android-native"]
+    "priority_order": [
+      "web",
+      "mac-shell",
+      "web-pwa",
+      "desktop-plugin-platform",
+      "browser-extension",
+      "iphone-native",
+      "apple-watch",
+      "ipad-dedicated/catalyst",
+      "android-native"
+    ]
   },
   "module_nav": {
     "source": "docs/PRODUCT_MODULE_MAP.md",
