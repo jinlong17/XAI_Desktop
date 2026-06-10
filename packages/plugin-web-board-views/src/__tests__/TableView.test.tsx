@@ -158,3 +158,35 @@ describe("TableView", () => {
     expect(screen.getAllByRole("columnheader")[0]!.textContent).toBe("卡片");
   });
 });
+
+describe("TableView — priority column (W2)", () => {
+  test("TV-P1 renders priority chip when card.priority set, hint otherwise", () => {
+    const lists = [
+      makeList({
+        id: "l1",
+        cards: [makeCard({ id: "c1", priority: "high" }), makeCard({ id: "c2" })],
+      }),
+    ];
+    render(<TableView lists={lists} lang="en" updateCard={() => {}} />);
+    const chips = screen.getAllByTestId("td-priority-value");
+    expect(chips).toHaveLength(1);
+    expect(chips[0]!.textContent).toContain("High");
+    expect(chips[0]!.getAttribute("data-priority")).toBe("high");
+  });
+
+  test("TV-P2 popover sets priority via updateCard and Clear removes it", () => {
+    const updateCard = vi.fn();
+    const lists = [makeList({ id: "lx", cards: [makeCard({ id: "cx", priority: "low" })] })];
+    render(<TableView lists={lists} lang="en" updateCard={updateCard} />);
+
+    fireEvent.click(screen.getByTestId("td-priority"));
+    expect(screen.getByTestId("priority-popover")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("priority-set-urgent"));
+    expect(updateCard).toHaveBeenCalledWith("lx", "cx", { priority: "urgent" });
+
+    fireEvent.click(screen.getByTestId("td-priority"));
+    fireEvent.click(screen.getByTestId("priority-clear"));
+    expect(updateCard).toHaveBeenCalledWith("lx", "cx", { priority: undefined });
+  });
+});

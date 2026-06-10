@@ -17,9 +17,11 @@ import type {
   BoardMemberOption,
 } from "@repo/plugin-web-board-core";
 import {
+  BOARD_PRIORITIES,
   DEFAULT_BOARD_LABELS,
   DEFAULT_BOARD_MEMBERS,
   getBoardCardDateMeta,
+  getPriorityMeta,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 import {
@@ -40,7 +42,7 @@ export interface TableViewProps {
   memberCatalog?: readonly BoardMemberOption[];
 }
 
-type EditingField = "labels" | "members" | "due";
+type EditingField = "labels" | "members" | "priority" | "due";
 type EditingState = { cardId: string; field: EditingField } | null;
 
 const COL_HEADERS = {
@@ -48,6 +50,7 @@ const COL_HEADERS = {
   list:      { en: "List",      zh: "列"     },
   labels:    { en: "Labels",    zh: "标签"   },
   members:   { en: "Members",   zh: "成员"   },
+  priority:  { en: "Priority",  zh: "优先级" },
   due:       { en: "Due",       zh: "截止日" },
   checklist: { en: "Checklist", zh: "核对表" },
 };
@@ -81,6 +84,7 @@ export function TableView({
             <th>{lang === "zh" ? COL_HEADERS.list.zh : COL_HEADERS.list.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.labels.zh : COL_HEADERS.labels.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.members.zh : COL_HEADERS.members.en}</th>
+            <th>{lang === "zh" ? COL_HEADERS.priority.zh : COL_HEADERS.priority.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.due.zh : COL_HEADERS.due.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.checklist.zh : COL_HEADERS.checklist.en}</th>
           </tr>
@@ -288,6 +292,101 @@ export function TableView({
                               </button>
                             );
                           })}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </td>
+
+                {/* Priority cell */}
+                <td
+                  className="td-editable"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditing({ cardId: card.id, field: "priority" });
+                  }}
+                  data-testid="td-priority"
+                >
+                  {card.priority ? (
+                    <span
+                      className="bc-priority"
+                      data-testid="td-priority-value"
+                      data-priority={card.priority}
+                      style={{ color: getPriorityMeta(card.priority).color }}
+                    >
+                      <span
+                        className="bc-priority-dot"
+                        style={{ background: getPriorityMeta(card.priority).color }}
+                      />
+                      {getPriorityMeta(card.priority).name[lang]}
+                    </span>
+                  ) : (
+                    <span className="td-empty-hint">
+                      + {lang === "zh" ? "优先级" : "Priority"}
+                    </span>
+                  )}
+                  {isEdit(card.id, "priority") && (
+                    <>
+                      <div
+                        className="popover-scrim"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          closeEditor();
+                        }}
+                      />
+                      <div className="popover td-popover" data-testid="priority-popover">
+                        <header className="popover-head">
+                          <span>{lang === "zh" ? "优先级" : "Priority"}</span>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            onClick={closeEditor}
+                            aria-label="close"
+                          >
+                            ×
+                          </button>
+                        </header>
+                        <div className="popover-list">
+                          {BOARD_PRIORITIES.map((p) => {
+                            const on = card.priority === p.id;
+                            return (
+                              <button
+                                key={p.id}
+                                type="button"
+                                className="popover-item label-row"
+                                data-testid={`priority-set-${p.id}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateCard(list.id, card.id, {
+                                    priority: on ? undefined : p.id,
+                                  });
+                                  closeEditor();
+                                }}
+                              >
+                                <span
+                                  className="bc-priority-dot"
+                                  style={{ background: p.color }}
+                                />
+                                <span>{p.name[lang]}</span>
+                                <span className="grow" />
+                                {on && <span aria-hidden="true">✓</span>}
+                              </button>
+                            );
+                          })}
+                          {card.priority && (
+                            <button
+                              type="button"
+                              className="popover-item label-row"
+                              data-testid="priority-clear"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateCard(list.id, card.id, { priority: undefined });
+                                closeEditor();
+                              }}
+                            >
+                              <span>{lang === "zh" ? "清除" : "Clear"}</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </>
