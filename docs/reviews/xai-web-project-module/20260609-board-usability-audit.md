@@ -85,8 +85,10 @@
 | P0 | 成员 新建/改名/分配（看板级目录）| ✅ W1 |
 | P1 | 看板元数据编辑（名/色/图标/描述）| ✅ W2 |
 | P1 | Table/Dashboard 标签+优先级 chip；Dashboard 优先级维度；按优先级过滤 | ✅ W2 |
-| P2 | status.category 语义、分数索引 rank、文件上传、Workspace CRUD | ⬜ Later |
-| P2 | 账号云同步接线（sync 线解冻后）| ⬜ Later |
+| P1.5 | Table 列排序（标题/优先级/截止日）+ Workspace CRUD | ✅ W3 |
+| P2 | status.category 语义、分数索引 rank、看板 groupBy 泛化 | ⬜ Later |
+| P2 | 文件上传（需 IndexedDB 基建决策——localStorage 5MB 配额放不下 blob）| ⬜ Later |
+| P2 | 真实分享后端、账号云同步接线（ADR-0013 §D4 门禁，sync 线 paused，不得擅自解冻）| ⬜ 门禁 |
 
 ---
 
@@ -115,3 +117,14 @@
 - **顺带修复**：FilterPopover 的标签/成员行从渲染原始 id 改为目录解析显示名（未知 id 原样回退）。
 
 **验证**：board-core 204 / board-views 138 / board-workspaces 277 = **619 测试全绿**（新增 FIL-P1..3、TV-P1..2、BD-P1..2、FP-P1/FP-N1、BWM-SET-1..2、BWM-FILTER-P、V10）；3 包 tsc + lint 干净；干净 preview 实测：chip 解析、🚀 图标持久化、封面切换、Urgent 卡面 chip 全部生效。
+
+---
+
+## 8. W3 已交付（2026-06-09 第三波）
+
+- **Table 列排序**：标题/优先级/截止日三列可点击排序（优先级首点 urgent 优先；缺值恒排末位；三击还原自然顺序）。
+- **Workspace CRUD**：新持久化键 `xai_board_workspaces`（registry + AC-REG/PARITY 契约登记，懒种子回退 `DEFAULT_WORKSPACES`）；切换器内可新建空间、改名（✎ 行内）、换色（点色点轮换）、删除（仅空且非最后一个）；空空间在可编辑态也渲染分组。最后一个冻结目录由此消除。
+- **范围外（记录理由）**：文件上传需 IndexedDB 基建决策；真实分享后端与账号云同步属 ADR-0013 §D4 sync 线（paused），接线前必须过 `xai-account-sync-scope-check` 九项门，不在本审查范围内擅自解冻。
+- **既有问题立项**：`plugin-web-storage` 的 AC-PARITY-1/2 因 `web design/DESIGN.md` 缺 §9.2 而失败（在本工作之前即失败，已开独立修复任务）。
+
+**验证**：board-core 206 / board-views 141 / board-workspaces 281 = **628 测试全绿**（新增 WSP-1/2、TV-S1..3、BWM-WS-1..4）；storage 87/89（2 个失败为上述既有 parity 漂移）；4 包 tsc + lint 干净；live 实测：新建空间出现在 scope 栏 + 分组（含 ✎/🗑）、Priority ▼ 排序置顶 Urgent 卡。

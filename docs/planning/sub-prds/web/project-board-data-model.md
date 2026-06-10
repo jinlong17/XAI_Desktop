@@ -30,7 +30,7 @@ Workspace  → Project(=Board)  → Status(列)  → Task(=Card)  → Subtask/Ch
 
 | 层级 | Trello | Linear | Asana | Notion | 本项目现状 | 本项目目标 |
 |---|---|---|---|---|---|---|
-| 组织 | Workspace | Workspace | Workspace | Workspace | `BoardWorkspace`（2 个种子，未做 CRUD） | Workspace（可建/改名）|
+| 组织 | Workspace | Workspace | Workspace | Workspace | `BoardWorkspace` ✅ W3 可建/改名/换色/删空 | Workspace（已达成）|
 | 看板/项目 | Board | Project | Project | Database | `Board`（真实集合，可建/删，**不可改名/换色**）| Project≡Board（可建/删/改名/换色/图标/描述）|
 | 列/状态 | List(容器) | Workflow state(类型化) | Section | View 分组属性 | `BoardList`（容器，列即状态）| 保留 List-as-status；为 List 增加 `category` 语义 |
 | 任务/卡片 | Card | Issue | Task | Page | `BoardCard`（字段丰富）| 同 + `priority` |
@@ -180,12 +180,16 @@ type StatusCategory = 'backlog' | 'unstarted' | 'started' | 'completed' | 'cance
 - 按优先级 过滤 ✅（排序/`groupBy` 泛化 → Later）
 - 起止日期 range + 逾期派生样式（已有）
 
+### W3（2026-06-09 已交付）
+- Table 列排序（标题/优先级/截止日，缺值末位，三态循环）✅
+- Workspace CRUD（建/改名/换色/删空；`xai_board_workspaces` 持久化）✅
+
 ### LATER
 - `status.category` 语义 + 完成度统计；列即状态 → status 作为属性的架构演进
-- 分数索引 `rank`（取代数组顺序，利并发/同步）
+- 分数索引 `rank`（取代数组顺序，利并发/同步）；看板 `groupBy` 泛化（按优先级/成员分组）
 - 嵌套子任务（`parentId`）、任务依赖/关系、自定义字段
-- 文件上传附件、真实分享后端
-- Workspace CRUD、多用户/邀请/权限
+- 文件上传附件（需 IndexedDB 基建决策）、真实分享后端
+- 多用户/邀请/权限
 - **账号云同步**（接 `storageContract` 投影 → `/sync/push`，ADR-0013 §D4，sync 线解冻后）
 
 ---
