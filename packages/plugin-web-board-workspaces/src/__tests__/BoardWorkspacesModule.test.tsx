@@ -1715,3 +1715,84 @@ describe("BWM-SET — board settings + priority filter", () => {
     });
   });
 });
+
+// ---- BWM-WS — Wave 3: workspace CRUD ----------------------------------------
+
+function getStoredWorkspaces(): { id: string; name: { en: string; zh: string }; color: string }[] {
+  const raw = localStorage.getItem("xai_board_workspaces");
+  if (!raw) throw new Error("xai_board_workspaces not persisted");
+  return JSON.parse(raw) as { id: string; name: { en: string; zh: string }; color: string }[];
+}
+
+describe("BWM-WS — workspace CRUD", () => {
+  it("BWM-WS-1: creating a workspace persists it (seed + new) and renders its group", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Client Projects" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored).toHaveLength(3); // 2 seeds materialized + 1 new
+    const created = stored.find((ws) => ws.name.en === "Client Projects");
+    expect(created).toBeDefined();
+    // Renders in both the scope tab and the group header.
+    expect(screen.getAllByText("Client Projects").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("BWM-WS-2: renaming a workspace persists the new name", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-ws-rename-ws-personal"));
+    const input = screen.getByTestId("bs-ws-rename-input-ws-personal");
+    fireEvent.change(input, { target: { value: "My Stuff" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored.find((ws) => ws.id === "ws-personal")!.name.en).toBe("My Stuff");
+  });
+
+  it("BWM-WS-3: delete affordance only on empty workspaces; deleting removes it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    // Seed workspaces both hold boards → no delete buttons for them.
+    expect(screen.queryByTestId("bs-ws-delete-ws-personal")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("bs-ws-delete-ws-team")).not.toBeInTheDocument();
+
+    // Create an empty workspace — it gets a delete affordance.
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Temp" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const temp = getStoredWorkspaces().find((ws) => ws.name.en === "Temp")!;
+    fireEvent.click(screen.getByTestId(`bs-ws-delete-${temp.id}`));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(getStoredWorkspaces().some((ws) => ws.id === temp.id)).toBe(false);
+  });
+
+  it("BWM-WS-4: recolor cycles the workspace color", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    const before = (() => {
+      try { return getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color; }
+      catch { return "oklch(60% 0.10 165)"; } // seed color before materialization
+    })();
+    fireEvent.click(screen.getByTestId("bs-ws-recolor-ws-personal"));
+    await act(async () => { await Promise.resolve(); });
+
+    const after = getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color;
+    expect(after).not.toBe(before);
+  });
+});
