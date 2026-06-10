@@ -268,6 +268,10 @@ export function isBoard(value: unknown): value is Board {
   ) {
     return false;
   }
+  if (value.icon !== undefined && !isString(value.icon)) return false;
+  if (value.description !== undefined && !isString(value.description)) {
+    return false;
+  }
   if (value.labels !== undefined && !Array.isArray(value.labels)) return false;
   if (Array.isArray(value.labels) && !value.labels.every(isBoardLabel)) {
     return false;

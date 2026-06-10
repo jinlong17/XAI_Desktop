@@ -347,6 +347,13 @@ describe("isBoardArray", () => {
     expect(isBoardCard({ ...base, priority: 3 })).toBe(false);
   });
 
+  test("V10 isBoard validates icon/description meta fields (W2)", () => {
+    const base = makeDefaultBoards()[0]!;
+    expect(isBoard({ ...base, icon: "🚀", description: "Team board" })).toBe(true);
+    expect(isBoard({ ...base, icon: 7 })).toBe(false);
+    expect(isBoard({ ...base, description: ["x"] })).toBe(false);
+  });
+
   test("V9 isBoard validates board-scoped label/member catalogs", () => {
     const base = makeDefaultBoards()[0]!;
     const label = { id: "x", name: { en: "X", zh: "X" }, color: "red" };

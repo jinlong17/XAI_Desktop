@@ -48,6 +48,21 @@ export const BOARD_LABEL_PALETTE: readonly string[] = [
   "oklch(60% 0.16 350)",
 ] as const;
 
+/**
+ * Cover presets offered by the board settings editor. The first three match
+ * the built-in template covers so a fresh board's cover is always re-pickable.
+ */
+export const BOARD_COVER_PRESETS: readonly string[] = [
+  "linear-gradient(135deg, oklch(72% 0.12 295), oklch(78% 0.10 25))",
+  "linear-gradient(135deg, oklch(58% 0.14 245), oklch(38% 0.10 250))",
+  "linear-gradient(135deg, oklch(70% 0.15 60), oklch(62% 0.16 35))",
+  "linear-gradient(135deg, oklch(72% 0.10 165), oklch(60% 0.10 165))",
+  "linear-gradient(135deg, oklch(78% 0.10 295), oklch(62% 0.12 245))",
+  "linear-gradient(135deg, oklch(80% 0.08 165), oklch(60% 0.12 195))",
+  "linear-gradient(135deg, oklch(75% 0.12 85), oklch(64% 0.15 35))",
+  "linear-gradient(135deg, oklch(85% 0.02 220), oklch(70% 0.02 220))",
+] as const;
+
 /** Avatar palette cycled through when creating a new member. */
 export const BOARD_MEMBER_PALETTE: readonly string[] = [
   "oklch(62% 0.14 155)",

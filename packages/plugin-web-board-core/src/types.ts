@@ -194,6 +194,11 @@ export interface Board {
   /** CSS background string (linear-gradient, image, etc.). */
   cover: string;
   template: BoardTemplate;
+  /** Optional short icon glyph (emoji or single char) shown before the name.
+   *  Absent → template-derived default (pm ▤, otherwise ▦). */
+  icon?: string;
+  /** Optional plain-text board description shown in switcher/settings. */
+  description?: string;
   /** Local visibility state. This is not a backend ACL grant. */
   visibility?: BoardVisibility;
   /**
