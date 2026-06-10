@@ -45,6 +45,16 @@ export interface TableViewProps {
 type EditingField = "labels" | "members" | "priority" | "due";
 type EditingState = { cardId: string; field: EditingField } | null;
 
+type SortField = "title" | "priority" | "due";
+type SortState = { field: SortField; dir: "asc" | "desc" } | null;
+
+/** First click per column: priority shows urgent first; title/due ascending. */
+const DEFAULT_SORT_DIR: Record<SortField, "asc" | "desc"> = {
+  title: "asc",
+  priority: "desc",
+  due: "asc",
+};
+
 const COL_HEADERS = {
   card:      { en: "Card",      zh: "卡片"   },
   list:      { en: "List",      zh: "列"     },
@@ -64,14 +74,52 @@ export function TableView({
   memberCatalog = DEFAULT_BOARD_MEMBERS,
 }: TableViewProps) {
   const [editing, setEditing] = useState<EditingState>(null);
+  const [sort, setSort] = useState<SortState>(null);
 
   const closeEditor = () => setEditing(null);
+
+  const today = new Date();
 
   const rows = lists.flatMap((list) =>
     list.cards.map((card) => ({ card, list })),
   );
 
-  const today = new Date();
+  if (sort) {
+    const { field, dir } = sort;
+    const sign = dir === "asc" ? 1 : -1;
+    // Cards missing the sorted value go last regardless of direction.
+    const sortValue = (card: BoardCardData): string | number | null => {
+      if (field === "title") return card.title[lang].toLowerCase();
+      if (field === "priority") {
+        return card.priority ? getPriorityMeta(card.priority).rank : null;
+      }
+      return getBoardCardDateMeta(card, { now: today }).dueDate ?? null;
+    };
+    rows.sort((a, b) => {
+      const va = sortValue(a.card);
+      const vb = sortValue(b.card);
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      if (va < vb) return -sign;
+      if (va > vb) return sign;
+      return 0;
+    });
+  }
+
+  const cycleSort = (field: SortField) => {
+    setSort((prev) => {
+      if (prev?.field !== field) return { field, dir: DEFAULT_SORT_DIR[field] };
+      if (prev.dir === DEFAULT_SORT_DIR[field]) {
+        return { field, dir: prev.dir === "asc" ? "desc" : "asc" };
+      }
+      return null; // third click resets to natural board order
+    });
+  };
+
+  const sortIndicator = (field: SortField): string =>
+    sort?.field === field ? (sort.dir === "asc" ? " ▲" : " ▼") : "";
+
   const isEdit = (cardId: string, field: EditingField) =>
     editing?.cardId === cardId && editing?.field === field;
 
@@ -80,12 +128,42 @@ export function TableView({
       <table className="board-table">
         <thead>
           <tr>
-            <th>{lang === "zh" ? COL_HEADERS.card.zh : COL_HEADERS.card.en}</th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("title")}
+                data-testid="th-sort-title"
+              >
+                {lang === "zh" ? COL_HEADERS.card.zh : COL_HEADERS.card.en}
+                {sortIndicator("title")}
+              </button>
+            </th>
             <th>{lang === "zh" ? COL_HEADERS.list.zh : COL_HEADERS.list.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.labels.zh : COL_HEADERS.labels.en}</th>
             <th>{lang === "zh" ? COL_HEADERS.members.zh : COL_HEADERS.members.en}</th>
-            <th>{lang === "zh" ? COL_HEADERS.priority.zh : COL_HEADERS.priority.en}</th>
-            <th>{lang === "zh" ? COL_HEADERS.due.zh : COL_HEADERS.due.en}</th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("priority")}
+                data-testid="th-sort-priority"
+              >
+                {lang === "zh" ? COL_HEADERS.priority.zh : COL_HEADERS.priority.en}
+                {sortIndicator("priority")}
+              </button>
+            </th>
+            <th>
+              <button
+                type="button"
+                className="th-sort-btn"
+                onClick={() => cycleSort("due")}
+                data-testid="th-sort-due"
+              >
+                {lang === "zh" ? COL_HEADERS.due.zh : COL_HEADERS.due.en}
+                {sortIndicator("due")}
+              </button>
+            </th>
             <th>{lang === "zh" ? COL_HEADERS.checklist.zh : COL_HEADERS.checklist.en}</th>
           </tr>
         </thead>
