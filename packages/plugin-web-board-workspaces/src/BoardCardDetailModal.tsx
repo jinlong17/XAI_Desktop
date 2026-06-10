@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   BOARD_INTEGRATION_PROVIDERS,
-  BOARD_MEMBER_OPTIONS,
-  PM_LABELS,
+  BOARD_LABEL_PALETTE,
+  BOARD_PRIORITIES,
   createBoardCardComment,
   createBoardIntegrationAttachment,
+  memberInitials,
 } from "@repo/plugin-web-board-core";
 import type {
   BoardCardAttachmentLink,
   BoardCardData,
+  BoardCardPriority,
   BoardChecklistItem,
   BoardIntegrationProviderId,
+  BoardLabel,
+  BoardMemberOption,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/strings.js";
 
@@ -19,6 +23,16 @@ export interface BoardCardDetailModalProps {
   listName: string;
   lang: Lang;
   taskLinkStatus?: BoardCardTaskLinkStatus;
+  /** Board label catalog (assignment options + manager source). */
+  labelCatalog: readonly BoardLabel[];
+  /** Board member directory (assignment options + manager source). */
+  memberCatalog: readonly BoardMemberOption[];
+  onCreateLabel?: (name: string, color: string) => void;
+  onUpdateLabel?: (id: string, patch: { name?: string; color?: string }) => void;
+  onDeleteLabel?: (id: string) => void;
+  onCreateMember?: (name: string) => void;
+  onUpdateMember?: (id: string, name: string) => void;
+  onDeleteMember?: (id: string) => void;
   onCreateLinkedTask?: () => void;
   onUnlinkTask?: () => void;
   onPatchCard: (patch: Partial<BoardCardData>) => void;
@@ -36,8 +50,16 @@ export interface BoardCardTaskLinkStatus {
 const STR = {
   close: { en: "Close", zh: "关闭" },
   description: { en: "Description", zh: "描述" },
+  priority: { en: "Priority", zh: "优先级" },
+  noPriority: { en: "None", zh: "无" },
   labels: { en: "Labels", zh: "标签" },
   members: { en: "Members", zh: "成员" },
+  manage: { en: "Manage", zh: "管理" },
+  done: { en: "Done", zh: "完成" },
+  newLabel: { en: "New label name", zh: "新标签名称" },
+  newMember: { en: "New member name", zh: "新成员名称" },
+  add: { en: "Add", zh: "添加" },
+  recolor: { en: "Change color", zh: "更改颜色" },
   dates: { en: "Dates", zh: "日期" },
   start: { en: "Start", zh: "开始" },
   due: { en: "Due", zh: "截止" },
@@ -94,6 +116,14 @@ export function BoardCardDetailSurface({
   listName,
   lang,
   taskLinkStatus,
+  labelCatalog,
+  memberCatalog,
+  onCreateLabel,
+  onUpdateLabel,
+  onDeleteLabel,
+  onCreateMember,
+  onUpdateMember,
+  onDeleteMember,
   onCreateLinkedTask,
   onUnlinkTask,
   onPatchCard,
@@ -105,6 +135,34 @@ export function BoardCardDetailSurface({
   const [attachmentUrl, setAttachmentUrl] = useState("");
   const [attachmentTitle, setAttachmentTitle] = useState("");
   const [activityText, setActivityText] = useState("");
+  const [labelEditorOpen, setLabelEditorOpen] = useState(false);
+  const [memberEditorOpen, setMemberEditorOpen] = useState(false);
+  const [newLabelName, setNewLabelName] = useState("");
+  const [newLabelColor, setNewLabelColor] = useState<string>(BOARD_LABEL_PALETTE[0]!);
+  const [newMemberName, setNewMemberName] = useState("");
+
+  const cyclePaletteColor = (color: string): string => {
+    const idx = BOARD_LABEL_PALETTE.indexOf(color);
+    return BOARD_LABEL_PALETTE[(idx + 1) % BOARD_LABEL_PALETTE.length]!;
+  };
+
+  const submitNewLabel = () => {
+    const name = newLabelName.trim();
+    if (!name || !onCreateLabel) return;
+    onCreateLabel(name, newLabelColor);
+    setNewLabelName("");
+    setNewLabelColor(cyclePaletteColor(newLabelColor));
+  };
+
+  const submitNewMember = () => {
+    const name = newMemberName.trim();
+    if (!name || !onCreateMember) return;
+    onCreateMember(name);
+    setNewMemberName("");
+  };
+
+  const labelsEditable = Boolean(onCreateLabel && onUpdateLabel && onDeleteLabel);
+  const membersEditable = Boolean(onCreateMember && onUpdateMember && onDeleteMember);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -203,9 +261,53 @@ export function BoardCardDetailSurface({
           </section>
 
           <section className="cd-section">
-            <h3>{STR.labels[lang]}</h3>
+            <h3>{STR.priority[lang]}</h3>
+            <div className="cd-priority-row" data-testid="card-detail-priority">
+              {BOARD_PRIORITIES.map((p) => {
+                const on = card.priority === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={"cd-priority-choice" + (on ? " active" : "")}
+                    style={on ? { borderColor: p.color, color: p.color } : undefined}
+                    onClick={() =>
+                      onPatchCard({ priority: on ? undefined : (p.id as BoardCardPriority) })
+                    }
+                    data-testid={`card-detail-priority-${p.id}`}
+                  >
+                    <span className="cd-priority-dot" style={{ background: p.color }} />
+                    {p.name[lang]}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className={"cd-priority-choice cd-priority-none" + (!card.priority ? " active" : "")}
+                onClick={() => onPatchCard({ priority: undefined })}
+                data-testid="card-detail-priority-none"
+              >
+                {STR.noPriority[lang]}
+              </button>
+            </div>
+          </section>
+
+          <section className="cd-section">
+            <div className="cd-section-head">
+              <h3>{STR.labels[lang]}</h3>
+              {labelsEditable ? (
+                <button
+                  type="button"
+                  className="cd-link-btn"
+                  onClick={() => setLabelEditorOpen((open) => !open)}
+                  data-testid="card-detail-labels-manage"
+                >
+                  {labelEditorOpen ? STR.done[lang] : STR.manage[lang]}
+                </button>
+              ) : null}
+            </div>
             <div className="cd-chip-grid">
-              {PM_LABELS.map((label) => {
+              {labelCatalog.map((label) => {
                 const on = (card.labels ?? []).includes(label.id);
                 return (
                   <button
@@ -223,19 +325,90 @@ export function BoardCardDetailSurface({
                     }}
                     data-testid={`card-detail-label-${label.id}`}
                   >
-                    <span className="bc-label" style={{ background: label.color }}>
+                    <span className="bc-label is-resolved" style={{ background: label.color }}>
                       {label.name[lang]}
                     </span>
                   </button>
                 );
               })}
             </div>
+            {labelEditorOpen && labelsEditable ? (
+              <div className="cd-catalog-editor" data-testid="card-detail-label-editor">
+                {labelCatalog.map((label) => (
+                  <div key={label.id} className="cd-catalog-row">
+                    <button
+                      type="button"
+                      className="cd-swatch"
+                      style={{ background: label.color }}
+                      onClick={() => onUpdateLabel?.(label.id, { color: cyclePaletteColor(label.color) })}
+                      aria-label={STR.recolor[lang]}
+                      title={STR.recolor[lang]}
+                    />
+                    <input
+                      className="cd-catalog-name"
+                      value={label.name[lang]}
+                      onChange={(event) => onUpdateLabel?.(label.id, { name: event.target.value })}
+                      data-testid={`card-detail-label-name-${label.id}`}
+                    />
+                    <button
+                      type="button"
+                      className="icon-btn danger"
+                      onClick={() => onDeleteLabel?.(label.id)}
+                      aria-label={STR.remove[lang]}
+                      data-testid={`card-detail-label-delete-${label.id}`}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+                <div className="cd-catalog-new">
+                  <button
+                    type="button"
+                    className="cd-swatch"
+                    style={{ background: newLabelColor }}
+                    onClick={() => setNewLabelColor(cyclePaletteColor(newLabelColor))}
+                    aria-label={STR.recolor[lang]}
+                    title={STR.recolor[lang]}
+                  />
+                  <input
+                    className="cd-catalog-name"
+                    value={newLabelName}
+                    placeholder={STR.newLabel[lang]}
+                    onChange={(event) => setNewLabelName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") submitNewLabel();
+                    }}
+                    data-testid="card-detail-label-new-name"
+                  />
+                  <button
+                    type="button"
+                    className="btn primary"
+                    onClick={submitNewLabel}
+                    data-testid="card-detail-label-new-add"
+                  >
+                    {STR.add[lang]}
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </section>
 
           <section className="cd-section">
-            <h3>{STR.members[lang]}</h3>
+            <div className="cd-section-head">
+              <h3>{STR.members[lang]}</h3>
+              {membersEditable ? (
+                <button
+                  type="button"
+                  className="cd-link-btn"
+                  onClick={() => setMemberEditorOpen((open) => !open)}
+                  data-testid="card-detail-members-manage"
+                >
+                  {memberEditorOpen ? STR.done[lang] : STR.manage[lang]}
+                </button>
+              ) : null}
+            </div>
             <div className="cd-chip-grid">
-              {BOARD_MEMBER_OPTIONS.map((member) => {
+              {memberCatalog.map((member) => {
                 const on = (card.members ?? []).includes(member.id);
                 return (
                   <button
@@ -252,13 +425,59 @@ export function BoardCardDetailSurface({
                     }}
                     data-testid={`card-detail-member-${member.id}`}
                   >
-                    <span className="bc-member" style={{ background: member.color }}>
-                      {member.name}
+                    <span className="bc-member" style={{ background: member.color, color: "#fff" }}>
+                      {memberInitials(member.name)}
                     </span>
+                    <span className="cd-member-name">{member.name}</span>
                   </button>
                 );
               })}
             </div>
+            {memberEditorOpen && membersEditable ? (
+              <div className="cd-catalog-editor" data-testid="card-detail-member-editor">
+                {memberCatalog.map((member) => (
+                  <div key={member.id} className="cd-catalog-row">
+                    <span className="cd-swatch" style={{ background: member.color }} aria-hidden="true" />
+                    <input
+                      className="cd-catalog-name"
+                      value={member.name}
+                      onChange={(event) => onUpdateMember?.(member.id, event.target.value)}
+                      data-testid={`card-detail-member-name-${member.id}`}
+                    />
+                    <button
+                      type="button"
+                      className="icon-btn danger"
+                      onClick={() => onDeleteMember?.(member.id)}
+                      aria-label={STR.remove[lang]}
+                      data-testid={`card-detail-member-delete-${member.id}`}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+                <div className="cd-catalog-new">
+                  <span className="cd-swatch cd-swatch-ghost" aria-hidden="true" />
+                  <input
+                    className="cd-catalog-name"
+                    value={newMemberName}
+                    placeholder={STR.newMember[lang]}
+                    onChange={(event) => setNewMemberName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") submitNewMember();
+                    }}
+                    data-testid="card-detail-member-new-name"
+                  />
+                  <button
+                    type="button"
+                    className="btn primary"
+                    onClick={submitNewMember}
+                    data-testid="card-detail-member-new-add"
+                  >
+                    {STR.add[lang]}
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </section>
 
           <section className="cd-section">

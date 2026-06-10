@@ -70,12 +70,19 @@ import {
   setBoardVisibility,
   setListColor as setListColorOp,
   updateCardInList,
+  resolveBoardLabels,
+  resolveBoardMembers,
+  stripLabelFromBoardLists,
+  stripMemberFromBoardLists,
+  BOARD_MEMBER_PALETTE,
 } from "@repo/plugin-web-board-core";
 import type {
   Board,
+  BoardLabel,
   BoardListData,
   BoardCardData,
   BoardListColorId,
+  BoardMemberOption,
   BoardTemplate,
   BoardVisibility,
 } from "@repo/plugin-web-board-core";
@@ -231,6 +238,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const totalCards = activeCardLists.reduce((n, l) => n + l.cards.length, 0);
   const isPM = activeBoard.template === "pm";
   const boardVisibility = getBoardVisibility(activeBoard);
+  const labelCatalog = resolveBoardLabels(activeBoard);
+  const memberCatalog = resolveBoardMembers(activeBoard);
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
   useEffect(() => {
@@ -267,6 +276,93 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
     [boards, activeBoard.id, rawBoards, setRawBoards],
+  );
+
+  // ---- Label catalog CRUD (board-scoped; materializes defaults on first edit)
+  const createLabel = useCallback(
+    (name: string, color: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      writeActiveBoard((board) => {
+        const id = `lbl-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        const next: BoardLabel = { id, name: { en: trimmed, zh: trimmed }, color };
+        return { ...board, labels: [...resolveBoardLabels(board), next] };
+      });
+    },
+    [writeActiveBoard],
+  );
+
+  const updateLabel = useCallback(
+    (id: string, patch: { name?: string; color?: string }) => {
+      writeActiveBoard((board) => ({
+        ...board,
+        labels: resolveBoardLabels(board).map((label) =>
+          label.id === id
+            ? {
+                ...label,
+                ...(patch.name !== undefined
+                  ? { name: { en: patch.name, zh: patch.name } }
+                  : {}),
+                ...(patch.color !== undefined ? { color: patch.color } : {}),
+              }
+            : label,
+        ),
+      }));
+    },
+    [writeActiveBoard],
+  );
+
+  const deleteLabel = useCallback(
+    (id: string) => {
+      writeActiveBoard((board) => ({
+        ...board,
+        labels: resolveBoardLabels(board).filter((label) => label.id !== id),
+        lists: stripLabelFromBoardLists(board.lists, id),
+      }));
+    },
+    [writeActiveBoard],
+  );
+
+  // ---- Member directory CRUD (board-scoped) ------------------------------
+  const createMember = useCallback(
+    (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      writeActiveBoard((board) => {
+        const current = resolveBoardMembers(board);
+        const color =
+          BOARD_MEMBER_PALETTE[current.length % BOARD_MEMBER_PALETTE.length]!;
+        const id = `mbr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        const next: BoardMemberOption = { id, name: trimmed, color };
+        return { ...board, members: [...current, next] };
+      });
+    },
+    [writeActiveBoard],
+  );
+
+  const updateMember = useCallback(
+    (id: string, name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      writeActiveBoard((board) => ({
+        ...board,
+        members: resolveBoardMembers(board).map((member) =>
+          member.id === id ? { ...member, name: trimmed } : member,
+        ),
+      }));
+    },
+    [writeActiveBoard],
+  );
+
+  const deleteMember = useCallback(
+    (id: string) => {
+      writeActiveBoard((board) => ({
+        ...board,
+        members: resolveBoardMembers(board).filter((member) => member.id !== id),
+        lists: stripMemberFromBoardLists(board.lists, id),
+      }));
+    },
+    [writeActiveBoard],
   );
 
   // ---- Filter state (row #10: persisted per board) ----------------------
@@ -903,6 +999,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                     cardMenu={cardMenu}
                     setCardMenu={setCardMenu}
                     onOpenCard={openCard}
+                    labelCatalog={labelCatalog}
+                    memberCatalog={memberCatalog}
                   />
               )}
               {activeView === "table" && (
@@ -911,6 +1009,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                   lang={lang}
                   updateCard={updateCard}
                   onOpenCard={(card, listId) => openCard(card.id, listId)}
+                  labelCatalog={labelCatalog}
+                  memberCatalog={memberCatalog}
                 />
               )}
               {activeView === "calendar" && (
@@ -922,7 +1022,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                 />
               )}
               {activeView === "dashboard" && (
-                <BoardDashboardView lists={filteredLists} lang={lang} />
+                <BoardDashboardView
+                  lists={filteredLists}
+                  lang={lang}
+                  labelCatalog={labelCatalog}
+                />
               )}
               {activeView === "timeline" && (
                 <TimelineView
@@ -1025,6 +1129,14 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           listName={resolveListName(activeCardContext.list, lang)}
           lang={lang}
           taskLinkStatus={activeTaskLinkStatus}
+          labelCatalog={labelCatalog}
+          memberCatalog={memberCatalog}
+          onCreateLabel={createLabel}
+          onUpdateLabel={updateLabel}
+          onDeleteLabel={deleteLabel}
+          onCreateMember={createMember}
+          onUpdateMember={updateMember}
+          onDeleteMember={deleteMember}
           onCreateLinkedTask={createLinkedTask}
           onUnlinkTask={unlinkActiveCardTask}
           onPatchCard={patchActiveCard}

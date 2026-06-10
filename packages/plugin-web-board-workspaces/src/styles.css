@@ -875,14 +875,117 @@
   background: color-mix(in oklch, var(--accent) 12%, var(--bg-panel));
   border-color: var(--accent);
 }
+.cd-member-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-right: 10px;
+}
 .cd-member-choice .bc-member {
-  min-width: 54px;
+  width: 22px;
   height: 22px;
-  padding: 0 8px;
   border-radius: var(--r-pill);
   color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+}
+.cd-member-name {
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+}
+
+/* ---- Priority selector ---- */
+.cd-priority-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cd-priority-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--r-pill);
+  background: var(--bg-panel);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.cd-priority-choice.active {
+  background: var(--bg-panel);
+  font-weight: 700;
+}
+.cd-priority-none.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cd-priority-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--r-pill);
+  flex: 0 0 9px;
+}
+
+/* ---- Label / member manager ---- */
+.cd-link-btn {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
   font-size: var(--fs-xs);
   font-weight: 700;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.cd-link-btn:hover { text-decoration: underline; }
+.cd-catalog-editor {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel-2);
+}
+.cd-catalog-row,
+.cd-catalog-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cd-catalog-new {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-1);
+}
+.cd-swatch {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: var(--r-pill);
+  border: 2px solid var(--bg-panel);
+  box-shadow: 0 0 0 1px var(--border-1);
+  cursor: pointer;
+  padding: 0;
+}
+.cd-swatch-ghost {
+  background: repeating-linear-gradient(45deg, var(--border-1) 0 3px, transparent 3px 6px);
+  cursor: default;
+}
+.cd-catalog-name {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
 }
 .cd-date-grid {
   display: grid;
