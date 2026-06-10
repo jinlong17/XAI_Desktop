@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
+import { DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
@@ -1565,5 +1565,91 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
 
     fireEvent.click(screen.getByTestId("card-detail-close"));
     expect(screen.queryByTestId("card-detail-modal")).not.toBeInTheDocument();
+  });
+});
+
+// ---- BWM-CAT — Wave 1: board-scoped label/member catalogs + priority -------
+
+describe("BWM-CAT — label/member catalogs + priority", () => {
+  it("BWM-CAT-1: priority selector patches and persists card.priority; re-click clears it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBe("high");
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBeUndefined();
+  });
+
+  it("BWM-CAT-2: creating a label materializes board.labels (defaults + new) and the label is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-label-new-name"), {
+      target: { value: "Spec" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-label-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const created = board.labels?.find((l) => l.name.en === "Spec");
+    expect(created).toBeDefined();
+    expect(board.labels!.length).toBe(DEFAULT_BOARD_LABELS.length + 1);
+
+    fireEvent.click(screen.getByTestId(`card-detail-label-${created!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").labels).toContain(created!.id);
+  });
+
+  it("BWM-CAT-3: deleting a label removes it from the catalog AND strips it from cards", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(getStoredCard("bc1").labels ?? []).toContain("l1");
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.click(screen.getByTestId("card-detail-label-delete-l1"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.labels!.some((l) => l.id === "l1")).toBe(false);
+    expect(getStoredCard("bc1").labels ?? []).not.toContain("l1");
+  });
+
+  it("BWM-CAT-4: creating a member persists to board.members and the member is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-new-name"), {
+      target: { value: "Dave" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-member-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const dave = board.members?.find((m) => m.name === "Dave");
+    expect(dave).toBeDefined();
+
+    fireEvent.click(screen.getByTestId(`card-detail-member-${dave!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").members).toContain(dave!.id);
+  });
+
+  it("BWM-CAT-5: renaming a member persists the new name in the board directory", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-name-u1"), {
+      target: { value: "Alicia" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.members!.find((m) => m.id === "u1")!.name).toBe("Alicia");
   });
 });
