@@ -144,6 +144,15 @@
   max-width: 100%;
 }
 
+/* Resolved labels carry their catalog color as an inline background; force
+   legible light text and a soft ring so they read as real, colored chips
+   instead of the raw-id gray pills they used to be. */
+.bc-label.is-resolved {
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
 .bc-label-text {
   white-space: nowrap;
   overflow: hidden;
@@ -226,6 +235,26 @@
 .bc-due.today      { background: var(--accent-soft); color: var(--accent-ink); }
 .bc-due.late       { background: var(--red-soft);    color: var(--red); }
 .bc-checklist.done { background: var(--accent-soft); color: var(--accent-ink); }
+
+.bc-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px 2px 5px;
+  border-radius: 999px;
+  background: color-mix(in oklch, currentColor 12%, transparent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+.bc-priority-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: 0 0 7px;
+}
 
 .bc-member {
   width: 20px;
