@@ -14,6 +14,8 @@
     "sync:self-test": "pnpm run build:web:self-test && cap sync",
     "sync:ios": "pnpm run build:web && cap sync ios",
     "sync:ios:self-test": "pnpm run build:web:self-test && cap sync ios",
+    "verify:ios": "node ../../scripts/mobile/verify-ios.mjs",
+    "verify:ios:self-test": "node ../../scripts/mobile/verify-ios.mjs --self-test",
     "sync:android": "pnpm run build:web && cap sync android",
     "sync:android:self-test": "pnpm run build:web:self-test && cap sync android",
     "open:ios": "pnpm run sync:ios && cap open ios",

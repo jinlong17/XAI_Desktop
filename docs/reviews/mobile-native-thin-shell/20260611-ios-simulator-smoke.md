@@ -3,7 +3,7 @@
 Date: 2026-06-11
 Branch: `codex/mobile/native-thin-shell-mvp`
 Scope: `apps/mobile/ios`
-Verdict: BLOCKED_ENVIRONMENT
+Verdict: PARTIAL_BUILD_PASS_BOOT_REQUIRED
 
 ## What Passed
 
@@ -14,45 +14,57 @@ Verdict: BLOCKED_ENVIRONMENT
   - `@capacitor/core: 8.4.0`
   - `@capacitor/ios: 8.4.0`
   - `@capacitor/android: 8.4.0`
+- `pnpm --filter @repo/mobile run verify:ios:self-test -- --allow-blocked` completed the repeatable iOS self-test runner through native build:
+  - selected Xcode developer directory: `/Applications/Xcode.app/Contents/Developer`
+  - Xcode: `26.5` / build `17F42`
+  - selected simulator destination: `iPhone 17 Pro`
+  - Web self-test sync passed before native build
+  - `xcodebuild` Debug simulator build succeeded
+  - app bundle produced at `apps/mobile/ios/DerivedData/Build/Products/Debug-iphonesimulator/App.app`
 
-## Blocker
+## Remaining Manual Gate
 
-The machine does not currently have a full Xcode developer directory selected, and `simctl` is unavailable.
+No iPhone Simulator was booted during the run, so install + launch verification was intentionally skipped.
+
+Current status:
+
+```text
+STATUS: PARTIAL_BUILD_PASS_BOOT_REQUIRED
+```
+
+This is no longer an Xcode environment blocker. It means the native iOS build is green, but a booted simulator is still required to prove the WebView launches and is not blank.
+
+## Reproduction Command
 
 Commands:
 
 ```bash
-xcodebuild -version
-xcrun simctl list devices available
-xcode-select -p
-ls -1 /Applications | rg '^Xcode' || true
+pnpm --filter @repo/mobile run verify:ios:self-test -- --allow-blocked
 ```
 
 Observed:
 
 ```text
-xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
-xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
-/Library/Developer/CommandLineTools
+xcode-select: /Applications/Xcode.app/Contents/Developer
+Xcode 26.5
+Build version 17F42
+selected simulator: iPhone 17 Pro
+launch: skipped until the user boots an iPhone simulator.
+** BUILD SUCCEEDED **
+STATUS: PARTIAL_BUILD_PASS_BOOT_REQUIRED
 ```
-
-No `Xcode*.app` entry was found under `/Applications`.
 
 ## Unlock Criteria
 
-Install Xcode, then select it:
+Boot an iPhone Simulator, then rerun the same self-test runner:
 
 ```bash
-sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-sudo xcodebuild -license accept
-xcodebuild -downloadPlatform iOS
+open -a Simulator
+pnpm --filter @repo/mobile run verify:ios:self-test -- --skip-sync
 ```
 
-Then rerun:
+PASS requires:
 
-```bash
-pnpm --filter @repo/mobile sync:self-test
-xcodebuild -project apps/mobile/ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build
-```
-
-PASS requires the simulator build to succeed and the app to launch without a blank WebView.
+- `xcrun simctl install` succeeds against the booted iPhone Simulator.
+- `xcrun simctl launch` succeeds for bundle id `com.jinlong.xai.mobile`.
+- The app renders the mock-auth Web UI without a blank WebView.
