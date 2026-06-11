@@ -16,8 +16,8 @@
 | Suggested Next | — |
 | Automation Mode | D-Codex+Cursor |
 | Verify Cross-vendor | no |
-| Executor | ship (claude-sonnet-4-6) |
-| Updated | 2026-05-19 20:30 |
+| Executor | parent-session release-readiness repair (Codex, gpt-5.4) |
+| Updated | 2026-05-29 11:40 |
 | Blockers | none |
 
 ## Phase Plan
@@ -96,8 +96,8 @@
 - **R-6 (Low)**: new E11xx variants must not disturb existing E1000/E3xxx
   serde/Display contract → additive-only + regression test.
 
-### Documented follow-ups (NOT ship blockers — re-surface when #10 ships)
-- D-1: signed-build ACL cross-process rejection (gated by `apple-developer-account` #10)
+### Documented follow-ups (NOT repo-side ship blockers — re-surface when #10 ships)
+- D-1: signed-build Data Protection ACL cross-process rejection (gated by `apple-developer-account` #10)
 - D-2: MAS-sandbox `keychain-access-group` entitlement behavior (gated by #10)
 
 ## Review Notes
@@ -125,7 +125,16 @@ Code-boundary & contract conformance:
 
 Commits reviewed: acd3126 (Phase 1+2), 3a208d4 (Phase 3), 04d69d7 (Phase 4), 741294a (Phase 5 docs). Each single-intent, within phase boundary.
 
-Residual risks (non-blocking): D-1 signed-build ACL cross-process rejection + D-2 MAS-sandbox keychain-access-group — both gated by `apple-developer-account` (#10); re-surface AC-7/AC-8/AC-12 + T-I4 on real signed hardware when #10 ships. Cosmetic: declare `keychain-it` feature in `Cargo.toml` to silence unknown-cfg warning (optional polish, not required for ship).
+Residual risks (non-blocking): D-1 signed-build Data Protection ACL cross-process rejection + D-2 MAS-sandbox keychain-access-group — both gated by `apple-developer-account` (#10); re-surface AC-8/T-I4 on real signed hardware when #10 ships.
+
+**Release-readiness repair (Codex, gpt-5.4) — 2026-05-29 11:40 — Verdict: PASS for unsigned dev/debug runtime, production-signing ACL deferred**
+
+The previous `SecAccessControl`/Data Protection Keychain path failed a real macOS ignored smoke from an unsigned dev/debug process with OSStatus -34018. The runtime bridge now uses namespaced generic-password items and explicitly sets `kSecAttrSynchronizable=false` on set/get/delete. This keeps local-first DB startup working and keeps secrets out of iCloud Keychain. Signed Data Protection ACL / bundle-identity rejection is now documented as a production Apple-signing/notarization gate rather than a repo-side runtime requirement.
+
+Evidence:
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto database::tests::keychain_database_kek_roundtrip_uses_32_byte_secret -- --ignored --nocapture`: PASS.
+- `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml --features crypto --lib -- --nocapture`: PASS (157 passed, 1 ignored).
+- `pnpm --filter desktop build` and `pnpm --filter desktop build:dmg`: PASS; the DMG-launched app created `app-config.json` plus encrypted `xai-repo-v0.db`, and plain `sqlite3` rejected the DB with `file is not a database`.
 
 ## Iterations
 
@@ -142,3 +151,4 @@ Residual risks (non-blocking): D-1 signed-build ACL cross-process rejection + D-
 | 2026-05-19 19:00 | feature-auto-build (claude-sonnet-4-6) | Phase 5: Docs sync — api.md §4 capability identifier frozen (plugin-account-keychain); §6 OQ-1+OQ-2 closed. test.md header updated (implementation complete, real-hardware gates deferred). PLUGIN_MAP.md @repo/core-data row updated with Phase 4 Keychain bridge note. Acceptance sweep: AC-1/2/3/4/5/6/9/10/11 PASS (unattended). AC-7/8/12 DEFERRED to feature-verify (real-hardware gates). Status → READY_FOR_VERIFY. | (see next commit) | feature-verify |
 | 2026-05-19 20:15 | feature-verify (claude-opus-4-7) | Independently re-ran cargo test --lib (11/11), core-data Vitest (27/27), cargo check + tsc clean. Verified boundary: red-line #4 grep clean (no @tauri-apps/api import), window.rs/default.json 0-line diff, error.rs additive-only, invoke_handler scoped, commit convention OK. AC-1/2/3/4/5/6/9/10/11 PASS; AC-7/8/12 legitimately deferred to #10 (D-1/D-2, non-blocking). Verdict PASS → READY_TO_SHIP. | acd3126, 3a208d4, 04d69d7, 741294a | ship |
 | 2026-05-19 20:30 | ship (claude-sonnet-4-6) | Workflow guard passed (Status=READY_TO_SHIP). Committed dev_log.md SHIPPED update. Pushed branch refactor/microkernel-plugin-architecture to origin. Keychain-bridge commits: acd3126 (Phase 1+2), 3a208d4 (Phase 3), 04d69d7 (Phase 4), 741294a (Phase 5 docs). Status → SHIPPED. | (this commit) | — |
+| 2026-05-29 11:40 | parent-session release-readiness repair (Codex, gpt-5.4) | Replaced the unsigned-dev runtime path with local non-synchronizable generic-password Keychain items after the `SecAccessControl` path failed real smoke with OSStatus -34018. Updated design/api/test docs so signed Data Protection ACL is a production-signing gate, not a false repo-side PASS. | pending | release-readiness-review |

@@ -268,7 +268,7 @@ Per test.md §6: open `/app/dashboard` in Safari 17+ / Chrome / Firefox and visu
 
 `pnpm --filter @repo/web lint` reports 3 PRE-EXISTING warnings in `apps/web/src/pages/TokensSmokePage.tsx` (lines 71 + 73 — turbo undeclared `DEV` env var + react-hooks/rules-of-hooks conditional `useState`). These were introduced in W1.P3 commit `6c556e6` and are NOT my changes (`git diff HEAD apps/web/src/pages/TokensSmokePage.tsx` returns empty). Row #10's verify (gate 12) documented the same status. Treating as pre-existing technical debt, NOT a row #11 blocker — would be cleaned up by a dedicated TokensSmokePage refactor commit outside this row's scope.
 
-- 
+-
 - 2026-05-28 00:31:58
   Executor: bugfix-full-loop
   Action: Phase 0 INTAKE PASS — fresh-start bugfix for Audit Top-10 #9 (D-06, missing WidgetShell remove UI). Bug not previously SHIPPED (git log search returns 0 commits for Top-10 #9 / D-06 / widget remove; widgets dev_log Status=SHIPPED for prior FEATURE_DEV lineage; grid dev_log Status=SHIPPED for prior BUGFIX lineage). Automation Mode=A-Claude (provided in invocation, no picker fire). Verify Cross-vendor=yes (provided). Dispatching bug-diagnose next.

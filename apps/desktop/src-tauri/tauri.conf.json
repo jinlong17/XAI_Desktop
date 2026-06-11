@@ -4,13 +4,14 @@
   "version": "1.0.0-rc.1",
   "identifier": "com.jinlong.desktop",
   "build": {
-    "beforeDevCommand": "pnpm dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "pnpm build",
-    "frontendDist": "../dist"
+    "beforeDevCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated node ./scripts/dev-tauri-assets.mjs",
+    "devUrl": "http://localhost:3000",
+    "beforeBuildCommand": "VITE_XAI_DESKTOP_HOST=tauri VITE_WEB_AUTH_MODE=mock-authenticated node ./scripts/build-tauri-assets.mjs",
+    "frontendDist": "../../web/dist"
   },
   "app": {
     "macOSPrivateApi": true,
+    "withGlobalTauri": true,
     "windows": [
       {
         "title": "AI Smart Desktop",
@@ -19,16 +20,16 @@
         "height": 720,
         "fullscreen": false,
         "maximized": false,
-        "resizable": false,
-        "transparent": true,
-        "decorations": false,
+        "resizable": true,
+        "transparent": false,
+        "decorations": true,
         "alwaysOnTop": false,
         "visible": true,
-        "shadow": false,
-        "skipTaskbar": true,
-        "hiddenTitle": true,
-        "titleBarStyle": "Overlay",
-        "dragDropEnabled": false
+        "shadow": true,
+        "skipTaskbar": false,
+        "hiddenTitle": false,
+        "titleBarStyle": "Visible",
+        "dragDropEnabled": true
       }
     ],
     "security": {

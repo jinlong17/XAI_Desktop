@@ -31,6 +31,7 @@ export type {
   CalEventColor,
   CalEventsByDay,
 } from "./internal/sampleEvents.js";
+export { SAMPLE_EVENTS } from "./internal/sampleEvents.js";
 
 export type { MonthCellData } from "./internal/monthGridCells.js";
 
@@ -91,3 +92,13 @@ export { useCalendarCreateRequestSubscriber } from "./internal/aiCreateSubscribe
 
 // ---- AI tool layer mutate subscriber (additive — P2 xai-web-ai-tool-edit-delete) ----------
 export { useCalendarMutateRequestSubscriber } from "./internal/aiMutateSubscriber.js";
+
+// ---- Desktop App compatibility seam ----------------------------------------
+// Kept as a browser-safe projector for the native notification bridge.
+export {
+  projectDesktopCalendarReminderEntries,
+} from "./projectDesktopCalendarReminderEntries.js";
+export type {
+  DesktopCalendarReminderEntry,
+  DesktopCalendarReminderUnsupportedReason,
+} from "./projectDesktopCalendarReminderEntries.js";

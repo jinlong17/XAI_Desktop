@@ -552,4 +552,3 @@ Filter / Share / Map all run within a single React render tree. No new cross-win
 ```
 
 Exact `^1.9.x` micro pinned by the build executor at P5 install time; current latest stable is 1.9.4 (verified 2026-05).
-

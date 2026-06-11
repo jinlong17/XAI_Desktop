@@ -13,7 +13,7 @@
  */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { getPref, setPref, type TaskColsState } from "@repo/plugin-web-storage";
 import { MailWidget } from "../widgets/MailWidget.js";
 import { STR_NOTIFICATIONS } from "../internal/strings.js";
 
@@ -66,8 +66,7 @@ describe("AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (
       later: { tasks: [] },
       nodate: { tasks: [] },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setPref("xai_task_cols", taskStore as any);
+    setPref("xai_task_cols", taskStore as unknown as TaskColsState);
 
     // Seed 1 today event
     const calStore = {
@@ -90,10 +89,9 @@ describe("AC-MAIL-REAL-1: seed xai_task_cols (2 overdue) + xai_calendar_events (
 
   it("clicking notification rows deep-links to the owning module", () => {
     const goTo = vi.fn();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setPref("xai_task_cols", {
       overdue: { tasks: [{ id: "t1", title: { en: "Task A", zh: "任务A" } }] },
-    } as any);
+    } as unknown as TaskColsState);
     setPref("xai_calendar_events", {
       ev1: {
         id: "ev1",
@@ -133,8 +131,7 @@ describe("AC-MAIL-REAL-2: each row shows label + time for events; source-type vi
         recurrence: null,
       },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setPref("xai_task_cols", taskStore as any);
+    setPref("xai_task_cols", taskStore as unknown as TaskColsState);
     setPref("xai_calendar_events", calStore as unknown as Record<string, unknown>);
 
     const { container } = render(<MailWidget lang="en" now={NOW} />);
@@ -205,8 +202,7 @@ describe("AC-MAIL-REAL-4: bilingual — overdue labels in zh use title.zh; title
     const taskStore = {
       overdue: { tasks: [{ id: "t1", title: { en: "Report", zh: "报告" } }] },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setPref("xai_task_cols", taskStore as any);
+    setPref("xai_task_cols", taskStore as unknown as TaskColsState);
 
     const { container } = render(<MailWidget lang="zh" now={NOW} />);
     expect(container.textContent).toContain("报告");
@@ -247,8 +243,7 @@ describe("AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unch
       },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setPref("xai_task_cols", taskStore as any);
+    setPref("xai_task_cols", taskStore as unknown as TaskColsState);
     setPref("xai_calendar_events", calStore as unknown as Record<string, unknown>);
 
     // Snapshot BEFORE render
@@ -280,17 +275,14 @@ describe("AC-MAIL-READONLY-1: BOTH xai_task_cols + xai_calendar_events byte-unch
         recurrence: null,
       },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setPref("xai_task_cols", TASK_SENTINEL as any);
+    setPref("xai_task_cols", TASK_SENTINEL as unknown as TaskColsState);
     setPref("xai_calendar_events", CAL_SENTINEL as unknown as Record<string, unknown>);
 
     render(<MailWidget lang="en" now={NOW} />);
 
     // getPref must still return the sentinel values (not cleared/overwritten)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const taskRead = getPref("xai_task_cols") as any as typeof TASK_SENTINEL;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const calRead = getPref("xai_calendar_events") as any as typeof CAL_SENTINEL;
+    const taskRead = getPref("xai_task_cols") as unknown as typeof TASK_SENTINEL;
+    const calRead = getPref("xai_calendar_events") as unknown as typeof CAL_SENTINEL;
 
     expect(taskRead.overdue.tasks[0]!.id).toBe("sentinel-t");
     expect(calRead["sentinel-ev"]!.title).toBe("SentinelEv");

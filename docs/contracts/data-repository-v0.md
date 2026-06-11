@@ -33,8 +33,8 @@ Entity type 使用 `plugin.entity`:
 
 | Entity | syncScope 默认值 |
 |---|---|
-| `organizer.grid` | `account-sync` |
-| `organizer.item` | `account-sync` 或 `device-local`,按 path 权限决定 |
+| `organizer.grid` | `device-local` |
+| `organizer.item` | `device-local` |
 | `labels.label` | `account-sync` |
 | `productivity.todo` | `account-sync` |
 | `productivity.habit` | `account-sync` |
@@ -83,8 +83,8 @@ entity 都是 `RepoRecord` 的扩展,`entityType` 必须使用下表中固定的
 
 | Entity (TS) | `entityType` | 默认 syncScope | 关键字段 |
 |---|---|---|---|
-| `GridEntity` | `organizer.grid` | `account-sync` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
-| `GridItemEntity` | `organizer.item` | `account-sync` (file/folder/app 可能 device-local) | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
+| `GridEntity` | `organizer.grid` | `device-local` | `title`, `rect`, `itemIds`, `isLocked`, `isFolded`, `viewMode` |
+| `GridItemEntity` | `organizer.item` | `device-local` | `gridId`, `kind`, `filename`, `filepath?`, `url?` |
 | `LabelEntity` | `labels.label` | `account-sync` | `name`, `color`, `parentId?` |
 | `TodoEntity` | `productivity.todo` | `account-sync` | `title`, `done`, `labelIds`, `dueAt?`, `projectId?` |
 | `HabitEntity` | `productivity.habit` | `account-sync` | `title`, `cadence`, `completions[]`, `labelIds` |

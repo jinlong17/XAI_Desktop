@@ -17,6 +17,43 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
+import {
+  calendarProviderStateRecordId,
+  mountDesktopRepoBridge,
+  patchCalendarProviderState,
+  readCalendarProviderState,
+  readDesktopRepoError,
+  readDesktopRepoValue,
+  unmountDesktopRepoBridge,
+  writeDesktopRepoValue,
+} from "./desktopRepoBridge.js";
+import {
+  preflightDesktopReconnectSync,
+  runDesktopReconnectSyncOnce,
+  setDesktopReconnectSyncRuntimeEnabled,
+} from "./desktopReconnectSync.js";
+import {
+  getLastDesktopWebImportReport,
+  runDesktopWebDataImport,
+  scanDesktopWebImportEligibility,
+  setDesktopWebImportRuntimeEnabled,
+  type DesktopWebImportReport,
+} from "./desktopWebDataMigration.js";
+import {
+  createDesktopBackupArtifact,
+  getLastDesktopBackupReport,
+  importDesktopBackupArtifact,
+  setDesktopBackupRuntimeEnabled,
+  verifyDesktopBackupArtifact,
+  type DesktopBackupReport,
+} from "./desktopBackup.js";
+import type {
+  CalendarProviderId,
+  CalendarProviderStateEntity,
+  DesktopWebImportSurface,
+  ReconnectSyncPreflightStatus,
+  ReconnectSyncReplayResult,
+} from "@repo/core-data";
 
 // ---------------------------------------------------------------------------
 // Same-tab pub/sub bus
@@ -110,6 +147,12 @@ export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
   if (typeof window === "undefined") {
     return entry.default as WebPrefValue<K>;
   }
+
+  const repoValue = readDesktopRepoValue(key);
+  if (repoValue.hasValue) {
+    return repoValue.value as WebPrefValue<K>;
+  }
+
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(key);
@@ -194,6 +237,7 @@ export function setPref<K extends WebPrefKey>(
 
   // Publish to same-tab subscribers
   publishSameTab(key, value);
+  void writeDesktopRepoValue(key, value);
   return true;
 }
 
@@ -211,6 +255,7 @@ export function removePref<K extends WebPrefKey>(key: K): void {
   const entry = PREF_REGISTRY[key];
   // Notify same-tab subscribers that the value is back to default
   publishSameTab(key, entry.default);
+  void writeDesktopRepoValue(key, entry.default);
 }
 
 // Suppress unused variable warning for guardStorage
@@ -287,6 +332,11 @@ export function getPrefAutosave<T>(
   }
 
   const key = `xai_pref_${suffix}`;
+  const repoValue = readDesktopRepoValue(key);
+  if (repoValue.hasValue) {
+    return repoValue.value as T;
+  }
+
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(key);
@@ -390,6 +440,7 @@ export function setPrefAutosave<T>(
   }
 
   publishSameTab(key, value);
+  void writeDesktopRepoValue(key, value);
   return true;
 }
 
@@ -410,4 +461,349 @@ export function removePrefAutosave(suffix: string): void {
     return;
   }
   publishSameTab(key, undefined);
+  void writeDesktopRepoValue(key, null);
+}
+
+export function getDesktopLocalFirstCalendarProviderStateKey(
+  providerId: CalendarProviderId,
+): string {
+  return calendarProviderStateRecordId(providerId);
+}
+
+export function getDesktopLocalFirstCalendarProviderState(
+  providerId: CalendarProviderId,
+): CalendarProviderStateEntity | null {
+  return readCalendarProviderState(providerId);
+}
+
+export function patchDesktopLocalFirstCalendarProviderState(
+  providerId: CalendarProviderId,
+  patch: {
+    connectionState?: CalendarProviderStateEntity["connectionState"];
+    availability?: CalendarProviderStateEntity["availability"];
+    lastAttemptAt?: string;
+    lastSuccessAt?: string;
+    lastFailureCode?: string;
+    lastFailureMessage?: string;
+    needsReconnectRefresh?: boolean;
+  },
+): Promise<CalendarProviderStateEntity | null> {
+  return patchCalendarProviderState(providerId, patch);
+}
+
+export interface DesktopCalendarProviderReconnectFailure {
+  providerId: CalendarProviderId;
+  code: string;
+  message: string;
+}
+
+export interface DesktopCalendarProviderReconnectResult {
+  preflight: ReconnectSyncPreflightStatus;
+  attemptedProviders: CalendarProviderId[];
+  reconciledProviders: CalendarProviderId[];
+  deferredProviders: CalendarProviderId[];
+  failures: DesktopCalendarProviderReconnectFailure[];
+}
+
+type CalendarTransportResult =
+  | {
+      outcome: "reconciled";
+    }
+  | {
+      outcome: "deferred" | "failed";
+      code: string;
+      message: string;
+      availability?: CalendarProviderStateEntity["availability"];
+    };
+
+type CalendarReconnectTransport = {
+  reconcileProvider: (
+    providerId: CalendarProviderId,
+  ) => Promise<CalendarTransportResult>;
+};
+
+function defaultProviderIds(
+  providerIds: readonly CalendarProviderId[] | undefined,
+): CalendarProviderId[] {
+  if (!providerIds || providerIds.length === 0) {
+    return ["gcal"];
+  }
+  return Array.from(new Set(providerIds));
+}
+
+function availabilityFromPreflight(
+  preflight: ReconnectSyncPreflightStatus,
+): CalendarProviderStateEntity["availability"] {
+  if (preflight === "network_unavailable") {
+    return "offline";
+  }
+  if (preflight === "account_required") {
+    return "auth-required";
+  }
+  if (
+    preflight === "device_required" ||
+    preflight === "transport_unavailable"
+  ) {
+    return "transport-unavailable";
+  }
+  return "ready";
+}
+
+function resolveCalendarReconnectTransport():
+  | CalendarReconnectTransport
+  | undefined {
+  const runtime = globalThis as typeof globalThis & {
+    __XAI_DESKTOP_CALENDAR_SYNC_TRANSPORT__?: CalendarReconnectTransport;
+  };
+  return runtime.__XAI_DESKTOP_CALENDAR_SYNC_TRANSPORT__;
+}
+
+const DESKTOP_WEB_IMPORT_REPORT_EVENT = "xai:web:desktop-import-report";
+const DESKTOP_BACKUP_REPORT_EVENT = "xai:web:desktop-backup-report";
+
+function publishDesktopWebImportReport(report: DesktopWebImportReport): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.dispatchEvent(
+    new CustomEvent(DESKTOP_WEB_IMPORT_REPORT_EVENT, {
+      detail: report,
+    }),
+  );
+}
+
+function publishDesktopBackupReport(report: DesktopBackupReport): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.dispatchEvent(
+    new CustomEvent(DESKTOP_BACKUP_REPORT_EVENT, {
+      detail: report,
+    }),
+  );
+}
+
+export function mountDesktopLocalFirstRepositoryBridge(enabled: boolean): void {
+  setDesktopWebImportRuntimeEnabled(enabled);
+  setDesktopReconnectSyncRuntimeEnabled(enabled);
+  setDesktopBackupRuntimeEnabled(enabled);
+  if (!enabled) {
+    unmountDesktopRepoBridge();
+    return;
+  }
+
+  mountDesktopRepoBridge({
+    enabled,
+    publish: publishSameTab,
+  });
+
+  const bridgeError = readDesktopRepoError("bridge");
+  if (bridgeError) {
+    console.warn(
+      `[plugin-web-storage] desktop repository bridge degraded: ${bridgeError.kind} (${bridgeError.message})`,
+    );
+  }
+
+  void scanDesktopWebImportEligibility().then((report) => {
+    publishDesktopWebImportReport(report);
+  });
+}
+
+export async function runDesktopLocalFirstWebDataImport(input?: {
+  boundaryKey?: string;
+  surfaces?: readonly DesktopWebImportSurface[];
+  allowBoundaryOverride?: boolean;
+}): Promise<DesktopWebImportReport> {
+  const report = await runDesktopWebDataImport(input);
+  publishDesktopWebImportReport(report);
+  return report;
+}
+
+export function getDesktopLocalFirstWebDataImportReport():
+  | DesktopWebImportReport
+  | null {
+  return getLastDesktopWebImportReport();
+}
+
+export function getDesktopLocalFirstWebDataImportReportEventName(): string {
+  return DESKTOP_WEB_IMPORT_REPORT_EVENT;
+}
+
+export async function createDesktopLocalFirstBackupArtifact(input?: {
+  destinationPath?: string;
+}): Promise<DesktopBackupReport> {
+  const report = await createDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export async function verifyDesktopLocalFirstBackupArtifact(input: {
+  path: string;
+}): Promise<DesktopBackupReport> {
+  const report = await verifyDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export async function importDesktopLocalFirstBackupArtifact(input: {
+  path: string;
+  apply?: boolean;
+}): Promise<DesktopBackupReport> {
+  const report = await importDesktopBackupArtifact(input);
+  publishDesktopBackupReport(report);
+  return report;
+}
+
+export function getDesktopLocalFirstBackupReport(): DesktopBackupReport | null {
+  return getLastDesktopBackupReport();
+}
+
+export function getDesktopLocalFirstBackupReportEventName(): string {
+  return DESKTOP_BACKUP_REPORT_EVENT;
+}
+
+export function getDesktopLocalFirstReconnectSyncPreflight():
+  Promise<ReconnectSyncPreflightStatus> {
+  return preflightDesktopReconnectSync();
+}
+
+export async function runDesktopLocalFirstCalendarProviderReconnect(input?: {
+  providerIds?: readonly CalendarProviderId[];
+}): Promise<DesktopCalendarProviderReconnectResult> {
+  const providerIds = defaultProviderIds(input?.providerIds);
+  const preflight = await preflightDesktopReconnectSync();
+  const attemptedProviders: CalendarProviderId[] = [];
+  const reconciledProviders: CalendarProviderId[] = [];
+  const deferredProviders: CalendarProviderId[] = [];
+  const failures: DesktopCalendarProviderReconnectFailure[] = [];
+
+  const isPreflightEligible =
+    preflight === "ready" || preflight === "queue_empty";
+  if (!isPreflightEligible) {
+    const availability = availabilityFromPreflight(preflight);
+    for (const providerId of providerIds) {
+      deferredProviders.push(providerId);
+      failures.push({
+        providerId,
+        code: preflight,
+        message: `Reconnect preflight is ${preflight}.`,
+      });
+      await patchCalendarProviderState(providerId, {
+        availability,
+        needsReconnectRefresh: true,
+        lastFailureCode: preflight,
+        lastFailureMessage: `Reconnect preflight is ${preflight}.`,
+      });
+    }
+    return {
+      preflight,
+      attemptedProviders,
+      reconciledProviders,
+      deferredProviders,
+      failures,
+    };
+  }
+
+  const transport = resolveCalendarReconnectTransport();
+  if (!transport?.reconcileProvider) {
+    for (const providerId of providerIds) {
+      deferredProviders.push(providerId);
+      failures.push({
+        providerId,
+        code: "calendar_transport_unavailable",
+        message: "Calendar reconnect transport is unavailable.",
+      });
+      await patchCalendarProviderState(providerId, {
+        availability: "transport-unavailable",
+        needsReconnectRefresh: true,
+        lastFailureCode: "calendar_transport_unavailable",
+        lastFailureMessage: "Calendar reconnect transport is unavailable.",
+      });
+    }
+    return {
+      preflight,
+      attemptedProviders,
+      reconciledProviders,
+      deferredProviders,
+      failures,
+    };
+  }
+
+  for (const providerId of providerIds) {
+    const currentState = readCalendarProviderState(providerId);
+    const connectedByPref =
+      providerId === "gcal"
+        ? getPref("xai_pref_integrations_connected_gcal") === true
+        : false;
+    const shouldAttempt =
+      currentState?.connectionState === "connected" ||
+      currentState?.needsReconnectRefresh === true ||
+      connectedByPref;
+    if (!shouldAttempt) {
+      deferredProviders.push(providerId);
+      continue;
+    }
+
+    attemptedProviders.push(providerId);
+    const attemptAt = new Date().toISOString();
+    await patchCalendarProviderState(providerId, {
+      lastAttemptAt: attemptAt,
+      connectionState: "connected",
+    });
+
+    try {
+      const outcome = await transport.reconcileProvider(providerId);
+      if (outcome.outcome === "reconciled") {
+        await patchCalendarProviderState(providerId, {
+          availability: "ready",
+          needsReconnectRefresh: false,
+          lastSuccessAt: attemptAt,
+          lastFailureCode: undefined,
+          lastFailureMessage: undefined,
+        });
+        reconciledProviders.push(providerId);
+      } else {
+        await patchCalendarProviderState(providerId, {
+          availability: outcome.availability ?? "ready",
+          needsReconnectRefresh: true,
+          lastFailureCode: outcome.code,
+          lastFailureMessage: outcome.message,
+        });
+        deferredProviders.push(providerId);
+        failures.push({
+          providerId,
+          code: outcome.code,
+          message: outcome.message,
+        });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      await patchCalendarProviderState(providerId, {
+        availability: "transport-unavailable",
+        needsReconnectRefresh: true,
+        lastFailureCode: "calendar_transport_error",
+        lastFailureMessage: message,
+      });
+      deferredProviders.push(providerId);
+      failures.push({
+        providerId,
+        code: "calendar_transport_error",
+        message,
+      });
+    }
+  }
+
+  return {
+    preflight,
+    attemptedProviders,
+    reconciledProviders,
+    deferredProviders,
+    failures,
+  };
+}
+
+export function runDesktopLocalFirstReconnectSync(input?: {
+  limit?: number;
+}): Promise<ReconnectSyncReplayResult> {
+  return runDesktopReconnectSyncOnce(input);
 }

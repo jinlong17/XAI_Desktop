@@ -38,6 +38,21 @@ export {
   getPref,
   setPref,
   removePref,
+  getDesktopLocalFirstCalendarProviderState,
+  getDesktopLocalFirstCalendarProviderStateKey,
+  patchDesktopLocalFirstCalendarProviderState,
+  mountDesktopLocalFirstRepositoryBridge,
+  getDesktopLocalFirstReconnectSyncPreflight,
+  runDesktopLocalFirstCalendarProviderReconnect,
+  runDesktopLocalFirstWebDataImport,
+  createDesktopLocalFirstBackupArtifact,
+  verifyDesktopLocalFirstBackupArtifact,
+  importDesktopLocalFirstBackupArtifact,
+  getDesktopLocalFirstBackupReport,
+  getDesktopLocalFirstBackupReportEventName,
+  runDesktopLocalFirstReconnectSync,
+  getDesktopLocalFirstWebDataImportReport,
+  getDesktopLocalFirstWebDataImportReportEventName,
   isPrefKey,
   // Open-ended xai_pref_* family — typed read/write/remove (mirrors usePrefAutosave).
   getPrefAutosave,
@@ -47,11 +62,20 @@ export {
 export type {
   GetPrefAutosaveOptions,
   SetPrefAutosaveOptions,
+  DesktopCalendarProviderReconnectFailure,
+  DesktopCalendarProviderReconnectResult,
 } from "./internal/storage.js";
+export type { DesktopWebImportReport } from "./internal/desktopWebDataMigration.js";
+export type { DesktopBackupReport } from "./internal/desktopBackup.js";
+export type {
+  CalendarProviderId,
+  CalendarProviderStateEntity,
+} from "@repo/core-data";
 
 // ---- usePref hook ----------------------------------------------------------
 export { usePref } from "./internal/usePref.js";
 export type { PrefMeta } from "./internal/usePref.js";
+export { useDesktopLocalFirstCalendarProviderState } from "./internal/useDesktopLocalFirstCalendarProviderState.js";
 
 // ---- usePrefAutosave hook --------------------------------------------------
 export { usePrefAutosave } from "./internal/usePrefAutosave.js";

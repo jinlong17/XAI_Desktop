@@ -62,6 +62,9 @@ describe("enqueueOutboxEntry", () => {
       targetEntityType: "productivity.todo",
       targetEntityId: "todo-1",
       op: "put",
+      queueStatus: "replay_deferred",
+      boundaryKey: "local-session",
+      localRevision: 1,
     });
     expect(isOutboxId(entry.id)).toBe(true);
     expect(entry.id.startsWith(OUTBOX_ID_PREFIX)).toBe(true);
@@ -181,6 +184,60 @@ describe("enqueueOutboxEntry", () => {
     ).rejects.toThrow(/E3009/);
   });
 
+  it("rejects unsupported queue status", async () => {
+    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+      namespace: "productivity.todos",
+    });
+    await expect(
+      enqueueOutboxEntry({
+        entityRepo: repo,
+        entity: todoFixture("todo-invalid-status"),
+        op: "put",
+        payload: "ENC",
+        mutationId: "mut-invalid-status",
+        queueStatus: "invalid" as never,
+        nextCommitSeq: createMockCommitSeqAuthority(),
+      }),
+    ).rejects.toThrow(/E3011/);
+  });
+
+  it("rejects invalid local revision", async () => {
+    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+      namespace: "productivity.todos",
+    });
+    await expect(
+      enqueueOutboxEntry({
+        entityRepo: repo,
+        entity: todoFixture("todo-invalid-local-rev"),
+        op: "put",
+        payload: "ENC",
+        mutationId: "mut-invalid-local-rev",
+        localRevision: 0,
+        nextCommitSeq: createMockCommitSeqAuthority(),
+      }),
+    ).rejects.toThrow(/E3012/);
+  });
+
+  it("requires rollback safety expectedEntityUpdatedAt when rollbackSafety is provided", async () => {
+    const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
+      namespace: "productivity.todos",
+    });
+    await expect(
+      enqueueOutboxEntry({
+        entityRepo: repo,
+        entity: todoFixture("todo-invalid-rollback"),
+        op: "put",
+        payload: "ENC",
+        mutationId: "mut-invalid-rollback",
+        rollbackSafety: {
+          expectedEntityUpdatedAt: " ",
+          previousEntityExisted: false,
+        },
+        nextCommitSeq: createMockCommitSeqAuthority(),
+      }),
+    ).rejects.toThrow(/E3013/);
+  });
+
   it("orders the batch by commitSeq", async () => {
     const repo = createInMemoryRepo<TodoEntity | OutboxEntry>({
       namespace: "productivity.todos",
@@ -232,9 +289,21 @@ describe("enqueueOutboxEntry", () => {
       op: "delete",
       payload: "ENC(del)",
       mutationId: "mut-d",
+      queueStatus: "queued",
+      boundaryKey: "user-a",
+      localRevision: 44,
+      rollbackSafety: {
+        expectedEntityUpdatedAt: entity.updatedAt,
+        previousEntityExisted: true,
+        previousEntityPayload: JSON.stringify(entity),
+      },
       nextCommitSeq,
     });
     expect(entry.op).toBe("delete");
+    expect(entry.queueStatus).toBe("queued");
+    expect(entry.boundaryKey).toBe("user-a");
+    expect(entry.localRevision).toBe(44);
+    expect(entry.rollbackSafety?.previousEntityExisted).toBe(true);
     await expect(repo.get("todo-1")).resolves.toBeUndefined();
   });
 });

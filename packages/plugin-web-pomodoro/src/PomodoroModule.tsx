@@ -39,6 +39,27 @@ export interface PomodoroModuleProps {
   lang: Lang;
 }
 
+const DESKTOP_ACTION_PARAM = "desktopAction";
+const DESKTOP_ACTION_START_FOCUS = "start-focus";
+
+export function readDesktopPomodoroAction(
+  search: string,
+): "start-focus" | null {
+  const params = new URLSearchParams(search);
+  const action = params.get(DESKTOP_ACTION_PARAM);
+  if (action === DESKTOP_ACTION_START_FOCUS) {
+    return action;
+  }
+  return null;
+}
+
+function consumeDesktopPomodoroActionInUrl(search: string): string {
+  const params = new URLSearchParams(search);
+  params.delete(DESKTOP_ACTION_PARAM);
+  const next = params.toString();
+  return next.length > 0 ? `?${next}` : "";
+}
+
 const DISPLAY_STYLE_IDS = [
   "digital",
   "ring",
@@ -506,6 +527,31 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const displayStyleLabel = label(lang, DISPLAY_STYLE_LABELS[displayStyle]);
   const soundLabel =
     SOUND_CHOICES.find((sound) => sound.id === soundId)?.label ?? SOUND_CHOICES[0]!.label;
+  const desktopActionSearch = typeof window === "undefined" ? "" : window.location.search;
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const action = readDesktopPomodoroAction(desktopActionSearch);
+    if (action !== DESKTOP_ACTION_START_FOCUS) {
+      return;
+    }
+
+    if (timerState.kind === "idle") {
+      start();
+    } else if (timerState.kind === "paused") {
+      resume();
+    }
+
+    const nextSearch = consumeDesktopPomodoroActionInUrl(window.location.search);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
+    if (currentUrl !== nextUrl) {
+      window.history.replaceState({}, "", nextUrl);
+    }
+  }, [desktopActionSearch, resume, start, timerState.kind]);
 
   return (
     <div

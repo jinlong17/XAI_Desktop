@@ -1,5 +1,4 @@
 import type {
-  ConflictShadowInput,
   PushDatabase,
   PushRecordResult,
   StoredBlob,
@@ -245,9 +244,9 @@ export async function createPostgresSyncDatabase(
 }
 
 async function loadPostgres(): Promise<PostgresFactory> {
-  // @ts-ignore Deno resolves the remote postgresjs module at deploy time.
-  const module = await import('https://deno.land/x/postgresjs@v3.4.5/mod.js');
-  return module.default as unknown as PostgresFactory;
+  // @ts-expect-error Deno resolves the remote postgresjs module at deploy time.
+  const postgresModule = await import('https://deno.land/x/postgresjs@v3.4.5/mod.js');
+  return postgresModule.default as unknown as PostgresFactory;
 }
 
 function coercePushRecordResult(input: unknown): PushRecordResult {

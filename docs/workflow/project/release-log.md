@@ -4,7 +4,128 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-07
+
+### Desktop Plugin Center Mac App-Contained Shape
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local working tree
+- User-visible change: 无运行时功能变更。产品文档现在明确 Plugin Center 是 Mac App 内的 `桌面插件` 管理 surface，可用独立原生窗口承载，但不是独立 App / 独立产品线。
+- Developer/system delta: 同步 `MODULE_BOUNDARIES`、Plugin PRD、Plugin SDK、Product Module Map、module-classification registry、Phase 1 execution route 和 dashboard-state，统一“入口 / 窗口容器归 App，目录 / AddToDesktop / PluginInstance contract 归 plugin”的边界。
+- Verification: docs-only；`node -e "JSON.parse(...)"` passed for `docs/workflow/project/module-classification.json` and `docs/workflow/project/dashboard-state.json`；targeted grep confirmed the Mac App-contained Plugin Center decision is present across the updated docs；`git diff --check` passed.
+- Risk / follow-up: 后续 UI/UX 可继续把入口收敛到 Mac App 控制面板或 sheet；本次不改变当前 Plugin Center window 实现，不声明 host smoke PASS。
+
+## 2026-06-06
+
+### Desktop Plugin Center Frame Normalization Smoke
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / this commit
+- User-visible change: Plugin Center 通过 macOS 原生菜单打开后会回到主窗口所在显示器内，不再因为物理像素 frame 污染跑到屏幕外。
+- Developer/system delta: Plugin Center frame 捕获现在按 window scale factor 转 logical coordinates；create / focus / get / set 都会按主窗口显示器归一化 frame；新增 off-screen frame recovery 测试和 Phase 2 host smoke PARTIAL 结果文档。
+- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed；manual smoke confirmed `Desktop Plugins > Open Plugin Center` creates `XAI Plugin Center` with CoreGraphics bounds `X=0,Y=33,Width=1512,Height=888`; hostMode native toggle was verified and restored to `normal`; locked-screen recheck confirmed the Plugin Center route initialized `xai_plugin_instances_v1` in WebKit localStorage.
+- Risk / follow-up: 当前显示面被 macOS lock/screen-saver 遮挡，无法视觉确认 Plugin Center 内容；smoke verdict remains `PARTIAL`, not `PASS`. Sample widget add-to-desktop、restart restore、native behavior matrix仍未完成。
+
+### Desktop Plugin Host Sub-Bundle Routing
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center、grid、control、console 这些桌面插件宿主窗口现在从 `.app` 内的 `/desktop-host/index.html#/...` 子 bundle 加载，不再误走主 Web router。
+- Developer/system delta: 保留 Tauri 主窗口 `frontendDist = ../../web/dist` 合同；新增 desktop asset build/dev 脚本，先构建并校验 Web bundle，再把 `apps/desktop` React host 以相对 base 输出到 `apps/web/dist/desktop-host` 或 dev server 的 `apps/web/public/desktop-host`；窗口 URL 和测试同步到 desktop-host 子路径。
+- Verification: `apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` `vitest run src/__tests__/tauri-conf-build-profile.test.ts` passed（6 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_host_window_urls_target_desktop_host_bundle --features crypto` passed；Codex bundled Node running `apps/desktop/scripts/build-tauri-assets.mjs` passed and generated `apps/web/dist/desktop-host/index.html` with relative `./assets` paths；`PATH=<Codex bundled node>:$PATH cargo tauri build --debug --features crypto --bundles app` passed and produced `X Desktop.app`.
+- Risk / follow-up: 仍需前台 `.app` 手动 smoke 证明菜单点击后实际渲染 Plugin Center，且重启恢复、native behavior、sample widget 添加仍未形成完整 host smoke PASS。`desktop-host` 是 Tauri build 注入到 local `apps/web/dist` 的桌面专用子 bundle；Web 发布前必须重新跑 Web build，让 Vite 清空 dist 并重新执行 browser-safety。
+
+### Desktop Plugin Native Host Menu Entry
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: macOS 菜单新增 `Desktop Plugins`，可直接打开 / 聚焦 Plugin Center，并提供需要重启生效的 Desktop Plugin Runtime 启用 / 禁用入口。
+- Developer/system delta: 将 Plugin Center 打开 / 聚焦逻辑抽成 `AppHandle` 级 helper，原有 Webview IPC allowlist 不放宽；原生菜单新增稳定 ID、启用态测试和 `normal` / `overlay_v2` host mode 写入动作。
+- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml app_menu --features crypto` passed；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin_center --features crypto` passed；`apps/desktop` `./node_modules/.bin/tsc --noEmit` passed；`apps/web` local Vite build passed；`cargo tauri build --debug --features crypto --bundles app --config '{"build":{"beforeBuildCommand":""}}'` passed and produced `X Desktop.app`；warnings are existing dead-code warnings in unrelated desktop modules.
+- Risk / follow-up: 这只解决真实 App smoke 的原生入口，不等于完成 manual smoke；仍需在前台 `.app` 中验证菜单点击、重启后的 host mode 生效，以及 Plugin Center 内容是否由正确 frontend bundle 提供。
+
+### Desktop Plugin Phase 2 Host Smoke Typecheck Preflight
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: 无运行时功能变更。Phase 2 host smoke 前置的 desktop typecheck 阻塞已清理，后续可以在具备 `pnpm` 的真实 macOS/operator 环境继续 build/dev smoke。
+- Developer/system delta: `apps/desktop` manifest 补声明已在 `src/main.tsx` 注册的 `@repo/plugin-labels` / `@repo/plugin-productivity` workspace dependencies，并同步 `pnpm-lock.yaml`；清理 `packages/core-data/src/indexeddb-sync-blob.ts` 中阻断 desktop typecheck 的未使用导入、变量和 stale helper；更新 Phase 2 host smoke checklist 与 execution route。
+- Verification: `apps/desktop` `./node_modules/.bin/tsc --noEmit` passed after local workspace symlink refresh；`packages/core-data` `./node_modules/.bin/tsc --noEmit` passed；`packages/core-data` Vitest passed with Codex bundled Node（13 files / 141 tests）；`apps/desktop/package.json` JSON parse passed；`pnpm-lock.yaml` contains the new workspace dependency links；`git diff --check` passed.
+- Risk / follow-up: 当前 Codex shell 无全局 `pnpm`，所以 `pnpm --filter desktop build` / `pnpm --filter desktop dev` 仍未执行；真实 host smoke 仍需 operator 环境启动 App 并记录 checklist evidence。
+
+### Desktop Plugin Phase 2 Host Smoke Checklist Refresh
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: 无运行时功能变更。Phase 2 真实 host smoke gate 现在明确覆盖 Plugin Center、Sample Widget 添加、device-local store、GridWindow routing、重启恢复、通用实例动作、nativeApplied 状态和 capability denial。
+- Developer/system delta: 将 `desktop-plugin-platform-runtime` smoke checklist 从 Phase 1 fallback 版本更新为 Phase 2 gate；同步 module-classification 与 Phase 1/2 execution route，避免下个 agent 误读为 “Phase 2 common capability proof is next”。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；stale status / conflict-marker scan passed；`git diff --check` passed。
+- Risk / follow-up: 这只是 smoke gate 文档更新，不是 manual smoke evidence；真实 macOS 验证仍需在 desktop host build/run 可用后记录结果。
+
+### Desktop Plugin Phase 2 Sample Widget Host Flow
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 现在有一个可添加的内置 Sample Widget。添加后会创建 device-local `PluginInstance`、打开 grid window，并由 GridWindow 根据实例记录渲染 sample widget；`widgets` / `clipboard` / `pet` 等具体插件包仍保持 planned / paused。
+- Developer/system delta: 新增 host-local sample widget manifest 和 grid content；Plugin Center built-in catalog 将 sample widget 标记为 addable；GridWindow 读取 `xai_plugin_instances_v1` 并按 `pluginName` / `contentType` 分发到 sample widget 或 organizer fallback；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. Rust window tests not rerun because this slice changes TS host routing/catalog/docs only.
+- Risk / follow-up: 这是平台 host flow proof，不是解冻完整 `plugin-widgets` 业务包；真实 macOS smoke 仍需验证 add / restore / drag / resize / opacity / click-through / pinned / all-spaces。
+
+### Desktop Plugin Phase 2 Native Behavior Application
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 的桌面插件实例设置现在可以通过 grid window command contract 真实传递 opacity、click-through、pinned 和 all-spaces 行为；最后窗口状态会根据 Rust 回传的 `nativeApplied` 区分已应用与 fallback。
+- Developer/system delta: 扩展 `create_grid_window` / `update_grid_window` 的可选 `native` payload；Rust 侧应用 `set_ignore_cursor_events`、`set_always_on_top`、`set_visible_on_all_workspaces` 和 macOS `NSWindow.setAlphaValue_`；`GridWindowSnapshot` 回传 native application state；core adapter 从 `PluginInstanceConfig` 派生 native options；同步 SDK、Tauri command contract、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 52 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（12 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: pinned 当前映射为 Tauri always-on-top，all-spaces 映射为 visible-on-all-workspaces；桌面级 pin / Space 真实行为仍需 macOS 手动 smoke。下一步做低风险 sample widget 完整流程，不解冻 clipboard / pet 等具体插件包。
+
+### Desktop Plugin Phase 2 Capability Denial 展示
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 现在用结构化提示展示插件窗口生命周期错误，区分 capability denied、overlay runtime disabled、native window error 等状态，并显示 code、severity、recoverable 和 capability scope。
+- Developer/system delta: 新增 `summarizePluginWindowCapabilityError()` core helper、`PluginWindowCapabilityErrorState` / severity 类型和 unit tests；Plugin Center 从纯文本错误改为消费结构化 capability error state；同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 51 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: 本次只展示 capability denial 状态，不授予新原生能力，也不改变窗口 allowlist；下一步继续做真实 native application 或低风险 sample widget。
+
+### Desktop Plugin Phase 2 Native Fallback 展示
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 的最后窗口状态现在显示 placement / size / opacity / click-through / pinned / all-spaces 的原生应用状态，区分 Applied、Fallback 和 Not requested，避免把 no-op fallback 误读成已生效。
+- Developer/system delta: 新增 `summarizePluginWindowNativeApplication()` core helper 与 `PluginWindowNativeApplicationState` 类型；Plugin Center 使用该 helper 渲染 native state chips；补 core unit tests，并同步 SDK、Plugin PRD、Phase 1/2 执行路线、dashboard-state 和 release-log。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 49 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.
+- Risk / follow-up: 本次仍是 fallback 展示，不是实际启用 click-through / pinned / all-spaces 原生能力；下一步继续做 capability denial 展示或低风险 sample widget。
+
+### Desktop Plugin Phase 2 重启恢复通用能力
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local commit in this branch
+- User-visible change: Plugin Center 重新打开后会读取 device-local plugin instance store，并恢复 `enabled` 桌面插件实例窗口；`disabled` / `hidden` 实例继续保留配置但不会自动出现在桌面。
+- Developer/system delta: 新增 `restoreEnabledPluginInstancesOnDesktop()` runtime API，导出 `PluginInstanceRestoreResult`，Plugin Center mount/load path 改为调用 restore API；补 core unit test，更新 SDK、Plugin PRD、Phase 1/2 执行路线和 dashboard-state。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 47 tests，Codex bundled Node）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails only on known existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals.
+- Risk / follow-up: This restores windows through the existing grid-window adapter; real macOS restart smoke is still required. Next Phase 2 slice should cover pin / click-through / all-spaces native fallback display or capability denial.
+
+### Desktop Plugin Phase 1 系统底座收口
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/plugin/platform-runtime-phase1` / `ed9c10e..5a410de` + P1D closeout commit in this branch
+- User-visible change: Mac App 插件线现在具备可继续推进 Phase 2 的系统底座：Plugin Center shell 可打开，内置 catalog 可区分 organizer 与 planned 插件，低风险实例可添加到桌面并通过通用动作管理。未声明 clipboard / widgets / pet / meditation / 快速记账 / 时间追踪等具体插件功能已完成。
+- Developer/system delta: 同步更新 Plugin PRD、Phase 1 执行路线、MODULE_BOUNDARIES、PRODUCT_MODULE_MAP、PLUGIN_MAP、PLUGIN_SDK、module-classification registry、dashboard-state 和 release-log；把状态从 “Phase 1 ready / 未实现” 改为 “Phase 1 foundation complete / Phase 2 common capability next / concrete packages paused”，并把 SDK 文档对齐实际 `lifecycleState + config{placement,size,behavior,style}` contract 与 `nativeApplied` fallback。
+- Verification: `dashboard-state.json` / `module-classification.json` JSON parse passed；conflict-marker scan passed；`git diff --check` passed；`packages/core` `tsc --noEmit` passed；`packages/core` Vitest passed（8 files / 46 tests，使用 Codex bundled Node 绕过本机 Rollup optional native code-signature 问题）；`packages/plugin-organizer` `tsc --noEmit` passed；`packages/plugin-organizer` `src/register-plugin.test.ts` passed（1 file / 2 tests）；`cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests` passed（10 tests，unused warnings only）；`apps/desktop` `tsc --noEmit` still fails on existing workspace issues: missing `@repo/plugin-labels`, missing `@repo/plugin-productivity`, unused `NativeMonitorBounds`, and pre-existing `packages/core-data/src/indexeddb-sync-blob.ts` unused locals. `pnpm dashboard` / dashboard verifiers not run because this runtime worktree has `dashboard-state.json` but not the dashboard generator/verifier scripts.
+- Risk / follow-up: Real macOS manual smoke is still required before claiming native window runtime ship quality: create/move/resize/focus/close, restart restore, multi-display/Space, click-through and pin fallback. Phase 2 should start from `desktop-plugin-next` in a new short branch and focus on common plugin capabilities before any concrete plugin feature package.
+
 ## 2026-06-04
+
+### Desktop Plugin Phase 1 系统底座文档包
+
+- Product line: desktop-plugin / project-system
+- Branch / commit: `codex/plugin/platform-docs` / docs commit in this branch
+- User-visible change: 无运行时功能变更。桌面插件现在明确可以先进入“系统层级基础建设”并与 Mac 桌面版并行推进；具体插件包（快速记账、时间追踪、任务、日历、便签、文件夹挂件、快捷入口等）仍放在第三阶段，不抢跑。
+- Developer/system delta: 新增 `docs/planning/execution/desktop-plugin-platform-phase1.md`，给出 Phase 1/2/3 顺序、系统能力清单、Mac App bridge 边界、小步 commit 规则和可复制 goal prompt；同步更新 Plugin PRD、模块边界、产品模块图、Plugin map、Plugin SDK、module-classification registry、execution pack 索引和个人开发看板状态。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed；`node --check scripts/dashboard/generate-state.mjs` passed；`pnpm dashboard` passed；`pnpm dashboard:verify-modules` passed；`pnpm dashboard:verify-static` passed；`git diff --check` passed。
+- Risk / follow-up: 本次只完成文档、分类和看板同步；不创建 `desktop-plugin-next`，不触碰 `dev`，不实现 Plugin Center / plugin container / native window bridge。下一步开发应先确认或创建 `desktop-plugin-next`，再按一个系统能力一个 commit 的方式推进 Phase 1。
 
 ### Desktop Plugin 产品边界与长期平台路线落地
 

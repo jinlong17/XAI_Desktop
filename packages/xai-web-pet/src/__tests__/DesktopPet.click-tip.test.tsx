@@ -42,11 +42,9 @@ describe("DesktopPet click tip", () => {
 
   it("bubble text is one of the known EN pet tip strings", () => {
     // After click, the bubble shows one of the 5 click tips (random).
-    // pet.hello may also show if tip rotation fires before pointerUp.
-    // We verify the text is any known EN pet string.
+    // We verify the text is any known EN click tip string.
     const ALL_PET_TIPS = [
       ...EN_CLICK_TIPS,
-      I18N.en.pet.hello,
     ];
     const { container } = render(<DesktopPet on={true} lang="en" />);
     clickPet(container);

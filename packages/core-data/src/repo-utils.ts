@@ -42,6 +42,23 @@ export function assertRepoRecord(record: RepoRecord): void {
       `E3005: clipboard.item must be device-local, got "${record.syncScope}"`,
     );
   }
+  if (
+    record.entityType === "calendar.provider_state" &&
+    record.syncScope !== "device-local"
+  ) {
+    throw new Error(
+      `E3005: calendar.provider_state must be device-local, got "${record.syncScope}"`,
+    );
+  }
+  if (
+    (record.entityType === "organizer.grid" ||
+      record.entityType === "organizer.item") &&
+    record.syncScope !== "device-local"
+  ) {
+    throw new Error(
+      `E3005: ${record.entityType} must be device-local, got "${record.syncScope}"`,
+    );
+  }
 }
 
 export function applyRepoListQuery<T extends RepoRecord>(

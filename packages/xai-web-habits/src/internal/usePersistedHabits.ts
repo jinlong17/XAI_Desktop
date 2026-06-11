@@ -27,7 +27,14 @@ export interface UsePersistedHabitsResult {
   isDefault: boolean;
 }
 
-export function usePersistedHabits(): UsePersistedHabitsResult {
+export interface UsePersistedHabitsOptions {
+  enableSeedHydration?: boolean;
+}
+
+export function usePersistedHabits(
+  options?: UsePersistedHabitsOptions,
+): UsePersistedHabitsResult {
+  const enableSeedHydration = options?.enableSeedHydration ?? true;
   const [rawState, setRawState, meta] = usePref(STORAGE_KEY);
 
   // Cast the raw (unknown) blob to HabitsState
@@ -40,12 +47,16 @@ export function usePersistedHabits(): UsePersistedHabitsResult {
     if (seeded.current) return;
     seeded.current = true;
 
+    if (!enableSeedHydration) {
+      return;
+    }
+
     if (meta.isDefault || state.habits.length === 0) {
       setState(buildSeedState());
     }
     // Only run on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [enableSeedHydration, meta.isDefault, state.habits.length]);
 
   return { state, setState, isDefault: meta.isDefault };
 }

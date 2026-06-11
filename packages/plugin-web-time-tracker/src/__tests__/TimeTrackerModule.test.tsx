@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { StrictMode } from "react";
 import { TimeTrackerModule } from "../TimeTrackerModule.js";
 import { TIME_TRACKER_CATEGORIES_KEY, readTimeTrackerCategories, readTimeTrackerEntries } from "../internal/storage.js";
 import { TIME_TRACKER_CATEGORY_COLORS } from "../internal/defaults.js";
@@ -17,6 +18,119 @@ describe("TimeTrackerModule", () => {
     rerender(<TimeTrackerModule lang="zh" />);
     expect(screen.getByText("时间追踪")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "学习" })).toBeInTheDocument();
+  });
+
+  it("renders and persists the compact time status cards", () => {
+    const { container, unmount } = render(<TimeTrackerModule lang="en" />);
+
+    expect(screen.getByText("Time status")).toBeInTheDocument();
+    expect(screen.getByText("Saturday")).toBeInTheDocument();
+    expect(screen.getByText("May 2026 · May 23")).toBeInTheDocument();
+    expect(screen.getByText("8 days left")).toBeInTheDocument();
+    expect(screen.getByText("left this month")).toBeInTheDocument();
+    expect(screen.getByText("222 days left")).toBeInTheDocument();
+    expect(screen.getByText("left this year")).toBeInTheDocument();
+    expect(screen.getByText("Today remaining: 13h 30m")).toBeInTheDocument();
+    expect(screen.getByText("No active timer")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Remove status card Month progress"));
+    });
+    expect(screen.queryByText("8 days left")).not.toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).not.toContain("month");
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Add status card"));
+    });
+    act(() => {
+      fireEvent.click(screen.getByRole("menuitem", { name: "Month progress" }));
+    });
+    expect(screen.getByText("8 days left")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).toContain("month");
+    expect(Array.from(container.querySelectorAll(".tt-time-card-copy em")).map((node) => node.textContent).slice(0, 2)).toEqual(["Current date", "Month progress"]);
+
+    const yearCard = screen.getByText("Year progress").closest("article");
+    expect(yearCard).not.toBeNull();
+    act(() => {
+      fireEvent.contextMenu(yearCard!);
+    });
+    expect(screen.queryByText("222 days left")).not.toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).not.toContain("year");
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Hide time status"));
+    });
+
+    expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
+    expect(screen.getByText("Time status hidden")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("1");
+
+    unmount();
+    render(<TimeTrackerModule lang="en" />);
+    expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
+    expect(screen.getByText("Time status hidden")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByText("Show time status"));
+    });
+
+    expect(screen.getByText("Saturday")).toBeInTheDocument();
+    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("0");
+  });
+
+  it("reorders time status cards by drag and persists the order", () => {
+    const { container } = render(<TimeTrackerModule lang="en" />);
+    const dateCard = screen.getByText("Current date").closest("article");
+    const monthCard = screen.getByText("Month progress").closest("article");
+    expect(dateCard).not.toBeNull();
+    expect(monthCard).not.toBeNull();
+
+    act(() => {
+      fireEvent.dragStart(monthCard!, { dataTransfer: { effectAllowed: "" } });
+      fireEvent.dragOver(dateCard!, { dataTransfer: { effectAllowed: "" } });
+      fireEvent.dragEnd(monthCard!);
+    });
+
+    const labels = Array.from(container.querySelectorAll(".tt-time-card-copy em")).map((node) => node.textContent);
+    expect(labels.slice(0, 2)).toEqual(["Month progress", "Current date"]);
+    expect(JSON.parse(localStorage.getItem("xai_tt_time_status_cards_v1") ?? "[]")).toEqual(["month", "date", "year", "today", "active"]);
+  });
+
+  it("creates and restores custom target time status cards", () => {
+    render(<TimeTrackerModule lang="en" />);
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Add status card"));
+    });
+    act(() => {
+      fireEvent.click(screen.getByRole("menuitem", { name: "Custom time" }));
+    });
+
+    expect(screen.getByText("Custom time")).toBeInTheDocument();
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Launch" } });
+      fireEvent.change(screen.getByLabelText("Target time"), { target: { value: "2026-05-25T12:00" } });
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    expect(screen.getByText("Launch")).toBeInTheDocument();
+    expect(screen.getByText("Target: May 25 12:00")).toBeInTheDocument();
+    const customCards = JSON.parse(localStorage.getItem("xai_tt_time_status_custom_cards_v1") ?? "[]") as Array<{ name?: string }>;
+    expect(customCards[0]?.name).toBe("Launch");
+    expect(JSON.parse(localStorage.getItem("xai_tt_time_status_cards_v1") ?? "[]").some((key: string) => key.startsWith("custom:"))).toBe(true);
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Remove status card Launch"));
+    });
+    expect(screen.queryByText("Launch")).not.toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByLabelText("Add status card"));
+    });
+    act(() => {
+      fireEvent.click(screen.getByRole("menuitem", { name: "Launch" }));
+    });
+    expect(screen.getByText("Launch")).toBeInTheDocument();
   });
 
   it("starts, pauses, resumes, and stops a tracked entry", () => {
@@ -45,6 +159,23 @@ describe("TimeTrackerModule", () => {
       fireEvent.click(screen.getByLabelText("End"));
     });
     expect(readTimeTrackerEntries()[0]?.done).toBe(true);
+  });
+
+  it("starts one entry per click under React StrictMode", () => {
+    render(
+      <StrictMode>
+        <TimeTrackerModule lang="en" />
+      </StrictMode>,
+    );
+
+    const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
+    expect(studyCard).not.toBeNull();
+    act(() => {
+      fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
+    });
+
+    expect(readTimeTrackerEntries()).toHaveLength(1);
+    expect(screen.getByText("Active sessions").closest("section")).toHaveTextContent("Code · Study");
   });
 
   it("adds a manual record", () => {

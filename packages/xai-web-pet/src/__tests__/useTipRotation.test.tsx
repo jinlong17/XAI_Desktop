@@ -24,22 +24,37 @@ describe("useTipRotation", () => {
     vi.clearAllMocks();
   });
 
-  it("calls setBubble with tips[0] immediately when on=true and !pickerOpen", () => {
+  it("does not show a tip immediately when on=true and !pickerOpen", () => {
     const setBubble = makeSetBubble();
     renderHook(() =>
       useTipRotation({ on: true, lang: "en", pickerOpen: false, setBubble }),
     );
-    // The first setBubble call should happen synchronously
+    expect(setBubble).not.toHaveBeenCalled();
+  });
+
+  it("shows the first tip after TIP_CYCLE_MS (12000ms)", () => {
+    const setBubble = makeSetBubble();
+    renderHook(() =>
+      useTipRotation({ on: true, lang: "en", pickerOpen: false, setBubble }),
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(12000);
+    });
+
     expect(setBubble).toHaveBeenCalledWith(expect.any(String));
     expect(setBubble.mock.calls[0]?.[0]).toBeTruthy();
   });
 
-  it("dismisses first bubble at TIP_FIRST_DISMISS_MS (5500ms)", () => {
+  it("dismisses first bubble after TIP_FIRST_DISMISS_MS (5500ms)", () => {
     const setBubble = makeSetBubble();
     renderHook(() =>
       useTipRotation({ on: true, lang: "en", pickerOpen: false, setBubble }),
     );
 
+    act(() => {
+      vi.advanceTimersByTime(12000);
+    });
     setBubble.mockClear();
 
     act(() => {
@@ -49,15 +64,18 @@ describe("useTipRotation", () => {
     expect(setBubble).toHaveBeenCalledWith(null);
   });
 
-  it("cycles to next tip at TIP_CYCLE_MS (12000ms) with null gap", () => {
+  it("cycles to next tip after the first visible cycle with null gap", () => {
     const setBubble = makeSetBubble();
     renderHook(() =>
       useTipRotation({ on: true, lang: "en", pickerOpen: false, setBubble }),
     );
 
+    act(() => {
+      vi.advanceTimersByTime(12000);
+    });
     setBubble.mockClear();
 
-    // Advance to cycle tick (12000ms)
+    // Advance to the next cycle tick (12000ms after first show)
     act(() => {
       vi.advanceTimersByTime(12000);
     });
@@ -104,12 +122,15 @@ describe("useTipRotation", () => {
       { initialProps: { lang: "en" } },
     );
 
-    const countBefore = setBubble.mock.calls.length;
-
     rerender({ lang: "zh" });
 
-    // After lang change, effect should run again — new calls expected
-    expect(setBubble.mock.calls.length).toBeGreaterThan(countBefore);
+    expect(setBubble).not.toHaveBeenCalled();
+
+    act(() => {
+      vi.advanceTimersByTime(12000);
+    });
+
+    expect(setBubble).toHaveBeenCalledWith(expect.any(String));
   });
 
   it("cleans up timers on unmount (no calls after unmount)", () => {

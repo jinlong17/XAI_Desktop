@@ -111,6 +111,10 @@ function currentDirtyCount() {
   return gitLines(["status", "--short"]).length;
 }
 
+function generatedSnapshotDirty() {
+  return gitLines(["status", "--short", "--", relative(repoRoot, generatedPath)]).length > 0;
+}
+
 assert(existsSync(htmlPath), `missing dashboard HTML: ${relative(repoRoot, htmlPath)}`);
 assert(existsSync(generatedPath), `missing generated state: ${relative(repoRoot, generatedPath)}; run pnpm dashboard`);
 
@@ -166,7 +170,13 @@ const currentBranch = git(["branch", "--show-current"]);
 const currentCommit = git(["log", "-1", "--format=%h %s"]);
 assert(state.git?.branch === currentBranch, `generated branch is stale: expected ${currentBranch}, got ${state.git?.branch || "<missing>"}`);
 assert(state.git?.latest_commit === currentCommit, `generated commit is stale: expected ${currentCommit}, got ${state.git?.latest_commit || "<missing>"}`);
-assert(state.sync_status?.dirty?.total === currentDirtyCount(), "generated dirty-file count is stale; run pnpm dashboard");
+const dirtyCount = currentDirtyCount();
+const generatedDirtyDelta = generatedSnapshotDirty() ? 1 : 0;
+assert(
+  state.sync_status?.dirty?.total === dirtyCount ||
+    state.sync_status?.dirty?.total === dirtyCount - generatedDirtyDelta,
+  "generated dirty-file count is stale; run pnpm dashboard"
+);
 
 assert(Array.isArray(state.status_rows) && state.status_rows.length > 0, "status_rows must be populated");
 assert(Array.isArray(state.kpis) && state.kpis.length > 0, "kpis must be populated");

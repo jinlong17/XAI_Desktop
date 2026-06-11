@@ -255,7 +255,7 @@ function toGridEntity(
     schemaVersion: 1,
     createdAt: timestamp,
     updatedAt: timestamp,
-    syncScope: "account-sync",
+    syncScope: "device-local",
     title: legacy.title ?? "Untitled",
     rect: {
       x: numberOrZero(legacy.rect?.x),
@@ -291,7 +291,7 @@ function toGridItemEntity(
     schemaVersion: 1,
     createdAt: timestamp,
     updatedAt: timestamp,
-    syncScope: "account-sync",
+    syncScope: "device-local",
     gridId,
     filename: legacy.filename ?? legacy.id,
     filepath: legacy.filepath,

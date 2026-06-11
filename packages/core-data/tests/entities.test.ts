@@ -3,17 +3,27 @@ import { describe, expect, it } from "vitest";
 import { assertRepoRecord } from "../src/repo-utils";
 import { createInMemoryRepo } from "../src/testing";
 import type {
+  CalendarProviderStateEntity,
+  BoardWorkspaceStorageKey,
   CardEntity,
   ClipboardEntryEntity,
   GridEntity,
   GridItemEntity,
   HabitEntity,
+  HabitsStateEntity,
+  PetStateEntity,
+  PomodoroSessionsEntity,
+  ProjectWorkspaceStateEntity,
   LabelEntity,
   ProjectEntity,
   RepoEntity,
+  SettingsPrefEntity,
+  TasksStateEntity,
   TodoEntity,
 } from "../src/entities";
 import type { RepoRecord } from "../src/types";
+import { NOTES_UNSUPPORTED_ERROR } from "../src/desktop-bridge";
+import { normalizeProjectEntityType } from "../src/entities";
 
 const BASE = {
   schemaVersion: 1,
@@ -27,6 +37,7 @@ function gridFixture(id: string): GridEntity {
     ...BASE,
     id,
     entityType: "organizer.grid",
+    syncScope: "device-local",
     title: "Today",
     rect: { x: 0, y: 0, width: 240, height: 320 },
     isLocked: false,
@@ -41,6 +52,7 @@ function gridItemFixture(id: string): GridItemEntity {
     ...BASE,
     id,
     entityType: "organizer.item",
+    syncScope: "device-local",
     gridId: "grid-1",
     filename: "report.md",
     filepath: "/Users/me/Documents/report.md",
@@ -116,6 +128,89 @@ function cardFixture(id: string): CardEntity {
   };
 }
 
+function tasksStateFixture(id: string): TasksStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "productivity.tasks_state",
+    syncScope: "device-local",
+    storageKey: "xai_task_cols",
+    value: { cols: [] },
+  };
+}
+
+function habitsStateFixture(id: string): HabitsStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "productivity.habits_state",
+    syncScope: "device-local",
+    storageKey: "xai_habits_state",
+    value: { habits: [] },
+  };
+}
+
+function pomodoroFixture(id: string): PomodoroSessionsEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "productivity.pomodoro_sessions",
+    syncScope: "device-local",
+    storageKey: "xai_pomodoro_sessions",
+    sessions: [],
+  };
+}
+
+function workspaceFixture(
+  id: string,
+  storageKey: BoardWorkspaceStorageKey,
+): ProjectWorkspaceStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "project.workspace_state",
+    syncScope: "device-local",
+    storageKey,
+    value: {},
+  };
+}
+
+function petFixture(id: string): PetStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "pet.state",
+    syncScope: "device-local",
+    storageKey: "xai_pet_pos",
+    value: { x: 0, y: 0 },
+  };
+}
+
+function settingsFixture(id: string): SettingsPrefEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "settings.pref",
+    syncScope: "device-local",
+    storageKey: "xai_pref_week_start",
+    value: "sun",
+  };
+}
+
+function calendarProviderStateFixture(id: string): CalendarProviderStateEntity {
+  return {
+    ...BASE,
+    id,
+    entityType: "calendar.provider_state",
+    syncScope: "device-local",
+    providerId: "gcal",
+    syncMode: "online-only",
+    connectionState: "connected",
+    availability: "ready",
+    needsReconnectRefresh: false,
+  };
+}
+
 describe("Repo entities contract", () => {
   it("round-trips every entity type through the in-memory repo", async () => {
     const repo = createInMemoryRepo<RepoEntity>({ namespace: "entities" });
@@ -129,6 +224,13 @@ describe("Repo entities contract", () => {
       clipboardFixture("clip-1"),
       projectFixture("proj-1"),
       cardFixture("card-1"),
+      tasksStateFixture("xai_task_cols"),
+      habitsStateFixture("xai_habits_state"),
+      pomodoroFixture("xai_pomodoro_sessions"),
+      workspaceFixture("xai_board_panels", "xai_board_panels"),
+      petFixture("xai_pet_pos"),
+      settingsFixture("xai_pref_week_start"),
+      calendarProviderStateFixture("calendar.provider_state:gcal"),
     ];
 
     for (const record of fixtures) {
@@ -199,6 +301,40 @@ describe("Repo entities contract", () => {
     );
   });
 
+  it("rejects calendar.provider_state records with non-device-local syncScope at runtime", () => {
+    const cheating: RepoRecord = {
+      ...BASE,
+      id: "calendar.provider_state:gcal",
+      entityType: "calendar.provider_state",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(cheating)).toThrowError(
+      /E3005: calendar\.provider_state must be device-local, got "account-sync"/,
+    );
+  });
+
+  it("rejects organizer records with non-device-local syncScope at runtime", () => {
+    const badGrid: RepoRecord = {
+      ...BASE,
+      id: "grid-bad",
+      entityType: "organizer.grid",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(badGrid)).toThrowError(
+      /E3005: organizer\.grid must be device-local, got "account-sync"/,
+    );
+
+    const badItem: RepoRecord = {
+      ...BASE,
+      id: "item-bad",
+      entityType: "organizer.item",
+      syncScope: "account-sync",
+    } as RepoRecord;
+    expect(() => assertRepoRecord(badItem)).toThrowError(
+      /E3005: organizer\.item must be device-local, got "account-sync"/,
+    );
+  });
+
   it("supports listByIndex on entity-owned fields", async () => {
     const repo = createInMemoryRepo<GridItemEntity>({
       namespace: "organizer.items",
@@ -223,5 +359,15 @@ describe("Repo entities contract", () => {
       orderBy: { field: "id", direction: "asc" },
     });
     expect(byGrid.map((it) => it.id)).toEqual(["item-1", "item-3"]);
+  });
+
+  it("normalizes legacy project.project entity type to project.board", () => {
+    expect(normalizeProjectEntityType("project.project")).toBe("project.board");
+    expect(normalizeProjectEntityType("project.board")).toBe("project.board");
+  });
+
+  it("freezes notes as unsupported in desktop bridge contracts", () => {
+    expect(NOTES_UNSUPPORTED_ERROR.kind).toBe("unsupported_surface");
+    expect(NOTES_UNSUPPORTED_ERROR.surface).toBe("notes");
   });
 });

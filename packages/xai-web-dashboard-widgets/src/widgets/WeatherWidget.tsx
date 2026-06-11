@@ -83,7 +83,7 @@ export function WeatherWidget({
     return () => {
       cancelled = true;
     };
-  }, [weather?.latitude, weather?.longitude, weather?.fetchedAt, fetchWeather, set]);
+  }, [weather, fetchWeather, set]);
 
   const hasCurrentWeather = weather?.temp !== undefined && weather.condition !== undefined;
 

@@ -1,4 +1,5 @@
 export * from "./types";
+export { registerOrganizerPlugin } from "./register-plugin";
 export * from "./mockData";
 export * from "./useGridSystem";
 export * from "./SmartContainer";
@@ -16,6 +17,7 @@ export * from "./hooks/useMultiWindowGrids";
 export { OrganizerLayer } from "./OrganizerLayer";
 export { OrganizerGridContent } from "./OrganizerGridContent";
 export type { OrganizerGridContentProps } from "./OrganizerGridContent";
+export { OrganizerWorkspaceModule } from "./OrganizerWorkspaceModule";
 export * from "./gridEvents";
 export {
   ORGANIZER_LAYOUT_STORAGE_KEY,
@@ -81,6 +83,13 @@ export type {
   NativeMonitorBounds,
   NativeWindowRect,
 } from "./nativeGridSnap";
+export {
+  ORGANIZER_GRID_REPO_NAMESPACE,
+  ORGANIZER_ITEM_REPO_NAMESPACE,
+  canUseOrganizerTauriRepoRuntime,
+  createOrganizerDesktopLayoutStore,
+} from "./desktopLayoutStore";
+export type { OrganizerDesktopLayoutStoreOptions } from "./desktopLayoutStore";
 export {
   defaultEmptyStateActions,
   evaluateItemHealth,

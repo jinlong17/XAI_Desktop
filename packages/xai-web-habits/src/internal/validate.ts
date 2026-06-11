@@ -45,27 +45,45 @@ export function isHabit(x: unknown): x is Habit {
  * Design: design.md §10 (error semantics)
  */
 export function validateHabitsState(raw: unknown): HabitsState {
-  if (raw === null || typeof raw !== "object") return DEFAULT_HABITS_STATE;
+  if (!isReadableHabitsCachePayload(raw)) {
+    return DEFAULT_HABITS_STATE;
+  }
+  return raw as HabitsState;
+}
+
+export function isReadableHabitsCachePayload(raw: unknown): boolean {
+  if (raw === null || typeof raw !== "object") {
+    return false;
+  }
+
   const r = raw as Record<string, unknown>;
+  if (r["schemaVersion"] !== 1) {
+    return false;
+  }
 
-  // schemaVersion must be exactly 1
-  if (r["schemaVersion"] !== 1) return DEFAULT_HABITS_STATE;
+  if (!Array.isArray(r["habits"])) {
+    return false;
+  }
 
-  // habits must be an array
-  if (!Array.isArray(r["habits"])) return DEFAULT_HABITS_STATE;
+  for (const habit of r["habits"]) {
+    if (!isHabit(habit)) {
+      return false;
+    }
+  }
 
-  // checkIns must be a non-array object (or absent)
   const checkIns = r["checkIns"];
   if (checkIns !== undefined && checkIns !== null) {
-    if (typeof checkIns !== "object" || Array.isArray(checkIns)) return DEFAULT_HABITS_STATE;
+    if (typeof checkIns !== "object" || Array.isArray(checkIns)) {
+      return false;
+    }
   }
 
-  // diaries must be a non-array object (or absent)
   const diaries = r["diaries"];
   if (diaries !== undefined && diaries !== null) {
-    if (typeof diaries !== "object" || Array.isArray(diaries)) return DEFAULT_HABITS_STATE;
+    if (typeof diaries !== "object" || Array.isArray(diaries)) {
+      return false;
+    }
   }
 
-  // All checks pass — cast
-  return raw as HabitsState;
+  return true;
 }

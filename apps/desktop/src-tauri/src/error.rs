@@ -73,6 +73,10 @@ pub enum AppError {
     #[error("E1300: database not initialized — call db_init first")]
     DatabaseNotInitialized,
 
+    /// E1300 — bootstrap contract mismatch (e.g. migration registry drift).
+    #[error("E1300: database bootstrap contract failed: {0}")]
+    DatabaseBootstrapContract(String),
+
     /// E1301 — invalid namespace or id input.
     #[error("E1301: database invalid input: {0}")]
     DatabaseInvalidInput(String),
@@ -188,6 +192,26 @@ mod tests {
             assert!(
                 s.starts_with(expected_prefix),
                 "Existing variant should start with {expected_prefix}, got: {s}"
+            );
+        }
+    }
+
+    #[test]
+    fn e13xx_display_prefixes_are_stable() {
+        let cases: Vec<(AppError, &str)> = vec![
+            (AppError::DatabaseNotInitialized, "E1300:"),
+            (
+                AppError::DatabaseBootstrapContract("x".into()),
+                "E1300:",
+            ),
+            (AppError::DatabaseInvalidInput("x".into()), "E1301:"),
+            (AppError::DatabaseBackend("x".into()), "E1302:"),
+        ];
+        for (err, expected_prefix) in cases {
+            let s = err.to_string();
+            assert!(
+                s.starts_with(expected_prefix),
+                "E13xx variant should start with {expected_prefix}, got: {s}"
             );
         }
     }

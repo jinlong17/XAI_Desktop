@@ -32,3 +32,9 @@ export type {
 
 // ---- Constants --------------------------------------------------------------
 export { HABITS_STORAGE_KEY } from "./constants.js";
+
+export {
+  readDesktopHabitsCacheStatusFromRaw,
+  readDesktopHabitsCacheStatusFromStorage,
+} from "./desktopCache.js";
+export type { DesktopHabitsCacheStatus } from "./desktopCache.js";

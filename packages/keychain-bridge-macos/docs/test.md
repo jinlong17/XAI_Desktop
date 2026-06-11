@@ -14,13 +14,12 @@ Run unattended in CI (no login keychain required):
   pattern; locks the JS-parseable contract). Also assert existing
   E1000/E3xxx prefixes still hold (regression — additive-only).
 - **T-U2 Attribute construction**: the function that builds the keychain item
-  attributes/`SecAccess` is asserted to set
-  `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` and to **never** set the
-  synchronizable attribute true (T13 regression). Pure-construction test, no
-  Keychain I/O.
-- **T-U3 ACL composition**: the trusted-application list is built from the
-  bundle id `com.jinlong.desktop` and contains exactly that one app
-  (FR-AC-08). Construction-level assertion.
+  attributes asserts the `com.jinlong.desktop.secret` service namespace and
+  synchronizable=false (T13 regression). Pure-construction test, no Keychain I/O.
+- **T-U3 Signed ACL release gate tracking**: the bundle id
+  `com.jinlong.desktop` remains recorded as the production signed Data Protection
+  ACL target, but the ACL is not attached in unsigned dev/debug builds after the
+  2026-05-29 release-readiness smoke exposed OSStatus -34018.
 - **T-U4 Non-macOS stub**: on a non-macOS `cfg`, the command path returns
   `KeychainUnsupportedPlatform` (E1104) — keeps web/CI compiling and
   contractually defined.
@@ -37,7 +36,7 @@ macOS hardware (cannot run on headless CI — R-3):
   returns identical bytes → `secret_del` → subsequent `secret_get` →
   `KeychainItemNotFound`.
 - **T-I2 Idempotent set**: `secret_set` twice (different values) → `secret_get`
-  returns the latest; ACL/accessibility preserved across update (OQ-2).
+  returns the latest (OQ-2).
 - **T-I3 Idempotent delete**: `secret_del` on absent key → success (no error).
 - **T-I4 Locked behavior** (manual, real hardware): with screen locked,
   `secret_get` → `KeychainLocked` (E1100), no panic (FR-SY-09).
@@ -68,7 +67,8 @@ Required before the human ship gate (feature-verify runs / records):
   Keychain in Vitest. Downstream consumers (plugin-account) mock
   `@repo/core-data` keychain exports until `@repo/core-data` is Stable in
   PLUGIN_MAP.
-- Rust unit layer: test attribute/ACL/error construction as pure functions;
+- Rust unit layer: test attribute/error construction and signed-ACL release-gate
+  tracking as pure functions;
   isolate Security.framework I/O behind the integration-test gate.
 
 ## 3. Acceptance Criteria
@@ -77,8 +77,8 @@ Required before the human ship gate (feature-verify runs / records):
 |---|---|---|
 | AC-1 | `secret_set/get/del` registered in `commands/mod.rs` + `lib.rs` `invoke_handler!`; `cargo check` green | build |
 | AC-2 | macOS impl under `platform/macos/keychain.rs`, `#[cfg(target_os = "macos")]`; non-macOS stub returns E1104 | T-U4 |
-| AC-3 | Item attributes asserted: `WhenUnlockedThisDeviceOnly` set, synchronizable never true (T13) | T-U2 |
-| AC-4 | `SecAccess` ACL = exactly bundle id `com.jinlong.desktop` (FR-AC-08) | T-U3 |
+| AC-3 | Item attributes asserted: service namespace set, synchronizable never true (T13) | T-U2 |
+| AC-4 | Signed Data Protection ACL target remains tracked for bundle id `com.jinlong.desktop` | T-U3 + production-signing gate |
 | AC-5 | All E11xx variants have JS-parseable `E11xx:` Display prefixes; existing E1000/E3xxx unchanged | T-U1 |
 | AC-6 | OSStatus → AppError mapping correct (locked/not-found/acl/other) | T-U5 |
 | AC-7 | Round-trip set→get→del on real macOS dev build (gated test) | T-I1 |
@@ -90,7 +90,7 @@ Required before the human ship gate (feature-verify runs / records):
 
 ## 4. Deferred / Documented Follow-up (NOT ship blockers)
 
-- **D-1**: Real signed-build ACL cross-process rejection (a non-bundle-id
+- **D-1**: Real signed-build Data Protection ACL cross-process rejection (a non-bundle-id
   process is denied) — verifiable only on a codesigned build; gated by
   `apple-developer-account` (#10).
 - **D-2**: MAS-sandbox `keychain-access-group` entitlement behavior — same

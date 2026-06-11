@@ -237,4 +237,3 @@ boundaries ensures the chunk is separated.
 | UI: generic → `packages/ui/`, business → owning plugin | ✅ FilterPopover + ShareModal + MapView are business components; they stay inside the owning plugin |
 | Rust / macOS platform code | N/A — web-only |
 | `manifest.json` aligned with runtime behavior | ✅ No manifest changes needed (status stays Stable for all 3 packages; PLUGIN_MAP note updated only) |
-

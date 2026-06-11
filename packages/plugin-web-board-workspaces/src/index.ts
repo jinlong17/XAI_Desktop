@@ -111,3 +111,11 @@ export type { BoardWorkspacesModuleProps } from "./BoardWorkspacesModule.js";
 
 // ---- Shell slot registration --------------------------------------------
 export { boardWorkspacesWebModuleRegistration } from "./registration.js";
+
+// ---- Desktop App compatibility seam --------------------------------------
+// Browser-safe cache status reader retained for the desktop runtime badge.
+export {
+  readDesktopBoardCacheStatusFromRaw,
+  readDesktopBoardCacheStatusFromStorage,
+} from "./desktopCache.js";
+export type { DesktopBoardCacheStatus } from "./desktopCache.js";

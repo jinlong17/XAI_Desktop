@@ -53,7 +53,7 @@
 | AC-PET-9 | Picker selection persists `xai_pet_id` | `PetPicker.test.tsx` + `DesktopPet.persistence.test.tsx` |
 | AC-PET-10 | Rail toggle (`web:shell:pet-toggle` event) hides/shows pet | `DesktopPet.event.test.tsx` |
 | AC-PET-11 | Bubble side flips based on pet x-position | `DesktopPet.bubble-side.test.tsx` |
-| AC-PET-12 | Tip rotation cycles every 12 s after initial 5.5 s dismiss | `useTipRotation.test.tsx` (`vi.useFakeTimers`) |
+| AC-PET-12 | Tip rotation waits 12 s before first automatic tip, dismisses after 5.5 s, then cycles | `useTipRotation.test.tsx` (`vi.useFakeTimers`) |
 | AC-PET-13 | Window resize re-clamps pet position | `DesktopPet.resize.test.tsx` |
 | AC-PET-14 | Corrupted `petId` falls back to "mochi" | `DesktopPet.persistence.test.tsx` |
 | AC-PET-15 | Pet click on `.pet-swap-btn` opens picker without triggering drag | `PetPicker.test.tsx` (via `stopPropagation` assertion) |

@@ -47,3 +47,23 @@ export { useTaskCreateRequestSubscriber } from "./internal/aiCreateSubscriber.js
 
 // ---- AI tool layer mutate subscriber (additive — P2 xai-web-ai-tool-edit-delete) ----------
 export { useTaskMutateRequestSubscriber } from "./internal/aiMutateSubscriber.js";
+
+// ---- Desktop App compatibility seams ---------------------------------------
+// Kept out of the Web rail UI, but retained so desktop native reminder/cache
+// packages keep compiling while the Mac app mirrors the Web shell by default.
+export {
+  projectDesktopTaskReminderEntries,
+} from "./projectDesktopTaskReminderEntries.js";
+export type {
+  DesktopTaskReminderEntry,
+  DesktopTaskReminderUnsupportedReason,
+  TaskDefaultReminderAll,
+  TaskDefaultReminderDue,
+} from "./projectDesktopTaskReminderEntries.js";
+export {
+  TASK_CACHE_STORAGE_KEY,
+  isReadableTaskCachePayload,
+  readDesktopTaskCacheStatusFromRaw,
+  readDesktopTaskCacheStatusFromStorage,
+} from "./desktopCache.js";
+export type { DesktopTaskCacheStatus } from "./desktopCache.js";

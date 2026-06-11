@@ -26,10 +26,18 @@ const __dirname = dirname(__filename);
 //   ../../../../ → monorepo root (XAI_Desktop/)
 const MONOREPO_ROOT = resolve(__dirname, "../../../..");
 const DESIGN_MD_PATH = resolve(MONOREPO_ROOT, "web design/DESIGN.md");
-const parityIt = existsSync(DESIGN_MD_PATH) ? it : it.skip;
+const API_CONTRACT_PATH = resolve(
+  MONOREPO_ROOT,
+  "packages/xai-web-persistence-contract/docs/api.md",
+);
+const parityIt = existsSync(DESIGN_MD_PATH) || existsSync(API_CONTRACT_PATH) ? it : it.skip;
 
 function loadDesignMd(): string {
   return readFileSync(DESIGN_MD_PATH, "utf-8");
+}
+
+function loadApiContract(): string {
+  return readFileSync(API_CONTRACT_PATH, "utf-8");
 }
 
 // ---------------------------------------------------------------------------
@@ -66,14 +74,48 @@ function extractSection92Keys(content: string): string[] {
   return [...new Set(rawKeys)];
 }
 
+function extractApiExplicitKeys(content: string): string[] {
+  const sectionMatch = content.match(
+    /###\s*1\.1\s+Explicit keys\s*\(18\)[\s\S]*?\n([\s\S]*?)(?=\n###|\n##|\n#|$)/,
+  );
+  if (!sectionMatch) {
+    throw new Error(
+      "Could not find explicit key registry in persistence API contract.",
+    );
+  }
+
+  const section = sectionMatch[1] ?? "";
+  const rawKeys: string[] = [];
+  const regex = /`(xai_[a-z_0-9]+)`/g;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(section)) !== null) {
+    const key = match[1];
+    if (key && key !== "xai_pref_*" && !key.endsWith("_*")) {
+      rawKeys.push(key);
+    }
+  }
+
+  return [...new Set(rawKeys)];
+}
+
+function extractCanonicalExplicitKeys(): string[] {
+  if (existsSync(DESIGN_MD_PATH)) {
+    const design = loadDesignMd();
+    if (/###\s*9\.2/.test(design)) {
+      return extractSection92Keys(design);
+    }
+  }
+
+  return extractApiExplicitKeys(loadApiContract());
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
 describe("AC-PARITY-1: all §9.2 keys are in PREF_REGISTRY", () => {
   parityIt("every xai_* key in DESIGN.md §9.2 table exists in PREF_REGISTRY", () => {
-    const content = loadDesignMd();
-    const designKeys = extractSection92Keys(content);
+    const designKeys = extractCanonicalExplicitKeys();
     const registryKeys = new Set(Object.keys(PREF_REGISTRY));
 
     expect(designKeys.length, "No keys extracted from §9.2 — check regex or section header").toBeGreaterThan(0);
@@ -118,6 +160,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pref_notif_push_task",
   "xai_pref_notif_push_pomo",
   "xai_pref_notif_push_habit",
+  "xai_pref_notif_push_calendar",
   "xai_pref_notif_quiet",
   "xai_pref_notif_quiet_start",
   "xai_pref_notif_quiet_end",
@@ -173,8 +216,7 @@ const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
 
 describe("AC-PARITY-2: all PREF_REGISTRY explicit keys are in §9.2", () => {
   parityIt("no PREF_REGISTRY key (excluding proposed + owner-row additions) is missing from §9.2", () => {
-    const content = loadDesignMd();
-    const designKeys = new Set(extractSection92Keys(content));
+    const designKeys = new Set(extractCanonicalExplicitKeys());
     const registryEntries = Object.entries(PREF_REGISTRY);
 
     // Exclude proposed keys — they may not appear literally in the §9.2 table

@@ -1,0 +1,35 @@
+{
+  "name": "@repo/desktop-global-hotkey-quick-open",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-safe desktop quick-open global-hotkey bridge and host-injected adapter contract.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./web": {
+      "types": "./src/web.ts",
+      "import": "./src/web.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "node ../core/node_modules/vitest/vitest.mjs run",
+    "test:watch": "node ../core/node_modules/vitest/vitest.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.10.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.1"
+  }
+}

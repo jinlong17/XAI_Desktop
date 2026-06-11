@@ -64,8 +64,7 @@ export type RailItemId =
   | "meditation"
   | "countdown"
   | "ai"
-  | "statistics"
-  | "settings";
+  | "statistics";
 
 export type PetId =
   | "mochi"
@@ -134,7 +133,7 @@ const DEFAULT_DASH_ORDER: DashWidgetId[] = [
   "upcoming",
 ];
 
-const DEFAULT_PET_POS: PetPos = { x: 24, y: 24 };
+const DEFAULT_PET_POS: PetPos = { x: 24, y: 520 };
 
 // ---------------------------------------------------------------------------
 // PREF_REGISTRY — 18 explicit + 2 proposed = 20 typed entries
@@ -604,6 +603,15 @@ export const PREF_REGISTRY = {
     category: "pref",
   } satisfies PrefEntry<boolean>,
 
+  xai_pref_notif_push_calendar: {
+    key: "xai_pref_notif_push_calendar",
+    codec: "boolean",
+    default: true as boolean,
+    schemaVersion: 1,
+    owner: "xai-web-settings-rest",
+    category: "pref",
+  } satisfies PrefEntry<boolean>,
+
   xai_pref_notif_quiet: {
     key: "xai_pref_notif_quiet",
     codec: "boolean",
@@ -897,6 +905,39 @@ export const PREF_REGISTRY = {
     category: "module",
   } satisfies PrefEntry<string>,
 
+  // ---- Calendar events (§S8 — extension 2026-05-27 by xai-web-calendar-event-create) ----
+  // User-created calendar events. Indexed by event.id (UUID).
+  xai_calendar_events: {
+    key: "xai_calendar_events",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-calendar",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
+
+  // ---- Dashboard stickies (extension 2026-05-28 by xai-web-dashboard-stickies-create) ----
+  // User-created sticky notes. Indexed by sticky.id (UUID).
+  xai_dashboard_stickies: {
+    key: "xai_dashboard_stickies",
+    codec: "json",
+    default: {} as Record<string, unknown>,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<Record<string, unknown>>,
+
+  // ---- Dashboard weather (extension 2026-05-29 by xai-web-dashboard-weather-mail) ----
+  // SINGLETON: stores one UserWeather | null under xai_dashboard_weather.
+  xai_dashboard_weather: {
+    key: "xai_dashboard_weather",
+    codec: "json",
+    default: null as null,
+    schemaVersion: 1,
+    owner: "xai-web-dashboard-widgets",
+    category: "module",
+  } satisfies PrefEntry<null>,
+
   // ---- Integrations OAuth stub (extension 2026-05-25 — gap-closure row #7) ----
   // 3 boolean flags marking per-provider "connected (stub)" state.
   // MUST NOT be interpreted as "real connection" by any other code path.
@@ -958,55 +999,6 @@ export const PREF_REGISTRY = {
     category: "pref",
   } satisfies PrefEntry<number>,
 
-  // ---- Calendar events (§S8 — extension 2026-05-27 by xai-web-calendar-event-create) ----
-  // User-created calendar events. Indexed by event.id (UUID).
-  // Owner xai-web-calendar (extension to row #12 SHIPPED + gap-closure row #4 SHIPPED).
-  // Category "module" — NOT in the xai_pref_* chassis-reset family
-  // (same category as xai_calendar_view / xai_clock_style / xai_active_board per ADR-0007 §S8).
-  // proposed: false — canonical xai_calendar_* family per ADR-0007 §S8.
-  // Authority: docs/adr/0010-p1-desktop-resume-plan.md §D4 (P0 carve-out) +
-  // docs/reviews/_p0-carve-outs/20260527-calendar-event-create.md.
-  // Value shape: Record<string, UserCalEvent> — `UserCalEvent` type declared in
-  // @repo/plugin-web-calendar (internal/eventStore/types.ts); not imported here
-  // because registry stays dep-free of plugin packages. Consumer types ensure
-  // shape correctness at the call site.
-  xai_calendar_events: {
-    key: "xai_calendar_events",
-    codec: "json",
-    default: {} as Record<string, unknown>,
-    schemaVersion: 1,
-    owner: "xai-web-calendar",
-    category: "module",
-  } satisfies PrefEntry<Record<string, unknown>>,
-
-  // ---- Dashboard stickies (extension 2026-05-28 by xai-web-dashboard-stickies-create) ----
-  // User-created sticky notes. Indexed by sticky.id (UUID).
-  // Owner xai-web-dashboard-widgets (extension to row #11 SHIPPED).
-  // Category "module" — NOT in the xai_pref_* chassis-reset family.
-  // proposed: false. Authority: ADR-0010 §D4 + docs/reviews/_p0-carve-outs/20260528-dashboard-stickies-create.md.
-  // Value shape: Record<string, UserSticky> — `UserSticky` declared in
-  // @repo/plugin-web-dashboard-widgets; not imported here (registry stays plugin-dep-free).
-  xai_dashboard_stickies: {
-    key: "xai_dashboard_stickies",
-    codec: "json",
-    default: {} as Record<string, unknown>,
-    schemaVersion: 1,
-    owner: "xai-web-dashboard-widgets",
-    category: "module",
-  } satisfies PrefEntry<Record<string, unknown>>,
-  // Category "module" — NOT in the xai_pref_* chassis-reset family.
-  // proposed: false. Authority: ADR-0010 §D4 + docs/reviews/_p0-carve-outs/20260529-dashboard-weather-mail.md.
-  // Value shape: UserWeather | null (SINGLETON) — `UserWeather` declared in
-  // @repo/plugin-web-dashboard-widgets; not imported here (registry stays plugin-dep-free).
-  // default: null (unset; contrast xai_dashboard_stickies whose default is {}).
-  xai_dashboard_weather: {
-    key: "xai_dashboard_weather",
-    codec: "json",
-    default: null as null,
-    schemaVersion: 1,
-    owner: "xai-web-dashboard-widgets",
-    category: "module",
-  } satisfies PrefEntry<null>,
 } as const;
 
 // ---------------------------------------------------------------------------

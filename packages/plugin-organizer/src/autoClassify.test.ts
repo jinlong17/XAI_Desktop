@@ -15,7 +15,7 @@ function grid(id: string, title: string): GridEntity {
     schemaVersion: 1,
     createdAt: "2026-05-20T00:00:00.000Z",
     updatedAt: "2026-05-20T00:00:00.000Z",
-    syncScope: "account-sync",
+    syncScope: "device-local",
     title,
     rect: { x: 0, y: 0, width: 240, height: 320 },
     isLocked: false,

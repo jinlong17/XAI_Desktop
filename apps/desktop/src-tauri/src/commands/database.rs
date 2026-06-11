@@ -1,21 +1,22 @@
 //! Tauri IPC commands for the Repository v0 SQLite driver.
 //!
-//! G2.2 PoC scope: expose CRUD that matches the TS `SqliteDriver`
+//! G2.2 runtime scope: expose CRUD that matches the TS `SqliteDriver`
 //! interface in `@repo/core-data/sqlite.ts`. One bundled-sqlcipher
 //! Connection is owned by Tauri-managed state; the on-disk file lives
 //! under the app data directory (`xai-repo-v0.db`).
 //!
-//! Encryption is intentionally **not** wired in this PoC — the SQLCipher
-//! PRAGMA path is exercised separately by `crypto::sqlcipher` unit tests.
-//! Once G2.4 publishes a stable opaque KEK handle, `db_open` will gain
-//! a `kek_handle` parameter and apply `PRAGMA key`. The wire format is
-//! designed so the JS side does not need to change when that happens.
+//! At-rest encryption is applied before bootstrap. The runtime loads or
+//! creates a device-local database KEK in the macOS Keychain, derives the
+//! SQLCipher DB key with the crypto KDF domain separator, then applies
+//! `PRAGMA key` before any schema reads/writes. The JS wire format stays
+//! unchanged and never receives raw key material.
 //!
 //! Wire commands (all gated to `main`,`control`,`grid_*`,`account` via
 //! `capabilities/default.json`):
 //!
-//! - `db_init { namespace }` → idempotent. Creates the shared table
-//!   `core_data_records (namespace, id, json, updated_at_ms)`.
+//! - `db_init { namespace }` → idempotent bootstrap. Resolves the
+//!   canonical live DB path under `app_data_dir()`, runs host-owned
+//!   migration registry steps, and returns bootstrap metadata.
 //! - `db_put { namespace, id, json, updatedAtMs }` → upsert.
 //! - `db_get { namespace, id }` → returns `json | null`.
 //! - `db_list { namespace }` → returns rows sorted by `id`.
@@ -25,6 +26,13 @@
 //!   `op` is `"put"` or `"delete"`. On any per-entry failure the whole
 //!   batch rolls back. Required for the Repository v0 sync outbox so the
 //!   entity row and its outbox row commit together (G2.6 P0 fix).
+//! - `db_backup_write_bundle { destinationPath?, json }` → writes one
+//!   validated backup bundle JSON payload either to a managed app-data
+//!   backup path (`app_data_dir()/backups/`) or to an explicit absolute
+//!   destination path for user export.
+//! - `db_backup_read_bundle { path }` → reads one backup bundle JSON file.
+//! - `db_backup_verify_bundle { path }` → non-mutating JSON parse check for
+//!   one backup bundle file; returns byte count plus managed-path flag.
 //!
 //! Errors map to the `E13xx` family in `error.rs`.
 
@@ -33,13 +41,18 @@
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use rusqlite::{params, Connection, OpenFlags};
+use getrandom::getrandom;
+use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
+use zeroize::Zeroize;
 
+use crate::commands::database_runtime::{
+    open_and_bootstrap, resolve_backup_dir, resolve_db_path, resolve_managed_backup_path,
+    DatabaseBootstrapMetadata, DatabaseBootstrapMigration,
+};
+use crate::crypto::kdf::{derive_db_key, KEY_BYTES};
 use crate::error::{AppError, AppResult};
-
-const DB_FILE_NAME: &str = "xai-repo-v0.db";
+use crate::platform::macos::keychain;
 
 /// Windows allowed to invoke `db_*` commands. Mirrors
 /// `capabilities/plugin-data-database.json`. `grid_*` matches the
@@ -47,6 +60,7 @@ const DB_FILE_NAME: &str = "xai-repo-v0.db";
 /// explicitly excluded — they must not persist Repository v0 data
 /// directly; they go through the owning plugin instead.
 const DATABASE_ALLOWED_WINDOWS: &[&str] = &["main", "control", "account", "console"];
+const DATABASE_KEK_KEY: &str = "xai.repository.v0.sqlite.kek";
 
 fn is_database_window_allowed(label: &str) -> bool {
     if DATABASE_ALLOWED_WINDOWS.contains(&label) {
@@ -64,14 +78,8 @@ fn ensure_database_window_allowed(label: &str) -> AppResult<()> {
     )))
 }
 
-const CREATE_RECORDS_SQL: &str = "CREATE TABLE IF NOT EXISTS core_data_records (\
-    namespace TEXT NOT NULL, \
-    id TEXT NOT NULL, \
-    json TEXT NOT NULL, \
-    updated_at_ms INTEGER NOT NULL, \
-    PRIMARY KEY (namespace, id))";
-
-const UPSERT_RECORD_SQL: &str = "INSERT INTO core_data_records (namespace, id, json, updated_at_ms) \
+const UPSERT_RECORD_SQL: &str =
+    "INSERT INTO core_data_records (namespace, id, json, updated_at_ms) \
     VALUES (?1, ?2, ?3, ?4) \
     ON CONFLICT(namespace, id) DO UPDATE SET \
     json = excluded.json, \
@@ -83,8 +91,7 @@ const SELECT_RECORD_SQL: &str =
 const SELECT_ALL_SQL: &str =
     "SELECT json FROM core_data_records WHERE namespace = ?1 ORDER BY id ASC";
 
-const DELETE_RECORD_SQL: &str =
-    "DELETE FROM core_data_records WHERE namespace = ?1 AND id = ?2";
+const DELETE_RECORD_SQL: &str = "DELETE FROM core_data_records WHERE namespace = ?1 AND id = ?2";
 
 /// Tauri-managed state holding the lazily-opened SQLite connection.
 #[derive(Default)]
@@ -94,46 +101,41 @@ pub struct DatabaseState {
 
 struct DatabaseInner {
     conn: Connection,
+    bootstrap: DatabaseBootstrapMetadata,
 }
 
 impl DatabaseState {
-    fn open_at(&self, path: &PathBuf) -> AppResult<()> {
-        let mut guard = self.inner.lock().map_err(|err| {
-            AppError::DatabaseBackend(format!("state lock poisoned: {err}"))
-        })?;
+    fn open_at(
+        &self,
+        path: &PathBuf,
+        db_key: &[u8; KEY_BYTES],
+    ) -> AppResult<DatabaseBootstrapMetadata> {
+        let mut guard = self
+            .inner
+            .lock()
+            .map_err(|err| AppError::DatabaseBackend(format!("state lock poisoned: {err}")))?;
 
-        if guard.is_some() {
-            return Ok(());
+        if let Some(inner) = guard.as_ref() {
+            return Ok(inner.bootstrap.clone());
         }
 
-        if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)
-                .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-        }
-
-        let conn = Connection::open_with_flags(
-            path,
-            OpenFlags::SQLITE_OPEN_READ_WRITE | OpenFlags::SQLITE_OPEN_CREATE,
-        )
-        .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-
-        conn.execute_batch(CREATE_RECORDS_SQL)
-            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
-
-        *guard = Some(DatabaseInner { conn });
-        Ok(())
+        let (conn, bootstrap) = open_and_bootstrap(path, db_key)?;
+        *guard = Some(DatabaseInner {
+            conn,
+            bootstrap: bootstrap.clone(),
+        });
+        Ok(bootstrap)
     }
 
     fn with_conn<F, T>(&self, f: F) -> AppResult<T>
     where
         F: FnOnce(&Connection) -> AppResult<T>,
     {
-        let guard = self.inner.lock().map_err(|err| {
-            AppError::DatabaseBackend(format!("state lock poisoned: {err}"))
-        })?;
-        let inner = guard
-            .as_ref()
-            .ok_or(AppError::DatabaseNotInitialized)?;
+        let guard = self
+            .inner
+            .lock()
+            .map_err(|err| AppError::DatabaseBackend(format!("state lock poisoned: {err}")))?;
+        let inner = guard.as_ref().ok_or(AppError::DatabaseNotInitialized)?;
         f(&inner.conn)
     }
 
@@ -141,28 +143,99 @@ impl DatabaseState {
     where
         F: FnOnce(&mut Connection) -> AppResult<T>,
     {
-        let mut guard = self.inner.lock().map_err(|err| {
-            AppError::DatabaseBackend(format!("state lock poisoned: {err}"))
-        })?;
-        let inner = guard
-            .as_mut()
-            .ok_or(AppError::DatabaseNotInitialized)?;
+        let mut guard = self
+            .inner
+            .lock()
+            .map_err(|err| AppError::DatabaseBackend(format!("state lock poisoned: {err}")))?;
+        let inner = guard.as_mut().ok_or(AppError::DatabaseNotInitialized)?;
         f(&mut inner.conn)
     }
 }
 
-fn resolve_db_path(app: &tauri::AppHandle) -> AppResult<PathBuf> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|err| AppError::DatabaseBackend(format!("app_data_dir: {err}")))?;
-    Ok(dir.join(DB_FILE_NAME))
+fn database_kek_from_bytes(bytes: &[u8]) -> AppResult<[u8; KEY_BYTES]> {
+    if bytes.len() != KEY_BYTES {
+        return Err(AppError::SyncCrypto(format!(
+            "database KEK has invalid length: expected {KEY_BYTES}, got {}",
+            bytes.len()
+        )));
+    }
+
+    let mut out = [0u8; KEY_BYTES];
+    out.copy_from_slice(bytes);
+    Ok(out)
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+fn load_or_create_database_kek_for_key(key: &str) -> AppResult<[u8; KEY_BYTES]> {
+    match keychain::secret_get(key) {
+        Ok(mut bytes) => {
+            let result = database_kek_from_bytes(&bytes);
+            bytes.zeroize();
+            result
+        }
+        Err(AppError::KeychainItemNotFound) => {
+            let mut kek = [0u8; KEY_BYTES];
+            if let Err(err) = getrandom(&mut kek) {
+                return Err(AppError::SyncCrypto(format!(
+                    "database KEK generation failed: {err}"
+                )));
+            }
+
+            if let Err(err) = keychain::secret_set(key, &kek) {
+                kek.zeroize();
+                return Err(err);
+            }
+
+            Ok(kek)
+        }
+        Err(err) => Err(err),
+    }
+}
+
+fn load_or_create_database_kek() -> AppResult<[u8; KEY_BYTES]> {
+    load_or_create_database_kek_for_key(DATABASE_KEK_KEY)
+}
+
+fn derive_database_key_from_keychain() -> AppResult<[u8; KEY_BYTES]> {
+    let mut kek = load_or_create_database_kek()?;
+    let result = derive_db_key(&kek)
+        .map_err(|err| AppError::SyncCrypto(format!("database key derivation failed: {err}")));
+    kek.zeroize();
+    result
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbInitMigration {
+    pub id: String,
+    pub from_version: i64,
+    pub to_version: i64,
+    pub started_at_ms: i64,
+    pub completed_at_ms: i64,
+    pub applied: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DbInitOutput {
     pub namespace: String,
     pub path: String,
+    pub schema_version: i64,
+    pub migration_version: i64,
+    pub migrations: Vec<DbInitMigration>,
+    pub applied_migrations: Vec<DbInitMigration>,
+}
+
+impl From<DatabaseBootstrapMigration> for DbInitMigration {
+    fn from(value: DatabaseBootstrapMigration) -> Self {
+        Self {
+            id: value.id,
+            from_version: value.from_version,
+            to_version: value.to_version,
+            started_at_ms: value.started_at_ms,
+            completed_at_ms: value.completed_at_ms,
+            applied: value.applied,
+        }
+    }
 }
 
 /// Initialize the repo database. Creates the parent directory and the
@@ -177,10 +250,25 @@ pub async fn db_init(
     ensure_database_window_allowed(window.label())?;
     validate_namespace(&namespace)?;
     let path = resolve_db_path(&app)?;
-    state.open_at(&path)?;
+    let mut db_key = derive_database_key_from_keychain()?;
+    let result = state.open_at(&path, &db_key);
+    db_key.zeroize();
+    let bootstrap = result?;
     Ok(DbInitOutput {
         namespace,
-        path: path.to_string_lossy().into_owned(),
+        path: bootstrap.path.to_string_lossy().into_owned(),
+        schema_version: bootstrap.schema_version,
+        migration_version: bootstrap.migration_version,
+        migrations: bootstrap
+            .migrations
+            .into_iter()
+            .map(DbInitMigration::from)
+            .collect(),
+        applied_migrations: bootstrap
+            .applied_in_this_bootstrap
+            .into_iter()
+            .map(DbInitMigration::from)
+            .collect(),
     })
 }
 
@@ -207,12 +295,7 @@ pub async fn db_put(
     state.with_conn(|conn| {
         conn.execute(
             UPSERT_RECORD_SQL,
-            params![
-                input.namespace,
-                input.id,
-                input.json,
-                input.updated_at_ms
-            ],
+            params![input.namespace, input.id, input.json, input.updated_at_ms],
         )
         .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
         Ok(())
@@ -295,11 +378,8 @@ pub async fn db_delete(
     validate_namespace(&input.namespace)?;
     validate_id(&input.id)?;
     state.with_conn(|conn| {
-        conn.execute(
-            DELETE_RECORD_SQL,
-            params![input.namespace, input.id],
-        )
-        .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+        conn.execute(DELETE_RECORD_SQL, params![input.namespace, input.id])
+            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
         Ok(())
     })
 }
@@ -386,11 +466,8 @@ fn apply_put_batch(state: &DatabaseState, input: &DbPutBatchInput) -> AppResult<
                     .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
                 }
                 "delete" => {
-                    tx.execute(
-                        DELETE_RECORD_SQL,
-                        params![input.namespace, entry.id],
-                    )
-                    .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+                    tx.execute(DELETE_RECORD_SQL, params![input.namespace, entry.id])
+                        .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
                 }
                 _ => unreachable!("validated above"),
             }
@@ -402,6 +479,166 @@ fn apply_put_batch(state: &DatabaseState, input: &DbPutBatchInput) -> AppResult<
     })
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupWriteInput {
+    pub destination_path: Option<String>,
+    pub json: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupWriteOutput {
+    pub path: String,
+    pub bytes: u64,
+    pub managed_path: bool,
+}
+
+#[tauri::command]
+pub async fn db_backup_write_bundle(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    input: DbBackupWriteInput,
+) -> AppResult<DbBackupWriteOutput> {
+    ensure_database_window_allowed(window.label())?;
+    if serde_json::from_str::<serde_json::Value>(&input.json).is_err() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle payload must be valid JSON".to_string(),
+        ));
+    }
+
+    let (target_path, managed_path) = match sanitize_optional_path(input.destination_path)? {
+        Some(path) => (path, false),
+        None => {
+            let managed = resolve_managed_backup_path(&app, now_ms())?;
+            (managed, true)
+        }
+    };
+
+    let parent = target_path.parent().ok_or_else(|| {
+        AppError::DatabaseInvalidInput(
+            "backup destination path must include a parent directory".to_string(),
+        )
+    })?;
+    std::fs::create_dir_all(parent)
+        .map_err(|err| AppError::DatabaseBackend(format!("create backup dir failed: {err}")))?;
+
+    let temp_path = target_path.with_extension(format!("{}.tmp", now_ms()));
+    std::fs::write(&temp_path, input.json.as_bytes()).map_err(|err| {
+        AppError::DatabaseBackend(format!("write backup temp file failed: {err}"))
+    })?;
+    std::fs::rename(&temp_path, &target_path)
+        .map_err(|err| AppError::DatabaseBackend(format!("persist backup file failed: {err}")))?;
+
+    Ok(DbBackupWriteOutput {
+        path: target_path.to_string_lossy().into_owned(),
+        bytes: input.json.as_bytes().len() as u64,
+        managed_path,
+    })
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupReadInput {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupReadOutput {
+    pub path: String,
+    pub json: String,
+    pub bytes: u64,
+}
+
+#[tauri::command]
+pub async fn db_backup_read_bundle(
+    window: tauri::WebviewWindow,
+    input: DbBackupReadInput,
+) -> AppResult<DbBackupReadOutput> {
+    ensure_database_window_allowed(window.label())?;
+    let path = sanitize_required_path(&input.path)?;
+    let json = std::fs::read_to_string(&path)
+        .map_err(|err| AppError::DatabaseBackend(format!("read backup bundle failed: {err}")))?;
+    Ok(DbBackupReadOutput {
+        path: path.to_string_lossy().into_owned(),
+        bytes: json.as_bytes().len() as u64,
+        json,
+    })
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupVerifyInput {
+    pub path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DbBackupVerifyOutput {
+    pub path: String,
+    pub bytes: u64,
+    pub valid_json: bool,
+    pub managed_path: bool,
+}
+
+#[tauri::command]
+pub async fn db_backup_verify_bundle(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    input: DbBackupVerifyInput,
+) -> AppResult<DbBackupVerifyOutput> {
+    ensure_database_window_allowed(window.label())?;
+    let path = sanitize_required_path(&input.path)?;
+    let raw = std::fs::read_to_string(&path)
+        .map_err(|err| AppError::DatabaseBackend(format!("read backup bundle failed: {err}")))?;
+
+    let backup_dir = resolve_backup_dir(&app)?;
+    let managed_path = path.starts_with(&backup_dir);
+
+    Ok(DbBackupVerifyOutput {
+        path: path.to_string_lossy().into_owned(),
+        bytes: raw.as_bytes().len() as u64,
+        valid_json: serde_json::from_str::<serde_json::Value>(&raw).is_ok(),
+        managed_path,
+    })
+}
+
+fn sanitize_optional_path(path: Option<String>) -> AppResult<Option<PathBuf>> {
+    let Some(raw) = path else {
+        return Ok(None);
+    };
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return Ok(None);
+    }
+    sanitize_required_path(trimmed).map(Some)
+}
+
+fn sanitize_required_path(path: &str) -> AppResult<PathBuf> {
+    let trimmed = path.trim();
+    if trimmed.is_empty() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle path must not be empty".to_string(),
+        ));
+    }
+    let parsed = PathBuf::from(trimmed);
+    if !parsed.is_absolute() {
+        return Err(AppError::DatabaseInvalidInput(
+            "backup bundle path must be absolute".to_string(),
+        ));
+    }
+    Ok(parsed)
+}
+
+fn now_ms() -> i64 {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let duration = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default();
+    duration.as_millis() as i64
+}
+
 fn validate_namespace(value: &str) -> AppResult<()> {
     if value.is_empty() || value.len() > 128 {
         return Err(AppError::DatabaseInvalidInput(format!(
@@ -409,9 +646,10 @@ fn validate_namespace(value: &str) -> AppResult<()> {
             value.len()
         )));
     }
-    if !value.bytes().all(|b| {
-        b.is_ascii_alphanumeric() || matches!(b, b'.' | b'_' | b'-' | b':')
-    }) {
+    if !value
+        .bytes()
+        .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'.' | b'_' | b'-' | b':'))
+    {
         return Err(AppError::DatabaseInvalidInput(
             "namespace must match [A-Za-z0-9._:-]+".into(),
         ));
@@ -440,10 +678,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!(
-            "xai-db-{name}-{}-{nanos}.db",
-            std::process::id()
-        ))
+        std::env::temp_dir().join(format!("xai-db-{name}-{}-{nanos}.db", std::process::id()))
     }
 
     static INIT: Once = Once::new();
@@ -451,20 +686,21 @@ mod tests {
         INIT.call_once(|| {});
     }
 
+    fn test_db_key() -> [u8; KEY_BYTES] {
+        [0x42; KEY_BYTES]
+    }
+
     fn opened(path: &PathBuf) -> DatabaseState {
         ensure_init();
         let state = DatabaseState::default();
-        state.open_at(path).unwrap();
+        state.open_at(path, &test_db_key()).unwrap();
         state
     }
 
     fn put(state: &DatabaseState, ns: &str, id: &str, json: &str, ts: i64) -> AppResult<()> {
         state.with_conn(|conn| {
-            conn.execute(
-                UPSERT_RECORD_SQL,
-                params![ns, id, json, ts],
-            )
-            .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
+            conn.execute(UPSERT_RECORD_SQL, params![ns, id, json, ts])
+                .map_err(|err| AppError::DatabaseBackend(err.to_string()))?;
             Ok(())
         })
     }
@@ -497,9 +733,7 @@ mod tests {
                 .with_conn(|conn| {
                     let mut stmt = conn.prepare(SELECT_ALL_SQL).unwrap();
                     let rows = stmt
-                        .query_map(params!["organizer.grids"], |row| {
-                            row.get::<_, String>(0)
-                        })
+                        .query_map(params!["organizer.grids"], |row| row.get::<_, String>(0))
                         .unwrap();
                     Ok(rows.map(|r| r.unwrap()).collect::<Vec<_>>())
                 })
@@ -537,13 +771,15 @@ mod tests {
         put(&state, "labels", "l1", r#"{"v":1}"#, 1).unwrap();
         state
             .with_conn(|conn| {
-                conn.execute(DELETE_RECORD_SQL, params!["labels", "l1"]).unwrap();
+                conn.execute(DELETE_RECORD_SQL, params!["labels", "l1"])
+                    .unwrap();
                 Ok(())
             })
             .unwrap();
         state
             .with_conn(|conn| {
-                conn.execute(DELETE_RECORD_SQL, params!["labels", "l1"]).unwrap();
+                conn.execute(DELETE_RECORD_SQL, params!["labels", "l1"])
+                    .unwrap();
                 Ok(())
             })
             .unwrap();
@@ -586,6 +822,25 @@ mod tests {
     }
 
     #[test]
+    fn backup_path_validation_requires_absolute_paths() {
+        assert!(sanitize_required_path("").is_err());
+        assert!(sanitize_required_path("relative/path.json").is_err());
+        assert!(sanitize_required_path("/tmp/xai-backup.json").is_ok());
+    }
+
+    #[test]
+    fn optional_backup_path_allows_empty_and_trims_whitespace() {
+        assert!(sanitize_optional_path(None).unwrap().is_none());
+        assert!(sanitize_optional_path(Some("   ".to_string()))
+            .unwrap()
+            .is_none());
+        let parsed = sanitize_optional_path(Some("  /tmp/backup.json  ".to_string()))
+            .unwrap()
+            .unwrap();
+        assert_eq!(parsed, PathBuf::from("/tmp/backup.json"));
+    }
+
+    #[test]
     fn window_allowlist_admits_documented_labels_and_grids() {
         for label in DATABASE_ALLOWED_WINDOWS {
             assert!(ensure_database_window_allowed(label).is_ok());
@@ -606,11 +861,36 @@ mod tests {
     }
 
     #[test]
+    fn database_kek_requires_32_bytes() {
+        assert!(database_kek_from_bytes(&[0x11; KEY_BYTES]).is_ok());
+        let err = database_kek_from_bytes(&[0x11; KEY_BYTES - 1]).unwrap_err();
+        assert!(matches!(err, AppError::SyncCrypto(_)));
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    #[ignore = "touches the real macOS Keychain; run only during release smoke"]
+    fn keychain_database_kek_roundtrip_uses_32_byte_secret() {
+        let key = format!(
+            "xai.repository.v0.sqlite.kek.release-smoke.{}",
+            std::process::id()
+        );
+        let _ = keychain::secret_del(&key);
+
+        let first = load_or_create_database_kek_for_key(&key).unwrap();
+        assert_eq!(first.len(), KEY_BYTES);
+        assert!(first.iter().any(|byte| *byte != 0));
+
+        let second = load_or_create_database_kek_for_key(&key).unwrap();
+        assert_eq!(second, first);
+
+        keychain::secret_del(&key).unwrap();
+    }
+
+    #[test]
     fn missing_init_returns_not_initialized() {
         let state = DatabaseState::default();
-        let err = state
-            .with_conn::<_, ()>(|_conn| Ok(()))
-            .unwrap_err();
+        let err = state.with_conn::<_, ()>(|_conn| Ok(())).unwrap_err();
         assert!(matches!(err, AppError::DatabaseNotInitialized));
     }
 

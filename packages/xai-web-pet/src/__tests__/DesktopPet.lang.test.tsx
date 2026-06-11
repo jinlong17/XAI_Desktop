@@ -41,7 +41,7 @@ describe("DesktopPet language", () => {
   });
 
   it("shows EN tip on click when lang=en", () => {
-    // After click: bubble shows one of the 5 click tips or the initial auto-tip.
+    // After click: bubble shows one of the 5 click tips.
     // All valid pet EN tip strings are used to assert language correctness.
     const ALL_EN_TIPS: string[] = [
       ...EN_CLICK_TIPS,
@@ -56,7 +56,7 @@ describe("DesktopPet language", () => {
   });
 
   it("shows ZH tip on click when lang=zh", () => {
-    // After click: bubble shows one of the 5 ZH click tips or the initial auto-tip.
+    // After click: bubble shows one of the 5 ZH click tips.
     const ALL_ZH_TIPS: string[] = [
       ...ZH_CLICK_TIPS,
       I18N.zh.pet.hello,
@@ -68,7 +68,7 @@ describe("DesktopPet language", () => {
     expect(ALL_ZH_TIPS.includes(text)).toBe(true);
   });
 
-  it("shows EN auto-tip initially when lang=en (tip rotation fires immediately)", () => {
+  it("does not show EN auto-tip immediately when lang=en", () => {
     const EN_AUTO_TIPS: string[] = [
       I18N.en.pet.hello,
       I18N.en.pet.tip1,
@@ -77,12 +77,14 @@ describe("DesktopPet language", () => {
       I18N.en.pet.tip4,
     ];
     const { container } = render(<DesktopPet on={true} lang="en" />);
-    // Tip rotation sets bubble[0] immediately on mount
+    expect(container.querySelector(".pet-bubble-text")).toBeNull();
+
+    act(() => {
+      vi.advanceTimersByTime(12000);
+    });
+
     const text = container.querySelector(".pet-bubble-text")?.textContent ?? "";
-    if (text) {
-      expect(EN_AUTO_TIPS.includes(text)).toBe(true);
-    }
-    // If no text yet, the auto-tip hasn't fired (timing issue in test) — pass
+    expect(EN_AUTO_TIPS.includes(text)).toBe(true);
   });
 
   it("shows EN bubble change link text when lang=en", () => {

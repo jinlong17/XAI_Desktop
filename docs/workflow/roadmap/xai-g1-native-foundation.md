@@ -1,6 +1,10 @@
 # Roadmap Manifest — xai-g1-native-foundation
 
-> **RESUMED (2026-05-26, per ADR-0010 Accepted).** Web Console gap-closure 9/9 SHIPPED + ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0010 Status flipped Accepted in commit `75655dc`. P1 desktop pivot is active per ADR-0010 §D1. G0 prerequisite met (CONDITIONAL_GO 2026-05-19; G0.1-G0.5 SHIPPED on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL deferred non-blocking). This roadmap is the **primary P1 active work surface** going forward.
+> **⚠ SUPERSEDED-BY-ADR-0011 (2026-05-26).** This roadmap was RESUMED on 2026-05-26 morning per ADR-0010, then **superseded the same day** by ADR-0011 (Accepted 2026-05-26) which redefines P1 as a React+Tauri+Local-first hybrid app — normal Mac window, Tauri-wrap of `apps/web` dist, not a transparent overlay. The legacy overlay/Smart-Container/file-organizer product scope (which this roadmap's G1.1–G1.6 anchors supported) is demoted to **P3 Future** per ADR-0011 §D3. The 4 Shipped anchors (G1.1 window-command-contract, G1.2 grid-shell-organizer-content, G1.4 multi-grid-event-scope, G1.5 grid-persistence, G1.6 host-business-residuals) + G1.3 BLOCKED_EXTERNAL row remain in PLUGIN_MAP as historical evidence; no new active work is dispatched against this roadmap. New P1 Phase 1 work surface is the patch roadmap at `docs/audit/2026-05-26-patch-roadmap-source.md` (first feature: `desktop-tauri-web-dist-normal-window`). Reversal protocol per ADR-0011 §S7 if Phase 1 execution requires reviving the overlay path.
+>
+> **Historical narrative below preserved unchanged for evidence.**
+>
+> RESUMED (2026-05-26, per ADR-0010 Accepted). Web Console gap-closure 9/9 SHIPPED + ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0010 Status flipped Accepted in commit `75655dc`. P1 desktop pivot is active per ADR-0010 §D1. G0 prerequisite met (CONDITIONAL_GO 2026-05-19; G0.1-G0.5 SHIPPED on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL deferred non-blocking). This roadmap is the **primary P1 active work surface** going forward.
 
 - Roadmap Source: docs/planning/execution/G1-native-foundation.md
 - Init Path: execution-pack

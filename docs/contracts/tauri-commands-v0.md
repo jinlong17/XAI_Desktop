@@ -33,11 +33,11 @@ Rust 是 label 生成权威。TS 侧不能手写除 public helper 以外的 labe
 
 | Command | Owner | Allowed windows | Input | Output |
 |---|---|---|---|---|
-| `create_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `update_grid_window` | organizer/host | `main`,`control` | `{ gridId, rect }` | `GridWindowSnapshot` |
-| `close_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `void` |
-| `list_grid_windows` | organizer/host | `main`,`control` | `void` | `GridWindowSnapshot[]` |
-| `focus_grid_window` | organizer/host | `main`,`control` | `{ gridId }` | `GridWindowSnapshot` |
+| `create_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId, rect, native? }` | `GridWindowSnapshot` |
+| `update_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId, rect, native? }` | `GridWindowSnapshot` |
+| `close_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId }` | `void` |
+| `list_grid_windows` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `void` | `GridWindowSnapshot[]` |
+| `focus_grid_window` | organizer/host/plugin-platform | `main`,`control`,`plugin-center` | `{ gridId }` | `GridWindowSnapshot` |
 
 Target G1 output type:
 
@@ -47,6 +47,19 @@ interface GridWindowSnapshot {
   label: `grid_${string}`;
   rect: Rect;
   visible: boolean;
+  nativeApplied: {
+    opacity: boolean;
+    clickThrough: boolean;
+    pinned: boolean;
+    allSpaces: boolean;
+  };
+}
+
+interface GridWindowNativeOptions {
+  opacity: number; // clamped by Rust to 0.35..1
+  clickThrough: boolean;
+  pinned: boolean;
+  allSpaces: boolean;
 }
 ```
 
@@ -56,8 +69,9 @@ G1.1 implementation notes:
 - Invalid `gridId` values return `INVALID_GRID_ID`.
 - Missing windows return `WINDOW_NOT_FOUND`.
 - Native window failures return `WINDOW_NATIVE_ERROR`.
+- `native` is optional for legacy organizer callers. When present, Rust applies opacity, click-through, pinned and all-spaces behavior and reports the applied state through `nativeApplied`.
 - Runtime allow-list `commands::window::WINDOW_ALLOWED_WINDOWS`
-  (`main`, `control`) enforces the table above at the IPC boundary
+  (`main`, `control`, `plugin-center`) enforces the table above at the IPC boundary
   with `WINDOW_CAPABILITY_DENIED`. `grid_*` windows are intentionally
   excluded — a grid window must request lifecycle changes for itself
   via cross-window events routed through `control`, not by directly
@@ -183,20 +197,20 @@ Current source:
 
 | Command | Allowed windows | Input | Output | Security rule |
 |---|---|---|---|---|
-| `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates `xai-repo-v0.db` under `app_data_dir`. |
+| `db_init` | `main`,`control`,`grid_*`,`account` | `{ namespace }` | `{ namespace, path }` | Idempotent. Opens or creates encrypted `xai-repo-v0.db` under `app_data_dir`. |
 | `db_put` | same | `{ input: { namespace, id, json, updatedAtMs } }` | `void` | Upsert. `json` payload is opaque; raw bytes do not cross IPC. |
 | `db_get` | same | `{ input: { namespace, id } }` | `string \| null` | Returns the stored JSON or `null` if absent. |
 | `db_list` | same | `{ input: { namespace } }` | `string[]` | All payloads in the namespace, sorted by id. |
 | `db_delete` | same | `{ input: { namespace, id } }` | `void` | Idempotent. |
 | `db_put_batch` | same | `{ input: { namespace, entries: [{ op: "put" \| "delete", id, json?, updatedAtMs? }] } }` | `void` | Atomic. Wraps every entry in one SQLite `BEGIN`/`COMMIT`. Any validation or backend failure rolls back the whole batch. Required by the sync-outbox to commit the entity row and its outbox row together (G2.6 P0 fix). |
 
-PoC scope:
-- Plain SQLite via `rusqlite` (bundled-sqlcipher build but no `PRAGMA key` applied).
-- SQLCipher PRAGMA path is exercised by `apps/desktop/src-tauri/src/crypto/sqlcipher.rs` and will be wired into `db_init` once G2.4 publishes a stable opaque KEK handle.
+Runtime scope:
+- SQLCipher via `rusqlite` with `bundled-sqlcipher`; `db_init` applies `PRAGMA key` before bootstrap/schema access.
+- The database KEK is device-local in macOS Keychain under the XAI Desktop keychain service. Rust derives the SQLCipher DB key with the `xai.sqlite.v1` KDF domain separator; raw key bytes never cross IPC.
 - Cross-namespace transactions are not exposed; the TS `createTauriRepo` shim runs `transaction(fn)` callbacks against a single namespace and dispatches all buffered writes through `db_put_batch`.
 - Namespace must match `[A-Za-z0-9._:-]+` and be ≤ 128 chars. Id must be 1..=256 chars.
 - Errors: `E1300` (not initialized), `E1301` (invalid input), `E1302` (backend SQLite/FS error).
-- Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that also enables `rusqlite`).
+- Feature-gated: registered only when the desktop crate is built with `--features crypto` (the gate that enables `rusqlite`/SQLCipher). The desktop `dev`, `build`, and `build:dmg` scripts enable this feature.
 
 ## 6.2 Sync Menubar Commands
 

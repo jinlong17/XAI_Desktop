@@ -355,4 +355,3 @@ Q23. Bilingual flip EN ↔ 中文 → Filter / Share / Map UI strings switch.
 | G9 | `pnpm --filter @repo/core check-types` PASS (new EventMap entry compiles) |
 | G10 | `pnpm --filter @repo/xai-web-event-bus test` PASS (no regression from EventMap addition) |
 | G11 (manual) | Cross-vendor smoke per §6.6 — Codex `gpt-5.5-thinking medium` primary; queued 24h per ADR-0008 carve-out (W1 precedent) |
-

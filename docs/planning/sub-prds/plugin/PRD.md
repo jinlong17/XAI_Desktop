@@ -1,6 +1,6 @@
 # Plugin 子 PRD — XAI 桌面整理插件 / Widget
 
-> **PAUSED until G1 SHIPPED (ADR-0010 §D2).** 桌面插件属 P2，整条线在 P1 App 原生地基（G1）SHIPPED 前保持 Paused。粗略需求先用 `xai-feature-brief` 规范化入队，**不开 feature-build**。解冻条件见 §7。
+> **当前开工结论（2026-06-06）**：桌面插件拆成两层推进。**插件平台运行时 / G1 锚点**（multi-window engine、overlay、click-through、grid persistence、Widget Host / SDK、Plugin Center contract）已完成 Phase 1 系统底座，Phase 2 common capability code path 已用 host-local `sample-widget` 跑通；**具体插件包**（clipboard / widgets / pet / meditation 等）仍保持 paused，等真实 macOS host smoke 和 operator 确认后再进入 feature-build。
 > **权威基线**：ADR-0010（amended 2026-05-30）、ADR-0013（D2 分支 / D3 闸门 / D4 同步）、ADR-0015（organizer P 级 + pet 归属，Proposed）。边界以 `docs/MODULE_BOUNDARIES.md` 为准。
 
 | 字段 | 值 |
@@ -9,10 +9,10 @@
 | 范围 | 桌面整理插件 / Widget 的开发范围、归属、MVP 顺序、解冻条件（**不**重复主 PRD 的 FR）|
 | 模块 key | `plugin`（PRODUCT_MODULE_MAP 模块 #3）|
 | Surface | `apps/desktop/` 插件槽位 + `packages/plugin-{organizer,clipboard,widgets,pet}` |
-| 主 / 短分支 | `desktop-plugin-next`（已定义未创建）/ `codex/plugin/<feature>` |
+| 主 / 短分支 | `desktop-plugin-next` / `codex/plugin/common-capabilities-phase2`（Phase 2） |
 | 文档作者 | Claude（subagent）|
 | 创建日期 | 2026-06-02 |
-| 状态 | v0.1-DRAFT（范围 + MVP 拍板版；解冻后再细化各插件 FR）|
+| 状态 | v0.4-PHASE-2-COMMON-CAPABILITY-CODE-PATH-COMPLETE（系统底座 + 通用能力代码路径完成；具体插件包等待 host smoke / operator 解冻）|
 
 ---
 
@@ -45,7 +45,7 @@
 
 ---
 
-## 2. 现状盘点（2026-06-02，来自代码审查）
+## 2. 现状盘点（2026-06-06，来自代码审查）
 
 | 插件 | 代码现状 | 是否接入 App | 缺口 |
 |---|---|---|---|
@@ -57,6 +57,8 @@
 
 > 详细证据见 PLUGIN_MAP.md 对应行 + `apps/desktop/src/main.tsx`（插件注册）+ `src-tauri/src/commands/`。
 > 2026-06-03 audit note：`plugin-clipboard` / `plugin-widgets` / `plugin-pet` targeted typecheck 通过；organizer fresh test 未取得结果，因为使用 `--runInBand` 调用 Vitest 不受支持（现有 dev_log 仍记录历史 ship 验证）。
+> 2026-06-04 follow-up：`plugin-clipboard` / `plugin-widgets` / `plugin-pet` 当前仍是 scaffold，不在 App 入口注册；它们的 typecheck 与 package-local tests 通过只能证明骨架健康，不代表可添加、可删除、可固定或可配置的桌面插件产品闭环已经存在。
+> 2026-06-06 Phase 1 closeout：平台 runtime foundation 已在 `codex/plugin/platform-runtime-phase1` 完成：typed contract、manifest-to-center adapter、device-local instance store、generic window adapter、placement/behavior/style model、native smoke checklist、Plugin Center shell、built-in catalog、add-to-desktop flow、instance management actions 均已落地。该结论只覆盖系统底座，不覆盖具体业务插件。
 
 ---
 
@@ -73,6 +75,31 @@
 
 > **一句话 MVP**：organizer 收尾 → Widget Host + 时钟/进度条 → clipboard → pet。
 
+### 3.1 三阶段开发顺序（2026-06-04 确认）
+
+当前已完成 **第一阶段：系统层级基础建设** 与 **第二阶段：插件基础能力 code path**。第三阶段具体插件包仍只做文档、brief、contract 对齐；真实 macOS host smoke 和 operator 解冻确认前，不写具体插件功能代码。
+
+| 阶段 | 目标 | 先做 / 后做 | 退出条件 |
+|---|---|---|---|
+| 第一阶段：系统层级基础建设 | 把桌面插件平台从 organizer 专用底座升级为可承载任意内置插件实例的平台 | 运行机制、插件容器、窗口管理、注册机制、生命周期、本地存储、Mac App 通信接口、插件配置管理 | **已完成系统底座**：Plugin Center MVP 能创建一个 `PluginInstance`，App 能按实例创建 / 关闭 / 聚焦 / 持久化窗口；禁用实例不丢配置；删除实例才清理配置 |
+| 第二阶段：插件基础能力 | 验证任何内置插件都能被平台管理，而不是只服务 organizer | 添加、删除、启用 / 禁用、隐藏、固定到桌面、调整位置、调整尺寸、透明度 / 样式设置、重启恢复、capability denial 展示、低风险 sample widget 完整链路 | 退出条件：common capability code path 完成；真实 macOS host smoke 后，operator 再确认是否解冻具体插件包 |
+| 第三阶段：具体功能插件 | 在稳定平台上补轻量、可瞥见、可快速操作的插件 | 快速记账、时间追踪、任务 glance、日历 glance、便签、文件夹挂件、快捷入口；clipboard / pet 延后到需要的原生命令和 AI 接口明确后 | 每个插件有独立 PRD / design / api / test / dev_log，默认 `device-local`，只复用 Web/App 业务逻辑，不重做完整 Web 模块 |
+
+2026-06-06 Phase 2 progress：`restoreEnabledPluginInstancesOnDesktop()` 已作为第一项通用能力落地。Plugin Center 加载 device-local store 后只恢复 `enabled` 实例窗口，`disabled` / `hidden` 实例保留配置但不自动建窗。`summarizePluginWindowNativeApplication()` 已作为第二项通用能力落地，Plugin Center 可展示 placement / size 已应用，以及 opacity / click-through / pinned / all-spaces 的 fallback / not-requested 状态。`summarizePluginWindowCapabilityError()` 已作为第三项通用能力落地，Plugin Center 可展示 capability denial / native window error 的 code、severity、recoverable 和 capability scope。grid window commands 已作为第四项通用能力接受 `native` options，并在 Rust 侧应用 opacity / click-through / pinned / all-spaces。host-local `sample-widget` 已作为第五项通用能力跑通 Plugin Center → device-local `PluginInstance` → grid window → GridWindow content routing。后续先做真实 macOS host smoke，再由 operator 确认是否解冻具体插件包。
+
+### 3.2 第一阶段系统能力拆分
+
+| 能力 | Owner | 范围 |
+|---|---|---|
+| 桌面插件运行机制 | `plugin` 产品线，物理可落在 `apps/desktop` host | 从 manifest / registry 创建 `PluginInstance`，把 contentType 映射到 overlay / grid / dedicated window |
+| 插件容器 | `app` 容器 + `plugin` 内容目录 | Mac App 提供 Plugin Center window；plugin 提供目录、预览、settings schema、AddToDesktop contract |
+| 插件窗口管理 | `plugin` 产品归属，host 物理实现 | create / close / focus / resize / move / opacity / click-through / pin / all-spaces；窗口命令必须有 allowlist |
+| 插件注册机制 | `plugin` | `manifest.json` + `registerPlugin()` + index-only public surface；Planned/In-Dev 插件先 mock，不作为稳定依赖 |
+| 插件生命周期 | `plugin` | registered → available → enabled → instance-created → mounted → hidden / disabled → destroyed |
+| 本地存储 | `plugin` + `core-data` contract | 实例配置默认 `syncScope: device-local`；跨设备需求必须另走 ADR-0013 D4 |
+| 与 Mac App 通信接口 | `app` host bridge + `plugin` contract | Tauri command payload、window label、EventMap、capability denial error shape；插件包只消费，不实现原生命令 |
+| 插件配置管理 | `plugin` | size / placement / opacity / style / dataSource / behavior；禁用保留配置，删除清理配置 |
+
 ---
 
 ## 4. 验收基线（每个 MVP 通用）
@@ -86,24 +113,26 @@
 
 ## 5. Plugin Center / Entry Model（入口与管理模型）
 
-> 本节是**产品入口设计决策**，不是实现授权。G1 SHIPPED 前只允许文档 / brief / SDK contract 对齐，不开 `feature-build`。
+> 本节是**产品入口设计决策**，不是具体插件包实现授权。Phase 1 可先做 Plugin Center / Entry Model 的系统底座与 contract；clipboard / widgets / pet / meditation 等具体插件包在平台运行时闭环前仍只允许文档 / brief / SDK contract 对齐，不开 `feature-build`。
+>
+> 2026-06-07 形态修正：Plugin Center 是 Mac App 内的「桌面插件」管理 surface，不是独立 App / 独立产品线。当前使用独立原生窗口承载，是为了管理桌面上的其他小窗、支持 focus / smoke / 多窗口验证；最终入口和用户心智必须回到 Mac App 控制面板 / 原生菜单里的 `桌面插件`。
 
 ### 5.1 推荐入口
 
 | 入口 | MVP 决策 | 归属 |
 |---|---|---|
 | Mac App 控制面板一级入口：`桌面插件` | **必须做**。作为日常发现、添加、管理桌面插件的主入口 | App 外壳 owns entry/window；Plugin 线 owns 可添加内容与实例 contract |
-| 轻量 Plugin Center | **必须做 MVP 版**。内置插件列表 + 已启用实例 + 详情设置 | App 提供管理容器；`packages/plugin-*` 提供 manifest / settings schema / 渲染能力 |
+| Mac App 内置轻量 Plugin Center | **必须做 MVP 版**。内置插件列表 + 已启用实例 + 详情设置；可用独立 NSWindow 承载，但不作为独立产品 | App 提供管理容器；`packages/plugin-*` 提供 manifest / settings schema / 渲染能力 |
 | 设置页 `桌面插件` | **只做全局偏好**。开关、权限、默认样式、点击穿透默认值 | App 设置面 |
 | Web / 工作台 | **不作为主入口**。只可展示“可添加到桌面”的轻提示或深链 | Web 不拥有桌面插件运行态 |
 | 第三方插件市场 | **不做 MVP** | Future / owner decision |
 
-最终入口拍板：**Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好**。
+最终入口拍板：**Mac App 控制面板一级入口 + Mac App 内置轻量 Plugin Center 管理 surface + 设置页全局偏好**。
 
 ### 5.2 用户添加流程（MVP）
 
 1. 用户打开 Mac App 控制面板，点击 `桌面插件`。
-2. App 打开 Plugin Center，默认展示 `推荐 / 可添加 / 已启用`。
+2. App 在自身上下文中打开 Plugin Center 管理窗口 / 面板，默认展示 `推荐 / 可添加 / 已启用`。
 3. 用户选择内置插件（如 `时间进度条`），右侧看到预览、尺寸、数据来源和样式摘要。
 4. 用户点击 `添加到桌面`。
 5. App 创建一个 `PluginInstance`，自动放到安全默认位置；插件只接收实例配置并渲染内容。
@@ -139,7 +168,7 @@ MVP 不把“拖拽到桌面”作为主流程。拖拽添加可在高级版补�
 
 - 最大风险不是功能少，而是文档 / UI 让人误以为插件体系已经成熟。当前真实状态：organizer 可用；clipboard/widgets/pet 多为 scaffold；meditation 未建包。
 - `clipboard.item` 是 core-data 中已登记的 device-local 语义；`plugin-clipboard` 包内仍出现 `clipboard.entry`，进入 Clipboard MVP 前必须先做契约统一。
-- Desktop Plugin 不是第四条完整产品线。它是 Mac App 增强层：短期目标是 Organizer 收尾为稳定参考实现；G1 后做最小 Widget Host；Clipboard / Pet 延后；Meditation 暂不做桌面插件。
+- Desktop Plugin 不是第四条完整产品线，Plugin Center 也不是独立 App。它是 Mac App 增强层：短期目标是 Organizer 收尾为稳定参考实现；G1 后做最小 Widget Host；Clipboard / Pet 延后；Meditation 暂不做桌面插件。
 
 ---
 
@@ -152,9 +181,10 @@ MVP 不把“拖拽到桌面”作为主流程。拖拽添加可在高级版补�
 
 ## 7. 解冻条件（gate）
 
-- **触发**：G1（App 原生地基）SHIPPED（ADR-0010 §D2）。
-- **解冻动作**：operator 确认创建 `desktop-plugin-next` 分支（独立确认步骤）；用 `xai-feature-dossier-sync` 给 clipboard/widgets/pet **反向补 PRD 与现状差距**作为开工基线；按 §3 MVP 顺序逐个走标准管线。
-- **在 Paused 期间允许的事**：用 `xai-feature-brief` 规范化需求入队、本文档与 MODULE_BOUNDARIES / ADR-0015 的对齐——**不**写插件功能代码。
+- **平台运行时触发**：operator 已确认从 `origin/dev` 创建 `desktop-plugin-next` 并启动 `codex/plugin/platform-runtime-phase1`。第一阶段系统底座已完成，第二阶段 common capability code path 已在 `codex/plugin/common-capabilities-phase2` 跑通；该工作是 `plugin` 产品归属，物理实现可落在 `apps/desktop` host，但不触碰 `dev`，不把 Web 改动直接合入 App。
+- **具体插件包解冻触发**：Phase 2 通用插件能力（重启恢复、pin、位置/尺寸/透明度、capability denial、sample widget 完整跑通）完成并有 host smoke 后，operator 再确认 clipboard / widgets / pet / meditation 等插件包进入 feature-plan。
+- **解冻动作**：先完成 Phase 2 真实 macOS host smoke；operator 确认后，将平台分支审核并合入 `desktop-plugin-next`，再用 `xai-feature-dossier-sync` 给 clipboard/widgets/pet 反向补 PRD 与现状差距；按 §3.1 顺序逐个走标准管线。
+- **在插件包 Paused 期间允许的事**：用 `xai-feature-brief` 规范化需求入队、维护 PRD / SDK / MODULE_BOUNDARIES / ADR-0015 / dashboard 对齐；不写具体插件功能代码。
 
 ---
 
@@ -164,5 +194,6 @@ MVP 不把“拖拽到桌面”作为主流程。拖拽添加可在高级版补�
 - 任务路由：`docs/PRODUCT_MODULE_MAP.md`（模块 #3）
 - 插件状态机：`docs/PLUGIN_MAP.md`
 - 插件 SDK：`docs/PLUGIN_SDK.md`
+- 第一阶段执行路线：`docs/planning/execution/desktop-plugin-platform-phase1.md`
 - 决策记录：`docs/adr/0015-desktop-plugin-scope-and-organizer-level.md`
 - 分类注册表：`docs/workflow/project/module-classification.json`

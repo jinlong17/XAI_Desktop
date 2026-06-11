@@ -6,7 +6,7 @@
 > **权威基线**：ADR-0010（amended 2026-05-30，active-focus 顺序）、ADR-0013（分支拓扑 + Web→Desktop D3 闸门 + 账号云同步 D4）、ADR-0015（桌面插件范围 + organizer P 级 reconcile，Proposed）。
 > **配套文档**：`docs/PRODUCT_MODULE_MAP.md`（六模块任务路由）、`docs/PLUGIN_MAP.md`（插件状态机）、`docs/PLUGIN_SDK.md`（插件 SDK 契约蓝图）、`docs/planning/sub-prds/plugin/PRD.md`（桌面插件开发范围）、`docs/workflow/project/module-classification.json`（机器可读分类注册表）。
 >
-> 最后更新：2026-06-02
+> 最后更新：2026-06-06
 
 ---
 
@@ -26,14 +26,16 @@
 
 | 层 | 实质 | 归属模块 | 谁拥有 | 现状 |
 |---|---|---|---|---|
-| **A1. Mac 壳（Web 容器）** | 承载 Web SPA 的主窗口 + 原生 chrome：菜单栏、托盘、离线缓存、账号/Keychain、自动更新、系统通知、深链、开机启动、`桌面插件` 入口按钮 | **P1 Mac 桌面壳**（`app`） | App 层（`apps/desktop/` + `src-tauri/` 外壳） | 壳身份 = "把 Web 装进原生窗 + 原生便利"，**不是桌面整理器** |
-| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | 命令基本做完；产品归属是插件平台而非壳身份 |
-| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | organizer 已 Stable；其余 Planned/stub，**整条线 Paused until G1**；入口模型已决，功能实现未开工 |
+| **A1. Mac 壳（Web 容器）** | 承载 Web SPA 的主窗口 + 原生 chrome：菜单栏、托盘、离线缓存、账号/Keychain、自动更新、系统通知、深链、开机启动、`桌面插件` 入口按钮、Plugin Center 管理窗口 / 面板容器 | **P1 Mac 桌面壳**（`app`） | App 层（`apps/desktop/` + `src-tauri/` 外壳） | 壳身份 = "把 Web 装进原生窗 + 原生便利"，**不是桌面整理器**；Plugin Center 是 Mac App 内的管理 surface，不是独立产品 |
+| **A2. 插件平台运行时（多窗口引擎）** | 新建原生小窗口、点击穿透、贴边吸附、grid 原生窗口、Spaces/多显示器矩阵、读真实文件、Tauri 窗口/文件命令 | **P2 桌面插件平台**（`plugin`，物理代码在 host） | 物理在 `apps/desktop/src-tauri/commands/*`（host 进程，app 通道执行）；**产品归属 = 插件平台** | Phase 1 系统底座已完成：Mac App 内置 Plugin Center 管理 surface、内置 catalog、`PluginInstance` store、window adapter、placement/behavior/style model 和 instance actions 已落地；真实 macOS smoke 仍按清单执行 |
+| **B. 桌面整理插件 / 挂件**（= 真·桌面插件） | organizer / clipboard / widgets / pet / meditation：跑在 App 插件槽位的轻量 overlay/grid 挂件；声明可添加内容、实例 schema 和 Plugin Center 目录项 | **P2 桌面插件**（`plugin`） | `packages/plugin-{organizer,clipboard,widgets,pet}` | organizer 已 Stable 且作为 Phase 1 低风险 add target；clipboard/widgets/pet 仍 Planned/stub 且 paused；meditation 未建包；具体功能实现未开工 |
 | **C. Web 同名组件** | `xai-web-pet`、`dashboard-widgets`、`dashboard-grid` 等 | **P0 Web**（`web`） | `packages/{xai-web-*,plugin-web-*}` | 已 SHIPPED，是网页内组件，**与桌面插件零代码共享** |
 
 > **一句话**：Mac 壳（A1）只把 Web 装进原生窗 + 原生便利；多窗口运行时（A2）物理在 host、**产品归插件平台**；真正的桌面插件（B）骑在 A2 上，多数还没做且被 Paused；Web 的同名组件（C）只是借用了相同词汇。
 
 > ⚠️ **物理位置 ≠ 产品归属（关键澄清）**：多窗口 / 原生窗口的 Tauri 命令**物理上必须实现在 host 进程**（`apps/desktop/src-tauri`，只有 host 能调 Tauri）。但"多窗口 / overlay 运行时"的**产品归属是【桌面插件平台】，不是 Mac 壳的身份**。Mac 壳的身份就是 Web 容器 + 原生 chrome；所有桌面原生超能力（多窗口、挂件、整理、快速入口）的产品归属都是桌面插件。长期面（iPhone/iPad/Watch/Android/扩展）的规划见 [`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`](planning/LONG_TERM_PRODUCT_ROADMAP.md)。
+
+> ✅ **Plugin Center 形态决策（2026-06-07）**：Plugin Center 不是独立 App，也不是脱离 Mac App 的独立产品线。它是 Mac App 内的「桌面插件」管理 surface：主入口应在 Mac App 控制面板 / 原生菜单里，当前可用独立 NSWindow 承载只是为了管理其他桌面小窗和完成 host smoke；最终用户心智必须是“在 Mac App 里管理桌面插件”。
 
 ---
 
@@ -43,7 +45,7 @@
 |---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/` + `xai-web-*` + `plugin-web-*` | `web` | **P0 active mainline** |
 | 2 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
-| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **P2 paused（等 G1）** |
+| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **Phase 1 系统底座完成；Phase 2 common capability code path 完成；具体插件包 paused** |
 | 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
 | 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
 | 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` + roadmap `xai-admin-dashboard-system-integration.md` | `codex/admin/<feature>` | **ACTIVE roadmap-gated** |
@@ -60,7 +62,7 @@
 | 真实文件 / 文件夹整理 | ❌ 浏览器无 fs | ✅ 提供 `finder.rs` / `thumbnail` 命令 | ✅ organizer 整理真实文件 |
 | 挂件（时钟/天气/便签/进度条/桌宠） | ✅ 网页内 DOM（同名 ≠ 同物） | — | ✅ 贴桌面的原生 overlay 挂件 |
 | 剪贴板历史 / OCR | ❌ 浏览器受限 | 提供 `clipboard_*` / `vision_ocr` 命令 | ✅ clipboard 面板 |
-| 插件入口 / 管理中心 | ❌ 不拥有桌面运行态 | ✅ `桌面插件` 入口、Plugin Center 容器、实例窗口和全局设置 | ✅ 插件目录、`PluginInstance` 设置 schema、可添加内容 |
+| 插件入口 / 管理中心 | ❌ 不拥有桌面运行态 | ✅ `桌面插件` 入口、Plugin Center 管理容器（可用独立 NSWindow 承载但不脱离 Mac App）、实例窗口和全局设置 | ✅ 插件目录、`PluginInstance` 设置 schema、可添加内容 |
 | 任务/看板/日历/番茄/习惯/统计/四象限/倒数日 | ✅ 完整 24 模块 | 共享 `plugin-productivity`/`project`/`labels` 业务逻辑 | ❌ **不重做**（插件不是完整模块） |
 | 数据 | IndexedDB ⇄ 账号云 | SQLite ⇄ 账号云 | **默认 `device-local` 永不上云**；仅显式 `account-sync` 才同步 |
 | 跨面对齐方式 | 源头 | 经 **D3 gate（W0~W4）** 从 Web 按需同步 + 共享业务包 | 依赖 App 平台；插件间走 `@repo/core/events` |
@@ -78,7 +80,7 @@
    - Web `dashboard-grid`：网页内 12 列 CSS 排版网格（挂件墙）。
    - 桌面 `organizer` grid：整理**真实文件/App** 的原生 Smart Container 窗。
    - 两套**零代码共享**（grep 0 命中），只是词汇相同。
-5. **插件入口归 App，插件内容归 plugin。** Mac App 控制面板里的 `桌面插件` 按钮、Plugin Center 窗口容器、实例窗口位置、pin、点击穿透、权限提示和全局偏好归 `app`；插件列表、可添加内容、`PluginInstance` settings schema、AddToDesktop contract 和具体渲染归 `plugin`。一个需求同时触及二者时，先拆分 App entry/window delta 与 plugin contract/package delta，不把入口实现塞进 Web 工作台。
+5. **插件入口归 App，插件内容归 plugin。** Mac App 控制面板里的 `桌面插件` 按钮、Plugin Center 管理窗口 / 面板容器、实例窗口位置、pin、点击穿透、权限提示和全局偏好归 `app`；插件列表、可添加内容、`PluginInstance` settings schema、AddToDesktop contract 和具体渲染归 `plugin`。Plugin Center 可以作为单独原生窗口出现，但它仍是 Mac App 内部管理 surface，不是独立 App / 独立产品线。一个需求同时触及二者时，先拆分 App entry/window delta 与 plugin contract/package delta，不把入口实现塞进 Web 工作台。
 
 ---
 
@@ -92,7 +94,7 @@
 | **pet** | 桌面悬浮宠物 | Planned（stub 偏空壳） | overlay 窗 | **独立包 plugin-pet**(ADR-0015 Accepted;非 widgets 子模块) |
 | **meditation** | 冥想 / 专注 | Planned（**未建包**） | 全屏覆盖 | Web 形态已 ship 为 `xai-web-meditation` |
 
-> 全部 P2 桌面插件按 ADR-0010 §D2 **Paused until G1 SHIPPED**。开工前用 `xai-feature-brief` 规范化入队，不开 feature-build。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
+> P2 具体插件包（clipboard / widgets / pet / meditation）按 ADR-0010 §D2 继续 paused，直到 Phase 2 common capability code path 完成后的真实 macOS host smoke 和 operator 确认通过。multi-window engine / grid persistence / window-command / Widget Host-SDK / Plugin Center contract 属 G1 平台运行时 active gate；Phase 1 系统底座已在 `codex/plugin/platform-runtime-phase1` 完成，Phase 2 sample-widget host flow 已在 `codex/plugin/common-capabilities-phase2` 证明代码路径。MVP 顺序见 `docs/planning/sub-prds/plugin/PRD.md`。
 
 ---
 
@@ -106,8 +108,8 @@
    - 不能（需原生窗口/fs/剪贴板/屏幕）→ 进 3。
 3. **是"Mac 壳能力"、"多窗口平台运行时"还是"用平台做挂件"？**
    - Mac 壳 / native chrome（菜单栏、托盘、离线缓存、账号+Keychain、自动更新、通知、深链、开机启动、承载 Web SPA）→ **App（P1，`codex/desktop/*`）**。
-   - 多窗口引擎 / overlay / grid 持久化 / window-command / 平台运行时（代码物理在 host，**产品归插件平台**）→ **桌面插件平台（P2，`codex/plugin/*`，当前 Paused）**。
-   - 用现有平台做轻量挂件/整理 → **桌面插件（P2，当前 Paused）**。
+   - 多窗口引擎 / overlay / grid 持久化 / window-command / 平台运行时（代码物理在 host，**产品归插件平台**）→ **桌面插件平台（`codex/plugin/*`，G1 active gate）**。
+   - 用现有平台做轻量挂件/整理 → **桌面插件（具体插件包仍 paused，先 brief / contract，不开 feature-build）**。
 4. **是插件入口还是插件内容？**
    - Mac App 控制面板入口 / Plugin Center 容器 / 原生实例窗口 → **App**。
    - 插件目录、AddToDesktop contract、实例设置 schema、具体 plugin 包 → **Plugin**。
@@ -125,6 +127,7 @@
 - 插件状态机：`docs/PLUGIN_MAP.md`
 - 插件 SDK 契约蓝图：`docs/PLUGIN_SDK.md`
 - 桌面插件开发范围 + MVP：`docs/planning/sub-prds/plugin/PRD.md`
+- 桌面插件第一阶段执行路线：`docs/planning/execution/desktop-plugin-platform-phase1.md`
 - 机器可读分类注册表：`docs/workflow/project/module-classification.json`
 - 决策记录（organizer P 级 + pet 归属）：`docs/adr/0015-desktop-plugin-scope-and-organizer-level.md`
 - 分支拓扑 + D3/D4：`docs/adr/0013-branch-sync-governance.md`

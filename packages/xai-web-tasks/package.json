@@ -9,6 +9,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./desktop-cache": {
+      "types": "./src/desktopCache.ts",
+      "default": "./src/desktopCache.ts"
     }
   },
   "scripts": {

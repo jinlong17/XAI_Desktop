@@ -49,6 +49,9 @@ async function runPreviewAction(
     case "search":
       actions.openSearch();
       return;
+    case "plugins":
+      actions.openPluginCenter();
+      return;
     default:
       return;
   }

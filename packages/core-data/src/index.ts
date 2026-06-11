@@ -43,18 +43,46 @@ export {
 } from "./keychain";
 export type { KeychainErrorCode, KeychainClient } from "./keychain";
 export type {
+  CalendarProviderAvailability,
+  CalendarProviderConnectionState,
+  CalendarProviderId,
+  CalendarProviderStateEntity,
+  CalendarProviderSyncMode,
+  BoardWorkspaceStorageKey,
   CardEntity,
   ClipboardEntryEntity,
   GridEntity,
   GridItemEntity,
   HabitEntity,
+  HabitsStateEntity,
   LabelEntity,
+  PetStateEntity,
+  PetStorageKey,
+  PomodoroSessionsEntity,
   ProjectEntity,
+  ProjectWorkspaceStateEntity,
   RepoEntity,
   RepoEntityType,
   RepoEntityTypeMap,
+  SettingsPrefEntity,
+  TasksStateEntity,
   TodoEntity,
 } from "./entities";
+export {
+  LEGACY_PROJECT_ENTITY_TYPE,
+  normalizeProjectEntityType,
+  PROJECT_ENTITY_TYPE,
+} from "./entities";
+export type {
+  DesktopBridgeError,
+  DesktopBridgeErrorKind,
+  DesktopBridgeReadResult,
+  DesktopBridgeReadSource,
+  DesktopBridgeSurface,
+  DesktopBridgeWriteResult,
+  DesktopBridgeWriteStatus,
+} from "./desktop-bridge";
+export { NOTES_UNSUPPORTED_ERROR } from "./desktop-bridge";
 export { createTauriRepo, dbInit } from "./tauri-sqlite";
 export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
 export {
@@ -69,7 +97,52 @@ export type {
   EnqueueOutboxInput,
   OutboxBatchOptions,
   OutboxEntry,
+  OutboxQueueStatus,
+  OutboxRollbackSafety,
 } from "./sync-outbox";
+export {
+  OFFLINE_QUEUE_REPLAYABLE_STATUSES,
+  OFFLINE_QUEUE_UNRESOLVED_STATUSES,
+  OFFLINE_QUEUEABLE_ENTITY_TYPES,
+  applyOfflineMutationRollback,
+  buildOfflineMutationId,
+  getOfflineQueueSummary,
+  isDeviceLocalRepoEntityType,
+  isOfflineQueueableEntity,
+  isQueuedOfflineResult,
+  listOfflineQueueMutations,
+  markOfflineMutationConflict,
+  markOfflineMutationReplayDeferred,
+  markOfflineMutationRetryableFailure,
+  markOfflineMutationRollbackPending,
+  markOfflineMutationSynced,
+  outboxIdForQueuedResult,
+  stageHabitOfflineEdit,
+  stageOfflineEditMutation,
+  stageProjectBoardOfflineEdit,
+  stageProjectCardOfflineEdit,
+  stageTodoOfflineEdit,
+} from "./offline-edit-queue";
+export type {
+  OfflineEditOperation,
+  OfflineEditQueueRequest,
+  OfflineEditQueueResult,
+  OfflineEditQueueStatus,
+  OfflineQueueListOptions,
+  OfflineQueueableEntityType,
+  OfflineQueueSummary,
+  OfflineRollbackResult,
+} from "./offline-edit-queue";
+export { runReconnectSyncReplay } from "./reconnect-sync";
+export type {
+  ReconnectSyncContext,
+  ReconnectSyncMutationOutcome,
+  ReconnectSyncPreflightStatus,
+  ReconnectSyncReplayInput,
+  ReconnectSyncReplayResult,
+  ReconnectSyncTransport,
+  ReconnectSyncTransportResult,
+} from "./reconnect-sync";
 export {
   SYNC_BLOB_ACCEPT_VERSION,
   SYNC_PROTOCOL_HEADER,
@@ -130,3 +203,45 @@ export type {
   OrganizerLayoutMigrationOptions,
   OrganizerLayoutMigrationResult,
 } from "./organizer-layout-migration";
+export {
+  DESKTOP_WEB_IMPORT_SURFACES,
+  buildDesktopWebImportLedgerId,
+  buildDesktopWebImportRunRecordId,
+  createDesktopWebImportFingerprint,
+  normalizeImportBoundaryKey,
+} from "./desktop-web-import";
+export type {
+  DesktopWebImportLedgerRecord,
+  DesktopWebImportRunRecord,
+  DesktopWebImportSkippedReason,
+  DesktopWebImportSurface,
+  DesktopWebImportSurfaceResult,
+  DesktopWebImportSurfaceStatus,
+  DesktopWebImportTrigger,
+} from "./desktop-web-import";
+export {
+  DESKTOP_BACKUP_BRIDGE_NAMESPACE,
+  DESKTOP_BACKUP_BUNDLE_VERSION,
+  DESKTOP_BACKUP_EXCLUDED_ENTITY_TYPES,
+  DESKTOP_BACKUP_RESTORABLE_ENTITY_TYPES,
+  DESKTOP_BACKUP_SOURCE_APP,
+  applyDesktopBackupBundle,
+  countUnresolvedOutboxRows,
+  createDesktopBackupBundle,
+  createDesktopBackupFingerprint,
+  verifyDesktopBackupApply,
+  verifyDesktopBackupBundle,
+  verifyDesktopBackupBundleJson,
+} from "./desktop-backup";
+export type {
+  DesktopBackupApplyResult,
+  DesktopBackupBundle,
+  DesktopBackupBundleAudit,
+  DesktopBackupBundleManifest,
+  DesktopBackupExcludedEntityType,
+  DesktopBackupLiveVerifyResult,
+  DesktopBackupRestorableEntityType,
+  DesktopBackupRestoreStatus,
+  DesktopBackupVerifyResult,
+  DesktopBackupVerifyStatus,
+} from "./desktop-backup";

@@ -13,9 +13,20 @@
 
 import type { RepoRecord } from "./types";
 
+export const PROJECT_ENTITY_TYPE = "project.board" as const;
+export const LEGACY_PROJECT_ENTITY_TYPE = "project.project" as const;
+
+export function normalizeProjectEntityType(entityType: string): string {
+  if (entityType === LEGACY_PROJECT_ENTITY_TYPE) {
+    return PROJECT_ENTITY_TYPE;
+  }
+  return entityType;
+}
+
 /** A floating Grid container ("Smart Container") on the desktop. */
 export interface GridEntity extends RepoRecord {
   entityType: "organizer.grid";
+  syncScope: "device-local";
   title: string;
   rect: {
     x: number;
@@ -33,6 +44,7 @@ export interface GridEntity extends RepoRecord {
 /** A typed item inside a Grid: file / folder / app / url. */
 export interface GridItemEntity extends RepoRecord {
   entityType: "organizer.item";
+  syncScope: "device-local";
   gridId: string;
   filename: string;
   /** Optional for non-fs items (e.g. URLs); required for file/folder/app. */
@@ -89,7 +101,7 @@ export interface ClipboardEntryEntity extends RepoRecord {
 }
 
 export interface ProjectEntity extends RepoRecord {
-  entityType: "project.board";
+  entityType: typeof PROJECT_ENTITY_TYPE;
   title: string;
   description?: string;
   archivedAt?: string;
@@ -107,6 +119,80 @@ export interface CardEntity extends RepoRecord {
   labelIds: string[];
 }
 
+export interface TasksStateEntity extends RepoRecord {
+  entityType: "productivity.tasks_state";
+  syncScope: "device-local";
+  storageKey: "xai_task_cols";
+  value: unknown;
+}
+
+export interface HabitsStateEntity extends RepoRecord {
+  entityType: "productivity.habits_state";
+  syncScope: "device-local";
+  storageKey: "xai_habits_state";
+  value: unknown;
+}
+
+export interface PomodoroSessionsEntity extends RepoRecord {
+  entityType: "productivity.pomodoro_sessions";
+  syncScope: "device-local";
+  storageKey: "xai_pomodoro_sessions";
+  sessions: unknown[];
+}
+
+export type BoardWorkspaceStorageKey =
+  | "xai_boards_v2"
+  | "xai_active_board"
+  | "xai_board_panels"
+  | "xai_board_inbox"
+  | "xai_board_view_by_id";
+
+export interface ProjectWorkspaceStateEntity extends RepoRecord {
+  entityType: "project.workspace_state";
+  syncScope: "device-local";
+  storageKey: BoardWorkspaceStorageKey;
+  value: unknown;
+}
+
+export type PetStorageKey = "xai_pet_id" | "xai_pet_pos";
+
+export interface PetStateEntity extends RepoRecord {
+  entityType: "pet.state";
+  syncScope: "device-local";
+  storageKey: PetStorageKey;
+  value: unknown;
+}
+
+export interface SettingsPrefEntity extends RepoRecord {
+  entityType: "settings.pref";
+  syncScope: "device-local";
+  storageKey: `xai_pref_${string}`;
+  value: unknown;
+}
+
+export type CalendarProviderId = "gcal";
+export type CalendarProviderSyncMode = "online-only";
+export type CalendarProviderConnectionState = "connected" | "disconnected";
+export type CalendarProviderAvailability =
+  | "ready"
+  | "offline"
+  | "auth-required"
+  | "transport-unavailable";
+
+export interface CalendarProviderStateEntity extends RepoRecord {
+  entityType: "calendar.provider_state";
+  syncScope: "device-local";
+  providerId: CalendarProviderId;
+  syncMode: CalendarProviderSyncMode;
+  connectionState: CalendarProviderConnectionState;
+  availability: CalendarProviderAvailability;
+  lastAttemptAt?: string;
+  lastSuccessAt?: string;
+  lastFailureCode?: string;
+  lastFailureMessage?: string;
+  needsReconnectRefresh: boolean;
+}
+
 /** Discriminated union of all Repository v0 entity types. */
 export type RepoEntity =
   | GridEntity
@@ -116,7 +202,14 @@ export type RepoEntity =
   | HabitEntity
   | ClipboardEntryEntity
   | ProjectEntity
-  | CardEntity;
+  | CardEntity
+  | TasksStateEntity
+  | HabitsStateEntity
+  | PomodoroSessionsEntity
+  | ProjectWorkspaceStateEntity
+  | PetStateEntity
+  | SettingsPrefEntity
+  | CalendarProviderStateEntity;
 
 /** Map from `entityType` string to its concrete record shape. */
 export interface RepoEntityTypeMap {
@@ -125,9 +218,16 @@ export interface RepoEntityTypeMap {
   "labels.label": LabelEntity;
   "productivity.todo": TodoEntity;
   "productivity.habit": HabitEntity;
+  "productivity.tasks_state": TasksStateEntity;
+  "productivity.habits_state": HabitsStateEntity;
+  "productivity.pomodoro_sessions": PomodoroSessionsEntity;
   "clipboard.item": ClipboardEntryEntity;
   "project.board": ProjectEntity;
+  "project.workspace_state": ProjectWorkspaceStateEntity;
   "project.card": CardEntity;
+  "pet.state": PetStateEntity;
+  "settings.pref": SettingsPrefEntity;
+  "calendar.provider_state": CalendarProviderStateEntity;
 }
 
 export type RepoEntityType = keyof RepoEntityTypeMap;

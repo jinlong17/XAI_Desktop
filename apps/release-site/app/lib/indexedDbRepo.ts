@@ -69,6 +69,7 @@ export function createIndexedDbRepo<T extends RepoRecord>({
     },
 
     async migrate(_plan: MigrationPlan<T>): Promise<MigrationResult> {
+      void _plan;
       // Migration execution is intentionally deferred until Repository v0
       // migrations are finalized for the browser IndexedDB driver.
       if (process.env.NODE_ENV !== "production") {

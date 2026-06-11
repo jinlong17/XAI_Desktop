@@ -57,6 +57,33 @@ export function isOutboxId(id: string): boolean {
   return id.startsWith(OUTBOX_ID_PREFIX);
 }
 
+export const OUTBOX_QUEUE_STATUSES = [
+  "queued",
+  "replay_deferred",
+  "retryable_failure",
+  "conflict",
+  "rollback_pending",
+  "synced",
+  "rolled_back",
+] as const;
+
+export type OutboxQueueStatus = (typeof OUTBOX_QUEUE_STATUSES)[number];
+
+export interface OutboxRollbackSafety {
+  /**
+   * Entity `updatedAt` expected when rollback is attempted. Rollback code
+   * must verify this before applying a destructive change.
+   */
+  expectedEntityUpdatedAt: string;
+  /**
+   * Serialized previous entity snapshot for rollback restore when needed.
+   * Undefined means no snapshot is available.
+   */
+  previousEntityPayload?: string;
+  /** True when a previous entity existed before this mutation. */
+  previousEntityExisted: boolean;
+}
+
 /** A single pending sync mutation queued for push. */
 export interface OutboxEntry extends RepoRecord {
   entityType: "sync.outbox";
@@ -78,6 +105,31 @@ export interface OutboxEntry extends RepoRecord {
   retryCount: number;
   /** Optional revision used by the conditional-write conflict path. */
   baseRevision?: number;
+  /** Local queue state (row #13). */
+  queueStatus: OutboxQueueStatus;
+  /** Boundary key owning this queued mutation (account/user/session scope). */
+  boundaryKey: string;
+  /** Monotonic local revision used for rollback/replay ordering. */
+  localRevision: number;
+  /** Last status transition timestamp. */
+  statusUpdatedAt: string;
+  /** Last local failure marker (never implies remote acknowledgement). */
+  lastFailureCode?: string;
+  lastFailureMessage?: string;
+  lastFailureAt?: string;
+  /** Conflict marker timestamp for explicit conflict visibility. */
+  conflictAt?: string;
+  /** Durable remote acknowledgement timestamp (row #14). */
+  ackedAt?: string;
+  /** Optional remote revision returned on acknowledgement. */
+  remoteRevision?: number;
+  /** Optional remote commit sequence returned on acknowledgement. */
+  remoteCommitSeq?: string;
+  /** Rollback audit markers. */
+  rollbackRequestedAt?: string;
+  rollbackReason?: string;
+  rollbackAppliedAt?: string;
+  rollbackSafety?: OutboxRollbackSafety;
 }
 
 /**
@@ -110,6 +162,10 @@ export interface EnqueueOutboxInput<T extends RepoRecord> {
   payload: string;
   mutationId: string;
   baseRevision?: number;
+  boundaryKey?: string;
+  queueStatus?: OutboxQueueStatus;
+  localRevision?: number;
+  rollbackSafety?: OutboxRollbackSafety;
   nowIso?: () => string;
   nextCommitSeq: () => number;
 }
@@ -139,6 +195,21 @@ export async function enqueueOutboxEntry<T extends RepoRecord>(
   if (!Number.isInteger(commitSeq) || commitSeq < 1) {
     throw new Error("E3008: outbox commitSeq must be a positive integer");
   }
+  const queueStatus = input.queueStatus ?? "replay_deferred";
+  if (!OUTBOX_QUEUE_STATUSES.includes(queueStatus)) {
+    throw new Error(`E3011: unsupported outbox queueStatus "${queueStatus}"`);
+  }
+  const localRevision = input.localRevision ?? commitSeq;
+  if (!Number.isInteger(localRevision) || localRevision < 1) {
+    throw new Error("E3012: outbox localRevision must be a positive integer");
+  }
+  const boundaryKey = input.boundaryKey?.trim() || "local-session";
+  if (input.rollbackSafety) {
+    const expected = input.rollbackSafety.expectedEntityUpdatedAt?.trim() ?? "";
+    if (expected.length === 0) {
+      throw new Error("E3013: rollbackSafety.expectedEntityUpdatedAt is required");
+    }
+  }
   const entry: OutboxEntry = {
     id: outboxIdFor(input.mutationId),
     entityType: "sync.outbox",
@@ -154,6 +225,11 @@ export async function enqueueOutboxEntry<T extends RepoRecord>(
     payload: input.payload,
     retryCount: 0,
     baseRevision: input.baseRevision,
+    queueStatus,
+    boundaryKey,
+    localRevision,
+    statusUpdatedAt: nowIso(),
+    rollbackSafety: input.rollbackSafety,
   };
   assertRepoRecord(entry);
 

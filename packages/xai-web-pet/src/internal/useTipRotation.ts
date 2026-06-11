@@ -4,8 +4,9 @@
  * Port of web design/pet.jsx lines 219-233 (the tip useEffect).
  *
  * Behaviour:
- * - When on===true AND !pickerOpen: immediately show tips[0], dismiss at
- *   TIP_FIRST_DISMISS_MS, then cycle every TIP_CYCLE_MS (null gap → TIP_REGROW_MS → next).
+ * - When on===true AND !pickerOpen: wait one TIP_CYCLE_MS before showing
+ *   tips[0], dismiss at TIP_FIRST_DISMISS_MS, then cycle every TIP_CYCLE_MS
+ *   (null gap → TIP_REGROW_MS → next).
  * - When on===false OR pickerOpen: effect does not run; bubble clears.
  * - Both timers are cleaned up on unmount / dep change (StrictMode-safe).
  *
@@ -49,19 +50,30 @@ export function useTipRotation({
     ];
 
     let i = 0;
-    setBubble(tips[0] ?? null);
+    let dismiss: ReturnType<typeof setTimeout> | null = null;
+    let cycle: ReturnType<typeof setInterval> | null = null;
+    let regrow: ReturnType<typeof setTimeout> | null = null;
 
-    const dismiss = setTimeout(() => setBubble(null), TIP_FIRST_DISMISS_MS);
+    const showCurrent = () => {
+      setBubble(tips[i] ?? null);
+      dismiss = setTimeout(() => setBubble(null), TIP_FIRST_DISMISS_MS);
+    };
 
-    const cycle = setInterval(() => {
-      i = (i + 1) % tips.length;
-      setBubble(null);
-      setTimeout(() => setBubble(tips[i] ?? null), TIP_REGROW_MS);
+    const firstShow = setTimeout(() => {
+      showCurrent();
+
+      cycle = setInterval(() => {
+        i = (i + 1) % tips.length;
+        setBubble(null);
+        regrow = setTimeout(showCurrent, TIP_REGROW_MS);
+      }, TIP_CYCLE_MS);
     }, TIP_CYCLE_MS);
 
     return () => {
-      clearInterval(cycle);
-      clearTimeout(dismiss);
+      clearTimeout(firstShow);
+      if (cycle) clearInterval(cycle);
+      if (dismiss) clearTimeout(dismiss);
+      if (regrow) clearTimeout(regrow);
     };
   }, [on, lang, pickerOpen, setBubble, s]);
 }

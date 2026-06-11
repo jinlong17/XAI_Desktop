@@ -11,7 +11,7 @@ Registered in `commands/keychain.rs`, declared in `commands/mod.rs`
 
 | Command | Signature (Rust) | Returns | Notes |
 |---|---|---|---|
-| `secret_set` | `secret_set(key: String, value: Vec<u8>) -> AppResult<()>` | `()` on success | Idempotent upsert. If key exists: find-then-update in place (preserves ACL, OQ-2); else add with accessibility + ACL attributes. |
+| `secret_set` | `secret_set(key: String, value: Vec<u8>) -> AppResult<()>` | `()` on success | Idempotent upsert. If key exists: find-then-update in place; else add a generic-password item in the local non-synchronizable store. |
 | `secret_get` | `secret_get(key: String) -> AppResult<Vec<u8>>` | stored bytes | Device-unlocked checked first; missing key → `KeychainItemNotFound`; locked → `KeychainLocked`. |
 | `secret_del` | `secret_del(key: String) -> AppResult<()>` | `()` on success | No-op success if key absent (delete is idempotent). |
 
@@ -29,10 +29,9 @@ account/service attribute pair.
 
 ### Attribute contract (asserted in tests)
 
-- `kSecAttrAccessible` = `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`
-- synchronizable attribute = never set true (T13)
-- `SecAccess` trusted-application list = exactly one app: bundle id `com.jinlong.desktop`
+- synchronizable attribute = explicitly false on set/get/delete (T13)
 - service attribute namespaced (e.g. `com.jinlong.desktop.secret`) to avoid collision with OS items
+- signed Data Protection ACL / bundle-identity rejection is a production signing gate for bundle id `com.jinlong.desktop`, not an unsigned dev/debug runtime requirement
 
 ## 2. TS Wrapper (`@repo/core-data`)
 
@@ -83,7 +82,7 @@ widened (Rec-1 from feature-review). The file was created in Phase 3.
 ## 5. Idempotency & Concurrency
 
 - `secret_set`: idempotent upsert (find-then-update, fallback add) — repeated
-  sets with the same value are safe; ACL preserved across updates (OQ-2).
+  sets with the same value are safe.
 - `secret_del`: idempotent (absent key → success).
 - `secret_get`: pure read.
 - Keychain access is process/device-scoped; no cross-window coordination
@@ -92,5 +91,5 @@ widened (Rec-1 from feature-review). The file was created in Phase 3.
 
 ## 6. Open Contract Questions (CLOSED)
 
-- **OQ-1** (RESOLVED — Phase 1): `SecAccessControl::create_with_protection(Some(ProtectionMode::AccessibleWhenUnlockedThisDeviceOnly), 0)` + `PasswordOptions::set_access_control()`. See `design.md §OQ-1 Resolution`.
-- **OQ-2** (RESOLVED — Phase 1): `set_generic_password_options` in `security-framework` implements find-then-update internally; existing `SecAccessControl` is preserved on updates. No delete+re-add required.
+- **OQ-1** (REVISED — 2026-05-29): unsigned dev/debug builds use generic-password items with `set_access_synchronized(Some(false))`; `SecAccessControl`/Data Protection ACL failed with OSStatus -34018 and is tracked as a production signing/notarization gate. See `design.md §OQ-1 Resolution`.
+- **OQ-2** (RESOLVED — Phase 1): `set_generic_password_options` in `security-framework` implements find-then-update internally. No delete+re-add required.

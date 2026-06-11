@@ -4,19 +4,22 @@ import App from "./App";
 import { GridWindow } from "./windows/GridWindow";
 import { ControlWindow } from "./windows/ControlWindow";
 import { ConsoleWindow } from "./windows/ConsoleWindow";
+import { PluginCenterWindow } from "./windows/PluginCenterWindow";
 import "./index.css";
 import { registerAccountPlugin } from "@repo/plugin-account";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
-import { registerConsolePlugin } from "../../../packages/plugin-console/src";
-import { registerLabelsPlugin } from "../../../packages/plugin-labels/src";
-import { registerProductivityPlugin } from "../../../packages/plugin-productivity/src";
+import { registerConsolePlugin } from "@repo/plugin-console";
+import { registerLabelsPlugin } from "@repo/plugin-labels";
+import { registerOrganizerPlugin } from "@repo/plugin-organizer";
+import { registerProductivityPlugin } from "@repo/plugin-productivity";
 
 /**
  * Simple hash router for multi-window architecture.
  * Main window loads "/" route
- * Grid windows load "/#/grid?id=xxx" route
- * Control window loads "/#/control" route
- * Console window loads "/#/console" route
+ * Grid windows load "/desktop-host/index.html#/grid?id=xxx" route
+ * Control window loads "/desktop-host/index.html#/control" route
+ * Console window loads "/desktop-host/index.html#/console" route
+ * Plugin Center window loads "/desktop-host/index.html#/plugin-center" route
  */
 function Router() {
   const hash = window.location.hash;
@@ -39,6 +42,10 @@ function Router() {
     return <ConsoleWindow />;
   }
 
+  if (hash.startsWith("#/plugin-center")) {
+    return <PluginCenterWindow />;
+  }
+
   // Default: main app
   return <App />;
 }
@@ -46,6 +53,7 @@ function Router() {
 // Static plugin registration — above createRoot (red line #1/#8: registration only, no sync logic)
 registerAccountPlugin();
 registerAiCubePlugin();
+registerOrganizerPlugin();
 registerProductivityPlugin();
 registerLabelsPlugin();
 registerConsolePlugin();

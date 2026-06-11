@@ -14,8 +14,16 @@
  * TS callers can reuse the returned driver safely.
  */
 
-import { applyRepoIndexQuery, applyRepoListQuery, assertRepoRecord } from "./repo-utils";
+import {
+  applyRepoIndexQuery,
+  applyRepoListQuery,
+  assertMigrationPlan,
+  assertRepoRecord,
+  skippedMigrationResult,
+} from "./repo-utils";
 import type {
+  MigrationPlan,
+  MigrationResult,
   Repo,
   RepoListQuery,
   RepoMetadata,
@@ -34,6 +42,19 @@ export interface CreateTauriRepoOptions {
 export interface DbInitOutput {
   namespace: string;
   path: string;
+  schemaVersion: number;
+  migrationVersion: number;
+  migrations: DbInitMigration[];
+  appliedMigrations: DbInitMigration[];
+}
+
+export interface DbInitMigration {
+  id: string;
+  fromVersion: number;
+  toVersion: number;
+  startedAtMs: number;
+  completedAtMs: number;
+  applied: boolean;
 }
 
 /**
@@ -63,14 +84,19 @@ export function createTauriRepo<T extends RepoRecord>(
   const { namespace } = options;
   const nowMs = options.nowMs ?? Date.now;
   let initialized: Promise<void> | undefined;
+  let bootstrap: DbInitOutput | undefined;
 
   async function ensureInit(): Promise<void> {
     if (!initialized) {
-      initialized = invoke<DbInitOutput>("db_init", { namespace }).then(
-        () => undefined,
-      );
+      initialized = dbInit(invoke, namespace).then((result) => {
+        bootstrap = result;
+      });
     }
     await initialized;
+  }
+
+  function currentMigrationVersion(): number {
+    return bootstrap?.migrationVersion ?? 0;
   }
 
   async function listAll(): Promise<T[]> {
@@ -134,10 +160,10 @@ export function createTauriRepo<T extends RepoRecord>(
       return {
         driver: "tauri-sqlite",
         namespace,
-        schemaVersion: options.schemaVersion ?? 1,
-        migrationVersion: 0,
+        schemaVersion: bootstrap?.schemaVersion ?? options.schemaVersion ?? 1,
+        migrationVersion: currentMigrationVersion(),
         recordCount: records.length,
-        migrations: [],
+        migrations: (bootstrap?.migrations ?? []).map(toMigrationResult),
       };
     },
   };
@@ -230,10 +256,29 @@ export function createTauriRepo<T extends RepoRecord>(
       return result;
     },
 
-    async migrate(): Promise<never> {
+    async migrate(plan: MigrationPlan<T>): Promise<MigrationResult> {
+      await ensureInit();
+      const current = currentMigrationVersion();
+
+      if (current >= plan.toVersion) {
+        return skippedMigrationResult(plan, () => new Date().toISOString());
+      }
+
+      assertMigrationPlan(plan, current);
       throw new Error(
-        "E1300: tauri-sqlite migrate() not yet wired — use createSqliteRepo in tests or wait for G2.2 follow-up",
+        "E1300: tauri-sqlite migrate(plan) is unsupported for host-owned runtime migrations; use native db_init registry migrations",
       );
     },
+  };
+}
+
+function toMigrationResult(input: DbInitMigration): MigrationResult {
+  return {
+    id: input.id,
+    fromVersion: input.fromVersion,
+    toVersion: input.toVersion,
+    startedAt: new Date(input.startedAtMs).toISOString(),
+    completedAt: new Date(input.completedAtMs).toISOString(),
+    applied: input.applied,
   };
 }

@@ -1,0 +1,139 @@
+# Roadmap Manifest — xai-desktop-remaining-p2-p3-future
+
+- Roadmap Source: inline PRD from 2026-05-28 `/xai-roadmap-loop mode: init` request
+- Source Context: `CLAUDE.md`, `AGENTS.md`, `docs/workflow/project/usage-guide.md`, `docs/PLUGIN_MAP.md`, `docs/SYSTEM_ARCHITECTURE.md`, `docs/adr/0011-p1-react-tauri-local-first-hybrid.md`, `docs/audit/2026-05-26-web-completeness-and-p1-redefinition.md`, `docs/audit/2026-05-26-patch-roadmap-source.md`, `packages/desktop-phase1-rc-release-gate/docs/dev_log.md`
+- Requested ADR Path Note: `docs/adr/0011-p1-desktop-redefinition.md` was not present; `docs/adr/0011-p1-react-tauri-local-first-hybrid.md` is the accepted ADR-0011 file used for this init.
+- Init Path: decompose
+- Generated: 2026-05-28
+- Default Automation Mode: B-Codex
+- Default Dependency Semantics: shipped
+- Default Verify Cross-vendor: yes
+- Wave Concurrency Cap: 3
+- BG Direct Verified: unknown
+- Manifest Review: REQUIRED
+- Branch Scope: `dev` only for this desktop/Tauri roadmap. Do not create new branch names from this manifest.
+- Ship Gate: human-triggered only. Roadmap-loop must never run `ship`.
+- Phase 1 Baseline: `desktop-tauri-web-dist-normal-window`, `desktop-web-auth-offline-mode`, `desktop-phase1-build-packaging-pipeline`, `web-external-runtime-offline-gates`, `desktop-basic-macos-menu-config-store`, and `desktop-phase1-rc-release-gate` are already SHIPPED and are treated as external preconditions, not rows to reopen.
+- Overlay Boundary: quarantined transparent overlay/control/grid assets are preserved for P3+ reuse; they must not be moved back into P1 Phase 2.
+
+## Features
+
+| # | Slug | Source | Depends On | Dep Semantics | Status | Automation Mode | Verify Cross-vendor | Last Run | Note |
+|---|------|--------|------------|---------------|--------|-----------------|---------------------|----------|------|
+| 1 | desktop-real-macos-release-smoke | docs/reviews/desktop-real-macos-release-smoke/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-29 23:32 PDT | Manual real-macOS smoke passed by human observation: offline launch, `/Applications` launch, native menu interactions, reset/relaunch behavior, normal-window startup, and no overlay/control/grid auto-start. Public-release signing/notarization and real updater credentials remain downstream release gates. |
+| 2 | desktop-native-notifications-reminders | docs/reviews/desktop-native-notifications-reminders/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:15 PDT | Shipped on `dev`; automated gates passed. Residual external-release risk remains real interactive macOS notification UX/manual Notification Center behavior on hardware. |
+| 3 | desktop-statusbar-quick-actions | docs/reviews/desktop-statusbar-quick-actions/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:19 PDT | Shipped on `dev`; automated gates passed. Residual release risk remains real macOS tray click/focus behavior on physical hardware. |
+| 4 | desktop-global-hotkey-quick-open | docs/reviews/desktop-global-hotkey-quick-open/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:24 PDT | Shipped on `dev`; automated gates passed after phase-bounded history repair. Residual external-release risk remains real macOS shortcut conflict/focus/persistence manual smoke on hardware. |
+| 5 | desktop-full-macos-menu-polish | docs/reviews/desktop-full-macos-menu-polish/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:26 PDT | Shipped on `dev`; automated gates passed. Residual external-release risk remains real macOS native menu interaction ergonomics/support-placement checks on hardware. |
+| 6 | desktop-auto-update-release-channel | docs/reviews/desktop-auto-update-release-channel/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:29 PDT | Shipped on `dev`; automated check/status-only updater gates passed. Residual external-release risk remains real internal endpoint/key/signing smoke plus Apple signing/notarization and real macOS updater interaction checks on hardware. |
+| 7 | desktop-last-data-cache-polish | docs/reviews/desktop-last-data-cache-polish/20260528-roadmap-seed.md | — | — | SHIPPED | (default) | (default) | 2026-05-28 21:33 PDT | Shipped on `dev`; automated cache/display gates passed. Residual external-release risk remains real macOS offline relaunch cache-state smoke on hardware (readable/absent/malformed), including shell/module unreadable-state and non-overlay startup confirmation. |
+| 8 | desktop-phase2-integrated-rc-gate | docs/reviews/desktop-phase2-integrated-rc-gate/20260528-roadmap-seed.md | desktop-native-notifications-reminders, desktop-statusbar-quick-actions, desktop-global-hotkey-quick-open, desktop-full-macos-menu-polish, desktop-auto-update-release-channel, desktop-last-data-cache-polish | ready_to_ship | SHIPPED | (default) | (default) | 2026-05-28 21:36 PDT | Shipped on `dev`; integrated repo-side Phase 2 RC gates remain green, while real-macOS interactive checks for all six slices and row #1 release smoke remain explicit external-release prerequisites. |
+| 9 | desktop-local-first-storage-adr | docs/reviews/desktop-local-first-storage-adr/20260528-roadmap-seed.md | desktop-phase2-integrated-rc-gate | shipped | SHIPPED | (default) | (default) | 2026-05-28 23:52 PDT | Shipped on `dev`; ADR-0012 is frozen as docs-only Phase 3 storage authority with no implementation drift. Rows `#10` and `#15` are now dependency-unblocked under shipped semantics. |
+| 10 | desktop-local-first-sqlite-foundation | docs/reviews/desktop-local-first-sqlite-foundation/20260528-roadmap-seed.md | desktop-local-first-storage-adr | shipped | SHIPPED | (default) | (default) | 2026-05-29 00:23 PDT | Shipped on `dev`; ADR-0012 SQLite foundation is implemented and verified as a foundation-only row, and row `#11` is now dependency-unblocked under shipped semantics. |
+| 11 | desktop-local-first-repository-bridge | docs/reviews/desktop-local-first-repository-bridge/20260528-roadmap-seed.md | desktop-local-first-sqlite-foundation | shipped | SHIPPED | (default) | (default) | 2026-05-29 01:38 PDT | Shipped on `dev`; canonical productivity and board bridge records are verified/pushed. Rows `#12`, `#13`, `#16`, and `#17` are dependency-unblocked under shipped semantics, while row `#14` remains dependent on row `#13`. |
+| 12 | desktop-local-first-web-data-migration | docs/reviews/desktop-local-first-web-data-migration/20260528-roadmap-seed.md | desktop-local-first-repository-bridge | shipped | SHIPPED | (default) | (default) | 2026-05-29 02:27 PDT | Shipped on `dev`; commits `170c0217`, `d51fac51`, `f470a3c6`, `77424ba6`, and `5573c2fa` are pushed. Row `#18` dependency progress: row `#12` is now satisfied, row `#13` remains dependency-unblocked from row `#11`, and row `#14` still depends on row `#13`. |
+| 13 | desktop-local-first-offline-edit-queue | docs/reviews/desktop-local-first-offline-edit-queue/20260528-roadmap-seed.md | desktop-local-first-repository-bridge | shipped | SHIPPED | (default) | (default) | 2026-05-29 03:05 PDT | Shipped on `dev`; commits `836a4616`, `0ffd22da`, `0a6ace15`, `a55c4567`, and `249fe138` are pushed. Row `#14` is now dependency-unblocked under shipped semantics. |
+| 14 | desktop-local-first-sync-reconnect | docs/reviews/desktop-local-first-sync-reconnect/20260528-roadmap-seed.md | desktop-local-first-offline-edit-queue | shipped | SHIPPED | (default) | (default) | 2026-05-29 03:42 PDT | Shipped on `dev`; commits `5e2a7e81`, `a925b6ff`, `a19af22b`, and `82e57d3e` are pushed. Row `#18` dependency progress: rows `#12`, `#13`, and `#14` are now satisfied; row `#18` remains pending because rows `#15`, `#16`, and `#17` are still `PENDING`. |
+| 15 | desktop-ai-offline-provider-policy | docs/reviews/desktop-ai-offline-provider-policy/20260528-roadmap-seed.md | desktop-local-first-storage-adr | shipped | SHIPPED | (default) | (default) | 2026-05-29 04:22 PDT | Shipped on `dev`; commits `e00c6a1b`, `8b497698`, `fd267fa6`, and `269f944d` are pushed. Row `#18` dependency progress: row `#15` is now satisfied, while row `#18` remains pending because rows `#16` and `#17` are still `PENDING`. |
+| 16 | desktop-calendar-sync-degraded-mode | docs/reviews/desktop-calendar-sync-degraded-mode/20260528-roadmap-seed.md | desktop-local-first-repository-bridge | shipped | SHIPPED | (default) | (default) | 2026-05-29 05:02 PDT | Shipped on `dev`; commits `ae920c3a`, `2af33394`, `0651b9e1`, and `cb1388fa` are pushed. Row `#18` dependency progress: row `#16` is now satisfied; row `#18` remains pending because row `#17` is still `PENDING`. |
+| 17 | desktop-local-first-backup-export-import | docs/reviews/desktop-local-first-backup-export-import/20260528-roadmap-seed.md | desktop-local-first-repository-bridge | shipped | SHIPPED | (default) | (default) | 2026-05-29 05:37 PDT | Shipped on `dev`; commits `82441369`, `889f080a`, `d586ca96`, and `552bf0ff` were verified and pushed with row #17 docs/manifest ship writeback. Row `#18` dependency progress: rows `#12` through `#17` are now satisfied, so row `#18` is dependency-unblocked and remains `PENDING` until dispatched. |
+| 18 | desktop-phase3-integrated-rc-gate | docs/reviews/desktop-phase3-integrated-rc-gate/20260528-roadmap-seed.md | desktop-local-first-sqlite-foundation, desktop-local-first-repository-bridge, desktop-local-first-web-data-migration, desktop-local-first-offline-edit-queue, desktop-local-first-sync-reconnect, desktop-ai-offline-provider-policy, desktop-calendar-sync-degraded-mode, desktop-local-first-backup-export-import | ready_to_ship | SHIPPED | (default) | (default) | 2026-05-29 06:17 PDT | Shipped on `dev`; row #18 integrated RC evidence and verify chain are complete (commits `1c8a1e4d`, `258bf842`, `7b9efec1`, `2f681ff0`, `e67584db`, `de4d6fe5`). Rows `#19` and `#20` are dependency-unblocked under shipped semantics. |
+| 19 | desktop-overlay-host-v2 | docs/reviews/desktop-overlay-host-v2/20260528-roadmap-seed.md | desktop-phase3-integrated-rc-gate | shipped | SHIPPED | (default) | (default) | 2026-05-29 06:56 PDT | Shipped on `dev`; commits `43aaf2e3`, `42db8606`, `9d1edf02`, `07919742`, and `ad7075c1` are verified and pushed with row #19 docs/manifest ship writeback. Row `#20` remains dependency-unblocked under shipped semantics. |
+| 20 | desktop-smart-container-file-organizer | docs/reviews/desktop-smart-container-file-organizer/20260528-roadmap-seed.md | desktop-phase3-integrated-rc-gate | shipped | SHIPPED | (default) | (default) | 2026-05-29 07:44 PDT | Shipped on `dev`; commits `e73ab00a`, `9c9a258e`, `db279493`, `be462264`, `bfeb7bed`, and `f52e0bfc` are verified for this row and pushed with ship writeback. Row `#21` is now dependency-unblocked under shipped semantics. |
+| 21 | desktop-organizer-plugin-restoration | docs/reviews/desktop-organizer-plugin-restoration/20260528-roadmap-seed.md | desktop-smart-container-file-organizer | shipped | SHIPPED | (default) | (default) | 2026-05-29 08:08 PDT | Shipped on `dev`; row #21 organizer-family restoration matrix is verified/pushed (commits `72106282`, `fabbb8fc`, `313f0a2e`, plus ship writeback). Manifest execution is now complete; row #1 remains `BLOCKED` for external/manual real-macOS release smoke. |
+
+## Dependency Graph
+
+```mermaid
+graph TD
+  phase1_rc["Phase 1 RC baseline (SHIPPED)"] --> smoke["desktop-real-macos-release-smoke"]
+  phase1_rc --> phase2_impl["Phase 2 implementation rows"]
+  phase2_impl --> phase2_rc["desktop-phase2-integrated-rc-gate"]
+  phase2_rc --> storage_adr["desktop-local-first-storage-adr"]
+  storage_adr --> sqlite_foundation["desktop-local-first-sqlite-foundation"]
+  storage_adr --> ai_policy["desktop-ai-offline-provider-policy"]
+  sqlite_foundation --> repo_bridge["desktop-local-first-repository-bridge"]
+  repo_bridge --> migration["desktop-local-first-web-data-migration"]
+  repo_bridge --> edit_queue["desktop-local-first-offline-edit-queue"]
+  repo_bridge --> calendar_degraded["desktop-calendar-sync-degraded-mode"]
+  repo_bridge --> backup_import["desktop-local-first-backup-export-import"]
+  edit_queue --> reconnect["desktop-local-first-sync-reconnect"]
+  sqlite_foundation --> phase3_rc["desktop-phase3-integrated-rc-gate"]
+  repo_bridge --> phase3_rc
+  migration --> phase3_rc
+  edit_queue --> phase3_rc
+  reconnect --> phase3_rc
+  ai_policy --> phase3_rc
+  calendar_degraded --> phase3_rc
+  backup_import --> phase3_rc
+  phase3_rc --> overlay_v2["desktop-overlay-host-v2"]
+  phase3_rc --> smart_container["desktop-smart-container-file-organizer"]
+  smart_container --> plugin_restoration["desktop-organizer-plugin-restoration"]
+```
+
+## Wave Plan
+
+Computed from `Depends On`, `Dep Semantics`, and current `PENDING` statuses. Already SHIPPED Phase 1 rows are treated as external preconditions, not manifest rows.
+
+| Wave | Eligible rows after review | Notes |
+|---|---|---|
+| W0 | `desktop-real-macos-release-smoke`; `desktop-native-notifications-reminders`; `desktop-statusbar-quick-actions`; `desktop-global-hotkey-quick-open`; `desktop-full-macos-menu-polish`; `desktop-auto-update-release-channel`; `desktop-last-data-cache-polish` | Phase 1 residual hardware smoke can run in parallel with Phase 2 implementation. Use concurrency cap 3 if dispatching via bg; use emit by default for portability. |
+| W1 | `desktop-phase2-integrated-rc-gate` | Unlocks once Phase 2 implementation rows reach READY_TO_SHIP or SHIPPED. Human must ensure `desktop-real-macos-release-smoke` is SHIPPED before external release. |
+| W2 | `desktop-local-first-storage-adr` | ADR-first gate for Phase 3. Do not start Phase 3 implementation before this row ships unless a human explicitly edits the manifest. |
+| W3 | `desktop-local-first-sqlite-foundation`; `desktop-ai-offline-provider-policy` | Storage implementation and AI offline policy can proceed after ADR acceptance. |
+| W4 | `desktop-local-first-repository-bridge` | Bridges the selected storage foundation into local-first entity repositories. |
+| W5 | `desktop-local-first-web-data-migration`; `desktop-local-first-offline-edit-queue`; `desktop-calendar-sync-degraded-mode`; `desktop-local-first-backup-export-import` | Parallel Phase 3 data/user-safety work after the repository boundary ships. |
+| W6 | `desktop-local-first-sync-reconnect` | Requires offline edit queue semantics first. |
+| W7 | `desktop-phase3-integrated-rc-gate` | Unlocks once all Phase 3 implementation rows reach READY_TO_SHIP or SHIPPED. |
+| W8 | `desktop-overlay-host-v2`; `desktop-smart-container-file-organizer` | P3+ Future rows only after Phase 3 RC ships. Overlay remains optional and not the default app host. |
+| W9 | `desktop-organizer-plugin-restoration` | Runs after the Smart Container decision/implementation row. |
+
+## Decomposition Rationale
+
+### R1. Source and init path
+
+`Init Path: decompose` because the invocation explicitly set `input_kind: prd`. The source PRD was already structured into candidate rows, so this init preserved the user-provided slugs and scopes instead of inventing a new partition. Per the decompose-path contract, each row has a seed brief under `docs/reviews/<slug>/20260528-roadmap-seed.md` and the manifest stops at this review gate.
+
+### R2. Structural context read
+
+Project context confirms the active product line is ADR-0011's React Web UI + Tauri native + local-first hybrid desktop app on `dev`. P1 Phase 1 and the RC release gate are SHIPPED in the relevant dev logs, with residual real-macOS GUI checks carried forward rather than blocking repo-side verification. `docs/PLUGIN_MAP.md` and `CLAUDE.md` both demote transparent overlay, Smart Container, and `plugin-{organizer, clipboard, widgets, meditation, pet}` to P3 Future until Phase 3 local-first ships.
+
+### R3. Boundary decisions
+
+- The Phase 1 residual smoke is a new release-gate row, not a reopening of `desktop-phase1-rc-release-gate`.
+- Phase 2 rows are desktop-native experience slices: notifications, status bar, hotkey, menu polish, update channel, and last-data cache. They do not reintroduce transparent overlay or file organizer work.
+- Phase 3 starts with `desktop-local-first-storage-adr`; implementation rows are locked behind that ADR. Prior packages such as `core-data-sqlite-driver` and `sqlcipher-local-db` are useful evidence, not a substitute for the Phase 3 ADR decision.
+- P3+ Future rows all depend on Phase 3 RC. The overlay row is optional future mode only, and Smart Container/plugin restoration stay out of P1 Phase 2.
+
+### R4. Dependency edges
+
+All row dependencies default to `shipped` unless the source explicitly allowed `READY_TO_SHIP`. The two integrated RC gates use `ready_to_ship` for their implementation dependencies because the source text says "READY_TO_SHIP or SHIPPED." The release smoke row is modeled as W0 parallel work and an external-release condition rather than a hard dependency on every Phase 2 row.
+
+### R5. User-provided mode choices
+
+The invocation supplied `Default Automation Mode: B-Codex` and `Default Verify Cross-vendor: yes`, so init did not ask a picker question. All row cells inherit `(default)`. The human reviewer can hand-edit individual rows before run mode.
+
+### R6. Assumptions and open uncertainties
+
+- Assumption: `desktop-statusbar-quick-actions` does not hard-depend on `desktop-native-notifications-reminders`; the source marked that relationship optional.
+- Assumption: `desktop-smart-container-file-organizer` does not hard-depend on `desktop-overlay-host-v2`; the source marked overlay optional. Both still depend on Phase 3 RC.
+- Assumption: `desktop-real-macos-release-smoke` must be SHIPPED before external release, but does not block Phase 2 implementation planning.
+- Open: auto-update signing/notarization credentials may be missing and should become explicit gates, not hidden blockers.
+- Open: Phase 3 storage choice, migration strategy, conflict model, local LLM support, and calendar reconciliation are deliberately deferred to their ADR/feature plans.
+
+## Review Gate
+
+Init is complete and must stop here. Before running, review this manifest and all seed briefs, especially the `ready_to_ship` semantics on integrated RC gates and the P3+ Future dependency boundary.
+
+### Next Step
+
+After human review, run:
+
+```text
+/xai-roadmap-loop
+mode: run
+manifest: docs/workflow/roadmap/xai-desktop-remaining-p2-p3-future.md
+dispatch: emit
+```
+
+Run mode must ask for dispatch confirmation before emitting or launching work. `ship` remains human-triggered only.

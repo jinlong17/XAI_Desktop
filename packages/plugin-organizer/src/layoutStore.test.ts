@@ -222,7 +222,7 @@ describe("repositoryLayoutStore", () => {
       schemaVersion: 1,
       createdAt: "2026-05-19T00:00:00.000Z",
       updatedAt: "2026-05-19T00:00:00.000Z",
-      syncScope: "account-sync",
+      syncScope: "device-local",
       title: "Old",
       rect: { x: 0, y: 0, width: 100, height: 100 },
       isLocked: false,

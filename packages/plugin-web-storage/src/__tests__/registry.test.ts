@@ -183,6 +183,7 @@ const OWNER_ROW_ADDITIONS = [
   "xai_pref_notif_push_task",
   "xai_pref_notif_push_pomo",
   "xai_pref_notif_push_habit",
+  "xai_pref_notif_push_calendar",
   "xai_pref_notif_quiet",
   "xai_pref_notif_quiet_start",
   "xai_pref_notif_quiet_end",
@@ -221,6 +222,11 @@ const OWNER_ROW_ADDITIONS = [
   "xai_ai_streaming",
   // xai-web-calendar gap-closure row #4 — calendar view persistence
   "xai_calendar_view",
+  // xai-web-calendar-event-create — user-created events
+  "xai_calendar_events",
+  // xai-web-dashboard-widgets — user-created dashboard module state
+  "xai_dashboard_stickies",
+  "xai_dashboard_weather",
   // xai-web-settings-rest gap-closure row #7 — 3 boolean integration OAuth stub prefs
   "xai_pref_integrations_connected_notion",
   "xai_pref_integrations_connected_gcal",
@@ -228,12 +234,6 @@ const OWNER_ROW_ADDITIONS = [
   // xai-web-settings-rest gap-closure row #8 — 2 Premium Stripe Checkout stub prefs
   "xai_pref_premium_tier",
   "xai_pref_premium_started_at",
-  // xai-web-calendar event-create extension 2026-05-27 — calendar events persistence
-  "xai_calendar_events",
-  // xai-web-dashboard-stickies-create extension 2026-05-28 — stickies persistence
-  "xai_dashboard_stickies",
-  // xai-web-dashboard-weather-mail extension 2026-05-29 — weather persistence
-  "xai_dashboard_weather",
 ] as const;
 
 describe("AC-REG-8: Total entry count = 20 baseline + owner-row additions", () => {
