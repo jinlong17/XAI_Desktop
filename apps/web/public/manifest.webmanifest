@@ -1,0 +1,19 @@
+{
+  "name": "XAI Mobile",
+  "short_name": "XAI",
+  "description": "XAI mobile self-test shell",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f2",
+  "theme_color": "#111314",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/xai-mobile-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

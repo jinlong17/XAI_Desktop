@@ -1,5 +1,5 @@
-const CACHE_NAME = "xai-web-shell-v1";
-const APP_SHELL_URLS = ["/", "/index.html"];
+const CACHE_NAME = "xai-web-shell-v2";
+const APP_SHELL_URLS = ["/", "/index.html", "/manifest.webmanifest", "/icons/xai-mobile-icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
