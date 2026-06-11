@@ -3,7 +3,7 @@
 Date: 2026-06-11
 Branch: `codex/mobile/native-thin-shell-mvp`
 Scope: `apps/mobile/ios`
-Verdict: PARTIAL_BUILD_PASS_BOOT_REQUIRED
+Verdict: PASS
 
 ## What Passed
 
@@ -21,25 +21,33 @@ Verdict: PARTIAL_BUILD_PASS_BOOT_REQUIRED
   - Web self-test sync passed before native build
   - `xcodebuild` Debug simulator build succeeded
   - app bundle produced at `apps/mobile/ios/DerivedData/Build/Products/Debug-iphonesimulator/App.app`
+- `pnpm --filter @repo/mobile run verify:ios:self-test -- --destination "iPhone 17 Pro Max"` passed end-to-end after the Capacitor asset-path fix:
+  - `VITE_CAPACITOR_BUILD=1 VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build` passed.
+  - `cap sync ios` copied relative-path Web assets into the iOS wrapper.
+  - `xcodebuild` Debug simulator build succeeded for `iPhone 17 Pro Max`.
+  - `xcrun simctl bootstatus` returned `Device already booted, nothing to do.`
+  - `xcrun simctl install` succeeded.
+  - `xcrun simctl launch --terminate-running-process` succeeded for `com.jinlong.xai.mobile` and returned PID `19969`.
+  - Simulator screenshot inspection showed a nonblank Web UI: search bar, chat drawer, bottom navigation, and floating pet rendered.
 
-## Remaining Manual Gate
+## Runtime Fix
 
-No iPhone Simulator was booted during the run, so install + launch verification was intentionally skipped.
+The first iOS launch exposed a blank WebView even though the app installed. Root cause was the Web build copied into Capacitor using root-relative asset URLs such as `/assets/...`, which are correct for the normal Web deployment but fragile under the Capacitor local scheme.
 
-Current status:
+Fix:
 
-```text
-STATUS: PARTIAL_BUILD_PASS_BOOT_REQUIRED
-```
-
-This is no longer an Xcode environment blocker. It means the native iOS build is green, but a booted simulator is still required to prove the WebView launches and is not blank.
+- `apps/web/vite.config.ts` uses `base: "./"` only when `VITE_CAPACITOR_BUILD=1`.
+- `apps/mobile` Web build scripts set `VITE_CAPACITOR_BUILD=1`.
+- `apps/web/index.html` uses `%BASE_URL%` for PWA/icon links.
+- `apps/web/src/service-worker/register.ts` skips service-worker registration inside native Capacitor and uses `BASE_URL` for normal production registration.
+- `scripts/mobile/verify-ios.mjs` now waits for simulator boot readiness, uses bounded install/launch timeouts, and launches with `--terminate-running-process`.
 
 ## Reproduction Command
 
 Commands:
 
 ```bash
-pnpm --filter @repo/mobile run verify:ios:self-test -- --allow-blocked
+pnpm --filter @repo/mobile run verify:ios:self-test -- --destination "iPhone 17 Pro Max"
 ```
 
 Observed:
@@ -48,23 +56,17 @@ Observed:
 xcode-select: /Applications/Xcode.app/Contents/Developer
 Xcode 26.5
 Build version 17F42
-selected simulator: iPhone 17 Pro
-launch: skipped until the user boots an iPhone simulator.
+selected simulator: iPhone 17 Pro Max (3DFD2634-00A9-4B6B-BD66-12B8B6C57FED, Booted)
 ** BUILD SUCCEEDED **
-STATUS: PARTIAL_BUILD_PASS_BOOT_REQUIRED
+Device already booted, nothing to do.
+com.jinlong.xai.mobile: 19969
+STATUS: PASS
+bundle: com.jinlong.xai.mobile
+simulator: iPhone 17 Pro Max (3DFD2634-00A9-4B6B-BD66-12B8B6C57FED)
 ```
 
-## Unlock Criteria
+## Notes
 
-Boot an iPhone Simulator, then rerun the same self-test runner:
+The first iOS 26.5 simulator boot took several minutes and temporarily reported `Waiting on Data Migration` / `Waiting on System App`. This was a simulator runtime readiness delay, not an app build failure. The verifier now waits for boot readiness before install/launch so this state is explicit.
 
-```bash
-open -a Simulator
-pnpm --filter @repo/mobile run verify:ios:self-test -- --skip-sync
-```
-
-PASS requires:
-
-- `xcrun simctl install` succeeds against the booted iPhone Simulator.
-- `xcrun simctl launch` succeeds for bundle id `com.jinlong.xai.mobile`.
-- The app renders the mock-auth Web UI without a blank WebView.
+Physical iPhone signing / on-device install remains separate and was not run in this receipt.

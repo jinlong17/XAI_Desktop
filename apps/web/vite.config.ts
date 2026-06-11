@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const isCapacitorBuild = process.env.VITE_CAPACITOR_BUILD === "1";
+
 /**
  * Vite plugin — strips __XAI_CSP_NONCE__ placeholders from index.html at
  * build time (xai-web-deploy-cloudflare P2 Decision 3 Candidate A.1).
@@ -33,6 +35,7 @@ function stripCspNoncePlaceholder() {
 }
 
 export default defineConfig({
+  base: isCapacitorBuild ? "./" : "/",
   plugins: [react(), stripCspNoncePlaceholder()],
   build: {
     sourcemap: "hidden",

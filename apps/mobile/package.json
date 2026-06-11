@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:web": "pnpm --filter @repo/web build",
-    "build:web:self-test": "VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build",
+    "build:web": "VITE_CAPACITOR_BUILD=1 pnpm --filter @repo/web build",
+    "build:web:self-test": "VITE_CAPACITOR_BUILD=1 VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build",
     "cap": "cap",
     "cap:add:ios": "cap add ios",
     "cap:add:android": "cap add android",

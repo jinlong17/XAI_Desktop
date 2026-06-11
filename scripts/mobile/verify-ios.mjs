@@ -35,6 +35,15 @@ function run(command, commandArgs, options = {}) {
     });
     let stdout = "";
     let stderr = "";
+    let timedOut = false;
+    let killTimer = null;
+    const timeoutTimer = options.timeoutMs
+      ? setTimeout(() => {
+          timedOut = true;
+          child.kill("SIGTERM");
+          killTimer = setTimeout(() => child.kill("SIGKILL"), 5000);
+        }, options.timeoutMs)
+      : null;
     child.stdout.on("data", (chunk) => {
       const text = chunk.toString();
       stdout += text;
@@ -46,7 +55,9 @@ function run(command, commandArgs, options = {}) {
       if (!options.quiet) process.stderr.write(text);
     });
     child.on("close", (status) => {
-      resolveRun({ status: status ?? 1, stdout, stderr });
+      if (timeoutTimer) clearTimeout(timeoutTimer);
+      if (killTimer) clearTimeout(killTimer);
+      resolveRun({ status: status ?? 1, stdout, stderr, timedOut });
     });
   });
 }
@@ -65,6 +76,16 @@ function fail(message) {
   console.error(`STATUS: FAIL`);
   console.error(`ERROR: ${message}`);
   process.exitCode = 1;
+}
+
+function simulatorBlocked(message, detail = "") {
+  console.log("STATUS: BLOCKED_SIMULATOR_RUNTIME");
+  console.log(`BLOCKER: ${message}`);
+  if (detail.trim()) {
+    console.log("DETAIL:");
+    console.log(detail.trim());
+  }
+  process.exitCode = allowBlocked ? 0 : 4;
 }
 
 function listAvailableIphones(simctlJson) {
@@ -180,13 +201,44 @@ async function main() {
     return;
   }
 
+  printHeading("Wait for simulator boot readiness");
+  const bootReady = await run("xcrun", ["simctl", "bootstatus", booted.udid, "-b"], {
+    timeoutMs: 600_000,
+  });
+  if (bootReady.timedOut) {
+    simulatorBlocked("Booted simulator did not finish bootstatus within 600s. It may still be stuck on the Apple logo; erase or restart the simulator and retry.");
+    return;
+  }
+  if (bootReady.status !== 0) {
+    simulatorBlocked("Booted simulator failed bootstatus readiness check.", bootReady.stderr);
+    return;
+  }
+
   printHeading("Install and launch on booted simulator");
-  const install = await run("xcrun", ["simctl", "install", booted.udid, appPath]);
+  const install = await run("xcrun", ["simctl", "install", booted.udid, appPath], {
+    timeoutMs: 180_000,
+  });
+  if (install.timedOut) {
+    simulatorBlocked("simctl install timed out after 180s.");
+    return;
+  }
   if (install.status !== 0) {
     fail("simctl install failed.");
     return;
   }
-  const launch = await run("xcrun", ["simctl", "launch", booted.udid, bundleId]);
+  const launch = await run("xcrun", [
+    "simctl",
+    "launch",
+    "--terminate-running-process",
+    booted.udid,
+    bundleId,
+  ], {
+    timeoutMs: 240_000,
+  });
+  if (launch.timedOut) {
+    simulatorBlocked("simctl launch timed out after 240s.");
+    return;
+  }
   if (launch.status !== 0) {
     fail("simctl launch failed.");
     return;

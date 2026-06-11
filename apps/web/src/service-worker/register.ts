@@ -3,6 +3,14 @@ export function registerServiceWorker() {
     return;
   }
 
+  const isCapacitorNative = Boolean(
+    (window as typeof window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor
+      ?.isNativePlatform?.()
+  );
+  if (isCapacitorNative) {
+    return;
+  }
+
   // The shell service worker precaches assets with a cache-first strategy. Under
   // the Vite dev server that traps stale modules (edits don't appear until the
   // SW + its caches are manually cleared), so it is production-only. In dev we
@@ -23,7 +31,7 @@ export function registerServiceWorker() {
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      void navigator.serviceWorker.register("/sw.js").catch(() => {
+      void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {
         // Service worker is optional for host bootstrap.
       });
     });
