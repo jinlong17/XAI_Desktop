@@ -1,12 +1,12 @@
-# MODULE_BOUNDARIES.md — Web / App / 桌面插件 三面边界（权威）
+# MODULE_BOUNDARIES.md — Web / Mobile / App / 桌面插件 边界（权威）
 
-> **定位**：本文件是 XAI 三个产品面（Web 版本 / Mac 桌面 App / 桌面插件）**功能边界与归属**的单一权威来源（single source of truth）。
+> **定位**：本文件是 XAI 当前产品面（Web 版本 / Mobile 原生薄壳 / Mac 桌面 App / 桌面插件）**功能边界与归属**的单一权威来源（single source of truth）。
 > 当某个功能"该放哪一面、该归哪个模块"产生分歧时，以本文为准。
 >
 > **权威基线**：ADR-0010（amended 2026-05-30，active-focus 顺序）、ADR-0013（分支拓扑 + Web→Desktop D3 闸门 + 账号云同步 D4）、ADR-0015（桌面插件范围 + organizer P 级 reconcile，Proposed）。
-> **配套文档**：`docs/PRODUCT_MODULE_MAP.md`（六模块任务路由）、`docs/PLUGIN_MAP.md`（插件状态机）、`docs/PLUGIN_SDK.md`（插件 SDK 契约蓝图）、`docs/planning/sub-prds/plugin/PRD.md`（桌面插件开发范围）、`docs/workflow/project/module-classification.json`（机器可读分类注册表）。
+> **配套文档**：`docs/PRODUCT_MODULE_MAP.md`（产品模块任务路由）、`docs/PLUGIN_MAP.md`（插件状态机）、`docs/PLUGIN_SDK.md`（插件 SDK 契约蓝图）、`docs/planning/sub-prds/plugin/PRD.md`（桌面插件开发范围）、`docs/workflow/project/module-classification.json`（机器可读分类注册表）。
 >
-> 最后更新：2026-06-02
+> 最后更新：2026-06-11
 
 ---
 
@@ -33,20 +33,21 @@
 
 > **一句话**：Mac 壳（A1）只把 Web 装进原生窗 + 原生便利；多窗口运行时（A2）物理在 host、**产品归插件平台**；真正的桌面插件（B）骑在 A2 上，多数还没做且被 Paused；Web 的同名组件（C）只是借用了相同词汇。
 
-> ⚠️ **物理位置 ≠ 产品归属（关键澄清）**：多窗口 / 原生窗口的 Tauri 命令**物理上必须实现在 host 进程**（`apps/desktop/src-tauri`，只有 host 能调 Tauri）。但"多窗口 / overlay 运行时"的**产品归属是【桌面插件平台】，不是 Mac 壳的身份**。Mac 壳的身份就是 Web 容器 + 原生 chrome；所有桌面原生超能力（多窗口、挂件、整理、快速入口）的产品归属都是桌面插件。长期面（iPhone/iPad/Watch/Android/扩展）的规划见 [`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`](planning/LONG_TERM_PRODUCT_ROADMAP.md)。
+> ⚠️ **物理位置 ≠ 产品归属（关键澄清）**：多窗口 / 原生窗口的 Tauri 命令**物理上必须实现在 host 进程**（`apps/desktop/src-tauri`，只有 host 能调 Tauri）。但"多窗口 / overlay 运行时"的**产品归属是【桌面插件平台】，不是 Mac 壳的身份**。Mac 壳的身份就是 Web 容器 + 原生 chrome；所有桌面原生超能力（多窗口、挂件、整理、快速入口）的产品归属都是桌面插件。Mobile 原生薄壳的身份是 `apps/web` 的手机投影 + Capacitor 壳，不是 Mac App 分叉。长期面（iPad/Watch/扩展）的规划见 [`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`](planning/LONG_TERM_PRODUCT_ROADMAP.md)。
 
 ---
 
-## 2. 六大产品模块速查（详见 PRODUCT_MODULE_MAP.md）
+## 2. 当前产品模块速查（详见 PRODUCT_MODULE_MAP.md）
 
 | # | 模块 | key | Surface | 主分支 | 状态 |
 |---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/` + `xai-web-*` + `plugin-web-*` | `web` | **P0 active mainline** |
-| 2 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
-| 3 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **P2 paused（等 G1）** |
-| 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
-| 5 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
-| 6 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` + roadmap `xai-admin-dashboard-system-integration.md` | `codex/admin/<feature>` | **ACTIVE roadmap-gated** |
+| 2 | 手机版 / 原生薄壳 | `mobile` | `apps/mobile/` + `apps/web` PWA/mobile metadata | `codex/mobile/<feature>` | **operator-unfrozen self-test** |
+| 3 | Mac 桌面 App | `app` | `apps/desktop/` + `src-tauri/` | `desktop-next`→`dev` | **P1 active App lane** |
+| 4 | **桌面整理插件 / Widget** | `plugin` | `apps/desktop/` 插件槽 + `packages/plugin-{organizer,clipboard,widgets,pet}` | `desktop-plugin-next` | **P2 paused（等 G1）** |
+| 5 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) | P2 paused |
+| 6 | 官方网页 | `site` | Cloudflare 部署设施 | (proposed) | PROPOSED |
+| 7 | Admin Dashboard | `admin` | `docs/prototypes/admin-dashboard/` + roadmap `xai-admin-dashboard-system-integration.md` | `codex/admin/<feature>` | **ACTIVE roadmap-gated** |
 
 ---
 
@@ -65,6 +66,17 @@
 | 数据 | IndexedDB ⇄ 账号云 | SQLite ⇄ 账号云 | **默认 `device-local` 永不上云**；仅显式 `account-sync` 才同步 |
 | 跨面对齐方式 | 源头 | 经 **D3 gate（W0~W4）** 从 Web 按需同步 + 共享业务包 | 依赖 App 平台；插件间走 `@repo/core/events` |
 
+### 3.1 Mobile 原生薄壳边界
+
+| 维度 | Mobile（`mobile`） |
+|---|---|
+| 运行形态 | Capacitor iOS/Android WebView + Web PWA，打包 `apps/web/dist` |
+| 本质 | Web 的手机投影，用于快速安装、自测和后续移动能力验证 |
+| 拥有 | `apps/mobile/` wrapper、PWA install metadata、mobile safe-area/touch/runtime baseline、iOS/Android self-test 证据 |
+| 不拥有 | Mac 菜单栏/托盘/窗口、桌面插件多窗口/overlay、SwiftUI/React Native 重写、复杂原生能力（push/widget/share/biometric 首版后置） |
+| 数据 | 先复用 Web 本地持久化；跨设备只使用已明确 `syncScope: account-sync` 的实体 |
+| 分支 | `codex/mobile/<feature>`，从 `web` 出发；不得从 `dev` / Mac App 分叉 |
+
 ---
 
 ## 4. 硬边界规则（MUST，不可违反）
@@ -79,6 +91,7 @@
    - 桌面 `organizer` grid：整理**真实文件/App** 的原生 Smart Container 窗。
    - 两套**零代码共享**（grep 0 命中），只是词汇相同。
 5. **插件入口归 App，插件内容归 plugin。** Mac App 控制面板里的 `桌面插件` 按钮、Plugin Center 窗口容器、实例窗口位置、pin、点击穿透、权限提示和全局偏好归 `app`；插件列表、可添加内容、`PluginInstance` settings schema、AddToDesktop contract 和具体渲染归 `plugin`。一个需求同时触及二者时，先拆分 App entry/window delta 与 plugin contract/package delta，不把入口实现塞进 Web 工作台。
+6. **Mobile 薄壳复用 Web，不从 Mac App 分叉。** iPhone / Android 首版只允许 `apps/web` PWA/mobile 适配 + `apps/mobile` Capacitor wrapper；如果某移动修复影响 Mac App，仍按 Web→App D3 gate，而不是直接触碰 `dev`。
 
 ---
 
@@ -104,7 +117,8 @@
 2. **浏览器能否实现？**
    - 能、且是完整功能页面 → **Web（P0）**。
    - 不能（需原生窗口/fs/剪贴板/屏幕）→ 进 3。
-3. **是"Mac 壳能力"、"多窗口平台运行时"还是"用平台做挂件"？**
+3. **是"手机薄壳"、"Mac 壳能力"、"多窗口平台运行时"还是"用平台做挂件"？**
+   - iPhone / Android / Capacitor / PWA installability / mobile WebView / safe-area / touch-first layout → **Mobile（`codex/mobile/*`）**。
    - Mac 壳 / native chrome（菜单栏、托盘、离线缓存、账号+Keychain、自动更新、通知、深链、开机启动、承载 Web SPA）→ **App（P1，`codex/desktop/*`）**。
    - 多窗口引擎 / overlay / grid 持久化 / window-command / 平台运行时（代码物理在 host，**产品归插件平台**）→ **桌面插件平台（P2，`codex/plugin/*`，当前 Paused）**。
    - 用现有平台做轻量挂件/整理 → **桌面插件（P2，当前 Paused）**。
@@ -121,7 +135,7 @@
 ## 7. 相关文档
 
 - 任务路由：`docs/PRODUCT_MODULE_MAP.md`
-- 长期平台路线（planning-only，未来 iPhone/iPad/Apple Watch/Android/浏览器扩展）：`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`
+- 长期平台路线（planning-only，未来 iPad/Apple Watch/浏览器扩展）：`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`
 - 插件状态机：`docs/PLUGIN_MAP.md`
 - 插件 SDK 契约蓝图：`docs/PLUGIN_SDK.md`
 - 桌面插件开发范围 + MVP：`docs/planning/sub-prds/plugin/PRD.md`

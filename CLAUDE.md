@@ -5,6 +5,7 @@
 Active focus order — supersedes any conflicting prior PRD / roadmap:
 
 - **P0 — Web Console (ACTIVE WEB MAINLINE)** (`apps/web/` + `packages/{xai-web-*, plugin-web-*}`): `web` is the Web product mainline and the most complete product surface. New Web feature and bug-fix work are permitted on `web` / `codex/web/<feature>` without a P0 carve-out. Web changes that may affect Desktop still require ADR-0013 D3 classification before promotion toward `desktop-next` / `dev`.
+- **P0.5 — Mobile native thin shell (OPERATOR-UNFROZEN SELF-TEST LANE)** (`apps/mobile/` + `apps/web` PWA/mobile metadata): `mobile` is now allowed for rapid personal self-testing on `codex/mobile/<feature>` branches, starting from `web` and reusing the Web build through PWA + Capacitor iOS/Android thin shells. Do **not** route this through `dev` or the Mac desktop `app` lane unless a Mac-specific delta is explicitly required.
 - **P1 — Desktop client (ACTIVE APP LANE)** (`apps/desktop/` + `packages/plugin-{account, console, productivity, ai-cube, calendar, labels, project}` + G0/G1 anchors): Tauri native shell that **hosts the Web SPA as a desktop app (Web container)** — menubar / tray / offline / account+Keychain / auto-update / notifications. **Multi-window, overlay, and desktop-widget capability is owned by the Desktop Plugin product (P2/P3), NOT the shell** (see `docs/MODULE_BOUNDARIES.md` + `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`). G0 = CONDITIONAL_GO (G0.1-G0.5 SHIPPED 2026-05-19 on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking). G1 native foundation remains permitted on the independent App lane; it no longer freezes Web new work. Authority: `docs/adr/0010-p1-desktop-resume-plan.md` (Accepted 2026-05-26, amended 2026-05-30).
 - **P2 — Desktop organizer plugins & tools + sync-v1 + G2** (`packages/plugin-{organizer, clipboard, widgets, pet}` — note `plugin-meditation` is a *Planned PLUGIN_MAP row, not yet a package*; its Web form ships as `xai-web-meditation` — plus sync-v1 crypto stack, xai-g2 data-security foundation): Paused. Resumes only after G1 SHIPPED. **Gating split (avoid deadlock):** the plugin **platform-runtime / G1 native-foundation anchor** (multi-window engine, grid persistence, window-command) is the *active gate* — it executes on the P1 App lane and is plugin-platform product, but it is **NOT part of this P2 freeze**; the freeze is the plugin **packages** (clipboard/widgets/pet/meditation) + sync-v1 + G2, which resume once G1 ships. `organizer` is a delivered flagship plugin (Stable/shipped, NOT in the P2-paused freeze; ADR-0015 web-side Accepted, dev ADR-0011 reconcile pending). Surface/module boundary + desktop-plugin scope: `docs/MODULE_BOUNDARIES.md` + `docs/planning/sub-prds/plugin/PRD.md`.
 
@@ -43,7 +44,7 @@ above. Key rules (do not contradict; cite ADR-0013 §D-N):
 
 ### Product module map & task routing (READ FIRST when a task arrives)
 
-**Before starting ANY dev task, classify it into exactly one of the six product
+**Before starting ANY dev task, classify it into exactly one active product
 modules below, then use that module's branch + skill + workflow.** This is the
 single source for "which module does this requirement belong to". Full per-module
 navigation (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
@@ -53,16 +54,18 @@ dev-dashboard 产品结构图 (`docs/prototypes/dev-dashboard/`). Authority: ADR
 | # | 模块 | key | Surface | 主 / 短分支 | 任务归属信号（命中即归该模块） | 状态 |
 |---|---|---|---|---|---|---|
 | 1 | Web 版本 | `web` | `apps/web/`, `packages/xai-web-*`, `plugin-web-*` | `web` / `codex/web/<feature>` | Web 页面·组件、Vite SPA、浏览器持久化、共享 UI、`/app/*` 路由、Cloudflare Pages | P0 active |
-| 2 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri 壳、菜单栏/托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、承载 Web SPA 容器 | P1 active lane |
-| 3 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 + 插件平台运行时 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、**多窗口引擎/原生窗口/grid 持久化/window-command/G1 native foundation/点击穿透**(代码物理在 host,产品归插件平台)、桌面整理、单插件功能 | 平台运行时/G1=active · 插件包=P2 paused |
-| 4 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
-| 5 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
-| 6 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` + roadmap manifest | `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | ACTIVE roadmap-gated |
+| 2 | 手机版 / 原生薄壳 | `mobile` | `apps/mobile/` + `apps/web` PWA/mobile metadata | mobile self-test lane / `codex/mobile/<feature>` | iPhone、Android、Capacitor、PWA installability、mobile WebView、安全区、触控布局 | operator-unfrozen self-test |
+| 3 | Mac 桌面版 App | `app` | `apps/desktop/` (Tauri 2 + React 19) | `desktop-next`→`dev` / `codex/desktop/<feature>` | Tauri 壳、菜单栏/托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、承载 Web SPA 容器 | P1 active lane |
+| 4 | 桌面整理插件 / Widget | `plugin` | `apps/desktop/` 插件槽 + 插件平台运行时 | `desktop-plugin-next` / `codex/plugin/<feature>` | 插件 SDK、widget host、**多窗口引擎/原生窗口/grid 持久化/window-command/G1 native foundation/点击穿透**(代码物理在 host,产品归插件平台)、桌面整理、单插件功能 | 平台运行时/G1=active · 插件包=P2 paused |
+| 5 | 账号云同步层 | `sync` | sync-v1 stack + server | (paused) / `codex/sync/<feature>` | `syncScope`、push/pull、冲突、跨设备、账号云、加密 blob | P2 paused |
+| 6 | 官方网页 | `site` | Cloudflare deploy infra (无独立 package) | (proposed) / `codex/site/<feature>` | 下载页、自动更新、release notes、营销说明、对外/账号入口 | PROPOSED |
+| 7 | Admin Dashboard / 控制面 | `admin` | prototype `docs/prototypes/admin-dashboard/` + roadmap manifest | `codex/admin/<feature>` | AI 配置、权限、用量、审计日志、运营后台 | ACTIVE roadmap-gated |
 
 Routing rules (do not violate):
 
 - **跨模块归属**：先按"任务归属信号"命中主模块；若改动会牵动其它模块，主模块照常开发，再按
   `PRODUCT_MODULE_MAP.md` 的 transitions / impacts 决定联动（例如功能改了下载产物 → 同步更新 `site`）。
+- **`mobile` 自测线已解冻**：移动端从 `web` 出发，优先 PWA + Capacitor 薄壳复用 Web UI；不得从 `dev` / Mac App 分叉成手机版。
 - **`web` → `app` 只能走 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动
   直接合进 `dev`。
 - **`sync` 只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4）。
@@ -80,7 +83,8 @@ Multi-face product — single monorepo, three product surfaces:
 - **Web Console (P0, active)** — Vite SPA at `apps/web/`, registers 24 modules via `xai-web-shell` slot pattern. Browser-only persistence via `xai-web-persistence-contract`; typed events via `xai-web-event-bus`. Authority spec: `web design/DESIGN.md` (Claude-Artifact prototype, per ADR-0007).
 - **macOS Desktop shell (P1)** — Tauri 2 + React 19 **native shell that hosts the Web SPA as a desktop app (Web container)**: single main window + native chrome (menubar, tray, offline cache, account+Keychain, auto-update, system notifications, deep links, launch-at-login). Its product identity is "Web, natively wrapped" — **NOT** a desktop organizer. Built in this monorepo (Turborepo + pnpm).
 - **Desktop Plugin product (G1 runtime active · packages P2 paused)** — The macOS desktop-native superpower layer: the plugin **platform runtime** (multi-window engine, click-through, Spaces, grid persistence, Plugin Host/SDK — physical code lives in the Tauri host but its product attribution is *plugin*, not the shell) is the active G1 gate; the individual plugins under `packages/plugin-*/` (organizer / clipboard / widgets / pet / sticky notes / quick-entry & quick-action floating panels) remain package work, with organizer shipped and the rest paused until G1.
-- **长期平台路线 (planning-only)** — 未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展 等平台作为"同一产品的面（surface）"规划在 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`（仅规划，未授权开工；当前开发仍以 Web / Mac 壳 / 桌面插件三面为主）。
+- **Mobile self-test shell (operator-unfrozen)** — iPhone / Android 的第一版走 `apps/mobile` Capacitor 薄壳 + `apps/web` PWA/移动适配，目标是快速安装、自测和后续迭代；原生重写、push/widget/share/biometric 仍后置。
+- **长期平台路线 (planning-only)** — iPad 专用、Apple Watch、浏览器扩展等未来平台作为"同一产品的面（surface）"规划在 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`；iPhone / Android 已仅在“原生薄壳自测 lane”范围内解冻。
 
 Local project cockpit: `docs/prototypes/dev-dashboard/index.html` is the
 personal developer dashboard. Machine-facing rules for Codex / Claude Code live

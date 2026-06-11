@@ -14,7 +14,8 @@
 - Product Module Registry: `docs/workflow/project/dashboard-state.json` field
   `product_lines`
 - Future Surface Registry: `docs/workflow/project/dashboard-state.json` field
-  `future_surfaces` (planning-only, not active Product Module Registry entries)
+  `future_surfaces` (planning-only, not active Product Module Registry entries;
+  iPhone / Android thin shell self-test now lives under active `mobile`)
 - Testing Registry: `docs/workflow/project/dashboard-state.json` field
   `testing`
 - Skill / Agent Knowledge Registry:
@@ -48,11 +49,12 @@ source; `dashboard-state.json.product_lines` is the Product Module Registry that
 the dashboard renders. When the boundary or classification changes, update
 `module-classification.json`, `docs/PRODUCT_MODULE_MAP.md`, and the matching
 registry entry in `dashboard-state.json` in the same change.
-Future iPhone / iPad / Apple Watch / Android / browser-extension surfaces live
-in `module-classification.json.future_surfaces` and
-`dashboard-state.json.future_surfaces` as planning-only data. They must not be
-rendered or routed as active `product_lines` unless the operator explicitly
-promotes a surface into `MODULE_BOUNDARIES.md`.
+Future iPad dedicated native / Apple Watch / browser-extension surfaces live in
+`module-classification.json.future_surfaces` and
+`dashboard-state.json.future_surfaces` as planning-only data. iPhone / Android
+PWA + Capacitor thin shell self-test work is operator-promoted into active
+`product_lines` as `mobile`; broader native rewrites remain future work unless
+the operator explicitly promotes them.
 
 Each registry entry owns the shared module definition for Overview, Product
 structure, Testing, Deployment, Release records, Docs library, and Skill / Agent
@@ -70,8 +72,8 @@ routing:
   filters, and region grouping.
 
 Testing data must reference modules by `product_lines[key]`. Do not add a second
-hard-coded Web/App/Plugin/Sync/Site/Admin module table in dashboard JavaScript or
-test-report scripts.
+hard-coded Web/Mobile/App/Plugin/Sync/Site/Admin module table in dashboard JavaScript
+or test-report scripts.
 
 Do not add separate hard-coded module maps in dashboard JavaScript. New surfaces
 must read the enriched `product_lines` objects from `state.generated.js`.
@@ -209,8 +211,9 @@ The dashboard must expose test status in four places:
 - Deployment and Release records where a module or version has relevant
   verification evidence.
 
-Testing Registry entries must cover the six module keys `web`, `app`, `plugin`,
-`sync`, `site`, and `admin`. Each module may include:
+Testing Registry entries must cover the Product Module Registry keys currently
+listed in `product_lines` (`web`, `mobile`, `app`, `plugin`, `sync`, `site`, and
+`admin`). Each module may include:
 
 - latest test time;
 - conclusion;
@@ -227,7 +230,7 @@ Dashboard-local evidence that belongs to the project system itself must use
 `project-system`, not `admin`. This includes `dev-dashboard`, `dashboard-state`,
 `generate-state`, `xai-dev-dashboard-sync`, and local dashboard smoke records.
 Those records may appear in Testing / Release record lists, but they must not
-change the six Product Module Registry cards or Admin module health.
+change the Product Module Registry cards or Admin module health.
 
 The generator may derive additional test records from
 `docs/workflow/project/release-log.md` `Verification` fields and may scan known
@@ -331,8 +334,9 @@ For HTML/CSS/JS or Overview changes, also verify the served dashboard at
 `http://127.0.0.1:4177/#overview` when practical.
 
 For Testing changes, also verify `http://127.0.0.1:4177/#testing`, confirm all
-six module cards render, and confirm Overview / Product structure / Deployment /
-Release surfaces show testing status without overflow on desktop and mobile.
+Product Module Registry cards render, and confirm Overview / Product structure /
+Deployment / Release surfaces show testing status without overflow on desktop and
+mobile.
 
 For Skill / Agent registry changes, also verify
 `http://127.0.0.1:4177/#skill-agent`, confirm summary counts, category index,

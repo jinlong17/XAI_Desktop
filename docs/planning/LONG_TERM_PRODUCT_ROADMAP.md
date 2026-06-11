@@ -1,20 +1,20 @@
 # LONG_TERM_PRODUCT_ROADMAP.md — 长期产品平台路线图（1–3 年）
 
-> **定位**：本文是 XAI 产品**长期平台演进**的单一规划来源（planning-only）。它回答"未来的 iPhone / iPad / Apple Watch / Android / 浏览器扩展等平台**何时**进入路线图、**以什么顺序**进入、**承载什么**、**如何与现有面协同**"。
+> **定位**：本文是 XAI 产品**长期平台演进**的规划来源。它回答"未来的 iPhone / iPad / Apple Watch / Android / 浏览器扩展等平台**何时**进入路线图、**以什么顺序**进入、**承载什么**、**如何与现有面协同**"；其中 iPhone / Android 的原生薄壳自测 lane 已于 2026-06-11 由 operator 解冻。
 >
 > **形式**：planning 文档（不是 ADR）。约束力低于 ADR，便于迭代；稳定后可升格为 ADR-0016。
 >
 > **权威关系**：
-> - 当前三面（Web / Mac 壳 / 桌面插件）的**功能边界**以 `docs/MODULE_BOUNDARIES.md` 为准；本文不重定义当前边界，只在其上扩展"未来面"层。
+> - 当前产品面（Web / Mobile 薄壳 / Mac 壳 / 桌面插件）的**功能边界**以 `docs/MODULE_BOUNDARIES.md` 为准；本文不重定义当前边界，只在其上扩展"未来面"层。
 > - 当前 active-focus 顺序以 `docs/adr/0010-p1-desktop-resume-plan.md`（amended）为准。
 > - 分支拓扑 / D3 / D4 以 `docs/adr/0013-branch-sync-governance.md` 为准。
-> - 机器可读镜像见 `docs/workflow/project/module-classification.json` 的 `future_surfaces` 块（标 planning-only，**永不**作为 active 分类目标）。
+> - 机器可读镜像见 `docs/workflow/project/module-classification.json`；`mobile` 已进入 active self-test module，仍未解冻的平台保留在 `future_surfaces` 块。
 >
-> **硬边界**：本文中的"未来面"全部是 **planning-only**——除非 operator 显式确认，**不得开工、不得开分支、不得进 feature-build**。当前开发仍只以 Web / Mac 壳 / 桌面插件三面 + 共享核心为主。
+> **硬边界**：iPhone / Android 的第一版仅在 `mobile` self-test lane 内解冻，范围是 PWA + Capacitor 原生薄壳复用 Web UI。iPad 专用、Apple Watch、浏览器扩展仍是 **planning-only**——除非 operator 显式确认，**不得开工、不得开分支、不得进 feature-build**。
 >
-> **团队前提（2026-06-04 更新）**：本项目后续为**多人开发**。因此"是否规划多平台"**不再受独立开发者带宽约束**——**多平台长期规划是必要且可行的**。它以 **future surfaces** 形式进入文档与看板（本文 + `module-classification.json` 的 `future_surfaces` + dev-dashboard 产品结构图的"未来面"层），但**不进入当前开发队列**——这是**排期与聚焦**的选择，不是产能限制。promotion 到当前模块/开发队列仍需 operator 显式确认。
+> **团队前提（2026-06-04 更新，2026-06-11 修订）**：本项目后续为**多人开发**。因此"是否规划多平台"**不再受独立开发者带宽约束**。2026-06-11 operator 已确认优先快速做出手机自测版，因此 iPhone / Android 的薄壳 MVP 进入当前开发队列；其它未来面仍以 **future surfaces** 形式停留在文档与看板。
 >
-> 最后更新：2026-06-04
+> 最后更新：2026-06-11
 
 ---
 
@@ -53,11 +53,12 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 
 ## 3. 当前面（active，本阶段开发主体）
 
-当前阶段只开发这三面 + 共享核心。三面边界详见 `docs/MODULE_BOUNDARIES.md`,此处只给长期定位摘要。
+当前阶段开发这些面 + 共享核心。边界详见 `docs/MODULE_BOUNDARIES.md`,此处只给长期定位摘要。
 
 | 当前面 | 角色 | 长期定位 | 一句话身份 |
 |---|---|---|---|
 | **Web 版本** | 完整面 | 产品的"大脑",所有面的功能与 UI 源头 | 完整产品功能层 |
+| **Mobile 原生薄壳** | 轻捕获面 | Web 的手机投影,用于快速安装和自测 | PWA + Capacitor 复用 Web UI |
 | **Mac 桌面壳** | 完整面 | **Web 的原生容器**,提供原生便利(离线/菜单栏/通知/账号) | 把 Web 装进原生窗 + 原生 chrome,**不是桌面整理器** |
 | **桌面插件** | 环境面 | macOS 桌面原生超能力层(多窗口/挂件/快速入口) | 插件平台运行时 + 具体插件 |
 
@@ -71,16 +72,16 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 
 ---
 
-## 4. 未来面（planning-only，仅规划不开发）
+## 4. 未来面 / 已解冻移动面
 
 下表是本文的核心。每个未来面给出:定位 / 进入时机 / 承载(适合) / 不承载 / 与现有面协同 / 实现策略。
 
 | 平台 | 角色 | 长期定位 | 进入路线图时机 | 承载（适合） | 不承载 | 与现有面协同 | 实现策略（复用优先） |
 |---|---|---|---|---|---|---|---|
-| **iPhone** | 轻捕获面 | 第一移动面,捕获+速览+提醒 | **Y1 H2 起 PWA;Y2 上原生薄壳** | 速记任务/记账/笔记、今日视图、习惯打卡、番茄/计时、日历速览、推送提醒、分享面板 | 看板复杂编排、项目管理、文档长编辑、桌面整理 | 共享账号+同步;捕获面"喂"给 Web/Mac 的编排面 | PWA → Capacitor / Tauri-Mobile **薄壳复用 Web UI** + 原生(push/widget/share/biometric);SwiftUI 重写仅在必要时 |
+| **iPhone** | 轻捕获面 | 第一移动面,捕获+速览+提醒 | **2026-06-11 已解冻 self-test lane** | 速记任务/记账/笔记、今日视图、习惯打卡、番茄/计时、日历速览；首版先能安装/启动/自测 | 看板复杂编排、项目管理、文档长编辑、桌面整理、push/widget/share/biometric 首版不做 | 共享账号+同步;捕获面"喂"给 Web/Mac 的编排面 | PWA → Capacitor **薄壳复用 Web UI**；SwiftUI 重写仅在必要时 |
 | **iPad** | 完整面 | "轻 Mac",介于 iPhone 与 Mac 之间 | **Y1 随 PWA 自然覆盖;专用 app 仅 Y2–3 且有 pencil/分屏需求** | 规划画布、日历、看板、阅读/复盘、较完整编辑 | (作为独立代码库——默认不做) | 同账号同步;大屏≈接近完整套件 | **永不先开独立代码库**:响应式 Web/PWA → Mac Catalyst →(仅 pencil/Stage Manager 需求验证后)才专用 |
 | **Apple Watch** | 环境面 | iPhone 的伴侣,微交互面 | **Y2–3,iPhone 原生之后** | 习惯打卡、计时/番茄起停、今日下一项、快速记账金额、冥想开始、表盘 complications(连胜/下一任务) | 项目管理、文档、Dashboard、复杂编辑 | **依附 iPhone app 取数**;complications 上表盘 | 原生 watchOS **伴侣** app,小范围;留存/惊喜面 |
-| **Android** | 轻捕获面 | 移动捕获面(非 Apple 生态) | **Y2 起 PWA 兜底;原生 Y2–3 且付费需求验证后** | 同 iPhone(捕获/速览/提醒) | 同 iPhone | 同账号同步 | PWA 先覆盖;Capacitor 复用 Web 或 Kotlin 原生仅在出现付费 Android 群体后;**优先级最低** |
+| **Android** | 轻捕获面 | 移动捕获面(非 Apple 生态) | **2026-06-11 已解冻 self-test lane** | 同 iPhone(捕获/速览/提醒);首版先能 debug APK 安装/启动/自测 | 同 iPhone;Kotlin 原生重写不做 | 同账号同步 | PWA → Capacitor 复用 Web；Kotlin 原生仅在后续收益明确时 |
 | **浏览器扩展** | 轻捕获面 | 最便宜的捕获面 | **Y1–2 机会主义(可能早于移动原生)** | 网页剪藏、快速加任务/书签、新标签页今日视图、omnibox 速加 | 完整编辑 | 同账号;捕获面 | 复用 Web 组件 + 薄扩展壳 |
 
 **两条铁律(写进长期架构,防止以后推翻)：**
@@ -98,17 +99,17 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 - **共享核心**：数据模型 + 账号 + 同步(合理范围) + 业务逻辑包 + **可移植 UI**——未来所有面的接入地基。
 - **Mac 壳**：按本文重新收窄为 Web 容器(菜单栏/托盘/离线/账号/更新/通知),**砍掉 overlay-organizer 身份**。
 - **桌面插件**：平台 SDK + 多窗口运行时**定契约**;organizer 维持 Stable;其余 Paused until G1。
-- **Web 响应式 + 可安装 PWA**：移动端的种子,几乎零新成本(同时覆盖 iPhone/iPad/Android 的捕获场景)。
+- **Web 响应式 + 可安装 PWA + Mobile Capacitor 薄壳**：移动端的自测种子,同时覆盖 iPhone/Android 的第一版安装和自测场景。
 - **文档治理**：边界 framing 对齐 + 本路线图文档 + 看板/结构图"未来面"层。
 - （可选）**浏览器扩展**捕获面。
 
 ### Year 2 — 移动捕获面 + 桌面插件兑现
 
-- **iPhone**：PWA → 原生薄壳(捕获/今日/打卡/计时 + push)。第一个真移动面。
+- **iPhone**：self-test lane 后再补 push / widget / share / biometric。
 - **桌面插件线 resume**（G1 后）：widgets、clipboard、便签、快速入口、快速记账/时间追踪小窗。
 - **浏览器扩展**成熟。
 - **iPad**：响应式 PWA 验证;决定要不要 Catalyst。
-- **Android**：PWA 可用;原生按需。
+- **Android**：self-test lane 后按真实需求决定是否继续原生能力。
 
 ### Year 3 — 环境面 + 生态补全
 
@@ -121,7 +122,7 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 
 ## 6. 全部面 · 长期优先级排序
 
-**Web（已成）→ Mac 壳（重新收窄）→ Web PWA/响应式 → 桌面插件平台 → 浏览器扩展 → iPhone 原生薄壳 → Apple Watch → iPad 专用/Catalyst → Android 原生**
+**Web（已成）→ Web PWA/响应式 → Mobile Capacitor 薄壳自测 → Mac 壳（重新收窄）→ 桌面插件平台 → 浏览器扩展 → Apple Watch → iPad 专用/Catalyst → Android/Kotlin 原生重写（仅按需）**
 
 ---
 
@@ -129,8 +130,8 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 
 | 现在就开发（active） | 仅进路线图（planning-only，不开工） |
 |---|---|
-| Web(P0)、Mac 壳(重新收窄)、桌面插件平台地基+SDK 契约+organizer、共享核心(数据/账号/同步)、开发看板、**Web 响应式 PWA** | **iPhone 原生**、**iPad 专用**、**Apple Watch**、**Android 原生** |
-| 机会主义可选(低成本)：浏览器扩展 | 只写进 PRD/结构图/看板的"未来面"层,**不开分支、不进 feature-build**,直到 operator 显式解冻 |
+| Web(P0)、**Mobile 原生薄壳 self-test lane**、Mac 壳(重新收窄)、桌面插件平台地基+SDK 契约+organizer、共享核心(数据/账号/同步)、开发看板、**Web 响应式 PWA** | **iPad 专用**、**Apple Watch**、**浏览器扩展**、Android/Kotlin 原生重写 |
+| iPhone / Android 首版只做 PWA + Capacitor 薄壳 | 只写进 PRD/结构图/看板的"未来面"层,**不开分支、不进 feature-build**,直到 operator 显式解冻 |
 
 ---
 
@@ -140,7 +141,7 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 |---|---|
 | 当前三面**功能边界** | `docs/MODULE_BOUNDARIES.md` |
 | **未来平台**长期规划（本文） | `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md` |
-| 六模块任务路由 | `docs/PRODUCT_MODULE_MAP.md` |
+| 产品模块任务路由 | `docs/PRODUCT_MODULE_MAP.md` |
 | active-focus 顺序 | `docs/adr/0010-p1-desktop-resume-plan.md` |
 | 分支 / D3 / D4 | `docs/adr/0013-branch-sync-governance.md` |
 | 机器可读镜像（`future_surfaces`） | `docs/workflow/project/module-classification.json` |
@@ -148,6 +149,6 @@ XAI 不是"多个产品",而是 **一个产品 + 多个交付面（surface）**�
 
 **维护规则：**
 
-- 本文是 planning-only。未来面进入 active 开发,需 operator 显式确认,并同步更新 `MODULE_BOUNDARIES.md`(把该面从"未来面"升为"当前面")+ `module-classification.json` + 看板。
+- 未来面进入 active 开发,需 operator 显式确认,并同步更新 `MODULE_BOUNDARIES.md`(把该面从"未来面"升为"当前面")+ `module-classification.json` + 看板。2026-06-11 已对 iPhone / Android 的 PWA + Capacitor 薄壳自测范围完成该提升。
 - 新平台讨论先更新本文,再决定是否升格为 ADR-0016。
 - 任何"未来面"的描述若与 `MODULE_BOUNDARIES.md` 当前边界冲突,以本文的"角色分类 + 接入契约"为长期意图,以 `MODULE_BOUNDARIES.md` 为当前事实。

@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-11
+
+### Mobile 原生薄壳 self-test lane 解冻
+
+- Product line: mobile / project-system
+- Branch / commit: `codex/mobile/native-thin-shell-mvp` / local working tree
+- User-visible change: 手机版本开发线已从 planning-only 解冻为自测 lane，目标是快速把现有 Web 版本通过 PWA + Capacitor 薄壳安装到 iPhone / Android 做个人测试。
+- Developer/system delta: 新增 `mobile` 产品模块路由，明确从 `web` 出发并复用 `apps/web/dist`；不得从 `dev` / Mac App 分叉。同步更新 `CLAUDE.md`、`AGENTS.md`、Cursor 路由、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、长期路线图、`module-classification.json`、dev-dashboard contract 和 `dashboard-state.json`。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed via bundled Node；dashboard refresh / verify 待本条治理变更完成后运行并登记。移动产品代码、PWA install shell、Capacitor wrapper、iOS / Android smoke 尚未在本条完成。
+- Risk / follow-up: 首版只做自测薄壳；push、widget、share sheet、biometric、SwiftUI/React Native/Kotlin 重写均后置。任何影响 Mac App 的 Web 共享改动仍必须走 ADR-0013 D3 gate。
+
 ## 2026-06-09
 
 ### Web 项目看板 W1：真实标签/成员目录 + 优先级 + chip 解析

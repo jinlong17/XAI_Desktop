@@ -17,7 +17,7 @@
       "plugin entities default syncScope=device-local and NEVER enter the remote outbox; only explicit account-sync entities sync (ADR-0013 D4)",
       "Web pet/widgets/grid (in-page DOM) are NOT the same as desktop pet/widgets/grid (native overlay) — same name, zero code sharing",
       "web->app only via the D3 gate (xai-web-to-desktop-sync); never merge web directly into dev",
-      "future iPhone/iPad/Apple Watch/Android/browser-extension surfaces are planning-only future_surfaces; never classify them as active module targets without operator confirmation"
+      "mobile native thin shell work for iPhone/Android is operator-unfrozen only under the mobile self-test lane; future iPad dedicated native, Apple Watch, browser-extension, and broader native rewrites remain planning-only future_surfaces unless operator-promoted"
     ],
     "frozen_lines": {
       "plugin": "P2 packages (clipboard/widgets/pet/meditation) PAUSED until G1 SHIPPED — brief/impact-note only, no source landing. Plugin platform-runtime / G1 native-foundation anchor (multi-window engine, grid persistence, window-command) is the ACTIVE gate (P1 App-lane execution, plugin-platform product), NOT frozen.",
@@ -37,6 +37,20 @@
       "signals": ["Web 页面/组件", "Vite SPA", "浏览器持久化(IndexedDB/localStorage)", "/app/* 路由", "共享 UI", "Cloudflare Pages"],
       "form": "browser in-page",
       "data": "IndexedDB <-> account cloud"
+    },
+    {
+      "key": "mobile",
+      "name": "手机版 / 原生薄壳",
+      "surface": ["apps/mobile/", "apps/web/ mobile PWA metadata"],
+      "main_branch": "mobile self-test lane",
+      "short_branch": "codex/mobile/<feature>",
+      "status": "operator-unfrozen-self-test",
+      "signals": ["iPhone", "Android", "Capacitor", "PWA installability", "mobile WebView", "mobile safe-area", "touch-first layout", "iOS Simulator", "Android debug APK"],
+      "identity": "thin native shell over the Web build for rapid personal self-testing; NOT a Mac App/dev fork and NOT a native UI rewrite",
+      "form": "PWA + Capacitor iOS/Android wrapper around apps/web/dist",
+      "owns": ["apps/mobile Capacitor wrapper", "Web PWA install metadata", "mobile safe-area/touch/runtime baseline", "iOS/Android self-test evidence"],
+      "not_owns": ["Mac menu/tray/window shell", "desktop plugin overlay/multi-window runtime", "SwiftUI rewrite", "React Native rewrite", "push/widget/share/biometric in MVP"],
+      "data": "reuse Web local storage first; account-sync only for explicitly syncable entities"
     },
     {
       "key": "app",
@@ -102,30 +116,30 @@
     }
   ],
   "future_surfaces": {
-    "status": "planning-only",
+    "status": "partially-promoted",
     "authority": "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md",
-    "rule": "NOT current modules; NEVER an active classification target. The classifier must not route work here without an operator-confirmed unfreeze that promotes a surface into MODULE_BOUNDARIES.md as a current module. These are 'surfaces of the one product', planned by role, reusing the shared core (data model + account + sync + portable UI).",
+    "rule": "iPhone/Android PWA + Capacitor thin shell self-test work is now active under the mobile module. Future iPad dedicated native, Apple Watch, browser-extension, and broader native rewrites remain planning-only; the classifier must not route those as active module work without another operator-confirmed promotion into MODULE_BOUNDARIES.md.",
     "surface_roles": {
       "organize_plan": "完整面：大屏完整编辑 — Web, Mac 壳, iPad",
-      "capture_glance": "轻捕获面：快进快出 — iPhone, Android, 浏览器扩展",
+      "capture_glance": "轻捕获面：快进快出 — iPhone, Android, 浏览器扩展 (iPhone/Android thin shell MVP lives in mobile)",
       "ambient_micro": "环境/微交互面：一瞥即走 — Apple Watch, 桌面插件"
     },
     "surfaces": [
-      {"key": "iphone", "role": "capture_glance", "enters": "Y1 H2 PWA; Y2 native shell", "carries": "速记/今日/打卡/计时/速览/提醒", "not": "复杂编排/项目/文档长编辑/桌面整理", "impl": "PWA -> Capacitor/Tauri-Mobile 薄壳复用 Web UI + 原生 push/widget/share/biometric"},
+      {"key": "iphone", "role": "capture_glance", "enters": "2026-06-11 promoted to mobile self-test lane for PWA + Capacitor thin shell", "status": "active-under-mobile-self-test", "carries": "速记/今日/打卡/计时/速览/提醒; MVP focuses install/launch/self-test", "not": "复杂编排/项目/文档长编辑/桌面整理; push/widget/share/biometric deferred", "impl": "PWA -> Capacitor 薄壳复用 Web UI"},
       {"key": "ipad", "role": "organize_plan", "enters": "Y1 随 PWA 覆盖; 专用 Y2-3 仅 pencil/分屏需求", "carries": "规划画布/日历/看板/阅读/较完整编辑", "not": "独立代码库(默认不做)", "impl": "响应式 Web/PWA -> Mac Catalyst -> 专用仅在 pencil/Stage Manager 需求后", "rule": "NEVER a separate product line — responsive Web tablet form"},
       {"key": "apple_watch", "role": "ambient_micro", "enters": "Y2-3, after iPhone native", "carries": "打卡/计时起停/今日下一项/快速记账/冥想/表盘 complications", "not": "项目/文档/Dashboard/复杂编辑", "impl": "原生 watchOS 伴侣 app, 依附 iPhone 取数", "rule": "NEVER a separate product line — companion of the iPhone product"},
-      {"key": "android", "role": "capture_glance", "enters": "Y2 PWA; native Y2-3 且付费需求验证后", "carries": "同 iPhone(捕获/速览/提醒)", "not": "同 iPhone", "impl": "PWA 兜底; Capacitor 复用 Web 或 Kotlin 仅在付费 Android 群体后; 优先级最低"},
+      {"key": "android", "role": "capture_glance", "enters": "2026-06-11 promoted to mobile self-test lane for PWA + Capacitor thin shell", "status": "active-under-mobile-self-test", "carries": "同 iPhone(捕获/速览/提醒); MVP focuses debug APK install/launch/self-test", "not": "Kotlin native rewrite in MVP", "impl": "PWA -> Capacitor 复用 Web; Kotlin only if later demand proves value"},
       {"key": "browser_extension", "role": "capture_glance", "enters": "Y1-2 机会主义", "carries": "网页剪藏/快速加任务/新标签页今日/omnibox 速加", "not": "完整编辑", "impl": "复用 Web 组件 + 薄扩展壳"}
     ],
-    "priority_order": ["web(done)", "mac-shell", "web-pwa", "desktop-plugin-platform", "browser-extension", "iphone-native", "apple-watch", "ipad-dedicated/catalyst", "android-native"]
+    "priority_order": ["web(done)", "web-pwa", "mobile-capacitor-self-test", "mac-shell", "desktop-plugin-platform", "browser-extension", "apple-watch", "ipad-dedicated/catalyst", "android-native-rewrite-if-needed"]
   },
   "classification_flow": [
     {"step": 1, "ask": "命中哪个模块的任务归属信号?", "action": "落该主模块"},
     {"step": 2, "ask": "浏览器能否实现且是完整功能页面?", "yes": "web", "no": "goto 3"},
-    {"step": 3, "ask": "是 Mac 壳/Web 容器/native chrome,还是桌面插件平台运行时/轻量挂件?", "mac_shell_or_native_chrome": "app", "plugin_platform_runtime_or_widget": "plugin", "note": "Tauri 命令物理位置不决定产品归属;按产品意图分类"},
+    {"step": 3, "ask": "是手机薄壳、Mac 壳/Web 容器/native chrome,还是桌面插件平台运行时/轻量挂件?", "mobile_shell_or_pwa": "mobile", "mac_shell_or_native_chrome": "app", "plugin_platform_runtime_or_widget": "plugin", "note": "Capacitor/PWA mobile shell starts from web; Tauri 命令物理位置不决定产品归属;按产品意图分类"},
     {"step": 4, "ask": "要不要跨设备?", "yes": "entities.ts 标 account-sync -> sync 线 (D4)", "no": "device-local"},
     {"step": 5, "ask": "改动源自 Web 要流向 App?", "yes": "走 D3 闸门 (W0-W4) via xai-web-to-desktop-sync"},
-    {"step": 6, "ask": "是否是 iPhone/iPad/Apple Watch/Android/browser-extension 等未来面?", "yes": "future_surfaces planning-only; no active module branch unless operator promotes it into MODULE_BOUNDARIES.md"}
+    {"step": 6, "ask": "是否是 iPad 专用 / Apple Watch / browser-extension / broader native rewrite 等未来面?", "yes": "future_surfaces planning-only; no active module branch unless operator promotes it into MODULE_BOUNDARIES.md", "note": "iPhone/Android PWA + Capacitor thin shell self-test is already routed to mobile"}
   ],
   "drift_checks": [
     {"id": "phantom_package", "rule": "every module.surface / sub_module.package path that is a packages/* dir MUST exist on disk; flag Planned-no-package rows (e.g. plugin-meditation, plugin-settings) so docs don't read as if the package exists"},
@@ -135,7 +149,7 @@
     {"id": "unknown_classification", "rule": "if a feature matches no module signal or matches 2+ with equal weight, escalate to operator instead of guessing"},
     {"id": "window_impl_in_plugin", "rule": "HR1: a plugin package must NOT implement a native window/file/clipboard Tauri command (window.rs-style) — it may only consume them; flag any such implementation under packages/plugin-*/src as an App-lane responsibility"},
     {"id": "window_product_ownership_drift", "rule": "flag docs/rules that present the Mac shell as the desktop organizer/overlay product, or classify plugin platform runtime as App product ownership only because code lives in apps/desktop/src-tauri"},
-    {"id": "future_surface_landing", "rule": "flag iPhone/iPad/Apple Watch/Android/browser-extension work presented as active feature-build/module work instead of planning-only future_surfaces without operator confirmation"},
+    {"id": "future_surface_landing", "rule": "flag iPad dedicated native / Apple Watch / browser-extension / broader native rewrite work presented as active feature-build/module work instead of planning-only future_surfaces without operator confirmation; do not flag iPhone/Android PWA + Capacitor thin shell self-test routed to mobile"},
     {"id": "module_redo_in_plugin", "rule": "HR2: a plugin must NOT re-build the web-form of a Web-covered module (tasks/board/calendar/pomodoro/habits/statistics/...); it should share the business-logic package (plugin-productivity/project/labels). Flag duplicate full-module rebuilds"},
     {"id": "d3_bypass", "rule": "HR5: a Web change must reach the App/dev line only via the D3 gate (xai-web-to-desktop-sync) with a parity receipt; flag web->dev merges or App-affecting Web changes with no D3 classification"}
   ],

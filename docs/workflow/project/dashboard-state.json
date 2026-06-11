@@ -31,7 +31,7 @@
   "status_rows": [
     {
       "label": "当前主线",
-      "value": "Web 主线（web 分支）+ Mac App 独立开发线。"
+      "value": "Web 主线（web 分支）+ Mobile 自测薄壳线 + Mac App 独立开发线。"
     },
     {
       "label": "Web 的位置",
@@ -58,8 +58,8 @@
     {
       "label": "产品线",
       "badge": "顺序模块",
-      "value": "6",
-      "note": "Web / App / Plugin / Sync / Site / Admin"
+      "value": "7",
+      "note": "Web / Mobile / App / Plugin / Sync / Site / Admin"
     },
     {
       "label": "长期分支",
@@ -1040,8 +1040,180 @@
       ]
     },
     {
-      "key": "app",
+      "key": "mobile",
       "order": 2,
+      "title": "Mobile",
+      "subtitle": "Web 的手机原生薄壳 / 自测版",
+      "badge": "self-test · active",
+      "status": "operator-unfrozen",
+      "branch": "mobile self-test lane / codex/mobile/<feature>",
+      "dependency": "复用 Web build",
+      "next": "完成治理提升 → Web PWA 安装壳 → Capacitor iOS/Android wrapper → iOS/Android 自测证据。",
+      "tracker": "PWA installability、mobile WebView、safe-area/touch baseline、iOS Simulator、Android debug APK。",
+      "labels": {
+        "overview": "手机版 / 原生薄壳",
+        "deployment": "Mobile 自测版",
+        "release": "Mobile 原生薄壳"
+      },
+      "visual": {
+        "tone": "cyan",
+        "icon": "M"
+      },
+      "overview": {
+        "phase": "PWA + Capacitor MVP",
+        "running": "自测线已解冻",
+        "progress_fallback": 12,
+        "recent_update": "2026-06-11 operator 解冻移动原生薄壳线，分支 codex/mobile/native-thin-shell-mvp 已从 web 创建并补执行计划。",
+        "todo_fallback": "先完成 PWA 安装壳和 mobile runtime，再生成 apps/mobile Capacitor wrapper。",
+        "target": {
+          "type": "docs",
+          "path": "docs/superpowers/plans/2026-06-11-mobile-native-thin-shell-mvp.md",
+          "label": "查看 Mobile MVP 计划"
+        }
+      },
+      "tracking": {
+        "region": "主产品链",
+        "roadmap_manifests": [],
+        "anchor_docs": [
+          [
+            "Mobile MVP Plan",
+            "docs/superpowers/plans/2026-06-11-mobile-native-thin-shell-mvp.md"
+          ],
+          [
+            "Long-term roadmap",
+            "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md"
+          ],
+          [
+            "Module boundaries",
+            "docs/MODULE_BOUNDARIES.md"
+          ]
+        ],
+        "release_aliases": [
+          "mobile",
+          "iphone",
+          "android",
+          "capacitor",
+          "pwa"
+        ]
+      },
+      "features": [
+        {
+          "name": "Web PWA install shell",
+          "status": "planned"
+        },
+        {
+          "name": "Mobile runtime + safe-area/touch baseline",
+          "status": "planned"
+        },
+        {
+          "name": "Capacitor iOS wrapper",
+          "status": "planned"
+        },
+        {
+          "name": "Capacitor Android wrapper",
+          "status": "planned"
+        },
+        {
+          "name": "iOS / Android self-test smoke evidence",
+          "status": "planned"
+        }
+      ],
+      "points": [
+        [
+          "定位",
+          "Mobile 是 Web 的手机投影，第一目标是快速安装和自测，不是重写 App。"
+        ],
+        [
+          "边界",
+          "从 web 出发，复用 apps/web/dist；不得从 dev / Mac App 分叉。"
+        ],
+        [
+          "验证",
+          "Web build + PWA smoke + Capacitor sync + iOS/Android 环境证据共同构成通过标准。"
+        ]
+      ],
+      "goal": "用 PWA + Capacitor 原生薄壳把现有 Web 版本快速装到 iPhone / Android 上自测，保持 Web 为 UI 源头，避免 SwiftUI/React Native 重写。",
+      "routing": [
+        "改动落在 apps/mobile/、Capacitor config、iOS/Android wrapper、native project sync、Simulator / debug APK 自测",
+        "改动落在 apps/web 的移动安装壳: manifest.webmanifest、mobile icons、viewport/meta、service worker app-shell、PWA installability",
+        "改动落在 Web 的 mobile WebView 适配: safe-area、touch target、手机视口 overflow、standalone/PWA/Capacitor runtime detection",
+        "需求明确是 iPhone / Android 上的快速自测、安装包、模拟器/真机启动，而不是 Mac 桌面 App 壳能力"
+      ],
+      "skills": [
+        {
+          "name": "xai-feature-brief",
+          "when": "移动端新增能力模糊时，先规范化自测范围、复用 Web 的边界和不做项。"
+        },
+        {
+          "name": "xai-feature-full-loop",
+          "when": "需要父会话连续推进 PWA + Capacitor + 自测证据时使用。"
+        },
+        {
+          "name": "xai-dev-dashboard-sync",
+          "when": "更新 Product Module Registry、测试记录和 release-log 后刷新看板。"
+        },
+        {
+          "name": "xai-release-log",
+          "when": "每个可安装/可自测增量完成后登记。"
+        }
+      ],
+      "prompts": [
+        {
+          "label": "移动薄壳 MVP",
+          "text": "Start the feature-plan agent.\n  动机:需要把现有 Web 版本快速装到 iPhone / Android 上自测。\n  目标:在 codex/mobile/<feature> 上完成 Web PWA install shell + apps/mobile Capacitor iOS/Android thin shell,复用 apps/web/dist。\n  范围:apps/web 的 mobile/PWA metadata + safe-area/touch/runtime baseline,apps/mobile 的 Capacitor config/native wrapper,自测文档与 release-log/dashboard 记录。\n  约束:不从 dev / Mac App 分叉;不做 SwiftUI/React Native 重写;push/widget/share/biometric 后置;账号同步只处理已有 account-sync 实体。"
+        }
+      ],
+      "workflow": [
+        "治理提升:MODULE_BOUNDARIES.md、PRODUCT_MODULE_MAP.md、module-classification.json、dashboard-state.json 同步声明 mobile 为 operator-unfrozen self-test lane。",
+        "PWA 先行:在 apps/web 增加 manifest、icon、mobile meta、service worker app-shell、移动 CSS 基线和 runtime detection。",
+        "原生薄壳:新增 apps/mobile,用 Capacitor 指向 ../web/dist,生成 iOS / Android native wrapper。",
+        "验证:先跑 Web unit/type/build，再跑移动视口 smoke，再跑 pnpm --filter @repo/mobile sync,最后跑 iOS Simulator / Android debug APK；环境缺失时记录 BLOCKED_ENVIRONMENT。",
+        "收口:release-log + dashboard-state + smoke 文档同步，确保 web、mobile、app 三条线边界清楚。"
+      ],
+      "transitions": [
+        {
+          "to": "web",
+          "trigger": "移动自测发现根因在共享 Web UI / 模块 CSS / browser persistence",
+          "branch": "web / codex/web/<feature> 或当前 codex/mobile/<feature> 后回流 web",
+          "skill": "bug-diagnose / xai-feature-full-loop",
+          "note": "Web 是 UI 源头；修复应进入 Web/PWA 共享层，避免在 native wrapper 内打补丁。"
+        },
+        {
+          "to": "sync",
+          "trigger": "手机自测需要跨设备账号云数据，而实体尚未声明 syncScope: account-sync",
+          "branch": "codex/sync/<feature>（paused，需 operator 确认）",
+          "skill": "xai-account-sync-scope-check",
+          "note": "仅显式 account-sync 实体进同步；device-local 不因移动端出现而自动上云。"
+        },
+        {
+          "to": "app",
+          "trigger": "某移动修复同时改变 Web shared seam 且需要带入 Mac App",
+          "branch": "web → desktop-next（经 D3 gate）",
+          "skill": "xai-web-to-desktop-sync",
+          "note": "mobile 不直连 dev；若影响 Mac App，仍按 Web→App D3 gate 处理。"
+        }
+      ],
+      "impacts": [
+        {
+          "module": "web",
+          "when": "PWA / mobile CSS / runtime detection 改动落在 apps/web",
+          "action": "保持浏览器桌面体验不回归；跑 Web typecheck/test/build 和移动视口 smoke。"
+        },
+        {
+          "module": "app",
+          "when": "共享 Web 改动可能改变 Tauri Web container 行为",
+          "action": "走 xai-web-to-desktop-sync 分级，不直接并入 dev。"
+        },
+        {
+          "module": "sync",
+          "when": "手机端需要账号云/多设备状态一致",
+          "action": "先跑 D4 scope check；未解冻前只产 receipt，不擅自改协议。"
+        }
+      ]
+    },
+    {
+      "key": "app",
+      "order": 3,
       "title": "Mac 桌面壳 App",
       "subtitle": "Web 的桌面壳 / 原生容器（不是桌面整理器）",
       "badge": "P1 · active app lane",
@@ -1243,7 +1415,7 @@
     },
     {
       "key": "plugin",
-      "order": 3,
+      "order": 4,
       "title": "桌面整理插件 / Widget",
       "subtitle": "桌面插件平台运行时 + 内置 Plugin Center",
       "badge": "G1 runtime active · packages paused",
@@ -1478,7 +1650,7 @@
     },
     {
       "key": "sync",
-      "order": 4,
+      "order": 5,
       "title": "账号云同步层",
       "subtitle": "前三者同步到同一个账号云",
       "badge": "P2 · paused",
@@ -1662,7 +1834,7 @@
     },
     {
       "key": "site",
-      "order": 5,
+      "order": 6,
       "title": "官方网页",
       "subtitle": "官网和发布入口同步开发",
       "badge": "proposed",
@@ -1822,7 +1994,7 @@
     },
     {
       "key": "admin",
-      "order": 6,
+      "order": 7,
       "title": "Admin Dashboard",
       "subtitle": "运营、AI 配置、权限和用量后台",
       "badge": "roadmap-gated",
@@ -2023,9 +2195,9 @@
     }
   ],
   "future_surfaces": {
-    "status": "planning-only",
+    "status": "partially-promoted",
     "authority": "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md",
-    "rule": "Future iPhone/iPad/Apple Watch/Android/browser-extension surfaces are not current Product Module Registry entries and must not receive active feature-build branches unless the operator explicitly promotes one into MODULE_BOUNDARIES.md.",
+    "rule": "iPhone/Android PWA + Capacitor thin shell self-test work is active under product_lines.mobile. Future iPad dedicated native, Apple Watch, browser-extension, and broader native rewrites remain planning-only unless the operator explicitly promotes one into MODULE_BOUNDARIES.md.",
     "roles": [
       {
         "key": "organize_plan",
@@ -2041,8 +2213,8 @@
         "key": "capture_glance",
         "label": "轻捕获面",
         "surfaces": [
-          "iPhone",
-          "Android",
+          "iPhone (active under mobile thin shell)",
+          "Android (active under mobile thin shell)",
           "浏览器扩展"
         ],
         "job": "快进快出、速记、速览、提醒"
@@ -2062,10 +2234,10 @@
         "key": "iphone",
         "priority": 6,
         "role": "capture_glance",
-        "phase": "Y1 H2 PWA seed; Y2 native thin shell",
-        "status": "planning-only",
+        "phase": "2026-06-11 promoted to mobile self-test lane for PWA + Capacitor thin shell",
+        "status": "active-under-mobile",
         "carries": "速记、今日、打卡、计时、速览、提醒",
-        "not_for": "复杂编排、项目管理、文档长编辑、桌面整理"
+        "not_for": "复杂编排、项目管理、文档长编辑、桌面整理；push/widget/share/biometric deferred"
       },
       {
         "key": "ipad",
@@ -2089,10 +2261,10 @@
         "key": "android",
         "priority": 9,
         "role": "capture_glance",
-        "phase": "Y2 PWA fallback; native only after paid demand",
-        "status": "planning-only",
+        "phase": "2026-06-11 promoted to mobile self-test lane for PWA + Capacitor thin shell",
+        "status": "active-under-mobile",
         "carries": "同 iPhone 的捕获/速览/提醒",
-        "not_for": "独立早期开工"
+        "not_for": "Kotlin 原生重写首版不做"
       },
       {
         "key": "browser_extension",

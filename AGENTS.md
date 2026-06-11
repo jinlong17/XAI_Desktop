@@ -113,9 +113,9 @@ whether the machine contract or reusable dashboard template needs alignment.
 
 ## 3. Product Module Routing (classify every task first)
 
-Before starting any dev task, classify it into exactly one of the six product
+Before starting any dev task, classify it into exactly one active product
 modules, then use that module's branch + skill + workflow. The authoritative
-router (the six-module table with task-attribution signals, plus the
+router (the product-module table with task-attribution signals, plus the
 `web→app` D3 gate / `syncScope` / PROPOSED-line rules) is **`CLAUDE.md`
 §"Product module map & task routing"**, and the full per-module navigation
 (开发目标 / 绑定 skill / prompt 模板 / 开发 workflow / 进入下一模块的触发条件 /
@@ -123,6 +123,7 @@ router (the six-module table with task-attribution signals, plus the
 产品结构图). Quick reference:
 
 - `web` → `apps/web/`, branch `codex/web/<feature>`→`web`.
+- `mobile` → `apps/mobile/` + Web PWA/mobile metadata in `apps/web/`, branch `codex/mobile/<feature>`; operator-unfrozen self-test lane, starts from `web`, uses PWA + Capacitor thin shell, and must not route through `dev` / Mac App unless a Mac-specific delta is explicitly required.
 - `app` → Mac shell / Web container in `apps/desktop/` (single Web SPA main window + native chrome; host process may implement native commands), branch `codex/desktop/<feature>`→`desktop-next`→`dev`.
 - `plugin` → desktop plugin platform/runtime + widget/plugin packages (multi-window / overlay / click-through / grid persistence product ownership lives here even when code is physically in the Tauri host), branch `codex/plugin/<feature>`→`desktop-plugin-next`; G1 platform-runtime/window-command anchor is active gate, concrete plugin packages are paused until G1 ships.
 - `sync` → account cloud-sync, branch `codex/sync/<feature>` (paused; only `syncScope: account-sync`).
@@ -132,9 +133,10 @@ router (the six-module table with task-attribution signals, plus the
 `web→app` only flows through the D3 gate (`xai-web-to-desktop-sync`); never merge
 Web changes straight into `dev`. Do not open new work branches for `site`
 without operator confirmation. Admin work is operator-confirmed but must stay
-inside the admin roadmap gates. Future iPhone / iPad / Apple Watch / Android /
-browser-extension surfaces are planning-only in
-`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
+inside the admin roadmap gates. iPhone / Android native thin shell work is
+operator-unfrozen only for the `mobile` self-test lane above. Future iPad
+dedicated native / Apple Watch / browser-extension surfaces remain planning-only
+in `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
 module targets or open work branches without operator confirmation.
 
 ---

@@ -1,9 +1,9 @@
 # 产品模块导航地图 / Product Module Map
 
-> **权威来源**：[ADR-0013](adr/0013-branch-sync-governance.md) §D1（六产品线）/§D2（分支拓扑）/§D3（Web→Desktop 同步闸门）/§D4（账号云同步），与 [`CLAUDE.md`](../CLAUDE.md) §“Product module map & task routing”。
+> **权威来源**：[ADR-0013](adr/0013-branch-sync-governance.md) §D1（原六产品线）/§D2（分支拓扑）/§D3（Web→Desktop 同步闸门）/§D4（账号云同步），加上 2026-06-11 operator 解冻的 `mobile` self-test lane，与 [`CLAUDE.md`](../CLAUDE.md) §“Product module map & task routing”。
 > 本文是 Codex / Claude / Cursor 的**任务归属 + 开发导航**单一事实源，并镜像到 [`dashboard-state.json`](workflow/project/dashboard-state.json) 的 `product_lines` Product Module Registry。dev-dashboard 的总览、产品结构图、部署、发布记录、文档库和 Skill / Agent 页面都从该 registry 派生。
 >
-> **长期平台路线（planning-only）**：未来 iPhone / iPad / Apple Watch / Android / 浏览器扩展 等平台的进入时机、定位与协同见 [`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`](planning/LONG_TERM_PRODUCT_ROADMAP.md)（机器可读镜像为 `module-classification.json` 的 `future_surfaces`，标 planning-only，**永不**作为 active 分类目标）。本文只覆盖当前六模块。
+> **长期平台路线（planning-only）**：未来 iPad 专用 / Apple Watch / 浏览器扩展 等平台的进入时机、定位与协同见 [`docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`](planning/LONG_TERM_PRODUCT_ROADMAP.md)（机器可读镜像为 `module-classification.json` 的 `future_surfaces`）。iPhone / Android 原生薄壳已由 operator 解冻为 `mobile` self-test lane，只允许 PWA + Capacitor 复用 Web UI 的快速自测范围。
 
 ## 如何使用
 
@@ -14,6 +14,7 @@
 **全局硬规则（不可违反）：**
 
 - `web → app` **只能经 D3 gate**（`xai-web-to-desktop-sync`，W0–W4 + parity receipt）；**禁止**把 Web 改动直接合进 `dev`。
+- `mobile` **已解冻为自测 lane**：从 `web` 出发，短分支 `codex/mobile/<feature>`，优先 Web PWA + Capacitor iOS/Android 薄壳；不得从 `dev` / Mac App 分叉手机版。
 - `sync` **只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4，9 项完整性清单）。
 - `site` 为 **PROPOSED（owner-deferred）**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线，先用 `xai-feature-brief` 规范化占位。
 - `admin` 已由 operator 于 2026-06-05 激活为 **roadmap-gated**：可开 `codex/admin/<feature>`，但必须经 [`xai-admin-dashboard-system-integration.md`](workflow/roadmap/xai-admin-dashboard-system-integration.md) 从 `xai-admin-dashboard-shell` 开始推进；不得绕过 RBAC/审计/secret/deploy 闸门直接做生产后台写入。
@@ -26,11 +27,12 @@
 | # | 模块 | key | 主 / 短分支 | 任务归属信号（命中即归该模块） | 状态 |
 |---|---|---|---|---|---|
 | 1 | Web | `web` | web / codex/web/<feature> | 改动落在 apps/web/(Vite SPA host shell:App.tsx、main.tsx、routes、providers)或 packages/xai-web-*、packages/plugin-web-* 任一包内；涉及 24 个 Web 模块的 UI/交互:任务、看板(6 视图)、Dashboard 网格、日历、四象限、番茄、习惯、冥想、倒计时、统计、AI 对话、桌宠、设置(13 面板)、命令面板(cmdk)；涉及浏览器持久化:xai_* localStorage 键(如 xai_dash_order)、usePref/WebPrefRegistry、加密 IndexedDB 缓存,或 web:<module>:<verb>-<noun> 类型化事件总线(@repo/core/events,如 web:calendar:create-requested、web:habits:checkin-recorded) | P0 · active |
-| 2 | Mac 桌面版 App | `app` | desktop-next -> dev | 改动落在 apps/desktop/ 或 src-tauri/ 的 Mac 壳 / Web 容器 / native chrome：主窗口承载 Web SPA、菜单栏、托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、`桌面插件`入口按钮；物理 host 可实现 Tauri 命令，但产品身份不是桌面整理器 | P1 · active app lane |
-| 3 | 桌面整理插件 / Widget | `plugin` | desktop-plugin-next | 改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包；需求提到 桌面整理 / Smart Container / Grid 容器 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想；即使运行时代码物理在 host，产品归属仍是 plugin | G1 runtime active · packages P2 paused |
-| 4 | 账号云同步层 | `sync` | sync-v1 roadmap wave | 实体出现 syncScope: account-sync / device-local 字段,或要在 packages/core-data/src/entities.ts 注册新 entityType(形如 productivity.todo,须匹配 ^[a-z]+\.[a-z_]+$)；涉及 /sync/push、/sync/pull、加密信封(envelope)、outbox、commit_seq 游标、nonce lease、AES-256-GCM、HPKE、device_id / encryption_device_id 等同步协议要素；需求是 Web IndexedDB ⇄ 服务端 encrypted blobs ⇄ App SQLite/SQLCipher 之间收敛,而非 Web 单端 UI 或 App 原生壳本身 | P2 · paused |
-| 5 | 官方网页 | `site` | codex/site/<feature> | 关键词命中:官方网页 / 官网 / marketing 站 / 下载页 / download page / 自动更新 / auto-update / updater / appcast / 发布说明 / release notes / 落地页 landing；分发与发布产物:.dmg / installer / 安装包 / updater metadata / latest.json / appcast.xml,且来源绑定 release/desktop/<version> 与 tag vX.Y.Z(ADR-0013 D2,该分支为 defined-not-yet-created)；部署设施复用:apps/web/wrangler.toml、apps/web/deploy/*、Cloudflare Pages、apps/web/public/_headers / CSP 仅为站点本身(ADR-0008),而非 apps/web/ 的 24 个产品模块 | proposed |
-| 6 | Admin Dashboard | `admin` | codex/admin/<feature> | 路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支；关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志；AI 治理类:Provider 配置、模型×套餐权限矩阵、套餐分层路由、AI 用量配额、成本上限、provider secret handle(服务端加密密钥句柄,浏览器只拿状态不拿密钥) | operator-activated · roadmap-gated |
+| 2 | 手机版 / 原生薄壳 | `mobile` | mobile self-test lane / codex/mobile/<feature> | 改动落在 apps/mobile/、Capacitor iOS/Android wrapper、Web PWA installability、manifest/icon、mobile WebView、safe-area、touch-first layout、手机自测 smoke；目标是复用 apps/web/dist 快速安装到 iPhone/Android 自测 | operator-unfrozen · self-test |
+| 3 | Mac 桌面版 App | `app` | desktop-next -> dev | 改动落在 apps/desktop/ 或 src-tauri/ 的 Mac 壳 / Web 容器 / native chrome：主窗口承载 Web SPA、菜单栏、托盘、离线缓存、账号+Keychain、自动更新、系统通知、深链、开机启动、`桌面插件`入口按钮；物理 host 可实现 Tauri 命令，但产品身份不是桌面整理器 | P1 · active app lane |
+| 4 | 桌面整理插件 / Widget | `plugin` | desktop-plugin-next | 改动落在桌面插件平台运行时（多窗口 engine、native overlay、click-through、Spaces/多显示器矩阵、grid persistence、Plugin Host/SDK）或 packages/plugin-{organizer,clipboard,widgets,pet} 等 P2 插件包；需求提到 桌面整理 / Smart Container / Grid 容器 / 快速入口 / 快速操作小窗 / 浮动小组件 Widget / 便签 / 桌面宠物 / 冥想；即使运行时代码物理在 host，产品归属仍是 plugin | G1 runtime active · packages P2 paused |
+| 5 | 账号云同步层 | `sync` | sync-v1 roadmap wave | 实体出现 syncScope: account-sync / device-local 字段,或要在 packages/core-data/src/entities.ts 注册新 entityType(形如 productivity.todo,须匹配 ^[a-z]+\.[a-z_]+$)；涉及 /sync/push、/sync/pull、加密信封(envelope)、outbox、commit_seq 游标、nonce lease、AES-256-GCM、HPKE、device_id / encryption_device_id 等同步协议要素；需求是 Web IndexedDB ⇄ 服务端 encrypted blobs ⇄ App SQLite/SQLCipher 之间收敛,而非 Web 单端 UI 或 App 原生壳本身 | P2 · paused |
+| 6 | 官方网页 | `site` | codex/site/<feature> | 关键词命中:官方网页 / 官网 / marketing 站 / 下载页 / download page / 自动更新 / auto-update / updater / appcast / 发布说明 / release notes / 落地页 landing；分发与发布产物:.dmg / installer / 安装包 / updater metadata / latest.json / appcast.xml,且来源绑定 release/desktop/<version> 与 tag vX.Y.Z(ADR-0013 D2,该分支为 defined-not-yet-created)；部署设施复用:apps/web/wrangler.toml、apps/web/deploy/*、Cloudflare Pages、apps/web/public/_headers / CSP 仅为站点本身(ADR-0008),而非 apps/web/ 的 24 个产品模块 | proposed |
+| 7 | Admin Dashboard | `admin` | codex/admin/<feature> | 路径命中:docs/prototypes/admin-dashboard/index.html、INTEGRATION_PLAN.md,或拟建的 apps/admin/、/admin 独立构建目标、codex/admin/<feature> 分支；关键词命中:管理中台 / 控制面 / Control Plane / 运营后台 / 后台管理,以及总览看板、运营队列、用户管理、组织/空间、功能管理、订阅计费、审计日志；AI 治理类:Provider 配置、模型×套餐权限矩阵、套餐分层路由、AI 用量配额、成本上限、provider secret handle(服务端加密密钥句柄,浏览器只拿状态不拿密钥) | operator-activated · roadmap-gated |
 
 > 完整的归属信号、prompt 模板与 workflow 见下方各模块详情。
 
@@ -128,7 +130,68 @@ Start the bug-diagnose agent.
 
 ---
 
-### 2. Mac 桌面版 App （`app`）
+### 2. 手机版 / 原生薄壳 （`mobile`）
+
+- **状态**：operator-unfrozen · self-test lane
+- **推荐 branch**：mobile self-test lane / codex/mobile/<feature>
+- **关键依赖**：Web build / PWA / Capacitor
+- **开发目标**：以最快速度把现有 Web 版本安装到手机自测。第一版只做 Web PWA + Capacitor iOS/Android 原生薄壳，复用 `apps/web/dist`，不重写业务 UI，不从 Mac `dev` 分叉。
+
+**任务归属信号**
+
+- 改动落在 `apps/mobile/`、Capacitor config、iOS/Android wrapper、native project sync、Simulator / debug APK 自测。
+- 改动落在 `apps/web` 的移动安装壳：`manifest.webmanifest`、mobile icons、viewport/meta、service worker app-shell、PWA installability。
+- 改动落在 Web 的 mobile WebView 适配：safe-area、touch target、手机视口 overflow、standalone/PWA/Capacitor runtime detection。
+- 需求明确是 iPhone / Android 上的快速自测、安装包、模拟器/真机启动，而不是 Mac 桌面 App 壳能力。
+
+**推荐 skill / agent**
+
+- `xai-feature-brief` — 移动端新增能力模糊时，先规范化自测范围、复用 Web 的边界和不做项。
+- `xai-feature-full-loop` — 需要父会话连续推进 PWA + Capacitor + 自测证据时使用。
+- `xai-dev-dashboard-sync` — 更新 Product Module Registry、测试记录和 release-log 后刷新看板。
+- `xai-release-log` — 每个可安装/可自测增量完成后登记。
+
+**开发 workflow**
+
+1. 先做治理提升：`MODULE_BOUNDARIES.md`、本文、`module-classification.json`、`dashboard-state.json` 同步声明 `mobile` 为 operator-unfrozen self-test lane。
+2. PWA 先行：在 `apps/web` 增加 manifest、icon、mobile meta、service worker app-shell、移动 CSS 基线和 runtime detection。
+3. 原生薄壳：新增 `apps/mobile`，用 Capacitor 指向 `../web/dist`，生成 iOS / Android native wrapper。
+4. 验证：先跑 Web unit/type/build，再跑移动视口 smoke，再跑 `pnpm --filter @repo/mobile sync`，最后跑 iOS Simulator / Android debug APK；环境缺失时记录 `BLOCKED_ENVIRONMENT`，不能冒充 PASS。
+5. 收口：release-log + dashboard-state + smoke 文档同步，确保 `web`、`mobile`、`app` 三条线边界清楚。
+
+**常用 prompt（可直接复制）**
+
+<details><summary>移动薄壳 MVP</summary>
+
+```text
+Start the feature-plan agent.
+  动机:需要把现有 Web 版本快速装到 iPhone / Android 上自测。
+  目标:在 codex/mobile/<feature> 上完成 Web PWA install shell + apps/mobile Capacitor iOS/Android thin shell,复用 apps/web/dist。
+  范围:apps/web 的 mobile/PWA metadata + safe-area/touch/runtime baseline,apps/mobile 的 Capacitor config/native wrapper,自测文档与 release-log/dashboard 记录。
+  约束:不从 dev / Mac App 分叉;不做 SwiftUI/React Native 重写;push/widget/share/biometric 后置;账号同步只处理已有 account-sync 实体。
+```
+
+</details>
+
+**进入下一模块（触发条件 · branch · skill）**
+
+| → 目标模块 | 触发条件 | branch | skill | 说明 |
+|---|---|---|---|---|
+| Web（`web`） | 移动自测发现根因在共享 Web UI / 模块 CSS / browser persistence | web / codex/web/<feature> 或当前 codex/mobile/<feature> 后回流 web | `bug-diagnose` / `xai-feature-full-loop` | Web 是 UI 源头；修复应进入 Web/PWA 共享层，避免在 native wrapper 内打补丁。 |
+| 账号云同步层（`sync`） | 手机自测需要跨设备账号云数据，而实体尚未声明 `syncScope: account-sync` | codex/sync/<feature>（paused，需 operator 确认） | `xai-account-sync-scope-check` | 仅显式 account-sync 实体进同步；device-local 不因移动端出现而自动上云。 |
+| Mac 桌面版 App（`app`） | 某移动修复同时改变 Web shared seam 且需要带入 Mac App | web → desktop-next（经 D3 gate） | `xai-web-to-desktop-sync` | mobile 不直连 dev；若影响 Mac App，仍按 Web→App D3 gate 处理。 |
+
+**影响 / 需同步更新的模块**
+
+| 受影响模块 | 何时 | 需要的动作 |
+|---|---|---|
+| Web（`web`） | PWA / mobile CSS / runtime detection 改动落在 `apps/web` | 保持浏览器桌面体验不回归；跑 Web typecheck/test/build 和移动视口 smoke。 |
+| App（`app`） | 共享 Web 改动可能改变 Tauri Web container 行为 | 走 `xai-web-to-desktop-sync` 分级，不直接并入 `dev`。 |
+| Sync（`sync`） | 手机端需要账号云/多设备状态一致 | 先跑 D4 scope check；未解冻前只产 receipt，不擅自改协议。 |
+
+---
+
+### 3. Mac 桌面版 App （`app`）
 
 - **状态**：P1 · active app lane · 独立桌面开发线
 - **推荐 branch**：desktop-next -> dev
@@ -218,7 +281,7 @@ Start the bug-diagnose agent.
 
 ---
 
-### 3. 桌面整理插件 / Widget （`plugin`）
+### 4. 桌面整理插件 / Widget （`plugin`）
 
 - **状态**：平台运行时/G1 active gate · 插件包 P2 paused
 - **推荐 branch**：desktop-plugin-next
@@ -323,7 +386,7 @@ Start the feature-plan agent.
 
 ---
 
-### 4. 账号云同步层 （`sync`）
+### 5. 账号云同步层 （`sync`）
 
 - **状态**：P2 · paused · 基建合同
 - **推荐 branch**：sync-v1 roadmap wave
@@ -411,7 +474,7 @@ Start the feature-plan agent.
 
 ---
 
-### 5. 官方网页 （`site`）
+### 6. 官方网页 （`site`）
 
 - **状态**：proposed · 拟定
 - **推荐 branch**：codex/site/<feature>
@@ -497,7 +560,7 @@ Start the bug-diagnose agent for site.
 
 ---
 
-### 6. Admin Dashboard （`admin`）
+### 7. Admin Dashboard （`admin`）
 
 - **状态**：operator-activated · roadmap-gated
 - **推荐 branch**：codex/admin/<feature>
