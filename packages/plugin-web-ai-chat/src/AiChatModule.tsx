@@ -76,6 +76,24 @@ function displayTime(lang: Lang) {
   return lang === "zh" ? "刚刚" : "Just now";
 }
 
+function shouldStartSidebarOpen(): boolean {
+  if (typeof window === "undefined") return true;
+
+  const root = window.document?.documentElement;
+  if (
+    root?.dataset.mobileLike === "true" ||
+    root?.dataset.mobileCapacitor === "true"
+  ) {
+    return false;
+  }
+
+  if (typeof window.matchMedia === "function") {
+    return !window.matchMedia("(max-width: 767px)").matches;
+  }
+
+  return window.innerWidth > 767;
+}
+
 function normalizeMessage(message: AiMessage): AiMessage {
   return {
     role: message.role,
@@ -121,7 +139,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [attachments, setAttachments] = useState<AiAttachment[]>([]);
   const [thinking, setThinking] = useState(false);
   const [activeConvo, setActiveConvo] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(shouldStartSidebarOpen);
   const [model] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
   const [bannerError, setBannerError] = useState<LlmError | null>(null);

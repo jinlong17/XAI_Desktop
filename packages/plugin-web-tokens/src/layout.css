@@ -2231,6 +2231,146 @@
   }
 }
 
+/* Mobile native shell polish — scoped to the runtime flags set by apps/web/src/mobile/runtime.ts. */
+html[data-mobile-like="true"] .app,
+html[data-mobile-like="true"] .app[data-rail-pos="left"],
+html[data-mobile-like="true"] .app[data-rail-pos="right"],
+html[data-mobile-like="true"] .app[data-rail-pos="top"],
+html[data-mobile-like="true"] .app[data-rail-pos="bottom"] {
+  --mobile-shell-bottom-h: 76px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr) calc(var(--mobile-shell-bottom-h) + env(safe-area-inset-bottom, 0px));
+}
+
+html[data-mobile-capacitor="true"] .app,
+html[data-mobile-capacitor="true"] .app[data-rail-pos="left"],
+html[data-mobile-capacitor="true"] .app[data-rail-pos="right"],
+html[data-mobile-capacitor="true"] .app[data-rail-pos="top"],
+html[data-mobile-capacitor="true"] .app[data-rail-pos="bottom"] {
+  --topbar-h: 50px;
+  --mobile-shell-bottom-h: 78px;
+}
+
+html[data-mobile-like="true"] .topbar {
+  padding: 0 max(12px, env(safe-area-inset-left, 0px)) 0 max(12px, env(safe-area-inset-right, 0px));
+  gap: 8px;
+  background: color-mix(in oklch, var(--bg-app) 76%, transparent);
+  border-bottom-color: color-mix(in oklch, var(--border-1) 48%, transparent);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+html[data-mobile-like="true"] .search-box {
+  height: 38px;
+  min-height: 38px;
+  padding: 0 11px;
+  border-radius: 18px;
+  background: color-mix(in oklch, var(--bg-panel) 78%, transparent);
+  border-color: color-mix(in oklch, var(--border-1) 68%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklch, var(--text-1) 6%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+html[data-mobile-like="true"] .search-box > span:not(.kbd),
+html[data-mobile-like="true"] .search-box input {
+  min-width: 0;
+  height: 38px;
+  min-height: 38px;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-mobile-like="true"] .search-box .kbd,
+html[data-mobile-like="true"] .topbar-pref-summary {
+  display: none;
+}
+
+html[data-mobile-like="true"] .topbar-pref-trigger {
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  justify-content: center;
+  padding: 0;
+  border-radius: 18px;
+  background: color-mix(in oklch, var(--bg-panel) 80%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklch, var(--text-1) 6%, transparent);
+}
+
+html[data-mobile-like="true"] .app .app-rail,
+html[data-mobile-like="true"] .app[data-rail-pos="right"] .app-rail,
+html[data-mobile-like="true"] .app[data-rail-pos="top"] .app-rail,
+html[data-mobile-like="true"] .app[data-rail-pos="bottom"] .app-rail {
+  grid-column: 1;
+  grid-row: 3;
+  width: min(520px, calc(100% - 24px));
+  max-width: calc(100% - 24px);
+  height: 58px;
+  margin: 0 0 max(8px, env(safe-area-inset-bottom, 0px));
+  justify-self: center;
+  align-self: center;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 8px;
+  color: var(--text-2);
+  background: color-mix(in oklch, var(--bg-panel) 78%, transparent);
+  border: 1px solid color-mix(in oklch, var(--border-1) 72%, transparent);
+  border-radius: 22px;
+  box-shadow:
+    0 16px 36px color-mix(in oklch, var(--text-1) 13%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 58%, transparent);
+  backdrop-filter: blur(20px) saturate(145%);
+  -webkit-backdrop-filter: blur(20px) saturate(145%);
+  overflow: hidden;
+}
+
+html[data-mobile-like="true"] .app .rail-items,
+html[data-mobile-like="true"] .app[data-rail-pos="top"] .rail-items,
+html[data-mobile-like="true"] .app[data-rail-pos="bottom"] .rail-items {
+  gap: 5px;
+  scroll-padding-inline: 6px;
+}
+
+html[data-mobile-like="true"] .app .rail-btn,
+html[data-mobile-like="true"] .app-rail[data-pos="top"] .rail-btn,
+html[data-mobile-like="true"] .app-rail[data-pos="bottom"] .rail-btn {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 16px;
+  color: var(--text-2);
+}
+
+html[data-mobile-like="true"] .app .rail-btn:hover {
+  background: color-mix(in oklch, var(--bg-hover) 82%, transparent);
+  color: var(--text-1);
+  transform: none;
+}
+
+html[data-mobile-like="true"] .app .rail-btn.active {
+  background: color-mix(in oklch, var(--accent) 15%, var(--bg-panel));
+  color: var(--accent-ink);
+}
+
+html[data-mobile-like="true"] .app .rail-btn.active::before,
+html[data-mobile-like="true"] .app-rail[data-pos="top"] .rail-btn.active::before,
+html[data-mobile-like="true"] .app-rail[data-pos="bottom"] .rail-btn.active::before {
+  bottom: 3px;
+  width: 16px;
+  height: 3px;
+  background: var(--accent);
+}
+
+html[data-mobile-like="true"] .topbar-pref-panel {
+  top: calc(var(--topbar-h) + 10px);
+  right: max(12px, env(safe-area-inset-right, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px));
+  border-radius: 20px;
+}
+
 /* ============================================================
    Avatar menu
    ============================================================ */

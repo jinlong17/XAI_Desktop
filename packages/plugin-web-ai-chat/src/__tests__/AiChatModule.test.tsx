@@ -50,6 +50,8 @@ describe("AiChatModule integration (I)", () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     localStorage.clear();
+    document.documentElement.removeAttribute("data-mobile-like");
+    document.documentElement.removeAttribute("data-mobile-capacitor");
     void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
     void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
   });
@@ -238,6 +240,14 @@ describe("AiChatModule integration (I)", () => {
       fireEvent.click(openBtn);
     });
     expect(container.querySelector(".ai-side")?.className).toContain("open");
+  });
+
+  it("I13b: mobile runtime starts with sidebar closed", () => {
+    document.documentElement.dataset.mobileLike = "true";
+    const { container } = render(<AiChatModule lang="en" />);
+
+    expect(container.querySelector(".ai-side")?.className).not.toContain("open");
+    expect(container.querySelector(".ai-open-side")).not.toBeNull();
   });
 
   it("I14: clicking an existing convo row loads its persisted messages", async () => {

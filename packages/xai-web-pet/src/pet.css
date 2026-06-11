@@ -320,6 +320,11 @@
     height: 44px;
   }
 }
+
+html[data-mobile-like="true"] .pet-wrap {
+  display: none;
+}
+
 .pet-swap-btn:hover {
   background: var(--bg-panel, #fff);
   color: var(--text-1, currentColor);

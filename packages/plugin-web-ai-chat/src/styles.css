@@ -1103,3 +1103,198 @@
     contain: paint;
   }
 }
+
+/* Mobile native shell polish — runtime-scoped, after generic breakpoints. */
+html[data-mobile-like="true"] .module-ai {
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--bg-panel) 42%, transparent), transparent 38%),
+    radial-gradient(ellipse at 50% 18%, color-mix(in oklch, var(--accent) 15%, transparent) 0%, transparent 58%),
+    var(--bg-app);
+}
+
+html[data-mobile-like="true"] .ai-side {
+  inset: 10px auto 10px max(10px, env(safe-area-inset-left, 0px));
+  width: min(84vw, 328px);
+  max-width: min(84vw, 328px);
+  height: auto;
+  border: 1px solid color-mix(in oklch, var(--border-1) 74%, transparent);
+  border-radius: 22px;
+  background: color-mix(in oklch, var(--bg-panel) 90%, transparent);
+  box-shadow:
+    0 28px 70px color-mix(in oklch, var(--text-1) 18%, transparent),
+    0 8px 20px color-mix(in oklch, var(--text-1) 9%, transparent);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  transform: translateX(calc(-100% - 24px));
+}
+
+html[data-mobile-like="true"] .ai-side.open {
+  width: min(84vw, 328px);
+  transform: translateX(0);
+}
+
+html[data-mobile-like="true"] .ai-main.with-side::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: color-mix(in oklch, var(--bg-overlay) 62%, transparent);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+html[data-mobile-like="true"] .ai-side-head {
+  padding: 12px;
+}
+
+html[data-mobile-like="true"] .ai-new-btn {
+  height: 40px;
+  min-height: 40px;
+  border-radius: 16px;
+}
+
+html[data-mobile-like="true"] .ai-search {
+  height: 38px;
+  min-height: 38px;
+  margin: 0 12px 10px;
+  border-radius: 14px;
+  background: color-mix(in oklch, var(--bg-panel-2) 76%, transparent);
+}
+
+html[data-mobile-like="true"] .ai-search input {
+  height: 38px;
+  min-height: 38px;
+}
+
+html[data-mobile-like="true"] .ai-convo-row {
+  border-radius: 12px;
+}
+
+html[data-mobile-like="true"] .ai-open-side,
+html[data-mobile-like="true"] .ai-new-corner {
+  top: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--bg-panel) 82%, transparent);
+  box-shadow: 0 6px 18px color-mix(in oklch, var(--text-1) 8%, transparent);
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+}
+
+html[data-mobile-like="true"] .ai-open-side {
+  left: max(12px, env(safe-area-inset-left, 0px));
+}
+
+html[data-mobile-like="true"] .ai-new-corner {
+  right: max(12px, env(safe-area-inset-right, 0px));
+}
+
+html[data-mobile-like="true"] .ai-insights-toggle {
+  top: 14px;
+  right: max(62px, calc(env(safe-area-inset-right, 0px) + 62px));
+  min-height: 42px;
+  max-width: calc(100vw - 136px);
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--bg-panel) 82%, transparent);
+  box-shadow: 0 6px 18px color-mix(in oklch, var(--text-1) 8%, transparent);
+}
+
+html[data-mobile-like="true"] .ai-insights-toggle.on {
+  color: var(--text-on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+html[data-mobile-like="true"] .ai-insights-toggle.on .ait-dot {
+  background: var(--text-on-accent);
+}
+
+html[data-mobile-like="true"] .ai-stage {
+  opacity: .68;
+}
+
+html[data-mobile-like="true"] .ai-aurora {
+  opacity: .82;
+}
+
+html[data-mobile-like="true"] .aurora-stream {
+  opacity: .2;
+}
+
+html[data-mobile-like="true"] .orb {
+  width: min(68vw, 280px);
+  height: min(68vw, 280px);
+}
+
+html[data-mobile-like="true"] .ai-content {
+  padding: 0 max(14px, env(safe-area-inset-left, 0px)) 0 max(14px, env(safe-area-inset-right, 0px));
+}
+
+html[data-mobile-like="true"] .ai-welcome {
+  width: 100%;
+  max-width: 420px;
+  padding: 86px 0 26px;
+}
+
+html[data-mobile-like="true"] .ai-welcome h1 {
+  margin-bottom: 24px;
+  font-size: clamp(25px, 7vw, 32px);
+  font-weight: 520;
+  letter-spacing: 0;
+  line-height: 1.12;
+  text-shadow: 0 12px 42px color-mix(in oklch, var(--accent) 16%, transparent);
+}
+
+html[data-mobile-like="true"] .ai-starters {
+  gap: 8px;
+}
+
+html[data-mobile-like="true"] .ai-starter {
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 12px;
+  background: color-mix(in oklch, var(--bg-panel) 76%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklch, var(--text-1) 5%, transparent);
+}
+
+html[data-mobile-like="true"] .ai-thread {
+  padding: 70px 0 24px;
+}
+
+html[data-mobile-like="true"] .ai-bubble {
+  max-width: min(78vw, 70ch);
+  border-radius: 16px;
+}
+
+html[data-mobile-like="true"] .ai-composer-wrap {
+  z-index: 24;
+  padding: 12px max(12px, env(safe-area-inset-right, 0px)) 12px max(12px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--bg-app) 78%, transparent));
+}
+
+html[data-mobile-like="true"] .ai-composer {
+  min-height: 52px;
+  padding: 6px 7px 6px 10px;
+  border-radius: 20px;
+  background: color-mix(in oklch, var(--bg-panel) 86%, transparent);
+  box-shadow:
+    0 12px 34px color-mix(in oklch, var(--text-1) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 60%, transparent);
+}
+
+html[data-mobile-like="true"] .ai-input {
+  height: 40px;
+  min-height: 40px;
+}
+
+html[data-mobile-like="true"] .ai-icon-round,
+html[data-mobile-like="true"] .ai-send {
+  width: 40px;
+  height: 40px;
+}
+
+html[data-mobile-like="true"] .ai-foot-hint {
+  display: none;
+}
