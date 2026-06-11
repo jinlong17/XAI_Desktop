@@ -114,23 +114,25 @@
 ## 5. Plugin Center / Entry Model（入口与管理模型）
 
 > 本节是**产品入口设计决策**，不是具体插件包实现授权。Phase 1 可先做 Plugin Center / Entry Model 的系统底座与 contract；clipboard / widgets / pet / meditation 等具体插件包在平台运行时闭环前仍只允许文档 / brief / SDK contract 对齐，不开 `feature-build`。
+>
+> 2026-06-07 形态修正：Plugin Center 是 Mac App 内的「桌面插件」管理 surface，不是独立 App / 独立产品线。当前使用独立原生窗口承载，是为了管理桌面上的其他小窗、支持 focus / smoke / 多窗口验证；最终入口和用户心智必须回到 Mac App 控制面板 / 原生菜单里的 `桌面插件`。
 
 ### 5.1 推荐入口
 
 | 入口 | MVP 决策 | 归属 |
 |---|---|---|
 | Mac App 控制面板一级入口：`桌面插件` | **必须做**。作为日常发现、添加、管理桌面插件的主入口 | App 外壳 owns entry/window；Plugin 线 owns 可添加内容与实例 contract |
-| 轻量 Plugin Center | **必须做 MVP 版**。内置插件列表 + 已启用实例 + 详情设置 | App 提供管理容器；`packages/plugin-*` 提供 manifest / settings schema / 渲染能力 |
+| Mac App 内置轻量 Plugin Center | **必须做 MVP 版**。内置插件列表 + 已启用实例 + 详情设置；可用独立 NSWindow 承载，但不作为独立产品 | App 提供管理容器；`packages/plugin-*` 提供 manifest / settings schema / 渲染能力 |
 | 设置页 `桌面插件` | **只做全局偏好**。开关、权限、默认样式、点击穿透默认值 | App 设置面 |
 | Web / 工作台 | **不作为主入口**。只可展示“可添加到桌面”的轻提示或深链 | Web 不拥有桌面插件运行态 |
 | 第三方插件市场 | **不做 MVP** | Future / owner decision |
 
-最终入口拍板：**Mac App 控制面板一级入口 + 轻量 Plugin Center + 设置页全局偏好**。
+最终入口拍板：**Mac App 控制面板一级入口 + Mac App 内置轻量 Plugin Center 管理 surface + 设置页全局偏好**。
 
 ### 5.2 用户添加流程（MVP）
 
 1. 用户打开 Mac App 控制面板，点击 `桌面插件`。
-2. App 打开 Plugin Center，默认展示 `推荐 / 可添加 / 已启用`。
+2. App 在自身上下文中打开 Plugin Center 管理窗口 / 面板，默认展示 `推荐 / 可添加 / 已启用`。
 3. 用户选择内置插件（如 `时间进度条`），右侧看到预览、尺寸、数据来源和样式摘要。
 4. 用户点击 `添加到桌面`。
 5. App 创建一个 `PluginInstance`，自动放到安全默认位置；插件只接收实例配置并渲染内容。
@@ -166,7 +168,7 @@ MVP 不把“拖拽到桌面”作为主流程。拖拽添加可在高级版补�
 
 - 最大风险不是功能少，而是文档 / UI 让人误以为插件体系已经成熟。当前真实状态：organizer 可用；clipboard/widgets/pet 多为 scaffold；meditation 未建包。
 - `clipboard.item` 是 core-data 中已登记的 device-local 语义；`plugin-clipboard` 包内仍出现 `clipboard.entry`，进入 Clipboard MVP 前必须先做契约统一。
-- Desktop Plugin 不是第四条完整产品线。它是 Mac App 增强层：短期目标是 Organizer 收尾为稳定参考实现；G1 后做最小 Widget Host；Clipboard / Pet 延后；Meditation 暂不做桌面插件。
+- Desktop Plugin 不是第四条完整产品线，Plugin Center 也不是独立 App。它是 Mac App 增强层：短期目标是 Organizer 收尾为稳定参考实现；G1 后做最小 Widget Host；Clipboard / Pet 延后；Meditation 暂不做桌面插件。
 
 ---
 
