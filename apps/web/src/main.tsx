@@ -11,6 +11,7 @@ import { AppProviders } from "./providers/AppProviders";
 import { router } from "./routes/router";
 import { registerServiceWorker } from "./service-worker/register";
 import "@repo/plugin-web-tokens";
+import "@repo/plugin-web-pet/pet.css";
 import "./styles/global.css";
 
 registerServiceWorker();
