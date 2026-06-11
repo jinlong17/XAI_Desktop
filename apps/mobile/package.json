@@ -1,0 +1,35 @@
+{
+  "name": "@repo/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:web": "pnpm --filter @repo/web build",
+    "build:web:self-test": "VITE_WEB_AUTH_MODE=mock-authenticated pnpm --filter @repo/web build",
+    "cap": "cap",
+    "cap:add:ios": "cap add ios",
+    "cap:add:android": "cap add android",
+    "doctor": "cap doctor",
+    "sync": "pnpm run build:web && cap sync",
+    "sync:self-test": "pnpm run build:web:self-test && cap sync",
+    "sync:ios": "pnpm run build:web && cap sync ios",
+    "sync:ios:self-test": "pnpm run build:web:self-test && cap sync ios",
+    "sync:android": "pnpm run build:web && cap sync android",
+    "sync:android:self-test": "pnpm run build:web:self-test && cap sync android",
+    "open:ios": "pnpm run sync:ios && cap open ios",
+    "open:ios:self-test": "pnpm run sync:ios:self-test && cap open ios",
+    "open:android": "pnpm run sync:android && cap open android",
+    "open:android:self-test": "pnpm run sync:android:self-test && cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.0",
+    "typescript": "5.9.2"
+  }
+}

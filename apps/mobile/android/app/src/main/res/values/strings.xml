@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">XAI</string>
+    <string name="title_activity_main">XAI</string>
+    <string name="package_name">com.jinlong.xai.mobile</string>
+    <string name="custom_url_scheme">com.jinlong.xai.mobile</string>
+</resources>
