@@ -6,13 +6,22 @@
 
 ## 2026-06-11
 
+### Mobile PWA + Capacitor 薄壳 MVP
+
+- Product line: mobile / web
+- Branch / commit: `codex/mobile/native-thin-shell-mvp` / `8a9c0baa`, `a8be40e0`, `099e107c` + local smoke receipts
+- User-visible change: 手机自测版已经具备可安装路线：Web 端有 PWA manifest、移动 meta、离线 shell、手机/Capacitor runtime 标记和移动端 overflow 兜底；`apps/mobile` 已生成 Capacitor iOS / Android 原生薄壳，可用 mock-auth self-test build 直接进入主界面自测。
+- Developer/system delta: 新增 `apps/mobile` workspace package（Capacitor 8.4.0，iOS/Android native projects，status-bar/splash-screen 插件）；Web 入口显式加载宠物 CSS，修复生产 build 中 floating pet 未带样式导致的手机横向溢出；新增 PWA / iOS / Android smoke receipts。Capacitor copied Web assets、generated config、本地 build、`node_modules` 继续按 native `.gitignore` 留在本机，不进仓库。
+- Verification: `pnpm --filter @repo/web test -- src/__tests__/pwa-manifest.test.ts src/mobile/runtime.test.ts` passed；`pnpm --filter @repo/web check-types` passed；`pnpm --filter @repo/plugin-web-pet check-types` passed；默认 live-auth `pnpm --filter @repo/web build` passed；mock-auth `pnpm --filter @repo/web build` passed；Browser 393x852 全模块矩阵 + 360/768 抽样 passed（无空白、无 console error、无根级横向滚动）；`pnpm install` passed；`pnpm --filter @repo/mobile cap:add:ios` passed；`pnpm --filter @repo/mobile cap:add:android` passed；`pnpm --filter @repo/mobile sync:self-test` passed；`pnpm --filter @repo/mobile run doctor` passed；native asset existence check passed；mobile production dependency audit found no known vulnerabilities；scoped config text audit found no cleartext/localhost server/secrets pattern；`git diff --check` passed。
+- Risk / follow-up: iOS Simulator build 阻塞于本机未安装/未选择完整 Xcode（当前 `xcode-select -p` 为 `/Library/Developer/CommandLineTools`，`simctl` 不可用）；Android debug build 阻塞于本机无 Java Runtime 且未检测到 Android SDK。结论是 Web/PWA + Capacitor wrapper 已完成，真实 iOS/Android build 为 `BLOCKED_ENVIRONMENT`，不是 PASS。
+
 ### Mobile 原生薄壳 self-test lane 解冻
 
 - Product line: mobile / project-system
 - Branch / commit: `codex/mobile/native-thin-shell-mvp` / local working tree
 - User-visible change: 手机版本开发线已从 planning-only 解冻为自测 lane，目标是快速把现有 Web 版本通过 PWA + Capacitor 薄壳安装到 iPhone / Android 做个人测试。
 - Developer/system delta: 新增 `mobile` 产品模块路由，明确从 `web` 出发并复用 `apps/web/dist`；不得从 `dev` / Mac App 分叉。同步更新 `CLAUDE.md`、`AGENTS.md`、Cursor 路由、`MODULE_BOUNDARIES.md`、`PRODUCT_MODULE_MAP.md`、长期路线图、`module-classification.json`、dev-dashboard contract 和 `dashboard-state.json`。
-- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed via bundled Node；dashboard refresh / verify 待本条治理变更完成后运行并登记。移动产品代码、PWA install shell、Capacitor wrapper、iOS / Android smoke 尚未在本条完成。
+- Verification: `module-classification.json` / `dashboard-state.json` JSON parse passed via bundled Node；`pnpm dashboard` passed；`pnpm dashboard:verify-static` passed；`pnpm dashboard:verify-modules` passed（7 modules: web, mobile, app, plugin, sync, site, admin）。移动产品代码、PWA install shell、Capacitor wrapper、iOS / Android smoke 在后续 `Mobile PWA + Capacitor 薄壳 MVP` 条目登记。
 - Risk / follow-up: 首版只做自测薄壳；push、widget、share sheet、biometric、SwiftUI/React Native/Kotlin 重写均后置。任何影响 Mac App 的 Web 共享改动仍必须走 ADR-0013 D3 gate。
 
 ## 2026-06-09
