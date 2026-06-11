@@ -3129,37 +3129,28 @@ window.XAI_DASHBOARD_STATE = {
     ],
     "note": "Per-module dev-navigation. Mirror of PRODUCT_MODULE_MAP.md; rendered by dev-dashboard 产品结构图 detail panel."
   },
-  "repo_root": "/Users/jinlong/Desktop/jinlong_project/XAI_Desktop",
-  "generated_at": "2026-06-06T23:28:30.109Z",
+  "repo_root": "/private/tmp/xai-dev-plugin-merge.swSiAv",
+  "generated_at": "2026-06-11T05:47:58.787Z",
   "git": {
-    "branch": "dev",
-    "latest_commit": "47d8f4e5 Merge branch 'web' into dev",
+    "branch": "",
+    "latest_commit": "8fd2072 Merge remote-tracking branch 'origin/dev' into dev",
     "divergence": {
-      "web_only": 444,
-      "dev_only": 214
+      "web_only": 60,
+      "dev_only": 220
     }
   },
   "sync_status": {
-    "status": "working-tree-dirty",
-    "status_label": "有未提交变更",
-    "generated_at": "2026-06-06T23:28:30.109Z",
+    "status": "clean",
+    "status_label": "已刷新",
+    "generated_at": "2026-06-11T05:47:58.787Z",
     "refresh_command": "pnpm dashboard",
     "serve_command": "pnpm dashboard:serve",
-    "branch": "dev",
-    "latest_commit": "47d8f4e5 Merge branch 'web' into dev",
+    "branch": "",
+    "latest_commit": "8fd2072 Merge remote-tracking branch 'origin/dev' into dev",
     "dirty": {
-      "total": 56,
-      "buckets": {
-        "other": 2,
-        "product-code": 41,
-        "docs": 11,
-        "dashboard-state": 1,
-        "release-log": 1
-      },
-      "notable": [
-        "docs/workflow/project/dashboard-state.json",
-        "docs/workflow/project/release-log.md"
-      ]
+      "total": 0,
+      "buckets": {},
+      "notable": []
     },
     "sync_skill": {
       "name": "xai-dev-dashboard-sync",
@@ -3174,63 +3165,63 @@ window.XAI_DASHBOARD_STATE = {
         "label": "manual state",
         "path": "docs/workflow/project/dashboard-state.json",
         "exists": true,
-        "updated_at": "2026-06-06T23:26:21.660Z",
+        "updated_at": "2026-06-11T05:47:49.482Z",
         "tracked": true
       },
       {
         "label": "dashboard readme",
         "path": "docs/prototypes/dev-dashboard/README.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.228Z",
         "tracked": true
       },
       {
         "label": "machine contract",
         "path": "docs/workflow/project/dev-dashboard.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.669Z",
+        "updated_at": "2026-06-11T05:47:49.483Z",
         "tracked": true
       },
       {
         "label": "template",
         "path": "docs/prototypes/dev-dashboard/TEMPLATE.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.230Z",
         "tracked": true
       },
       {
         "label": "boundaries",
         "path": "docs/prototypes/dev-dashboard/BOUNDARIES.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.631Z",
+        "updated_at": "2026-06-11T05:47:49.226Z",
         "tracked": true
       },
       {
         "label": "release log",
         "path": "docs/workflow/project/release-log.md",
         "exists": true,
-        "updated_at": "2026-06-06T23:26:21.660Z",
+        "updated_at": "2026-06-11T05:47:49.486Z",
         "tracked": true
       },
       {
         "label": "branch policy",
         "path": "docs/workflow/project/branch-policy.json",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.667Z",
+        "updated_at": "2026-06-11T05:47:49.480Z",
         "tracked": true
       },
       {
         "label": "dashboard design",
         "path": "docs/prototypes/dev-dashboard/DESIGN.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.227Z",
         "tracked": true
       },
       {
         "label": "sync skill",
         "path": ".teams/skills/xai-dev-dashboard-sync/SKILL.md",
         "exists": true,
-        "updated_at": "2026-06-06T11:09:10.604Z",
+        "updated_at": "2026-06-11T05:47:48.939Z",
         "tracked": true
       }
     ],
@@ -11167,7 +11158,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:12:44.700Z",
+          "updated_at": "2026-06-11T05:47:49.487Z",
           "size_bytes": 29743,
           "tracked": true
         },
@@ -11182,7 +11173,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-06T11:09:10.632Z",
+          "updated_at": "2026-06-11T05:47:49.228Z",
           "size_bytes": 2600,
           "tracked": true
         },
@@ -11197,7 +11188,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.669Z",
+          "updated_at": "2026-06-11T05:47:49.483Z",
           "size_bytes": 16230,
           "tracked": true
         },
@@ -11212,7 +11203,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-06T11:09:10.631Z",
+          "updated_at": "2026-06-11T05:47:49.226Z",
           "size_bytes": 32516,
           "tracked": true
         },
@@ -11226,7 +11217,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:12:44.699Z",
+          "updated_at": "2026-06-11T05:47:49.485Z",
           "size_bytes": 7848,
           "tracked": true
         },
@@ -11240,7 +11231,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:10:50.855Z",
+          "updated_at": "2026-06-11T05:47:49.455Z",
           "size_bytes": 9685,
           "tracked": true
         },
@@ -11254,7 +11245,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-05-22T07:42:56.378Z",
+          "updated_at": "2026-06-11T05:47:49.455Z",
           "size_bytes": 11047,
           "tracked": true
         },
@@ -11268,7 +11259,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-05-22T07:42:56.378Z",
+          "updated_at": "2026-06-11T05:47:49.454Z",
           "size_bytes": 7351,
           "tracked": true
         },
@@ -11282,7 +11273,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:10:50.856Z",
+          "updated_at": "2026-06-11T05:47:49.456Z",
           "size_bytes": 46686,
           "tracked": true
         }
@@ -11310,7 +11301,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:13:08.757Z",
+          "updated_at": "2026-06-11T05:47:48.945Z",
           "size_bytes": 21391,
           "tracked": true
         },
@@ -11324,7 +11315,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:10:50.822Z",
+          "updated_at": "2026-06-11T05:47:48.945Z",
           "size_bytes": 8513,
           "tracked": true
         },
@@ -11338,7 +11329,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T23:26:21.658Z",
+          "updated_at": "2026-06-11T05:47:49.078Z",
           "size_bytes": 56876,
           "tracked": true
         },
@@ -11352,7 +11343,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必读",
-          "updated_at": "2026-06-06T11:12:44.695Z",
+          "updated_at": "2026-06-11T05:47:49.090Z",
           "size_bytes": 36345,
           "tracked": true
         },
@@ -11366,7 +11357,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "系统级",
-          "updated_at": "2026-05-24T10:55:45.113Z",
+          "updated_at": "2026-06-11T05:47:49.086Z",
           "size_bytes": 37432,
           "tracked": true
         },
@@ -11380,7 +11371,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "系统级",
-          "updated_at": "2026-06-06T11:09:10.621Z",
+          "updated_at": "2026-06-11T05:47:49.093Z",
           "size_bytes": 2458,
           "tracked": true
         },
@@ -11394,7 +11385,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "dir",
           "kind": "Folder",
           "importance": "参考",
-          "updated_at": "2026-06-06T11:10:50.891Z",
+          "updated_at": "2026-06-11T05:47:54.790Z",
           "size_bytes": 0,
           "tracked": true
         },
@@ -11408,7 +11399,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.632Z",
+          "updated_at": "2026-06-11T05:47:49.227Z",
           "size_bytes": 12823,
           "tracked": true
         },
@@ -11423,7 +11414,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-06T11:09:10.632Z",
+          "updated_at": "2026-06-11T05:47:49.230Z",
           "size_bytes": 37894,
           "tracked": true
         },
@@ -11438,7 +11429,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "参考",
-          "updated_at": "2026-06-06T11:09:10.631Z",
+          "updated_at": "2026-06-11T05:47:49.226Z",
           "size_bytes": 32516,
           "tracked": true
         }
@@ -11465,7 +11456,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.678Z",
+          "updated_at": "2026-06-11T05:47:49.549Z",
           "size_bytes": 25564,
           "tracked": true
         },
@@ -11479,7 +11470,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:12.881Z",
+          "updated_at": "2026-06-11T05:47:49.535Z",
           "size_bytes": 5745,
           "tracked": true
         },
@@ -11493,7 +11484,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.674Z",
+          "updated_at": "2026-06-11T05:47:49.531Z",
           "size_bytes": 38684,
           "tracked": true
         },
@@ -11507,7 +11498,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T23:26:21.660Z",
+          "updated_at": "2026-06-11T05:47:49.486Z",
           "size_bytes": 54613,
           "tracked": true
         },
@@ -11521,7 +11512,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "dir",
           "kind": "Folder",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.397Z",
+          "updated_at": "2026-06-11T05:47:49.524Z",
           "size_bytes": 0,
           "tracked": true
         }
@@ -11549,7 +11540,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.603Z",
+          "updated_at": "2026-06-11T05:47:48.937Z",
           "size_bytes": 8964,
           "tracked": true
         },
@@ -11563,7 +11554,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:10:50.821Z",
+          "updated_at": "2026-06-11T05:47:48.938Z",
           "size_bytes": 5133,
           "tracked": true
         },
@@ -11577,7 +11568,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:12:44.692Z",
+          "updated_at": "2026-06-11T05:47:48.938Z",
           "size_bytes": 7357,
           "tracked": true
         },
@@ -11591,7 +11582,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:10.604Z",
+          "updated_at": "2026-06-11T05:47:48.939Z",
           "size_bytes": 6185,
           "tracked": true
         },
@@ -11605,7 +11596,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.282Z",
+          "updated_at": "2026-06-11T05:47:48.881Z",
           "size_bytes": 2875,
           "tracked": true
         },
@@ -11619,7 +11610,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.282Z",
+          "updated_at": "2026-06-11T05:47:48.882Z",
           "size_bytes": 1511,
           "tracked": true
         },
@@ -11633,7 +11624,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.282Z",
+          "updated_at": "2026-06-11T05:47:48.883Z",
           "size_bytes": 1458,
           "tracked": true
         },
@@ -11647,7 +11638,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:09:12.679Z",
+          "updated_at": "2026-06-11T05:47:48.885Z",
           "size_bytes": 10353,
           "tracked": true
         },
@@ -11661,7 +11652,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.383Z",
+          "updated_at": "2026-06-11T05:47:49.470Z",
           "size_bytes": 2875,
           "tracked": true
         },
@@ -11675,7 +11666,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.383Z",
+          "updated_at": "2026-06-11T05:47:49.470Z",
           "size_bytes": 1511,
           "tracked": true
         },
@@ -11689,7 +11680,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.383Z",
+          "updated_at": "2026-06-11T05:47:49.470Z",
           "size_bytes": 1458,
           "tracked": true
         },
@@ -11703,7 +11694,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Markdown",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.383Z",
+          "updated_at": "2026-06-11T05:47:49.470Z",
           "size_bytes": 1344,
           "tracked": true
         }
@@ -11731,7 +11722,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:10:50.815Z",
+          "updated_at": "2026-06-11T05:47:48.859Z",
           "size_bytes": 15841,
           "tracked": true
         },
@@ -11745,7 +11736,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.279Z",
+          "updated_at": "2026-06-11T05:47:48.859Z",
           "size_bytes": 12934,
           "tracked": true
         },
@@ -11759,7 +11750,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.279Z",
+          "updated_at": "2026-06-11T05:47:48.860Z",
           "size_bytes": 17701,
           "tracked": true
         },
@@ -11773,7 +11764,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-06-06T11:10:50.815Z",
+          "updated_at": "2026-06-11T05:47:48.861Z",
           "size_bytes": 29769,
           "tracked": true
         },
@@ -11787,7 +11778,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.279Z",
+          "updated_at": "2026-06-11T05:47:48.862Z",
           "size_bytes": 12698,
           "tracked": true
         },
@@ -11801,7 +11792,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.280Z",
+          "updated_at": "2026-06-11T05:47:48.862Z",
           "size_bytes": 15320,
           "tracked": true
         },
@@ -11815,7 +11806,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.280Z",
+          "updated_at": "2026-06-11T05:47:48.863Z",
           "size_bytes": 11848,
           "tracked": true
         },
@@ -11829,7 +11820,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-23T07:28:03.853Z",
+          "updated_at": "2026-06-11T05:47:48.864Z",
           "size_bytes": 11254,
           "tracked": true
         },
@@ -11843,7 +11834,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.278Z",
+          "updated_at": "2026-06-11T05:47:48.855Z",
           "size_bytes": 14688,
           "tracked": true
         },
@@ -11857,7 +11848,7 @@ window.XAI_DASHBOARD_STATE = {
           "type": "file",
           "kind": "Agent TOML",
           "importance": "必要",
-          "updated_at": "2026-05-22T07:42:56.278Z",
+          "updated_at": "2026-06-11T05:47:48.856Z",
           "size_bytes": 11722,
           "tracked": true
         }
@@ -11877,7 +11868,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-06T23:26:21.659Z",
+        "updated_at": "2026-06-11T05:47:49.454Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11891,7 +11882,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.855Z",
+        "updated_at": "2026-06-11T05:47:49.488Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11905,7 +11896,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:12.840Z",
+        "updated_at": "2026-06-11T05:47:49.245Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11919,7 +11910,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:13:08.757Z",
+        "updated_at": "2026-06-11T05:47:49.091Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11933,7 +11924,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.891Z",
+        "updated_at": "2026-06-11T05:47:54.790Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11947,7 +11938,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.821Z",
+        "updated_at": "2026-06-11T05:47:48.943Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11962,7 +11953,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.816Z",
+        "updated_at": "2026-06-11T05:47:48.895Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11977,7 +11968,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.816Z",
+        "updated_at": "2026-06-11T05:47:48.876Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -11992,7 +11983,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:10:50.812Z",
+        "updated_at": "2026-06-11T05:47:48.555Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12007,7 +11998,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.813Z",
+        "updated_at": "2026-06-11T05:47:48.662Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12022,7 +12013,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.817Z",
+        "updated_at": "2026-06-11T05:47:48.918Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12037,7 +12028,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:12:44.691Z",
+        "updated_at": "2026-06-11T05:47:48.931Z",
         "size_bytes": 0,
         "tracked": true
       }
@@ -12060,7 +12051,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:09:10.669Z",
+            "updated_at": "2026-06-11T05:47:49.483Z",
             "size_bytes": 16230,
             "tracked": true
           },
@@ -12075,7 +12066,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:09:10.632Z",
+            "updated_at": "2026-06-11T05:47:49.228Z",
             "size_bytes": 2600,
             "tracked": true
           },
@@ -12090,7 +12081,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:09:10.632Z",
+            "updated_at": "2026-06-11T05:47:49.230Z",
             "size_bytes": 37894,
             "tracked": true
           },
@@ -12105,7 +12096,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:09:10.631Z",
+            "updated_at": "2026-06-11T05:47:49.226Z",
             "size_bytes": 32516,
             "tracked": true
           },
@@ -12120,7 +12111,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:09:10.632Z",
+            "updated_at": "2026-06-11T05:47:49.229Z",
             "size_bytes": 9125,
             "tracked": true
           },
@@ -12135,7 +12126,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:10:50.822Z",
+            "updated_at": "2026-06-11T05:47:48.945Z",
             "size_bytes": 8513,
             "tracked": true
           },
@@ -12150,7 +12141,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:13:08.757Z",
+            "updated_at": "2026-06-11T05:47:48.945Z",
             "size_bytes": 21391,
             "tracked": true
           },
@@ -12165,7 +12156,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:12:44.700Z",
+            "updated_at": "2026-06-11T05:47:49.487Z",
             "size_bytes": 29743,
             "tracked": true
           },
@@ -12179,7 +12170,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:12:44.699Z",
+            "updated_at": "2026-06-11T05:47:49.485Z",
             "size_bytes": 7848,
             "tracked": true
           },
@@ -12194,7 +12185,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T23:26:21.658Z",
+            "updated_at": "2026-06-11T05:47:49.078Z",
             "size_bytes": 56876,
             "tracked": true
           }
@@ -12218,7 +12209,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:10:50.855Z",
+            "updated_at": "2026-06-11T05:47:49.455Z",
             "size_bytes": 9685,
             "tracked": true
           },
@@ -12232,7 +12223,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.378Z",
+            "updated_at": "2026-06-11T05:47:49.455Z",
             "size_bytes": 11047,
             "tracked": true
           },
@@ -12246,7 +12237,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.378Z",
+            "updated_at": "2026-06-11T05:47:49.454Z",
             "size_bytes": 7351,
             "tracked": true
           },
@@ -12260,7 +12251,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T23:26:21.660Z",
+            "updated_at": "2026-06-11T05:47:49.486Z",
             "size_bytes": 54613,
             "tracked": true
           },
@@ -12275,7 +12266,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.605Z",
+            "updated_at": "2026-06-11T05:47:48.942Z",
             "size_bytes": 3318,
             "tracked": true
           }
@@ -12299,7 +12290,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:12:44.695Z",
+            "updated_at": "2026-06-11T05:47:49.090Z",
             "size_bytes": 36345,
             "tracked": true
           },
@@ -12314,7 +12305,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-05-24T10:55:45.113Z",
+            "updated_at": "2026-06-11T05:47:49.086Z",
             "size_bytes": 37432,
             "tracked": true
           },
@@ -12328,7 +12319,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:09:10.621Z",
+            "updated_at": "2026-06-11T05:47:49.093Z",
             "size_bytes": 2458,
             "tracked": true
           },
@@ -12342,7 +12333,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:10:50.856Z",
+            "updated_at": "2026-06-11T05:47:49.456Z",
             "size_bytes": 46686,
             "tracked": true
           },
@@ -12357,7 +12348,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "JSON",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:09:10.667Z",
+            "updated_at": "2026-06-11T05:47:49.480Z",
             "size_bytes": 5925,
             "tracked": true
           },
@@ -12372,7 +12363,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:09:10.632Z",
+            "updated_at": "2026-06-11T05:47:49.230Z",
             "size_bytes": 37894,
             "tracked": true
           },
@@ -12387,7 +12378,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "系统级",
-            "updated_at": "2026-06-06T11:09:10.631Z",
+            "updated_at": "2026-06-11T05:47:49.226Z",
             "size_bytes": 32516,
             "tracked": true
           }
@@ -12411,7 +12402,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.603Z",
+            "updated_at": "2026-06-11T05:47:48.937Z",
             "size_bytes": 8964,
             "tracked": true
           },
@@ -12426,7 +12417,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:10:50.821Z",
+            "updated_at": "2026-06-11T05:47:48.938Z",
             "size_bytes": 5133,
             "tracked": true
           },
@@ -12441,7 +12432,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:12:44.692Z",
+            "updated_at": "2026-06-11T05:47:48.938Z",
             "size_bytes": 7357,
             "tracked": true
           },
@@ -12456,7 +12447,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.282Z",
+            "updated_at": "2026-06-11T05:47:48.881Z",
             "size_bytes": 2875,
             "tracked": true
           },
@@ -12471,7 +12462,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.282Z",
+            "updated_at": "2026-06-11T05:47:48.882Z",
             "size_bytes": 1511,
             "tracked": true
           },
@@ -12486,7 +12477,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.282Z",
+            "updated_at": "2026-06-11T05:47:48.883Z",
             "size_bytes": 1458,
             "tracked": true
           },
@@ -12501,7 +12492,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.383Z",
+            "updated_at": "2026-06-11T05:47:49.470Z",
             "size_bytes": 2875,
             "tracked": true
           },
@@ -12516,7 +12507,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.383Z",
+            "updated_at": "2026-06-11T05:47:49.470Z",
             "size_bytes": 1511,
             "tracked": true
           },
@@ -12531,7 +12522,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.383Z",
+            "updated_at": "2026-06-11T05:47:49.470Z",
             "size_bytes": 1458,
             "tracked": true
           },
@@ -12546,7 +12537,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:10:50.815Z",
+            "updated_at": "2026-06-11T05:47:48.859Z",
             "size_bytes": 15841,
             "tracked": true
           },
@@ -12561,7 +12552,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.279Z",
+            "updated_at": "2026-06-11T05:47:48.859Z",
             "size_bytes": 12934,
             "tracked": true
           },
@@ -12576,7 +12567,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.279Z",
+            "updated_at": "2026-06-11T05:47:48.860Z",
             "size_bytes": 17701,
             "tracked": true
           },
@@ -12591,7 +12582,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:10:50.815Z",
+            "updated_at": "2026-06-11T05:47:48.861Z",
             "size_bytes": 29769,
             "tracked": true
           },
@@ -12606,7 +12597,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.279Z",
+            "updated_at": "2026-06-11T05:47:48.862Z",
             "size_bytes": 12698,
             "tracked": true
           },
@@ -12621,7 +12612,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.280Z",
+            "updated_at": "2026-06-11T05:47:48.862Z",
             "size_bytes": 15320,
             "tracked": true
           },
@@ -12636,7 +12627,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-22T07:42:56.280Z",
+            "updated_at": "2026-06-11T05:47:48.863Z",
             "size_bytes": 11848,
             "tracked": true
           },
@@ -12651,7 +12642,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "必要",
-            "updated_at": "2026-05-23T07:28:03.853Z",
+            "updated_at": "2026-06-11T05:47:48.864Z",
             "size_bytes": 11254,
             "tracked": true
           }
@@ -12675,7 +12666,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.605Z",
+            "updated_at": "2026-06-11T05:47:48.941Z",
             "size_bytes": 5581,
             "tracked": true
           },
@@ -12690,7 +12681,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.604Z",
+            "updated_at": "2026-06-11T05:47:48.939Z",
             "size_bytes": 11860,
             "tracked": true
           },
@@ -12705,7 +12696,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.605Z",
+            "updated_at": "2026-06-11T05:47:48.942Z",
             "size_bytes": 31959,
             "tracked": true
           },
@@ -12720,7 +12711,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:09:10.606Z",
+            "updated_at": "2026-06-11T05:47:48.944Z",
             "size_bytes": 7152,
             "tracked": true
           },
@@ -12735,7 +12726,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必要",
-            "updated_at": "2026-06-06T11:10:50.861Z",
+            "updated_at": "2026-06-11T05:47:49.480Z",
             "size_bytes": 49235,
             "tracked": true
           }
@@ -12758,7 +12749,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:10:50.822Z",
+            "updated_at": "2026-06-11T05:47:48.945Z",
             "size_bytes": 8513,
             "tracked": true
           },
@@ -12772,7 +12763,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Markdown",
             "importance": "必读",
-            "updated_at": "2026-06-06T11:13:08.757Z",
+            "updated_at": "2026-06-11T05:47:48.945Z",
             "size_bytes": 21391,
             "tracked": true
           },
@@ -12786,7 +12777,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Cursor Rule",
             "importance": "必读",
-            "updated_at": "2026-05-23T07:00:37.698Z",
+            "updated_at": "2026-06-11T05:47:48.919Z",
             "size_bytes": 3624,
             "tracked": true
           },
@@ -12801,7 +12792,7 @@ window.XAI_DASHBOARD_STATE = {
             "type": "file",
             "kind": "Agent TOML",
             "importance": "系统级",
-            "updated_at": "2026-05-23T07:28:03.854Z",
+            "updated_at": "2026-06-11T05:47:48.878Z",
             "size_bytes": 442,
             "tracked": true
           }
@@ -12820,7 +12811,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必读",
-        "updated_at": "2026-06-06T23:26:21.659Z",
+        "updated_at": "2026-06-11T05:47:49.454Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12834,7 +12825,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.855Z",
+        "updated_at": "2026-06-11T05:47:49.488Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12848,7 +12839,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:12.840Z",
+        "updated_at": "2026-06-11T05:47:49.245Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12862,7 +12853,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:13:08.757Z",
+        "updated_at": "2026-06-11T05:47:49.091Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12876,7 +12867,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.891Z",
+        "updated_at": "2026-06-11T05:47:54.790Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12890,7 +12881,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.821Z",
+        "updated_at": "2026-06-11T05:47:48.943Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12905,7 +12896,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.816Z",
+        "updated_at": "2026-06-11T05:47:48.895Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12920,7 +12911,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.816Z",
+        "updated_at": "2026-06-11T05:47:48.876Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12935,7 +12926,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:10:50.812Z",
+        "updated_at": "2026-06-11T05:47:48.555Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12950,7 +12941,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.813Z",
+        "updated_at": "2026-06-11T05:47:48.662Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12965,7 +12956,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "参考",
-        "updated_at": "2026-06-06T11:10:50.817Z",
+        "updated_at": "2026-06-11T05:47:48.918Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12980,7 +12971,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "dir",
         "kind": "Folder",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:12:44.691Z",
+        "updated_at": "2026-06-11T05:47:48.931Z",
         "size_bytes": 0,
         "tracked": true
       },
@@ -12995,7 +12986,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:09:10.669Z",
+        "updated_at": "2026-06-11T05:47:49.483Z",
         "size_bytes": 16230,
         "tracked": true
       },
@@ -13010,7 +13001,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.228Z",
         "size_bytes": 2600,
         "tracked": true
       },
@@ -13025,7 +13016,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.230Z",
         "size_bytes": 37894,
         "tracked": true
       },
@@ -13040,7 +13031,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:09:10.631Z",
+        "updated_at": "2026-06-11T05:47:49.226Z",
         "size_bytes": 32516,
         "tracked": true
       },
@@ -13055,7 +13046,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:09:10.632Z",
+        "updated_at": "2026-06-11T05:47:49.229Z",
         "size_bytes": 9125,
         "tracked": true
       },
@@ -13070,7 +13061,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:10:50.822Z",
+        "updated_at": "2026-06-11T05:47:48.945Z",
         "size_bytes": 8513,
         "tracked": true
       },
@@ -13085,7 +13076,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:13:08.757Z",
+        "updated_at": "2026-06-11T05:47:48.945Z",
         "size_bytes": 21391,
         "tracked": true
       },
@@ -13100,7 +13091,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:12:44.700Z",
+        "updated_at": "2026-06-11T05:47:49.487Z",
         "size_bytes": 29743,
         "tracked": true
       },
@@ -13114,7 +13105,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T11:12:44.699Z",
+        "updated_at": "2026-06-11T05:47:49.485Z",
         "size_bytes": 7848,
         "tracked": true
       },
@@ -13129,7 +13120,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必读",
-        "updated_at": "2026-06-06T23:26:21.658Z",
+        "updated_at": "2026-06-11T05:47:49.078Z",
         "size_bytes": 56876,
         "tracked": true
       },
@@ -13144,7 +13135,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.855Z",
+        "updated_at": "2026-06-11T05:47:49.455Z",
         "size_bytes": 9685,
         "tracked": true
       },
@@ -13158,7 +13149,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.378Z",
+        "updated_at": "2026-06-11T05:47:49.455Z",
         "size_bytes": 11047,
         "tracked": true
       },
@@ -13172,7 +13163,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.378Z",
+        "updated_at": "2026-06-11T05:47:49.454Z",
         "size_bytes": 7351,
         "tracked": true
       },
@@ -13186,7 +13177,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T23:26:21.660Z",
+        "updated_at": "2026-06-11T05:47:49.486Z",
         "size_bytes": 54613,
         "tracked": true
       },
@@ -13201,7 +13192,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.605Z",
+        "updated_at": "2026-06-11T05:47:48.942Z",
         "size_bytes": 3318,
         "tracked": true
       },
@@ -13216,7 +13207,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:12:44.695Z",
+        "updated_at": "2026-06-11T05:47:49.090Z",
         "size_bytes": 36345,
         "tracked": true
       },
@@ -13231,7 +13222,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-05-24T10:55:45.113Z",
+        "updated_at": "2026-06-11T05:47:49.086Z",
         "size_bytes": 37432,
         "tracked": true
       },
@@ -13245,7 +13236,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:09:10.621Z",
+        "updated_at": "2026-06-11T05:47:49.093Z",
         "size_bytes": 2458,
         "tracked": true
       },
@@ -13259,7 +13250,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:10:50.856Z",
+        "updated_at": "2026-06-11T05:47:49.456Z",
         "size_bytes": 46686,
         "tracked": true
       },
@@ -13274,7 +13265,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "JSON",
         "importance": "系统级",
-        "updated_at": "2026-06-06T11:09:10.667Z",
+        "updated_at": "2026-06-11T05:47:49.480Z",
         "size_bytes": 5925,
         "tracked": true
       },
@@ -13289,7 +13280,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.603Z",
+        "updated_at": "2026-06-11T05:47:48.937Z",
         "size_bytes": 8964,
         "tracked": true
       },
@@ -13304,7 +13295,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.821Z",
+        "updated_at": "2026-06-11T05:47:48.938Z",
         "size_bytes": 5133,
         "tracked": true
       },
@@ -13319,7 +13310,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:12:44.692Z",
+        "updated_at": "2026-06-11T05:47:48.938Z",
         "size_bytes": 7357,
         "tracked": true
       },
@@ -13334,7 +13325,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.282Z",
+        "updated_at": "2026-06-11T05:47:48.881Z",
         "size_bytes": 2875,
         "tracked": true
       },
@@ -13349,7 +13340,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.282Z",
+        "updated_at": "2026-06-11T05:47:48.882Z",
         "size_bytes": 1511,
         "tracked": true
       },
@@ -13364,7 +13355,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.282Z",
+        "updated_at": "2026-06-11T05:47:48.883Z",
         "size_bytes": 1458,
         "tracked": true
       },
@@ -13379,7 +13370,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.383Z",
+        "updated_at": "2026-06-11T05:47:49.470Z",
         "size_bytes": 2875,
         "tracked": true
       },
@@ -13394,7 +13385,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.383Z",
+        "updated_at": "2026-06-11T05:47:49.470Z",
         "size_bytes": 1511,
         "tracked": true
       },
@@ -13409,7 +13400,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.383Z",
+        "updated_at": "2026-06-11T05:47:49.470Z",
         "size_bytes": 1458,
         "tracked": true
       },
@@ -13424,7 +13415,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.815Z",
+        "updated_at": "2026-06-11T05:47:48.859Z",
         "size_bytes": 15841,
         "tracked": true
       },
@@ -13439,7 +13430,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.279Z",
+        "updated_at": "2026-06-11T05:47:48.859Z",
         "size_bytes": 12934,
         "tracked": true
       },
@@ -13454,7 +13445,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.279Z",
+        "updated_at": "2026-06-11T05:47:48.860Z",
         "size_bytes": 17701,
         "tracked": true
       },
@@ -13469,7 +13460,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.815Z",
+        "updated_at": "2026-06-11T05:47:48.861Z",
         "size_bytes": 29769,
         "tracked": true
       },
@@ -13484,7 +13475,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.279Z",
+        "updated_at": "2026-06-11T05:47:48.862Z",
         "size_bytes": 12698,
         "tracked": true
       },
@@ -13499,7 +13490,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.280Z",
+        "updated_at": "2026-06-11T05:47:48.862Z",
         "size_bytes": 15320,
         "tracked": true
       },
@@ -13514,7 +13505,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-22T07:42:56.280Z",
+        "updated_at": "2026-06-11T05:47:48.863Z",
         "size_bytes": 11848,
         "tracked": true
       },
@@ -13529,7 +13520,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "必要",
-        "updated_at": "2026-05-23T07:28:03.853Z",
+        "updated_at": "2026-06-11T05:47:48.864Z",
         "size_bytes": 11254,
         "tracked": true
       },
@@ -13544,7 +13535,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.605Z",
+        "updated_at": "2026-06-11T05:47:48.941Z",
         "size_bytes": 5581,
         "tracked": true
       },
@@ -13559,7 +13550,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.604Z",
+        "updated_at": "2026-06-11T05:47:48.939Z",
         "size_bytes": 11860,
         "tracked": true
       },
@@ -13574,7 +13565,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.605Z",
+        "updated_at": "2026-06-11T05:47:48.942Z",
         "size_bytes": 31959,
         "tracked": true
       },
@@ -13589,7 +13580,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:09:10.606Z",
+        "updated_at": "2026-06-11T05:47:48.944Z",
         "size_bytes": 7152,
         "tracked": true
       },
@@ -13604,7 +13595,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Markdown",
         "importance": "必要",
-        "updated_at": "2026-06-06T11:10:50.861Z",
+        "updated_at": "2026-06-11T05:47:49.480Z",
         "size_bytes": 49235,
         "tracked": true
       },
@@ -13618,7 +13609,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Cursor Rule",
         "importance": "必读",
-        "updated_at": "2026-05-23T07:00:37.698Z",
+        "updated_at": "2026-06-11T05:47:48.919Z",
         "size_bytes": 3624,
         "tracked": true
       },
@@ -13633,7 +13624,7 @@ window.XAI_DASHBOARD_STATE = {
         "type": "file",
         "kind": "Agent TOML",
         "importance": "系统级",
-        "updated_at": "2026-05-23T07:28:03.854Z",
+        "updated_at": "2026-06-11T05:47:48.878Z",
         "size_bytes": 442,
         "tracked": true
       }
@@ -23250,18 +23241,18 @@ window.XAI_DASHBOARD_STATE = {
       }
     ],
     "current": {
-      "web_only": 444,
-      "dev_only": 214,
+      "web_only": 60,
+      "dev_only": 220,
       "drift_status": "符合预期",
       "drift_note": "commit 数不是异常判据；只检查该共享的变化是否已有 D3 分类或 defer 记录。",
       "gate_timeline": {
-        "web_last_commit": "2026-06-06",
+        "web_last_commit": "2026-06-10",
         "dev_last_commit": "2026-06-06",
-        "shared_base": "2026-05-26",
+        "shared_base": "2026-06-06",
         "last_release_tag": "（暂无 tag）",
-        "web_ahead": 444,
-        "dev_ahead": 214,
-        "reminder": "web 较共同基线领先 444 个提交、dev 领先 214 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
+        "web_ahead": 60,
+        "dev_ahead": 220,
+        "reminder": "web 较共同基线领先 60 个提交、dev 领先 220 个；属预期分叉，只需为“该共享的改动”补一次 D3 分类或 defer。"
       }
     }
   },
@@ -23379,25 +23370,9 @@ window.XAI_DASHBOARD_STATE = {
   "development_data": {
     "source": "git",
     "scope": "all refs unless noted",
-    "today_commits": 83,
-    "seven_day_commits": 345,
+    "today_commits": 1,
+    "seven_day_commits": 196,
     "seven_day_trend": [
-      {
-        "date": "2026-05-31",
-        "commits": 61
-      },
-      {
-        "date": "2026-06-01",
-        "commits": 14
-      },
-      {
-        "date": "2026-06-02",
-        "commits": 58
-      },
-      {
-        "date": "2026-06-03",
-        "commits": 101
-      },
       {
         "date": "2026-06-04",
         "commits": 25
@@ -23408,22 +23383,26 @@ window.XAI_DASHBOARD_STATE = {
       },
       {
         "date": "2026-06-06",
-        "commits": 83
+        "commits": 103
+      },
+      {
+        "date": "2026-06-07",
+        "commits": 0
+      },
+      {
+        "date": "2026-06-08",
+        "commits": 1
+      },
+      {
+        "date": "2026-06-09",
+        "commits": 45
+      },
+      {
+        "date": "2026-06-10",
+        "commits": 1
       }
     ],
     "weekly_stats": [
-      {
-        "key": "week:2026-04-13",
-        "type": "week",
-        "label": "04-13-04-19",
-        "start_date": "2026-04-13",
-        "end_date": "2026-04-19",
-        "commits": 4,
-        "active_days": 1,
-        "total_days": 7,
-        "active_rate": 0.14,
-        "is_current": false
-      },
       {
         "key": "week:2026-04-20",
         "type": "week",
@@ -23490,7 +23469,7 @@ window.XAI_DASHBOARD_STATE = {
         "label": "05-25-05-31",
         "start_date": "2026-05-25",
         "end_date": "2026-05-31",
-        "commits": 533,
+        "commits": 534,
         "active_days": 7,
         "total_days": 7,
         "active_rate": 1,
@@ -23499,12 +23478,24 @@ window.XAI_DASHBOARD_STATE = {
       {
         "key": "week:2026-06-01",
         "type": "week",
-        "label": "06-01-06-06",
+        "label": "06-01-06-07",
         "start_date": "2026-06-01",
-        "end_date": "2026-06-06",
-        "commits": 284,
+        "end_date": "2026-06-07",
+        "commits": 314,
         "active_days": 6,
-        "total_days": 6,
+        "total_days": 7,
+        "active_rate": 0.86,
+        "is_current": false
+      },
+      {
+        "key": "week:2026-06-08",
+        "type": "week",
+        "label": "06-08-06-10",
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-10",
+        "commits": 47,
+        "active_days": 3,
+        "total_days": 3,
         "active_rate": 1,
         "is_current": true
       }
@@ -23564,7 +23555,7 @@ window.XAI_DASHBOARD_STATE = {
         "label": "2026-05",
         "start_date": "2026-05-01",
         "end_date": "2026-05-31",
-        "commits": 1187,
+        "commits": 1188,
         "active_days": 19,
         "total_days": 31,
         "active_rate": 0.61,
@@ -23575,135 +23566,120 @@ window.XAI_DASHBOARD_STATE = {
         "type": "month",
         "label": "2026-06",
         "start_date": "2026-06-01",
-        "end_date": "2026-06-06",
-        "commits": 284,
-        "active_days": 6,
-        "total_days": 6,
-        "active_rate": 1,
+        "end_date": "2026-06-10",
+        "commits": 361,
+        "active_days": 9,
+        "total_days": 10,
+        "active_rate": 0.9,
         "is_current": true
       }
     ],
     "today_numstat": {
-      "added": 31737,
-      "deleted": 1295,
-      "files": 196
+      "added": 585,
+      "deleted": 115,
+      "files": 2
     },
     "directory_changes": {
       "docs": {
-        "added": 6640,
-        "deleted": 356,
-        "files": 85
-      },
-      "other": {
-        "added": 22442,
-        "deleted": 781,
-        "files": 272
-      },
-      "apps/desktop": {
-        "added": 2636,
-        "deleted": 158,
-        "files": 33
-      },
-      "apps/web": {
-        "added": 19,
-        "deleted": 0,
-        "files": 1
+        "added": 585,
+        "deleted": 115,
+        "files": 2
       }
     },
     "branch_recent_commits": [
       {
         "name": "web",
-        "date": "2026-06-06 15:09:21 -0700",
-        "commit": "26ff5617",
-        "subject": "dashboard: auto-start web from launcher"
+        "date": "2026-06-10 14:34:50 -0700",
+        "commit": "64cdf9a",
+        "subject": "docs(project): record board W1-W3 in release-log + dashboard state"
       },
       {
         "name": "origin/web",
-        "date": "2026-06-06 15:09:21 -0700",
-        "commit": "26ff5617",
-        "subject": "dashboard: auto-start web from launcher"
+        "date": "2026-06-10 14:34:50 -0700",
+        "commit": "64cdf9a",
+        "subject": "docs(project): record board W1-W3 in release-log + dashboard state"
+      },
+      {
+        "name": "codex/web/mobile-browser-adaptation",
+        "date": "2026-06-09 15:39:30 -0700",
+        "commit": "819bd20",
+        "subject": "docs(workflow): refresh cross-module sync ADR"
+      },
+      {
+        "name": "codex/web/metric-tracker",
+        "date": "2026-06-09 11:38:43 -0700",
+        "commit": "4da1445",
+        "subject": "feat(web): refine metric tracker preview workflow"
+      },
+      {
+        "name": "codex/plugin/common-capabilities-phase2",
+        "date": "2026-06-06 17:44:05 -0700",
+        "commit": "1834b4c",
+        "subject": "docs(plugin-platform): clarify plugin center app-contained shape"
+      },
+      {
+        "name": "origin/codex/plugin/common-capabilities-phase2",
+        "date": "2026-06-06 17:44:05 -0700",
+        "commit": "1834b4c",
+        "subject": "docs(plugin-platform): clarify plugin center app-contained shape"
       },
       {
         "name": "origin/dev",
-        "date": "2026-06-06 14:43:34 -0700",
-        "commit": "022dc90b",
-        "subject": "merge(plugin-platform): integrate desktop plugin common capabilities"
+        "date": "2026-06-06 16:29:47 -0700",
+        "commit": "8fd2072",
+        "subject": "Merge remote-tracking branch 'origin/dev' into dev"
+      },
+      {
+        "name": "dev",
+        "date": "2026-06-06 15:02:29 -0700",
+        "commit": "0623c3f",
+        "subject": "dashboard: auto-start web from launcher"
+      },
+      {
+        "name": "claude/frosty-nash-c4bf16",
+        "date": "2026-06-06 08:01:35 -0700",
+        "commit": "72902b7",
+        "subject": "docs(project): record Admin Dashboard roadmap 6/6 SHIPPED + dashboard refresh"
+      },
+      {
+        "name": "codex/admin/fix-users-smoke-flake",
+        "date": "2026-06-06 08:01:35 -0700",
+        "commit": "72902b7",
+        "subject": "docs(project): record Admin Dashboard roadmap 6/6 SHIPPED + dashboard refresh"
       },
       {
         "name": "origin/claude/frosty-nash-c4bf16",
         "date": "2026-06-06 08:01:35 -0700",
-        "commit": "72902b7d",
+        "commit": "72902b7",
         "subject": "docs(project): record Admin Dashboard roadmap 6/6 SHIPPED + dashboard refresh"
       },
       {
-        "name": "origin/codex/plugin/common-capabilities-phase2",
-        "date": "2026-06-06 06:08:50 -0700",
-        "commit": "47bf5632",
-        "subject": "docs(plugin-platform): record locked host smoke recheck"
-      },
-      {
-        "name": "dev",
-        "date": "2026-06-06 04:31:53 -0700",
-        "commit": "47d8f4e5",
-        "subject": "Merge branch 'web' into dev"
+        "name": "main",
+        "date": "2026-06-06 04:28:28 -0700",
+        "commit": "9a61669",
+        "subject": "ci(deploy): keep Pages build in public demo auth"
       },
       {
         "name": "origin",
         "date": "2026-06-06 04:28:28 -0700",
-        "commit": "9a61669b",
+        "commit": "9a61669",
         "subject": "ci(deploy): keep Pages build in public demo auth"
       },
       {
         "name": "origin/main",
         "date": "2026-06-06 04:28:28 -0700",
-        "commit": "9a61669b",
+        "commit": "9a61669",
         "subject": "ci(deploy): keep Pages build in public demo auth"
-      },
-      {
-        "name": "origin/codex/plugin/platform-runtime-phase1",
-        "date": "2026-06-06 04:07:29 -0700",
-        "commit": "ae72888f",
-        "subject": "docs(plugin-platform): close phase 1 runtime foundation"
-      },
-      {
-        "name": "origin/desktop-plugin-next",
-        "date": "2026-06-06 04:07:29 -0700",
-        "commit": "ae72888f",
-        "subject": "docs(plugin-platform): close phase 1 runtime foundation"
-      },
-      {
-        "name": "main",
-        "date": "2026-06-06 04:00:43 -0700",
-        "commit": "2258d376",
-        "subject": "ci(deploy): run Wrangler deploy through pnpm"
-      },
-      {
-        "name": "origin/codex/admin-dashboard-prototype-hardening",
-        "date": "2026-06-05 21:44:55 -0700",
-        "commit": "b803f001",
-        "subject": "fix(admin): activate roadmap gate"
-      },
-      {
-        "name": "origin/codex/web/ui-ux-system-refresh",
-        "date": "2026-06-05 17:21:20 -0700",
-        "commit": "3037fe99",
-        "subject": "Add Web color token enforcement gate"
-      },
-      {
-        "name": "origin/codex/web/countdown-system-upgrade",
-        "date": "2026-06-04 13:41:27 -0700",
-        "commit": "eb25338a",
-        "subject": "feat(plugin-web-countdown): polish interactions and drag sorting"
       }
     ],
-    "uncommitted_files": 56,
+    "uncommitted_files": 0,
     "doc_vs_code": {
-      "docs_lines": 132400,
-      "code_lines": 196975,
-      "ratio": 0.67
+      "docs_lines": 85460,
+      "code_lines": 151605,
+      "ratio": 0.56
     },
-    "recent_push_time": "2026-06-06T14:43:34-07:00",
-    "skill_change_commits": 20
+    "recent_push_time": "",
+    "skill_change_commits": 5
   },
   "task_progress": {
     "items": [
@@ -24873,7 +24849,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "web↔dev 分叉",
       "badge": "正常差异",
-      "value": "444/214",
+      "value": "60/220",
       "note": "两条独立专注线，差异正常"
     },
     {
@@ -24891,7 +24867,7 @@ window.XAI_DASHBOARD_STATE = {
     {
       "label": "Dashboard sync",
       "badge": "skill tracked",
-      "value": "56 dirty",
+      "value": "current",
       "note": "pnpm dashboard · 最新发布 Desktop Plugin Center Frame Normalization Smoke"
     }
   ],
@@ -24903,7 +24879,7 @@ window.XAI_DASHBOARD_STATE = {
     },
     {
       "question": "在哪条线",
-      "answer": "dev",
+      "answer": "unknown",
       "detail": "当前仓库线；web 与 dev 独立推进"
     },
     {
@@ -24913,8 +24889,8 @@ window.XAI_DASHBOARD_STATE = {
     },
     {
       "question": "什么状态",
-      "answer": "有未提交变更",
-      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 56"
+      "answer": "已刷新",
+      "detail": "自动化不改 roadmap、不 merge、不判断发布；dirty 0"
     }
   ],
   "overview_modules": [
