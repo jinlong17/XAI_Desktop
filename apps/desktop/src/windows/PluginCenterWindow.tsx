@@ -203,6 +203,7 @@ export function PluginCenterWindow() {
   const [lastWindow, setLastWindow] = useState<PluginWindowSnapshot | null>(
     null,
   );
+  const [hostWindows, setHostWindows] = useState<PluginWindowSnapshot[]>([]);
   const [capabilityError, setCapabilityError] =
     useState<PluginWindowCapabilityErrorState | null>(null);
   const availableCount = entries.filter(
@@ -214,6 +215,12 @@ export function PluginCenterWindow() {
       lastWindow ? summarizePluginWindowNativeApplication(lastWindow) : [],
     [lastWindow],
   );
+
+  const refreshHostWindows = useCallback(async () => {
+    const windows = await windowAdapter.list();
+    setHostWindows(windows);
+    return windows;
+  }, [windowAdapter]);
 
   useEffect(() => {
     if (!instanceStore) return;
@@ -230,6 +237,10 @@ export function PluginCenterWindow() {
           if (lastRestored?.window) {
             setLastWindow(lastRestored.window);
           }
+          void refreshHostWindows().catch((error) => {
+            setHostWindows([]);
+            setCapabilityError(summarizePluginWindowCapabilityError(error));
+          });
         }
       })
       .catch((error) => {
@@ -241,7 +252,7 @@ export function PluginCenterWindow() {
     return () => {
       cancelled = true;
     };
-  }, [instanceStore, windowAdapter]);
+  }, [instanceStore, refreshHostWindows, windowAdapter]);
 
   const handleAddToDesktop = useCallback(
     async (entry: PluginCenterEntry) => {
@@ -266,6 +277,7 @@ export function PluginCenterWindow() {
         });
         setInstances(instanceStore.list());
         setLastWindow(result.window);
+        await refreshHostWindows();
       } catch (error) {
         setCapabilityError(summarizePluginWindowCapabilityError(error));
       } finally {
@@ -289,13 +301,22 @@ export function PluginCenterWindow() {
         if (result?.window) {
           setLastWindow(result.window);
         }
+        await refreshHostWindows();
       } catch (error) {
         setCapabilityError(summarizePluginWindowCapabilityError(error));
       } finally {
         setBusyInstanceId(null);
       }
     },
-    [instanceStore],
+    [instanceStore, refreshHostWindows],
+  );
+
+  const handleFocusInstance = useCallback(
+    (instance: PluginInstance) =>
+      runInstanceAction(instance.id, async () => ({
+        window: await windowAdapter.focus(instance.id),
+      })),
+    [runInstanceAction, windowAdapter],
   );
 
   const handleEnableInstance = useCallback(
@@ -615,6 +636,10 @@ export function PluginCenterWindow() {
               <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
                 {instances.length}
               </dd>
+              <dt>Host windows</dt>
+              <dd style={{ margin: 0, color: shellTokens.color.textPrimary }}>
+                {hostWindows.length}
+              </dd>
               {lastWindow ? (
                 <>
                   <dt>Last window</dt>
@@ -687,6 +712,32 @@ export function PluginCenterWindow() {
                 </div>
               </div>
             ) : null}
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setCapabilityError(null);
+                  void refreshHostWindows().catch((error) => {
+                    setHostWindows([]);
+                    setCapabilityError(
+                      summarizePluginWindowCapabilityError(error),
+                    );
+                  });
+                }}
+                style={{
+                  border: `1px solid ${shellTokens.color.borderSubtle}`,
+                  borderRadius: shellTokens.radius.md,
+                  background: "transparent",
+                  color: shellTokens.color.textPrimary,
+                  cursor: "pointer",
+                  fontSize: 12,
+                  minHeight: 30,
+                  padding: "0 10px",
+                }}
+              >
+                Refresh Host Windows
+              </button>
+            </div>
           </section>
 
           <section
@@ -1051,6 +1102,12 @@ export function PluginCenterWindow() {
                           >
                             {[
                               {
+                                label: "Focus",
+                                onClick: () => handleFocusInstance(instance),
+                                disabled:
+                                  instance.lifecycleState !== "enabled",
+                              },
+                              {
                                 label: "Enable",
                                 onClick: () => handleEnableInstance(instance),
                                 disabled: instance.lifecycleState === "enabled",
@@ -1106,6 +1163,155 @@ export function PluginCenterWindow() {
                       </tr>
                     );
                   })}
+                </tbody>
+              </table>
+            )}
+          </section>
+
+          <section
+            style={{
+              border: `1px solid ${shellTokens.color.borderSubtle}`,
+              borderRadius: shellTokens.radius.md,
+              background: shellTokens.color.surfaceGlass,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                color: shellTokens.color.textPrimary,
+                fontSize: 16,
+                fontWeight: shellTokens.typography.fontWeightSemibold,
+                padding: "14px 16px",
+              }}
+            >
+              Host Windows
+            </div>
+            {hostWindows.length === 0 ? (
+              <div
+                style={{
+                  color: shellTokens.color.textSecondary,
+                  fontSize: 13,
+                  padding: "14px 16px",
+                }}
+              >
+                No host windows
+              </div>
+            ) : (
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: 13,
+                }}
+              >
+                <thead>
+                  <tr style={{ color: shellTokens.color.textSecondary }}>
+                    {[
+                      "Instance",
+                      "Surface",
+                      "Visible",
+                      "Rect",
+                      "Native",
+                    ].map((heading) => (
+                      <th
+                        key={heading}
+                        scope="col"
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          fontWeight: shellTokens.typography.fontWeightMedium,
+                          padding: "10px 12px",
+                          textAlign: "left",
+                        }}
+                      >
+                        {heading}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {hostWindows.map((hostWindow) => (
+                    <tr key={hostWindow.instanceId}>
+                      <td
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          color: shellTokens.color.textPrimary,
+                          padding: "12px",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {hostWindow.instanceId}
+                      </td>
+                      <td
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          color: shellTokens.color.textSecondary,
+                          padding: "12px",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {hostWindow.surface}
+                      </td>
+                      <td
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          color: shellTokens.color.textPrimary,
+                          padding: "12px",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {hostWindow.visible ? "Visible" : "Hidden"}
+                      </td>
+                      <td
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          color: shellTokens.color.textSecondary,
+                          padding: "12px",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        {Math.round(hostWindow.rect.x)},{" "}
+                        {Math.round(hostWindow.rect.y)} ·{" "}
+                        {Math.round(hostWindow.rect.width)}x
+                        {Math.round(hostWindow.rect.height)}
+                      </td>
+                      <td
+                        style={{
+                          borderBottom: `1px solid ${shellTokens.color.borderSubtle}`,
+                          padding: "12px",
+                          verticalAlign: "top",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 6,
+                          }}
+                        >
+                          {summarizePluginWindowNativeApplication(
+                            hostWindow,
+                          ).map((state) => (
+                            <span
+                              key={state.key}
+                              style={{
+                                border: `1px solid ${shellTokens.color.borderSubtle}`,
+                                borderRadius: shellTokens.radius.md,
+                                color: nativeStatusColor(state.status),
+                                fontSize: 11,
+                                lineHeight: 1.2,
+                                padding: "4px 6px",
+                              }}
+                              title={`${state.label}: ${state.value}`}
+                            >
+                              {state.label}:{" "}
+                              {nativeStatusLabel(state.status)}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             )}

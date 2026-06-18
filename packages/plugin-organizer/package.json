@@ -19,7 +19,7 @@
     "@repo/core": "workspace:*",
     "@repo/core-data": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@tauri-apps/api": "^2",
+    "@tauri-apps/api": "^2.11.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-draggable": "^4.4.6",

@@ -6,6 +6,15 @@
 
 ## 2026-06-07
 
+### Desktop Plugin Phase 2 Host Smoke Partial
+
+- Product line: desktop-plugin
+- Branch / commit: `codex/plugin/common-capabilities-phase2` / local working tree
+- User-visible change: Plugin Center 真实 macOS host smoke 已推进到 Sample Widget 添加、grid sample 渲染、重启恢复、透明度、置顶层级、click-through / all-spaces nativeApplied、Focus / Host Windows list、Reset / Disable / Hide / Delete 等路径；具体插件包仍保持冻结。
+- Developer/system delta: 新增 `docs/reviews/desktop-plugin-platform-runtime/20260607-phase2-host-smoke-result.md` 记录 P2-HS-2..23 证据；Plugin Center 增加 Host Windows 诊断表与 per-instance Focus 操作，给真实 `focus_grid_window` / `list_grid_windows` IPC 提供可见证据；fresh Tauri build 前置修复为将 workspace `@tauri-apps/api` 对齐到 `^2.11.0`，匹配 Rust `tauri 2.11.2` 的 major/minor 检查。
+- Verification: `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml window::tests::plugin --features crypto` passed（7 tests）；`pnpm --filter desktop exec tsc --noEmit` passed；`PATH="/opt/homebrew/bin:$PATH" cargo tauri build --debug --features crypto --bundles app` passed；`pnpm --filter @repo/core test -- plugin-window-adapter plugin-instance-runtime plugin-center-runtime plugin-center` passed（4 files / 28 tests）；`pnpm install --frozen-lockfile` passed；`dashboard-state.json` / `module-classification.json` JSON parse passed；`git diff --check` passed；`pnpm dashboard` not run because this worktree has no `dashboard` script；manual host smoke result is `PARTIAL`, not `PASS`.
+- Risk / follow-up: 未满足 pass receipt：当前机器只有单显示器；P2-HS-14 已补做 Mission Control / System Events 自动化探测，但无法形成可重复的 sample-window-across-Spaces 观察证据。需要 operator 手动 Space 切换和双显示器环境补测。不要合入 `desktop-plugin-next`，不要解冻具体插件包。
+
 ### Desktop Plugin Center Mac App-Contained Shape
 
 - Product line: desktop-plugin

@@ -948,8 +948,8 @@
       "status": "Phase 2 common plugin capability code path complete · concrete plugin packages paused",
       "branch": "desktop-plugin-next",
       "dependency": "依赖 Tauri host 命令 + 插件平台运行时",
-      "next": "继续 Phase 2：真实 macOS host smoke，然后确认是否解冻具体插件包。",
-      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
+      "next": "Phase 2 真实 macOS host smoke 已跑到 PARTIAL；需要 operator 手动 Space 切换和双显示器证据后，再确认是否解冻具体插件包。",
+      "tracker": "Phase 1 系统底座已完成；Phase 2 重启恢复、native fallback 展示、capability denial 展示、native behavior application 与 sample widget host flow 已完成。2026-06-07 host smoke PARTIAL 证明 Sample Widget 添加、grid sample 渲染、restart restore、opacity、pinned、click-through/all-spaces nativeApplied、Focus/List、Reset/Disable/Hide/Delete；P2-HS-14 自动化探测未形成可重复 Space 证据，clipboard/widgets/pet/meditation 等具体插件包继续 paused。",
       "labels": {
         "overview": "桌面整理插件 / Widget",
         "deployment": "桌面插件",
@@ -961,10 +961,10 @@
       },
       "overview": {
         "phase": "Phase 2 common capabilities",
-        "running": "Phase 2 common capability code path complete · 插件包未开工",
+        "running": "Phase 2 host smoke PARTIAL · 插件包未开工",
         "progress_fallback": 64,
-        "recent_update": "Phase 2 sample widget host flow 已接入 Plugin Center 与 GridWindow routing",
-        "todo_fallback": "下一步做真实 macOS host smoke，并确认具体插件包解冻条件。",
+        "recent_update": "2026-06-07 真实 macOS host smoke 已记录 PARTIAL：sample-widget、restore、opacity、pinned、click-through/all-spaces nativeApplied、Focus/List 和实例管理通过；Space 自动化探测未形成 PASS 证据，双显示器仍不可测",
+        "todo_fallback": "operator 手动补 P2-HS-13/14 证据；未到 PASS 前不合入 desktop-plugin-next、不解冻具体插件包。",
         "target": { "type": "doc", "path": "docs/planning/execution/desktop-plugin-platform-phase1.md", "label": "打开 Phase 1 执行路线" }
       },
       "tracking": {
@@ -974,7 +974,7 @@
         "release_aliases": ["plugin", "widget", "clipboard", "organizer", "ai-cube"]
       },
       "features": [
-        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-1-complete", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；native manual smoke 按清单执行" },
+        { "name": "插件平台运行时(多窗口/overlay/click-through/grid persistence)", "status": "phase-2-partial-smoke", "note": "typed contract、device-local store、window adapter 和 placement/behavior/style snapshot 已完成；2026-06-07 真实 host smoke 为 PARTIAL，P2-HS-14 自动化探测不可重复，Space/双显示器仍需 operator 补证据" },
         { "name": "Plugin Center / Entry Model", "status": "phase-1-complete", "note": "Mac App-contained 管理 surface、内置 catalog、add-to-desktop flow 和 instance management 已完成；复杂 UI 和具体插件功能留到 Phase 2/3；不是独立 App / 独立产品线" },
         { "name": "重启恢复 / enabled instance restore", "status": "phase-2-complete", "note": "Plugin Center load 调用 restoreEnabledPluginInstancesOnDesktop，仅恢复 enabled，disabled/hidden 保留配置不建窗" },
         { "name": "Native fallback 展示", "status": "phase-2-complete", "note": "Plugin Center 展示 placement/size applied 与 opacity/click-through/pinned/all-spaces fallback 或 not-requested 状态" },
