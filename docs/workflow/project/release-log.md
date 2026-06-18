@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-06-18
+
+### Dev Dashboard Skill / Agent Registry Classification Sync
+
+- Product line: project-system / dev-dashboard
+- Branch / commit: `web` / `8f27adb3`; `codex/mobile/native-thin-shell-mvp` / `dcf284c0`
+- User-visible change: 个人开发看板的 Skill / Agent 页面不再把 `stitch-design-taste` 留在 `needs-action`，当前工作区刷新后 66 个 Skill / Agent 条目均为 resolved。
+- Developer/system delta: `scripts/dashboard/generate-state.mjs` 将 `stitch-design-taste` 明确归入 quality 分类，避免设计质量类 skill 被误判为 reference / unclear category；本地 `state.generated.js` 仍作为每机器快照，不进仓库。
+- Verification: bundled Node `--check scripts/dashboard/generate-state.mjs` passed；bundled Node `scripts/dashboard/generate-state.mjs` passed；generated registry reported `skill_status=resolved`, `skill_entries=66`, `unresolved=0`；`git diff --check HEAD^ HEAD` passed；`pnpm dashboard` not run because `pnpm` is not available in this shell PATH.
+- Risk / follow-up: 低风险；65 个条目仍依赖生成器自动补齐 source-backfill 字段，可后续按需回写源 skill / agent 定义。
+
 ## 2026-06-11
 
 ### Mobile PWA + Capacitor 薄壳 MVP
