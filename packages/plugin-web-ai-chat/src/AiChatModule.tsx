@@ -66,6 +66,7 @@ export interface AiChatModuleProps {
 }
 
 const SUMMARY_MAX_LEN = 140;
+const SIDEBAR_DOCKED_QUERY = "(min-width: 768px)";
 
 function compactText(text: string, maxLen = SUMMARY_MAX_LEN) {
   const oneLine = text.replace(/\s+/g, " ").trim();
@@ -88,6 +89,13 @@ function normalizeMessage(message: AiMessage): AiMessage {
 
 function normalizeMessages(messages: readonly AiMessage[]) {
   return messages.map(normalizeMessage);
+}
+
+function getInitialSidebarOpen() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return true;
+  }
+  return window.matchMedia(SIDEBAR_DOCKED_QUERY).matches;
 }
 
 export function AiChatModule({ lang }: AiChatModuleProps) {
@@ -121,7 +129,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [attachments, setAttachments] = useState<AiAttachment[]>([]);
   const [thinking, setThinking] = useState(false);
   const [activeConvo, setActiveConvo] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarOpen);
   const [model] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
   const [bannerError, setBannerError] = useState<LlmError | null>(null);

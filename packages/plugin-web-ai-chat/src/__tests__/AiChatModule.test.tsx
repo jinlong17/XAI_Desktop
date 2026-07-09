@@ -49,6 +49,7 @@ describe("AiChatModule integration (I)", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     localStorage.clear();
     void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
     void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
@@ -198,6 +199,25 @@ describe("AiChatModule integration (I)", () => {
       "thinking",
     );
     expect(localStorage.getItem("xai_ai_convos")).toBeNull();
+  });
+
+  it("I11b: small screens start with the chat sidebar collapsed", () => {
+    const matchMedia = vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    vi.stubGlobal("matchMedia", matchMedia);
+
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(matchMedia).toHaveBeenCalledWith("(min-width: 768px)");
+    expect(container.querySelector(".ai-side.open")).toBeNull();
+    expect(screen.getByRole("button", { name: /Open sidebar/i })).toBeInTheDocument();
   });
 
   it("I12: unmount during thinking does not throw or leak", async () => {
