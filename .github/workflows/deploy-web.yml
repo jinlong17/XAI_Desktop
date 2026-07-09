@@ -5,7 +5,11 @@
 #   - pull_request → preview deploy
 #
 # Secrets required (set in GitHub repo Settings → Secrets → Actions):
-#   CLOUDFLARE_API_TOKEN — Cloudflare API token with scope "Cloudflare Pages:Edit"
+#   CLOUDFLARE_API_TOKEN — Cloudflare API token scoped to the target account:
+#     Account → Cloudflare Pages → Edit
+#     User → Memberships → Read
+#     Account → Account Settings → Read
+#     Do not choose Zone → Custom Pages; that is not the Pages hosting product.
 #   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID where the project lives
 #   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — not required for the v1 public
 #     demo; live Supabase auth is a later productionization step.
@@ -65,9 +69,15 @@ jobs:
           fi
 
           projects_file="$(mktemp)"
-          pnpm dlx "wrangler@${WRANGLER_VERSION}" pages project list | tee "$projects_file"
+          if ! pnpm dlx "wrangler@${WRANGLER_VERSION}" pages project list > "$projects_file" 2>&1; then
+            cat "$projects_file"
+            echo "::error title=Cloudflare credentials rejected::Wrangler could not list Cloudflare Pages projects for this account. Recreate or update CLOUDFLARE_API_TOKEN with Account -> Cloudflare Pages -> Edit, User -> Memberships -> Read, and Account -> Account Settings -> Read on the target account. Avoid Zone -> Custom Pages; it is a different Cloudflare product."
+            echo "::error::Local verification command: CLOUDFLARE_API_TOKEN=<token> CLOUDFLARE_ACCOUNT_ID=<account_id> pnpm dlx wrangler@${WRANGLER_VERSION} pages project list"
+            exit 1
+          fi
+          cat "$projects_file"
           if ! grep -q "xai-web-console" "$projects_file"; then
-            echo "::error::Cloudflare credentials are valid, but xai-web-console is not visible to this token/account."
+            echo "::error::Cloudflare credentials are valid, but xai-web-console is not visible to this token/account. Confirm CLOUDFLARE_ACCOUNT_ID and token account-resource scope."
             exit 1
           fi
 

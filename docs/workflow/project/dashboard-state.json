@@ -121,7 +121,7 @@
         },
         {
           "label": "发布",
-          "detail": "Cloudflare wrangler-action 在 apps/web 下执行 pages deploy ./dist，project-name=xai-web-console。",
+          "detail": "GitHub Actions 用 pinned Wrangler CLI 在 apps/web 下执行 pages deploy ./dist，project-name=xai-web-console。",
           "owner": "apps/web/wrangler.toml"
         },
         {
@@ -240,7 +240,7 @@
           },
           {
             "severity": "pending",
-            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 66 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；latest Preview deployment=280a3451-3912-4e4e-8dd0-46baa3e217d2 / source=2966bba / URL=https://280a3451.xai-web-console.pages.dev（alias=https://web.xai-web-console.pages.dev）已由本地 Wrangler 发布并通过 /app/ai 桌面+390px mobile smoke；latest Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），仍不是当前改动。GitHub PR #2 supply-chain 已在 head 78160fd 全绿；Deploy Web 最新失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / missing User->Memberships->Read / membership roles 读取失败）；workflow 已新增 credentials preflight，但 secret 需 operator 更新后重新跑。production 发布前需 web→main fast-forward promote，并登记 production deployment URL、deployment id、commit、smoke 与 rollback 结果。"
+            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 66 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；latest Preview deployment=280a3451-3912-4e4e-8dd0-46baa3e217d2 / source=2966bba / URL=https://280a3451.xai-web-console.pages.dev（alias=https://web.xai-web-console.pages.dev）已由本地 Wrangler 发布并通过 /app/ai 桌面+390px mobile smoke；latest Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），仍不是当前改动。GitHub PR #2 supply-chain 已查询为全绿；Deploy Web 最新失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / missing User->Memberships->Read / membership roles 读取失败）；workflow 已新增 credentials preflight 和 token-scope 诊断，但 secret 需 operator 更新后重新跑。production 发布前需 web→main fast-forward promote，并登记 production deployment URL、deployment id、commit、smoke 与 rollback 结果。"
           }
         ]
       },
@@ -425,7 +425,7 @@
         "name": "Supply-chain security",
         "path": ".github/workflows/supply-chain-security.yml",
         "status": "passed",
-        "last_result": "2026-07-09 PR #2 head 78160fd: Rust exact pins, OSV, cargo-deny, RFC crypto vectors + CBOR all passed",
+        "last_result": "2026-07-09 PR #2 queried result: Rust exact pins, OSV, cargo-deny, RFC crypto vectors + CBOR all passed",
         "categories": [
           "unit",
           "backend",
@@ -437,7 +437,7 @@
         "name": "Deploy Web to Cloudflare Pages",
         "path": ".github/workflows/deploy-web.yml",
         "status": "blocked",
-        "last_result": "2026-07-09 PR #2 head 78160fd: credentials preflight failed with Cloudflare code 10000 / missing User->Memberships->Read",
+        "last_result": "2026-07-09 PR #2 queried result: credentials preflight failed with Cloudflare code 10000 / missing User->Memberships->Read",
         "categories": [
           "build",
           "pre_deploy"
@@ -464,7 +464,7 @@
         "title": "Web 版本",
         "status": "pass",
         "latest_tested_at": "2026-07-09",
-        "conclusion": "最新 Web/Cloudflare readiness 批次：PR #2 head 78160fd 的 Supply-chain security 远端全绿；本地 Web check-types/build/test、Desktop build、AI chat test/typecheck、preview /app/ai desktop+390px smoke 均通过。已知阻塞：Deploy Web / Cloudflare Workers Builds 因 GitHub secret Cloudflare token 权限不足失败，非代码侧通过项。",
+        "conclusion": "最新 Web/Cloudflare readiness 批次：PR #2 的 Supply-chain security 已查询为远端全绿；本地 Web check-types/build/test、Desktop build、AI chat test/typecheck、preview /app/ai desktop+390px smoke 均通过。已知阻塞：Deploy Web / Cloudflare Workers Builds 因 GitHub secret Cloudflare token 权限不足失败，非代码侧通过项。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
         "pipeline_status": "configured",
@@ -833,7 +833,7 @@
         "phase": "主线开发",
         "running": "正常运行",
         "progress_fallback": 78,
-        "recent_update": "Web / Cloudflare readiness：Preview 280a3451 已发布并完成 /app/ai 桌面+390px smoke；PR #2 head 78160fd 的 supply-chain 远端全绿，Deploy Web 仍被 Cloudflare token 权限阻断。",
+        "recent_update": "Web / Cloudflare readiness：Preview 280a3451 已发布并完成 /app/ai 桌面+390px smoke；PR #2 supply-chain 已查询为远端全绿，Deploy Web 仍被 Cloudflare token 权限阻断。",
         "todo_fallback": "D3 gate 后再同步到 Desktop",
         "target": {
           "type": "ops",
