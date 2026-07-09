@@ -26,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      WRANGLER_VERSION: 4.107.1
 
     steps:
       - name: Checkout
@@ -51,6 +53,24 @@ jobs:
           # Public Demo v1 uses mock auth on both production and previews.
           VITE_WEB_AUTH_MODE: mock-authenticated
 
+      - name: Verify Cloudflare credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID GitHub secret."
+            exit 1
+          fi
+
+          projects_file="$(mktemp)"
+          pnpm dlx "wrangler@${WRANGLER_VERSION}" pages project list | tee "$projects_file"
+          if ! grep -q "xai-web-console" "$projects_file"; then
+            echo "::error::Cloudflare credentials are valid, but xai-web-console is not visible to this token/account."
+            exit 1
+          fi
+
       - name: Deploy to Cloudflare Pages
         id: deploy
         env:
@@ -63,16 +83,18 @@ jobs:
           set -euo pipefail
           log_file="$(mktemp)"
 
-          pnpm dlx wrangler@4.98.0 pages deploy ./apps/web/dist \
+          pnpm dlx "wrangler@${WRANGLER_VERSION}" pages deploy ./apps/web/dist \
             --project-name=xai-web-console \
             --branch="$DEPLOY_BRANCH" \
             --commit-hash="$DEPLOY_SHA" \
             --commit-message="$DEPLOY_MESSAGE" | tee "$log_file"
 
           deployment_url="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' "$log_file" | tail -n 1 || true)"
+          deployment_id="$(grep -Eio 'Deployment ID: [0-9a-f-]+' "$log_file" | awk '{print $3}' | tail -n 1 || true)"
           {
             echo "deployment-url=${deployment_url}"
             echo "pages-deployment-alias-url=${deployment_url}"
+            echo "pages-deployment-id=${deployment_id}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Deployment summary

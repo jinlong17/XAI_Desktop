@@ -232,7 +232,7 @@
         "platform": "Cloudflare Pages / GitHub Actions",
         "target": "apps/web SPA",
         "branch": "web",
-        "next": "发布源已定为 main（§12-A）→ 先 cherry-pick 3 笔部署文档 dev→web → web→main fast-forward promote → 跑真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
+        "next": "发布源已定为 main（§12-A）→ web→main fast-forward promote → 跑真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
         "issues": [
           {
             "severity": "pending",
@@ -240,7 +240,7 @@
           },
           {
             "severity": "pending",
-            "text": "发布源 = main（已定），web 领先 main 439 commits；发布前需 web→main fast-forward promote，且先把部署文档 cherry-pick 到 web（DEPLOYMENT.md §12-D）。"
+            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 62 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；最新 Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），最新 Preview deployment=37e6d9c2-d60a-470f-8b33-c482d149f37a / source=64cdf9a（约 4 weeks ago），均不是当前工作区改动。GitHub Deploy Web 历史失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / memberships 9106）；workflow 已新增 credentials preflight，但 secret 需 operator 更新后重新跑。发布前需 web→main fast-forward promote，并登记新 deployment URL、deployment id、commit、smoke 与 rollback 结果。"
           }
         ]
       },
@@ -468,7 +468,7 @@
           {
             "key": "pre_deploy",
             "status": "partial",
-            "detail": "Cloudflare 真实线上 URL / deploy id 仍需按部署记录补齐。"
+            "detail": "Cloudflare 真实线上 URL / deploy id 仍需按部署记录补齐；deploy workflow 已有 credentials preflight，但 GitHub secret 仍需更新/轮换。"
           },
           {
             "key": "regression",
@@ -482,8 +482,8 @@
         "key": "app",
         "title": "Mac 桌面版本",
         "status": "partial",
-        "latest_tested_at": "",
-        "conclusion": "桌面线已有 Tauri / Rust / supply-chain 测试入口，但 RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
+        "latest_tested_at": "2026-07-09",
+        "conclusion": "桌面线 Tauri build、Rust crypto vectors、cargo-deny、OSV scanner 和 CBOR 跨实现检查已有最新本地通过记录；RC、签名、公证、真机 macOS smoke 尚未形成最近通过记录。",
         "failure_count": 0,
         "duration": "",
         "pipeline_status": "configured",
@@ -497,12 +497,12 @@
           {
             "key": "backend",
             "status": "partial",
-            "detail": "Rust cargo test / crypto vectors 有 CI 入口，最近 App RC 结果未登记。"
+            "detail": "2026-07-09 本地通过 cargo metadata --locked、crypto RFC vectors、CBOR cross-check、cargo-deny all-features、OSV scanner。"
           },
           {
             "key": "build",
-            "status": "partial",
-            "detail": "Tauri build gate 需在 desktop-next / dev RC 时登记。"
+            "status": "pass",
+            "detail": "2026-07-09 `pnpm --filter desktop build` passed；最大 JS chunk 约 193 kB。RC 时仍需重新登记。"
           },
           {
             "key": "self_test",
@@ -913,6 +913,11 @@
           "name": "记账 Bookkeeping",
           "status": "in-dev",
           "note": "codex/web/bookkeeping 已建包并接入 Web shell；同步状态 device-local"
+        },
+        {
+          "name": "指标追踪 Metric Tracker",
+          "status": "in-dev",
+          "note": "已接入 Web shell；V1 以体重/BMI 快速记录为主，sleep/water/exercise/custom 仍为 planned/disabled；同步状态 device-local"
         }
       ],
       "points": [
@@ -932,7 +937,7 @@
       "goal": "在 web 分支上以生产级 Vite SPA + plugin-web-*/xai-web-* 插件开发 Web 版本功能与缺陷修复,Web 是最完整的产品面,也是 App 复用的 UI 源头。",
       "routing": [
         "改动落在 apps/web/(Vite SPA host shell:App.tsx、main.tsx、routes、providers)或 packages/xai-web-*、packages/plugin-web-* 任一包内",
-        "涉及 24 个 Web 模块的 UI/交互:任务、看板(6 视图)、Dashboard 网格、日历、四象限、番茄、习惯、冥想、倒计时、统计、AI 对话、桌宠、设置(13 面板)、命令面板(cmdk)",
+        "涉及 Web 模块的 UI/交互:任务、看板(6 视图)、Dashboard 网格、日历、四象限、番茄、习惯、冥想、倒计时、统计、指标追踪、AI 对话、桌宠、设置(13 面板)、命令面板(cmdk)",
         "涉及浏览器持久化:xai_* localStorage 键(如 xai_dash_order)、usePref/WebPrefRegistry、加密 IndexedDB 缓存,或 web:<module>:<verb>-<noun> 类型化事件总线(@repo/core/events,如 web:calendar:create-requested、web:habits:checkin-recorded)",
         "涉及 AI 配置/对话适配:window.claude.complete shim、xai-web-ai-chat、aiPane、secretStore、claudeStreamAdapter、llmProvider",
         "涉及 Web 发布面:Cloudflare Pages、wrangler.toml、apps/web/deploy/、CSP/Sentry、_headers、sw.js、设备会话登录(web-auth-device-session)",
@@ -997,7 +1002,7 @@
         {
           "to": "app",
           "trigger": "Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3",
-          "branch": "desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认)",
+          "branch": "desktop-next(已定义未创建) / desktop-plugin-next(已存在;触及 dev 需 operator 确认)",
           "skill": "xai-feature-full-loop",
           "note": "W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。"
         },
@@ -1199,7 +1204,7 @@
         {
           "to": "plugin",
           "trigger": "改动落在桌面插件平台 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 App 外壳本身",
-          "branch": "desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature>",
+          "branch": "desktop-plugin-next(已存在) / codex/plugin/<feature>",
           "skill": "xai-feature-full-loop",
           "note": "插件平台线与 App 外壳隔离,避免插件平台 churn 动摇 App RC;就绪后再 merge 回 desktop-next。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。"
         },
@@ -1377,7 +1382,7 @@
         "涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线；运行时代码物理在 host 不改变产品归属",
         "涉及 Plugin Center 产品契约（可添加插件目录、PluginInstance、AddToDesktop、实例 settings schema、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板入口按钮和必要 host 容器命令归 app 物理实现",
         "插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层",
-        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）",
+        "分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已存在；与 desktop-next 互通但触及 dev 仍需 operator 确认）",
         "状态线索：multi-window engine / grid persistence / window-command / Widget Host-SDK 等 G1 平台运行时锚点是 active gate,不在 P2 冻结内；clipboard/widgets/pet/meditation 等插件包仍是 P2 PAUSED,等 G1 ships 后再开工。",
         "归类不确定 / 同名陷阱（Web 的 pet·widgets·dashboard-grid 是网页内 DOM，≠ 桌面插件的原生 overlay）/ 发现边界漂移时，用 xai-module-classify 对照 docs/workflow/project/module-classification.json 判定，勿凭名字归类"
       ],

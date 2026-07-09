@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Bookkeeping module for XAI Web Console — ledgers, accounts, records, budgets, assets, investments, recurring rules, local persistence, and sync-ready modeling.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -38,6 +41,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

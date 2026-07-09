@@ -15,7 +15,7 @@
 | AC-5 | `cargo deny check advisories bans licenses sources` runs green on the clean tree | run job locally / in CI; exit 0 |
 | AC-6 | SQLCipher community-edition determination encoded in `deny.toml` (not prose) | inspect `deny.toml` licenses clarify/exceptions for sqlcipher/libsqlite3-sys |
 | AC-7 | `[sources]` denies unknown registry/git | `deny.toml` inspection; `cargo deny check sources` green |
-| AC-8 | osv-scanner runs, `fail-on-vuln: true`, and reports a **non-zero** parsed package count for `pnpm-lock.yaml` | CI log shows scanned > 0 packages, exit 0 on clean tree |
+| AC-8 | osv-scanner runs from a SHA256-verified pinned binary and reports **non-zero** parsed package counts for `pnpm-lock.yaml` and `apps/desktop/src-tauri/Cargo.lock` | CI/local log shows scanned > 0 packages, exit 0 on clean tree after only dated reviewed exceptions |
 | AC-9 | `verify_strict` trip-wire script exists and exits 0 today (inert — no ed25519 code) | run `scripts/ci/check-verify-strict.sh`; exit 0 |
 | AC-10 | Code boundary clean: only Cargo.toml/Cargo.lock/deny.toml/.github/workflows/scripts/ci + anchor docs changed | `git diff --name-only` ∩ {plugin-*, apps/desktop/src/, packages/core/} = ∅ |
 | AC-INJECT | **Negative gate proof:** a deliberately injected RustSec **and** OSV advisory each turn at least one job red | temporary local injection (an advisory'd version / a known-vuln npm dep on a throwaway branch), observe red, revert; documented in dev_log Work Log |
@@ -54,8 +54,8 @@ This proves the gate *blocks*, satisfying the brief's acceptance signal.
   advisory databases (RustSec / OSV.dev). The advisory DBs are the live source
   of truth by design (a new upstream advisory legitimately failing CI is
   intended behavior, not a flake).
-- `osv-scanner` action pinned to a known-good ref to neutralize parser-edge
-  flake (R-2); no behavioral mocking.
+- `osv-scanner` binary pinned to v2.3.8 and SHA256-verified to neutralize action
+  wrapper drift (R-2); no behavioral mocking.
 
 ## 6. Out of scope (later rows)
 

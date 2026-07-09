@@ -51,7 +51,7 @@
 .vp-btn[aria-pressed="true"] {
   background: var(--surface-1, #fff);
   color: var(--accent, oklch(60% 0.14 165));
-  box-shadow: 0 1px 3px color-mix(in oklch, black 12%, transparent);
+  box-shadow: 0 1px 3px color-mix(in oklch, var(--bg-overlay) 12%, transparent);
 }
 
 .vp-icon {
@@ -100,7 +100,7 @@
   font-weight: inherit;
   cursor: pointer;
 }
-.th-sort-btn:hover { color: var(--text-1, oklch(25% 0.02 165)); }
+.th-sort-btn:hover { color: var(--text-1); }
 
 .board-table td {
   padding: 8px 12px;
@@ -164,7 +164,7 @@
   background: var(--surface-1, #fff);
   border: 1px solid var(--border-1, oklch(90% 0.02 165));
   border-radius: 8px;
-  box-shadow: 0 4px 16px color-mix(in oklch, black 14%, transparent);
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--bg-overlay) 14%, transparent);
 }
 
 .td-popover-due {
@@ -413,7 +413,7 @@
   background: var(--surface-1, #fff);
   border-radius: 16px;
   padding: 32px 40px;
-  box-shadow: 0 4px 24px color-mix(in oklch, black 12%, transparent);
+  box-shadow: 0 4px 24px color-mix(in oklch, var(--bg-overlay) 12%, transparent);
   max-width: 360px;
 }
 
@@ -527,7 +527,7 @@
   height: 22px;
   border-radius: 50%;
   background: var(--accent, oklch(60% 0.14 165));
-  color: #fff;
+  color: var(--text-on-accent);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -773,7 +773,7 @@
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 /* Shared bc-member avatar */
@@ -786,7 +786,7 @@
   border-radius: 50%;
   font-size: 0.6875rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .grow {

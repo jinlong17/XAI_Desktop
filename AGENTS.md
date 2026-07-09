@@ -136,6 +136,9 @@ inside the admin roadmap gates. Future iPhone / iPad / Apple Watch / Android /
 browser-extension surfaces are planning-only in
 `docs/planning/LONG_TERM_PRODUCT_ROADMAP.md`; do not classify them as active
 module targets or open work branches without operator confirmation.
+`desktop-plugin-next` already exists; creating `desktop-next` /
+`release/desktop/<version>`, advancing to `dev`, or starting a release branch
+still requires explicit operator confirmation.
 
 ---
 

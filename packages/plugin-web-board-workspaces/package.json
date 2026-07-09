@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Board workspace + multi-board layer for XAI Web Console — Workspace chips, Board Switcher modal (search + scope tabs + grouped grid + New board), Board Creator (3 templates: Basic Kanban / PM for Teams / Blank), PM Status Overview SVG ring chart with live percentages, 4-button multi-panel switcher (Inbox 260px / Planner 320px / Board flex / Switch boards trigger) with at-least-one-open invariant, bilingual via per-file STR tables, persistence via usePref on xai_board_panels + xai_board_inbox with boundary narrowing (both SHIPPED unknown-typed slots). Wraps @repo/plugin-web-board-core's BoardView + schema + helpers + seed.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -26,9 +29,9 @@
     "@repo/core": "workspace:*",
     "@repo/plugin-web-board-core": "workspace:*",
     "@repo/plugin-web-board-views": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
-    "@repo/plugin-web-tasks": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tasks": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
@@ -43,6 +46,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

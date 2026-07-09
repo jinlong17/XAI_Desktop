@@ -37,7 +37,7 @@
   display: inline-flex; align-items: center; gap: 8px;
   height: 36px; padding: 0 14px;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border-radius: var(--r-pill);
   font-size: var(--fs-sm);
   font-weight: 600;
@@ -181,7 +181,7 @@
 }
 .ai-insights-toggle.on {
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border-color: var(--accent);
   box-shadow: 0 4px 18px color-mix(in oklch, var(--accent) 30%, transparent);
 }
@@ -497,7 +497,7 @@
   width: 28px; height: 28px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--accent), oklch(60% 0.16 calc(var(--accent-hue) + 60)));
-  color: #fff;
+  color: var(--text-on-accent);
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 4px 12px color-mix(in oklch, var(--accent) 30%, transparent);
@@ -512,7 +512,7 @@
 }
 .ai-msg-user .ai-bubble {
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border-bottom-right-radius: 4px;
   white-space: pre-wrap;
 }
@@ -585,7 +585,7 @@
   overflow: auto;
   padding: 12px;
   border-radius: var(--r-md);
-  background: color-mix(in oklch, var(--bg-panel-2) 88%, black 10%);
+  background: color-mix(in oklch, var(--bg-panel-2) 88%, var(--bg-overlay) 10%);
   border: 1px solid var(--border-1);
 }
 .ai-md pre code {
@@ -633,7 +633,7 @@
 .ai-pill {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 8px;
-  background: rgba(255,255,255,.18);
+  background: color-mix(in oklch, var(--text-on-accent) 18%, transparent);
   border-radius: var(--r-pill);
   font-size: 11px;
   font-weight: 600;
@@ -694,7 +694,7 @@
   border: 1px solid var(--border-1);
   border-radius: 28px;
   box-shadow: 0 10px 40px color-mix(in oklch, var(--accent) 8%, transparent),
-              0 1px 3px rgba(0,0,0,.05);
+              0 1px 3px color-mix(in oklch, var(--bg-overlay) 5%, transparent);
   transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
 }
 .ai-composer:focus-within {
@@ -734,7 +734,7 @@
   width: 36px; height: 36px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   transition: background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
@@ -770,7 +770,7 @@
     max-width: 320px;
     transform: translateX(calc(-100% - 12px));
     transition: transform 320ms var(--ease-out);
-    box-shadow: 20px 0 54px color-mix(in oklch, black 20%, transparent);
+    box-shadow: 20px 0 54px color-mix(in oklch, var(--bg-overlay) 20%, transparent);
     z-index: 18;
   }
 
@@ -1013,7 +1013,7 @@
     max-width: 320px;
     transform: translateX(calc(-100% - 12px));
     transition: transform 320ms var(--ease-out);
-    box-shadow: 20px 0 54px color-mix(in oklch, black 20%, transparent);
+    box-shadow: 20px 0 54px color-mix(in oklch, var(--bg-overlay) 20%, transparent);
     z-index: 18;
   }
 
