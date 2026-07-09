@@ -240,7 +240,7 @@
           },
           {
             "severity": "pending",
-            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 62 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；latest Preview deployment=280a3451-3912-4e4e-8dd0-46baa3e217d2 / source=2966bba / URL=https://280a3451.xai-web-console.pages.dev（alias=https://web.xai-web-console.pages.dev）已由本地 Wrangler 发布并通过 /app/ai 桌面+390px mobile smoke；latest Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），仍不是当前改动。GitHub Deploy Web 历史失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / memberships 9106）；workflow 已新增 credentials preflight，但 secret 需 operator 更新后重新跑。production 发布前需 web→main fast-forward promote，并登记 production deployment URL、deployment id、commit、smoke 与 rollback 结果。"
+            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 66 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；latest Preview deployment=280a3451-3912-4e4e-8dd0-46baa3e217d2 / source=2966bba / URL=https://280a3451.xai-web-console.pages.dev（alias=https://web.xai-web-console.pages.dev）已由本地 Wrangler 发布并通过 /app/ai 桌面+390px mobile smoke；latest Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），仍不是当前改动。GitHub PR #2 supply-chain 已在 head 78160fd 全绿；Deploy Web 最新失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / missing User->Memberships->Read / membership roles 读取失败）；workflow 已新增 credentials preflight，但 secret 需 operator 更新后重新跑。production 发布前需 web→main fast-forward promote，并登记 production deployment URL、deployment id、commit、smoke 与 rollback 结果。"
           }
         ]
       },
@@ -327,6 +327,19 @@
     ],
     "records": [
       {
+        "id": "2026-07-09-web-cloudflare-preview-pr2",
+        "date": "2026-07-09",
+        "module": "web",
+        "module_title": "Web / Cloudflare Preview",
+        "status": "partial",
+        "environment": "preview / pull_request",
+        "platform": "Cloudflare Pages / GitHub Actions",
+        "version": "preview:280a3451 / pr2:78160fd",
+        "target": "apps/web SPA",
+        "summary": "本地 Wrangler preview 部署成功并完成 /app/ai 桌面+390px mobile smoke；GitHub PR #2 supply-chain security 全绿。GitHub Deploy Web 与 Cloudflare Workers Builds 仍失败，根因是 GitHub secret Cloudflare token 权限不足，需 operator 更新/轮换后重跑。",
+        "commit": "78160fd"
+      },
+      {
         "id": "2026-06-06-deployment-architecture-doc",
         "date": "2026-06-06",
         "module": "web",
@@ -356,8 +369,8 @@
   },
   "testing": {
     "summary": {
-      "latest_tested_at": "",
-      "overall_status": "测试结果登记已建立，真实通过状态由 release-log Verification、报告文件和人工登记共同证明。",
+      "latest_tested_at": "2026-07-09",
+      "overall_status": "测试结果登记已建立，真实通过状态由 release-log Verification、报告文件、人工登记和已查询 GitHub check 共同证明；最新 Web supply-chain 远端通过，Cloudflare deploy 因外部 token 权限失败。",
       "source": "manual testing registry + release-log Verification + local report scan"
     },
     "categories": [
@@ -406,6 +419,29 @@
           "build",
           "frontend_page"
         ]
+      },
+      {
+        "id": "github-supply-chain-security",
+        "name": "Supply-chain security",
+        "path": ".github/workflows/supply-chain-security.yml",
+        "status": "passed",
+        "last_result": "2026-07-09 PR #2 head 78160fd: Rust exact pins, OSV, cargo-deny, RFC crypto vectors + CBOR all passed",
+        "categories": [
+          "unit",
+          "backend",
+          "pre_deploy"
+        ]
+      },
+      {
+        "id": "github-deploy-web",
+        "name": "Deploy Web to Cloudflare Pages",
+        "path": ".github/workflows/deploy-web.yml",
+        "status": "blocked",
+        "last_result": "2026-07-09 PR #2 head 78160fd: credentials preflight failed with Cloudflare code 10000 / missing User->Memberships->Read",
+        "categories": [
+          "build",
+          "pre_deploy"
+        ]
       }
     ],
     "report_sources": [
@@ -427,8 +463,8 @@
         "key": "web",
         "title": "Web 版本",
         "status": "pass",
-        "latest_tested_at": "2026-06-09",
-        "conclusion": "最近一批（项目看板 W1–W3，2026-06-09）：board-core 206 + board-views 141 + board-workspaces 281 = 628 Vitest 全绿，4 包 typecheck + lint 干净，干净 preview 实拍确认。已知遗留：plugin-web-storage AC-PARITY-1/2 因 web design/DESIGN.md 缺 §9.2 而 fail（改动前即失败，已立独立任务）。",
+        "latest_tested_at": "2026-07-09",
+        "conclusion": "最新 Web/Cloudflare readiness 批次：PR #2 head 78160fd 的 Supply-chain security 远端全绿；本地 Web check-types/build/test、Desktop build、AI chat test/typecheck、preview /app/ai desktop+390px smoke 均通过。已知阻塞：Deploy Web / Cloudflare Workers Builds 因 GitHub secret Cloudflare token 权限不足失败，非代码侧通过项。",
         "failure_count": 0,
         "duration": "按最近 release-log 记录",
         "pipeline_status": "configured",
@@ -468,7 +504,7 @@
           {
             "key": "pre_deploy",
             "status": "partial",
-            "detail": "Preview URL / deploy id 已补齐：280a3451-3912-4e4e-8dd0-46baa3e217d2（source 2966bba，alias https://web.xai-web-console.pages.dev）；production deploy id 仍需在 web→main 后补齐。deploy workflow 已有 credentials preflight，但 GitHub secret 仍需更新/轮换。"
+            "detail": "Preview URL / deploy id 已补齐：280a3451-3912-4e4e-8dd0-46baa3e217d2（source 2966bba，alias https://web.xai-web-console.pages.dev）；PR #2 supply-chain 远端全绿。production deploy id 仍需在 web→main 后补齐。Deploy Web 最新被 credentials preflight 阻断：GitHub secret Cloudflare token 缺少可列出 Pages project / membership 的权限。"
           },
           {
             "key": "regression",
@@ -797,7 +833,7 @@
         "phase": "主线开发",
         "running": "正常运行",
         "progress_fallback": 78,
-        "recent_update": "项目看板 /app/board W1–W3：真实标签/成员目录+优先级+chip 解析、看板元数据编辑+优先级贯通多视图+过滤、Table 列排序+Workspace CRUD（628 包测试全绿）",
+        "recent_update": "Web / Cloudflare readiness：Preview 280a3451 已发布并完成 /app/ai 桌面+390px smoke；PR #2 head 78160fd 的 supply-chain 远端全绿，Deploy Web 仍被 Cloudflare token 权限阻断。",
         "todo_fallback": "D3 gate 后再同步到 Desktop",
         "target": {
           "type": "ops",
