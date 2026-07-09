@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "cloudflare:verify-token": "bash scripts/ci/check-cloudflare-pages-token.sh",
     "dashboard": "node scripts/dashboard/generate-state.mjs",
     "dashboard:open": "node scripts/dashboard/open.mjs",
     "dashboard:verify-static": "node scripts/dashboard/verify-static.mjs",

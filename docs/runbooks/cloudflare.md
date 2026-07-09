@@ -79,7 +79,7 @@ From a local shell, without committing or printing the token value:
 ```bash
 CLOUDFLARE_API_TOKEN="<token>" \
 CLOUDFLARE_ACCOUNT_ID="<account_id>" \
-pnpm dlx wrangler@4.107.1 pages project list
+pnpm cloudflare:verify-token
 ```
 
 The output must include `xai-web-console`. If it fails with `Authentication

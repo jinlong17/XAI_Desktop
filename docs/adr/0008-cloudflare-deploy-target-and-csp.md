@@ -533,6 +533,7 @@ Action: pinned Wrangler CLI via `pnpm dlx wrangler@4.107.1` (NOT
 `cloudflare/pages-action`)
 Secret references: `${{ secrets.CLOUDFLARE_API_TOKEN }}` and
 `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}` — no literal values.
+Credential preflight: `scripts/ci/check-cloudflare-pages-token.sh`
 Deploy command: `pages deploy ./dist --project-name=xai-web-console
 --branch=${{ github.head_ref || github.ref_name }}`
 
