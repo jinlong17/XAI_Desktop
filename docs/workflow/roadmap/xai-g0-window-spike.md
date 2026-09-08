@@ -1,5 +1,7 @@
 # Roadmap Manifest — xai-g0-window-spike
 
+> **RESUMED (2026-05-26, per ADR-0010 Accepted).** Web Console gap-closure 9/9 SHIPPED + ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0010 Status flipped Accepted in commit `75655dc`. P1 desktop pivot is active per ADR-0010 §D1. G0 state: **CONDITIONAL_GO already reached** 2026-05-19 (rows #1-#5 SHIPPED on `origin/spike/window-ground-truth`; row #6 BLOCKED_EXTERNAL pending Apple Developer signing — non-blocking for G1 DMG/private path). The next P1 milestone is G1 native foundation (`xai-g1-native-foundation.md`, also unfrozen this commit).
+
 - Roadmap Source: docs/planning/execution/G0-window-spike.md
 - Init Path: execution-pack
 - Generated: 2026-05-19

@@ -1,0 +1,465 @@
+/*
+ * pet.css — Desktop Pet keyframe animations + component class rules.
+ *
+ * All selectors are namespaced with `.pet-` to avoid global collisions.
+ * No `*`-selector resets. No `body` / `html` rules.
+ *
+ * Import as a side-effect from src/index.ts — do not import directly.
+ *
+ * 7 named keyframes:
+ *   pet-bob, pet-hop, pet-sway, pet-glow, pet-still, pet-twinkle, pet-flicker
+ *
+ * 8 pets use these via pet-anim-<animid> classes:
+ *   mochi → bob, pip → hop, sprout → sway, lumi → glow,
+ *   drip → bob, pebble → still, star → twinkle, ember → flicker
+ */
+
+/* ---- Keyframe definitions ---- */
+
+@keyframes pet-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pet-hop {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: translateY(-10px) rotate(-3deg);
+  }
+  80% {
+    transform: translateY(-4px) rotate(2deg);
+  }
+}
+
+@keyframes pet-sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes pet-glow {
+  0%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 6px var(--accent-soft, rgba(255, 220, 120, 0.5)));
+  }
+  50% {
+    filter: brightness(1.15) drop-shadow(0 0 14px var(--accent, rgba(255, 200, 60, 0.8)));
+  }
+}
+
+@keyframes pet-still {
+  0%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes pet-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(0.96) rotate(8deg);
+  }
+}
+
+@keyframes pet-flicker {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-2px) scale(1.03);
+  }
+  60% {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+/* ---- Animation class rules ---- */
+
+.pet-anim-bob {
+  animation: pet-bob 2.4s ease-in-out infinite;
+}
+
+.pet-anim-hop {
+  animation: pet-hop 1.4s ease-in-out infinite;
+}
+
+.pet-anim-sway {
+  animation: pet-sway 3.2s ease-in-out infinite;
+}
+
+.pet-anim-glow {
+  animation: pet-glow 2.8s ease-in-out infinite;
+}
+
+/* .pet-anim-still — explicit no-op; no animation property needed */
+.pet-anim-still {
+  /* intentionally empty — "still" means no animation */
+}
+
+.pet-anim-twinkle {
+  animation: pet-twinkle 1.8s ease-in-out infinite;
+}
+
+.pet-anim-flicker {
+  animation: pet-flicker 0.7s ease-in-out infinite;
+}
+
+/* ---- Layout / structure ---- */
+
+.pet-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  /* transform: translate(Xpx, Ypx) applied inline via React */
+  width: 84px;
+  height: 84px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.18));
+  touch-action: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.pet-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  will-change: transform;
+  transition: transform var(--dur-med, 280ms) var(--ease-out, ease);
+  transform-origin: center bottom;
+  pointer-events: auto; /* R1: explicit override so Safari doesn't swallow on inner SVG paths */
+}
+
+.pet-body svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.pet-body:active {
+  cursor: grabbing;
+}
+
+.pet-body.mood-happy {
+  animation: pet-happy 0.6s ease-in-out 2 !important;
+}
+
+@keyframes pet-happy {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+.pet-shadow {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+/* ---- Tip bubble ---- */
+
+.pet-bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  max-width: 200px;
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, #333);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.08));
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  pointer-events: none;
+  z-index: 1;
+  transition:
+    opacity var(--dur-fast, 180ms) var(--ease-out, ease),
+    transform var(--dur-fast, 180ms) var(--ease-out, ease);
+}
+
+.pet-wrap:hover .pet-bubble,
+.pet-wrap:focus-within .pet-bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.pet-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  border-width: 6px 5px 0;
+  border-style: solid;
+  border-color: var(--bg-panel, #fff) transparent transparent;
+}
+
+/* Bubble anchored to the left when pet is near the right edge */
+.pet-bubble-left {
+  right: 0;
+}
+.pet-bubble-left::after {
+  right: 16px;
+}
+
+/* Bubble anchored to the right of the wrap when pet is near the left */
+.pet-bubble-right {
+  left: 0;
+}
+.pet-bubble-right::after {
+  left: 16px;
+}
+
+.pet-bubble-text {
+  margin: 0 0 4px;
+  color: var(--text-1, #333);
+}
+
+.pet-change-link {
+  display: block;
+  margin-top: 2px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  color: var(--text-3, #888);
+  cursor: pointer;
+  text-align: left;
+}
+.pet-change-link:hover {
+  color: var(--text-2, #555);
+}
+
+/* ---- Swap button ---- */
+
+.pet-swap-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--bg-panel, #fff) 90%, transparent);
+  border: 1px solid var(--border-1, rgba(0, 0, 0, 0.1));
+  color: var(--text-2, currentColor);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+@media (min-width: 761px) and (max-width: 1024px) {
+  .pet-wrap {
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+  }
+
+  .pet-swap-btn {
+    top: 0;
+    right: 0;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 760px) {
+  .pet-wrap {
+    width: 56px;
+    height: 56px;
+    z-index: 20;
+    overflow: hidden;
+  }
+
+  .pet-bubble {
+    display: none;
+  }
+
+  .pet-swap-btn {
+    top: 0;
+    right: 0;
+    width: 44px;
+    height: 44px;
+  }
+}
+.pet-swap-btn:hover {
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
+}
+
+/* ---- PetPicker modal ---- */
+
+.pet-picker-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.pet-picker {
+  background: var(--bg-panel, #fff);
+  color: var(--text-1, currentColor);
+  border: 1px solid var(--border-1, transparent);
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  width: 340px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pp-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 16px 8px;
+  border-bottom: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
+}
+
+.pp-head h3 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1, #111);
+}
+
+.pp-head p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-3, #888);
+}
+
+.pp-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: var(--text-3, #888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.pp-close-btn:hover {
+  color: var(--text-1, #333);
+  background: var(--bg-hover, rgba(0, 0, 0, 0.06));
+}
+
+.pp-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px 0;
+}
+
+.pp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-1, currentColor);
+  transition: background 0.1s;
+}
+
+.pp-row:hover {
+  background: var(--bg-hover, rgba(0, 0, 0, 0.04));
+}
+
+.pp-row.current {
+  background: var(--accent-soft, rgba(100, 180, 120, 0.08));
+}
+
+.pp-avatar {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.pp-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.pp-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1, #111);
+}
+
+.pp-desc {
+  font-size: 11px;
+  color: var(--text-3, #888);
+  margin-top: 1px;
+}
+
+.pp-btn {
+  font-size: 11px;
+  color: var(--text-3, #888);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pp-btn.selected {
+  color: var(--accent-ink, #3a8a5a);
+  font-weight: 600;
+}
+
+.pp-foot {
+  padding: 8px 16px 12px;
+  border-top: 1px solid var(--border-1, rgba(0, 0, 0, 0.06));
+  font-size: 11px;
+  color: var(--text-3, #aaa);
+  text-align: center;
+}

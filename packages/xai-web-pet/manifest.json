@@ -1,0 +1,22 @@
+{
+  "name": "plugin-web-pet",
+  "displayName": "Desktop Pet",
+  "version": "0.0.0",
+  "description": "Floating 8-character desktop pet with drag + tips + picker",
+  "status": "Stable",
+  "type": "ui",
+  "author": "XAI Team",
+  "enabled": true,
+  "contentTypes": [],
+  "windows": { "console": true },
+  "events": {
+    "emit": [],
+    "listen": ["web:shell:pet-toggle"]
+  },
+  "dependencies": [
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus"
+  ],
+  "tauriCommands": []
+}

@@ -1,3 +1,4 @@
+// Type-only reliance on @repo/plugin-widgets' public WidgetManifestRegistration. The exported calendarWidgetManifest is a no-op when plugin-widgets is not present.
 import type { WidgetManifestRegistration } from "@repo/plugin-widgets";
 import { CalendarWidget } from "./components/CalendarWidget";
 

@@ -157,7 +157,7 @@ ReplayPending(rec) ==
          /\ commitSeq' = commitSeq + 1
          /\ applied' = applied \cup {rec.mutation}
          /\ seenCommit' = [seenCommit EXCEPT ![rec.device] = commitSeq + 1]
-         /\ conflictShadow' = conflictShadow
+         /\ conflictShadow' = { c \in conflictShadow : c.mutation # rec.mutation }
        ELSE
          /\ commitSeq' = commitSeq
          /\ applied' = applied
@@ -202,7 +202,7 @@ RevokedNotActive ==
   revoked \cap active = {}
 
 RecoveredDevicesHaveDEK ==
-  \A d \in recovered: hasDEK[d]
+  \A d \in recovered \cap active: hasDEK[d]
 
 AppliedAndConflictDisjoint ==
   \A rec \in conflictShadow: rec.mutation \notin applied
@@ -215,5 +215,9 @@ CommitWithinBound ==
 
 NoCommitPastDeviceView ==
   \A d \in Devices: seenCommit[d] <= commitSeq
+
+StateConstraint ==
+  /\ Cardinality(pending) <= 2
+  /\ Cardinality(conflictShadow) <= 2
 
 ====

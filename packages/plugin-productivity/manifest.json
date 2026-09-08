@@ -1,0 +1,71 @@
+{
+  "name": "productivity",
+  "version": "0.1.0",
+  "displayName": "效率工具",
+  "description": "Todos, Eisenhower planning, pomodoro cycles, and habit basics.",
+  "author": "Jinlong",
+  "enabled": true,
+  "contentTypes": ["todo", "pomodoro-session", "habit"],
+  "windows": {
+    "control": true,
+    "overlay": true,
+    "console": true
+  },
+  "ui": {
+    "consoleSidebar": {
+      "entries": [
+        {
+          "id": "tasks",
+          "label": "Tasks",
+          "icon": "check-square",
+          "order": 20,
+          "group": "productivity",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "tasks"
+        },
+        {
+          "id": "pomodoro",
+          "label": "Pomodoro",
+          "icon": "timer",
+          "order": 30,
+          "group": "productivity",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "pomodoro"
+        },
+        {
+          "id": "habits",
+          "label": "Habits",
+          "icon": "repeat",
+          "order": 40,
+          "group": "productivity",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "habits"
+        },
+        {
+          "id": "matrix",
+          "label": "Matrix",
+          "icon": "grid",
+          "order": 50,
+          "group": "productivity",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "matrix"
+        }
+      ]
+    }
+  },
+  "events": {
+    "emit": [
+      "productivity:todo-created",
+      "productivity:todo-updated",
+      "productivity:pomodoro-completed",
+      "productivity:habit-checked"
+    ],
+    "listen": ["console:create-task-from-grid-item"]
+  },
+  "dependencies": ["@repo/core", "@repo/core-data"],
+  "tauriCommands": []
+}

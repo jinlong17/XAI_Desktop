@@ -85,3 +85,9 @@
 - Repository contract。
 - Sync protocol。
 - MAS/DMG 能力差异。
+
+## 7. 文档/治理 backlog（deferred · 非 v1 Gate）
+
+| ID | Item | 说明 | 来源 | 状态 |
+|---|---|---|---|---|
+| DOC-001 | future_surfaces schema 统一 | `dashboard-state.json`（phase/not_for/priority）与 `module-classification.json`（enters/not/impl）两套 future_surfaces 字段模型并存；消费者不同、当前均正常，但若后续要让 Skill/看板/路线图互相校验，应抽成同一字段模型。 | 边界重构第 3 轮审查 P3（commit 1ee655e/553c3e6） | deferred |

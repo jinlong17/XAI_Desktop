@@ -13,6 +13,7 @@ export type {
   RepoTransaction,
   SyncScope,
 } from "./types";
+export { assertRepoRecord } from "./repo-utils";
 export { SQLITE_STATEMENTS, createSqliteRepo } from "./sqlite";
 export type {
   MutationHook,
@@ -56,3 +57,76 @@ export type {
 } from "./entities";
 export { createTauriRepo, dbInit } from "./tauri-sqlite";
 export type { CreateTauriRepoOptions, DbInitOutput } from "./tauri-sqlite";
+export {
+  createMockCommitSeqAuthority,
+  enqueueOutboxEntry,
+  isOutboxId,
+  nextOutboxBatch,
+  OUTBOX_ID_PREFIX,
+  outboxIdFor,
+} from "./sync-outbox";
+export type {
+  EnqueueOutboxInput,
+  OutboxBatchOptions,
+  OutboxEntry,
+} from "./sync-outbox";
+export {
+  SYNC_BLOB_ACCEPT_VERSION,
+  SYNC_PROTOCOL_HEADER,
+  SyncBlobError,
+  createSyncBlobRepo,
+} from "./sync-blob";
+export {
+  WEB_CACHE_DB_PREFIX,
+  WEB_CACHE_DB_VERSION,
+  type CacheHealthState,
+  type CacheQuotaSnapshot,
+  type CacheWipeReport,
+  type CreateIndexedDbSyncBlobRepoOptions,
+  type DeadLetterMutationRow,
+  type EncryptedBlobRow,
+  type EntityIndexRow,
+  type EntitySortKeyRow,
+  type IndexedDbSyncBlobRepo,
+  type PendingMutationRow,
+  type SearchTextExtractor,
+  type SortPayloadCrypto,
+  type SortPayloadCryptoContext,
+  type SortPayloadExtractor,
+  type WebCacheErrorCode,
+  type WebCacheLockReason,
+  type WebCacheRuntimeOptions,
+  type WebCacheRuntimeTransition,
+  type WebCacheRuntimeTransitionSource,
+  type WebCacheSearchWorker,
+  type WebCacheSearchWorkerStatus,
+  type WebCacheStoreName,
+} from "./indexeddb-sync-blob";
+export {
+  WebCacheError,
+  createIndexedDbSyncBlobRepo,
+} from "./indexeddb-sync-blob";
+export type {
+  CreateSyncBlobRepoOptions,
+  PullOptions,
+  RetryPolicy,
+  SyncBlobCryptoAdapter,
+  SyncBlobCryptoDecryptInput,
+  SyncBlobCryptoEncryptInput,
+  SyncBlobDriverState,
+  SyncBlobErrorCode,
+  SyncBlobFetch,
+  SyncBlobRepo,
+  SyncBlobRepoOptions,
+} from "./sync-blob";
+export {
+  LEGACY_LAYOUT_STORAGE_KEY,
+  migrateOrganizerLayoutToRepos,
+} from "./organizer-layout-migration";
+export type {
+  LegacyDesktopItem,
+  LegacyGridBox,
+  LegacyOrganizerLayout,
+  OrganizerLayoutMigrationOptions,
+  OrganizerLayoutMigrationResult,
+} from "./organizer-layout-migration";

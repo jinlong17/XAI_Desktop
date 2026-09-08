@@ -13,6 +13,16 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/core": ["../../packages/core/src/index"],
+      "@repo/core/events": ["../../packages/core/src/events/index"],
+      "@repo/core/hooks": ["../../packages/core/src/hooks/index"],
+      "@repo/core/registry": ["../../packages/core/src/registry/index"],
+      "@repo/core/types": ["../../packages/core/src/types/index"],
+      "@repo/core-data": ["../../packages/core-data/src/index"],
+      "@repo/plugin-console": ["../../packages/plugin-console/src/index"]
+    },
 
     /* Linting */
     "strict": true,

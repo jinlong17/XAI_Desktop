@@ -2,7 +2,7 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
 import { describe, expect, it } from 'vitest';
 
 import type { SqlParams, SqliteDriver, SqlValue } from '@repo/core-data';
-import { processPushBatch, type PushDatabase, type StoredBlob } from '../../../../apps/web/supabase/functions/sync-push/handler';
+import { processPushBatch, type PushDatabase, type StoredBlob } from '../../../../apps/release-site/supabase/functions/sync-push/handler';
 import {
   TODO_SYNC_SQL,
   SyncPushRevisionMismatchError,

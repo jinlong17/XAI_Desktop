@@ -8,12 +8,30 @@ export type {
   CreateGridWindowInput,
   UpdateGridWindowInput,
   GridWindowSnapshot,
+  ConsoleWindowFrame,
   CommandError,
 } from './window';
-export type { DroppedFile, EventMap } from './events';
+export type { DroppedFile, EventMap, WebModuleId, WebPreferenceKey, WebPreferenceChange } from './events';
 export type {
   PluginManifest,
   PluginComponents,
   PluginRegistration,
   ContentType,
+  ConsoleModuleId,
+  ConsoleRouteState,
+  ConsoleThemeState,
+  ConsoleCapabilityStatus,
+  ConsoleCapabilityErrorCode,
+  ConsoleCapabilityResult,
+  ConsoleShortcutBinding,
+  ConsoleDownloadRequest,
+  ConsoleNotificationRequest,
+  ConsoleViewCapabilities,
+  ConsoleViewProps,
+  ConsoleSidebarEntry,
+  ConsoleViewDefinition,
+  ConsoleViewRegistration,
+  WebModuleRouteProps,
+  WebModuleRouteChild,
+  WebModuleRouteRegistration,
 } from './plugin';

@@ -1,0 +1,1226 @@
+.module-countdown {
+  min-height: 100%;
+  padding: clamp(1rem, 2.4vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background:
+    radial-gradient(circle at 12% 4%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 28rem),
+    var(--bg-app);
+  color: var(--text-1);
+}
+
+.module-countdown .grow { flex: 1 1 auto; }
+.module-countdown .mono { font-family: var(--font-mono, "SF Mono", ui-monospace, monospace); font-variant-numeric: tabular-nums; }
+
+.cd-page-head,
+.cd-page-actions,
+.cd-card__chrome,
+.cd-card__actions,
+.cd-progress-row,
+.cd-dialog-head,
+.cd-dialog-actions,
+.cd-calendar-view header {
+  display: flex;
+  align-items: center;
+}
+
+.cd-page-head {
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.cd-kicker,
+.cd-dialog-head p {
+  margin: 0 0 0.25rem;
+  color: var(--text-3);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.module-countdown .module-title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  line-height: 1.04;
+  letter-spacing: 0;
+  color: var(--text-1);
+}
+
+.cd-page-actions {
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.cd-board-controls {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.35rem 0 0.75rem;
+  background:
+    linear-gradient(180deg, var(--bg-app) 78%, color-mix(in oklch, var(--bg-app) 0%, transparent));
+}
+
+.cd-view-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cd-btn,
+.cd-mini-action,
+.cd-view-tabs button,
+.cd-card__actions button,
+.cd-history-view button,
+.cd-calendar-view button,
+.cd-add-card,
+.cd-dialog-close {
+  min-height: 2.75rem;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.85rem;
+  border-radius: 0.65rem;
+  background: color-mix(in oklch, var(--bg-panel) 86%, transparent);
+  color: var(--text-2);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 10%, transparent));
+  font-weight: 650;
+  font-size: 0.88rem;
+}
+
+.cd-btn:hover,
+.cd-view-tabs button:hover,
+.cd-card__actions button:hover,
+.cd-history-view button:hover,
+.cd-calendar-view button:hover,
+.cd-add-card:hover,
+.cd-mini-action:hover {
+  transform: translateY(-1px);
+}
+
+.cd-btn:active,
+.cd-view-tabs button:active,
+.cd-card__actions button:active,
+.cd-history-view button:active,
+.cd-calendar-view button:active,
+.cd-add-card:active,
+.cd-mini-action:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.cd-btn.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+
+.cd-btn[aria-disabled="true"] {
+  opacity: 0.62;
+}
+
+.cd-btn.danger,
+.cd-card__actions button.danger {
+  color: var(--red);
+}
+
+.cd-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.cd-overview div {
+  min-height: 5rem;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+  background: color-mix(in oklch, var(--bg-panel) 88%, transparent);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-overview span {
+  display: block;
+  font-family: var(--font-mono, "SF Mono", ui-monospace, monospace);
+  font-size: 1.45rem;
+  line-height: 1;
+  color: var(--text-1);
+}
+
+.cd-overview p {
+  margin: 0.35rem 0 0;
+  color: var(--text-3);
+  font-size: 0.82rem;
+}
+
+.cd-view-tabs {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.25rem;
+  border-radius: 0.8rem;
+  background: color-mix(in oklch, var(--bg-panel) 72%, transparent);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-view-tabs button {
+  flex: 0 0 auto;
+  padding: 0 0.85rem;
+  border-radius: 0.62rem;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.cd-view-tabs button.selected {
+  background: var(--bg-panel);
+  color: var(--text-1);
+  box-shadow: 0 0.35rem 1.2rem color-mix(in oklch, var(--bg-overlay) 8%, transparent);
+}
+
+.cd-view-return {
+  flex: 0 0 auto;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.module-countdown .countdown-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 0.85rem;
+}
+
+.cd-card {
+  --cd-accent: var(--accent);
+  --cd-soft: var(--accent-soft);
+  --cd-ink: var(--text-on-accent);
+  position: relative;
+  min-height: 17rem;
+  height: auto;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--text-1);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--cd-soft) 64%, transparent), transparent 60%),
+    var(--bg-panel);
+  box-shadow:
+    0 1rem 2.6rem color-mix(in oklch, var(--bg-overlay) 8%, transparent),
+    inset 0 0 0 1px color-mix(in oklch, var(--cd-accent) 18%, var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent)));
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.module-countdown .cd-card {
+  min-height: 17rem;
+  height: auto;
+  border: 0;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--cd-soft) 64%, transparent), transparent 60%),
+    var(--bg-panel);
+  box-shadow:
+    0 1rem 2.6rem color-mix(in oklch, var(--bg-overlay) 8%, transparent),
+    inset 0 0 0 1px color-mix(in oklch, var(--cd-accent) 18%, var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent)));
+}
+
+.cd-card:hover {
+  transform: translateY(-0.12rem);
+  box-shadow:
+    0 1.2rem 3rem color-mix(in oklch, var(--bg-overlay) 12%, transparent),
+    inset 0 0 0 1px color-mix(in oklch, var(--cd-accent) 28%, var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent)));
+}
+
+.module-countdown .cd-card:hover {
+  transform: translateY(-0.18rem);
+  box-shadow:
+    0 1.35rem 3.2rem color-mix(in oklch, var(--cd-accent) 12%, color-mix(in oklch, var(--bg-overlay) 12%, transparent)),
+    inset 0 0 0 1px color-mix(in oklch, var(--cd-accent) 38%, var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent)));
+}
+
+.cd-card[draggable="true"] {
+  cursor: grab;
+}
+
+.cd-card.is-dragging {
+  opacity: 0.58;
+  cursor: grabbing;
+  transform: scale(0.985);
+}
+
+.cd-card.is-drop-target {
+  transform: translateY(-0.16rem) scale(1.012);
+  box-shadow:
+    0 1.3rem 3rem color-mix(in oklch, var(--cd-accent) 14%, color-mix(in oklch, var(--bg-overlay) 12%, transparent)),
+    inset 0 0 0 2px color-mix(in oklch, var(--cd-accent) 62%, transparent);
+}
+
+.cd-card.is-drop-target::after {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border-radius: 0.75rem;
+  border: 1px dashed color-mix(in oklch, var(--cd-accent) 55%, transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cd-card:focus-visible,
+.cd-btn:focus-visible,
+.cd-view-tabs button:focus-visible,
+.cd-card__actions button:focus-visible,
+.cd-history-view button:focus-visible,
+.cd-add-card:focus-visible,
+.cd-mini-action:focus-visible,
+.cd-dialog input:focus,
+.cd-dialog select:focus,
+.cd-dialog textarea:focus {
+  outline: 0.15rem solid color-mix(in oklch, var(--cd-accent, var(--accent)) 55%, transparent);
+  outline-offset: 0.15rem;
+}
+
+.cd-card--image {
+  color: var(--text-on-accent);
+  background-size: cover;
+  background-position: center;
+}
+
+.cd-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, color-mix(in oklch, var(--bg-overlay) 2%, transparent), color-mix(in oklch, var(--bg-overlay) 38%, transparent));
+  pointer-events: none;
+}
+
+.module-countdown .cd-overlay {
+  background: linear-gradient(180deg, color-mix(in oklch, var(--bg-overlay) 2%, transparent), color-mix(in oklch, var(--bg-overlay) 38%, transparent));
+}
+
+.cd-card__chrome,
+.cd-card__body,
+.cd-card__actions {
+  position: relative;
+  z-index: 1;
+}
+
+.cd-card__chrome {
+  gap: 0.4rem;
+}
+
+.cd-icon-badge,
+.cd-add-card__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.7rem;
+  background: var(--cd-soft);
+  color: var(--cd-accent);
+}
+
+.cd-card--image .cd-icon-badge {
+  background: color-mix(in oklch, var(--text-on-accent) 16%, transparent);
+  color: var(--text-on-accent);
+}
+
+.cd-meta-pill {
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  background: color-mix(in oklch, var(--bg-panel) 66%, transparent);
+  color: var(--text-3);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.cd-card--image .cd-meta-pill {
+  background: color-mix(in oklch, var(--text-on-accent) 14%, transparent);
+  color: color-mix(in oklch, var(--text-on-accent) 86%, transparent);
+}
+
+.cd-mini-action {
+  width: 2rem;
+  min-height: 2rem;
+  border-radius: 0.6rem;
+  background: color-mix(in oklch, var(--bg-panel) 76%, transparent);
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cd-drag-indicator {
+  width: 2rem;
+  min-height: 2rem;
+  border-radius: 0.6rem;
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.cd-card--image .cd-mini-action {
+  background: color-mix(in oklch, var(--text-on-accent) 14%, transparent);
+  color: var(--text-on-accent);
+}
+
+.cd-card--image .cd-drag-indicator {
+  color: color-mix(in oklch, var(--text-on-accent) 84%, transparent);
+}
+
+.cd-card__body {
+  display: flex;
+  min-height: 12rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+
+.cd-title-wrap h2,
+.cd-history-view h2,
+.cd-empty-history h2,
+.cd-calendar-view h2 {
+  margin: 0;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+.cd-title {
+  font-size: 1.12rem;
+  font-weight: 760;
+  text-wrap: pretty;
+}
+
+.cd-title-wrap p,
+.cd-note,
+.cd-history-view p,
+.cd-empty-history p {
+  margin: 0.28rem 0 0;
+  color: var(--text-3);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.module-countdown .cd-foot {
+  margin: 0.28rem 0 0;
+  color: var(--text-3);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  font-family: var(--font-mono, "SF Mono", ui-monospace, monospace);
+}
+
+.cd-card--image .cd-title-wrap p,
+.cd-card--image .cd-note {
+  color: color-mix(in oklch, var(--text-on-accent) 78%, transparent);
+}
+
+.module-countdown .cd-card--image .cd-foot {
+  color: color-mix(in oklch, var(--text-on-accent) 78%, transparent);
+  text-shadow: none;
+}
+
+.cd-module-stack {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.cd-module-stack--split {
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: end;
+}
+
+.cd-count-module {
+  display: flex;
+  align-items: end;
+  gap: 0.4rem;
+}
+
+.cd-count-module--date {
+  display: grid;
+  align-items: start;
+}
+
+.cd-date-label {
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.cd-count-module--date strong {
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+
+.cd-num {
+  margin-top: 0;
+  font-size: clamp(2.4rem, 8vw, 4.4rem);
+  font-weight: 520;
+  line-height: 0.86;
+  letter-spacing: 0;
+  font-family: var(--font-mono, "SF Mono", ui-monospace, monospace);
+  color: var(--cd-accent);
+}
+
+.module-countdown .cd-num {
+  margin-top: 0;
+  font-size: clamp(2.4rem, 8vw, 4.4rem);
+  font-weight: 520;
+  line-height: 0.86;
+  letter-spacing: 0;
+  font-family: var(--font-mono, "SF Mono", ui-monospace, monospace);
+  color: var(--cd-accent);
+}
+
+.cd-card--hero .cd-num,
+.cd-card--festival .cd-num {
+  font-size: clamp(3.5rem, 10vw, 5.8rem);
+}
+
+.module-countdown .cd-card--hero .cd-num,
+.module-countdown .cd-card--festival .cd-num {
+  font-size: clamp(3.5rem, 10vw, 5.8rem);
+}
+
+.cd-card--image .cd-num,
+.cd-card--image .cd-count-copy,
+.cd-card--image .cd-progress-row,
+.cd-card--image .cd-date-label,
+.cd-card--image .cd-count-module--date strong {
+  color: var(--text-on-accent);
+}
+
+.module-countdown .cd-card--image .cd-num {
+  color: var(--text-on-accent);
+  text-shadow: 0 0.12rem 0.35rem color-mix(in oklch, var(--bg-overlay) 30%, transparent);
+}
+
+.cd-count-copy {
+  margin-bottom: 0.38rem;
+  color: var(--text-3);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.cd-progress-module {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cd-progress-row {
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-3);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.cd-progress-row b {
+  color: var(--text-2);
+  font-weight: 720;
+}
+
+.cd-card--image .cd-progress-row b {
+  color: var(--text-on-accent);
+}
+
+.cd-progress-track {
+  height: 0.55rem;
+  border-radius: 999rem;
+  overflow: hidden;
+  background: color-mix(in oklch, var(--cd-accent) 12%, var(--bg-app));
+}
+
+.cd-card--image .cd-progress-track {
+  background: color-mix(in oklch, var(--text-on-accent) 22%, transparent);
+}
+
+.cd-progress-track i {
+  display: block;
+  width: var(--cd-progress, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cd-accent);
+}
+
+.cd-card--image .cd-progress-track i {
+  background: var(--bg-panel);
+}
+
+.cd-segmented-bar {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.18rem;
+}
+
+.cd-segmented-bar i {
+  height: 0.8rem;
+  border-radius: 0.2rem;
+  background: color-mix(in oklch, var(--cd-accent) 11%, var(--bg-app));
+}
+
+.cd-segmented-bar i.filled {
+  background: var(--cd-accent);
+}
+
+.cd-ring {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.cd-ring svg {
+  transform: rotate(-90deg);
+  flex: 0 0 auto;
+}
+
+.cd-ring__track,
+.cd-ring__fill {
+  fill: none;
+  stroke-width: 7;
+}
+
+.cd-ring__track { stroke: color-mix(in oklch, var(--cd-accent) 13%, var(--bg-app)); }
+.cd-ring__fill { stroke: var(--cd-accent); stroke-linecap: round; }
+.cd-card--image .cd-ring__track { stroke: color-mix(in oklch, var(--text-on-accent) 20%, transparent); }
+.cd-card--image .cd-ring__fill { stroke: var(--text-on-accent); }
+
+.cd-ring span {
+  font-family: var(--font-mono, "SF Mono", ui-monospace, monospace);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.cd-card__actions {
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+  min-height: 2rem;
+}
+
+.cd-card__actions button,
+.cd-history-view button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  min-height: 2rem;
+  padding: 0 0.55rem;
+  border-radius: 0.55rem;
+  background: color-mix(in oklch, var(--bg-panel) 72%, transparent);
+  color: var(--text-3);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.cd-card--image .cd-card__actions button {
+  background: color-mix(in oklch, var(--text-on-accent) 14%, transparent);
+  color: color-mix(in oklch, var(--text-on-accent) 90%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cd-card .cd-card__actions,
+  .cd-card .cd-mini-action,
+  .cd-card .cd-drag-indicator {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.35rem);
+    transition:
+      opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .cd-card:hover .cd-card__actions,
+  .cd-card:focus-within .cd-card__actions,
+  .cd-card.is-dragging .cd-card__actions,
+  .cd-card:hover .cd-mini-action,
+  .cd-card:focus-within .cd-mini-action,
+  .cd-card.is-dragging .cd-mini-action,
+  .cd-card:hover .cd-drag-indicator,
+  .cd-card:focus-within .cd-drag-indicator,
+  .cd-card.is-dragging .cd-drag-indicator {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+}
+
+.cd-list-view {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cd-card--list,
+.cd-card--timeline {
+  min-height: auto;
+}
+
+.cd-card--list .cd-card__body {
+  min-height: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(13rem, 1fr);
+  align-items: end;
+  padding-top: 0.8rem;
+}
+
+.cd-card--list .cd-card__actions {
+  margin-top: 0.5rem;
+}
+
+.cd-timeline-view {
+  position: relative;
+  display: grid;
+  gap: 0.7rem;
+  padding-left: 1rem;
+}
+
+.cd-timeline-view::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 0.12rem;
+  border-radius: 999rem;
+  background: var(--border-1, color-mix(in oklch, var(--bg-overlay) 10%, transparent));
+}
+
+.cd-card--timeline::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 1.2rem;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 999rem;
+  background: var(--cd-accent);
+  box-shadow: 0 0 0 0.25rem var(--bg-app);
+}
+
+.cd-calendar-view,
+.cd-history-view,
+.cd-empty-history {
+  border-radius: 1rem;
+  background: color-mix(in oklch, var(--bg-panel) 90%, transparent);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-calendar-view {
+  padding: 1rem;
+}
+
+.cd-calendar-view header {
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.cd-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.cd-calendar-grid--weekdays {
+  margin-bottom: 0.35rem;
+}
+
+.cd-calendar-grid b {
+  color: var(--text-3);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.cd-calendar-grid div {
+  min-height: 6rem;
+  padding: 0.45rem;
+  border-radius: 0.7rem;
+  background: color-mix(in oklch, var(--bg-app) 58%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent)) 75%, transparent);
+}
+
+.cd-calendar-grid div.today {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.cd-calendar-grid span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.cd-calendar-grid button {
+  width: 100%;
+  min-height: 1.7rem;
+  margin-top: 0.2rem;
+  border-radius: 0.45rem;
+  padding: 0 0.35rem;
+  background: color-mix(in oklch, var(--accent) 12%, var(--bg-panel));
+  color: var(--text-2);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.cd-history-view {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+}
+
+.cd-history-view article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-history-view article:first-child {
+  border-top: 0;
+}
+
+.cd-history-state {
+  padding: 0.35rem 0.48rem;
+  border-radius: 0.5rem;
+  background: color-mix(in oklch, var(--accent) 10%, var(--bg-app));
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.cd-empty-history {
+  min-height: 15rem;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-3);
+}
+
+.cd-add-card {
+  min-height: 17rem;
+  border-radius: 1rem;
+  border: 1.5px dashed var(--border-2, var(--border-1));
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--text-3);
+  font-weight: 700;
+}
+
+.cd-add-card:hover {
+  border-color: var(--accent);
+  color: var(--text-1);
+  background: color-mix(in oklch, var(--bg-panel) 60%, transparent);
+}
+
+.cd-dialog-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  z-index: 900;
+}
+
+.cd-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(44rem, calc(100vw - 1.5rem));
+  max-height: min(90dvh, 52rem);
+  overflow: auto;
+  border: 0;
+  border-radius: 1rem;
+  padding: 1rem;
+  z-index: 901;
+  background: var(--bg-panel);
+  color: var(--text-1);
+  box-shadow:
+    0 2rem 5rem color-mix(in oklch, var(--bg-overlay) 24%, transparent),
+    inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-dialog-head {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cd-dialog-title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.12;
+}
+
+.cd-dialog-close {
+  width: 2.5rem;
+  border-radius: 0.7rem;
+  background: var(--bg-app);
+  color: var(--text-3);
+}
+
+.cd-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.cd-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+  margin-bottom: 0.75rem;
+}
+
+.cd-form-row label,
+.cd-form-row > span {
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.cd-form-row input[type="text"],
+.cd-form-row input[type="date"],
+.cd-form-row input[type="time"],
+.cd-form-row select,
+.cd-form-row textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 0.72rem;
+  padding: 0 0.8rem;
+  background: var(--bg-app);
+  color: var(--text-1);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.cd-form-row textarea {
+  min-height: 5.5rem;
+  padding-top: 0.7rem;
+  resize: vertical;
+}
+
+.cd-color-grid,
+.cd-icon-grid,
+.cd-switch-grid,
+.cd-preset-grid,
+.cd-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.cd-color-grid button,
+.cd-icon-grid button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 0.72rem;
+  background: var(--bg-app);
+  color: var(--text-2);
+  box-shadow: inset 0 0 0 1px var(--border-1, color-mix(in oklch, var(--bg-overlay) 8%, transparent));
+}
+
+.cd-color-grid button::before {
+  content: "";
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--cd-swatch);
+}
+
+.cd-color-grid button.selected,
+.cd-icon-grid button.selected,
+.cd-preset-swatch.selected {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.cd-switch-grid label,
+.cd-radio-group label {
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.65rem;
+  border-radius: 0.65rem;
+  background: var(--bg-app);
+  color: var(--text-2);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.cd-preset-swatch {
+  min-height: 3.25rem;
+  min-width: 7.2rem;
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 1.65rem 0.55rem 0.45rem;
+  color: color-mix(in oklch, var(--text-on-accent) 92%, transparent);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.cd-validation-panel {
+  margin: -0.15rem 0 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.78rem;
+  background: color-mix(in oklch, var(--red) 9%, var(--bg-app));
+  color: var(--red);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--red) 22%, transparent);
+}
+
+.cd-validation-panel strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.cd-validation-panel ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.cd-dialog-actions {
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.cd-dialog-actions .cd-btn {
+  min-height: 2.55rem;
+}
+
+@media (min-width: 42rem) {
+  .cd-overview {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cd-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 48rem) {
+  .cd-page-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cd-page-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .cd-page-actions .cd-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .cd-board-controls {
+    top: 0;
+    padding-top: 0.25rem;
+  }
+
+  .cd-view-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cd-view-return {
+    justify-content: center;
+  }
+
+  .cd-module-stack--split,
+  .cd-card--list .cd-card__body,
+  .cd-history-view article {
+    grid-template-columns: 1fr;
+  }
+
+  .cd-calendar-grid div {
+    min-height: 4.5rem;
+    padding: 0.35rem;
+  }
+
+  .cd-calendar-grid button {
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 40rem) {
+  .module-countdown {
+    overflow-x: hidden;
+  }
+
+  .cd-board-controls,
+  .cd-view-row {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .cd-view-tabs {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cd-view-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cd-view-tabs button {
+    flex: 1 0 auto;
+    min-width: 5rem;
+    min-height: 2.75rem;
+    padding: 0 0.65rem;
+  }
+
+  .cd-mini-action {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .cd-card__actions {
+    position: static;
+    opacity: 1;
+    transform: none;
+    justify-content: stretch;
+    margin-top: 0.75rem;
+  }
+
+  .cd-card__actions button {
+    flex: 1 1 auto;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .cd-dialog {
+    width: calc(100vw - 1.5rem);
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100dvh - 3rem);
+  }
+}
+
+@media (min-width: 40.063rem) and (max-width: 64rem) {
+  .module-countdown {
+    overflow-x: hidden;
+  }
+
+  .cd-page-head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .cd-page-actions {
+    flex: 1 1 auto;
+  }
+
+  .cd-btn,
+  .cd-mini-action,
+  .cd-view-tabs button,
+  .cd-card__actions button,
+  .cd-history-view button,
+  .cd-calendar-view button,
+  .cd-add-card,
+  .cd-dialog-close,
+  .cd-dialog-actions .cd-btn,
+  .cd-color-grid button,
+  .cd-icon-grid button,
+  .cd-switch-grid label,
+  .cd-radio-group label {
+    min-height: 2.75rem;
+  }
+
+  .cd-mini-action,
+  .cd-card__actions button,
+  .cd-dialog-close,
+  .cd-color-grid button,
+  .cd-icon-grid button {
+    min-width: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .cd-card__actions button.danger,
+  .cd-card__actions .danger {
+    width: auto;
+    min-width: 3.5rem;
+    padding-inline: 0.75rem;
+  }
+
+  .cd-card,
+  .cd-card__chrome {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .cd-view-row,
+  .cd-board-controls,
+  .countdown-grid,
+  .cd-module-stack,
+  .cd-module-stack--split {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .cd-dialog {
+    width: min(42rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 3rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .module-countdown *,
+  .module-countdown *::before,
+  .module-countdown *::after {
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

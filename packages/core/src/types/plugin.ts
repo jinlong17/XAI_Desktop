@@ -16,6 +16,12 @@ export interface PluginManifest {
     overlay?: boolean;
     control?: boolean;
     grid?: boolean;
+    console?: boolean;
+  };
+  ui?: {
+    consoleSidebar?: {
+      entries: ConsoleSidebarEntry[];
+    };
   };
   events: {
     emit: string[];
@@ -23,6 +29,117 @@ export interface PluginManifest {
   };
   dependencies: string[];
   tauriCommands: string[];
+}
+
+export type ConsoleModuleId = string;
+
+export interface ConsoleRouteState {
+  moduleId: ConsoleModuleId;
+  listId?: string;
+  detailId?: string;
+}
+
+export interface ConsoleThemeState {
+  mode: 'light' | 'dark' | 'system';
+  density: 'comfortable' | 'compact';
+  fontScale: number;
+}
+
+export type ConsoleCapabilityStatus = "supported" | "unsupported" | "blocked";
+
+export type ConsoleCapabilityErrorCode =
+  | "unsupported_in_browser"
+  | "permission_denied"
+  | "not_configured"
+  | "build_blocked";
+
+export type ConsoleCapabilityResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; code: ConsoleCapabilityErrorCode; message: string };
+
+export interface ConsoleShortcutBinding {
+  id: string;
+  combo: string;
+  scope: "route" | "app";
+}
+
+export interface ConsoleDownloadRequest {
+  filename: string;
+  blob: Blob;
+  mimeType?: string;
+}
+
+export interface ConsoleNotificationRequest {
+  title: string;
+  body?: string;
+  tag?: string;
+}
+
+export interface ConsoleViewCapabilities {
+  navigate(route: ConsoleRouteState): void;
+  openSettings(section?: string): void;
+  openCommandPalette(query?: string): void;
+  focusPane(pane: 'sidebar' | 'list' | 'detail'): void;
+  persistState(partial: Partial<ConsoleRouteState>): Promise<void>;
+  requestReconcile(reason?: string): Promise<void>;
+  download(request: ConsoleDownloadRequest): Promise<ConsoleCapabilityResult<void>>;
+  notify(request: ConsoleNotificationRequest): Promise<ConsoleCapabilityResult<void>>;
+  registerShortcut(
+    binding: ConsoleShortcutBinding,
+    handler: () => void,
+  ): ConsoleCapabilityResult<() => void>;
+  beginDrag(payload: unknown): Promise<ConsoleCapabilityResult<void>>;
+  invokeNativeCapability(name: string, payload?: unknown): Promise<ConsoleCapabilityResult<void>>;
+  status(capability: string): ConsoleCapabilityStatus;
+}
+
+export interface ConsoleViewProps {
+  moduleId: ConsoleModuleId;
+  route: ConsoleRouteState;
+  selection: Record<string, string | number | boolean | null>;
+  query: string;
+  theme: ConsoleThemeState;
+  capabilities: ConsoleViewCapabilities;
+}
+
+export interface ConsoleSidebarEntry {
+  id: string;
+  label: string;
+  icon: string;
+  order: number;
+  group: string;
+  enabled: boolean;
+  placeholder: boolean;
+  moduleId: ConsoleModuleId;
+}
+
+export interface ConsoleViewRegistration {
+  moduleId: ConsoleModuleId;
+  sidebar: ConsoleSidebarEntry;
+  render: ComponentType<ConsoleViewProps>;
+}
+
+export interface ConsoleViewDefinition {
+  moduleId: ConsoleModuleId;
+  render: ComponentType<ConsoleViewProps>;
+}
+
+export interface WebModuleRouteProps {
+  moduleId: ConsoleModuleId;
+  childPath: string;
+  capabilities: ConsoleViewCapabilities;
+}
+
+export interface WebModuleRouteChild {
+  path: string;
+  render: ComponentType<WebModuleRouteProps>;
+}
+
+export interface WebModuleRouteRegistration {
+  moduleId: ConsoleModuleId;
+  label: string;
+  defaultChildPath?: string;
+  children: WebModuleRouteChild[];
 }
 
 /** React components a plugin registers */
@@ -35,6 +152,8 @@ export interface PluginComponents {
   GridContent?: ComponentType<{ gridId: string }>;
   /** Rendered in settings panel */
   SettingsPanel?: ComponentType;
+  /** Rendered inside the Console shell by module slot */
+  ConsoleViews?: ConsoleViewDefinition[];
 }
 
 /** A registered plugin — manifest + components */

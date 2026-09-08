@@ -1,0 +1,45 @@
+{
+  "name": "@repo/release-site-archive",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "archive:dev": "next dev --port 3000",
+    "archive:build": "next build",
+    "lint": "eslint --max-warnings 0",
+    "archive:check-types": "next typegen && tsc --noEmit",
+    "test:rls": "vitest run supabase/tests/rls-policies.test.ts",
+    "test:rls:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rls-policies.test.ts",
+    "test:nonce": "vitest run supabase/tests/nonce-lease.test.ts",
+    "test:nonce:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/nonce-lease.test.ts",
+    "test:push": "vitest run supabase/tests/sync-push.test.ts",
+    "test:pull": "vitest run supabase/tests/sync-pull.test.ts",
+    "test:recovery": "vitest run supabase/tests/recovery-proof.test.ts",
+    "test:audit": "vitest run supabase/tests/audit-log.test.ts",
+    "test:audit:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/audit-log.test.ts",
+    "test:protocol": "vitest run supabase/tests/protocol-integrity.test.ts",
+    "test:rls-fuzz": "vitest run supabase/tests/rls-fuzz-property.test.ts",
+    "test:rls-fuzz:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rls-fuzz-property.test.ts",
+    "test:rekey": "vitest run supabase/tests/rekey.test.ts",
+    "test:rekey:integration": "SUPABASE_INTEGRATION_TESTS=1 vitest run supabase/tests/rekey.test.ts",
+    "test:onboarding-backfill": "vitest run supabase/tests/onboarding-backfill.test.ts"
+  },
+  "dependencies": {
+    "@repo/core-data": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "next": "^16.2.7",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "^9.39.1",
+    "fast-check": "4.8.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

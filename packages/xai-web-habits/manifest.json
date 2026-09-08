@@ -1,0 +1,19 @@
+{
+  "name": "@repo/plugin-web-habits",
+  "slug": "xai-web-habits",
+  "version": "0.0.0",
+  "status": "Production",
+  "type": "ui",
+  "owner": "xai-web-habits",
+  "description": "Habits module \u2014 habit list + check-toggle + 4-up stat cards + 6/365 progress + month calendar + diary. Emits web:habits:checkin-recorded.",
+  "roadmap_row": 15,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus",
+    "@repo/xai-web-shell"
+  ]
+}

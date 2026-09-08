@@ -1,5 +1,7 @@
 # sync-v1 Incidents — 2026-05-19
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Web Console (`docs/workflow/roadmap/xai-web-console.md`) is the active roadmap. Do NOT start new work on this roadmap. SHIPPED rows remain authoritative for their domain; in-flight items: complete-or-park. Resumes only after P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 This file records build failures, test failures, dependency conflicts, context pressure,
 permission issues, and feature-level blockers from the 24h serial autorun.
 

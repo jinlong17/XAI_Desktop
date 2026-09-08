@@ -14,7 +14,7 @@ branch-protection toggle, R-4).
 |---|---|---|---|
 | `rust-pins` | `scripts/ci/check-exact-pins.sh` + `cargo metadata --locked --manifest-path apps/desktop/src-tauri/Cargo.toml` + `scripts/ci/check-verify-strict.sh` | all 7 crates use `=x.y.z` literal pin; `Cargo.lock` in sync with manifest (`--locked` does not need to rewrite); no non-strict ed25519 verify pattern present | yes |
 | `cargo-deny` | `cargo deny --manifest-path apps/desktop/src-tauri/Cargo.toml --all-features check advisories bans licenses sources` | zero RustSec advisories; no banned/version-floor-violating crate; all licenses in allow/exceptions; all sources in allowlist | yes |
-| `osv-scanner` | `google/osv-scanner-action` (pinned ref) with `fail-on-vuln: true`, scan-args targeting `pnpm-lock.yaml` (+ `apps/desktop/src-tauri/Cargo.lock`) | zero OSV advisories; scanner reports a **non-zero parsed-package count** (no silent skip) | yes |
+| `osv-scanner` | SHA256-verified `osv-scanner` v2.3.8 binary; `scan source --config=scripts/ci/osv-scanner.toml --lockfile=pnpm-lock.yaml --lockfile=apps/desktop/src-tauri/Cargo.lock` | zero unreviewed OSV advisories; scanner reports **non-zero parsed-package counts** (no silent skip); reviewed Tauri Linux GTK/unic exceptions must stay dated and narrow | yes |
 
 **Injected-advisory acceptance signal:** introducing a crate/lockfile entry with
 a known RustSec or OSV advisory MUST turn at least one job red. (test.md §1

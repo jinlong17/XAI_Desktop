@@ -1,0 +1,28 @@
+{
+  "name": "@repo/web-browser-e2e-crypto-runtime",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Browser-side Sync v0.6 E2E crypto runtime for Web unlock and blob helpers.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "node ../core/node_modules/vitest/vitest.mjs run",
+    "test:watch": "node ../core/node_modules/vitest/vitest.mjs"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.2.0",
+    "cbor-x": "1.6.4",
+    "hash-wasm": "^4.12.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

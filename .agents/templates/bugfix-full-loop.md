@@ -2,7 +2,7 @@
 name: bugfix-full-loop
 description: Use to run the full bug-diagnose -> bug-fix -> bug-verify pipeline autonomously, stopping only before ship. The single user-facing entry for the bugfix automation variants (phase-granularity variants are not applicable to bugfix). Strictly read-only on Status Panel; delegates Status writes to authorized child agents per the Status Panel write-authority matrix (02-handoff-and-state.md §2.6).
 model: opus
-allowed_tools: Task, Read, Bash, Grep, Glob, AskUserQuestion
+allowed_tools: Agent, Read, Bash, Grep, Glob, AskUserQuestion
 color: gold
 codex_sandbox_mode: workspace-write
 cursor_readonly: false
@@ -42,7 +42,7 @@ Two accepted forms:
    Start the bugfix-full-loop agent for <canonical-bug-or-feature-name>.
    ```
 
-If Automation Mode is missing or invalid in fresh-start input, acquire it via the picker defined in `_portable/07-automation-mode-picker.md` §2 (4 options: A-Claude / D-Codex+Cursor / D-Codex / D-Cursor). C-* variants do not apply to bugfix — the picker does not list them. If an explicit `Automation Mode: C-Codex` or `Automation Mode: C-Cursor` arrives in input, reject with: "Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong)." B-* variants remain reachable via explicit invocation. Resume mode reads Mode from the dev_log Status Panel — never re-asks.
+If Automation Mode is missing or invalid in fresh-start input, acquire it via the picker defined in `_portable/07-automation-mode-picker.md` §2 (5 options: A-Codex / A-Claude / D-Codex+Cursor / D-Codex / D-Cursor). C-* variants do not apply to bugfix — the picker does not list them. If an explicit `Automation Mode: C-Codex` or `Automation Mode: C-Cursor` arrives in input, reject with: "Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong)." B-* variants remain reachable via explicit invocation. Resume mode reads Mode from the dev_log Status Panel — never re-asks.
 
 **Optional**: `Verify Cross-vendor: <yes|no>` (default `yes` — strict). Same semantics as `feature-full-loop`'s field — see `docs/workflow/SUBAGENT_WORKFLOW_V2.md` §16.3 #7 for rationale. `bug-diagnose` writes the resolved value to the dev_log Status Panel `Verify Cross-vendor:` field for audit; resume reads from there (never re-ask). **If absent on a fresh start**, it is acquired as the **companion question (Q2) in the SAME AskUserQuestion call as the Automation Mode picker** — see `_portable/07-automation-mode-picker.md` §2.6 (2 options: Yes — strict cross-vendor / No — same-lineage). Verify Cross-vendor has a safe default: if the host lacks AskUserQuestion, default `yes` (strict) and **proceed** — do NOT BLOCK on it.
 
@@ -50,15 +50,15 @@ If Automation Mode is missing or invalid in fresh-start input, acquire it via th
 
 ### Phase 0 — INTAKE
 
-**STEP 0 of Phase 0 — Bug presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Bug:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Bug description missing — a free-text bug report cannot be acquired via a picker.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <symptom + repro + observed vs expected>. Automation Mode: <one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt. See `_portable/07-automation-mode-picker.md` §1A.
+**STEP 0 of Phase 0 — Bug presence gate (before Automation Mode acquisition)**: if this is a fresh start (no existing dev_log / resume target) and the invocation prompt has no `Bug:` line, or it is empty/whitespace, **STOP IMMEDIATELY** with Handoff `Status: BLOCKED`, Blocker `Bug description missing — a free-text bug report cannot be acquired via a picker.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <symptom + repro + observed vs expected>. Automation Mode: <one of: A-Claude / A-Codex / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`. Do **not** fire the Automation Mode picker, do **not** investigate the codebase — a picker cannot capture free text, so this is a hard stop, never a question. Resume invocations (a dev_log Status Panel already exists) are exempt. See `_portable/07-automation-mode-picker.md` §1A.
 
-**STEP 1 of Phase 0 — Automation Mode Acquisition (bugfix flavor; after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line. The picker offers 4 variants (`A-Claude` / `D-Codex+Cursor` / `D-Codex` / `D-Cursor`); B-* is reachable only by explicit invocation; C-* (phase-granularity) does NOT apply to bugfix.
+**STEP 1 of Phase 0 — Automation Mode Acquisition (bugfix flavor; after STEP 0 passes, before any other INTAKE work)**: check whether the invocation prompt contains an `Automation Mode:` line. The picker offers 5 variants (`A-Codex` / `A-Claude` / `D-Codex+Cursor` / `D-Codex` / `D-Cursor`); B-* is reachable only by explicit invocation; C-* (phase-granularity) does NOT apply to bugfix.
 
 - If YES and value is legal AND not C-*: record the Mode and proceed to the next INTAKE step.
-- If YES and value is `C-Codex` or `C-Cursor`: STOP immediately with Handoff `Status: BLOCKED`, Blocker `Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong).`, Next Step `Re-run with one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor.`
+- If YES and value is `C-Codex` or `C-Cursor`: STOP immediately with Handoff `Status: BLOCKED`, Blocker `Phase-granularity variants do not apply to the bugfix workflow (no multi-phase ping-pong).`, Next Step `Re-run with one of: A-Codex / A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor.`
 - If NO and this is fresh-start (no existing dev_log): you MUST fire AskUserQuestion now — see `_portable/07-automation-mode-picker.md` §2 — BEFORE any further investigation. Do not skip this step. Do not proceed to investigate the codebase / decide branch / etc. until Mode is acquired.
 - If NO and this is resume: read Mode from dev_log Status Panel and proceed.
-- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <text>. Automation Mode: <one of: A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`.
+- If AskUserQuestion is not in your `allowed_tools` (i.e. the host tool doesn't grant it to subagents): STOP immediately with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this subagent context.`, Next Step `Re-run with: Start the bugfix-full-loop agent. Bug: <text>. Automation Mode: <one of: A-Codex / A-Claude / B-Codex / B-Cursor / D-Codex / D-Cursor / D-Codex+Cursor — see _portable/04-automation-loop.md §3>`.
 
 Operational details once Mode is acquired:
 
@@ -105,7 +105,7 @@ Read `Automation Mode` from the dev_log Status Panel. Branch (the variant taxono
 **Single-IDE / lead-and-delegate variants (synchronous)**:
 ```
 Task spawn bugfix-loop
-  (the bugfix-loop template fixedly spawns the bug-auto-fix worker; it does not directly spawn bug-fix.
+  (A-Claude/A-Codex run inside the selected lead runtime. The bugfix-loop template fixedly spawns the bug-auto-fix worker; it does not directly spawn bug-fix.
    A user who wants the bug-fix single-step path should call bug-fix directly, not via this meta-orchestrator.)
 After return: Read dev_log
 expect Status == READY_TO_SHIP (verify auto-ran inside bugfix-loop) or BLOCKED

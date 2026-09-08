@@ -1,5 +1,7 @@
 # Roadmap Manifest — xai-g1-native-foundation
 
+> **RESUMED (2026-05-26, per ADR-0010 Accepted).** Web Console gap-closure 9/9 SHIPPED + ADR-0009 D2 G2 PASS (Chrome-only carve-out) + ADR-0010 Status flipped Accepted in commit `75655dc`. P1 desktop pivot is active per ADR-0010 §D1. G0 prerequisite met (CONDITIONAL_GO 2026-05-19; G0.1-G0.5 SHIPPED on `origin/spike/window-ground-truth`; G0.6 BLOCKED_EXTERNAL deferred non-blocking). This roadmap is the **primary P1 active work surface** going forward.
+
 - Roadmap Source: docs/planning/execution/G1-native-foundation.md
 - Init Path: execution-pack
 - Generated: 2026-05-19
@@ -20,7 +22,7 @@
 | 2 | grid-shell-organizer-content | docs/planning/execution/G1-native-foundation.md §G1.2 | window-command-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Production split commits: `26d9f57` (feat), `03ca86a` (docs ship promote), `3751f43` (dev_log ready). |
 | 3 | native-dnd-path-first | docs/planning/execution/G1-native-foundation.md §G1.3 | finder-dnd-path | shipped | BLOCKED_EXTERNAL | D-Codex | yes | 2026-05-19 | Production implementation still blocked by MAS/security-scope evidence; skip under unattended mode and continue next eligible feature. |
 | 4 | multi-grid-event-scope | docs/planning/execution/G1-native-foundation.md §G1.4 | grid-window-prototype | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · Manifest promoted on `codex/track-a-desktop-foundation`. Event migration commits: `78aef01` (feat), `59da1e5` (docs ship promote), `44345cf` (dev_log ready). |
-| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract | shipped | BLOCKED | D-Codex | yes | 2026-05-19 | Safe prep only via user override; production implementation blocked by G2 Repository v0. |
+| 5 | grid-persistence | docs/planning/execution/G1-native-foundation.md §G1.5 | window-command-contract, repository-v0-contract | shipped | SHIPPED | D-Codex | yes | 2026-05-20 | SHIPPED 2026-05-20 (Track A) · LayoutStore seam + Repository v0 adapter + async whiteout-safe hydrate; userTouched guard prevents late-hydrate clobber (P1 Beta); URL payload round-trip preserved. Commits `91dc6b6` (feat), `1b34b54` (P1 hardening). 46 vitest cases passing. |
 | 6 | host-business-residuals | docs/planning/execution/G1-native-foundation.md §G1.6 | — | — | SHIPPED | D-Codex | yes | 2026-05-19 | SHIPPED 2026-05-19 · Pushed to origin/spike/window-ground-truth. Audit-only residual inventory complete; production cleanup remains blocked by G0/G1 sequencing. |
 
 ## Decomposition Rationale

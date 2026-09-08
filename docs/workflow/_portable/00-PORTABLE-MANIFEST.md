@@ -151,7 +151,7 @@ has a complete registry — there is nothing to search-and-replace for these at 
 | `<dev_log_abs_path>` | the absolute dev_log path argument in the `read_phase_verdict_from_path` skeleton (`scripts/README.md`) |
 | `<prompt_file>` | the dispatch-prompt file argument in the `dispatch_<executor>.sh` skeleton (`scripts/README.md`) |
 | `<text>` | the free-text requirement body slot in an invocation-prompt example (`07-automation-mode-picker.md`) |
-| `<variant>` | the Automation Mode variant value slot — one of the 8 legal variants enumerated in `04-automation-loop.md` §3 — used in picker / invocation examples (`07-automation-mode-picker.md`) |
+| `<variant>` | the Automation Mode variant value slot — one of the 9 legal variants enumerated in `04-automation-loop.md` §3 — used in picker / invocation examples (`07-automation-mode-picker.md`) |
 | `<i>` | the feature-row index slot in a roadmap-loop `init` per-row question (`07-automation-mode-picker.md` §5.1) |
 | `<vendor>` | the generic vendor-name slot in shell-script invocation examples (`07-automation-mode-picker.md` / `04-automation-loop.md` §3.4 multi-state hook) — one of `codex` / `cursor` / `claude` |
 | `<other_vendor>` | the cross-vendor-routing slot (the vendor that is NOT the one named by the just-committed step's `* Executor:` field) used in `04-automation-loop.md` §3.4 hook state machine |
@@ -214,8 +214,9 @@ per-project rewrite.
    `--force` **regresses** those hand-edits: re-run only when a template changed, then re-propagate.
 6a. **(optional public-skill bundle)** Run the generation script again with `--include-skills`
    to render the public-skill shims under `<public_skill_root>` into `.claude/skills/skill-*/SKILL.md`,
-   `.codex/agents/skill-*.toml`, and `.cursor/rules/skill-*.mdc`. Optional `--skills NAME[,NAME]`
-   selects a subset. Without `--include-skills`, behavior is byte-identical to step 6.
+   `.codex/agents/skill-*.toml`, `.codex/skills/*/SKILL.md`, and
+   `.cursor/rules/skill-*.mdc`. Optional `--skills NAME[,NAME]` selects a subset.
+   Without `--include-skills`, behavior is byte-identical to step 6.
    Then (optional) follow `<mcp_servers_root>/README.md` for the Playwright MCP and Rube install
    commands — those servers stay out of the generator path. Skip this step entirely if the project
    does not adopt the public-skill bundle.
@@ -229,7 +230,7 @@ per-project rewrite.
    coreutils`); `flock` (`brew install util-linux` — **keg-only on macOS, NOT on PATH**; the
    dispatch scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); an authenticated `codex` CLI;
    `cursor-agent login` (cursor-agent runs `--force` on default model `gpt-5.5-high`, override via
-   `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `D-*`).
+   `CW_CURSOR_MODEL`). Skip this entire step for synchronous variants (`A-Claude` / `A-Codex` / `D-*`).
 7a. **Render portable-sourced project workflow skills.** Extract
    `<skill_prefix>feature-full-loop` from `04-automation-loop.md` Appendix and
    `<skill_prefix>roadmap-loop` from `06-roadmap-orchestration.md` Appendix, apply the target
@@ -425,8 +426,10 @@ checklist. STOP.
    `source <cowork_scripts_dir>/lib_hook_helpers.sh` and exec `<cowork_scripts_dir>/git-post-commit`.
    Prereqs: `gtimeout` (`brew install coreutils`); `flock` (`brew install util-linux` — keg-only on
    macOS, NOT on PATH; scripts probe `/opt/homebrew/opt/util-linux/bin/flock`); authenticated
-   `codex` CLI; `cursor-agent login`. Skip this whole step for synchronous variants (`A-Claude` /
-   `D-*`) — see `04-automation-loop.md` §3.
+   `codex` CLI; `cursor-agent login`; optional `claude --bg` smoke test plus `CW_ENABLE_CLAUDE_BG=1`
+   or `git config cowork.claudeBg true` if this project wants hook-launched Claude review/verify.
+   Skip this whole step for synchronous variants (`A-Claude` /
+   `A-Codex` / `D-*`) — see `04-automation-loop.md` §3.
 6b. **Render project-prefixed workflow skills with portable sources.** Extract
    `<skill_prefix>feature-full-loop` from `_portable/04-automation-loop.md` Appendix and
    `<skill_prefix>roadmap-loop` from `_portable/06-roadmap-orchestration.md` Appendix, replace the
@@ -439,11 +442,12 @@ checklist. STOP.
    hand into `.claude/.codex/.cursor`. Re-running with `--force` **regresses** those — re-run only
    on template change, then re-propagate. Flag this in the emitted checklist.
 8. **Verify.** Count (without `--include-skills`): 15 templates → 15 × 3 = 45 generated configs +
-   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 9 × 3 = 27
-   skill outputs = **72 outputs** + 1 `.codex/config.toml`. Skip the +27 if the target opted out of
-   the public-skill bundle. Run `check_portable_sync.py` against the copied portable layer (must
-   PASS). Spot-check that no `<placeholder>` token survived in `<templates_dir>/*.md` or the
-   generated configs.
+   1 `.codex/config.toml`. Count (with `--include-skills`): 15 × 3 = 45 frozen + 10 public skills
+   rendered to Claude skill, Codex agent, Codex native skill, and Cursor rule surfaces = **85 core
+   outputs** + 1 `.codex/config.toml`, plus any copied Codex native skill sidecars such as
+   `PROVENANCE.md`. Skip the public-skill outputs if the target opted out of the public-skill
+   bundle. Run `check_portable_sync.py` against the copied portable layer (must PASS). Spot-check
+   that no `<placeholder>` token survived in `<templates_dir>/*.md` or the generated configs.
 9. **Emit the project-layer checklist and STOP.** Do not author the project-layer docs — list them
    for the human:
    - write `<project_workflow_doc>` — the concrete V2 landing (use the source project's instance as

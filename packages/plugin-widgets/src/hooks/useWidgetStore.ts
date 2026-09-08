@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createInMemoryRepo } from "@repo/core-data";
-import type { Repo } from "@repo/core-data";
+import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useWidgetRepoAdapter } from "../data/RepoProvider";
 import type {
   WidgetDensity,
   WidgetEntity,
@@ -10,6 +10,7 @@ import type {
 
 const WIDGET_STORAGE_KEY = "xai.widgets.v1";
 const PREF_STORAGE_KEY = "xai.widget-preferences.v1";
+const EMPTY_SEED_WIDGETS: WidgetEntity[] = [];
 
 export interface WidgetStoreState {
   widgets: WidgetEntity[];
@@ -34,8 +35,12 @@ function nowIso(): string {
 
 function createWidget(type: string, size: WidgetSize, config: Record<string, unknown>): WidgetEntity {
   const timestamp = nowIso();
+  // SSR / non-secure context fallback only; crypto.randomUUID is preferred.
+  const fallbackId = `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random()
+    .toString(36)
+    .slice(2)}-${Math.random().toString(36).slice(2)}`;
   return {
-    id: `widget-${type}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)}`,
+    id: `widget-${type}-${globalThis.crypto?.randomUUID?.() ?? fallbackId}`,
     entityType: "widgets.widget",
     schemaVersion: 1,
     createdAt: timestamp,
@@ -46,6 +51,7 @@ function createWidget(type: string, size: WidgetSize, config: Record<string, unk
     size,
     config,
     visible: true,
+    version: 1,
   };
 }
 
@@ -67,53 +73,47 @@ function writeJson<T>(key: string, value: T): void {
   }
 }
 
-async function hydrateRepo(repo: Repo<WidgetEntity>, widgets: WidgetEntity[]): Promise<void> {
-  for (const widget of widgets) {
-    await repo.put(widget);
-  }
-}
-
-export function useWidgetStore(seedWidgets: WidgetEntity[] = []): WidgetStoreState {
-  const repo = useMemo(() => createInMemoryRepo<WidgetEntity>({ namespace: "widgets" }), []);
-  const [widgets, setWidgets] = useState<WidgetEntity[]>(seedWidgets);
+// seedWidgets is strictly a fallback when localStorage is empty.
+export function useWidgetStore(seedWidgets: WidgetEntity[] = EMPTY_SEED_WIDGETS): WidgetStoreState {
+  const repoAdapter = useWidgetRepoAdapter();
+  const fallbackAdapter = useMemo(() => new LocalStorageAdapter<WidgetEntity>(WIDGET_STORAGE_KEY, seedWidgets), [seedWidgets]);
+  const adapter = repoAdapter ?? fallbackAdapter;
+  const [widgets, setWidgets] = useState<WidgetEntity[]>([]);
   const [preferences, setPreferences] = useState<WidgetPreferences>(defaultPreferences);
 
   const persistWidgets = useCallback((next: WidgetEntity[]) => {
     setWidgets(next);
-    writeJson(WIDGET_STORAGE_KEY, next);
   }, []);
 
-  useEffect(() => {
-    const storedWidgets = readJson<WidgetEntity[]>(WIDGET_STORAGE_KEY, seedWidgets);
-    const storedPrefs = readJson<WidgetPreferences>(PREF_STORAGE_KEY, defaultPreferences);
-    setWidgets(storedWidgets);
-    setPreferences(storedPrefs);
-    void hydrateRepo(repo, storedWidgets);
-  }, [repo, seedWidgets]);
-
-  const refreshFromRepo = useCallback(async () => {
-    const next = await repo.list({ entityType: "widgets.widget" });
+  const refreshFromAdapter = useCallback(async () => {
+    const next = await adapter.getAll();
     persistWidgets(next);
-  }, [persistWidgets, repo]);
+  }, [adapter, persistWidgets]);
+
+  useEffect(() => {
+    const storedPrefs = readJson<WidgetPreferences>(PREF_STORAGE_KEY, defaultPreferences);
+    setPreferences(storedPrefs);
+    void refreshFromAdapter();
+  }, [refreshFromAdapter]);
 
   return {
     widgets,
     preferences,
     async addWidget(type, size, config = {}) {
-      await repo.put(createWidget(type, size, config));
-      await refreshFromRepo();
+      await adapter.save(createWidget(type, size, config));
+      await refreshFromAdapter();
     },
     async updateWidget(id, patch) {
-      const existing = await repo.get(id);
+      const existing = await adapter.getById(id);
       if (!existing) {
         return;
       }
-      await repo.put({ ...existing, ...patch, updatedAt: nowIso() });
-      await refreshFromRepo();
+      await adapter.save({ ...existing, ...patch, updatedAt: nowIso(), version: existing.version + 1 });
+      await refreshFromAdapter();
     },
     async removeWidget(id) {
-      await repo.delete(id);
-      await refreshFromRepo();
+      await adapter.delete(id);
+      await refreshFromAdapter();
     },
     async setDensity(density) {
       const next = { ...preferences, density };

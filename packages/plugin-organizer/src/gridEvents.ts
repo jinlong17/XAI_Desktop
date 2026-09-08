@@ -5,6 +5,7 @@ export const ORGANIZER_GRID_READY_EVENT = "organizer:grid:ready";
 export const ORGANIZER_GRID_STATE_EVENT = "organizer:grid:state";
 export const ORGANIZER_GRID_UPDATE_EVENT = "organizer:grid:update";
 export const ORGANIZER_GRID_CLOSE_EVENT = "organizer:grid:close";
+export const ORGANIZER_GRID_DELETE_EVENT = "organizer:grid:delete";
 export const ORGANIZER_GRID_CREATE_REQUEST_EVENT = "organizer:grid:create-request";
 export const ORGANIZER_FILE_DROP_EVENT = "organizer:file:drop";
 
@@ -27,6 +28,10 @@ export interface OrganizerGridUpdatePayload {
 }
 
 export interface OrganizerGridClosePayload {
+  gridId: string;
+}
+
+export interface OrganizerGridDeletePayload {
   gridId: string;
 }
 
@@ -96,6 +101,10 @@ export function isGridClosePayload(payload: unknown): payload is OrganizerGridCl
   return hasGridId(payload);
 }
 
+export function isGridDeletePayload(payload: unknown): payload is OrganizerGridDeletePayload {
+  return hasGridId(payload);
+}
+
 export function isGridCreateRequestPayload(
   payload: unknown,
 ): payload is OrganizerGridCreateRequestPayload {
@@ -110,7 +119,8 @@ export function isFileDropPayload(payload: unknown): payload is OrganizerFileDro
 
 export function toDroppedFile(path: string): DroppedFile {
   const normalizedPath = path.trim().replace(/\/+$/, "");
-  const name = normalizedPath.split("/").filter(Boolean).at(-1) ?? normalizedPath;
+  const pathParts = normalizedPath.split("/").filter(Boolean);
+  const name = pathParts[pathParts.length - 1] ?? normalizedPath;
   const lower = normalizedPath.toLowerCase();
   const kind =
     lower.endsWith(".app") ? "app" :

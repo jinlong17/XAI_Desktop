@@ -1,0 +1,244 @@
+---
+name: workflow-router
+description: Compose workflow-compatible goal or task prompts from a freeform idea before execution. Use when the user asks to generate a goal prompt, task prompt, copy-paste prompt for Codex or Codex, choose workflow mode with AskUserQuestion, route a requirement into feature-full-loop/bugfix/roadmap, or preview a task before running it in the current window. Triggers — goal prompt · task prompt · workflow router · route this requirement · prompt for Codex · prompt for Codex · preview task before running.
+---
+
+# workflow-router
+
+Prompt router and composer for Workflow V2 projects.
+
+Use this skill when the user has a rough requirement, bug, question, PRD, or
+implementation idea and wants a workflow-compatible prompt before execution.
+This skill does not replace the project's Step 0 brief skill, feature full-loop
+skill, or roadmap-loop skill; it chooses the right entry and writes the prompt
+that should be copied or confirmed.
+
+## Read First
+
+- The project usage guide, when present:
+  `docs/workflow/project/usage-guide.md`
+- The project agent rules, when present:
+  `AGENTS.md`, `AGENTS.md`
+- The project feature map, when present:
+  `docs/PLUGIN_MAP.md`, `docs/FEATURE_MAP.md`, or equivalent
+- Relevant feature docs or `dev_log.md` only when needed to identify scope,
+  status, or owner
+- Portable references only when the route requires them:
+  `docs/workflow/_portable/04-automation-loop.md`,
+  `docs/workflow/_portable/06-roadmap-orchestration.md`,
+  `docs/workflow/_portable/07-automation-mode-picker.md`
+
+## Core Contract
+
+1. Start from the user's freeform request.
+2. Use AskUserQuestion-style interaction whenever the host supports it.
+3. Every choice shown to the user must include:
+   - recommendation marker when one option is best
+   - reason for the recommendation
+   - estimated completion time
+   - involved feature or likely feature slug
+4. First classify the output route:
+   - `goal`: produce a prompt the user will copy into another Codex/Codex window
+   - `task`: produce a prompt preview for the current window; do not run until the
+     user approves it
+   Treat explicit user wording such as "goal prompt", "task prompt", "prompt for
+   Codex", or "prompt for Codex" as already answered choices; only ask for
+   unresolved choices.
+5. If `goal`, ask the target host:
+   - `Codex`: cap the final prompt at 4000 characters
+   - `Codex`: no hard character cap, but keep it concise and self-contained
+6. If `task`, show the exact prompt preview and stop with
+   `Status: AWAITING_CONFIRMATION`. Execute only after the user explicitly
+   confirms in a later message.
+
+## Host Interaction Compatibility
+
+Treat "AskQuestion" as a host-specific capability, not as one literal tool name.
+
+- **Codex**: use `AskUserQuestion` when available. Codex subagents may receive
+  that tool through their `allowed_tools` frontmatter.
+- **Codex parent session**: use Codex's structured `request_user_input` capability when
+  it is available in the current mode. Keep option labels short, put the recommended
+  option first, and include the same reason / ETA / affected-feature metadata required
+  by this skill.
+- **Codex spawned subagents**: do not assume `request_user_input` is available. For any
+  prompt intended to run inside a Codex subagent, pre-resolve closed-set fields in the
+  parent prompt instead of relying on an in-subagent picker.
+- **Cursor or plain text hosts**: when no structured question tool is available, ask the
+  same choices in compact plain text and wait.
+
+Never silently choose `goal` or `task`. For Codex goal prompts, do not emit a workflow
+prompt that expects the destination subagent to recover missing `Automation Mode:` or
+`Verify Cross-vendor:` via `AskUserQuestion`; collect those values first or include a
+safe explicit value.
+
+## Routing Heuristics
+
+Choose the underlying workflow entry before writing the prompt:
+
+- New feature, extension, refactor, or unclear implementation idea:
+  the project's feature full-loop entry. For Codex goal prompts this is usually
+  `/xai-feature-full-loop` or `<skill_prefix>feature-full-loop`; for Codex goal
+  prompts prefer the project-layer parent-session full-loop skill when the usage
+  guide lists one, otherwise use `Start the feature-full-loop agent.`
+- Need only Step 0 normalization or the idea is still vague:
+  the project's Step 0 feature brief skill, usually `/xai-feature-brief` or
+  `<step0-skill>`
+- Bug with observable actual/expected behavior:
+  `Start the bug-diagnose agent.` when the user needs diagnosis or the fix
+  strategy is not approved yet; `Start the bugfix-full-loop agent.` when the
+  user asks for an end-to-end bugfix run and provides enough repro/expected
+  behavior context.
+- Multi-feature PRD, roadmap, or dependency wave:
+  the project's roadmap-loop skill, usually `/xai-roadmap-loop mode: init` or
+  `<skill_prefix>roadmap-loop mode: init`
+- Small direct edit that does not need Workflow V2:
+  current-window task prompt with ordinary implementation instructions
+- Review request:
+  code-review task prompt unless the user asks to implement fixes
+
+Prefer workflow entries over direct edits when the request changes architecture,
+feature boundaries, typed events, backend command signatures, persistence schema,
+native OS behavior, multi-window behavior, or release/ship state.
+
+## AskUserQuestion Sequence
+
+### Q1 Route
+
+Ask the user to choose:
+
+- `Goal prompt (Recommended)` when the work should run in a fresh window,
+  needs a clean workflow handoff, uses background sessions, or may exceed the
+  current window's focus. Include estimated time and involved feature(s).
+- `Task prompt` when the work is small enough to run in the current window after
+  preview and confirmation. Include estimated time and involved feature(s).
+
+### Q2 Target Host
+
+Ask only if Q1 is `goal`:
+
+- `Codex (Recommended)` when the selected workflow relies on project-layer
+  skills under `.Codex/skills`, background sessions, or Codex-specific
+  AskUserQuestion behavior.
+- `Codex` when the user wants Codex to execute, the task is implementation-heavy,
+  or Codex subagents are the intended executor.
+
+### Q3 Workflow Entry
+
+Ask only when two routes are genuinely close, for example:
+
+- `Feature full loop` vs `Feature brief only`
+- `Bug diagnose` vs `Direct task`
+- `Roadmap init` vs `Single feature`
+
+If one route is clearly correct, state the chosen route in the generated prompt
+instead of asking another question.
+
+## Prompt Field Safety
+
+- For feature full-loop fresh starts, do not emit `Feature: TBD` or
+  `Feature: <suggested slug>`. `Feature:` is a resume/canonical-target field in
+  many Workflow V2 projects and can make the runner treat a fresh requirement as
+  ambiguous. Use `Suggested Feature Slug: <slug>` until the feature slug is
+  confirmed by a feature map, dev_log, existing docs, or explicit user input.
+- `Automation Mode:` must be one of the legal Workflow V2 variants:
+  `A-Claude`, `A-Codex`, `B-Codex`, `B-Cursor`, `C-Codex`, `C-Cursor`,
+  `D-Codex`, `D-Cursor`, or `D-Codex+Cursor`. Never write natural-language values such as
+  `feature full loop`.
+- If the project has a parent-session feature full-loop skill, prefer that entry
+  over `Start the feature-full-loop agent.` for normal end-to-end feature work.
+  Detect this from the usage guide or files such as
+  `.teams/skills/*-feature-full-loop/SKILL.md`, `.Codex/skills/*-feature-full-loop/SKILL.md`,
+  or `.codex/skills/*-feature-full-loop/SKILL.md`.
+- Use `Start the feature-full-loop agent.` only when the project docs identify it
+  as the runtime entry, or when no project-layer full-loop skill exists.
+
+## Goal Prompt Output
+
+Output only a copyable prompt block plus minimal metadata above it.
+
+For Codex goal prompts:
+
+- Keep the prompt under 4000 characters.
+- Prefer the project's feature full-loop, feature brief, or roadmap-loop skill
+  when applicable.
+- Include only the strongest context references; do not paste large docs.
+- Mention the project usage guide as the execution guide when it exists.
+
+For Codex goal prompts:
+
+- Make the prompt self-contained enough for a new Codex window.
+- Mention project agent rules and the project usage guide as local rules to read.
+- If using a Workflow V2 subagent, require verbatim `## Handoff` display.
+- Include explicit values for every closed-set Workflow V2 field that a Codex prompt
+  might otherwise collect via `AskUserQuestion`, especially `Automation Mode:` and
+  `Verify Cross-vendor:`.
+- Prefer parent-session skills (`/<skill_prefix>feature-full-loop`,
+  `/<skill_prefix>roadmap-loop`) over spawned compatibility meta-orchestrators when
+  the project documents them as the runtime entry.
+
+Recommended goal prompt shape:
+
+```text
+<workflow entry>
+Requirement: <1-3 concise sentences>
+Suggested Feature Slug: <candidate slug, only if unconfirmed>
+Automation Mode: <one of A-Claude | A-Codex | B-Codex | B-Cursor | C-Codex | C-Cursor | D-Codex | D-Cursor | D-Codex+Cursor>
+Verify Cross-vendor: yes
+Context:
+- Read the project workflow usage guide.
+- Read the feature map and target feature docs before planning.
+Constraints:
+- Respect project feature boundaries.
+- Use typed events / typed contracts for cross-boundary behavior.
+Expected Output:
+- Follow Workflow V2 and end with the required Handoff/Next Step.
+```
+
+## Task Prompt Output
+
+For task mode, produce:
+
+```text
+## Task Prompt Preview
+<exact prompt to execute in this current window>
+
+Status: AWAITING_CONFIRMATION
+Next Step: Reply "run" or "执行" to execute this prompt in the current window.
+```
+
+The preview must include:
+
+- goal
+- involved feature(s)
+- expected files or modules to inspect
+- workflow route or reason for direct execution
+- test/verification expectation
+- explicit stop condition
+
+Do not execute the task in the same response that first shows the preview.
+
+## Estimation Rules
+
+Use conservative estimates:
+
+- Prompt-only / triage: 5-15 minutes
+- Step 0 brief: 15-30 minutes
+- Small direct task: 20-60 minutes
+- Bug diagnose only: 20-45 minutes
+- Single feature full loop: 1-4 hours depending on scope
+- Roadmap init: 30-90 minutes
+- Native OS / multi-window / persistence / typed contract work: add 30-90
+  minutes and flag real-hardware verification when relevant
+
+Make clear that estimates are planning estimates, not wall-clock guarantees.
+
+## Safety
+
+- Never claim a feature slug is confirmed unless found in a feature map, existing
+  docs, or explicit user input.
+- If feature ownership is unclear, mark it `TBD` and include likely candidates in
+  the AskUserQuestion options.
+- Never run `ship` from this skill.
+- Never edit a workflow `dev_log.md` from this skill.
+- Never bypass `feature-verify` / `bug-verify` for Workflow V2 work.

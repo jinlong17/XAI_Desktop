@@ -36,6 +36,19 @@ pub struct CommandError {
     pub details: Option<serde_json::Value>,
 }
 
+/// Persisted frame snapshot for the Console window.
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct ConsoleWindowFrame {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    #[serde(rename = "isFullscreen")]
+    pub is_fullscreen: bool,
+    #[serde(rename = "navStateVersion")]
+    pub nav_state_version: u32,
+}
+
 /// State to track all grid windows.
 pub struct GridWindowsState {
     pub windows: Mutex<HashMap<String, GridWindowRect>>,
@@ -49,13 +62,34 @@ impl Default for GridWindowsState {
     }
 }
 
+pub struct ConsoleWindowFrameState {
+    pub frame: Mutex<ConsoleWindowFrame>,
+}
+
+impl Default for ConsoleWindowFrameState {
+    fn default() -> Self {
+        Self {
+            frame: Mutex::new(ConsoleWindowFrame {
+                x: 180.0,
+                y: 120.0,
+                width: 1240.0,
+                height: 820.0,
+                is_fullscreen: false,
+                nav_state_version: 1,
+            }),
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(commands::crypto::CryptoCommandState::default())
         .manage(commands::menubar::SyncMenuBarState::default())
-        .manage(GridWindowsState::default());
+        .manage(commands::bookmarks::BookmarkRegistry::default())
+        .manage(GridWindowsState::default())
+        .manage(ConsoleWindowFrameState::default());
 
     #[cfg(feature = "crypto")]
     let builder = builder.manage(commands::database::DatabaseState::default());
@@ -67,6 +101,11 @@ pub fn run() {
             commands::window::close_grid_window,
             commands::window::list_grid_windows,
             commands::window::focus_grid_window,
+            commands::window::open_console_window,
+            commands::window::close_console_window,
+            commands::window::focus_console_window,
+            commands::window::get_console_window_frame,
+            commands::window::set_console_window_frame,
             commands::menubar::sync_set_menubar_status,
             commands::crypto::crypto_encrypt_for,
             commands::crypto::crypto_unwrap_dek_for_device,
@@ -75,6 +114,11 @@ pub fn run() {
             commands::keychain::secret_set,
             commands::keychain::secret_get,
             commands::keychain::secret_del,
+            commands::finder::reveal_in_finder,
+            commands::finder::open_path,
+            commands::bookmarks::register_path_bookmark,
+            commands::bookmarks::clear_path_bookmark,
+            commands::thumbnail::generate_file_thumbnail,
             #[cfg(feature = "crypto")]
             commands::database::db_init,
             #[cfg(feature = "crypto")]
@@ -85,6 +129,8 @@ pub fn run() {
             commands::database::db_list,
             #[cfg(feature = "crypto")]
             commands::database::db_delete,
+            #[cfg(feature = "crypto")]
+            commands::database::db_put_batch,
         ])
         .setup(|app| {
             let window = app

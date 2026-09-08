@@ -1,5 +1,11 @@
 # x25519-device-keypair — Dev Log (Workflow State Machine)
 
+## 2026-05-20 14:55 PDT
+
+- Implemented Node crypto X25519 device key generation and shared-secret derivation.
+- Added in-memory device registration and pairing registry with public-key storage, max-device guard, and request rate limiting.
+- Verification: `pnpm --filter @repo/x25519-device-keypair test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |
@@ -45,4 +51,3 @@
 | Timestamp | Executor | Action | Commits | Next |
 |---|---|---|---|---|
 | 2026-05-19 02:53 PDT | Codex serial autorun | Implemented #12 local CSPRNG X25519 device key generation, Keychain store abstraction, KeyVault insertion, public-key validation, docs, and tests. | local commit `feat(x25519-device-keypair): add device key generation` | hpke-per-device-wrap (#13) |
-

@@ -1,15 +1,31 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCalendarRepoAdapter } from "../data/RepoProvider";
+import { toLocalIsoDate } from "../utils/date";
 import type { CalendarEvent, CalendarStoreState } from "../types";
 
 export function useCalendarStore(seedEvents: CalendarEvent[] = createMockEvents()): CalendarStoreState {
+  const adapter = useCalendarRepoAdapter();
   const today = useMemo(() => new Date(), []);
+  const [events, setEvents] = useState(seedEvents);
   const [month, setMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
-  const [selectedDate, selectDate] = useState(today.toISOString().slice(0, 10));
+  const [selectedDate, selectDate] = useState(toLocalIsoDate(today));
+  const refresh = useCallback(async () => {
+    if (!adapter) {
+      setEvents(seedEvents);
+      return;
+    }
+    setEvents(await adapter.getAll());
+  }, [adapter, seedEvents]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
 
   return {
-    events: seedEvents,
+    events,
     month,
     selectedDate,
+    refresh,
     setMonth,
     selectDate,
   };
@@ -50,5 +66,6 @@ function makeEvent(
     endsAt: ends.toISOString(),
     source,
     color,
+    version: 1,
   };
 }

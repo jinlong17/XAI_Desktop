@@ -12,8 +12,11 @@ description: Normalize feature ideas into a structured, QA-gated brief before di
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md` (when present; project-layer SOP is on the post-instantiate
   checklist)
+- `docs/PRODUCT_MODULE_MAP.md`
+- `docs/workflow/project/module-classification.json`
 - `docs/PLUGIN_MAP.md`
 - `CLAUDE.md` §Architecture / §Code Boundaries / §Documentation Contract
+- `docs/adr/0013-branch-sync-governance.md`
 - `docs/adr/0003-three-faces-architecture.md`
 
 ## Purpose
@@ -67,16 +70,33 @@ is the primary quality control mechanism for this step.
    - desired outcome
    - rough scope or constraints if already known
 2. Run Round 1 classification:
-   - `Architecture Kind` — which of the three faces (host shell / core / plugin slice) is touched
-   - `User Surface` — desktop overlay / control window / grid window / settings / API only
+   - `Product Module` — exactly one of `web`, `app`, `plugin`, `sync`, `site`, `admin`
+     using `docs/PRODUCT_MODULE_MAP.md` signals. If the request is dashboard / workflow /
+     skill governance, classify it as Web mainline / `project-system` support rather than
+     the proposed Admin Control Plane.
+   - `Line Status` — active / paused / proposed, including whether operator confirmation is
+     required before implementation.
+   - `Architecture Kind` — Web host shell / Desktop native host / plugin slice / sync contract /
+     deployment surface / governance surface.
+   - `User Surface` — Web route / Mac app window / desktop widget / sync API / official site /
+     admin control plane / project dashboard.
    - `Change Type` — new feature / extension / refactor / bug fix
-   - `Impacted Layers` — `apps/desktop/src/` (host) / `apps/desktop/src-tauri/` (Rust backend) / `packages/core/` (infra) / `packages/plugin-*` (business slice) / `packages/ui/` (shared UI)
+   - `Impacted Layers` — `apps/web/` / `packages/xai-web-*` / `packages/plugin-web-*` /
+     `apps/desktop/` / `apps/desktop/src-tauri/` / `packages/plugin-*` /
+     `packages/core-data/` / `.github/workflows` / Cloudflare deploy config /
+     dashboard / workflow docs.
    - `Target Plugin State` when extending — Stable / Production / In-Dev / Migrating
-   - `Risk Level` — multi-window, macOS native APIs, persistence schema changes raise this
+   - `Risk Level` — multi-window, macOS native APIs, account-sync schema changes,
+     deployment/secrets, release packaging, or cross-product-line transitions raise this
 3. Run Round 2 conditional follow-up questions only for hit dimensions.
 4. Scan dependencies and constraints using:
+   - `docs/PRODUCT_MODULE_MAP.md`
+   - `docs/workflow/project/module-classification.json`
    - `docs/PLUGIN_MAP.md`
    - relevant plugin docs (`packages/plugin-<name>/docs/`) when needed
+   - relevant Web package docs (`packages/xai-web-*` / `packages/plugin-web-*`) when needed
+   - account-sync contracts (`docs/contracts/account-sync-*.md`) when `syncScope` or `entityType`
+     is in scope
    - `apps/desktop/src-tauri/` Rust modules when touching native code
 5. Explain mock strategy options if dependencies are not `Stable` / `Production`:
    - `No Mock`
@@ -136,6 +156,9 @@ Before finalizing, verify at least:
 13. **Three-faces boundary check** (per `0003-three-faces-architecture.md`): the brief explicitly
     states which face owns each change (host / core / plugin), and confirms no business logic is
     being smuggled into `apps/desktop/src/` or `packages/core/`.
+14. **Six-module routing check** (per `PRODUCT_MODULE_MAP.md`): the brief names exactly one owning
+    product module, identifies any affected downstream modules, and preserves paused/proposed line
+    gates instead of presenting them as ready-to-build.
 
 If any of these fail, do not finalize the brief yet.
 
@@ -155,6 +178,8 @@ If any of these fail, do not finalize the brief yet.
     - `Options To Evaluate`
     - `Risks If Deferred`
 - `Planner Handoff`
+  - 必须包含字段 `Product module`：`web | app | plugin | sync | site | admin`，以及
+    paused/proposed/operator gate 状态。
   - 必须包含字段 `Three-faces decision`：哪一面（host / core / plugin slice）拥有本变更
   - 必须包含字段 `Target plugin slice`（如适用）：`plugin-<name>` 全名 + 当前 PLUGIN_MAP 状态
   - 必须包含字段 `Mock strategy`：从上面 5 个选项中选一个并解释为什么

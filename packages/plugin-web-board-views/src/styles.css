@@ -1,0 +1,809 @@
+/**
+ * @repo/plugin-web-board-views — styles.css
+ *
+ * Side-effect import via src/index.ts.
+ * Requires @repo/plugin-web-tokens token CSS to be loaded first (OKLCH semantic vars).
+ *
+ * Sections:
+ *  1. ViewPicker
+ *  2. TableView
+ *  3. BoardDashboardView
+ *  4. MapView
+ *  5. BoardCalendarView   (added in P2)
+ *  6. TimelineView        (added in P2)
+ *  7. BoardModule         (added in P3)
+ */
+
+/* ====================================================================
+   1. ViewPicker
+   ==================================================================== */
+
+.view-picker {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: color-mix(in oklch, var(--surface-2, oklch(96% 0.01 165)) 80%, transparent);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.vp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-2, oklch(50% 0.02 165));
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.vp-btn:hover {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 10%, transparent);
+  color: var(--text-1, oklch(20% 0.02 165));
+}
+
+.vp-btn.active,
+.vp-btn[aria-pressed="true"] {
+  background: var(--surface-1, #fff);
+  color: var(--accent, oklch(60% 0.14 165));
+  box-shadow: 0 1px 3px color-mix(in oklch, var(--bg-overlay) 12%, transparent);
+}
+
+.vp-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-block;
+  background: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* ====================================================================
+   2. TableView
+   ==================================================================== */
+
+.board-table-wrap {
+  overflow: auto;
+  flex: 1;
+  padding: 16px;
+}
+
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.board-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border-1, oklch(90% 0.02 165));
+  color: var(--text-2, oklch(50% 0.02 165));
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Sortable column headers (W3) — inherit th typography, add affordance. */
+.th-sort-btn {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+.th-sort-btn:hover { color: var(--text-1); }
+
+.board-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  vertical-align: middle;
+  position: relative;
+}
+
+.board-table tr:last-child td {
+  border-bottom: none;
+}
+
+.td-title {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.td-title:hover span:last-child {
+  text-decoration: underline;
+}
+
+.td-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-1, oklch(90% 0.02 165));
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.td-labels,
+.td-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.td-empty-hint {
+  color: var(--text-3, oklch(70% 0.02 165));
+  font-size: 0.8125rem;
+}
+
+.td-editable {
+  cursor: pointer;
+  position: relative;
+}
+
+.td-due.late {
+  color: var(--red, oklch(60% 0.18 25));
+}
+
+.td-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 220px;
+  background: var(--surface-1, #fff);
+  border: 1px solid var(--border-1, oklch(90% 0.02 165));
+  border-radius: 8px;
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--bg-overlay) 14%, transparent);
+}
+
+.td-popover-due {
+  min-width: 200px;
+}
+
+.popover-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.popover-list {
+  padding: 6px 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.popover-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.popover-item:hover {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 8%, transparent);
+}
+
+.td-date-input {
+  width: 100%;
+  padding: 7px 10px;
+  margin: 8px 12px;
+  width: calc(100% - 24px);
+  border: 1px solid var(--border-1, oklch(90% 0.02 165));
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.td-quick-due {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+
+.td-quick-btn {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.td-quick-btn:hover {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 8%, transparent);
+}
+
+.td-quick-btn.danger:hover {
+  background: color-mix(in oklch, var(--red, oklch(60% 0.18 25)) 8%, transparent);
+  color: var(--red, oklch(60% 0.18 25));
+}
+
+.td-checklist {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.td-cl-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-1, oklch(90% 0.02 165));
+  overflow: hidden;
+}
+
+.td-cl-bar > div {
+  height: 100%;
+  background: var(--accent, oklch(60% 0.14 165));
+  border-radius: 3px;
+  transition: width 0.25s;
+}
+
+.td-due-body {
+  padding: 6px 0 4px;
+}
+
+/* ====================================================================
+   3. BoardDashboardView
+   ==================================================================== */
+
+.board-dash {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.bd-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.bd-kpi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.kpi-ico {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.bd-kpi-val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.bd-kpi-label {
+  font-size: 0.8125rem;
+  color: var(--text-2, oklch(50% 0.02 165));
+  margin-top: 3px;
+}
+
+.bd-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.bd-card {
+  padding: 16px;
+}
+
+.bd-card h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--text-1, oklch(20% 0.02 165));
+}
+
+.bd-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bd-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bd-bar-label {
+  flex-shrink: 0;
+  width: 120px;
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bd-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border-1, oklch(90% 0.02 165));
+  overflow: hidden;
+}
+
+.bd-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+  min-width: 0;
+}
+
+.bd-bar-val {
+  flex-shrink: 0;
+  width: 28px;
+  text-align: right;
+  font-size: 0.8125rem;
+  color: var(--text-2, oklch(50% 0.02 165));
+}
+
+/* ====================================================================
+   4. MapView
+   ==================================================================== */
+
+.board-map {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bm-svg {
+  flex: 1;
+  min-height: 0;
+}
+
+.bm-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in oklch, var(--surface-1, #fff) 70%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.bm-card {
+  text-align: center;
+  background: var(--surface-1, #fff);
+  border-radius: 16px;
+  padding: 32px 40px;
+  box-shadow: 0 4px 24px color-mix(in oklch, var(--bg-overlay) 12%, transparent);
+  max-width: 360px;
+}
+
+.bm-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 12px 0 8px;
+}
+
+.bm-card p {
+  color: var(--text-2, oklch(50% 0.02 165));
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.bm-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ====================================================================
+   5. BoardCalendarView  (P2)
+   ==================================================================== */
+
+.board-cal {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.board-cal-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  flex-shrink: 0;
+}
+
+.board-cal-head h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.board-cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  flex-shrink: 0;
+}
+
+.bcw {
+  padding: 8px 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-2, oklch(50% 0.02 165));
+}
+
+.board-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(80px, auto);
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  gap: 1px;
+  background: var(--border-1, oklch(90% 0.02 165));
+}
+
+.board-cal-cell {
+  background: var(--surface-1, #fff);
+  min-height: 80px;
+  padding: 4px;
+  position: relative;
+  transition: background 0.1s;
+}
+
+.board-cal-cell.empty {
+  background: var(--surface-2, oklch(96% 0.01 165));
+  opacity: 0.4;
+}
+
+.board-cal-cell.today {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 6%, var(--surface-1, #fff));
+}
+
+.board-cal-cell.drag-over {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 15%, var(--surface-1, #fff));
+  outline: 2px solid var(--accent, oklch(60% 0.14 165));
+}
+
+.bcc-num {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-2, oklch(50% 0.02 165));
+  text-align: right;
+  padding: 2px;
+}
+
+.today-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent, oklch(60% 0.14 165));
+  color: var(--text-on-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.bcc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.bcc-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: none;
+  border-left: 3px solid var(--accent, oklch(60% 0.14 165));
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 8%, var(--surface-1, #fff));
+  font-size: 0.75rem;
+  cursor: grab;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bcc-card.dragging {
+  opacity: 0.5;
+}
+
+.bcc-more {
+  font-size: 0.75rem;
+  color: var(--text-2, oklch(50% 0.02 165));
+  padding: 2px 6px;
+}
+
+.bcal-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-3, oklch(70% 0.02 165));
+  font-size: 0.875rem;
+}
+
+/* ====================================================================
+   6. TimelineView  (P2)
+   ==================================================================== */
+
+.board-timeline {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.bt-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  min-width: max-content;
+}
+
+.bt-corner {
+  grid-column: 1;
+  grid-row: 1;
+  position: sticky;
+  left: 0;
+  background: var(--surface-1, #fff);
+  border-bottom: 2px solid var(--border-1, oklch(90% 0.02 165));
+  z-index: 2;
+}
+
+.bt-days {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: repeat(30, 1fr);
+  border-bottom: 2px solid var(--border-1, oklch(90% 0.02 165));
+  position: sticky;
+  top: 0;
+  background: var(--surface-1, #fff);
+  z-index: 1;
+}
+
+.bt-day {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 0.75rem;
+  color: var(--text-2, oklch(50% 0.02 165));
+  border-left: 1px solid var(--border-1, oklch(90% 0.02 165));
+}
+
+.bt-day.today {
+  background: color-mix(in oklch, var(--accent, oklch(60% 0.14 165)) 8%, transparent);
+  color: var(--accent, oklch(60% 0.14 165));
+  font-weight: 700;
+}
+
+.bt-day-num {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.bt-day-m {
+  font-size: 0.6875rem;
+  opacity: 0.7;
+}
+
+.bt-list-name {
+  grid-column: 1;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  font-size: 0.8125rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: sticky;
+  left: 0;
+  background: var(--surface-1, #fff);
+  z-index: 1;
+}
+
+.bt-track {
+  grid-column: 2;
+  position: relative;
+  height: 48px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  overflow: hidden;
+}
+
+.bt-bar {
+  position: absolute;
+  top: 6px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid;
+  display: flex;
+  align-items: stretch;
+  cursor: default;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  user-select: none;
+  transition: opacity 0.1s;
+}
+
+.bt-bar.dragging {
+  opacity: 0.8;
+  z-index: 10;
+}
+
+.bt-handle {
+  width: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  background: color-mix(in oklch, currentColor 20%, transparent);
+}
+
+.bt-handle-l {
+  border-radius: 5px 0 0 5px;
+}
+
+.bt-handle-r {
+  border-radius: 0 5px 5px 0;
+}
+
+.bt-bar-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.bt-bar-content:active {
+  cursor: grabbing;
+}
+
+.bt-bar-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bt-empty {
+  padding: 14px 12px;
+  font-size: 0.8125rem;
+}
+
+/* ====================================================================
+   7. BoardModule  (P3)
+   ==================================================================== */
+
+.board-views-module {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bvm-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-1, oklch(90% 0.02 165));
+  flex-shrink: 0;
+}
+
+.bvm-header h1 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bvm-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shared panel class used by views */
+.panel {
+  background: var(--surface-1, #fff);
+  border-radius: 10px;
+  border: 1px solid var(--border-1, oklch(90% 0.02 165));
+}
+
+/* Shared bc-label chip */
+.bc-label {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-on-accent);
+}
+
+/* Shared bc-member avatar */
+.bc-member {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-on-accent);
+}
+
+.grow {
+  flex: 1;
+}
+
+.mono {
+  font-family: ui-monospace, monospace;
+}
+
+.muted {
+  color: var(--text-3, oklch(70% 0.02 165));
+}
+
+/* Board-views module wrapper within a board-module host */
+.board-module.board-views-host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

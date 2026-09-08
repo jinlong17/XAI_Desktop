@@ -7,13 +7,11 @@ description: Roadmap orchestration layer (Layer 3.5). Parses a reviewed roadmap 
 
 ## Read First
 
-- `docs/workflow/_portable/06-roadmap-orchestration.md` (the canonical spec)
-- `docs/workflow/_portable/07-automation-mode-picker.md` (Mode picker)
-- `docs/workflow/SUBAGENT_WORKFLOW_V2.md` (project-layer V2 landing)
+- `docs/workflow/_portable/06-roadmap-orchestration.md` (the spec)
+- `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 
-Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-roadmap-orchestration.md`.
-This skill is the project-layer instantiation; the portable spec is the source of truth for
-behaviour and the hard constraints below.
+Layer 3.5 roadmap orchestration skill. Full spec: `docs/workflow/_portable/06-roadmap-orchestration.md`
+(and the project's concrete roadmap-orchestration doc).
 
 ## 0. Hard constraints (inviolable in any mode)
 
@@ -60,7 +58,7 @@ behaviour and the hard constraints below.
 14. **`bg` must protect worktrees and quota.** Before launching bg sessions, satisfy the clean-tree /
     `worktree.baseRef=head` / inline-content visibility gate, respect `Wave Concurrency Cap` (default
     `3`), queue overflow rows with `QUEUED_BG`, and make ship instructions point to the background
-    session worktree. Agent View PR dots are never the A2K truth source.
+    session worktree. Agent View PR dots are never the project truth source.
 15. **Dispatch confirmation is mandatory, in Chinese, on every `run`.** After resolving the candidate
     dispatch mode but before emitting prompt blocks, marking rows `IN_PROGRESS`, launching bg
     sessions, or dispatching any worker, present a Chinese AskUserQuestion-style confirmation that
@@ -106,16 +104,16 @@ Mechanical extraction; invent nothing.
 Propose a decomposition; the shared-tail review gate is where the author confirms it.
 
 1. Read the project's structural context — `docs/PLUGIN_MAP.md`, `docs/planning/REFACTORING_PLAN.md`,
-   `developer.md` when present, and the `packages/` plugin layout — so features land on real plugin
-   boundaries. XAI naming: each `<slug>` is a `plugin-<name>` package.
+   `developer.md`, the `packages` layout — so features land on real module boundaries.
+   If the project uses package-prefixed feature slugs, record the canonical full slug in the
+   manifest.
 2. Partition the PRD into the smallest independent candidate units that each make sense as one
-   `xai-feature-full-loop` run; prefer existing plugin boundaries. This step MAY spawn parallel
+   `xai-feature-full-loop` run; prefer existing project boundaries. This step MAY spawn parallel
    analysis subagents (e.g. one per subsystem named in the PRD), then synthesise their results —
    this keeps init's own context small (spec §A3 principle 3).
 3. Analyse inter-feature relationships first, then infer the dependency graph from them: shared
-   modules/files (concurrent-edit conflict risk in `packages/core/` or `packages/ui/`),
-   contract/data dependencies (shared typed events in `packages/core/src/events/`), sequencing/foundation,
-   true independence (do not invent edges). Set `depends_on` + `Dep Semantics` (default `shipped`;
+   modules/files (concurrent-edit conflict risk), shared core/ui areas, contract/data dependencies,
+   sequencing/foundation, true independence (do not invent edges). Set `depends_on` + `Dep Semantics` (default `shipped`;
    relax to `ready_to_ship` only where the PRD clearly allows). Assign a canonical `Slug` per feature.
 4. Clarify genuine ambiguity with the user — do NOT silently guess. When a decision is genuinely
    ambiguous AND materially changes the manifest (one feature or two? real dependency or
@@ -135,7 +133,7 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
 
 - For each row drafted, fire the per-feature Automation Mode picker per
   `_portable/07-automation-mode-picker.md` §5 (smart inheritance shortcut on by default):
-  - **Row #1:** full 4-option picker → answer becomes header `Default Automation Mode`; row #1's
+  - **Row #1:** full 5-option picker → answer becomes header `Default Automation Mode`; row #1's
     Mode cell written as `(default)`.
   - **Row #2..N:** AskUserQuestion with 2 options — "Same as Default (<Mode_1>)" → write
     `(default)`; "Pick a different Mode" → fire full picker → write explicit variant.
@@ -143,8 +141,7 @@ Propose a decomposition; the shared-tail review gate is where the author confirm
     per-row picker.
   - To disable the shortcut and force a full picker per row, set a project-layer config flag
     (portable spec keeps shortcut ON by default).
-- AskUserQuestion **once** for the cross-vendor verify gate
-  (`docs/workflow/SUBAGENT_WORKFLOW_V2.md` V2 portable-layer note):
+- AskUserQuestion **once** for the cross-vendor verify gate (`docs/workflow/SUBAGENT_WORKFLOW_V2.md` §16.3 #5):
   - Question: "Strict cross-vendor verify gate? (recommended yes — strict; opt out to allow `feature-dev-loop` and skip the manual cross-vendor verify hand-off)"
   - Option 1: "Yes — strict (default)" → header `Default Verify Cross-vendor: yes`
   - Option 2: "No — allow feature-dev-loop (echo chamber accepted)" → header `Default Verify Cross-vendor: no`
@@ -224,7 +221,7 @@ row per the 5-layer fallback in `_portable/07-automation-mode-picker.md` §4. Su
 If layer 4 fires the picker and the host tool does not support AskUserQuestion, STOP with Handoff:
 Status `BLOCKED`, Blocker "Manifest header 'Default Automation Mode' missing or invalid; cannot
 ask interactively in this tool.", Next Step "Edit `docs/workflow/roadmap/<roadmap_name>.md` header
-`Default Automation Mode:` to one of the 8 legal variants (see `_portable/04-automation-loop.md`
+`Default Automation Mode:` to one of the 9 legal variants (see `_portable/04-automation-loop.md`
 §3), then re-run."
 
 Record the resolution outcome in a per-session log line (not in the manifest):
@@ -332,7 +329,7 @@ emit to user:
 
   Next Step:
     Open <K> new sessions in parallel and paste each block. Each will produce
-    its own dev_log under `packages/<slug>/docs/dev_log.md` and reach
+    its own dev_log under packages/<slug>/docs/dev_log.md and reach
     READY_TO_SHIP (or BLOCKED) independently. After any feature(s) SHIPPED,
     re-run `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md` here.
     Reconcile will pick up the new state from dev_logs and emit the next wave.
@@ -422,7 +419,7 @@ After launching the wave, STOP. Output:
 - `claude agents --cwd /path/to/repo`
 - `Worktree: pending until first file edit`; check with `git worktree list | grep SESSION_ID`
 - bg-aware ship prompt blocks for every READY_TO_SHIP row
-- warning: Agent View PR dots are not A2K truth; `dev_log` Status Panel + reconcile are truth
+- warning: Agent View PR dots are not project truth; `dev_log` Status Panel + reconcile are truth
 - the fallback emit blocks for any row that failed to launch
 - Next Step: monitor Agent View; after rows reach READY_TO_SHIP and are shipped, re-run
   `xai-roadmap-loop manifest: docs/workflow/roadmap/<roadmap_name>.md`
@@ -447,8 +444,8 @@ that `Worktree:` line. Do not tell the user to `claude rm SESSION_ID` until afte
 commits were pushed and the dev_log was marked `SHIPPED`; removing the background session can remove
 the worktree.
 
-Agent View is a monitor, not the A2K source of truth. Its "Ready for review" / PR indicators only
-reflect Claude Code PR state when a PR exists. A2K shippability is determined by
+Agent View is a monitor, not the project source of truth. Its "Ready for review" / PR indicators only
+reflect Claude Code PR state when a PR exists. Project shippability is determined by
 `packages/<slug>/docs/dev_log.md` `Status: READY_TO_SHIP` plus the next roadmap reconcile.
 
 ### 3.5 serial-dispatch (one transcript, no parallelism)

@@ -1,11 +1,23 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "DEV",
+    "MODE",
+    "NODE_ENV",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_DEPLOY_ENV",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
+    "SENTRY_RELEASE",
+    "VITE_STRIPE_PAYMENT_LINK_URL",
+    "VITE_WEB_AUTH_MODE"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]

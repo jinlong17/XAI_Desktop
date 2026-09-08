@@ -1,0 +1,4 @@
+# Transient runner artifacts
+_runner/drive.log
+**/output.log
+**/prompt.md

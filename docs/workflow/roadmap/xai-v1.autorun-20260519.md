@@ -1,5 +1,7 @@
 # XAI v1 Autorun Log — 2026-05-19
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Web Console (`docs/workflow/roadmap/xai-web-console.md`) is the active roadmap. Do NOT start new work on this roadmap. SHIPPED rows remain authoritative for their domain; in-flight items: complete-or-park. Resumes only after P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 ## Run Contract
 
 - Executor: Codex serial inline conductor.
@@ -768,3 +770,144 @@ G1.1 (window-command-contract), G1.6 (host-business-residuals), G1.2 (grid-shell
   - `pnpm --filter @repo/core-data check-types` -> PASS
   - `pnpm --filter desktop build` -> PASS
 - Deferred: SQLCipher PRAGMA wiring (depends on G2.4 opaque KEK handle); cross-command transactions; real `app_data_dir` macOS runtime smoke (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 00:48 PDT — Feature Checkpoint: G2.3 localstorage-migration READY_TO_SHIP
+
+- Added `packages/core-data/src/organizer-layout-migration.ts` exporting `migrateOrganizerLayoutToRepos({ storage, gridRepo, itemRepo })` and `LEGACY_LAYOUT_STORAGE_KEY = "xai-desktop-layout"`.
+- Maps legacy `PersistedLayout` → typed `GridEntity` / `GridItemEntity`. Orphan items (no owning grid) are dropped.
+- Non-destructive by default; `removeLegacy: true` opt-in.
+- Added 5 vitest cases (`tests/organizer-layout-migration.test.ts`): mapping, idempotency, default-keep-legacy, opt-in removal, absent/malformed no-op.
+- Created `packages/localstorage-migration/docs/dev_log.md` and promoted G2 manifest row #4 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/core-data test` -> 54 tests PASS.
+  - `pnpm --filter @repo/core-data check-types` -> PASS.
+- UI runtime cut-over (`useGridSystem.tsx` async refactor) is parked under G1.5 `grid-persistence` so it lands in a single focused PR.
+
+### Branch Hygiene Note (Track A)
+
+- 00:32 PDT: my G2.2 commit landed on `codex/track-c-widgets-web-ai` because a parallel agent had switched the working-tree branch. Cherry-picked `92e2ba6` onto `codex/track-a-desktop-foundation` as `f3dd30b`; the duplicate remains on Track C and will be reconciled when the tracks merge to main.
+
+### 2026-05-20 00:54 PDT — Feature Checkpoint: G2.4 keychain-opaque-handle READY_TO_SHIP
+
+- Added `apps/desktop/src-tauri/src/crypto/keychain_handle.rs` with `load_kek_into_vault(key, vault)` and `insert_kek_from_bytes(bytes, vault)`. Both return only `KeyHandleId`; byte buffers are zeroized.
+- Rust-internal `KeychainHandleError` (Keychain passthrough, InvalidKeyLength, KeyVault) — does not cross IPC; callers map to JS-visible variants.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.0.1 documenting the single authorised "Keychain bytes → KeyVault handle" crossing and the rule that `secret_get` MUST NOT surface KEK/DEK/device-private bytes to JS.
+- Created `packages/keychain-opaque-handle/docs/dev_log.md`.
+- Promoted G2 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto keychain_handle::` -> 3 tests PASS
+- Deferred: `db_init` SQLCipher PRAGMA wiring (G2.6); live macOS Keychain runtime smoke (covered by keychain-bridge-macos package).
+
+### 2026-05-20 00:58 PDT — Feature Checkpoint: G2.5 tauri-capability-allowlist READY_TO_SHIP
+
+- Audited existing capability files (`default.json`, `plugin-account-crypto.json`, `plugin-account-keychain.json`) and added `plugin-data-database.json` scoped to main/control/grid_*/account/console.
+- Added defence-in-depth `DATABASE_ALLOWED_WINDOWS` runtime allow-list in `commands/database.rs` so widget / pet / ai_cube windows cannot reach `db_*` even via a mis-attached capability file. 2 new cargo tests cover admit/reject paths.
+- Recorded the full audit (windows ↔ commands ↔ enforcement layer) in `apps/desktop/src-tauri/capabilities/AUDIT.md`.
+- Updated `docs/contracts/tauri-commands-v0.md` §6.1 and §7 with the new capability file + audit pointer.
+- Created `packages/tauri-capability-allowlist/docs/dev_log.md`; promoted G2 manifest row #6 to READY_TO_SHIP.
+- Tests run:
+  - `cargo check --features crypto` -> PASS
+  - `cargo test --features crypto database::` -> 9 tests PASS
+  - `cargo check` (default) -> PASS
+- Deferred: MAS sandbox capability validation under signed runtime; `tauri-plugin-opener` minimization (follow-up audit).
+
+### 2026-05-20 01:02 PDT — Feature Checkpoint: G2.6 single-table-sync-baseline READY_TO_SHIP
+
+- Added `packages/core-data/src/sync-outbox.ts`: `OutboxEntry` record (`commitSeq`, `mutationId`, `targetEntityType`/`Id`, `op`, `payload`, `retryCount`, `baseRevision`), `enqueueOutboxEntry()` atomic helper, `nextOutboxBatch()` ordered drain, and `createMockCommitSeqAuthority()` test helper.
+- `enqueueOutboxEntry` wraps the entity write and outbox put in the same outer transaction, so a crash between the two phases rolls both back. Proved by a sabotaged outbox test.
+- Added 4 vitest cases (`tests/sync-outbox.test.ts`): happy-path put, rollback on outbox failure, ordering by commitSeq, delete op.
+- Re-exported the new surface from `@repo/core-data` index.
+- Updated `packages/single-table-todos-e2e/docs/dev_log.md` Status Panel to READY_TO_SHIP and recorded the Repository v0 reconciliation.
+- Promoted G2 manifest row #7 to READY_TO_SHIP.
+- Tests run: `pnpm --filter @repo/core-data test` -> 58 tests PASS.
+- Deferred: live Supabase project provisioning + 2-Mac smoke + zero-knowledge dump PoC (recorded in `xai-v1.deferred-gates.md`).
+
+### 2026-05-20 01:08 PDT — Feature Checkpoint: G1.5 grid-persistence READY_TO_SHIP
+
+- Added `packages/plugin-organizer/src/layoutStore.ts` exporting `LayoutStore` interface, `localStorageLayoutStore()` (preserves the historical synchronous path), and `repositoryLayoutStore()` (G2.1 Repository-backed adapter; uses `GridEntity`/`GridItemEntity`).
+- Both adapters catch `load()` / `save()` errors and surface them via optional `onLoadError`/`onSaveError` callbacks. Corrupted state can never whiteout the desktop.
+- Wired `GridSystemProvider` to accept `store?: LayoutStore`. Default behaviour is unchanged. Hydrate is async with a try/catch fallback to empty state; save and `clearAll` delegate to the store.
+- Added `@repo/core-data` workspace dep to `packages/plugin-organizer/package.json`. `pnpm install --offline` linked the workspace (no new deps pulled).
+- Added 9 vitest cases (`src/layoutStore.test.ts`) covering round-trip, missing key, malformed JSON, type guard, save quota error, repo empty layout, repo round-trip, repo cull on disappearance, and repo load failure → null.
+- Promoted G1 manifest row #5 to READY_TO_SHIP.
+- Tests run:
+  - `pnpm --filter @repo/plugin-organizer test` -> 13 tests PASS
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+  - `pnpm --filter desktop build` -> PASS
+- Deferred: actual host wire-up that passes `repositoryLayoutStore(tauriGridRepo, tauriItemRepo)` to `GridSystemProvider`. Currently parked because the host integration needs a `useTauriInvoke()` adapter and live macOS Tauri runtime smoke; recorded in `xai-v1.deferred-gates.md` as a follow-up.
+
+### 2026-05-20 01:14 PDT — Feature Checkpoint: G3-E1 / S3 / E2 / E3 / E4 READY_TO_SHIP
+
+Consolidated G3 organizer-loop feature batch (Track A scope):
+
+- **G3-E1** Grid item model productization
+  - `packages/plugin-organizer/src/gridItemFactory.ts`: typed factories for file / folder / app entities + `createGridItemsFromFinderDrop` bulk adapter; deterministic IDs and timestamps via injectable deps.
+  - `inferKindFromPath` heuristic with `.app` bundle detection.
+- **G3-S3** New URL item
+  - `createUrlGridItem` validates http/https protocols, normalises hostname-based filename, rejects file:// / javascript: / unparseable URLs via `InvalidUrlError`.
+- **G3-E2** Auto-classification rules
+  - `packages/plugin-organizer/src/autoClassify.ts`: rule-engine seam with `ClassificationRule[]`. Default rules cover kind-title (score 10), extension-group-title (score 20: images/videos/audio/pdfs/notes/archives), and parent-folder-title (score 25).
+- **G3-E3** Finder collaboration
+  - `apps/desktop/src-tauri/src/commands/finder.rs`: `reveal_in_finder` / `open_path` Tauri commands with runtime `FINDER_ALLOWED_WINDOWS` allow-list and path validation. Registered in `lib.rs` `invoke_handler`. 3 cargo tests.
+  - `packages/plugin-organizer/src/finderClient.ts`: TS wrapper bound to injected `invoke`.
+- **G3-E4** Empty state + error recovery
+  - `packages/plugin-organizer/src/itemHealth.ts`: `evaluateItemHealth(item, { pathExists? })` classifies items into `healthy / missing-path / missing-protocol / broken-url / unknown`. Plus `defaultEmptyStateActions()` (create-grid / drop-here / add-url / choose-folder CTAs).
+
+- Updated `docs/contracts/tauri-commands-v0.md` §4 with `reveal_in_finder` / `open_path` security rules.
+- Tests run:
+  - `pnpm --filter @repo/plugin-organizer test` -> 41 tests PASS (4 prior + 13 gridItemFactory + 9 layoutStore + 8 autoClassify + 7 itemHealth).
+  - `pnpm --filter @repo/plugin-organizer check-types` -> PASS
+  - `cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml finder::` -> 3 tests PASS.
+  - `pnpm --filter desktop build` -> PASS.
+- Deferred: actual UI wire-up in `SmartContainer.tsx` / `OrganizerGridContent.tsx` to consume the new helpers + render empty-state actions. Currently parked because the host integration needs careful interaction with the existing drag-drop flow. Recorded in `xai-v1.deferred-gates.md` as the G3 UI cut-over follow-up.
+
+### 2026-05-20 01:17 PDT — Track A Session Summary
+
+Branch: `codex/track-a-desktop-foundation` · Commits in this session (newest first):
+
+1. `533391e` G3 organizer-loop utilities + Finder commands (G3-E1 / S3 / E2 / E3 / E4)
+2. `91dc6b6` LayoutStore seam with whiteout-safe hydrate (G1.5)
+3. `43ffdda` Repository v0 outbox + atomic enqueue (G2.6)
+4. `ad5f1d3` db capability file + runtime window allow-list (G2.5)
+5. `d1fe45a` Keychain ↔ KeyVault bridge with byte zeroization (G2.4)
+6. `2784397` organizer-layout → Repository v0 adapter (G2.3)
+7. `f3dd30b` Tauri db_* command bridge + TS createTauriRepo (G2.2)
+8. `653219b` promote G1.2 and G1.4 manifest rows to SHIPPED
+9. `744d578` freeze Repository v0 entity surface (G2.1)
+
+Feature outcomes:
+
+| Roadmap row | Status | Notes |
+|---|---|---|
+| G1.2 grid-shell-organizer-content | SHIPPED | manifest promotion only |
+| G1.4 multi-grid-event-scope | SHIPPED | manifest promotion only |
+| G1.5 grid-persistence | READY_TO_SHIP | LayoutStore seam + Repository adapter |
+| G2.1 repository-v0-contract | READY_TO_SHIP | typed entity surface + 45 tests |
+| G2.2 core-data-sqlite-driver | READY_TO_SHIP | Tauri db_* + createTauriRepo |
+| G2.3 localstorage-migration | READY_TO_SHIP | organizer-layout adapter + 5 tests |
+| G2.4 keychain-opaque-handle | READY_TO_SHIP | Keychain → KeyVault bridge |
+| G2.5 tauri-capability-allowlist | READY_TO_SHIP | plugin-data-database.json + AUDIT.md |
+| G2.6 single-table-sync-baseline | READY_TO_SHIP | Repository v0 outbox + 4 tests |
+| G3-E1 grid item model | READY_TO_SHIP | typed factory + 13 tests |
+| G3-S3 new URL item | READY_TO_SHIP | InvalidUrlError, http(s) only |
+| G3-E2 auto-classification rules | READY_TO_SHIP | rule engine + 8 tests |
+| G3-E3 Finder collaboration | READY_TO_SHIP | reveal_in_finder / open_path + 3 cargo tests |
+| G3-E4 empty state + recovery | READY_TO_SHIP | evaluateItemHealth + 7 tests |
+
+Test totals:
+
+- `pnpm --filter @repo/core-data test`: 58 PASS
+- `pnpm --filter @repo/plugin-organizer test`: 41 PASS
+- `cargo test --features crypto`: 78 PASS
+- `cargo check` (default + crypto): PASS
+- `pnpm --filter desktop build`: PASS
+
+Ship policy: G1.2 and G1.4 manifest promotions were authorized; all other rows stop at READY_TO_SHIP without push.
+
+Deferred-gate follow-ups (recorded in `xai-v1.deferred-gates.md` / individual dev_logs):
+
+- SQLCipher PRAGMA wiring into `db_init` (depends on G2.4 KEK handle being threaded into the database state).
+- Live Supabase / 2-Mac / zero-knowledge dump PoC.
+- Host UI cut-over to consume `repositoryLayoutStore`, `createTauriRepo`, classifier, finder client, item-health, empty-state actions.
+- macOS signed-runtime / MAS sandbox smoke (G0.6, G2.7).

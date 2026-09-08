@@ -1,6 +1,9 @@
+pub mod bookmarks;
 pub mod crypto;
 #[cfg(feature = "crypto")]
 pub mod database;
+pub mod finder;
 pub mod keychain;
 pub mod menubar;
+pub mod thumbnail;
 pub mod window;

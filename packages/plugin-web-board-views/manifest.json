@@ -1,0 +1,8 @@
+{
+  "name": "@repo/plugin-web-board-views",
+  "status": "Stable",
+  "type": "ui",
+  "owner": "xai-web-board-views row #8",
+  "windows": [],
+  "description": "Web Console Board — 5 additional views (Table/Calendar/Dashboard/Timeline/Map) + ViewPicker layered on @repo/plugin-web-board-core (row #7)."
+}

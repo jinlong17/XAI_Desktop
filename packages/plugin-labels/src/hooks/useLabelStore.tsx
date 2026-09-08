@@ -7,7 +7,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { emitEvent } from "@repo/core/events";
 import { LocalStorageAdapter } from "../data/LocalStorageAdapter";
+import { useLabelRepoAdapter } from "../data/RepoProvider";
 import type { DataAdapter, Label, LabelDraft, LabelStore } from "../types";
 
 const STORAGE_KEY = "xai.plugin-labels.labels";
@@ -15,9 +17,42 @@ const RECENT_KEY = "xai.plugin-labels.recent";
 const FALLBACK_COLORS = ["#2563eb", "#16a34a", "#dc2626", "#9333ea", "#ea580c", "#0891b2"];
 
 const seedLabels: Label[] = [
-  { id: "label-focus", name: "Focus", color: "#2563eb", icon: "target", createdAt: "2026-05-20T00:00:00.000Z" },
-  { id: "label-waiting", name: "Waiting", color: "#9333ea", icon: "clock", createdAt: "2026-05-20T00:00:00.000Z" },
-  { id: "label-home", name: "Home", color: "#16a34a", icon: "home", createdAt: "2026-05-20T00:00:00.000Z" },
+  {
+    id: "label-focus",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Focus",
+    color: "#2563eb",
+    icon: "target",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
+  {
+    id: "label-waiting",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Waiting",
+    color: "#9333ea",
+    icon: "clock",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
+  {
+    id: "label-home",
+    entityType: "labels.label",
+    schemaVersion: 1,
+    syncScope: "account-sync",
+    name: "Home",
+    color: "#16a34a",
+    icon: "home",
+    createdAt: "2026-05-20T00:00:00.000Z",
+    updatedAt: "2026-05-20T00:00:00.000Z",
+    version: 1,
+  },
 ];
 
 function createId(prefix: string): string {
@@ -50,9 +85,15 @@ export interface LabelStoreProviderProps {
 }
 
 export function LabelStoreProvider({
-  adapter = new LocalStorageAdapter<Label>(STORAGE_KEY, seedLabels),
+  adapter,
   children,
 }: LabelStoreProviderProps) {
+  const repoAdapter = useLabelRepoAdapter();
+  const [defaultAdapter] = useState(
+    () => new LocalStorageAdapter<Label>(STORAGE_KEY, seedLabels),
+  );
+  const stableAdapter = adapter ?? repoAdapter ?? defaultAdapter;
+
   const [labels, setLabels] = useState<Label[]>([]);
   const [recentLabelIds, setRecentLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +103,7 @@ export function LabelStoreProvider({
     setIsLoading(true);
     setError(null);
     try {
-      const next = await adapter.getAll();
+      const next = await stableAdapter.getAll();
       setLabels(next.sort((a, b) => a.name.localeCompare(b.name)));
       setRecentLabelIds(readRecent());
     } catch (cause) {
@@ -70,7 +111,7 @@ export function LabelStoreProvider({
     } finally {
       setIsLoading(false);
     }
-  }, [adapter]);
+  }, [stableAdapter]);
 
   useEffect(() => {
     void refresh();
@@ -81,38 +122,74 @@ export function LabelStoreProvider({
       const color = input.color ?? FALLBACK_COLORS[labels.length % FALLBACK_COLORS.length] ?? "#2563eb";
       const label: Label = {
         id: createId("label"),
+        entityType: "labels.label",
+        schemaVersion: 1,
+        syncScope: "account-sync",
         name: input.name.trim(),
         color,
         icon: input.icon?.trim() || undefined,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        version: 1,
       };
       if (!label.name) throw new Error("Label name is required");
-      await adapter.save(label);
+      await stableAdapter.save(label);
+      void emitEvent("labels:created", {
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        icon: label.icon,
+        entityType: label.entityType,
+        version: label.version,
+        createdAt: label.createdAt,
+      }).catch(() => undefined);
       setLabels((prev) => [...prev, label].sort((a, b) => a.name.localeCompare(b.name)));
       return label;
     },
-    [adapter, labels.length],
+    [stableAdapter, labels.length],
   );
 
   const updateLabel = useCallback(
     async (id: string, patch: Partial<Omit<Label, "id" | "createdAt">>) => {
-      const current = await adapter.getById(id);
+      const current = await stableAdapter.getById(id);
       if (!current) return;
       const next: Label = {
         ...current,
         ...patch,
         name: patch.name?.trim() ?? current.name,
         icon: patch.icon?.trim() || patch.icon,
+        updatedAt: new Date().toISOString(),
+        version: current.version + 1,
       };
-      await adapter.save(next);
-      setLabels((prev) => prev.map((label) => (label.id === id ? next : label)));
+      await stableAdapter.save(next);
+      void emitEvent("labels:updated", {
+        id: next.id,
+        name: next.name,
+        color: next.color,
+        icon: next.icon,
+        version: next.version,
+        updatedAt: next.updatedAt,
+      }).catch(() => undefined);
+      setLabels((prev) =>
+        prev
+          .map((label) => (label.id === id ? next : label))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      );
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const deleteLabel = useCallback(
     async (id: string) => {
-      await adapter.delete(id);
+      const existing = await stableAdapter.getById(id);
+      if (!existing) return;
+      const deletedAt = new Date().toISOString();
+      await stableAdapter.delete(id);
+      void emitEvent("labels:deleted", {
+        id: existing.id,
+        version: existing.version,
+        deletedAt,
+      }).catch(() => undefined);
       setLabels((prev) => prev.filter((label) => label.id !== id));
       setRecentLabelIds((prev) => {
         const next = prev.filter((recentId) => recentId !== id);
@@ -120,7 +197,7 @@ export function LabelStoreProvider({
         return next;
       });
     },
-    [adapter],
+    [stableAdapter],
   );
 
   const markRecent = useCallback((labelIds: string[]) => {

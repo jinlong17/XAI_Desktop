@@ -1,0 +1,1267 @@
+/*
+ * Dashboard grid container styles.
+ *
+ * Most layout/grid rules already live in @repo/plugin-web-tokens/src/layout.css
+ * (ported via row #2 from web design/layout.css): .module-dashboard, .dash-head,
+ * .dash-greeting, .dash-date, .dash-grid, .widget-shell, .w-clock, .w-stat, etc.
+ *
+ * This file declares row-scoped additions only:
+ * - Dashboard visual hierarchy overrides
+ * - Empty state panel
+ * - Widget ghost layer (P2)
+ * - Drag state modifiers (P2)
+ *
+ * Per ADR-0007 §S5 rule 9: CSS imports are side-effect — no CSS Modules.
+ */
+
+/* ---- Dashboard surface + widget card hierarchy ---------------------- */
+
+.module-dashboard {
+  --dash-widget-glass-rgb: 255 255 255;
+  --dash-widget-glass-alpha: 0.42;
+  --dash-widget-glass-hover-alpha: 0.54;
+  --dash-widget-glass-border-alpha: 0.5;
+  --dash-widget-glass-dark-alpha: 0.18;
+  --dash-widget-glass-dark-hover-alpha: 0.22;
+  --dash-widget-glass-dark-border-alpha: 0.22;
+  --dash-control-bg: oklch(100% 0 0 / 0.62);
+  --dash-control-bg-hover: oklch(100% 0 0 / 0.9);
+  --dash-control-border: oklch(75% 0.018 215 / 0.36);
+  --dash-control-shadow: 0 4px 12px oklch(25% 0.02 220 / 0.1);
+  --dash-card-bg:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.62) 0%,
+      rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-alpha)) 48%,
+      rgb(255 255 255 / 0.18) 100%
+    );
+  --dash-card-bg-hover:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.72) 0%,
+      rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-hover-alpha)) 50%,
+      rgb(255 255 255 / 0.26) 100%
+    );
+  --dash-card-border: rgb(118 132 145 / 0.22);
+  --dash-card-border-hover: rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-border-alpha));
+  --dash-card-shadow:
+    0 18px 42px rgb(36 48 58 / 0.1),
+    0 2px 8px rgb(36 48 58 / 0.06),
+    inset 0 1px 0 rgb(255 255 255 / 0.78),
+    inset 0 0 0 1px rgb(255 255 255 / 0.34);
+  --dash-card-shadow-hover:
+    0 22px 56px rgb(36 48 58 / 0.14),
+    0 4px 12px rgb(36 48 58 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.86),
+    inset 0 0 0 1px rgb(255 255 255 / 0.42);
+  --dash-widget-cols: 4;
+  --dash-widget-min-height: 160px;
+  gap: 18px;
+  background:
+    linear-gradient(180deg, oklch(98% 0.01 210 / 0.92), oklch(95% 0.018 158 / 0.92)),
+    var(--bg-app);
+}
+
+[data-theme="dark"] .module-dashboard {
+  --dash-control-bg: oklch(30% 0.014 220 / 0.72);
+  --dash-control-bg-hover: oklch(36% 0.016 220 / 0.88);
+  --dash-control-border: oklch(54% 0.018 220 / 0.38);
+  --dash-control-shadow: 0 8px 18px rgb(0 0 0 / 0.24);
+  --dash-card-bg:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.08) 0%,
+      rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-dark-alpha)) 46%,
+      rgb(8 13 18 / 0.5) 100%
+    ),
+    rgb(17 24 31 / 0.62);
+  --dash-card-bg-hover:
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.11) 0%,
+      rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-dark-hover-alpha)) 48%,
+      rgb(8 13 18 / 0.42) 100%
+    ),
+    rgb(19 27 35 / 0.7);
+  --dash-card-border: rgb(255 255 255 / 0.12);
+  --dash-card-border-hover: rgb(var(--dash-widget-glass-rgb) / var(--dash-widget-glass-dark-border-alpha));
+  --dash-card-shadow:
+    0 18px 48px rgb(0 0 0 / 0.28),
+    0 2px 10px rgb(0 0 0 / 0.18),
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  --dash-card-shadow-hover:
+    0 22px 56px rgb(0 0 0 / 0.36),
+    0 4px 12px rgb(0 0 0 / 0.22),
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 34%),
+    linear-gradient(180deg, var(--bg-app), color-mix(in oklch, var(--bg-app) 88%, black));
+}
+
+.module-dashboard .dash-head {
+  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(240px, auto) minmax(280px, 1fr) auto;
+  gap: 18px;
+  padding: 4px 2px 0;
+}
+
+.module-dashboard .dash-head__intro {
+  min-width: 0;
+}
+
+.module-dashboard .dash-note-lane {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.module-dashboard .dash-add {
+  border-color: var(--dash-control-border);
+  background: var(--dash-control-bg);
+  box-shadow: var(--dash-control-shadow);
+  backdrop-filter: blur(12px) saturate(140%);
+  margin-left: 0;
+  white-space: nowrap;
+}
+
+.module-dashboard .dash-note {
+  position: relative;
+  min-width: 0;
+  width: min(100%, 560px);
+  justify-self: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  cursor: grab;
+  touch-action: pan-y;
+  transform: translateX(var(--dash-note-x, 0px));
+  will-change: transform;
+  transition:
+    transform 160ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    backdrop-filter 140ms ease;
+}
+
+.module-dashboard .dash-note.is-moving {
+  cursor: grabbing;
+  user-select: none;
+  transition: none;
+}
+
+.module-dashboard .dash-note:hover,
+.module-dashboard .dash-note:focus-within,
+.module-dashboard .dash-note.is-editing {
+  border-color: oklch(80% 0.018 215 / 0.46);
+  background: oklch(100% 0 0 / 0.46);
+  box-shadow:
+    0 12px 28px oklch(30% 0.018 220 / 0.06),
+    inset 0 1px 0 oklch(100% 0 0 / 0.64);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.module-dashboard .dash-note.has-note:hover,
+.module-dashboard .dash-note.has-note:focus-within {
+  background: oklch(100% 0 0 / 0.62);
+  border-color: oklch(72% 0.034 170 / 0.5);
+}
+
+.module-dashboard .dash-note.is-editing {
+  border-color: var(--accent, oklch(64% 0.13 180));
+  background: oklch(100% 0 0 / 0.78);
+  cursor: text;
+}
+
+.module-dashboard .dash-note__label {
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.module-dashboard .dash-note__display,
+.module-dashboard .dash-note__editor {
+  min-width: 0;
+  width: 100%;
+  min-height: 28px;
+}
+
+.module-dashboard .dash-note__display {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  cursor: inherit;
+  text-align: left;
+}
+
+.module-dashboard .dash-note__display:hover,
+.module-dashboard .dash-note__display:focus-visible {
+  color: var(--text-1);
+  outline: none;
+}
+
+.module-dashboard .dash-note__display svg {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.module-dashboard .dash-note:hover .dash-note__display svg,
+.module-dashboard .dash-note:focus-within .dash-note__display svg {
+  opacity: 0.72;
+}
+
+.module-dashboard .dash-note__text,
+.module-dashboard .dash-note__placeholder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.module-dashboard .dash-note__text {
+  font-weight: 700;
+}
+
+.module-dashboard .dash-note__placeholder {
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.module-dashboard .dash-note__editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-dashboard .dash-note__input {
+  min-width: 0;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
+}
+
+.module-dashboard .dash-note__input::placeholder {
+  color: var(--text-3);
+}
+
+.module-dashboard .dash-note__icon-btn,
+.module-dashboard .dash-note__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--dash-control-border);
+  border-radius: 999px;
+  background: var(--dash-control-bg);
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.module-dashboard .dash-note__icon-btn:hover,
+.module-dashboard .dash-note__icon-btn:focus-visible,
+.module-dashboard .dash-note__clear:hover,
+.module-dashboard .dash-note__clear:focus-visible {
+  background: var(--dash-control-bg-hover);
+  border-color: var(--accent, oklch(64% 0.13 180));
+  color: var(--text-1);
+  outline: none;
+}
+
+.module-dashboard .dash-note__clear {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.module-dashboard .dash-note:hover .dash-note__clear,
+.module-dashboard .dash-note:focus-within .dash-note__clear {
+  opacity: 1;
+  transform: scale(1);
+}
+
+[data-theme="dark"] .module-dashboard .dash-note {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .module-dashboard .dash-note:hover,
+[data-theme="dark"] .module-dashboard .dash-note:focus-within,
+[data-theme="dark"] .module-dashboard .dash-note.has-note:hover,
+[data-theme="dark"] .module-dashboard .dash-note.has-note:focus-within,
+[data-theme="dark"] .module-dashboard .dash-note.is-editing {
+  border-color: oklch(52% 0.018 220 / 0.42);
+  background: oklch(32% 0.014 220 / 0.68);
+  box-shadow:
+    0 12px 30px oklch(0% 0 0 / 0.16),
+    inset 0 1px 0 oklch(100% 0 0 / 0.08);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.module-dashboard .dash-grid {
+  gap: 18px;
+  align-items: stretch;
+  grid-auto-rows: minmax(118px, auto);
+}
+
+.module-dashboard .widget-shell {
+  grid-column: span var(--dash-widget-cols);
+  min-height: var(--dash-widget-min-height);
+  padding: 0;
+}
+
+.module-dashboard .widget-shell > .widget,
+.module-dashboard .widget-shell > .widget-content {
+  position: relative;
+  min-height: inherit;
+  border: 1px solid var(--dash-card-border);
+  border-radius: 14px;
+  background: var(--dash-card-bg);
+  box-shadow: var(--dash-card-shadow);
+  overflow: hidden;
+  backdrop-filter: blur(22px) saturate(175%);
+  -webkit-backdrop-filter: blur(22px) saturate(175%);
+  transition:
+    border-color var(--dur-fast, 140ms) var(--ease-out, ease),
+    background var(--dur-fast, 140ms) var(--ease-out, ease),
+    box-shadow var(--dur-fast, 140ms) var(--ease-out, ease),
+    transform var(--dur-fast, 140ms) var(--ease-out, ease);
+}
+
+.module-dashboard .widget-shell:hover > .widget,
+.module-dashboard .widget-shell:hover > .widget-content,
+.module-dashboard .widget-shell:focus-within > .widget,
+.module-dashboard .widget-shell:focus-within > .widget-content {
+  background: var(--dash-card-bg-hover);
+  border-color: var(--dash-card-border-hover);
+  box-shadow: var(--dash-card-shadow-hover);
+}
+
+.module-dashboard .widget-shell:active > .widget,
+.module-dashboard .widget-shell:active > .widget-content {
+  transform: translateY(1px);
+}
+
+.module-dashboard .wgt-h,
+.module-dashboard .ww-head {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.44), rgb(255 255 255 / 0.08)),
+    rgb(var(--dash-widget-glass-rgb) / 0.1);
+  border-bottom-color: oklch(82% 0.014 215 / 0.58);
+}
+
+[data-theme="dark"] .module-dashboard .wgt-h,
+[data-theme="dark"] .module-dashboard .ww-head {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02)),
+    rgb(var(--dash-widget-glass-rgb) / 0.06);
+  border-bottom-color: oklch(54% 0.018 220 / 0.38);
+}
+
+/* ---- Empty state ----------------------------------------------------- */
+
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 32px;
+  margin-top: 32px;
+  border: 1px dashed var(--dash-card-border, var(--border-1, oklch(85% 0.01 250)));
+  border-radius: 16px;
+  background: var(--dash-card-bg, var(--bg-panel-2, transparent));
+  box-shadow: var(--dash-card-shadow, none);
+  backdrop-filter: blur(18px) saturate(150%);
+  text-align: center;
+}
+
+.dash-empty__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-1, currentColor);
+}
+
+.dash-empty__subtitle {
+  font-size: 14px;
+  color: var(--text-2, currentColor);
+  opacity: 0.75;
+  max-width: 360px;
+}
+
+.dash-empty__cta {
+  margin-top: 8px;
+}
+
+/* ---- Widget ghost (rendered while a widget is being dragged, P2) ----- */
+
+.widget-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  /* The widget body renders inside; the ghost shell mirrors widget-shell sizing. */
+}
+
+/* ---- Drag state modifiers (P2) --------------------------------------- */
+
+.widget-shell {
+  /* Required so iOS touch-drag works without native scroll capture (R3). */
+  touch-action: none;
+  transition:
+    grid-column var(--dur-med, 220ms) var(--ease-out, ease),
+    min-height var(--dur-med, 220ms) var(--ease-out, ease);
+}
+
+.widget-shell.dragging {
+  opacity: 0.18;
+  pointer-events: none;
+  /* Disable FLIP transition on the source while it is the floating ghost. */
+  transition: none !important;
+  transform: none !important;
+}
+
+.dash-grid.is-dragging {
+  cursor: grabbing;
+}
+
+.dash-grid.is-dragging .widget-shell:not(.dragging) {
+  cursor: grabbing;
+}
+
+/* ---- Widget remove affordance (Audit Top-10 #9, D-06) ------------------- */
+
+/*
+ * The widget-shell parent needs position:relative so the absolutely-positioned
+ * remove button can be anchored just outside its top-right corner.
+ * (Existing `.widget-shell` rule in layout.css does not set position — we add
+ * it here, scoped to this package.)
+ */
+.widget-shell {
+  position: relative;
+}
+
+.widget-shell__appearance {
+  position: absolute;
+  top: 22px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgb(118 132 145 / 0.28);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.78), rgb(255 255 255 / 0.34)),
+    rgb(var(--dash-widget-glass-rgb) / 0.28);
+  color: var(--text-2, currentColor);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: auto;
+  transform: translate(4px, -2px) scale(0.96);
+  box-shadow:
+    0 8px 18px rgb(36 48 58 / 0.12),
+    inset 0 1px 0 rgb(255 255 255 / 0.78);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  transition:
+    opacity 120ms ease,
+    background 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+  z-index: 12;
+}
+
+.widget-shell:hover .widget-shell__appearance,
+.widget-shell:focus-within .widget-shell__appearance,
+.widget-shell__appearance[aria-expanded="true"] {
+  opacity: 0.78;
+  transform: translate(0, 0) scale(1);
+}
+
+.widget-shell__appearance:hover,
+.widget-shell__appearance:focus-visible,
+.widget-shell__appearance[aria-expanded="true"] {
+  opacity: 1;
+  color: var(--text-1, currentColor);
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.88), rgb(255 255 255 / 0.42)),
+    rgb(var(--dash-widget-glass-rgb) / 0.4);
+  outline: none;
+}
+
+.widget-shell__appearance-dot {
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  background: rgb(var(--dash-widget-glass-rgb) / 0.64);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.42);
+}
+
+.widget-shell__appearance svg {
+  position: relative;
+  z-index: 1;
+}
+
+.widget-shell__appearance-panel {
+  position: absolute;
+  top: 54px;
+  right: -4px;
+  width: 224px;
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgb(118 132 145 / 0.22);
+  border-radius: 14px;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.34)),
+    rgb(var(--dash-widget-glass-rgb) / 0.26);
+  box-shadow:
+    0 18px 38px rgb(36 48 58 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.76);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  z-index: 30;
+}
+
+.widget-shell__appearance-row {
+  display: grid;
+  gap: 8px;
+}
+
+.widget-shell__appearance-label {
+  color: var(--text-3, currentColor);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.widget-shell__swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.widget-shell__swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid rgb(118 132 145 / 0.22);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 25%, rgb(255 255 255 / 0.8), transparent 38%),
+    rgb(var(--widget-swatch-rgb) / 0.72);
+  box-shadow:
+    0 4px 10px rgb(36 48 58 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.68);
+  cursor: pointer;
+}
+
+.widget-shell__swatch:hover,
+.widget-shell__swatch:focus-visible,
+.widget-shell__swatch[aria-pressed="true"] {
+  border-color: rgb(var(--widget-swatch-rgb) / 0.96);
+  box-shadow:
+    0 0 0 3px rgb(var(--widget-swatch-rgb) / 0.28),
+    0 5px 14px rgb(36 48 58 / 0.1),
+    inset 0 1px 0 rgb(255 255 255 / 0.72);
+  outline: none;
+}
+
+.widget-shell__opacity-row {
+  grid-template-columns: 1fr;
+}
+
+.widget-shell__opacity-control {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-shell__opacity {
+  width: 100%;
+  accent-color: rgb(var(--dash-widget-glass-rgb));
+}
+
+.widget-shell__opacity-step {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid rgb(118 132 145 / 0.2);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.34);
+  color: var(--text-2, currentColor);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.widget-shell__opacity-step:hover,
+.widget-shell__opacity-step:focus-visible {
+  background: rgb(255 255 255 / 0.62);
+  color: var(--text-1, currentColor);
+  outline: none;
+}
+
+.widget-shell__appearance-reset {
+  justify-self: end;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid rgb(118 132 145 / 0.2);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.34);
+  color: var(--text-2, currentColor);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.widget-shell__appearance-reset:hover,
+.widget-shell__appearance-reset:focus-visible {
+  background: rgb(255 255 255 / 0.62);
+  color: var(--text-1, currentColor);
+  outline: none;
+}
+
+.widget-shell__remove {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  /* Sizing. */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  /* Reset native button chrome. */
+  border: 0;
+  border: 1px solid var(--dash-control-border);
+  background: var(--dash-control-bg);
+  border-radius: 999px;
+  cursor: pointer;
+  /* Layout. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2, currentColor);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(4px, -4px) scale(0.96);
+  box-shadow: var(--dash-control-shadow);
+  backdrop-filter: blur(10px) saturate(130%);
+  transition: opacity 120ms ease, background 120ms ease, transform 120ms ease;
+  /* Ensure the button is above any widget body chrome. */
+  z-index: 10;
+}
+
+/* Reveal on hover (pointer devices) or :focus-within (keyboard + iOS tap-focus). */
+.widget-shell:hover .widget-shell__remove,
+.widget-shell:focus-within .widget-shell__remove {
+  opacity: 0.72;
+  pointer-events: auto;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Full opacity + background tint on direct focus/hover of the button itself. */
+.widget-shell__remove:hover,
+.widget-shell__remove:focus-visible {
+  opacity: 1;
+  background: var(--dash-control-bg-hover);
+  transform: scale(1.04);
+  outline: none;
+}
+
+.widget-shell__resize {
+  position: absolute;
+  right: -9px;
+  bottom: -9px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--dash-control-border);
+  border-radius: 8px;
+  background: var(--dash-control-bg);
+  color: var(--text-3, currentColor);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: nwse-resize;
+  opacity: 0;
+  box-shadow: var(--dash-control-shadow);
+  backdrop-filter: blur(10px) saturate(130%);
+  transition: opacity 120ms ease, background 120ms ease, color 120ms ease, transform 120ms ease;
+  z-index: 10;
+}
+
+.widget-shell:hover .widget-shell__resize,
+.widget-shell:focus-within .widget-shell__resize {
+  opacity: 0.72;
+}
+
+.widget-shell__resize:hover,
+.widget-shell__resize:focus-visible {
+  opacity: 1;
+  color: var(--text-1, currentColor);
+  background: var(--dash-control-bg-hover);
+  transform: scale(1.04);
+  outline: none;
+}
+
+[data-theme="dark"] .widget-shell__appearance {
+  border-color: rgb(255 255 255 / 0.14);
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.04)),
+    rgb(var(--dash-widget-glass-rgb) / 0.12);
+  box-shadow:
+    0 8px 18px rgb(0 0 0 / 0.24),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+[data-theme="dark"] .widget-shell__appearance:hover,
+[data-theme="dark"] .widget-shell__appearance:focus-visible,
+[data-theme="dark"] .widget-shell__appearance[aria-expanded="true"] {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.15), rgb(255 255 255 / 0.05)),
+    rgb(var(--dash-widget-glass-rgb) / 0.18);
+}
+
+[data-theme="dark"] .widget-shell__appearance-panel {
+  border-color: rgb(255 255 255 / 0.12);
+  background:
+    linear-gradient(145deg, rgb(34 43 52 / 0.78), rgb(13 18 24 / 0.54)),
+    rgb(var(--dash-widget-glass-rgb) / 0.1);
+  box-shadow:
+    0 18px 42px rgb(0 0 0 / 0.34),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+[data-theme="dark"] .widget-shell__appearance-reset {
+  border-color: rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.08);
+}
+
+[data-theme="dark"] .widget-shell__opacity-step {
+  border-color: rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.08);
+}
+
+[data-theme="dark"] .widget-shell__appearance-reset:hover,
+[data-theme="dark"] .widget-shell__appearance-reset:focus-visible,
+[data-theme="dark"] .widget-shell__opacity-step:hover,
+[data-theme="dark"] .widget-shell__opacity-step:focus-visible {
+  background: rgb(255 255 255 / 0.14);
+}
+
+@media (max-width: 780px) {
+  .module-dashboard {
+    padding: 16px 14px 22px;
+    gap: 14px;
+  }
+
+  .module-dashboard .dash-head {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .module-dashboard .dash-add {
+    margin-left: 0;
+  }
+
+  .module-dashboard .dash-note {
+    width: 100%;
+    justify-self: stretch;
+    transform: none;
+  }
+
+  .module-dashboard .dash-grid {
+    gap: 14px;
+  }
+
+  .module-dashboard .widget-shell {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* ---- Add Widget Picker <dialog> (gap-closure row #5) -------------------- */
+
+.add-widget-picker {
+  border: 1px solid var(--border-1, oklch(85% 0.01 250));
+  border-radius: 20px;
+  background: var(--bg-panel-2, var(--bg-panel));
+  color: var(--text-1, currentColor);
+  padding: 0;
+  max-width: 660px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 8px 40px oklch(0% 0 0 / 0.18);
+}
+
+.add-widget-picker::backdrop {
+  background: oklch(0% 0 0 / 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.awp-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px 28px 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.awp-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-1, currentColor);
+  margin: 0;
+}
+
+.awp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.awp-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--border-1, oklch(85% 0.01 250));
+  border-radius: 12px;
+  background: var(--bg-panel-1, var(--bg-panel));
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.awp-card:hover,
+.awp-card:focus-visible {
+  background: var(--hover-bg, var(--bg-hover));
+  border-color: var(--accent, oklch(60% 0.15 250));
+  outline: none;
+}
+
+.awp-card__icon {
+  color: var(--text-2, currentColor);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.awp-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1, currentColor);
+  line-height: 1.3;
+}
+
+.awp-card__desc {
+  font-size: 12px;
+  color: var(--text-2, currentColor);
+  opacity: 0.75;
+  line-height: 1.4;
+}
+
+.awp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.awp-empty__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1, currentColor);
+}
+
+.awp-empty__subtitle {
+  font-size: 13px;
+  color: var(--text-2, currentColor);
+  opacity: 0.75;
+  max-width: 320px;
+}
+
+.awp-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+/* ---- 2026 UI refresh: quieter Apple/Linear dashboard shell ------------ */
+.module-dashboard {
+  --dash-control-bg: color-mix(in oklch, var(--bg-panel) 88%, transparent);
+  --dash-control-bg-hover: var(--bg-panel);
+  --dash-control-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-control-shadow: var(--shadow-1);
+  --dash-card-bg: color-mix(in oklch, var(--bg-panel) 92%, transparent);
+  --dash-card-bg-hover: var(--bg-panel);
+  --dash-card-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-card-border-hover: color-mix(in oklch, var(--accent) 28%, var(--border-1));
+  --dash-card-shadow: var(--shadow-1);
+  --dash-card-shadow-hover: var(--shadow-2);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--bg-panel) 28%, transparent), transparent 46%),
+    var(--bg-app);
+}
+
+[data-theme="dark"] .module-dashboard {
+  --dash-control-bg: color-mix(in oklch, var(--bg-panel) 82%, transparent);
+  --dash-control-bg-hover: color-mix(in oklch, var(--bg-panel) 94%, white 4%);
+  --dash-control-border: color-mix(in oklch, var(--border-2) 82%, transparent);
+  --dash-card-bg: color-mix(in oklch, var(--bg-panel) 90%, transparent);
+  --dash-card-bg-hover: color-mix(in oklch, var(--bg-panel) 96%, white 3%);
+  --dash-card-border: color-mix(in oklch, var(--border-1) 88%, transparent);
+  --dash-card-border-hover: color-mix(in oklch, var(--accent) 34%, var(--border-2));
+  background: var(--bg-app);
+}
+
+.module-dashboard .dash-head {
+  gap: 20px;
+}
+
+.module-dashboard .dash-note {
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+}
+
+.module-dashboard .dash-note:hover,
+.module-dashboard .dash-note:focus-within,
+.module-dashboard .dash-note.is-editing,
+.module-dashboard .dash-note.has-note:hover,
+.module-dashboard .dash-note.has-note:focus-within {
+  background: color-mix(in oklch, var(--bg-panel) 92%, transparent);
+  border-color: var(--dash-card-border-hover);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: none;
+}
+
+.module-dashboard .dash-note__label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.module-dashboard .dash-note__text,
+.module-dashboard .dash-note__placeholder,
+.module-dashboard .dash-note__input {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+}
+
+.module-dashboard .widget-shell {
+  border-radius: var(--r-xl);
+}
+
+.module-dashboard .widget-shell__chrome,
+.module-dashboard .widget-shell__appearance,
+.module-dashboard .widget-shell__resize {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.module-dashboard .widget-shell__appearance,
+.module-dashboard .widget-shell__resize {
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 11px;
+}
+
+.module-dashboard .awp-card {
+  min-height: 112px;
+}
+
+@media (min-width: 781px) and (max-width: 1024px) {
+  .module-dashboard {
+    --dash-widget-min-height: 148px;
+    padding: 18px 16px 24px;
+    gap: 16px;
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .dash-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .module-dashboard .dash-note-lane {
+    grid-column: 1 / -1;
+    justify-content: stretch;
+    order: 3;
+  }
+
+  .module-dashboard .dash-note {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+    transform: none;
+  }
+
+  .module-dashboard .dash-note__display {
+    min-height: 44px;
+  }
+
+  .module-dashboard button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .module-dashboard .dash-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 14px;
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .widget-shell,
+  .module-dashboard .widget-shell > .widget,
+  .module-dashboard .widget-shell > .widget-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .module-dashboard .w-clock,
+  .module-dashboard .w-weather,
+  .module-dashboard .w-upcoming {
+    grid-column: span 8;
+  }
+
+  .module-dashboard .w-stat,
+  .module-dashboard .w-timetrack,
+  .module-dashboard .w-timezones,
+  .module-dashboard .w-stickies,
+  .module-dashboard .w-mail,
+  .module-dashboard .w-mini-cal {
+    grid-column: span 4;
+  }
+
+  .module-dashboard .clock-time,
+  .module-dashboard .clock-split {
+    font-size: clamp(56px, 8vw, 76px);
+  }
+
+  .module-dashboard .clock-min {
+    font-size: clamp(70px, 10vw, 96px);
+  }
+
+  .module-dashboard .pomo-dots {
+    width: 52px;
+  }
+
+  .module-dashboard .sticky-stack {
+    overflow: hidden;
+  }
+
+  .module-dashboard .sticky {
+    overflow-wrap: anywhere;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove,
+  .module-dashboard .widget-shell__appearance,
+  .module-dashboard .widget-shell__resize {
+    min-width: 44px;
+    min-height: 44px;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove {
+    top: 8px;
+    right: 58px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell__appearance {
+    top: 8px;
+    right: 8px;
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+
+  .module-dashboard .widget-shell__resize {
+    right: 8px;
+    bottom: 8px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell:hover .widget-shell__remove,
+  .module-dashboard .widget-shell:focus-within .widget-shell__remove,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__remove,
+  .module-dashboard .widget-shell:hover .widget-shell__resize,
+  .module-dashboard .widget-shell:focus-within .widget-shell__resize,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__resize {
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 780px) {
+  .module-dashboard {
+    padding: 14px 12px 20px;
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .dash-head {
+    gap: 14px;
+  }
+
+  .module-dashboard .dash-grid,
+  .module-dashboard .widget-shell {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .module-dashboard .dash-grid {
+    overflow-x: hidden;
+  }
+
+  .module-dashboard .dash-note__display {
+    min-height: 44px;
+  }
+
+  .module-dashboard .dash-add,
+  .module-dashboard .widget-shell__remove,
+  .module-dashboard .widget-shell__appearance,
+  .module-dashboard .widget-shell__resize {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    transform: none;
+  }
+
+  .module-dashboard .widget-shell__remove {
+    top: 8px;
+    right: 60px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell__appearance {
+    top: 8px;
+    right: 8px;
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+
+  .module-dashboard .widget-shell__resize {
+    right: 8px;
+    bottom: 8px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .module-dashboard .widget-shell:hover .widget-shell__remove,
+  .module-dashboard .widget-shell:focus-within .widget-shell__remove,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__remove,
+  .module-dashboard .widget-shell:hover .widget-shell__resize,
+  .module-dashboard .widget-shell:focus-within .widget-shell__resize,
+  .module-dashboard .widget-shell:has(.widget-shell__appearance[aria-expanded="true"]) .widget-shell__resize {
+    opacity: 0.82;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .module-dashboard button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .module-dashboard .dash-add {
+    width: auto !important;
+    min-width: 112px !important;
+    padding-inline: 14px !important;
+  }
+
+  .module-dashboard .clk-style-toggle button,
+  .module-dashboard .tz-view-toggle button,
+  .module-dashboard .ww-edit-btn {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .module-dashboard .clk-tz-btn,
+  .module-dashboard .mc-jump {
+    height: auto !important;
+    min-height: 44px !important;
+  }
+
+  .module-dashboard .pomo-dots {
+    width: 52px !important;
+    grid-template-columns: repeat(4, 8px);
+    justify-content: start;
+  }
+
+  .module-dashboard .ws-row {
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .module-dashboard .sticky-stack {
+    min-width: 0;
+    max-width: 100%;
+    overflow: clip;
+  }
+
+  .module-dashboard .sticky {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+    transform: none !important;
+  }
+
+  .module-dashboard .sticky--sample {
+    transform: none !important;
+  }
+}

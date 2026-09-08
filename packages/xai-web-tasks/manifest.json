@@ -1,0 +1,9 @@
+{
+  "id": "xai-web-tasks",
+  "name": "Tasks",
+  "version": "0.0.0",
+  "description": "4-bucket DnD task board with date-rewrite and localStorage persistence.",
+  "windows": {
+    "web": true
+  }
+}

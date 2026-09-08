@@ -5,11 +5,13 @@ import { GridBox, DesktopItem } from "../types";
 import {
   ORGANIZER_FILE_DROP_EVENT,
   ORGANIZER_GRID_CLOSE_EVENT,
+  ORGANIZER_GRID_DELETE_EVENT,
   ORGANIZER_GRID_READY_EVENT,
   ORGANIZER_GRID_STATE_EVENT,
   ORGANIZER_GRID_UPDATE_EVENT,
   isFileDropPayload,
   isGridClosePayload,
+  isGridDeletePayload,
   isGridReadyPayload,
   isGridUpdatePayload,
 } from "../gridEvents";
@@ -19,11 +21,6 @@ import {
   closeGridWindow,
   GridWindowRect,
 } from "./useGridWindow";
-
-// Debug logging helper - only console.log to avoid infinite loops
-const debugLog = (msg: string) => {
-  console.log(msg);
-};
 
 /**
  * Hook to manage grid windows in multi-window architecture.
@@ -67,26 +64,21 @@ export function useMultiWindowGrids(
 
     while (creationQueue.current.length > 0) {
       const grid = creationQueue.current.shift()!;
-      const shortId = grid.id.slice(0, 8);
       const windowRect = toWindowRect(grid);
 
       if (openWindows.current.has(grid.id)) {
-        debugLog(`⏭️ Skip existing: ${shortId}...`);
         continue;
       }
 
-      debugLog(`🆕 Creating window: ${shortId}...`);
       pendingCreations.current.add(grid.id);
 
       try {
         await createGridWindow(grid.id, windowRect);
         openWindows.current.add(grid.id);
-        debugLog(`🪟 Window created: ${shortId}...`);
-
-        // Small delay between window creations to prevent overwhelming the system
+        // Small delay between window creations to prevent overwhelming the system.
         await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (error) {
-        debugLog(`❌ Create failed: ${error}`);
+      } catch (_error) {
+        // Best effort. Main flow continues for remaining grids.
       } finally {
         pendingCreations.current.delete(grid.id);
       }
@@ -99,15 +91,13 @@ export function useMultiWindowGrids(
   const syncGridWindow = useCallback(
     async (grid: GridBox) => {
       if (!enabled) {
-        debugLog(`⚠️ syncGridWindow skipped - disabled`);
         return;
       }
 
       const windowRect = toWindowRect(grid);
-      const shortId = grid.id.slice(0, 8);
 
       if (openWindows.current.has(grid.id)) {
-        // Window exists, update it (debounced)
+        // Window exists, update it (throttled/debounced).
         const existingTimer = updateTimers.current.get(grid.id);
         if (existingTimer) {
           window.clearTimeout(existingTimer);
@@ -116,21 +106,19 @@ export function useMultiWindowGrids(
         const timer = window.setTimeout(async () => {
           try {
             await updateGridWindow(grid.id, windowRect);
-          } catch (error) {
-            debugLog(`❌ Update failed: ${shortId}...`);
+          } catch (_error) {
+            // Best effort. Future updates will retry.
           }
           updateTimers.current.delete(grid.id);
-        }, 50);
+        }, 120);
 
         updateTimers.current.set(grid.id, timer);
       } else if (!pendingCreations.current.has(grid.id)) {
-        // Queue window creation instead of creating immediately
+        // Queue window creation instead of creating immediately.
         if (!creationQueue.current.some(g => g.id === grid.id)) {
           creationQueue.current.push(grid);
           processCreationQueue();
         }
-      } else {
-        debugLog(`⏳ Pending: ${shortId}...`);
       }
     },
     [enabled, toWindowRect, processCreationQueue]
@@ -152,9 +140,8 @@ export function useMultiWindowGrids(
         try {
           await closeGridWindow(gridId);
           openWindows.current.delete(gridId);
-          console.log(`🗑️ Closed window for grid: ${gridId}`);
-        } catch (error) {
-          console.error(`Failed to close window for grid ${gridId}:`, error);
+        } catch (_error) {
+          // Best effort.
         }
       }
     },
@@ -163,10 +150,7 @@ export function useMultiWindowGrids(
 
   // Sync windows when grids change
   useEffect(() => {
-    debugLog(`📊 sync - enabled: ${enabled}, grids: ${grids.length}`);
-
     if (!enabled) {
-      debugLog("⚠️ Multi-window disabled");
       return;
     }
 
@@ -174,14 +158,12 @@ export function useMultiWindowGrids(
 
     // Create/update windows for existing grids
     grids.forEach((grid) => {
-      debugLog(`🔄 Syncing: ${grid.id.slice(0, 8)}...`);
       syncGridWindow(grid);
     });
 
     // Close windows for deleted grids
     openWindows.current.forEach((gridId) => {
       if (!currentGridIds.has(gridId)) {
-        debugLog(`🗑️ Closing: ${gridId.slice(0, 8)}...`);
         closeWindow(gridId);
       }
     });
@@ -195,11 +177,9 @@ export function useMultiWindowGrids(
       ORGANIZER_GRID_UPDATE_EVENT,
       (event) => {
         if (!isGridUpdatePayload(event.payload)) {
-          console.warn("⚠️ Ignored invalid grid update event", event.payload);
           return;
         }
         const { gridId, changes } = event.payload;
-        console.log(`📨 Received update from grid window: ${gridId}`, changes);
         onGridUpdate(gridId, changes);
       }
     );
@@ -208,11 +188,20 @@ export function useMultiWindowGrids(
       ORGANIZER_GRID_CLOSE_EVENT,
       (event) => {
         if (!isGridClosePayload(event.payload)) {
-          console.warn("⚠️ Ignored invalid grid close event", event.payload);
           return;
         }
         const { gridId } = event.payload;
-        console.log(`📨 Received close from grid window: ${gridId}`);
+        closeWindow(gridId);
+      }
+    );
+
+    const unlistenDelete = listen<unknown>(
+      ORGANIZER_GRID_DELETE_EVENT,
+      (event) => {
+        if (!isGridDeletePayload(event.payload)) {
+          return;
+        }
+        const { gridId } = event.payload;
         onGridDelete(gridId);
       }
     );
@@ -221,12 +210,10 @@ export function useMultiWindowGrids(
       ORGANIZER_FILE_DROP_EVENT,
       (event) => {
         if (!isFileDropPayload(event.payload)) {
-          console.warn("⚠️ Ignored invalid grid file drop event", event.payload);
           return;
         }
         const { gridId, files } = event.payload;
         const paths = files.map((file) => file.path);
-        console.log(`📨 Received file drop from grid window: ${gridId}`, paths);
         onFileDrop(gridId, paths);
       }
     );
@@ -235,11 +222,9 @@ export function useMultiWindowGrids(
       ORGANIZER_GRID_READY_EVENT,
       (event) => {
         if (!isGridReadyPayload(event.payload)) {
-          console.warn("⚠️ Ignored invalid grid ready event", event.payload);
           return;
         }
         const { gridId } = event.payload;
-        console.log(`📨 Grid window ready: ${gridId}`);
 
         // Find the grid and send its data
         const grid = grids.find((g) => g.id === gridId);
@@ -256,10 +241,11 @@ export function useMultiWindowGrids(
     return () => {
       unlistenUpdate.then((fn) => fn());
       unlistenClose.then((fn) => fn());
+      unlistenDelete.then((fn) => fn());
       unlistenFileDrop.then((fn) => fn());
       unlistenReady.then((fn) => fn());
     };
-  }, [enabled, grids, items, onGridUpdate, onGridDelete, onFileDrop]);
+  }, [enabled, grids, items, onGridUpdate, onGridDelete, onFileDrop, closeWindow]);
 
   // Broadcast grid updates to all windows
   useEffect(() => {
@@ -287,7 +273,7 @@ export function useMultiWindowGrids(
       // Close all windows
       if (enabled) {
         openWindows.current.forEach((gridId) => {
-          closeGridWindow(gridId).catch(console.error);
+          closeGridWindow(gridId).catch(() => undefined);
         });
       }
     };

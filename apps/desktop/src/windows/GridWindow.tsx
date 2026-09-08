@@ -1,10 +1,23 @@
-import { MouseEvent as ReactMouseEvent, useCallback } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { OrganizerGridContent } from "@repo/plugin-organizer";
+import { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useRef } from "react";
+import { emit, listen } from "@tauri-apps/api/event";
+import { currentMonitor, getCurrentWindow, LogicalPosition } from "@tauri-apps/api/window";
+import { useTauriInvoke } from "@repo/core/hooks";
+import {
+  ORGANIZER_GRID_STATE_EVENT,
+  ORGANIZER_GRID_UPDATE_EVENT,
+  RECT_SYNC_EPSILON,
+  OrganizerGridContent,
+  applyNativeEdgeSnap,
+  createFinderClient,
+  isGridStatePayload,
+  rectsNearlyEqual,
+  type NativeWindowRect,
+} from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";
 import { SettingsProvider, useSettings } from "../context/SettingsContext";
 
 const DRAG_THRESHOLD_PX = 4;
+const NATIVE_MOVE_SYNC_DELAY_MS = 120;
 
 /**
  * Native Grid window shell.
@@ -14,6 +27,126 @@ const DRAG_THRESHOLD_PX = 4;
  */
 function GridWindowShell({ gridId }: { gridId: string }) {
   const { gridOpacity, gridBlur } = useSettings();
+  const { invoke } = useTauriInvoke();
+  const nativeMoveSyncTimerRef = useRef<number | null>(null);
+  const lastEmittedRectRef = useRef<NativeWindowRect | null>(null);
+  const latestGridRef = useRef<{ isFolded: boolean; rect: NativeWindowRect } | null>(null);
+  // Construct once per shell mount. The Finder client is the IPC bridge
+  // for `register_path_bookmark` (G3-E3 / P0-Foxtrot honest provenance).
+  // The grid window is the only surface that receives absolute paths
+  // from a user drag-drop (Tauri `tauri://drag-drop` event), so it is
+  // the only place that can honestly register the bookmark before the
+  // path is forwarded cross-window via `ORGANIZER_FILE_DROP_EVENT`.
+  const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
+
+  const emitNativeWindowRect = useCallback(async () => {
+    const currentWindow = getCurrentWindow();
+    const dpr =
+      typeof window !== "undefined" && window.devicePixelRatio
+        ? window.devicePixelRatio
+        : 1;
+
+    const [position, size, monitor] = await Promise.all([
+      currentWindow.outerPosition(),
+      currentWindow.outerSize(),
+      currentMonitor(),
+    ]);
+    const latestGrid = latestGridRef.current;
+    const scaleFactor = monitor?.scaleFactor ?? dpr;
+    const screen = window.screen as Screen & { availLeft?: number; availTop?: number };
+    const monitorBounds = monitor
+      ? {
+          x: monitor.workArea.position.x / scaleFactor,
+          y: monitor.workArea.position.y / scaleFactor,
+          width: monitor.workArea.size.width / scaleFactor,
+          height: monitor.workArea.size.height / scaleFactor,
+        }
+      : {
+          // Rare fallback for currentMonitor() failures; WebKit may omit
+          // availLeft/availTop, which degrades to primary-screen coordinates.
+          x: screen.availLeft ?? 0,
+          y: screen.availTop ?? 0,
+          width: screen.availWidth || window.innerWidth,
+          height: screen.availHeight || window.innerHeight,
+        };
+
+    const measuredRect = {
+      x: Math.round(position.x / scaleFactor),
+      y: Math.round(position.y / scaleFactor),
+      width: latestGrid?.rect.width ?? Math.round(size.width / scaleFactor),
+      height: latestGrid?.rect.height ?? Math.round(size.height / scaleFactor),
+    };
+    const rect = applyNativeEdgeSnap(measuredRect, latestGrid?.isFolded ?? false, monitorBounds);
+
+    if (
+      Math.abs(rect.x - measuredRect.x) > RECT_SYNC_EPSILON ||
+      Math.abs(rect.y - measuredRect.y) > RECT_SYNC_EPSILON
+    ) {
+      await currentWindow.setPosition(new LogicalPosition(rect.x, rect.y));
+    }
+
+    const lastRect = lastEmittedRectRef.current;
+    if (lastRect && rectsNearlyEqual(lastRect, rect)) {
+      return;
+    }
+
+    lastEmittedRectRef.current = rect;
+    await emit(ORGANIZER_GRID_UPDATE_EVENT, {
+      gridId,
+      changes: { rect },
+    });
+  }, [gridId]);
+
+  const scheduleNativeWindowRectSync = useCallback(() => {
+    if (nativeMoveSyncTimerRef.current !== null) {
+      window.clearTimeout(nativeMoveSyncTimerRef.current);
+    }
+
+    nativeMoveSyncTimerRef.current = window.setTimeout(() => {
+      nativeMoveSyncTimerRef.current = null;
+      void emitNativeWindowRect().catch((error) => {
+        console.error("[GridWindow] native move sync failed:", error);
+      });
+    }, NATIVE_MOVE_SYNC_DELAY_MS);
+  }, [emitNativeWindowRect]);
+
+  useEffect(() => {
+    const unlistenStatePromise = listen<unknown>(ORGANIZER_GRID_STATE_EVENT, (event) => {
+      if (!isGridStatePayload(event.payload)) {
+        return;
+      }
+      if (event.payload.gridId === gridId) {
+        const wasFolded = latestGridRef.current?.isFolded;
+        const isFolded = event.payload.grid.isFolded;
+        latestGridRef.current = {
+          isFolded,
+          rect: event.payload.grid.rect,
+        };
+        if ((wasFolded === undefined && isFolded) || (wasFolded !== undefined && wasFolded !== isFolded)) {
+          scheduleNativeWindowRectSync();
+        }
+      }
+    });
+
+    return () => {
+      unlistenStatePromise.then((unlisten) => unlisten());
+    };
+  }, [gridId, scheduleNativeWindowRectSync]);
+
+  useEffect(() => {
+    const currentWindow = getCurrentWindow();
+    const unlistenMovedPromise = currentWindow.onMoved(() => {
+      scheduleNativeWindowRectSync();
+    });
+
+    return () => {
+      if (nativeMoveSyncTimerRef.current !== null) {
+        window.clearTimeout(nativeMoveSyncTimerRef.current);
+        nativeMoveSyncTimerRef.current = null;
+      }
+      unlistenMovedPromise.then((unlisten) => unlisten());
+    };
+  }, [scheduleNativeWindowRectSync]);
 
   // Intercept mousedown on the Organizer title bar (or the G0 fallback
   // panel) in CAPTURE phase. We stopPropagation so react-draggable's
@@ -56,6 +189,7 @@ function GridWindowShell({ gridId }: { gridId: string }) {
         handed = true;
         void getCurrentWindow()
           .startDragging()
+          .then(scheduleNativeWindowRectSync)
           .catch((err) => {
             console.error("[GridWindow] startDragging failed:", err);
           });
@@ -67,14 +201,19 @@ function GridWindowShell({ gridId }: { gridId: string }) {
 
     window.addEventListener("mousemove", onMove, true);
     window.addEventListener("mouseup", onUp, true);
-  }, []);
+  }, [scheduleNativeWindowRectSync]);
 
   return (
     <div
       onMouseDownCapture={handleHeaderDragStart}
       style={{ width: "100%", height: "100%" }}
     >
-      <OrganizerGridContent gridId={gridId} gridOpacity={gridOpacity} gridBlur={gridBlur} />
+      <OrganizerGridContent
+        gridId={gridId}
+        gridOpacity={gridOpacity}
+        gridBlur={gridBlur}
+        finderClient={finderClient}
+      />
     </div>
   );
 }

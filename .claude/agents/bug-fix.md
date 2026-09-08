@@ -113,7 +113,7 @@ Tooling notes:
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_BUGFIX.md`
 - `docs/conventions/COMMIT_CONVENTION.md`

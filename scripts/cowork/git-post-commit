@@ -32,8 +32,8 @@
 # MUST NOT write the dev_log Status Panel — it only reads state, dispatches, and notifies.
 #
 # Project-layer helpers (implement in scripts/cowork/lib_hook_helpers.sh):
-#   determine_other_vendor <executor>        → echoes "codex" | "cursor" | "claude"
-#   determine_lead_from_variant <variant>    → echoes "codex" | "cursor" | "claude"
+#   determine_other_vendor <executor>        → echoes "codex" | "cursor" | "claude" | "MANUAL_CLAUDE" | "UNKNOWN"
+#   determine_lead_from_variant <variant>    → echoes "codex" | "cursor" | "UNKNOWN"
 #   render_review_prompt <feature>           → stdout = review prompt body
 #   render_build_prompt <feature>            → stdout = build prompt body
 #   render_verify_prompt <feature>           → stdout = verify prompt body
@@ -101,14 +101,13 @@ dispatch() {
   return 0
 }
 
-# Only "codex" / "cursor" map to a real dispatch_<x>.sh. determine_other_vendor
-# legitimately returns the sentinel MANUAL_CLAUDE (cross-vendor step lands on
-# Claude, which has no headless exec) or UNKNOWN (executor field missing from
-# the Status Panel). Both must short-circuit to notify — never reach dispatch()
-# (a `[ -z ]` guard let these non-empty sentinels through → dispatch_UNKNOWN.sh).
+# Only real vendor names with an executable dispatch_<x>.sh may launch. When
+# Claude bg dispatch is not explicitly enabled, determine_other_vendor returns
+# MANUAL_CLAUDE and the hook stays notify-only. UNKNOWN also short-circuits to
+# notify, never dispatch_UNKNOWN.sh.
 vendor_dispatchable() {
   case "$1" in
-    codex|cursor) return 0 ;;
+    codex|cursor|claude) [ -x "$COWORK_DIR/dispatch_$1.sh" ] && return 0 || return 1 ;;
     *) return 1 ;;
   esac
 }
@@ -127,7 +126,9 @@ case "$VARIANT" in
         other_vendor="$(determine_other_vendor "$plan_executor" 2>/dev/null || echo "")"
         if ! vendor_dispatchable "$other_vendor"; then
           if [ "$other_vendor" = "MANUAL_CLAUDE" ]; then
-            notify "$FEATURE: NEEDS_REVIEW — cross-vendor reviewer is Claude (no headless); run feature-review manually"
+            notify "$FEATURE: NEEDS_REVIEW — cross-vendor reviewer is Claude; enable cowork.claudeBg or run feature-review manually"
+          elif [ "$other_vendor" = "claude" ]; then
+            notify "$FEATURE: NEEDS_REVIEW — Claude bg selected but dispatch_claude.sh is missing/not executable; run feature-review manually"
           else
             notify "$FEATURE: NEEDS_REVIEW — cannot resolve reviewer vendor (Plan Executor missing in Status Panel?); manual review needed"
           fi
@@ -161,7 +162,9 @@ case "$VARIANT" in
           other_vendor="$(determine_other_vendor "$build_executor" 2>/dev/null || echo "")"
           if ! vendor_dispatchable "$other_vendor"; then
             if [ "$other_vendor" = "MANUAL_CLAUDE" ]; then
-              notify "$FEATURE: READY_FOR_VERIFY — cross-vendor verifier is Claude (no headless); run feature-verify manually"
+              notify "$FEATURE: READY_FOR_VERIFY — cross-vendor verifier is Claude; enable cowork.claudeBg or run feature-verify manually"
+            elif [ "$other_vendor" = "claude" ]; then
+              notify "$FEATURE: READY_FOR_VERIFY — Claude bg selected but dispatch_claude.sh is missing/not executable; run feature-verify manually"
             else
               notify "$FEATURE: READY_FOR_VERIFY — cannot resolve verifier vendor (Build Executor missing in Status Panel?); manual verify needed"
             fi

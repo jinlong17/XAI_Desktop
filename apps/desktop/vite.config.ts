@@ -1,5 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const desktopRoot = fileURLToPath(new URL(".", import.meta.url));
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -7,6 +11,16 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vite.dev/config/
 export default defineConfig(async () => ({
   plugins: [react()],
+  resolve: {
+    alias: [
+      { find: "@repo/core/events", replacement: path.resolve(desktopRoot, "../../packages/core/src/events/index.ts") },
+      { find: "@repo/core/hooks", replacement: path.resolve(desktopRoot, "../../packages/core/src/hooks/index.ts") },
+      { find: "@repo/core/registry", replacement: path.resolve(desktopRoot, "../../packages/core/src/registry/index.ts") },
+      { find: "@repo/core/types", replacement: path.resolve(desktopRoot, "../../packages/core/src/types/index.ts") },
+      { find: "@repo/core-data", replacement: path.resolve(desktopRoot, "../../packages/core-data/src/index.ts") },
+      { find: "@repo/core", replacement: path.resolve(desktopRoot, "../../packages/core/src/index.ts") },
+    ],
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -27,6 +41,45 @@ export default defineConfig(async () => ({
     watch: {
       // 3. tell Vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes("/node_modules/react/") ||
+            id.includes("/node_modules/react-dom/") ||
+            id.includes("/node_modules/scheduler/")
+          ) {
+            return "vendor-react";
+          }
+          if (
+            id.includes("/node_modules/@dnd-kit/") ||
+            id.includes("/node_modules/react-draggable/")
+          ) {
+            return "vendor-interaction";
+          }
+          if (id.includes("/packages/plugin-organizer/")) {
+            return "plugin-organizer";
+          }
+          if (id.includes("/packages/plugin-account/")) {
+            return "plugin-account";
+          }
+          if (
+            id.includes("/packages/plugin-ai-cube/") ||
+            id.includes("/packages/plugin-console/")
+          ) {
+            return "plugin-tools";
+          }
+          if (id.includes("/packages/core-data/")) {
+            return "core-data";
+          }
+          if (id.includes("/packages/core/")) {
+            return "core";
+          }
+        },
+      },
     },
   },
 }));

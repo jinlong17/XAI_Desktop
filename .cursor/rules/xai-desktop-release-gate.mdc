@@ -1,0 +1,101 @@
+---
+description: Run the XAI Mac Desktop W4 release readiness gate before dev promotion, release/desktop/<version>, DMG, signing, notarization, updater metadata, or public download handoff is treated as releasable. Use for Tauri build/signing/notarization checks, macOS manual smoke gates, updater/appcast/latest.json metadata, release artifact provenance, and site download handoff. Receipt-only — it does not create release branches, touch dev, sign, notarize, tag, upload, or ship without operator confirmation.
+alwaysApply: false
+---
+
+# xai-desktop-release-gate
+
+Project-layer gate for ADR-0013 D2/D3 W4 Mac Desktop release readiness. Use this skill when a
+Desktop/App delta affects signing, notarization, DMG packaging, updater metadata, versioned release
+artifacts, `release/desktop/<version>`, public download handoff, or promotion from `desktop-next`
+toward `dev` / RC.
+
+This skill is a **release gate and receipt emitter only**. It does not create `desktop-next`,
+`desktop-plugin-next`, `dev`, or `release/desktop/<version>` branches, does not run `ship`, does not
+tag, sign, notarize, upload, or mutate updater metadata. Those are separate operator-confirmed steps.
+
+## Read First
+
+- `docs/adr/0013-branch-sync-governance.md` D2/D3 — desktop branch topology and W0-W4 gate.
+- `docs/PRODUCT_MODULE_MAP.md` App / Site transitions and release artifact ownership.
+- `docs/adr/0008-cloudflare-deploy-target-and-csp.md` when release artifacts feed official site / updater host.
+- `docs/runbooks/cloudflare.md` if the official site consumes the artifact metadata.
+- `apps/desktop/` and `apps/desktop/src-tauri/` release-related config.
+- `xai-web-to-desktop-sync` parity receipt when the W4 trigger came from Web.
+- `AGENTS.md` / `CLAUDE.md` Agent / Skill Tracking rules when this skill or mirrors change.
+
+## Inputs
+
+```text
+/xai-desktop-release-gate
+Desktop delta: <commit | range | branch diff | changed paths | parity receipt | RC summary>
+Release target: dev-rc | release/desktop/<version> | updater-handoff | site-download-handoff
+Mode: dry-run | gate
+```
+
+If `Desktop delta:` is omitted, infer the smallest current delta from `HEAD`, the current branch
+diff, a referenced D3 parity receipt, or named files. If release impact cannot be proven, stop with
+`Verdict: BLOCKED`.
+
+## Hard Constraints
+
+1. **Operator-confirmed topology.** Do not create, checkout, merge into, or promote through
+   `desktop-next`, `desktop-plugin-next`, `dev`, or `release/desktop/<version>` without explicit
+   operator confirmation outside this skill.
+2. **No release side effects.** Do not tag, sign, notarize, upload, publish updater metadata, modify
+   public download links, or run `ship`.
+3. **Manual macOS smoke is mandatory for W4.** Simulator/browser/build success is not enough for a
+   release verdict; record real macOS hardware smoke as `not_run` unless current evidence exists.
+4. **Artifact provenance must be exact.** Release artifact path, version, commit, branch, signing
+   identity, notarization status, and updater metadata source must be named or marked missing.
+5. **Site only consumes artifacts.** Official site/download work may link to a release artifact only
+   after App owns and proves the artifact; site does not manufacture Desktop artifacts.
+6. **No credential leakage.** Never print signing credentials, Apple IDs, app-specific passwords,
+   notary tokens, or private key material.
+
+## Gate Workflow
+
+1. Resolve the Desktop delta and release target:
+   - `git show --name-status --stat <commit>`
+   - `git diff --name-status <base>...<head>`
+   - linked D3 parity receipt, if any.
+2. Inspect release-sensitive surfaces:
+   - `apps/desktop/`
+   - `apps/desktop/src-tauri/`
+   - Tauri config, permissions/capabilities, version metadata, updater/appcast/latest metadata when present.
+   - site/download docs only as consumers, not artifact source.
+3. Run or record gates:
+   - Web build gate when App UI source changed.
+   - Tauri/macOS build gate when release target is Desktop.
+   - signing/notarization/package check when configured and operator approved.
+   - manual macOS smoke for W4.
+   - updater metadata validation when updater/download handoff is in scope.
+4. Emit the receipt below. Missing gates must be `not_run:<reason>` or `operator_gate:<owner>`, never omitted.
+
+## Verdict Mapping
+
+- All required build/package/sign/notarize/updater/manual-smoke evidence current -> `RELEASE_READY`.
+- Build/package gates are green but signing/notarization/upload/manual-smoke is operator-gated -> `OPERATOR_GATED`.
+- Any required release gate fails, artifact provenance is missing, or manual smoke contradicts readiness -> `BLOCKED`.
+- Delta is not W4 release-sensitive -> `NOT_RELEASE_RELEVANT`.
+
+## Output Format
+
+```text
+Desktop Release Gate Receipt
+  Verdict:             RELEASE_READY | OPERATOR_GATED | BLOCKED | NOT_RELEASE_RELEVANT
+  Desktop delta:       <commits / paths / parity receipt / summary>
+  Release target:      dev-rc | release/desktop/<version> | updater-handoff | site-download-handoff
+  Release impact:      signing:yes|no notarization:yes|no dmg:yes|no updater:yes|no version:yes|no site-handoff:yes|no
+  Branch gate:         desktop-next:<exists|defined-not-created|n/a> dev:<operator_gate|n/a> release:<operator_gate|n/a>
+  Build gate:          web-build:<pass|fail|not_run> tauri-build:<pass|fail|not_run>
+  Package gate:        dmg:<pass|fail|not_run|n/a> signing:<pass|fail|not_run|operator_gate|n/a> notarization:<pass|fail|not_run|operator_gate|n/a>
+  Updater gate:        metadata:<pass|fail|not_run|n/a> artifact-source:<commit/path/tag|missing|n/a>
+  Manual macOS smoke:  pass | fail | not_run:<reason>
+  Required action:     <none | run tauri build | run signing/notarization | run W4 manual smoke | fix artifact provenance | operator branch confirmation>
+  Next workflow:       record-only | xai-release-log + xai-dev-dashboard-sync | operator release branch | fix release blocker
+  Release status:      ready | operator-gated | blocked | not-applicable
+```
+
+If executed as a Workflow V2 spawned agent, wrap only this receipt in the required `## Handoff`
+block and do not append a conversational follow-up after it.

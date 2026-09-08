@@ -125,7 +125,7 @@ These public skills auto-load when the task matches their triggers — surfaced 
 
 ## Read First
 
-- `<onboarding_doc>`
+- `developer.md`
 - `docs/workflow/SUBAGENT_WORKFLOW_V2.md`
 - `docs/workflow/SOP_NEW_FEATURE.md`
 - `docs/conventions/COMMIT_CONVENTION.md`
@@ -194,6 +194,9 @@ When `dev_log.md` has `Automation Mode = D-Codex`, `D-Cursor`, or
 - A Work Log entry for each phase must name the actual external executor used
   (`codex exec` or `cursor-agent`) or the external-executor failure that caused
   `BLOCKED`.
+- `A-Codex` is intentionally NOT an external-build mode. In `A-Codex`, Codex is
+  the lead runtime and may implement phases directly in the current Codex
+  session or its spawned Codex workers.
 
 1. Read the approved phase plan from `dev_log.md`.
 2. Build the actionable phase list:
@@ -203,7 +206,7 @@ When `dev_log.md` has `Automation Mode = D-Codex`, `D-Cursor`, or
    - re-read `dev_log.md` before starting the phase
    - implement only that phase's intended scope
    - run the tests required for that phase
-   - self-check architecture boundaries, contract alignment, `<config_manifest>` impact, and documentation drift
+   - self-check architecture boundaries, contract alignment, `manifest.json` impact, and documentation drift
    - commit the completed phase following `docs/conventions/COMMIT_CONVENTION.md`
    - record the commit hash(es) under that phase in `dev_log.md`
    - update `design.md`, `api.md`, `test.md`, and `docs/PLUGIN_MAP.md` only when implementation facts require it

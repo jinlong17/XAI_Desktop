@@ -108,3 +108,4 @@
 - PRD §5.13(整体控制台)+ §5.15(网页版)
 - SYSTEM_ARCHITECTURE.md §1(架构流派)+ §3(三层边界)+ §4 红线 4/13
 - TECHNICAL_REQUIREMENTS.md §3.1.5 Web 部署 + §4 跨平台抽象
+- `docs/adr/0006-web-face-hybrid-reuse-boundary.md` — 2026-05-21 对 Web 面的源码复用硬规则做收窄

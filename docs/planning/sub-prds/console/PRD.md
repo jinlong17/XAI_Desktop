@@ -1,5 +1,7 @@
 # Console 子 PRD — XAI_Desktop 整体控制台
 
+> **PAUSED (2026-05-24, per Web P0 Priority Override).** Console window is part of P1 (Desktop client). Do not start new work against this PRD until P0 Web gap-closure ships and ADR-0009 (Web → Desktop Pivot Plan) is Accepted. Existing in-flight items: complete-or-park. Authority basis: `docs/workflow/roadmap/xai-web-console.md` §Authority Override 2026-05-23. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.13)|

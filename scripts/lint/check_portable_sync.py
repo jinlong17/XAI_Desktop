@@ -4,7 +4,7 @@
 Mechanically checks that `docs/workflow/_portable/` stays project-agnostic and
 self-consistent, so the workflow paradigm can be copied cleanly into any project.
 
-Eight rules:
+Ten rules:
 
   1. Proper-noun leak — `_portable/**` must not contain Any2Knowledge-specific
      nouns (`a2k-`, `features/`, `apps/web`, `Stripe`, `E2B`, `Univer`, `LUMX`,
@@ -37,6 +37,12 @@ Eight rules:
      target project's `<skill_prefix>`, skill root, feature root, workflow doc,
      and roadmap paths from the checked repo so the same script can run in A2K,
      XAI, or another migrated project without a permanent fork.
+  9. Codex project-skill surfaces — every `.teams/skills/<name>/SKILL.md` must
+     be discoverable as `.codex/skills/<name>/SKILL.md` for Codex native skill
+     loading.
+ 10. Backup skill discovery guard — skill roots must not contain `*backup*`
+     directories with a `SKILL.md`, because loaders may treat them as active
+     duplicate skills.
 
 Exit code: 0 = pass, 1 = violations found, 2 = lint could not run.
 
@@ -113,6 +119,7 @@ COWORK_SCRIPT_FILES = (
     "git-post-commit",
     "dispatch_codex.sh",
     "dispatch_cursor.sh",
+    "dispatch_claude.sh",
     "codex_wrapper.sh",
     "cursor_wrapper.sh",
     "lib_phase_verdict.sh",
@@ -128,6 +135,8 @@ class ProjectConfig:
     feature_root: str
     review_root: str
     project_workflow_doc: str
+    feature_sop_doc: str
+    bugfix_sop_doc: str
     feature_map_doc: str
     refactor_plan_doc: str
     onboarding_doc: str
@@ -148,6 +157,8 @@ class ProjectConfig:
             ("<onboarding_doc>", self.onboarding_doc),
             ("<review_root>", self.review_root),
             ("<project_workflow_doc>", self.project_workflow_doc),
+            ("<your_feature_sop>", self.feature_sop_doc),
+            ("<your_bugfix_sop>", self.bugfix_sop_doc),
             ("<roadmap_manifest_dir>", self.roadmap_manifest_dir),
             ("<feature_root>", self.feature_root),
             ("<orchestrator_marker_dir>", self.orchestrator_marker_dir),
@@ -164,7 +175,12 @@ def _first_existing(root: Path, candidates: tuple[str, ...], default: str) -> st
 
 
 def _infer_skill_prefix(root: Path) -> str:
-    skill_dirs = (root / ".teams/skills", root / ".claude/skills", root / ".agents/skills")
+    skill_dirs = (
+        root / ".teams/skills",
+        root / ".claude/skills",
+        root / ".agents/skills",
+        root / ".codex/skills",
+    )
     suffixes = ("workflow-migrate", "roadmap-loop", "feature-full-loop", "feature-brief")
     for skill_dir in skill_dirs:
         if not skill_dir.is_dir():
@@ -178,7 +194,12 @@ def _infer_skill_prefix(root: Path) -> str:
 
 
 def _infer_skill_root(root: Path, prefix: str) -> Path:
-    candidates = (Path(".teams/skills"), Path(".claude/skills"), Path(".agents/skills"))
+    candidates = (
+        Path(".teams/skills"),
+        Path(".claude/skills"),
+        Path(".agents/skills"),
+        Path(".codex/skills"),
+    )
     for candidate in candidates:
         abs_candidate = root / candidate
         if (abs_candidate / f"{prefix}feature-full-loop").exists() or (
@@ -220,6 +241,16 @@ def infer_project_config(root: Path) -> ProjectConfig:
             root,
             ("docs/workflow/project/SUBAGENT_WORKFLOW_V2.md", "docs/workflow/SUBAGENT_WORKFLOW_V2.md"),
             "docs/workflow/project/SUBAGENT_WORKFLOW_V2.md",
+        ),
+        feature_sop_doc=_first_existing(
+            root,
+            ("docs/workflow/SOP_NEW_FEATURE.md", "docs/workflow/project/SOP_NEW_FEATURE.md"),
+            "docs/workflow/project/SOP_NEW_FEATURE.md",
+        ),
+        bugfix_sop_doc=_first_existing(
+            root,
+            ("docs/workflow/SOP_BUGFIX.md", "docs/workflow/project/SOP_BUGFIX.md"),
+            "docs/workflow/project/SOP_BUGFIX.md",
         ),
         feature_map_doc=_first_existing(root, ("docs/FEATURE_MAP.md", "docs/PLUGIN_MAP.md"), "docs/FEATURE_MAP.md"),
         refactor_plan_doc=_first_existing(
@@ -539,6 +570,49 @@ def check_skill_doc_registration(root: Path) -> list[Violation]:
     return violations
 
 
+def check_project_skill_codex_surfaces(root: Path) -> list[Violation]:
+    """Every project-layer .teams skill must have a Codex-native SKILL.md surface."""
+    rule = "PROJECT_SKILL_CODEX_SURFACE_MISSING"
+    team_dir = root / ".teams/skills"
+    if not team_dir.is_dir():
+        return []
+    codex_dir = root / ".codex/skills"
+    violations: list[Violation] = []
+    for skill_md in sorted(team_dir.glob("*/SKILL.md")):
+        name = skill_md.parent.name
+        if not (codex_dir / name / "SKILL.md").exists():
+            violations.append(
+                Violation(
+                    rule,
+                    f".codex/skills/{name}/SKILL.md",
+                    None,
+                    "Codex-native project skill surface missing; mirror or render the .teams skill",
+                )
+            )
+    return violations
+
+
+def check_skill_backup_dirs(root: Path) -> list[Violation]:
+    """Skill discovery directories must not contain backup skill folders."""
+    rule = "SKILL_BACKUP_DISCOVERABLE"
+    violations: list[Violation] = []
+    for rel in (".claude/skills", ".agents/skills", ".cursor/skills", ".codex/skills"):
+        base = root / rel
+        if not base.is_dir():
+            continue
+        for child in sorted(base.iterdir()):
+            if "backup" in child.name and (child / "SKILL.md").exists():
+                violations.append(
+                    Violation(
+                        rule,
+                        child.relative_to(root).as_posix(),
+                        None,
+                        "backup skill directory is discoverable; move it outside skill roots",
+                    )
+                )
+    return violations
+
+
 def _extract_fenced_appendix_source(text: str, marker: str) -> str | None:
     try:
         marker_pos = text.index(marker)
@@ -778,6 +852,8 @@ def run(root: Path) -> tuple[int, list[Violation]]:
     violations.extend(check_template_next_step(root))
     violations.extend(check_cowork_parity(root, config))
     violations.extend(check_skill_doc_registration(root))
+    violations.extend(check_project_skill_codex_surfaces(root))
+    violations.extend(check_skill_backup_dirs(root))
     violations.extend(check_feature_full_loop_skill_source_parity(root, config))
     violations.extend(check_roadmap_skill_source_parity(root, config))
     violations.extend(check_workflow_migrate_skill_source_parity(root, config))

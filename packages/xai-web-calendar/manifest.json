@@ -1,0 +1,19 @@
+{
+  "name": "@repo/plugin-web-calendar",
+  "slug": "xai-web-calendar",
+  "version": "0.0.0",
+  "status": "Production",
+  "type": "ui",
+  "owner": "xai-web-calendar",
+  "description": "Calendar module \u2014 Month grid + 4-color event chips (mint/amber/blue/violet) + view switcher (Month + Week/Day coming-soon stub) + deep-link receive via web:shell:module-change focusDate.",
+  "roadmap_row": 12,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus",
+    "@repo/xai-web-shell"
+  ]
+}

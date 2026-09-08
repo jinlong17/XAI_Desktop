@@ -161,7 +161,8 @@ def parse_args() -> argparse.Namespace:
         "--include-skills",
         action="store_true",
         help="Also render the public-skill shims under SKILLS_DIR into "
-             ".claude/skills/skill-*, .codex/agents/skill-*.toml, .cursor/rules/skill-*.mdc. "
+             ".claude/skills/skill-*, .codex/agents/skill-*.toml, "
+             ".codex/skills/*/SKILL.md, .cursor/rules/skill-*.mdc. "
              "Without this flag, output is byte-identical to the pre-skill-bundle behavior.",
     )
     parser.add_argument(
@@ -341,18 +342,22 @@ from setup_subagents_v2_skills import (
     load_skills as _load_skills_impl,
     render_skill_claude as _render_skill_claude,
     render_skill_codex as _render_skill_codex,
+    render_skill_codex_native as _render_skill_codex_native,
     render_skill_cursor as _render_skill_cursor,
     write_skill as _write_skill,
 )
 
 
-def _render_skills(skills, target: str):
+def _render_skill_outputs(skill, target: str):
     fns = {
-        "claude": lambda s: _render_skill_claude(s, ROOT),
-        "codex": lambda s: _render_skill_codex(s, codex_output_dir(), CODEX_FAST_MODEL, toml_multiline, toml_string),
-        "cursor": lambda s: _render_skill_cursor(s, ROOT),
+        "claude": lambda s: [_render_skill_claude(s, ROOT)],
+        "codex": lambda s: [
+            _render_skill_codex(s, codex_output_dir(), CODEX_FAST_MODEL, toml_multiline, toml_string),
+            *_render_skill_codex_native(s, ROOT),
+        ],
+        "cursor": lambda s: [_render_skill_cursor(s, ROOT)],
     }
-    return [fns[target](s) for s in skills]
+    return fns[target](skill)
 
 
 def ensure_codex_config(dry_run: bool, force: bool) -> str:
@@ -423,10 +428,10 @@ def main() -> int:
             skills = all_skills
         for skill in skills:
             for target in sorted(targets):
-                out_path, content = _render_skills([skill], target)[0]
-                ensure_dir(out_path.parent, args.dry_run)
-                status = _write_skill(out_path, content, args.force, args.dry_run, write_file)
-                rows.append((target, f"skill-{skill.name}", str(out_path.relative_to(ROOT)), status))
+                for out_path, content in _render_skill_outputs(skill, target):
+                    ensure_dir(out_path.parent, args.dry_run)
+                    status = _write_skill(out_path, content, args.force, args.dry_run, write_file)
+                    rows.append((target, f"skill-{skill.name}", str(out_path.relative_to(ROOT)), status))
 
     print("Generated Workflow V2 subagent configs:")
     for target, name, rel_path, status in rows:

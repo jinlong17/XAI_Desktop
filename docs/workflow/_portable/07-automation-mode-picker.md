@@ -1,6 +1,6 @@
 # 07 — Automation Mode Picker (cross-cutting spec)
 
-> **Source:** `_portable/04-automation-loop.md` §3 (8-variant matrix) +
+> **Source:** `_portable/04-automation-loop.md` §3 (9-variant matrix) +
 > `_portable/02-handoff-and-state.md` §3.3 (Universal Next Step Contract) +
 > `_portable/06-roadmap-orchestration.md` §A6 (manifest schema).
 >
@@ -12,12 +12,12 @@
 
 ## 1. Position in the workflow
 
-`04-automation-loop.md` §3 defines **what** the 8 variants are. This file defines **how** an
+`04-automation-loop.md` §3 defines **what** the 9 variants are. This file defines **how** an
 Automation Mode is acquired when one is not already supplied. Three trigger sites:
 
 | Site | When this file fires |
 |------|----------------------|
-| `feature-full-loop` Phase 0 INTAKE (fresh start) | invocation prompt has no `Automation Mode:` field, or the value is not one of the 8 legal variants |
+| `feature-full-loop` Phase 0 INTAKE (fresh start) | invocation prompt has no `Automation Mode:` field, or the value is not one of the 9 legal variants |
 | `bugfix-full-loop` Phase 0 INTAKE (fresh start) | same, but C-* variants are also rejected (phase-granularity does not apply to bugfix) |
 | `<skill_prefix>roadmap-loop` init mode | per-row, while drafting the manifest (see §5) |
 
@@ -52,16 +52,17 @@ INTAKE's three fields:
 
 ---
 
-## 2. The picker — single AskUserQuestion, 4 options
+## 2. The picker — single AskUserQuestion, 5 options
 
 ### 2.1 Options table (feature flavor)
 
 | # | label (1-5 words) | variant written |
 |---|---|---|
-| 1 | A-Claude (single IDE) | `A-Claude` |
-| 2 | D-Codex+Cursor (resilient) | `D-Codex+Cursor` |
-| 3 | D-Codex (single delegate) | `D-Codex` |
-| 4 | D-Cursor (single delegate) | `D-Cursor` |
+| 1 | A-Codex (Codex lead) | `A-Codex` |
+| 2 | A-Claude (Claude lead) | `A-Claude` |
+| 3 | D-Codex+Cursor (resilient) | `D-Codex+Cursor` |
+| 4 | D-Codex (single delegate) | `D-Codex` |
+| 5 | D-Cursor (single delegate) | `D-Cursor` |
 
 No "Other" option. Experimental variants (`B-Codex` / `B-Cursor` / `C-Codex` / `C-Cursor`) are
 reachable only via explicit invocation — see §2.3.
@@ -69,7 +70,7 @@ reachable only via explicit invocation — see §2.3.
 ### 2.2 Options table (bugfix flavor)
 
 Identical to §2.1. Bugfix never reaches a C-* variant because `bugfix-full-loop.md` Inputs already
-rejects phase-granularity at the input gate; the picker therefore lists the same 4 options without
+rejects phase-granularity at the input gate; the picker therefore lists the same 5 options without
 extra B/C entries. The B-* variants are still reachable for bugfix via explicit invocation (§2.3).
 
 ### 2.3 B/C variants — explicit invocation only
@@ -117,7 +118,25 @@ Pick an Automation Mode for this <feature|bugfix>.
 Each preview follows the same 5-section structure so users can compare side by side. Length target:
 ≤ 250 words per option so preview rendering stays within typical UI bounds.
 
-#### Option 1 — A-Claude (single IDE)
+#### Option 1 — A-Codex (Codex lead)
+
+```markdown
+**A-Codex — Codex lead single-IDE loop**
+
+- **执行模型:** 同步。整个 step 0 → plan → review → build/fix → verify 都由当前
+  Codex runtime 作为 lead 推进;不走 hook,不把实现外包给 `codex exec`。
+- **Executor 分工:** plan / review / build / verify 都在 Codex lineage 内完成。能 spawn
+  Codex worker 时直接 spawn;若 `max_depth` 或 host policy 不允许,当前 Codex parent session
+  inline 执行下一步 worker contract。
+- **Phase 粒度:** 可用 `feature-auto-build` + `feature-verify`;若 `Verify Cross-vendor: no`
+  且 loop worker 可用,也可用 `feature-dev-loop`。
+- **何时停下来:** Phase 5(verify PASS 后),输出 READY_TO_SHIP,等你手动跑 `ship`。
+- **额外依赖:** 无外部 CLI / hook 依赖;适合长时间停留在 Codex 里连续开发。
+- **不要选 A-Codex 当:** 你希望 Claude Code / Agent View 做 lead,或希望另一个 lead 通过
+  `codex exec` 委派实现 phase(那是 D-Codex)。
+```
+
+#### Option 2 — A-Claude (single IDE)
 
 ```markdown
 **A-Claude — single-IDE loop**
@@ -133,7 +152,7 @@ Each preview follows the same 5-section structure so users can compare side by s
 - **不要选 A-Claude 当:** fast-tier 也耗尽 quota / 你想观察外部 executor 怎么协作。
 ```
 
-#### Option 2 — D-Codex+Cursor (resilient)
+#### Option 3 — D-Codex+Cursor (resilient)
 
 ```markdown
 **D-Codex+Cursor — lead-and-delegate with 3-layer fallback**
@@ -152,7 +171,7 @@ Each preview follows the same 5-section structure so users can compare side by s
   上限不影响整体进度"的最稳路径。8 个 variant 里**最抗 quota** 的。
 ```
 
-#### Option 3 — D-Codex (single delegate Codex)
+#### Option 4 — D-Codex (single delegate Codex)
 
 ```markdown
 **D-Codex — lead-and-delegate to codex exec only**
@@ -170,7 +189,7 @@ Each preview follows the same 5-section structure so users can compare side by s
   压力小;A-Claude 全 lead 跑,简单但 lead quota 压力大。
 ```
 
-#### Option 4 — D-Cursor (single delegate Cursor)
+#### Option 5 — D-Cursor (single delegate Cursor)
 
 ```markdown
 **D-Cursor — lead-and-delegate to cursor-agent only**
@@ -191,7 +210,7 @@ Each preview follows the same 5-section structure so users can compare side by s
 
 When the picker fires on a fresh start AND the invocation prompt has **no**
 `Verify Cross-vendor:` line, the picker carries a **second question in the SAME
-AskUserQuestion call** — Q1 = Automation Mode (§2.1, 4 options), Q2 = Verify
+AskUserQuestion call** — Q1 = Automation Mode (§2.1, 5 options), Q2 = Verify
 Cross-vendor (2 options). One call, two questions. Never two sequential pickers.
 
 | # | label | value written | meaning |
@@ -214,7 +233,7 @@ Don't-ask / fallback (note: differs from Mode — Verify HAS a safe default):
 | Resume mode | Read from dev_log Status Panel `Verify Cross-vendor:`; never re-ask |
 | Explicit `Verify Cross-vendor:` value on the prompt | Use as-is; do **not** add Q2 |
 | Host tool lacks `AskUserQuestion` | Default `Verify Cross-vendor: yes` (strict) and **proceed** — NOT a BLOCKED. Only Requirement (§1A) and Automation Mode hard-block; Verify has a safe strict default. |
-| `A-Claude` (single-vendor) selected in Q1 | Q2 is still asked (per the always-ask design) but is effectively **moot**: cross-vendor verify is physically impossible single-vendor, so `feature-plan` treats `yes` as best-effort same-vendor verify and never blocks on it. |
+| `A-Claude` or `A-Codex` (single-vendor) selected in Q1 | Q2 is still asked (per the always-ask design) but is effectively **moot**: cross-vendor verify is physically impossible single-vendor, so `feature-plan` treats `yes` as best-effort same-vendor verify and never blocks on it. |
 
 Write-authority unchanged (§6): the meta-orchestrator appends a Work Log line
 only; `feature-plan` / `bug-diagnose` write the Status Panel
@@ -233,7 +252,7 @@ Fire the picker (§2) **if and only if** all of these hold:
 
 1. The invocation is a **fresh start** (Phase 0 INTAKE has a non-empty
    `Requirement:`/`Bug:` per §1A, not a resume cue).
-2. Invocation prompt has **no** `Automation Mode:` field, OR the field's value is not one of the 8
+2. Invocation prompt has **no** `Automation Mode:` field, OR the field's value is not one of the 9
    legal variants.
 3. The host tool **supports `AskUserQuestion`**.
 
@@ -251,7 +270,7 @@ Cross-vendor → default `yes` and proceed (§2.6).
 | Caller is `<skill_prefix>roadmap-loop` run mode dispatch (`emit` / `bg` / `serial` / `spawn`) | The generated feature prompt or inline recipe is required to include a resolved `Automation Mode:` value (§4 layer 1-3); the Automation Mode picker never fires here. The separate dispatch-mode confirmation question lives in `06` §A7.3. |
 | Fresh start, no `Requirement:`/`Bug:` | Handled earlier by §1A — STOP `BLOCKED` before §3 is even evaluated (never reaches the picker) |
 | Invocation prompt has a legal `Verify Cross-vendor:` value | Use it as-is; the §2.6 Q2 is not added |
-| Host tool does not support `AskUserQuestion` | **Automation Mode:** STOP with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this tool.`, Next Step `Re-run with: Start the <agent> agent. Requirement: <text>. Automation Mode: <one of the 8 — see 04 §3>`. **Verify Cross-vendor:** do NOT block — default `yes` (strict) and proceed (§2.6). |
+| Host tool does not support `AskUserQuestion` | **Automation Mode:** STOP with Handoff `Status: BLOCKED`, Blocker `Automation Mode missing and AskUserQuestion not available in this tool.`, Next Step `Re-run with: Start the <agent> agent. Requirement: <text>. Automation Mode: <one of the 9 — see 04 §3>`. **Verify Cross-vendor:** do NOT block — default `yes` (strict) and proceed (§2.6). |
 
 ---
 
@@ -261,9 +280,9 @@ When `<skill_prefix>roadmap-loop` `run` mode starts, it resolves the Automation 
 PENDING row **before** entering the main loop, in this order (high → low precedence):
 
 ```
-1. row['Automation Mode'] ∈ {8 legal variants}                       → use row value
+1. row['Automation Mode'] ∈ {9 legal variants}                       → use row value
 2. row['Automation Mode'] == '(default)' AND
-   header['Default Automation Mode'] ∈ {8 legal variants}            → use header value
+   header['Default Automation Mode'] ∈ {9 legal variants}            → use header value
 3. row['Automation Mode'] == '(default)' AND header invalid AND
    a run_time_fallback was already set this session                  → use run_time_fallback
 4. row['Automation Mode'] == '(default)' AND header invalid AND
@@ -297,7 +316,7 @@ inheritance shortcut so the common "all features same Mode" case stays fast.
 
 ```
 For row #1:
-  Fire picker §2 (full 4-option). Result = Mode_1.
+  Fire picker §2 (full 5-option). Result = Mode_1.
   Write manifest:
     header 'Default Automation Mode: <Mode_1>'
     row #1 'Automation Mode: (default)'
@@ -418,7 +437,7 @@ contracts. The three meta-orchestrators that consume this file keep their own te
 - `_portable/templates/bugfix-full-loop.md` — Phase 0 INTAKE references §2 + §3 (notes bugfix flavor in §2.2).
 - `_portable/06-roadmap-orchestration.md` Appendix SKILL.md — init mode references §5; run mode references §4.
 - `_portable/04-automation-loop.md` §3 — pointer at the top of §3 noting "for how a Mode is picked at runtime, see `07-automation-mode-picker.md`".
-- `_portable/usage-guide.md` §4.2 — pointer below the 8-variant table noting the picker.
+- `_portable/usage-guide.md` §4.2 — pointer below the 9-variant table noting the picker.
 
 If you change the picker (option count, option labels, fallback layers, write-authority), update
 this file first and consumers second — never the other way around.

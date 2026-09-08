@@ -3,7 +3,26 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./button": {
+      "types": "./src/button.tsx",
+      "import": "./src/button.tsx"
+    },
+    "./card": {
+      "types": "./src/card.tsx",
+      "import": "./src/card.tsx"
+    },
+    "./code": {
+      "types": "./src/code.tsx",
+      "import": "./src/code.tsx"
+    },
+    "./tokens": {
+      "types": "./src/tokens.ts",
+      "import": "./src/tokens.ts"
+    },
+    "./icons": {
+      "types": "./src/icons.tsx",
+      "import": "./src/icons.tsx"
+    }
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

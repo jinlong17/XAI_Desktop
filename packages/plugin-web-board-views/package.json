@@ -1,0 +1,50 @@
+{
+  "name": "@repo/plugin-web-board-views",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web Console Board — 5 additional views (Table/Calendar/Dashboard/Timeline/Map) layered on @repo/plugin-web-board-core. Adds ViewPicker + BoardModule orchestrator. Persists per-board active view in xai_board_view_by_id.",
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-board-core": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/leaflet": "^1.9.14",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

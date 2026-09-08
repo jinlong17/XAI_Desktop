@@ -1,6 +1,10 @@
 // All exported hooks/components in this package are client-only. Consumers must wrap with "use client" in Next.js.
 
-export type { ActionSuggestion, AiActionKind, AiMessage, AiRole, CostGuardState, PrivacyReview } from "./types";
+export type { ActionSuggestion, AiActionKind, AiMessage, AiRole, CostGuardState, CostUsage, PrivacyReview } from "./types";
+export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as AiCubeRepoAdapter } from "./data/RepoAdapter";
+export { AiCubeRepoProvider, useAiCubeRepoAdapters } from "./data/RepoProvider";
+export type { AiCubeRepoAdapters, AiCubeRepoProviderProps } from "./data/RepoProvider";
 export type { CostGuardApi } from "./hooks/useCostGuard";
 export { redactSecrets } from "./redaction";
 export { useAiConversation } from "./hooks/useAiConversation";
@@ -12,3 +16,13 @@ export { InputBar } from "./components/InputBar";
 export { MessageBubble } from "./components/MessageBubble";
 export { OfflineFallback } from "./components/OfflineFallback";
 export { PrivacyGateDialog } from "./components/PrivacyGateDialog";
+export { registerAiCubePlugin } from "./register-plugin";
+export { AiCubeControlProvider, useAiCubeControlBridge } from "./control/ControlBridge";
+export { AiCubeControlWidget } from "./control/ControlWidget";
+export {
+  PREVIEW_ACTIONS,
+  PREVIEW_STATUS_TEXT,
+  PREVIEW_TRANSCRIPT,
+  isPreviewActionEnabled,
+} from "./control/preview";
+export type { AiCubeControlBridge, AiCubeTrayActions } from "./control/types";

@@ -1,0 +1,81 @@
+{
+  "name": "console",
+  "version": "0.1.0",
+  "displayName": "控制台",
+  "description": "Productivity console shell with navigation slots, search, command palette, desktop bridge, and notifications.",
+  "author": "Jinlong",
+  "enabled": true,
+  "contentTypes": ["console-shell", "console-view-slot", "console-search", "notification"],
+  "windows": {
+    "console": true
+  },
+  "ui": {
+    "consoleSidebar": {
+      "entries": [
+        {
+          "id": "notifications",
+          "label": "Notifications",
+          "icon": "bell",
+          "order": 90,
+          "group": "console",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "notifications"
+        },
+        {
+          "id": "settings",
+          "label": "Settings",
+          "icon": "settings",
+          "order": 100,
+          "group": "console",
+          "enabled": true,
+          "placeholder": false,
+          "moduleId": "settings"
+        },
+        {
+          "id": "calendar",
+          "label": "Calendar",
+          "icon": "calendar",
+          "order": 130,
+          "group": "calendar",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "calendar"
+        },
+        {
+          "id": "widgets",
+          "label": "Widgets",
+          "icon": "sparkles",
+          "order": 140,
+          "group": "widgets",
+          "enabled": true,
+          "placeholder": true,
+          "moduleId": "widgets"
+        }
+      ]
+    }
+  },
+  "events": {
+    "emit": [
+      "console:navigate-module",
+      "console:sidebar-toggled",
+      "console:search-opened",
+      "console:detail-selection-changed",
+      "console:reconcile-requested",
+      "console:ack-applied"
+    ],
+    "listen": [
+      "account:sync-started",
+      "account:sync-completed",
+      "account:sync-failed"
+    ]
+  },
+  "dependencies": [],
+  "tauriCommands": [
+    "open_console_window",
+    "close_console_window",
+    "focus_console_window",
+    "get_console_window_frame",
+    "set_console_window_frame"
+  ]
+}

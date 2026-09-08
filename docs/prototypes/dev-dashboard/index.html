@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XAI 个人开发看板</title>
+<script src="./js/theme-bootstrap.js"></script>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">X</div>
+      <div>
+        <b>XAI 个人开发看板</b>
+        <span>本地项目控制台</span>
+      </div>
+    </div>
+    <nav class="nav" id="primaryNav" aria-label="主导航">
+      <div class="nav-title"><span>导航</span><button id="navOrderReset" type="button" aria-label="恢复默认导航顺序" title="恢复默认顺序">↺</button></div>
+      <!-- Nav items are rendered by renderPrimaryNav() from DEFAULT_NAV_ITEMS (js/nav.js).
+           Do NOT add static <a> items here — the single source is the JS registry. -->
+      <div class="nav-list" id="primaryNavList"></div>
+    </nav>
+    <section class="theme-panel" aria-labelledby="themeSettingsTitle">
+      <div class="theme-panel-head">
+        <b id="themeSettingsTitle">外观设置</b>
+        <span id="themeStatusText">跟随系统</span>
+      </div>
+      <div class="theme-mode-control" id="themeModeControl" role="group" aria-label="主题模式">
+        <button type="button" data-theme-mode="system">系统</button>
+        <button type="button" data-theme-mode="light">浅色</button>
+        <button type="button" data-theme-mode="dark">深色</button>
+      </div>
+      <div class="theme-accent-head">
+        <span>主色调</span>
+        <span id="themeAccentText">Blue</span>
+      </div>
+      <div class="theme-accent-row">
+        <div class="theme-swatches" id="themeAccentSwatches" aria-label="主色调预设"></div>
+        <input class="theme-color-input" id="themeAccentPicker" type="color" value="#1a73e8" aria-label="自定义主色调">
+      </div>
+    </section>
+    <div class="rail-note">
+      <b>核心规则</b>
+      <p>产品线说明“做什么”，branch 说明“在哪里集成和发布”。两者不要一一绑定。</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content">
+      <section class="section hero page-section is-active" id="overview" data-page-section="overview">
+        <div class="surface ops-board">
+          <div class="ops-head">
+            <div class="ops-title">
+              <b>产品功能监控总览</b>
+              <span id="snapshotMeta">state snapshot</span>
+              <div class="ops-badges">
+                <span class="badge b-green">读取+提醒</span>
+                <span class="badge b-blue">localhost only</span>
+                <span class="badge b-cyan" id="freshnessBadge">snapshot</span>
+              </div>
+            </div>
+            <button class="reader-btn" data-page-jump="product-flow" type="button">产品线</button>
+          </div>
+          <div class="overview-signal-grid" id="overviewSignalGrid"></div>
+          <div class="overview-sync-card" id="overviewSyncStatus"></div>
+          <div class="flow-note ops-note">
+            <b>控制边界：</b>
+            <p style="margin-top:8px">总览只汇总产品模块状态和入口；roadmap、merge、发布判断仍由 operator 决定。</p>
+          </div>
+        </div>
+        <div class="overview-right-col">
+          <div class="surface pad focus-box" id="overviewFocus"></div>
+          <div class="overview-skill-quick" id="overviewSkillQuick"></div>
+        </div>
+      </section>
+
+      <section class="section overview-flow-section page-section is-active" data-page-section="overview">
+        <div class="surface overview-flow-board" id="overviewFlowBoard">
+          <div class="overview-flow-head">
+            <div>
+              <h2>产品流程图</h2>
+              <p class="sub" id="overviewFlowDescription">用简化链路展示 Web、桌面、插件、同步、官网和管理控制面的当前进展。</p>
+            </div>
+            <div class="overview-flow-actions">
+              <div class="overview-flow-switch" id="overviewFlowSwitch" role="tablist" aria-label="产品流程图视图"></div>
+              <span class="pill">点击模块查看详情</span>
+            </div>
+          </div>
+          <div class="overview-flow-canvas" id="overviewFlowCanvas" aria-label="总览产品流程图"></div>
+        </div>
+        <aside class="surface overview-flow-side">
+          <div class="overview-flow-view-meta" id="overviewFlowViewMeta"></div>
+          <h3>状态图例</h3>
+          <div class="overview-flow-legend">
+            <div><span class="legend-dot is-new"></span><span>未开发 / 待启动</span></div>
+            <div><span class="legend-dot is-active"></span><span>开发中 / 正在推进</span></div>
+            <div><span class="legend-dot is-risk"></span><span>开发中但存在阻塞</span></div>
+            <div><span class="legend-dot is-done"></span><span>已完成 / 稳定运行</span></div>
+          </div>
+          <div class="overview-flow-summary" id="overviewFlowSummary"></div>
+        </aside>
+      </section>
+
+      <section class="section overview-module-grid page-section is-active" data-page-section="overview" id="overviewModuleGrid"></section>
+
+      <section class="section page-section is-active" data-page-section="overview">
+        <div class="surface pad deployment-overview-card" id="overviewDeployment"></div>
+      </section>
+
+      <section class="section page-section is-active" data-page-section="overview">
+        <div class="surface pad deployment-overview-card" id="overviewTesting"></div>
+      </section>
+
+      <section class="section flow-grid page-section" id="product-flow" data-page-section="product-flow">
+        <div class="surface pad flow-stage">
+          <div class="section-head">
+            <div>
+          <h2>产品结构 · 开发导航</h2>
+          <p class="sub">点击任一模块查看：开发目标、任务归属信号、绑定 branch / skill / prompt、开发 workflow，以及进入下一模块的触发条件与需同步更新的模块。完整规则见 docs/PRODUCT_MODULE_MAP.md。</p>
+            </div>
+            <span class="pill">点击 = 开发导航</span>
+          </div>
+          <div class="structure-map" id="structureMap" aria-label="产品结构流程图"></div>
+          <div class="branch-workflow">
+            <div class="branch-flow-head">
+              <b>Branch 开发到发布工作流</b>
+              <span id="branchFlowMeta">从短分支进入主线，再经过 D3、RC、release gate</span>
+            </div>
+            <div class="branch-flow" id="branchFlow"></div>
+          </div>
+          <div class="sync-orchestration" id="syncOrchestration"></div>
+          <div class="module-track" id="moduleTrack"></div>
+          <div class="future-surfaces" id="futureSurfaces"></div>
+          <div class="module-rhythm">
+            <div class="rhythm-chip"><b>1. Web 先完整</b><span>最全功能产品，也是 App UI 来源。</span></div>
+            <div class="rhythm-chip"><b>2. App 再下沉</b><span>把 Web 能力接入 macOS/Tauri。</span></div>
+            <div class="rhythm-chip"><b>3. 插件再扩展</b><span>桌面整理和 widget 依赖 App 平台。</span></div>
+            <div class="rhythm-chip"><b>4. 同步打通</b><span>Web/App/Plugin 进入同一账号云。</span></div>
+            <div class="rhythm-chip"><b>5. 官网承接</b><span>下载、更新、发布记录和对外入口。</span></div>
+            <div class="rhythm-chip"><b>6. Admin 控制</b><span>运营、AI 配置、权限、用量和审计后台。</span></div>
+          </div>
+        </div>
+        <aside class="surface pad detail" id="productDetail" aria-live="polite"></aside>
+      </section>
+
+      <section class="section deployment-dashboard page-section" id="deployment" data-page-section="deployment">
+        <div class="deployment-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署总览</h2>
+                <p class="sub">按产品模块集中查看云端部署状态、部署环境、版本、平台和最近部署时间。</p>
+              </div>
+              <span class="pill" id="deploymentOverallPill">deployment</span>
+            </div>
+            <div class="deployment-summary-grid" id="deploymentSummaryGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署流程看板</h2>
+                <p class="sub">把当前已有的部署开发、部署到哪里、触发方式、涉及配置和上线前检查放在一张流程卡里。</p>
+              </div>
+              <span class="pill">flow</span>
+            </div>
+            <div class="deployment-flow-board" id="deploymentFlowBoard"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块部署卡片</h2>
+                <p class="sub">官方网页、Web、Mac 桌面版、桌面插件、账号云同步层和管理者 Dashboard 独立登记。</p>
+              </div>
+              <span class="pill">按模块</span>
+            </div>
+            <div class="deployment-module-grid" id="deploymentModuleGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>部署记录</h2>
+                <p class="sub">保留每次部署的模块、时间、环境、平台、版本、结果和说明。</p>
+              </div>
+              <span class="pill" id="deploymentRecordCount">history</span>
+            </div>
+            <div class="deployment-record-list" id="deploymentRecordList"></div>
+          </div>
+        </div>
+        <aside class="surface pad deployment-side">
+          <div>
+            <h2>环境与问题</h2>
+            <p class="sub">聚合部署环境、平台和失败 / 待处理项，作为下一次上线前检查入口。</p>
+          </div>
+          <div class="deployment-env-list" id="deploymentEnvironmentList"></div>
+          <div class="deployment-issue-list" id="deploymentIssueList"></div>
+        </aside>
+      </section>
+
+      <section class="section testing-dashboard page-section" id="testing" data-page-section="testing">
+        <div class="testing-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>测试结果总览</h2>
+                <p class="sub">按产品模块集中查看最近测试时间、测试结论、通过状态、失败项、Pipeline、耗时和报告入口。</p>
+              </div>
+              <span class="pill" id="testingOverallPill">testing</span>
+            </div>
+            <div class="deployment-summary-grid" id="testingSummaryGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块测试卡片</h2>
+                <p class="sub">Web、Mac 桌面版本、桌面插件、账号云同步、管理者 Dashboard 和官网使用同一 Product Module Registry 关联。</p>
+              </div>
+              <span class="pill">按模块</span>
+            </div>
+            <div class="testing-module-grid" id="testingModuleGrid"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>测试记录</h2>
+                <p class="sub">从 release-log Verification 和 testing.records 生成，保留模块、来源、结论、失败项和报告路径。</p>
+              </div>
+              <span class="pill" id="testingRecordCount">history</span>
+            </div>
+            <div class="testing-record-list" id="testingRecordList"></div>
+          </div>
+        </div>
+        <aside class="surface pad testing-side">
+          <div>
+            <h2>Pipeline 与报告</h2>
+            <p class="sub">CI 存在不等于通过；未查询的 pipeline 只显示 configured / not queried。</p>
+          </div>
+          <h3>Pipeline</h3>
+          <div class="testing-side-list" id="testingPipelineList"></div>
+          <h3>报告入口</h3>
+          <div class="testing-side-list" id="testingReportList"></div>
+        </aside>
+      </section>
+
+      <section class="section usage-ops page-section" id="usage-ops" data-page-section="usage-ops">
+        <div class="surface pad usage-ops-hero">
+          <div class="section-head">
+            <div>
+              <h2>使用和操作</h2>
+              <p class="sub">集中放日常启动、打开页面、更新、构建、部署、日志、状态检查和停止服务命令，作为本地项目操作入口。</p>
+            </div>
+            <span class="badge b-blue">operator manual</span>
+          </div>
+          <div class="usage-quick-grid">
+            <div>
+              <span>推荐 Web 启动</span>
+              <b>mock 登录</b>
+              <code>pnpm --filter @repo/web dev:mock-auth</code>
+            </div>
+            <div>
+              <span>Web 地址</span>
+              <b>localhost:3000</b>
+              <code>http://localhost:3000</code>
+            </div>
+            <div>
+              <span>开发看板</span>
+              <b>127.0.0.1:4177</b>
+              <code>pnpm dashboard:serve</code>
+            </div>
+            <div>
+              <span>状态检查</span>
+              <b>git + pnpm</b>
+              <code>git status --short</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-ops-grid">
+          <article class="usage-card" data-tone="blue">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">01</span><div><h3>启动服务</h3><p>从仓库根目录启动主 Web 应用。日常调试优先使用 mock 登录版本。</p></div></div>
+              <span class="pill">Web</span>
+            </div>
+            <ol class="usage-steps">
+              <li>进入仓库根目录。</li>
+              <li>启动 Web 主应用，默认监听 3000。</li>
+              <li>需要真实登录链路时改用普通 dev。</li>
+            </ol>
+            <div class="usage-run-panel" id="usageWebOpsPanel">
+              <div class="usage-run-head">
+                <div>
+                  <b>Web 运行控制</b>
+                  <span id="usageWebOpsSummary">正在检查本地 3000 端口...</span>
+                </div>
+                <span class="badge b-gray" id="usageWebOpsBadge">checking</span>
+              </div>
+              <div class="usage-run-actions">
+                <button class="reader-btn" data-ops-start="web:start-mock" data-ops-open-after="true" type="button">启动 mock 并打开 App</button>
+                <button class="reader-btn" data-ops-start="web:start-dev" type="button">启动普通 dev</button>
+                <button class="reader-btn" data-ops-open="web" data-ops-route="/" type="button">打开首页</button>
+                <button class="reader-btn" data-ops-open="web" data-ops-route="/app/dashboard" type="button">打开 App</button>
+                <button class="reader-btn" data-ops-refresh="web" type="button">刷新状态</button>
+                <button class="reader-btn" data-ops-stop="web" type="button" disabled>停止</button>
+              </div>
+              <div class="usage-run-meta" id="usageWebOpsMeta"></div>
+              <div class="usage-log-panel">
+                <div class="usage-log-head"><b>最近日志</b><button class="prompt-copy" data-ops-copy-log="web" type="button">复制日志</button></div>
+                <pre id="usageWebOpsLog">暂无由看板启动的日志。</pre>
+              </div>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>推荐：带 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-mock" type="button">复制</button></div>
+              <pre><code id="cmd-web-mock">cd "$(git rev-parse --show-toplevel)"
+pnpm --filter @repo/web dev:mock-auth</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>不需要 mock 登录</b><button class="prompt-copy" data-copy-target="cmd-web-dev" type="button">复制</button></div>
+              <pre><code id="cmd-web-dev">cd "$(git rev-parse --show-toplevel)"
+pnpm --filter @repo/web dev</code></pre>
+            </div>
+            <div class="usage-note is-warn">不建议一上来用 <code>pnpm dev</code>；它会运行 <code>turbo run dev</code>，可能把多个 workspace 的 dev 服务一起拉起来。</div>
+          </article>
+
+          <article class="usage-card" data-tone="cyan">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">02</span><div><h3>打开页面</h3><p>主应用和本地开发看板分开启动，避免把产品页面和操作手册混在一个端口里。</p></div></div>
+              <span class="pill">入口</span>
+            </div>
+            <div class="usage-link-grid">
+              <div><b>Web 首页</b><span>主应用本地首页</span><code>http://localhost:3000/</code><button class="prompt-copy" data-copy-target="url-web-home" type="button">复制</button><button class="reader-btn" data-ops-open="web" data-ops-route="/" type="button">打开</button><span id="url-web-home" hidden>http://localhost:3000/</span></div>
+              <div><b>Web App</b><span>Web 版应用入口</span><code>http://localhost:3000/app/dashboard</code><button class="prompt-copy" data-copy-target="url-web-app" type="button">复制</button><button class="reader-btn" data-ops-open="web" data-ops-route="/app/dashboard" type="button">打开</button><span id="url-web-app" hidden>http://localhost:3000/app/dashboard</span></div>
+              <div><b>开发看板 / 文档库</b><span>一键脚本会自动打开实际端口</span><code>open-dashboard.command</code><button class="prompt-copy" data-copy-target="cmd-dashboard-open-short" type="button">复制</button><button class="reader-btn" data-open-current-dashboard type="button">打开当前看板</button><span id="cmd-dashboard-open-short" hidden>open-dashboard.command</span></div>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>启动看板服务</b><button class="prompt-copy" data-copy-target="cmd-dashboard-open" type="button">复制</button></div>
+              <pre><code id="cmd-dashboard-open">cd "$(git rev-parse --show-toplevel)"
+./open-dashboard.command</code></pre>
+            </div>
+            <div class="usage-note"><code>open-dashboard.command</code> 会先刷新生成态，再启动 <code>127.0.0.1</code> 本地看板服务、自动拉起 Web mock 服务并打开浏览器。默认端口是 4177；如果 4177 被占用，底层 server 会自动顺延并打开实际端口。</div>
+          </article>
+
+          <article class="usage-card" data-tone="green">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">03</span><div><h3>更新代码</h3><p>先确认当前分支和未提交文件，再同步远端，避免覆盖并行窗口里的改动。</p></div></div>
+              <span class="pill">Git</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>同步前检查</b><button class="prompt-copy" data-copy-target="cmd-update-check" type="button">复制</button></div>
+              <pre><code id="cmd-update-check">git status --short
+git branch --show-current
+git log -1 --oneline</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>拉取当前分支</b><button class="prompt-copy" data-copy-target="cmd-update-pull" type="button">复制</button></div>
+              <pre><code id="cmd-update-pull">git pull --ff-only
+pnpm install</code></pre>
+            </div>
+            <div class="usage-note">如果 <code>git status --short</code> 已经有不属于本次任务的改动，先判断来源，再决定是否暂停、<code>stash</code> 或只处理自己的文件。</div>
+          </article>
+
+          <article class="usage-card" data-tone="purple">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">04</span><div><h3>构建与部署</h3><p>本地构建、类型检查和 Web 安全构建分开跑；正式部署仍以发布流程和环境凭证为准。</p></div></div>
+              <span class="pill">Build</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>主线验证</b><button class="prompt-copy" data-copy-target="cmd-build-check" type="button">复制</button></div>
+              <pre><code id="cmd-build-check">pnpm check-types
+pnpm build</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>只构建 Web</b><button class="prompt-copy" data-copy-target="cmd-web-build" type="button">复制</button></div>
+              <pre><code id="cmd-web-build">pnpm --filter @repo/web build</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>Web 安全构建 / 部署标记</b><button class="prompt-copy" data-copy-target="cmd-web-secure-build" type="button">复制</button></div>
+              <pre><code id="cmd-web-secure-build">pnpm --filter @repo/web build:secure
+pnpm --filter @repo/web build:secure:with-deploy</code></pre>
+            </div>
+          </article>
+
+          <article class="usage-card" data-tone="yellow">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">05</span><div><h3>日志和运行状态</h3><p>先看终端服务输出，再用端口、HTTP 和 git 快照确认当前机器是否真的在跑。</p></div></div>
+              <span class="pill">Status</span>
+            </div>
+            <div class="usage-status-strip">
+              <div><b id="usageStatusState">检查中</b><span id="usageStatusDetail">读取本地 ops API 状态。</span></div>
+              <button class="reader-btn" data-ops-refresh="web" type="button">重新检查</button>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>端口与进程</b><button class="prompt-copy" data-copy-target="cmd-status-port" type="button">复制</button></div>
+              <pre><code id="cmd-status-port">lsof -nP -iTCP:3000 -sTCP:LISTEN
+lsof -nP -iTCP:4177 -sTCP:LISTEN
+ps aux | rg "vite|dashboard/serve"</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>HTTP 快速检查</b><button class="prompt-copy" data-copy-target="cmd-status-http" type="button">复制</button></div>
+              <pre><code id="cmd-status-http">curl -I http://localhost:3000
+curl -I http://127.0.0.1:4177</code></pre>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>看板快照刷新</b><button class="prompt-copy" data-copy-target="cmd-dashboard-refresh" type="button">复制</button></div>
+              <pre><code id="cmd-dashboard-refresh">pnpm dashboard
+git status --short docs/prototypes/dev-dashboard docs/workflow/project/dashboard-state.json</code></pre>
+            </div>
+          </article>
+
+          <article class="usage-card" data-tone="red">
+            <div class="usage-card-head">
+              <div><span class="usage-icon">06</span><div><h3>停止服务与常见问题</h3><p>优先在启动服务的终端按 Ctrl+C；端口残留时再定位 PID 并停止。</p></div></div>
+              <span class="pill">Troubleshoot</span>
+            </div>
+            <div class="command-panel">
+              <div class="command-head"><b>查找并停止端口进程</b><button class="prompt-copy" data-copy-target="cmd-stop-port" type="button">复制</button></div>
+              <pre><code id="cmd-stop-port">lsof -tiTCP:3000 -sTCP:LISTEN
+kill &lt;PID&gt;</code></pre>
+            </div>
+            <div class="faq-list">
+              <div><b>页面打不开</b><span>先确认对应服务是否启动，再检查端口是否被别的进程占用。</span></div>
+              <div><b>看板数据不新</b><span>执行 <code>pnpm dashboard</code> 或重新运行 <code>pnpm dashboard:serve</code>。</span></div>
+              <div><b>登录流程挡住调试</b><span>用 <code>pnpm --filter @repo/web dev:mock-auth</code> 启动。</span></div>
+              <div><b>启动过多服务</b><span>避免直接 <code>pnpm dev</code>；按 workspace 精确启动需要的服务。</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="surface pad usage-shortcuts">
+          <div class="section-head">
+            <div>
+              <h2>快捷命令</h2>
+              <p class="sub">常用的一组短命令，适合复制到新终端快速检查或继续工作。</p>
+            </div>
+            <button class="reader-btn" data-copy-target="cmd-shortcuts-all" type="button">复制全部</button>
+          </div>
+          <div class="shortcut-command-grid">
+            <div><span>进入仓库</span><code>cd "$(git rev-parse --show-toplevel)"</code></div>
+            <div><span>Web mock 登录</span><code>pnpm --filter @repo/web dev:mock-auth</code></div>
+            <div><span>Web 普通开发</span><code>pnpm --filter @repo/web dev</code></div>
+            <div><span>开发看板</span><code>pnpm dashboard:serve</code></div>
+            <div><span>刷新看板快照</span><code>pnpm dashboard</code></div>
+            <div><span>状态检查</span><code>git status --short</code></div>
+            <div><span>类型检查</span><code>pnpm check-types</code></div>
+            <div><span>Web 构建</span><code>pnpm --filter @repo/web build</code></div>
+          </div>
+          <pre class="shortcut-all" aria-hidden="true"><code id="cmd-shortcuts-all">cd "$(git rev-parse --show-toplevel)"
+pnpm --filter @repo/web dev:mock-auth
+pnpm dashboard:serve
+git status --short
+pnpm check-types
+pnpm --filter @repo/web build</code></pre>
+        </div>
+      </section>
+
+      <section class="section page-section" id="docs" data-page-section="docs">
+        <div class="surface pad docs-main">
+          <div class="doc-manager-head">
+            <div>
+              <h2>文档库</h2>
+              <p id="serveNotice">像浏览本地文件夹一样查看项目文档；入口全部关联真实仓库路径。</p>
+            </div>
+            <span class="pill" id="docModePill">file</span>
+          </div>
+          <div class="doc-toolbar">
+            <input id="docSearch" type="search" placeholder="可选：在当前文档库中搜索关键字">
+            <button class="reader-btn" id="docSearchButton" type="button">搜索</button>
+            <button class="reader-btn" id="docRefreshButton" type="button">刷新</button>
+          </div>
+          <div class="doc-recommendation-grid" id="docRecommendationGroups"></div>
+          <div class="search-results" id="searchResults"></div>
+
+          <div class="doc-file-manager">
+            <aside class="doc-pane doc-folder-pane">
+              <div class="doc-pane-head">
+                <b>文件夹</b>
+                <span>真实目录入口</span>
+              </div>
+              <div class="doc-root-list" id="docRootList"></div>
+              <div class="doc-tree-title">目录树</div>
+              <div class="doc-tree" id="docTree"></div>
+            </aside>
+
+            <section class="doc-pane doc-folder-browser">
+              <div class="doc-pane-head">
+                <b>当前文件夹</b>
+                <span id="treePathLabel">文档根目录</span>
+              </div>
+              <div class="doc-folder-toolbar">
+                <span id="folderSummary">选择一个文件夹查看内容</span>
+                <button class="reader-btn" id="treeUpButton" type="button">上级</button>
+              </div>
+              <div class="doc-folder-list" id="docFolderList"></div>
+            </section>
+
+            <aside class="doc-pane doc-inspector">
+              <div class="doc-inspector-title">
+                <span class="importance-pill" id="docImportancePill" data-importance="参考">参考</span>
+                <b id="docTitle">未选择文档</b>
+                <span id="docSource">选择左侧文件夹或中间文件</span>
+              </div>
+              <div class="doc-inspector-body">
+                <div class="doc-meta-grid" id="docMetaGrid"></div>
+                <div class="doc-inspector-actions">
+                  <button class="reader-btn" id="docOpenButton" type="button">全屏查看</button>
+                  <button class="reader-btn" id="docCopyButton" type="button">复制路径</button>
+                  <button class="reader-btn" id="docRevealButton" type="button">Finder</button>
+                  <button class="reader-btn" id="docRefreshFolderButton" type="button">刷新目录</button>
+                </div>
+                <div class="outline-box" id="docOutline"></div>
+              </div>
+            </aside>
+          </div>
+
+          <article class="reader doc-reader doc-preview">
+            <div class="reader-head">
+              <div class="reader-title">
+                <div><b>文档内容</b><span id="docPreviewSource">选择 Markdown / TOML / JSON 文档后在这里预览。</span></div>
+                <div class="reader-title-actions">
+                  <button class="reader-btn" id="docFullscreenButton" type="button" disabled>全屏浏览</button>
+                </div>
+              </div>
+            </div>
+            <div class="reader-body markdown-body" id="markdownBody"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section skill-agent-layout page-section" id="skill-agent" data-page-section="skill-agent">
+        <div class="surface pad skill-agent-hero">
+          <div class="skill-agent-title">
+            <div>
+              <h2>Skill 和 Agent</h2>
+              <p>按 workflow 和维护分类查看 Skill / Agent 知识库：用途、输入输出、关联文档、维护状态、更新时间和缺口标记统一从生成状态同步。</p>
+            </div>
+            <div class="skill-agent-counts" id="skillAgentCounts"></div>
+          </div>
+          <div class="skill-agent-index" id="skillAgentIndex" aria-label="Skill 和 Agent 分类"></div>
+        </div>
+        <div class="skill-agent-board" id="skillAgentBoard"></div>
+      </section>
+
+      <section class="section split page-section" id="dev-data" data-page-section="dev-data">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>开发数据</h2>
+              <p class="sub">纯 git 读数：commit、numstat、目录桶、dirty 文件，以及日 / 周 / 月开发趋势。</p>
+            </div>
+            <span class="pill">all refs</span>
+          </div>
+          <div class="data-grid" id="devDataCards"></div>
+          <div class="dev-time-panel">
+            <div class="dev-time-toolbar">
+              <div>
+                <h2>时间维度</h2>
+                <p class="sub">切换查看今日、最近 7 天、按周和按月的开发节奏。</p>
+              </div>
+              <div class="dev-time-tabs" id="devTimeTabs" role="tablist" aria-label="开发数据时间维度"></div>
+            </div>
+            <div class="data-grid dev-time-summary" id="devTimeSummary"></div>
+            <div class="dev-chart-grid" id="devChartGrid"></div>
+          </div>
+        </div>
+        <aside class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>Branch 最近提交</h2>
+              <p class="sub">local + origin refs，按 committerdate 排序。</p>
+            </div>
+          </div>
+          <div class="branch-list" id="branchCommitList"></div>
+        </aside>
+      </section>
+
+      <section class="section page-section" id="tasks" data-page-section="tasks">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>任务进度</h2>
+              <p class="sub">聚合各 packages/*/docs/dev_log.md 的 Status Panel；只读提醒，不修改状态。优先显示需要关注的任务。</p>
+            </div>
+            <span class="pill" id="taskCountPill">tasks</span>
+          </div>
+          <div class="chip-row" id="taskCounts"></div>
+          <div class="task-list" id="taskList"></div>
+        </div>
+      </section>
+
+      <section class="section split page-section" id="branches" data-page-section="branches">
+        <div class="surface pad">
+          <div class="section-head">
+            <div>
+              <h2>Branch 为什么不等于产品线</h2>
+              <p class="sub">对一个人、两台电脑并行开发来说，branch 先服务“稳定性和集成节奏”。产品线是地图，branch 是交通规则。</p>
+            </div>
+            <span class="badge b-blue">管理原则</span>
+          </div>
+          <div class="branch-grid" id="branchGrid"></div>
+        </div>
+        <aside class="surface pad">
+          <div class="flow-note">
+            <b>两台电脑的默认分工：</b>
+            <p style="margin-top:8px">这台电脑可以继续作为 `web` 主线和系统治理线；另一台电脑作为 `dev` / Desktop RC 线。Web 改动先进入 D3 gate，再决定是记录、合入 `desktop-next`，还是派发桌面补丁。</p>
+          </div>
+          <div class="flow-note" style="margin-top:10px">
+            <b>这样分的好处：</b>
+            <p style="margin-top:8px">不会因为“有 6 个产品线”就制造 6 条长期分支。长期 branch 只保留给会影响集成、发布、冻结的阶段。</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section release-dashboard page-section" id="release-log" data-page-section="release-log">
+        <div class="release-main">
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>整体发布记录</h2>
+                <p class="sub">按阶段总结新增功能、体验优化、修复问题和影响范围，先读这里就能理解一次发布的主线。</p>
+              </div>
+              <a class="reader-btn" id="releaseLogOpenLink" href="../../workflow/project/release-log.md" data-release-log-path="docs/workflow/project/release-log.md" target="_blank" rel="noreferrer">打开 release-log.md</a>
+            </div>
+            <div class="release-card-grid" id="overallReleaseCards"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>模块发布卡片</h2>
+                <p class="sub">按 Web、Mac 桌面版、插件、同步、官网和管理者 / 开发者 Dashboard 分开看最近更新。</p>
+              </div>
+              <span class="pill">模块记录</span>
+            </div>
+            <div class="release-module-grid" id="releaseModuleCards"></div>
+          </div>
+
+          <div class="surface pad">
+            <div class="section-head">
+              <div>
+                <h2>详细发布记录</h2>
+                <p class="sub">保留时间顺序，但每条记录会标出模块、影响范围、验证和后续风险。</p>
+              </div>
+              <span class="pill">最新优先</span>
+            </div>
+            <div class="release-entry-grid" id="releaseRows"></div>
+          </div>
+        </div>
+        <aside class="surface pad release-side">
+          <div>
+            <h2>xai-release-log skill</h2>
+            <p class="sub">用于每次 ship、系统文档增量、跨机器治理变更之后补齐更新日志。</p>
+          </div>
+          <div class="flow-note">
+            <b>推荐字段：</b>
+            <p style="margin-top:8px">Version / Added / Improved / Fixed / Impact / Audience note，加上 User-visible change 和 Verification。</p>
+          </div>
+          <div class="flow-note">
+            <b>触发语：</b>
+            <p style="margin-top:8px">发布 log、更新日志、release notes、今天改了什么、把这次提交写进 changelog。</p>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div class="doc-fullscreen-overlay" id="docFullscreenOverlay" aria-hidden="true">
+    <section class="doc-fullscreen-shell" role="dialog" aria-modal="true" aria-labelledby="docFullscreenTitle">
+      <div class="doc-fullscreen-head" id="docFullscreenHead">
+        <div>
+          <b id="docFullscreenTitle">文档阅读</b>
+          <span id="docFullscreenSource">选择文档后进入全屏浏览。</span>
+        </div>
+        <div class="doc-fullscreen-tools">
+          <button class="reader-btn" id="docFullscreenCopyButton" type="button">复制路径</button>
+          <button class="reader-btn" id="docExitFullscreenButton" type="button">返回文档库</button>
+        </div>
+      </div>
+      <div class="doc-fullscreen-body markdown-body" id="docFullscreenBody"></div>
+    </section>
+  </div>
+  <div class="module-drawer-overlay" id="moduleDrawerOverlay" aria-hidden="true"></div>
+  <aside class="module-drawer" id="moduleDrawer" role="dialog" aria-modal="true" aria-labelledby="moduleDrawerTitle" aria-hidden="true">
+    <div class="module-drawer-head">
+      <div>
+        <span class="badge b-blue" id="moduleDrawerBadge">module</span>
+        <h2 id="moduleDrawerTitle">模块详情</h2>
+      </div>
+      <button class="drawer-close" id="moduleDrawerClose" type="button" aria-label="关闭模块详情">×</button>
+    </div>
+    <div class="drawer-body" id="moduleDrawerBody"></div>
+    <div class="drawer-foot">
+      <button class="reader-btn" id="moduleDrawerLocate" type="button">定位结构图</button>
+      <button class="reader-btn" id="moduleDrawerPrimary" type="button">打开入口</button>
+    </div>
+  </aside>
+</div>
+
+<script src="./state.generated.js"></script>
+<script src="./js/state.js"></script>
+<script src="./js/utils.js"></script>
+<script src="./js/status-meta.js"></script>
+<script src="./js/skill-groups.js"></script>
+<script src="./js/theme.js"></script>
+<script src="./js/testing.js"></script>
+<script src="./js/overview.js"></script>
+<script src="./js/product-flow.js"></script>
+<script src="./js/deployment.js"></script>
+<script src="./js/docs-library.js"></script>
+<script src="./js/skill-agent.js"></script>
+<script src="./js/branches.js"></script>
+<script src="./js/dev-data.js"></script>
+<script src="./js/tasks.js"></script>
+<script src="./js/release-log.js"></script>
+<script src="./js/nav.js"></script>
+<script src="./js/usage-ops.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

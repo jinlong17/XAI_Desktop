@@ -1,0 +1,94 @@
+---
+description: Classify a new XAI feature into exactly one product module (web / app / plugin / sync / site / admin) using docs/MODULE_BOUNDARIES.md + docs/workflow/project/module-classification.json, or scan the repo for boundary drift (phantom packages, syncScope drift, same-name web-vs-desktop collisions, doc-code mismatch, unknown classification). Emits a classification + doc-division + dashboard-update suggestion, and applies doc/dashboard updates only after confirmation. Advisory / route-only — it does not decide priority, create branches, ship, write product source, or unfreeze paused lines. Triggers — 功能分类, 这个功能归哪个模块, module classification, classify this feature, 模块归类, 新功能归哪类, 边界漂移扫描, boundary drift scan, which module does X belong to, 同名陷阱, unknown classification, 文档划分建议.
+alwaysApply: false
+---
+
+# xai-module-classify
+
+Project-layer **classifier + boundary-drift advisor**. Use it in two situations:
+
+1. **classify mode** — a new feature/idea arrives and you need to know *which of the six product
+   modules it belongs to*, plus where its docs go and how the dev-dashboard should reflect it.
+2. **scan mode** — sweep the repo for *boundary drift*: phantom packages, missing `syncScope`,
+   same-name web-vs-desktop collisions, doc↔code mismatch, or features that match no (or multiple)
+   module signals.
+
+This skill is **advisory and route-only**. It reads the authority files, matches the classification
+rules, and emits a receipt with suggestions. It NEVER decides product priority, creates long-lived
+branches, ships, merges, writes product source, or unfreezes a PAUSED/PROPOSED line. Execution of
+suggestions happens only after explicit confirmation, and is delegated to the owning skills
+(`xai-feature-brief`, `xai-dev-dashboard-sync`, `xai-web-to-desktop-sync`, `xai-account-sync-scope-check`,
+`xai-web-deploy-preflight`, `xai-desktop-release-gate`, `xai-sync-fanout-dispatch`, `xai-release-log`).
+
+## Read First
+
+- `docs/MODULE_BOUNDARIES.md` — THE human-readable Web/App/Plugin boundary (A1 Mac shell / A2 plugin platform runtime / B plugin packages / C Web same-name layer, capability matrix, hard rules, same-name trap).
+- `docs/workflow/project/module-classification.json` — THE machine rule source (`modules`, `classification_flow`, `drift_checks`, `governance.frozen_lines`).
+- `docs/PRODUCT_MODULE_MAP.md` — six-module routing signals + per-module branch/skill/workflow/transitions/impacts.
+- `docs/PLUGIN_MAP.md` — plugin/package status (Stable/In-Dev/Planned; which packages actually exist).
+- `docs/adr/0010` (active-focus), `0013` (D2/D3/D4 + web/dev split), `0015` (organizer P-level + pet packaging).
+- `CLAUDE.md` Agent / Skill Tracking Contract; `AGENTS.md` Workflow V2 Handoff Display rules.
+
+## Inputs
+
+```text
+/xai-module-classify
+Mode: classify | scan            # default: classify if a feature is described, else scan
+Feature: <one-paragraph description of the new feature/idea>   # classify mode
+Changed paths: <optional list of files/dirs the work touches>  # sharpens classify/scan
+Scope: <optional — limit scan to a path, e.g. packages/plugin-*>  # scan mode
+```
+
+## Classify mode — steps
+
+1. **Signal match.** Compare Feature + Changed paths against each `modules[].signals` (PRODUCT_MODULE_MAP "任务归属信号"). Record every module that matches and why.
+2. **Run `classification_flow`** (6 steps): browser-doable full page → `web`; Mac shell / Web container / native chrome → `app`; desktop plugin platform runtime (multi-window / overlay / click-through / grid persistence) or lightweight widget on that runtime → `plugin`; cross-device need → declare `account-sync` (sync line); web→app promotion → D3 gate; future mobile/watch/browser surfaces → planning-only, not active modules.
+3. **Apply hard rules** from MODULE_BOUNDARIES §4: physical host implementation is not product ownership; Mac shell/native chrome = `app`; desktop multi-window/overlay/plugin runtime product ownership = `plugin`; plugin packages consume native commands and do not implement Tauri commands; don't re-do a Web-covered module inside a plugin; data defaults `device-local`; resolve the same-name trap (web DOM vs desktop overlay).
+4. **Frozen-line check.** Use `module-classification.json.governance.frozen_lines`:
+   - `plugin` platform-runtime / G1 native-foundation anchor (multi-window engine, grid persistence, window-command) is the ACTIVE gate, not frozen; route it as plugin-platform product work with P1 App-lane execution.
+   - `plugin` packages (clipboard/widgets/pet/meditation), `sync`, and `site` remain frozen/proposed unless the operator unfreezes them; route those to brief/queue only.
+   - `admin` was operator-activated on 2026-06-05 but remains roadmap-gated; route admin source work only through `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md`, starting with `xai-admin-dashboard-shell`.
+5. **Emit the receipt** (below).
+
+## Scan mode — drift checks
+
+Walk `drift_checks` from the registry and report each hit with file evidence:
+- **phantom_package** — a `packages/*` path cited in docs that does not exist on disk (e.g. `plugin-meditation`, `plugin-settings`).
+- **syncscope_drift** — a plugin entity without a `syncScope` in `packages/core-data/src/entities.ts`, or a `device-local` entity reachable by the outbox (delegate the proof to `xai-account-sync-scope-check`).
+- **same_name_trap** — a feature/package named pet/widgets/grid/dashboard that is ambiguous between web-DOM and desktop-native.
+- **frozen_line_landing** — source landing on a PAUSED/PROPOSED line without an operator unfreeze, or admin source landing outside the activated roadmap gates.
+- **window_product_ownership_drift** — docs or code comments that treat Mac shell identity as desktop organizer/overlay product, or classify plugin platform runtime as App product only because code lives in the host.
+- **future_surface_landing** — iPhone / iPad / Apple Watch / Android / browser-extension work presented as active module work instead of planning-only `future_surfaces`.
+- **unknown_classification** — a feature matching no module signal, or 2+ with equal weight → escalate.
+
+## Output (receipt)
+
+```text
+## Module Classification Receipt — <feature | scan>  (<YYYYMMDD>)
+Verdict: <module key> · <confidence high/med/low>      # or: DRIFT FOUND / NEEDS-OPERATOR
+Why: <signals matched + flow steps + hard rules applied>
+Frozen?: <no | ACTIVE plugin-runtime/G1 | PAUSED plugin-package/sync | PROPOSED site | ADMIN roadmap-gated> → <route/queue note>
+Doc division: <which docs to add/update — e.g. sub-prds/<key>/PRD.md, MODULE_BOUNDARIES note, ADR if a real decision>
+Dashboard update: <which product_lines[key] fields to touch — links/rows/copy only, via xai-dev-dashboard-sync>
+Drift (scan): <phantom/syncscope/same-name/frozen/unknown hits with file:line>
+Next (on confirm): <one delegated action per owning skill>
+```
+
+## Boundaries (MUST NOT)
+
+- Do NOT decide product priority, create `desktop-next`/`desktop-plugin-next`/`release/*`, or touch `dev` — those are operator-confirmed.
+- Do NOT write product source, `packages/core-data/src/entities.ts`, or any plugin `types.ts`.
+- Do NOT land work on a frozen line. For `plugin`, first distinguish ACTIVE platform-runtime/G1 anchor work from frozen plugin-package work; for frozen plugin packages or `sync`, produce a brief/queue note only.
+- Do NOT auto-edit dashboard priority/branch/badge — only links/rows/copy, and only via `xai-dev-dashboard-sync` rules.
+- When the verdict is ambiguous (unknown / multi-match), STOP and ask the operator instead of guessing.
+
+## Integration / handoff
+
+- **New feature, classified** → hand to `xai-feature-brief` (normalize) → standard pipeline when the line is active; G1 plugin-platform-runtime work is active, while concrete plugin packages remain queued until G1 ships.
+- **Web change that may affect desktop** → `xai-web-to-desktop-sync` (D3 gate).
+- **Web deploy / CSP / Cloudflare change** → `xai-web-deploy-preflight` (ADR-0008 deploy readiness gate).
+- **Desktop W4 signing / notarization / updater / release artifact change** → `xai-desktop-release-gate`.
+- **Entity may need cross-device** → `xai-account-sync-scope-check` (D4).
+- **Dashboard reflect** → `xai-dev-dashboard-sync` (apply the suggested `product_lines`/copy updates + regen).
+- **Visible increment shipped** → `xai-release-log`.
+- After applying any classification/boundary change, keep `module-classification.json` + the relevant `dashboard-state.json` `product_lines` entry aligned in the same change (dashboard contract drift rule).

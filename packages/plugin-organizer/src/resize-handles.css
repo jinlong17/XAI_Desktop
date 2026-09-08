@@ -1,82 +1,49 @@
-/* Custom Resize Handle Styles - Override react-resizable defaults */
-
 .resize-handle {
-  display: block !important;
-  pointer-events: auto !important;
-}
-
-.react-resizable {
-  position: relative;
-}
-
-.react-resizable-handle {
-  display: block;
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: #ffffff;
-  border: 3px solid #666666;
-  border-radius: 50%;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(15, 23, 42, 0.72);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  pointer-events: auto;
   z-index: 10000;
-  pointer-events: auto !important;
+  transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
 }
 
-.react-resizable-handle:hover {
-  background-color: #4CAF50;
-  transform: scale(1.3);
+.resize-handle:hover {
+  background: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28);
 }
 
-/* Position handles */
-.react-resizable-handle-se {
-  bottom: -10px;
-  right: -10px;
-  cursor: nwse-resize;
-}
-
-.react-resizable-handle-sw {
-  bottom: -10px;
-  left: -10px;
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-ne {
-  top: -10px;
-  right: -10px;
-  cursor: nesw-resize;
-}
-
-.react-resizable-handle-nw {
-  top: -10px;
-  left: -10px;
-  cursor: nwse-resize;
-}
-
-.react-resizable-handle-n {
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
+.resize-handle--n {
   cursor: ns-resize;
 }
 
-.react-resizable-handle-s {
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
+.resize-handle--s {
   cursor: ns-resize;
 }
 
-.react-resizable-handle-e {
-  top: 50%;
-  right: -10px;
-  transform: translateY(-50%);
+.resize-handle--e {
   cursor: ew-resize;
 }
 
-.react-resizable-handle-w {
-  top: 50%;
-  left: -10px;
-  transform: translateY(-50%);
+.resize-handle--w {
   cursor: ew-resize;
 }
 
+.resize-handle--ne {
+  cursor: nesw-resize;
+}
+
+.resize-handle--sw {
+  cursor: nesw-resize;
+}
+
+.resize-handle--nw {
+  cursor: nwse-resize;
+}
+
+.resize-handle--se {
+  cursor: nwse-resize;
+}

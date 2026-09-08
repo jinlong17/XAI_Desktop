@@ -34,16 +34,18 @@
 
 | 依赖 | 来源 | 必须状态 |
 |---|---|---|
-| `core-data` SQLite driver 稳定 | Phase 0 子阶段 0.3 | ✅ Stable(已交付才能起 Phase 4.5) |
-| `core-data` Sync blob driver 占位 trait | Phase 0 子阶段 0.3 | ✅ Repository trait 定义完(ADR-0003 衍生);本档 §5.2 在此 trait 上实现 Sync push/pull 协议绑定 |
-| `plugin-console` 三栏外壳 | Phase 2.5 | ✅ Stable;在桌面端跑通真机 |
-| `plugin-productivity` / `plugin-project` / `plugin-labels` / `plugin-calendar` / `plugin-account` | Phase 2 / 2.5 | ✅ Stable;`manifest.windows.web = true` 已就位 |
+| `core-data` 共享数据契约 | Phase 0 子阶段 0.3 | ⚠️ 当前全局状态仍以 `docs/PLUGIN_MAP.md` 为准:`@repo/core-data` = In-Dev。可作为共享 contract source,但不可在此文继续假设已存在 shipped Web driver。 |
+| `core-data` Sync blob driver 占位 trait | Phase 0 子阶段 0.3 | ⚠️ Repository trait/driver boundary是前置,但浏览器可用 driver 仍是后续 Web row 的实现内容,不是当前既成事实。 |
+| `plugin-console` 三栏外壳 | Phase 2.5 | ⚠️ 当前全局状态仍为 In-Dev。它是共享 Console contract/package boundary,不是未来浏览器 host shell 已落地的证明。 |
+| `plugin-productivity` / `plugin-project` / `plugin-labels` / `plugin-calendar` / `plugin-account` | Phase 2 / 2.5 | ⚠️ 必须按 `docs/PLUGIN_MAP.md` 的真实 package rows 规划。当前不可再假设这些包已 Stable,也不可声称 `manifest.windows.web = true` 已存在。 |
 | Supabase 后端骨架(Auth + Postgres + Realtime) | Phase 0 子阶段 0.3 | ✅ schema 已 deploy;Auth 已开通 OAuth provider |
 | 同步层 v1(增量 + E2E + 冲突 LWW) | Phase 5(主 PRD §5.9)— 但 **Web 启动前需 v0 可用** | ⚠️ Phase 4.5 启动时同步层至少 v0(单端推/拉跑通),Phase 5 与 Web 并行打磨 |
 | Apple Developer 账号 + OAuth client(Apple/Google) | Phase 0 末 | ✅ |
 | 域名 `xai-desktop.app` 已注册 + DNS 接 Vercel/CF | Phase 0 末 | ✅ |
 
 **风险阻塞**:若任一前置不到位,Phase 4.5 不启动,改先补齐(参考主 PRD R-00 思路:不在坏地基上盖楼)。
+
+> 2026-05-21 contract correction: later Web rows must treat `docs/PLUGIN_MAP.md` §Web Planning Contract as the current source of package truth. `ADR-0006` allows a Web-specific host shell/view layer, so any older wording in this dev-plan that implies direct registration into today's `apps/web` entry or already-landed browser manifests is provisional and must be revalidated by the owning row.
 
 ---
 

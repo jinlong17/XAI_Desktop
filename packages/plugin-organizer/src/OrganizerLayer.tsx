@@ -1,10 +1,14 @@
-import { memo, useCallback, useState, useEffect, useRef } from "react";
+import { memo, useCallback, useState, useEffect, useMemo, useRef } from "react";
 import { DesktopItem } from "./types";
 import { useGridSystem } from "./useGridSystem";
 import { useFileDrop, getFileInfoFromPath, getFileIcon } from "./hooks/useFileDrop";
 import { useMultiWindowGrids } from "./hooks/useMultiWindowGrids";
 import { listen } from "@tauri-apps/api/event";
 import { isTauri } from "@tauri-apps/api/core";
+import { useTauriInvoke } from "@repo/core/hooks";
+import { createFinderClient } from "./finderClient";
+import { FolderGrid } from "./FolderGrid";
+import { OrganizerOneClick } from "./OrganizerOneClick";
 import {
   LEGACY_CREATE_GRID_REQUEST_EVENT,
   LEGACY_ORGANIZER_CREATE_GRID_REQUEST_EVENT,
@@ -51,10 +55,42 @@ function OrganizerContent() {
   const hasTauriRuntime = canUseTauriRuntime();
   const recentGridPathDrops = useRef<Map<string, number>>(new Map());
 
+  // Finder client for defensive bookmark registration on the
+  // main-window side of `ORGANIZER_FILE_DROP_EVENT`. The grid window
+  // is the primary registrant (it receives `tauri://drag-drop` first
+  // and registers there inside `OrganizerGridContent`), but registering
+  // again here is idempotent on the Rust side (`HashSet<PathBuf>::insert`)
+  // and gives us a second line of defense if a future refactor moves
+  // the cross-window event seam.
+  const { invoke } = useTauriInvoke();
+  const finderClient = useMemo(() => createFinderClient(invoke), [invoke]);
+  const finderClientRef = useRef(finderClient);
+  useEffect(() => {
+    finderClientRef.current = finderClient;
+  }, [finderClient]);
+
+  const ensureGrid = useCallback(
+    (x: number, y: number, title?: string) => {
+      const id = createGrid(x, y);
+      if (title) updateGrid(id, { title });
+      return id;
+    },
+    [createGrid, updateGrid],
+  );
+
+  const addItemToSpecificGrid = useCallback(
+    (item: DesktopItem, gridId: string) => {
+      const alreadyMapped = Object.values(items).some((current) => current.filepath === item.filepath);
+      if (alreadyMapped) return;
+      addItem(item);
+      addItemToGrid(gridId, item.id);
+    },
+    [addItem, addItemToGrid, items],
+  );
+
   // Handle file drop for a specific grid (from grid windows)
   const handleGridFileDrop = useCallback(
     (gridId: string, paths: string[]) => {
-      console.log(`📂 Files dropped on grid ${gridId}:`, paths);
       const now = Date.now();
       const recentDropTtlMs = 5000;
       const targetGrid = grids.find((grid) => grid.id === gridId);
@@ -78,12 +114,26 @@ function OrganizerContent() {
         const dedupeKey = toGridPathKey(gridId, filePath);
         const recentDropAt = recentGridPathDrops.current.get(dedupeKey);
         if (existingPaths.has(filePath) || (recentDropAt !== undefined && now - recentDropAt < recentDropTtlMs)) {
-          console.warn(`⏭️ Skipping duplicate drop for grid ${gridId}:`, filePath);
           return;
         }
 
         existingPaths.add(filePath);
         recentGridPathDrops.current.set(dedupeKey, now);
+
+        // G3-E3 / P0-Foxtrot — defensive bookmark registration on the
+        // main-window receiver of `ORGANIZER_FILE_DROP_EVENT`. The grid
+        // window already registered each path before emitting (see
+        // `OrganizerGridContent.handleFileDrop`); registering again here
+        // is idempotent on the Rust side (`HashSet<PathBuf>::insert`).
+        // Only absolute paths reach this branch — relative paths and
+        // basenames are filtered out by `validate_user_path` in the
+        // Rust handler, so a basename will simply be rejected on the
+        // Rust side without polluting the registry.
+        if (filePath.startsWith("/")) {
+          void finderClientRef.current
+            .registerBookmark(filePath)
+            .catch(() => undefined);
+        }
 
         const fileInfo = getFileInfoFromPath(filePath);
         const newItem: DesktopItem = {
@@ -97,7 +147,6 @@ function OrganizerContent() {
 
         addItem(newItem);
         addItemToGrid(gridId, newItem.id);
-        console.log(`✅ Added file "${fileInfo.name}" to grid ${gridId}`);
       });
     },
     [addItem, addItemToGrid, grids, items]
@@ -117,14 +166,11 @@ function OrganizerContent() {
   // Handle file drop on main window (creates new grid)
   const handleMainWindowFileDrop = useCallback(
     (paths: string[], position: { x: number; y: number }) => {
-      console.log("📂 Files dropped on main window at position:", position, paths);
-
       // Find the grid at drop position
       const targetGrid = findGridAtPosition(position.x, position.y);
 
       // If no grid at position, create a new one
       if (!targetGrid) {
-        console.log("📂 No grid at position, creating new one");
         createGrid(position.x, position.y);
         return;
       }
@@ -151,7 +197,6 @@ function OrganizerContent() {
   useEffect(() => {
     const unlistenPromise = listen<unknown>(ORGANIZER_GRID_CREATE_REQUEST_EVENT, (event) => {
       if (!isGridCreateRequestPayload(event.payload)) {
-        console.warn("⚠️ Ignored invalid organizer grid create request", event.payload);
         return;
       }
       createGrid(event.payload.rect.x, event.payload.rect.y, event.payload.gridId);
@@ -170,7 +215,6 @@ function OrganizerContent() {
       createGrid(x, y);
     });
     const unlistenClearPromise = listen(CLEAR_ALL_REQUEST_EVENT, () => {
-      console.log("🧹 Clearing all grids per control window request");
       clearAll();
     });
     return () => {
@@ -181,7 +225,6 @@ function OrganizerContent() {
     };
   }, [createGrid, clearAll]);
 
-  // Grid info display (for debugging/status)
   const gridCount = grids.length;
 
   return (
@@ -196,6 +239,21 @@ function OrganizerContent() {
       }}
       data-organizer-layer="true"
     >
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          left: 12,
+          pointerEvents: "auto",
+          position: "fixed",
+          top: 12,
+          zIndex: 20,
+        }}
+      >
+        <OrganizerOneClick grids={grids} onEnsureGrid={ensureGrid} onAddItem={addItemToSpecificGrid} />
+        <FolderGrid grids={grids} onEnsureGrid={ensureGrid} onAddItem={addItemToSpecificGrid} />
+      </div>
+
       {/* Drop hint when dragging files and no grids exist */}
       {isDraggingFile && gridCount === 0 && (
         <div
@@ -215,24 +273,6 @@ function OrganizerContent() {
           }}
         >
           Drop files here to create a new Grid
-        </div>
-      )}
-
-      {hasTauriRuntime && gridCount > 0 && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 12,
-            left: 12,
-            padding: "6px 12px",
-            borderRadius: 6,
-            background: "rgba(15, 23, 42, 0.7)",
-            color: "#94a3b8",
-            fontSize: 12,
-            pointerEvents: "none",
-          }}
-        >
-          🪟 {gridCount} grid window{gridCount !== 1 ? "s" : ""} active
         </div>
       )}
     </div>

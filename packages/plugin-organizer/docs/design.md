@@ -1,45 +1,57 @@
-# Organizer — Design Document
+# Organizer — Design Snapshot
 
-## 1. 业务目标
+## Selected Option
 
-智能桌面文件整理插件。将桌面文件、文件夹和应用组织到浮动 Smart Container (Grid) 中，
-支持拖拽、调整大小、折叠、锁定和文件拖放。
+Adopt the F3 organizer polish plan as four bounded phases with explicit ownership:
 
-## 2. 核心流程
+1. `F3-P1` visual/debug cleanup in `OrganizerGridContent.tsx`, `SmartContainer.tsx`, `GridItem.tsx`, and `resize-handles.css`.
+2. `F3-P2` action-information architecture in `SmartContainer.tsx`, `GridItem.tsx`, and organizer menu wiring.
+3. `F3-P3` interaction smoothness in `SmartContainer.tsx`, `OrganizerLayer.tsx`, `useMultiWindowGrids.ts`, `useGridWindow.ts`, and host bridge callers `GridWindow.tsx` / `ControlWindow.tsx`.
+4. `F3-P4` edge snap/hide plus real thumbnails through plugin UI files and an additive Rust thumbnail seam only.
 
-1. 用户在桌面创建 Grid → 出现浮动容器
-2. 拖拽文件/文件夹到 Grid → 文件被组织到容器中
-3. Grid 支持调整大小、折叠、锁定
-4. 多窗口架构: 每个 Grid 可以弹出为独立原生窗口
-5. 所有 Grid 布局持久化到 localStorage
+## Review Doc Path
 
-## 3. 数据模型
+`docs/reviews/plugin-organizer/20260521-discovery-review.md`
 
-- `GridBox`: 容器元数据 (位置、大小、锁定/折叠状态、内容 ID 列表)
-- `DesktopItem`: 文件/文件夹项 (名称、路径、类型、图标)
-- `PersistedLayout`: 持久化结构 `{ grids: GridBox[], items: DesktopItem[] }`
-- 存储: localStorage key `xai-desktop-layout`
+## Review Date / Version
 
-## 4. 窗口需求
+- 2026-05-21
+- F3 revised planning pass (`Revise` mode after feature-review)
 
-| 窗口类型 | 用途 | 尺寸 | 交互模式 |
-|---------|------|------|---------|
-| main overlay | Grid 编排层 | 全屏 | pointer-events: none (容器区域 auto) |
-| grid_\<id\> | 独立 Grid 窗口 | 用户自定义 | 始终可交互 |
-| control | 控制面板中显示 Grid 列表 | 360x360 (共享) | 始终可交互 |
+## Frozen Assumptions
 
-## 5. 事件协议
+- `plugin-organizer` remains the feature owner; host and Tauri changes are supporting seams only.
+- Existing typed event payload shapes stay unchanged in F3.
+- Existing window command payloads stay unchanged in F3:
+  - `create_grid_window({ gridId, rect })`
+  - `update_grid_window({ gridId, rect })`
+  - `close_grid_window({ gridId })`
+- Finder/open-path keeps the existing bookmark-gated `{ input: { path } }` semantics.
+- `PersistedLayout` remains backward-compatible.
+- `@repo/ui/tokens` and `@repo/ui/icons` are available for consumption in this workspace.
+- Thumbnail work, if approved, is additive only and must not weaken existing command signatures or authorization rules.
 
-| 事件名 | 方向 | Payload 类型 | 说明 |
-|--------|------|-------------|------|
-| organizer:grid-update | Grid→All | `{ gridId, changes }` | Grid 状态变更广播 |
-| organizer:grid-close | Grid→Main | `{ gridId }` | Grid 窗口关闭 |
-| organizer:file-drop | Main→Grid | `{ gridId, files }` | 文件拖入 Grid |
-| organizer:grid-window-ready | Grid→Main | `{ gridId }` | Grid 窗口初始化完成 |
-| organizer:create-grid-request | Control→Main | `{ gridId?, rect }` | 请求主窗口创建 Grid 状态并同步原生 Grid 窗口；control 可用同一 `gridId` 直接调用 Rust command 兜底 |
+## Dependency Overview
 
-## 6. 依赖关系
+| Dependency | Status | F3 usage |
+|---|---|---|
+| `packages/plugin-organizer` | owner | SmartContainer, GridItem, OrganizerGridContent, OrganizerLayer, organizer hooks |
+| `@repo/core/events` / `@repo/core/hooks` | Stable | existing cross-window event transport and invoke wrappers |
+| `@repo/ui/tokens` | parent says shipped via F1 | colors, spacing, radius, motion, shadow, typography |
+| `@repo/ui/icons` | parent says shipped via F1 | header actions, item affordances, menu icons |
+| `react-draggable` | existing dep | container/window dragging only |
+| `@dnd-kit/*` | existing dep | item/grid droppable interactions only |
+| `apps/desktop/src/windows/GridWindow.tsx` | host bridge | provider wiring, Finder client injection, native drag handoff |
+| `apps/desktop/src/windows/ControlWindow.tsx` | host bridge | create-grid caller using live `{ gridId, rect }` contract |
+| `apps/desktop/src-tauri/src/commands/window.rs` | stable runtime seam | existing create/update/close lifecycle commands, unchanged payloads |
+| `apps/desktop/src-tauri/src/commands/finder.rs` + `bookmarks.rs` | stable runtime seam | existing bookmark-gated reveal/open behavior, unchanged payloads |
+| Quick Look Thumbnailing | gated candidate | additive native thumbnail command for image/PDF/video previews |
 
-- Core: @repo/core (events, types)
-- UI: @repo/ui (ResizeHandles — 未来迁移)
-- DnD: @dnd-kit/core, @dnd-kit/utilities
+## Delivery Shape
+
+| Phase | Primary outcome | Primary ownership |
+|---|---|---|
+| F3-P1 | remove debug shell residue and align baseline visuals to F1 tokens | organizer UI files only |
+| F3-P2 | ship header/menu/GridItem information architecture | organizer UI files only |
+| F3-P3 | reduce event spam and smooth drag/resize/fold flows | organizer hooks plus host bridge callers |
+| F3-P4 | ship edge snap/hide and thumbnails with additive native seam | organizer UI plus additive Tauri command/docs seam |

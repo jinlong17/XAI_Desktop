@@ -2,6 +2,7 @@ import {
   CSSProperties,
   KeyboardEvent,
   MouseEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -9,28 +10,84 @@ import {
 } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { useDroppable } from "@dnd-kit/core";
+import { DesktopIcon, type DesktopIconName } from "@repo/ui/icons";
+import {
+  colorTokens,
+  motionTokens,
+  radiusTokens,
+  shadowTokens,
+  spaceTokens,
+  typographyTokens,
+} from "@repo/ui/tokens";
 import { DesktopItem, GridBox } from "./types";
 import GridItem from "./GridItem";
+import { emitOrganizerGridCreateTask } from "./taskEvents";
 import { useCustomResize, RESIZE_HANDLE_STYLES, ResizeDirection } from "./hooks/useCustomResize";
+import "./resize-handles.css";
 
 const RESIZE_DIRECTIONS: ResizeDirection[] = ["s", "e", "se", "w", "n", "nw", "ne", "sw"];
 const MIN_SIZE = 150;
 const TITLE_BAR_HEIGHT = 40;
-const HEADER_COLOR = "#111827";
+const EDGE_SNAP_THRESHOLD = 24;
+const EDGE_HIDE_REVEAL_PX = 52;
 
 export interface SmartContainerProps {
   data: GridBox;
   items: DesktopItem[];
   onUpdate: (id: string, patch: Partial<GridBox>) => void;
   onClose: (id: string) => void;
+  onDelete?: (id: string) => void;
   onToggleFold: (id: string) => void;
   onToggleLock: (id: string) => void;
+  onUpdateItem?: (itemId: string, patch: Partial<DesktopItem>) => void;
   onFocus?: (id: string) => void;
   gridOpacity?: number;
   gridBlur?: boolean;
 }
 
 type ContextMenuState = { x: number; y: number } | null;
+type GridMenuAction = {
+  key: string;
+  label: string;
+  icon?: DesktopIconName;
+  onClick: () => void;
+  tone?: "default" | "danger";
+};
+
+type Rect = GridBox["rect"];
+
+function applyEdgeSnap(rect: Rect, isFolded: boolean): Rect {
+  if (typeof window === "undefined") {
+    return rect;
+  }
+
+  const maxX = Math.max(0, window.innerWidth - rect.width);
+  const maxY = Math.max(0, window.innerHeight - rect.height);
+  let x = rect.x;
+  let y = rect.y;
+
+  if (x <= EDGE_SNAP_THRESHOLD) {
+    x = 0;
+  } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
+    x = maxX;
+  }
+
+  if (y <= EDGE_SNAP_THRESHOLD) {
+    y = 0;
+  } else if (y >= maxY - EDGE_SNAP_THRESHOLD) {
+    y = maxY;
+  }
+
+  if (isFolded) {
+    if (x <= EDGE_SNAP_THRESHOLD) {
+      x = Math.min(0, EDGE_HIDE_REVEAL_PX - rect.width);
+    } else if (x >= maxX - EDGE_SNAP_THRESHOLD) {
+      x = Math.max(0, window.innerWidth - EDGE_HIDE_REVEAL_PX);
+    }
+  }
+
+  return { ...rect, x, y };
+}
 
 /**
  * ## SmartContainer (Independent File Fence)
@@ -44,25 +101,33 @@ export function SmartContainer({
   items,
   onUpdate,
   onClose,
+  onDelete,
   onToggleFold,
   onToggleLock,
+  onUpdateItem,
   onFocus,
   gridOpacity = 0.8,
   gridBlur = true,
 }: SmartContainerProps) {
   const nodeRef = useRef<HTMLDivElement | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [titleDraft, setTitleDraft] = useState(data.title || "新建画布");
+  const [titleDraft, setTitleDraft] = useState(data.title || "New Grid");
   const [contextMenu, setContextMenu] = useState<ContextMenuState>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const hoverTimerRef = useRef<number | null>(null);
+  const [dragPosition, setDragPosition] = useState({ x: data.rect.x, y: data.rect.y });
 
   useEffect(() => {
-    setTitleDraft(data.title || "新建画布");
+    setTitleDraft(data.title || "New Grid");
   }, [data.title]);
 
+  useEffect(() => {
+    setDragPosition({ x: data.rect.x, y: data.rect.y });
+  }, [data.rect.x, data.rect.y]);
+
   const commitTitle = () => {
-    const nextTitle = titleDraft.trim() || "新建画布";
+    const nextTitle = titleDraft.trim() || "New Grid";
     setIsEditingTitle(false);
     onUpdate(data.id, { title: nextTitle });
   };
@@ -72,13 +137,27 @@ export function SmartContainer({
       commitTitle();
     } else if (event.key === "Escape") {
       setIsEditingTitle(false);
-      setTitleDraft(data.title);
+      setTitleDraft(data.title || "New Grid");
     }
   };
 
   const toggleView = () => {
     const nextView: GridBox["viewMode"] = data.viewMode === "grid" ? "list" : "grid";
     onUpdate(data.id, { viewMode: nextView });
+  };
+
+  const createTaskFromItem = (item: DesktopItem) => {
+    void emitOrganizerGridCreateTask({
+      gridItemId: item.id,
+      title: item.filename,
+      path: item.filepath,
+    });
+  };
+
+  const removeItemFromGrid = (itemId: string) => {
+    onUpdate(data.id, {
+      itemIds: data.itemIds.filter((current) => current !== itemId),
+    });
   };
 
   const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
@@ -103,15 +182,49 @@ export function SmartContainer({
 
   const handleDragStop = (_event: DraggableEvent, dataEvent: DraggableData) => {
     setIsDragging(false);
-    onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
+    const snappedRect = applyEdgeSnap(
+      { ...data.rect, x: dataEvent.x, y: dataEvent.y },
+      data.isFolded,
+    );
+    setDragPosition({ x: snappedRect.x, y: snappedRect.y });
+    onUpdate(data.id, { rect: snappedRect });
   };
 
   const handleDrag = (_event: DraggableEvent, dataEvent: DraggableData) => {
     setIsDragging(true);
-    onUpdate(data.id, { rect: { ...data.rect, x: dataEvent.x, y: dataEvent.y } });
+    setDragPosition({ x: dataEvent.x, y: dataEvent.y });
   };
 
-  // Custom resize handler
+  const handleContainerMouseEnter = useCallback(() => {
+    if (!data.isFolded) {
+      setIsHovering(true);
+      return;
+    }
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+    }
+    hoverTimerRef.current = window.setTimeout(() => {
+      setIsHovering(true);
+      hoverTimerRef.current = null;
+    }, 120);
+  }, [data.isFolded]);
+
+  const handleContainerMouseLeave = useCallback(() => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    setIsHovering(false);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current !== null) {
+        window.clearTimeout(hoverTimerRef.current);
+      }
+    };
+  }, []);
+
   const { handleMouseDown: handleResizeStart } = useCustomResize({
     onResize: (width, height, x, y) => {
       const newRect = { ...data.rect, width, height };
@@ -133,20 +246,18 @@ export function SmartContainer({
       display: "flex",
       flexDirection: "column",
       backgroundColor: `rgba(255,255,255,${gridOpacity})`,
-      border: `1px solid ${data.themeColor ?? "rgba(255,255,255,0.12)"}`,
-      borderRadius: 16,
-      boxShadow:
-        isDragging
-          ? "0 16px 40px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.1)"
-          : "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.08)",
+      border: `1px solid ${data.themeColor ?? colorTokens.borderSubtle}`,
+      borderRadius: radiusTokens.xl,
+      boxShadow: isDragging ? shadowTokens.panelDragging : shadowTokens.panel,
       backdropFilter: gridBlur ? "blur(12px)" : "none",
       WebkitBackdropFilter: gridBlur ? "blur(12px)" : "none",
-      color: "#0b1220",
+      color: colorTokens.textPrimary,
       overflow: "hidden",
-      pointerEvents: "auto", // keep the desktop click-through intact elsewhere.
+      pointerEvents: "auto",
       position: "relative",
-      transition: "box-shadow 160ms ease, border-color 160ms ease, height 120ms ease",
+      transition: `box-shadow ${motionTokens.durationBaseMs}ms ${motionTokens.easingStandard}, border-color ${motionTokens.durationBaseMs}ms ${motionTokens.easingStandard}, height ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}`,
       zIndex: isDragging ? 100 : 1,
+      fontFamily: typographyTokens.fontFamilySans,
     };
   }, [
     data.isFolded,
@@ -163,32 +274,33 @@ export function SmartContainer({
     id: data.id,
     data: { gridId: data.id },
   });
+  const containerBorderColor = data.themeColor ?? colorTokens.borderSubtle;
 
   const headerStyle: CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "8px 10px",
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    padding: `${spaceTokens.sm}px ${spaceTokens.md}px`,
+    borderBottom: `1px solid ${colorTokens.borderSubtle}`,
     cursor: "grab",
     userSelect: "none",
-    gap: 8,
+    gap: spaceTokens.sm,
     height: TITLE_BAR_HEIGHT,
-    color: HEADER_COLOR,
+    color: colorTokens.textPrimary,
+    fontSize: typographyTokens.fontSizeBodyPx,
   };
 
-  const viewToggleStyle: CSSProperties = {
+  const iconButtonStyle: CSSProperties = {
     width: 28,
     height: 28,
-    borderRadius: 8,
-    border: "1px solid rgba(17,24,39,0.25)",
+    borderRadius: radiusTokens.md,
+    border: `1px solid ${colorTokens.borderStrong}`,
     background: "rgba(255,255,255,0.85)",
-    color: HEADER_COLOR,
+    color: colorTokens.textPrimary,
     display: "grid",
     placeItems: "center",
-    fontSize: 12,
     cursor: "pointer",
-    transition: "transform 120ms ease, box-shadow 120ms ease, background 120ms ease",
+    transition: `transform ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}, box-shadow ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}, background ${motionTokens.durationFastMs}ms ${motionTokens.easingStandard}`,
   };
 
   const actionsWrapperStyle: CSSProperties = {
@@ -197,41 +309,16 @@ export function SmartContainer({
     gap: 6,
   };
 
-  const foldIconStyle: CSSProperties = {
-    display: "grid",
-    placeItems: "center",
-    width: "100%",
-    height: "100%",
-    color: HEADER_COLOR,
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: 0.5,
-  };
-
-  const gridIconStyle: CSSProperties = {
-    width: 14,
-    height: 14,
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gridTemplateRows: "repeat(2, 1fr)",
-    gap: 2,
-  };
-
-  const listIconStyle: CSSProperties = {
-    width: 14,
-    height: 14,
-    display: "grid",
-    gridTemplateRows: "repeat(3, 1fr)",
-    gap: 2,
-  };
-
-  const dotStyle: CSSProperties = {
-    background: HEADER_COLOR,
-    borderRadius: 3,
+  const directCloseStyle: CSSProperties = {
+    ...iconButtonStyle,
+    color: "#dc2626",
+    fontSize: 16,
+    lineHeight: 1,
+    fontWeight: typographyTokens.fontWeightSemibold,
   };
 
   const bodyStyle: CSSProperties = {
-    padding: "10px",
+    padding: 10,
     display: "flex",
     flexDirection: "column",
     gap: 10,
@@ -255,10 +342,82 @@ export function SmartContainer({
     overflow: "auto",
   };
 
+  const menuButtonStyle: CSSProperties = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    color: colorTokens.textOnDark,
+    fontWeight: typographyTokens.fontWeightMedium,
+    padding: "6px 8px",
+    borderRadius: 10,
+    cursor: "pointer",
+    textAlign: "left",
+    fontFamily: typographyTokens.fontFamilySans,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
+
+  const menuActions: GridMenuAction[] = [
+    {
+      key: "rename",
+      label: "Rename Grid",
+      onClick: () => {
+        setIsEditingTitle(true);
+      },
+    },
+    {
+      key: "view",
+      label: data.viewMode === "grid" ? "Switch to List" : "Switch to Grid",
+      icon: data.viewMode === "grid" ? "list" : "grid",
+      onClick: () => {
+        toggleView();
+      },
+    },
+    {
+      key: "lock",
+      label: data.isLocked ? "Unlock Grid" : "Lock Grid",
+      icon: data.isLocked ? "unlock" : "lock",
+      onClick: () => {
+        onToggleLock(data.id);
+      },
+    },
+    {
+      key: "fold",
+      label: data.isFolded ? "Expand Grid" : "Fold Grid",
+      icon: data.isFolded ? "chevronDown" : "chevronUp",
+      onClick: () => {
+        onToggleFold(data.id);
+      },
+    },
+    {
+      key: "settings",
+      label: "Grid Settings",
+      icon: "settings",
+      onClick: () => {},
+    },
+    {
+      key: "delete",
+      label: "Delete Grid",
+      onClick: () => {
+        (onDelete ?? onClose)(data.id);
+      },
+      tone: "danger",
+    },
+    {
+      key: "close",
+      label: "Close Grid",
+      onClick: () => {
+        onClose(data.id);
+      },
+      tone: "danger",
+    },
+  ];
+
   return (
     <Draggable
       nodeRef={nodeRef}
-      position={{ x: data.rect.x, y: data.rect.y }}
+      position={dragPosition}
       onStop={handleDragStop}
       onDrag={handleDrag}
       onStart={() => {
@@ -266,65 +425,42 @@ export function SmartContainer({
         onFocus?.(data.id);
       }}
       handle=".grid-title-bar"
-      cancel=".smart-container__input, .resize-handle, .react-resizable-handle"
+      cancel=".smart-container__input, .resize-handle"
       disabled={data.isLocked}
     >
       <div
         ref={nodeRef}
-        className="smart-container border border-red-500 opacity-50"
+        className="smart-container"
         style={{ position: "absolute", pointerEvents: "auto" }}
         onContextMenu={handleContextMenu}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+        onMouseEnter={handleContainerMouseEnter}
+        onMouseLeave={handleContainerMouseLeave}
       >
         <div
           ref={setNodeRef}
           style={{
             ...containerStyle,
-            borderColor: isOver ? "#38bdf8" : containerStyle.border?.toString(),
+            borderColor: isOver ? colorTokens.accentPrimary : containerBorderColor,
             boxShadow: isOver
               ? "0 0 0 2px rgba(56,189,248,0.5), 0 16px 40px rgba(0,0,0,0.35)"
               : containerStyle.boxShadow,
-            position: "relative",
           }}
         >
-          {/* Custom Resize Handles */}
           {!data.isLocked && RESIZE_DIRECTIONS.map((direction) => (
             <div
               key={direction}
-              className="resize-handle"
+              className={`resize-handle resize-handle--${direction}`}
               style={{
-                position: "absolute",
-                width: 20,
-                height: 20,
-                borderRadius: "50%",
-                background: "#ffffff",
-                border: "3px solid rgba(17,24,39,0.8)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-                pointerEvents: "auto",
-                zIndex: 10000,
-                transition: "background 120ms ease, transform 120ms ease, box-shadow 120ms ease",
                 ...RESIZE_HANDLE_STYLES[direction],
               }}
-              onMouseDown={(e) => handleResizeStart(direction, e, data.rect.width, data.rect.height, data.rect.x, data.rect.y)}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = `${RESIZE_HANDLE_STYLES[direction].transform || ''} scale(1.3)`;
-                (e.currentTarget as HTMLElement).style.background = "#10b981";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = RESIZE_HANDLE_STYLES[direction].transform as string || '';
-                (e.currentTarget as HTMLElement).style.background = "#ffffff";
-              }}
+              onMouseDown={(event) =>
+                handleResizeStart(direction, event, data.rect.width, data.rect.height, data.rect.x, data.rect.y)
+              }
             />
           ))}
 
-          <div
-            style={{
-              ...containerStyle,
-              borderColor: isOver ? "#38bdf8" : containerStyle.border?.toString(),
-            }}
-          >
-            <div className="smart-container__header grid-title-bar group" style={headerStyle}>
+          <div className="smart-container__header grid-title-bar group" style={headerStyle}>
+            <div style={{ display: "grid", gap: 2, minWidth: 0, flex: 1 }}>
               {isEditingTitle ? (
                 <input
                   className="smart-container__input"
@@ -335,139 +471,165 @@ export function SmartContainer({
                   onKeyDown={handleTitleKey}
                   style={{
                     flex: 1,
-                    borderRadius: 8,
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    background: "rgba(0,0,0,0.25)",
-                    color: "#f8fafc",
+                    borderRadius: radiusTokens.md,
+                    border: `1px solid ${colorTokens.borderStrong}`,
+                    background: "rgba(255,255,255,0.9)",
+                    color: colorTokens.textPrimary,
                     padding: "6px 8px",
                     outline: "none",
+                    fontFamily: typographyTokens.fontFamilySans,
                   }}
                 />
               ) : (
                 <span
                   style={{
-                    fontWeight: 600,
-                    fontSize: 14,
+                    fontWeight: typographyTokens.fontWeightSemibold,
+                    fontSize: typographyTokens.fontSizeBodyPx,
                     cursor: "text",
                     flex: 1,
-                    color: HEADER_COLOR,
+                    color: colorTokens.textPrimary,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                   onDoubleClick={() => setIsEditingTitle(true)}
                   title="Double-click to rename"
                 >
-                  {data.title || "新建画布"}
+                  {data.title || "New Grid"}
                 </span>
               )}
-              <div className="transition-opacity" style={{ ...actionsWrapperStyle, opacity: 1 }}>
-                <button
-                  type="button"
-                  style={viewToggleStyle}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    const rect = nodeRef.current?.getBoundingClientRect();
-                    setContextMenu({
-                      x: (rect?.width ?? 180) - 80,
-                      y: 32,
-                    });
-                  }}
-                  aria-label="More options"
-                >
-                  <span style={foldIconStyle}>···</span>
-                </button>
-                <button
-                  type="button"
-                  style={viewToggleStyle}
-                  onClick={() => onToggleLock(data.id)}
-                  aria-label="Lock/Unlock"
-                >
-                  <span style={foldIconStyle}>{data.isLocked ? "🔒" : "🔓"}</span>
-                </button>
-                <button
-                  type="button"
-                  style={viewToggleStyle}
-                  onClick={() => onToggleFold(data.id)}
-                  aria-label="Fold/Unfold"
-                >
-                  <span style={foldIconStyle}>{data.isFolded ? "⌄" : "⌃"}</span>
-                </button>
-                <button
-                  type="button"
-                  style={viewToggleStyle}
-                  onClick={toggleView}
-                  aria-label="Toggle view"
-                >
-                  {data.viewMode === "grid" ? (
-                    <div style={gridIconStyle} aria-hidden>
-                      <span style={dotStyle} />
-                      <span style={dotStyle} />
-                      <span style={dotStyle} />
-                      <span style={dotStyle} />
-                    </div>
-                  ) : (
-                    <div style={listIconStyle} aria-hidden>
-                      <span style={{ ...dotStyle, height: 3 }} />
-                      <span style={{ ...dotStyle, height: 3 }} />
-                      <span style={{ ...dotStyle, height: 3 }} />
-                    </div>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {(!data.isFolded || isHovering) && (
-              <div style={bodyStyle}>
-                {data.viewMode === "grid" ? (
-                  <div style={gridStyle}>
-                    {items.map((file) => (
-                      <GridItem key={file.id} item={file} variant="grid" />
-                    ))}
-                  </div>
-                ) : (
-                  <div style={listStyle}>
-                    {items.map((file) => (
-                      <GridItem key={file.id} item={file} variant="list" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {contextMenu && (
-              <div
+              <span
                 style={{
-                  position: "absolute",
-                  top: contextMenu.y,
-                  left: contextMenu.x,
-                  background: "rgba(15, 23, 42, 0.9)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: 12,
-                  padding: "6px 8px",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
-                  zIndex: 10,
-                  minWidth: 120,
+                  color: colorTokens.textSecondary,
+                  fontSize: 11,
+                  letterSpacing: typographyTokens.letterSpacingTight,
                 }}
-                role="menu"
               >
+                {items.length} item{items.length === 1 ? "" : "s"} · {data.viewMode}
+              </span>
+            </div>
+            <div className="transition-opacity" style={{ ...actionsWrapperStyle, opacity: 1 }}>
+              <button
+                type="button"
+                style={directCloseStyle}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onClose(data.id);
+                }}
+                aria-label="Close grid"
+                title="Close grid"
+              >
+                ×
+              </button>
+              <button
+                type="button"
+                style={iconButtonStyle}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  const rect = nodeRef.current?.getBoundingClientRect();
+                  setContextMenu({
+                    x: Math.max(8, (rect?.width ?? 180) - 136),
+                    y: 34,
+                  });
+                }}
+                aria-label="More options"
+              >
+                <DesktopIcon name="more" size={14} />
+              </button>
+              <button
+                type="button"
+                style={iconButtonStyle}
+                onClick={() => onToggleLock(data.id)}
+                aria-label="Lock/Unlock"
+              >
+                <DesktopIcon name={data.isLocked ? "lock" : "unlock"} size={14} />
+              </button>
+              <button
+                type="button"
+                style={iconButtonStyle}
+                onClick={() => onToggleFold(data.id)}
+                aria-label="Fold/Unfold"
+              >
+                <DesktopIcon name={data.isFolded ? "chevronDown" : "chevronUp"} size={14} />
+              </button>
+              <button
+                type="button"
+                style={iconButtonStyle}
+                onClick={toggleView}
+                aria-label="Toggle view"
+              >
+                <DesktopIcon name={data.viewMode === "grid" ? "list" : "grid"} size={14} />
+              </button>
+            </div>
+          </div>
+
+          {(!data.isFolded || isHovering) && (
+            <div style={bodyStyle}>
+              {data.viewMode === "grid" ? (
+                <div style={gridStyle}>
+                  {items.map((file) => (
+                    <GridItem
+                      key={file.id}
+                      item={file}
+                      variant="grid"
+                      onUpdate={onUpdateItem}
+                      onCreateTask={createTaskFromItem}
+                      onRemove={removeItemFromGrid}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div style={listStyle}>
+                  {items.map((file) => (
+                    <GridItem
+                      key={file.id}
+                      item={file}
+                      variant="list"
+                      onUpdate={onUpdateItem}
+                      onCreateTask={createTaskFromItem}
+                      onRemove={removeItemFromGrid}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {contextMenu && (
+            <div
+              style={{
+                position: "absolute",
+                top: contextMenu.y,
+                left: contextMenu.x,
+                background: colorTokens.surfaceOverlay,
+                border: `1px solid ${colorTokens.borderSubtle}`,
+                borderRadius: 12,
+                padding: "6px 8px",
+                boxShadow: shadowTokens.overlay,
+                zIndex: 10,
+                minWidth: 120,
+              }}
+              role="menu"
+            >
+              {menuActions.map((action) => (
                 <button
+                  key={action.key}
                   type="button"
-                  onClick={() => onClose(data.id)}
+                  onClick={() => {
+                    setContextMenu(null);
+                    action.onClick();
+                  }}
                   style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    color: "#fca5a5",
-                    fontWeight: 600,
-                    padding: "6px 8px",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    textAlign: "left",
+                    ...menuButtonStyle,
+                    color: action.tone === "danger" ? "#fca5a5" : colorTokens.textOnDark,
                   }}
                 >
-                  Close
+                  <span>{action.label}</span>
+                  {action.icon ? <DesktopIcon name={action.icon} size={13} /> : null}
                 </button>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Draggable>

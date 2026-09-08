@@ -1,0 +1,16 @@
+{
+  "name": "@repo/plugin-web-settings-rest",
+  "version": "0.0.0",
+  "status": "Stable",
+  "type": "ui",
+  "owner": "xai-web-settings-rest row #24",
+  "description": "Settings remaining 11 panes (Account/Premium/SmartLists/Notifications/DateTime/More/Integrations/Collaborate/StickyNote/Hotkeys/About). Consumes chassis atoms from @repo/plugin-web-settings-shell.",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/plugin-web-settings-shell",
+    "@repo/xai-web-event-bus",
+    "@repo/xai-web-shell"
+  ]
+}

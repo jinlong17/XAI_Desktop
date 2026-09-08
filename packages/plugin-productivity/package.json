@@ -1,0 +1,34 @@
+{
+  "name": "@repo/plugin-productivity",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Todo, pomodoro, and habit productivity plugin for XAI_Desktop.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./web": {
+      "types": "./src/web.ts",
+      "import": "./src/web.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "node ../core/node_modules/vitest/vitest.mjs run",
+    "test:watch": "node ../core/node_modules/vitest/vitest.mjs"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/core-data": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

@@ -1,61 +1,87 @@
 # Organizer — API Contract
 
-## Tauri Commands
+## Upstream Interfaces
 
-### create_grid_window
-**Params:** `{ grid_id: string, x: f64, y: f64, width: f64, height: f64 }`
-**Returns:** `void`
-**Errors:** Window creation failure
+| Surface | Current contract | F3 assumption |
+|---|---|---|
+| Host main overlay / organizer owner | imports organizer public exports only | keep organizer business logic inside `packages/plugin-organizer/` |
+| `apps/desktop/src/windows/GridWindow.tsx` | renders `OrganizerGridContent` and injects `finderClient` | host stays a shell/provider bridge only |
+| `apps/desktop/src/windows/ControlWindow.tsx` | emits create-grid request and directly invokes `create_grid_window({ gridId, rect })` | no contract widening beyond organizer UX work |
 
-### update_grid_window
-**Params:** `{ grid_id: string, x: f64, y: f64, width: f64, height: f64 }`
-**Returns:** `void`
-**Errors:** Window not found
+## Downstream Interfaces
 
-### close_grid_window
-**Params:** `{ grid_id: string }`
-**Returns:** `void`
-**Errors:** Window not found
+### Existing window lifecycle commands
 
-## Events (emit)
+| Command | Params from TS callers | Runtime owner | Return | F3 rule |
+|---|---|---|---|---|
+| `create_grid_window` | `{ gridId, rect }` | `apps/desktop/src-tauri/src/commands/window.rs` | typed `Result<GridWindowSnapshot, CommandError>` over Tauri IPC | keep payload shape unchanged |
+| `update_grid_window` | `{ gridId, rect }` | `apps/desktop/src-tauri/src/commands/window.rs` | typed `Result<GridWindowSnapshot, CommandError>` | keep payload shape unchanged |
+| `close_grid_window` | `{ gridId }` | `apps/desktop/src-tauri/src/commands/window.rs` | typed `Result<(), CommandError>` | keep payload shape unchanged |
+| `list_grid_windows` | none | `apps/desktop/src-tauri/src/commands/window.rs` | typed `Result<GridWindowSnapshot[], CommandError>` | out of scope for F3 |
+| `focus_grid_window` | `{ gridId }` | `apps/desktop/src-tauri/src/commands/window.rs` | typed `Result<GridWindowSnapshot, CommandError>` | out of scope for F3 |
 
-### organizer:grid-update
-**Payload:** `{ gridId: string; changes: Partial<GridBox> }`
-**From:** Any grid window or main window
-**To:** All windows
+Evidence:
 
-### organizer:grid-close
-**Payload:** `{ gridId: string }`
-**From:** Grid window
-**To:** Main window
+- `packages/plugin-organizer/src/hooks/useGridWindow.ts`
+- `apps/desktop/src/windows/ControlWindow.tsx`
+- `apps/desktop/src-tauri/src/commands/window.rs`
 
-### organizer:file-drop
-**Payload:** `{ gridId: string; files: string[] }`
-**From:** Main window (HTML5 drop handler)
-**To:** Target grid window
+### Existing Finder and bookmark commands
 
-### organizer:grid-window-ready
-**Payload:** `{ gridId: string }`
-**From:** Grid window (on mount)
-**To:** Main window
+| Command | Params from TS callers | Runtime owner | Return | F3 rule |
+|---|---|---|---|---|
+| `reveal_in_finder` | `{ input: { path } }` | `apps/desktop/src-tauri/src/commands/finder.rs` | typed `Result<(), AppError>` | preserve bookmark-gated semantics |
+| `open_path` | `{ input: { path } }` | `apps/desktop/src-tauri/src/commands/finder.rs` | typed `Result<(), AppError>` | preserve bookmark-gated semantics |
+| `register_path_bookmark` | `{ input: { path } }` | `apps/desktop/src-tauri/src/commands/bookmarks.rs` | typed `Result<(), AppError>` | unchanged; still required for honest provenance |
+| `clear_path_bookmark` | `{ input: { path } }` | `apps/desktop/src-tauri/src/commands/bookmarks.rs` | typed `Result<(), AppError>` | unchanged; idempotent cleanup only |
 
-### organizer:create-grid-request
-**Payload:** `{ gridId?: string; rect: Rect }`
-**From:** Control window
-**To:** Main window OrganizerLayer; the main window creates grid state with the provided `gridId` when present, then invokes Rust window commands during grid sync. The control window may also invoke `create_grid_window` directly with the same `gridId` as a no-duplicate fallback.
+Operational semantics:
 
-## Events (listen)
+- TS callers go through `packages/plugin-organizer/src/finderClient.ts`.
+- Rust applies two gates before Finder/open actions succeed:
+  - lexical path validation
+  - `BookmarkRegistry` authorization
+- F3 must not document or implement weaker “absolute path is enough” semantics.
 
-### organizer:grid-update
-**Handler:** Update local grid state to reflect changes from other windows
+### Proposed additive thumbnail seam (gated)
 
-### organizer:grid-window-ready
-**Handler:** Send initial grid data to newly created grid window
+| Candidate | Purpose | Contract notes |
+|---|---|---|
+| `generate_file_thumbnail` | native thumbnail generation for image/PDF/video paths | additive only; must not alter existing window/finder/bookmark command signatures |
 
-## Public Exports (from index.ts)
+Planning assumptions for the additive seam:
 
-- `SmartContainer` — Main grid container component
-- `GridItem` — Individual item renderer
-- `useGridSystem` — Grid state management hook
-- `useContainerManager` — Container lifecycle management
-- Types: `GridBox`, `DesktopItem`, `PersistedLayout`
+- request shape can be new, but must remain isolated from existing commands
+- UI must render placeholder/icon fallback first
+- failures must be recoverable without breaking grid rendering
+- authorization must remain consistent with the existing user-authorized path model
+
+## Event Contracts
+
+| Event | Payload | F3 handling assumption |
+|---|---|---|
+| `organizer:grid:update` | `{ gridId, changes }` | payload schema unchanged; emission cadence may change |
+| `organizer:grid:close` | `{ gridId }` | unchanged; direct close UI becomes a new caller |
+| `organizer:grid:file-drop` | `{ gridId, files }` | unchanged; bookmark registration still happens before forwarding |
+| `organizer:grid:state` | existing grid snapshot payload | unchanged |
+| `organizer:grid:ready` | `{ gridId }` | unchanged |
+| `organizer:create-grid-request` | `{ gridId?, rect }` | unchanged |
+
+## Error Semantics
+
+- Window lifecycle commands keep existing runtime enforcement and error classes, including invalid grid id, capability denial, native window errors, and window-not-found.
+- Grid windows are not allowed to invoke window lifecycle commands directly; `window.rs` still enforces the `main` / `control` caller allow-list.
+- Finder/open-path authorization failures stay bookmark-gated and must continue to reject unregistered paths.
+- Drag/event-smoothing work must remain lossless for the final committed grid rect.
+- Thumbnail generation failures must degrade to a visible fallback, not a broken item tile.
+
+## Permission And Idempotency Notes
+
+- F3 does not widen organizer authority beyond existing grid/finder surfaces.
+- `register_path_bookmark` / `clear_path_bookmark` remain idempotent.
+- If a thumbnail command is added, it must honor the same user-authorized path model already enforced for Finder/open actions.
+- Context-menu actions that toggle lock/fold/view mode remain idempotent under repeated invocation.
+
+## Public Surface Assumptions
+
+The plugin public surface remains `index.ts` only. F3 may extend exported organizer UI/helpers, but external callers must not import internal modules directly.

@@ -59,3 +59,6 @@ mod rfc_vectors;
 
 #[cfg(feature = "crypto")]
 pub mod sqlcipher;
+
+#[cfg(feature = "crypto")]
+pub mod keychain_handle;

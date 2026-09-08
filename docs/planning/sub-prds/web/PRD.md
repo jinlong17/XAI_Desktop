@@ -1,5 +1,7 @@
 # Web 子 PRD — XAI_Desktop 网页版
 
+> **SUPERSEDED-IN-PART (2026-05-24).** UI module specs are SUPERSEDED by `docs/workflow/roadmap/xai-web-console.md` (24/24 SHIPPED) + ADR-0007 build-form decision + `web design/DESIGN.md` as authoritative UI source. This PRD remains authoritative for **browser-only platform concerns**: Auth/Device/Session, Sync push/pull encrypted blob driver, IndexedDB cache, Realtime, Offline outbox, CSP/Sentry, Cloudflare deploy. Do not consume §FR-* UI specs without cross-checking the xai-web-console manifest. Full rationale: `docs/reviews/web-priority-pivot-and-repo-cleanup/20260524-brief.md`.
+
 | 字段 | 值 |
 |---|---|
 | 父 PRD | `docs/planning/2026-05-12-PRD-v1.md`(主 PRD §5.15) |
@@ -14,6 +16,8 @@
 ## 0. 文档定位
 
 本文档 **只覆盖浏览器特有的内容**。控制台 UI(三栏布局 / 各模块视图 / 键盘流 / 主题 / 设置 / 全局搜索 / sidebar 导航)全部继承自 `sub-prds/console/PRD.md`,本档不重复。
+
+> 2026-05-21 更新: `docs/adr/0006-web-face-hybrid-reuse-boundary.md` 已对 `ADR-0003` 做 Web 面收窄。Web 继续共享数据契约、Sync/Repository 语义与 Console PRD 的共享 UI truth，但不再把“直接复用现有 plugin 源码”作为硬前提。
 
 **心智模型一句话(v0.2 修正)**:网页版 = 控制台子 PRD 的 React 组件树 + 浏览器壳 + **Sync push/pull encrypted blob driver**(不是直连业务表的 PostgREST CRUD)+ 浏览器特有的运行约束(认证 / 缓存 / 实时同步 / 离线 / 部署)。
 
@@ -50,7 +54,7 @@
 
 ### 1.1 角色
 
-网页版是 XAI_Desktop 的"第三个面"(见 ADR-0003):桌面 overlay + 整体控制台 + 网页版三者**共享同一套 plugin 业务层与同一套后端数据**,差异只在宿主壳与数据 driver。
+网页版是 XAI_Desktop 的"第三个面"(见 ADR-0003,并受 ADR-0006 收窄):桌面 overlay + 整体控制台 + 网页版三者共享同一套后端数据、数据契约与交互真理源;**Web 的宿主壳与浏览器视图层可独立实现**,而源码级 plugin 复用不再是硬前提。
 
 ### 1.2 为什么进 v1
 
@@ -92,6 +96,12 @@
 
 ### 3.1 URL 结构
 
+> **2026-06-03 Project route clarification:** 当前 Web Console 运行时代码把项目/看板模块注册为
+> `moduleId = "board"`，实际入口是 `/app/board`。下表保留 `/app/projects*`
+> 作为正式 Project 命名和深链接目标，但在实现完成前不得把它当成当前可用路由。
+> 详见 `docs/reviews/xai-web-project-module/20260603-audit-and-prd.md` 和
+> `docs/workflow/roadmap/xai-web-project-module.md`。
+
 | 路径 | 用途 | 鉴权 |
 |---|---|---|
 | `/` | 营销 landing page(可选 SSR/SSG,Phase 5 评估) | 公开 |
@@ -104,9 +114,11 @@
 | `/app/todos` | Todo 模块 | 必须登录 |
 | `/app/todos/:listId` | 指定 list | 必须登录 |
 | `/app/todos/:listId/:todoId` | 选中具体 Todo(detail 面板) | 必须登录 |
-| `/app/projects` | 项目管理(看板列表) | 必须登录 |
-| `/app/projects/:boardId` | 看板视图 | 必须登录 |
-| `/app/projects/:boardId/cards/:cardId` | 卡片 detail | 必须登录 |
+| `/app/board` | 项目/看板模块当前实际入口 | 必须登录 |
+| `/app/board/*` | 当前 catch-all 模块内路径;尚未提供 boardId/cardId 语义化深链接 | 必须登录 |
+| `/app/projects` | 计划中的正式 Project alias/redirect;当前未实现 | 必须登录 |
+| `/app/projects/:boardId` | 计划中的看板深链接;当前未实现 | 必须登录 |
+| `/app/projects/:boardId/cards/:cardId` | 计划中的卡片 detail 深链接;当前未实现 | 必须登录 |
 | `/app/calendar` | 桌面日历(网页版) | 必须登录 |
 | `/app/habits` | 习惯模块 | 必须登录 |
 | `/app/habits/:habitId` | 习惯详情 | 必须登录 |
@@ -1026,7 +1038,7 @@ packages/core-events/
     └── testing.ts
 ```
 
-### 7.3 平台无关性约束(继承 ADR-0003)
+### 7.3 平台无关性约束(继承 ADR-0003,并受 ADR-0006 收窄)
 
 - Plugin 业务代码 0 import `@tauri-apps/api`;所有跨平台能力通过 `@repo/core-*` 注入
 - Plugin 在 Web build 中失活的部分(剪贴板监听 / 桌宠浮窗)通过 manifest `windows.web = false` 静态剔除,不进 bundle

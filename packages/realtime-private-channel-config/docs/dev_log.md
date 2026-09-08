@@ -1,5 +1,10 @@
 # realtime-private-channel-config — Dev Log
 
+## 2026-05-20 14:55 PDT
+
+- Implemented private account topic config and in-memory realtime event bus with account mismatch rejection.
+- Verification: `pnpm --filter @repo/realtime-private-channel-config test`; package `check-types`.
+
 ## Status Panel
 
 | Field | Value |

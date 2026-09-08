@@ -2,7 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window and grid windows",
-  "windows": ["main", "control", "grid_*"],
+  "windows": ["main", "control", "console", "grid_*"],
   "permissions": [
     "core:default",
     "opener:default",

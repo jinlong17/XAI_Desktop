@@ -1,0 +1,47 @@
+{
+  "name": "@repo/plugin-web-statistics",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Statistics module for XAI Web Console — read-only aggregator over xai_pomodoro_sessions + xai_habits_state + xai_pref_week_start. Range tabs (week/month/all), 4 KPI cards with trend %, focus line chart + shaded area, 24-hour productivity bars + peak glow, emoji-grouped ring chart, top-5 habit leaderboard, deterministic 26-week heatmap, bilingual insight callout.",
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
+    "@repo/xai-web-shell": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.2",
+    "vitest": "^3.2.7"
+  }
+}

@@ -1,0 +1,111 @@
+# Deploy XAI Web Console to Cloudflare Pages
+#
+# Triggers:
+#   - push to main → production deploy
+#   - pull_request → preview deploy
+#
+# Secrets required (set in GitHub repo Settings → Secrets → Actions):
+#   CLOUDFLARE_API_TOKEN — Cloudflare API token scoped to the target account:
+#     Account → Cloudflare Pages → Edit
+#     User → Memberships → Read
+#     Account → Account Settings → Read
+#     Do not choose Zone → Custom Pages; that is not the Pages hosting product.
+#   CLOUDFLARE_ACCOUNT_ID — Cloudflare account ID where the project lives
+#   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — not required for the v1 public
+#     demo; live Supabase auth is a later productionization step.
+#
+# See docs/runbooks/cloudflare.md for setup, rotation, and rollback procedures.
+# See docs/adr/0008-cloudflare-deploy-target-and-csp.md for all deploy decisions.
+
+name: Deploy Web to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      WRANGLER_VERSION: 4.107.1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm --filter @repo/web build
+        env:
+          # Public Demo v1 uses mock auth on both production and previews.
+          VITE_WEB_AUTH_MODE: mock-authenticated
+
+      - name: Verify Cloudflare credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: bash scripts/ci/check-cloudflare-pages-token.sh
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+          DEPLOY_SHA: ${{ github.sha }}
+          DEPLOY_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title || github.sha }}
+        run: |
+          set -euo pipefail
+          log_file="$(mktemp)"
+
+          pnpm dlx "wrangler@${WRANGLER_VERSION}" pages deploy ./apps/web/dist \
+            --project-name=xai-web-console \
+            --branch="$DEPLOY_BRANCH" \
+            --commit-hash="$DEPLOY_SHA" \
+            --commit-message="$DEPLOY_MESSAGE" | tee "$log_file"
+
+          deployment_url="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' "$log_file" | tail -n 1 || true)"
+          deployment_id="$(grep -Eio 'Deployment ID: [0-9a-f-]+' "$log_file" | awk '{print $3}' | tail -n 1 || true)"
+          {
+            echo "deployment-url=${deployment_url}"
+            echo "pages-deployment-alias-url=${deployment_url}"
+            echo "pages-deployment-id=${deployment_id}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Deployment summary
+        if: always()
+        env:
+          DEPLOY_ID: ${{ steps.deploy.outputs.pages-deployment-id }}
+          DEPLOY_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          {
+            echo "## Cloudflare Pages Deployment"
+            echo ""
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| Deployment ID | ${DEPLOY_ID} |"
+            echo "| Preview URL | ${DEPLOY_ALIAS_URL} |"
+            echo "| Production URL | ${DEPLOY_URL} |"
+            echo "| Branch | ${DEPLOY_BRANCH} |"
+            echo "| Commit | ${DEPLOY_SHA} |"
+          } >> "$GITHUB_STEP_SUMMARY"

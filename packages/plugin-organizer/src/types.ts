@@ -14,7 +14,14 @@ export interface GridBox {
   themeColor?: string;
 }
 
-export type DesktopItemType = "file" | "folder" | "app";
+export type DesktopItemType = "file" | "folder" | "app" | "url";
+
+export type FinderTagColor = "gray" | "green" | "purple" | "blue" | "yellow" | "red" | "orange";
+
+export interface FinderTag {
+  name: string;
+  color?: FinderTagColor;
+}
 
 export interface DesktopItem {
   id: string;
@@ -24,6 +31,19 @@ export interface DesktopItem {
   icon: string;
   size?: number;
   createdAt: number;
+  finderTags?: FinderTag[];
+  /**
+   * Populated when `type === "url"`. Behaviour-preserving widening from
+   * the original file/folder/app union — code that only reads `type`
+   * keeps working, but URL payloads now round-trip through the
+   * Repository v0 GridItemEntity.url shape (see G3-E1).
+   */
+  url?: {
+    href: string;
+    title?: string;
+    description?: string;
+    favicon?: string;
+  };
 }
 
 export interface PersistedLayout {

@@ -1,0 +1,18 @@
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/core": ["../core/src/index"],
+      "@repo/core/types": ["../core/src/types/index"],
+      "@repo/core/events": ["../core/src/events/index"],
+      "@repo/core/registry": ["../core/src/registry/index"],
+      "@repo/core-data": ["../core-data/src/index"],
+      "@repo/core-data/testing": ["../core-data/src/testing"],
+      "@repo/core/hooks": ["../core/src/hooks/index"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}

@@ -1,0 +1,31 @@
+export * from "./types";
+export { LocalStorageAdapter } from "./data/LocalStorageAdapter";
+export { RepoAdapter as ProductivityRepoAdapter } from "./data/RepoAdapter";
+export { ProductivityRepoProvider, useProductivityRepoAdapters } from "./data/RepoProvider";
+export type { ProductivityRepoAdapters, ProductivityRepoProviderProps } from "./data/RepoProvider";
+export { TodoStoreProvider, autoAssignQuadrant, useTodoStore } from "./hooks/useTodoStore";
+export type { TodoStore, TodoStoreProviderProps } from "./hooks/useTodoStore";
+export { PomodoroStoreProvider, usePomodoroStore } from "./hooks/usePomodoroStore";
+export type { PomodoroStore, PomodoroStoreProviderProps } from "./hooks/usePomodoroStore";
+export { HabitStoreProvider, useHabitStore } from "./hooks/useHabitStore";
+export type { HabitStore, HabitStoreProviderProps } from "./hooks/useHabitStore";
+export { TodoItem } from "./components/TodoItem";
+export type { TodoItemProps } from "./components/TodoItem";
+export { TodoQuickAdd } from "./components/TodoQuickAdd";
+export { TodoList } from "./components/TodoList";
+export { EisenhowerMatrix } from "./components/EisenhowerMatrix";
+export { PomodoroTimer } from "./components/PomodoroTimer";
+export { PomodoroOverlay } from "./components/PomodoroOverlay";
+export { HabitCalendarMini } from "./components/HabitCalendarMini";
+export type { HabitCalendarMiniProps } from "./components/HabitCalendarMini";
+export { HabitCard } from "./components/HabitCard";
+export type { HabitCardProps } from "./components/HabitCard";
+export { HabitList } from "./components/HabitList";
+export {
+  HabitsConsoleView,
+  MatrixConsoleView,
+  PomodoroConsoleView,
+  TasksConsoleView,
+  productivityConsoleViews,
+} from "./console-views";
+export { registerProductivityPlugin } from "./register-plugin";

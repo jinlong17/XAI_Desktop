@@ -6,6 +6,7 @@ import {
   SyncRevisionRollbackError,
   applyServerRecords,
   createSyncPullHttpTransport,
+  createSyncNonceLeaseManager,
   createSyncPushHttpTransport,
   createSyncOutbox,
   createUuidV7,
@@ -140,7 +141,7 @@ describe('pushBatch', () => {
 });
 
 describe('createSyncPushHttpTransport', () => {
-  it('posts one JSON request to /sync/push with bearer auth', async () => {
+  it('posts one server-shaped JSON request to /sync/push with bearer auth and sync headers', async () => {
     const fetch = vi.fn(async () => ({
       ok: true,
       status: 207,
@@ -150,6 +151,8 @@ describe('createSyncPushHttpTransport', () => {
     }));
     const transport = createSyncPushHttpTransport({
       accessToken: 'access-token',
+      accountId: 'account-1',
+      deviceId: 'device-1',
       fetch,
     });
     const request: PushBatchRequest = {
@@ -176,10 +179,72 @@ describe('createSyncPushHttpTransport', () => {
         headers: {
           authorization: 'Bearer access-token',
           'content-type': 'application/json',
+          'accept-version': 'sync.protocol=1',
+          'x-device-id': 'device-1',
+          'x-account-id': 'account-1',
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify({
+          accountId: 'account-1',
+          records: [
+            {
+              ...request.records[0],
+              originatorDeviceId: 'device-1',
+            },
+          ],
+        }),
       },
     ]);
+  });
+
+  it('requires accountId and deviceId together when binding server request context', () => {
+    expect(() =>
+      createSyncPushHttpTransport({
+        accessToken: 'access-token',
+        accountId: 'account-1',
+        fetch: vi.fn(),
+      }),
+    ).toThrow(/accountId and deviceId/);
+  });
+});
+
+describe('createSyncNonceLeaseManager', () => {
+  it('requests, renews, releases nonce leases and persists progress', async () => {
+    const released: unknown[] = [];
+    const progress: unknown[] = [];
+    const manager = createSyncNonceLeaseManager(
+      {
+        async requestLease(input) {
+          return {
+            ...input,
+            encryptionDeviceId: 1001n,
+            leaseStart: 0n,
+            leaseEnd: BigInt(input.count - 1),
+            expiresAtMs: 100,
+          };
+        },
+        async renewLease(lease) {
+          return { ...lease, expiresAtMs: 200 };
+        },
+        async releaseLease(lease) {
+          released.push(lease);
+        },
+        async persistProgress(checkpoint) {
+          progress.push(checkpoint);
+        },
+      },
+      { nowMs: () => 123 },
+    );
+
+    await expect(
+      manager.request({ accountId: 'acct', deviceId: 'dev-a', keyId: 1, count: 3 }),
+    ).resolves.toMatchObject({ leaseEnd: 2n });
+    await expect(manager.renew()).resolves.toMatchObject({ expiresAtMs: 200 });
+    await expect(manager.persistProgress(7n)).resolves.toMatchObject({ lastAckCommitSeq: 7n, updatedAtMs: 123 });
+    await manager.release();
+
+    expect(progress).toHaveLength(1);
+    expect(released).toHaveLength(1);
+    expect(manager.current()).toBeUndefined();
   });
 });
 
@@ -278,7 +343,7 @@ describe('pullBatch', () => {
 });
 
 describe('createSyncPullHttpTransport', () => {
-  it('gets /sync/pull with since_commit_seq and limit only', async () => {
+  it('gets /sync/pull with canonical sync headers and no entity filter', async () => {
     const fetch = vi.fn(async () => ({
       ok: true,
       status: 200,
@@ -286,7 +351,12 @@ describe('createSyncPullHttpTransport', () => {
         return { currentAccountCommitSeq: '7', records: [] };
       },
     }));
-    const transport = createSyncPullHttpTransport({ accessToken: 'access-token', fetch });
+    const transport = createSyncPullHttpTransport({
+      accessToken: 'access-token',
+      accountId: 'account-1',
+      deviceId: 'device-1',
+      fetch,
+    });
 
     await expect(transport.pullBatch({ sinceCommitSeq: '5', limit: 500 })).resolves.toMatchObject({
       currentAccountCommitSeq: '7',
@@ -294,9 +364,54 @@ describe('createSyncPullHttpTransport', () => {
 
     expect(fetch).toHaveBeenCalledWith('/sync/pull?since_commit_seq=5&limit=500', {
       method: 'GET',
-      headers: { authorization: 'Bearer access-token' },
+      headers: {
+        authorization: 'Bearer access-token',
+        'accept-version': 'sync.protocol=1',
+        'x-account-id': 'account-1',
+        'x-device-id': 'device-1',
+      },
     });
     expect(fetch.mock.calls[0]![0]).not.toContain('entity_type');
+  });
+
+  it('normalizes server snake_case /sync-pull blobs into pull records', async () => {
+    const fetch = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return {
+          current_account_commit_seq: '9',
+          records: [
+            {
+              entity_type: 'productivity.todo',
+              entity_id: 'todo-1',
+              revision: '3',
+              key_id: 7,
+              blob: Buffer.from([1, 2, 3, 4]).toString('base64'),
+              commit_seq: '8',
+              soft_deleted: false,
+              hard_deleted: false,
+              originator_device_id: 'device-remote',
+            },
+          ],
+        };
+      },
+    }));
+    const transport = createSyncPullHttpTransport({ accessToken: 'access-token', fetch });
+
+    await expect(transport.pullBatch({ sinceCommitSeq: '5', limit: 500 })).resolves.toMatchObject({
+      currentAccountCommitSeq: '9',
+      records: [
+        {
+          entityType: 'productivity.todo',
+          entityId: 'todo-1',
+          revision: '3',
+          commitSeq: '8',
+          keyId: 7,
+          envelope: [1, 2, 3, 4],
+        },
+      ],
+    });
   });
 });
 

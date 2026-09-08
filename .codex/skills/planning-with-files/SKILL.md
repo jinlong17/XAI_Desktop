@@ -1,0 +1,27 @@
+---
+name: planning-with-files
+description: Use when a multi-step task needs a persistent plan file that survives context resets — drives the upstream "Planning with Files" task_plan.md discipline (long-running plan + checkbox progress + per-step rationale). Triggers — persistent plan, task_plan.md, /plan, long-running task plan, plan-as-file.
+upstream: https://github.com/OthmanAdi/planning-with-files
+license: MIT
+vendor_card: docs/vendor-cards/planning-with-files.md
+---
+
+# planning-with-files
+
+**Purpose.** Maintain a persistent `task_plan.md`-style file the agent updates as it works, so the plan survives session resets and provides an auditable trail of decisions. The shim is description-triggered: agents load it when the conversation matches one of the trigger phrases below.
+
+## Triggers
+
+- "persistent plan"
+- "task_plan.md"
+- "/plan"
+- "long-running task plan"
+- "plan-as-file"
+
+## How to deepen
+
+The full SKILL.md and the canonical `task_plan.md` schema live upstream at
+<https://github.com/OthmanAdi/planning-with-files>. Pull the upstream content
+on demand when a task needs the deeper material — this shim deliberately keeps
+the in-tree footprint small (no vendored upstream content). See the vendor
+card for license, sync owner, and the recorded upstream commit pin.

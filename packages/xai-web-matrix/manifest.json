@@ -1,0 +1,19 @@
+{
+  "name": "@repo/plugin-web-matrix",
+  "slug": "xai-web-matrix",
+  "version": "0.0.0",
+  "status": "Production",
+  "type": "ui",
+  "owner": "xai-web-matrix",
+  "description": "Eisenhower 2×2 Matrix module — Quadrant drag-and-drop, usePref persistence (xai_matrix_state), web:matrix:priority-tagged event emit, bilingual (EN/ZH), keyboard a11y (Ctrl/Cmd+Arrow). SHIPPED 2026-05-23. 54/54 automated tests pass.",
+  "roadmap_row": 13,
+  "wave": "W2",
+  "entry": "./src/index.ts",
+  "dependencies": [
+    "@repo/core",
+    "@repo/plugin-web-tokens",
+    "@repo/plugin-web-storage",
+    "@repo/xai-web-event-bus",
+    "@repo/xai-web-shell"
+  ]
+}
