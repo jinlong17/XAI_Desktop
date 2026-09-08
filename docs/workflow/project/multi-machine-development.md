@@ -44,6 +44,9 @@ reflog、隐藏 ref、未跟踪源码或聊天记录。
 
 ## 4. 开始工作门禁
 
+新 MacBook 首次接手时，复制执行
+[`new-mac-development-handoff-prompt.md`](new-mac-development-handoff-prompt.md)。
+
 ```bash
 git fetch --all --prune --tags
 git status --short --branch
