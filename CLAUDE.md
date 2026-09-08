@@ -282,6 +282,7 @@ Track and keep synchronized at minimum:
 - `.teams/skills/`
 - `docs/workflow/_portable/`
 - `docs/workflow/project/workflow.md`
+- `docs/workflow/project/multi-machine-development.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Rules:
@@ -295,6 +296,21 @@ Rules:
   and resolve any project-level untracked files intentionally.
 - After committing, push the branch when the change is meant to be available on
   another machine.
+
+### Multi-machine development contract
+
+All recoverable project work—not only Agent/Skill configuration—must follow
+`docs/workflow/project/multi-machine-development.md`.
+
+- A writable short branch has one active machine/worktree owner. Parallel
+  computers use sibling branches and reconcile explicitly.
+- Before switching computers or ending a session, commit and push the current
+  checkpoint. Stash, reflog, hidden refs, untracked source, and application chat
+  history are not cross-machine handoff mechanisms.
+- Secrets remain outside Git; tracked `.env.example` files carry names only.
+- Run `pnpm git:sync-check -- --fetch`; use `--deep` for migration/cleanup.
+- This completeness rule preserves ADR-0013 branch independence and never
+  authorizes force-alignment, release, or a D3 bypass.
 
 ### Platform-specific generation
 

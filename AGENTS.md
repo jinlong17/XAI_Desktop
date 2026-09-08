@@ -89,6 +89,7 @@ The tracked sync surface includes at least:
 - `.teams/skills/`
 - `docs/workflow/_portable/`
 - `docs/workflow/project/workflow.md`
+- `docs/workflow/project/multi-machine-development.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Before finishing a workflow/agent/skill change, audit for project-level
@@ -100,7 +101,26 @@ git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/wo
 
 If the change is intended to apply on another computer, push it after commit.
 
-### 2.5 Personal developer dashboard
+### 2.5 Multi-machine development
+
+GitHub is the exchange source of truth for all recoverable project work. Follow
+`docs/workflow/project/multi-machine-development.md` whenever more than one
+computer or worktree may continue the project.
+
+- One writable short branch belongs to one machine/worktree at a time; use
+  sibling branches when two computers work on the same feature.
+- Before switching computers or ending a session, commit and push all
+  recoverable work. A local stash, reflog entry, hidden ref, untracked source,
+  or chat transcript is not a handoff.
+- Keep secrets outside Git and maintain tracked names-only `.env.example`
+  templates plus a documented secure restore channel.
+- Run `pnpm git:sync-check -- --fetch` at normal handoff and add `--deep` before
+  migration or cleanup. Do not delete local recovery state merely to make the
+  check pass.
+- Independent long-lived product branches remain intentionally divergent; this
+  rule never authorizes a bulk merge or D3 bypass.
+
+### 2.6 Personal developer dashboard
 
 The local personal developer dashboard is the project-system cockpit at
 `docs/prototypes/dev-dashboard/index.html`. Machine-facing rules live in

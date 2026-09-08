@@ -14,6 +14,7 @@
     "web:check-colors": "node scripts/web/check-design-colors.mjs",
     "typecheck": "pnpm check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "git:sync-check": "bash scripts/ci/check-multi-machine-sync.sh",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {

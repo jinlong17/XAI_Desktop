@@ -9,6 +9,7 @@
 | Topic | Authority |
 |---|---|
 | Branch topology, product lines, Web to Desktop gate, account cloud-sync contract | `docs/adr/0013-branch-sync-governance.md` |
+| Multi-machine branch ownership, GitHub completeness, handoff and local-asset policy | `docs/workflow/project/multi-machine-development.md` |
 | Current P0/P1/P2 active-focus order | `CLAUDE.md` "Current Priority" + Branch & sync governance |
 | Repository layout and branch map entrypoint | `developer.md` §3 and §3.5 |
 | Workflow entrypoints and branch/sync usage notes | `docs/workflow/project/usage-guide.md` §16 and §17 |
