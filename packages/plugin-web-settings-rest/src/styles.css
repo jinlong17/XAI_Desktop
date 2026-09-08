@@ -100,6 +100,18 @@
   background: oklch(55% 0.18 20 / 0.08);
 }
 
+@media (max-width: 640px) {
+  .acct-upgrade,
+  .acct-danger {
+    min-height: 44px;
+  }
+
+  .acct-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
 /* ---- Premium pane ---------------------------------------------------- */
 .premium-pane {
   padding: 16px;

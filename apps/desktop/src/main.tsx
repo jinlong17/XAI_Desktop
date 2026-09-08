@@ -5,7 +5,7 @@ import { GridWindow } from "./windows/GridWindow";
 import { ControlWindow } from "./windows/ControlWindow";
 import { ConsoleWindow } from "./windows/ConsoleWindow";
 import "./index.css";
-import { registerAccountPlugin } from "@repo/plugin-account";
+import { registerAccountPlugin } from "@repo/plugin-account/register-plugin";
 import { registerAiCubePlugin } from "@repo/plugin-ai-cube";
 import { registerConsolePlugin } from "../../../packages/plugin-console/src";
 import { registerLabelsPlugin } from "../../../packages/plugin-labels/src";

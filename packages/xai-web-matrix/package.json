@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Eisenhower 2×2 Matrix module for XAI Web Console (W2 row #13).",
-  "sideEffects": ["./src/matrix.css"],
+  "sideEffects": [
+    "./src/matrix.css"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -20,8 +22,8 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
@@ -39,6 +41,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

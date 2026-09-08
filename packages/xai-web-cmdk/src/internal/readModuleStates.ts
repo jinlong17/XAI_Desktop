@@ -1,7 +1,7 @@
 /**
  * @internal — readModuleStates.ts
  *
- * Reads the current state of all 11 searchable modules from localStorage
+ * Reads the current state of all 12 searchable modules from localStorage
  * via the SHIPPED getPref / getPrefAutosave API. Returns a frozen Record
  * mapping each WebModuleId to its state (unknown-typed; each adapter is
  * responsible for runtime shape validation).
@@ -55,6 +55,7 @@ export function readModuleStates(): Readonly<Record<WebModuleId, unknown>> {
     countdown: getPref("xai_countdowns"),
     statistics: {},
     timetrack: {},
+    metrics: {},
     settings: settingsState,
     // These WebModuleIds exist but have no adapter in v1:
     ai: {},

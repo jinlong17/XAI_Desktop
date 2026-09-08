@@ -221,16 +221,77 @@ describe("PomodoroModule", () => {
     expect((document.querySelector(".module-pomo") as HTMLElement).style.getPropertyValue("--accent-hue")).toBe("245");
   });
 
-  it("M19: fullscreen mode toggles and exits with Escape", () => {
+  it("M19: fullscreen focus can open after changing color before the timer starts", () => {
     render(<PomodoroModule lang="en" />);
 
     const fullscreenBtn = screen.getByTestId("fullscreen-btn");
-    act(() => { fireEvent.click(fullscreenBtn); });
+    expect(fullscreenBtn).not.toBeDisabled();
+    expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
+
+    act(() => { fireEvent.click(screen.getByTestId("theme-blue")); });
+    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("true");
+    expect(screen.getByTestId("pomo-focus-overlay")).toBeTruthy();
+    expect(screen.getByTestId("focus-start-btn")).toBeTruthy();
     expect(fullscreenBtn.getAttribute("aria-label")).toBe("Exit fullscreen");
+
+    act(() => { fireEvent.click(screen.getByTestId("focus-start-btn")); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
 
     act(() => { fireEvent.keyDown(window, { key: "Escape" }); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("false");
+    expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
+  });
+
+  it("M20: fullscreen focus controls reveal on pointer movement and idle-hide", () => {
+    render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
+    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+
+    const overlay = screen.getByTestId("pomo-focus-overlay");
+    expect(overlay.getAttribute("data-controls-visible")).toBe("false");
+
+    act(() => { fireEvent.pointerMove(overlay); });
+    expect(overlay.getAttribute("data-controls-visible")).toBe("true");
+
+    act(() => { vi.advanceTimersByTime(2500); });
+    expect(overlay.getAttribute("data-controls-visible")).toBe("false");
+  });
+
+  it("M21: fullscreen focus buttons keep timer state and Stop exits fullscreen", () => {
+    render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
+    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+
+    expect(screen.getByTestId("focus-pause-btn")).toBeTruthy();
+    act(() => { fireEvent.click(screen.getByTestId("focus-pause-btn")); });
+    expect(screen.getByTestId("focus-continue-btn")).toBeTruthy();
+    expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
+
+    act(() => { fireEvent.click(screen.getByTestId("focus-continue-btn")); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
+
+    act(() => { fireEvent.click(screen.getByTestId("focus-stop-btn")); });
+    expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("false");
+    expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
+  });
+
+  it("M22: Space toggles start, pause, and continue while fullscreen", () => {
+    render(<PomodoroModule lang="en" />);
+
+    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+    expect(screen.getByTestId("focus-start-btn")).toBeTruthy();
+
+    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
+
+    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
+
+    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
   });
 
   it("M18: sound selection, preview, and mute controls are interactive", () => {

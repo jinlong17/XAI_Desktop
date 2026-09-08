@@ -28,6 +28,7 @@ export type {
   BoardCardActivityEntry,
   BoardCardActivityKind,
   BoardCardAttachmentLink,
+  BoardCardPriority,
   BoardCardTaskLink,
   BoardChecklistItem,
   BoardList as BoardListData,
@@ -56,6 +57,8 @@ export {
   isBoardArray,
   isBoardCard,
   isBoardList,
+  isBoardWorkspace,
+  isBoardWorkspaceArray,
 } from "./internal/isBoardArray.js";
 
 // ---- Seed (typed; consumed at first run + by row #9 board-workspaces) ----
@@ -70,6 +73,26 @@ export type {
   BoardLabel,
   BoardTemplateOption,
 } from "./internal/seed/board-data.js";
+
+// ---- Catalogs (label/member directories + priority metadata) -------------
+export {
+  KANBAN_LABELS,
+  DEFAULT_BOARD_LABELS,
+  DEFAULT_BOARD_MEMBERS,
+  BOARD_COVER_PRESETS,
+  BOARD_LABEL_PALETTE,
+  BOARD_MEMBER_PALETTE,
+  BOARD_PRIORITIES,
+  getPriorityMeta,
+  resolveBoardLabels,
+  resolveBoardMembers,
+  indexBoardLabels,
+  indexBoardMembers,
+  memberInitials,
+  stripLabelFromBoardLists,
+  stripMemberFromBoardLists,
+} from "./internal/catalogs.js";
+export type { BoardPriorityMeta } from "./internal/catalogs.js";
 
 // ---- Pure helpers (re-exported for #8 / #9 reuse) ------------------------
 export {
@@ -161,6 +184,7 @@ export type {
 // ---- Persistence helpers -------------------------------------------------
 export {
   loadBoardsOrDefault,
+  loadWorkspacesOrDefault,
   pickActiveBoard,
 } from "./internal/persistence.js";
 

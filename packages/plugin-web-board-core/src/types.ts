@@ -85,6 +85,24 @@ export interface BoardMemberOption {
   color: string;
 }
 
+/**
+ * Canonical board label definition. A card references labels by id; the board
+ * (or the default catalog) owns the id → {name, color} mapping that the card
+ * chips and the detail-modal label editor resolve against.
+ */
+export interface BoardLabel {
+  id: string;
+  name: BilingualText;
+  /** OKLCH or CSS color string. */
+  color: string;
+}
+
+/**
+ * Card priority. Ordered urgent > high > medium > low. `undefined` = no
+ * priority. Chip color/name metadata lives in `BOARD_PRIORITIES`.
+ */
+export type BoardCardPriority = "urgent" | "high" | "medium" | "low";
+
 /** Geographic location for Map view rendering (gap-closure row #6). */
 export interface CardLocation {
   /** WGS84 latitude, -90..90. */
@@ -104,10 +122,12 @@ export interface BoardCard {
   completedAt?: string;
   /** Rich card detail description, persisted by the workspace detail modal. */
   description?: string;
-  /** Label ids; reference entries in PM_LABELS or future global label set. */
+  /** Label ids; resolved against the board's label catalog (or defaults). */
   labels?: string[];
-  /** Member user ids; rendered as avatar chips. */
+  /** Member user ids; resolved against the board's member catalog (or defaults). */
   members?: string[];
+  /** Card priority. Resolved against BOARD_PRIORITIES for chip color/label. */
+  priority?: BoardCardPriority;
   checklist?: CardChecklist;
   /** Structured checklist rows. `checklist` is derived for legacy chip rendering. */
   checklistItems?: BoardChecklistItem[];
@@ -174,7 +194,22 @@ export interface Board {
   /** CSS background string (linear-gradient, image, etc.). */
   cover: string;
   template: BoardTemplate;
+  /** Optional short icon glyph (emoji or single char) shown before the name.
+   *  Absent → template-derived default (pm ▤, otherwise ▦). */
+  icon?: string;
+  /** Optional plain-text board description shown in switcher/settings. */
+  description?: string;
   /** Local visibility state. This is not a backend ACL grant. */
   visibility?: BoardVisibility;
+  /**
+   * Board-scoped label catalog. When absent (legacy boards), resolves to
+   * DEFAULT_BOARD_LABELS. Materialized lazily on first label edit.
+   */
+  labels?: BoardLabel[];
+  /**
+   * Board-scoped member directory. When absent (legacy boards), resolves to
+   * DEFAULT_BOARD_MEMBERS. Materialized lazily on first member edit.
+   */
+  members?: BoardMemberOption[];
   lists: BoardList[];
 }

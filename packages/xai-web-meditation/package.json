@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Meditation module for XAI Web Console (W2 row #16) — 5 scene gradients + 4 live clock variants + 5 ambient sounds + 5 durations + fullscreen player with rising particles + 8s breathing ring.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -20,8 +23,8 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
   "peerDependencies": {
@@ -40,6 +43,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

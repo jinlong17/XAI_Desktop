@@ -1166,3 +1166,174 @@
     min-height: 44px;
   }
 }
+
+@media (max-width: 640px) {
+  .module-habits {
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  .habits-list,
+  .habits-detail {
+    border-radius: var(--r-lg);
+  }
+
+  .habit-view-tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .habit-view-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .habit-view-tabs button {
+    flex: 1 0 auto;
+    min-width: 92px;
+  }
+
+  .habit-row,
+  .habit-all-row,
+  .week-header {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .week-header > span {
+    display: none;
+  }
+
+  .week-header {
+    grid-template-columns: 1fr;
+    padding-inline: 10px;
+  }
+
+  .habit-row,
+  .habit-all-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .habit-week,
+  .week-strip-head {
+    grid-column: 1 / -1;
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(0, 44px));
+    justify-content: space-between;
+    gap: 2px;
+  }
+
+  .habit-all-week {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .habit-all-week {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .hcell,
+  .habit-check-cell {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .stat-grid,
+  .stats-two-col,
+  .hb-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .month-cal header button,
+  .cal-cell,
+  .cal-cell.in,
+  .hb-dialog button,
+  .hb-dialog input,
+  .hb-dialog textarea {
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .module-habits {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .habits-list,
+  .habits-detail {
+    min-width: 0;
+    min-height: min-content;
+  }
+
+  .habit-row,
+  .habit-all-row,
+  .week-header {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .week-header {
+    padding-inline: 12px;
+  }
+
+  .week-header > span {
+    display: none;
+  }
+
+  .habit-week,
+  .habit-all-week,
+  .week-strip-head {
+    grid-column: 1 / -1;
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(44px, 1fr));
+    gap: 4px;
+  }
+
+  .hcell,
+  .all-hcell,
+  .habit-check-cell {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    max-width: 44px;
+    justify-self: center;
+  }
+
+  .habit-title,
+  .stat-label,
+  .rank-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .stat-grid,
+  .stats-two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .habit-view-tabs button,
+  .icon-btn,
+  .hb-btn,
+  .month-cal header button,
+  .cal-cell,
+  .cal-cell.in,
+  .hb-dialog button,
+  .hb-dialog input,
+  .hb-dialog textarea {
+    min-height: 44px;
+  }
+
+  .icon-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+}

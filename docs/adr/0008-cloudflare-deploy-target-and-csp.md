@@ -7,7 +7,7 @@
 | 决策者 | Jinlong (project owner) + Claude (`feature-plan` → `feature-review`) |
 | Supersedes | none |
 | Superseded by | none |
-| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages; 2026-05-26 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com` (row `xai-web-settings-premium-stripe`, gap-closure #8, Stripe Payment Link same-tab redirect); `script-src` + `frame-src` NOT widened — no Stripe.js bundle, no Embedded Checkout iframe in v1 stub; 2026-06-01 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.openai.com`, `https://api.groq.com` (OpenAI + Groq openai-compatible provider hosts) and `https://*.ingest.sentry.io` (Sentry error-event ingestion); `script-src`/`frame-src` NOT widened; post-hoc gap-closure for the 2026-06-01 web batch surfaced by the web-sync D3 review (`docs/reviews/web-sync-2026-06-01/`); the §S6 snippet correction in this amendment also folds in the prior 2026-05-29 Gemini extension (which had updated §S3 only, leaving §S6/frontmatter stale) |
+| Amendments | 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` widened to include `https://api.anthropic.com` (row `xai-web-ai-chat-real-llm-adapter`, gap-closure #2); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` + `img-src` widened to include `https://tile.openstreetmap.org` (row `xai-web-board-filter-share-map`, gap-closure #6, MapView OSM tiles); 2026-05-25 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.notion.com`, `https://oauth2.googleapis.com`, `https://api.linear.app` (row `xai-web-settings-integrations-3rd-party`, gap-closure #7, OAuth token endpoints for Notion/GCal/Linear); `frame-src` NOT widened — all 3 providers set `X-Frame-Options: DENY` on authorize pages; 2026-05-26 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://js.stripe.com`, `https://checkout.stripe.com`, `https://buy.stripe.com` (row `xai-web-settings-premium-stripe`, gap-closure #8, Stripe Payment Link same-tab redirect); `script-src` + `frame-src` NOT widened — no Stripe.js bundle, no Embedded Checkout iframe in v1 stub; 2026-06-01 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.openai.com`, `https://api.groq.com` (OpenAI + Groq openai-compatible provider hosts) and `https://*.ingest.sentry.io` (Sentry error-event ingestion); `script-src`/`frame-src` NOT widened; post-hoc gap-closure for the 2026-06-01 web batch surfaced by the web-sync D3 review (`docs/reviews/web-sync-2026-06-01/`); the §S6 snippet correction in this amendment also folds in the prior 2026-05-29 Gemini extension (which had updated §S3 only, leaving §S6/frontmatter stale); 2026-06-07 §S3 D3 + §S6 `_headers` — `connect-src` extended with `https://api.deepseek.com` for the managed DeepSeek OpenAI-compatible provider preset |
 
 ---
 
@@ -64,8 +64,8 @@ The project owner (Jinlong) needs:
   `vite.config.ts`), not inside `apps/web/deploy/`, to preserve this distinction.
   Future Worker layer will reuse the library functions from `apps/web/deploy/security/`.
 - Root `.nvmrc` is absent; P2 adds one pinned to `22` (Node 22 LTS).
-- `cloudflare/wrangler-action@v3` is the current canonical GitHub Action for
-  Pages deploys; the legacy `cloudflare/pages-action` is deprecated.
+- The current workflow uses pinned Wrangler CLI (`pnpm dlx wrangler@4.107.1`)
+  for Pages deploys; the legacy `cloudflare/pages-action` is deprecated.
 
 ### Related ADRs
 
@@ -83,7 +83,7 @@ The project owner (Jinlong) needs:
 
 | Option | Pros | Cons |
 |--------|------|------|
-| **A. Cloudflare Pages** (selected) | Cleanly static; built-in PR previews; `pages_build_output_dir = "./dist"` one-liner; free-tier 500 builds/month; `wrangler-action@v3` first-class support. | Future `/api/chat` Worker = separate project or migration when AI Chat backend row lands. |
+| **A. Cloudflare Pages** (selected) | Cleanly static; built-in PR previews; `pages_build_output_dir = "./dist"` one-liner; free-tier 500 builds/month; Wrangler CLI supports direct-upload CI. | Future `/api/chat` Worker = separate project or migration when AI Chat backend row lands. |
 | B. Workers Static Assets | `[assets] directory` + `not_found_handling = "single-page-application"` natively co-locates future Workers. No migration cost when AI Chat backend lands. | Slightly more config; builds billed per Workers requests (different quota model); premature for a fully-static payload today. |
 
 Pages selected because `apps/web/` is fully static today; migration cost when
@@ -302,6 +302,24 @@ drift — the §S6 snippet had not been refreshed for the 2026-05-29 Gemini
 extension (it still showed the superseded Stripe-era `connect-src`). The §S6
 snippet below now matches `apps/web/public/_headers` verbatim.
 
+**Amendment 2026-06-07 — `connect-src` DeepSeek managed provider extension:**
+
+The Web AI settings pane now exposes DeepSeek as a managed OpenAI-compatible
+provider preset with its own encrypted key slot. Requests are direct browser
+`fetch` calls to DeepSeek's OpenAI-compatible chat endpoint, so the provider
+host must be in `connect-src`.
+
+| Directive | Before | After |
+|---|---|---|
+| `connect-src` | `'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io` | `'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://api.deepseek.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io` |
+
+Notes:
+- `https://api.deepseek.com` is the canonical host for DeepSeek's
+  OpenAI-compatible API surface.
+- `script-src` / `frame-src` NOT widened — this is a `connect-src` fetch only.
+- `apps/web/src/__tests__/csp.test.ts` has a dedicated guard asserting
+  `https://api.deepseek.com` remains in `_headers`.
+
 **Runtime nonce caller audit (P2):** `requireRuntimeNonce` and
 `createNonceStyleElement` are defined in `apps/web/src/security/nonce.ts` and
 called only in test files (`nonce.test.ts`). No production caller in
@@ -369,9 +387,9 @@ via Revise mode or opening a follow-up row with a new ADR.
    That library remains compiled but unreachable at static runtime — accepted
    dead-code-at-runtime, kept for the future Worker layer to reuse.
 
-8. **GitHub Action = `cloudflare/wrangler-action@v3`** (NOT the deprecated
-   `cloudflare/pages-action`). Action pinned `@v3`; bundled `wranglerVersion`
-   pinned to `3.114.0`.
+8. **GitHub deploy path = pinned Wrangler CLI** (NOT the deprecated
+   `cloudflare/pages-action`). The workflow runs `pnpm dlx wrangler@4.107.1`
+   for credential preflight and `pages deploy`.
 
 9. **Workflow triggers:** `push` on `main` → production deploy; `pull_request`
    → preview deploy. No `paths-ignore` filter in v1 (runbook lever for
@@ -388,7 +406,7 @@ via Revise mode or opening a follow-up row with a new ADR.
 
 12. **Branch policy:** `main` deploys to production; PR branches deploy to
     Cloudflare Pages preview environments. Pass
-    `--branch=${{ github.head_ref || github.ref_name }}` to the wrangler-action.
+    `--branch=${{ github.head_ref || github.ref_name }}` to `wrangler pages deploy`.
 
 13. **GitHub Action does NOT auto-commit anything to the repo.** Verify-gate
     evidence file is written by `feature-verify` locally, not pushed by CI.
@@ -462,7 +480,7 @@ Delivered at `apps/web/public/_headers` (Vite copies `public/` verbatim into
 
 ```
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.anthropic.com https://api.openai.com https://api.groq.com https://api.deepseek.com https://tile.openstreetmap.org https://api.notion.com https://oauth2.googleapis.com https://api.linear.app https://generativelanguage.googleapis.com https://*.ingest.sentry.io; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -494,6 +512,10 @@ per the 2026-06-01 web batch — see §S3 D3 2026-06-01 amendment above; `script
 widened. NOTE: the superseded Stripe-era hosts shown in earlier revisions of this snippet were removed
 upstream; the §S6 snippet above now matches `apps/web/public/_headers` verbatim.)_
 
+_(amended 2026-06-07: `connect-src` extended to include `https://api.deepseek.com`
+for the managed DeepSeek OpenAI-compatible provider preset — see §S3 D3 2026-06-07 amendment above;
+`script-src` / `frame-src` NOT widened.)_
+
 No `'unsafe-inline'`. No `'unsafe-eval'`. No bare `*` host wildcard — the sole wildcard is the org-scoped `https://*.ingest.sentry.io` Sentry ingest subdomain (added 2026-06-01).
 
 ### Nonce strip mechanism
@@ -507,16 +529,20 @@ the `<meta name="xai-csp-nonce">` element are stripped from the output
 ### CI workflow shape
 
 File: `.github/workflows/deploy-web.yml`
-Action: `cloudflare/wrangler-action@v3` (NOT `cloudflare/pages-action`)
+Action: pinned Wrangler CLI via `pnpm dlx wrangler@4.107.1` (NOT
+`cloudflare/pages-action`)
 Secret references: `${{ secrets.CLOUDFLARE_API_TOKEN }}` and
 `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}` — no literal values.
+Credential preflight: `scripts/ci/check-cloudflare-pages-token.sh`
 Deploy command: `pages deploy ./dist --project-name=xai-web-console
 --branch=${{ github.head_ref || github.ref_name }}`
 
 ### Secret naming
 
 GitHub repo Secrets MUST be named exactly:
-- `CLOUDFLARE_API_TOKEN` — Cloudflare API token with scope `Cloudflare Pages:Edit`
+- `CLOUDFLARE_API_TOKEN` — Cloudflare API token scoped to the target account with
+  Account → Cloudflare Pages → Edit, User → Memberships → Read, and Account →
+  Account Settings → Read. Do not select Zone → Custom Pages.
 - `CLOUDFLARE_ACCOUNT_ID` — the Cloudflare account ID where the project lives
 
 ### `apps/web/deploy/security/` namespace coexistence note
@@ -549,7 +575,7 @@ Quota Monitoring / Disaster Recovery.
 - **Feature brief**: `docs/reviews/xai-web-deploy-cloudflare/20260524-feature-brief.md`
 - **Discovery review**: `docs/reviews/xai-web-deploy-cloudflare/20260524-discovery-review.md`
 - **Runbook**: `docs/runbooks/cloudflare.md`
-- **wrangler-action docs**: https://github.com/cloudflare/wrangler-action (v3)
+- **Wrangler Pages direct upload docs**: https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/
 - **Cloudflare Pages `_headers` spec**: https://developers.cloudflare.com/pages/configuration/headers/
 - **PLUGIN_MAP.md**: `docs/PLUGIN_MAP.md` — all 24 `xai-web-*` rows SHIPPED;
   no mocks required.

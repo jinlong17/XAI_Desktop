@@ -252,6 +252,23 @@ Rules:
 git ls-files -o --exclude-standard .agents .claude .codex .cursor .teams docs/workflow/_portable docs/workflow/project AGENTS.md CLAUDE.md
 ```
 
+### Multi-machine closeout
+
+When another computer may continue the work, use
+`docs/workflow/project/multi-machine-development.md` as the authority. Each
+writable short branch has one active machine/worktree owner; parallel machines
+use sibling branches. A session is not handed off until its recoverable
+checkpoint is committed and pushed.
+
+```bash
+pnpm git:sync-check -- --fetch
+```
+
+Use `--deep` before moving machines or deleting a worktree. A stash, reflog,
+hidden ref, untracked source file, or local application history must never be
+the only copy of project work. Secret values remain outside Git and use a
+documented secure restore channel.
+
 ---
 
 ## 8. Review Policy

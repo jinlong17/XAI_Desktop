@@ -1,27 +1,28 @@
 /**
  * useDevAiConfigSeed — DEV-ONLY: seed AI provider config + key from
  * `apps/web/.env.local` into the runtime stores, so `.env.local` is the single
- * local source of truth for the Gemini (openai-compatible) configuration.
+ * local source of truth for managed OpenAI-compatible provider configuration.
  *
  * Reads (all `VITE_`-prefixed, from the gitignored `.env.local`):
- *   - VITE_GEMINI_API_KEY  — the API key (REQUIRED to seed; blank → no-op)
- *   - VITE_AI_PROVIDER     — default "openai-compatible"
- *   - VITE_AI_BASE_URL     — default Gemini OpenAI-compatible endpoint
- *   - VITE_AI_MODEL        — default "gemini-3.1-flash-lite"
+ *   - VITE_GEMINI_API_KEY    — optional Gemini key
+ *   - VITE_DEEPSEEK_API_KEY  — optional DeepSeek key
+ *   - VITE_AI_PROVIDER       — active provider, default "gemini"
+ *   - VITE_AI_BASE_URL       — optional custom OpenAI-compatible endpoint
+ *   - VITE_AI_MODEL          — optional active default model
  *
  * Writes:
  *   - xai_ai_provider / xai_ai_base_url / xai_ai_model_default prefs
- *   - aiKeyStorage.saveKey("openai-compatible", key) → encrypted secretStore
+ *   - aiKeyStorage.saveKey("gemini"|"deepseek", key) → encrypted secretStore
  *
  * SECURITY — why this never leaks the key into production:
  *   The entire effect body is gated behind `import.meta.env.DEV`. Vite
  *   statically replaces `import.meta.env.DEV` with the literal `false` in a
  *   production build, making the body unreachable; the minifier then
- *   dead-code-eliminates it, so the `import.meta.env.VITE_GEMINI_API_KEY`
- *   reference is removed and never inlined into the production bundle. The key
- *   lives ONLY in `.env.local` (gitignored — never committed/pushed).
+ *   dead-code-eliminates it, so the `import.meta.env.VITE_*_API_KEY`
+ *   references are removed and never inlined into the production bundle. Keys
+ *   live ONLY in `.env.local` (gitignored — never committed/pushed).
  *   Verified at build time: a production `vite build` + grep of `dist/` for
- *   `VITE_GEMINI_API_KEY` / `seedAiConfigFromEnv` returns zero hits (recorded in
+ *   `VITE_*_API_KEY` / `seedAiConfigFromEnv` returns zero hits (recorded in
  *   the carve-out evidence). Re-run that grep if this file changes.
  *
  * env is AUTHORITATIVE in DEV: each dev load re-seeds from `.env.local` so the
@@ -32,10 +33,9 @@
  */
 import { useEffect } from "react";
 import { setPref } from "@repo/plugin-web-storage";
-import { aiKeyStorage } from "@repo/plugin-web-ai-chat";
+import { aiKeyStorage, getAiProviderPreset } from "@repo/plugin-web-ai-chat";
 
-const DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/";
-const DEFAULT_MODEL = "gemini-3.1-flash-lite";
+const DEFAULT_PROVIDER = "gemini";
 
 export function useDevAiConfigSeed(): void {
   useEffect(() => {
@@ -44,23 +44,33 @@ export function useDevAiConfigSeed(): void {
     if (!import.meta.env.DEV || import.meta.env.MODE === "test") return;
 
     const env = import.meta.env as Record<string, string | undefined>;
-    const key = (env.VITE_GEMINI_API_KEY ?? "").trim();
-    if (!key) return; // no key configured in .env.local → nothing to seed
+    const geminiKey = (env.VITE_GEMINI_API_KEY ?? "").trim();
+    const deepseekKey = (env.VITE_DEEPSEEK_API_KEY ?? "").trim();
+    if (!geminiKey && !deepseekKey) return; // no key configured in .env.local → nothing to seed
 
-    const provider = (env.VITE_AI_PROVIDER ?? "openai-compatible").trim();
-    const baseUrl = (env.VITE_AI_BASE_URL ?? DEFAULT_BASE_URL).trim();
-    const model = (env.VITE_AI_MODEL ?? DEFAULT_MODEL).trim();
+    const provider = (env.VITE_AI_PROVIDER ?? DEFAULT_PROVIDER).trim();
+    const preset = getAiProviderPreset(provider);
+    const baseUrl = (env.VITE_AI_BASE_URL ?? preset.baseUrl).trim();
+    const model = (env.VITE_AI_MODEL ?? preset.defaultModel).trim();
 
     let cancelled = false;
     void (async () => {
       try {
-        setPref("xai_ai_provider", provider);
+        setPref("xai_ai_provider", preset.id);
         setPref("xai_ai_base_url", baseUrl);
         setPref("xai_ai_model_default", model);
-        await aiKeyStorage.saveKey("openai-compatible", key);
+        if (geminiKey) {
+          await aiKeyStorage.saveKey("gemini", geminiKey);
+        }
+        if (deepseekKey) {
+          await aiKeyStorage.saveKey("deepseek", deepseekKey);
+        }
         if (!cancelled) {
           console.info(
-            `[dev] AI config seeded from .env.local (provider=${provider}, model=${model}); key length=${key.length}`,
+            `[dev] AI config seeded from .env.local (provider=${preset.id}, model=${model}); providers=${[
+              geminiKey ? "gemini" : "",
+              deepseekKey ? "deepseek" : "",
+            ].filter(Boolean).join(",")}`,
           );
         }
       } catch (err) {

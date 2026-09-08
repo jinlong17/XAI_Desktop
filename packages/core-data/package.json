@@ -24,6 +24,6 @@
     "@repo/typescript-config": "workspace:*",
     "fake-indexeddb": "^6.2.5",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

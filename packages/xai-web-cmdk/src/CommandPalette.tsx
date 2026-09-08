@@ -35,7 +35,7 @@ import { readModuleStates } from "./internal/readModuleStates.js";
 import { navigateToHit } from "./internal/navigateToHit.js";
 import { PaletteInput } from "./PaletteInput.js";
 import { PaletteList } from "./PaletteList.js";
-// Side-effect: register all 11 adapters when this module is imported
+// Side-effect: register all 12 adapters when this module is imported
 import "./adapters/index.js";
 // Side-effect: import styles
 import "./styles.css";
@@ -198,6 +198,7 @@ function readEnabledSearchModules(): ReadonlySet<string> {
     "search",
     "settings",
     "statistics",
+    "metrics",
   ]);
   for (const featureId of TOGGLEABLE_MODULE_IDS) {
     if (getPref(`xai_pref_features_${featureId}` as never) !== false) {

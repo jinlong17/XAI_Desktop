@@ -136,12 +136,12 @@ XAI_Desktop/
 
 ---
 
-## 3.5 Branch Map (ADR-0013, Proposed)
+## 3.5 Branch Map (ADR-0013, Accepted)
 
 > Added 2026-05-30. Branch topology + Web→Desktop sync flow. Authority: `docs/adr/0013-branch-sync-governance.md`.
 
-`web` leads, `dev` lags — **by design** (Web first, App follows). The lag is managed by
-the catch-up lanes + the D3 sync gate, not "fixed" by force-merging `dev` forward:
+`web` and `dev` are independent product-focus lines — **by design**. Shared changes
+move through governed lanes + the D3 sync gate, not by force-aligning either line:
 
 ```
 web                        Web mainline / Web release source (the line you develop on)
@@ -159,6 +159,11 @@ release/desktop/<version>  ephemeral, freeze-only (sign / notarize / dmg / updat
 **Product lines** (ADR-0013 §D1) — importance ≠ current dev-focus: web (P0·maintenance) ·
 mac App (P1·**active**) · organizer plugins (P2·paused) · account cloud-sync (P2·paused) ·
 official website (PROPOSED) · admin-dashboard (operator-activated · roadmap-gated).
+
+For multiple computers, GitHub is the exchange source of truth and each writable
+short branch has one active machine/worktree owner. Run
+`pnpm git:sync-check -- --fetch` before handoff (`--deep` before migration or
+cleanup). Full contract: `docs/workflow/project/multi-machine-development.md`.
 
 ## 4. Three-Faces Architecture
 

@@ -84,6 +84,7 @@ export type ClockStyle = "classic" | "split" | "minimal" | "analog";
 export type PetPos = { x: number; y: number };
 export type TaskColsState = Record<string, boolean>;
 export type BoardsState = unknown;
+export type BoardWorkspacesState = unknown;
 export type BoardPanelState = unknown;
 export type InboxCard = unknown;
 export type BoardFilterByIdState = Record<string, unknown>;
@@ -225,6 +226,17 @@ export const PREF_REGISTRY = {
     owner: "xai-web-board-core",
     category: "module",
   } satisfies PrefEntry<string>,
+
+  // Workspace directory (W3). `null` default → seed DEFAULT_WORKSPACES; the
+  // owner narrows via loadWorkspacesOrDefault (board-core guard).
+  xai_board_workspaces: {
+    key: "xai_board_workspaces",
+    codec: "json",
+    default: null as BoardWorkspacesState,
+    schemaVersion: 1,
+    owner: "plugin-web-board-workspaces",
+    category: "module",
+  } satisfies PrefEntry<BoardWorkspacesState>,
 
   xai_board_panels: {
     key: "xai_board_panels",

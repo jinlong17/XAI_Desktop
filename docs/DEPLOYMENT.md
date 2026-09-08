@@ -150,7 +150,7 @@ pnpm --filter @repo/web build:secure  # 带 Sentry sourcemap 的生产构建
 ### 5.2 环境变量
 - **构建期（Cloudflare Pages 项目变量）**：`VITE_WEB_AUTH_MODE`、`VITE_STRIPE_PAYMENT_LINK_URL`、`VITE_SENTRY_DSN`、`VITE_RELEASE`。
 - **真账号上线追加**：`VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`（anon key 可公开；**service_role key 永不进前端**）。
-- **GitHub Secrets**：`CLOUDFLARE_API_TOKEN`(Pages:Edit)、`CLOUDFLARE_ACCOUNT_ID`、`SENTRY_AUTH_TOKEN`。
+- **GitHub Secrets**：`CLOUDFLARE_API_TOKEN`（Account → Cloudflare Pages → Edit；User → Memberships → Read；Account → Account Settings → Read）、`CLOUDFLARE_ACCOUNT_ID`、`SENTRY_AUTH_TOKEN`。
 - `.env.local`（Gemini key 等）保持 gitignore，**绝不进仓库**。
 
 ### 5.3 域名 + HTTPS
@@ -369,7 +369,7 @@ Desktop Plugin → repo adapter → Mac               └─ Realtime: notify-pu
 
 | # | 决策 | 选项 | 建议 |
 |---|---|---|---|
-| **A** | Web 生产部署源分支 | (a) `main`（由 `web → main` 快进喂入）；(b) Cloudflare 直接部署 `web` | ✅ **DECIDED = `main`**（operator 2026-06-06）。发布 = `web → main` **fast-forward**：当前 `web` 领先 `main` **439 commits**、`main` 零落后 → ff 干净，**CI 触发分支（main）不用改**。`main` 同时是 `web`/`dev` 的共同祖先。 |
+| **A** | Web 生产部署源分支 | (a) `main`（由 `web → main` 快进喂入）；(b) Cloudflare 直接部署 `web` | ✅ **DECIDED = `main`**（operator 2026-06-06）。发布 = `web → main` **fast-forward**：截至 2026-07-09，`web` 领先 `main` **66 commits**、`main` 零落后 → ff 干净，**CI 触发分支（main）不用改**。`main` 同时是 `web`/`dev` 的共同祖先。 |
 | **B** | 首发模式 | Public Demo（mock-auth）/ Real-Auth Private Beta | **先发 Demo 拿反馈**，账号同步并行推进。**不要把 Real-Auth 当首发条件**（它还卡 Supabase + `account-delete` + 隐私合规）。（待 operator 最终确认） |
 | **C** | Supabase 实例开通时机 | 立即 / 先开 staging，prod 等 Demo+真实登录 smoke 后 | 先开 **staging**；production 等 Demo 反馈 + 真实登录 smoke 通过后再开。（待 operator 最终确认） |
 | **D** | 治理源 vs 发布执行源 | `dev`=治理/看板记录源；`main`=发布源（由 `web` 喂入） | 三笔部署文档现在 `dev`（治理记录源）。**A=main 下 `main` 由 `web → main` ff 喂入，而文档不在 `web`** → 进 Step 3 阶段 1（promote / 真实部署）前，必须先把这三笔部署文档 **cherry-pick `dev → web`**，再 `web → main` ff，否则 `main` 发布时不含部署治理文档。`dev` 保留治理副本，在 `main` 处与 `web` 一并 reconcile。 |

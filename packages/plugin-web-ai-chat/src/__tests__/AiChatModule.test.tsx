@@ -49,6 +49,7 @@ describe("AiChatModule integration (I)", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     localStorage.clear();
     void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
     void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
@@ -108,8 +109,10 @@ describe("AiChatModule integration (I)", () => {
     });
     const raw = localStorage.getItem("xai_ai_convos");
     expect(raw).not.toBeNull();
-    const parsed = JSON.parse(raw!) as Array<{ title: string }>;
+    const parsed = JSON.parse(raw!) as Array<{ title: string; summary?: string; messages?: unknown[] }>;
     expect(parsed[0]?.title).toBe("weekly review");
+    expect(parsed[0]?.summary).toBe(DEMO_REPLY_EN);
+    expect(parsed[0]?.messages?.length).toBe(2);
   });
 
   it("I6: new-chat resets messages but leaves xai_ai_convos intact", async () => {
@@ -167,21 +170,10 @@ describe("AiChatModule integration (I)", () => {
     ).not.toBeNull();
   });
 
-  it("I9: model picker default 'Haiku 4.5'; selecting Opus updates label", () => {
+  it("I9: model picker is hidden from the user-facing chat surface", () => {
     const { container } = render(<AiChatModule lang="en" />);
-    expect(container.querySelector(".ai-model-btn")?.textContent).toContain(
-      "Haiku 4.5",
-    );
-    act(() => {
-      fireEvent.click(container.querySelector<HTMLButtonElement>(".ai-model-btn")!);
-    });
-    const items = container.querySelectorAll<HTMLButtonElement>(".popover-item");
-    act(() => {
-      fireEvent.click(items[2]!); // opus
-    });
-    expect(container.querySelector(".ai-model-btn")?.textContent).toContain(
-      "Opus 4.1",
-    );
+    expect(container.querySelector(".ai-model-btn")).toBeNull();
+    expect(container.textContent).not.toMatch(/Haiku 4\.5|Sonnet|Opus 4\.1/i);
   });
 
   it("I10: corrupted convo entries are filtered with dev warning", () => {
@@ -207,6 +199,25 @@ describe("AiChatModule integration (I)", () => {
       "thinking",
     );
     expect(localStorage.getItem("xai_ai_convos")).toBeNull();
+  });
+
+  it("I11b: small screens start with the chat sidebar collapsed", () => {
+    const matchMedia = vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    vi.stubGlobal("matchMedia", matchMedia);
+
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(matchMedia).toHaveBeenCalledWith("(min-width: 768px)");
+    expect(container.querySelector(".ai-side.open")).toBeNull();
+    expect(screen.getByRole("button", { name: /Open sidebar/i })).toBeInTheDocument();
   });
 
   it("I12: unmount during thinking does not throw or leak", async () => {
@@ -249,13 +260,33 @@ describe("AiChatModule integration (I)", () => {
     expect(container.querySelector(".ai-side")?.className).toContain("open");
   });
 
-  it("I14: clicking an existing convo row switches activeConvo and clears messages", async () => {
+  it("I14: clicking an existing convo row loads its persisted messages", async () => {
     // Seed two convos in storage.
     localStorage.setItem(
       "xai_ai_convos",
       JSON.stringify([
-        { id: "c1", title: "older", time: "Yesterday" },
-        { id: "c2", title: "newer", time: "Today" },
+        {
+          id: "c1",
+          title: "older",
+          time: "Yesterday",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          summary: "old answer",
+          messages: [
+            { role: "user", text: "old question", attachments: null },
+            { role: "assistant", text: "old answer", attachments: null },
+          ],
+        },
+        {
+          id: "c2",
+          title: "newer",
+          time: "Today",
+          activeAt: "2026-06-02T00:00:00.000Z",
+          summary: "new answer",
+          messages: [
+            { role: "user", text: "new question", attachments: null },
+            { role: "assistant", text: "new answer", attachments: null },
+          ],
+        },
       ]),
     );
     const { container } = render(<AiChatModule lang="en" />);
@@ -272,7 +303,7 @@ describe("AiChatModule integration (I)", () => {
     });
     expect(container.querySelectorAll(".ai-msg").length).toBeGreaterThan(0);
 
-    // Click an existing row → messages cleared, active swapped.
+    // Click an existing row → stored messages load, active swapped.
     const rows = container.querySelectorAll<HTMLLIElement>(".ai-convo-row");
     // Find the row whose title is "older".
     let olderRow: HTMLLIElement | null = null;
@@ -286,7 +317,9 @@ describe("AiChatModule integration (I)", () => {
     act(() => {
       fireEvent.click(olderRow!);
     });
-    expect(container.querySelectorAll(".ai-msg").length).toBe(0);
+    expect(container.querySelectorAll(".ai-msg").length).toBe(2);
+    expect(container.textContent).toContain("old question");
+    expect(container.textContent).toContain("old answer");
     const newRows = container.querySelectorAll<HTMLLIElement>(".ai-convo-row");
     let activeText = "";
     for (const r of newRows) {
@@ -296,6 +329,51 @@ describe("AiChatModule integration (I)", () => {
       }
     }
     expect(activeText).toContain("older");
+  });
+
+  it("I14b: persisted active conversation restores after remount", async () => {
+    localStorage.setItem(
+      "xai_ai_convos",
+      JSON.stringify([
+        {
+          id: "c-restored",
+          title: "restored",
+          time: "Just now",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          messages: [
+            { role: "user", text: "persisted user", attachments: null },
+            { role: "assistant", text: "persisted assistant", attachments: null },
+          ],
+        },
+      ]),
+    );
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(container.textContent).toContain("persisted user");
+    expect(container.textContent).toContain("persisted assistant");
+  });
+
+  it("I14c: deleting a conversation removes it from storage and clears active thread", async () => {
+    localStorage.setItem(
+      "xai_ai_convos",
+      JSON.stringify([
+        {
+          id: "c-delete",
+          title: "delete me",
+          time: "Just now",
+          activeAt: "2026-06-01T00:00:00.000Z",
+          messages: [{ role: "user", text: "delete question", attachments: null }],
+        },
+      ]),
+    );
+    const { container } = render(<AiChatModule lang="en" />);
+    expect(container.textContent).toContain("delete question");
+    const deleteButton = screen.getByRole("button", { name: /Delete chat: delete me/i });
+    act(() => {
+      fireEvent.click(deleteButton);
+    });
+    expect(container.textContent).not.toContain("delete question");
+    const parsed = JSON.parse(localStorage.getItem("xai_ai_convos") ?? "[]") as unknown[];
+    expect(parsed.length).toBe(0);
   });
 
   it("I15: rapid double Enter queues FIFO — both user bubbles immediate, replies serialized in send order", async () => {

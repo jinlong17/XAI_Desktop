@@ -19,10 +19,11 @@ import { getPref } from "@repo/plugin-web-storage";
 import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
 import { resolveProvider } from "./llmProvider.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
+import { getAiProviderPreset, type AiProviderId } from "./providerPresets.js";
 
 // ---- Types -----------------------------------------------------------------
 
-export type AiProvider = "anthropic" | "openai-compatible";
+export type AiProvider = AiProviderId;
 
 interface StoredSecretBlob {
   version: 1;
@@ -251,10 +252,11 @@ export const aiKeyStorage: AiKeyStorage = {
     }
     try {
       const config = resolveProvider(plaintext);
+      const preset = getAiProviderPreset(provider);
       const modelId =
         provider === "anthropic"
           ? config.resolveModelId("haiku")
-          : String(getPref("xai_ai_model_default") || "gpt-4o-mini");
+          : String(getPref("xai_ai_model_default") || preset.defaultModel);
       const body = config.buildBody({
         modelId,
         messages: [{ role: "user", content: "hi" }],

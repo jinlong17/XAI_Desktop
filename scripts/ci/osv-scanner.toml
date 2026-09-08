@@ -1,0 +1,88 @@
+# OSV exceptions that mirror the dated Rust policy in
+# apps/desktop/src-tauri/deny.toml. Keep this file narrow: npm advisories should
+# be fixed in pnpm-lock.yaml unless there is a documented runtime exception.
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0411"
+ignoreUntil = 2026-12-31
+reason = "gdkwayland-sys 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0412"
+ignoreUntil = 2026-12-31
+reason = "gdk 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0413"
+ignoreUntil = 2026-12-31
+reason = "atk 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0414"
+ignoreUntil = 2026-12-31
+reason = "gdkx11-sys 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0415"
+ignoreUntil = 2026-12-31
+reason = "gtk 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0416"
+ignoreUntil = 2026-12-31
+reason = "atk-sys 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0417"
+ignoreUntil = 2026-12-31
+reason = "gdkx11 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0418"
+ignoreUntil = 2026-12-31
+reason = "gdk-sys 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0419"
+ignoreUntil = 2026-12-31
+reason = "gtk3-macros 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0420"
+ignoreUntil = 2026-12-31
+reason = "gtk-sys 0.18.2 is an unmaintained Tauri 2.x Linux GTK3 transitive dependency; primary product target is macOS. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0370"
+ignoreUntil = 2026-12-31
+reason = "proc-macro-error 1.0.4 is a Tauri macro build-time dependency, not final binary runtime. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0429"
+ignoreUntil = 2026-12-31
+reason = "glib 0.18.5 is pulled through Tauri/Wry Linux GTK3 backend; macOS target is primary and upstream GTK4 migration controls remediation."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2025-0075"
+ignoreUntil = 2026-12-31
+reason = "unic-char-range 0.9.0 is an unmaintained Tauri transitive Unicode crate. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2025-0080"
+ignoreUntil = 2026-12-31
+reason = "unic-common 0.9.0 is an unmaintained Tauri transitive Unicode crate. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2025-0081"
+ignoreUntil = 2026-12-31
+reason = "unic-char-property 0.9.0 is an unmaintained Tauri transitive Unicode crate. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2025-0098"
+ignoreUntil = 2026-12-31
+reason = "unic-ucd-version 0.9.0 is an unmaintained Tauri transitive Unicode crate. Mirrored from deny.toml dated review."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2025-0100"
+ignoreUntil = 2026-12-31
+reason = "unic-ucd-ident 0.9.0 is an unmaintained Tauri transitive Unicode crate. Mirrored from deny.toml dated review."

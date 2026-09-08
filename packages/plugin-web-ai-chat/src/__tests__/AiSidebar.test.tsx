@@ -11,12 +11,13 @@ import { AiSidebar } from "../AiSidebar.js";
 import type { AiConvoRecord } from "../types.js";
 
 const sample: AiConvoRecord[] = [
-  { id: "c1", title: "Weekly review", time: "Today" },
-  { id: "c2", title: "Focus rhythm", time: "Yesterday" },
+  { id: "c1", title: "Weekly review", time: "Today", summary: "Latest plan" },
+  { id: "c2", title: "Focus rhythm", time: "Yesterday", summary: "Rhythm notes" },
 ];
 
 const baseHandlers = {
   onSelectConvo: () => undefined,
+  onDeleteConvo: () => undefined,
   onNewChat: () => undefined,
   onCollapse: () => undefined,
 };
@@ -128,5 +129,25 @@ describe("AiSidebar (SB)", () => {
     );
     const input = container.querySelector(".ai-search input");
     expect(input?.getAttribute("placeholder")).toBe("搜索对话");
+  });
+
+  it("SB8: renders summaries and delete button stops row selection", () => {
+    const onSelectConvo = vi.fn();
+    const onDeleteConvo = vi.fn();
+    const { container } = render(
+      <AiSidebar
+        convos={sample}
+        activeConvo={null}
+        open={true}
+        lang="en"
+        {...baseHandlers}
+        onSelectConvo={onSelectConvo}
+        onDeleteConvo={onDeleteConvo}
+      />,
+    );
+    expect(container.querySelector(".ai-convo-summary")?.textContent).toBe("Latest plan");
+    fireEvent.click(screen.getByRole("button", { name: /Delete chat: Weekly review/i }));
+    expect(onDeleteConvo).toHaveBeenCalledWith("c1");
+    expect(onSelectConvo).not.toHaveBeenCalled();
   });
 });

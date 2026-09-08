@@ -23,6 +23,7 @@ import { parseSseStream } from "./sseParser.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
 import { buildTodayContext } from "./contextProvider.js";
 import type { AnthropicToolDef, ContentBlock, ToolUseResult } from "./toolUseTypes.js";
+import { getAiProviderPreset } from "./providerPresets.js";
 
 // ---- Public types ----------------------------------------------------------
 
@@ -31,8 +32,8 @@ export interface StreamRequest {
   text: string;
   /** Active language; controls fallback demo string + future i18n in errors. */
   lang: Lang;
-  /** Model id the user picked in the composer (or default). */
-  model: AiModelId;
+  /** Model id the user picked in the composer or Settings default. */
+  model: AiModelId | string;
   /** Optional abort signal — when aborted, the underlying fetch is aborted. */
   signal?: AbortSignal;
   /**
@@ -85,10 +86,9 @@ export async function* streamCompleteChat(
 
   // 1. Load the API key.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
-  const providerKind = (provider === "openai-compatible" ? "openai-compatible" : "anthropic") as
-    | "anthropic"
-    | "openai-compatible";
-  const apiKey = await aiKeyStorage.loadKey(providerKind);
+  const providerPreset = getAiProviderPreset(provider);
+  const providerKind = providerPreset.transport;
+  const apiKey = await aiKeyStorage.loadKey(providerPreset.id);
 
   if (!apiKey) {
     const err: LlmError = { kind: "BadKey", status: 401, detail: "not-set" };

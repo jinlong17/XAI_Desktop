@@ -70,8 +70,8 @@ Routing rules (do not violate):
 - **`admin` 已由 operator 于 2026-06-05 激活为 roadmap-gated**：只允许经 `codex/admin/<feature>` +
   `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` 推进，首个切片是
   `xai-admin-dashboard-shell`；不得绕过 RBAC/审计/secret 边界直接做生产后台写入。
-- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` 目前**已定义但尚未创建**，创建是
-  独立的 operator 确认步骤（任何触及 `dev` 的操作都需显式确认）。
+- `desktop-plugin-next` 已存在；`desktop-next` / `release/desktop/<version>` 目前**已定义但尚未创建**。
+  创建新长期分支、推进到 `dev`、或进入 release 分支仍是独立的 operator 确认步骤。
 
 ## Project Overview
 
@@ -282,6 +282,7 @@ Track and keep synchronized at minimum:
 - `.teams/skills/`
 - `docs/workflow/_portable/`
 - `docs/workflow/project/workflow.md`
+- `docs/workflow/project/multi-machine-development.md`
 - `CLAUDE.md`, `AGENTS.md`, `.cursor/rules/handoff.mdc`
 
 Rules:
@@ -295,6 +296,21 @@ Rules:
   and resolve any project-level untracked files intentionally.
 - After committing, push the branch when the change is meant to be available on
   another machine.
+
+### Multi-machine development contract
+
+All recoverable project work—not only Agent/Skill configuration—must follow
+`docs/workflow/project/multi-machine-development.md`.
+
+- A writable short branch has one active machine/worktree owner. Parallel
+  computers use sibling branches and reconcile explicitly.
+- Before switching computers or ending a session, commit and push the current
+  checkpoint. Stash, reflog, hidden refs, untracked source, and application chat
+  history are not cross-machine handoff mechanisms.
+- Secrets remain outside Git; tracked `.env.example` files carry names only.
+- Run `pnpm git:sync-check -- --fetch`; use `--deep` for migration/cleanup.
+- This completeness rule preserves ADR-0013 branch independence and never
+  authorizes force-alignment, release, or a D3 bypass.
 
 ### Platform-specific generation
 

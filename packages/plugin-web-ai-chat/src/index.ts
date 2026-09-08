@@ -41,5 +41,17 @@ export type { StreamChunk, StreamRequest } from "./internal/claudeStreamAdapter.
 export { aiKeyStorage } from "./internal/secretStore.js";
 export type { AiKeyStorage, AiProvider } from "./internal/secretStore.js";
 
+export {
+  AI_PROVIDER_PRESETS,
+  getAiProviderPreset,
+  normalizeAiProviderId,
+} from "./internal/providerPresets.js";
+export type {
+  AiModelOption,
+  AiProviderId,
+  AiProviderPreset,
+  AiProviderTransport,
+} from "./internal/providerPresets.js";
+
 // Public error union (consumed by Settings → AI pane + ErrorBanner).
 export type { LlmError, LlmErrorKind } from "./internal/llmErrors.js";

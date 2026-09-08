@@ -875,15 +875,261 @@
   background: color-mix(in oklch, var(--accent) 12%, var(--bg-panel));
   border-color: var(--accent);
 }
+.cd-member-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-right: 10px;
+}
 .cd-member-choice .bc-member {
-  min-width: 54px;
+  width: 22px;
   height: 22px;
-  padding: 0 8px;
   border-radius: var(--r-pill);
   color: #ffffff;
-  font-size: var(--fs-xs);
+  font-size: 10px;
   font-weight: 700;
 }
+.cd-member-name {
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+}
+
+/* ---- Priority selector ---- */
+.cd-priority-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cd-priority-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--r-pill);
+  background: var(--bg-panel);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.cd-priority-choice.active {
+  background: var(--bg-panel);
+  font-weight: 700;
+}
+.cd-priority-none.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cd-priority-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--r-pill);
+  flex: 0 0 9px;
+}
+
+/* ---- Label / member manager ---- */
+.cd-link-btn {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.cd-link-btn:hover { text-decoration: underline; }
+.cd-catalog-editor {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel-2);
+}
+.cd-catalog-row,
+.cd-catalog-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cd-catalog-new {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-1);
+}
+.cd-swatch {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: var(--r-pill);
+  border: 2px solid var(--bg-panel);
+  box-shadow: 0 0 0 1px var(--border-1);
+  cursor: pointer;
+  padding: 0;
+}
+.cd-swatch-ghost {
+  background: repeating-linear-gradient(45deg, var(--border-1) 0 3px, transparent 3px 6px);
+  cursor: default;
+}
+.cd-catalog-name {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+/* ---- Board settings modal (W2) ---- */
+.board-title-icon {
+  font-size: var(--fs-lg);
+  line-height: 1;
+}
+.board-settings {
+  width: min(440px, calc(100vw - 32px));
+  max-height: min(80vh, 560px);
+  overflow: auto;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-3);
+}
+.bset-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border-1);
+}
+.bset-head h2 {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+.bset-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 16px 18px;
+}
+.bset-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bset-row > span {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.bset-row input,
+.bset-row textarea {
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+  padding: 7px 9px;
+  resize: vertical;
+}
+.bset-covers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.bset-cover {
+  height: 44px;
+  border: 2px solid transparent;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  padding: 0;
+}
+.bset-cover.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent) 35%, transparent);
+}
+
+/* Board switcher description line (W2) */
+.bs-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Filter popover priority facet (W2) */
+.fp-priority-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex: 0 0 9px;
+  display: inline-block;
+}
+
+/* ---- Workspace CRUD in switcher (W3) ---- */
+.bs-ws-add {
+  border: 1px dashed var(--border-1);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.bs-ws-add:hover { color: var(--text-1); border-color: var(--text-3); }
+.bs-ws-composer {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 0;
+}
+.bs-ws-composer input {
+  flex: 1;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+.ws-dot-btn {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.bs-ws-rename {
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--bg-panel);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.bs-ws-actions {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.bs-ws-actions .icon-btn { font-size: 12px; }
+.bs-ws-actions:hover { opacity: 1; }
 .cd-date-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

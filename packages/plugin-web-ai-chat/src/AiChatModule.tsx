@@ -65,6 +65,39 @@ export interface AiChatModuleProps {
   lang: Lang;
 }
 
+const SUMMARY_MAX_LEN = 140;
+const SIDEBAR_DOCKED_QUERY = "(min-width: 768px)";
+
+function compactText(text: string, maxLen = SUMMARY_MAX_LEN) {
+  const oneLine = text.replace(/\s+/g, " ").trim();
+  return oneLine.length > maxLen ? `${oneLine.slice(0, maxLen - 1)}...` : oneLine;
+}
+
+function displayTime(lang: Lang) {
+  return lang === "zh" ? "刚刚" : "Just now";
+}
+
+function normalizeMessage(message: AiMessage): AiMessage {
+  return {
+    role: message.role,
+    text: message.text,
+    attachments: Array.isArray(message.attachments)
+      ? message.attachments.filter((a): a is string => typeof a === "string")
+      : null,
+  };
+}
+
+function normalizeMessages(messages: readonly AiMessage[]) {
+  return messages.map(normalizeMessage);
+}
+
+function getInitialSidebarOpen() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return true;
+  }
+  return window.matchMedia(SIDEBAR_DOCKED_QUERY).matches;
+}
+
 export function AiChatModule({ lang }: AiChatModuleProps) {
   const zh = lang === "zh";
 
@@ -96,8 +129,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [attachments, setAttachments] = useState<AiAttachment[]>([]);
   const [thinking, setThinking] = useState(false);
   const [activeConvo, setActiveConvo] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [model, setModel] = useState<AiModelId>("haiku");
+  const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarOpen);
+  const [model] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
   const [bannerError, setBannerError] = useState<LlmError | null>(null);
 
@@ -133,6 +166,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    */
   const pendingSendQueueRef = useRef<Array<{ text: string; lang: Lang }>>([]);
   const processingRef = useRef(false);
+  const hydratedActiveRef = useRef(false);
+  const suppressNextPersistRef = useRef(false);
   useEffect(() => {
     mountedRef.current = true;
     return () => {
@@ -141,6 +176,59 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       abortCtrlRef.current?.abort();
     };
   }, []);
+
+  const persistConvoMessages = useCallback(
+    (id: string, nextMessages: readonly AiMessage[]) => {
+      setRawConvos((prev) => {
+        const safe: AiConvoRecord[] = Array.isArray(prev)
+          ? (prev as unknown[]).filter(isAiConvoRecord)
+          : [];
+        const index = safe.findIndex((c) => c.id === id);
+        if (index < 0) return safe;
+
+        const storedMessages = normalizeMessages(nextMessages);
+        const last = storedMessages[storedMessages.length - 1];
+        const now = new Date().toISOString();
+        const updated: AiConvoRecord = {
+          ...safe[index]!,
+          time: displayTime(lang),
+          summary: last ? compactText(last.text) : safe[index]!.summary,
+          updatedAt: now,
+          messages: storedMessages,
+        };
+
+        return [updated, ...safe.filter((c) => c.id !== id)];
+      });
+    },
+    [lang, setRawConvos],
+  );
+
+  useEffect(() => {
+    if (hydratedActiveRef.current) return;
+    hydratedActiveRef.current = true;
+    if (convos.length === 0) return;
+
+    const restored =
+      [...convos].sort((a, b) => {
+        const aTime = Date.parse(a.activeAt ?? a.updatedAt ?? "");
+        const bTime = Date.parse(b.activeAt ?? b.updatedAt ?? "");
+        return (Number.isFinite(bTime) ? bTime : 0) - (Number.isFinite(aTime) ? aTime : 0);
+      })[0] ?? null;
+    if (!restored || !restored.messages || restored.messages.length === 0) return;
+
+    suppressNextPersistRef.current = true;
+    setActiveConvo(restored.id);
+    setMessages(normalizeMessages(restored.messages));
+  }, [convos]);
+
+  useEffect(() => {
+    if (!activeConvo) return;
+    if (suppressNextPersistRef.current) {
+      suppressNextPersistRef.current = false;
+      return;
+    }
+    persistConvoMessages(activeConvo, messages);
+  }, [activeConvo, messages, persistConvoMessages]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -207,7 +295,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         abortCtrlRef.current = ctrl;
 
         // Read model preference (non-React context: direct localStorage read per Rec2).
-        const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+        const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
         // Placeholder ID for streaming bubble mutation. The placeholder is NOT
         // appended until the first chunk arrives (so user bubbles always precede
@@ -330,7 +418,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           const safe: AiConvoRecord[] = Array.isArray(prev)
             ? (prev as unknown[]).filter(isAiConvoRecord)
             : [];
-          return [seed, ...safe];
+          return [{ ...seed, messages: [userMsg] }, ...safe];
         });
       }
 
@@ -343,16 +431,66 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   );
 
   const handleNewChat = useCallback(() => {
+    abortCtrlRef.current?.abort();
+    pendingSendQueueRef.current = [];
+    processingRef.current = false;
     setActiveConvo(null);
     setMessages([]);
     setInput("");
     setAttachments([]);
+    setThinking(false);
+    setPendingConfirmation(null);
+    setBannerError(null);
   }, []);
 
-  const handleSelectConvo = useCallback((id: string) => {
-    setActiveConvo(id);
-    setMessages([]);
-  }, []);
+  const handleSelectConvo = useCallback(
+    (id: string) => {
+      const selected = convos.find((c) => c.id === id);
+      abortCtrlRef.current?.abort();
+      pendingSendQueueRef.current = [];
+      processingRef.current = false;
+      suppressNextPersistRef.current = true;
+      setActiveConvo(id);
+      setMessages(selected?.messages ? normalizeMessages(selected.messages) : []);
+      setInput("");
+      setAttachments([]);
+      setThinking(false);
+      setPendingConfirmation(null);
+      setBannerError(null);
+      setRawConvos((prev) => {
+        const safe: AiConvoRecord[] = Array.isArray(prev)
+          ? (prev as unknown[]).filter(isAiConvoRecord)
+          : [];
+        const now = new Date().toISOString();
+        return safe.map((c) => (c.id === id ? { ...c, activeAt: now } : c));
+      });
+    },
+    [convos, setRawConvos],
+  );
+
+  const handleDeleteConvo = useCallback(
+    (id: string) => {
+      setRawConvos((prev) => {
+        const safe: AiConvoRecord[] = Array.isArray(prev)
+          ? (prev as unknown[]).filter(isAiConvoRecord)
+          : [];
+        return safe.filter((c) => c.id !== id);
+      });
+      if (activeConvo === id) {
+        abortCtrlRef.current?.abort();
+        pendingSendQueueRef.current = [];
+        processingRef.current = false;
+        setActiveConvo(null);
+        setMessages([]);
+        setInput("");
+        setAttachments([]);
+        setThinking(false);
+        setPendingConfirmation(null);
+        setBannerError(null);
+      }
+    },
+    [activeConvo, setRawConvos],
+  );
 
   const handleAttachFiles = useCallback((files: File[]) => {
     if (files.length === 0) return;
@@ -416,7 +554,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [
@@ -571,7 +709,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
       const ctrl = new AbortController();
       abortCtrlRef.current = ctrl;
-      const modelPref = (getPref("xai_ai_model_default") as "haiku" | "sonnet" | "opus") ?? model;
+      const modelPref = (getPref("xai_ai_model_default") as AiModelId) || model;
 
       // Build Anthropic message history: user turn → assistant tool_use turn → user tool_result turn.
       const priorMessages = [
@@ -641,6 +779,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         open={sidebarOpen}
         lang={lang}
         onSelectConvo={handleSelectConvo}
+        onDeleteConvo={handleDeleteConvo}
         onNewChat={handleNewChat}
         onCollapse={() => setSidebarOpen(false)}
       />
@@ -747,8 +886,6 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           attachments={attachments}
           onAttachFiles={handleAttachFiles}
           onRemoveAttachment={handleRemoveAttachment}
-          model={model}
-          onModelChange={setModel}
           voiceOn={voiceOn}
           onVoiceToggle={handleVoiceToggle}
           onSend={() => send()}

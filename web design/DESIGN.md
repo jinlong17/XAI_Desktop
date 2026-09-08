@@ -274,6 +274,36 @@ Avoid:
 
 Always honor `prefers-reduced-motion`.
 
+## Persistence Contract
+
+### 9.2 LocalStorage Keys
+
+The Web shell persists user-visible state through the typed preference registry
+in `@repo/plugin-web-storage`. These are the original explicit keys that remain
+part of the design contract; later owner-row additions are documented by their
+own package API files and registry entries.
+
+| Key | Owner |
+| --- | --- |
+| `xai_accent_hue` | Settings appearance |
+| `xai_rail_pos` | Settings appearance |
+| `xai_bg_tone` | Settings appearance |
+| `xai_rail_order` | Web shell |
+| `xai_pet_pos` | Pet module |
+| `xai_pet_id` | Pet module |
+| `xai_task_cols` | Tasks module |
+| `xai_boards_v2` | Board core |
+| `xai_active_board` | Board core |
+| `xai_board_panels` | Board workspaces |
+| `xai_board_inbox` | Board workspaces |
+| `xai_dash_order` | Dashboard |
+| `xai_clock_style` | Dashboard clock |
+| `xai_clock_tz` | Dashboard clock |
+| `xai_zones` | Time zones |
+| `xai_ai_convos` | AI chat |
+| `xai_ai_insights` | AI chat |
+| `xai_ai_voice` | AI chat |
+
 ## Implementation Checklist
 
 Before shipping a Web UI change:
