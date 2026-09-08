@@ -6,6 +6,15 @@
 
 ## 2026-09-08
 
+### 产品上线运行闭环方案更新
+
+- Product line: project-system / web mainline
+- Branch / commit: codex/web/production-launch-operations-20260908 / 基于 web 9257be4 的文档变更
+- User-visible change: 现有 [docs/DEPLOYMENT.md](../../DEPLOYMENT.md) 升级为 Production Launch & Operations 统一入口，覆盖当前能力/缺口、Cloudflare 与 Supabase 架构、Web/Mac/移动端账号和支付、CI/CD、监控/日志/预算、备份恢复及分阶段执行顺序。
+- Developer/system delta: 固定 web/main/dev/plugin/mobile 基线并保存[日期证据](../../reviews/production-launch-operations/20260908-current-state-audit.md)；修正 Cloudflare/Supabase/Web deploy 和 Mac release/support 手册；补 README/handbook 入口；同步看板部署摘要与最新 CI，保留历史记录及既有模块/分支治理。修正构建变量来源、无效回滚指令、删除 404 误判、同步入口缺口和 Premium stub 的上线口径。没有产品运行时代码变更。
+- Verification: 文档相对链接/标题锚点检查 passed（68 项）；package script 名称检查 passed（37 处）；JSON parse 和 git diff --check passed；node --check scripts/dashboard/generate-state.mjs、pnpm dashboard、pnpm dashboard:verify-static、pnpm dashboard:verify-modules passed（六模块、66 个 Skill/Agent，registry resolved）。机器契约/模板/边界无需变更，未改看板渲染行为；未重跑全量产品测试。只读查询确认 2026-09-08 GitHub mock build 通过，OSV/cargo-deny/Cloudflare credentials gate 失败，详见日期证据。
+- Risk / follow-up: 文档交付不等于实施或上线。Cloudflare 当前部署清单与 Supabase 项目配置因认证不可用而未核验；真实账号删除、同步鉴权/恢复、服务端 billing/entitlement、告警和恢复演练仍须按主文档阶段落地。此短分支仅保存文档，不推进 main/dev、不部署、不解冻产品线。
+
 ### 多电脑开发 GitHub 完整性门禁
 
 - Product line: project-system / web mainline

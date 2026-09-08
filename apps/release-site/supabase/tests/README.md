@@ -1,23 +1,38 @@
 # Supabase Sync Tests
 
-These tests use two layers.
+Last verified against repository configuration: 2026-09-08.
+
+These tests belong to the archive package **@repo/release-site-archive**,
+not the active Web package. The source location is historical; migrating its
+ownership/configuration is a prerequisite tracked in [the production plan](../../../../docs/DEPLOYMENT.md).
 
 ## Smoke Layer
 
-The smoke layer runs by default in CI and local `pnpm --filter web test:*` commands. It exercises the in-memory JS mocks and checks that the expected SQL migration files are present and parseable for local review.
+The package's test scripts exercise in-memory mocks and inspect migration
+fixtures. Their presence does not establish that a deployed Supabase instance
+has the same schema or that the application is running with live auth.
 
 ## Integration Layer
 
-The integration layer is gated by `SUPABASE_INTEGRATION_TESTS=1`. It starts a local Docker Postgres container, applies the Supabase migrations in order, and verifies the real SQL, RLS, RPC, nonce, rekey, and audit-log behavior through `psql`.
+The integration scripts set SUPABASE_INTEGRATION_TESTS=1 and use a local Docker
+Postgres container. They apply migrations and verify SQL, RLS, RPC, nonce,
+rekey, and audit behavior through psql.
 
-Run these locally with Docker available:
+With dependencies installed and Docker available:
 
-```sh
-pnpm --filter web test:audit:integration
-pnpm --filter web test:nonce:integration
-pnpm --filter web test:rekey:integration
-pnpm --filter web test:rls:integration
-pnpm --filter web test:rls-fuzz:integration
-```
+~~~sh
+pnpm --filter @repo/release-site-archive test:audit:integration
+pnpm --filter @repo/release-site-archive test:nonce:integration
+pnpm --filter @repo/release-site-archive test:rekey:integration
+pnpm --filter @repo/release-site-archive test:rls:integration
+pnpm --filter @repo/release-site-archive test:rls-fuzz:integration
+~~~
 
-CI runs the smoke layer by default. The integration layer runs in the G9 nightly job.
+The checked-in GitHub workflows currently do **not** run these scripts or
+contain a G9 nightly job. Adding PR migration/RLS gates and a scheduled integration
+run is pending work. Do not report them as CI coverage until a workflow and
+successful run receipt exist.
+
+These tests are not a substitute for staging Auth/OAuth, Edge Function routing,
+CORS, device RPC, account deletion, storage cleanup, or two-device recovery
+tests. See [the Supabase runbook](../../../../docs/runbooks/supabase.md).

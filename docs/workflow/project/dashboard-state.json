@@ -82,16 +82,16 @@
   ],
   "deployment": {
     "summary": {
-      "current_online_version": "未登记线上版本",
-      "latest_deployed_at": "未登记",
-      "overall_status": "部署架构已沉淀为权威文档 docs/DEPLOYMENT.md；Web 设施就绪待真实生产登记，账号云同步代码完成待 Supabase 开通",
+      "current_online_version": "当前未核验；历史 Production source 9a61669",
+      "latest_deployed_at": "2026-07-09（历史 Preview；当前未核验）",
+      "overall_status": "2026-09-08：完整上线/账号/支付/运维方案已更新；最新 CI 部署凭据和供应链检查失败，真实账号/支付/同步尚无完整生产验收。卡片百分比为旧人工登记，不作为本次成熟度结论。",
       "default_environment": "production / preview",
       "source": "docs/DEPLOYMENT.md + manual deployment registry",
       "authority_doc": "docs/DEPLOYMENT.md"
     },
     "flow": {
-      "title": "Web / Cloudflare 部署流程",
-      "summary": "权威设计见 docs/DEPLOYMENT.md。当前已有 Cloudflare Pages、GitHub Actions、CSP / service worker 和部署安全库；这里把上线链路、目标环境和涉及文件集中到一个流程卡。账号云同步后端（Supabase）部署见 docs/runbooks/supabase.md。",
+      "title": "产品上线与持续运行闭环",
+      "summary": "主文档 docs/DEPLOYMENT.md 统一维护开发、测试、构建、迁移、部署、发布、监控、更新、回滚和备份；当前 Actions 仅实现部分步骤。账号/支付/云同步/Mac/移动端分别验收，不以文档或构建完成代替上线。",
       "targets": [
         {
           "label": "Preview",
@@ -104,40 +104,40 @@
           "label": "Production",
           "destination": "Cloudflare Pages project xai-web-console",
           "trigger": "push to main",
-          "branch": "main（已定为发布源，§12-A；由 web→main fast-forward 喂入，CI 不改）",
+          "branch": "main（既有发布源；候选通过全部 gate 后再按 §12-A 推进）",
           "output": "Production URL"
         }
       ],
       "steps": [
         {
-          "label": "触发",
-          "detail": "PR 生成 preview；push main 走 production deploy。",
-          "owner": ".github/workflows/deploy-web.yml"
+          "label": "开发与候选",
+          "detail": "独立模块短分支、固定 commit、数据/API 兼容和发布范围；Web→App 先过 D3。",
+          "owner": "ADR-0013 / docs/DEPLOYMENT.md §5"
         },
         {
-          "label": "构建",
-          "detail": "安装依赖后执行 pnpm --filter @repo/web build；当前 CI 对所有构建（PR preview + push main 生产）都固定 VITE_WEB_AUTH_MODE=mock-authenticated（ADR-0008 D2，ship 全部 24 模块、CI 不放密钥）。live auth 是未来阶段，需先开通 Supabase 并按 §12-B 决策切换。",
-          "owner": "@repo/web build"
+          "label": "质量门",
+          "detail": "目标为 lint/types/unit/E2E/SQL/供应链串联；当前 workflow 尚未全部接入，2026-09-08 OSV/cargo-deny 失败。",
+          "owner": ".github/workflows / package scripts"
         },
         {
-          "label": "发布",
-          "detail": "GitHub Actions 用 pinned Wrangler CLI 在 apps/web 下执行 pages deploy ./dist，project-name=xai-web-console。",
-          "owner": "apps/web/wrangler.toml"
+          "label": "构建与环境",
+          "detail": "当前 CI 仍全部 mock-authenticated；VITE 变量在 GitHub 构建时注入，Pages 控制台不能改写 Direct Upload 产物。secure sourcemap 链尚待接入。",
+          "owner": "@repo/web build / build:secure"
         },
         {
-          "label": "安全头与离线壳",
-          "detail": "_headers 提供 CSP / HSTS / frame policy；sw.js 缓存 app shell 并处理离线导航。",
-          "owner": "apps/web/public/_headers / sw.js"
+          "label": "迁移与部署",
+          "detail": "目标为先兼容 schema/函数再部署前端，单一 writer；当前 Pages preflight 凭据失败，无本次成功部署。",
+          "owner": "deploy-web.yml / Supabase runbook"
         },
         {
-          "label": "观测与记录",
-          "detail": "GitHub step summary 输出 deployment id / URL / branch / commit；Sentry deploy mark 可登记 release 环境。",
-          "owner": "Deployment summary / sourcemaps-deploy-mark"
+          "label": "验收与记录",
+          "detail": "部署后验证真实 URL、账号/权限及适用用户旅程；记录环境、版本、SHA、deployment ID、制品和回滚目标。",
+          "owner": "docs/DEPLOYMENT.md §5.5 / release-log"
         },
         {
-          "label": "上线验证",
-          "detail": "部署成功后仍需补真实 URL、版本标签、手动浏览器 smoke 和回滚记录。",
-          "owner": "operator gate"
+          "label": "持续运营",
+          "detail": "目标为错误/成本告警、支付对账、备份及恢复演练；按平台做兼容回滚，Auth 故障不能切 mock 冒充恢复。",
+          "owner": "docs/DEPLOYMENT.md §9 / runbooks"
         }
       ],
       "assets": [
@@ -172,9 +172,9 @@
           "note": "将 release/environment 登记到 Sentry deploys。"
         },
         {
-          "label": "部署架构权威文档",
+          "label": "产品上线运行闭环主文档",
           "path": "docs/DEPLOYMENT.md",
-          "note": "六产品线部署矩阵、Web 两模式上线流程、账号云同步落地路径、4 阶段执行路线图。"
+          "note": "现状/缺口、统一架构、账号/支付、多端发行、服务台账、运营恢复与分阶段执行。"
         },
         {
           "label": "Cloudflare 运维手册",
@@ -184,21 +184,20 @@
         {
           "label": "Supabase 运维手册",
           "path": "docs/runbooks/supabase.md",
-          "note": "账号云开通、migrations/RLS/Edge Functions 部署、备份恢复、staging→prod 提升。"
+          "note": "Auth、SQL/函数部署前置、真实入口缺口、邮件、备份恢复与环境隔离。"
         }
       ],
       "gates": [
-        "生产部署源分支确认（main vs web 主线，DEPLOYMENT.md §12-A）",
-        "Cloudflare secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID",
-        "Production auth env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY",
-        "账号云同步: 先开通 Supabase staging/prod 并部署 migrations+RLS+Edge Functions（runbooks/supabase.md）",
-        "Real-Auth Beta 前: 补实现并部署 account-delete Edge Function（未随仓库 shipped，合规硬前置）",
-        "口径: 当前 CI 对所有构建固定 mock-authenticated；live auth 是后续阶段，勿误判生产已支持真实账号",
-        "Web build green: pnpm --filter @repo/web build",
-        "CSP / security tests remain green",
-        "数据兜底: Web 提供导出/导入 JSON；接 Supabase 后做一次 restore drill",
-        "部署后登记 URL、deployment id、版本、commit、smoke 结果",
-        "失败时登记 rollback / failed 状态和处理人"
+        "main 是既定生产来源；发布前重新 fetch 核对候选与全部检查，不自动 promotion。",
+        "修复 Cloudflare token 认证/权限；供应链质量检查必须成为 deploy 的真实依赖。",
+        "按 Demo / Account Beta / Paid Beta / Sync / Mac / Mobile 明确发布承诺。",
+        "真实 Auth：GitHub 构建 env、SMTP/OAuth、账号建立、设备 RPC、session 与跨账号隔离。",
+        "删除：补后端任务与完成回执，修复 404 误判，验证业务行/对象/订阅/残余 token。",
+        "支付：禁止 live premium_stub；服务端验签、inbox、entitlement、退款与对账通过。",
+        "同步：云资源状态未核验；仍有 JWT/DEK metadata/501/入口缺口；解冻后按 #37 / D4 验收。",
+        "构建无 secret/公开 maps；CSP、关键路由、弱网/旧缓存与适用业务 smoke 通过。",
+        "备份和恢复演练、告警到达、支持渠道、预算限制有证据。",
+        "登记 URL、deployment ID、commit、版本、schema、制品摘要、验收与回滚。"
       ]
     },
     "modules": [
@@ -224,7 +223,7 @@
       {
         "key": "web",
         "title": "Web 版本",
-        "status": "ready",
+        "status": "failed",
         "progress": 62,
         "environment": "production / preview",
         "last_deployed_at": "2026-07-09",
@@ -232,15 +231,15 @@
         "platform": "Cloudflare Pages / GitHub Actions",
         "target": "apps/web SPA",
         "branch": "web",
-        "next": "发布源已定为 main（§12-A）→ web→main fast-forward promote → 跑真实部署/回滚闭环并登记 → 补「导出/导入 JSON」数据兜底",
+        "next": "先修 Cloudflare 凭据与当前供应链失败，串联发布门；再按主文档 §10 完成 Demo→真实账号→付费闭环。",
         "issues": [
           {
-            "severity": "pending",
-            "text": "部署设施就绪度约 95%（CF Pages + Actions + _headers + runbook 齐全）；62% 指含账号同步的完整产品，两个概念勿混淆。"
+            "severity": "error",
+            "text": "2026-09-08 Deploy Web run 34214653502：mock build 通过，Cloudflare credentials preflight 失败，deploy skipped；supply-chain run 34214653513 的 OSV/cargo-deny 失败。"
           },
           {
             "severity": "pending",
-            "text": "发布源 = main（已定）；2026-07-09 fetch 后 web 领先 main 66 commits。Cloudflare Pages 项目 xai-web-console 存在但未绑定 Git Provider；latest Preview deployment=280a3451-3912-4e4e-8dd0-46baa3e217d2 / source=2966bba / URL=https://280a3451.xai-web-console.pages.dev（alias=https://web.xai-web-console.pages.dev）已由本地 Wrangler 发布并通过 /app/ai 桌面+390px mobile smoke；latest Production deployment=1cc04a60-02b8-4579-97f1-52f84de3d3d6 / source=9a61669（约 1 month ago），仍不是当前改动。GitHub PR #2 supply-chain 已查询为全绿；Deploy Web 最新失败根因为 CLOUDFLARE_API_TOKEN 认证/权限无效（Cloudflare code 10000 / missing User->Memberships->Read / membership roles 读取失败）；workflow 已新增复用型 credentials preflight 脚本和 token-scope 诊断，但 secret 需 operator 更新后重新跑。production 发布前需 web→main fast-forward promote，并登记 production deployment URL、deployment id、commit、smoke 与 rollback 结果。"
+            "text": "历史 Preview 280a3451/source 2966bba 和 Production 1cc04a60/source 9a61669 保留；当前线上 commit/健康未核验。web 9257be4 比 main 多 72 commits；详见日期审查。原 62% 为历史人工值，不代表本次生产就绪结论。"
           }
         ]
       },
@@ -255,11 +254,11 @@
         "platform": "Tauri / DMG / updater",
         "target": "macOS 桌面安装包",
         "branch": "desktop-next -> dev -> release/desktop/<version>",
-        "next": "完成 G1 native foundation、RC smoke、签名/公证和 updater 元数据",
+        "next": "按 dev 候选完成 D3/W4、真实主窗口/账号验收、签名公证、updater 下载安装和数据升级回退。",
         "issues": [
           {
             "severity": "pending",
-            "text": "release/desktop/<version> 冻结分支尚未进入实际发布。"
+            "text": "dev 343cc5f 主窗口已承载 Web SPA；updater endpoint/pubkey 和 DSN 为占位，更新安装未闭环；无本次正式签名/安装/升级回执。"
           }
         ]
       },
@@ -274,11 +273,11 @@
         "platform": "Desktop plugin host",
         "target": "插件 / widget 随 App 分发",
         "branch": "codex/plugin/<feature>",
-        "next": "等待 App 插件平台恢复排期，再登记插件包版本与宿主版本",
+        "next": "平台运行时按 G1 推进；具体插件包保持现有暂停门，随宿主记录兼容与发行版本。",
         "issues": [
           {
             "severity": "pending",
-            "text": "插件平台暂停，当前没有独立云端部署目标。"
+            "text": "desktop-plugin-next 已有平台基础；具体包等待 G1。不能把插件包暂停写成平台均未实现。"
           }
         ]
       },
@@ -289,19 +288,19 @@
         "progress": 30,
         "environment": "account-sync",
         "last_deployed_at": "",
-        "version": "v1 protocol（代码完成 #1–#36，未 provision）",
+        "version": "v1 protocol 基础；生产入口与验收未闭环",
         "platform": "Supabase（Edge Functions + Postgres + RLS）",
         "target": "账号、设备会话、push/pull、冲突处理（端到端加密）",
         "branch": "codex/sync/<feature>",
-        "next": "开通 Supabase staging/prod（#9）→ 部署 migrations+RLS+Edge Functions → 过 hardening 门（#37）→ 单实体双设备 smoke（#56）。流程见 runbooks/supabase.md",
+        "next": "解冻后先核验外部资源、补可复现配置/身份/设备/恢复入口，再过 #37 与单实体 D4、双设备和恢复演练。",
         "issues": [
           {
             "severity": "pending",
-            "text": "客户端 + 后端代码已完成（crypto/outbox/Edge Functions/RLS），但未部署到任何真实 Supabase；整条线按 P0 优先级 PAUSED。"
+            "text": "Supabase 当前项目/部署未核验；crypto/outbox/RLS 和 push/pull adapter 存在，但 recovery-proof 返回 501、onboarding 缺入口，设备 RPC/删除尚不完整。"
           },
           {
-            "severity": "pending",
-            "text": "总闸是 Supabase 实例开通（sync-v1 #9，纯外部人工任务）。"
+            "severity": "error",
+            "text": "生产接线还需排除 JWT decode/X-Account-Id fallback 和原始 DEK metadata 路径；不是单纯开通实例即可上线。暂停/解冻规则仍按既有 roadmap。"
           }
         ]
       },
@@ -369,8 +368,8 @@
   },
   "testing": {
     "summary": {
-      "latest_tested_at": "2026-07-09",
-      "overall_status": "测试结果登记已建立，真实通过状态由 release-log Verification、报告文件、人工登记和已查询 GitHub check 共同证明；最新 Web supply-chain 远端通过，Cloudflare deploy 因外部 token 权限失败。",
+      "latest_tested_at": "2026-09-08",
+      "overall_status": "2026-09-08 实查：Web mock build、Rust pin 和 RFC/CBOR 通过；OSV、cargo-deny、Cloudflare 凭据 gate 失败。未重跑全量产品/E2E/SQL；7 月通过项保留为历史证据。",
       "source": "manual testing registry + release-log Verification + local report scan"
     },
     "categories": [
@@ -421,11 +420,11 @@
         ]
       },
       {
-        "id": "github-supply-chain-security",
+        "id": "supply-chain-security",
         "name": "Supply-chain security",
         "path": ".github/workflows/supply-chain-security.yml",
-        "status": "passed",
-        "last_result": "2026-07-09 PR #2 queried result: Rust exact pins, OSV, cargo-deny, RFC crypto vectors + CBOR all passed",
+        "status": "failed",
+        "last_result": "2026-09-08 run 34214653513：Rust exact pins、RFC vectors/CBOR passed；OSV、cargo-deny failed。",
         "categories": [
           "unit",
           "backend",
@@ -433,11 +432,11 @@
         ]
       },
       {
-        "id": "github-deploy-web",
+        "id": "deploy-web",
         "name": "Deploy Web to Cloudflare Pages",
         "path": ".github/workflows/deploy-web.yml",
         "status": "blocked",
-        "last_result": "2026-07-09 PR #2 queried result: credentials preflight failed with Cloudflare code 10000 / missing User->Memberships->Read",
+        "last_result": "2026-09-08 run 34214653502：install/build passed；Cloudflare code 10000，credentials preflight failed，deploy skipped。",
         "categories": [
           "build",
           "pre_deploy"
@@ -462,13 +461,13 @@
       {
         "key": "web",
         "title": "Web 版本",
-        "status": "pass",
-        "latest_tested_at": "2026-07-09",
-        "conclusion": "最新 Web/Cloudflare readiness 批次：PR #2 的 Supply-chain security 已查询为远端全绿；本地 Web check-types/build/test、Desktop build、AI chat test/typecheck、preview /app/ai desktop+390px smoke 均通过。已知阻塞：Deploy Web / Cloudflare Workers Builds 因 GitHub secret Cloudflare token 权限不足失败，非代码侧通过项。",
-        "failure_count": 0,
-        "duration": "按最近 release-log 记录",
-        "pipeline_status": "configured",
-        "report_path": "docs/workflow/project/release-log.md",
+        "status": "fail",
+        "latest_tested_at": "2026-09-08",
+        "conclusion": "固定 web 9257be4 查询：mock build 通过；当前失败项 3 个为 OSV、cargo-deny、Cloudflare 凭据 gate（不是单测失败数）。全量业务/E2E/SQL 未重跑；7 月 smoke 仅作历史证据。",
+        "failure_count": 3,
+        "duration": "远端既有 run；本次为只读查询",
+        "pipeline_status": "queried",
+        "report_path": "docs/reviews/production-launch-operations/20260908-current-state-audit.md",
         "commands": [
           "pnpm --filter @repo/web check-types",
           "pnpm --filter @repo/web test",
@@ -478,33 +477,33 @@
         "categories": [
           {
             "key": "self_test",
-            "status": "pass",
-            "detail": "Browser smoke / manual smoke 由 release-log 记录。"
+            "status": "stale",
+            "detail": "历史测试证据见 2026-07-09 release-log；本次没有重跑该类完整产品验收。"
           },
           {
             "key": "unit",
-            "status": "pass",
-            "detail": "Vitest package tests 按模块登记。"
+            "status": "stale",
+            "detail": "历史测试证据见 2026-07-09 release-log；本次没有重跑该类完整产品验收。"
           },
           {
             "key": "e2e",
-            "status": "pass",
-            "detail": "Browser smoke 作为当前轻量 E2E 证据。"
+            "status": "stale",
+            "detail": "历史测试证据见 2026-07-09 release-log；本次没有重跑该类完整产品验收。"
           },
           {
             "key": "frontend_page",
-            "status": "pass",
-            "detail": "390px / desktop 页面 smoke 在 dashboard 变更中必须验证。"
+            "status": "stale",
+            "detail": "历史测试证据见 2026-07-09 release-log；本次没有重跑该类完整产品验收。"
           },
           {
             "key": "build",
             "status": "pass",
-            "detail": "Web build gate 由 release-log Verification 记录。"
+            "detail": "2026-09-08 GitHub run 34214653502，web 9257be4 mock build passed；不代表 live auth。"
           },
           {
             "key": "pre_deploy",
-            "status": "partial",
-            "detail": "Preview URL / deploy id 已补齐：280a3451-3912-4e4e-8dd0-46baa3e217d2（source 2966bba，alias https://web.xai-web-console.pages.dev）；PR #2 supply-chain 远端全绿。production deploy id 仍需在 web→main 后补齐。Deploy Web 最新被 credentials preflight 阻断：GitHub secret Cloudflare token 缺少可列出 Pages project / membership 的权限。"
+            "status": "fail",
+            "detail": "2026-09-08：OSV/cargo-deny 与 Cloudflare credentials gate failed；无本次 deployment/smoke。"
           },
           {
             "key": "regression",
@@ -512,7 +511,7 @@
             "detail": "回归范围随功能包记录，尚未形成统一全量 regression suite。"
           }
         ],
-        "next": "把每次 Web ship 的测试命令、通过数、失败数和 Browser smoke 写入 release-log Verification。"
+        "next": "先处理当前三个检查失败，补部署依赖与真实 smoke；按主文档 §10 的 gate 提供新证据。"
       },
       {
         "key": "app",
@@ -711,6 +710,25 @@
       }
     ],
     "records": [
+      {
+        "id": "2026-09-08-production-launch-ci-audit",
+        "source": "manual",
+        "module": "web",
+        "related_modules": [
+          "web"
+        ],
+        "date": "2026-09-08",
+        "title": "Production Launch 现状审查：当前 GitHub 检查",
+        "status": "fail",
+        "conclusion": "只读查询 head 9257be4：mock build/Rust pins/RFC+CBOR 通过；OSV/cargo-deny/Cloudflare credentials 共 3 个检查失败，非单测失败数。未执行新的部署或全量测试。",
+        "failure_count": 3,
+        "duration": "既有 GitHub runs",
+        "categories": [
+          "build",
+          "pre_deploy"
+        ],
+        "report_path": "docs/reviews/production-launch-operations/20260908-current-state-audit.md"
+      },
       {
         "id": "2026-05-31-dev-dashboard-local-smoke",
         "source": "manual",
@@ -1526,7 +1544,7 @@
       "status": "基建合同",
       "branch": "sync-v1 roadmap wave",
       "dependency": "连接 Web / App / Plugin",
-      "next": "代码完成（#1–#36）；总闸是开通 Supabase（#9）。部署路径见 docs/DEPLOYMENT.md §6 + docs/runbooks/supabase.md。Post-G1 / operator 解冻后恢复实体接入。",
+      "next": "基础代码已建，生产入口/鉴权/恢复与真实部署仍有缺口；先看 docs/DEPLOYMENT.md §6 和日期审查，Post-G1 / operator 解冻后按 #37、D4 推进。",
       "tracker": "syncScope、push/pull、冲突、两设备 smoke。",
       "labels": {
         "overview": "账号云同步层",

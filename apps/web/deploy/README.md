@@ -1,222 +1,96 @@
-# apps/web/deploy — Deployment Configuration Notes
+# apps/web/deploy — Web 配置与上线操作边界
 
-This directory contains deployment-related configuration and runbooks for
-`apps/web/` (the XAI Web Console Vite SPA).
+> 更新：2026-09-08。完整方案见 [Production Launch & Operations](../../../docs/DEPLOYMENT.md)；
+> 本页只维护 Web 构建配置、支付演示与账号删除入口的操作说明。
 
-## Structure
+## 1. 当前实现与实际发布分开记录
 
-```
-apps/web/deploy/
-  security/   — SHIPPED security library namespace (buildSecurityHeaders, ingestCspReport, etc.)
-                Used by future Worker layer. Not active at static Cloudflare Pages runtime.
-  README.md   — This file. Operator runbook for env vars and deployment configuration.
-```
+- Web 使用 Vite SPA；现有 GitHub Actions 构建后 Direct Upload 到 Cloudflare Pages。
+- 当前 deploy-web.yml 的 Preview 与 Production 都显式使用 mock-authenticated；将其构建成功不代表真实账号产品上线。
+- 真实 Auth 页面已经接入 Supabase；支付仍为客户端 stub；account-delete 服务端函数当前未交付。
+- deploy/security 是可复用安全库。静态 Pages 不会自动执行库中的 CSP / RUM 接收器；响应头由 public/_headers 提供。
+- 2026-09-08 的 CI、历史部署及云端可见性边界见 [审计快照](../../../docs/reviews/production-launch-operations/20260908-current-state-audit.md)。
 
----
+## 2. 构建变量、服务端 secret 与环境
 
-## Environment Variables
-
-### Required for Premium Stripe Checkout (gap-closure row #8)
-
-| Variable | Description | Required at runtime |
+| 配置 | 放置位置 | 使用要求 |
 |---|---|---|
-| `VITE_STRIPE_PAYMENT_LINK_URL` | Stripe Payment Link URL for the Upgrade CTA. Format: `https://buy.stripe.com/<link_id>` | Yes (premium Upgrade button is disabled with tooltip when absent) |
+| VITE_WEB_AUTH_MODE | GitHub 对应环境的构建变量 | Demo 可用 mock；账号 Beta 的产物须验证真实模式 |
+| VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY | GitHub 构建变量；本机使用 gitignored .env.local | 浏览器可见的项目 URL 与公开客户端 key；不能填 service_role / secret key |
+| VITE_STRIPE_PAYMENT_LINK_URL | 仅测试构建变量 | 当前只用于 Payment Link 演示；不得接 live 收费 |
+| Sentry DSN / release 等客户端标识 | 对应构建环境的公开配置 | 依代码读取名称配置，并验证事件送达与脱敏 |
+| SENTRY_AUTH_TOKEN | CI secret | 只用于 sourcemap 上传，不进入浏览器产物 |
+| CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID | GitHub secret / variable，按权限边界配置 | CLI 上传身份与账号定位；token 不写入仓库或浏览器 |
+| Supabase 服务端 key、数据库密码、Stripe key / webhook secret、平台 LLM key | 选定后端的 secret store | 不能使用 VITE_ 前缀，不能出现在构建产物 |
 
-#### How to set `VITE_STRIPE_PAYMENT_LINK_URL`
+Vite 的 VITE_ 值在构建时进入静态 JS。当前 CI 在 GitHub 生成 dist，再用 Wrangler 上传；
+只修改 Cloudflare Pages Dashboard 的环境变量不会改写该 dist。改变公开配置后必须在正确环境重新构建并发布。
+预览与生产各自产物按 hash 保存；不得把指向测试数据库的预览包直接晋升生产。
+详见 [Cloudflare runbook](../../../docs/runbooks/cloudflare.md)。
 
-**Development / local:**
+本机示例模板只维护变量名称与无敏感意义的占位值。真实值通过密码管理器、GitHub Environments 和后端 secret store 恢复；
+轮换时更新所有实际消费者并验证，再撤销旧值。不要在命令历史、日志或本页登记实际 secret。
 
-Add to `apps/web/.env.local` (gitignored):
+## 3. Premium 当前只能演示
 
-```
-VITE_STRIPE_PAYMENT_LINK_URL=https://buy.stripe.com/test_<your_test_link_id>
-```
+现有 CheckoutSuccessPage 只检查 URL 中存在 session_id，就写入本地 premium_stub；
+30 天计时依赖客户端时钟。Cancel Subscription 只清除本地标记，没有请求 Stripe 取消订阅。
 
-**Cloudflare Pages (production):**
+因此：
 
-1. Log in to the [Cloudflare Dashboard](https://dash.cloudflare.com).
-2. Navigate to: Workers & Pages → xai-web-console → Settings → Environment Variables.
-3. Add variable `VITE_STRIPE_PAYMENT_LINK_URL` under **Production** environment.
-4. Value: `https://buy.stripe.com/<live_link_id>` — get this from the Stripe Dashboard.
-5. Click **Save**.
-6. Trigger a new deploy (push a commit to `main` or use the Cloudflare Pages dashboard "Deploy" button).
+1. 当前构建只接 Stripe 测试环境或禁用 Upgrade CTA。
+2. 回跳页面、localStorage、query string 都不是付款证明。
+3. 客户端和 Desktop 都不能作为平台付费权益的权威执行端。
+4. 不把演示取消按钮描述成真实订阅取消；真实收款前必须补齐后台与用户自助管理。
 
-**Cloudflare Pages (preview/staging):**
+推荐正式接入路径：登录用户 → 服务端创建 Checkout Session → Stripe 签名验证 webhook →
+持久化 inbox / billing state / entitlement → 产品 API 权限判断 → 客户端查询状态。
+事件去重、乱序处理、退款、失败续费、宽限期、取消到期与周期对账见
+[主文档 §6.5](../../../docs/DEPLOYMENT.md#65-支付订阅与-entitlement)。
 
-Repeat step 3–6 under the **Preview** environment with a test Payment Link URL.
+Payment Link 的跳转域名 CSP 允许项并不能证明上述后台存在。
+当前 public/_headers 的 Stripe connect-src 与相关 source guards 只是既有安全边界；
+后续正式 Hosted Checkout 或 Portal 方案改变时，按实际网络需求修改并验证 CSP。
 
-#### Creating a Stripe Payment Link
+## 4. Account-delete 当前缺少服务端实现
 
-1. Log in to [Stripe Dashboard](https://dashboard.stripe.com).
-2. Navigate to: Payment Links → + New payment link.
-3. Create a product and price (e.g. "XAI Premium — 1 month, $X USD").
-4. Under **After payment**, set redirect URL to:
-   `<your_app_origin>/app/settings/premium/checkout/success?session_id={CHECKOUT_SESSION_ID}`
-   Note: `{CHECKOUT_SESSION_ID}` is a Stripe template variable — Stripe substitutes the actual
-   session ID at checkout completion.
-5. Copy the Payment Link URL (e.g. `https://buy.stripe.com/test_xxxxxxxxxxxx`).
-6. Set it as `VITE_STRIPE_PAYMENT_LINK_URL`.
+当前客户端会调用 Supabase Edge Function account-delete，但此仓库没有该函数入口。
+不能直接执行“部署已有函数”的命令并期望成功。
 
-**Test vs Live mode:**
-- Test mode URLs: `https://buy.stripe.com/test_<id>` — no real charges.
-- Live mode URLs: `https://buy.stripe.com/<id>` — real charges. Use only in production.
+更严重的现有行为：客户端将 404 当作幂等成功。函数不存在、路由缺失与账号已删除可能无法区分；
+关闭或删除函数不能作为安全回滚，因为这可能误触发本地清除并向用户显示成功。
 
-#### Rotation runbook
+accounts.id 没有声明到 auth.users.id 的外键。删除 Auth 用户不等于业务数据级联删除。
+还需要处理设备、会话、同步数据、密文对象、审计保留、第三方连接与支付关系。
 
-If the Payment Link URL needs to be rotated (e.g. price change, product change):
+### 推荐契约（待实现）
 
-1. Create a new Payment Link in the Stripe Dashboard (follow steps above).
-2. Update `VITE_STRIPE_PAYMENT_LINK_URL` in Cloudflare Pages environment variables.
-3. Trigger a new deploy.
-4. The old Payment Link can be disabled in the Stripe Dashboard after verifying the new one works.
-5. Update `apps/web/.env.local` locally if needed for development.
+- 从已验证的用户 JWT / 会话获取 account_id；不信任请求参数或 X-Account-Id。
+- 删除请求先持久化 operation_id；要求必要的重新认证，停止该账号新增写入。
+- 以可重试任务执行资源清理、订阅取消策略、设备与 refresh session 撤销及最终 Auth 删除。
+- 返回结构化状态：accepted / running / completed / failed，并提供状态查询。
+- completed 必须有可核验的服务端回执；普通 404 不代表成功。
+- 对用户透明说明备份中的延迟淘汰、依法需要保留的最少交易记录与不可恢复的 E2EE 密钥边界。
+- 对象存储与业务行须先按设计清理，再执行 Auth 管理 API；管理权限仅在后端使用。
 
-Note: Rotating the Payment Link does NOT require a code change — the URL is read
-at build time from the env var. No git commit needed for a rotation.
+这里是目标契约，当前客户端与函数都需要配套改造。测试必须包含缺失函数、超时重试、
+重复请求、任务中途失败、残余有效 access token、跨账号删除与备份恢复后的删除抑制。
 
----
+### 上线与故障处置
 
-## v1 Stub Disclosure
+账号 Beta 之前完成 staging 实现及端到端删除证据，再发布匹配的客户端与后端。
+故障时保留服务端任务与操作编号，显式返回暂不可用，提供可追踪的人工支持入口；
+修复后重试并对账，不假报删除成功。
 
-The current Premium integration is a **client-side stub only** (gap-closure row #8):
+生产环境不能通过切换 mock-authenticated 来恢复真实账号服务，也不能把“清除本机数据”
+显示成“删除云端账号”。紧急代码回滚必须选择与当前删除契约、数据库 schema 兼容的已验证版本。
 
-- **No Stripe Secret Key** is present in the client bundle (enforced by `no-stripe-secret-key.test.ts` source-text guard — HC3 CRITICAL).
-- **No Stripe.js bundle** is loaded (enforced by `no-stripe-js-bundle.test.ts` source-text guard).
-- After a successful checkout, the client flips a `xai_pref_premium_tier = "premium_stub"` flag in `localStorage` based on the presence of `?session_id=` in the callback URL. It does **NOT** validate the session with Stripe's API.
-- The 30-day "subscription" timer is client-clock based and can be defeated by clock manipulation — documented known limitation (R4).
-- **Cancel Subscription** clears the client-side flags only — it does NOT cancel any Stripe subscription. Users who made a real payment must cancel at [billing.stripe.com](https://billing.stripe.com) or the Stripe Customer Portal.
+## 5. 验收与维护入口
 
-Real subscription enforcement requires either the Desktop client (P1) or a Cloudflare Worker layer (deferred per ADR-0008 D3 follow-up). This stub establishes the callback URL pattern and the client-state hook for the future real implementation.
+- [Cloudflare 部署与回滚](../../../docs/runbooks/cloudflare.md)
+- [Supabase Auth / migration / backup](../../../docs/runbooks/supabase.md)
+- [统一账号、支付、恢复与阶段门槛](../../../docs/DEPLOYMENT.md)
+- [上线证据登记](../../../docs/workflow/project/dashboard-state.json)与[发布记录](../../../docs/workflow/project/release-log.md)
 
----
-
-## CSP Impact (ADR-0008 §S3 D3 FOURTH amendment)
-
-`connect-src` in `apps/web/public/_headers` includes 3 Stripe hostnames:
-
-```
-https://js.stripe.com
-https://checkout.stripe.com
-https://buy.stripe.com
-```
-
-`script-src` and `frame-src` are **NOT widened** — the Payment Link redirect uses
-`window.location.assign()` (same-tab navigation), so no Stripe.js script loading
-and no Embedded Checkout iframe is involved.
-
-Source-text guards:
-- `CSP4` in `apps/web/src/__tests__/csp.test.ts` asserts all 3 hostnames are present.
-- `CSP4-SCRIPT-SRC-CLEAN` asserts `script-src` does NOT include `js.stripe.com`.
-- `CSP4-FRAME-SRC-CLEAN` asserts `frame-src` is NOT present in the CSP.
-
-Authority: `docs/adr/0008-cloudflare-deploy-target-and-csp.md` §S3 D3 FOURTH amendment.
-
----
-
-## Account-Delete Edge Function (gap-closure row #9)
-
-The account-delete flow requires a Supabase Edge Function named **`account-delete`**.
-The function is NOT shipped in this repository. It must be deployed separately to the
-project's Supabase instance before the live-auth code path (`VITE_WEB_AUTH_MODE !== "mock-authenticated"`)
-will work end-to-end. The client invokes it via `client.functions.invoke("account-delete", { method: "POST" })`.
-
-### Function name
-
-```
-account-delete
-```
-
-### Request shape
-
-```http
-POST /functions/v1/account-delete
-Authorization: Bearer <user-jwt>
-```
-
-No request body is required. The authenticated JWT determines which user to delete.
-
-### Response shape
-
-| Status | Meaning |
-|--------|---------|
-| `200 OK` | User deleted successfully. |
-| `401 Unauthorized` | Missing or invalid JWT. Client should surface `AccountDeleteError("unauthorized")`. |
-| `403 Forbidden` | JWT is valid but the user is not allowed to delete this account (e.g. service account guard). Client surfaces `AccountDeleteError("forbidden")`. |
-| `404 Not Found` | User already deleted (idempotent path). Client treats as success and proceeds to local wipe. |
-| `5xx` | Server error. Client surfaces `AccountDeleteError("server")`. Retry is user-initiated via the Retry button in the modal. |
-
-### RLS / service_role requirements
-
-- The function must run with **`service_role`** credentials (not the anon/JWT key) to call `auth.admin.deleteUser(userId)` against the Supabase Auth API.
-- The user id is extracted from the verified JWT via `supabase.auth.getUser(token)` inside the function.
-- No RLS policy change is required on data tables — `auth.admin.deleteUser` cascades to Auth table rows only; application-table row deletion is deferred (out-of-scope for v1 per FA-1).
-- The function should call `supabase.auth.admin.deleteUser(userId)` after extracting and validating the caller's identity.
-
-### Deploy gate
-
-1. Deploy the Edge Function to your Supabase project:
-   ```bash
-   supabase functions deploy account-delete --project-ref <project-ref>
-   ```
-2. Set the `service_role` key as a secret in the function's environment (via Supabase dashboard or CLI):
-   ```bash
-   supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service_role_key> --project-ref <project-ref>
-   ```
-3. Verify the function is reachable:
-   ```bash
-   curl -X POST https://<project-ref>.supabase.co/functions/v1/account-delete \
-     -H "Authorization: Bearer <valid-user-jwt>"
-   ```
-   Expected: `200 OK` (or `404` if user already deleted).
-
-**Before deploying to production, ensure the function is tested in a staging environment.**
-The mock-auth fallback (`VITE_WEB_AUTH_MODE=mock-authenticated`) is available for local development
-without any Edge Function deployed.
-
----
-
-## Account-Delete Rollback (gap-closure row #9)
-
-If the account-delete flow must be rolled back after deployment, four paths are available
-(from discovery review §12):
-
-### Path 1 — Disable the Edge Function (fastest, recommended)
-
-Pause or delete the `account-delete` Edge Function in the Supabase dashboard.
-The client will receive a network error, which surfaces as `AccountDeleteError("network")`.
-The modal will show the error banner and offer a Retry button — but the function
-will remain unreachable until re-enabled.
-
-**Effect**: Account deletion is silently blocked server-side. Local state is NOT cleared
-(DEL-ORCH-3: no local mutation before backend success). Users see the error banner.
-
-### Path 2 — Return 403 from the Edge Function
-
-Modify the Edge Function to return `403 Forbidden` for all requests.
-Client maps this to `AccountDeleteError("forbidden")` and surfaces the error banner.
-
-**Effect**: Same as Path 1 but returns a meaningful HTTP status rather than a network error.
-Cleaner monitoring signal.
-
-### Path 3 — Feature-flag via `VITE_WEB_AUTH_MODE`
-
-Set `VITE_WEB_AUTH_MODE=mock-authenticated` in the build environment and redeploy the SPA.
-In mock-auth mode, the backend is never called. The flow skips to local-wipe + redirect directly.
-
-**Effect**: Account deletion still completes locally (localStorage + IDB wipe + redirect),
-but no real account is deleted server-side. Use only as a temporary measure in mock/staging
-environments — not appropriate for production unless the intent is to let users clear
-local data without deleting their Supabase account.
-
-### Path 4 — Revert to row #24 single-step modal (breaking change)
-
-Revert `packages/plugin-web-settings-rest/src/internal/DeleteAccountConfirmModal.tsx`
-and `packages/plugin-web-settings-rest/src/panes/accountPane.tsx` to the row #24
-single-step shape. This also requires reverting the orchestrator imports and removing
-`packages/plugin-web-settings-rest/src/internal/useAccountDeleteOrchestrator.ts`.
-
-**Effect**: Full behavioral rollback. The deprecated `web:settings:rest:account-delete-confirmed`
-event continues to be emitted (it was already emitted in row #24). Requires a code deploy.
-
-**Recommended**: Use Path 1 or Path 2 for a fast operational rollback. Path 4 should only
-be used if a code defect is discovered that cannot be patched forward.
+任何“上线成功”记录必须包含 commit、环境、构建配置类别、部署 ID、schema 版本、
+冒烟结果及回滚目标；不能只记录工作流运行完成。

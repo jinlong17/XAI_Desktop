@@ -1,4 +1,14 @@
-# Turborepo starter
+# XAI Desktop
+
+项目的开发、上线与长期运维入口：
+
+- [产品上线运行闭环 / Production Launch & Operations](docs/DEPLOYMENT.md)：当前能力、缺口、统一账号/支付、多端发布、监控、备份与恢复。
+- [2026-09-08 现状证据](docs/reviews/production-launch-operations/20260908-current-state-audit.md)：固定代码基线、CI 结果与外部未验证项。
+- [Developer Handbook](docs/workflow/project/handbook.md) · [产品模块导航](docs/PRODUCT_MODULE_MAP.md) · [发布与治理记录](docs/workflow/project/release-log.md)。
+
+以下保留脚手架说明；实际应用和发布架构以上述项目文档为准。
+
+## Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
 

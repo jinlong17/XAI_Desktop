@@ -8,6 +8,7 @@
 
 | Topic | Authority |
 |---|---|
+| Production launch, unified identity/billing, operations, backup and recovery | [Production Launch & Operations](../../DEPLOYMENT.md) |
 | Branch topology, product lines, Web to Desktop gate, account cloud-sync contract | `docs/adr/0013-branch-sync-governance.md` |
 | Multi-machine branch ownership, GitHub completeness, handoff and local-asset policy | `docs/workflow/project/multi-machine-development.md` |
 | New MacBook copy-paste setup and verification prompt | `docs/workflow/project/new-mac-development-handoff-prompt.md` |

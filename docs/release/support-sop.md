@@ -1,38 +1,49 @@
-# Support SOP
+# Support and Incident SOP
 
-Status: GA support flow draft.
+> 更新：2026-09-08。面向一人维护的支持草案；具体响应承诺在开放收费前公布。
+> 运维矩阵、告警与恢复合同见 [主文档 §9](../DEPLOYMENT.md#9-上线后的运维更新和恢复)。
 
 ## Intake
 
-Issue template fields:
+收集最少必要信息：
 
-- App version and channel.
-- macOS version and hardware.
-- Distribution path: DMG or MAS.
-- Last successful launch time.
-- Sync enabled: yes/no.
-- Device action involved: login, revoke, export, import, delete.
-- Crash report ID, if available.
+- 平台、版本/渠道、浏览器或 OS、最近正常时间。
+- 功能与操作：登录、支付、同步、设备吊销、导入导出、删除、更新。
+- 脱敏错误码、request_id、deletion operation_id 或 Sentry event ID。
+- 问题是否持续、是否可重现、是否影响数据访问。
+
+不要求用户提交密码、token、恢复短语、原始私钥、完整 prompt/文件或支付卡信息。
+诊断附件明确授权并设定保留时间。
 
 ## Triage
 
-| Severity | Response target | Criteria |
-|---|---:|---|
-| S0 | 4 business hours | data loss, account lockout, repeated crash on launch |
-| S1 | 1 business day | sync blocked, export/import blocked, device revoke failure |
-| S2 | 3 business days | UI defect, non-critical degraded feature |
-| S3 | next planning cycle | copy, docs, low-risk polish |
+| 等级 | 建议响应目标 | 典型条件 |
+|---|---|---|
+| S0 | 4 个工作小时 | 数据损坏/越权、重复扣费、广泛无法登录、启动持续崩溃 |
+| S1 | 1 个工作日 | 同步、购买恢复、导入导出或设备吊销被阻塞 |
+| S2 | 3 个工作日 | 局部 UI / 非关键功能异常 |
+| S3 | 下个规划周期 | 文案与低风险改进 |
 
-## Crash Flow
+这些是待公布的工作时间目标，不是现有 SLA 或 24/7 承诺。
+自动监控持续运行不意味着个人开发者能全天即时响应。
 
-1. Locate Sentry event by release and hashed device/account identifiers.
-2. Confirm symbolication exists for the build.
-3. Check whether the crash affects startup, sync, Keychain, or export/import.
-4. Reproduce on the matching channel.
-5. Add the incident to release notes if user-visible.
+## Incident Flow
 
-## Known Issues
+1. 记录事件和影响范围，核对 release、外部供应商状态、错误率与变更。
+2. 先控制影响：停止发布、隔离高风险写入/付费/AI 调用，保留日志与备份证据。
+3. 按 runbook 选择兼容回滚、向前修复或受控恢复；数据恢复不能当普通前端回滚执行。
+4. 验证关键用户旅程、告警恢复、支付对账和数据完整性。
+5. 对用户说明影响、恢复进度及需要采取的行动；相关业务任务保留可追踪编号。
+6. 在 release-log / incident 记录根因、修复和防复发任务。
 
-- Supabase Auth, production device revoke RPC, and delete-account execution are mocked until staging credentials are provisioned.
-- DMG signing/notarization and MAS submission require Apple Developer gates.
-- Web import restore validates bundles locally but does not write to production sync storage.
+账号服务故障不能切 mock 模式伪装恢复；删除函数缺失不能用 404 当完成。
+支付回调故障先保持事件可重放并对账，不能依回跳页向用户承诺权益到账。
+
+## 当前边界
+
+- Web 真实 Auth 客户端已实现，当前部署 CI 仍构建 mock；云端提供商、邮件与 session 配置未核验。
+- device_register/device_heartbeat RPC、account-delete 与部分恢复入口尚缺完整实现或部署合同。
+- 支付为本地 stub；收费前必须完成服务端订阅和 entitlement。
+- Mac 签名/公证/updater 安装未有本次生产验收；移动端试验工程不等于商店可用版本。
+- 历史 Web import 验证不能证明所有实体已写入生产云同步。
+- 具体证据与关闭条件见 [2026-09-08 审查](../reviews/production-launch-operations/20260908-current-state-audit.md)。
