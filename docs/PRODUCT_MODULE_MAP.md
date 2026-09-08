@@ -17,7 +17,7 @@
 - `sync` **只搬 `syncScope: account-sync` 的实体**；`device-local` 永不上云（ADR-0013 §D4，9 项完整性清单）。
 - `site` 为 **PROPOSED（owner-deferred）**：未经 operator 确认，不得开新工作分支、不得当作 active 开发线，先用 `xai-feature-brief` 规范化占位。
 - `admin` 已由 operator 于 2026-06-05 激活为 **roadmap-gated**：可开 `codex/admin/<feature>`，但必须经 [`xai-admin-dashboard-system-integration.md`](workflow/roadmap/xai-admin-dashboard-system-integration.md) 从 `xai-admin-dashboard-shell` 开始推进；不得绕过 RBAC/审计/secret/deploy 闸门直接做生产后台写入。
-- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` **已定义但尚未创建**；创建是独立的 operator 确认步骤，任何触及 `dev` 的操作都需显式确认。
+- `desktop-plugin-next` 已存在；`desktop-next` / `release/desktop/<version>` **已定义但尚未创建**。创建新长期分支、推进到 `dev`、或进入 release 分支仍是独立的 operator 确认步骤。
 - 站内（同一条 Web 线）的部署/CSP 改动（`apps/web/wrangler.toml`、`apps/web/public/_headers`）走 **ADR-0008 扩展协议 + feature-plan/review**，**不走 D3**（D3 只判定 Web 变更对 App 的影响）。
 - **部署体系的权威设计文档是 [`docs/DEPLOYMENT.md`](DEPLOYMENT.md)**（六产品线部署矩阵、平台组合、Web 两模式上线流程、账号云同步落地路径、执行路线图）；运维步骤见 [`docs/runbooks/cloudflare.md`](runbooks/cloudflare.md) + [`docs/runbooks/supabase.md`](runbooks/supabase.md)。本文只做任务归属导航，部署结论以 `DEPLOYMENT.md` 为准。
 
@@ -113,7 +113,7 @@ Start the bug-diagnose agent.
 | → 目标模块 | 触发条件 | branch | skill | 说明 |
 |---|---|---|---|---|
 | Mac 桌面版 App（`app`） | 一个已落地的 Web 改动触碰共享 UI / @repo/core 接缝、或在 desktop 运行时(VITE_WEB_RUNTIME_PROFILE=desktop-phase1-offline)行为不同,需要带入 Desktop App | web → desktop-next(经 D3 gate;desktop-next 已定义但尚未创建,创建需 operator 确认) | `xai-web-to-desktop-sync` | 跑 D3 分级:W0 仅记录、W1 合入 desktop-next 跑 web build+tauri build 门、W2 加 desktop 离线/运行时/profile 测试,产出 Parity Receipt(NO_APP_CHANGE\|GATE_ONLY\|DESKTOP_DELTA_REQUIRED\|BLOCKED)。这是 Web 改动流向 App 的唯一通道,不是把 dev 拉成 web 的子集。 |
-| Mac 桌面版 App（`app`） | Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3 | desktop-next / desktop-plugin-next(均已定义但尚未创建,创建需 operator 确认) | `xai-feature-full-loop` | W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。 |
+| Mac 桌面版 App（`app`） | Web 改动需要新的 Tauri/Rust 原生能力(新 command、capability、NSWindow/原生行为)才能在 App 落地,即 D3 分级为 W3 | desktop-next(已定义未创建) / desktop-plugin-next(已存在;触及 dev 需 operator 确认) | `xai-feature-full-loop` | W3 原生 delta 是真正的新工作,不是 merge:先用 xai-web-to-desktop-sync 判出 W3/DESKTOP_DELTA_REQUIRED,再把原生增量路由到 desktop 侧的 xai-feature-full-loop 全流程,而非从 web 直接合并。 |
 | 官方网页（`site`） | 需求落在官方网页/下载页/自动更新宿主(marketing + download + auto-update host),复用 Cloudflare 部署基建但与 release/desktop/<version> 绑定 | codex/site/<feature>(site 线 PROPOSED,owner-deferred;短分支约定已定,实际开工尚未授权) | `xai-feature-brief` | site 与 web 共用 Cloudflare 部署基建与 ADR-0008,但属独立产品线且为 PROPOSED/owner-deferred(ADR-0013 §S7 #2,本轮治理 out of scope、未授权开工):先用 brief 规范化占位,勿在 apps/web/ Console 内塞下载/官网逻辑,勿当作已批准的 active work 直接推进。 |
 | Admin Dashboard（`admin`） | 需求落在管理中台/控制面(AI 配置、用量、权限、审计、运维操作),即与 docs/prototypes/admin-dashboard/index.html 原型同源的 Control Plane 能力,而非 Web Console 终端用户面 | codex/admin/<feature>(admin 线已由 operator 于 2026-06-05 激活为 roadmap-gated;已有 roadmap manifest,尚无 package/deploy target) | `xai-feature-brief` 或 `xai-roadmap-loop` | admin Control Plane 与 Web Console 的 AI 配置/用量面同源但属独立产品线;当前可按 docs/workflow/roadmap/xai-admin-dashboard-system-integration.md 从 `xai-admin-dashboard-shell` 推进。勿把后台管理/审计/运维逻辑塞进 apps/web/ Console,勿绕过 RBAC/审计/secret/deploy 闸门做生产后台写入。 |
 
@@ -203,7 +203,7 @@ Start the bug-diagnose agent.
 
 | → 目标模块 | 触发条件 | branch | skill | 说明 |
 |---|---|---|---|---|
-| 桌面整理插件 / Widget（`plugin`） | 改动落在桌面插件平台运行时 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 Mac 壳/native chrome 本身 | desktop-plugin-next(与 desktop-next 互通,defined, not yet created)/ codex/plugin/<feature> | `xai-feature-full-loop` | 插件平台线与 Mac 壳隔离,避免插件平台 churn 动摇 App RC；多窗口/overlay 运行时代码可物理落在 host，但产品归属是 plugin。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻。 |
+| 桌面整理插件 / Widget（`plugin`） | 改动落在桌面插件平台运行时 / Widget / 插件 SDK(plugin-organizer、widgets 等)而非 Mac 壳/native chrome 本身 | desktop-plugin-next(已存在) / codex/plugin/<feature> | `xai-feature-full-loop` | 插件平台线与 Mac 壳隔离,避免插件平台 churn 动摇 App RC；多窗口/overlay 运行时代码可物理落在 host，但产品归属是 plugin。注意 P2 插件线在 G1 SHIPPED 前仍为 paused,需操作者解冻；触及 `dev` 仍需 operator 确认。 |
 | 账号云同步层（`sync`） | 需要新增/改动 account-sync 实体的端侧落地(App SQLite outbox、push/pull 应用规则、两端冲突策略) | codex/sync/<feature>(并入 desktop-next/dev 通道,均 defined, not yet created) | `xai-feature-full-loop` | 按 ADR-0013 D4:Web 与 App 不互相同步,都同步到一个账号云;只有 syncScope=account-sync 实体进 outbox,device-local 永不同步。sync-v1 线在 G1 SHIPPED 前 paused,需操作者解冻。 |
 | Web（`web`） | 诊断发现根因在共享 UI / @repo/core 源头,需回到 Web 主线修复(D3 反向 / hotfix back-merge) | web / codex/web/<feature> | `bug-diagnose` | App 与 Web 是两条独立聚焦分支,共享改动按需在 web 修复后再经 D3(/xai-web-to-desktop-sync)正向流回 desktop-next;不要为对齐而强行 force-merge 两条线。 |
 
@@ -232,7 +232,7 @@ Start the bug-diagnose agent.
 - 涉及插件平台 / SDK / Widget Host / 插件清单 manifest.json / 插件注册装载（plugin platform / plugin SDK），归 desktop-plugin-next 隔离线
 - 涉及 Plugin Center 的**产品契约**（可添加插件目录、`PluginInstance`、`AddToDesktopRequest`、实例 settings schema、内置插件 maturity/status、placement/pin/click-through 等实例模型）归 plugin；Mac App 控制面板按钮和必要的 host 容器命令归 app 物理实现
 - 插件本地数据带 syncScope: device-local（已注册的如 clipboard.item；ADR-0013 D4 还以 widgets.widget 为示例）——不入远端 outbox，留在本设备；只有显式声明 account-sync 才走同步层
-- 分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（<-> desktop-next，均已在 D2 定义但尚未创建）
+- 分支线索：short = codex/plugin/<feature>，long = desktop-plugin-next（已存在；与 desktop-next 互通但触及 dev 仍需 operator 确认）
 - 状态线索：需求若是 multi-window engine / grid persistence / window-command / Widget Host-SDK 等 **G1 平台运行时锚点**，它是 active gate，不在 P2 冻结内；需求若是 clipboard/widgets/pet/meditation 等插件包，则仍是 P2 PAUSED，等 G1 ships 后再开工。
 
 **推荐 skill / agent**

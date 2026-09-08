@@ -13,18 +13,14 @@
 import type {
   Board,
   BoardCard,
+  BoardLabel,
   BoardList,
   BoardMemberOption,
   BoardTemplate,
   BoardWorkspace,
 } from "../../types.js";
 
-export interface BoardLabel {
-  id: string;
-  name: { en: string; zh: string };
-  /** OKLCH or CSS color string. */
-  color: string;
-}
+export type { BoardLabel };
 
 /** PM template label palette — DESIGN.md §4.3 + `board-data.js` PM_LABELS. */
 export const PM_LABELS: readonly BoardLabel[] = [

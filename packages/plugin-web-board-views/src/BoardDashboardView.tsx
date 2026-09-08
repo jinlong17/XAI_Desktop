@@ -6,13 +6,19 @@
  * API contract: packages/xai-web-board-views/docs/api.md §5
  */
 
-import type { BoardListData } from "@repo/plugin-web-board-core";
-import { PM_LABELS, getBoardCardDateMeta } from "@repo/plugin-web-board-core";
+import type { BoardLabel, BoardListData } from "@repo/plugin-web-board-core";
+import {
+  BOARD_PRIORITIES,
+  DEFAULT_BOARD_LABELS,
+  getBoardCardDateMeta,
+} from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/i18n.js";
 
 export interface BoardDashboardViewProps {
   lists: readonly BoardListData[];
   lang: Lang;
+  /** Board label catalog; must match the other views so per-label stats agree. */
+  labelCatalog?: readonly BoardLabel[];
 }
 
 interface KpiProps {
@@ -41,7 +47,11 @@ function KpiCard({ label, value, color }: KpiProps) {
   );
 }
 
-export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
+export function BoardDashboardView({
+  lists,
+  lang,
+  labelCatalog = DEFAULT_BOARD_LABELS,
+}: BoardDashboardViewProps) {
   const total = lists.reduce((n, l) => n + l.cards.length, 0);
   const allCards = lists.flatMap((l) => l.cards);
   const now = new Date();
@@ -57,12 +67,19 @@ export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
     });
   });
 
-  const labelData = PM_LABELS.map((l) => ({
+  const labelData = labelCatalog.map((l) => ({
     label: l,
     count: labelCounts[l.id] ?? 0,
   })).filter((d) => d.count > 0);
 
   const maxLabelCount = Math.max(1, ...labelData.map((d) => d.count));
+
+  // Per-priority counts
+  const priorityData = BOARD_PRIORITIES.map((p) => ({
+    priority: p,
+    count: allCards.filter((c) => c.priority === p.id).length,
+  })).filter((d) => d.count > 0);
+  const maxPriorityCount = Math.max(1, ...priorityData.map((d) => d.count));
 
   const KPIs = [
     {
@@ -122,6 +139,46 @@ export function BoardDashboardView({ lists, lang }: BoardDashboardViewProps) {
             })}
           </div>
         </div>
+
+        {/* Per-priority bar chart */}
+        {priorityData.length > 0 && (
+          <div className="bd-card panel" data-testid="bd-per-priority">
+            <h3>{lang === "zh" ? "按优先级分布" : "Cards by priority"}</h3>
+            <div className="bd-bars">
+              {priorityData.map(({ priority, count }) => {
+                const pct = (count / maxPriorityCount) * 100;
+                return (
+                  <div
+                    key={priority.id}
+                    className="bd-bar-row"
+                    data-testid="bd-bar-row-priority"
+                  >
+                    <div className="bd-bar-label">
+                      <span
+                        className="bc-priority"
+                        style={{ color: priority.color }}
+                      >
+                        <span
+                          className="bc-priority-dot"
+                          style={{ background: priority.color }}
+                        />
+                        {priority.name[lang]}
+                      </span>
+                    </div>
+                    <div className="bd-bar-track">
+                      <div
+                        className="bd-bar-fill"
+                        style={{ width: pct + "%", background: priority.color }}
+                        data-testid="bd-bar-fill-priority"
+                      />
+                    </div>
+                    <div className="bd-bar-val mono">{count}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Per-label bar chart */}
         <div className="bd-card panel" data-testid="bd-per-label">

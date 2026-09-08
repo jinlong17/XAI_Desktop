@@ -17,7 +17,7 @@ import { it, expect, beforeAll } from "vitest";
 import { buildIndex } from "../internal/buildIndex.js";
 import { REALISTIC_MODULE_STATES } from "./fixtures/realisticState.js";
 
-// Import adapters for side-effect registration (so all 11 are in the registry)
+// Import adapters for side-effect registration (so all 12 are in the registry)
 import "../adapters/index.js";
 
 const ITERATIONS = 100;

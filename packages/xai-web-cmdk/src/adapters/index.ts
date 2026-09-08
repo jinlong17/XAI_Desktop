@@ -1,8 +1,8 @@
 /**
- * Adapter barrel — imports all 11 adapters for side-effect registration.
+ * Adapter barrel — imports all 12 adapters for side-effect registration.
  *
  * Each adapter calls registerSearchAdapter() at import time.
- * Importing this barrel ensures all 11 adapters are registered before
+ * Importing this barrel ensures all 12 adapters are registered before
  * CommandPalette mounts.
  *
  * This barrel is imported by apps/web/src/App.tsx (via CommandPalette/Provider)
@@ -29,6 +29,7 @@ import "./dashboard.js";
 import "./habits.js";
 import "./matrix.js";
 import "./meditation.js";
+import "./metrics.js";
 import "./pomodoro.js";
 import "./settings.js";
 import "./statistics.js";

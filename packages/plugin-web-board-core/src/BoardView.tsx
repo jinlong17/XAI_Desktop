@@ -14,6 +14,8 @@ import { BOARD_CARD_DND_MIME } from "./BoardCard.js";
 import type {
   BoardList as BoardListData,
   BoardListColorId,
+  BoardLabel,
+  BoardMemberOption,
 } from "./types.js";
 
 export interface BoardViewProps {
@@ -62,6 +64,10 @@ export interface BoardViewProps {
 
   // Open card detail (deferred to row #9; row #7 passes a no-op)
   onOpenCard?: (cardId: string, listId: string) => void;
+
+  // Catalogs for resolving card label/member chips
+  labelCatalog?: readonly BoardLabel[];
+  memberCatalog?: readonly BoardMemberOption[];
 }
 
 interface DragState {
@@ -99,6 +105,8 @@ export function BoardView({
   cardMenu,
   setCardMenu,
   onOpenCard,
+  labelCatalog,
+  memberCatalog,
 }: BoardViewProps) {
   const [dragging, setDragging] = useState<DragState | null>(null);
   const [overListId, setOverListId] = useState<string | null>(null);
@@ -233,6 +241,8 @@ export function BoardView({
           onCardDragEnd={onCardDragEnd}
           draggingCardId={dragging?.cardId ?? null}
           onOpenCard={(cardId) => onOpenCard?.(cardId, list.id)}
+          labelCatalog={labelCatalog}
+          memberCatalog={memberCatalog}
         />
       ))}
 

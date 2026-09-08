@@ -11,7 +11,7 @@
 import React from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { AiConvoRecord } from "./types.js";
-import { IconList, IconPlus, IconSearch, IconSparkle } from "./internal/icons.js";
+import { IconClose, IconList, IconPlus, IconSearch, IconSparkle } from "./internal/icons.js";
 
 export interface AiSidebarProps {
   convos: readonly AiConvoRecord[];
@@ -19,6 +19,7 @@ export interface AiSidebarProps {
   open: boolean;
   lang: Lang;
   onSelectConvo: (id: string) => void;
+  onDeleteConvo: (id: string) => void;
   onNewChat: () => void;
   onCollapse: () => void;
 }
@@ -29,6 +30,7 @@ export function AiSidebar({
   open,
   lang,
   onSelectConvo,
+  onDeleteConvo,
   onNewChat,
   onCollapse,
 }: AiSidebarProps) {
@@ -82,8 +84,23 @@ export function AiSidebar({
                 }}
               >
                 <IconSparkle size={12} />
-                <span className="ai-convo-title">{c.title}</span>
+                <span className="ai-convo-main">
+                  <span className="ai-convo-title">{c.title || (zh ? "未命名对话" : "Untitled chat")}</span>
+                  {c.summary && <span className="ai-convo-summary">{c.summary}</span>}
+                </span>
                 <span className="ai-convo-time mono">{c.time}</span>
+                <button
+                  type="button"
+                  className="ai-convo-delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteConvo(c.id);
+                  }}
+                  aria-label={zh ? `删除对话：${c.title}` : `Delete chat: ${c.title}`}
+                  title={zh ? "删除对话" : "Delete chat"}
+                >
+                  <IconClose size={11} />
+                </button>
               </li>
             );
           })}

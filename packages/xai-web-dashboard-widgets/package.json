@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Dashboard widget pack for XAI Web Console (W2 row #11) — Clock (4 styles + 12 timezones + analog 60+12+12) · MiniCal · WorldClocks · Weather · Stickies · Mail · Upcoming · 3 mini stats. Consumes @repo/plugin-web-dashboard-grid's WidgetRegistration[] slot API.",
-  "sideEffects": ["./src/styles.css"],
+  "sideEffects": [
+    "./src/styles.css"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -39,6 +41,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }

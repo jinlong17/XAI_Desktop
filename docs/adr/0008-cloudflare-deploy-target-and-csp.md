@@ -64,8 +64,8 @@ The project owner (Jinlong) needs:
   `vite.config.ts`), not inside `apps/web/deploy/`, to preserve this distinction.
   Future Worker layer will reuse the library functions from `apps/web/deploy/security/`.
 - Root `.nvmrc` is absent; P2 adds one pinned to `22` (Node 22 LTS).
-- `cloudflare/wrangler-action@v3` is the current canonical GitHub Action for
-  Pages deploys; the legacy `cloudflare/pages-action` is deprecated.
+- The current workflow uses pinned Wrangler CLI (`pnpm dlx wrangler@4.107.1`)
+  for Pages deploys; the legacy `cloudflare/pages-action` is deprecated.
 
 ### Related ADRs
 
@@ -83,7 +83,7 @@ The project owner (Jinlong) needs:
 
 | Option | Pros | Cons |
 |--------|------|------|
-| **A. Cloudflare Pages** (selected) | Cleanly static; built-in PR previews; `pages_build_output_dir = "./dist"` one-liner; free-tier 500 builds/month; `wrangler-action@v3` first-class support. | Future `/api/chat` Worker = separate project or migration when AI Chat backend row lands. |
+| **A. Cloudflare Pages** (selected) | Cleanly static; built-in PR previews; `pages_build_output_dir = "./dist"` one-liner; free-tier 500 builds/month; Wrangler CLI supports direct-upload CI. | Future `/api/chat` Worker = separate project or migration when AI Chat backend row lands. |
 | B. Workers Static Assets | `[assets] directory` + `not_found_handling = "single-page-application"` natively co-locates future Workers. No migration cost when AI Chat backend lands. | Slightly more config; builds billed per Workers requests (different quota model); premature for a fully-static payload today. |
 
 Pages selected because `apps/web/` is fully static today; migration cost when
@@ -387,9 +387,9 @@ via Revise mode or opening a follow-up row with a new ADR.
    That library remains compiled but unreachable at static runtime — accepted
    dead-code-at-runtime, kept for the future Worker layer to reuse.
 
-8. **GitHub Action = `cloudflare/wrangler-action@v3`** (NOT the deprecated
-   `cloudflare/pages-action`). Action pinned `@v3`; bundled `wranglerVersion`
-   pinned to `3.114.0`.
+8. **GitHub deploy path = pinned Wrangler CLI** (NOT the deprecated
+   `cloudflare/pages-action`). The workflow runs `pnpm dlx wrangler@4.107.1`
+   for credential preflight and `pages deploy`.
 
 9. **Workflow triggers:** `push` on `main` → production deploy; `pull_request`
    → preview deploy. No `paths-ignore` filter in v1 (runbook lever for
@@ -406,7 +406,7 @@ via Revise mode or opening a follow-up row with a new ADR.
 
 12. **Branch policy:** `main` deploys to production; PR branches deploy to
     Cloudflare Pages preview environments. Pass
-    `--branch=${{ github.head_ref || github.ref_name }}` to the wrangler-action.
+    `--branch=${{ github.head_ref || github.ref_name }}` to `wrangler pages deploy`.
 
 13. **GitHub Action does NOT auto-commit anything to the repo.** Verify-gate
     evidence file is written by `feature-verify` locally, not pushed by CI.
@@ -529,16 +529,20 @@ the `<meta name="xai-csp-nonce">` element are stripped from the output
 ### CI workflow shape
 
 File: `.github/workflows/deploy-web.yml`
-Action: `cloudflare/wrangler-action@v3` (NOT `cloudflare/pages-action`)
+Action: pinned Wrangler CLI via `pnpm dlx wrangler@4.107.1` (NOT
+`cloudflare/pages-action`)
 Secret references: `${{ secrets.CLOUDFLARE_API_TOKEN }}` and
 `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}` — no literal values.
+Credential preflight: `scripts/ci/check-cloudflare-pages-token.sh`
 Deploy command: `pages deploy ./dist --project-name=xai-web-console
 --branch=${{ github.head_ref || github.ref_name }}`
 
 ### Secret naming
 
 GitHub repo Secrets MUST be named exactly:
-- `CLOUDFLARE_API_TOKEN` — Cloudflare API token with scope `Cloudflare Pages:Edit`
+- `CLOUDFLARE_API_TOKEN` — Cloudflare API token scoped to the target account with
+  Account → Cloudflare Pages → Edit, User → Memberships → Read, and Account →
+  Account Settings → Read. Do not select Zone → Custom Pages.
 - `CLOUDFLARE_ACCOUNT_ID` — the Cloudflare account ID where the project lives
 
 ### `apps/web/deploy/security/` namespace coexistence note
@@ -571,7 +575,7 @@ Quota Monitoring / Disaster Recovery.
 - **Feature brief**: `docs/reviews/xai-web-deploy-cloudflare/20260524-feature-brief.md`
 - **Discovery review**: `docs/reviews/xai-web-deploy-cloudflare/20260524-discovery-review.md`
 - **Runbook**: `docs/runbooks/cloudflare.md`
-- **wrangler-action docs**: https://github.com/cloudflare/wrangler-action (v3)
+- **Wrangler Pages direct upload docs**: https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/
 - **Cloudflare Pages `_headers` spec**: https://developers.cloudflare.com/pages/configuration/headers/
 - **PLUGIN_MAP.md**: `docs/PLUGIN_MAP.md` — all 24 `xai-web-*` rows SHIPPED;
   no mocks required.

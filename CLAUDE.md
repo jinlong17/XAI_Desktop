@@ -70,8 +70,8 @@ Routing rules (do not violate):
 - **`admin` 已由 operator 于 2026-06-05 激活为 roadmap-gated**：只允许经 `codex/admin/<feature>` +
   `docs/workflow/roadmap/xai-admin-dashboard-system-integration.md` 推进，首个切片是
   `xai-admin-dashboard-shell`；不得绕过 RBAC/审计/secret 边界直接做生产后台写入。
-- `desktop-next` / `desktop-plugin-next` / `release/desktop/<version>` 目前**已定义但尚未创建**，创建是
-  独立的 operator 确认步骤（任何触及 `dev` 的操作都需显式确认）。
+- `desktop-plugin-next` 已存在；`desktop-next` / `release/desktop/<version>` 目前**已定义但尚未创建**。
+  创建新长期分支、推进到 `dev`、或进入 release 分支仍是独立的 operator 确认步骤。
 
 ## Project Overview
 

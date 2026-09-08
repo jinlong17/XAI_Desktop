@@ -337,4 +337,33 @@ describe("isBoardArray", () => {
       }),
     ).toBe(false);
   });
+
+  // BCV5 + V9 — Wave 1 (label/member catalogs + priority additive extension)
+  test("BCV5 isBoardCard validates priority (enum value or absent)", () => {
+    const base = { id: "c1", title: { en: "a", zh: "b" } };
+    expect(isBoardCard({ ...base, priority: "high" })).toBe(true);
+    expect(isBoardCard(base)).toBe(true);
+    expect(isBoardCard({ ...base, priority: "banana" })).toBe(false);
+    expect(isBoardCard({ ...base, priority: 3 })).toBe(false);
+  });
+
+  test("V10 isBoard validates icon/description meta fields (W2)", () => {
+    const base = makeDefaultBoards()[0]!;
+    expect(isBoard({ ...base, icon: "🚀", description: "Team board" })).toBe(true);
+    expect(isBoard({ ...base, icon: 7 })).toBe(false);
+    expect(isBoard({ ...base, description: ["x"] })).toBe(false);
+  });
+
+  test("V9 isBoard validates board-scoped label/member catalogs", () => {
+    const base = makeDefaultBoards()[0]!;
+    const label = { id: "x", name: { en: "X", zh: "X" }, color: "red" };
+    const member = { id: "u9", name: "Dave", color: "blue" };
+    expect(isBoard({ ...base, labels: [label], members: [member] })).toBe(true);
+    expect(isBoard({ ...base, labels: [] })).toBe(true);
+    expect(isBoard({ ...base, labels: "garbage" })).toBe(false);
+    expect(isBoard({ ...base, labels: [{ id: 1 }] })).toBe(false);
+    expect(
+      isBoard({ ...base, members: [{ id: "u9", name: 7, color: "blue" }] }),
+    ).toBe(false);
+  });
 });

@@ -9,7 +9,7 @@
  * API contract: packages/xai-web-pomodoro/docs/api.md §2.1
  */
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { getPrefAutosave, usePref, usePrefAutosave } from "@repo/plugin-web-storage";
@@ -78,6 +78,9 @@ const POMODORO_PRESETS = [
 ] as const;
 type PomodoroPresetId = (typeof POMODORO_PRESETS)[number]["id"] | "custom";
 
+const FOCUS_ROUNDS_PER_CYCLE = 4;
+const FOCUS_CONTROLS_IDLE_MS = 2400;
+
 const DISPLAY_STYLE_LABELS: Record<PomodoroDisplayStyle, { en: string; zh: string }> = {
   digital: { en: "Digital", zh: "数字倒计时" },
   ring: { en: "Ring", zh: "圆环倒计时" },
@@ -129,6 +132,25 @@ function defaultPresetForMode(mode: PomodoroMode) {
   if (mode === "short-break") return POMODORO_PRESETS.find((preset) => preset.id === "break-5")!;
   if (mode === "long-break") return POMODORO_PRESETS.find((preset) => preset.id === "break-15")!;
   return POMODORO_PRESETS.find((preset) => preset.id === "focus-25")!;
+}
+
+function currentRoundFor(mode: PomodoroMode, completedFocusCount: number): number {
+  if (mode === "focus") {
+    return (completedFocusCount % FOCUS_ROUNDS_PER_CYCLE) + 1;
+  }
+  const completedInCycle = Math.max(1, completedFocusCount);
+  return ((completedInCycle - 1) % FOCUS_ROUNDS_PER_CYCLE) + 1;
+}
+
+function isKeyboardControlTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.isContentEditable ||
+    target.tagName === "BUTTON" ||
+    target.tagName === "INPUT" ||
+    target.tagName === "SELECT" ||
+    target.tagName === "TEXTAREA"
+  );
 }
 
 function playPromptSound(soundId: PomodoroSoundId, muted: boolean) {
@@ -220,6 +242,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   });
   const [completionNotice, setCompletionNotice] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [focusControlsVisible, setFocusControlsVisible] = useState(false);
 
   usePrefAutosave("pomodoro_preset", activePresetId);
   usePrefAutosave("pomodoro_custom_minutes", customMinutes);
@@ -250,6 +273,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   // Ref to hold timerTick.reset so onTickToZero can call it
   const resetRef = useRef<((nextMode: PomodoroMode, durationMs?: number) => void) | null>(null);
+  const focusControlsTimerRef = useRef<number | null>(null);
 
   // ---- Tick-to-zero handler (injected into useTimerTick) ------------------
   // Stable callback — does not change between renders
@@ -313,6 +337,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
     playPromptSound(soundId, muted);
     notifySessionEnd(mode, elapsedMs);
+    setIsFullscreen(false);
+    setFocusControlsVisible(false);
 
     // Advance mode
     const focusCountAfter =
@@ -352,14 +378,16 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   });
 
   useEffect(() => {
-    if (!isFullscreen || typeof window === "undefined") return undefined;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsFullscreen(false);
+    if (!isFullscreen) {
+      setFocusControlsVisible(false);
+      return undefined;
+    }
+    return () => {
+      if (focusControlsTimerRef.current) {
+        window.clearTimeout(focusControlsTimerRef.current);
+        focusControlsTimerRef.current = null;
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFullscreen]);
 
   // Keep resetRef in sync
@@ -407,6 +435,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
     }
 
     end();
+    setIsFullscreen(false);
+    setFocusControlsVisible(false);
 
     const finishedAt = new Date().toISOString();
     const record: PomodoroSession = {
@@ -477,6 +507,68 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
     }
   }
 
+  function enterFocusFullscreen() {
+    setFocusControlsVisible(false);
+    setIsFullscreen(true);
+  }
+
+  function exitFocusFullscreen() {
+    setIsFullscreen(false);
+    setFocusControlsVisible(false);
+  }
+
+  const revealFocusControls = useCallback(() => {
+    if (!isFullscreen) return;
+    setFocusControlsVisible(true);
+    if (focusControlsTimerRef.current) {
+      window.clearTimeout(focusControlsTimerRef.current);
+    }
+    focusControlsTimerRef.current = window.setTimeout(() => {
+      setFocusControlsVisible(false);
+      focusControlsTimerRef.current = null;
+    }, FOCUS_CONTROLS_IDLE_MS);
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    if (!isFullscreen || typeof window === "undefined") return undefined;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFullscreen(false);
+        setFocusControlsVisible(false);
+        return;
+      }
+
+      if (
+        (event.key === " " || event.key === "Spacebar" || event.code === "Space") &&
+        !event.repeat &&
+        !isKeyboardControlTarget(event.target)
+      ) {
+        event.preventDefault();
+        revealFocusControls();
+        if (isIdle) {
+          setCompletionNotice(null);
+          start(selectedDurationMs);
+        } else if (isRunning) {
+          pause();
+        } else if (isPaused) {
+          resume();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    isFullscreen,
+    isIdle,
+    isPaused,
+    isRunning,
+    pause,
+    resume,
+    revealFocusControls,
+    selectedDurationMs,
+    start,
+  ]);
+
   const progress = useMemo(() => {
     const durationMs = timerState.durationMs;
     const elapsed = durationMs - displayedRemainingMs;
@@ -506,6 +598,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const displayStyleLabel = label(lang, DISPLAY_STYLE_LABELS[displayStyle]);
   const soundLabel =
     SOUND_CHOICES.find((sound) => sound.id === soundId)?.label ?? SOUND_CHOICES[0]!.label;
+  const currentRound = currentRoundFor(currentMode, completedFocusCount);
 
   return (
     <div
@@ -558,7 +651,13 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 : "Enter fullscreen"
           }
           aria-pressed={isFullscreen}
-          onClick={() => setIsFullscreen((value) => !value)}
+          onClick={() => {
+            if (isFullscreen) {
+              exitFocusFullscreen();
+            } else {
+              enterFocusFullscreen();
+            }
+          }}
           data-testid="fullscreen-btn"
         >
           {isFullscreen ? <IconMinimize /> : <IconMaximize />}
@@ -591,7 +690,12 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
               </span>
             </div>
 
-            <div className="pomo-timer-frame">
+            <div
+              className="pomo-timer-frame"
+              onDoubleClick={enterFocusFullscreen}
+              data-testid="pomo-timer-frame"
+              title={lang === "zh" ? "双击进入全屏专注" : "Double-click for fullscreen focus"}
+            >
               <TimerRing
                 ref={accentDotRef}
                 progress={progress}
@@ -833,6 +937,124 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
           </section>
         </aside>
       </div>
+
+      {isFullscreen && (
+        <section
+          className="pomo-focus-overlay"
+          data-testid="pomo-focus-overlay"
+          data-controls-visible={focusControlsVisible ? "true" : "false"}
+          data-paused={isPaused ? "true" : "false"}
+          aria-label={lang === "zh" ? "番茄钟全屏专注模式" : "Pomodoro fullscreen focus mode"}
+          onPointerMove={revealFocusControls}
+          onPointerLeave={() => setFocusControlsVisible(false)}
+          onFocusCapture={revealFocusControls}
+        >
+          <div className="pomo-focus-aura" aria-hidden="true" />
+          <button
+            type="button"
+            className="pomo-focus-exit"
+            aria-label={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+            data-testid="focus-exit-btn"
+            onClick={exitFocusFullscreen}
+          >
+            <IconMinimize size={18} />
+          </button>
+
+          <div className="pomo-focus-hero">
+            <div className="pomo-focus-heading">
+              <span className="pomo-focus-eyebrow">{t.pomo.title}</span>
+              <h2>{modeLabelFor(currentMode)}</h2>
+              <p>{stateLabel}</p>
+            </div>
+
+            <div className="pomo-focus-ring">
+              <TimerRing
+                ref={accentDotRef}
+                progress={progress}
+                running={isRunning}
+                variant={displayStyle === "digital" ? "apple" : displayStyle}
+              />
+              <div className="pomo-focus-time">
+                <span className="pomo-focus-phase">
+                  {lang === "zh" ? "当前阶段" : "Current phase"}
+                </span>
+                <span className="pomo-focus-num">{formatDuration(displayedRemainingMs)}</span>
+                <span className="pomo-focus-mode">{modeLabelFor(currentMode)}</span>
+              </div>
+            </div>
+
+            <dl className="pomo-focus-stats">
+              <div>
+                <dt>{lang === "zh" ? "当前轮次" : "Round"}</dt>
+                <dd>{currentRound}</dd>
+              </div>
+              <div>
+                <dt>{lang === "zh" ? "总轮次" : "Total rounds"}</dt>
+                <dd>{FOCUS_ROUNDS_PER_CYCLE}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="pomo-focus-controls" data-testid="pomo-focus-controls">
+            {isIdle && (
+              <button
+                type="button"
+                className="btn primary"
+                aria-label={t.pomo.start}
+                data-testid="focus-start-btn"
+                onClick={() => {
+                  setCompletionNotice(null);
+                  start(selectedDurationMs);
+                }}
+              >
+                {t.pomo.start}
+              </button>
+            )}
+            {isRunning && (
+              <button
+                type="button"
+                className="btn ghost"
+                aria-label={t.pomo.pause}
+                data-testid="focus-pause-btn"
+                onClick={pause}
+              >
+                {t.pomo.pause}
+              </button>
+            )}
+            {isPaused && (
+              <button
+                type="button"
+                className="btn primary"
+                aria-label={t.pomo.continue}
+                data-testid="focus-continue-btn"
+                onClick={resume}
+              >
+                {t.pomo.continue}
+              </button>
+            )}
+            {!isIdle && (
+              <button
+                type="button"
+                className="btn ghost"
+                aria-label={lang === "zh" ? "停止" : "Stop"}
+                data-testid="focus-stop-btn"
+                onClick={handleStop}
+              >
+                {lang === "zh" ? "停止" : "Stop"}
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn ghost"
+              aria-label={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+              data-testid="focus-exit-action-btn"
+              onClick={exitFocusFullscreen}
+            >
+              {lang === "zh" ? "退出全屏" : "Exit"}
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

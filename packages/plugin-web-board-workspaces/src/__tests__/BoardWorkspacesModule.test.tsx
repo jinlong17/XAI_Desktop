@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
+import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
@@ -384,6 +384,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(stored["b-default"]).toEqual({
       labels: ["l1"],
       members: ["u1"],
+      priorities: [],
       dueRange: "today",
     });
     expect(localStorage.getItem("xai_boards_v2")).toBe(boardsBefore);
@@ -449,6 +450,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(getStoredBoardFilters()["b-default"]).toEqual({
       labels: [],
       members: [],
+      priorities: [],
       dueRange: "all",
     });
     expect(screen.getByTestId("fp-label-l1")).not.toBeChecked();
@@ -1565,5 +1567,232 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
 
     fireEvent.click(screen.getByTestId("card-detail-close"));
     expect(screen.queryByTestId("card-detail-modal")).not.toBeInTheDocument();
+  });
+});
+
+// ---- BWM-CAT — Wave 1: board-scoped label/member catalogs + priority -------
+
+describe("BWM-CAT — label/member catalogs + priority", () => {
+  it("BWM-CAT-1: priority selector patches and persists card.priority; re-click clears it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBe("high");
+
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").priority).toBeUndefined();
+  });
+
+  it("BWM-CAT-2: creating a label materializes board.labels (defaults + new) and the label is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-label-new-name"), {
+      target: { value: "Spec" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-label-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const created = board.labels?.find((l) => l.name.en === "Spec");
+    expect(created).toBeDefined();
+    expect(board.labels!.length).toBe(DEFAULT_BOARD_LABELS.length + 1);
+
+    fireEvent.click(screen.getByTestId(`card-detail-label-${created!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").labels).toContain(created!.id);
+  });
+
+  it("BWM-CAT-3: deleting a label removes it from the catalog AND strips it from cards", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    expect(getStoredCard("bc1").labels ?? []).toContain("l1");
+    fireEvent.click(screen.getByTestId("card-detail-labels-manage"));
+    fireEvent.click(screen.getByTestId("card-detail-label-delete-l1"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.labels!.some((l) => l.id === "l1")).toBe(false);
+    expect(getStoredCard("bc1").labels ?? []).not.toContain("l1");
+  });
+
+  it("BWM-CAT-4: creating a member persists to board.members and the member is assignable", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-new-name"), {
+      target: { value: "Dave" },
+    });
+    fireEvent.click(screen.getByTestId("card-detail-member-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    const dave = board.members?.find((m) => m.name === "Dave");
+    expect(dave).toBeDefined();
+
+    fireEvent.click(screen.getByTestId(`card-detail-member-${dave!.id}`));
+    await act(async () => { await Promise.resolve(); });
+    expect(getStoredCard("bc1").members).toContain(dave!.id);
+  });
+
+  it("BWM-CAT-5: renaming a member persists the new name in the board directory", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+
+    fireEvent.click(screen.getByTestId("card-detail-members-manage"));
+    fireEvent.change(screen.getByTestId("card-detail-member-name-u1"), {
+      target: { value: "Alicia" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.members!.find((m) => m.id === "u1")!.name).toBe("Alicia");
+  });
+});
+
+// ---- BWM-SET — Wave 2: board metadata editing + priority filter ------------
+
+describe("BWM-SET — board settings + priority filter", () => {
+  it("BWM-SET-1: settings modal renames the board and picks a cover preset, persisted", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+    expect(screen.getByTestId("board-settings-modal")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId("board-settings-name"), {
+      target: { value: "Sprint Board" },
+    });
+    fireEvent.click(screen.getByTestId("board-settings-cover-3"));
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.name.en).toBe("Sprint Board");
+    expect(board.cover).toBe(BOARD_COVER_PRESETS[3]);
+  });
+
+  it("BWM-SET-2: icon + description persist; icon renders in the header title", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-settings-btn"));
+
+    fireEvent.change(screen.getByTestId("board-settings-icon"), {
+      target: { value: "🚀" },
+    });
+    fireEvent.change(screen.getByTestId("board-settings-description"), {
+      target: { value: "Quarterly launch work" },
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    const board = getStoredBoards()[0]!;
+    expect(board.icon).toBe("🚀");
+    expect(board.description).toBe("Quarterly launch work");
+    expect(screen.getByTestId("board-title-icon").textContent).toBe("🚀");
+  });
+
+  it("BWM-FILTER-P: priority filter narrows the board to matching cards and persists", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+
+    // Give bc1 a priority through the card detail modal.
+    fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+    fireEvent.click(screen.getByTestId("card-detail-priority-high"));
+    fireEvent.click(screen.getByTestId("card-detail-close"));
+    await act(async () => { await Promise.resolve(); });
+
+    const before = screen.getAllByTestId("board-card").length;
+    expect(before).toBeGreaterThan(1);
+
+    fireEvent.click(screen.getByTestId("filter-btn"));
+    fireEvent.click(screen.getByTestId("fp-priority-high"));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(screen.getAllByTestId("board-card")).toHaveLength(1);
+    expect(getStoredBoardFilters()["b-default"]).toMatchObject({
+      priorities: ["high"],
+    });
+  });
+});
+
+// ---- BWM-WS — Wave 3: workspace CRUD ----------------------------------------
+
+function getStoredWorkspaces(): { id: string; name: { en: string; zh: string }; color: string }[] {
+  const raw = localStorage.getItem("xai_board_workspaces");
+  if (!raw) throw new Error("xai_board_workspaces not persisted");
+  return JSON.parse(raw) as { id: string; name: { en: string; zh: string }; color: string }[];
+}
+
+describe("BWM-WS — workspace CRUD", () => {
+  it("BWM-WS-1: creating a workspace persists it (seed + new) and renders its group", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Client Projects" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored).toHaveLength(3); // 2 seeds materialized + 1 new
+    const created = stored.find((ws) => ws.name.en === "Client Projects");
+    expect(created).toBeDefined();
+    // Renders in both the scope tab and the group header.
+    expect(screen.getAllByText("Client Projects").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("BWM-WS-2: renaming a workspace persists the new name", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    fireEvent.click(screen.getByTestId("bs-ws-rename-ws-personal"));
+    const input = screen.getByTestId("bs-ws-rename-input-ws-personal");
+    fireEvent.change(input, { target: { value: "My Stuff" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    await act(async () => { await Promise.resolve(); });
+
+    const stored = getStoredWorkspaces();
+    expect(stored.find((ws) => ws.id === "ws-personal")!.name.en).toBe("My Stuff");
+  });
+
+  it("BWM-WS-3: delete affordance only on empty workspaces; deleting removes it", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    // Seed workspaces both hold boards → no delete buttons for them.
+    expect(screen.queryByTestId("bs-ws-delete-ws-personal")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("bs-ws-delete-ws-team")).not.toBeInTheDocument();
+
+    // Create an empty workspace — it gets a delete affordance.
+    fireEvent.click(screen.getByTestId("bs-new-workspace"));
+    fireEvent.change(screen.getByTestId("bs-ws-new-name"), {
+      target: { value: "Temp" },
+    });
+    fireEvent.click(screen.getByTestId("bs-ws-new-add"));
+    await act(async () => { await Promise.resolve(); });
+
+    const temp = getStoredWorkspaces().find((ws) => ws.name.en === "Temp")!;
+    fireEvent.click(screen.getByTestId(`bs-ws-delete-${temp.id}`));
+    await act(async () => { await Promise.resolve(); });
+
+    expect(getStoredWorkspaces().some((ws) => ws.id === temp.id)).toBe(false);
+  });
+
+  it("BWM-WS-4: recolor cycles the workspace color", async () => {
+    render(<BoardWorkspacesModule lang="en" />);
+    fireEvent.click(screen.getByTestId("board-title-btn"));
+
+    const before = (() => {
+      try { return getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color; }
+      catch { return "oklch(60% 0.10 165)"; } // seed color before materialization
+    })();
+    fireEvent.click(screen.getByTestId("bs-ws-recolor-ws-personal"));
+    await act(async () => { await Promise.resolve(); });
+
+    const after = getStoredWorkspaces().find((w) => w.id === "ws-personal")!.color;
+    expect(after).not.toBe(before);
   });
 });

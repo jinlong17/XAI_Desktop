@@ -11,7 +11,6 @@ import {
   createFinderClient,
   isGridStatePayload,
   rectsNearlyEqual,
-  type NativeMonitorBounds,
   type NativeWindowRect,
 } from "@repo/plugin-organizer";
 import { GlobalDndProvider } from "../providers/DndProvider";

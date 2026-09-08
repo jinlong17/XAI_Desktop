@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Tasks module for XAI Web Console — 4-bucket DnD board with date-rewrite and persistence.",
-  "sideEffects": ["./src/styles.css", "./src/index.ts"],
+  "sideEffects": [
+    "./src/styles.css",
+    "./src/index.ts"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -24,8 +27,8 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/plugin-web-storage": "workspace:*",
+    "@repo/plugin-web-tokens": "workspace:*",
     "@repo/xai-web-event-bus": "workspace:*",
     "@repo/xai-web-shell": "workspace:*"
   },
@@ -41,6 +44,6 @@
     "react-dom": "^19.2.0",
     "react-router": "^7.15.1",
     "typescript": "5.9.2",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.7"
   }
 }
