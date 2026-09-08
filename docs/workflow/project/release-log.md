@@ -4,6 +4,17 @@
 > Keep newest entries first. Use `.teams/skills/xai-release-log/SKILL.md` when
 > appending entries.
 
+## 2026-09-08
+
+### 多电脑开发 GitHub 完整性门禁
+
+- Product line: project-system / web mainline
+- Branch / commit: `web` / `03d3db3`
+- User-visible change: 无产品运行时变更。项目现在明确 GitHub 远端 refs 是多电脑开发的交换事实源；切换电脑前必须保证可恢复工作已经 commit + push，stash、reflog、隐藏 ref 和未跟踪源码不得只留在一台电脑。
+- Developer/system delta: 新增 `docs/workflow/project/multi-machine-development.md` 和可执行的 `pnpm git:sync-check -- --fetch [--deep]` 门禁；同步 AGENTS / CLAUDE / Cursor / workflow / handbook / usage guide / ADR-0013 / branch-policy / consistency-checks；新增无值的 `apps/web/.env.example`，只同步本机环境变量名，不上传密钥；记录 2026-09-08 迁移归档 refs 作为灾难恢复层，且明确不得把归档分支整条合并到长期产品线。
+- Verification: `git diff --check` passed；`bash -n scripts/ci/check-multi-machine-sync.sh` passed；`shellcheck scripts/ci/check-multi-machine-sync.sh` passed；JSON parse passed for `package.json`、`branch-policy.json`、`consistency-checks.json`；staged secret-pattern scan passed；`.env.example` value check passed；dirty-tree negative test correctly failed；`pnpm git:sync-check -- --fetch --deep` passed after pushing `03d3db3`（4 local branches aligned；0 branch/ref/reflog-only commits；23/23 stashes remote-reachable；0 unreachable commits；0 failures / 0 warnings）。
+- Risk / follow-up: `.env.local`、API token、签名材料与应用登录态仍必须经密码管理器或加密迁移渠道恢复；GitHub branch protection API 因当前私有仓库套餐返回 403，暂不能把长期分支保护配置为服务端强制门禁，因此当前以项目规则、脚本和 PR 纪律执行；现有 `web→main` PR #2（draft）和 `dev→main` PR #1 保持独立，未因本次完整性审计执行跨线合并或发布。
+
 ## 2026-07-09
 
 ### Web / Cloudflare / Desktop Readiness Gate Cleanup
