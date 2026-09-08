@@ -1,0 +1,184 @@
+- complementary:
+  - button "Open account menu":
+  - button "Tasks":
+  - button "Boards":
+  - button "Dashboard":
+  - button "Calendar":
+  - button "Matrix":
+  - button "Pomodoro":
+  - button "Time Tracker":
+  - button "Habits":
+  - button "Meditation":
+  - button "Countdown":
+  - button "XAI Chat":
+  - button "Statistics":
+  - button "Bookkeeping":
+  - button "Metrics":
+  - button "Pet":
+- banner:
+  - button "Search tasks, habits, notes…":
+    - generic: Search tasks, habits, notes…
+    - generic: ⌘K
+  - button "EN · Light · Comfortable":
+    - generic: EN · Light · Comfortable
+- main:
+  - heading "Pomodoro" [level=1]
+  - generic: Focus · Apple
+  - generic: Focusing
+  - button "Mute":
+  - button "Enter fullscreen":
+  - button "More":
+  - button "Current mode":
+    - generic: Focus
+  - generic: 0/25 min
+  - generic "Double-click for fullscreen focus":
+    - generic: Focus
+    - generic: 24:59
+    - generic: Focusing
+  - button "Pause"
+  - button "Stop"
+  - button "Reset"
+  - region "Pomodoro settings":
+    - generic: Preset
+    - list:
+      - button "25 min" [disabled] [pressed]
+      - button "30 min" [disabled]
+      - button "15 min" [disabled]
+      - button "5 min break" [disabled]
+      - button "10 min break" [disabled]
+      - button "15 min break" [disabled]
+      - button "Custom" [disabled]
+    - generic: Display
+    - list:
+      - button "Digital"
+      - button "Ring"
+      - button "Clockwise"
+      - button "Apple" [pressed]
+      - button "Minimal"
+      - button "Focus"
+    - generic: Color
+    - button "Coral" [pressed]
+    - button "Amber"
+    - button "Sage"
+    - button "Teal"
+    - button "Blue"
+    - button "Violet"
+    - button "Rose"
+    - generic: Sound
+    - combobox "Select alert sound":
+      - option "Soft Chime" [selected]
+      - option "Bell"
+      - option "Digital"
+      - option "None"
+    - button "Preview"
+    - generic: Soft Chime
+  - complementary:
+    - heading "Overview" [level=2]
+    - list "Overview":
+      - generic: Today's Pomos
+      - 'generic "Today''s Pomos: 0"': "0"
+      - generic: Today's Focus
+      - 'generic "Today''s Focus: 0m"': "0"
+      - generic: Total Pomos
+      - 'generic "Total Pomos: 0"': "0"
+      - generic: Total Focus
+      - 'generic "Total Focus: 0m"': "0"
+    - heading "Focus Record" [level=2]
+    - button "Add manually":
+    - button "More":
+    - generic "Focus Record"
+- paragraph: Hi! Don't forget to drink water 💧
+- button "🐾 Change pet (Mochi)"
+- button "Change pet":
+---RELOAD---
+- complementary:
+  - button "Open account menu":
+  - button "Tasks":
+  - button "Boards":
+  - button "Dashboard":
+  - button "Calendar":
+  - button "Matrix":
+  - button "Pomodoro":
+  - button "Time Tracker":
+  - button "Habits":
+  - button "Meditation":
+  - button "Countdown":
+  - button "XAI Chat":
+  - button "Statistics":
+  - button "Bookkeeping":
+  - button "Metrics":
+  - button "Pet":
+- banner:
+  - button "Search tasks, habits, notes…":
+    - generic: Search tasks, habits, notes…
+    - generic: ⌘K
+  - button "EN · Light · Comfortable":
+    - generic: EN · Light · Comfortable
+- main:
+  - heading "Pomodoro" [level=1]
+  - generic: Focus · Apple
+  - generic: Ready
+  - button "Mute":
+  - button "Enter fullscreen":
+  - button "More":
+  - button "Current mode":
+    - generic: Focus
+  - generic: 0/25 min
+  - generic "Double-click for fullscreen focus":
+    - generic: Focus
+    - generic: 25:00
+    - generic: Ready
+  - button "Start"
+  - button "Reset"
+  - region "Pomodoro settings":
+    - generic: Preset
+    - list:
+      - button "25 min" [pressed]
+      - button "30 min"
+      - button "15 min"
+      - button "5 min break"
+      - button "10 min break"
+      - button "15 min break"
+      - button "Custom"
+    - generic: Display
+    - list:
+      - button "Digital"
+      - button "Ring"
+      - button "Clockwise"
+      - button "Apple" [pressed]
+      - button "Minimal"
+      - button "Focus"
+    - generic: Color
+    - button "Coral" [pressed]
+    - button "Amber"
+    - button "Sage"
+    - button "Teal"
+    - button "Blue"
+    - button "Violet"
+    - button "Rose"
+    - generic: Sound
+    - combobox "Select alert sound":
+      - option "Soft Chime" [selected]
+      - option "Bell"
+      - option "Digital"
+      - option "None"
+    - button "Preview"
+    - generic: Soft Chime
+  - complementary:
+    - heading "Overview" [level=2]
+    - list "Overview":
+      - generic: Today's Pomos
+      - 'generic "Today''s Pomos: 0"': "0"
+      - generic: Today's Focus
+      - 'generic "Today''s Focus: 0m"': "0"
+      - generic: Total Pomos
+      - 'generic "Total Pomos: 0"': "0"
+      - generic: Total Focus
+      - 'generic "Total Focus: 0m"': "0"
+    - heading "Focus Record" [level=2]
+    - button "Add manually":
+    - button "More":
+    - generic "Focus Record"
+- paragraph: Hi! Don't forget to drink water 💧
+- button "🐾 Change pet (Mochi)"
+- button "Change pet":
