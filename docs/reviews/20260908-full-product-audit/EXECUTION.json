@@ -57,7 +57,9 @@
         "commit:55d826e",
         "commit:60a1b6e",
         "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md",
-        "commit:d01b671"
+        "commit:d01b671",
+        "commit:f6b1d00",
+        "../web-data-lifecycle-registry/20260909-timer-lifecycle-check.md"
       ]
     },
     {
@@ -294,12 +296,14 @@
     },
     {
       "id": "TASK-02",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:1b7c0e0",
         "commit:d7d1733",
         "commit:f3a75f1",
-        "commit:3c8e24f"
+        "commit:3c8e24f",
+        "commit:58f4076",
+        "../web-task-link-independent/20260909-review.md"
       ]
     },
     {
