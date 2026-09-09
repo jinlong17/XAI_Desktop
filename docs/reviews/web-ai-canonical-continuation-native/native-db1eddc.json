@@ -1,0 +1,40 @@
+{
+  "requestedRef": "db1eddc",
+  "revision": "db1eddccadfecdbea2e078e09c4b5808d25b0e56",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "tasks:create",
+      "pass": false,
+      "error": "Error: tasks:create: double confirm attempted multiple writes: expected 1, got 0"
+    },
+    {
+      "name": "tasks:update",
+      "pass": false,
+      "error": "Error: tasks:update: double confirm attempted multiple writes: expected 1, got 0"
+    },
+    {
+      "name": "tasks:delete",
+      "pass": false,
+      "error": "Error: tasks:delete: double confirm attempted multiple writes: expected 1, got 0"
+    },
+    {
+      "name": "calendar:create",
+      "pass": false,
+      "error": "Error: calendar:create: double confirm attempted multiple writes: expected 1, got 0"
+    },
+    {
+      "name": "calendar:update",
+      "pass": false,
+      "error": "Error: calendar:update: double confirm attempted multiple writes: expected 1, got 0"
+    },
+    {
+      "name": "calendar:delete",
+      "pass": false,
+      "error": "Error: calendar:delete: double confirm attempted multiple writes: expected 1, got 0"
+    }
+  ],
+  "scope": "Real AiChat UI/subscribers/native storage; synthetic stream adapter, no provider network"
+}
