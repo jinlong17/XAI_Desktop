@@ -64,7 +64,6 @@ export function useTaskCreateRequestSubscriber(): void {
         // Clear the oldest entries by rebuilding (simple approach for bounded sessions).
         seenRef.current.clear();
       }
-      seenRef.current.add(requestId);
     }
 
     const title = typeof payload.title === "string" ? payload.title.trim() : "";
@@ -98,6 +97,7 @@ export function useTaskCreateRequestSubscriber(): void {
 
     // Write back via imperative setPref.
     // Cast through unknown for the same registry-type mismatch reason.
-    setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState);
+    // Only committed requests are deduplicated; rejected writes remain retryable.
+    if (setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState) && requestId) seenRef.current.add(requestId);
   });
 }

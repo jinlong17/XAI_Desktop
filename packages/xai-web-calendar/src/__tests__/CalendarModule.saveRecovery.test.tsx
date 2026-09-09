@@ -45,6 +45,7 @@ it("keeps the editor and record when deletion fails", () => {
   expect(screen.getByRole("alert").textContent).toMatch(/not saved/i);
 });
 it("exports the latest unsaved form and refuses old-account retry and export", () => {
+  vi.useFakeTimers();
   render(<CalendarModule lang="en" />);
   fireEvent.click(screen.getByLabelText("Add event"));
   const input = document.getElementById("event-composer-title-input") as HTMLInputElement;
@@ -58,7 +59,8 @@ it("exports the latest unsaved form and refuses old-account retry and export", (
     constructor(parts: BlobPart[], options?: BlobPropertyBag) { super(parts, options); downloaded = parts.map(String).join(""); }
   });
   const createObjectURL = vi.fn(() => "blob:calendar");
-  vi.stubGlobal("URL", { createObjectURL, revokeObjectURL: vi.fn() });
+  const revokeObjectURL = vi.fn();
+  vi.stubGlobal("URL", { createObjectURL, revokeObjectURL });
   vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
   fireEvent.click(screen.getByRole("button", { name: "Export current draft" }));
   expect(JSON.parse(downloaded).form.title).toBe("Latest export");
@@ -66,6 +68,9 @@ it("exports the latest unsaved form and refuses old-account retry and export", (
   fireEvent.click(screen.getByRole("button", { name: /retry save/i }));
   fireEvent.click(screen.getByRole("button", { name: "Export current draft" }));
   expect(createObjectURL).toHaveBeenCalledTimes(1);
+  // Complete the owned download cleanup before restoring the URL test double.
+  vi.advanceTimersByTime(1000);
+  expect(revokeObjectURL).toHaveBeenCalledWith("blob:calendar");
   expect(localStorage.getItem(key)).toBeNull();
   expect(localStorage.getItem(accountScope.physicalKey("xai_calendar_events"))).toBeNull();
 });

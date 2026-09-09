@@ -1,0 +1,24 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests) 1003ms
+   ✓ keeps a failed new event and its latest draft available for retry  352ms
+   ✓ exports the latest unsaved form and refuses old-account retry and export  370ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  14:17:16
+   Duration  2.83s (transform 526ms, setup 309ms, collect 609ms, tests 1.00s, environment 534ms, prepare 70ms)
+

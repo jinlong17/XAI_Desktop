@@ -1,0 +1,69 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps a failed new event and its latest draft available for retry
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > keeps the editor and record when deletion fails
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/CalendarModule.eventcrud.test.tsx (10 tests) 682ms
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > exports the latest unsaved form and refuses old-account retry and export
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+stderr | src/__tests__/CalendarModule.saveRecovery.test.tsx > does not overwrite newer raw events when retrying a failed draft
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ✓ src/__tests__/CalendarModule.saveRecovery.test.tsx (4 tests) 940ms
+   ✓ keeps a failed new event and its latest draft available for retry  338ms
+   ✓ exports the latest unsaved form and refuses old-account retry and export  339ms
+ ✓ src/__tests__/CalendarModule.viewtoggle.test.tsx (11 tests) 559ms
+ ✓ src/__tests__/CalendarModule.render.test.tsx (12 tests) 509ms
+ ✓ src/__tests__/CalendarModule.nav.test.tsx (6 tests) 382ms
+ ✓ src/__tests__/YearView.test.tsx (5 tests) 367ms
+ ✓ src/__tests__/CalendarModule.deeplink.test.tsx (7 tests) 312ms
+ ✓ src/__tests__/CalendarModule.recurrence.test.tsx (6 tests) 355ms
+ ✓ src/__tests__/CalendarModule.activedate.test.tsx (5 tests) 286ms
+ ✓ src/__tests__/WeekView.test.tsx (14 tests) 260ms
+ ✓ src/__tests__/CalendarModule.i18n.test.tsx (6 tests) 294ms
+ ✓ src/__tests__/CalendarModule.weekstart.test.tsx (4 tests) 217ms
+ ✓ src/__tests__/CalendarModule.events.test.tsx (6 tests) 210ms
+ ✓ src/__tests__/CalendarModule.dst-recurrence.test.tsx (2 tests) 272ms
+ ✓ src/__tests__/CalendarModule.boardfeed.test.tsx (3 tests) 141ms
+ ✓ src/__tests__/EventComposer.test.tsx (21 tests) 155ms
+ ✓ src/__tests__/TimeGrid.test.tsx (8 tests) 111ms
+ ✓ src/__tests__/localDate.test.tsx (4 tests) 90ms
+ ✓ src/__tests__/weekdays.test.ts (3 tests) 2ms
+ ✓ src/__tests__/DayView.test.tsx (10 tests) 93ms
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (6 tests) 18ms
+ ✓ src/__tests__/perfBudget.test.ts (1 test) 54ms
+ ✓ src/__tests__/events.test.ts (3 tests) 9ms
+ ✓ src/__tests__/useUserCalEvents.test.tsx (8 tests) 23ms
+ ✓ src/__tests__/perfBudget.eventcrud.test.ts (1 test) 15ms
+ ✓ src/__tests__/eventStore.test.ts (13 tests) 30ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (5 tests) 25ms
+ ✓ src/__tests__/monthGridCells.test.ts (9 tests) 6ms
+ ✓ src/__tests__/placeEventBlocks.test.ts (12 tests) 6ms
+ ✓ src/__tests__/expandRecurrence.test.ts (12 tests) 5ms
+ ✓ src/__tests__/mergeEventsForViewport.test.ts (10 tests) 4ms
+ ✓ src/__tests__/boardCalendarFeed.test.ts (6 tests) 7ms
+ ✓ src/__tests__/sampleEvents.test.ts (10 tests) 6ms
+ ✓ src/__tests__/styles.css.tokens.test.ts (11 tests) 3ms
+ ✓ src/__tests__/timeGridMath.test.ts (16 tests) 4ms
+ ✓ src/__tests__/weekWindow.test.ts (8 tests) 4ms
+ ✓ src/__tests__/parseDateKey.test.ts (15 tests) 4ms
+ ✓ src/__tests__/isoWeekNumber.test.ts (6 tests) 2ms
+ ✓ src/__tests__/ids.test.ts (4 tests) 6ms
+ ✓ src/__tests__/validators.test.ts (11 tests) 3ms
+ ✓ src/__tests__/dateKeys.test.ts (7 tests) 3ms
+ ✓ src/__tests__/holidays.test.ts (4 tests) 2ms
+ ✓ src/__tests__/index-barrel.test.ts (9 tests) 3ms
+ ✓ src/__tests__/registration.test.tsx (2 tests) 2ms
+ ✓ src/__tests__/formatMonth.test.ts (3 tests) 2ms
+ ✓ src/__tests__/registry-presence.test.ts (4 tests) 2ms
+
+ Test Files  46 passed (46)
+      Tests  343 passed (343)
+   Start at  14:16:49
+   Duration  15.29s (transform 576ms, setup 3.65s, collect 2.10s, tests 6.48s, environment 10.55s, prepare 1.90s)
+

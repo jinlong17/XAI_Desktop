@@ -93,7 +93,6 @@ export function useCalendarCreateRequestSubscriber(): void {
       if (seenRef.current.size >= MAX_SEEN) {
         seenRef.current.clear();
       }
-      seenRef.current.add(requestId);
     }
 
     const title = typeof payload.title === "string" ? payload.title.trim() : "";
@@ -124,6 +123,7 @@ export function useCalendarCreateRequestSubscriber(): void {
     const { next } = createEvent(store, partial);
 
     // Write back via imperative setPref (storage-event → useUserCalEvents in mounted CalendarModule updates reactively).
-    setPref("xai_calendar_events", next);
+    // Only committed requests are deduplicated; rejected writes remain retryable.
+    if (setPref("xai_calendar_events", next) && requestId) seenRef.current.add(requestId);
   });
 }

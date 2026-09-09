@@ -709,8 +709,11 @@
     },
     {
       "id": "AI-02",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:bce7fc8",
+        "../web-ai-tool-write-receipts/20260909-create-retry-fix.md"
+      ]
     },
     {
       "id": "AI-03",
