@@ -1486,3 +1486,8 @@ it("AB7: ZH locale renders ZH tooltip on each disabled link", () => {
   - Must be completed before next `xai-web-deploy-cloudflare` ship.
 - **Top-10 audit batch progress**: **6/10 SHIPPED** (#1 Sign-out / #2 Calendar `+` / #5 Board onOpenCard / #7 Topbar persist / #9 Widget remove / #10 About links). Remaining: #3 Tasks `+` (carve-out feature) / #4 Matrix Add / #6 Stickies `+` (carve-out) / #8 Rail icons HIDE.
 - **Next step**: — (workflow complete for Audit Top-10 #10).
+
+
+## REL-04 export scope and device recovery
+
+REL-04 UI implementation: account export scope/exclusion copy, manifest omission feedback, separate device settings/history download and safe default choices. Preserves original local data and account deletion semantics. Settings full suite 41 files/269 tests passed before one additional omission-feedback case; typecheck and lint passed. Focused final tests and independent browser verification are recorded separately. No restore, cloud backup or hosted deployment acceptance claimed.

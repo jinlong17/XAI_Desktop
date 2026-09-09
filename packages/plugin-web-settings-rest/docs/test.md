@@ -628,3 +628,8 @@ Durable recovery additionally verifies tombstone-before-erase, serialized receip
 Package config uses ESNext/Bundler resolution to match the shipped Vite application and its source-package imports; ImportMeta typing is explicit. No dependencies or lockfile changed by this Settings worker.
 
 Implementation verification: **40 test files / 266 tests PASS**, package typecheck PASS. A separate isolated real Chromium probe (`node packages/plugin-web-settings-rest/docs/verify-browser-deletion-recovery.mjs`) writes native localStorage and IndexedDB fixtures, reloads the full page, shows recovery while unauthenticated, activates B, retries A erasure and confirms A content/ciphertext are removed while B, legacy ciphertext and device preferences survive. Receipt becomes complete only after native cleanup; the notice then disappears. This is an actual page reload, not whole-browser termination or hosted authentication acceptance. The fixture ciphertext is opaque synthetic data: the probe tests native owner-scoped erasure, not cryptographic correctness.
+
+
+## REL-04 export scope and device recovery
+
+REL-04: DeviceRecoveryExport tests inspect actual Blob JSON: device layout included, A/B account data and unselected history excluded; explicit legacy raw bytes retained exactly; stale account pane refuses download; credential-named history omitted with visible feedback and source retention. Account export test now also requires manifest and restoreSupported:false while preserving account/legacy isolation assertions. Browser download/render verification remains an independent layer.

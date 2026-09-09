@@ -876,3 +876,8 @@ P4 of the phase plan adds two new sections to `apps/web/deploy/README.md`:
 - `readAccountDeletionReceipt(accountId, demo?)` and `resumeAccountLocalDeletion(receipt)` are public browser-only recovery APIs. A malformed/mismatched receipt cannot authorize cleanup. Completed receipts remain metadata for recovery/audit; this module does not claim cloud synchronization or complete deletion of every future registered backend.
 
 Scope limit: this closes REL-03 compatibility for Settings and the implemented local LS/BYOK stores. Full REL-04/REL-06 deletion inventory, future encrypted-cache namespaces, remote revocation and hosted account-deletion acceptance are not marked complete here. Tests use synthetic accounts and mock the server/AI deletion seam; no real account was deleted.
+
+
+## REL-04 export scope and device recovery
+
+Account settings now downloads account records with a lifecycle manifest. A separate DeviceRecoveryExport control calls exportDeviceRecoveryData with includeLegacy/includeArchives, both false initially. This is a read-only JSON preservation export, not a restore API. Known device preferences are included; current account namespaces, authentication stores and BYOK stores are excluded. Unsafe/unrecognized selected history is omitted with manifest reasons and visible omission counts.

@@ -137,7 +137,7 @@ describe("account-local data management", () => {
     render(accountPane.render({ lang: "en" }));
     fireEvent.click(screen.getByRole("button", { name: "Export this account's local data" }));
     const text = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = reject; reader.readAsText(blob); });
-    expect(JSON.parse(text)).toEqual({ version: 1, accountId: scope.accountId, generation: scope.generation, records: { xai_task_cols: '[{"id":"A-task"}]' } });
+    expect(JSON.parse(text)).toMatchObject({ version: 1, kind: "account-records", accountId: scope.accountId, generation: scope.generation, records: { xai_task_cols: '[{"id":"A-task"}]' }, manifest: { restoreSupported: false } });
     expect(text).not.toContain("B-secret-content"); expect(text).not.toContain("unowned-content"); expect(text).not.toContain("xai_lang");
     expect(screen.getByRole("status")).toHaveTextContent("Download requested");
     expect(screen.getByRole("status")).toHaveTextContent("not a cloud backup");

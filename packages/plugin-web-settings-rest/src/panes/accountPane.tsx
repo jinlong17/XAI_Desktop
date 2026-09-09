@@ -19,6 +19,7 @@ import { accountScope, exportAccountLocalData, requestAccountDataManagement } fr
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { localI18n } from "../internal/localI18n.js";
 import { DeleteAccountConfirmModal } from "../internal/DeleteAccountConfirmModal.js";
+import { DeviceRecoveryExport } from "../internal/DeviceRecoveryExport.js";
 
 function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const t = localI18n(lang);
@@ -39,7 +40,10 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
       document.body.append(link);
       try { link.click(); } finally { link.remove(); }
       setExportFailed(false);
-      setExportMessage(lang === "zh" ? "已请求下载，请检查浏览器下载记录。这不是云端备份。" : "Download requested. Check your browser downloads; this is not a cloud backup.");
+      const omitted = data.manifest.omitted.length;
+      setExportMessage(omitted > 0
+        ? (lang === "zh" ? `已请求下载；${omitted} 项凭据类数据已排除，详情见文件内范围清单。这不是云端备份。` : `Download requested; ${omitted} credential-related items were excluded. See the file's scope manifest; this is not a cloud backup.`)
+        : (lang === "zh" ? "已请求下载，请检查浏览器下载记录。这不是云端备份。" : "Download requested. Check your browser downloads; this is not a cloud backup."));
     } catch {
       setExportFailed(true);
       setExportMessage(lang === "zh" ? "无法导出当前账户数据。请确认账户已解锁，并检查浏览器存储权限后重试。" : "Could not export this account. Unlock the account and check browser storage permissions, then retry.");
@@ -113,6 +117,7 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
 
       <section aria-label={lang === "zh" ? "本地账户数据" : "Local account data"}>
         <p>{lang === "zh" ? "导出仅包含当前账户的本地业务数据，不包含登录凭据、AI 密钥或其他账户数据。" : "Export includes this account's local content, excluding login credentials, AI keys and other accounts."}</p>
+        <p>{lang === "zh" ? "设备布局、未归属的旧数据与迁移归档不在此账户文件中。导出文件附有范围清单；暂不支持直接导入恢复。" : "Device layout, unassigned old data and migration archives are excluded. The file includes a scope manifest; direct import and restore are not currently supported."}</p>
         <button type="button" className="btn ghost" onClick={exportLocalData}>
           {lang === "zh" ? "导出当前账户本地数据" : "Export this account's local data"}
         </button>
@@ -121,6 +126,7 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
         </button>
         {exportMessage && <p role={exportFailed ? "alert" : "status"}>{exportMessage}</p>}
       </section>
+      <DeviceRecoveryExport lang={lang} />
 
       <DeleteAccountConfirmModal
         open={modalOpen}

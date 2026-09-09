@@ -965,3 +965,10 @@ dialog.delete-account-modal::backdrop {
 .account-deletion-recovery p { margin: 0 0 0.75rem; }
 .account-deletion-recovery button { min-height: 44px; }
 .account-deletion-recovery button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Device recovery stays secondary to the current account's export. */
+.device-recovery-export { margin-block: 1.25rem; max-width: 100%; overflow-wrap: anywhere; }
+.device-recovery-export summary { cursor: pointer; min-height: 44px; padding-block: .7rem; }
+.device-recovery-export label { display: flex; align-items: flex-start; gap: .65rem; min-height: 44px; padding-block: .6rem; }
+.device-recovery-export input { flex: 0 0 auto; margin-top: .2rem; }
+.device-recovery-export summary:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
