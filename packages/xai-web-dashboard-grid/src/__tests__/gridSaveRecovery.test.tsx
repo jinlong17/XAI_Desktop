@@ -55,3 +55,7 @@ describe('Dashboard recovery proposals',()=>{
   const failure=deny(accountScope.physicalKey('xai_dash_order'));fireEvent.click(document.querySelector('[data-widget-id=bravo] .widget-shell__remove')!);expect(document.querySelector('[data-widget-id=bravo]')).toBeTruthy();failure.mockRestore();fireEvent.click(document.querySelector('[role=alert] button')!);expect(document.querySelector('[data-widget-id=bravo]')).toBeNull();expect(events).toHaveLength(1);off();
  });
 });
+
+it('failed order reconciliation remains pending and can retry rather than marking it saved',()=>{
+  setPref('xai_dash_order',['alpha','unknown']);const fault=deny(accountScope.physicalKey('xai_dash_order'));const {result}=renderHook(()=>useDashOrder(widgets));expect(result.current[0]).toEqual(['alpha']);expect(result.current.recovery.error).toBeTruthy();expect(localStorage.getItem(accountScope.physicalKey('xai_dash_order'))).toBe('["alpha","unknown"]');fault.mockRestore();act(()=>{expect(result.current.recovery.retry()).toBe(true)});expect(localStorage.getItem(accountScope.physicalKey('xai_dash_order'))).toBe('["alpha"]');expect(result.current.recovery.error).toBeNull();
+});
