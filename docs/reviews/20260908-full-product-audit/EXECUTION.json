@@ -141,7 +141,11 @@
         "../web-ai-preference-discard/review.md",
         "commit:72296ec",
         "commit:33723a1",
-        "commit:187225e"
+        "commit:187225e",
+        "../web-dashboard-grid-independent/review.md",
+        "commit:8865d17",
+        "commit:53854f4",
+        "../web-ai-toolbar-independent/review.md"
       ]
     },
     {
