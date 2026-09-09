@@ -1,0 +1,770 @@
+revision=94f1183
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-parent-tasks-d1-1eSlaX
+
+stdout | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+queued-target {"preserved":true}
+
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx (8 tests | 2 failed) 2447ms
+   ✓ real checkbox persists completion and preserves existing durable receipts 70ms
+   ✓ queued checkbox refuses a changed target without overwriting newer external bytes 42ms
+   ✓ queued checkbox never drops an unrelated externally added task 24ms
+   ✓ render and checkbox do not repair a present invalid domain by overwriting it with demo tasks 73ms
+   ✓ failed checkbox retry preserves its original baseline; external change=false 100ms
+   ✓ failed checkbox retry preserves its original baseline; external change=true 76ms
+   × physically absent Tasks can initialize a valid canonical seed without false recovery 1039ms
+     → expected null not to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"module module-tasks"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"task-save-failure"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mCould not save. Your changes are still here. Try saving again, or export this draft.[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mExport draft[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button>[39m
+            [0mRetry save[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"All"[39m
+          [33mclass[39m=[32m"module-sidebar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sidebar-section"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"true"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mAll[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m26[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mNext 7 Days[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m11[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+     ...
+   × valid legacy task normalization commits metadata using the stored baseline 1023ms
+     → expected undefined to be 'xai-command-state' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"module module-tasks"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"task-save-failure"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mCould not save. Your changes are still here. Try saving again, or export this draft.[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mExport draft[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button>[39m
+            [0mRetry save[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"All"[39m
+          [33mclass[39m=[32m"module-sidebar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sidebar-section"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"true"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mAll[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m1[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mNext 7 Days[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+       ...
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  16:46:29
+   Duration  3.42s (transform 198ms, setup 0ms, collect 335ms, tests 2.45s, environment 339ms, prepare 93ms)
+
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > real checkbox persists completion and preserves existing durable receipts
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > render and checkbox do not repair a present invalid domain by overwriting it with demo tasks
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > failed checkbox retry preserves its original baseline; external change=false
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > physically absent Tasks can initialize a valid canonical seed without false recovery
+AssertionError: expected null not to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"module module-tasks"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"task-save-failure"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mCould not save. Your changes are still here. Try saving again, or export this draft.[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mExport draft[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button>[39m
+            [0mRetry save[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"All"[39m
+          [33mclass[39m=[32m"module-sidebar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sidebar-section"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"true"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mAll[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m26[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mNext 7 Days[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m11[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+     ...
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx:57:60
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > valid legacy task normalization commits metadata using the stored baseline
+AssertionError: expected undefined to be 'xai-command-state' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"module module-tasks"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"task-save-failure"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mCould not save. Your changes are still here. Try saving again, or export this draft.[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"task-composer__btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mExport draft[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button>[39m
+            [0mRetry save[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"All"[39m
+          [33mclass[39m=[32m"module-sidebar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sidebar-section"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"true"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mAll[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m1[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mToday[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mTomorrow[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mNext 7 Days[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"list-row"[39m
+              [33mdata-active[39m=[32m"false"[39m
+              [33mrole[39m=[32m"button"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 16 16"[39m
+                [33mwidth[39m=[32m"16"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"grow"[39m
+              [36m>[39m
+                [0mInbox[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"count"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+       ...
+
+- Expected: 
+"xai-command-state"
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx:63:42
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

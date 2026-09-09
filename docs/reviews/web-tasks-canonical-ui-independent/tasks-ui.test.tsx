@@ -52,3 +52,14 @@ it.each([false,true])('failed checkbox retry preserves its original baseline; ex
  if(external){expect.soft(localStorage.getItem(physical)).toBe(newer);expect(await screen.findByRole('alert')).not.toBeNull();}
  else await waitFor(()=>expect(data().data.flatMap((c:any)=>c.tasks).find((t:any)=>t.id==='existing').done).toBe(true));
 });
+it('physically absent Tasks can initialize a valid canonical seed without false recovery',async()=>{
+ render(<TasksModule lang="en"/>);
+ await waitFor(()=>expect(localStorage.getItem(key())).not.toBeNull());
+ expect(data().format).toBe('xai-command-state');expect(data().data.flatMap((c:any)=>c.tasks).length).toBeGreaterThan(0);expect(data().receipts).toEqual({});expect(screen.queryByRole('alert')).toBeNull();
+});
+it('valid legacy task normalization commits metadata using the stored baseline',async()=>{
+ const legacy=cols().map(col=>({...col,tasks:col.tasks.map(({id,title,tag})=>({id,title,tag}))}));localStorage.setItem(key(),JSON.stringify(legacy));
+ render(<TasksModule lang="en"/>);
+ await waitFor(()=>expect(data().format).toBe('xai-command-state'));
+ const original=data().data.flatMap((c:any)=>c.tasks).find((row:any)=>row.id==='existing');expect(original.title.en).toBe('Original');expect(original.tags).toContain('work');expect(original.priority).toBe('normal');expect(screen.queryByRole('alert')).toBeNull();
+});
