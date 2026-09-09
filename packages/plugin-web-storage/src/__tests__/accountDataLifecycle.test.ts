@@ -66,3 +66,13 @@ it('preserves a deletion recovery receipt and enforces the tombstone while clean
   expect(()=>accountScope.physicalKey('xai_ai_convos',a)).toThrow();
   expect(()=>readGeneration(localStorage,'A')).toThrow(/deleted/);
 });
+
+it('exports and erases a whole canonical envelope without projecting or stripping receipts',()=>{
+  const scope=accountScope.activate(accountScope.lock('A'),'one');
+  const raw=JSON.stringify({format:'xai-command-state',version:1,revision:2,data:{},receipts:{'ai:calendar-delete':{operationVersion:1,signature:'calendar:delete:v1',result:{ok:true,targetId:'event-1'},committedAt:'2026-09-09T12:00:00.000Z'}}});
+  const key=generationKey('A','one','xai_calendar_events');
+  localStorage.setItem(key,raw);
+  expect(exportAccountLocalData(scope).records.xai_calendar_events).toBe(raw);
+  deleteAccountLocalData(scope);
+  expect(localStorage.getItem(key)).toBeNull();
+});

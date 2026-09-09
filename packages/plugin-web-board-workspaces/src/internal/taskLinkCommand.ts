@@ -1,4 +1,4 @@
-import { accountScope, setPref, type AccountScope, type TaskColsState } from '@repo/plugin-web-storage';
+import { accountScope, readCanonicalCommandState, setPref, type AccountScope, type TaskColsState } from '@repo/plugin-web-storage';
 import { loadBoardsOrDefault, readBoardStorage, preserveBoardStorageFormat, type Board, type BoardCardTaskLink } from '@repo/plugin-web-board-core';
 import { bucketIdForBoardDueDate, findBoardLinkedTask, loadTaskColsOrSeed, taskCardFromBoardLink, upsertBoardLinkedTask } from '@repo/plugin-web-tasks';
 
@@ -31,8 +31,13 @@ export function ensureBoardTaskLink(boardId: string, cardId: string, scope: Acco
     const current = boardsNow();
     const source = { type: 'board-card' as const, boardId, listId: current.list.id, cardId };
     const rawTasks = read('xai_task_cols');
-    const cols = loadTaskColsOrSeed(rawTasks);
-    if (rawTasks !== null && cols !== rawTasks) throw Error('Task data needs recovery; original bytes were preserved.');
+    const taskState = rawTasks === null ? { status: 'absent' as const } : readCanonicalCommandState(rawTasks);
+    if (taskState.status === 'corrupt' || taskState.status === 'unsupported' || taskState.status === 'unavailable') {
+      throw Error('Task data needs recovery; original bytes were preserved.');
+    }
+    const taskData = taskState.status === 'absent' ? null : taskState.data;
+    const cols = loadTaskColsOrSeed(taskData);
+    if (taskData !== null && cols !== taskData) throw Error('Task data needs recovery; original bytes were preserved.');
     const existing = findBoardLinkedTask(cols, source);
     const draft = current.card.taskLink?.pending ?? { title: current.card.title, ...(current.card.dueDate ? { dueDate: current.card.dueDate } : {}) };
     const task = existing?.task ?? taskCardFromBoardLink({ ...source, ...draft });

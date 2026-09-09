@@ -40,3 +40,12 @@ it('legacy task ID collision never overwrites another source or publishes a fals
  expect(ensureBoardTaskLink('b-default','bc1',accountScope.capture())).toMatchObject({ok:false,phase:'intent'});
  expect(localStorage.getItem(taskKey())).toBe(bytes);expect(card().taskLink).toBeUndefined();
 });
+
+it('reads task data from an envelope but leaves durable receipt bytes untouched until the coordinated writer lands',()=>{
+ seed();const scope=accountScope.capture();
+ const raw=JSON.stringify({format:'xai-command-state',version:1,revision:2,data:loadTaskColsOrSeed(null),receipts:{'ai:task-create':{operationVersion:1,signature:'tasks:create:v1',result:{ok:true,targetId:'older-task'},committedAt:'2026-09-09T12:00:00.000Z'}}});
+ localStorage.setItem(taskKey(),raw);
+ expect(ensureBoardTaskLink('b-default','bc1',scope)).toMatchObject({ok:false,phase:'task'});
+ expect(localStorage.getItem(taskKey())).toBe(raw);
+ expect(card().taskLink?.pending).toBeDefined();
+});

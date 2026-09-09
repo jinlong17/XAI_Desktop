@@ -20,7 +20,11 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
-import { accountScope, usePref } from "@repo/plugin-web-storage";
+import {
+  accountScope,
+  readCanonicalCommandSnapshot,
+  usePref,
+} from "@repo/plugin-web-storage";
 import type { UserCalEvent } from "./types.js";
 import {
   createEvent,
@@ -63,8 +67,15 @@ export function useUserCalEvents(): UserCalEventsApi {
   const [scope] = useState(() => accountScope.capture());
   const persist = useCallback((next: Record<string, UserCalEvent>) => {
     if (!accountScope.isReady(scope)) throw new Error("Calendar account changed");
-    const raw = localStorage.getItem(accountScope.physicalKey("xai_calendar_events", scope));
-    if (JSON.stringify(raw === null ? {} : JSON.parse(raw)) !== JSON.stringify(events)) {
+    const snapshot = readCanonicalCommandSnapshot("xai_calendar_events", scope);
+    if (snapshot.status === "corrupt" || snapshot.status === "unsupported" || snapshot.status === "unavailable") {
+      throw new Error("Calendar data needs recovery; original bytes were preserved.");
+    }
+    const baseline = snapshot.status === "absent" ? {} : snapshot.data;
+    if (!baseline || typeof baseline !== "object" || Array.isArray(baseline)) {
+      throw new Error("Calendar data needs recovery; original bytes were preserved.");
+    }
+    if (JSON.stringify(baseline) !== JSON.stringify(events)) {
       throw new Error("Calendar data changed; reopen before saving");
     }
     if (!setEventsRaw(next)) throw new Error("Calendar changes were not saved");

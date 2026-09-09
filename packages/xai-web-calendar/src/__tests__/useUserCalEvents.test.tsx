@@ -100,6 +100,27 @@ describe("useUserCalEvents — CRUD", () => {
 });
 
 describe("useUserCalEvents — persistence round-trip", () => {
+  it("reads an envelope baseline and refuses an old sync write without changing its raw receipt bytes", () => {
+    const raw = JSON.stringify({
+      format: "xai-command-state", version: 1, revision: 2, data: {},
+      receipts: {
+        "ai:calendar-create": {
+          operationVersion: 1, signature: "calendar:create:v1",
+          result: { ok: true, targetId: "older-event" },
+          committedAt: "2026-09-09T12:00:00.000Z",
+        },
+      },
+    });
+    localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), raw);
+    const { result } = renderHook(() => useUserCalEvents());
+    expect(result.current.events).toEqual({});
+    expect(() => act(() => result.current.create({
+      title: "Blocked until canonical writer", startISO: "2026-05-22T09:00",
+      endISO: "2026-05-22T10:00", colorPreset: "mint", recurrence: null,
+    }))).toThrow(/not saved/);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_calendar_events"))).toBe(raw);
+  });
+
   it("remount sees the event that was created in a previous mount (HC4)", () => {
     const { result: r1, unmount } = renderHook(() => useUserCalEvents());
     act(() => {
