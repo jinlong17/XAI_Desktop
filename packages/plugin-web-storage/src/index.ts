@@ -55,7 +55,7 @@ export type { PrefMeta } from "./internal/usePref.js";
 
 // ---- usePrefAutosave hook --------------------------------------------------
 export { usePrefAutosave } from "./internal/usePrefAutosave.js";
-export type { UsePrefAutosaveOptions } from "./internal/usePrefAutosave.js";
+export type { UsePrefAutosaveOptions, PrefAutosaveResult } from "./internal/usePrefAutosave.js";
 
 // ---- migrate stub (v1 — no registered migrations) -------------------------
 export { migrate } from "./internal/migrate.js";

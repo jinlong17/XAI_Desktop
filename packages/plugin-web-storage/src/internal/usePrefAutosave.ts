@@ -12,7 +12,7 @@
  * Settings panels.
  */
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PrefCodec } from "./registry.js";
 import { encode } from "./codec.js";
 import { isPrefKey, setPrefAutosave } from "./storage.js";
@@ -22,6 +22,12 @@ import { accountScope } from "./accountScope.js";
 export interface UsePrefAutosaveOptions {
   /** Codec used to serialize the value. Default: "json". */
   codec?: PrefCodec;
+}
+
+export interface PrefAutosaveResult {
+  /** null before the first effect; false means the current value was not saved. */
+  readonly saved: boolean | null;
+  readonly retry: () => boolean;
 }
 
 /**
@@ -36,10 +42,11 @@ export function usePrefAutosave<T>(
   suffix: string,
   value: T,
   options?: UsePrefAutosaveOptions,
-): void {
+): PrefAutosaveResult {
   const scope = useRef(accountScope.capture()).current;
   const codec: PrefCodec = options?.codec ?? "json";
   const key = `xai_pref_${suffix}`;
+  const [saved, setSaved] = useState<boolean | null>(null);
 
   // Dev-mode validation: suffix must not contain '/'
   if (process.env.NODE_ENV !== "production" && suffix.includes("/")) {
@@ -58,19 +65,23 @@ export function usePrefAutosave<T>(
   // Keep a ref to the previous raw encoded value to implement idempotency
   const prevEncodedRef = useRef<string | null | undefined>(undefined);
 
-  useEffect(() => {
+  const write = useCallback((force = false) => {
     // SSR guard (belt-and-suspenders: useEffect never runs at SSR anyway)
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return false;
 
     const encoded = encode(codec, value);
-    if (encoded === null) return;
+    if (encoded === null) { setSaved(false); return false; }
+    const descriptor = JSON.stringify([key, codec, encoded]);
 
     // Idempotency: skip write if value is unchanged
-    if (prevEncodedRef.current === encoded) return;
+    if (!force && prevEncodedRef.current === descriptor) { setSaved(true); return true; }
 
-    if (setPrefAutosave(suffix, value, { codec, scope })) {
-      prevEncodedRef.current = encoded;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+    const success = setPrefAutosave(suffix, value, { codec, scope });
+    if (success) prevEncodedRef.current = descriptor;
+    setSaved(success);
+    return success;
+  }, [codec, key, scope, suffix, value]);
+  useEffect(() => { write(); }, [write]);
+  const retry = useCallback(() => write(true), [write]);
+  return { saved, retry };
 }

@@ -19,6 +19,36 @@ import { _clearAllListeners } from "../internal/storage.js";
 let container: HTMLDivElement;
 let root: ReturnType<typeof createRoot>;
 
+it("reports failed autosave and retries the latest value", async () => {
+  let result: unknown;
+  function Consumer({ value }: { value: string }) {
+    result = usePrefAutosave("pomodoro_sound", value);
+    return null;
+  }
+  const original = Storage.prototype.setItem;
+  const fault = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) {
+    if (key === "xai_pref_pomodoro_sound") throw new DOMException("quota", "QuotaExceededError");
+    original.call(this, key, value);
+  });
+  await act(async () => { root.render(createElement(Consumer, { value: "first" })); });
+  expect((result as { saved: boolean } | undefined)?.saved).toBe(false);
+  await act(async () => { root.render(createElement(Consumer, { value: "latest" })); });
+  fault.mockRestore();
+  await act(async () => { (result as { retry: () => boolean }).retry(); });
+  expect((result as { saved: boolean }).saved).toBe(true);
+  expect(localStorage.getItem("xai_pref_pomodoro_sound")).toBe('"latest"');
+});
+
+it("resaves when the key changes even if the value is unchanged", async () => {
+  function Consumer({ suffix }: { suffix: string }) {
+    usePrefAutosave(suffix, "same");
+    return null;
+  }
+  await act(async () => { root.render(createElement(Consumer, { suffix: "pomodoro_sound" })); });
+  await act(async () => { root.render(createElement(Consumer, { suffix: "pomodoro_theme" })); });
+  expect(localStorage.getItem("xai_pref_pomodoro_theme")).toBe('"same"');
+});
+
 beforeEach(() => {
   localStorage.clear();
   _clearAllListeners();

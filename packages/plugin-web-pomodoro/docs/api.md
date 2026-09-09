@@ -1,5 +1,9 @@
 # API Contract — xai-web-pomodoro
 
+## Preference save recovery — 2026-09-09
+
+The six device-local preferences (preset, custom minutes, display style, theme, sound and mute) consume autosave results. Failed writes keep the selected value active in the current page and display an unsaved notice, retry and a current-values JSON download. Retry only writes preferences currently marked unsaved. This recovery surface is separate from durable session settlement; it does not rewrite session or history records. Export is a manual preference draft, not a cloud backup or import contract. Other autosave consumers need their own UI integration.
+
 ## POMO-03 amendment — 2026-09-09 partial focus records
 
 FocusRecordList shows every ended focus session, including early endings, and labels rows Completed / Ended early · Incomplete (已完成 / 提前结束 · 未完成). Displayed duration remains measured `elapsedMs`. Today/total focus-duration overview sums include partial sessions; completed Pomodoro counts and streaks still count only completed sessions. This supersedes older completed-only record-list and duration-sum assumptions. Statistics consumes the same measured elapsed values and preserves unknown legacy measurements without substituting configured time.

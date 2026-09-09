@@ -242,12 +242,15 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [focusControlsVisible, setFocusControlsVisible] = useState(false);
 
-  usePrefAutosave("pomodoro_preset", activePresetId);
-  usePrefAutosave("pomodoro_custom_minutes", customMinutes);
-  usePrefAutosave("pomodoro_display_style", displayStyle);
-  usePrefAutosave("pomodoro_theme", themeId);
-  usePrefAutosave("pomodoro_sound", soundId);
-  usePrefAutosave("pomodoro_muted", muted);
+  const presetSave = usePrefAutosave("pomodoro_preset", activePresetId);
+  const minutesSave = usePrefAutosave("pomodoro_custom_minutes", customMinutes);
+  const styleSave = usePrefAutosave("pomodoro_display_style", displayStyle);
+  const themeSave = usePrefAutosave("pomodoro_theme", themeId);
+  const soundSave = usePrefAutosave("pomodoro_sound", soundId);
+  const mutedSave = usePrefAutosave("pomodoro_muted", muted);
+  const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
+  const preferencesUnsaved = preferenceSaves.some(result => result.saved === false);
+  const [preferenceExportFailed, setPreferenceExportFailed] = useState(false);
 
   // ---- Emit dedup guard (StrictMode double-mount safe) --------------------
 
@@ -503,6 +506,21 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       data-running={isRunning ? "true" : "false"}
       style={moduleStyle}
     >
+      {preferencesUnsaved && <section role="alert" className="pomo-notice pomo-recovery">
+        <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
+        <button type="button" onClick={() => { preferenceSaves.filter(result => result.saved === false).forEach(result => result.retry()); }}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
+        <button type="button" onClick={() => {
+          try {
+            const values = { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted };
+            const blob = new Blob([JSON.stringify({ version: 1, kind: "pomodoro-preference-draft", values }, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+            anchor.href = url; anchor.download = "pomodoro-preferences.json";
+            document.body.appendChild(anchor); anchor.click(); anchor.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000); setPreferenceExportFailed(false);
+          } catch { setPreferenceExportFailed(true); }
+        }}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
+        {preferenceExportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
+      </section>}
       {timerTick.conflict && <p role="status" className="pomo-notice">{lang === "zh" ? "计时已在其他标签页更改，现已刷新。请检查当前状态后重新操作。" : "The timer changed in another tab and has been refreshed. Review its current state before choosing an action."}</p>}
       {timerTick.error && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{timerTick.error}</p>
