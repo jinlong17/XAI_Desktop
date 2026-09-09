@@ -1,0 +1,18 @@
+revision=7b584b3
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-remove-2ie3sz
+
+ ✓ docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx (2 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:25:06
+   Duration  881ms (transform 68ms, setup 0ms, collect 87ms, tests 3ms, environment 469ms, prepare 94ms)
+
+
+stderr | docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx > failed read must not authorize canonical removal
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+
+stderr | docs/reviews/web-canonical-remove-read-failure/remove-contract.test.tsx > readable envelope refuses legacy removal
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
