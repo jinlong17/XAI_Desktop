@@ -118,7 +118,9 @@
         "commit:d8501f3",
         "../web-auth-host-independent/20260909-independent-review.md",
         "commit:ab8c35a",
-        "../web-account-deletion-auth-receipt/20260909-fix.md"
+        "../web-account-deletion-auth-receipt/20260909-fix.md",
+        "commit:2274185",
+        "../web-account-deletion-auth-independent/20260909-review.md"
       ]
     },
     {
@@ -258,13 +260,19 @@
     },
     {
       "id": "MED-01",
-      "status": "in_progress",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:6887879",
+        "../web-meditation-durable/20260909-author-verification.md"
+      ]
     },
     {
       "id": "MED-02",
-      "status": "in_progress",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:6887879",
+        "../web-meditation-durable/20260909-author-verification.md"
+      ]
     },
     {
       "id": "MED-03",
@@ -289,7 +297,9 @@
       "status": "verification_pending",
       "evidence": [
         "commit:1b7c0e0",
-        "commit:d7d1733"
+        "commit:d7d1733",
+        "commit:f3a75f1",
+        "commit:3c8e24f"
       ]
     },
     {

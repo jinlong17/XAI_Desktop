@@ -1,5 +1,15 @@
 # 全清单执行台账
 
+最新检查点（2026-09-09，产品基线 6887879）：正式完成 8/312；TASK-02、MED-01/02 已提交作者修复，正在独立验收。以下保留历次检查记录。
+
+REL-06 认证回执子项通过独立 2274185：固定 ab8c35a，实际 Chrome/IndexedDB/Supabase SDK/Provider/RecoveryNotice 验证撤销事务失败后回执保持 pending、reload 后重试、B 登录后重试 A 保留 B 的 SDK 与业务原始字节、最终回执 quota 后重试且不重复服务器删除。实际宿主 bridge 函数已纳入，但不是完整 AppProviders/router；完整清理参与者、数据库 blocked 和未知服务器结果仍未关闭。因此 REL-06 保持 in_progress。
+
+TASK-02 作者提交 f3a75f1 补身份冲突保护、今日桶和 44px 恢复按钮，3c8e24f 固定最终作者证据。完整编号已交另一位 Agent 独立验收，保持 verification_pending。
+
+MED-01/02 作者 6887879 实现持久绝对会话、暂停/重开、结束状态与音频清理。父审查发现的跨账户 busy 锁遗留和时钟回拨结束时间问题已补；作者测试 Meditation134/Storage126 及 native 通过。两项改为 verification_pending，由非作者 Agent 检查完整合同，含真实点击音频权限路径。作者 autoplay fixture 不作为默认浏览器权限验收。
+
+父会话在 6887879、clean 产品工作树上执行 Web 整合检查：pnpm --filter @repo/web check-types、test（27文件146测试）、build 均 exit 0；Vite 转换1004模块完成。仅是本地整合验证，没有部署或生产服务验收。
+
 目标：按顺序执行、检查并 commit 全部 312 项。原始 [TODO.md](TODO.md) 保留审查基线；[EXECUTION.json](EXECUTION.json) 记录逐项状态和关闭证据。
 
 当前 REL-01（统一时间）已完成实现、父会话包测试与独立四时区/真实浏览器验证，Metrics 编辑绝对时间问题已补修；仍保留完整关闭验证状态。REL-02 已修复并完成本地独立及真实浏览器检查，跨厂商验证待补。REL-03 已提交账户存储、显式迁移、BYOK、身份/路由接线；12个消费者包回归通过，生产打包丢失迁移校验注册已修复并通过独立真实浏览器复验。Settings 删除恢复已提交；独立联合验收8组真实Chrome检查通过（9638dbe）。REL-03本地bug-verify通过，完整关闭仍保留跨厂商/真实环境边界。当前TT-01已按该项范围完成验收，其余项保留逐项状态；不代表其他功能未实现。QA-01 持续核对各项实施前的当前基线，不视为全范围完成。
