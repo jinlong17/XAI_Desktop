@@ -19,3 +19,9 @@ Logs: `20260909-before.log` and `20260909-after.log`. The runner's existing impo
 ## Limits and disposition
 
 Scoped preference fix passes independent native acceptance. This probe does not repeat timer close/reopen, background expiry or audio acceptance; active timer checks cover only preference non-interference. It does not establish cross-tab conflict resolution, automatic draft survival after leaving the page, cloud durability, or production deployment. Existing device-local preference ownership policy is unchanged. Other autosave consumers remain outside this scope, so REL-05 as a whole remains open.
+
+## Actual filesystem download supplement
+
+`node docs/reviews/web-pomodoro-prefs-independent/verify-native-download.mjs 394efad` passes in native Chrome PID62343 (`20260909-download-after.log`). The same 42 product sources are pinned. CDP Browser.setDownloadBehavior directs real downloads into an isolated temporary directory; the actual anchor click and Blob URL are not intercepted on the successful path. The runner reads the resulting `pomodoro-preferences.json` from disk, parses JSON, and checks the latest six values listed above. Exactly one file is present, with no unfinished download. The directory/profile are removed after Chrome exits.
+
+Before the successful download, inject URL.createObjectURL failure: the actual UI displays “Preference export failed. Please retry.” Restore the native method and retry; the error clears and the real file appears. This proves the application-controlled export preparation failure path. Browser/OS rejection after an anchor click has no download acknowledgement in this implementation and is not claimed to produce an application error. This supplement closes the earlier Blob-only download evidence limitation; it does not broaden timer or REL-05 acceptance.
