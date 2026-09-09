@@ -18,3 +18,9 @@ node docs/reviews/web-tasks-canonical-ui-independent/verify-fixed.mjs 66a8488
 ```
 
 The fixtures contain valid four-column task data, an explicit persistent account marker, and a retained receipt. Raw fixture writes model another document's storage update while the actual writer awaits its lock; only the lock scheduler is injected. Production activation remains off, enabled explicitly for this isolated test. List/tag cascades, failed-save retry, composer/detail lifetimes, normalization, all remaining callbacks, multi-document native execution and full package regressions still require their own verification. No numbered item is closed here.
+
+## Additional retry boundary: fixed 66a8488
+
+Expanded suite is 5 PASS / 1 correct FAIL. Original four still pass, and quota-failed checkbox retry succeeds when no external change occurs. With an external storage event after that failure, Retry adopts the now-current UI baseline while replaying the old whole-dataset draft: it overwrites the newer title, drops the external addition and clears the recovery alert. This is a distinct failure from the now-fixed initial queued write. The retry must retain its original operation baseline and refuse or explicitly resolve newer data. Evidence: tasks-ui-retry-66a8488.log. Original four-case after log is retained separately.
+
+Expanded-run command: `node docs/reviews/web-tasks-canonical-ui-independent/verify-fixed.mjs 66a8488 tasks-ui retry`. The optional fourth argument separates evidence filenames.

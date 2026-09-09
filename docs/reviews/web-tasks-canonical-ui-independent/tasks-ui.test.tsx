@@ -41,3 +41,14 @@ it('render and checkbox do not repair a present invalid domain by overwriting it
  const broken=JSON.stringify({format:'xai-command-state',version:1,revision:1,data:{invalid:'domain'},receipts:{}});localStorage.setItem(key(),broken);render(<TasksModule lang="en"/>);await act(async()=>{});
  if(checkbox())fireEvent.click(checkbox());await act(async()=>{});expect(localStorage.getItem(key())).toBe(broken);
 });
+it.each([false,true])('failed checkbox retry preserves its original baseline; external change=%s',async external=>{
+ localStorage.setItem(key(),envelope());render(<TasksModule lang="en"/>);await act(async()=>{});
+ const physical=key(),write=Storage.prototype.setItem;
+ const deny=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(k,v){if(k===physical)throw new DOMException('quota','QuotaExceededError');write.call(this,k,v);});
+ fireEvent.click(checkbox());await screen.findByRole('alert');deny.mockRestore();
+ let newer='';
+ if(external){newer=envelope('New external value',true,9);await act(async()=>{localStorage.setItem(physical,newer);window.dispatchEvent(new StorageEvent('storage',{key:physical,newValue:newer,storageArea:localStorage}));});await waitFor(()=>expect(document.body.textContent).toContain('New external value'));}
+ fireEvent.click(screen.getByRole('button',{name:'Retry save'}));await act(async()=>{});await act(async()=>{});
+ if(external){expect.soft(localStorage.getItem(physical)).toBe(newer);expect(await screen.findByRole('alert')).not.toBeNull();}
+ else await waitFor(()=>expect(data().data.flatMap((c:any)=>c.tasks).find((t:any)=>t.id==='existing').done).toBe(true));
+});

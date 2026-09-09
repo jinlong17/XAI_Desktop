@@ -33,7 +33,7 @@ try {
   const result = spawnSync(join(root,'packages/plugin-web-board-workspaces/node_modules/.bin/vitest'), ['run','--config',config], {cwd:dir,encoding:'utf8',maxBuffer:20*1024*1024});
   if (result.error) throw result.error;
   if (result.status !== 0) process.exitCode = result.status ?? 1;
-  writeFileSync(join(evidence,name+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
+  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
   console.log(name, 'exit='+result.status, result.stdout.slice(-1600));
  }
 } finally { rmSync(dir, {recursive:true,force:true}); }
