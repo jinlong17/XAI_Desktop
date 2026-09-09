@@ -51,6 +51,8 @@ export {
   readCanonicalCommandSnapshot,
   findCanonicalCommandReceipt,
   commitCanonicalCommand,
+  mutateCanonicalDataset,
+  canonicalDatasetLockName,
   setCanonicalCommandActivationForTests,
   canonicalCommandSignature,
   canonicalCommandReceiptId,
@@ -64,6 +66,10 @@ export type {
   CanonicalCommandMutation,
   CanonicalCommitResult,
   CanonicalCommandFailureReason,
+  CanonicalDatasetInput,
+  CanonicalDatasetMutation,
+  CanonicalDatasetResult,
+  CanonicalDatasetFailureReason,
 } from "./internal/canonicalCommandState.js";
 export type {
   GetPrefAutosaveOptions,

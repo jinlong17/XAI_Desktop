@@ -1,5 +1,6 @@
 import type { AccountScope } from "./accountScope.js";
 import { accountPrefix, accountScope, generationKey, generationMarkerKey } from "./accountScope.js";
+import { publishSameTab } from "./sameTabBus.js";
 
 export const CANONICAL_COMMAND_KEYS = [
   "xai_task_cols",
@@ -62,6 +63,24 @@ export type CanonicalCommitResult =
 export type CanonicalCommandMutation<T> =
   | Readonly<{ ok: true; data: T; targetId: string }>
   | Readonly<{ ok: false; reason: "invalid" | "not-found" }>;
+
+export type CanonicalDatasetFailureReason = CanonicalCommandFailureReason | "conflict";
+export type CanonicalDatasetResult<T> =
+  | Readonly<{ ok: true; data: T; revision: number; changed: boolean }>
+  | Readonly<{ ok: false; reason: CanonicalDatasetFailureReason }>;
+export type CanonicalDatasetMutation<T> =
+  | Readonly<{ ok: true; data: T }>
+  | Readonly<{ ok: false; reason: "invalid" | "not-found" | "conflict" }>;
+export type CanonicalDatasetInput<T> = Readonly<{
+  key: CanonicalCommandKey;
+  scope: AccountScope;
+  validate: (value: unknown) => value is T;
+  /** Used only for a physically absent key. Present invalid bytes are never repaired. */
+  initialize?: () => T;
+  /** Rejects a whole-snapshot edit if its captured canonical revision is stale. */
+  expectedRevision?: number;
+  mutate: (data: T) => CanonicalDatasetMutation<T>;
+}>;
 
 export type CanonicalCommandInput<T> = Readonly<{
   key: CanonicalCommandKey;
@@ -174,6 +193,10 @@ function checkCurrentDataset(scope: AccountScope, key: CanonicalCommandKey): Dat
   return { ok: true, physicalKey: generationKey(scope.accountId, scope.generation, key, demo) };
 }
 
+export function canonicalDatasetLockName(scope: AccountScope, key: CanonicalCommandKey): string {
+  return `xai:canonical:${scope.kind}:${scope.accountId ?? ""}:${scope.generation ?? ""}:${key}`;
+}
+
 function readPhysicalCommandState(physicalKey: string): CanonicalCommandRead {
   let raw: string | null;
   try {
@@ -187,6 +210,83 @@ function readPhysicalCommandState(physicalKey: string): CanonicalCommandRead {
   } catch {
     return { status: "corrupt", reason: "invalid JSON" };
   }
+}
+
+function currentLocks(): LockManager | null {
+  try { return typeof navigator !== "undefined" && navigator.locks ? navigator.locks : null; } catch { return null; }
+}
+
+/**
+ * The ordinary human writer for receipt-bearing datasets. It shares the command
+ * lock and envelope format, never creates a receipt, and publishes only after
+ * the single physical write has committed.
+ */
+export async function mutateCanonicalDataset<T>(input: CanonicalDatasetInput<T>): Promise<CanonicalDatasetResult<T>> {
+  let key: CanonicalCommandKey;
+  let scope: AccountScope;
+  let validate: (value: unknown) => value is T;
+  let initialize: (() => T) | undefined;
+  let expectedRevision: number | undefined;
+  let mutate: (data: T) => CanonicalDatasetMutation<T>;
+  try {
+    ({ key, scope, validate, initialize, expectedRevision, mutate } = input);
+    if (!isCanonicalCommandKey(key) || !scope || typeof validate !== "function" || typeof mutate !== "function"
+      || (initialize !== undefined && typeof initialize !== "function")
+      || (expectedRevision !== undefined && (!Number.isSafeInteger(expectedRevision) || expectedRevision < 0))) {
+      return { ok: false, reason: "invalid" };
+    }
+  } catch { return { ok: false, reason: "invalid" }; }
+  const locks = currentLocks();
+  if (!locks) return { ok: false, reason: "lock-unavailable" };
+  try {
+    return await locks.request(canonicalDatasetLockName(scope, key), async (): Promise<CanonicalDatasetResult<T>> => {
+      const first = checkCurrentDataset(scope, key);
+      if (!first.ok) return first;
+      const state = readPhysicalCommandState(first.physicalKey);
+      if (state.status === "corrupt" || state.status === "unsupported" || state.status === "unavailable") {
+        return { ok: false, reason: state.status === "unavailable" ? "storage" : "recovery-required" };
+      }
+      let data: T;
+      let envelope: CanonicalCommandEnvelope<T> | null = null;
+      if (state.status === "absent") {
+        if (!initialize) return { ok: false, reason: "missing-data" };
+        try { data = initialize(); } catch { return { ok: false, reason: "invalid" }; }
+      } else {
+        data = state.data as T;
+        if (state.status === "envelope") envelope = state.envelope as CanonicalCommandEnvelope<T>;
+      }
+      try { if (!validate(data)) return { ok: false, reason: state.status === "absent" ? "invalid" : "recovery-required" }; }
+      catch { return { ok: false, reason: "recovery-required" }; }
+      const revision = envelope?.revision ?? 0;
+      if (expectedRevision !== undefined && expectedRevision !== revision) return { ok: false, reason: "conflict" };
+      let outcome: CanonicalDatasetMutation<T>;
+      try { outcome = mutate(data); } catch { return { ok: false, reason: "invalid" }; }
+      if (!outcome || typeof outcome !== "object" || typeof outcome.ok !== "boolean") return { ok: false, reason: "invalid" };
+      if (!outcome.ok) return { ok: false, reason: outcome.reason };
+      try { if (!validate(outcome.data)) return { ok: false, reason: "invalid" }; }
+      catch { return { ok: false, reason: "invalid" }; }
+      const changed = JSON.stringify(data) !== JSON.stringify(outcome.data) || state.status === "absent";
+      if (!changed) return { ok: true, data, revision, changed: false };
+      if (revision >= Number.MAX_SAFE_INTEGER) return { ok: false, reason: "capacity" };
+      const next: CanonicalCommandEnvelope<T> = {
+        format: "xai-command-state", version: 1, revision: revision + 1, data: outcome.data,
+        receipts: envelope ? copyReceipts(envelope.receipts) : Object.create(null) as Record<string, CanonicalCommandReceipt>,
+      };
+      let encoded: string;
+      try {
+        encoded = JSON.stringify(next);
+        const decoded = readCanonicalCommandState<T>(JSON.parse(encoded));
+        if (decoded.status !== "envelope" || !validate(decoded.data)) return { ok: false, reason: "invalid" };
+      } catch { return { ok: false, reason: "invalid" }; }
+      if (encoded.length > MAX_CANONICAL_RECORD_LENGTH) return { ok: false, reason: "capacity" };
+      const final = checkCurrentDataset(scope, key);
+      if (!final.ok) return final;
+      if (final.physicalKey !== first.physicalKey) return { ok: false, reason: "account-changed" };
+      try { localStorage.setItem(first.physicalKey, encoded); } catch { return { ok: false, reason: "storage" }; }
+      publishSameTab(key, outcome.data, scope);
+      return { ok: true, data: outcome.data, revision: next.revision, changed: true };
+    });
+  } catch { return { ok: false, reason: "lock-failed" }; }
 }
 
 function copyReceipts(receipts: Record<string, CanonicalCommandReceipt>): Record<string, CanonicalCommandReceipt> {
@@ -221,18 +321,13 @@ export async function commitCanonicalCommand<T>(input: CanonicalCommandInput<T>)
       || typeof mutate !== "function") return { ok: false, reason: "invalid" };
     receiptId = canonicalCommandReceiptId(input.channel, input.requestId);
     signature = canonicalCommandSignature(input.operation);
-    lockName = `xai:canonical:${scope.kind}:${scope.accountId ?? ""}:${scope.generation ?? ""}:${key}`;
+    lockName = canonicalDatasetLockName(scope, key);
   } catch {
     return { ok: false, reason: "invalid" };
   }
   if (receiptId === null || signature === null) return { ok: false, reason: "invalid" };
-  let locks: LockManager;
-  try {
-    if (typeof navigator === "undefined" || !navigator.locks) return { ok: false, reason: "lock-unavailable" };
-    locks = navigator.locks;
-  } catch {
-    return { ok: false, reason: "lock-unavailable" };
-  }
+  const locks = currentLocks();
+  if (!locks) return { ok: false, reason: "lock-unavailable" };
   try {
     return await locks.request(lockName, async (): Promise<CanonicalCommitResult> => {
       const firstCheck = checkCurrentDataset(scope, key);
@@ -318,6 +413,7 @@ export async function commitCanonicalCommand<T>(input: CanonicalCommandInput<T>)
       } catch {
         return { ok: false, reason: "storage" };
       }
+      publishSameTab(key, mutationData, scope);
       return { ok: true, targetId, replay: false };
     });
   } catch {

@@ -19,6 +19,8 @@ import {
 import { encode, decode } from "./codec.js";
 import { accountScope, type AccountScope } from "./accountScope.js";
 import { isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
+export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
+import { publishSameTab } from "./sameTabBus.js";
 
 /** Decode one physical preference value into the domain projection readers expect. */
 export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string): WebPrefValue<K> | null {
@@ -45,60 +47,6 @@ export function readRawPref(key: string, scope = accountScope.capture()): string
   try { return localStorage.getItem(accountScope.physicalKey(key, scope)); } catch { return null; }
 }
 
-
-// ---------------------------------------------------------------------------
-// Same-tab pub/sub bus
-// ---------------------------------------------------------------------------
-
-type Listener<T = unknown> = (value: T) => void;
-
-// Map from storage key to Set of listeners
-const _listeners = new Map<string, Set<Listener>>();
-
-/**
- * Subscribe to same-tab writes for a single key.
- * Returns an unsubscribe function.
- */
-export function subscribeSameTab(
-  key: string,
-  listener: Listener,
-  scope = accountScope.capture(),
-): () => void {
-  try { key = accountScope.physicalKey(key, scope); } catch { return () => {}; }
-  let set = _listeners.get(key);
-  if (!set) {
-    set = new Set();
-    _listeners.set(key, set);
-  }
-  set.add(listener);
-  return () => {
-    const s = _listeners.get(key);
-    if (s) {
-      s.delete(listener);
-      if (s.size === 0) _listeners.delete(key);
-    }
-  };
-}
-
-/**
- * Publish to same-tab subscribers for a key.
- * Called by setPref after writing to localStorage.
- */
-export function publishSameTab(key: string, value: unknown, scope = accountScope.capture()): void {
-  try { key = accountScope.physicalKey(key, scope); } catch { return; }
-  const set = _listeners.get(key);
-  if (!set) return;
-  for (const listener of set) {
-    listener(value);
-  }
-}
-
-/**
- * @internal — exposed for test cleanup; not part of the public surface.
- */
-export function _clearAllListeners(): void {
-  _listeners.clear();
-}
 
 // ---------------------------------------------------------------------------
 // One-shot warn for localStorage unavailability (e.g. Safari Private Mode)
