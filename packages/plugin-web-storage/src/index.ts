@@ -74,3 +74,9 @@ export { AccountDataGate, requestAccountDataManagement } from "./AccountDataGate
 export type { AccountDataGateProps } from "./AccountDataGate.js";
 
 export { exportAccountLocalData, deleteAccountLocalData } from "./internal/accountDataLifecycle.js";
+
+// Declared local-data lifecycles and explicit recovery export (REL-04).
+export { LOCAL_DATA_LIFECYCLE, LOCAL_DATA_FAMILIES, lifecycleForKey } from "./internal/lifecycleDeclaration.js";
+export type { LocalDataLifecycle } from "./internal/lifecycleDeclaration.js";
+export { exportDeviceRecoveryData } from "./internal/dataExport.js";
+export type { DeviceRecoveryExportOptions, DeviceRecoveryExport, DataExportManifest, ExportOmission, ExportSection } from "./internal/dataExport.js";

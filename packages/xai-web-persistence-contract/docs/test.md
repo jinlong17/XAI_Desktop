@@ -183,3 +183,7 @@ Minimum AC count target: **≥ 30** distinct scenarios across §1 + §2 + §3 (c
 ## REL-03 regression evidence
 
 Added storage scope, stale-hook/autosave, generation migration, marker quota failure, secret-stage failure, interrupted-candidate recovery, legacy byte preservation, rollback, captured-owner export/delete and tombstone tests. Three standalone repositories (Time Tracker, Bookkeeping, Metric Tracker) exercise A → B → A plus rejected stale A writes. Owner migration guard integration is executable using `pnpm --filter @repo/plugin-web-storage exec vitest run --root ../.. --config docs/reviews/web-account-data-isolation/migration-guards.config.mjs`. No live Supabase credentials are required; these tests do not prove a cross-vendor or production-auth release gate.
+
+## REL-04 export verification
+
+`plugin-web-storage/src/__tests__/dataExport.test.ts` covers declaration parity, all 38 account keys and 76 device keys, compatible account records and per-feature manifest counts, default-empty history, independent historical selection, raw malformed business values, authoritative Bookkeeping layout and TT mode, auth/credential exclusions, unreadable/duplicate-field archive rejection without mutation, captured-account isolation and inaccessible-storage failure. Storage suite: 123 tests PASS before the final additional camel-case credential fixture; focused export rerun verifies that fixture. JSON record reconstruction in diagnosis is not a supported restore API or production recovery acceptance.
