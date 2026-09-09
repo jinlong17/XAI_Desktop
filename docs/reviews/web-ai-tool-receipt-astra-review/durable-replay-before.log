@@ -1,0 +1,109 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx (6 tests | 6 failed) 28ms
+   × tasks:create replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 15ms
+     → replay must return the original committed target: expected '141fe39c-559a-4426-8b86-f3a85c960d71' to be '7977ce4d-f5d6-4f6f-af5a-2f85f6810818' // Object.is equality
+   × tasks:update replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 3ms
+     → replay must not create again or overwrite a later human edit: expected '[{"id":"nodate","tasks":[{"id":"exist…' to be '[{"id":"nodate","tasks":[{"id":"exist…' // Object.is equality
+   × tasks:delete replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 3ms
+     → committed replay must return success even after original target was deleted: expected false to be true // Object.is equality
+   × calendar:create replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 3ms
+     → replay must return the original committed target: expected 'befe3bc3-8866-44bb-8473-b9c81057371e' to be '7652e60c-ad05-487e-879e-f2e00c85a08e' // Object.is equality
+   × calendar:update replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 2ms
+     → replay must not create again or overwrite a later human edit: expected '{"existing":{"id":"existing","title":…' to be '{"existing":{"id":"existing","title":…' // Object.is equality
+   × calendar:delete replays the committed receipt across a new epoch in the SAME durable generation without rewriting data 1ms
+     → committed replay must return success even after original target was deleted: expected false to be true // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > tasks:create replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+AssertionError: replay must return the original committed target: expected '141fe39c-559a-4426-8b86-f3a85c960d71' to be '7977ce4d-f5d6-4f6f-af5a-2f85f6810818' // Object.is equality
+
+Expected: "7977ce4d-f5d6-4f6f-af5a-2f85f6810818"
+Received: "141fe39c-559a-4426-8b86-f3a85c960d71"
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx:60:85
+     58|       emitWebEvent(channel, { ...payload, owner: next, attemptId: 'rec…
+     59|       expect(receipt?.ok, 'committed replay must return success even a…
+     60|       expect(receipt?.targetId, 'replay must return the original commi…
+       |                                                                                     ^
+     61|       expect(localStorage.getItem(key), 'replay must not create again …
+     62|     } finally { off(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > tasks:update replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+AssertionError: replay must not create again or overwrite a later human edit: expected '[{"id":"nodate","tasks":[{"id":"exist…' to be '[{"id":"nodate","tasks":[{"id":"exist…' // Object.is equality
+
+Expected: "[{"id":"nodate","tasks":[{"id":"existing","title":{"en":"Later human edit","zh":"Later human edit"}}]}]"
+Received: "[{"id":"nodate","tasks":[{"id":"existing","title":{"en":"Tool committed","zh":"Tool committed"}}]}]"
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx:61:105
+     59|       expect(receipt?.ok, 'committed replay must return success even a…
+     60|       expect(receipt?.targetId, 'replay must return the original commi…
+     61|       expect(localStorage.getItem(key), 'replay must not create again …
+       |                                                                                                         ^
+     62|     } finally { off(); }
+     63|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > tasks:delete replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > calendar:delete replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+AssertionError: committed replay must return success even after original target was deleted: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx:59:106
+     57|     try {
+     58|       emitWebEvent(channel, { ...payload, owner: next, attemptId: 'rec…
+     59|       expect(receipt?.ok, 'committed replay must return success even a…
+       |                                                                                                          ^
+     60|       expect(receipt?.targetId, 'replay must return the original commi…
+     61|       expect(localStorage.getItem(key), 'replay must not create again …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > calendar:create replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+AssertionError: replay must return the original committed target: expected 'befe3bc3-8866-44bb-8473-b9c81057371e' to be '7652e60c-ad05-487e-879e-f2e00c85a08e' // Object.is equality
+
+Expected: "7652e60c-ad05-487e-879e-f2e00c85a08e"
+Received: "befe3bc3-8866-44bb-8473-b9c81057371e"
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx:60:85
+     58|       emitWebEvent(channel, { ...payload, owner: next, attemptId: 'rec…
+     59|       expect(receipt?.ok, 'committed replay must return success even a…
+     60|       expect(receipt?.targetId, 'replay must return the original commi…
+       |                                                                                     ^
+     61|       expect(localStorage.getItem(key), 'replay must not create again …
+     62|     } finally { off(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx > calendar:update replays the committed receipt across a new epoch in the SAME durable generation without rewriting data
+AssertionError: replay must not create again or overwrite a later human edit: expected '{"existing":{"id":"existing","title":…' to be '{"existing":{"id":"existing","title":…' // Object.is equality
+
+Expected: "{"existing":{"id":"existing","title":"Later human edit","startISO":"2026-09-09T09:00","endISO":"2026-09-09T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-09-09T00:00:00Z","updatedAt":"2026-09-09T21:31:47.239Z"}}"
+Received: "{"existing":{"id":"existing","title":"Tool committed","startISO":"2026-09-09T09:00","endISO":"2026-09-09T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-09-09T00:00:00Z","updatedAt":"2026-09-09T21:31:47.240Z"}}"
+
+ ❯ docs/reviews/web-ai-tool-receipt-astra-review/durable-replay.test.tsx:61:105
+     59|       expect(receipt?.ok, 'committed replay must return success even a…
+     60|       expect(receipt?.targetId, 'replay must return the original commi…
+     61|       expect(localStorage.getItem(key), 'replay must not create again …
+       |                                                                                                         ^
+     62|     } finally { off(); }
+     63|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  14:31:46
+   Duration  1.13s (transform 191ms, setup 121ms, collect 294ms, tests 28ms, environment 414ms, prepare 63ms)
+
