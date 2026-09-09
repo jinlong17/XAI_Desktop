@@ -54,3 +54,9 @@ Final owner-claim focused results: **26 foundation tests PASS**, plus the parent
 ## Read-only migration proof for coordinator bootstrap
 
 `readLegacyImport(legacyKey)` returns only the validated names-only `{generation,owner}` claim, or null when absent. Unknown schema rejects with `schema-invalid` without modifying the original claim. Bootstrap can distinguish a successfully migrated generation subsequently revoked from an unproven import failure by matching this claim to `readRecovery()`; preserved legacy bytes then remain inert without turning every normal post-logout restart into an error. This lookup does not itself authorize replay or delete legacy bytes.
+
+## Atomic replacement opt-in
+
+`publishAndRevokePredecessor(options)` preserves ordinary `publish` semantics as a separate API. It verifies the expected active pointer and its generation/owner/schema, then publishes the candidate and revokes/clears the prior generation in the same IDB readwrite transaction. A failed final predecessor write rolls back both rows and the pointer. The revoked predecessor remains a names-only recovery receipt for its separately retriable transient cleanup; sessionStorage is not part of this transaction. The coordinator uses this opt-in so a migrated legacy generation retains a precise revocation proof after replacement, rather than requiring a later unjournaled revoke.
+
+Tests prove successful replacement rejects old leases and a transaction abort preserves old session bytes, candidate bytes/claim, and the original pointer. Existing ordinary-publish tests and behavior remain unchanged.

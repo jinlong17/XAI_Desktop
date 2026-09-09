@@ -34,6 +34,7 @@ export interface AuthGenerationStore {
   createCandidate(lease: AuthGenerationLease): Promise<AuthGenerationMutationResult>;
   readActive(): Promise<ActiveAuthGeneration | null>;
   publish(options: PublishAuthGenerationOptions): Promise<AuthGenerationMutationResult>;
+  publishAndRevokePredecessor(options: PublishAuthGenerationOptions): Promise<AuthGenerationMutationResult>;
   revoke(captured: ActiveAuthGeneration): Promise<AuthGenerationMutationResult>;
   cancelCandidate(lease: AuthGenerationLease): Promise<AuthGenerationMutationResult>;
   getItem(lease: AuthGenerationLease, key: string): Promise<string | null>;
@@ -211,6 +212,26 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
       if (!validPublish(input)) return invalid();
       input = { ...input, lease: { generation: input.lease.generation } };
       return mutate((store, finish) => publishInside(store, input, finish));
+    },
+    publishAndRevokePredecessor(input) {
+      if (!validPublish(input)) return invalid();
+      input = { ...input, lease: { generation: input.lease.generation } };
+      return mutate((store, finish) => readPointer(store, pointer => {
+        if ((pointer?.generation ?? null) !== input.expectedActive) return finish(superseded('active-changed'));
+        const publish = (previous?: GenerationRow) => publishInside(store, input, result => {
+          if (result.status === 'applied' && previous) {
+            previous.state = 'revoked';
+            previous.entries = [];
+            store.put(previous, rowKey(previous.generation));
+          }
+          finish(result);
+        });
+        if (!pointer) return publish();
+        readRow(store, pointer, previous => {
+          if (!previous || previous.state !== 'active' || previous.owner !== pointer.owner) return rejectSchema(store);
+          publish(previous);
+        });
+      }));
     },
     revoke(captured) {
       if (!validLease(captured) || !validName(captured.owner)) return invalid();

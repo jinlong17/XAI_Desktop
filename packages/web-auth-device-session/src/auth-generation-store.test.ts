@@ -267,3 +267,28 @@ it('reads only validated legacy migration names without modifying malformed clai
   await expect(store.readLegacyImport('broken')).rejects.toMatchObject({ reason: 'schema-invalid' });
   expect(await createIndexedDbStore().getItem(key)).toEqual(broken);
 });
+
+it('atomically publishes and revokes predecessor without changing ordinary publish semantics', async () => {
+  const store = await activeA(); await store.createCandidate(B); await store.setSessionItem(B, 'session', 'B-bytes', 'account-B');
+  expect(await store.publishAndRevokePredecessor({ lease: B, owner: 'account-B', expectedActive: A.generation })).toEqual({ status: 'applied' });
+  expect(await store.readActive()).toEqual({ ...B, owner: 'account-B' });
+  expect(await store.getItem(B, 'session')).toBe('B-bytes');
+  expect(await store.readRecovery()).toEqual([{ ...A, owner: 'account-A', state: 'revoked' }]);
+  expect(await store.setItem(A, 'session', 'late')).toMatchObject({ reason: 'lease-revoked' });
+});
+
+it('aborted predecessor revocation rolls back both generations and active pointer', async () => {
+  const store = await activeA(); await store.createCandidate(B); await store.setSessionItem(B, 'session', 'B-candidate', 'account-B');
+  const original = IDBObjectStore.prototype.put;
+  const fault = vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementation(function(this: IDBObjectStore, value, key) {
+    const request = original.call(this, value, key);
+    if (value?.generation === A.generation && value?.state === 'revoked') this.transaction.abort();
+    return request;
+  });
+  expect(await store.publishAndRevokePredecessor({ lease: B, owner: 'account-B', expectedActive: A.generation })).toEqual({ status: 'failed', reason: 'transaction-failed' });
+  fault.mockRestore();
+  expect(await store.readActive()).toEqual({ ...A, owner: 'account-A' });
+  expect(await store.getItem(A, 'session')).toBe('original-A'); expect(await store.getItem(B, 'session')).toBe('B-candidate');
+  expect(await store.readRecovery()).toEqual([]);
+  expect(await store.cancelCandidate(B)).toEqual({ status: 'applied' });
+});
