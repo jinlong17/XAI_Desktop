@@ -91,6 +91,22 @@ describe("canonical command state B1 reader", () => {
     expect(testStorage.getItem("xai_task_cols")).toBe(raw);
   });
 
+  it("fails closed when an envelope cannot be read before removal", () => {
+    const raw = JSON.stringify(envelope({ todo: true }));
+    testStorage.setItem("xai_task_cols", raw);
+    const physicalKey = accountScope.physicalKey("xai_task_cols");
+    const nativeGet = Storage.prototype.getItem;
+    const removeSpy = vi.spyOn(Storage.prototype, "removeItem");
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(function (this: Storage, key: string) {
+      if (key === physicalKey) throw new DOMException("denied", "SecurityError");
+      return nativeGet.call(this, key);
+    });
+    removePref("xai_task_cols");
+    expect(removeSpy).not.toHaveBeenCalledWith(physicalKey);
+    vi.restoreAllMocks();
+    expect(localStorage.getItem(physicalKey)).toBe(raw);
+  });
+
   it("projects a canonical StorageEvent through usePref without exposing receipts", async () => {
     const node = document.createElement("div");
     const root = createRoot(node);

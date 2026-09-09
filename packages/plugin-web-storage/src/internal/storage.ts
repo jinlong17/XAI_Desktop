@@ -239,10 +239,18 @@ export function setPref<K extends WebPrefKey>(
 
 export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
-  const existing = readRawPref(key, scope);
-  if (canonicalWriteBlocked(key, existing)) {
-    console.warn(`[plugin-web-storage] refusing legacy removal of protected canonical ${key}.`);
-    return;
+  if (isCanonicalCommandKey(key)) {
+    let existing: string | null;
+    try {
+      existing = localStorage.getItem(accountScope.physicalKey(key, scope));
+    } catch {
+      console.warn(`[plugin-web-storage] refusing canonical removal because ${key} could not be read.`);
+      return;
+    }
+    if (canonicalWriteBlocked(key, existing)) {
+      console.warn(`[plugin-web-storage] refusing legacy removal of protected canonical ${key}.`);
+      return;
+    }
   }
   try {
     localStorage.removeItem(accountScope.physicalKey(key, scope));
