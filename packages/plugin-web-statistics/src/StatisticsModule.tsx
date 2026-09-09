@@ -31,6 +31,7 @@ import type {
   StatisticsModuleProps,
 } from "./types.js";
 import { aggregateRange } from "./internal/aggregators.js";
+import { formatFocusMinutes } from './internal/measuredDuration.js';
 import { heatmapCells } from "./internal/heatmapCells.js";
 import { insightCopy } from "./internal/insightCopy.js";
 import {
@@ -115,7 +116,7 @@ export function StatisticsModule({
   });
 
   const focusHoursDisplay = `${Math.floor(agg.kpis.focusMinutesTotal / 60)}`;
-  const focusMinsRemainder = agg.kpis.focusMinutesTotal % 60;
+  const focusMinsRemainder = formatFocusMinutes(agg.kpis.focusMinutesTotal % 60, lang);
   const focusUnit = `h ${focusMinsRemainder}m`;
 
   const habitsKeptKept = agg.kpis.habitsKeptStr.split("/")[0] ?? "0";
@@ -154,6 +155,12 @@ export function StatisticsModule({
           </button>
         </div>
       </header>
+
+      {agg.unmeasuredFocusSessions > 0 && <p role="status" className="muted" data-testid="stats-unmeasured-focus">
+        {lang === 'zh'
+          ? `当前范围内有 ${agg.unmeasuredFocusSessions} 条专注记录缺少有效实际时长，未计入时长统计。原始记录已保留。`
+          : `${agg.unmeasuredFocusSessions} focus records in this range have no valid measured duration and are excluded from time totals. Original records are preserved.`}
+      </p>}
 
       <div className="stats-grid">
         {/* KPIs */}
@@ -201,7 +208,7 @@ export function StatisticsModule({
           <div className="sc-head">
             <h3>{lang === "zh" ? "专注时长趋势" : "Focus trend"}</h3>
             <div className="sc-totals mono">
-              {`${agg.kpis.focusMinutesTotal} min · ${agg.labels.length} ${
+              {`${formatFocusMinutes(agg.kpis.focusMinutesTotal, lang)} min · ${agg.labels.length} ${
                 lang === "zh" ? "段" : "buckets"
               }`}
             </div>

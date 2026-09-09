@@ -31,7 +31,7 @@ describe("heatmapCells", () => {
 
   it("H6: minutes summation lands on the right cell", () => {
     const sessions: PomodoroSessionRecord[] = [
-      { mode: "focus", durationMs: 25 * 60_000, finishedAt: "2026-05-20T09:00:00Z" },
+      { mode: "focus", durationMs: 25 * 60_000, elapsedMs: 25 * 60_000, finishedAt: "2026-05-20T09:00:00Z" },
     ];
     const cells = heatmapCells(sessions, 0, NOW);
     const hit = cells.find((c) => c.date === "2026-05-20");
@@ -42,8 +42,8 @@ describe("heatmapCells", () => {
 
   it("H7: level threshold map", () => {
     const sessions: PomodoroSessionRecord[] = [
-      { mode: "focus", durationMs: 15 * 60_000, finishedAt: "2026-05-20T09:00:00Z" },
-      { mode: "focus", durationMs: 31 * 60_000, finishedAt: "2026-05-21T09:00:00Z" }, // 46+
+      { mode: "focus", durationMs: 15 * 60_000, elapsedMs: 15 * 60_000, finishedAt: "2026-05-20T09:00:00Z" },
+      { mode: "focus", durationMs: 31 * 60_000, elapsedMs: 31 * 60_000, finishedAt: "2026-05-21T09:00:00Z" }, // 46+
     ];
     const cells = heatmapCells(sessions, 0, NOW);
     const day1 = cells.find((c) => c.date === "2026-05-20");

@@ -18,6 +18,20 @@ afterEach(() => {
 });
 
 describe("StatisticsModule", () => {
+  it('shows measured partial time and explains legacy exclusions without rewriting storage', () => {
+    const rows = [
+      { mode: 'focus', durationMs: 1_500_000, elapsedMs: 60_000, finishedAt: NOW_ISO },
+      { mode: 'focus', durationMs: 1_500_000, finishedAt: NOW_ISO },
+    ];
+    act(() => { setPref('xai_pomodoro_sessions', rows as never); });
+    const before = JSON.stringify({ ...localStorage });
+    const { rerender } = render(<StatisticsModule lang="en" />);
+    expect(screen.getByLabelText('KPI focus')).toHaveTextContent('h 1m');
+    expect(screen.getByTestId('stats-unmeasured-focus')).toHaveTextContent('1 focus records');
+    rerender(<StatisticsModule lang="zh" />);
+    expect(screen.getByTestId('stats-unmeasured-focus')).toHaveTextContent('1 条专注记录');
+    expect(JSON.stringify({ ...localStorage })).toBe(before);
+  });
   it("S1: renders with no seeded data — empty-state safe", () => {
     const { container } = render(<StatisticsModule lang="en" />);
     expect(container.querySelector(".module-stats")).not.toBeNull();

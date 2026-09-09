@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-statistics-time-contract/reproduction.test.ts (4 tests | 1 skipped) 7ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 1 skipped (4)
+   Start at  13:04:46
+   Duration  1.10s (transform 446ms, setup 0ms, collect 757ms, tests 7ms, environment 0ms, prepare 106ms)
+

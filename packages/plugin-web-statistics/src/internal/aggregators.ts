@@ -46,13 +46,14 @@ import {
   type WeekStart,
 } from "./rangeWindow.js";
 import { trendPercent } from "./trendPercent.js";
+import { measuredDurationMs } from './measuredDuration.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 function minutesOf(s: PomodoroSessionRecord): number {
-  return Math.max(0, Math.round(s.durationMs / 60_000));
+  return (measuredDurationMs(s) ?? 0) / 60_000;
 }
 
 function isInRange(s: PomodoroSessionRecord, start: Date, end: Date): boolean {
@@ -255,6 +256,7 @@ export function aggregateRange(
 
   return {
     range,
+    unmeasuredFocusSessions: focusSessions.filter(s => isInRange(s, w.start, w.end) && measuredDurationMs(s) === null).length,
     labels: w.labels,
     focusBuckets,
     taskBuckets,

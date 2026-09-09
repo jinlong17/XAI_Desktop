@@ -14,6 +14,7 @@ function focus(finishedAt: string, minutes = 25): PomodoroSessionRecord {
   return {
     mode: "focus",
     durationMs: minutes * 60_000,
+    elapsedMs: minutes * 60_000,
     finishedAt,
   };
 }

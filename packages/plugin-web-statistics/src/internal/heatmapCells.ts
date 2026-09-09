@@ -22,6 +22,7 @@ import {
 } from "./aggregators.js";
 import { type PomodoroSessionRecord } from "./isPomodoroSession.js";
 import { addDays, startOfWeek, type WeekStart } from "./rangeWindow.js";
+import { measuredDurationMs } from './measuredDuration.js';
 
 const TOTAL_WEEKS = 26;
 const DAYS_PER_WEEK = 7;
@@ -38,7 +39,7 @@ export function heatmapCells(
     if (s.mode !== "focus") continue;
     const dk = dateKeyOfFinishedAt(s.finishedAt);
     if (dk === null) continue;
-    const minutes = Math.max(0, Math.round(s.durationMs / MS_PER_MIN));
+    const minutes = (measuredDurationMs(s) ?? 0) / MS_PER_MIN;
     minutesByDate.set(dk, (minutesByDate.get(dk) ?? 0) + minutes);
   }
 

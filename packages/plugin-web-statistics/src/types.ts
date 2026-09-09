@@ -77,6 +77,8 @@ export interface HabitRankingRow {
  */
 export interface RangeAggregate {
   range: RangeId;
+  /** Current-range focus rows missing a valid actual duration, excluded from measured totals. */
+  unmeasuredFocusSessions: number;
   labels: string[];
   focusBuckets: number[];
   taskBuckets: number[];
