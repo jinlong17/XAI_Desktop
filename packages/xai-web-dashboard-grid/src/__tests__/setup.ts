@@ -6,6 +6,7 @@
  * Mirrors xai-web-matrix/src/__tests__/setup.ts.
  */
 import { afterEach, beforeEach, vi } from "vitest";
+import { accountScope } from "@repo/plugin-web-storage";
 import { cleanup } from "@testing-library/react";
 
 // PointerEvent polyfill for jsdom — degrades to MouseEvent with the relevant
@@ -51,5 +52,6 @@ afterEach(() => {
 
 beforeEach(() => {
   localStorage.clear();
+  accountScope.activate(accountScope.lock("dashboard-test"), "fixture");
   vi.clearAllMocks();
 });

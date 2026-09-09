@@ -1265,3 +1265,17 @@
     transform: none !important;
   }
 }
+
+.dash-note-recovery {
+  grid-column: 1 / -1;
+  flex-basis: 100%;
+  max-width: 100%;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+.dash-note-recovery p { margin: 0 0 8px; }
+.dash-note-recovery button { min-height: 44px; margin: 4px; padding: 8px 12px; }

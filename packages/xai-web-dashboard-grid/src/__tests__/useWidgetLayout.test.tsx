@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 
@@ -25,7 +26,7 @@ describe("useWidgetLayout", () => {
     act(() => {
       result.current.setWidgetLayout("weather", { cols: 9, minHeight: 288 });
     });
-    expect(JSON.parse(localStorage.getItem("xai_pref_dashboard_widget_layout") ?? "{}")).toEqual({
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_pref_dashboard_widget_layout")) ?? "{}")).toEqual({
       weather: { cols: 9, minHeight: 288 },
     });
     expect(result.current.getLayout("weather", "w-weather")).toEqual({
@@ -39,7 +40,7 @@ describe("useWidgetLayout", () => {
     act(() => {
       result.current.setWidgetLayout("ghost", { cols: 12, minHeight: 360 });
     });
-    expect(localStorage.getItem("xai_pref_dashboard_widget_layout")).toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_pref_dashboard_widget_layout"))).toBeNull();
   });
 
   it("layoutFromResize clamps grid cols and height", () => {

@@ -17,7 +17,7 @@ import {
 } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { getPrefAutosave, usePrefAutosave } from "@repo/plugin-web-storage";
+import { accountScope, getPrefAutosave, usePrefAutosave } from "@repo/plugin-web-storage";
 
 import { formatDashboardDate, pickGreetingKey } from "./internal/greeting.js";
 
@@ -170,8 +170,43 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const [noteOffset, setNoteOffset] = useState<number>(() => readInitialHeaderNoteOffset());
   const [movingNote, setMovingNote] = useState<boolean>(false);
 
-  usePrefAutosave(HEADER_NOTE_SUFFIX, note, { codec: "string" });
-  usePrefAutosave(HEADER_NOTE_OFFSET_SUFFIX, noteOffset, { codec: "json" });
+  const scope = useRef(accountScope.capture()).current;
+  const readRaw = useCallback((suffix: string) => {
+    accountScope.assertCurrent(scope);
+    return localStorage.getItem(accountScope.physicalKey(`xai_pref_${suffix}`, scope));
+  }, [scope]);
+  const [baseline] = useState(() => {
+    try { return { note: readRaw(HEADER_NOTE_SUFFIX), offset: readRaw(HEADER_NOTE_OFFSET_SUFFIX) }; }
+    catch { return { note: null, offset: null }; }
+  });
+  const [conflict, setConflict] = useState(false);
+  const [exportFailed, setExportFailed] = useState(false);
+  const submitting = useRef(false);
+  const noteSave = usePrefAutosave(HEADER_NOTE_SUFFIX, note, { codec: "string" });
+  const offsetSave = usePrefAutosave(HEADER_NOTE_OFFSET_SUFFIX, noteOffset, { codec: "json" });
+  const unsaved = conflict || noteSave.saved === false || offsetSave.saved === false;
+  const canWrite = useCallback((suffix: string, expected: string | null) => {
+    try { if (readRaw(suffix) === expected) return true; } catch { /* Scope/read failure retains draft. */ }
+    setConflict(true);
+    return false;
+  }, [readRaw]);
+  useEffect(() => {
+    try {
+      if (noteSave.saved && readRaw(HEADER_NOTE_SUFFIX) === note) {
+        baseline.note = note;
+        if (submitting.current) { submitting.current = false; setEditing(false); }
+      }
+      if (offsetSave.saved && readRaw(HEADER_NOTE_OFFSET_SUFFIX) === JSON.stringify(noteOffset)) {
+        baseline.offset = JSON.stringify(noteOffset);
+      }
+    } catch { /* Old component cannot accept another account's persistence. */ }
+  }, [baseline, note, noteOffset, noteSave.saved, offsetSave.saved, readRaw]);
+  useEffect(() => {
+    if (!unsaved && !(editing && draft !== note)) return;
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [unsaved, editing, draft, note]);
 
   const clampNoteOffset = useCallback((value: number): number => {
     const laneEl = laneRef.current;
@@ -191,11 +226,11 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
 
   useEffect(() => {
     const onResize = () => {
-      setNoteOffset((current) => clampNoteOffset(current));
+      if (canWrite(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) setNoteOffset((current) => clampNoteOffset(current));
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [clampNoteOffset]);
+  }, [baseline, canWrite, clampNoteOffset]);
 
   const beginEdit = useCallback(() => {
     if (suppressNextEditRef.current) {
@@ -207,17 +242,30 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   }, [note]);
 
   const saveDraft = useCallback(() => {
+    if (!canWrite(HEADER_NOTE_SUFFIX, baseline.note)) return;
     const next = normalizeHeaderNote(draft);
-    setNote(next);
     setDraft(next);
-    setEditing(false);
-  }, [draft]);
+    submitting.current = true;
+    setConflict(false);
+    if (next === note) {
+      if (noteSave.retry()) { baseline.note = next; submitting.current = false; setEditing(false); }
+    } else setNote(next);
+  }, [baseline, canWrite, draft, note, noteSave]);
 
   const clearNote = useCallback(() => {
-    setNote("");
     setDraft("");
-    setEditing(false);
-  }, []);
+    setEditing(true);
+    if (!canWrite(HEADER_NOTE_SUFFIX, baseline.note)) return;
+    submitting.current = true;
+    setNote("");
+  }, [baseline, canWrite]);
+
+  const retrySave = () => {
+    saveDraft();
+    if (offsetSave.saved === false && canWrite(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) {
+      if (offsetSave.retry()) baseline.offset = JSON.stringify(noteOffset);
+    }
+  };
 
   const startNoteMove = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -243,10 +291,10 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       if (Math.abs(deltaX) > 3) {
         drag.moved = true;
         setMovingNote(true);
-        setNoteOffset(clampNoteOffset(drag.startOffset + deltaX));
+        if (canWrite(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) setNoteOffset(clampNoteOffset(drag.startOffset + deltaX));
       }
     },
-    [clampNoteOffset],
+    [baseline, canWrite, clampNoteOffset],
   );
 
   const endNoteMove = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
@@ -296,7 +344,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
                     event.preventDefault();
                     saveDraft();
                   }
-                  if (event.key === "Escape") {
+                  if (event.key === "Escape" && !unsaved) {
                     setDraft(note);
                     setEditing(false);
                   }
@@ -347,6 +395,22 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         <PlusIcon />
         <span>{addWidget}</span>
       </button>
+      {unsaved && <section role="alert" className="dash-note-recovery">
+        <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p>
+        {conflict && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
+        <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>
+        <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
+          try {
+            accountScope.assertCurrent(scope);
+            const blob = new Blob([JSON.stringify({ version: 1, kind: "dashboard-note-draft", note: editing ? draft : note, noteOffset }, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+            anchor.href = url; anchor.download = "dashboard-note-draft.json";
+            document.body.appendChild(anchor); anchor.click(); anchor.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000); setExportFailed(false);
+          } catch { setExportFailed(true); }
+        }}>{lang === "zh" ? "导出备注草稿" : "Export note draft"}</button>
+        {exportFailed && <p>{lang === "zh" ? "导出失败，请重试。" : "Export failed. Please retry."}</p>}
+      </section>}
     </header>
   );
 }

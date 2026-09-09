@@ -4,16 +4,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 
+import { accountScope } from "@repo/plugin-web-storage";
 import { DashHeader } from "../DashHeader.js";
 
 const TIME_MORNING = new Date(2026, 4, 23, 8, 0, 0);
 const TIME_AFTERNOON = new Date(2026, 4, 23, 14, 0, 0);
 const TIME_EVENING = new Date(2026, 4, 23, 20, 0, 0);
-const HEADER_NOTE_KEY = "xai_pref_dashboard_header_note";
+let HEADER_NOTE_KEY = "";
 const HEADER_NOTE_OFFSET_KEY = "xai_pref_dashboard_header_note_x";
 
 beforeEach(() => {
   localStorage.clear();
+  accountScope.activate(accountScope.lock("fixture-A"), "A");
+  HEADER_NOTE_KEY = accountScope.physicalKey("xai_pref_dashboard_header_note");
 });
 
 describe("DashHeader", () => {
