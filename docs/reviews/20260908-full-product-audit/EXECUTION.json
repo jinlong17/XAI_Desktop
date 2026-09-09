@@ -51,12 +51,13 @@
     },
     {
       "id": "REL-04",
-      "status": "in_progress",
+      "status": "verification_pending",
       "evidence": [
         "commit:d266ab8",
         "commit:55d826e",
         "commit:60a1b6e",
-        "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md"
+        "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md",
+        "commit:d01b671"
       ]
     },
     {
@@ -74,7 +75,10 @@
       "status": "in_progress",
       "evidence": [
         "commit:27b8925",
-        "commit:a1ed33a"
+        "commit:a1ed33a",
+        "commit:762778c",
+        "commit:35d7b11",
+        "../../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx"
       ]
     },
     {
