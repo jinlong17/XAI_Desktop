@@ -16,3 +16,9 @@ The package-owned AccountDataGate offers explicit empty/import/postpone choices.
 ## Scope and remaining acceptance
 
 These are local controlled tests using synthetic accounts; no hosted login, production deletion or cloud sync is claimed. Entire REL-03 still needs owner migration validators, current-account Settings/export/delete integration, broad consumer regression and independent joint acceptance. Cross-vendor review remains pending revoked Claude OAuth. Passing these layers does not close unrelated REL-04/05/06/08 requirements.
+
+## Recovery entry integration checkpoint
+
+The host now mounts the public `AccountDeletionRecoveryNotice` inside the auth provider and outside all routes and account gates. A deleted account therefore does not need to sign in again to retry previously authorized local cleanup. The component owns durable receipt discovery and captured-owner cleanup; host wiring does not invoke another server deletion.
+
+After this wiring, the Web suite passed 27 files / 143 tests and Web typecheck passed. The production build is also rerun after the owner `sideEffects` registration repair `96d1914`; the independent joined browser probe separately verifies that the real host registration graph retains all required migration validators. Settings owner and independent joined acceptance remain separately recorded; this checkpoint does not claim deployment or full REL-03 closure.

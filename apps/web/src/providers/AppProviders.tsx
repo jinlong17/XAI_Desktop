@@ -8,6 +8,7 @@ import {
 } from "@repo/web-auth-device-session/web";
 
 import { accountScope } from "@repo/plugin-web-storage";
+import { AccountDeletionRecoveryNotice } from "@repo/plugin-web-settings-rest";
 import { invalidateAccountIdentity } from "./AccountStorageGate.js";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
@@ -454,6 +455,7 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null} onIdentityChange={invalidateAccountIdentity}>
+      <AccountDeletionRecoveryNotice />
       {transport ? (
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge supabaseAnonKey={config?.anonKey} supabaseUrl={config?.url}>

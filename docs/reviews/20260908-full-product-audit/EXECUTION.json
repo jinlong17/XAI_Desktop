@@ -11,7 +11,10 @@
         "commit:2f04bd4",
         "../web-local-time-contract/20260909-bug-diagnose.md",
         "commit:337d2b8",
-        "../web-local-time-contract/20260909-parent-verification.md"
+        "../web-local-time-contract/20260909-parent-verification.md",
+        "commit:8edd51d",
+        "commit:ca70f6f",
+        "../web-local-time-contract/20260909-independent-verification.md"
       ]
     },
     {
@@ -31,7 +34,16 @@
       "status": "in_progress",
       "evidence": [
         "commit:44fa05c",
-        "../web-account-data-isolation/20260909-rel03-diagnosis.md"
+        "../web-account-data-isolation/20260909-rel03-diagnosis.md",
+        "commit:ebb91c2",
+        "commit:85451f6",
+        "commit:e1cbe5c",
+        "commit:575cfd9",
+        "commit:fae9398",
+        "commit:5ae7b7a",
+        "commit:23b83e4",
+        "commit:96d1914",
+        "../web-account-data-isolation/20260909-host-integration.md"
       ]
     },
     {
