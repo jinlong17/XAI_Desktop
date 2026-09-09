@@ -1,0 +1,15 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope} from './packages/plugin-web-storage/src/index';
+import {MatrixModule} from './packages/xai-web-matrix/src/MatrixModule';
+import {onWebEvent} from './packages/xai-web-event-bus/src/index';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/xai-web-matrix/src/matrix.css';
+accountScope.activate(accountScope.lock('independent-A'),'A');
+const initial={schemaVersion:1,q1:[{id:'original',title:{en:'Original A',zh:'Original A'}}],q2:[],q3:[],q4:[]};
+const key=accountScope.physicalKey('xai_matrix_state');localStorage.setItem(key,JSON.stringify(initial));
+let events=0;onWebEvent('web:matrix:priority-tagged',()=>events++);
+const nativeSet=Storage.prototype.setItem;
+(window as any).verify={key,initial,events:()=>events,deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('independent quota','QuotaExceededError');nativeSet.call(this,k,v)}},restore(){Storage.prototype.setItem=nativeSet},switch(){accountScope.activate(accountScope.lock('independent-B'),'B');return accountScope.physicalKey('xai_matrix_state')}};
+createRoot(document.getElementById('app')!).render(<MatrixModule lang="en"/>);

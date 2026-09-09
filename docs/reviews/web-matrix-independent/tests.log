@@ -1,0 +1,33 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-OYnqGw/source/packages/xai-web-matrix
+
+ ✓ src/__tests__/MatrixModule.dnd.test.tsx (5 tests) 538ms
+   ✓ MatrixModule DnD > AC-DND-1: dragging a card from Q4 to Q1 moves it  343ms
+ ✓ src/__tests__/MatrixModule.edge.test.tsx (3 tests) 580ms
+   ✓ MatrixModule edge cases > P3-EDGE-1: emptying Q1 (drag only card out) shows q-empty hint  300ms
+ ✓ src/__tests__/MatrixModule.events.test.tsx (5 tests) 598ms
+   ✓ MatrixModule event emission > AC-EVENT-1: drag-between emits exactly one web:matrix:priority-tagged  333ms
+ ✓ src/__tests__/MatrixModule.kbd.test.tsx (6 tests) 678ms
+   ✓ MatrixModule keyboard a11y > AC-KBD-1: card rows have tabIndex=0  370ms
+ ✓ src/__tests__/MatrixModule.persist.test.tsx (6 tests) 598ms
+   ✓ MatrixModule persistence > AC-PERSIST-1: a drag-between writes updated state to localStorage  301ms
+ ✓ src/__tests__/saveRecovery.test.tsx (4 tests) 939ms
+   ✓ Matrix save-result recovery > quota keeps native dialog and latest draft; retry creates exactly one latest card  517ms
+ ✓ src/__tests__/MatrixModule.create.test.tsx (7 tests) 1240ms
+   ✓ MatrixModule card create > T-MWIRE-1: clicking M-01 header + opens the composer with defaultQuadrant=q1  548ms
+ ✓ src/__tests__/create.test.ts (8 tests) 14ms
+ ✓ src/__tests__/move.test.ts (5 tests) 3ms
+ ✓ src/__tests__/MatrixModule.render.test.tsx (4 tests) 139ms
+ ✓ src/__tests__/MatrixModule.i18n.test.tsx (6 tests) 140ms
+ ✓ src/__tests__/MatrixComposer.test.tsx (9 tests) 242ms
+ ✓ src/__tests__/index-barrel.test.ts (3 tests) 3ms
+ ✓ src/__tests__/ids.test.ts (3 tests) 9ms
+ ✓ src/__tests__/matrix.css.tokens.test.ts (5 tests) 3ms
+ ✓ src/__tests__/registration.test.ts (4 tests) 3ms
+ ✓ src/__tests__/registry-presence.test.ts (3 tests) 4ms
+
+ Test Files  17 passed (17)
+      Tests  86 passed (86)
+   Start at  13:41:48
+   Duration  4.23s (transform 603ms, setup 3.63s, collect 2.32s, tests 5.73s, environment 10.90s, prepare 1.37s)
+
