@@ -1,10 +1,10 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。Board工作区1053463仅修好hook拒绝损坏数据，Astra ac0e090仍要求修改：预存schema-invalid、JSON null、语法损坏、[]四场景在Module启动时被seed/automation覆盖；单独阻止board写入后active选择仍从valuable-board被改为b-default。正确启动反例保留，Terra正在扩到初始化/自动及手动automation/queued selection的共用源校验。原9组件6PASS/3FAIL，其中一项为正常seed自动化改变有效数据的断言边界，不与两个真实损坏保护FAIL混淆。完整Board/REL-05未关闭。
+最新检查点（2026-09-09）：正式完成 **13/312**。A1 Calendar有界主审接受：20a0748修复非字符串时间分类；Sol a9b88ba与Astra8045d5d分别固定20a0748原生复验22非法/5有效/同id纠正及重放通过，ecb588c原FAIL保留。Astra批准进入9df552e原B-D canonical单记录及全部writer协调；完整AI-02仍in_progress，不将A1或页内回执当持久幂等完成。Luna3241ffd补当前迁移入口清单，实施按该清单和Astra完整方案执行。
 
-Board详情a8774fd固定d7f1987新增3正确FAIL：清单项、附件、评论在canonical写入被拒后丢失编辑稿；原字节未变，后续alert断言尚未执行。Astra已批准下一批架构（ac0e090中的20260909-detail-repair-architecture.md），须待当前Module所有权释放再实施，不能仅把void当成功或仅在会消失的Modal中保留草稿。
+Board 034ef46的四种预存损坏数据/静态选择保护已通过Astra复验，但8045d5d三个同账号queued-selection组件及Chrome反例仍FAIL：校验后active变化、board替换或删除，旧callback会覆盖选择。Terra接执行时同时核对owner、physical源及预期active的窄修。正常seed/automation重试单列已通过；原9断言6PASS/3FAIL中有效seed字节与新增多alert边界另有说明，不伪造全通过。整体Board/REL-05保持开放，下一批详情3丢稿FAIL与架构a8774fd/ac0e090仍待当前Module所有权释放后接续。
 
-AI-02页内回执Sol补充8bcd1d6：固定daff8ef错误request/channel/owner回执、重复Confirm、等待卸载/换账号、六工具读写SecurityError均通过；完整持久幂等仍开放。Calendar A1 afd10ff上游前后同6断言证据fd1dce1已提交（before5FAIL/1PASS→after6PASS）。Sol固定afd10ff独立native发现array时间误报storage而非invalid，Terra接最小类型校验修复；A1未通过最终验收。以下保留历次检查记录。
+父Web整合1364de5固定a81234e产品树：27files146tests与check-types通过，产品树检查期间不变；不替代独立Chrome或生产验收。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 
