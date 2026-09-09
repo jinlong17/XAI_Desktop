@@ -24,4 +24,8 @@ describe('Board creator ordered persistence',()=>{
  it('old owner cannot retry or export its failed creation into B',()=>{
   mount();const fault=deny(boardKey());fireEvent.click(screen.getByTestId('bc-submit'));fault.mockRestore();const aKey=boardKey(),aBytes=localStorage.getItem(aKey);act(()=>accountScope.activate(accountScope.lock('B'),'B'));const bKey=boardKey(),bBytes=localStorage.getItem(bKey);fireEvent.click(screen.getByTestId('bc-submit'));fireEvent.click(screen.getByText('Export draft'));expect(localStorage.getItem(aKey)).toBe(aBytes);expect(localStorage.getItem(bKey)).toBe(bBytes);expect(screen.getByRole('alert')).toHaveTextContent('Export failed');
  });
+ it('does not resurrect canonical data removed before first create',()=>{
+  mount();localStorage.removeItem(boardKey());fireEvent.click(screen.getByTestId('bc-submit'));expect(localStorage.getItem(boardKey())).toBeNull();expect(screen.getByRole('alert')).toHaveTextContent('Newer board data');expect(screen.getByTestId('bc-name-input')).toBeInTheDocument();
+ });
+
 });

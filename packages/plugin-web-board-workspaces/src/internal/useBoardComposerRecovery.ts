@@ -16,7 +16,7 @@ export function useBoardComposerRecovery(rawBoards: unknown, boardId: string, sa
       pending.current = proposal;
       if (proposal.kind !== kind || proposal.boardId !== boardId || proposal.listId !== listId) throw Error('The destination changed. Export or discard the original draft.');
       if (!text.trim()) throw Error('Enter a title before retrying.');
-      if (raw !== proposal.baseline || raw !== null && JSON.stringify(JSON.parse(raw)) !== JSON.stringify(rawBoards)) throw Error('Newer board data exists. Export the draft and reopen.');
+      if (raw !== proposal.baseline || (raw === null ? rawBoards !== null : JSON.stringify(JSON.parse(raw)) !== JSON.stringify(rawBoards))) throw Error('Newer board data exists. Export the draft and reopen.');
       const boards = loadBoardsOrDefault(rawBoards), board = boards.find(item => item.id === boardId);
       if (!board || kind === 'card' && !board.lists.some(list => list.id === listId && !list.archived)) throw Error('The destination is no longer available.');
       const lists = kind === 'card'

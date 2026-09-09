@@ -18,7 +18,7 @@ export function useBoardCreateRecovery(rawBoards: unknown, workspaces: readonly 
         if (!tpl) throw new Error('Unknown board template.');
         const proposal = pending.current ?? { id: `b-${crypto.randomUUID()}`, baseline: raw, committed: false, draft };
         proposal.draft = draft; pending.current = proposal;
-        if (raw !== proposal.baseline || raw !== null && JSON.stringify(JSON.parse(raw)) !== JSON.stringify(rawBoards)) throw new Error('Newer board data exists. Export the draft and reopen.');
+        if (raw !== proposal.baseline || (raw === null ? rawBoards !== null : JSON.stringify(JSON.parse(raw)) !== JSON.stringify(rawBoards))) throw new Error('Newer board data exists. Export the draft and reopen.');
         const board: Board = { id: proposal.id, workspaceId: draft.workspaceId, name: {en: draft.name, zh: draft.name}, cover: tpl.cover, template: draft.templateId, lists: tpl.lists() };
         if (!saveBoards(preserveBoardStorageFormat(rawBoards, [...loadBoardsOrDefault(rawBoards), board]))) throw new Error('Board was not saved. Retry or export the draft.');
         proposal.committed = true;

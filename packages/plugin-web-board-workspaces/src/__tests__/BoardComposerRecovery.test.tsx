@@ -23,4 +23,8 @@ describe('Card/list composer confirmed persistence',()=>{
   const original=Storage.prototype.setItem;const fault=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,k,v){if(k===key())throw new DOMException('quota','QuotaExceededError');original.call(this,k,v);});fireEvent.click(screen.getByTestId('card-composer-add'));fault.mockRestore();const aKey=key();const newer=JSON.stringify([...makeDefaultBoards(),{...makeDefaultBoards()[0],id:'external'}]);localStorage.setItem(aKey,newer);fireEvent.click(screen.getByText('Retry save'));expect(localStorage.getItem(aKey)).toBe(newer);expect(screen.getByRole('alert')).toHaveTextContent('Newer board data');
   act(()=>accountScope.activate(accountScope.lock('B'),'B'));const bKey=key();const b=localStorage.getItem(bKey);fireEvent.click(screen.getByText('Retry save'));fireEvent.click(screen.getByText('Export draft'));expect(localStorage.getItem(aKey)).toBe(newer);expect(localStorage.getItem(bKey)).toBe(b);expect(screen.getByRole('alert')).toHaveTextContent('Export failed');
  });
+ it('rejects a canonical key removed before the first submission without resurrecting old data',()=>{
+  mount();fireEvent.click(screen.getAllByTestId('add-card-btn')[0]!);fireEvent.change(screen.getByTestId('card-composer-input'),{target:{value:'Draft before external removal'}});localStorage.removeItem(key());fireEvent.click(screen.getByTestId('card-composer-add'));expect(localStorage.getItem(key())).toBeNull();expect(screen.getByRole('alert')).toHaveTextContent('Newer board data');expect(screen.getByTestId('card-composer-input')).toHaveValue('Draft before external removal');
+ });
+
 });
