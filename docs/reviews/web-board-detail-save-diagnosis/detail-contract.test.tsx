@@ -1,0 +1,22 @@
+import { afterEach, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { BoardWorkspacesModule } from '../../../packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.js';
+import { makeDefaultBoards } from '../../../packages/plugin-web-board-core/src/index.js';
+import { accountScope } from '../../../packages/plugin-web-storage/src/index.js';
+afterEach(()=>{cleanup();vi.restoreAllMocks();localStorage.clear();});
+for(const kind of ['checklist','attachment','activity'] as const) it(`${kind}: rejected canonical write preserves editable draft and reports failure`,async()=>{
+ const key=accountScope.physicalKey('xai_boards_v2');const seed=makeDefaultBoards();
+ localStorage.setItem(key,JSON.stringify(seed));localStorage.setItem(accountScope.physicalKey('xai_active_board'),seed[0]!.id);
+ render(<BoardWorkspacesModule lang="en"/>);fireEvent.click(screen.getAllByTestId('board-card')[0]!);
+ const originalRaw=localStorage.getItem(key);const originalSet=Storage.prototype.setItem;let rejected=0;
+ vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,name,value){if(name===key){rejected++;throw new DOMException('quota','QuotaExceededError');}originalSet.call(this,name,value);});
+ const inputId=kind==='attachment'?'card-detail-attachment-url':`card-detail-${kind}-input`;
+ const text=kind==='attachment'?'https://example.com/valuable-spec':'Unsaved valuable '+kind;
+ fireEvent.change(screen.getByTestId(inputId),{target:{value:text}});
+ if(kind==='attachment')fireEvent.change(screen.getByTestId('card-detail-attachment-title'),{target:{value:'Valuable attachment title'}});
+ await act(async()=>{fireEvent.click(screen.getByTestId(`card-detail-${kind}-add`));});
+ expect(rejected).toBeGreaterThan(0);expect(localStorage.getItem(key)).toBe(originalRaw);
+ expect(screen.getByTestId(inputId)).toHaveValue(text);
+ if(kind==='attachment')expect(screen.getByTestId('card-detail-attachment-title')).toHaveValue('Valuable attachment title');
+ expect(screen.getByRole('alert').textContent).toMatch(/not saved|unsaved|save failed/i);
+});
