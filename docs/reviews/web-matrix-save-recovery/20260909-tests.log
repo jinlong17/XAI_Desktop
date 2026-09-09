@@ -1,0 +1,66 @@
+
+> @repo/plugin-web-matrix@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix
+
+stderr | src/__tests__/saveRecovery.test.tsx > Matrix save-result recovery > quota keeps native dialog and latest draft; retry creates exactly one latest card
+[plugin-web-storage] quota exceeded for xai_matrix_state.
+
+stderr | src/__tests__/MatrixModule.persist.test.tsx > MatrixModule persistence > AC-PERSIST-4: corrupted JSON falls back to default (no exception)
+[plugin-web-storage] decode failed for xai_matrix_state: Error: Cannot decode stored value with codec "json"
+    at getPref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/storage.ts:136:7)
+    at /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at usePersistedMatrix (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix/src/internal/usePersistedMatrix.ts:41:41)
+    at MatrixModule (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-matrix/src/MatrixModule.tsx:37:50)
+
+ ✓ src/__tests__/MatrixModule.dnd.test.tsx (5 tests) 1126ms
+   ✓ MatrixModule DnD > AC-DND-1: dragging a card from Q4 to Q1 moves it  526ms
+stderr | src/__tests__/saveRecovery.test.tsx > Matrix save-result recovery > failed move emits no success and retains original quadrant; retry emits once after persistence
+[plugin-web-storage] quota exceeded for xai_matrix_state.
+
+ ✓ src/__tests__/MatrixModule.events.test.tsx (5 tests) 1216ms
+   ✓ MatrixModule event emission > AC-EVENT-1: drag-between emits exactly one web:matrix:priority-tagged  507ms
+   ✓ MatrixModule event emission > AC-EVENT-2: no event on drag within same quadrant  313ms
+ ✓ src/__tests__/MatrixModule.edge.test.tsx (3 tests) 1259ms
+   ✓ MatrixModule edge cases > P3-EDGE-1: emptying Q1 (drag only card out) shows q-empty hint  477ms
+   ✓ MatrixModule edge cases > P3-EDGE-2: drag from Q4 (--accent) to Q1 (--red) — tokens remain distinct  350ms
+   ✓ MatrixModule edge cases > P3-EDGE-3: 100-card stress — drag completes without quadratic slowdown  430ms
+ ✓ src/__tests__/MatrixModule.kbd.test.tsx (6 tests) 1352ms
+   ✓ MatrixModule keyboard a11y > AC-KBD-2: Ctrl+ArrowLeft from Q4 (col=1) wraps to Q3 (col=0)  486ms
+ ✓ src/__tests__/MatrixModule.persist.test.tsx (6 tests) 1227ms
+   ✓ MatrixModule persistence > AC-PERSIST-1: a drag-between writes updated state to localStorage  632ms
+stderr | src/__tests__/saveRecovery.test.tsx > Matrix save-result recovery > retry preserves newer external bytes and does not emit an obsolete move
+[plugin-web-storage] quota exceeded for xai_matrix_state.
+
+stderr | src/__tests__/saveRecovery.test.tsx > Matrix save-result recovery > old account draft cannot retry or export into B
+[plugin-web-storage] quota exceeded for xai_matrix_state.
+
+ ✓ src/__tests__/saveRecovery.test.tsx (4 tests) 1689ms
+   ✓ Matrix save-result recovery > quota keeps native dialog and latest draft; retry creates exactly one latest card  1013ms
+ ✓ src/__tests__/MatrixModule.create.test.tsx (7 tests) 2168ms
+   ✓ MatrixModule card create > T-MWIRE-1: clicking M-01 header + opens the composer with defaultQuadrant=q1  876ms
+   ✓ MatrixModule card create > T-MCR-1: save creates a card; it renders in the correct quadrant; count increments  420ms
+ ✓ src/__tests__/move.test.ts (5 tests) 6ms
+ ✓ src/__tests__/ids.test.ts (3 tests) 3ms
+ ✓ src/__tests__/MatrixModule.render.test.tsx (4 tests) 276ms
+ ✓ src/__tests__/MatrixModule.i18n.test.tsx (6 tests) 376ms
+ ✓ src/__tests__/index-barrel.test.ts (3 tests) 4ms
+ ✓ src/__tests__/create.test.ts (8 tests) 6ms
+ ✓ src/__tests__/MatrixComposer.test.tsx (9 tests) 607ms
+ ✓ src/__tests__/registration.test.ts (4 tests) 3ms
+ ✓ src/__tests__/matrix.css.tokens.test.ts (5 tests) 2ms
+ ✓ src/__tests__/registry-presence.test.ts (3 tests) 2ms
+
+ Test Files  17 passed (17)
+      Tests  86 passed (86)
+   Start at  13:38:36
+   Duration  9.29s (transform 1.88s, setup 11.67s, collect 6.56s, tests 11.32s, environment 16.45s, prepare 3.89s)
+

@@ -13,8 +13,8 @@
  * Extension: xai-web-matrix-card-create (design.md §E.1 #11)
  */
 
-import { useEffect, useRef } from "react";
-import { usePref } from "@repo/plugin-web-storage";
+import { useEffect, useRef, useState } from "react";
+import { accountScope, usePref } from "@repo/plugin-web-storage";
 import type { WebPrefValue } from "@repo/plugin-web-storage";
 import type { MatrixState, Quadrant, NewMatrixCardDraft } from "../types.js";
 import { buildSeedState } from "./seed.js";
@@ -30,10 +30,11 @@ type RawBlob = WebPrefValue<typeof STORAGE_KEY>;
 
 export interface UsePersistedMatrixResult {
   state: MatrixState;
-  setState: (next: MatrixState) => void;
-  moveCard: (cardId: string, to: Quadrant) => void;
+  setState: (next: MatrixState) => boolean;
+  moveCard: (cardId: string, to: Quadrant) => boolean;
   /** Appends a new card to targetQuadrant. Does NOT emit web:matrix:priority-tagged. */
-  addCard: (draft: NewMatrixCardDraft, to: Quadrant) => void;
+  addCard: (draft: NewMatrixCardDraft, to: Quadrant) => boolean;
+  recovery: { failure: 'write' | 'account' | 'conflict' | null; kind: 'create' | 'move' | 'state' | null; retry: () => boolean; discard: () => void; snapshot: () => unknown };
 }
 
 export function usePersistedMatrix(): UsePersistedMatrixResult {
@@ -41,7 +42,25 @@ export function usePersistedMatrix(): UsePersistedMatrixResult {
 
   // Cast the raw (unknown) blob to MatrixState
   const state = asMatrixState(rawState as RawBlob);
-  const setState = (next: MatrixState) => setRawState(next as unknown as RawBlob);
+  const scope = useRef(accountScope.capture());
+  type Pending = { next: MatrixState; baseline: string | null; kind: 'create' | 'move' | 'state'; after?: () => void };
+  const pending = useRef<Pending | null>(null);
+  const [failure, setFailure] = useState<'write' | 'account' | 'conflict' | null>(null);
+  const physical = () => { accountScope.assertCurrent(scope.current); return accountScope.physicalKey(STORAGE_KEY, scope.current); };
+  const commit = (next: MatrixState, kind: Pending['kind'], after?: () => void): boolean => {
+    if (pending.current && (kind !== pending.current.kind || kind !== 'create' && pending.current.next !== next)) return false;
+    let key: string;
+    try { key = physical(); } catch { setFailure('account'); return false; }
+    try {
+      const current = localStorage.getItem(key);
+      const baseline = pending.current ? pending.current.baseline : current;
+      pending.current = { next, kind, baseline, after };
+      if (current !== baseline || current !== null && JSON.stringify(JSON.parse(current)) !== JSON.stringify(rawState)) { setFailure('conflict'); return false; }
+      if (!setRawState(next as RawBlob)) { setFailure('write'); return false; }
+      pending.current = null; setFailure(null); after?.(); return true;
+    } catch { if (!pending.current) pending.current = { next, kind, baseline: null, after }; setFailure('write'); return false; }
+  };
+  const setState = (next: MatrixState) => commit(next, 'state');
 
   // First-launch seed: if state is empty (all quadrant arrays have zero cards)
   // and this is the default (key absent from storage), apply the seed.
@@ -65,19 +84,23 @@ export function usePersistedMatrix(): UsePersistedMatrixResult {
 
   const moveCard = (cardId: string, to: Quadrant) => {
     const { next, from } = moveCardTo(state, cardId, to);
-    if (from === null || from === to) return; // no-op
-    setState(next);
-    emitPriorityTagged(cardId, from, to);
+    if (from === null || from === to) return false; // no-op
+    return commit(next, 'move', () => emitPriorityTagged(cardId, from, to));
   };
 
   // addCard: creates a new card + persists; does NOT emit (QE-D — create ≠ move).
   const addCard = (draft: NewMatrixCardDraft, to: Quadrant) => {
     const next = addCardReducer(state, draft, to);
-    if (next === state) return; // no-op (empty title / bad quadrant)
-    setState(next);
+    if (next === state) return false; // no-op (empty title / bad quadrant)
+    return commit(next, 'create');
   };
 
-  return { state, setState, moveCard, addCard };
+  return { state, setState, moveCard, addCard, recovery: {
+    failure, kind: pending.current?.kind ?? null,
+    retry: () => { const proposed = pending.current; return proposed ? commit(proposed.next, proposed.kind, proposed.after) : false; },
+    discard: () => { pending.current = null; setFailure(null); },
+    snapshot: () => { const key = physical(); return { version: 1, kind: 'matrix-unsaved-change', pending: pending.current?.next ?? null, stored: localStorage.getItem(key) }; },
+  } };
 }
 
 /** Casts a potentially unknown blob to MatrixState, falling back to empty default. */

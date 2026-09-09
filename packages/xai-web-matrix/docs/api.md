@@ -496,3 +496,9 @@ NO `plugin-web-tokens` edit. Quadrant labels here are composer-local; the quadra
 ## E.9 Out of scope (extension contract)
 
 No new `index.ts` exports beyond `NewMatrixCardDraft`. No new registry key. No new EventMap channel. No `updateCard`/`deleteCard` (Edit/Delete deferred). `MatrixComposer` stays module-internal.
+
+## REL05 save-result recovery (2026-09-09)
+
+`usePersistedMatrix.setState`, `moveCard`, and `addCard` now return a boolean. A failed write must not close the editor or emit `web:matrix:priority-tagged`. `recovery` exposes a failure/kind, retry, explicit discard and captured-account snapshot for manual export. Creation retries pass the latest form draft; movement retries persist the retained proposal before emitting once. Original bytes are retained on failure and newer-baseline conflicts; this is not a cross-tab atomic transaction.
+
+`MatrixComposer` has optional `saveError`, `exportFailed`, `onExportDraft`, and `onDiscard` props. A failed draft remains open through Escape/backdrop; explicit discard may close it. Export includes current unsaved title/tag/quadrant, and is intended for manual recovery. No import or cross-reload draft restoration is introduced.
