@@ -14,7 +14,10 @@
         "../web-local-time-contract/20260909-parent-verification.md",
         "commit:8edd51d",
         "commit:ca70f6f",
-        "../web-local-time-contract/20260909-independent-verification.md"
+        "../web-local-time-contract/20260909-independent-verification.md",
+        "commit:58e2757",
+        "commit:9149778",
+        "../web-local-time-contract/20260909-tt-idle-rollover-fix.md"
       ]
     },
     {
@@ -262,18 +265,22 @@
     },
     {
       "id": "MED-01",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:6887879",
-        "../web-meditation-durable/20260909-author-verification.md"
+        "../web-meditation-durable/20260909-author-verification.md",
+        "commit:797b4b4",
+        "../web-meditation-independent/20260909-independent-verification.md"
       ]
     },
     {
       "id": "MED-02",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:6887879",
-        "../web-meditation-durable/20260909-author-verification.md"
+        "../web-meditation-durable/20260909-author-verification.md",
+        "commit:797b4b4",
+        "../web-meditation-independent/20260909-independent-verification.md"
       ]
     },
     {
