@@ -5,6 +5,7 @@
  * Port of `web design/module-board.jsx` lines 1282..1366.
  */
 
+import type { WorkspaceAction } from "./internal/useWorkspaceSaveRecovery.js";
 import { useState } from "react";
 import type { Board, BoardWorkspace } from "@repo/plugin-web-board-core";
 import { STR_SWITCHER, type Lang } from "./internal/strings.js";
@@ -25,11 +26,17 @@ export interface BoardSwitcherProps {
   onRequestDelete: (boardId: string) => void;
   onClose: () => void;
   /** Workspace CRUD (W3). All four must be provided to enable the editor UI. */
-  onCreateWorkspace?: (name: string) => void;
-  onRenameWorkspace?: (id: string, name: string) => void;
+  onCreateWorkspace?: (name: string) => boolean | void;
+  onRenameWorkspace?: (id: string, name: string) => boolean | void;
   onRecolorWorkspace?: (id: string) => void;
   /** Host refuses deletion of non-empty or last workspaces; UI also hides it. */
   onDeleteWorkspace?: (id: string) => void;
+  saveError?: string | null;
+  pendingAction?: WorkspaceAction;
+  exportFailed?: boolean;
+  onRetrySave?: (latestName?: string) => boolean;
+  onExportSave?: (latestName?: string) => void;
+  onDiscardSave?: () => void;
 }
 
 /** Compute the visible groups + filtered boards for the current search + scope. */
@@ -66,6 +73,7 @@ export function BoardSwitcher({
   onRenameWorkspace,
   onRecolorWorkspace,
   onDeleteWorkspace,
+  saveError, pendingAction, exportFailed, onRetrySave, onExportSave, onDiscardSave,
 }: BoardSwitcherProps) {
   const [filter, setFilter] = useState("");
   const [rawScope, setScope] = useState<"all" | string>("all");
@@ -87,14 +95,14 @@ export function BoardSwitcher({
   const submitNewWorkspace = () => {
     const name = newWsName.trim();
     if (!name || !onCreateWorkspace) return;
-    onCreateWorkspace(name);
+    if (onCreateWorkspace(name) === false) return;
     setNewWsName("");
     setWsComposerOpen(false);
   };
 
   const submitWsRename = () => {
     if (renamingWsId && renameWsText.trim()) {
-      onRenameWorkspace?.(renamingWsId, renameWsText);
+      if (onRenameWorkspace?.(renamingWsId, renameWsText) === false) return;
     }
     setRenamingWsId(null);
   };
@@ -129,6 +137,16 @@ export function BoardSwitcher({
           </button>
         </header>
 
+        {saveError && <section role="alert" className="bs-save-recovery">
+          <p>{lang === 'zh' ? '更改未保存。离开前请重试或导出。' : 'Changes were not saved. Retry or export before leaving.'} {saveError}</p>
+          <button type="button" className="btn" onMouseDown={e=>e.preventDefault()} onClick={()=>{
+            const latest = pendingAction==='create'?newWsName:pendingAction==='rename'?renameWsText:undefined;
+            if(onRetrySave?.(latest)){setWsComposerOpen(false);setNewWsName('');setRenamingWsId(null);}
+          }}>{lang === 'zh' ? '重试保存' : 'Retry workspace change'}</button>
+          <button type="button" className="btn" onMouseDown={e=>e.preventDefault()} onClick={()=>onExportSave?.(pendingAction==='create'?newWsName:pendingAction==='rename'?renameWsText:undefined)}>{lang === 'zh' ? '导出草稿' : 'Export workspace draft'}</button>
+          <button type="button" className="btn" onMouseDown={e=>e.preventDefault()} onClick={()=>{onDiscardSave?.();setWsComposerOpen(false);setNewWsName('');setRenamingWsId(null);}}>{lang === 'zh' ? '放弃更改' : 'Discard workspace change'}</button>
+          {exportFailed && <p>{lang === 'zh' ? '导出失败或账户已更改。' : 'Export failed or the account changed.'}</p>}
+        </section>}
         <div className="bs-scopes">
           <button
             type="button"
@@ -152,7 +170,7 @@ export function BoardSwitcher({
             <button
               type="button"
               className="bs-ws-add"
-              onClick={() => setWsComposerOpen((open) => !open)}
+              onClick={() => { if (!saveError) setWsComposerOpen((open) => !open); }}
               data-testid="bs-new-workspace"
             >
               + {lang === "zh" ? "空间" : "Workspace"}
@@ -162,7 +180,7 @@ export function BoardSwitcher({
           <button
             type="button"
             className="btn primary bs-new"
-            onClick={onCreate}
+            onClick={() => { if (!saveError) onCreate(); }}
             data-testid="bs-new-board"
           >
             + {STR_SWITCHER.newBoard[lang]}
@@ -178,7 +196,7 @@ export function BoardSwitcher({
               onChange={(e) => setNewWsName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") submitNewWorkspace();
-                if (e.key === "Escape") setWsComposerOpen(false);
+                if (e.key === "Escape" && !saveError) setWsComposerOpen(false);
               }}
               data-testid="bs-ws-new-name"
             />
@@ -208,7 +226,7 @@ export function BoardSwitcher({
                       type="button"
                       className="ws-dot ws-dot-btn"
                       style={{ background: ws.color }}
-                      onClick={() => onRecolorWorkspace?.(ws.id)}
+                      onClick={() => { if (!saveError) onRecolorWorkspace?.(ws.id); }}
                       aria-label={lang === "zh" ? "更改颜色" : "Change color"}
                       title={lang === "zh" ? "更改颜色" : "Change color"}
                       data-testid={`bs-ws-recolor-${ws.id}`}
@@ -224,7 +242,7 @@ export function BoardSwitcher({
                       onChange={(e) => setRenameWsText(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") submitWsRename();
-                        if (e.key === "Escape") setRenamingWsId(null);
+                        if (e.key === "Escape" && !saveError) setRenamingWsId(null);
                       }}
                       onBlur={submitWsRename}
                       data-testid={`bs-ws-rename-input-${ws.id}`}
@@ -239,6 +257,7 @@ export function BoardSwitcher({
                         type="button"
                         className="icon-btn"
                         onClick={() => {
+                          if (saveError) return;
                           setRenamingWsId(ws.id);
                           setRenameWsText(ws.name[lang]);
                         }}
@@ -252,7 +271,7 @@ export function BoardSwitcher({
                         <button
                           type="button"
                           className="icon-btn danger"
-                          onClick={() => onDeleteWorkspace?.(ws.id)}
+                          onClick={() => { if (!saveError) onDeleteWorkspace?.(ws.id); }}
                           aria-label={lang === "zh" ? "删除空间" : "Delete workspace"}
                           data-testid={`bs-ws-delete-${ws.id}`}
                         >
@@ -275,7 +294,7 @@ export function BoardSwitcher({
                         <button
                           type="button"
                           className={"bs-card" + (isActive ? " active" : "")}
-                          onClick={() => onPick(b.id)}
+                          onClick={() => { if (!saveError) onPick(b.id); }}
                           data-testid={`bs-card-${b.id}`}
                         >
                           <div className="bs-cover" style={{ background: b.cover }}>

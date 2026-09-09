@@ -1,0 +1,25 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > create rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > rename rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > recolor rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > delete rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > pick rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+ ✓ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx (5 tests) 430ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  14:27:58
+   Duration  2.50s (transform 702ms, setup 324ms, collect 932ms, tests 430ms, environment 395ms, prepare 69ms)
+

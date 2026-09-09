@@ -1715,3 +1715,5 @@
 .bc-create-recovery .btn, .board-creator .bc-foot .btn { min-height: 44px; }
 .board-composer-recovery { padding: 12px; border: 1px solid var(--border); border-radius: 12px; overflow-wrap: anywhere; }
 .board-composer-recovery .btn { min-height: 44px; margin: 4px; }
+.bs-save-recovery { margin: 12px; padding: 12px; border: 1px solid var(--border-1); border-radius: 12px; overflow-wrap: anywhere; }
+.bs-save-recovery .btn { min-height: 44px; margin: 4px; }
