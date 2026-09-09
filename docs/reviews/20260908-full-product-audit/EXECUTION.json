@@ -6,7 +6,7 @@
   "items": [
     {
       "id": "REL-01",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:2f04bd4",
         "../web-local-time-contract/20260909-bug-diagnose.md",
@@ -17,7 +17,9 @@
         "../web-local-time-contract/20260909-independent-verification.md",
         "commit:58e2757",
         "commit:9149778",
-        "../web-local-time-contract/20260909-tt-idle-rollover-fix.md"
+        "../web-local-time-contract/20260909-tt-idle-rollover-fix.md",
+        "commit:c02a09a",
+        "../web-local-time-consumers-independent/20260909-review.md"
       ]
     },
     {
@@ -88,7 +90,12 @@
         "../web-save-consumer-inventory/20260909-inventory.md",
         "../../../packages/xai-web-meditation/docs/test.md",
         "commit:28fe049",
-        "../web-save-consumer-inventory/20260909-med-after.md"
+        "../web-save-consumer-inventory/20260909-med-after.md",
+        "commit:9ebc48c",
+        "commit:8e50d8f",
+        "../web-matrix-independent/20260909-independent-verification.md",
+        "commit:a452d40",
+        "../web-calendar-save-recovery/20260909-diagnosis-and-fix.md"
       ]
     },
     {
