@@ -115,6 +115,7 @@ describe('atomic auth generation participant', () => {
     expect(await store.getItem(A, 'new-auth')).toBe(raw);
     await store.revoke({ ...A, owner: 'account-A' });
     expect(await legacy.getItem('old-auth')).toBe(raw);
+    expect(await store.readLegacyImport('old-auth')).toEqual({ ...A, owner: 'account-A' });
     expect(await device.getItem('identity')).toBe('device-original');
     await store.createCandidate(B);
     expect(await store.importLegacy({ lease: B, owner: 'account-A', expectedActive: null, legacyKey: 'old-auth', expectedRaw: raw, destinationKey: 'new-auth' })).toMatchObject({ reason: 'legacy-already-imported' });
@@ -251,4 +252,18 @@ it('aborted first session write preserves the unclaimed candidate', async () => 
   fault.mockRestore();
   expect(await store.getItem(A, 'session')).toBeNull();
   expect(await store.setSessionItem(A, 'session', 'B-session', 'account-B')).toEqual({ status: 'applied' });
+});
+
+it('reads only validated legacy migration names without modifying malformed claims', async () => {
+  const store = createAuthGenerationStore();
+  expect(await store.readLegacyImport('missing')).toBeNull();
+  const key = 'xai.auth-generation.v1:xai-web-auth:legacy:broken';
+  const { createIndexedDbTransactionStore } = await import('./storage');
+  const broken = { version: 99, owner: 'A', generation: 'old', legacyKey: 'broken' };
+  await createIndexedDbTransactionStore()('readwrite', objectStore => new Promise<void>((resolve, reject) => {
+    objectStore.transaction.oncomplete = () => resolve(); objectStore.transaction.onabort = () => reject(Error('fixture abort'));
+    objectStore.put(broken, key);
+  }));
+  await expect(store.readLegacyImport('broken')).rejects.toMatchObject({ reason: 'schema-invalid' });
+  expect(await createIndexedDbStore().getItem(key)).toEqual(broken);
 });

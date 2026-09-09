@@ -42,6 +42,7 @@ export interface AuthGenerationStore {
   setSessionItem(lease: AuthGenerationLease, key: string, value: string, owner: string): Promise<AuthGenerationMutationResult>;
   removeItem(lease: AuthGenerationLease, key: string): Promise<AuthGenerationMutationResult>;
   readRecovery(): Promise<AuthGenerationRecovery[]>;
+  readLegacyImport(legacyKey: string): Promise<ActiveAuthGeneration | null>;
   /** Atomically compares legacy bytes, copies and publishes; never deletes the legacy row. */
   importLegacy(options: ImportLegacyAuthGenerationOptions): Promise<AuthGenerationMutationResult>;
 }
@@ -293,6 +294,18 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
           if (!validRow(row) || cursor.key !== rowKey(row.generation)) return rejectSchema(store);
           if (row.state === 'revoked') results.push({ generation: row.generation, owner: row.owner, state: 'revoked' });
           cursor.continue();
+        };
+      });
+    },
+    readLegacyImport(legacyKey) {
+      if (!validName(legacyKey) || legacyKey.startsWith(prefix)) return Promise.reject(new AuthGenerationStorageError('invalid-input'));
+      return transaction('readonly', (store, finish) => {
+        const request = store.get(`${prefix}legacy:${encodeURIComponent(legacyKey)}`);
+        request.onsuccess = () => {
+          const value = request.result;
+          if (value === undefined) return finish(null);
+          if (!value || typeof value !== 'object' || value.version !== 1 || !validName(value.generation) || !validName(value.owner) || value.legacyKey !== legacyKey) return rejectSchema(store);
+          finish({ generation: value.generation, owner: value.owner });
         };
       });
     },
