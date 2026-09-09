@@ -775,7 +775,12 @@
         "../web-canonical-preflight-current/CHECKLIST.md",
         "commit:1364de5",
         "commit:501feb7",
-        "../web-board-workspace-astra-review/20260909-canonical-old-client-rollout-gate.md"
+        "../web-board-workspace-astra-review/20260909-canonical-old-client-rollout-gate.md",
+        "commit:fb3ae2f",
+        "../web-ai-canonical-receipts-fix/20260909-b1-compatibility.md",
+        "commit:1831585",
+        "../web-canonical-remove-read-failure/review.md",
+        "commit:7c59d3f"
       ]
     },
     {

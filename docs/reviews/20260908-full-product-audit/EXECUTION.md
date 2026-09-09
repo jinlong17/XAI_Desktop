@@ -2,6 +2,8 @@
 
 最新检查点（2026-09-09）：正式完成 **13/312**。Board workspace保存恢复及启动/queued选择有界接受：产品b353cbb，作者944c5ef，Astra独立501feb7。原queued三反例组件与Chrome通过，正常修正/absent seed/legacy及envelope保存失败重试通过，启动四类损坏八断言通过；包313、作者契约10、浏览器4路径分层记录不合计。原失败证据保留，不宣称原九条旧oracle全部PASS；全Board/REL-05仍开放。
 
+B1已提交fb3ae2f：结果型兼容读取、domain投影、旧sync保护及迁移解包，作者storage136测试/types通过；原六durable断言继续FAIL。父独立1831585固定fb3ae2f发现removePref读取失败被readRawPref吞成null后实际删除envelope（1正确FAIL/1正常拒绝对照PASS），已交Terra先窄修再继续B2，B1未通过独立验收。Astra7c59d3f实际SW/启动链审查确认缺少旧进程排空和版本激活屏障，默认关闭首次envelope激活，不能把仅协议代码完成当完整AI02通过。
+
 A1 Calendar有界主审接受仍为20a0748/Sol a9b88ba/Astra8045d5d，完整AI-02未关闭。Terra现接已批准B-D：兼容表示→六动作durable→全部writer共同锁及生命周期适配，首先保留原六重放FAIL，再实现分阶段测试。Module已从workspace修复释放，仅由同一Terra按B-D需要适配caller；详情三丢稿FAIL及架构继续排在该共享文件批次之后。
 
 Luna3241ffd入口清单及Astra501feb7旧客户端补充共同约束迁移：新WebLocks不能约束旧JS；首次envelope激活前需可验证旧进程排空/升级/防旧版重入，否则完整AI-02/rollout gate开放，不以新客户端并发PASS冒充旧tab保护。父Web整合1364de5的146测试/types为局部整合证据，不是部署或完整持久幂等验收。以下保留历次检查记录。
