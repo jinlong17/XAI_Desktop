@@ -1,3 +1,5 @@
+import { groupTasksByDueDate } from "./internal/groupTasksByDueDate.js";
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * TasksModule — root component for the Tasks module.
  *
@@ -5,7 +7,7 @@
  * stored separately in xai_pref_task_lists and xai_pref_task_tags.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   BucketId,
   NewTaskDraft,
@@ -64,6 +66,7 @@ type CollectionBoardMode = "grouped" | "time";
 
 export function TasksModule({ lang }: TasksModuleProps) {
   const { s } = useI18n(lang);
+  const { now } = useLocalDayClock();
 
   const [rawCols, setRawCols] = usePref("xai_task_cols");
   const [lists, setLists] = useState<TaskListMeta[]>(() =>
@@ -83,7 +86,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return SEED_TASK_COLS as TaskCol[];
   }, [rawCols]);
 
-  const taskCols = useMemo<TaskCol[]>(() => hydrateTaskCols(baseCols), [baseCols]);
+  const taskCols = useMemo<TaskCol[]>(() => groupTasksByDueDate(hydrateTaskCols(baseCols), now), [baseCols, now]);
 
   useEffect(() => {
     if (isTaskColsArray(rawCols) && JSON.stringify(rawCols) === JSON.stringify(taskCols)) return;
@@ -121,14 +124,14 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [metaEditor, setMetaEditor] = useState<MetaEditorState | null>(null);
 
   const activeTasks = useMemo(() => taskCols.flatMap((col) => col.tasks), [taskCols]);
-  const smartCounts = useMemo(() => getSmartCounts(taskCols), [taskCols]);
+  const smartCounts = useMemo(() => getSmartCounts(taskCols, now), [taskCols, now]);
   const listCounts = useMemo(() => countByList(activeTasks), [activeTasks]);
   const tagCounts = useMemo(() => countByTag(activeTasks), [activeTasks]);
   const taskOrigins = useMemo(() => getTaskOrigins(taskCols), [taskCols]);
 
   const filteredCols = useMemo<TaskCol[]>(
-    () => filterColsByView(taskCols, activeView),
-    [taskCols, activeView],
+    () => filterColsByView(taskCols, activeView, now),
+    [taskCols, activeView, now],
   );
 
   const overviewActive =
@@ -330,6 +333,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
     tags: string[];
     priority: TaskPriority;
     notes: string;
+    dueDate?: string | null;
     done: boolean;
   }) {
     const located = findTask(taskCols, id);
@@ -345,6 +349,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
       tag: patch.tags[0] ? (patch.tags[0] as TaskTagId) : null,
       priority: patch.priority,
       notes: patch.notes,
+      ...(patch.dueDate !== undefined ? { dueDate: patch.dueDate } : {}),
       done: patch.done,
     });
     persistCols(next);
@@ -393,7 +398,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
             <h1 className="module-title">{mainTitle}</h1>
             {dragging && (
               <span className="drag-hint" style={{ marginLeft: 8 }}>
-                {lang === "zh" ? "拖到时间列、清单或标签以更新任务" : "Drop on a column, list, or tag to update the task"}
+                {lang === "zh" ? "时间列设为今天、明天、8 天后或无日期；清单和标签不改日期" : "Time columns set today, tomorrow, +8 days, or no date; lists and tags keep the date"}
               </span>
             )}
           </div>
@@ -588,8 +593,8 @@ function isTaskTagArray(value: unknown): value is TaskTagMeta[] {
   );
 }
 
-function filterColsByView(cols: TaskCol[], view: TaskViewSelection): TaskCol[] {
-  if (view.kind === "smart") return filterCardsByList(cols, view.id);
+function filterColsByView(cols: TaskCol[], view: TaskViewSelection, now: Date): TaskCol[] {
+  if (view.kind === "smart") return filterCardsByList(cols, view.id, now);
   if (view.kind === "list" && view.id === "all") return cols;
   return cols.map((col) => {
     const tasks = col.tasks.filter((task) => {
@@ -611,16 +616,16 @@ function filterColsByView(cols: TaskCol[], view: TaskViewSelection): TaskCol[] {
   });
 }
 
-function getSmartCounts(cols: TaskCol[]): Record<SmartListId, number> {
-  const byBucket = (bucket: BucketId) => cols.find((col) => col.id === bucket)?.tasks.length ?? 0;
+function getSmartCounts(cols: TaskCol[], now: Date): Record<SmartListId, number> {
+  const count = (id: SmartListId) => filterCardsByList(cols, id, now).reduce((n, col) => n + col.tasks.length, 0);
   const total = cols.reduce((sum, col) => sum + col.tasks.length, 0);
   const inbox = cols.reduce((sum, col) => sum + col.tasks.filter((task) => task.inbox === true || task.listId === "inbox").length, 0);
   return {
     all: total,
     summary: total,
-    today: byBucket("overdue"),
-    tomorrow: byBucket("next7"),
-    next7: byBucket("next7"),
+    today: count("today"),
+    tomorrow: count("tomorrow"),
+    next7: count("next7"),
     inbox,
   };
 }
@@ -1164,7 +1169,7 @@ function BulkToolbar({
         <option value="">{lang === "zh" ? "修改日期" : "Set date"}</option>
         <option value="overdue">{lang === "zh" ? "今天/过期" : "Today/overdue"}</option>
         <option value="next7">{lang === "zh" ? "明天/最近几天" : "Tomorrow/next days"}</option>
-        <option value="later">{lang === "zh" ? "以后" : "Later"}</option>
+        <option value="later">{lang === "zh" ? "以后（8 天后）" : "Later (+8 days)"}</option>
         <option value="nodate">{lang === "zh" ? "无日期" : "No date"}</option>
       </select>
       <select aria-label={lang === "zh" ? "批量调整优先级" : "Change priority"} defaultValue="" onChange={(e) => onPriority(e.target.value as TaskPriority | "")}>
@@ -1196,6 +1201,7 @@ function TaskDetailPanel({
     tags: string[];
     priority: TaskPriority;
     notes: string;
+    dueDate?: string | null;
     done: boolean;
   }) => void;
   onDelete: (id: string) => void;
@@ -1208,16 +1214,24 @@ function TaskDetailPanel({
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [priority, setPriority] = useState<TaskPriority>("normal");
   const [notes, setNotes] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [dateEdited, setDateEdited] = useState(false);
+  const openedTask = useRef<string | null>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!located) return;
+    if (!located) { openedTask.current = null; return; }
+    const identity = `${located.task.id}:${lang}`;
+    if (openedTask.current === identity) return;
+    openedTask.current = identity;
     setTitle(lang === "zh" ? located.task.title.zh : located.task.title.en);
     setBucket(located.colId);
     setListId(located.task.listId ?? lists[0]?.id ?? "inbox");
     setTagIds([...(located.task.tags ?? (located.task.tag ? [located.task.tag] : []))]);
     setPriority(located.task.priority ?? "normal");
     setNotes(located.task.notes ?? "");
+    setDueDate(located.task.dueDate ?? "");
+    setDateEdited(false);
     setDone(located.task.done === true);
   }, [located, lang, lists]);
 
@@ -1238,13 +1252,17 @@ function TaskDetailPanel({
         <span>{lang === "zh" ? "标记完成" : "Mark complete"}</span>
       </label>
       <label>
-        <span>{lang === "zh" ? "日期" : "Date"}</span>
+        <span>{lang === "zh" ? "时间分组（移动会设置日期）" : "Time group (moving schedules a date)"}</span>
         <select value={bucket} onChange={(e) => setBucket(e.target.value as BucketId)}>
           <option value="overdue">{lang === "zh" ? "今天/过期" : "Today/overdue"}</option>
           <option value="next7">{lang === "zh" ? "明天/最近几天" : "Tomorrow/next days"}</option>
-          <option value="later">{lang === "zh" ? "以后" : "Later"}</option>
+          <option value="later">{lang === "zh" ? "以后（8 天后）" : "Later (+8 days)"}</option>
           <option value="nodate">{lang === "zh" ? "无日期" : "No date"}</option>
         </select>
+      </label>
+      <label>
+        <span>{lang === "zh" ? "截止日期" : "Due date"}</span>
+        <input type="date" value={dueDate} onChange={e => { setDueDate(e.target.value); setDateEdited(true); }} />
       </label>
       <label>
         <span>{lang === "zh" ? "清单" : "List"}</span>
@@ -1286,13 +1304,13 @@ function TaskDetailPanel({
           className="task-composer__btn task-composer__btn--primary"
           onClick={() => {
             if (title.trim()) {
-              onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, done });
+              onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done });
             }
           }}
         >
           {lang === "zh" ? "保存" : "Save"}
         </button>
-        <button className="task-composer__btn" onClick={() => onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, done: true })}>
+        <button className="task-composer__btn" onClick={() => onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true })}>
           {lang === "zh" ? "完成" : "Complete"}
         </button>
         <button className="task-composer__btn task-danger-btn" onClick={() => onDelete(task.id)}>

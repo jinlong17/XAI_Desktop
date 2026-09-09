@@ -26,6 +26,7 @@
 
 import type { MouseEvent, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { localDateKey } from "@repo/plugin-web-tokens";
 import type { Lang } from "@repo/plugin-web-tokens";
 import type { BucketId, TaskTagId, NewTaskDraft, TaskListMeta, TaskTagMeta, TaskPriority } from "./types.js";
 import { STR_TASK_COMPOSER } from "./internal/strings.js";
@@ -78,6 +79,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
   const [bucket, setBucket]     = useState<BucketId>(defaultBucket);
   const [listId, setListId]     = useState(defaultListId ?? lists[0]?.id ?? "inbox");
   const [priority, setPriority] = useState<TaskPriority>("normal");
+  const [dueDate, setDueDate] = useState("");
   const [withDate, setWithDate] = useState(false);
   const [titleErr, setTitleErr] = useState(false);
 
@@ -88,6 +90,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
     setListId(defaultListId ?? lists[0]?.id ?? "inbox");
     setPriority("normal");
     setWithDate(false);
+    setDueDate("");
     setTitleErr(false);
   }, [open, defaultBucket, defaultListId, lists]);
 
@@ -141,10 +144,11 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
         listId,
         priority,
         withDate,
+        ...(withDate && bucket !== "nodate" && dueDate ? { dueDate } : {}),
       };
       onSave(draft, bucket);
     },
-    [title, tag, listId, priority, bucket, withDate, onSave],
+    [title, tag, listId, priority, bucket, withDate, dueDate, onSave],
   );
 
   const handleCancel = useCallback(
@@ -291,7 +295,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
               id="task-composer-with-date"
               type="checkbox"
               checked={withDate}
-              onChange={(e) => setWithDate(e.target.checked)}
+              onChange={(e) => { setWithDate(e.target.checked); if (!dueDate) setDueDate(localDateKey(new Date())); }}
             />
             <label htmlFor="task-composer-with-date" className="task-composer__label">
               {str("field_add_date", lang)}
@@ -299,6 +303,11 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
           </div>
         )}
 
+        {withDate && bucket !== "nodate" && <label className="task-composer__field">
+          <span>{lang === "zh" ? "截止日期" : "Due date"}</span>
+          <input type="date" className="task-composer__input" value={dueDate} onChange={e => { setDueDate(e.target.value); if (!e.target.value) setWithDate(false); }} />
+        </label>}
+        {withDate && <p>{lang === "zh" ? "任务将按截止日期自动分组。" : "Tasks are grouped automatically by their due date."}</p>}
         {/* Actions */}
         <div className="task-composer__actions">
           <button

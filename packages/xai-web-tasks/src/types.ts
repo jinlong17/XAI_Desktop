@@ -76,6 +76,8 @@ export interface TaskCard {
   readonly notes?: string;
   /** Optional source reference used by Board card -> Task linking. */
   readonly source?: BoardTaskLinkSource;
+  /** Device-local Gregorian date identity; never inferred from legacy display labels. */
+  readonly dueDate?: string;
   /** Optional date display string in EN format ("7/31", "Jun 14", etc.). */
   readonly date?: string;
   /** Optional date display string in ZH format ("6 月 14 日", etc.). */
@@ -161,5 +163,6 @@ export interface NewTaskDraft {
   /** Optional detail notes. */
   readonly notes?: string;
   /** When true (and target ≠ "nodate"), addCard derives date via dateForCol(targetBucket, now). */
+  readonly dueDate?: string;
   readonly withDate: boolean;
 }

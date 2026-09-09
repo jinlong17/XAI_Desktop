@@ -1,3 +1,4 @@
+import { parseLocalDateKey } from "@repo/plugin-web-tokens";
 /**
  * Public helpers for creating and resolving Tasks that originate from Board
  * cards. This keeps Board integrations on the public package surface instead
@@ -41,6 +42,7 @@ export function boardLinkedTaskId(
 }
 
 function parseIsoDateOnly(value: string): { year: number; month: number; day: number } | null {
+  if (!parseLocalDateKey(value)) return null;
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   if (!match) return null;
   const year = Number(match[1]);
@@ -98,6 +100,7 @@ export function taskCardFromBoardLink(input: BoardLinkedTaskInput): TaskCard {
       listId: input.listId,
       cardId: input.cardId,
     },
+    ...(input.dueDate && parseIsoDateOnly(input.dueDate) ? { dueDate: input.dueDate } : {}),
     ...dateDisplayFromIso(input.dueDate),
   };
 }

@@ -1,3 +1,4 @@
+import { groupTasksByDueDate } from "./groupTasksByDueDate.js";
 /**
  * tasksReducer.ts — pure state-transition helpers.
  *
@@ -15,7 +16,7 @@
  */
 
 import type { TaskCol, TaskCard, TaskTagId, BucketId, NewTaskDraft, TaskPriority } from "../types.js";
-import { dateForCol } from "./dateForCol.js";
+import { dateForCol, dateFields } from "./dateForCol.js";
 import { createTaskId } from "./ids.js";
 
 /**
@@ -44,44 +45,13 @@ export function moveCard(
   const task = fromCol.tasks.find((t) => t.id === taskId);
   if (!task) return prev;
 
-  // Rewrite date fields — strip date/dateZh/dateLabel/sub regardless of destination,
-  // then re-add date fields for dated buckets (api.md §5.2).
-  const newDateResult = dateForCol(toColId, now);
-  // T-10 sub-fix 4: preserve `done` across bucket moves (prevents drag clearing completion)
-  const { id, title, tag, tags, listId, priority, notes, inbox, done } = task;
-
-  const moved: TaskCard = (() => {
-    if (toColId === "nodate") {
-      // Strip date + dateZh + dateLabel + sub; keep tag + inbox + done (api.md §5.2)
-      return {
-        id,
-        title,
-        ...(tag !== undefined    ? { tag }    : {}),
-        ...(tags !== undefined   ? { tags }   : {}),
-        ...(listId !== undefined ? { listId } : {}),
-        ...(priority !== undefined ? { priority } : {}),
-        ...(notes !== undefined  ? { notes }  : {}),
-        ...(inbox !== undefined  ? { inbox }  : {}),
-        ...(done !== undefined   ? { done }   : {}),
-      };
-    }
-    // Non-nodate: set date + dateZh from dateForCol; strip dateLabel + sub; keep done
-    const base = {
-      id,
-      title,
-      ...(tag !== undefined   ? { tag }   : {}),
-      ...(tags !== undefined  ? { tags }  : {}),
-      ...(listId !== undefined ? { listId } : {}),
-      ...(priority !== undefined ? { priority } : {}),
-      ...(notes !== undefined ? { notes } : {}),
-      ...(inbox !== undefined ? { inbox } : {}),
-      ...(done !== undefined  ? { done }  : {}),
-    };
-    if (newDateResult) {
-      return { ...base, date: newDateResult.date, dateZh: newDateResult.dateZh };
-    }
-    return base;
-  })();
+  // Bucket moves explicitly schedule a date; unrelated metadata stays intact.
+  const rest = { ...task };
+  delete rest.dueDate;
+  delete rest.date;
+  delete rest.dateZh;
+  delete rest.dateLabel;
+  const moved: TaskCard = { ...rest, ...dateForCol(toColId, now) };
 
   return prev.map((col, i) => {
     if (i === fromIdx) {
@@ -155,12 +125,14 @@ export interface TaskCardPatch {
   listId?: string;
   priority?: TaskPriority;
   notes?: string;
+  dueDate?: string | null;
   done?: boolean;
   // bucket change handled via moveCard composition in the subscriber (ED-6), NOT here.
 }
 
 function patchHasValue(patch: TaskCardPatch): boolean {
   return (
+    patch.dueDate !== undefined ||
     patch.title !== undefined ||
     patch.tag !== undefined ||
     patch.tags !== undefined ||
@@ -222,6 +194,7 @@ export function updateCard(prev: TaskCol[], id: string, patch: TaskCardPatch): T
 }
 
 export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: TaskCardPatch): TaskCol[] {
+  if (patch.dueDate != null && !dateFields(patch.dueDate)) return prev;
   // Empty patch → no-op
   if (ids.size === 0 || !patchHasValue(patch)) return prev;
 
@@ -257,6 +230,13 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
         id: card.id,
       };
 
+      if (patch.dueDate !== undefined) {
+        delete (updatedCard as { dueDate?: string }).dueDate;
+        delete (updatedCard as { date?: string }).date;
+        delete (updatedCard as { dateZh?: string }).dateZh;
+        delete (updatedCard as { dateLabel?: unknown }).dateLabel;
+        if (patch.dueDate !== null) Object.assign(updatedCard, dateFields(patch.dueDate));
+      }
       if (patch.tag === null && nextTags === undefined) {
         const rest = { ...updatedCard };
         delete rest.tag;
@@ -266,7 +246,7 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
     });
     return changed ? { ...col, tasks: updatedTasks } : col;
   });
-  return found ? next : prev;
+  return found ? (patch.dueDate !== undefined ? groupTasksByDueDate(next, new Date(), patch.dueDate === null ? ids : undefined) : next) : prev;
 }
 
 /**
@@ -297,7 +277,8 @@ export function addCard(
   if (toIdx < 0) return prev;
 
   // Build the date fields if opted-in and bucket is not nodate
-  const dateResult = (draft.withDate && targetBucket !== "nodate")
+  if (draft.dueDate !== undefined && !dateFields(draft.dueDate)) return prev;
+  const dateResult = draft.dueDate ? dateFields(draft.dueDate) : (draft.withDate && targetBucket !== "nodate")
     ? dateForCol(targetBucket, now)
     : null;
 
@@ -310,7 +291,7 @@ export function addCard(
     ...(draft.listId !== undefined ? { listId: draft.listId } : {}),
     ...(draft.priority !== undefined ? { priority: draft.priority } : { priority: "normal" as const }),
     ...(draft.notes !== undefined ? { notes: draft.notes } : {}),
-    ...(dateResult ? { date: dateResult.date, dateZh: dateResult.dateZh } : {}),
+    ...(dateResult ?? {}),
   };
 
   return prev.map((col, i) => {

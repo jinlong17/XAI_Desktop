@@ -1,3 +1,14 @@
+## REL-01 local due-date contract (2026-09-09)
+
+This section supersedes historical yearless/bucket-only date rules below (including D-QT and old dateForCol offsets).
+
+- `TaskCard.dueDate` / `NewTaskDraft.dueDate` are optional strict `YYYY-MM-DD` local calendar identities. Legacy `date`, `dateZh`, and `dateLabel` are display data only: never infer a year, shift their day, or delete a historical task because no real due date exists. Invalid string dates remain visible for manual repair; predicates do not count them.
+- Today includes dated tasks due today **and overdue**; Tomorrow is exactly the next local day; Next 7 Days is `(today, today + 7 calendar days]`. These predicates inspect dates across all stored columns, including completed groups, and never mutate input.
+- The rendered/persisted time columns regroup known dates as Today / Overdue (`<= today`), Next 7 Days, and Later. Legacy unknown dates retain their original column; moving a list or tag does not fabricate a date. Shared `useLocalDayClock` refreshes midnight and browser resume. Date identity survives reload and DST.
+- Composer explicitly accepts a date; detail edits accept a date or clear it. Date edits regroup immediately. Clearing a date moves to No Date. An explicit cross-time-column move schedules Today / Overdue = today, Next 7 Days = tomorrow, Later = eight days from today; No Date clears dueDate and stale date labels. Same-column moves are no-ops. Source, subtitle, notes, tags, list, and completion survive moves.
+- `TaskCardPatch.dueDate`: omitted preserves date; null clears; valid string replaces; invalid string rejects the patch. Legacy `withDate` callers remain supported through the same date presets. Board-linked inputs retain validated dueDate and source.
+- Uses only public `@repo/plugin-web-tokens` date helpers. Device-local persistence only; does not enable cloud sync or guarantee background JavaScript execution when a tab is closed.
+
 # Design — `@repo/plugin-web-tasks`
 
 > Decision snapshot for the Tasks module port.

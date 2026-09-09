@@ -1,3 +1,12 @@
+## REL-01 regression evidence (2026-09-09)
+
+- Whole package: 16 files / 156 tests PASS; package typecheck and lint PASS. UTC / America/Los_Angeles / Asia/Shanghai focused runs: 3 files / 32 tests PASS each (repeated scenarios, not additive coverage).
+- `dueDate.test.tsx`: real TasksModule composer → persisted date → detail edit → unmount/remount → Tomorrow projection → local midnight → Today + persisted column regroup. Pure lifecycle covers valid/invalid dates, Board linkage, source preservation, clearing, legacy and completed record retention, and exact seven-day boundary.
+- `filterCardsByList.test.ts`: year crossing, local midnight, strict date predicates independent of physical column, invalid and yearless exclusions, identity and non-mutation. Historical bucket-only assertions were replaced by date-based requirements, not silently kept as correctness evidence.
+- `dateForCol.test.ts`: documented day presets, clear, leap-day validation. Existing reducer, storage, UI, AI subscriber and public API tests retained.
+- Validation commands: `pnpm --filter @repo/plugin-web-tasks test`, `typecheck`, `lint`; representative date/module tests additionally run under UTC, America/Los_Angeles and Asia/Shanghai.
+- jsdom verifies real component/store code, not actual browser process termination or live Supabase. Independent verification and full six-package REL-01 acceptance remain parent-session work.
+
 # Test — `@repo/plugin-web-tasks`
 
 > Test strategy and acceptance criteria.

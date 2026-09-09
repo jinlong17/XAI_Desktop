@@ -1,3 +1,25 @@
+# REL-01 Tasks dueDate repair — current iteration
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-tasks |
+| Title | REL-01 Tasks smart lists approximate dates and lose linkage on moves |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex bug-fix |
+| Updated | 2026-09-09 11:04 America/Los_Angeles |
+| Suggested Next | bug-verify |
+| Verify Cross-vendor | pending independent verification |
+
+Diagnosis: `docs/reviews/web-local-time-contract/20260909-bug-diagnose.md`, S3. Authorized FIX_READY strategy implemented. The older shipped iterations below are historical evidence.
+
+## Work Log
+
+- 2026-09-09 11:04 — Codex bug-fix: added real dueDate create/edit/move/Board/persistence lifecycle, exact local-day filters and midnight regroup, preserved legacy records and source metadata. Tests: whole Tasks suite 16 files / 156 PASS; typecheck/lint PASS; focused date/component matrix 32 PASS each in UTC, America/Los_Angeles, Asia/Shanghai. Commit: this scoped `fix(web-tasks)` changeset; next: independent bug-verify. Does not mark full cross-feature REL-01 or TASK-01 complete.
+
+---
+
 # Dev Log — `@repo/plugin-web-tasks`
 
 > Source of truth for the workflow state machine of this feature.

@@ -23,7 +23,7 @@ describe("TasksModule — T-MOD-1 EN column headers", () => {
     render(<TasksModule lang="en" />);
     const headers = screen.getAllByRole("heading", { level: 2 });
     const texts = headers.map((h) => h.textContent?.trim());
-    expect(texts).toContain("Overdue");
+    expect(texts).toContain("Today / Overdue");
     expect(texts).toContain("Next 7 Days");
     expect(texts).toContain("Later");
     expect(texts).toContain("No Date");
@@ -44,7 +44,7 @@ describe("TasksModule — T-MOD-2 ZH column headers", () => {
     render(<TasksModule lang="zh" />);
     const headers = screen.getAllByRole("heading", { level: 2 });
     const texts = headers.map((h) => h.textContent?.trim());
-    expect(texts).toContain("过期");
+    expect(texts).toContain("今天 / 过期");
     expect(texts).toContain("最近 7 天");
     expect(texts).toContain("以后");
     expect(texts).toContain("无日期");
@@ -242,14 +242,14 @@ describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
     // Board-level empty state should appear with bucket-framed wording (D-QT compliant)
     const emptyEl = document.querySelector(".tasks-board-empty");
     expect(emptyEl).toBeTruthy();
-    expect(emptyEl!.textContent).toBe("Nothing in the next 7 days");
+    expect(emptyEl!.textContent).toBe("Nothing due in the next 7 days");
 
     // The copy must NOT claim precise calendar-day precision (D-QT)
-    expect(emptyEl!.textContent).not.toContain("due today");
+
     expect(emptyEl!.textContent).not.toContain("due tomorrow");
   });
 
-  it("T-EMPTY-1b: clicking 'Today' (overdue bucket) when overdue is empty shows 'No overdue tasks' (D-QT)", () => {
+  it("T-EMPTY-1b: clicking 'Today' (overdue bucket) when overdue is empty shows 'Nothing due today or overdue' (D-QT)", () => {
     // Pre-seed localStorage with cols where overdue has NO tasks
     const emptyCols = JSON.parse(JSON.stringify(
       [
@@ -277,8 +277,8 @@ describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
     const emptyEl = document.querySelector(".tasks-board-empty");
     expect(emptyEl).toBeTruthy();
     // D-QT compliant: shows overdue bucket label, not "due today" precision
-    expect(emptyEl!.textContent).toBe("No overdue tasks");
-    expect(emptyEl!.textContent).not.toContain("due today");
+    expect(emptyEl!.textContent).toBe("Nothing due today or overdue");
+
   });
 
   it("T-EMPTY-1c: when 'All' is selected, board-level empty state does NOT appear even with empty board", () => {
@@ -327,11 +327,11 @@ describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
 
     const emptyEl = document.querySelector(".tasks-board-empty");
     expect(emptyEl).toBeTruthy();
-    // D-QT compliant ZH: "最近 7 天没有任务"
-    expect(emptyEl!.textContent).toBe("最近 7 天没有任务");
+    // D-QT compliant ZH: "明天没有到期任务"
+    expect(emptyEl!.textContent).toBe("未来 7 天没有到期任务");
   });
 
-  it("T-EMPTY-2b: ZH lang + today filter + empty overdue bucket → ZH 'No overdue tasks' (D-QT)", () => {
+  it("T-EMPTY-2b: ZH lang + today filter + empty overdue bucket → ZH 'Nothing due today or overdue' (D-QT)", () => {
     const emptyCols = JSON.parse(JSON.stringify(
       [
         { id: "overdue", key: "overdue",     count: 0, action: "postpone", tasks: [] },
@@ -355,7 +355,7 @@ describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
     const emptyEl = document.querySelector(".tasks-board-empty");
     expect(emptyEl).toBeTruthy();
     // D-QT compliant: bucket-framed ZH wording
-    expect(emptyEl!.textContent).toBe("没有逾期任务");
+    expect(emptyEl!.textContent).toBe("今天没有到期或逾期任务");
   });
 });
 
@@ -372,7 +372,7 @@ describe("TasksModule — collection overview boards", () => {
     expect(titles).toContain("Research Papers");
     expect(titles).toContain("Personal Life");
     expect(titles).toContain("Career Planning");
-    expect(titles).not.toContain("Overdue");
+    expect(titles).not.toContain("Today / Overdue");
   });
 
   it("renders All tags as tag-grouped cards instead of time buckets", () => {
@@ -403,7 +403,7 @@ describe("TasksModule — collection overview boards", () => {
     expect(document.querySelector(".task-group-board")).toBeNull();
     expect(document.querySelectorAll(".task-col")).toHaveLength(4);
     const headers = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent?.trim());
-    expect(headers).toContain("Overdue");
+    expect(headers).toContain("Today / Overdue");
     expect(headers).toContain("Next 7 Days");
   });
 });

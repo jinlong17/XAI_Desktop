@@ -45,7 +45,7 @@ export function TaskCard({
   onDragEnd,
 }: TaskCardProps) {
   const { s } = useI18n(lang);
-  const hasMeta = Boolean(taskTags.length || task.tag || task.date || task.inbox || taskList || task.priority);
+  const hasMeta = Boolean(taskTags.length || task.tag || task.dueDate || task.date || task.inbox || taskList || task.priority);
 
   return (
     <div
@@ -138,9 +138,9 @@ export function TaskCard({
             </span>
           )}
           <span className="grow" />
-          {task.date && (
+          {(task.dueDate || task.date) && (
             <span className="task-date">
-              {lang === "zh" && task.dateZh ? task.dateZh : task.date}
+              {task.dueDate || (lang === "zh" && task.dateZh ? task.dateZh : task.date)}
             </span>
           )}
           {task.inbox && (

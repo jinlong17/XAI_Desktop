@@ -70,6 +70,8 @@ export function isTaskCard(value: unknown): value is TaskCard {
     if (typeof sourceObj["listId"] !== "string" || sourceObj["listId"].length === 0) return false;
     if (typeof sourceObj["cardId"] !== "string" || sourceObj["cardId"].length === 0) return false;
   }
+  // Keep malformed string dates visible in All for manual repair; selectors reject them.
+  if (v["dueDate"] !== undefined && typeof v["dueDate"] !== "string") return false;
   if ("date" in v && v["date"] !== undefined) {
     if (typeof v["date"] !== "string") return false;
   }
