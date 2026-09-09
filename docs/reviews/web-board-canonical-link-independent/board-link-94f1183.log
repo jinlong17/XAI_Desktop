@@ -1,0 +1,45 @@
+revision=94f1183
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-parent-board-d1-zZsVGB
+
+ ❯ docs/reviews/web-board-canonical-link-independent/board-link.test.ts (4 tests | 2 failed) 10ms
+   × Board link completes through the canonical Tasks writer with absent source and remains idempotent 8ms
+     → expected { ok: false, phase: 'task', …(1) } to deeply equal { ok: true }
+   × Board link completes through the canonical Tasks writer with envelope source and remains idempotent 1ms
+     → expected { ok: false, phase: 'task', …(1) } to deeply equal { ok: true }
+   ✓ invalid present Tasks domain refuses before publishing intent: null 1ms
+   ✓ invalid present Tasks domain refuses before publishing intent: {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} 0ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  16:43:58
+   Duration  1.15s (transform 311ms, setup 0ms, collect 433ms, tests 10ms, environment 401ms, prepare 78ms)
+
+
+stderr | docs/reviews/web-board-canonical-link-independent/board-link.test.ts > Board link completes through the canonical Tasks writer with absent source and remains idempotent
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-canonical-link-independent/board-link.test.ts > Board link completes through the canonical Tasks writer with envelope source and remains idempotent
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-canonical-link-independent/board-link.test.ts > Board link completes through the canonical Tasks writer with absent source and remains idempotent
+ FAIL  docs/reviews/web-board-canonical-link-independent/board-link.test.ts > Board link completes through the canonical Tasks writer with envelope source and remains idempotent
+AssertionError: expected { ok: false, phase: 'task', …(1) } to deeply equal { ok: true }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
++   "message": "Link intent saved; task creation failed. Retry to finish.",
++   "ok": false,
++   "phase": "task",
+  }
+
+ ❯ docs/reviews/web-board-canonical-link-independent/board-link.test.ts:14:98
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
