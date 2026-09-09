@@ -96,3 +96,33 @@ it("an End queued before deadline retains command time even if the lock is grant
   expect(await pending).toBe(true);
   expect(read(HISTORY_KEY)[0]).toMatchObject({ completed: false, elapsedMs: 10_000, finishedAt: new Date(endTime).toISOString() });
 });
+
+it("stale cross-tab pause clears obsolete retry and permits a fresh resume", async () => {
+  await command("start", { mode: "focus", durationMs: minute });
+  const original = read(ACTIVE_KEY);
+  await command("pause"); const pausedBytes = localStorage.getItem(accountScope.physicalKey(ACTIVE_KEY));
+  expect(await command("pause", undefined, original.sessionId, original.revision)).toBe(false);
+  expect(getPomodoroSnapshot()).toMatchObject({ error: null, conflict: true, active: { phase: "paused", revision: 1 } });
+  expect(await retryPomodoro()).toBe(false);
+  expect(localStorage.getItem(accountScope.physicalKey(ACTIVE_KEY))).toBe(pausedBytes);
+  expect(await command("resume")).toBe(true);
+  expect(getPomodoroSnapshot()).toMatchObject({ error: null, conflict: false, active: { phase: "running", revision: 2 } });
+});
+it("a failed End that loses its revision discards the frozen intent without overwriting the winner", async () => {
+  await command("start", { mode: "focus", durationMs: minute });
+  const activeKey=accountScope.physicalKey(ACTIVE_KEY);const original=read(ACTIVE_KEY);
+  const native=Storage.prototype.setItem;
+  const fail=vi.spyOn(Storage.prototype,"setItem").mockImplementation(function(this:Storage,key,value){if(key===activeKey)throw new DOMException("full","QuotaExceededError");native.call(this,key,value)});
+  expect(await command("end")).toBe(false);fail.mockRestore();
+  const winner={...original,phase:"paused",revision:1,pausedAt:Date.now()};localStorage.setItem(activeKey,JSON.stringify(winner));
+  expect(await retryPomodoro()).toBe(false);
+  expect(read(ACTIVE_KEY)).toEqual(winner);expect(read(HISTORY_KEY)).toBeNull();
+  expect(JSON.parse(exportPomodoroRecovery()).uncommittedSettlement).toBeNull();
+  expect(await command("resume")).toBe(true);
+});
+it("a stale Start refreshes the winning session without blocking later pause",async()=>{
+  await command("start",{mode:"focus",durationMs:minute});const winner=read(ACTIVE_KEY);
+  expect(await command("start",{mode:"focus",durationMs:minute})).toBe(false);
+  expect(await retryPomodoro()).toBe(false);expect(read(ACTIVE_KEY)).toEqual(winner);
+  expect(await command("pause")).toBe(true);
+});

@@ -205,3 +205,11 @@ Dual-perspective analysis would add no signal. Single-vector diagnosis is the ri
 | Verify Cross-vendor | Not performed for this iteration; historical panel does not apply |
 
 Work Log: Diagnosed in b6cf0ee; implemented registered account active/pending WAL, scope/generation Web Locks, idempotent history and actual deadline/recordedAt semantics. Added lightweight Gate host, observer hook, explicit failure/retry/raw recovery export and post-commit events. Preserved old history schema compatibility and owner device preferences. Existing tests await asynchronous locks; original business assertions preserved. Evidence and reproduction commands: `docs/reviews/web-pomodoro-durable-session/20260909-fix.md`. Independent verification and parent push remain pending.
+
+## Iteration — 2026-09-09 stale cross-tab command recovery
+
+- Workflow: BUGFIX; Target: web / plugin-web-pomodoro; Current Phase: BUG_FIX; Status: FIX_READY_FOR_VERIFY.
+- Executor: Codex /root/rel02_auth_fix; Suggested Next: independent bug-verify by /root/rel01_independent_verify; cross-vendor: not performed.
+- Independent reviewer reproduced A pause rev1 followed by B stale rev0 pause: generic error captured an irrecoverably stale retry closure, blocking every new command.
+- Fix: distinguish stale revision/session and competing Start from persistence errors. Refresh authoritative state, clear obsolete retry/frozen settlement, show a nonblocking localized notice, and require a fresh user action. Persistence/WAL failures retain retry. No automatic replay of stale intent.
+- Tests: full package 143/143, typecheck/lint PASS. Three new regressions cover stale Pause→fresh Resume, pending End write failure superseded by another tab, and competing Start. Existing pending/history/clear failure assertions remain intact. Independent native reproduction is owned separately in docs/reviews/web-pomodoro-independent and will be rerun against the fix commit.

@@ -90,6 +90,6 @@ export function useTimerTick(options: UseTimerTickOptions = {}) {
     if (getPomodoroSnapshot().active) { void command("discard").then(ok => { if (ok) setIdle({ mode, durationMs: duration }); }); }
     else setIdle(prev => prev.mode === mode && prev.durationMs === duration ? prev : { mode, durationMs: duration });
   }, [scope]);
-  return { timerState, displayedRemainingMs: remaining, start, pause, resume, end, reset, error: visible ? snapshot.error : null, available: visible && snapshot.available, settlementPending: active?.phase === "settlement-pending", retry: () => accountScope.isReady(scope) ? retryPomodoro() : Promise.resolve(false), exportRecovery: () => exportPomodoroRecovery(scope) };
+  return { timerState, displayedRemainingMs: remaining, start, pause, resume, end, reset, error: visible ? snapshot.error : null, conflict: visible && snapshot.conflict, available: visible && snapshot.available, settlementPending: active?.phase === "settlement-pending", retry: () => accountScope.isReady(scope) ? retryPomodoro() : Promise.resolve(false), exportRecovery: () => exportPomodoroRecovery(scope) };
 }
 export type UseTimerTickReturn = ReturnType<typeof useTimerTick>;

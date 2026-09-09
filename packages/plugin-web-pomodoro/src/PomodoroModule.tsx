@@ -503,6 +503,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       data-running={isRunning ? "true" : "false"}
       style={moduleStyle}
     >
+      {timerTick.conflict && <p role="status" className="pomo-notice">{lang === "zh" ? "计时已在其他标签页更改，现已刷新。请检查当前状态后重新操作。" : "The timer changed in another tab and has been refreshed. Review its current state before choosing an action."}</p>}
       {timerTick.error && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{timerTick.error}</p>
         <button type="button" onClick={() => { void timerTick.retry(); }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>

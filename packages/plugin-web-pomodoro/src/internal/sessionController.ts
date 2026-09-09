@@ -11,14 +11,16 @@ export interface SessionSnapshot {
   active: ActiveSession | null;
   now: number;
   error: string | null;
+  conflict: boolean;
   available: boolean;
   lastCommitted: PomodoroSession | null;
 }
 type Command = "start" | "pause" | "resume" | "end" | "discard" | "reconcile";
 class SettlementCleanupError extends Error {}
+class StaleCommandError extends Error {}
 const unavailable = "This browser cannot safely save shared timers because Web Locks is unavailable. Use a browser with Web Locks support.";
 const listeners = new Set<() => void>();
-let snapshot: SessionSnapshot = { scope: null, active: null, now: 0, error: null, available: false, lastCommitted: null };
+let snapshot: SessionSnapshot = { scope: null, active: null, now: 0, error: null, conflict: false, available: false, lastCommitted: null };
 let mounted = 0;
 let stopScope: (() => void) | undefined;
 let interval: ReturnType<typeof setInterval> | undefined;
@@ -91,10 +93,10 @@ function refresh() {
   const scope = accountScope.capture();
   if (!accountScope.isReady(scope)) {
     observedScope = scope; retryAction = null; pendingDraft = null;
-    publish({ scope, active: null, error: null, lastCommitted: null, now: Date.now(), available: false });
+    publish({ scope, active: null, error: null, conflict: false, lastCommitted: null, now: Date.now(), available: false });
     return;
   }
-  if (scope !== observedScope) { observedScope = scope; retryAction = null; pendingDraft = null; publish({ scope, lastCommitted: null, error: null }); }
+  if (scope !== observedScope) { observedScope = scope; retryAction = null; pendingDraft = null; publish({ scope, lastCommitted: null, conflict: false, error: null }); }
   const available = typeof navigator !== "undefined" && !!navigator.locks;
   try { publish({ scope, active: activeFor(scope), now: Date.now(), available, ...(available ? {} : { error: unavailable }) }); }
   catch (error) { publish({ active: null, error: String(error), available }); }
@@ -145,9 +147,9 @@ export async function command(action: Command, options?: { mode: PomodoroMode; d
         const current = activeFor(scope);
         const now = Date.now();
         if (!current && expectedId && action !== "start" && historyFor(scope).some(row => row.id === expectedId)) {
-          retryAction = null; pendingDraft = null; publish({ scope, active: null, error: null, now }); return;
+          retryAction = null; pendingDraft = null; publish({ scope, active: null, error: null, conflict: false, now }); return;
         }
-        if (action !== "start" && action !== "reconcile" && (!current || current.sessionId !== expectedId || current.phase !== "settlement-pending" && current.revision !== expectedRevision)) throw Error("This timer changed in another tab. Refresh before retrying the command.");
+        if (action !== "start" && action !== "reconcile" && (!current || current.sessionId !== expectedId || current.phase !== "settlement-pending" && current.revision !== expectedRevision)) throw new StaleCommandError("This timer changed in another tab.");
         if (frozenPending && current && current.phase !== "settlement-pending") {
           writeActive(scope, frozenPending); settle(scope, frozenPending);
         } else if (current?.phase === "settlement-pending" || current?.phase === "running" && (action === "end" ? issuedAt : now) >= current.deadline) {
@@ -155,7 +157,7 @@ export async function command(action: Command, options?: { mode: PomodoroMode; d
           if (current.phase !== "settlement-pending") writeActive(scope, pending);
           settle(scope, pending);
         } else if (action === "start") {
-          if (current) throw Error("A timer is already active in this account. Continue that session first.");
+          if (current) throw new StaleCommandError("A timer is already active in this account.");
           if (!options || !Number.isFinite(options.durationMs) || options.durationMs <= 0) throw Error("Invalid timer duration.");
           writeActive(scope, { version: 1, owner: identity, revision: 0, sessionId: `pomo_${crypto.randomUUID()}`, mode: options.mode, durationMs: options.durationMs, sessionStartedAt: new Date(now).toISOString(), phase: "running", accumulatedElapsedMs: 0, runStartedAt: now, deadline: now + options.durationMs });
         } else if (current && action === "pause" && current.phase === "running") {
@@ -171,11 +173,19 @@ export async function command(action: Command, options?: { mode: PomodoroMode; d
           writeActive(scope, null);
         }
         retryAction = null; pendingDraft = null;
-        publish({ scope, active: activeFor(scope), now, error: null });
+        publish({ scope, active: activeFor(scope), now, error: null, conflict: false });
       });
       return true;
     } catch (error) {
       if (accountScope.isReady(scope)) {
+        if (error instanceof StaleCommandError) {
+          // A revision mismatch is an obsolete intent, not a failed write.
+          // Drop its captured revision/settlement; never replay it over the winner.
+          retryAction = null; pendingDraft = null; frozenPending = undefined;
+          try { publish({ active: activeFor(scope), error: null, conflict: true, now: Date.now() }); }
+          catch (readError) { publish({ active: null, error: `Timer recovery required: ${String(readError)}`, conflict: false }); }
+          return false;
+        }
         retryAction = execute;
         try { publish({ active: activeFor(scope), error: error instanceof SettlementCleanupError ? error.message : `Timer could not be saved: ${String(error)}`, now: Date.now() }); }
         catch { publish({ error: `Timer recovery required: ${String(error)}` }); }
