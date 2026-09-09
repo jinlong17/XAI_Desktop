@@ -1,0 +1,11 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,setPref} from './packages/plugin-web-storage/src/index';
+import {onWebEvent} from './packages/xai-web-event-bus/src/index';
+import {DashboardModule} from './packages/xai-web-dashboard-grid/src/DashboardModule';
+import './packages/plugin-web-tokens/src/tokens.css';import './packages/plugin-web-tokens/src/layout.css';import './packages/xai-web-dashboard-grid/src/styles.css';
+accountScope.activate(accountScope.lock('fixture-A'),'A');setPref('xai_dash_order',['alpha']);
+const layout=accountScope.physicalKey('xai_pref_dashboard_widget_layout'),appearance=accountScope.physicalKey('xai_pref_dashboard_widget_appearance'),order=accountScope.physicalKey('xai_dash_order');localStorage.setItem(layout,'{}');localStorage.setItem(appearance,'{}');let events=0;onWebEvent('web:dashboard:widget-added',()=>events++);const nativeSet=Storage.prototype.setItem;
+(window as any).verify={layout,appearance,order,events:()=>events,deny(which:string){const target={layout,appearance,order}[which];Storage.prototype.setItem=function(k,v){if(k===target)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},restore(){Storage.prototype.setItem=nativeSet},switch(){accountScope.activate(accountScope.lock('fixture-B'),'B');return accountScope.physicalKey('xai_pref_dashboard_widget_layout')}};
+const widgets=[{id:'alpha',span:'w-stat' as const,render:()=> <div>Alpha fixture</div>},{id:'bravo',span:'w-stat' as const,render:()=> <div>Bravo fixture</div>}];
+createRoot(document.getElementById('app')!).render(<DashboardModule lang="en" widgets={widgets}/>);

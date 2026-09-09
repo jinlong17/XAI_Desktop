@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"72296ec","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-resize-failure-latest-download-retry","pass":true}
+{"name":"actual-appearance-failure-retry","pass":true}
+{"name":"actual-add-no-false-event-retry-once","pass":true}
+{"name":"actual-remove-failure-retry","pass":true}
+{"name":"first-conflict-and-physical-event","pass":true}
+{"name":"old-account-handler-and-export-blocked","pass":true}
+{"name":"PASS","scope":"Dashboard grid saves","checks":6}
