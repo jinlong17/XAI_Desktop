@@ -1,0 +1,108 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx (5 tests | 5 failed) 53ms
+   × auth error immediately removes the ready device fetch capability 19ms
+     → expected [AsyncFunction deviceBoundFetch] to be null
+   × a previously captured A fetch cannot send credentials after logout/error 9ms
+     → promise resolved "Response { status: 200, statusText: '', headers: Headers { 'content-type': 'text/plain;charset=UTF-8' }, body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true }, bodyUsed: false, ok: true, redirected: false, type: 'default', url: '' }" instead of rejecting
+   × late A buildContext cannot overwrite an already ready B fetch 8ms
+     → expected "spy" to be called 1 times, but got 2 times
+   × an A fetch awaiting context cannot send after the synchronous B render 6ms
+     → expected 'unexpected-success' to be an instance of Error
+   × the same token with a replaced auth generation revokes its old capability 10ms
+     → promise resolved "Response { status: 200, statusText: '', headers: Headers { 'content-type': 'text/plain;charset=UTF-8' }, body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true }, bodyUsed: false, ok: true, redirected: false, type: 'default', url: '' }" instead of rejecting
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx > auth error immediately removes the ready device fetch capability
+AssertionError: expected [AsyncFunction deviceBoundFetch] to be null
+
+- Expected: 
+null
+
++ Received: 
+[Function deviceBoundFetch]
+
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx:29:17
+     27|  await render(); expect(latest).toBeTypeOf('function');
+     28|  state.auth = {...state.auth,state:'error',session:null};await render(…
+     29|  expect(latest).toBeNull();
+       |                 ^
+     30| });
+     31| it('a previously captured A fetch cannot send credentials after logout…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx > a previously captured A fetch cannot send credentials after logout/error
+AssertionError: promise resolved "Response { status: 200, statusText: '', headers: Headers { 'content-type': 'text/plain;charset=UTF-8' }, body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true }, bodyUsed: false, ok: true, redirected: false, type: 'default', url: '' }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
+- }
++ Response {}
+
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx:34:40
+     32|  await render();const old = latest!;
+     33|  state.auth = {...state.auth,state:'error',session:null};await render(…
+     34|  await expect(old('/synthetic-private')).rejects.toThrow();
+       |                                        ^
+     35|  expect(state.fetch).not.toHaveBeenCalled();
+     36| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx > late A buildContext cannot overwrite an already ready B fetch
+AssertionError: expected "spy" to be called 1 times, but got 2 times
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx:41:18
+     39|  state.auth = {...state.auth,session:{access_token:'synthetic-B'},clea…
+     40|  await act(async()=>{state.resolveA!({accessToken:'synthetic-A',device…
+     41|  expect(onReady).toHaveBeenCalledTimes(1);
+       |                  ^
+     42|  await latest!('/synthetic-private');
+     43|  expect(new Headers(state.fetch.mock.calls.at(-1)![1].headers).get('Au…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx > an A fetch awaiting context cannot send after the synchronous B render
+AssertionError: expected 'unexpected-success' to be an instance of Error
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx:54:25
+     52|    flushSync(()=>root.render(<DeviceSessionBridge transport={transport…
+     53|  });
+     54|  expect(await outcome!).toBeInstanceOf(Error);
+       |                         ^
+     55|  expect(state.fetch).not.toHaveBeenCalled();
+     56| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx > the same token with a replaced auth generation revokes its old capability
+AssertionError: promise resolved "Response { status: 200, statusText: '', headers: Headers { 'content-type': 'text/plain;charset=UTF-8' }, body: ReadableStream { locked: false, state: 'readable', supportsBYOB: true }, bodyUsed: false, ok: true, redirected: false, type: 'default', url: '' }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
+- }
++ Response {}
+
+ ❯ docs/reviews/web-auth-session-cleanup/independent-device-bridge/reproduction.test.tsx:60:40
+     58|  await render();const old=latest!;
+     59|  state.auth={...state.auth,clearSessionStorage:vi.fn()};await render();
+     60|  await expect(old('/synthetic-private')).rejects.toThrow();
+       |                                        ^
+     61|  expect(state.fetch).not.toHaveBeenCalled();
+     62| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  12:52:06
+   Duration  1.83s (transform 83ms, setup 0ms, collect 127ms, tests 53ms, environment 1.06s, prepare 142ms)
+
