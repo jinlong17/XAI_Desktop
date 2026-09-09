@@ -1,0 +1,412 @@
+packages/xai-web-dashboard-grid/src/DashHeader.tsx:209:  const saveDraft = useCallback(() => {
+packages/xai-web-dashboard-grid/src/DashHeader.tsx:297:                    saveDraft();
+packages/xai-web-dashboard-grid/src/DashHeader.tsx:304:                onBlur={saveDraft}
+packages/xai-web-dashboard-grid/src/DashHeader.tsx:311:                onClick={saveDraft}
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:41:  const [persisted, setPref] = usePref("xai_dash_order");
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:54:    setPref(sanitized);
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:61:  //   - otherwise → call setPref([...sanitized, id])
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:74:      setPref([...current, id]);
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:76:    [widgets, setPref],
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:93:      setPref(current.filter((x) => x !== id));
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:95:    [setPref],
+packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts:98:  return [sanitized, setPref, addWidget, removeWidget] as const;
+packages/xai-web-dashboard-grid/src/internal/useWidgetAppearance.ts:9:import { getPrefAutosave, setPrefAutosave } from "@repo/plugin-web-storage";
+packages/xai-web-dashboard-grid/src/internal/useWidgetAppearance.ts:112:function writeAppearance(next: WidgetAppearanceMap): void {
+packages/xai-web-dashboard-grid/src/internal/useWidgetAppearance.ts:113:  setPrefAutosave(APPEARANCE_PREF_SUFFIX, next, { codec: "json" });
+packages/xai-web-dashboard-grid/src/internal/useWidgetAppearance.ts:164:        writeAppearance(next);
+packages/xai-web-dashboard-grid/src/internal/useWidgetAppearance.ts:178:        writeAppearance(next);
+packages/xai-web-dashboard-grid/src/internal/useWidgetLayout.ts:10:import { getPrefAutosave, setPrefAutosave } from "@repo/plugin-web-storage";
+packages/xai-web-dashboard-grid/src/internal/useWidgetLayout.ts:86:function writeLayout(next: WidgetLayoutMap): void {
+packages/xai-web-dashboard-grid/src/internal/useWidgetLayout.ts:87:  setPrefAutosave(LAYOUT_PREF_SUFFIX, next, { codec: "json" });
+packages/xai-web-dashboard-grid/src/internal/useWidgetLayout.ts:127:        writeLayout(next);
+packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:111:  // same-tab bus on `setPref`, which we bypassed. To wake up other usePref
+packages/plugin-web-board-workspaces/src/ShareModal.tsx:92:      await navigator.clipboard.writeText(envelope.url);
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:636:   * Emits the typed write event → owning-module subscriber executes via reducer + setPref.
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:650:      const writeEvent = tool.toWriteEvent(
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:657:      // and executes via its own pure reducer + setPref.
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:659:      if (writeEvent.channel === "web:tasks:create-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:660:        const p = writeEvent.payload as {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:668:      } else if (writeEvent.channel === "web:calendar:create-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:669:        const p = writeEvent.payload as {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:678:      } else if (writeEvent.channel === "web:tasks:delete-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:680:        const p = writeEvent.payload as {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:686:      } else if (writeEvent.channel === "web:calendar:delete-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:688:        const p = writeEvent.payload as {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:694:      } else if (writeEvent.channel === "web:tasks:update-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:696:        const p = writeEvent.payload as {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:703:      } else if (writeEvent.channel === "web:calendar:update-requested") {
+packages/plugin-web-ai-chat/src/AiChatModule.tsx:705:        const p = writeEvent.payload as {
+packages/xai-web-tasks/src/TaskComposer.tsx:76:  const [saveFailed, setSaveFailed] = useState(false);
+packages/xai-web-tasks/src/TaskComposer.tsx:316:        {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ title, tag, bucket, listId, priority, withDate, dueDate }} />}
+packages/xai-web-meditation/src/internal/useMeditationPrefs.ts:9: *     onClick={() => setPrefs({ ...prefs, scene: id })}
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:263:  const writeActiveBoard = useCallback(
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:273:  const writeLists = useCallback(
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:290:      writeActiveBoard((board) => {
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:296:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:301:      writeActiveBoard((board) => ({
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:316:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:321:      writeActiveBoard((board) => ({
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:327:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:335:      writeActiveBoard((board) => {
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:344:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:351:      writeActiveBoard((board) => ({
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:358:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:363:      writeActiveBoard((board) => ({
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:369:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:373:  const writeWorkspaces = useCallback(
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:386:      writeWorkspaces((prev) => {
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:393:    [writeWorkspaces],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:400:      writeWorkspaces((prev) =>
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:406:    [writeWorkspaces],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:411:      writeWorkspaces((prev) =>
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:421:    [writeWorkspaces],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:428:      writeWorkspaces((prev) =>
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:432:    [boards, writeWorkspaces],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:438:      writeActiveBoard((board) => ({
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:448:    [writeActiveBoard],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:552:    writeActiveBoard((board) => setBoardVisibility(board, nextVisibility));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:553:  }, [boardVisibility, writeActiveBoard]);
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:639:      writeLists((prev) => addCardToListById(prev, listId, text));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:643:    [composerText, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:652:    writeLists((prev) => addNewList(prev, text));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:655:  }, [newListName, writeLists]);
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:659:      writeLists((prev) => setListColorOp(prev, listId, color));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:661:    [writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:666:      writeLists((prev) => {
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:675:    [writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:686:      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:688:    [writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:693:      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:695:    [writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:700:      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:710:    [activeBoard.id, activeCardRef, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:729:      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:731:    [mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:736:      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:738:    [mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:743:      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:745:    [mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:750:      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:755:    [activeBoard.id, activeCardRef, mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:760:      writeLists((prev) => restoreListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:762:    [mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:767:      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:772:    [activeBoard.id, activeCardRef, mutationCtx, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:777:      writeLists((prev) => restoreCardOp(prev, listId, cardId));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:779:    [writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:784:      writeLists((prev) => deleteCardOp(prev, listId, cardId));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:793:    [activeBoard.id, activeCardRef, writeLists],
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:799:  // the row #7 atomic persistence pattern: one writeLists call = one
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:803:      writeLists((prev) => updateCardInList(prev, listId, cardId, patch));
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:805:    [writeLists],
+packages/xai-web-meditation/src/MeditationModule.tsx:119:  const [prefs, setPrefs] = useMeditationPrefs();
+packages/xai-web-meditation/src/MeditationModule.tsx:138:    setPrefs({
+packages/xai-web-meditation/src/MeditationModule.tsx:148:    setPrefs({ ...prefs, volume });
+packages/xai-web-meditation/src/MeditationModule.tsx:153:    setPrefs({
+packages/xai-web-meditation/src/MeditationModule.tsx:172:    setPrefs({ ...prefs, scene: id });
+packages/xai-web-meditation/src/MeditationModule.tsx:176:    setPrefs({ ...prefs, clock: variant });
+packages/xai-web-meditation/src/MeditationModule.tsx:180:    setPrefs({ ...prefs, sound });
+packages/xai-web-meditation/src/MeditationModule.tsx:193:    setPrefs({ ...prefs, duration, durationMode: "preset" });
+packages/xai-web-meditation/src/MeditationModule.tsx:204:    setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" });
+packages/xai-web-meditation/src/MeditationModule.tsx:210:    setPrefs({
+packages/xai-web-meditation/src/MeditationModule.tsx:220:    setPrefs({ ...prefs, customDuration, durationMode: "custom" });
+packages/xai-web-meditation/src/MeditationModule.tsx:243:  const saveCustomScene = (): void => {
+packages/xai-web-meditation/src/MeditationModule.tsx:264:    setPrefs({ ...prefs, customScenes, scene: id });
+packages/xai-web-meditation/src/MeditationModule.tsx:271:    setPrefs({
+packages/xai-web-meditation/src/MeditationModule.tsx:432:                    onFocus={() => setPrefs({ ...prefs, durationMode: "custom" })}
+packages/xai-web-meditation/src/MeditationModule.tsx:438:                  onClick={() => setPrefs({ ...prefs, durationMode: "infinite" })}
+packages/xai-web-meditation/src/MeditationModule.tsx:515:                      onClick={() => setPrefs({ ...prefs, clockScale: scale })}
+packages/xai-web-meditation/src/MeditationModule.tsx:631:              <button type="button" className="btn primary save-scene" onClick={saveCustomScene}>
+packages/plugin-web-ai-chat/src/internal/secretStore.ts:20:  saveKey(provider: AiProvider, plaintext: string): Promise<void>;
+packages/plugin-web-ai-chat/src/internal/secretStore.ts:227:  async saveKey(provider, plaintext) {
+packages/plugin-web-ai-chat/src/internal/secretStore.ts:234:    await getSecretStore().setItem(rowKey(owner), raw);
+packages/plugin-web-ai-chat/src/internal/secretStore.ts:348:      await getSecretStore().setItem(rowKey(owner), candidate);
+packages/plugin-web-ai-chat/src/internal/secretStore.ts:352:    await getSecretStore().setItem(migrationKey(input), JSON.stringify(staged));
+packages/xai-web-tasks/src/TasksModule.tsx:26:import { accountScope, getPrefAutosave, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
+packages/xai-web-tasks/src/TasksModule.tsx:100:    const ok = accountScope.isReady(owner) && setPrefAutosave("task_lists", next, { scope: owner });
+packages/xai-web-tasks/src/TasksModule.tsx:107:    const ok = accountScope.isReady(owner) && setPrefAutosave("task_tags", next, { scope: owner });
+packages/xai-web-tasks/src/TasksModule.tsx:1234:  const [saveFailed, setSaveFailed] = useState(false);
+packages/xai-web-tasks/src/TasksModule.tsx:1328:      {(saveFailed || failed) && <TaskSaveFailure lang={lang} owner={owner} draft={{ id: task.id, title, bucket, listId, tags: tagIds, priority, notes, dueDate, dateEdited, done }} />}
+packages/xai-web-tasks/src/TasksModule.tsx:1363:  const [saveFailed, setSaveFailed] = useState(false);
+packages/xai-web-tasks/src/TasksModule.tsx:1402:        {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ kind: editor.kind, id: editor.item?.id, name: { en: nameEn, zh: nameZh }, color, icon }} />}
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:6: * - Executes writes IMPERATIVELY via getPref + reducer + setPref,
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:27:import { getPref, setPref } from "@repo/plugin-web-storage";
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:57:function writeCols(cols: TaskCol[]): void {
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:58:  setPref("xai_task_cols", cols as unknown as import("@repo/plugin-web-storage").TaskColsState);
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:92:      writeCols(next);
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:147:      writeCols(next);
+packages/plugin-web-board-core/src/BoardModule.tsx:67:  const writeLists = useCallback(
+packages/plugin-web-board-core/src/BoardModule.tsx:111:      writeLists((prev) => addCardToListById(prev, listId, text));
+packages/plugin-web-board-core/src/BoardModule.tsx:115:    [composerText, writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:124:    writeLists((prev) => addNewList(prev, text));
+packages/plugin-web-board-core/src/BoardModule.tsx:127:  }, [newListName, writeLists]);
+packages/plugin-web-board-core/src/BoardModule.tsx:131:      writeLists((prev) => setListColorOp(prev, listId, color));
+packages/plugin-web-board-core/src/BoardModule.tsx:133:    [writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:138:      writeLists((prev) => moveCardOp(prev, cardId, fromListId, toListId));
+packages/plugin-web-board-core/src/BoardModule.tsx:140:    [writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:151:      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+packages/plugin-web-board-core/src/BoardModule.tsx:153:    [writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:158:      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+packages/plugin-web-board-core/src/BoardModule.tsx:160:    [writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:165:      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+packages/plugin-web-board-core/src/BoardModule.tsx:168:    [writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:187:      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+packages/plugin-web-board-core/src/BoardModule.tsx:189:    [mutationCtx, writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:194:      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+packages/plugin-web-board-core/src/BoardModule.tsx:196:    [mutationCtx, writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:201:      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-core/src/BoardModule.tsx:203:    [mutationCtx, writeLists],
+packages/plugin-web-board-core/src/BoardModule.tsx:208:      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-core/src/BoardModule.tsx:210:    [mutationCtx, writeLists],
+packages/web-auth-device-session/src/auth-generation-store.ts:40:  setItem(lease: AuthGenerationLease, key: string, value: string): Promise<AuthGenerationMutationResult>;
+packages/web-auth-device-session/src/auth-generation-store.ts:248:    setItem(lease, key, value) {
+packages/plugin-web-board-workspaces/src/BoardSettingsModal.tsx:6: * `onPatchBoard` (single writeActiveBoard write per change); Close just
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:5: * - Executes the write IMPERATIVELY via getPref + addCard + setPref,
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:24:import { getPref, setPref } from "@repo/plugin-web-storage";
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:99:    // Write back via imperative setPref.
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:101:    setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState);
+packages/web-auth-device-session/src/auth-generation-client.ts:17:  transientStorage?: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> | null;
+packages/web-auth-device-session/src/auth-generation-client.ts:73:    async setItem(key, value) {
+packages/web-auth-device-session/src/auth-generation-client.ts:82:      requireApplied(await store.setItem(lease, verifierPermissionKey, '1'));
+packages/web-auth-device-session/src/auth-generation-client.ts:83:      try { transient().setItem(verifierKey, value); }
+packages/web-auth-device-session/src/auth-generation-store.test.ts:14:  expect(await store.setItem(A, 'session', 'original-A')).toEqual({ status: 'applied' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:23:    await store.setItem(A, 'session', 'candidate-bytes');
+packages/web-auth-device-session/src/auth-generation-store.test.ts:28:    expect(await store.setItem(A, 'session', 'late')).toMatchObject({ status: 'superseded', reason: 'lease-revoked' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:44:    expect(await first.setItem(A, 'session', 'late-refresh')).toMatchObject({ status: 'superseded', reason: 'active-changed' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:50:    await store.createCandidate(B); await store.setItem(B, 'session', 'B-exact');
+packages/web-auth-device-session/src/auth-generation-store.test.ts:76:    await Promise.all([store.revoke({ ...A, owner: 'account-A' }), other.setItem(A, 'session', 'stale-refresh')]);
+packages/web-auth-device-session/src/auth-generation-store.test.ts:79:    expect(await other.setItem(A, 'session', 'even-later')).toMatchObject({ reason: 'lease-revoked' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:112:    await legacy.setItem('old-auth', raw); await device.setItem('identity', 'device-original');
+packages/web-auth-device-session/src/auth-generation-store.test.ts:125:    const legacy = createIndexedDbStore(); await legacy.setItem('old-auth', 'newer-bytes');
+packages/web-auth-device-session/src/auth-generation-store.test.ts:136:    const mutable = { ...A }; const pending = first.setItem(mutable, '__proto__', 'exact-value'); mutable.generation = B.generation;
+packages/web-auth-device-session/src/auth-generation-store.test.ts:174:    expect(await store.setItem(A, 'session', 'replacement')).toEqual({ status: 'failed', reason: 'schema-invalid' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:205:    expect(await store.setItem(A, 'session', 'generic-bypass')).toMatchObject({ reason: 'session-owner-required' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:229:    expect(await store.setItem(A, 'session', 'generic')).toMatchObject({ reason: 'session-owner-required' });
+packages/web-auth-device-session/src/auth-generation-store.test.ts:233:    const raw = createIndexedDbStore(); await raw.setItem('legacy-session', 'original-legacy');
+packages/web-auth-device-session/src/auth-generation-store.test.ts:238:    expect(await store.setItem(A, 'session', 'generic')).toMatchObject({ reason: 'session-owner-required' });
+packages/web-auth-device-session/src/auth-generation-client.test.ts:44:    await a.storage.setItem(a.storageKey, rawA);
+packages/web-auth-device-session/src/auth-generation-client.test.ts:45:    await b.storage.setItem(b.storageKey, rawB);
+packages/web-auth-device-session/src/auth-generation-client.test.ts:72:    await b.storage.setItem(`${b.storageKey}-code-verifier`, 'B-new-verifier');
+packages/web-auth-device-session/src/auth-generation-client.test.ts:86:    await a.storage.setItem(`${a.storageKey}-code-verifier`, 'A-verifier');
+packages/web-auth-device-session/src/auth-generation-client.test.ts:89:    await expect(a.storage.setItem(a.storageKey, JSON.stringify(session('A')))).rejects.toMatchObject({ reason: 'lease-revoked' });
+packages/web-auth-device-session/src/auth-generation-client.test.ts:90:    await expect(a.storage.setItem(`${a.storageKey}-code-verifier`, 'late-pkce')).rejects.toMatchObject({ reason: 'lease-revoked' });
+packages/web-auth-device-session/src/auth-generation-client.test.ts:99:    await a.storage.setItem(a.storageKey, original);
+packages/web-auth-device-session/src/auth-generation-client.test.ts:104:    await expect(a.storage.setItem(a.storageKey, JSON.stringify({ ...session('A'), refresh_token: 'replacement' }))).rejects.toMatchObject({ reason: 'transaction-failed' });
+packages/web-auth-device-session/src/auth-generation-client.test.ts:113:    await expect(a.storage.setItem(`${a.storageKey}-code-verifier`, 'verifier')).rejects.toMatchObject({ reason: 'transient-write-failed' });
+packages/web-auth-device-session/src/auth-generation-client.test.ts:153:    await a.storage.setItem(a.storageKey, original);
+packages/web-auth-device-session/src/auth-generation-client.test.ts:155:      await expect(a.storage.setItem(a.storageKey, raw)).rejects.toMatchObject({ reason: 'invalid-session-owner' });
+packages/plugin-web-ai-chat/vitest.setup.ts:52: localStorage.setItem(generationMarkerKey("ai-test-account"),JSON.stringify({generation:"test",migrationId:"test",previous:null}));
+packages/web-auth-device-session/src/session-lifecycle.test.tsx:94:      getItem: async () => null, setItem: async () => undefined,
+packages/web-auth-device-session/src/storage.test.ts:9:    await storage.setItem("token", "abc");
+packages/web-auth-device-session/src/storage.test.ts:21:    await storage.setItem("xai-web-auth-auth-token", "session-token");
+packages/web-auth-device-session/src/storage.test.ts:22:    await storage.setItem("xai-web-auth-code-verifier", "pkce-verifier");
+packages/web-auth-device-session/src/auth-actions.ts:15:  setItem(key: string, value: string): void;
+packages/web-auth-device-session/src/auth-actions.ts:27:function writePkceState(nextPath: string, storage: StringStorage | null = resolveSessionStorage()): void {
+packages/web-auth-device-session/src/auth-actions.ts:37:  storage.setItem(PKCE_TRANSIENT_KEY, JSON.stringify(payload));
+packages/web-auth-device-session/src/auth-actions.ts:137:  writePkceState(resolvedNext, storage);
+packages/web-auth-device-session/src/device-store.ts:35:      await store.setItem(key, deviceId);
+packages/web-auth-device-session/src/device-store.ts:47:      await store.setItem(key, next);
+packages/web-auth-device-session/src/auth-actions.test.ts:20:    setItem(key, value) {
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:12:    await session.setItem('token', 'saved-token');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:44:  await session.setItem('token', 'token-A');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:55:  await Promise.all([session.setItem('token', 'A'), device.set('B')]);
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:68:  await createAuthSessionStorage().setItem('new', 'session');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:80:  await a.setItem('same', 'A');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:81:  await b.setItem('same', 'B');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:87:  await extra.setItem('key', 'C');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:94:  await store.setItem('token', 'preserved');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:98:  await store.setItem('token', 'updated');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:123:  await store.setItem('token', 'retry-ok');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:140:  await store.setItem('token', 'retry');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:146:  await a.setItem('old', 'preserved');
+packages/web-auth-device-session/src/storage-indexeddb.test.ts:148:  await Promise.all([a.setItem('new', 'A'), b.setItem('new', 'B')]);
+packages/web-auth-device-session/src/callback.test.ts:16:    setItem(key, value) {
+packages/plugin-web-metric-tracker/src/index.ts:6:export { readMetricTrackerState, writeMetricTrackerState, upsertWeightRecord, deleteWeightRecord, updateWeightProfile } from "./internal/storage.js";
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:13: * or setPref (for persisted dims), then emits web:settings:preference-changed.
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:36:import { usePref, setPref, removePref } from "@repo/plugin-web-storage";
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:103:    setPref("xai_accent_hue", value);
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:111:    setPref("xai_bg_tone", toneId);
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:113:    setPref("xai_accent_hue", hueValue);
+packages/xai-web-settings-appearance/src/AppearancePane.tsx:122:    setPref("xai_rail_pos", value);
+packages/web-auth-device-session/src/storage.ts:6:  setItem(key: string, value: string): Promise<void>;
+packages/web-auth-device-session/src/storage.ts:128:    async setItem(key: string, value: string) {
+packages/web-auth-device-session/src/storage.ts:166:    async setItem(key: string, value: string) {
+packages/web-auth-device-session/src/storage.ts:167:      storage?.setItem(key, value);
+packages/web-auth-device-session/src/storage.ts:182:    setItem: (key, value) => (isTransientKey(key) ? transientStore.setItem(key, value) : store.setItem(key, value)),
+packages/web-auth-device-session/src/storage.ts:194:    async setItem(key: string, value: string) {
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:194:  function saveRecord(event?: FormEvent<HTMLFormElement>): void {
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:214:  function saveProfile(): void {
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:242:  const saveFailure = recovery.failure ? <section className="mt-save-failure" role="alert">
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:245:    <button type="button" onClick={() => { if (pendingAction === "record") saveRecord(); else if (pendingAction === "profile") saveProfile(); else if (recovery.retry()) setPendingAction(null); }}>{t(lang, "重试保存", "Retry save")}</button>
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:279:      {!entryOpen && saveFailure}
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:313:              <button type="button" disabled={!!recovery.failure && pendingAction !== "profile"} onClick={saveProfile} aria-label={t(lang, "保存目标设置", "Save goal settings")}><Icon name="edit" /></button>
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:448:            {saveFailure}
+packages/plugin-web-metric-tracker/src/MetricTrackerModule.tsx:456:            <form className="mt-entry" onSubmit={saveRecord}>
+packages/plugin-web-bookkeeping/src/index.ts:15:export { readBookkeepingState, writeBookkeepingState, localBookkeepingStorageAdapter } from "./internal/storage.js";
+packages/plugin-web-bookkeeping/src/index.ts:16:export { applyTransactionBalance, deleteTransaction, saveAccount, saveCategorySets, saveLedger, txInLedgerCurrency, upsertTransactions } from "./internal/state.js";
+packages/plugin-web-metric-tracker/src/internal/storage.ts:68:export function writeMetricTrackerState(state: MetricTrackerState, scope = accountScope.capture()): void {
+packages/plugin-web-metric-tracker/src/internal/storage.ts:70:  window.localStorage.setItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope), JSON.stringify(state));
+packages/plugin-web-metric-tracker/src/internal/storage.ts:158:      writeMetricTrackerState(value, scope);
+packages/plugin-web-bookkeeping/src/internal/storage.ts:37:function writeString(key: string, value: string, scope = accountScope.capture()): void {
+packages/plugin-web-bookkeeping/src/internal/storage.ts:40:  window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
+packages/plugin-web-bookkeeping/src/internal/storage.ts:111:function writeDevicePreferences(state: BookkeepingState, scope: ReturnType<typeof accountScope.capture>): BookkeepingWriteResult {
+packages/plugin-web-bookkeeping/src/internal/storage.ts:121:    try { writeString(key,value,scope); } catch { failedDeviceKeys.push(key); }
+packages/plugin-web-bookkeeping/src/internal/storage.ts:125:export function writeBookkeepingState(state: BookkeepingState, scope = accountScope.capture()): BookkeepingWriteResult {
+packages/plugin-web-bookkeeping/src/internal/storage.ts:128:  writeString(BOOKKEEPING_STATE_KEY, JSON.stringify(state), scope);
+packages/plugin-web-bookkeeping/src/internal/storage.ts:129:  const result=writeDevicePreferences(state,scope);
+packages/plugin-web-bookkeeping/src/internal/storage.ts:137:  write: writeBookkeepingState,
+packages/plugin-web-bookkeeping/src/internal/storage.ts:175:      const result=draft.canonicalCommitted ? writeDevicePreferences(draft.value,scope) : writeBookkeepingState(draft.value,scope);
+packages/plugin-web-board-views/src/BoardModule.tsx:114:  const writeLists = useCallback(
+packages/plugin-web-board-views/src/BoardModule.tsx:129:      writeLists((prev) => updateCardInList(prev, listId, cardId, patch));
+packages/plugin-web-board-views/src/BoardModule.tsx:131:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:160:      writeLists((prev) => addCardToListById(prev, listId, text));
+packages/plugin-web-board-views/src/BoardModule.tsx:164:    [composerText, writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:170:    writeLists((prev) => addNewList(prev, text));
+packages/plugin-web-board-views/src/BoardModule.tsx:173:  }, [newListName, writeLists]);
+packages/plugin-web-board-views/src/BoardModule.tsx:177:      writeLists((prev) => setListColorOp(prev, listId, color));
+packages/plugin-web-board-views/src/BoardModule.tsx:179:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:184:      writeLists((prev) => moveCardOp(prev, cardId, fromListId, toListId));
+packages/plugin-web-board-views/src/BoardModule.tsx:186:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:197:      writeLists((prev) => renameCardOp(prev, listId, cardId, title));
+packages/plugin-web-board-views/src/BoardModule.tsx:199:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:204:      writeLists((prev) => moveCardWithinListByOffsetOp(prev, listId, cardId, offset));
+packages/plugin-web-board-views/src/BoardModule.tsx:206:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:211:      writeLists((prev) => archiveCardOp(prev, listId, cardId));
+packages/plugin-web-board-views/src/BoardModule.tsx:214:    [writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:233:      writeLists((prev) => renameListOp(prev, listId, name, mutationCtx));
+packages/plugin-web-board-views/src/BoardModule.tsx:235:    [mutationCtx, writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:240:      writeLists((prev) => moveListByOffsetOp(prev, listId, offset, mutationCtx));
+packages/plugin-web-board-views/src/BoardModule.tsx:242:    [mutationCtx, writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:247:      writeLists((prev) => archiveListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-views/src/BoardModule.tsx:249:    [mutationCtx, writeLists],
+packages/plugin-web-board-views/src/BoardModule.tsx:254:      writeLists((prev) => deleteListOp(prev, listId, mutationCtx));
+packages/plugin-web-board-views/src/BoardModule.tsx:256:    [mutationCtx, writeLists],
+packages/plugin-web-bookkeeping/src/internal/state.ts:116:export function saveLedger(state: BookkeepingState, ledger: BookkeepingLedger): BookkeepingState {
+packages/plugin-web-bookkeeping/src/internal/state.ts:137:export function saveAccount(state: BookkeepingState, account: BookkeepingAccount): BookkeepingState {
+packages/plugin-web-bookkeeping/src/internal/state.ts:163:export function saveCategorySets(
+packages/plugin-web-bookkeeping/src/internal/state.ts:170:export function setPrefs(
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:25:  saveAccount,
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:26:  saveCategorySets,
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:27:  saveLedger,
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:28:  setPrefs,
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:335:                onClick={() => setState((prev) => setPrefs(prev, { billsView: next }))}
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:403:      setState((prev) => setPrefs(prev, { dashboardSplit: pct }));
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:430:        <button type="button" className="bk-grip" onClick={() => setState((prev) => setPrefs(prev, { dashboardOrder: prev.prefs.dashboardOrder === "bills-first" ? "quick-first" : "bills-first" }))}>
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:459:        <button type="button" className="bk-grip" onClick={() => setState((prev) => setPrefs(prev, { dashboardOrder: prev.prefs.dashboardOrder === "bills-first" ? "quick-first" : "bills-first" }))}>
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:507:        <button type="button" className="bk-swap-btn" onPointerDown={(event) => event.stopPropagation()} onClick={() => setState((prev) => setPrefs(prev, { dashboardOrder: prev.prefs.dashboardOrder === "bills-first" ? "quick-first" : "bills-first" }))}>
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:826:          <button type="button" aria-selected={mode === "month"} onClick={() => setState((prev) => setPrefs(prev, { calendarMode: "month" }))}><Icon name="calendar" size={13} /> {t(lang, "月", "Month")}</button>
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:827:          <button type="button" aria-selected={mode === "year"} onClick={() => setState((prev) => setPrefs(prev, { calendarMode: "year" }))}><Icon name="grid4" size={13} /> {t(lang, "年", "Year")}</button>
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:844:        <YearCalendar lang={lang} dayAgg={dayAgg} year={year} onPickDay={(day) => { setSelected(day); setCursor(new Date(`${day.slice(0, 7)}-01T00:00:00`)); setState((prev) => setPrefs(prev, { calendarMode: "month" })); }} onPickMonth={(monthNo) => { setCursor(new Date(year, monthNo - 1, 1)); setState((prev) => setPrefs(prev, { calendarMode: "month" })); }} />
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:1553:    setState((prev) => saveCategorySets(prev, { expense: updateList(prev.expense), income: updateList(prev.income), transfer: updateList(prev.transfer), prepay: updateList(prev.prepay) }));
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:1576:      {modal?.kind === "ledger" ? <LedgerModal state={state} lang={lang} ledger={modal.payload} onClose={() => setModal(null)} onSave={(ledger) => setState((prev) => saveLedger(prev, ledger))} onDelete={(id) => setState((prev) => deleteLedger(prev, id))} /> : null}
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:1577:      {modal?.kind === "account" ? <AccountModal state={state} lang={lang} account={modal.payload} onClose={() => setModal(null)} onSave={(account) => setState((prev) => saveAccount(prev, account))} onDelete={(id) => setState((prev) => deleteAccount(prev, id))} /> : null}
+packages/plugin-web-bookkeeping/src/BookkeepingModule.tsx:1578:      {modal?.kind === "categories" ? <CategoryModal state={state} lang={lang} onClose={() => setModal(null)} onSave={(patch) => setState((prev) => saveCategorySets(prev, patch))} /> : null}
+packages/plugin-web-storage/src/index.ts:5: *   import { usePref, setPref, isPrefKey, type WebPrefKey } from "@repo/plugin-web-storage"
+packages/plugin-web-storage/src/index.ts:39:  setPref,
+packages/plugin-web-storage/src/index.ts:44:  setPrefAutosave,
+packages/plugin-web-storage/src/index.ts:48:  GetPrefAutosaveOptions,
+packages/plugin-web-storage/src/index.ts:49:  SetPrefAutosaveOptions,
+packages/plugin-web-storage/src/index.ts:58:export type { UsePrefAutosaveOptions } from "./internal/usePrefAutosave.js";
+packages/plugin-web-storage/src/internal/accountDataLifecycle.ts:5:type Store = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>;
+packages/plugin-web-storage/src/internal/accountDataLifecycle.ts:36:  if (storage.getItem(tombstone) === null) storage.setItem(tombstone,'1');
+packages/plugin-web-settings-shell/src/SettingsFooter.tsx:102:  const saveText = lang === "zh" ? "保存生效" : "Save & apply";
+packages/plugin-web-settings-shell/src/SettingsFooter.tsx:124:        {saved ? savedText : saveText}
+packages/plugin-web-storage/src/internal/accountMigration.ts:5:type Store = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>;
+packages/plugin-web-storage/src/internal/accountMigration.ts:95:    storage.setItem(archiveKey, archive);
+packages/plugin-web-storage/src/internal/accountMigration.ts:98:    storage.setItem(journalKey, JSON.stringify({ version: 1, accountId, generation, previousRaw, archiveKey, selected, phase: 'prepared' }));
+packages/plugin-web-storage/src/internal/accountMigration.ts:99:    for (const [key, raw] of Object.entries(candidate)) storage.setItem(generationKey(accountId, generation, key, demo), raw);
+packages/plugin-web-storage/src/internal/accountMigration.ts:113:    storage.setItem(generationMarkerKey(accountId, demo), JSON.stringify(marker));
+packages/plugin-web-storage/src/internal/accountMigration.ts:136:    else storage.setItem(generationMarkerKey(accountId, demo), journal.previousRaw!);
+packages/plugin-web-storage/src/internal/accountScope.ts:63:export function createScopedStorage(storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>, controller = accountScope) {
+packages/plugin-web-storage/src/internal/accountScope.ts:68:    setItem(key: string, value: string) { storage.setItem(controller.physicalKey(key, scope), value); },
+packages/plugin-web-storage/src/internal/storage.ts:3: * Imperative getPref / setPref / removePref + same-tab pub/sub bus.
+packages/plugin-web-storage/src/internal/storage.ts:7: * - setPref compares-before-write to avoid spurious storage events (AC-IMP-11).
+packages/plugin-web-storage/src/internal/storage.ts:64: * Called by setPref after writing to localStorage.
+packages/plugin-web-storage/src/internal/storage.ts:144:// setPref
+packages/plugin-web-storage/src/internal/storage.ts:147:export function setPref<K extends WebPrefKey>(
+packages/plugin-web-storage/src/internal/storage.ts:154:      "[plugin-web-storage] setPref called during SSR; no-op.",
+packages/plugin-web-storage/src/internal/storage.ts:187:    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
+packages/plugin-web-storage/src/internal/storage.ts:267:export interface GetPrefAutosaveOptions<T> {
+packages/plugin-web-storage/src/internal/storage.ts:289:  options?: GetPrefAutosaveOptions<T>,
+packages/plugin-web-storage/src/internal/storage.ts:330:export interface SetPrefAutosaveOptions {
+packages/plugin-web-storage/src/internal/storage.ts:339: * Mirrors `setPref` semantics (compare-before-write, same-tab pub/sub on
+packages/plugin-web-storage/src/internal/storage.ts:346:export function setPrefAutosave<T>(
+packages/plugin-web-storage/src/internal/storage.ts:349:  options?: SetPrefAutosaveOptions,
+packages/plugin-web-storage/src/internal/storage.ts:354:  if (!validateSuffix("setPrefAutosave", suffix)) {
+packages/plugin-web-storage/src/internal/storage.ts:359:      "[plugin-web-storage] setPrefAutosave called during SSR; no-op.",
+packages/plugin-web-storage/src/internal/storage.ts:388:    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
+packages/xai-web-shell/src/AppRail.tsx:37:  const [prefOrder, setPrefOrder] = usePref("xai_rail_order");
+packages/xai-web-shell/src/AppRail.tsx:89:    setPrefOrder(nextOrder as typeof prefOrder);
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:7: * - Executes writes IMPERATIVELY via getPref + store fn + setPref.
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:24:import { getPref, setPref } from "@repo/plugin-web-storage";
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:120:      setPref("xai_calendar_events", next);
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:176:      setPref("xai_calendar_events", next);
+packages/plugin-web-storage/src/internal/usePref.ts:6: * - Same-tab writes: setPref() publishes to the in-process same-tab bus;
+packages/plugin-web-storage/src/internal/usePref.ts:16:import { getPref, setPref, removePref, subscribeSameTab, readRawPref } from "./storage.js";
+packages/plugin-web-storage/src/internal/usePref.ts:68:          "[plugin-web-storage] setPref called during SSR; no-op.",
+packages/plugin-web-storage/src/internal/usePref.ts:141:      const ok = setPref(key, nextValue, scope);
+packages/plugin-web-storage/src/internal/usePrefAutosave.ts:18:import { isPrefKey, setPrefAutosave } from "./storage.js";
+packages/plugin-web-storage/src/internal/usePrefAutosave.ts:22:export interface UsePrefAutosaveOptions {
+packages/plugin-web-storage/src/internal/usePrefAutosave.ts:38:  options?: UsePrefAutosaveOptions,
+packages/plugin-web-storage/src/internal/usePrefAutosave.ts:71:    if (setPrefAutosave(suffix, value, { codec, scope })) {
+packages/xai-web-shell/src/Topbar.tsx:22: * Raw localStorage.setItem/JSON.stringify is intentional (see dev_log fix-strategy).
+packages/xai-web-shell/src/Topbar.tsx:34:      localStorage.setItem(key, JSON.stringify(value));
+packages/xai-web-shell/src/Topbar.tsx:66:  const [prefsOpen, setPrefsOpen] = useState(false);
+packages/xai-web-shell/src/Topbar.tsx:75:        setPrefsOpen(false);
+packages/xai-web-shell/src/Topbar.tsx:79:      if (event.key === "Escape") setPrefsOpen(false);
+packages/xai-web-shell/src/Topbar.tsx:142:            onClick={() => setPrefsOpen((open) => !open)}
+packages/xai-web-shell/src/Topbar.tsx:232:                  setPrefsOpen(false);
+packages/plugin-web-settings-rest/src/panes/aiPane.tsx:104:    await aiKeyStorage.saveKey(prov, trimmed);
+packages/plugin-web-time-tracker/src/index.ts:14:  writeTimeTrackerEntries,
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:59:function writeActive(scope: AccountScope, active: ActiveSession | null) {
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:62:  if (active) localStorage.setItem(key, JSON.stringify(active));
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:78:    localStorage.setItem(accountScope.physicalKey(HISTORY_KEY, scope), JSON.stringify([...history, committed]));
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:84:  writeActive(scope, null);
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:145:          if (current.phase !== "settlement-pending") writeActive(scope, pending);
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:150:          writeActive(scope, { version: 1, owner: identity, revision: 0, sessionId: `pomo_${crypto.randomUUID()}`, mode: options.mode, durationMs: options.durationMs, sessionStartedAt: new Date(now).toISOString(), phase: "running", accumulatedElapsedMs: 0, runStartedAt: now, deadline: now + options.durationMs });
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:152:          writeActive(scope, { ...current, phase: "paused", revision: current.revision + 1, accumulatedElapsedMs: elapsedAt(current, now), pausedAt: now });
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:154:          writeActive(scope, { ...current, phase: "running", revision: current.revision + 1, runStartedAt: now, deadline: now + current.durationMs - current.accumulatedElapsedMs });
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:157:          writeActive(scope, frozenPending);
+packages/plugin-web-pomodoro/src/internal/sessionController.ts:160:          writeActive(scope, null);
+packages/plugin-web-settings-rest/src/internal/accountDeletionIntent.ts:21:  localStorage.setItem(keyFor(intent.accountId), raw);
+packages/plugin-web-time-tracker/src/internal/storage.ts:105:function writeJson<T>(key: string, value: T, scope = accountScope.capture()): void {
+packages/plugin-web-time-tracker/src/internal/storage.ts:107:  window.localStorage.setItem(accountScope.physicalKey(key, scope), JSON.stringify(value));
+packages/plugin-web-time-tracker/src/internal/storage.ts:129:export function writeTimeTrackerCategories(categories: readonly TimeTrackerCategory[], scope = accountScope.capture()): void {
+packages/plugin-web-time-tracker/src/internal/storage.ts:130:  writeJson(TIME_TRACKER_CATEGORIES_KEY, categories, scope);
+packages/plugin-web-time-tracker/src/internal/storage.ts:133:export function writeTimeTrackerEntries(entries: readonly TimeTrackerEntry[], scope = accountScope.capture()): void {
+packages/plugin-web-time-tracker/src/internal/storage.ts:134:  writeJson(TIME_TRACKER_ENTRIES_KEY, entries, scope);
+packages/plugin-web-time-tracker/src/internal/storage.ts:137:export function writeTimeTrackerMode(mode: TimeTrackerMode): void {
+packages/plugin-web-time-tracker/src/internal/storage.ts:139:  window.localStorage.setItem(TIME_TRACKER_MODE_KEY, mode);
+packages/plugin-web-time-tracker/src/internal/storage.ts:250:  return useTimeTrackerStorage(readTimeTrackerCategories, writeTimeTrackerCategories);
+packages/plugin-web-time-tracker/src/internal/storage.ts:254:  return useTimeTrackerStorage(readTimeTrackerEntries, writeTimeTrackerEntries);
+packages/plugin-web-time-tracker/src/internal/storage.ts:259:  const write = useCallback(writeTimeTrackerMode, []);
+packages/plugin-web-settings-rest/src/internal/integrationDisconnectButton.tsx:7: *   1. Calls setPref(provider.prefKey, false) to flip the connection flag.
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:7: * via `setPref` (which also fans out to other tabs via the storage
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:16: *     calls `setPref`, tab B's `usePref` re-reads from localStorage and
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:19: *     reference; `setPref` updates the React state inside `usePref`).
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:547:    writeTrackerUi(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0", scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:551:    writeTrackerUi(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]), scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:555:    writeTrackerUi(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0", scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:559:    writeTrackerUi(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0", scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:634:  function saveEntry(draft: EntryDraft): void {
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:663:  function saveCategory(draft: CategoryDraft): void {
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:944:          onSave={saveCategory}
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:972:          onSave={saveEntry}
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:1184:    writeTrackerUi(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys), scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:1189:    writeTrackerUi(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards), scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:2050:  function saveTime(): void {
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:2087:                <button type="button" className="tt-btn tt-btn-primary" disabled={!timeValid} onClick={saveTime}>{ttCopy(lang, "save")}</button>
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:2812:    writeTrackerUi(INSIGHTS_KEY, JSON.stringify(cards), scope);
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:3595:function writeTrackerUi(key: string, value: string, scope: AccountScope): void {
+packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx:3597:  window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
+packages/plugin-web-settings-rest/src/internal/accountDeletionRecovery.ts:43:  localStorage.setItem(receiptKey(receipt.accountId, receipt.kind === "demo"), JSON.stringify(receipt));
+packages/plugin-web-settings-rest/src/internal/oauthState.ts:105:  sessionStorage.setItem(
+packages/xai-web-calendar/src/internal/eventStore/eventStore.ts:6: * commits the new snapshot via `setPref` to localStorage.
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:5: * - Executes the write IMPERATIVELY via getPref + createEvent + setPref,
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:24:import { getPref, setPref } from "@repo/plugin-web-storage";
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:126:    // Write back via imperative setPref (storage-event → useUserCalEvents in mounted CalendarModule updates reactively).
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:127:    setPref("xai_calendar_events", next);
+packages/xai-web-dashboard-widgets/src/internal/weatherStore/weatherStore.ts:5: * The React hook wrapper (useWeather) commits via setPref.
+packages/xai-web-dashboard-widgets/src/internal/weatherStore/useWeather.ts:9: *   - set/clear persist via setPref; stable identities via useCallback
+packages/xai-web-dashboard-widgets/src/internal/stickiesStore/stickiesStore.ts:6: * commits the new snapshot via `setPref` to localStorage.
+packages/xai-web-dashboard-widgets/src/internal/stickiesStore/useStickies.ts:7: * via `setPref` (which also fans out to other tabs via the storage event).

@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-save-consumer-inventory/consumer.test.tsx > reproduces MED failed new scene retry silently persisting no scene
+[plugin-web-storage] quota exceeded for xai_meditation_prefs.
+
+ ✓ docs/reviews/web-save-consumer-inventory/consumer.test.tsx (1 test) 131ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  12:31:48
+   Duration  1.62s (transform 206ms, setup 0ms, collect 408ms, tests 131ms, environment 750ms, prepare 101ms)
+
