@@ -1,0 +1,11 @@
+{"name":"baseline","head":"da35b3b8175565f5e99ab9f88da2a788889494d4","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"actual-latest-draft-download","filename":"meditation-unsaved-draft.json"}
+{"name":"latest-new-retry","exactlyOne":true,"latestName":"Latest native draft"}
+{"name":"failed-delete-draft-download","filename":"meditation-unsaved-draft.json"}
+{"name":"failed-delete","editorRetained":true,"retryRemoved":true}
+{"name":"390px-recovery","left":8,"right":372,"viewport":390,"buttons":[44,44,44]}
+{"name":"conflict-account","newerRawPreserved":true,"oldAExportRetryRejected":true,"BPreserved":true}
+{"name":"configuration-volume-failure","visible":true}
+{"name":"player-volume-failure","visible":true,"geometry":{"top":16,"bottom":302.578125,"left":16,"right":374}}
+{"name":"player-retry","buttonHitTest":true,"persistedVolume":0.2,"playerContinues":true}
+{"name":"PASS","downloads":2,"scope":"actual module latest scene, delete, conflict, B isolation, configuration/player volume and 390px recovery panel"}
