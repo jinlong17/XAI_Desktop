@@ -1,3 +1,4 @@
+import { accountScope, registerAccountMigrationValidator } from "@repo/plugin-web-storage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BOOKKEEPING_CALENDAR_MODE_KEY,
@@ -24,19 +25,19 @@ function safeParse(raw: string | null): unknown {
   }
 }
 
-function readString(key: string): string | null {
+function readString(key: string, scope = accountScope.capture()): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return window.localStorage.getItem(key);
+    return window.localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     return null;
   }
 }
 
-function writeString(key: string, value: string): void {
+function writeString(key: string, value: string, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(key, value);
+    window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
   } catch {
     return;
   }
@@ -106,43 +107,36 @@ function dispatchStorageEvent(): void {
   window.dispatchEvent(new CustomEvent(BOOKKEEPING_STORAGE_EVENT));
 }
 
+export function readBookkeepingState(scope = accountScope.capture()): BookkeepingState {
+  const parsed = safeParse(readString(BOOKKEEPING_STATE_KEY, scope));
+  return normalizeState(isBookkeepingState(parsed) ? parsed : createSeedBookkeepingState());
+}
+export function writeBookkeepingState(state: BookkeepingState, scope = accountScope.capture()): void {
+  accountScope.assertCurrent(scope);
+  writeString(BOOKKEEPING_STATE_KEY, JSON.stringify(state), scope);
+  writeString(BOOKKEEPING_DASH_ORDER_KEY, state.prefs.dashboardOrder, scope);
+  writeString(BOOKKEEPING_DASH_SPLIT_KEY, String(state.prefs.dashboardSplit), scope);
+  writeString(BOOKKEEPING_VIEW_KEY, state.prefs.billsView, scope);
+  writeString(BOOKKEEPING_CALENDAR_MODE_KEY, state.prefs.calendarMode, scope);
+  dispatchStorageEvent();
+}
 export const localBookkeepingStorageAdapter: BookkeepingStorageAdapter = {
   kind: "localStorage",
   syncStatus: "device-local",
-  read() {
-    const parsed = safeParse(readString(BOOKKEEPING_STATE_KEY));
-    return normalizeState(isBookkeepingState(parsed) ? parsed : createSeedBookkeepingState());
-  },
-  write(state) {
-    writeString(BOOKKEEPING_STATE_KEY, JSON.stringify(state));
-    writeString(BOOKKEEPING_DASH_ORDER_KEY, state.prefs.dashboardOrder);
-    writeString(BOOKKEEPING_DASH_SPLIT_KEY, String(state.prefs.dashboardSplit));
-    writeString(BOOKKEEPING_VIEW_KEY, state.prefs.billsView);
-    writeString(BOOKKEEPING_CALENDAR_MODE_KEY, state.prefs.calendarMode);
-    dispatchStorageEvent();
-  },
-  reset() {
-    const state = createSeedBookkeepingState();
-    this.write(state);
-    return state;
-  },
+  read: readBookkeepingState,
+  write: writeBookkeepingState,
+  reset() { const state = createSeedBookkeepingState(); this.write(state); return state; },
 };
 
-export function readBookkeepingState(): BookkeepingState {
-  return localBookkeepingStorageAdapter.read();
-}
-
-export function writeBookkeepingState(state: BookkeepingState): void {
-  localBookkeepingStorageAdapter.write(state);
-}
-
 export function useBookkeepingState(): readonly [BookkeepingState, (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void] {
-  const [state, setState] = useState<BookkeepingState>(() => localBookkeepingStorageAdapter.read());
+  const scope = useRef(accountScope.capture()).current;
+  const [state, setState] = useState<BookkeepingState>(() => readBookkeepingState(scope));
   const stateRef = useRef(state);
 
   useEffect(() => {
     function refresh(): void {
-      const next = localBookkeepingStorageAdapter.read();
+      if (!accountScope.isReady(scope)) return;
+      const next = readBookkeepingState(scope);
       stateRef.current = next;
       setState(next);
     }
@@ -155,11 +149,14 @@ export function useBookkeepingState(): readonly [BookkeepingState, (next: Bookke
   }, []);
 
   const setPersistedState = useCallback((next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => {
+    if (!accountScope.isReady(scope)) return;
     const value = typeof next === "function" ? next(stateRef.current) : next;
+    writeBookkeepingState(value, scope);
     stateRef.current = value;
-    localBookkeepingStorageAdapter.write(value);
     setState(value);
   }, []);
 
   return [state, setPersistedState];
 }
+
+registerAccountMigrationValidator(BOOKKEEPING_STATE_KEY, isBookkeepingState);

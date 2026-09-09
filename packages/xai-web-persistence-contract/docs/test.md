@@ -179,3 +179,7 @@ Minimum AC count target: **≥ 30** distinct scenarios across §1 + §2 + §3 (c
 - No `console.log` left in test files (lint should catch).
 - `// @ts-expect-error` annotations are commented with the reason inline (per sibling-row convention).
 - Snapshot tests are not used (no UI in this package).
+
+## REL-03 regression evidence
+
+Added storage scope, stale-hook/autosave, generation migration, marker quota failure, secret-stage failure, interrupted-candidate recovery, legacy byte preservation, rollback, captured-owner export/delete and tombstone tests. Three standalone repositories (Time Tracker, Bookkeeping, Metric Tracker) exercise A → B → A plus rejected stale A writes. Owner migration guard integration is executable using `pnpm --filter @repo/plugin-web-storage exec vitest run --root ../.. --config docs/reviews/web-account-data-isolation/migration-guards.config.mjs`. No live Supabase credentials are required; these tests do not prove a cross-vendor or production-auth release gate.

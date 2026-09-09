@@ -81,7 +81,7 @@ export function usePersistedMatrix(): UsePersistedMatrixResult {
 }
 
 /** Casts a potentially unknown blob to MatrixState, falling back to empty default. */
-function asMatrixState(raw: unknown): MatrixState {
+export function asMatrixState(raw: unknown): MatrixState {
   if (
     isRecord(raw) &&
     raw.schemaVersion === 1 &&

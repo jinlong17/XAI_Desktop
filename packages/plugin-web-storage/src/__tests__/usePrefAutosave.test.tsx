@@ -1,3 +1,4 @@
+import { testStorage } from "./accountTestHarness.js";
 /**
  * usePrefAutosave tests — AC-AUTO-1..5
  * Environment: jsdom (from vitest.config.ts)
@@ -47,7 +48,7 @@ describe("AC-AUTO-1: first render writes to xai_pref_${suffix}", () => {
     await act(async () => {
       root.render(createElement(Consumer));
     });
-    expect(localStorage.getItem("xai_pref_appearance_density")).toBe(
+    expect(testStorage.getItem("xai_pref_appearance_density")).toBe(
       '"compact"',
     );
   });
@@ -71,14 +72,14 @@ describe("AC-AUTO-2: re-render with new value updates stored value", () => {
     await act(async () => {
       root.render(createElement(Consumer));
     });
-    expect(localStorage.getItem("xai_pref_appearance_density")).toBe(
+    expect(testStorage.getItem("xai_pref_appearance_density")).toBe(
       '"compact"',
     );
 
     await act(async () => {
       setValue("comfortable");
     });
-    expect(localStorage.getItem("xai_pref_appearance_density")).toBe(
+    expect(testStorage.getItem("xai_pref_appearance_density")).toBe(
       '"comfortable"',
     );
   });
@@ -103,7 +104,7 @@ describe("AC-AUTO-3: same value re-render does NOT call setItem again", () => {
       root.render(createElement(Consumer));
     });
     // First write happened
-    expect(localStorage.getItem("xai_pref_idempotency_test")).toBe(
+    expect(testStorage.getItem("xai_pref_idempotency_test")).toBe(
       '"fixed-value"',
     );
 
@@ -130,7 +131,7 @@ describe("AC-AUTO-4: options.codec='string' writes raw string", () => {
     await act(async () => {
       root.render(createElement(Consumer));
     });
-    expect(localStorage.getItem("xai_pref_raw_string_test")).toBe("abc");
+    expect(testStorage.getItem("xai_pref_raw_string_test")).toBe("abc");
   });
 });
 

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Bookkeeping module for XAI Web Console — ledgers, accounts, records, budgets, assets, investments, recurring rules, local persistence, and sync-ready modeling.",
+  "description": "Bookkeeping module for XAI Web Console \u2014 ledgers, accounts, records, budgets, assets, investments, recurring rules, local persistence, and sync-ready modeling.",
   "sideEffects": [
     "./src/styles.css",
     "./src/index.ts"
@@ -28,7 +28,8 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/plugin-web-tokens": "workspace:*",
-    "@repo/xai-web-shell": "workspace:*"
+    "@repo/xai-web-shell": "workspace:*",
+    "@repo/plugin-web-storage": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

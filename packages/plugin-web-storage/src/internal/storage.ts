@@ -17,6 +17,13 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
+import { accountScope, type AccountScope } from "./accountScope.js";
+
+export function readRawPref(key: string, scope = accountScope.capture()): string | null {
+  if (typeof window === "undefined") return null;
+  try { return localStorage.getItem(accountScope.physicalKey(key, scope)); } catch { return null; }
+}
+
 
 // ---------------------------------------------------------------------------
 // Same-tab pub/sub bus
@@ -34,7 +41,9 @@ const _listeners = new Map<string, Set<Listener>>();
 export function subscribeSameTab(
   key: string,
   listener: Listener,
+  scope = accountScope.capture(),
 ): () => void {
+  try { key = accountScope.physicalKey(key, scope); } catch { return () => {}; }
   let set = _listeners.get(key);
   if (!set) {
     set = new Set();
@@ -54,7 +63,8 @@ export function subscribeSameTab(
  * Publish to same-tab subscribers for a key.
  * Called by setPref after writing to localStorage.
  */
-export function publishSameTab(key: string, value: unknown): void {
+export function publishSameTab(key: string, value: unknown, scope = accountScope.capture()): void {
+  try { key = accountScope.physicalKey(key, scope); } catch { return; }
   const set = _listeners.get(key);
   if (!set) return;
   for (const listener of set) {
@@ -105,14 +115,14 @@ function guardStorage(action: () => void): boolean {
 // getPref
 // ---------------------------------------------------------------------------
 
-export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
+export function getPref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): WebPrefValue<K> {
   const entry = PREF_REGISTRY[key];
   if (typeof window === "undefined") {
     return entry.default as WebPrefValue<K>;
   }
   let raw: string | null = null;
   try {
-    raw = localStorage.getItem(key);
+    raw = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     return entry.default as WebPrefValue<K>;
   }
@@ -123,7 +133,7 @@ export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
   if (decoded === null) {
     console.warn(
       `[plugin-web-storage] decode failed for ${key}:`,
-      new Error(`Cannot decode "${raw}" with codec "${entry.codec}"`),
+      new Error(`Cannot decode stored value with codec "${entry.codec}"`),
     );
     return entry.default as WebPrefValue<K>;
   }
@@ -137,6 +147,7 @@ export function getPref<K extends WebPrefKey>(key: K): WebPrefValue<K> {
 export function setPref<K extends WebPrefKey>(
   key: K,
   value: WebPrefValue<K>,
+  scope = accountScope.capture(),
 ): boolean {
   if (typeof window === "undefined") {
     console.warn(
@@ -155,7 +166,7 @@ export function setPref<K extends WebPrefKey>(
   // Compare-before-write: avoid spurious storage events (AC-IMP-11)
   let existing: string | null = null;
   try {
-    existing = localStorage.getItem(key);
+    existing = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     // localStorage unavailable
     if (!_storageUnavailableWarned) {
@@ -173,7 +184,7 @@ export function setPref<K extends WebPrefKey>(
   }
 
   try {
-    localStorage.setItem(key, encoded);
+    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
   } catch (err) {
     if (
       err instanceof DOMException &&
@@ -193,7 +204,7 @@ export function setPref<K extends WebPrefKey>(
   }
 
   // Publish to same-tab subscribers
-  publishSameTab(key, value);
+  publishSameTab(key, value, scope);
   return true;
 }
 
@@ -201,16 +212,16 @@ export function setPref<K extends WebPrefKey>(
 // removePref
 // ---------------------------------------------------------------------------
 
-export function removePref<K extends WebPrefKey>(key: K): void {
+export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.removeItem(key);
+    localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {
     return;
   }
   const entry = PREF_REGISTRY[key];
   // Notify same-tab subscribers that the value is back to default
-  publishSameTab(key, entry.default);
+  publishSameTab(key, entry.default, scope);
 }
 
 // Suppress unused variable warning for guardStorage
@@ -254,6 +265,7 @@ function validateSuffix(fnName: string, suffix: string): boolean {
 }
 
 export interface GetPrefAutosaveOptions<T> {
+  scope?: AccountScope;
   /** Codec used to deserialize. Must match the codec passed to `usePrefAutosave`. Default: "json". */
   codec?: PrefCodec;
   /** Value returned when the key is absent, decode fails, or running under SSR. */
@@ -276,6 +288,7 @@ export function getPrefAutosave<T>(
   suffix: string,
   options?: GetPrefAutosaveOptions<T>,
 ): T | undefined {
+  const scope = options?.scope ?? accountScope.capture();
   const defaultValue = options?.defaultValue;
   const codec: PrefCodec = options?.codec ?? "json";
 
@@ -289,7 +302,7 @@ export function getPrefAutosave<T>(
   const key = `xai_pref_${suffix}`;
   let raw: string | null = null;
   try {
-    raw = localStorage.getItem(key);
+    raw = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     if (!_storageUnavailableWarned) {
       _storageUnavailableWarned = true;
@@ -307,7 +320,7 @@ export function getPrefAutosave<T>(
   if (decoded === null) {
     console.warn(
       `[plugin-web-storage] decode failed for ${key}:`,
-      new Error(`Cannot decode "${raw}" with codec "${codec}"`),
+      new Error(`Cannot decode stored value with codec "${codec}"`),
     );
     return defaultValue;
   }
@@ -315,6 +328,7 @@ export function getPrefAutosave<T>(
 }
 
 export interface SetPrefAutosaveOptions {
+  scope?: AccountScope;
   /** Codec used to serialize. Default: "json". Must match the reader's codec. */
   codec?: PrefCodec;
 }
@@ -334,6 +348,7 @@ export function setPrefAutosave<T>(
   value: T,
   options?: SetPrefAutosaveOptions,
 ): boolean {
+  const scope = options?.scope ?? accountScope.capture();
   const codec: PrefCodec = options?.codec ?? "json";
 
   if (!validateSuffix("setPrefAutosave", suffix)) {
@@ -355,7 +370,7 @@ export function setPrefAutosave<T>(
 
   let existing: string | null = null;
   try {
-    existing = localStorage.getItem(key);
+    existing = localStorage.getItem(accountScope.physicalKey(key, scope));
   } catch {
     if (!_storageUnavailableWarned) {
       _storageUnavailableWarned = true;
@@ -370,7 +385,7 @@ export function setPrefAutosave<T>(
   }
 
   try {
-    localStorage.setItem(key, encoded);
+    localStorage.setItem(accountScope.physicalKey(key, scope), encoded);
   } catch (err) {
     if (
       err instanceof DOMException &&
@@ -389,7 +404,7 @@ export function setPrefAutosave<T>(
     return false;
   }
 
-  publishSameTab(key, value);
+  publishSameTab(key, value, scope);
   return true;
 }
 
@@ -399,15 +414,15 @@ export function setPrefAutosave<T>(
  * Notifies same-tab subscribers that the value is gone (publishes `undefined`).
  * SSR no-op. Returns nothing — there is no failure mode worth surfacing.
  */
-export function removePrefAutosave(suffix: string): void {
+export function removePrefAutosave(suffix: string, scope = accountScope.capture()): void {
   if (!validateSuffix("removePrefAutosave", suffix)) return;
   if (typeof window === "undefined") return;
 
   const key = `xai_pref_${suffix}`;
   try {
-    localStorage.removeItem(key);
+    localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {
     return;
   }
-  publishSameTab(key, undefined);
+  publishSameTab(key, undefined, scope);
 }

@@ -127,3 +127,7 @@ Inherited verbatim from `docs/reviews/xai-web-persistence-contract/20260523-disc
 - Telemetry / `Sentry.captureException` on storage errors (deferred to a future row).
 - BroadcastChannel cross-tab fan-out (deferred to a future row).
 - Debouncing of writes (deferred to a future row as opt-in `usePrefDebounced`).
+
+## REL-03 ownership and migration
+
+The runtime starts locked until authentication and committed generation resolution complete. Mounted account hooks capture the current immutable scope and cannot write after it changes. The host mounts `AccountDataGate`; its presentation belongs to the storage package. Unowned data is never automatically assigned to the next login. Empty/import/postpone are explicit choices, with raw archives, candidate journals and rollback. The generation marker is the sole visibility commit after local and encrypted-store verification. This implements local account isolation only and does not unfreeze account cloud sync.

@@ -1,3 +1,4 @@
+import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TIME_TRACKER_CATEGORIES } from "./defaults.js";
 import { entryDuration, entryStart, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
@@ -96,26 +97,26 @@ function safeParse(raw: string | null): unknown {
   }
 }
 
-function readJson(key: string): unknown {
+function readJson(key: string, scope = accountScope.capture()): unknown {
   if (typeof window === "undefined") return null;
-  return safeParse(window.localStorage.getItem(key));
+  return safeParse(window.localStorage.getItem(accountScope.physicalKey(key, scope)));
 }
 
-function writeJson<T>(key: string, value: T): void {
+function writeJson<T>(key: string, value: T, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  window.localStorage.setItem(accountScope.physicalKey(key, scope), JSON.stringify(value));
   window.dispatchEvent(new CustomEvent(TIME_TRACKER_STORAGE_EVENT, { detail: { key } }));
 }
 
-export function readTimeTrackerCategories(): TimeTrackerCategory[] {
-  const raw = readJson(TIME_TRACKER_CATEGORIES_KEY);
+export function readTimeTrackerCategories(scope = accountScope.capture()): TimeTrackerCategory[] {
+  const raw = readJson(TIME_TRACKER_CATEGORIES_KEY, scope);
   if (!Array.isArray(raw)) return [...DEFAULT_TIME_TRACKER_CATEGORIES];
   const categories = raw.filter(isCategory).filter((category) => category.deleted !== true).map(normalizeCategory);
   return categories.length > 0 ? categories : [...DEFAULT_TIME_TRACKER_CATEGORIES];
 }
 
-export function readTimeTrackerEntries(): TimeTrackerEntry[] {
-  const raw = readJson(TIME_TRACKER_ENTRIES_KEY);
+export function readTimeTrackerEntries(scope = accountScope.capture()): TimeTrackerEntry[] {
+  const raw = readJson(TIME_TRACKER_ENTRIES_KEY, scope);
   if (!Array.isArray(raw)) return [];
   return raw.filter(isEntry).filter((entry) => entry.deleted !== true);
 }
@@ -125,12 +126,12 @@ export function readTimeTrackerMode(): TimeTrackerMode {
   return window.localStorage.getItem(TIME_TRACKER_MODE_KEY) === "multi" ? "multi" : "single";
 }
 
-export function writeTimeTrackerCategories(categories: readonly TimeTrackerCategory[]): void {
-  writeJson(TIME_TRACKER_CATEGORIES_KEY, categories);
+export function writeTimeTrackerCategories(categories: readonly TimeTrackerCategory[], scope = accountScope.capture()): void {
+  writeJson(TIME_TRACKER_CATEGORIES_KEY, categories, scope);
 }
 
-export function writeTimeTrackerEntries(entries: readonly TimeTrackerEntry[]): void {
-  writeJson(TIME_TRACKER_ENTRIES_KEY, entries);
+export function writeTimeTrackerEntries(entries: readonly TimeTrackerEntry[], scope = accountScope.capture()): void {
+  writeJson(TIME_TRACKER_ENTRIES_KEY, entries, scope);
 }
 
 export function writeTimeTrackerMode(mode: TimeTrackerMode): void {
@@ -207,8 +208,9 @@ export function getTimeTrackerSnapshot(nowMs = Date.now()): TimeTrackerSnapshot 
   };
 }
 
-export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => void): readonly [T, (next: T | ((prev: T) => T)) => void] {
-  const [value, setValue] = useState<T>(read);
+export function useTimeTrackerStorage<T>(read: (scope?: AccountScope) => T, write: (value: T, scope?: AccountScope) => void): readonly [T, (next: T | ((prev: T) => T)) => void] {
+  const scope = useRef(accountScope.capture()).current;
+  const [value, setValue] = useState<T>(() => read(scope));
   const valueRef = useRef(value);
 
   useEffect(() => {
@@ -217,7 +219,8 @@ export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => voi
 
   useEffect(() => {
     function refresh(): void {
-      const nextValue = read();
+      if (!accountScope.isReady(scope)) return;
+      const nextValue = read(scope);
       valueRef.current = nextValue;
       setValue(nextValue);
     }
@@ -231,9 +234,10 @@ export function useTimeTrackerStorage<T>(read: () => T, write: (value: T) => voi
 
   const setStored = useCallback(
     (next: T | ((prev: T) => T)) => {
+      if (!accountScope.isReady(scope)) return;
       const nextValue = typeof next === "function" ? (next as (prev: T) => T)(valueRef.current) : next;
       valueRef.current = nextValue;
-      write(nextValue);
+      write(nextValue, scope);
       setValue(nextValue);
     },
     [write],
@@ -259,3 +263,6 @@ export function useTimeTrackerMode(): readonly [TimeTrackerMode, (next: TimeTrac
 export function useCategoryMap(categories: readonly TimeTrackerCategory[]): ReadonlyMap<string, TimeTrackerCategory> {
   return useMemo(() => new Map(categories.map((category) => [category.id, category])), [categories]);
 }
+
+registerAccountMigrationValidator(TIME_TRACKER_CATEGORIES_KEY, value => Array.isArray(value) && value.every(isCategory));
+registerAccountMigrationValidator(TIME_TRACKER_ENTRIES_KEY, value => Array.isArray(value) && value.every(isEntry));

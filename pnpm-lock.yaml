@@ -1054,6 +1054,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-storage':
+        specifier: workspace:*
+        version: link:../plugin-web-storage
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
@@ -1152,6 +1155,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-storage':
+        specifier: workspace:*
+        version: link:../plugin-web-storage
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
@@ -1446,6 +1452,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../core
+      '@repo/plugin-web-storage':
+        specifier: workspace:*
+        version: link:../plugin-web-storage
       '@repo/plugin-web-tokens':
         specifier: workspace:*
         version: link:../plugin-web-tokens
@@ -1727,6 +1736,9 @@ importers:
       fake-indexeddb:
         specifier: ^6.2.4
         version: 6.2.5
+      jsdom:
+        specifier: ^25.0.0
+        version: 25.0.1
       typescript:
         specifier: 5.9.2
         version: 5.9.2

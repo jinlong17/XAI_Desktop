@@ -1,3 +1,4 @@
+import "./internal/accountMigration.js";
 /**
  * @repo/plugin-web-board-core — public surface.
  *

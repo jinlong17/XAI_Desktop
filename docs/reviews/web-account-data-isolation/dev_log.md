@@ -8,12 +8,12 @@
 | Target | web-account-data-isolation |
 | Title | REL-03 business data and BYOK cross-account isolation |
 | Module | web |
-| Status | FIX_READY |
-| Current Phase | BUG_DIAGNOSE |
-| Suggested Next | bug-fix |
+| Status | IN_PROGRESS |
+| Current Phase | BUG_FIX |
+| Suggested Next | Complete parallel owner integration, then independent bug-verify |
 | Automation Mode | A-Codex |
 | Verify Cross-vendor | pending; no PASS claimed |
-| Executor | bug-diagnose (Codex) |
+| Executor | bug-fix (Codex), parallel owner integration |
 | Updated | 2026-09-09 |
 | Blockers | Implementation must preserve unowned legacy data; no automatic first-account adoption |
 
@@ -26,3 +26,5 @@ Authoritative strategy: [20260909-rel03-diagnosis.md](20260909-rel03-diagnosis.m
 | Timestamp | Executor | Goal / Done / Tests / Risks | Commits | Next |
 |---|---|---|---|---|
 | 2026-09-09 | bug-diagnose (Codex) | Goal: REL-03 isolation. Done: two-perspective auth/storage analysis, ownership inventory, migration and epoch strategy. Tests: 2 characterization cases PASS (leaks reproduced). Risks: no live-auth browser verification; cross-backend migration needs staged generation commit, fail-closed switch and rollback. | — (diagnosis only; no product code or commit) | bug-fix |
+
+| 2026-09-09 | bug-fix (Codex) | Goal: full local ownership and migration. Done: scope/registry/hooks, transactional generation migration, recovery APIs, captured-owner lifecycle, three repository adapters and owner blob guards. Tests: storage 113 PASS before final recovery addition; migration 10 PASS; three A/B/A repository cases PASS; Web typecheck PASS. Risks: parent host/AI/settings independent verification remains required, no cross-vendor PASS claimed. | Pending exact implementation commit | parent independent bug-verify |

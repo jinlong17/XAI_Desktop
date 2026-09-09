@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { StrictMode } from "react";
@@ -37,7 +38,7 @@ describe("TimeTrackerModule", () => {
       fireEvent.click(screen.getByLabelText("Remove status card Month progress"));
     });
     expect(screen.queryByText("8 days left")).not.toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).not.toContain("month");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1"))).not.toContain("month");
 
     act(() => {
       fireEvent.click(screen.getByLabelText("Add status card"));
@@ -46,7 +47,7 @@ describe("TimeTrackerModule", () => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Month progress" }));
     });
     expect(screen.getByText("8 days left")).toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).toContain("month");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1"))).toContain("month");
     expect(Array.from(container.querySelectorAll(".tt-time-card-copy em")).map((node) => node.textContent).slice(0, 2)).toEqual(["Current date", "Month progress"]);
 
     const yearCard = screen.getByText("Year progress").closest("article");
@@ -55,7 +56,7 @@ describe("TimeTrackerModule", () => {
       fireEvent.contextMenu(yearCard!);
     });
     expect(screen.queryByText("222 days left")).not.toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_time_status_cards_v1")).not.toContain("year");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1"))).not.toContain("year");
 
     act(() => {
       fireEvent.click(screen.getByLabelText("Hide time status"));
@@ -63,7 +64,7 @@ describe("TimeTrackerModule", () => {
 
     expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
     expect(screen.getByText("Time status hidden")).toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("1");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_hidden_v1"))).toBe("1");
 
     unmount();
     render(<TimeTrackerModule lang="en" />);
@@ -75,7 +76,7 @@ describe("TimeTrackerModule", () => {
     });
 
     expect(screen.getByText("Saturday")).toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_time_status_hidden_v1")).toBe("0");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_hidden_v1"))).toBe("0");
   });
 
   it("reorders time status cards by drag and persists the order", () => {
@@ -93,7 +94,7 @@ describe("TimeTrackerModule", () => {
 
     const labels = Array.from(container.querySelectorAll(".tt-time-card-copy em")).map((node) => node.textContent);
     expect(labels.slice(0, 2)).toEqual(["Month progress", "Current date"]);
-    expect(JSON.parse(localStorage.getItem("xai_tt_time_status_cards_v1") ?? "[]")).toEqual(["month", "date", "year", "today", "active"]);
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1")) ?? "[]")).toEqual(["month", "date", "year", "today", "active"]);
   });
 
   it("creates and restores custom target time status cards", () => {
@@ -115,9 +116,9 @@ describe("TimeTrackerModule", () => {
 
     expect(screen.getByText("Launch")).toBeInTheDocument();
     expect(screen.getByText("Target: May 25 12:00")).toBeInTheDocument();
-    const customCards = JSON.parse(localStorage.getItem("xai_tt_time_status_custom_cards_v1") ?? "[]") as Array<{ name?: string }>;
+    const customCards = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_custom_cards_v1")) ?? "[]") as Array<{ name?: string }>;
     expect(customCards[0]?.name).toBe("Launch");
-    expect(JSON.parse(localStorage.getItem("xai_tt_time_status_cards_v1") ?? "[]").some((key: string) => key.startsWith("custom:"))).toBe(true);
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1")) ?? "[]").some((key: string) => key.startsWith("custom:"))).toBe(true);
 
     act(() => {
       fireEvent.click(screen.getByLabelText("Remove status card Launch"));
@@ -300,7 +301,7 @@ describe("TimeTrackerModule", () => {
 
     expect(screen.queryByText("Review notes")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Show records")).toHaveAttribute("aria-expanded", "false");
-    expect(localStorage.getItem("xai_tt_day_records_collapsed_v1")).toBe("1");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_day_records_collapsed_v1"))).toBe("1");
 
     unmount();
     render(<TimeTrackerModule lang="en" />);
@@ -312,7 +313,7 @@ describe("TimeTrackerModule", () => {
 
     expect(screen.getByText("Review notes")).toBeInTheDocument();
     expect(screen.getByLabelText("Hide records")).toHaveAttribute("aria-expanded", "true");
-    expect(localStorage.getItem("xai_tt_day_records_collapsed_v1")).toBe("0");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_day_records_collapsed_v1"))).toBe("0");
   });
 
   it("adjusts a completed record time with inline hour minute second controls", () => {
@@ -376,7 +377,7 @@ describe("TimeTrackerModule", () => {
 
     expect(within(studyCard!).queryByRole("button", { name: "Start Code" })).not.toBeInTheDocument();
     expect(within(studyCard!).getByLabelText("Show subcategories Study")).toHaveAttribute("aria-expanded", "false");
-    expect(localStorage.getItem("xai_tt_category_collapsed_v1")).toContain("cat_study");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_category_collapsed_v1"))).toContain("cat_study");
 
     unmount();
     render(<TimeTrackerModule lang="en" />);
@@ -390,7 +391,7 @@ describe("TimeTrackerModule", () => {
 
     expect(within(restoredStudyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
     expect(within(restoredStudyCard!).getByLabelText("Hide subcategories Study")).toHaveAttribute("aria-expanded", "true");
-    expect(localStorage.getItem("xai_tt_category_collapsed_v1")).toBe("[]");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_category_collapsed_v1"))).toBe("[]");
   });
 
   it("starts multiple subcategory sessions in parallel without switch confirmation", () => {
@@ -548,7 +549,7 @@ describe("TimeTrackerModule", () => {
   });
 
   it("backfills missing stored subcategory color and icon without dropping old data", () => {
-    localStorage.setItem(TIME_TRACKER_CATEGORIES_KEY, JSON.stringify([
+    localStorage.setItem(accountScope.physicalKey(TIME_TRACKER_CATEGORIES_KEY), JSON.stringify([
       {
         id: "cat_study",
         name: { en: "Study", zh: "学习" },
@@ -580,7 +581,7 @@ describe("TimeTrackerModule", () => {
     expect(screen.queryByText("Where time went")).not.toBeInTheDocument();
     expect(screen.queryByText("7-day trend")).not.toBeInTheDocument();
     expect(screen.getByText("Insights hidden")).toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_sidebar_insights_hidden_v1")).toBe("1");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_sidebar_insights_hidden_v1"))).toBe("1");
 
     act(() => {
       fireEvent.click(screen.getByText("Show"));
@@ -588,7 +589,7 @@ describe("TimeTrackerModule", () => {
 
     expect(screen.getByText("Where time went")).toBeInTheDocument();
     expect(screen.getByText("7-day trend")).toBeInTheDocument();
-    expect(localStorage.getItem("xai_tt_sidebar_insights_hidden_v1")).toBe("0");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_tt_sidebar_insights_hidden_v1"))).toBe("0");
   });
 
   it("renders the configurable insights board", () => {

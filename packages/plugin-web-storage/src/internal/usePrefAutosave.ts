@@ -15,8 +15,9 @@
 import { useEffect, useRef } from "react";
 import type { PrefCodec } from "./registry.js";
 import { encode } from "./codec.js";
-import { isPrefKey } from "./storage.js";
-import { publishSameTab } from "./storage.js";
+import { isPrefKey, setPrefAutosave } from "./storage.js";
+import { accountScope } from "./accountScope.js";
+
 
 export interface UsePrefAutosaveOptions {
   /** Codec used to serialize the value. Default: "json". */
@@ -36,6 +37,7 @@ export function usePrefAutosave<T>(
   value: T,
   options?: UsePrefAutosaveOptions,
 ): void {
+  const scope = useRef(accountScope.capture()).current;
   const codec: PrefCodec = options?.codec ?? "json";
   const key = `xai_pref_${suffix}`;
 
@@ -66,27 +68,8 @@ export function usePrefAutosave<T>(
     // Idempotency: skip write if value is unchanged
     if (prevEncodedRef.current === encoded) return;
 
-    const existing = localStorage.getItem(key);
-    if (existing === encoded) {
+    if (setPrefAutosave(suffix, value, { codec, scope })) {
       prevEncodedRef.current = encoded;
-      return;
-    }
-
-    try {
-      localStorage.setItem(key, encoded);
-      prevEncodedRef.current = encoded;
-      // Notify same-tab subscribers
-      publishSameTab(key, value);
-    } catch (err) {
-      if (
-        err instanceof DOMException &&
-        (err.name === "QuotaExceededError" ||
-          err.name === "NS_ERROR_DOM_QUOTA_REACHED")
-      ) {
-        console.warn(`[plugin-web-storage] quota exceeded for ${key}.`);
-      } else {
-        console.warn(`[plugin-web-storage] setItem failed for ${key}:`, err);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);

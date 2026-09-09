@@ -59,3 +59,18 @@ export type { UsePrefAutosaveOptions } from "./internal/usePrefAutosave.js";
 
 // ---- migrate stub (v1 — no registered migrations) -------------------------
 export { migrate } from "./internal/migrate.js";
+
+// Account-local isolation and explicit legacy migration (REL-03).
+export { accountScope, createAccountScopeController, createScopedStorage, AccountScopeError, accountPrefix, generationKey, generationMarkerKey } from "./internal/accountScope.js";
+export type { AccountScope, AccountScopeController } from "./internal/accountScope.js";
+export { LOCAL_KEY_OWNERSHIP, ACCOUNT_LOCAL_KEYS, ownershipForKey } from "./internal/accountOwnership.js";
+export { inspectLegacy, migrateAccount, readGeneration, rollbackAccount, browserMigrationLock, listAccountMigrations } from "./internal/accountMigration.js";
+export type { GenerationMarker, SecretMigrationParticipant, SecretMigrationContext, MigrationLock, MigrationJournalInfo } from "./internal/accountMigration.js";
+export { readRawPref } from "./internal/storage.js";
+
+export { registerAccountMigrationValidator, accountMigrationIssue } from "./internal/accountMigrationValidation.js";
+
+export { AccountDataGate, requestAccountDataManagement } from "./AccountDataGate.js";
+export type { AccountDataGateProps } from "./AccountDataGate.js";
+
+export { exportAccountLocalData, deleteAccountLocalData } from "./internal/accountDataLifecycle.js";

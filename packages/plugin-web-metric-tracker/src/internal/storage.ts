@@ -1,3 +1,4 @@
+import { accountScope, registerAccountMigrationValidator } from "@repo/plugin-web-storage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { MetricTrackerState, WeightProfile, WeightRecord } from "../types.js";
 import { createSeedMetricTrackerState, DEFAULT_METRICS, DEFAULT_PROFILE, METRIC_TRACKER_STATE_KEY, METRIC_TRACKER_STORAGE_EVENT } from "./seed.js";
@@ -59,14 +60,14 @@ function dispatchStorageEvent(): void {
   window.dispatchEvent(new CustomEvent(METRIC_TRACKER_STORAGE_EVENT));
 }
 
-export function readMetricTrackerState(): MetricTrackerState {
+export function readMetricTrackerState(scope = accountScope.capture()): MetricTrackerState {
   if (typeof window === "undefined") return createSeedMetricTrackerState();
-  return normalizeState(safeParse(window.localStorage.getItem(METRIC_TRACKER_STATE_KEY)));
+  return normalizeState(safeParse(window.localStorage.getItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope))));
 }
 
-export function writeMetricTrackerState(state: MetricTrackerState): void {
+export function writeMetricTrackerState(state: MetricTrackerState, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(METRIC_TRACKER_STATE_KEY, JSON.stringify(state));
+  window.localStorage.setItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope), JSON.stringify(state));
   dispatchStorageEvent();
 }
 
@@ -112,12 +113,14 @@ export function createWeightRecordId(now = Date.now()): string {
 }
 
 export function useMetricTrackerState(): readonly [MetricTrackerState, (next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => void] {
-  const [state, setState] = useState<MetricTrackerState>(readMetricTrackerState);
+  const scope = useRef(accountScope.capture()).current;
+  const [state, setState] = useState<MetricTrackerState>(() => readMetricTrackerState(scope));
   const stateRef = useRef(state);
 
   useEffect(() => {
     function refresh(): void {
-      const next = readMetricTrackerState();
+      if (!accountScope.isReady(scope)) return;
+      const next = readMetricTrackerState(scope);
       stateRef.current = next;
       setState(next);
     }
@@ -130,11 +133,14 @@ export function useMetricTrackerState(): readonly [MetricTrackerState, (next: Me
   }, []);
 
   const setPersisted = useCallback((next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => {
+    if (!accountScope.isReady(scope)) return;
     const value = typeof next === "function" ? next(stateRef.current) : next;
+    writeMetricTrackerState(value, scope);
     stateRef.current = value;
-    writeMetricTrackerState(value);
     setState(value);
   }, []);
 
   return [state, setPersisted];
 }
+
+registerAccountMigrationValidator(METRIC_TRACKER_STATE_KEY, value => isRecord(value) && value["schemaVersion"] === 1 && isWeightProfile(value["profile"]) && Array.isArray(value["records"]) && value["records"].every(isWeightRecord));

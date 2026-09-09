@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { MetricTrackerModule } from "../MetricTrackerModule.js";
@@ -60,7 +61,7 @@ describe('editing keeps absolute measurement instants', () => {
   it.each(['2026-11-01T09:30:00.000Z', '2026-09-09T18:30:45.123Z'])(
     'retains %s when only weight changes', original => {
       const state = readMetricTrackerState();
-      localStorage.setItem('xai_metric_tracker_state_v1', JSON.stringify({
+      localStorage.setItem(accountScope.physicalKey('xai_metric_tracker_state_v1'), JSON.stringify({
         ...state, records: [{ ...state.records[0], id: 'instant-test', measuredAt: original }],
       }));
       render(<MetricTrackerModule lang="en" />);

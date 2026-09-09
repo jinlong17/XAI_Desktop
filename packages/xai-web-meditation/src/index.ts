@@ -1,3 +1,4 @@
+import "./internal/accountMigration.js";
 /**
  * @repo/plugin-web-meditation — public surface.
  *

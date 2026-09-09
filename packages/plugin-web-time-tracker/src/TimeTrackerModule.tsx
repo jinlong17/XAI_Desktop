@@ -1,3 +1,4 @@
+import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
 import { addLocalDays, nextLocalDayStart } from "@repo/plugin-web-tokens";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
@@ -398,7 +399,7 @@ function rangeLabel(startMs: number, endMs: number, lang: Lang): string {
 function readInsightBoard(): InsightCard[] {
   if (typeof window === "undefined") return defaultInsightBoard();
   try {
-    const raw = JSON.parse(window.localStorage.getItem(INSIGHTS_KEY) ?? "null") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(INSIGHTS_KEY)) ?? "null") as unknown;
     if (Array.isArray(raw) && raw.length > 0) {
       const allowed = new Set(INSIGHT_DEFS.map((def) => def.type));
       const cards = raw.filter((item): item is InsightCard => {
@@ -434,13 +435,13 @@ function defaultInsightBoard(): InsightCard[] {
 
 function readSidebarInsightsHidden(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(SIDEBAR_INSIGHTS_KEY) === "1";
+  return window.localStorage.getItem(accountScope.physicalKey(SIDEBAR_INSIGHTS_KEY)) === "1";
 }
 
 function readCollapsedCategoryIds(): ReadonlySet<string> {
   if (typeof window === "undefined") return new Set();
   try {
-    const raw = JSON.parse(window.localStorage.getItem(CATEGORY_COLLAPSED_KEY) ?? "[]") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(CATEGORY_COLLAPSED_KEY)) ?? "[]") as unknown;
     if (!Array.isArray(raw)) return new Set();
     return new Set(raw.filter((item): item is string => typeof item === "string" && item !== ""));
   } catch {
@@ -450,12 +451,12 @@ function readCollapsedCategoryIds(): ReadonlySet<string> {
 
 function readDayRecordsCollapsed(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(DAY_RECORDS_COLLAPSED_KEY) === "1";
+  return window.localStorage.getItem(accountScope.physicalKey(DAY_RECORDS_COLLAPSED_KEY)) === "1";
 }
 
 function readTimeStatusHidden(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(TIME_STATUS_HIDDEN_KEY) === "1";
+  return window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_HIDDEN_KEY)) === "1";
 }
 
 function customTimeStatusKey(id: string): TimeStatusCardKey {
@@ -473,7 +474,7 @@ function isTimeStatusCardKey(value: unknown): value is TimeStatusCardKey {
 function readTimeStatusCardKeys(): readonly TimeStatusCardKey[] {
   if (typeof window === "undefined") return DEFAULT_TIME_STATUS_CARDS;
   try {
-    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CARDS_KEY) ?? "null") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_CARDS_KEY)) ?? "null") as unknown;
     if (!Array.isArray(raw)) return DEFAULT_TIME_STATUS_CARDS;
     const seen = new Set<TimeStatusCardKey>();
     const keys = raw.filter((item): item is TimeStatusCardKey => {
@@ -490,7 +491,7 @@ function readTimeStatusCardKeys(): readonly TimeStatusCardKey[] {
 function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = JSON.parse(window.localStorage.getItem(TIME_STATUS_CUSTOM_CARDS_KEY) ?? "[]") as unknown;
+    const raw = JSON.parse(window.localStorage.getItem(accountScope.physicalKey(TIME_STATUS_CUSTOM_CARDS_KEY)) ?? "[]") as unknown;
     if (!Array.isArray(raw)) return [];
     return raw.filter((item): item is TimeStatusCustomCard => {
       if (typeof item !== "object" || item === null) return false;
@@ -507,6 +508,7 @@ function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
 }
 
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
+  const scope = useRef(accountScope.capture()).current;
   const [categories, setCategories] = useTimeTrackerCategories();
   const [entries, setEntries] = useTimeTrackerEntries();
   const [view, setView] = useState<TrackerView>("tracker");
@@ -537,19 +539,19 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   }, [hasActive]);
 
   useEffect(() => {
-    window.localStorage.setItem(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0");
+    writeTrackerUi(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0", scope);
   }, [sidebarInsightsHidden]);
 
   useEffect(() => {
-    window.localStorage.setItem(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]));
+    writeTrackerUi(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]), scope);
   }, [collapsedCategoryIds]);
 
   useEffect(() => {
-    window.localStorage.setItem(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0");
+    writeTrackerUi(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0", scope);
   }, [dayRecordsCollapsed]);
 
   useEffect(() => {
-    window.localStorage.setItem(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0");
+    writeTrackerUi(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0", scope);
   }, [timeStatusHidden]);
 
   useEffect(() => {
@@ -1090,6 +1092,7 @@ function TimeStatusPanel({
   readonly hidden: boolean;
   readonly onSetHidden: (hidden: boolean) => void;
 }) {
+  const scope = useRef(accountScope.capture()).current;
   const [visibleCardKeys, setVisibleCardKeys] = useState(readTimeStatusCardKeys);
   const [customCards, setCustomCards] = useState(readTimeStatusCustomCards);
   const [customEditorOpen, setCustomEditorOpen] = useState(false);
@@ -1172,12 +1175,12 @@ function TimeStatusPanel({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys));
+    writeTrackerUi(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys), scope);
   }, [visibleCardKeys]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards));
+    writeTrackerUi(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards), scope);
   }, [customCards]);
 
   function removeCard(key: TimeStatusCardKey): void {
@@ -2780,6 +2783,7 @@ function InsightsBoard({
   readonly categoryMap: ReadonlyMap<string, TimeTrackerCategory>;
   readonly onDeleteRange: (rangeEntries: readonly TimeTrackerEntry[], label: string) => void;
 }) {
+  const scope = useRef(accountScope.capture()).current;
   const [range, setRange] = useState<InsightRange>("week");
   const [customStart, setCustomStart] = useState(() => dateInputValue(addLocalDays(nowMs, -29).getTime()));
   const [customEnd, setCustomEnd] = useState(() => dateInputValue(nowMs));
@@ -2789,7 +2793,7 @@ function InsightsBoard({
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
-    window.localStorage.setItem(INSIGHTS_KEY, JSON.stringify(cards));
+    writeTrackerUi(INSIGHTS_KEY, JSON.stringify(cards), scope);
   }, [cards]);
 
   const customA = keyToDate(customStart);
@@ -3577,3 +3581,18 @@ function ConfirmDialog({
     </Modal>
   );
 }
+
+function writeTrackerUi(key: string, value: string, scope: AccountScope): void {
+  if (!accountScope.isReady(scope)) return;
+  window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
+}
+registerAccountMigrationValidator(INSIGHTS_KEY, value => Array.isArray(value) && value.every(item => {
+  if (!item || typeof item !== "object") return false;
+  const card = item as Record<string, unknown>;
+  return typeof card.iid === "string" && INSIGHT_DEFS.some(def => def.type === card.type) && (card.catId == null || typeof card.catId === "string");
+}));
+registerAccountMigrationValidator(TIME_STATUS_CUSTOM_CARDS_KEY, value => Array.isArray(value) && value.every(item => {
+  if (!item || typeof item !== "object") return false;
+  const card = item as Record<string, unknown>;
+  return typeof card.id === "string" && card.id.trim() !== "" && typeof card.name === "string" && card.name.trim() !== "" && [card.targetMs, card.createdAt, card.updatedAt].every(value => typeof value === "number" && Number.isFinite(value));
+}));

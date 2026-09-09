@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, it } from "vitest";
 import { createSeedMetricTrackerState, METRIC_TRACKER_STATE_KEY } from "../internal/seed.js";
 import { deleteWeightRecord, readMetricTrackerState, updateWeightProfile, upsertWeightRecord, writeMetricTrackerState } from "../internal/storage.js";
@@ -13,7 +14,7 @@ describe("metric tracker storage", () => {
   it("persists normalized state", () => {
     const state = createSeedMetricTrackerState();
     writeMetricTrackerState(state);
-    expect(JSON.parse(localStorage.getItem(METRIC_TRACKER_STATE_KEY) ?? "{}")).toMatchObject({ schemaVersion: 1 });
+    expect(JSON.parse(localStorage.getItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY)) ?? "{}")).toMatchObject({ schemaVersion: 1 });
     expect(readMetricTrackerState().records).toHaveLength(state.records.length);
   });
 

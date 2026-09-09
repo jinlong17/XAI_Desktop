@@ -97,3 +97,9 @@ Auth state-change callback should invalidate local scope synchronously and sched
 ## External source verification
 
 Supabase Skill read. Changelog fetched as markdown using curl after web tool rejected its content type; current entries inspected. Relevant recent auth breaking entry concerns self-hosted URL configuration; this repair changes no endpoints/config. Official [onAuthStateChange documentation](https://supabase.com/docs/reference/javascript/auth-onauthstatechange) supports using auth lifecycle events. The diagnosis is based on repository behavior, not presumed SDK internals. No Supabase client/version, SQL/RLS, service credentials or network integration are modified.
+
+## Implementation refinement — 2026-09-09
+
+The existing open-ended `xai_pref_*` API remains compatible: unknown new preference names default to account-private. Unknown **unowned** legacy names still cannot be adopted without classification; archives preserve them verbatim. Generation migration enumerates every already-owned private key, including these open-ended preferences, so subsequent imports cannot hide existing custom values.
+
+Module guards are registered by each consumer package through its public entry point, avoiding a storage-to-consumer dependency cycle and keeping business formats with their owners. Invalid blobs remain in the original unowned key and raw archive; migration refuses publication. A prepared journal is exposed through `listAccountMigrations`; retry builds a new invisible candidate rather than discarding interrupted bytes. Captured-account deletion writes a tombstone before removing generations, preventing stale work from recreating deleted data. Web Locks serialize commits and rollback across tabs; unavailable lock support fails explicitly.
