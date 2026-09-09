@@ -183,7 +183,13 @@
         "../web-tasks-canonical-ui-independent/review.md",
         "commit:0a294bc",
         "commit:8503b71",
-        "../web-tasks-canonical-ui-independent/tasks-ui-retry-35b4964.log"
+        "../web-tasks-canonical-ui-independent/tasks-ui-retry-35b4964.log",
+        "commit:1998df3",
+        "commit:9a7e66b",
+        "../web-calendar-d1-fixture-repair/20260909-calendar-fixture-repair.md",
+        "commit:1829c3a",
+        "../web-board-canonical-link-independent/review.md",
+        "commit:56f1aaf"
       ]
     },
     {
@@ -865,7 +871,13 @@
         "commit:0a294bc",
         "commit:8503b71",
         "../web-tasks-canonical-ui-independent/tasks-ui-retry-35b4964.log",
-        "commit:6efba71"
+        "commit:6efba71",
+        "commit:1998df3",
+        "commit:9a7e66b",
+        "../web-calendar-d1-fixture-repair/20260909-calendar-fixture-repair.md",
+        "commit:1829c3a",
+        "../web-board-canonical-link-independent/review.md",
+        "commit:56f1aaf"
       ]
     },
     {

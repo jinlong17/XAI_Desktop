@@ -154,3 +154,14 @@ No newly closed numbered item: 13/312 completed; 299 remain open.
 Parent fixed-35b4964 rerun now confirms all six Tasks UI assertions PASS. Terra 0a294bc awaits list/tag cascades and detail deletion before cleanup; author full Tasks regression is 156/170 with 14 failures, under active repair. Sol 8503b71 snapshots queued patches; author original Astra 11 assertions pass, Astra non-author re-review is pending. These are bounded progress, not new item closures.
 
 Astra 6efba71 independently accepts the bounded C six-subscriber repair at 8503b71: original 11 assertions all PASS. The old semantic mismatch FAIL remains archived. Native results remain attributed to their tested 4202c79 revision. Full AI-02/D1/D2/production activation are not closed. Tasks remaining async recovery/full regression work is now assigned to Sol (all Tasks product/test files); Terra independently repairs Calendar test fixtures and async expectations in Calendar tests only. This follows the user model split and separates file ownership.
+
+
+## 2026-09-09: Calendar package recovery and remaining D1 entry paths
+
+Terra 1998df3 and 9a7e66b repair Calendar test initialization and async assertions. Author reports 50 files / 372 tests, types and lint PASS; Astra fixed-commit independent verification is in progress. No product synchronous-write bypass was restored.
+
+Parent 56f1aaf independently expanded real TasksModule verification at 94f1183: previous six assertions remain PASS; two new correct FAIL show physically absent initialization and valid legacy normalization reject their own hydrated comparison baseline. Sol owns the product repair and remaining Tasks regressions.
+
+Parent 1829c3a records the next approved Board D1 contract at fixed 94f1183: linking against absent Tasks or an existing canonical envelope fails at the task phase (2 correct FAIL). Invalid physical null/envelope-null still refuse before Board intent (2 PASS). This must be fixed through the common async Tasks writer while preserving ordered intent/task/ack and owner/source rechecks, not by restoring a synchronous bypass. Board D1 implementation remains pending after current dependency work.
+
+The full 312-item objective is unchanged: 13 completed, 299 open.
