@@ -1,0 +1,13 @@
+# D1 ordinary writer: independent initial regression findings
+
+Web; fixed product `3a764a16d8da3df91e00ed2e9a7cd3925fec57ac`. The runner imports an immutable git archive, excluding ongoing UI/subscriber edits. Run `node docs/reviews/web-canonical-ordinary-writer-review/verify-fixed.mjs 3a764a1`.
+
+**3 correct FAIL / 1 positive-control PASS**, process exit 1. This is jsdom production-function evidence, not native UI acceptance. Shared writer acceptance is pending repair and independent rerun.
+
+1. **Activation is bypassed by the ordinary writer.** With `setCanonicalCommandActivationForTests(false)`, an ordinary update returns success and converts the physical legacy record into an envelope. The approved D1 contract keeps first envelope activation closed. The command API's separate guard does not protect this new entry point.
+2. **In-place mutation can falsely report success.** The mutator appends to the validated input array and returns that data. Because `changed` compares input/output after mutation, the same modified object compares equal to itself. The function returns success/unchanged while physical bytes still contain the empty array. The assertion allows explicit refusal with unchanged original bytes; successful return must mean the changed domain was actually persisted.
+3. **No-op success precedes final account validation.** A mutator invalidates the captured owner and returns unchanged data. The early no-op branch returns success despite the account change. It must perform the final owner/marker/tombstone checks before any successful return, including unchanged results.
+
+The positive control enables activation and performs an immutable update; it correctly writes revision 1 with the expected value. The tests use the real persisted generation marker and physical localStorage key, with an injected serial lock. They do not claim cross-tab concurrency.
+
+Minimum repair remains within Terra's shared-storage ownership: consistent activation guard, a pre-mutation snapshot or explicit mutation refusal instead of a post-mutation same-object comparison, and final checks on the no-op path. Preserve the fixed failure log and rerun these same business oracles. The current C primitive bounded acceptance is unchanged; ordinary-writer/UI/D1 and full AI-02 remain open.
