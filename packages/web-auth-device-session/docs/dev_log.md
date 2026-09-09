@@ -4,6 +4,44 @@
 
 | Field | Value |
 |---|---|
+| Workflow | BUGFIX |
+| Target | web-auth-device-session |
+| Title | REL-02 shared IndexedDB schema initialization |
+| Status | FIX_READY_FOR_VERIFY |
+| Current Phase | BUG_VERIFY |
+| Suggested Next | bug-verify |
+| Automation Mode | A-Codex |
+| Verify Cross-vendor | pending; no cross-vendor PASS claimed |
+| Executor | bug-fix (Codex) |
+| Updated | 2026-09-09 10:57 PDT |
+| Blockers | — |
+
+## REL-02 Diagnosis
+
+- Reproduction: fake-indexeddb fresh database, createAuthSessionStorage().setItem followed by createDeviceIdentityStore().ensure. Fails with NotFoundError: No objectStore named device. Expected both durable stores to work in either order.
+- Root cause: independent idb-keyval createStore calls open the same database without schema version coordination; only the first store is created. Existing tests use memory adapters and miss the database contract.
+- Strategy: shared versioned database manager in storage.ts; default schema v2 includes session/device, migration preserves existing records, connection closes on versionchange, failed or blocked opens reject and permit retry, late connections are closed. Keep custom database/store API working. Add actual IndexedDB regressions and contract documentation.
+- Scope: Web package only; no route/manifest/native or Supabase network changes.
+
+### REL-02 Work Log
+
+| Timestamp | Executor | Action | Commits | Next |
+|---|---|---|---|---|
+| 2026-09-09 10:53 PDT | bug-diagnose (Codex) | Reproduced missing device store; recorded root cause and schema migration strategy. | — | bug-fix |
+
+| 2026-09-09 10:57 PDT | bug-fix (Codex) | Goal: preserve auth/device storage. Done: shared schema, migration and failure lifecycle; Tests: 52/52 package regressions, package/Web type checks; Risks: real browser/live auth not verified. | fix(web-auth-device-session): migrate shared auth database safely | bug-verify |
+
+### REL-02 Fix Result
+
+- Implemented default schema v2 and custom-store upgrades; no deletion or clearing during migration.
+- Reproduction now passes. Existing PKCE memory tests remain unchanged.
+- Verification requested from independent reviewer; no READY_TO_SHIP or cross-vendor PASS claimed.
+- Commit reference: `fix(web-auth-device-session): migrate shared auth database safely` (hash recorded in the subsequent evidence receipt).
+
+## Historical W3 Status Panel
+
+| Field | Value |
+|---|---|
 | Workflow | FEATURE_DEV |
 | Target | web-auth-device-session |
 | Title | W3 browser auth and app-device session foundation |

@@ -174,3 +174,9 @@ Rules:
 - Re-running auth callback handling must not duplicate device registration side effects from the browser perspective.
 - Re-running ordinary sign-out should be safe and local-only.
 - Revoked-device cleanup may invalidate and rotate local `device.id`; ordinary sign-out should not.
+
+## REL-02 IndexedDB lifecycle contract (2026-09-09)
+
+`createIndexedDbStore({ dbName?, storeName? })` keeps its existing promise-based get/set/remove API. Default database: `xai-web-auth`; default store: `session`. Both default auth/device stores are initialized together at minimum version 2, without deleting v1 records. Custom names remain valid and custom stores are added using schema upgrades. Get returns null for absent keys; write/delete resolve on transaction completion.
+
+Open/transaction failures reject the operation; callers may retry. A blocked schema upgrade rejects with `InvalidStateError` describing that another tab must close before retry. Version-change notifications release cached connections, including for database deletion. No auth token or device identifier is logged or migrated outside the owning database. PKCE routing to sessionStorage is unchanged.

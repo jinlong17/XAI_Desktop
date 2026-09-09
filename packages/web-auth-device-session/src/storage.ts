@@ -1,4 +1,4 @@
-import { createStore, del, get, set, type UseStore } from "idb-keyval";
+import { del, get, set, type UseStore } from "idb-keyval";
 import type { SupportedStorage } from "@supabase/supabase-js";
 
 export interface KeyValueStore {
@@ -15,8 +15,97 @@ export interface CreateIndexedDbStoreOptions {
 const DEFAULT_DB_NAME = "xai-web-auth";
 const DEFAULT_STORE_NAME = "session";
 
+interface DatabaseState {
+  stores: Set<string>;
+  connection?: IDBDatabase;
+  opening?: Promise<IDBDatabase>;
+}
+
+// Separate factories also isolate test environments and embedded browser contexts.
+const databases = new WeakMap<IDBFactory, Map<string, DatabaseState>>();
+
+function openDatabase(factory: IDBFactory, name: string, state: DatabaseState, version?: number): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = factory.open(name, version);
+    let settled = false;
+    const fail = (error: unknown) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+    request.onblocked = () => fail(new DOMException(
+      `Database ${name} upgrade is blocked; close other tabs and retry.`, 'InvalidStateError'
+    ));
+    request.onerror = () => fail(request.error);
+    request.onupgradeneeded = () => {
+      // A blocked request cannot be cancelled. Abort its delayed upgrade after rejection.
+      if (settled) {
+        request.transaction?.abort();
+        return;
+      }
+      for (const store of state.stores) {
+        if (!request.result.objectStoreNames.contains(store)) request.result.createObjectStore(store);
+      }
+    };
+    request.onsuccess = () => {
+      const db = request.result;
+      if (settled) {
+        db.close();
+        return;
+      }
+      settled = true;
+      const invalidate = () => {
+        db.close();
+        if (state.connection === db) state.connection = undefined;
+      };
+      db.onversionchange = invalidate;
+      db.onclose = invalidate;
+      resolve(db);
+    };
+  });
+}
+
+async function getDatabase(factory: IDBFactory, name: string, state: DatabaseState): Promise<IDBDatabase> {
+  if (state.opening) await state.opening;
+  const minimumVersion = name === DEFAULT_DB_NAME ? 2 : 1;
+  const valid = (db: IDBDatabase) => db.version >= minimumVersion
+    && [...state.stores].every(store => db.objectStoreNames.contains(store));
+  if (state.connection && valid(state.connection)) return state.connection;
+  const opening = (async () => {
+    let db = state.connection ?? await openDatabase(factory, name, state);
+    if (!valid(db)) {
+      const nextVersion = Math.max(minimumVersion, db.version + 1);
+      db.close();
+      state.connection = undefined;
+      db = await openDatabase(factory, name, state, nextVersion);
+    }
+    state.connection = db;
+    return db;
+  })();
+  state.opening = opening;
+  try {
+    return await opening;
+  } finally {
+    if (state.opening === opening) state.opening = undefined;
+  }
+}
+
 function createUseStore(options: CreateIndexedDbStoreOptions = {}): UseStore {
-  return createStore(options.dbName ?? DEFAULT_DB_NAME, options.storeName ?? DEFAULT_STORE_NAME);
+  const name = options.dbName ?? DEFAULT_DB_NAME;
+  const storeName = options.storeName ?? DEFAULT_STORE_NAME;
+  return async (mode, callback) => {
+    const factory = indexedDB;
+    let byName = databases.get(factory);
+    if (!byName) databases.set(factory, byName = new Map());
+    let state = byName.get(name);
+    if (!state) {
+      state = { stores: new Set(name === DEFAULT_DB_NAME ? ['session', 'device'] : []) };
+      byName.set(name, state);
+    }
+    state.stores.add(storeName);
+    const db = await getDatabase(factory, name, state);
+    return callback(db.transaction(storeName, mode).objectStore(storeName));
+  };
 }
 
 export function createIndexedDbStore(options: CreateIndexedDbStoreOptions = {}): KeyValueStore {

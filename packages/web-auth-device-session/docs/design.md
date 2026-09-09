@@ -132,3 +132,9 @@ Planned thin wrappers only:
 - auth row overreaching into later encrypted-cache/runtime rows
 - route-guard logic drifting between host pages and package code
 - revoked-device cleanup semantics becoming inconsistent with future device-management UI
+
+## REL-02 durable database schema (2026-09-09)
+
+`storage.ts` owns shared connection initialization per IndexedDB factory and database name. The default `xai-web-auth` database has minimum schema version 2 and both `session` and `device` stores. Upgrade creates only missing stores and retains existing records, including v1 databases initialized by either adapter. Existing higher versions are opened without downgrade. Custom database/store options remain supported; missing custom stores are added through a version upgrade.
+
+Connections close and invalidate their cache on `versionchange`/`close`. Open failures do not retain a rejected cache entry. A blocked upgrade rejects promptly instead of keeping auth initialization pending; a delayed rejected request aborts its upgrade or closes a late successful connection. The user must close the older blocking tab before retrying. This patch does not introduce a login UI retry control or change account/session security policy.
