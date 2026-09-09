@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import type { CountdownCard, CountdownViewMode } from "./types.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import { useCountdownSaveRecovery } from "./internal/useCountdownSaveRecovery.js";
 import {
   addCard,
   deleteCard,
@@ -69,7 +69,9 @@ function sameStorageShape(a: unknown, b: CountdownCard[]): boolean {
 
 export function CountdownModule({ lang }: CountdownModuleProps) {
   const { t } = useI18n(lang);
-  const [rawCards, setRawCards] = usePref("xai_countdowns");
+  const recovery = useCountdownSaveRecovery();
+  const { rawCards } = recovery;
+  const [exportFailed, setExportFailed] = useState(false);
   const [modal, setModal] = useState<ModalState>({ mode: "closed" });
   const [view, setView] = useState<CountdownViewMode>("cards");
   const [dragState, setDragState] = useState<DragState>({ draggingId: null, targetId: null });
@@ -91,11 +93,11 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
   }, []);
 
   useEffect(() => {
-    setRawCards((prev) => {
-      const merged = mergePresetCountdowns(prev, new Date());
-      return sameStorageShape(prev, merged) ? prev : merged;
-    });
-  }, [setRawCards, todayKey]);
+    const merged = mergePresetCountdowns(rawCards, new Date());
+    if (!sameStorageShape(rawCards, merged)) recovery.mutate(() => merged, 'presets');
+    // Automatic reconciliation runs once per local day; failures require explicit retry.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todayKey]);
 
   const cards = useMemo(() => mergePresetCountdowns(rawCards, now), [rawCards, now]);
   const activeCards = useMemo(() => sortedCountdowns(cards.filter(isCardVisible)), [cards]);
@@ -105,33 +107,52 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
   const presetCount = cards.filter((card) => card.source === "preset").length;
 
   function openCreate() {
+    if (recovery.error) return;
     setModal({ mode: "create" });
   }
 
   function openEdit(card: CountdownCard) {
+    if (recovery.error) return;
     setModal({ mode: "edit", card });
   }
 
   function closeModal() {
+    recovery.discard(); setExportFailed(false);
     setModal({ mode: "closed" });
   }
 
   function mutateCards(mutator: (cards: CountdownCard[]) => CountdownCard[]) {
-    setRawCards((prev) => mutator(mergePresetCountdowns(prev, new Date())));
+    return recovery.mutate(mutator);
   }
 
-  function handleSave(draft: Omit<CountdownCard, "id">) {
-    mutateCards((prev) => {
+  function editorCurrent(): boolean {
+    return modal.mode !== 'edit' || JSON.stringify(cards.find(card => card.id === modal.card.id)) === JSON.stringify(modal.card);
+  }
+  function handleSave(draft: Omit<CountdownCard, "id">): boolean {
+    if (!editorCurrent()) return recovery.reject('This card changed. Export the draft and reopen before saving.');
+    const saved = recovery.mutate((prev) => {
       if (modal.mode === "create") return addCard(prev, draft);
       if (modal.mode === "edit") return updateCard(prev, modal.card.id, draft);
       return prev;
-    });
-    closeModal();
+    }, 'editor');
+    if (saved) closeModal();
+    return saved;
   }
 
-  function handleDelete(id: string) {
-    mutateCards((prev) => deleteCard(prev, id));
-    closeModal();
+  function handleDelete(id: string): boolean {
+    if (!editorCurrent()) return recovery.reject('This card changed. Reopen before deleting.');
+    const saved = recovery.error ? recovery.retry('delete') : recovery.mutate(prev => deleteCard(prev, id), 'delete');
+    if (saved) closeModal();
+    return saved;
+  }
+
+  function exportDraft(draft?: Omit<CountdownCard, "id">) {
+    try {
+      const blob = new Blob([JSON.stringify({ recovery: recovery.snapshot(), latestDraft: draft ?? null }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob), link = document.createElement('a');
+      link.href = url; link.download = 'countdown-unsaved-change.json'; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000); setExportFailed(false);
+    } catch { setExportFailed(true); }
   }
 
   function cardHandlers() {
@@ -218,6 +239,13 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
         </div>
       </header>
 
+      {recovery.error && modal.mode === 'closed' && <div role="alert" className="cd-save-recovery">
+        <p>{lang === 'zh' ? '更改未保存，请重试或导出。' : 'Changes were not saved. Retry or export before reopening.'} {recovery.error}</p>
+        <button className="cd-btn" onClick={() => recovery.retry()}>{lang === 'zh' ? '重试保存' : 'Retry save'}</button>
+        <button className="cd-btn" onClick={() => exportDraft()}>{lang === 'zh' ? '导出未保存更改' : 'Export unsaved change'}</button>
+        <button className="cd-btn" onClick={() => { recovery.discard(); setExportFailed(false); }}>{lang === 'zh' ? '放弃更改' : 'Discard change'}</button>
+        {exportFailed && <p>{lang === 'zh' ? '导出失败或账户已更改。' : 'Export failed or the account changed.'}</p>}
+      </div>}
       <div className="cd-board-controls">
         <section className="cd-overview" aria-label={lang === "zh" ? "倒计时概览" : "Countdown overview"}>
           <div><span>{activeCards.length}</span><p>{lang === "zh" ? "可见倒计时" : "visible"}</p></div>
@@ -292,6 +320,9 @@ export function CountdownModule({ lang }: CountdownModuleProps) {
         <CountdownEditDialog
           card={modal.mode === "edit" ? modal.card : null}
           lang={lang}
+          saveError={recovery.error}
+          exportFailed={exportFailed}
+          onExport={exportDraft}
           onSave={handleSave}
           onDelete={handleDelete}
           onCancel={closeModal}

@@ -26,8 +26,11 @@ import { isValidTime } from "./countdownMath.js";
 export interface CountdownEditDialogProps {
   card: CountdownCard | null;
   lang: Lang;
-  onSave: (draft: Omit<CountdownCard, "id">) => void;
-  onDelete: (id: string) => void;
+  onSave: (draft: Omit<CountdownCard, "id">) => boolean | void;
+  onDelete: (id: string) => boolean | void;
+  saveError?: string | null;
+  exportFailed?: boolean;
+  onExport?: (draft: Omit<CountdownCard, "id">) => void;
   onCancel: () => void;
 }
 
@@ -70,6 +73,9 @@ export function CountdownEditDialog({
   onSave,
   onDelete,
   onCancel,
+  saveError,
+  exportFailed,
+  onExport,
 }: CountdownEditDialogProps) {
   const { t } = useI18n(lang);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -145,9 +151,7 @@ export function CountdownEditDialog({
     action();
   }
 
-  function handleSave() {
-    setAttemptedSave(true);
-    if (!canSave) return;
+  function buildDraft(): Omit<CountdownCard, "id"> {
     const targetChanged = card !== null && (
       targetDate !== card.target_date ||
       (targetTime || null) !== (card.target_time ?? null)
@@ -177,7 +181,12 @@ export function CountdownEditDialog({
       updated_at: stamp,
       deleted_at: null,
     };
-    closeWith(() => onSave(draft));
+    return draft;
+  }
+  function handleSave() {
+    setAttemptedSave(true);
+    if (!canSave) return;
+    if (onSave(buildDraft()) !== false) closeWith(() => {});
   }
 
   const modalTitle = isEdit ? label("Edit Countdown", "编辑倒计时", lang) : label("New Countdown", "新建倒计时", lang);
@@ -196,6 +205,11 @@ export function CountdownEditDialog({
           </button>
         </header>
 
+        {saveError && <div role="alert" className="cd-save-recovery">
+          <p>{label('Changes were not saved. Your draft is still here.', '更改未保存，草稿仍保留。', lang)} {saveError}</p>
+          <button type="button" className="cd-btn" onClick={() => onExport?.(buildDraft())}>{label('Export draft', '导出草稿', lang)}</button>
+          {exportFailed && <p>{label('Export failed or the account changed.', '导出失败或账户已更改。', lang)}</p>}
+        </div>}
         <div className="cd-form-grid">
           <div className="cd-form-row">
             <label htmlFor="cd-title-en">{label("Title (English)", "标题（英文）", lang)}</label>
@@ -314,13 +328,13 @@ export function CountdownEditDialog({
 
         <div className="cd-dialog-actions">
           {isEdit && (
-            <button type="button" className="cd-btn danger" onClick={() => card && closeWith(() => onDelete(card.id))}>
+            <button type="button" className="cd-btn danger" onClick={() => { if (card && onDelete(card.id) !== false) closeWith(() => {}); }}>
               <IconGlyph name="trash" size={13} />{label("Delete", "删除", lang)}
             </button>
           )}
           <span className="grow" />
           <button type="button" className="cd-btn" onClick={() => closeWith(onCancel)}>{t.common.cancel}</button>
-          <button type="button" className="cd-btn primary" onClick={handleSave} aria-disabled={!canSave}>{t.common.save}</button>
+          <button type="button" className="cd-btn primary" onClick={handleSave} aria-disabled={!canSave}>{saveError ? label("Retry save", "重试保存", lang) : t.common.save}</button>
         </div>
       </dialog>
     </>

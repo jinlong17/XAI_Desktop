@@ -1224,3 +1224,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+.cd-save-recovery {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: .75rem;
+  overflow-wrap: anywhere;
+}
+.cd-save-recovery .cd-btn, .cd-dialog-actions .cd-btn { min-height: 44px; }
+.cd-save-recovery .cd-btn { margin: .25rem; }
