@@ -104,3 +104,8 @@ REL-03: session-lifecycle.test.tsx adds six independently authored React Provide
 ## REL-06 generic 404 regression (2026-09-09)
 
 13 files / 70 tests pass, including 24 auth-actions cases. Uses actual installed Supabase `FunctionsHttpError` with native `Response`: function-not-found, invented already_deleted code, HTML and malformed body 404 all reject; 401/403/500 map from context status; response-only 404 rejects; normal HTTP 200/204 succeeds; captured-token/no-sign-out behavior remains. Error body remains readable. No live server account deleted. Independent verification and wider REL-06 gates remain pending.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 legacy wipe: five focused tests cover all-success, mixed blocked/error with late success, successful retry, unavailable IndexedDB and synchronous request refusal. Auth package full suite 14 files/75 tests and typecheck PASS. Native Chrome probe docs/reviews/web-account-deletion-reliability/verify-browser-wipe.mjs holds a connection in a second page context, observes named aggregate failure, releases it, retries and verifies every database has no stores. Uses an isolated temporary profile; not two physical tabs, production data or account-erasure acceptance.

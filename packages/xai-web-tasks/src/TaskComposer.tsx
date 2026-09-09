@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { TaskSaveFailure } from "./TaskSaveFailure.js";
 /**
  * TaskComposer — native <dialog> for creating a new task.
  *
@@ -43,7 +45,7 @@ export interface TaskComposerProps {
   tags?: ReadonlyArray<TaskTagMeta>;
   defaultListId?: string;
   /** Called after validation passes with the draft + chosen bucket. */
-  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => boolean | void;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
 }
@@ -70,6 +72,8 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
     onSave,
     onClose,
   } = props;
+  const owner = useRef(accountScope.capture()).current;
+  const [saveFailed, setSaveFailed] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -92,6 +96,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
     setWithDate(false);
     setDueDate("");
     setTitleErr(false);
+    setSaveFailed(false);
   }, [open, defaultBucket, defaultListId, lists]);
 
   // Open/close imperatively (HTML semantics)
@@ -146,7 +151,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
         withDate,
         ...(withDate && bucket !== "nodate" && dueDate ? { dueDate } : {}),
       };
-      onSave(draft, bucket);
+      setSaveFailed(onSave(draft, bucket) === false);
     },
     [title, tag, listId, priority, bucket, withDate, dueDate, onSave],
   );
@@ -308,6 +313,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
           <input type="date" className="task-composer__input" value={dueDate} onChange={e => { setDueDate(e.target.value); if (!e.target.value) setWithDate(false); }} />
         </label>}
         {withDate && <p>{lang === "zh" ? "任务将按截止日期自动分组。" : "Tasks are grouped automatically by their due date."}</p>}
+        {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ title, tag, bucket, listId, priority, withDate, dueDate }} />}
         {/* Actions */}
         <div className="task-composer__actions">
           <button

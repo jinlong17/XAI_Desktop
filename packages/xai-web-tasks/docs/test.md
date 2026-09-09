@@ -248,3 +248,12 @@ The extension's `READY_FOR_VERIFY` gate requires ALL of:
 - Persistence of the active-list selection (Q3 session-only — no persistence test for `activeList`; the relevant test is T-FILT-COUNT proving `xai_task_cols` is NOT written).
 - Date-string parsing (B2/B3 rejected — no test for parsing `card.date`).
 - Reducer mutation behaviour (already covered by SHIPPED T-RD/T-ADD suites; this extension only guards them against regression via T-REG-NOMUT).
+
+
+## REL-05 — storage fault recovery
+
+- `saveRecovery.test.tsx`: native Storage quota injection at exact A physical keys; composer/latest-draft export and single retry, detail edits, list and tag metadata, failed deletion/reference ordering, and account-switch revocation. Old committed bytes remain unchanged when their write fails.
+- `node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-storage-write-results/independent-write-failure.config.mjs -t 'Tasks retains'`: unchanged independent pre-fix correctness assertion now passes. The separate Bookkeeping assertion belongs to another sub-fix and is not hidden or rewritten.
+- `node packages/xai-web-tasks/docs/verify-native-save-recovery.mjs`: isolated native Chrome quota → visible retained form → export latest Blob → retry once and close → reject old-account retry. The probe inspects the real Blob URL while intercepting anchor download to avoid writing a fixture to the user's Downloads folder. No real user profile or network service is used.
+
+Final complete Tasks suite: 17 files / 162 tests PASS, including six focused recovery tests. Shared usePref suites: two files / 16 tests PASS, including three new setter-result cases. Component and browser counts are separate evidence, not an aggregate coverage percentage.

@@ -1,3 +1,4 @@
+import { TaskSaveFailure } from "./TaskSaveFailure.js";
 import { groupTasksByDueDate } from "./internal/groupTasksByDueDate.js";
 import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
@@ -22,7 +23,7 @@ import type {
   TasksModuleProps,
 } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { getPrefAutosave, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
+import { accountScope, getPrefAutosave, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
 import {
@@ -66,6 +67,8 @@ type CollectionBoardMode = "grouped" | "time";
 
 export function TasksModule({ lang }: TasksModuleProps) {
   const { s } = useI18n(lang);
+  const owner = useRef(accountScope.capture()).current;
+  const [failedSave, setFailedSave] = useState<{ kind: "tasks" | "lists" | "tags"; value: TaskCol[] | TaskListMeta[] | TaskTagMeta[] } | null>(null);
   const { now } = useLocalDayClock();
 
   const [rawCols, setRawCols] = usePref("xai_task_cols");
@@ -94,18 +97,25 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }, [rawCols, setRawCols, taskCols]);
 
   const persistLists = useCallback((next: TaskListMeta[]) => {
-    setLists(next);
-    setPrefAutosave("task_lists", next);
-  }, []);
+    const ok = accountScope.isReady(owner) && setPrefAutosave("task_lists", next, { scope: owner });
+    if (ok) { setLists(next); setFailedSave(null); }
+    else setFailedSave({ kind: "lists", value: next });
+    return ok;
+  }, [owner]);
 
   const persistTags = useCallback((next: TaskTagMeta[]) => {
-    setTags(next);
-    setPrefAutosave("task_tags", next);
-  }, []);
+    const ok = accountScope.isReady(owner) && setPrefAutosave("task_tags", next, { scope: owner });
+    if (ok) { setTags(next); setFailedSave(null); }
+    else setFailedSave({ kind: "tags", value: next });
+    return ok;
+  }, [owner]);
 
   const persistCols = useCallback((next: TaskCol[]) => {
-    setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
-  }, [setRawCols]);
+    const ok = accountScope.isReady(owner) && setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
+    if (ok) setFailedSave(null);
+    else setFailedSave({ kind: "tasks", value: next });
+    return ok;
+  }, [setRawCols, owner]);
 
   const completedIds = useMemo<ReadonlySet<string>>(() => {
     const ids = new Set<string>();
@@ -228,8 +238,9 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
-    persistCols(addCard(taskCols, draft, targetBucket));
-    setComposer((c) => ({ ...c, open: false }));
+    const ok = persistCols(addCard(taskCols, draft, targetBucket));
+    if (ok) setComposer((c) => ({ ...c, open: false }));
+    return ok;
   }
 
   function handleComposerClose() {
@@ -263,36 +274,37 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   function handleSaveMeta(next: TaskListMeta | TaskTagMeta) {
-    if (!metaEditor) return;
+    if (!metaEditor) return false;
     if (metaEditor.kind === "list") {
       const list = next as TaskListMeta;
       const updated = metaEditor.mode === "edit"
         ? lists.map((item) => item.id === list.id ? list : item)
         : [...lists, list];
-      persistLists(updated);
+      if (!persistLists(updated)) return false;
       selectListView(list.id);
     } else {
       const tag = next as TaskTagMeta;
       const updated = metaEditor.mode === "edit"
         ? tags.map((item) => item.id === tag.id ? tag : item)
         : [...tags, tag];
-      persistTags(updated);
+      if (!persistTags(updated)) return false;
       selectTagView(tag.id);
     }
     setMetaEditor(null);
+    return true;
   }
 
   function handleDeleteList(listId: string) {
     if (lists.length <= 1) return;
     const fallback = lists.find((list) => list.id !== listId)?.id ?? "inbox";
-    persistLists(lists.filter((list) => list.id !== listId));
-    persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }));
+    if (!persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }))) return;
+    if (!persistLists(lists.filter((list) => list.id !== listId))) return;
     if (activeView.kind === "list" && activeView.id === listId) selectListView("all");
   }
 
   function handleDeleteTag(tagId: string) {
-    persistTags(tags.filter((tag) => tag.id !== tagId));
-    persistCols(removeTagFromTasks(taskCols, tagId));
+    if (!persistCols(removeTagFromTasks(taskCols, tagId))) return;
+    if (!persistTags(tags.filter((tag) => tag.id !== tagId))) return;
     if (activeView.kind === "tag" && activeView.id === tagId) selectTagView("all");
   }
 
@@ -301,7 +313,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   function handleBulkDelete() {
-    persistCols(deleteCards(taskCols, selectedIds));
+    if (!persistCols(deleteCards(taskCols, selectedIds))) return;
     setSelectedIds(new Set());
     if (editingTaskId && selectedIds.has(editingTaskId)) setEditingTaskId(null);
   }
@@ -337,7 +349,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
     done: boolean;
   }) {
     const located = findTask(taskCols, id);
-    if (!located) return;
+    if (!located) return false;
     let next = taskCols;
     if (located.colId !== patch.bucket) {
       next = moveCard(next, id, located.colId, patch.bucket);
@@ -352,11 +364,11 @@ export function TasksModule({ lang }: TasksModuleProps) {
       ...(patch.dueDate !== undefined ? { dueDate: patch.dueDate } : {}),
       done: patch.done,
     });
-    persistCols(next);
+    return persistCols(next);
   }
 
   function handleDetailDelete(id: string) {
-    persistCols(deleteCard(taskCols, id));
+    if (!persistCols(deleteCard(taskCols, id))) return;
     setEditingTaskId(null);
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -369,6 +381,14 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   return (
     <div className="module module-tasks">
+      {failedSave && !composer.open && !editingTaskId && !metaEditor && <div>
+        <TaskSaveFailure lang={lang} owner={owner} draft={failedSave} />
+        <button onClick={() => {
+          if (failedSave.kind === "tasks") persistCols(failedSave.value as TaskCol[]);
+          else if (failedSave.kind === "lists") persistLists(failedSave.value as TaskListMeta[]);
+          else persistTags(failedSave.value as TaskTagMeta[]);
+        }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>
+      </div>}
       <TasksSidebar
         lang={lang}
         activeView={activeView}
@@ -526,6 +546,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
       <TaskDetailPanel
         lang={lang}
         located={editingTask}
+        failed={failedSave?.kind === "tasks"}
         lists={lists}
         tags={tags}
         onSave={handleDetailSave}
@@ -1182,6 +1203,7 @@ function BulkToolbar({
 }
 
 function TaskDetailPanel({
+  failed,
   lang,
   located,
   lists,
@@ -1192,6 +1214,7 @@ function TaskDetailPanel({
 }: {
   lang: "en" | "zh";
   located: LocatedTask | null;
+  failed: boolean;
   lists: ReadonlyArray<TaskListMeta>;
   tags: ReadonlyArray<TaskTagMeta>;
   onSave: (id: string, patch: {
@@ -1203,10 +1226,12 @@ function TaskDetailPanel({
     notes: string;
     dueDate?: string | null;
     done: boolean;
-  }) => void;
+  }) => boolean;
   onDelete: (id: string) => void;
   onClose: () => void;
 }) {
+  const owner = useRef(accountScope.capture()).current;
+  const [saveFailed, setSaveFailed] = useState(false);
   const task = located?.task;
   const [title, setTitle] = useState("");
   const [bucket, setBucket] = useState<BucketId>("next7");
@@ -1221,9 +1246,10 @@ function TaskDetailPanel({
 
   useEffect(() => {
     if (!located) { openedTask.current = null; return; }
-    const identity = `${located.task.id}:${lang}`;
+    const identity = located.task.id;
     if (openedTask.current === identity) return;
     openedTask.current = identity;
+    setSaveFailed(false);
     setTitle(lang === "zh" ? located.task.title.zh : located.task.title.en);
     setBucket(located.colId);
     setListId(located.task.listId ?? lists[0]?.id ?? "inbox");
@@ -1299,18 +1325,19 @@ function TaskDetailPanel({
         <span>{lang === "zh" ? "备注" : "Notes"}</span>
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} />
       </label>
+      {(saveFailed || failed) && <TaskSaveFailure lang={lang} owner={owner} draft={{ id: task.id, title, bucket, listId, tags: tagIds, priority, notes, dueDate, dateEdited, done }} />}
       <footer>
         <button
           className="task-composer__btn task-composer__btn--primary"
           onClick={() => {
             if (title.trim()) {
-              onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done });
+              setSaveFailed(!onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done }));
             }
           }}
         >
           {lang === "zh" ? "保存" : "Save"}
         </button>
-        <button className="task-composer__btn" onClick={() => onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true })}>
+        <button className="task-composer__btn" onClick={() => setSaveFailed(!onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true }))}>
           {lang === "zh" ? "完成" : "Complete"}
         </button>
         <button className="task-composer__btn task-danger-btn" onClick={() => onDelete(task.id)}>
@@ -1329,9 +1356,11 @@ function MetaEditorDialog({
 }: {
   lang: "en" | "zh";
   editor: MetaEditorState | null;
-  onSave: (item: TaskListMeta | TaskTagMeta) => void;
+  onSave: (item: TaskListMeta | TaskTagMeta) => boolean;
   onCancel: () => void;
 }) {
+  const owner = useRef(accountScope.capture()).current;
+  const [saveFailed, setSaveFailed] = useState(false);
   const [nameEn, setNameEn] = useState("");
   const [nameZh, setNameZh] = useState("");
   const [color, setColor] = useState("#3b82f6");
@@ -1339,6 +1368,7 @@ function MetaEditorDialog({
 
   useEffect(() => {
     if (!editor) return;
+    setSaveFailed(false);
     setNameEn(editor.item?.name.en ?? (editor.kind === "list" ? "New list" : "New tag"));
     setNameZh(editor.item?.name.zh ?? (editor.kind === "list" ? "新清单" : "新标签"));
     setColor(editor.item?.color ?? "#3b82f6");
@@ -1369,6 +1399,7 @@ function MetaEditorDialog({
             <input value={icon} onChange={(e) => setIcon(e.target.value)} />
           </label>
         )}
+        {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ kind: editor.kind, id: editor.item?.id, name: { en: nameEn, zh: nameZh }, color, icon }} />}
         <footer>
           <button className="task-composer__btn" onClick={onCancel}>{lang === "zh" ? "取消" : "Cancel"}</button>
           <button
@@ -1376,9 +1407,9 @@ function MetaEditorDialog({
             onClick={() => {
               const id = editor.item?.id ?? `${editor.kind}-${Date.now().toString(36)}`;
               if (editor.kind === "list") {
-                onSave({ id, name: { en: nameEn.trim() || "New list", zh: nameZh.trim() || "新清单" }, color, icon: icon.trim() || "list" });
+                setSaveFailed(!onSave({ id, name: { en: nameEn.trim() || "New list", zh: nameZh.trim() || "新清单" }, color, icon: icon.trim() || "list" }));
               } else {
-                onSave({ id, name: { en: nameEn.trim() || "New tag", zh: nameZh.trim() || "新标签" }, color });
+                setSaveFailed(!onSave({ id, name: { en: nameEn.trim() || "New tag", zh: nameZh.trim() || "新标签" }, color }));
               }
             }}
           >
