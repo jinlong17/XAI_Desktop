@@ -1,0 +1,13 @@
+{"name":"baseline","head":"4868d0a","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"stale-pause","active":{"version":1,"owner":{"kind":"account","accountId":"independent-POMO-A","generation":"g1"},"revision":1,"sessionId":"pomo_841a68ee-7273-4aaf-93b7-ddeba340253d","mode":"focus","durationMs":60000,"sessionStartedAt":"2026-09-09T20:03:20.284Z","phase":"paused","accumulatedElapsedMs":160,"runStartedAt":1788984200284,"deadline":1788984260284,"pausedAt":1788984200444},"error":null}
+{"name":"actual-resume-button","disabled":false}
+{"name":"post-conflict-valid-resume","phase":"running","error":null,"expectedPhase":"running"}
+{"name":"two-tab-end-dedup","pass":true,"results":[true,true],"record":{"id":"pomo_9e02b260-be98-4ba0-a843-d11b038af57b","mode":"focus","startedAt":"2026-09-09T20:03:21.331Z","finishedAt":"2026-09-09T20:03:22.153Z","durationMs":60000,"elapsedMs":822,"completed":false,"deadline":"2026-09-09T20:04:21.331Z","schemaVersion":2,"recordedAt":"2026-09-09T20:03:22.153Z"}}
+{"name":"duplicate-start-then-valid-pause","actual":true,"expected":true,"error":null}
+{"name":"pending-cut-late-retry","pass":true,"record":{"id":"pomo_3f372827-69c9-4a27-95e3-ebe4c87cf4a1","mode":"focus","startedAt":"2026-09-09T20:03:22.875Z","finishedAt":"2026-09-09T20:03:22.980Z","durationMs":60000,"elapsedMs":105,"completed":false,"deadline":"2026-09-09T20:04:22.875Z","schemaVersion":2,"recordedAt":"2026-09-09T20:05:22.985Z"}}
+{"name":"reload-history-cut","pass":true,"record":{"id":"pomo_7dac69b1-23df-4528-9139-2c2fc954aef7","mode":"focus","startedAt":"2026-09-09T20:03:23.142Z","finishedAt":"2026-09-09T20:03:23.145Z","durationMs":60000,"elapsedMs":3,"completed":false,"deadline":"2026-09-09T20:04:23.142Z","schemaVersion":2,"recordedAt":"2026-09-09T20:03:23.200Z"}}
+{"name":"reload-clear-cut","pass":true,"record":{"id":"pomo_be51332d-f374-4492-8642-4eba6bced2db","mode":"focus","startedAt":"2026-09-09T20:03:23.426Z","finishedAt":"2026-09-09T20:03:23.428Z","durationMs":60000,"elapsedMs":2,"completed":false,"deadline":"2026-09-09T20:04:23.426Z","schemaVersion":2,"recordedAt":"2026-09-09T20:03:23.429Z"}}
+{"name":"paused-reload","pass":true,"elapsed":104,"remaining":59896}
+{"name":"actual-route-host","pass":true,"record":{"id":"pomo_8bd1374b-5c97-40a2-8e8e-419da2bbcee3","mode":"focus","startedAt":"2026-09-09T20:03:24.672Z","finishedAt":"2026-09-09T20:04:24.672Z","durationMs":60000,"elapsedMs":60000,"completed":true,"deadline":"2026-09-09T20:04:24.672Z","schemaVersion":2,"recordedAt":"2026-09-09T20:05:24.744Z"}}
+{"name":"queued-A-command-after-B","pass":true}
+{"name":"stale-export","pass":true}
