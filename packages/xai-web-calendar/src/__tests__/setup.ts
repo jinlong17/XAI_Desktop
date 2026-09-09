@@ -1,4 +1,4 @@
-import { accountScope } from "@repo/plugin-web-storage";
+import { accountScope, generationMarkerKey, setCanonicalCommandActivationForTests } from "@repo/plugin-web-storage";
 import { beforeEach as beforeAccountTest } from "vitest";
 /**
  * Vitest global setup for @repo/plugin-web-calendar tests.
@@ -35,7 +35,12 @@ afterEach(() => {
 beforeEach(() => {
   localStorage.clear();
   vi.clearAllMocks();
+  setCanonicalCommandActivationForTests(true);
+  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
 });
 
 // Explicit authenticated context; raw Storage remains unmodified.
-beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });
+beforeAccountTest(() => {
+  accountScope.activate(accountScope.lock("consumer-test"), "fixture");
+  localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({ generation: "fixture", migrationId: "test", previous: null }));
+});

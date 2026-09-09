@@ -61,8 +61,8 @@ export interface EventComposerProps {
   event: UserCalEvent | null;
   lang: Lang;
   defaultDateKey?: string;
-  onSave: (event: UserCalEvent) => void;
-  onDelete?: (id: string) => void;
+  onSave: (event: UserCalEvent) => void | Promise<void>;
+  onDelete?: (id: string) => void | Promise<void>;
   onClose: () => void;
 }
 
@@ -156,6 +156,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [saveFailure, setSaveFailure] = useState<"save" | "delete" | null>(null);
   const [exportFailed, setExportFailed] = useState(false);
+  const [pending, setPending] = useState(false);
   const owner = useRef(accountScope.capture());
 
   // Reset form when (mode, event, defaultDateKey) changes — e.g. operator
@@ -210,8 +211,9 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
   );
 
   const handleSave = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
+    async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
+      if (pending) return;
       const startTime = form.allDay ? "00:00" : form.startTime;
       const endTime = form.allDay ? "23:59" : form.endTime;
       const validationErrors = validateUserCalEvent({
@@ -249,7 +251,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           reminder: form.reminder,
           updatedAt: now,
         };
-        try { onSave(patched); setSaveFailure(null); } catch { setSaveFailure("save"); }
+        try { setPending(true); await onSave(patched); setSaveFailure(null); } catch { setSaveFailure("save"); } finally { setPending(false); }
       } else {
         const created: UserCalEvent = {
           id: createEventId(),
@@ -265,23 +267,24 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           createdAt: now,
           updatedAt: now,
         };
-        try { onSave(created); setSaveFailure(null); } catch { setSaveFailure("save"); }
+        try { setPending(true); await onSave(created); setSaveFailure(null); } catch { setSaveFailure("save"); } finally { setPending(false); }
       }
     },
-    [form, mode, event, onSave],
+    [form, mode, event, onSave, pending],
   );
 
   const handleDelete = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
+    async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      if (mode !== "edit" || !event || !onDelete) return;
+      if (pending || mode !== "edit" || !event || !onDelete) return;
       try {
-        onDelete(event.id);
+        setPending(true);
+        await onDelete(event.id);
         setSaveFailure(null);
         onClose();
-      } catch { setSaveFailure("delete"); }
+      } catch { setSaveFailure("delete"); } finally { setPending(false); }
     },
-    [mode, event, onDelete, onClose],
+    [mode, event, onDelete, onClose, pending],
   );
 
   const handleCancel = useCallback(

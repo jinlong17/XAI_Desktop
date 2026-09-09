@@ -20,11 +20,7 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
-import {
-  accountScope,
-  readCanonicalCommandSnapshot,
-  usePref,
-} from "@repo/plugin-web-storage";
+import { accountScope, mutateCanonicalDataset, usePref } from "@repo/plugin-web-storage";
 import type { UserCalEvent } from "./types.js";
 import {
   createEvent,
@@ -42,14 +38,14 @@ export interface UserCalEventsApi {
   /** Create + persist; returns the new entity. */
   create: (
     partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">,
-  ) => UserCalEvent;
+  ) => Promise<UserCalEvent | null>;
   /** Update + persist; returns the updated entity, or null when id missing. */
   update: (
     id: string,
     patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>,
-  ) => UserCalEvent | null;
+  ) => Promise<UserCalEvent | null>;
   /** Remove + persist; no-op when id missing. */
-  remove: (id: string) => void;
+  remove: (id: string) => Promise<boolean>;
   /** Read by id. */
   getById: (id: string) => UserCalEvent | null;
 }
@@ -65,48 +61,51 @@ export function useUserCalEvents(): UserCalEventsApi {
   const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
   const events = eventsRaw as Record<string, UserCalEvent>;
   const [scope] = useState(() => accountScope.capture());
-  const persist = useCallback((next: Record<string, UserCalEvent>) => {
-    if (!accountScope.isReady(scope)) throw new Error("Calendar account changed");
-    const snapshot = readCanonicalCommandSnapshot("xai_calendar_events", scope);
-    if (snapshot.status === "corrupt" || snapshot.status === "unsupported" || snapshot.status === "unavailable") {
-      throw new Error("Calendar data needs recovery; original bytes were preserved.");
-    }
-    const baseline = snapshot.status === "absent" ? {} : snapshot.data;
-    if (!baseline || typeof baseline !== "object" || Array.isArray(baseline)) {
-      throw new Error("Calendar data needs recovery; original bytes were preserved.");
-    }
-    if (JSON.stringify(baseline) !== JSON.stringify(events)) {
-      throw new Error("Calendar data changed; reopen before saving");
-    }
-    if (!setEventsRaw(next)) throw new Error("Calendar changes were not saved");
-  }, [events, scope, setEventsRaw]);
+  const valid = useCallback((value: unknown): value is Record<string, UserCalEvent> => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+    return Object.entries(value).every(([id, event]) => !!event && typeof event === "object"
+      && event.id === id && typeof event.title === "string" && typeof event.startISO === "string"
+      && typeof event.endISO === "string" && typeof event.createdAt === "string" && typeof event.updatedAt === "string"
+      && ["mint", "amber", "blue", "violet", "rose"].includes(event.colorPreset));
+  }, []);
+  const commit = useCallback(async (mutate: (current: Record<string, UserCalEvent>) => { ok: true; data: Record<string, UserCalEvent> } | { ok: false; reason: "not-found" | "conflict" }) => {
+    if (!accountScope.isReady(scope)) return null;
+    const result = await mutateCanonicalDataset({ key: "xai_calendar_events", scope, validate: valid, initialize: () => ({}), mutate });
+    if (!result.ok) return null;
+    setEventsRaw(result.data);
+    return result.data;
+  }, [scope, valid, setEventsRaw]);
 
   const list = useMemo(() => listEvents(events), [events]);
 
   const create = useCallback(
-    (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => {
-      const { next, created } = createEvent(events, partial);
-      persist(next);
-      return created;
+    async (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => {
+      const { created } = createEvent({}, partial);
+      const saved = await commit(current => current[created.id] ? { ok: false, reason: "conflict" } : { ok: true, data: { ...current, [created.id]: created } });
+      return saved ? created : null;
     },
-    [events, persist],
+    [commit],
   );
 
   const update = useCallback(
-    (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => {
-      const { next, updated } = updateEvent(events, id, patch);
-      if (updated) persist(next);
-      return updated;
+    async (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => {
+      let updated: UserCalEvent | null = null;
+      const saved = await commit(current => {
+        const result = updateEvent(current, id, patch);
+        updated = result.updated;
+        return result.updated ? { ok: true, data: result.next } : { ok: false, reason: "not-found" };
+      });
+      return saved ? updated : null;
     },
-    [events, persist],
+    [commit],
   );
 
   const remove = useCallback(
-    (id: string) => {
-      const next = deleteEvent(events, id);
-      if (next !== events) persist(next);
+    async (id: string) => {
+      const saved = await commit(current => current[id] ? { ok: true, data: deleteEvent(current, id) } : { ok: false, reason: "not-found" });
+      return saved !== null;
     },
-    [events, persist],
+    [commit],
   );
 
   const getById = useCallback(

@@ -156,12 +156,12 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   }, []);
 
   const handleComposerSave = useCallback(
-    (event: UserCalEvent) => {
+    async (event: UserCalEvent) => {
       if (composer.mode === "edit" && composer.editing) {
         if (JSON.stringify(getById(composer.editing.id)) !== JSON.stringify(composer.editing)) {
           throw new Error("Calendar event changed; reopen before saving");
         }
-        update(composer.editing.id, {
+        const saved = await update(composer.editing.id, {
           title: event.title,
           startISO: event.startISO,
           endISO: event.endISO,
@@ -172,8 +172,9 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           notes: event.notes,
           reminder: event.reminder,
         });
+        if (!saved) throw new Error("Calendar changes were not saved");
       } else {
-        create({
+        const saved = await create({
           title: event.title,
           startISO: event.startISO,
           endISO: event.endISO,
@@ -184,6 +185,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           notes: event.notes,
           reminder: event.reminder,
         });
+        if (!saved) throw new Error("Calendar changes were not saved");
       }
       setActiveDate(event.startISO.slice(0, 10));
       setComposer(COMPOSER_CLOSED);
@@ -192,11 +194,11 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   );
 
   const handleComposerDelete = useCallback(
-    (id: string) => {
+    async (id: string) => {
       if (JSON.stringify(getById(id)) !== JSON.stringify(composer.editing)) {
         throw new Error("Calendar event changed; reopen before deleting");
       }
-      remove(id);
+      if (!await remove(id)) throw new Error("Calendar changes were not saved");
       // composer.onDelete already calls onClose internally; we still snap
       // state back to ensure no edge case leaves the dialog open.
       setComposer(COMPOSER_CLOSED);
