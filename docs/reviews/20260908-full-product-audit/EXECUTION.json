@@ -55,8 +55,12 @@
         "../web-account-data-isolation/20260909-host-integration.md",
         "commit:992f688",
         "commit:9638dbe",
-        "../web-account-data-isolation/20260909-joint-independent-review.md"
-      ]
+        "../web-account-data-isolation/20260909-joint-independent-review.md",
+        "commit:f02ca28",
+        "../web-account-scope-current-independent/20260909-review.md"
+      ],
+      "functional_status": "passed",
+      "workflow_status": "cross_tool_verification_pending"
     },
     {
       "id": "REL-04",
@@ -68,7 +72,8 @@
         "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md",
         "commit:d01b671",
         "commit:f6b1d00",
-        "../web-data-lifecycle-registry/20260909-timer-lifecycle-check.md"
+        "../web-data-lifecycle-registry/20260909-timer-lifecycle-check.md",
+        "commit:adf7485"
       ]
     },
     {
@@ -101,7 +106,12 @@
         "commit:a452d40",
         "../web-calendar-save-recovery/20260909-diagnosis-and-fix.md",
         "commit:3cd8870",
-        "../web-calendar-independent/20260909-independent-verification.md"
+        "../web-calendar-independent/20260909-independent-verification.md",
+        "commit:45a2a06",
+        "../web-habits-save-recovery/20260909-diagnosis-and-fix.md",
+        "commit:394efad",
+        "../web-pomodoro-preference-recovery/20260909-fix.md",
+        "commit:179e6d5"
       ]
     },
     {

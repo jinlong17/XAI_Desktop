@@ -1,6 +1,12 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **12/312**。REL-02 功能PASS、跨工具验证pending分列；REL-05 Matrix与Calendar子项独立通过，Habits与Countdown继续处理。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **12/312**。REL-02/03 功能PASS、跨工具验证pending分列；REL-05 Habits、Countdown及POMO偏好修复已提交，等待相应独立验收。以下保留历次检查记录。
+
+REL-03 独立f02ca28固定5803e86：当前完整workspace图原生8项联合断言通过，补实际Gate选择import→Undo→恢复A私有内容/BYOK→退出→B空白和旧setter拒绝。功能PASS与工作流pending分列，整体复合verification_pending不冒充跨工具或READY_TO_SHIP。REL-04跟进adf7485补auth-attempt和generation PKCE verifier暂存族的排除/捕获代清理声明，旧114键proposal表明确标为历史；完整生命周期仍未核销。
+
+REL-05 Habits作者45a2a06：新增/打卡/日记失败结果、latestdraft、baseline及账户保护，132测试/types/lint与作者native通过，已交独立。Countdown作者179e6d5处理dialog先close问题、全部card mutation及自动preset失败，128测试/types/lint通过，作者native尚在完成。
+
+REL-05 父394efad：共享autosave返回saved/retry，修同值换key跳过写入；POMO六个偏好接入失败提示、latestretry/export。原2个正确hook断言beforeFAIL→PASS；Storage130全、POMO144全+新UI1、两包类型/POMO lint/Web类型通过。非作者native验收进行中；不联动其他仍忽略结果的消费者，不重置已验收timer合同。正式完成仍12/312。
 
 REL-02 独立5803e86固定8e50d8f：9组原生初始化/迁移/故障恢复通过，包含两种顺序、并发、两种旧库、热连接扩表、blocked后重试、事务abort和同步DataError恢复。`functional_status=passed`；保留现有复合状态verification_pending和`workflow_status=cross_tool_verification_pending`。workflow.md §8跨工具验证仍未通过，不把同厂商独立验证冒充跨工具或READY_TO_SHIP；此前凭证401不是当前功能缺陷。全清单的功能完成数字也不构成发布门禁通过。
 
