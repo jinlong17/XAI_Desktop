@@ -62,3 +62,12 @@ STAT-01/POMO-03独立666171d先发现提前结束列表隐藏及POMO时长漏计
 REL-06宿主d8501f3独立验收：真实路由曾吞掉退出专用提示，父10a90ce将错误标记提升至provider后，原完整native断言通过。实际登录/失败隔离/整Chrome进程重开/OAuth StrictMode单次exchange/reset/双页旧A迟到不覆盖B通过；synthetic HTTP、不含生产服务、CSS/SW，不关闭整个REL-06。
 
 STAT-02消费者580bbde已提交：真实completedAt日期分桶、无时间只显示当前总数、旧completed[]缺失done兼容、invalid/future不造历史；原四诊断断言通过，Statistics23文件166测试、types/lint通过。Task/Board生产者TASK-02正并行实施，完整链路需待其固定提交后独立验收。MED-01/02进入绝对时间持久会话与音频停止修复，尚无完成结论。
+
+
+## 2026-09-09 检查点：STAT-02 核销及认证删除回执
+
+STAT-02正式核销：905abb7固定1b7c0e0（含dafaf9e严格日期）实际Tasks checkbox完成→真实Statistics→reload→undo→次日recomplete→reload通过。分别落入真实UTC completedAt对应自然日；无时间只当前总数，非法/未来/未完成不造日期柱，旧completed[]语义与双语390px图表通过。当前完成8/312，不联动STAT-03/04或Board关联事务。
+
+TASK-02作者1b7c0e0实现完成时间/稳定来源与legacy真实撤销，d7d1733实现Board持久pending链接意图及重试；完整编号仍待独立Board移动/归档/恢复及失败路径验收。MED-01/02持久绝对时间与音频清理实施中，尚未核销。
+
+REL-06父ab8c35a：发现旧回执在auth清理前complete，已改live version2记录原authGeneration并将其清理纳入complete前；旧v1读者拒绝v2，避免只清旧参与者就成功。RecoveryNotice通过宿主coordinator只清捕获原代，不重发服务器删除、不影响新B登录。原三条receipt contract断言before3FAIL→after3PASS；Settings全42文件280通过后补两条现代导航测试，最终receipt/orchestrator/HTTP focused32通过；Settingstypes/lint与Web146/types/lint通过。真实SDK/IDB重开联合独立验收已派发，REL-06仍开放。

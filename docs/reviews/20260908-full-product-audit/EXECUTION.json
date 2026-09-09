@@ -116,7 +116,9 @@
         "commit:3637866",
         "commit:10a90ce",
         "commit:d8501f3",
-        "../web-auth-host-independent/20260909-independent-review.md"
+        "../web-auth-host-independent/20260909-independent-review.md",
+        "commit:ab8c35a",
+        "../web-account-deletion-auth-receipt/20260909-fix.md"
       ]
     },
     {
@@ -284,8 +286,11 @@
     },
     {
       "id": "TASK-02",
-      "status": "in_progress",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:1b7c0e0",
+        "commit:d7d1733"
+      ]
     },
     {
       "id": "TASK-03",
@@ -407,12 +412,17 @@
     },
     {
       "id": "STAT-02",
-      "status": "in_progress",
+      "status": "completed",
       "evidence": [
         "commit:ed7009f",
         "../web-statistics-time-contract/20260909-diagnosis.md",
         "commit:580bbde",
-        "../web-statistics-time-contract/20260909-stat02-consumer.md"
+        "../web-statistics-time-contract/20260909-stat02-consumer.md",
+        "commit:dafaf9e",
+        "commit:1b7c0e0",
+        "commit:b700096",
+        "commit:905abb7",
+        "../web-statistics-completion-independent/20260909-review.md"
       ]
     },
     {
