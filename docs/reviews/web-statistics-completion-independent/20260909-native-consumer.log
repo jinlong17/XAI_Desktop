@@ -1,0 +1,5 @@
+{"name":"baseline","head":"580bbde","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"undated-current-only","aggregate":2,"buckets":[0,0,0,0,0,0,0],"panel":"Tasks completed2current boardNo completion dates recorded. Showing the current completed total only."}
+{"name":"mixed-week","total":7,"undated":4,"buckets":[0,1,1,0,0,0,0],"panel":"Tasks completed7current board2 dated task completions in the selected range0Sun1Mon1Tue0Wed0Thu0Fri0Sat4 completed tasks have no valid completion date and are excluded from the timeline."}
+{"name":"ranges-source-preserved","month":2,"allBuckets":[0,0,0,1,2]}
+{"name":"consumer-PASS","scope":"undated/mixed/future-invalid/undone/ranges/raw; strict calendar invalidity remains separate failing regression"}
