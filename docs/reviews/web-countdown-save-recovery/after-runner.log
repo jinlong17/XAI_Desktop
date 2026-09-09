@@ -1,0 +1,9 @@
+baseline {"commit":"179e6d5","browser":"Chrome/152.0.7977.83"}
+create-correct-oracle {"dialogRetained":true,"draftRetained":true,"errorVisible":true,"bytesUnchanged":true}
+delete-correct-oracle {"dialogRetained":true,"errorVisible":true,"bytesUnchanged":true}
+delete-retry {"pass":true}
+actual-download-latest-retry {"pass":true}
+actual-pin-retry {"pass":true}
+baseline-rejected {"pass":true}
+cross-account-retry-export-rejected {"pass":true}
+PASS {"scope":"Countdown save recovery","checks":7}
