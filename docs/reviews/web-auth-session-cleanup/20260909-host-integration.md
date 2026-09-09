@@ -14,3 +14,7 @@ DeviceSessionBridge invalidates both rendered fetch context and already captured
 - Coordinator dependency: `d895b0b`, with native coordinator evidence in `23c3423`. Root UI/provider integration has not yet received independent native full-page acceptance.
 
 Counts overlap focused checks and are not a total coverage measure. No production deployment or real account/provider flow was exercised. OAuth code consumption followed by failed local persistence remains an explicit recovery failure, not a fabricated successful login. Complete REL-06 deletion/result-query and cleanup-participant acceptance remains open. UI styling and localization are not closed by these functional changes.
+
+## Follow-up: outer route error ownership
+
+Independent actual-host verification found that the router's AppRouteGate unmounts the whole App on an auth error. Keeping sign-out failure state above AccountStorageGate inside App was insufficient: the user only saw a generic restore failure. The failure marker now belongs to the session provider above both gates. A late host result reports into that provider and the protected route displays “Sign-out did not complete.” Recovery or a newly published non-error auth state clears the marker. Focused provider tests include the outer gate and verify failure after protected children are removed, then successful recovery; 3 managed-provider and 7 host sign-out tests, Web types/lint pass. Original native explicit-message assertion remains pending independent rerun, not weakened to accept generic text.

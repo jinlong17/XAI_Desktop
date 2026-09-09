@@ -5,7 +5,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { IDBFactory, IDBKeyRange, IDBObjectStore } from 'fake-indexeddb';
 import { WebAuthSessionProvider, useWebAuthSession, type WebAuthSessionContextValue } from './session';
 import { createAuthGenerationStore } from './auth-generation-store';
-import { resolveAppRouteGuard } from './guards';
+import { AppRouteGate, resolveAppRouteGuard } from './guards';
 
 const config = { url: 'https://auth-fixture.invalid', anonKey: 'synthetic-public', autoRefreshToken: false };
 let root: Root;
@@ -30,7 +30,7 @@ afterEach(async () => { if (root) await act(async () => root.unmount()); documen
 async function mount() {
   const identity = vi.fn();
   const holder = document.createElement('div'); document.body.append(holder); root = createRoot(holder);
-  function Consumer() { current = useWebAuthSession(); return <output>{current.state}:{current.session?.user.id ?? 'none'}</output>; }
+  function Consumer() { current = useWebAuthSession(); return <><output>{current.state}:{current.session?.user.id ?? 'none'}</output><AppRouteGate navigate={() => undefined}><span data-protected="true" /></AppRouteGate></>; }
   await act(async () => { root.render(<WebAuthSessionProvider config={config} onIdentityChange={identity}><Consumer /></WebAuthSessionProvider>); });
   await act(async () => { await current.coordinator!.bootstrap(); });
   return { holder, identity };
@@ -50,6 +50,26 @@ it('live provider publishes durable identities and stale A cleanup cannot remove
   expect(current.session?.user.id).toBe('B');
   expect((await createAuthGenerationStore().readActive())?.owner).toBe('B');
   expect(view.identity.mock.calls.at(-1)).toEqual(['B']);
+});
+
+it('logout failure survives the outer protected route unmount and clears on recovery', async () => {
+  const view = await mount(); await login('A');
+  const captured = current.coordinator!.capture()!;
+  const report = current.reportSignOutFailure!;
+  const put = IDBObjectStore.prototype.put;
+  const fault = vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementation(function (this: IDBObjectStore, value, key) {
+    const request = put.call(this, value, key); this.transaction.abort(); return request;
+  });
+  await act(async () => {
+    expect((await current.coordinator!.signOut(captured, { remote: false })).status).toBe('failed');
+  });
+  expect(view.holder.querySelector('[data-protected]')).toBeNull();
+  await act(async () => { report(); });
+  expect(view.holder.querySelector('[role=alert]')?.textContent).toContain('Sign-out did not complete.');
+  fault.mockRestore();
+  await act(async () => { await current.coordinator!.bootstrap(); });
+  expect(current.signOutFailed).toBe(false);
+  expect(view.holder.querySelector('[role=alert]')).toBeNull();
 });
 
 it('live persistence failure is an error with no protected session or redirect', async () => {

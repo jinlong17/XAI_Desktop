@@ -185,7 +185,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   // Reads from WebAuthSessionProvider (already mounted in AppProviders via main.tsx).
   // Steps: 1) best-effort Supabase backend sign-out  2) clear React session state
   //        3) hard-redirect to "/" so AuthRouteGate takes over.
-  const { client, clearSessionStorage, coordinator } = useWebAuthSession();
+  const { client, clearSessionStorage, coordinator, reportSignOutFailure } = useWebAuthSession();
   const handleSignOut = useCallback(async () => {
     onSignOutError(false);
     if (coordinator) {
@@ -193,7 +193,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
       if (!captured) { onSignOutError(true); return; }
       invalidateAccountIdentity(null);
       const result = await coordinator.signOut(captured);
-      if (result.status === 'failed') { onSignOutError(true); return; }
+      if (result.status === 'failed') { reportSignOutFailure?.(); onSignOutError(true); return; }
       if (result.status === 'applied') window.location.assign('/');
       return;
     }
@@ -207,7 +207,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
     }
     await clearSessionStorage();
     window.location.assign("/");
-  }, [client, clearSessionStorage, coordinator, onSignOutError]);
+  }, [client, clearSessionStorage, coordinator, onSignOutError, reportSignOutFailure]);
 
   return (
     <WebShellProvider

@@ -22,6 +22,8 @@ type AuthState = "loading" | "authenticated" | "unauthenticated" | "unconfigured
 export interface WebAuthSessionContextValue {
   coordinator?: AuthGenerationCoordinator;
   authError?: string | null;
+  signOutFailed?: boolean;
+  reportSignOutFailure?: () => void;
   state: AuthState;
   session: Session | null;
   client: SupabaseClient | null;
@@ -67,6 +69,7 @@ function ManagedAuthSessionProvider({ children, config, deviceStore, onIdentityC
   const coordinatorRef = useRef<AuthGenerationCoordinator | null>(null);
   const [coordinator, setCoordinator] = useState<AuthGenerationCoordinator>();
   const [snapshot, setSnapshot] = useState<AuthCoordinatorSnapshot | null>(null);
+  const [signOutFailed, setSignOutFailed] = useState(false);
   const identity = useRef<string | null | undefined>(undefined);
   const identityCallback = useRef(onIdentityChange);
   identityCallback.current = onIdentityChange;
@@ -78,6 +81,7 @@ function ManagedAuthSessionProvider({ children, config, deviceStore, onIdentityC
     setCoordinator(runtime);
     const publish = () => {
       const next = runtime.getSnapshot();
+      if (next.status !== 'error') setSignOutFailed(false);
       const owner = next.status === 'authenticated' ? next.owner : null;
       if (identity.current !== owner) { identityCallback.current?.(owner); identity.current = owner; }
       setSnapshot(next);
@@ -116,12 +120,16 @@ function ManagedAuthSessionProvider({ children, config, deviceStore, onIdentityC
     if (result.status === 'failed') throw new Error(result.reason ?? 'auth_cleanup_failed');
   }, [coordinator, generation, owner]);
   const setSession = useCallback(() => { void refreshSession(); }, [refreshSession]);
+  const reportSignOutFailure = useCallback(() => {
+    if (coordinatorRef.current?.getSnapshot().status === 'error') setSignOutFailed(true);
+  }, []);
   const state = snapshot?.status ?? 'loading';
   const value: WebAuthSessionContextValue = {
     state, session: state === 'authenticated' ? snapshot?.session ?? null : null,
     client: state === 'authenticated' ? snapshot?.client ?? null : null,
     deviceId, syncVersion: WEB_SYNC_VERSION, refreshSession, ensureDeviceIdentity,
-    clearSessionStorage, setSession, coordinator, authError: snapshot?.error
+    clearSessionStorage, setSession, coordinator, authError: snapshot?.error,
+    signOutFailed, reportSignOutFailure
   };
   return <WebAuthSessionContext.Provider value={value}>{children}</WebAuthSessionContext.Provider>;
 }

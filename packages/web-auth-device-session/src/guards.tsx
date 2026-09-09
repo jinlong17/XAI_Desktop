@@ -97,7 +97,7 @@ function resolvePath(path?: string): string {
 }
 
 export function AppRouteGate({ children, path, fallback = null, navigate }: AppRouteGateProps) {
-  const { state, coordinator } = useWebAuthSession();
+  const { state, coordinator, signOutFailed } = useWebAuthSession();
   const guard = resolveAppRouteGuard(state, resolvePath(path));
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export function AppRouteGate({ children, path, fallback = null, navigate }: AppR
   }, [guard.redirectTo, navigate]);
 
   if (state === 'error') {
-    return <div role="alert">Unable to restore this session. Your stored data has not been reset.
+    return <div role="alert">{signOutFailed ? 'Sign-out did not complete.' : 'Unable to restore this session.'} Your stored data has not been reset.
       <button type="button" onClick={() => { void coordinator?.bootstrap(); }}>Retry session recovery</button>
       <a href="/auth/login">Go to sign in</a>
     </div>;
