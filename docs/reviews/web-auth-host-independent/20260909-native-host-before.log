@@ -1,0 +1,151 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AvatarMenu.tsx:132:25:
+      132 │                   typeof import.meta !== "undefined" &&
+          ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AppRail.tsx:51:13:
+      51 │       typeof import.meta !== "undefined" &&
+         ╵              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-tasks/src/TasksModule.tsx:85:17:
+      85 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/internal/validate.ts:31:11:
+      31 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts:39:15:
+      39 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/SettingsFooter.tsx:45:15:
+      45 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-dashboard-grid/src/DashboardGrid.tsx:53:21:
+      53 │         const meta = import.meta as ImportMeta & { env?: { DEV?: b...
+         ╵                      ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/CountdownCardView.tsx:33:11:
+      33 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:98:17:
+      98 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:132:17:
+      132 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:179:19:
+      179 │         if (typeof import.meta !== "undefined" && (import.meta as...
+          ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{
+  "pass": false,
+  "error": "Error: host failure alert absent UI=Unable to restore this session. Your stored data has not been reset.Retry session recoveryGo to sign in",
+  "stack": "Error: host failure alert absent UI=Unable to restore this session. Your stored data has not been reset.Retry session recoveryGo to sign in\n    at assert (http://127.0.0.1:53024/app:115709:23)\n    at run (http://127.0.0.1:53024/app:115775:7)",
+  "path": "/app/ai",
+  "phase": "after-login",
+  "checks": [
+    "Actual WebAuthPage form login and full navigation restore A in actual App shell"
+  ],
+  "launches": [
+    34242
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:53024/auth/v1/token?grant_type=password",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53024/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53024/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53024/rest/v1/rpc/device_register",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53024/rest/v1/rpc/device_heartbeat",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53024/auth/v1/logout?scope=global",
+      "method": "POST"
+    }
+  ]
+}
