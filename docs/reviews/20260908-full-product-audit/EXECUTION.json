@@ -222,12 +222,13 @@
     },
     {
       "id": "TT-03",
-      "status": "in_progress",
+      "status": "completed",
       "evidence": [
         "commit:c5b08a7",
         "../web-time-tracker-window-accounting/20260909-fix.md",
         "commit:8d951e9",
-        "../web-time-window-independent/20260909-verification.md"
+        "../web-time-window-independent/20260909-verification.md",
+        "../web-time-hour-independent/20260909-review.md"
       ]
     },
     {

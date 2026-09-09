@@ -1,6 +1,6 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **12/312**。REL-05 Habits 在 CSS 修复后独立通过四种宽度（bc57f1f）；Board 创建独立通过（996199b），Dashboard 备注独立通过（81f5623）。仅核销各自页内恢复范围，完整 REL-05 仍开放。AI 对话保存失败两项正确 FAIL 和 Board 新卡片保存失败丢 composer 的正确 FAIL 已复现，进入修复；Dashboard grid/order 继续诊断。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **13/312**。TT-03 当前固定 cd3146b 独立复验：20 类 Insights/module/widget、5 份实际 CSV、跨小时毫秒余量、23/25/24.5/23.5h DST 与明确 UTC 范围通过，完整包 82 测试通过，按编号既定范围核销。REL-05 AI 对话和 Board composer 修复进行中；Dashboard grid 诊断发现旧 A 回调写 B 及保存失败路径，进入修复。完整 REL-05 保持开放。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 
