@@ -6,6 +6,8 @@ B1有界接受：fb3ae2f与修复7b584b3经Astra de3bf16独立新13断言及stor
 
 C原语未提交改动由Sol独占完成复杂实现和测试；Astra已接非作者验收准备，待固定提交再运行。后续按确定方案的接入由Terra负责，不覆盖Sol脏文件。A1 Calendar有界接受仍为20a0748/Sol a9b88ba/Astra8045d5d。原六持久重放FAIL、全部writer共同锁与生命周期适配、完整AI-02/REL-05继续开放；详情三丢稿FAIL排在共享文件批次之后。Astra7c59d3f确认SW/启动链缺少旧实例排空及版本激活屏障，首次envelope激活保持默认关闭。
 
+D迁移新增父独立证据0ed1582：固定2dc5333，实际migrateAccount在异步secrets.stage/verify期间接受另一controller下setPref成功写入，但之后发布旧candidate，2正确FAIL/1迁移前写PASS。最新bytes保留在旧代，当前代遗漏成功更新；这是jsdom受控交错，不是原生双tab验收。已交Astra纳入生命周期协调架构，不扩大Sol当前C原语文件范围，不关闭AI-02/REL-06。
+
 Luna3241ffd入口清单及Astra501feb7旧客户端补充共同约束迁移：新WebLocks不能约束旧JS；首次envelope激活前需可验证旧进程排空/升级/防旧版重入，否则完整AI-02/rollout gate开放，不以新客户端并发PASS冒充旧tab保护。父Web整合1364de5的146测试/types为局部整合证据，不是部署或完整持久幂等验收。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。

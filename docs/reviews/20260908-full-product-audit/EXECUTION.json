@@ -201,7 +201,9 @@
         "commit:ab8c35a",
         "../web-account-deletion-auth-receipt/20260909-fix.md",
         "commit:2274185",
-        "../web-account-deletion-auth-independent/20260909-review.md"
+        "../web-account-deletion-auth-independent/20260909-review.md",
+        "commit:0ed1582",
+        "../web-canonical-migration-write-race/review.md"
       ]
     },
     {
@@ -791,7 +793,9 @@
         "../web-board-workspace-astra-review/20260909-b2-compatibility-review.md",
         "commit:aca0193",
         "commit:19cfee4",
-        "../web-board-workspace-astra-review/20260909-b2-aca0193-acceptance.md"
+        "../web-board-workspace-astra-review/20260909-b2-aca0193-acceptance.md",
+        "commit:0ed1582",
+        "../web-canonical-migration-write-race/review.md"
       ]
     },
     {
