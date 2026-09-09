@@ -305,16 +305,16 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return true;
   }
 
-  function handleDeleteList(listId: string) {
+  async function handleDeleteList(listId: string) {
     if (lists.length <= 1) return;
     const fallback = lists.find((list) => list.id !== listId)?.id ?? "inbox";
-    if (!persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }))) return;
+    if (!await persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }))) return;
     if (!persistLists(lists.filter((list) => list.id !== listId))) return;
     if (activeView.kind === "list" && activeView.id === listId) selectListView("all");
   }
 
-  function handleDeleteTag(tagId: string) {
-    if (!persistCols(removeTagFromTasks(taskCols, tagId))) return;
+  async function handleDeleteTag(tagId: string) {
+    if (!await persistCols(removeTagFromTasks(taskCols, tagId))) return;
     if (!persistTags(tags.filter((tag) => tag.id !== tagId))) return;
     if (activeView.kind === "tag" && activeView.id === tagId) selectTagView("all");
   }
@@ -378,8 +378,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return persistCols(next);
   }
 
-  function handleDetailDelete(id: string) {
-    if (!persistCols(deleteCard(taskCols, id))) return;
+  async function handleDetailDelete(id: string) {
+    if (!await persistCols(deleteCard(taskCols, id))) return;
     setEditingTaskId(null);
     setSelectedIds((prev) => {
       const next = new Set(prev);
