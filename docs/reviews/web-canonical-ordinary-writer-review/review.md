@@ -15,3 +15,9 @@ Minimum repair remains within Terra's shared-storage ownership: consistent activ
 ## Fixed follow-up
 
 Product `151982b` was tested through the identical independent runner and four business assertions. Result **4/4 PASS**, `independent-151982b.log`; original `3a764a1` failure evidence is retained. The three demonstrated activation/false-save/no-op-owner defects are repaired within this bounded scope. This is not a full shared-writer, UI, D1 or AI-02 acceptance. Terra continues actual Calendar/Tasks/Board caller integration.
+
+## Activated synchronous bypass follow-up
+
+The D1 contract also forbids old synchronous setters/removers once the coordinated protocol is enabled, including before the first envelope exists. `verify-sync-guard.mjs 151982b` produces **3 correct FAIL / 1 control PASS**: activated setPref writes physical absence or valid legacy `{}`, and activated removePref deletes legacy `{}`. The unchanged four assertions against repair `3e0b611` produce **4/4 PASS**. Disabled legacy setter behavior remains the positive control. Both fixed logs are retained.
+
+These are actual storage API assertions, not a native Web Locks concurrency test or permission to activate production. Calendar UI author commit `496039f` is a separate batch pending Astra review; it is not accepted by these four storage checks.

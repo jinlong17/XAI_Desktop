@@ -1,0 +1,21 @@
+revision=3e0b611
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ordinary-review-rqe8vj
+
+ ✓ docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts (4 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  16:09:24
+   Duration  822ms (transform 80ms, setup 0ms, collect 89ms, tests 3ms, environment 457ms, prepare 72ms)
+
+
+stderr | docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse physical absence without writing
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous setter must refuse legacy domain without writing
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-canonical-ordinary-writer-review/sync-guard.test.ts > activated synchronous removal must refuse legacy domain
+[plugin-web-storage] refusing legacy removal of protected canonical xai_calendar_events.
