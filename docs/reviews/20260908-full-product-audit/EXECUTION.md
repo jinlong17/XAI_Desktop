@@ -40,3 +40,14 @@ REL-06：d895b0b coordinator及23c3423作者native证据已固定。父cfc2d6d�
 POMO-01/02：ce4b767持久会话与pending→history→clear结算已提交。父直接复跑verify-close-reopen-native.mjs：关闭整个Chrome进程、跨绝对deadline后同profile重开，恢复同一id并仅结算一次；verify-crash-native.mjs五项故障恢复通过。独立审查新发现旧revision冲突会留下永久retryAction，导致合法Resume被拒；作者正在修复，两个编号均未关闭。
 
 REL-05 MED：28fe049独立真实页面验证保存失败、最新草稿重试、删除失败保留编辑器、较新原始数据冲突与账户切换，以及实际JSON下载和390px恢复按钮通过。只覆盖挂载页面内恢复，不关闭MED计时持续/跨重载草稿或整个REL-05。
+
+
+## 2026-09-09 检查点：POMO-01/02 核销与 Statistics 实际时长
+
+POMO-01 与 POMO-02 分别正式核销。独立53eda1b固定4868d0a（含ce4b767），复验真实Continue按钮冲突恢复、双tab唯一结算、pending/history/clear故障、实际Host路由切换、paused刷新、queued A→B、整个Chrome进程关闭及两次重开，running/paused分别通过。两项既定合同已满足；不把闭浏览器实时通知、未落盘End意图或云同步计入本次完成。当前完成4/312。
+
+STAT-01/02 原始复现ed7009f四断言全部FAIL。2b1759b仅修STAT-01：KPI/趋势/hour/heatmap统一elapsedMs，保留子分钟，未知旧时长不按配置值估算，显示双语排除提示且原数据不改。三条STAT-01原断言通过，STAT-02仍未修；包22文件161测试、types/lint通过。STAT-01和POMO-03生产者到消费者链路已交独立真实浏览器验收。TASK-01已存在REL-01日期实现，正在独立核验当前Module与sidebar，避免重复实施旧报告已修问题。
+
+REL-06 独立3637866：固定cfc2d6d基础60测试、native双页面11场景通过；原c0af11b三竞态原封复现。当前只证明代隔离、清理失败不假成功与显式重试；首次持久化写入完全失败后不能承诺跨重启退出意图保留，服务端global撤销与账号删除合同仍未闭。独立实际host流程继续进行。
+
+本次git:sync-check -- --fetch已检查：所有长期分支与远端对齐、无local-only refs/reflog commits，23个stash均有远端可恢复ref，Agent/Skill/Workflow无untracked。唯一失败为并行Agent正在生成的未提交验收文件；不能描述工作树为clean。未执行深度unreachable扫描（本次非迁移/清理）。

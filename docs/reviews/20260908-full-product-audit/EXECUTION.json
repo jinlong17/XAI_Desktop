@@ -112,7 +112,8 @@
         "commit:23c3423",
         "commit:cfc2d6d",
         "commit:e1c3b01",
-        "../web-auth-session-cleanup/20260909-host-integration.md"
+        "../web-auth-session-cleanup/20260909-host-integration.md",
+        "commit:3637866"
       ]
     },
     {
@@ -204,28 +205,37 @@
     },
     {
       "id": "POMO-01",
-      "status": "in_progress",
+      "status": "completed",
       "evidence": [
         "commit:b6cf0ee",
         "../web-pomodoro-durable-session/20260909-diagnosis.md",
         "commit:ce4b767",
-        "../web-pomodoro-durable-session/20260909-fix.md"
+        "../web-pomodoro-durable-session/20260909-fix.md",
+        "commit:4868d0a",
+        "commit:53eda1b",
+        "../web-pomodoro-independent/20260909-independent-review.md"
       ]
     },
     {
       "id": "POMO-02",
-      "status": "in_progress",
+      "status": "completed",
       "evidence": [
         "commit:b6cf0ee",
         "../web-pomodoro-durable-session/20260909-diagnosis.md",
         "commit:ce4b767",
-        "../web-pomodoro-durable-session/20260909-fix.md"
+        "../web-pomodoro-durable-session/20260909-fix.md",
+        "commit:4868d0a",
+        "commit:53eda1b",
+        "../web-pomodoro-independent/20260909-independent-review.md"
       ]
     },
     {
       "id": "POMO-03",
-      "status": "pending",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:2b1759b",
+        "../web-statistics-time-contract/20260909-stat01-fix.md"
+      ]
     },
     {
       "id": "POMO-04",
@@ -259,7 +269,7 @@
     },
     {
       "id": "TASK-01",
-      "status": "pending",
+      "status": "verification_pending",
       "evidence": []
     },
     {
@@ -374,13 +384,20 @@
     },
     {
       "id": "STAT-01",
-      "status": "pending",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:ed7009f",
+        "commit:2b1759b",
+        "../web-statistics-time-contract/20260909-stat01-fix.md"
+      ]
     },
     {
       "id": "STAT-02",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:ed7009f",
+        "../web-statistics-time-contract/20260909-diagnosis.md"
+      ]
     },
     {
       "id": "STAT-03",
