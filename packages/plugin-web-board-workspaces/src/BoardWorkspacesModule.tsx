@@ -204,6 +204,16 @@ type BoardStorageBaseline = Readonly<{
   raw: string | null;
 }>;
 
+type QueuedActiveBoardCorrection = Readonly<{
+  owner: ReturnType<typeof accountScope.capture>;
+  boardKey: string;
+  boardRaw: string;
+  activeKey: string;
+  activeRaw: string;
+  renderedBoards: unknown;
+  target: string;
+}>;
+
 function captureBoardStorageBaseline(): BoardStorageBaseline {
   const owner = accountScope.capture();
   try {
@@ -265,6 +275,59 @@ function boardAutomationSourceError(
     return null;
   } catch {
     return "Board storage ownership changed. Reopen before running automation.";
+  }
+}
+
+function captureQueuedActiveBoardCorrection(
+  baseline: BoardStorageBaseline,
+  renderedBoards: unknown,
+  activeBoardId: string,
+  target: string,
+): QueuedActiveBoardCorrection | null {
+  if (boardAutomationSourceError(baseline, renderedBoards) !== null) {
+    return null;
+  }
+  try {
+    const boardKey = accountScope.physicalKey("xai_boards_v2", baseline.owner);
+    const activeKey = accountScope.physicalKey("xai_active_board", baseline.owner);
+    const boardRaw = localStorage.getItem(boardKey);
+    const activeRaw = localStorage.getItem(activeKey);
+    if (boardRaw === null || activeRaw !== activeBoardId) return null;
+    return {
+      owner: baseline.owner,
+      boardKey,
+      boardRaw,
+      activeKey,
+      activeRaw,
+      renderedBoards,
+      target,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function canRunQueuedActiveBoardCorrection(
+  correction: QueuedActiveBoardCorrection,
+  baseline: BoardStorageBaseline,
+): boolean {
+  try {
+    accountScope.assertCurrent(correction.owner);
+    if (
+      accountScope.physicalKey("xai_boards_v2", correction.owner) !==
+        correction.boardKey ||
+      accountScope.physicalKey("xai_active_board", correction.owner) !==
+        correction.activeKey ||
+      localStorage.getItem(correction.boardKey) !== correction.boardRaw ||
+      localStorage.getItem(correction.activeKey) !== correction.activeRaw
+    ) {
+      return false;
+    }
+    return (
+      boardAutomationSourceError(baseline, correction.renderedBoards) === null
+    );
+  } catch {
+    return false;
   }
 }
 
@@ -332,12 +395,20 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   }, []);
 
   // ---- Sync active id if it has drifted ----------------------------------
-  if (
-    activeBoardId &&
-    activeBoardId !== activeBoard.id &&
-    boardAutomationSourceError(boardStorageBaseline, rawBoards) === null
-  ) {
-    queueMicrotask(() => setActiveBoardId(activeBoard.id));
+  if (activeBoardId && activeBoardId !== activeBoard.id) {
+    const correction = captureQueuedActiveBoardCorrection(
+      boardStorageBaseline,
+      rawBoards,
+      activeBoardId,
+      activeBoard.id,
+    );
+    if (correction) {
+      queueMicrotask(() => {
+        if (canRunQueuedActiveBoardCorrection(correction, boardStorageBaseline)) {
+          setActiveBoardId(correction.target);
+        }
+      });
+    }
   }
 
   // ---- Boards writer (single updater for atomic moves) -------------------

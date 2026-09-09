@@ -6,6 +6,7 @@ import { accountScope } from "@repo/plugin-web-storage";
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
+import { useLayoutEffect } from "react";
 import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
@@ -315,6 +316,75 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
       expect(localStorage.getItem(boardKey)).toBe(boardRaw);
       expect(localStorage.getItem(activeKey)).toBe("valuable-board");
+    },
+  );
+
+  it("BWM18c: a stable valid source corrects an unknown active board id", async () => {
+    localStorage.setItem(
+      accountScope.physicalKey("xai_boards_v2"),
+      JSON.stringify(makeDefaultBoards()),
+    );
+    const activeKey = accountScope.physicalKey("xai_active_board");
+    localStorage.setItem(activeKey, "stale-id");
+
+    render(<BoardWorkspacesModule lang="en" />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(localStorage.getItem(activeKey)).toBe("b-default");
+  });
+
+  function ReplaceSelectionSourceInLayout({ replace }: { replace: () => void }) {
+    useLayoutEffect(() => {
+      replace();
+    }, [replace]);
+    return null;
+  }
+
+  it.each(["active-only", "board-replaced", "board-removed"] as const)(
+    "BWM18d: queued correction refuses same-account %s writes before it runs",
+    async (mode) => {
+      const boardKey = accountScope.physicalKey("xai_boards_v2");
+      const activeKey = accountScope.physicalKey("xai_active_board");
+      const boards = makeDefaultBoards();
+      localStorage.setItem(boardKey, JSON.stringify(boards));
+      localStorage.setItem(activeKey, "stale-id");
+      let expectedActive = "stale-id";
+      let expectedBoard: string | null = JSON.stringify(boards);
+
+      const replace = () => {
+        if (mode === "active-only") {
+          expectedActive = "b-pm";
+          localStorage.setItem(activeKey, expectedActive);
+        }
+        if (mode === "board-replaced") {
+          const replacement = makeDefaultBoards();
+          replacement[0]!.id = "stale-id";
+          expectedBoard = JSON.stringify(replacement);
+          localStorage.setItem(boardKey, expectedBoard);
+        }
+        if (mode === "board-removed") {
+          expectedBoard = null;
+          localStorage.removeItem(boardKey);
+        }
+      };
+
+      render(
+        <>
+          <BoardWorkspacesModule lang="en" />
+          <ReplaceSelectionSourceInLayout replace={replace} />
+        </>,
+      );
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(activeKey)).toBe(expectedActive);
+      if (mode !== "active-only") {
+        expect(localStorage.getItem(boardKey)).toBe(expectedBoard);
+      }
     },
   );
 
