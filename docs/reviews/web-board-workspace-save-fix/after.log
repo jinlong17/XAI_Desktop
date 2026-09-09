@@ -22,4 +22,3 @@ stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > pick
       Tests  5 passed (5)
    Start at  14:27:58
    Duration  2.50s (transform 702ms, setup 324ms, collect 932ms, tests 430ms, environment 395ms, prepare 69ms)
-
