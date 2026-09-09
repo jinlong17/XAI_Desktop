@@ -160,23 +160,27 @@ export function createTimeTrackerEntry(
   };
 }
 
+/** Terminal commands are replay-safe. Close every open segment, including legacy
+ * malformed rows; retain the original source separately before repository repair. */
 export function finishTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
-  const segments = entry.segments.map((segment, index) => {
-    if (index !== entry.segments.length - 1 || segment.end !== null) return segment;
-    return { ...segment, end: atMs };
-  });
-  return { ...entry, segments, done: true, updatedAt: atMs };
+  if (entry.deleted || !Number.isFinite(atMs)) return entry;
+  const open = entry.segments.filter(segment => segment.end === null);
+  if (open.some(segment => atMs < segment.start)) return entry;
+  if (entry.done && open.length === 0) return entry;
+  return { ...entry, segments: entry.segments.map(segment => segment.end === null ? { ...segment, end: atMs } : segment), done: true, updatedAt: atMs };
 }
 
 export function pauseTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
-  const segments = entry.segments.map((segment, index) => {
-    if (index !== entry.segments.length - 1 || segment.end !== null) return segment;
-    return { ...segment, end: atMs };
-  });
-  return { ...entry, segments, updatedAt: atMs };
+  if (entry.deleted || entry.done || !Number.isFinite(atMs)) return entry;
+  const open = entry.segments.filter(segment => segment.end === null);
+  if (open.length === 0 || open.some(segment => atMs < segment.start)) return entry;
+  return { ...entry, segments: entry.segments.map(segment => segment.end === null ? { ...segment, end: atMs } : segment), updatedAt: atMs };
 }
 
 export function resumeTimeTrackerEntry(entry: TimeTrackerEntry, atMs: number): TimeTrackerEntry {
+  if (entry.deleted || entry.done || !Number.isFinite(atMs) || entry.segments.some(segment => segment.end === null)) return entry;
+  const last = entry.segments.at(-1);
+  if (!last || last.end === null || atMs < last.end) return entry;
   return { ...entry, segments: [...entry.segments, { start: atMs, end: null }], updatedAt: atMs };
 }
 

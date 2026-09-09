@@ -2695,6 +2695,8 @@ function EntryEditor({
   const editing = state.mode === "edit";
   const entry = editing ? state.entry : undefined;
   const wasRunning = entry !== undefined && isRunningEntry(entry);
+  const originalStart = entry === undefined ? null : toInputValue(entryStart(entry));
+  const originalEnd = useRef(entry === undefined ? null : toInputValue(entryLastEnd(entry, Date.now()))).current;
   const baseDay = entry === undefined ? keyToDate(defaultDayKey) : entryStart(entry);
   const firstCategory = categories[0];
   const [categoryId, setCategoryId] = useState(entry?.categoryId ?? firstCategory?.id ?? "");
@@ -2716,9 +2718,11 @@ function EntryEditor({
       id: entry?.id,
       categoryId,
       subId,
-      segments: [{ start: startMs, end: keepRunning ? null : endMs }],
+      segments: entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning
+        ? entry.segments
+        : [{ start: startMs, end: keepRunning ? null : endMs }],
       note: note.trim() === "" ? { en: "", zh: "" } : { en: note.trim(), zh: note.trim() },
-      done: !keepRunning,
+      done: entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning ? entry.done : !keepRunning,
     });
   }
 
