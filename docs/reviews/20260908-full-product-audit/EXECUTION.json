@@ -78,7 +78,7 @@
         "commit:a1ed33a",
         "commit:762778c",
         "commit:35d7b11",
-        "../../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx"
+        "../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx"
       ]
     },
     {
