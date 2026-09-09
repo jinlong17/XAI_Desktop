@@ -69,7 +69,15 @@
         "commit:aff8175",
         "../web-storage-write-results/independent-write-failure.test.tsx",
         "commit:dd744f5",
-        "commit:9222519"
+        "commit:9222519",
+        "commit:7102f22",
+        "commit:15be421",
+        "commit:a61f92d",
+        "commit:45d0665",
+        "commit:9c974e7",
+        "commit:8c88842",
+        "../web-save-recovery-independent/20260909-joint-verification.md",
+        "../web-metrics-save-independent/20260909-verification.md"
       ]
     },
     {
@@ -83,7 +91,9 @@
         "../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx",
         "commit:23bd23c",
         "commit:65e87b7",
-        "../web-account-deletion-reliability/20260909-legacy-wipe-verification.md"
+        "../web-account-deletion-reliability/20260909-legacy-wipe-verification.md",
+        "commit:c0af11b",
+        "../web-auth-session-cleanup/20260909-rel06-independent-diagnosis.md"
       ]
     },
     {
@@ -118,8 +128,13 @@
     },
     {
       "id": "TT-01",
-      "status": "pending",
-      "evidence": []
+      "status": "verification_pending",
+      "evidence": [
+        "commit:6cd137e",
+        "commit:c5b08a7",
+        "../web-time-tracker-window-accounting/20260909-tt01-diagnosis.md",
+        "../web-time-tracker-window-accounting/20260909-fix.md"
+      ]
     },
     {
       "id": "TT-02",
@@ -128,8 +143,11 @@
     },
     {
       "id": "TT-03",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:c5b08a7",
+        "../web-time-tracker-window-accounting/20260909-fix.md"
+      ]
     },
     {
       "id": "TT-04",
