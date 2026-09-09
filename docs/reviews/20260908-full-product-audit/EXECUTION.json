@@ -51,21 +51,31 @@
     },
     {
       "id": "REL-04",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:d266ab8",
+        "commit:55d826e",
+        "commit:60a1b6e",
+        "../web-data-lifecycle-registry/20260909-rel04-diagnosis.md"
+      ]
     },
     {
       "id": "REL-05",
-      "status": "pending",
+      "status": "in_progress",
       "evidence": [
         "commit:3399f88",
-        "../web-storage-write-results/20260909-rel05-diagnosis.md"
+        "../web-storage-write-results/20260909-rel05-diagnosis.md",
+        "commit:aff8175",
+        "../web-storage-write-results/independent-write-failure.test.tsx"
       ]
     },
     {
       "id": "REL-06",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:27b8925",
+        "commit:a1ed33a"
+      ]
     },
     {
       "id": "REL-07",
