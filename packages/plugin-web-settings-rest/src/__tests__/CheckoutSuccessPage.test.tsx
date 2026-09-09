@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * CS1..CS8 + CS-INVALID-1 + CS-NO-FETCH-1 — CheckoutSuccessPage (test.md §6 P3)
  *
@@ -67,7 +68,7 @@ describe("CheckoutSuccessPage", () => {
       vi.runAllTimers();
     });
     // Tier should NOT be flipped to premium_stub
-    const tierValue = localStorage.getItem("xai_pref_premium_tier");
+    const tierValue = localStorage.getItem(accountScope.physicalKey("xai_pref_premium_tier"));
     expect(tierValue).not.toBe("premium_stub");
   });
 
@@ -76,7 +77,7 @@ describe("CheckoutSuccessPage", () => {
     await act(async () => {
       vi.runAllTimers();
     });
-    const tierValue = localStorage.getItem("xai_pref_premium_tier");
+    const tierValue = localStorage.getItem(accountScope.physicalKey("xai_pref_premium_tier"));
     expect(tierValue).toBe("premium_stub");
   });
 
@@ -86,7 +87,7 @@ describe("CheckoutSuccessPage", () => {
     await act(async () => {
       vi.runAllTimers();
     });
-    const startedAtRaw = localStorage.getItem("xai_pref_premium_started_at");
+    const startedAtRaw = localStorage.getItem(accountScope.physicalKey("xai_pref_premium_started_at"));
     const startedAt = Number(startedAtRaw);
     expect(startedAt).toBeGreaterThanOrEqual(before);
   });

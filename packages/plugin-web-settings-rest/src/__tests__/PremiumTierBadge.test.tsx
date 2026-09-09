@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * PCB-1..2 — PremiumTierBadge (test.md §6 P4)
  *
@@ -13,8 +14,8 @@ describe("PremiumTierBadge", () => {
   });
 
   it("PCB-1: renders 'Premium (stub)' badge when effective tier is premium_stub", () => {
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(Date.now()));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(Date.now()));
     render(<PremiumTierBadge lang="en" />);
     const badge = screen.getByTestId("premium-tier-badge");
     expect(badge).toBeTruthy();

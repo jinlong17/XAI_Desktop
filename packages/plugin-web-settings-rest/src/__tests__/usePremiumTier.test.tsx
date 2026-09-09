@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * PHK1..PHK6 — usePremiumTier hook (test.md §6 P1)
  *
@@ -17,8 +18,8 @@ describe("usePremiumTier", () => {
   it("PHK2: returns 'premium_stub' within 30-day window", () => {
     const now = Date.now();
     // string codec: store raw string value (no JSON quotes)
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(now));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(now));
 
     const { result } = renderHook(() => usePremiumTier());
     expect(result.current.effectiveTier).toBe("premium_stub");
@@ -27,8 +28,8 @@ describe("usePremiumTier", () => {
   it("PHK3: returns 'free' when 30-day window has expired", () => {
     const thirtyOneDaysAgo = Date.now() - (PREMIUM_TIER_TTL_MS + 1000);
     // string codec: store raw string value (no JSON quotes)
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(thirtyOneDaysAgo));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(thirtyOneDaysAgo));
 
     const { result } = renderHook(() => usePremiumTier());
     expect(result.current.effectiveTier).toBe("free");
@@ -36,8 +37,8 @@ describe("usePremiumTier", () => {
 
   it("PHK4: returns 'pending' when tier is pending (transitional state)", () => {
     // string codec: store raw string value (no JSON quotes)
-    localStorage.setItem("xai_pref_premium_tier", "pending");
-    localStorage.setItem("xai_pref_premium_started_at", "0");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "pending");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), "0");
 
     const { result } = renderHook(() => usePremiumTier());
     expect(result.current.effectiveTier).toBe("pending");
@@ -58,8 +59,8 @@ describe("usePremiumTier", () => {
   it("PHK6: setTier to 'free' resets from premium_stub", () => {
     const now = Date.now();
     // string codec: store raw string value (no JSON quotes)
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
-    localStorage.setItem("xai_pref_premium_started_at", String(now));
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_started_at"), String(now));
 
     const { result } = renderHook(() => usePremiumTier());
     expect(result.current.effectiveTier).toBe("premium_stub");

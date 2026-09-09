@@ -1,7 +1,7 @@
 /**
  * morePane — Settings → More pane.
  *
- * 14 persisted keys + per-pane Reset Default link (clears only the 14 More-owned keys).
+ * 15 persisted keys + per-pane Reset Default link (clears only the 15 More-owned keys).
  * Port of web design/module-settings.jsx lines 658-822.
  * API contract: packages/xai-web-settings-rest/docs/api.md §4.6
  *
@@ -15,7 +15,7 @@ import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import { usePref, removePref, accountScope, type AccountScope } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
 import type {
@@ -30,8 +30,8 @@ import type {
   OverdueAt,
 } from "../types.js";
 
-// The 14 More-owned pref keys — used by per-pane Reset Default (pane-scoped only).
-const MORE_OWNED_KEYS: readonly string[] = [
+// The 15 More-owned pref keys — used by per-pane Reset Default (pane-scoped only).
+const MORE_OWNED_KEYS: readonly WebPrefKey[] = [
   "xai_pref_more_win_type",
   "xai_pref_more_launch_at_login",
   "xai_pref_more_minimize_on_launch",
@@ -49,20 +49,11 @@ const MORE_OWNED_KEYS: readonly string[] = [
   "xai_pref_more_overdue_at",
 ] as const;
 
-function resetMorePrefs(): void {
-  for (const key of MORE_OWNED_KEYS) {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      // Swallow — matches resetAllPrefs() idempotency
-    }
-  }
-  // Wake up same-tab usePref listeners (removeItem does NOT fire 'storage' in originating tab)
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: null, storageArea: localStorage }),
-    );
-  }
+function resetMorePrefs(scope: AccountScope): void {
+  accountScope.assertCurrent(scope);
+  // Keep the original per-pane reset: device settings reset only when explicitly
+  // selected here, while private default list/tag references use this account.
+  for (const key of MORE_OWNED_KEYS) removePref(key, scope);
 }
 
 interface TaskTemplateSpec {
@@ -128,10 +119,12 @@ const TEMPLATES: readonly TaskTemplateSpec[] = [
 function MorePaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const [scope] = React.useState(() => accountScope.capture());
 
   // Reset counter forces re-render of pane when reset is triggered.
   // This ensures usePref hooks read fresh defaults without a component remount.
   const [resetKey, setResetKey] = React.useState(0);
+  const [resetFailed, setResetFailed] = React.useState(false);
 
   const [winType, setWinType] = usePref(
     "xai_pref_more_win_type" as WebPrefKey,
@@ -194,12 +187,13 @@ function MorePaneContent({ lang }: PaneRenderProps): React.ReactElement {
   ) as readonly [OverdueAt, (v: OverdueAt) => void, unknown];
 
   function handleReset(): void {
-    resetMorePrefs();
-    setResetKey((k) => k + 1);
+    try { resetMorePrefs(scope); setResetFailed(false); setResetKey((k) => k + 1); }
+    catch { setResetFailed(true); }
   }
 
   return (
     <div className="more-pane" key={resetKey}>
+      {resetFailed && <p role="alert">{lang === "zh" ? "账户已更改，请重新打开设置后重试。" : "Account changed. Reopen settings and retry."}</p>}
       {/* Language (read-only) */}
       <SectionBlock>
         <SettingRow label={t("more.language")}>

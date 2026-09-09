@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import * as authorize from "../internal/buildAuthorizeUrl.js";
 /**
  * CB1..CB4 — IntegrationConnectButton tests (test.md §5.3 P2)
  */
@@ -63,4 +65,17 @@ describe("IntegrationConnectButton", () => {
 
     expect(localStorage.length).toBe(0);
   });
+});
+
+it("cancels navigation if the account changes while the authorization URL is being prepared", async () => {
+  let finish!: (url: string) => void;
+  const delayed = new Promise<string>(resolve => { finish = resolve; });
+  vi.spyOn(authorize, "buildAuthorizeUrl").mockReturnValue(delayed);
+  render(<IntegrationConnectButton provider={notionProvider} lang="en" />);
+  fireEvent.click(screen.getByRole("button", { name: /Connect/i }));
+  await waitFor(() => expect(authorize.buildAuthorizeUrl).toHaveBeenCalledOnce());
+  accountScope.activate(accountScope.lock("B"), "g-b");
+  finish("https://example.com/old-A-authorize");
+  await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Connection did not complete"));
+  expect(assignMock).not.toHaveBeenCalled();
 });

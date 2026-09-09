@@ -950,3 +950,18 @@ dialog.delete-account-modal::backdrop {
     height: 44px;
   }
 }
+
+/* Available on the sign-in page too; content never reveals an account identity. */
+.account-deletion-recovery {
+  box-sizing: border-box;
+  max-width: 48rem;
+  margin: 0.75rem auto;
+  padding: 1rem;
+  border: 1px solid var(--border, oklch(82% 0 0));
+  border-radius: 0.75rem;
+  background: var(--panel, oklch(97% 0 0));
+  color: var(--text-1, oklch(25% 0 0));
+}
+.account-deletion-recovery p { margin: 0 0 0.75rem; }
+.account-deletion-recovery button { min-height: 44px; }
+.account-deletion-recovery button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

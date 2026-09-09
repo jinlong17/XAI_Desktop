@@ -18,6 +18,7 @@ const STUB_PENDING: PendingOAuthState = {
   state: "notion.teststatevalue123",
   codeVerifier: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
   expiresAt: Date.now() + 600_000,
+  owner: { accountId: "settings-fixture", kind: "demo", generation: "fixture-generation", epoch: 2 },
 };
 
 describe("buildAuthorizeUrl", () => {

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * IN1..IN6 (PRESERVED) + IN-EXT-1..IN-EXT-12 — integrationsPane tests
  * (test.md §3 P2 + §5.3 P4)
@@ -94,7 +95,7 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
 
   it("IN-EXT-3: flipping a pref to true renders Disconnect button + 'Connected (stub)' badge", () => {
     // Pre-set notion as connected
-    localStorage.setItem("xai_pref_integrations_connected_notion", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"), "true");
     render(integrationsPane.render({ lang: "en" }));
     // Should have a Disconnect button for notion
     expect(screen.getByRole("button", { name: /Disconnect Notion/i })).toBeInTheDocument();
@@ -137,17 +138,17 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
   });
 
   it("IN-EXT-8: clicking Disconnect flips pref back to false", () => {
-    localStorage.setItem("xai_pref_integrations_connected_notion", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"), "true");
     render(integrationsPane.render({ lang: "en" }));
     const disconnectBtn = screen.getByRole("button", { name: /Disconnect Notion/i });
     fireEvent.click(disconnectBtn);
-    const stored = localStorage.getItem("xai_pref_integrations_connected_notion");
+    const stored = localStorage.getItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"));
     expect(stored).toBe("false");
   });
 
   it("IN-EXT-9: clicking Disconnect emits web:settings:integration-disconnected exactly once", () => {
     const emitSpy = vi.spyOn(eventBus, "emitWebEvent");
-    localStorage.setItem("xai_pref_integrations_connected_notion", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"), "true");
     render(integrationsPane.render({ lang: "en" }));
     const disconnectBtn = screen.getByRole("button", { name: /Disconnect Notion/i });
     fireEvent.click(disconnectBtn);
@@ -159,16 +160,16 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
   });
 
   it("IN-EXT-10: Disconnect tooltip mentions provider's account settings", () => {
-    localStorage.setItem("xai_pref_integrations_connected_linear", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_linear"), "true");
     render(integrationsPane.render({ lang: "en" }));
     const disconnectBtn = screen.getByRole("button", { name: /Disconnect Linear/i });
     expect(disconnectBtn.getAttribute("title")).toContain("provider's account settings");
   });
 
   it("IN-EXT-11: per-provider state independent — flipping Notion does not change GCal pref", () => {
-    localStorage.setItem("xai_pref_integrations_connected_notion", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"), "true");
     render(integrationsPane.render({ lang: "en" }));
-    const gcalRaw = localStorage.getItem("xai_pref_integrations_connected_gcal");
+    const gcalRaw = localStorage.getItem(accountScope.physicalKey("xai_pref_integrations_connected_gcal"));
     // Should be null (not set) or false
     expect(gcalRaw === null || gcalRaw === "false").toBe(true);
   });
@@ -177,7 +178,7 @@ describe("integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12)", () => {
     // This test verifies the NEW components don't introduce hex literals in their TSX.
     // The no-hex-literals source-text test covers this at the file level (NH1 extended).
     // Here we verify badge style is applied via class, not inline.
-    localStorage.setItem("xai_pref_integrations_connected_notion", "true");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_integrations_connected_notion"), "true");
     const { container } = render(integrationsPane.render({ lang: "en" }));
     const badge = container.querySelector(".int-badge-connected");
     expect(badge).not.toBeNull();

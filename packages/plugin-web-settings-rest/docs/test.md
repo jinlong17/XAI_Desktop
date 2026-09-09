@@ -617,3 +617,14 @@ Manual smoke (Chrome 120 / Safari 17, deferrable 24h per ADR-0008 carve-out, con
 - Live mode → mock the backend to return 500 → click flow as above → on submit → error banner shows ZH/EN copy → localStorage NOT cleared → retry button restores Step 2 → re-submit succeeds with mocked 200 → cleanup happens → redirect.
 - Failure recovery → close tab mid-deletion → reopen → app loads in unauthenticated state (account is gone upstream; local stale data is inert without a session).
 
+
+
+## REL-03 Settings regression (2026-09-09)
+
+New coverage uses real scoped localStorage with synthetic A/B/demo identities: account deletion success/failure/already-deleted/reentry; switches during server, secrets and auth clear; no whole-IDB erasure; captured-token request; More reset preservation; export payload exclusion and visible failure; AccountDataGate event; OAuth owner/epoch invalidation and delayed URL cancellation.
+
+Durable recovery additionally verifies tombstone-before-erase, serialized receipt replay while B is active, blocked secrets, failed final receipt commit, malformed-owner metadata, signed-out notice remount, visible retry and receipt event discovery. Scope fixtures now explicitly activate a demo generation; previous raw global-key expectations were replaced by actual physical-key reads/writes. Callback success fixtures now include the required authorization code; missing-code rejection remains a real guard. The old whole-database-list assertion was removed because global database deletion is forbidden by the new contract, replaced by scoped preservation assertions.
+
+Package config uses ESNext/Bundler resolution to match the shipped Vite application and its source-package imports; ImportMeta typing is explicit. No dependencies or lockfile changed by this Settings worker.
+
+Implementation verification: **40 test files / 266 tests PASS**, package typecheck PASS. A separate isolated real Chromium probe (`node packages/plugin-web-settings-rest/docs/verify-browser-deletion-recovery.mjs`) writes native localStorage and IndexedDB fixtures, reloads the full page, shows recovery while unauthenticated, activates B, retries A erasure and confirms A content/ciphertext are removed while B, legacy ciphertext and device preferences survive. Receipt becomes complete only after native cleanup; the notice then disappears. This is an actual page reload, not whole-browser termination or hosted authentication acceptance. The fixture ciphertext is opaque synthetic data: the probe tests native owner-scoped erasure, not cryptographic correctness.

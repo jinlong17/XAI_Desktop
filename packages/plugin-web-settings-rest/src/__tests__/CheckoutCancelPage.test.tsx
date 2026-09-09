@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * CC1..CC4 + CC-DIRECT-1 + CC-NO-FETCH-1 — CheckoutCancelPage (test.md §6 P3)
  *
@@ -58,13 +59,13 @@ describe("CheckoutCancelPage", () => {
 
   it("CC4: tier is NOT changed (idempotent — no pref mutation)", async () => {
     // Set premium_stub before rendering cancel page
-    localStorage.setItem("xai_pref_premium_tier", "premium_stub");
+    localStorage.setItem(accountScope.physicalKey("xai_pref_premium_tier"), "premium_stub");
     renderCancelPage();
     await act(async () => {
       vi.runAllTimers();
     });
     // Tier should remain premium_stub — cancel page must not touch it
-    const tierValue = localStorage.getItem("xai_pref_premium_tier");
+    const tierValue = localStorage.getItem(accountScope.physicalKey("xai_pref_premium_tier"));
     expect(tierValue).toBe("premium_stub");
   });
 
@@ -75,7 +76,7 @@ describe("CheckoutCancelPage", () => {
       vi.runAllTimers();
     });
     // No tier mutation should have occurred
-    const tierValue = localStorage.getItem("xai_pref_premium_tier");
+    const tierValue = localStorage.getItem(accountScope.physicalKey("xai_pref_premium_tier"));
     expect(tierValue).toBeNull(); // Key was never set
   });
 

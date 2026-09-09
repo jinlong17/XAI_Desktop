@@ -8,7 +8,30 @@
 
 ---
 
-## Workflow State
+## Current REL-03 Settings iteration
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | plugin-web-settings-rest · REL-03 account-local compatibility |
+| Title | Scoped reset/export/delete and OAuth attempts must not cross accounts |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex bug-fix |
+| Updated | 2026-09-09 America/Los_Angeles |
+| Suggested Next | Parent REL-03 integration and independent bug-verify |
+| Automation Mode | A-Codex |
+| Verify Cross-vendor | Not performed; Claude OAuth unavailable in parent session |
+
+Implementation verification: 40 files / 266 tests, typecheck, and isolated real-Chromium full-page reload/native IDB recovery PASS. Independent integrated REL-03 verification remains pending. No hosted account deletion was exercised.
+
+Reproduction and strategy: `docs/reviews/web-account-data-isolation/20260909-rel03-diagnosis.md`. Original More reset bypassed the account resolver; deletion removed all registry keys and entire shared databases; OAuth pending records had no owner. Preserve the historical shipped iterations below; this iteration does not replace their evidence.
+
+| Timestamp | Executor | Action | Commits | Next Step |
+|---|---|---|---|---|
+| 2026-09-09 | Codex bug-fix | Implement captured-scope Settings operations, bound OAuth attempts and durable local deletion recovery; add synthetic account regression coverage | Current scoped commit | Independent REL-03 verify |
+
+## Historical Workflow State — About pane (2026-05-28)
 
 | Field | Value |
 |---|---|

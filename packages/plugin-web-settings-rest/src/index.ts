@@ -67,3 +67,9 @@ export type { IntegrationProviderId } from "./internal/integrationProviders.js";
 
 // Extension 2026-05-26 — Premium tier type (gap-closure row #8)
 export type { PremiumTier } from "./internal/premiumTier.js";
+
+// AccountDataGate recovery integration: metadata only, no token or plaintext key.
+export { readAccountDeletionReceipt, resumeAccountLocalDeletion } from "./internal/accountDeletionRecovery.js";
+export type { AccountDeletionReceipt } from "./internal/accountDeletionRecovery.js";
+export { AccountDeletionRecoveryNotice } from "./AccountDeletionRecoveryNotice.js";
+export type { AccountDeletionRecoveryNoticeProps } from "./AccountDeletionRecoveryNotice.js";

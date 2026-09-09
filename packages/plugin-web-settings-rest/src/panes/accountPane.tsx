@@ -15,6 +15,7 @@
 
 import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
+import { accountScope, exportAccountLocalData, requestAccountDataManagement } from "@repo/plugin-web-storage";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { localI18n } from "../internal/localI18n.js";
 import { DeleteAccountConfirmModal } from "../internal/DeleteAccountConfirmModal.js";
@@ -22,6 +23,30 @@ import { DeleteAccountConfirmModal } from "../internal/DeleteAccountConfirmModal
 function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const t = localI18n(lang);
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [scope] = React.useState(() => accountScope.capture());
+  const [exportMessage, setExportMessage] = React.useState<string | null>(null);
+  const [exportFailed, setExportFailed] = React.useState(false);
+
+  function exportLocalData(): void {
+    let url: string | undefined;
+    try {
+      accountScope.assertCurrent(scope);
+      const data = exportAccountLocalData(scope);
+      url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `xai-account-data-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.append(link);
+      try { link.click(); } finally { link.remove(); }
+      setExportFailed(false);
+      setExportMessage(lang === "zh" ? "已请求下载，请检查浏览器下载记录。这不是云端备份。" : "Download requested. Check your browser downloads; this is not a cloud backup.");
+    } catch {
+      setExportFailed(true);
+      setExportMessage(lang === "zh" ? "无法导出当前账户数据。请确认账户已解锁，并检查浏览器存储权限后重试。" : "Could not export this account. Unlock the account and check browser storage permissions, then retry.");
+    } finally {
+      if (url) { const completedUrl = url; setTimeout(() => URL.revokeObjectURL(completedUrl), 1000); }
+    }
+  }
 
   function handleDeleteClick(): void {
     setModalOpen(true);
@@ -85,6 +110,17 @@ function AccountPaneContent({ lang }: PaneRenderProps): React.ReactElement {
           {t("account.delete")}
         </button>
       </div>
+
+      <section aria-label={lang === "zh" ? "本地账户数据" : "Local account data"}>
+        <p>{lang === "zh" ? "导出仅包含当前账户的本地业务数据，不包含登录凭据、AI 密钥或其他账户数据。" : "Export includes this account's local content, excluding login credentials, AI keys and other accounts."}</p>
+        <button type="button" className="btn ghost" onClick={exportLocalData}>
+          {lang === "zh" ? "导出当前账户本地数据" : "Export this account's local data"}
+        </button>
+        <button type="button" className="btn ghost" onClick={() => { try { accountScope.assertCurrent(scope); requestAccountDataManagement(); } catch { setExportFailed(true); setExportMessage(lang === "zh" ? "账户已更改，请重新打开设置。" : "Account changed. Reopen settings."); } }}>
+          {lang === "zh" ? "管理本地数据导入与回滚" : "Manage local data import and rollback"}
+        </button>
+        {exportMessage && <p role={exportFailed ? "alert" : "status"}>{exportMessage}</p>}
+      </section>
 
       <DeleteAccountConfirmModal
         open={modalOpen}

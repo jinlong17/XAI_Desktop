@@ -1,33 +1,10 @@
-/**
- * @internal — useAccountDeleteOrchestrator.ts
- *
- * Orchestration hook for the Account-Delete flow.
- * NOT exported from barrel — used only by DeleteAccountConfirmModal.tsx.
- *
- * Two execution paths:
- * - Live-auth (VITE_WEB_AUTH_MODE !== "mock-authenticated"):
- *     deleteAccount(supabaseClient) → signOut (inside deleteAccount) →
- *     registry-list localStorage wipe → IDB wipe → window.location.assign("/")
- * - Mock-auth (VITE_WEB_AUTH_MODE === "mock-authenticated"):
- *     skip backend + signOut →
- *     registry-list localStorage wipe → IDB wipe → window.location.assign("/")
- *
- * Orchestration sequence enforces HC3 (DEL-ORCH-3): backend SUCCESS precedes
- * any local mutation in live-auth mode. On failure, local state is NOT touched.
- *
- * API contract: packages/plugin-web-settings-rest/docs/api.md §8.3
- * Design: design.md §"2026-05-26 Extension" FA-12
- * Test: test.md §7.3 P3 — DEL-ORCH-1..4, DEL-WIPE-1..2, DEL-IDEM-1, DEL-IDB-LIST-1
- */
-
+/** Account deletion owns only the captured account. Server success precedes local cleanup. */
 import * as React from "react";
-import { PREF_REGISTRY, removePref } from "@repo/plugin-web-storage";
-import type { WebPrefKey } from "@repo/plugin-web-storage";
+import { accountScope } from "@repo/plugin-web-storage";
+import { beginAccountLocalDeletion, resumeAccountLocalDeletion } from "./accountDeletionRecovery.js";
 import {
   deleteAccount,
   AccountDeleteError,
-  ACCOUNT_LOCAL_WIPE_IDB_NAMES,
-  wipeRegisteredIDB,
 } from "@repo/web-auth-device-session";
 import { useWebAuthSession } from "@repo/web-auth-device-session/web";
 
@@ -54,7 +31,8 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
 
   const IS_MOCK_AUTH = isMockAuthMode();
 
-  const { client: supabaseClient } = useWebAuthSession();
+  const { client: supabaseClient, session, clearSessionStorage } = useWebAuthSession();
+  const [scope] = React.useState(() => accountScope.capture());
 
   const submit = React.useCallback(async () => {
     // DEL-IDEM-1: idempotent — if already submitting, no-op.
@@ -68,17 +46,22 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
     const currentIsMockAuth = isMockAuthMode();
 
     try {
+      accountScope.assertCurrent(scope);
+      if (scope.kind === "locked" || !scope.accountId || !scope.generation) {
+        throw new AccountDeleteError("unauthorized", "Unlock the account before deleting its data");
+      }
+      if (currentIsMockAuth && scope.kind !== "demo") throw new AccountDeleteError("unauthorized", "Demo deletion requires a demo account");
       if (!currentIsMockAuth) {
         // Live-auth: call backend FIRST (DEL-ORCH-3 sequencing).
         // supabaseClient is obtained from the SHIPPED session context.
-        if (!supabaseClient) {
+        if (!supabaseClient || session?.user.id !== scope.accountId || !session.access_token || scope.kind !== "account") {
           throw new AccountDeleteError("unauthorized", "No active Supabase session");
         }
-        // deleteAccount internally calls signOut (best-effort) on success.
+        // Suppress implicit signOut: the shared client may already belong to B.
         // Idempotency (DEL-ORCH-4): if deleteAccount throws kind="already_deleted",
         // treat as success and proceed to local wipe (account is gone).
         try {
-          await deleteAccount(supabaseClient);
+          await deleteAccount(supabaseClient, { accessToken: session.access_token, signOutAfterDelete: false });
         } catch (err) {
           if (err instanceof AccountDeleteError && err.kind === "already_deleted") {
             // Idempotent — proceed to wipe (account already deleted server-side).
@@ -92,18 +75,19 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
       // Local wipe (same in both paths — HC3: only reached AFTER backend success or mock skip).
       setState("wiping");
 
-      // 1. Iterate Object.keys(PREF_REGISTRY) → removePref per key (sequential).
-      // NEVER localStorage.clear() (DEL-WILDCARD-GUARD).
-      for (const key of Object.keys(PREF_REGISTRY) as WebPrefKey[]) {
-        removePref(key);
+      // Explicit owner operations may finish after A has signed out or B has
+      // signed in. They never resolve the mutable current account after an await.
+      const receipt = beginAccountLocalDeletion(scope);
+      await resumeAccountLocalDeletion(receipt);
+
+      if (accountScope.capture() === scope) {
+        const clearing = clearSessionStorage(); // synchronously invalidates A
+        const clearedScope = accountScope.capture();
+        await clearing;
+        // A late clear must not navigate away from a newly active B.
+        if (accountScope.capture() === clearedScope) window.location.assign("/");
       }
-
-      // 2. IDB wipe via ACCOUNT_LOCAL_WIPE_IDB_NAMES (DEL-WIPE-2).
-      await wipeRegisteredIDB();
-
-      // 3. Redirect — full-page navigation forces clean React tree.
       setState("success");
-      window.location.assign("/");
     } catch (err) {
       const deleteErr =
         err instanceof AccountDeleteError
@@ -114,7 +98,7 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
     } finally {
       isSubmittingRef.current = false;
     }
-  }, [supabaseClient]);
+  }, [supabaseClient, session, clearSessionStorage, scope]);
 
   const reset = React.useCallback(() => {
     setState("idle");
@@ -129,6 +113,3 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
     reset,
   };
 }
-
-// Re-export ACCOUNT_LOCAL_WIPE_IDB_NAMES for tests that need to assert the frozen list.
-export { ACCOUNT_LOCAL_WIPE_IDB_NAMES };

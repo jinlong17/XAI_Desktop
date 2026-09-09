@@ -1,3 +1,4 @@
+import { accountScope, generationKey } from "@repo/plugin-web-storage";
 /**
  * MP1..MP10 — morePane tests (test.md §3 P2)
  */
@@ -89,4 +90,30 @@ describe("morePane", () => {
     expect(morePane.icon).toBe("help");
     expect(morePane.i18nKey).toBe("settings.more");
   });
+});
+
+
+it("REL-03 More reset preserves B and unowned defaults while resetting the selected account", () => {
+  const current = accountScope.capture();
+  setPref("xai_pref_more_default_list", "today");
+  const keyB = generationKey("B", "g-b", "xai_pref_more_default_list");
+  localStorage.setItem(keyB, "today");
+  localStorage.setItem("xai_pref_more_default_list", "unowned-list");
+  render(morePane.render({ lang: "en" }));
+  fireEvent.click(screen.getByTestId("more-reset-default"));
+  expect(getPref("xai_pref_more_default_list")).toBe("inbox");
+  expect(localStorage.getItem(keyB)).toBe("today");
+  expect(localStorage.getItem("xai_pref_more_default_list")).toBe("unowned-list");
+  expect(accountScope.capture()).toBe(current);
+});
+
+it("REL-03 a stale reset callback cannot reset B or device settings", () => {
+  render(morePane.render({ lang: "en" }));
+  accountScope.activate(accountScope.lock("B"), "g-b");
+  setPref("xai_pref_more_default_list", "today");
+  setPref("xai_pref_more_win_type", "tray");
+  fireEvent.click(screen.getByTestId("more-reset-default"));
+  expect(getPref("xai_pref_more_default_list")).toBe("today");
+  expect(getPref("xai_pref_more_win_type")).toBe("tray");
+  expect(screen.getByRole("alert")).toHaveTextContent("Account changed");
 });
