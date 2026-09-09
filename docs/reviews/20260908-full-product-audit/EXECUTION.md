@@ -1,6 +1,12 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **12/312**。REL-02/03 功能PASS、跨工具验证pending分列；REL-05 Habits、Countdown及POMO偏好修复已提交，等待相应独立验收。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **12/312**。REL-05 Countdown和POMO偏好子项独立通过；Habits独立发现窄屏重叠，CSS已补待复验。Board创建及Dashboard备注继续处理。以下保留历次检查记录。
+
+REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
+
+REL-05 POMO偏好独立dc86983及88108ed固定394efad：6项quota、最新值重试、计时active/history原bytes保留、仅失败key重试通过。补真实Chrome临时目录下载，落盘JSON最新6值和唯一文件通过；URL准备错误可见，恢复后成功。浏览器/OS在anchor启动后拒绝无应用ack，不声称该类反馈。全REL-05仍开放。
+
+Habits45a2a06独立功能断言通过但正确样式顺序下390px发现保存错误布局重叠（list.bottom418.8、detail.top224）；父0b16605在实际单列范围<=1024px改auto内容行，保留桌面两行。独立几何/截图复验进行中，该子项未提前核销。
 
 REL-03 独立f02ca28固定5803e86：当前完整workspace图原生8项联合断言通过，补实际Gate选择import→Undo→恢复A私有内容/BYOK→退出→B空白和旧setter拒绝。功能PASS与工作流pending分列，整体复合verification_pending不冒充跨工具或READY_TO_SHIP。REL-04跟进adf7485补auth-attempt和generation PKCE verifier暂存族的排除/捕获代清理声明，旧114键proposal表明确标为历史；完整生命周期仍未核销。
 
