@@ -1,6 +1,6 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **12/312**。REL-05 Countdown和POMO偏好子项独立通过；Habits独立发现窄屏重叠，CSS已补待复验。Board创建及Dashboard备注继续处理。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **12/312**。REL-05 Habits 已在 CSS 修复后独立通过 390/768/1024/1440px 功能和布局复验（bc57f1f）；Board 创建（885a111/0223180）、Dashboard 备注（8eb163d/88fd5c1）作者验证完成，独立验收进行中。AI 对话首次保存失败无提示、存储恢复后继续发送仍无历史记录，两项正确组件断言 FAIL，已进入修复。以上均不关闭整个 REL-05。全部逐项状态见 ALL-TODO-CURRENT.md。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 
