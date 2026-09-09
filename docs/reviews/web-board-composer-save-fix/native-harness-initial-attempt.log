@@ -1,0 +1,22 @@
+baseline {"commit":"279a7f5","chromePid":71304}
+card-correct-oracle {"retained":true,"error":true,"originalBytes":true,"rejectedWrites":1}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'bc2'
+- 'card-591631b9-cf61-4865-a698-5fa17f7719a6'
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-composer-save-fix/verify-native.mjs:41:227 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'bc2',
+  expected: 'card-591631b9-cf61-4865-a698-5fa17f7719a6',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

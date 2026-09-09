@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-board-card-save-recovery/save-contract.test.tsx > retains a new card draft and reports failure when canonical board storage rejects the write
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ✓ docs/reviews/web-board-card-save-recovery/save-contract.test.tsx (1 test) 165ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  14:16:39
+   Duration  1.91s (transform 686ms, setup 281ms, collect 745ms, tests 165ms, environment 297ms, prepare 118ms)
+

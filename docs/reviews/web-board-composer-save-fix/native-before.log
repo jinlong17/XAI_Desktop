@@ -1,0 +1,20 @@
+baseline {"commit":"885a111","chromePid":70956}
+card-correct-oracle {"retained":false,"error":false,"originalBytes":true,"rejectedWrites":1}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(result.retained&&result.error&&result.originalBytes&&result.rejectedWrites>0)
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-composer-save-fix/verify-native.mjs:40:383 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0
