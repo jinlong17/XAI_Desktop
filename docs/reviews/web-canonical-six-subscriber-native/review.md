@@ -1,6 +1,6 @@
 # Six subscribers: whole Chrome process reopen verification
 
-Status: harness prepared; **not yet run or accepted**. No production or AI-02 closure claim.
+Status: pre-integration baseline executed; **six initial operations fail; restart phase not reached**. No production or AI-02 closure claim.
 
 The runner archives a supplied Git commit and builds the actual Tasks and Calendar subscriber hooks with their event bus and public storage writer. It uses a temporary HTTP origin, isolated Chrome profile, and synthetic account data. Product source is resolved from the archive, excluding concurrent worktree edits.
 
@@ -17,3 +17,7 @@ node docs/reviews/web-canonical-six-subscriber-native/verify-native.mjs <fixed-c
 The JSON artifact records the fixed revision, both process IDs, per-case outcomes, and synthetic checkpoints. Initialization explicitly enables the experimental canonical writer. It does not prove the production activation/old-client upgrade gate, OS crash durability, browser UI close gestures, actual composer interactions, or AiChat/provider continuation. These remain separate acceptance work.
 
 Preparation validation: runner JavaScript syntax checked with `node --check`; behavioral execution pending.
+
+## Before integration: fixed db1eddc
+
+The isolated native run reached all six actual subscriber hooks. Every initial operation returned a correlated `storage` failure under explicit activation, so the runner correctly refused to proceed to restart. This baseline predates the asynchronous canonical subscriber integration: activated legacy synchronous writes are rejected. It does not imply production activation is enabled. Evidence: `native-db1eddc.json`, command exited 1. Preserve the same assertions for the integration commit and report both phases independently.

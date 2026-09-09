@@ -1,0 +1,40 @@
+{
+  "requestedRef": "db1eddc",
+  "revision": "db1eddccadfecdbea2e078e09c4b5808d25b0e56",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "tasks:create",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-tasks:create\",\"requestChannel\":\"web:tasks:create-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-tasks-create\",\"generation\":\"stable\",\"epoch\":2},\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "tasks:update",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-tasks:update\",\"requestChannel\":\"web:tasks:update-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-tasks-update\",\"generation\":\"stable\",\"epoch\":4},\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "tasks:delete",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-tasks:delete\",\"requestChannel\":\"web:tasks:delete-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-tasks-delete\",\"generation\":\"stable\",\"epoch\":6},\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "calendar:create",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-calendar:create\",\"requestChannel\":\"web:calendar:create-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-calendar-create\",\"generation\":\"stable\",\"epoch\":8},\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "calendar:update",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-calendar:update\",\"requestChannel\":\"web:calendar:update-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-calendar-update\",\"generation\":\"stable\",\"epoch\":10},\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "calendar:delete",
+      "pass": false,
+      "error": "Error: Expected success: {\"requestId\":\"original-calendar:delete\",\"requestChannel\":\"web:calendar:delete-requested\",\"attemptId\":\"first\",\"owner\":{\"kind\":\"account\",\"accountId\":\"native-six-calendar-delete\",\"generation\":\"stable\",\"epoch\":12},\"ok\":false,\"reason\":\"storage\"}"
+    }
+  ],
+  "checkpoint": {}
+}
