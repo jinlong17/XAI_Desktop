@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-tt02-independent-q5b_xf8_
+
+ ✓ docs/reviews/web-time-tracker-session-invariants/invariants.test.ts (5 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  12:54:57
+   Duration  1.26s (transform 155ms, setup 0ms, collect 212ms, tests 3ms, environment 670ms, prepare 81ms)
+

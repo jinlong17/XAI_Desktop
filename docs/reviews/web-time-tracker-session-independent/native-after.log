@@ -1,0 +1,13 @@
+{"name":"baseline","head":"64caa5a678ce9943a0e7aa03609095153c5131e2","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"two-tab-replayed-resume","expectedOpenCount":1,"actualOpenCount":1,"pass":true}
+{"name":"two-tab-end","done":true,"remainingOpen":0,"before":1203250,"after":1203250,"expectedGrowth":0,"actualGrowth":0,"pass":true}
+{"name":"note-only-source-edit","before":[{"start":1780333200125,"end":1780333800875},{"start":1780336800250,"end":1780337400750}],"after":[{"start":1780333200125,"end":1780333800875},{"start":1780336800250,"end":1780337400750}],"pass":true,"durationBefore":1201250,"durationAfter":1201250}
+{"name":"single-mode-two-tab-start-buttons","expectedRunning":1,"actualRunning":1,"pass":true}
+{"name":"simultaneous-two-tab-single-start","pass":true}
+{"name":"native-lock-unavailable","result":false,"unchanged":true,"pass":true}
+{"name":"native-lock-revision","outcomes":["fulfilled","rejected"],"pass":true}
+{"name":"native-failed-editor-preserves-draft","pass":true}
+{"name":"native-malformed-byte-preservation-export","pass":true}
+{"name":"native-raw-download","byteExact":true,"pass":true}
+{"name":"native-waiting-A-B-isolation","rejected":true,"aUnchanged":true,"bEmpty":true,"pass":true}
+{"name":"PASS","checks":11}
