@@ -1,0 +1,10 @@
+baseline {"commit":"dea0af6","chromePid":76403}
+card-correct-oracle {"retained":true,"error":true,"originalBytes":true,"rejectedWrites":1}
+card-actual-download-stable-id-latest-retry {"pass":true}
+list-correct-oracle {"retained":true,"error":true,"originalBytes":true,"rejectedWrites":1}
+list-actual-download-stable-id-latest-retry {"pass":true}
+first-submit-external-removal-rejected {"pass":true}
+list-first-submit-external-removal-rejected {"pass":true}
+newer-raw-retains-draft {"pass":true}
+old-account-retry-export-denied {"pass":true}
+PASS {"scope":"card and list composer only"}
