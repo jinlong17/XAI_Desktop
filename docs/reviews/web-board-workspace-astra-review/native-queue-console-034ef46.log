@@ -1,0 +1,29 @@
+baseline {"commit":"034ef46","scope":"same-account layout write between selection scheduling and its microtask"}
+active-only {"expectedActive":"b-pm","activeAfter":"b-default","sourcePreserved":true,"pass":false}
+board-replaced {"expectedActive":"stale-id","activeAfter":"b-default","sourcePreserved":true,"pass":false}
+board-removed {"expectedActive":"stale-id","activeAfter":"b-default","sourcePreserved":true,"pass":false}
+verdict {"cases":3,"failed":["active-only","board-replaced","board-removed"]}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Queued correction must revalidate active and board sources at execution
++ actual - expected
+
++ [
++   'active-only',
++   'board-replaced',
++   'board-removed'
++ ]
+- []
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-workspace-astra-review/verify-queue-native.mjs:68:45 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [ 'active-only', 'board-replaced', 'board-removed' ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.16.0

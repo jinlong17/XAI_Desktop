@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { accountScope, setPref } from './packages/plugin-web-storage/src/index';
 import { loadWorkspacesOrDefault, makeDefaultBoards } from './packages/plugin-web-board-core/src/index';
@@ -41,4 +41,13 @@ if (corruptMode && corruptFixtures[corruptMode]) localStorage.setItem(boardKey, 
 const activeFixture = new URLSearchParams(location.search).get('active');
 if (activeFixture) localStorage.setItem(activeKey, activeFixture);
 if (new URLSearchParams(location.search).get('denyboard') === '1') denied = boardKey;
-createRoot(document.getElementById('app')!).render(<BoardWorkspacesModule lang="en" />);
+function ReplaceBeforeSelectionMicrotask() {
+  useLayoutEffect(() => {
+    const race = new URLSearchParams(location.search).get('race');
+    if (race === 'active-only') nativeSet.call(localStorage, activeKey, 'b-pm');
+    if (race === 'board-replaced') { const replacement = makeDefaultBoards(); replacement[0]!.id = 'stale-id'; nativeSet.call(localStorage, boardKey, JSON.stringify(replacement)); }
+    if (race === 'board-removed') localStorage.removeItem(boardKey);
+  }, []);
+  return null;
+}
+createRoot(document.getElementById('app')!).render(<><BoardWorkspacesModule lang="en" /><ReplaceBeforeSelectionMicrotask /></>);

@@ -26,8 +26,10 @@ try {
  aliases.push({find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
  copyFileSync(join(evidence,'independent.test.tsx'),join(owned,'independent.test.tsx'));
+ copyFileSync(join(evidence,'startup-and-queue.test.tsx'),join(owned,'startup-and-queue.test.tsx'));
  for (const [name, include] of [
   ['independent', ['docs/reviews/web-board-workspace-astra-review/independent.test.tsx']],
+  ['startup-and-queue', ['docs/reviews/web-board-workspace-astra-review/startup-and-queue.test.tsx']],
   ['author-contract-rerun', ['docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx']],
   ['package-rerun', ['packages/plugin-web-board-workspaces/src/__tests__/**/*.{test,spec}.{ts,tsx}']],
  ]) {
