@@ -1,0 +1,17 @@
+.account-data-gate { min-height: 100dvh; padding: 1.5rem; display: grid; place-items: center; background: var(--bg, #f7f7f5); color: var(--text, #242424); font-family: inherit; }
+.account-data-gate section { width: 100%; max-width: 38rem; padding: 1.5rem; background: var(--surface, #fff); border: 1px solid var(--border, #deded8); border-radius: 1rem; }
+.account-data-gate h1 { font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.2; margin: .5rem 0 1rem; text-wrap: balance; }
+.account-data-gate p { line-height: 1.6; overflow-wrap: anywhere; }
+.account-data-eyebrow { font-size: .8rem; color: var(--muted, #666); margin: 0; }
+.account-data-gate fieldset { border: 0; padding: 0; margin: 1.5rem 0; }
+.account-data-gate legend { font-weight: 600; margin-bottom: .5rem; }
+.account-data-gate label { display: flex; gap: .75rem; align-items: center; min-height: 2.75rem; cursor: pointer; }
+.account-data-gate input[type=checkbox] { width: 1.125rem; height: 1.125rem; flex: 0 0 auto; }
+.account-data-actions { display: grid; gap: .75rem; margin-top: 1.5rem; }
+.account-data-gate button { min-height: 2.75rem; padding: .75rem 1rem; border: 1px solid var(--border, #deded8); border-radius: .5rem; background: var(--text, #242424); color: var(--surface, #fff); font: inherit; cursor: pointer; }
+.account-data-gate button.secondary { background: transparent; color: inherit; }
+.account-data-gate button:hover:not(:disabled) { opacity: .85; }
+.account-data-gate button:disabled { opacity: .5; cursor: default; }
+.account-data-gate :focus-visible { outline: 3px solid var(--accent, #34765c); outline-offset: 3px; }
+.account-data-error { border-left: 3px solid var(--danger, #af332c); padding-left: 1rem; }
+@media (min-width: 48rem) { .account-data-gate section { padding: 2.5rem; } .account-data-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
