@@ -1,5 +1,5 @@
 import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
-import { addLocalDays, nextLocalDayStart } from "@repo/plugin-web-tokens";
+import { addLocalDays, nextLocalDayStart, useLocalDayClock } from "@repo/plugin-web-tokens";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import type { CopyKey } from "./internal/copy.js";
@@ -520,6 +520,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const [mode, setMode] = useTimeTrackerMode();
   const [exportError, setExportError] = useState(false);
   const [view, setView] = useState<TrackerView>("tracker");
+  const { now: calendarNow } = useLocalDayClock();
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedKey, setSelectedKey] = useState(() => dayKey(Date.now()));
   const [categoryEditor, setCategoryEditor] = useState<CategoryEditorState | null>(null);
@@ -539,6 +540,9 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const activeEntries = useMemo(() => liveEntries.filter(isActiveEntry), [liveEntries]);
   const hasActive = activeEntries.length > 0;
   const focusEntry = focusEntryId === null ? null : activeEntries.find((entry) => entry.id === focusEntryId) ?? null;
+
+  // Idle trackers still cross midnight and resume from suspended browser pages.
+  useEffect(() => { setNowMs(calendarNow.getTime()); }, [calendarNow]);
 
   useEffect(() => {
     if (!hasActive) return;
@@ -567,6 +571,12 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   }, [focusEntry, focusEntryId]);
 
   const todayKey = dayKey(nowMs);
+  const previousToday = useRef(todayKey);
+  useEffect(() => {
+    const prior = previousToday.current;
+    previousToday.current = todayKey;
+    if (prior !== todayKey) setSelectedKey(selected => selected === prior ? todayKey : selected);
+  }, [todayKey]);
   const isToday = selectedKey === todayKey;
   const weekStart = startOfWeek(nowMs);
   const selectedEntries = useMemo(
