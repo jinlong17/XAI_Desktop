@@ -1,0 +1,14 @@
+revision=8503b71
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-subscribers-V5XJwN
+
+stdout | docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx > Tasks queued mutation must use the validated semantic snapshot recorded in its receipt
+queued-payload {"signature":"{\"id\":\"target\",\"patch\":{\"bucket\":\"later\",\"tag\":\"work\",\"title\":\"Tool edit\"}}","actualBucket":"later","actualTag":"work"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/six-subscriber-independent.test.tsx (11 tests) 1524ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  16:40:11
+   Duration  2.20s (transform 155ms, setup 0ms, collect 262ms, tests 1.52s, environment 195ms, prepare 40ms)
