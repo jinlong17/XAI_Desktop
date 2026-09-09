@@ -1,0 +1,8 @@
+
+> @repo/xai-web-event-bus@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus
+> eslint --max-warnings 0 .
+
+(node:52972) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus/eslint.config.js?mtime=1779608952455 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)

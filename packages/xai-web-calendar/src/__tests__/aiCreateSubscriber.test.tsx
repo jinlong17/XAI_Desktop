@@ -10,20 +10,24 @@
  * Test strategy: packages/xai-web-ai-chat/docs/test.md §8 CS tests
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 import { useCalendarCreateRequestSubscriber } from "../internal/aiCreateSubscriber.js";
+import { disableCanonicalSubscriberTests, enableCanonicalSubscriberTests, settleCanonicalCommands } from "./canonicalSubscriberHarness.js";
 
 beforeEach(() => {
   localStorage.clear();
   // Seed an empty calendar store.
-  setPref("xai_calendar_events", {});
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), "{}");
+  enableCanonicalSubscriberTests();
 });
 
+afterEach(disableCanonicalSubscriberTests);
+
 describe("CS-1: store mutation — event handler calls createEvent + setPref", () => {
-  it("creates a calendar event in the store", () => {
+  it("creates a calendar event in the store", async () => {
     renderHook(() => useCalendarCreateRequestSubscriber());
 
     act(() => {
@@ -37,6 +41,7 @@ describe("CS-1: store mutation — event handler calls createEvent + setPref", (
       });
     });
 
+    await settleCanonicalCommands();
     const rawStore = getPref("xai_calendar_events") as Record<
       string,
       { title: string; startISO: string; endISO: string; colorPreset: string }
@@ -51,7 +56,7 @@ describe("CS-1: store mutation — event handler calls createEvent + setPref", (
     expect(events[0]!.colorPreset).toBe("mint");
   });
 
-  it("defaults startTime to 09:00 and durationMin to 60 when not provided", () => {
+  it("defaults startTime to 09:00 and durationMin to 60 when not provided", async () => {
     renderHook(() => useCalendarCreateRequestSubscriber());
 
     act(() => {
@@ -65,6 +70,7 @@ describe("CS-1: store mutation — event handler calls createEvent + setPref", (
       });
     });
 
+    await settleCanonicalCommands();
     const rawStore = getPref("xai_calendar_events") as Record<
       string,
       { title: string; startISO: string; endISO: string }
@@ -76,7 +82,7 @@ describe("CS-1: store mutation — event handler calls createEvent + setPref", (
 });
 
 describe("CS-2: idempotency — duplicate requestId does not create a second event", () => {
-  it("ignores a second event with the same requestId", () => {
+  it("ignores a second event with the same requestId", async () => {
     renderHook(() => useCalendarCreateRequestSubscriber());
 
     act(() => {
@@ -98,13 +104,14 @@ describe("CS-2: idempotency — duplicate requestId does not create a second eve
       });
     });
 
+    await settleCanonicalCommands();
     const rawStore = getPref("xai_calendar_events") as Record<string, unknown>;
     expect(Object.values(rawStore)).toHaveLength(1); // deduplicated
   });
 });
 
 describe("CS-3: route-independent — subscriber works without CalendarModule mounted", () => {
-  it("writes to store even when no CalendarModule is rendered", () => {
+  it("writes to store even when no CalendarModule is rendered", async () => {
     renderHook(() => useCalendarCreateRequestSubscriber());
 
     act(() => {
@@ -118,6 +125,7 @@ describe("CS-3: route-independent — subscriber works without CalendarModule mo
       });
     });
 
+    await settleCanonicalCommands();
     const rawStore = getPref("xai_calendar_events") as Record<string, { title: string }>;
     const events = Object.values(rawStore);
     expect(events).toHaveLength(1);

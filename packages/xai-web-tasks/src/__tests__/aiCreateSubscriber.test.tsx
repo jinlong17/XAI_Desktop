@@ -10,11 +10,12 @@
  * Test strategy: packages/xai-web-ai-chat/docs/test.md §8 TS tests
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { emitWebEvent } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 import { useTaskCreateRequestSubscriber } from "../internal/aiCreateSubscriber.js";
+import { disableCanonicalSubscriberTests, enableCanonicalSubscriberTests, settleCanonicalCommands } from "./canonicalSubscriberHarness.js";
 
 beforeEach(() => {
   localStorage.clear();
@@ -27,8 +28,11 @@ beforeEach(() => {
     { id: "later",    key: "later",       count: 0, tasks: [] },
     { id: "nodate",   key: "no_date",     count: 0, tasks: [] },
   ];
-  setPref("xai_task_cols", initialCols as unknown as import("@repo/plugin-web-storage").TaskColsState);
+  localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(initialCols));
+  enableCanonicalSubscriberTests();
 });
+
+afterEach(disableCanonicalSubscriberTests);
 
 describe("TS-1: store mutation — event handler calls addCard + setPref", () => {
   it("creates a task in the next7 bucket", async () => {
@@ -43,6 +47,7 @@ describe("TS-1: store mutation — event handler calls addCard + setPref", () =>
       });
     });
 
+    await settleCanonicalCommands();
     const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ title: { en: string } }> }>;
     const next7Col = rawCols.find((c) => c.id === "next7");
     expect(next7Col).toBeDefined();
@@ -50,7 +55,7 @@ describe("TS-1: store mutation — event handler calls addCard + setPref", () =>
     expect(next7Col!.tasks[0]!.title.en).toBe("Buy milk");
   });
 
-  it("creates a task with tag in the overdue bucket", () => {
+  it("creates a task with tag in the overdue bucket", async () => {
     renderHook(() => useTaskCreateRequestSubscriber());
 
     act(() => {
@@ -63,6 +68,7 @@ describe("TS-1: store mutation — event handler calls addCard + setPref", () =>
       });
     });
 
+    await settleCanonicalCommands();
     const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ title: { en: string }; tag?: string }> }>;
     const overdueCol = rawCols.find((c) => c.id === "overdue");
     expect(overdueCol!.tasks).toHaveLength(1);
@@ -72,7 +78,7 @@ describe("TS-1: store mutation — event handler calls addCard + setPref", () =>
 });
 
 describe("TS-2: idempotency — duplicate requestId does not create a second task", () => {
-  it("ignores a second event with the same requestId", () => {
+  it("ignores a second event with the same requestId", async () => {
     renderHook(() => useTaskCreateRequestSubscriber());
 
     act(() => {
@@ -90,6 +96,7 @@ describe("TS-2: idempotency — duplicate requestId does not create a second tas
       });
     });
 
+    await settleCanonicalCommands();
     const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: unknown[] }>;
     const next7Col = rawCols.find((c) => c.id === "next7");
     expect(next7Col!.tasks).toHaveLength(1); // deduplicated
@@ -97,7 +104,7 @@ describe("TS-2: idempotency — duplicate requestId does not create a second tas
 });
 
 describe("TS-3: route-independent — subscriber works without TasksModule mounted", () => {
-  it("writes to store even when no TasksModule is rendered", () => {
+  it("writes to store even when no TasksModule is rendered", async () => {
     // Only the subscriber hook is rendered (no TasksModule or routing context).
     renderHook(() => useTaskCreateRequestSubscriber());
 
@@ -110,6 +117,7 @@ describe("TS-3: route-independent — subscriber works without TasksModule mount
       });
     });
 
+    await settleCanonicalCommands();
     const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: unknown[] }>;
     const laterCol = rawCols.find((c) => c.id === "later");
     expect(laterCol!.tasks).toHaveLength(1);
@@ -122,8 +130,24 @@ describe("TS-5: unseeded store — subscriber seeds bucket columns so the task i
   // (or `[]` if poisoned by a prior empty write). addCard into a missing bucket
   // would no-op and silently DROP the AI-created task. The subscriber must seed
   // from SEED_TASK_COLS when the store is not a non-empty TaskCol[].
-  it("lands the task when xai_task_cols is the default empty object {}", () => {
-    setPref("xai_task_cols", {} as unknown as import("@repo/plugin-web-storage").TaskColsState);
+  it("initializes only a physically absent task domain", async () => {
+    localStorage.removeItem(accountScope.physicalKey("xai_task_cols"));
+    renderHook(() => useTaskCreateRequestSubscriber());
+    act(() => {
+      emitWebEvent("web:tasks:create-requested", {
+        requestId: "req-physically-absent",
+        title: "First command task",
+        bucket: "next7",
+        requestedAt: new Date().toISOString(),
+      });
+    });
+    await settleCanonicalCommands();
+    const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ title: { en: string } }> }>;
+    expect(rawCols.find(col => col.id === "next7")?.tasks.some(task => task.title.en === "First command task")).toBe(true);
+  });
+
+  it("refuses a present invalid empty object instead of replacing it with a seed", async () => {
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), "{}");
     renderHook(() => useTaskCreateRequestSubscriber());
 
     act(() => {
@@ -135,17 +159,12 @@ describe("TS-5: unseeded store — subscriber seeds bucket columns so the task i
       });
     });
 
-    const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ title: { en: string; zh: string } }> }>;
-    expect(Array.isArray(rawCols)).toBe(true);
-    expect(rawCols.length).toBeGreaterThan(0); // seeded — buckets exist
-    const next7Col = rawCols.find((c) => c.id === "next7");
-    expect(next7Col).toBeDefined();
-    const milk = next7Col!.tasks.find((t) => t.title.en === "买牛奶" || t.title.zh === "买牛奶");
-    expect(milk).toBeDefined(); // task landed, not dropped
+    await settleCanonicalCommands();
+    expect(getPref("xai_task_cols")).toEqual({});
   });
 
-  it("lands the task when xai_task_cols is an empty array [] (poison case)", () => {
-    setPref("xai_task_cols", [] as unknown as import("@repo/plugin-web-storage").TaskColsState);
+  it("refuses a present invalid empty array instead of replacing it with a seed", async () => {
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), "[]");
     renderHook(() => useTaskCreateRequestSubscriber());
 
     act(() => {
@@ -157,10 +176,30 @@ describe("TS-5: unseeded store — subscriber seeds bucket columns so the task i
       });
     });
 
-    const rawCols = getPref("xai_task_cols") as unknown as Array<{ id: string; tasks: Array<{ title: { en: string; zh: string } }> }>;
-    expect(rawCols.length).toBeGreaterThan(0);
-    const next7Col = rawCols.find((c) => c.id === "next7");
-    expect(next7Col!.tasks.some((t) => t.title.en === "买牛奶" || t.title.zh === "买牛奶")).toBe(true);
+    await settleCanonicalCommands();
+    expect(getPref("xai_task_cols")).toEqual([]);
+  });
+});
+
+describe("TS-6: malformed create semantics", () => {
+  it("rejects an explicitly invalid bucket without changing storage", async () => {
+    renderHook(() => useTaskCreateRequestSubscriber());
+    const key = accountScope.physicalKey("xai_task_cols");
+    const before = localStorage.getItem(key);
+    const receipts: Array<{ ok: boolean; reason?: string }> = [];
+    const off = onWebEvent("web:ai:tool-write-receipt", receipt => receipts.push(receipt));
+    act(() => {
+      emitWebEvent("web:tasks:create-requested", {
+        requestId: "req-invalid-bucket",
+        title: "Must not move",
+        bucket: "unknown" as "next7",
+        requestedAt: new Date().toISOString(),
+      });
+    });
+    await settleCanonicalCommands();
+    expect(receipts).toEqual([expect.objectContaining({ ok: false, reason: "invalid" })]);
+    expect(localStorage.getItem(key)).toBe(before);
+    off();
   });
 });
 

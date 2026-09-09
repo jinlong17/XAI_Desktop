@@ -1,0 +1,75 @@
+
+> @repo/plugin-web-tasks@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-tasks
+
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (9 tests) 164ms
+ ✓ src/__tests__/completionContract.test.tsx (3 tests) 490ms
+   ✓ legacy completed group checkbox truly restores the task without inventing completion time  486ms
+ ✓ src/__tests__/TaskComposer.test.tsx (11 tests) 1036ms
+   ✓ TaskComposer — T-TC-1 open renders correctly > T-TC-1: renders dialog with defaultBucket pre-selected  337ms
+   ✓ TaskComposer — T-TC-3 valid save with tag > T-TC-3: title + tag work + Save → onSave({title, tag:'work', withDate:false}, 'later') called once  307ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/dueDate.test.tsx (3 tests) 1451ms
+   ✓ REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh  1395ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > retains failed detail edits and commits their latest values on retry
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (8 tests) 46ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 491ms
+   ✓ tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading  487ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_lists.
+
+ ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 620ms
+ ✓ src/__tests__/filterCardsByList.test.ts (24 tests) 21ms
+ ✓ src/__tests__/persistence.test.tsx (10 tests) 3926ms
+   ✓ TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)  662ms
+   ✓ TasksModule persistence > T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols  369ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-1: create card → appears at top of target column + localStorage round-trips it  396ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-2: create card → card prepended and column count +1  608ms
+   ✓ TasksModule create flow + persistence (T-CR) > T-CR-3: created card survives unmount + re-mount (simulates page reload)  564ms
+   ✓ TasksModule completion persistence (T-PER-DONE) > T-PER-DONE-2: toggled card shows is-completed after unmount + re-mount (simulates page reload)  355ms
+   ✓ filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: persisted xai_task_cols count field is not mutated after applying filters  387ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_tags.
+
+ ✓ src/__tests__/TasksModule.test.tsx (15 tests) 4011ms
+   ✓ TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en  817ms
+   ✓ TasksModule — T-MOD-3 checkbox toggle > T-MOD-3: clicking checkbox toggles is-completed class on card  349ms
+   ✓ TasksModule — T-MOD-6 drag hint while dragging > T-MOD-6: drag-hint element appears while a card is being dragged  354ms
+   ✓ TasksModule — T-COL-1 + button opens composer > T-COL-1: clicking + on a column with action===add opens the composer with that bucket pre-selected  309ms
+   ✓ TasksModule — collection overview boards > renders All lists as list-grouped cards instead of time buckets  371ms
+   ✓ TasksModule — collection overview boards > can switch an All lists overview back to time buckets  346ms
+ ✓ src/__tests__/tasksReducer.test.ts (29 tests) 11ms
+ ✓ src/__tests__/canonicalMigrationCompatibility.test.ts (2 tests) 27ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/seed.test.ts (4 tests) 31ms
+ ✓ src/__tests__/validate.test.ts (9 tests) 6ms
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > revokes failed composer retry and export after switching to B
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ✓ src/__tests__/saveRecovery.test.tsx (6 tests) 5369ms
+   ✓ Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once  1586ms
+   ✓ Tasks recoverable writes > retains failed detail edits and commits their latest values on retry  638ms
+   ✓ Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry  913ms
+   ✓ Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry  879ms
+   ✓ Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit  713ms
+   ✓ Tasks recoverable writes > revokes failed composer retry and export after switching to B  639ms
+ ✓ src/__tests__/taskLink.test.ts (7 tests) 7ms
+ ✓ src/__tests__/index-barrel.test.ts (11 tests) 6ms
+ ✓ src/__tests__/dateForCol.test.ts (5 tests) 4ms
+ ✓ src/__tests__/ids.test.ts (2 tests) 21ms
+
+ Test Files  19 passed (19)
+      Tests  169 passed (169)
+   Start at  16:26:30
+   Duration  11.77s (transform 3.37s, setup 10.82s, collect 10.35s, tests 17.74s, environment 22.48s, prepare 3.89s)

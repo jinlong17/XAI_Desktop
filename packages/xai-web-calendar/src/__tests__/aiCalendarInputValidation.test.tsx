@@ -1,10 +1,11 @@
 import { act, renderHook } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
-import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 import { emitWebEvent, onWebEvent, type WebEventMap } from "@repo/xai-web-event-bus";
 import { useCalendarCreateRequestSubscriber } from "../internal/aiCreateSubscriber.js";
 import { useCalendarMutateRequestSubscriber } from "../internal/aiMutateSubscriber.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
+import { disableCanonicalSubscriberTests, enableCanonicalSubscriberTests, settleCanonicalCommands } from "./canonicalSubscriberHarness.js";
 
 const seed: UserCalEvent = {
   id: "existing-event",
@@ -33,17 +34,21 @@ function emitUpdate(payload: unknown): void {
 }
 
 beforeEach(() => {
-  setPref("xai_calendar_events", { [seed.id]: seed });
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify({ [seed.id]: seed }));
+  enableCanonicalSubscriberTests();
 });
 
+afterEach(disableCanonicalSubscriberTests);
+
 describe("Calendar AI input validation", () => {
-  it("retains documented defaults only when a legacy create request omits the fields", () => {
+  it("retains documented defaults only when a legacy create request omits the fields", async () => {
     installSubscribers();
 
     act(() => {
       emitCreate({ requestId: "legacy-defaults", title: "Legacy event", requestedAt: "2026-09-09T00:00:00.000Z" });
     });
 
+    await settleCanonicalCommands();
     const events = Object.values(getPref("xai_calendar_events") as Record<string, UserCalEvent>);
     const created = events.find(event => event.title === "Legacy event");
     expect(created?.startISO.slice(11)).toBe("09:00");
@@ -60,7 +65,7 @@ describe("Calendar AI input validation", () => {
     ["non-finite duration", { durationMin: Infinity }],
     ["non-number duration", { durationMin: "30" }],
     ["non-integer duration", { durationMin: 5.5 }],
-  ])("rejects explicit create %s without writing", (_name, override) => {
+  ])("rejects explicit create %s without writing", async (_name, override) => {
     installSubscribers();
     const key = accountScope.physicalKey("xai_calendar_events");
     const before = localStorage.getItem(key);
@@ -79,6 +84,7 @@ describe("Calendar AI input validation", () => {
           ...override,
         });
       });
+      await settleCanonicalCommands();
       expect(receipts).toHaveLength(1);
       expect(receipts[0]).toMatchObject({ ok: false, reason: "invalid" });
       expect(localStorage.getItem(key)).toBe(before);
@@ -87,7 +93,7 @@ describe("Calendar AI input validation", () => {
     }
   });
 
-  it("rejects invalid update date/time/duration without changing the target", () => {
+  it("rejects invalid update date/time/duration without changing the target", async () => {
     installSubscribers();
     const key = accountScope.physicalKey("xai_calendar_events");
     const before = localStorage.getItem(key);
@@ -102,6 +108,7 @@ describe("Calendar AI input validation", () => {
         emitUpdate({ requestId: "invalid-update-duration", id: seed.id, patch: { durationMin: Number.NaN }, requestedAt: "2026-09-09T00:00:00.000Z" });
         emitUpdate({ requestId: "invalid-update-cross-day", id: seed.id, patch: { startTime: "23:50", durationMin: 10 }, requestedAt: "2026-09-09T00:00:00.000Z" });
       });
+      await settleCanonicalCommands();
       expect(receipts).toHaveLength(5);
       expect(receipts.every(receipt => receipt.ok === false && receipt.reason === "invalid")).toBe(true);
       expect(localStorage.getItem(key)).toBe(before);
@@ -110,7 +117,7 @@ describe("Calendar AI input validation", () => {
     }
   });
 
-  it("permits a corrected request ID once after its invalid request was rejected", () => {
+  it("permits a corrected request ID once after its invalid request was rejected", async () => {
     installSubscribers();
     const receipts: WebEventMap["web:ai:tool-write-receipt"][] = [];
     const off = onWebEvent("web:ai:tool-write-receipt", receipt => receipts.push(receipt));
@@ -120,6 +127,7 @@ describe("Calendar AI input validation", () => {
         emitCreate({ requestId: "retry-after-invalid", title: "Leap-day event", date: "2026-02-29", startTime: "09:00", durationMin: 30, requestedAt: "2026-09-09T00:00:00.000Z" });
         emitCreate({ requestId: "retry-after-invalid", title: "Leap-day event", date: "2024-02-29", startTime: "09:00", durationMin: 30, requestedAt: "2026-09-09T00:00:00.000Z" });
       });
+      await settleCanonicalCommands();
       expect(receipts).toHaveLength(2);
       expect(receipts[0]).toMatchObject({ ok: false, reason: "invalid" });
       expect(receipts[1]).toMatchObject({ ok: true });
@@ -131,20 +139,21 @@ describe("Calendar AI input validation", () => {
     }
   });
 
-  it("keeps the confirmed duration at the legal same-day boundary", () => {
+  it("keeps the confirmed duration at the legal same-day boundary", async () => {
     installSubscribers();
 
     act(() => {
       emitCreate({ requestId: "same-day-boundary", title: "Late event", date: "2024-02-29", startTime: "23:50", durationMin: 5, requestedAt: "2026-09-09T00:00:00.000Z" });
     });
 
+    await settleCanonicalCommands();
     const events = Object.values(getPref("xai_calendar_events") as Record<string, UserCalEvent>);
     const created = events.find(event => event.title === "Late event");
     expect(created?.startISO).toBe("2024-02-29T23:50");
     expect(created?.endISO).toBe("2024-02-29T23:55");
   });
 
-  it("rejects a duration that would otherwise be silently clamped across the same-day boundary", () => {
+  it("rejects a duration that would otherwise be silently clamped across the same-day boundary", async () => {
     installSubscribers();
     const key = accountScope.physicalKey("xai_calendar_events");
     const before = localStorage.getItem(key);
@@ -153,6 +162,7 @@ describe("Calendar AI input validation", () => {
       emitCreate({ requestId: "cross-day-duration", title: "Too late", date: "2024-02-29", startTime: "23:50", durationMin: 10, requestedAt: "2026-09-09T00:00:00.000Z" });
     });
 
+    await settleCanonicalCommands();
     expect(localStorage.getItem(key)).toBe(before);
   });
 });

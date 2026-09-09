@@ -13,12 +13,13 @@
  * Test strategy: packages/xai-web-ai-chat/docs/test.md §9 TS-DEL/TS-UPD tests
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 import { useTaskMutateRequestSubscriber } from "../internal/aiMutateSubscriber.js";
 import type { TaskCol } from "../types.js";
+import { disableCanonicalSubscriberTests, enableCanonicalSubscriberTests, settleCanonicalCommands } from "./canonicalSubscriberHarness.js";
 
 type ColsRaw = Array<{ id: string; count: number; tasks: Array<{ id: string; title: { en: string; zh: string }; tag?: string; done?: boolean }> }>;
 
@@ -41,15 +42,18 @@ function seedCols(): TaskCol[] {
 }
 
 function writeSeed(): void {
-  setPref("xai_task_cols", seedCols() as unknown as import("@repo/plugin-web-storage").TaskColsState);
+  localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(seedCols()));
 }
 
 beforeEach(() => {
   localStorage.clear();
+  enableCanonicalSubscriberTests();
 });
 
+afterEach(disableCanonicalSubscriberTests);
+
 describe("TS-DEL-1: delete event → deleteCard + setPref (card removed, count decremented)", () => {
-  it("removes the targeted task and decrements column count", () => {
+  it("removes the targeted task and decrements column count", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -61,6 +65,7 @@ describe("TS-DEL-1: delete event → deleteCard + setPref (card removed, count d
       });
     });
 
+    await settleCanonicalCommands();
     const cols = getPref("xai_task_cols") as unknown as ColsRaw;
     const overdue = cols.find((c) => c.id === "overdue")!;
     expect(overdue.tasks.find((t) => t.id === "t-del-a")).toBeUndefined();
@@ -69,7 +74,7 @@ describe("TS-DEL-1: delete event → deleteCard + setPref (card removed, count d
 });
 
 describe("TS-DEL-2: delete idempotency — duplicate requestId → only one delete", () => {
-  it("ignores second event with same requestId", () => {
+  it("ignores second event with same requestId", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -81,6 +86,7 @@ describe("TS-DEL-2: delete idempotency — duplicate requestId → only one dele
       });
     });
 
+    await settleCanonicalCommands();
     const firstCount = (getPref("xai_task_cols") as unknown as ColsRaw)
       .find((c) => c.id === "overdue")!.tasks.length;
 
@@ -92,6 +98,7 @@ describe("TS-DEL-2: delete idempotency — duplicate requestId → only one dele
       });
     });
 
+    await settleCanonicalCommands();
     const secondCount = (getPref("xai_task_cols") as unknown as ColsRaw)
       .find((c) => c.id === "overdue")!.tasks.length;
 
@@ -100,7 +107,7 @@ describe("TS-DEL-2: delete idempotency — duplicate requestId → only one dele
 });
 
 describe("TS-DEL-3: delete unknown id → store unchanged (no-op)", () => {
-  it("returns store unchanged when id not found", () => {
+  it("returns store unchanged when id not found", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -114,13 +121,14 @@ describe("TS-DEL-3: delete unknown id → store unchanged (no-op)", () => {
       });
     });
 
+    await settleCanonicalCommands();
     const after = JSON.stringify(getPref("xai_task_cols"));
     expect(after).toBe(before); // no change
   });
 });
 
 describe("TS-UPD-1: update event → updateCard + setPref; done preserved (T-10 lifeline)", () => {
-  it("updates title; preserve done:true on t-del-a (done lifeline)", () => {
+  it("updates title; preserve done:true on t-del-a (done lifeline)", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -133,6 +141,7 @@ describe("TS-UPD-1: update event → updateCard + setPref; done preserved (T-10 
       });
     });
 
+    await settleCanonicalCommands();
     const cols = getPref("xai_task_cols") as unknown as ColsRaw;
     const overdue = cols.find((c) => c.id === "overdue")!;
     const card = overdue.tasks.find((t) => t.id === "t-del-a")!;
@@ -140,7 +149,7 @@ describe("TS-UPD-1: update event → updateCard + setPref; done preserved (T-10 
     expect(card.done).toBe(true); // preserved!
   });
 
-  it("updates tag without touching title or done", () => {
+  it("updates tag without touching title or done", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -153,6 +162,7 @@ describe("TS-UPD-1: update event → updateCard + setPref; done preserved (T-10 
       });
     });
 
+    await settleCanonicalCommands();
     const cols = getPref("xai_task_cols") as unknown as ColsRaw;
     const card = cols.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t-upd-a")!;
     expect(card.tag).toBe("personal");
@@ -161,7 +171,7 @@ describe("TS-UPD-1: update event → updateCard + setPref; done preserved (T-10 
 });
 
 describe("TS-UPD-2: bucket change → moveCard composition (ED-6)", () => {
-  it("moves task to next7 when bucket changes from overdue", () => {
+  it("moves task to next7 when bucket changes from overdue", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -174,6 +184,7 @@ describe("TS-UPD-2: bucket change → moveCard composition (ED-6)", () => {
       });
     });
 
+    await settleCanonicalCommands();
     const cols = getPref("xai_task_cols") as unknown as ColsRaw;
     const overdue = cols.find((c) => c.id === "overdue")!;
     const next7 = cols.find((c) => c.id === "next7")!;
@@ -185,7 +196,7 @@ describe("TS-UPD-2: bucket change → moveCard composition (ED-6)", () => {
 });
 
 describe("TS-UPD-3: update idempotency — duplicate requestId → only one update", () => {
-  it("applies title update once; second event with same requestId is no-op", () => {
+  it("applies title update once; second event with same requestId is no-op", async () => {
     writeSeed();
     renderHook(() => useTaskMutateRequestSubscriber());
 
@@ -198,6 +209,8 @@ describe("TS-UPD-3: update idempotency — duplicate requestId → only one upda
       });
     });
 
+    await settleCanonicalCommands();
+
     act(() => {
       emitWebEvent("web:tasks:update-requested", {
         requestId: "req-upd-dup", // same requestId
@@ -206,6 +219,8 @@ describe("TS-UPD-3: update idempotency — duplicate requestId → only one upda
         requestedAt: new Date().toISOString(),
       });
     });
+
+    await settleCanonicalCommands();
 
     const cols = getPref("xai_task_cols") as unknown as ColsRaw;
     const card = cols.find((c) => c.id === "overdue")!.tasks.find((t) => t.id === "t-upd-a");

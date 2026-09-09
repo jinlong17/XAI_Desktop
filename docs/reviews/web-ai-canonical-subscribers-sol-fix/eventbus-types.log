@@ -1,0 +1,3 @@
+
+> @repo/xai-web-event-bus@0.0.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-event-bus
+> tsc --noEmit
