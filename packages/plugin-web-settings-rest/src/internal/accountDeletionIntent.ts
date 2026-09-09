@@ -13,6 +13,9 @@ const EVENT = "xai:account-deletion-intent";
 const keyFor = (accountId: string) => `${accountPrefix(accountId)}deletion-intent`;
 export function prepareAccountDeletionIntent(scope: AccountScope): AccountDeletionIntent {
   if (scope.kind !== "account" || !scope.accountId || !scope.generation) throw new Error("An authenticated account is required");
+  // A later rejected request cannot resolve an earlier request's lost response.
+  // Preserve even unreadable metadata rather than overwriting recovery evidence.
+  if (localStorage.getItem(keyFor(scope.accountId)) !== null) throw new Error("A prior account deletion outcome must be resolved before another request");
   const intent: AccountDeletionIntent = { version: 1, accountId: scope.accountId, generation: scope.generation, operationId: crypto.randomUUID(), phase: "server-outcome-unknown", createdAt: new Date().toISOString() };
   const raw = JSON.stringify(intent);
   localStorage.setItem(keyFor(intent.accountId), raw);

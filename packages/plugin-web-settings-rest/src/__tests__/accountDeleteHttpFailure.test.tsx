@@ -69,6 +69,12 @@ it("retains an uncertain request after a lost response and remount without enabl
   expect(JSON.parse(raw)).toMatchObject({ accountId: "uncertain-A", phase: "server-outcome-unknown" });
   expect(raw).not.toContain("synthetic-token");
   expect(invoke).toHaveBeenCalledTimes(1);
+  accountScope.activate(accountScope.lock("uncertain-A"), "generation-A");
+  invoke.mockResolvedValue({ error: { context: new Response(null, { status: 401 }) } });
+  const retried = renderHook(() => useAccountDeleteOrchestrator());
+  await act(async () => retried.result.current.submit());
+  expect(invoke).toHaveBeenCalledTimes(1);
+  expect(localStorage.getItem(`${accountPrefix("uncertain-A")}deletion-intent`)).toBe(raw);
 });
 
 it("keeps the intent if recording server success fails before local cleanup", async () => {
