@@ -141,3 +141,14 @@ Sol4202c79精确提交六subscriber与异步receipt桥；作者eventbus22/22、T
 Astra adc1202已确认Calendar原24断言独立全PASS，但新增reset读取失败反例仍假成功；Terra d8412d3改真实remove结果，作者原26通过，Astra独立复验进行中。Tasks D1仍需实际UI写入迁移，Terra继续实施；Board D1和migration后续范围保留。完整AI-02/REL-05均继续in_progress，正式完成13/312未变。
 
 Astra c58a647固定d8412d3独立原26/26通过，有界接受reset真实删除结果与已测Calendar恢复修复；不接受完整D1、Tasks/Board接入、D2或AI-02。原各阶段FAIL保留。
+
+
+## 2026-09-09: semantic snapshot and Tasks retry gates
+
+Astra 45c74c3 independently ran fixed 4202c79: 10 PASS / 1 correct FAIL. Queued Tasks updates read mutable payload tag/bucket after capturing the signature, so persisted data can disagree with the signed operation. Sol is repairing the captured-patch contract. The separate native PASS results in 646a539 remain valid but do not override this failure. Calendar full-suite 20 failures include legacy setPref fixtures and synchronous saveRecovery expectations against async results; they are not all exclusively seed failures.
+
+Terra 5c0f46d/51338e0/66a8488 migrated Tasks ordinary writes in batches. Parent 74565a6 independently reproduced two initial queued overwrite failures at 51338e0; the original four tests pass at 66a8488. Parent 4584ceb expanded this to six: five PASS, one correct FAIL when retry adopted a new UI baseline for an old failed draft after an external storage event. Terra 35b4964 preserves the failed baseline; author six tests pass, parent fixed-SHA rerun is in progress. List/tag cascade, detail deletion, normalization and remaining full Tasks D1 coverage are still open.
+
+No newly closed numbered item: 13/312 completed; 299 remain open.
+
+Parent fixed-35b4964 rerun now confirms all six Tasks UI assertions PASS. Terra 0a294bc awaits list/tag cascades and detail deletion before cleanup; author full Tasks regression is 156/170 with 14 failures, under active repair. Sol 8503b71 snapshots queued patches; author original Astra 11 assertions pass, Astra non-author re-review is pending. These are bounded progress, not new item closures.

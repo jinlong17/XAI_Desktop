@@ -24,3 +24,7 @@ The fixtures contain valid four-column task data, an explicit persistent account
 Expanded suite is 5 PASS / 1 correct FAIL. Original four still pass, and quota-failed checkbox retry succeeds when no external change occurs. With an external storage event after that failure, Retry adopts the now-current UI baseline while replaying the old whole-dataset draft: it overwrites the newer title, drops the external addition and clears the recovery alert. This is a distinct failure from the now-fixed initial queued write. The retry must retain its original operation baseline and refuse or explicitly resolve newer data. Evidence: tasks-ui-retry-66a8488.log. Original four-case after log is retained separately.
 
 Expanded-run command: `node docs/reviews/web-tasks-canonical-ui-independent/verify-fixed.mjs 66a8488 tasks-ui retry`. The optional fourth argument separates evidence filenames.
+
+## Retry repair: fixed 35b4964
+
+Parent independently archived 35b4964 and reran the six assertions unchanged: 6/6 PASS (tasks-ui-retry-35b4964.log). Retry after an external storage update now preserves the newer record and keeps recovery visible; unchanged-baseline retry still completes. Author HEAD output is excluded from this independent result. Full Tasks D1 remains open.
