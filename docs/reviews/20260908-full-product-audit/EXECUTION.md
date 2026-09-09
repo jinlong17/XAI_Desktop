@@ -1,6 +1,8 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。Astra主审9df552e确认完整AI-02仍开放：固定daff8ef六动作同账户同generation新epoch重放6例正确FAIL；Calendar非法日期dd10cb8两例FAIL列P1并批准A1。新Terra专门实施A1；原Terra继续Board工作区保存恢复，Sol独立验证daff8ef页内回执。Astra已给同canonical envelope/普通写保留receipt/同键并发协议的完整分阶段验收，后续完成仍须主审复核。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **13/312**。Calendar A1下游修复e50ca1c已提交；父会话在该提交独立重跑dd10cb8原非法日期断言，1文件2测试PASS（14:43:33，1.17s）。源代码复核同时发现AI toolRegistry上游仍将非法duration默认/取整，或丢弃非法date/time后仅写title，因此A1尚未完整验收，Terra继续修复转换层与整条调用链测试。完整AI-02仍开放，六动作跨epoch重放6例FAIL仍须持久幂等实现解决。
+
+Board工作区3e7f17a已补正式快照native验证，证据b55227b覆盖create/rename/pick/A→B；recolor/delete目前仅组件证据，Astra正在独立复核。Sol继续固定daff8ef页内回执验收。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 

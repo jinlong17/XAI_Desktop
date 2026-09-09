@@ -742,7 +742,9 @@
         "commit:dd10cb8",
         "../web-ai-calendar-invalid-date/review.md",
         "commit:9df552e",
-        "../web-ai-tool-receipt-astra-review/review.md"
+        "../web-ai-tool-receipt-astra-review/review.md",
+        "commit:e50ca1c",
+        "../web-ai-calendar-validation-fix/review.md"
       ]
     },
     {
