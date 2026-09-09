@@ -95,7 +95,11 @@
         "commit:c0af11b",
         "../web-auth-session-cleanup/20260909-rel06-independent-diagnosis.md",
         "commit:2cec3c5",
-        "../web-auth-session-cleanup/20260909-generation-foundation.md"
+        "../web-auth-session-cleanup/20260909-generation-foundation.md",
+        "commit:498ceb9",
+        "commit:faecd79",
+        "commit:3d39533",
+        "../web-auth-session-cleanup/20260909-generation-client.md"
       ]
     },
     {
@@ -130,12 +134,14 @@
     },
     {
       "id": "TT-01",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:6cd137e",
         "commit:c5b08a7",
         "../web-time-tracker-window-accounting/20260909-tt01-diagnosis.md",
-        "../web-time-tracker-window-accounting/20260909-fix.md"
+        "../web-time-tracker-window-accounting/20260909-fix.md",
+        "commit:8d951e9",
+        "../web-time-window-independent/20260909-verification.md"
       ]
     },
     {
@@ -148,7 +154,9 @@
       "status": "in_progress",
       "evidence": [
         "commit:c5b08a7",
-        "../web-time-tracker-window-accounting/20260909-fix.md"
+        "../web-time-tracker-window-accounting/20260909-fix.md",
+        "commit:8d951e9",
+        "../web-time-window-independent/20260909-verification.md"
       ]
     },
     {
