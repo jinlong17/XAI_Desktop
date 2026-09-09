@@ -1,0 +1,29 @@
+import React from '../../../packages/plugin-web-metric-tracker/node_modules/react';
+import {beforeEach,afterEach,it,expect,vi} from 'vitest';
+import {render,renderHook,act,cleanup,fireEvent,screen} from '../../../packages/plugin-web-metric-tracker/node_modules/@testing-library/react';
+import {accountScope,generationKey} from '../../../packages/plugin-web-storage/src/index';
+import {MetricTrackerModule} from '../../../packages/plugin-web-metric-tracker/src/MetricTrackerModule';
+import {useMetricTrackerState,deleteWeightRecord} from '../../../packages/plugin-web-metric-tracker/src/internal/storage';
+import {createSeedMetricTrackerState} from '../../../packages/plugin-web-metric-tracker/src/internal/seed';
+const key=generationKey('metrics-A','one','xai_metric_tracker_state_v1');
+beforeEach(()=>{localStorage.clear();accountScope.activate(accountScope.lock('metrics-A'),'one');localStorage.setItem(key,JSON.stringify(createSeedMetricTrackerState()));});
+afterEach(()=>{vi.restoreAllMocks();cleanup();localStorage.clear();});
+function deny(){const original=Storage.prototype.setItem;return vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(k,v){if(k===key)throw new DOMException('Independent quota fault','QuotaExceededError');return original.call(this,k,v);});}
+it('Retry save commits the latest visible profile draft, not the prior failed value',()=>{
+ render(<MetricTrackerModule lang="en"/>);const input=screen.getByLabelText(/Target/) as HTMLInputElement;fireEvent.change(input,{target:{value:'63'}});const fail=deny();fireEvent.click(screen.getByRole('button',{name:'Save goal settings'}));expect(screen.getByRole('alert')).toBeTruthy();fireEvent.change(input,{target:{value:'64'}});fail.mockRestore();fireEvent.click(screen.getByRole('button',{name:'Retry save'}));console.log('profile retry observed',JSON.stringify({visible:input.value,persisted:JSON.parse(localStorage.getItem(key)!).profile.targetWeightKg,failureVisible:!!screen.queryByRole('alert')}));expect(JSON.parse(localStorage.getItem(key)!).profile.targetWeightKg).toBe(64);
+});
+it('an unrelated successful action must not silently discard a failed profile snapshot',()=>{
+ render(<MetricTrackerModule lang="en"/>);fireEvent.change(screen.getByLabelText(/Target/),{target:{value:'63'}});const fail=deny();fireEvent.click(screen.getByRole('button',{name:'Save goal settings'}));fail.mockRestore();fireEvent.click(screen.getByRole('button',{name:'Log'}));const recordInput=screen.queryByLabelText('Weight value');if(recordInput){fireEvent.change(recordInput,{target:{value:'81'}});fireEvent.click(screen.getByRole('button',{name:'Save record'}));}const persisted=JSON.parse(localStorage.getItem(key)!).profile.targetWeightKg;const retainedFailure=!!screen.queryByRole('alert');console.log('cross-operation observed',JSON.stringify({persistedProfile:persisted,failureVisible:retainedFailure}));expect(persisted===63||retainedFailure).toBe(true);
+});
+it('a storage event with newer bytes does not silently rebase the pending retry',()=>{
+ const {result}=renderHook(()=>useMetricTrackerState());const fail=deny();act(()=>result.current[1](s=>({...s,profile:{...s.profile,targetWeightKg:63}})));fail.mockRestore();const newer=JSON.parse(localStorage.getItem(key)!);newer.profile.targetWeightKg=99;const raw=JSON.stringify(newer);localStorage.setItem(key,raw);act(()=>window.dispatchEvent(new StorageEvent('storage',{key,newValue:raw})));act(()=>expect(result.current[2].retry()).toBe(false));expect(result.current[2].failure).toBe('conflict');expect(localStorage.getItem(key)).toBe(raw);expect(result.current[2].snapshot()?.profile.targetWeightKg).toBe(63);
+});
+it('a read failure after mount retains a proposal and retries once when access returns',()=>{
+ const {result}=renderHook(()=>useMetricTrackerState());const original=Storage.prototype.getItem;const denied=vi.spyOn(Storage.prototype,'getItem').mockImplementation(function(k){if(k===key)throw new DOMException('Denied read','SecurityError');return original.call(this,k);});act(()=>expect(result.current[1](s=>({...s,profile:{...s.profile,targetWeightKg:63}}))).toBe(false));denied.mockRestore();expect(result.current[2].snapshot()?.profile.targetWeightKg).toBe(63);const writes=vi.spyOn(Storage.prototype,'setItem');act(()=>{result.current[2].retry();result.current[2].retry();});expect(writes.mock.calls.filter(([k])=>k===key)).toHaveLength(1);expect(JSON.parse(localStorage.getItem(key)!).profile.targetWeightKg).toBe(63);
+});
+it('failed deletion remains a proposal and later retry does not duplicate or remove unrelated records',()=>{
+ const {result}=renderHook(()=>useMetricTrackerState());const id=result.current[0].records[0]!.id,original=localStorage.getItem(key),count=result.current[0].records.length;const fail=deny();act(()=>result.current[1](s=>deleteWeightRecord(s,id)));expect(localStorage.getItem(key)).toBe(original);expect(result.current[2].snapshot()?.records.find(x=>x.id===id)?.deleted).toBe(true);fail.mockRestore();act(()=>result.current[2].retry());const records=JSON.parse(localStorage.getItem(key)!).records;expect(records.length).toBe(count);expect(records.filter((x:any)=>x.deleted&&x.id===id)).toHaveLength(1);
+});
+it('pending A snapshot and retry cannot export or write after B activation',()=>{
+ const {result}=renderHook(()=>useMetricTrackerState());const fail=deny();act(()=>result.current[1](s=>({...s,profile:{...s.profile,targetWeightKg:63}})));fail.mockRestore();const raw=localStorage.getItem(key),stale=result.current[2];accountScope.activate(accountScope.lock('metrics-B'),'two');const b=generationKey('metrics-B','two','xai_metric_tracker_state_v1');localStorage.setItem(b,'B unchanged');act(()=>expect(stale.retry()).toBe(false));expect(()=>stale.snapshot()).toThrow();expect(localStorage.getItem(key)).toBe(raw);expect(localStorage.getItem(b)).toBe('B unchanged');
+});

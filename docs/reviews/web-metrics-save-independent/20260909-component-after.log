@@ -1,0 +1,16 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stdout | docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > Retry save commits the latest visible profile draft, not the prior failed value
+profile retry observed {"visible":"64","persisted":64,"failureVisible":false}
+
+stdout | docs/reviews/web-metrics-save-independent/profile-retry.test.tsx > an unrelated successful action must not silently discard a failed profile snapshot
+cross-operation observed {"persistedProfile":70,"failureVisible":true}
+
+ ✓ docs/reviews/web-metrics-save-independent/profile-retry.test.tsx (6 tests) 213ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  12:13:00
+   Duration  1.87s (transform 203ms, setup 0ms, collect 355ms, tests 213ms, environment 861ms, prepare 84ms)
+
