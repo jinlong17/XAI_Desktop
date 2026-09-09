@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx > tasks: a failed request can be retried with the same id after storage recovers
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx > calendar: a failed request can be retried with the same id after storage recovers
+[plugin-web-storage] quota exceeded for xai_calendar_events.
+
+ ❯ docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx (2 tests | 2 failed) 19ms
+   × tasks: a failed request can be retried with the same id after storage recovers 17ms
+     → expected [] to have a length of 1 but got +0
+   × calendar: a failed request can be retried with the same id after storage recovers 2ms
+     → expected [] to have a length of 1 but got +0
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx > tasks: a failed request can be retried with the same id after storage recovers
+ FAIL  docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx > calendar: a failed request can be retried with the same id after storage recovers
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ docs/reviews/web-ai-tool-write-receipts/save-contract.test.tsx:28:18
+     26|  const persisted=JSON.parse(localStorage.getItem(key)!);
+     27|  const records=kind==='tasks'?persisted.flatMap((col:{tasks:unknown[]}…
+     28|  expect(records).toHaveLength(1);
+       |                  ^
+     29|  dispatch();expect(localStorage.getItem(key)).toBe(JSON.stringify(pers…
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  14:14:58
+   Duration  1.44s (transform 184ms, setup 278ms, collect 97ms, tests 19ms, environment 761ms, prepare 77ms)
+
