@@ -24,6 +24,7 @@ export interface BoardCardDetailModalProps {
   lang: Lang;
   taskLinkStatus?: BoardCardTaskLinkStatus;
   taskLinkError?: string | null;
+  taskLinkPending?: boolean;
   /** Board label catalog (assignment options + manager source). */
   labelCatalog: readonly BoardLabel[];
   /** Board member directory (assignment options + manager source). */
@@ -118,6 +119,7 @@ export function BoardCardDetailSurface({
   lang,
   taskLinkStatus,
   taskLinkError,
+  taskLinkPending = false,
   labelCatalog,
   memberCatalog,
   onCreateLabel,
@@ -515,7 +517,7 @@ export function BoardCardDetailSurface({
             {taskLinkError && <p role="alert">{taskLinkError}</p>}
             {card.taskLink?.pending && <div role="status">
               <p>{lang === "zh" ? "任务链接尚未全部保存。原始创建意图已保留，请重试完成。" : "Task linking is not fully saved. The original request is retained; retry to finish."}</p>
-              <button type="button" className="btn task-link-retry" onClick={onCreateLinkedTask} data-testid="card-detail-retry-task">{lang === "zh" ? "重试链接" : "Retry linking"}</button>
+              <button type="button" className="btn task-link-retry" onClick={onCreateLinkedTask} disabled={taskLinkPending} data-testid="card-detail-retry-task">{lang === "zh" ? "重试链接" : "Retry linking"}</button>
             </div>}
             {card.taskLink ? (
               <div className="cd-task-link-row">
@@ -547,7 +549,7 @@ export function BoardCardDetailSurface({
                 type="button"
                 className="btn primary"
                 onClick={onCreateLinkedTask}
-                disabled={!onCreateLinkedTask}
+                disabled={!onCreateLinkedTask || taskLinkPending}
                 data-testid="card-detail-create-task"
               >
                 {STR.createTask[lang]}

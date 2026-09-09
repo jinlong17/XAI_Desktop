@@ -343,6 +343,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [automationError, setAutomationError] = useState<string | null>(null);
   const linkOwner = useRef(accountScope.capture()).current;
   const [taskLinkError, setTaskLinkError] = useState<string | null>(null);
+  const [taskLinkPending, setTaskLinkPending] = useState(false);
   const [rawViewByBoardId, setRawViewByBoardId] = usePref(
     "xai_board_view_by_id",
   );
@@ -579,6 +580,13 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [archiveCardsOpen, setArchiveCardsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [activeCardRef, setActiveCardRef] = useState<ActiveCardRef | null>(null);
+  const taskLinkOperation = useRef(0);
+  const activeCardState = useRef(activeCardRef);
+  useEffect(() => {
+    activeCardState.current = activeCardRef;
+    taskLinkOperation.current += 1;
+    setTaskLinkPending(false);
+  }, [activeCardRef]);
   const [automationAppliedKey, setAutomationAppliedKey] = useState<string | null>(null);
 
   // ---- Kanban-view composer state ---------------------------------------
@@ -932,11 +940,18 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     [activeBoard.id, activeCardRef, updateCard],
   );
 
-  const createLinkedTask = useCallback(() => {
+  const createLinkedTask = useCallback(async () => {
     if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
-    const result = ensureBoardTaskLink(activeBoard.id, activeCardRef.cardId, linkOwner);
+    if (taskLinkPending) return;
+    const operation = ++taskLinkOperation.current;
+    const capturedCardId = activeCardRef.cardId;
+    setTaskLinkPending(true);
+    setTaskLinkError(null);
+    const result = await ensureBoardTaskLink(activeBoard.id, capturedCardId, linkOwner);
+    if (operation !== taskLinkOperation.current || activeCardState.current?.cardId !== capturedCardId) return;
     setTaskLinkError(result.ok ? null : result.message);
-  }, [activeBoard.id, activeCardRef, linkOwner]);
+    setTaskLinkPending(false);
+  }, [activeBoard.id, activeCardRef, linkOwner, taskLinkPending]);
 
   const unlinkActiveCardTask = useCallback(() => {
     patchActiveCard({ taskLink: undefined });
@@ -1358,6 +1373,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           lang={lang}
           taskLinkStatus={activeTaskLinkStatus}
           taskLinkError={taskLinkError}
+          taskLinkPending={taskLinkPending}
           labelCatalog={labelCatalog}
           memberCatalog={memberCatalog}
           onCreateLabel={createLabel}

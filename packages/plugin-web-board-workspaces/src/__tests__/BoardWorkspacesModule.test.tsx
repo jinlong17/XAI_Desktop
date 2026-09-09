@@ -1,11 +1,11 @@
-import { accountScope } from "@repo/plugin-web-storage";
+import { accountScope, generationMarkerKey, readCanonicalCommandState, setCanonicalCommandActivationForTests } from "@repo/plugin-web-storage";
 /**
  * BWM1..BWM18 + BWM-EXT-1..6 — top-level orchestrator integration tests.
  * Gap-closure row #6 additions: BWM-EXT-1..6 (Filter + Share)
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { useLayoutEffect } from "react";
 import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFromOffset } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
@@ -25,6 +25,10 @@ HTMLDialogElement.prototype.close = vi.fn();
 
 beforeEach(() => {
   localStorage.clear();
+  accountScope.activate(accountScope.lock("consumer-test"), "fixture");
+  localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({ generation: "fixture", migrationId: "test", previous: null }));
+  setCanonicalCommandActivationForTests(true);
+  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
 });
 
 function getStoredCard(cardId: string): BoardCardData {
@@ -47,7 +51,9 @@ function getStoredBoards(): Board[] {
 function getStoredTaskCols(): TaskCol[] {
   const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
   if (!raw) throw new Error("xai_task_cols not persisted");
-  return JSON.parse(raw) as TaskCol[];
+  const state = readCanonicalCommandState<TaskCol[]>(JSON.parse(raw));
+  if (state.status === "legacy" || state.status === "envelope") return state.data;
+  throw new Error("xai_task_cols was not valid");
 }
 
 function getStoredBoardFilters(): Record<
@@ -107,9 +113,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM2: defensive seed persists makeDefaultBoards on mount with null prefs", async () => {
     render(<BoardWorkspacesModule lang="en" />);
     // useEffect fires post-mount → flush microtasks
-    await act(async () => {
-      await Promise.resolve();
-    });
+    await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
     const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
@@ -139,9 +143,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       target: { value: "My New Board" },
     });
     fireEvent.click(screen.getByTestId("bc-submit"));
-    await act(async () => {
-      await Promise.resolve();
-    });
+    await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
     expect(screen.queryByTestId("bs-scrim")).not.toBeInTheDocument();
     expect(screen.queryByTestId("bc-scrim")).not.toBeInTheDocument();
     // Active board title flipped to the new one
@@ -1902,17 +1904,17 @@ describe("BWM-WS — workspace CRUD", () => {
   });
 });
 
-it("TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once", () => {
+it("TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once", async () => {
   const view=render(<BoardWorkspacesModule lang="en"/>);
   fireEvent.click(screen.getAllByTestId("board-card")[0]!);
   const key=accountScope.physicalKey("xai_task_cols"),native=Storage.prototype.setItem;
   const fail=vi.spyOn(Storage.prototype,"setItem").mockImplementation(function(this:Storage,k,v){if(k===key)throw new DOMException("quota","QuotaExceededError");native.call(this,k,v)});
   fireEvent.click(screen.getByTestId("card-detail-create-task"));
-  expect(screen.getByRole("alert")).toHaveTextContent("task creation failed");
+  await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("task creation failed"));
   expect(getStoredCard("bc1").taskLink?.pending).toBeDefined();
   fail.mockRestore();view.unmount();render(<BoardWorkspacesModule lang="en"/>);
   fireEvent.click(screen.getAllByTestId("board-card")[0]!);
   fireEvent.click(screen.getByTestId("card-detail-retry-task"));
-  expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined();
+  await waitFor(() => expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined());
   expect(getStoredTask("bt-b-default-bc1").task.source?.cardId).toBe("bc1");
 });
