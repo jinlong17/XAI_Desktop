@@ -123,7 +123,7 @@ export function TaskColumn({
           </div>
         )}
         {col.completed && (
-          <CompletedGroup tasks={col.completed} lang={lang} lists={lists} tags={tags} />
+          <CompletedGroup tasks={col.completed} lang={lang} onToggle={onToggle} lists={lists} tags={tags} />
         )}
       </div>
     </section>

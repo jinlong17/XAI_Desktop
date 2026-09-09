@@ -109,7 +109,6 @@ function sourceMatches(task: TaskCard, source: BoardTaskLinkSource): boolean {
   return (
     task.source?.type === "board-card" &&
     task.source.boardId === source.boardId &&
-    task.source.listId === source.listId &&
     task.source.cardId === source.cardId
   );
 }
@@ -125,9 +124,9 @@ export function findBoardLinkedTask(
 ): BoardLinkedTaskLookup | null {
   for (const col of cols) {
     const task = col.tasks.find((entry) => sourceMatches(entry, source));
-    if (task) return { task, bucketId: col.id, completed: false };
+    if (task) return { task, bucketId: col.id, completed: task.done === true };
     const completed = col.completed?.find((entry) => sourceMatches(entry, source));
-    if (completed) return { task: completed, bucketId: col.id, completed: true };
+    if (completed) return { task: completed, bucketId: col.id, completed: completed.done !== false };
   }
   return null;
 }
@@ -136,18 +135,19 @@ export function upsertBoardLinkedTask(
   cols: readonly TaskCol[],
   task: TaskCard,
   bucketId: BucketId = "nodate",
+  preserveExisting = false,
 ): TaskCol[] {
   let updatedExisting = false;
   const withoutDuplicate = cols.map((col) => {
     const tasks = col.tasks.map((entry) => {
       if (!sameLinkedTask(entry, task)) return entry;
       updatedExisting = true;
-      return task;
+      return preserveExisting ? entry : task;
     });
     const completed = col.completed?.map((entry) => {
       if (!sameLinkedTask(entry, task)) return entry;
       updatedExisting = true;
-      return task;
+      return preserveExisting ? entry : task;
     });
     return {
       ...col,

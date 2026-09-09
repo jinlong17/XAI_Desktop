@@ -16,11 +16,12 @@ import { TaskCard } from "./TaskCard.js";
 export interface CompletedGroupProps {
   tasks: ReadonlyArray<TaskCardType>;
   lang: Lang;
+  onToggle?: (id: string) => void;
   lists?: ReadonlyArray<TaskListMeta>;
   tags?: ReadonlyArray<TaskTagMeta>;
 }
 
-export function CompletedGroup({ tasks, lang, lists = [], tags = [] }: CompletedGroupProps) {
+export function CompletedGroup({ tasks, lang, lists = [], tags = [], onToggle }: CompletedGroupProps) {
   const [open, setOpen] = useState(true);
   const { s } = useI18n(lang);
 
@@ -57,7 +58,7 @@ export function CompletedGroup({ tasks, lang, lists = [], tags = [] }: Completed
               dragging={false}
               taskList={lists.find((list) => list.id === task.listId)}
               taskTags={tags.filter((tag) => (task.tags ?? (task.tag ? [task.tag] : [])).includes(tag.id))}
-              onToggle={() => {}}
+              onToggle={() => onToggle?.(task.id)}
               onOpen={() => {}}
               onDragStart={(e) => { e.preventDefault(); }}
               onDragEnd={() => {}}

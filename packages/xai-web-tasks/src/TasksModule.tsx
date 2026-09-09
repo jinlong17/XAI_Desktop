@@ -566,8 +566,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
 function hydrateTaskCols(cols: TaskCol[]): TaskCol[] {
   return cols.map((col) => {
-    const tasks = col.tasks.map(hydrateTask);
-    const completed = col.completed?.map((task) => ({ ...hydrateTask(task), done: true }));
+    const tasks = [...col.tasks.map(hydrateTask), ...(col.completed ?? []).filter(task => task.done === false).map(hydrateTask)];
+    const completed = col.completed?.filter(task => task.done !== false).map((task) => ({ ...hydrateTask(task), done: true }));
     return {
       ...col,
       tasks,

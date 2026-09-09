@@ -1,0 +1,96 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ❯ docs/reviews/web-task-completion-link/reproduction.test.ts (5 tests | 4 failed) 9ms
+   ✓ T05 move preserves stable source and lookup 2ms
+   × T05 completed flag is visible to Board 4ms
+     → expected false to be true // Object.is equality
+   × moving Board card to another list preserves link 1ms
+     → expected undefined to be truthy
+   × completion records an actual timestamp and undo clears it 0ms
+     → expected false to be true // Object.is equality
+   × relink retry does not erase task edits or completion 2ms
+     → expected { id: 'bt-b-c', title: { …(2) }, …(3) } to deeply equal { id: 'bt-b-c', …(7) }
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-task-completion-link/reproduction.test.ts > T05 completed flag is visible to Board
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-task-completion-link/reproduction.test.ts:8:165
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-task-completion-link/reproduction.test.ts > moving Board card to another list preserves link
+AssertionError: expected undefined to be truthy
+
+- Expected: 
+true
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-task-completion-link/reproduction.test.ts:9:132
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-task-completion-link/reproduction.test.ts > completion records an actual timestamp and undo clears it
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-task-completion-link/reproduction.test.ts:10:229
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-task-completion-link/reproduction.test.ts > relink retry does not erase task edits or completion
+AssertionError: expected { id: 'bt-b-c', title: { …(2) }, …(3) } to deeply equal { id: 'bt-b-c', …(7) }
+
+- Expected
++ Received
+
+  {
+-   "completedAt": "2026-01-01T01:00:00.000Z",
+-   "done": true,
+    "id": "bt-b-c",
+    "inbox": true,
+-   "notes": "user edit",
+    "source": {
+      "boardId": "b",
+      "cardId": "c",
+      "listId": "l",
+      "type": "board-card",
+    },
+    "tag": "todo",
+    "title": {
+-     "en": "linked",
+-     "zh": "linked",
++     "en": "original",
++     "zh": "original",
+    },
+  }
+
+ ❯ docs/reviews/web-task-completion-link/reproduction.test.ts:11:351
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  13:12:32
+   Duration  463ms (transform 99ms, setup 0ms, collect 147ms, tests 9ms, environment 0ms, prepare 76ms)
+

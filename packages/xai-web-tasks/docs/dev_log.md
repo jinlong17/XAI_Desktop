@@ -850,3 +850,7 @@ No blockers. Both命脉 (no-mutation + D-QT honesty) proven by green load-bearin
 ## Notes for feature-review (Iteration 3)
 
 The single decision needing reviewer sign-off is **Q-T** (today→overdue, tomorrow→next7 bucket approximation). It is unavoidable: the SHIPPED `xai_task_cols` card shape has no real per-day due dates (discovery §1.2), and the carve-out forbids a schema change. Everything else (state lift, pure selector, no-mutation property, session-only, defer custom/tag, Summary-as-all) follows precedent and the carve-out line-for-line. The load-bearing safety gates are T-FILT-NOMUT (pure deep-equal) + T-FILT-COUNT (localStorage byte-identical) — both must be green for the no-mutation constraint to be proven, not just asserted.
+
+## 2026-09-09 TASK-02 iteration
+
+Workflow BUGFIX; target web / Tasks + Board links; executor Codex /root/rel02_auth_fix; status FIX_IN_PROGRESS (producer sub-fix complete, Board recovery and independent verification pending). Diagnosed T05 against current source: move/source was already fixed, but done lookup, Board list identity, completedAt and retry overwrite failed correct expectations. Added shared timestamp transition, stable lookup, explicit idempotent creation option, and actual legacy completed-row undo. Existing tests preserved; new completion contract cases cover undo/recomplete/metadata/move and undated compatibility. No historical timestamps synthesized. See docs/reviews/web-task-completion-link. Cross-vendor verification not performed.

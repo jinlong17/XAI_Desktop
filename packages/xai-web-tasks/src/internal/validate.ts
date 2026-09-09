@@ -89,6 +89,8 @@ export function isTaskCard(value: unknown): value is TaskCard {
     if (typeof v["done"] !== "boolean") return false;
   }
 
+  if (v["completedAt"] !== undefined && typeof v["completedAt"] !== "string") return false;
+
   return true;
 }
 

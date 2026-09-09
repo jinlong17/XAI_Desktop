@@ -49,6 +49,7 @@ export interface TaskTitleBundle {
 export interface BoardTaskLinkSource {
   readonly type: "board-card";
   readonly boardId: string;
+  /** Last known location only; boardId/cardId define source identity. */
   readonly listId: string;
   readonly cardId: string;
 }
@@ -92,6 +93,8 @@ export interface TaskCard {
    * Absent/undefined is treated as false by all consumers.
    */
   readonly done?: boolean;
+  /** Actual completion instant; absent on undated legacy history, cleared on undo. */
+  readonly completedAt?: string;
 }
 
 // ---------------------------------------------------------------------------

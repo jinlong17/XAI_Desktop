@@ -19,6 +19,19 @@ import type { TaskCol, TaskCard, TaskTagId, BucketId, NewTaskDraft, TaskPriority
 import { dateForCol, dateFields } from "./dateForCol.js";
 import { createTaskId } from "./ids.js";
 
+/** Bring only command-targeted legacy rows into the canonical task container. */
+function materializeCompleted(prev: TaskCol[], ids: ReadonlySet<string>): TaskCol[] {
+  let changed = false;
+  const next = prev.map(col => {
+    const selected = col.completed?.filter(task => ids.has(task.id));
+    if (!selected?.length) return col;
+    changed = true;
+    const tasks = [...col.tasks, ...selected.map(task => ({ ...task, done: task.done ?? true }))];
+    return { ...col, tasks, count: tasks.length, completed: col.completed!.filter(task => !ids.has(task.id)) };
+  });
+  return changed ? next : prev;
+}
+
 /**
  * Pure move: removes task from fromColId, rewrites date per toColId, prepends to toColId.tasks.
  *
@@ -36,6 +49,7 @@ export function moveCard(
   now?: Date,
 ): TaskCol[] {
   if (fromColId === toColId) return prev;
+  prev = materializeCompleted(prev, new Set([taskId]));
 
   const fromIdx = prev.findIndex((c) => c.id === fromColId);
   const toIdx   = prev.findIndex((c) => c.id === toColId);
@@ -72,6 +86,15 @@ export function moveCard(
   });
 }
 
+/** Idempotent completion transition. Never date undated legacy completions. */
+export function withTaskCompletion(task: TaskCard, done: boolean, now: Date = new Date()): TaskCard {
+  if (done && task.done === true) return task;
+  const next = { ...task, done };
+  if (done) next.completedAt = now.toISOString();
+  else delete next.completedAt;
+  return next;
+}
+
 /**
  * Pure toggle: flips the `done` field on the matching card in TaskCol[].
  *
@@ -86,15 +109,23 @@ export function moveCard(
 export function toggleComplete(
   prev: TaskCol[],
   taskId: string,
+  now: Date = new Date(),
 ): TaskCol[] {
   let found = false;
   const next = prev.map((col) => {
     const taskIdx = col.tasks.findIndex((t) => t.id === taskId);
-    if (taskIdx < 0) return col; // referential equality for untouched columns
+    if (taskIdx < 0) {
+      const archived = col.completed?.find(task => task.id === taskId);
+      if (!archived) return col;
+      found = true;
+      const normalized = { ...archived, done: archived.done ?? true };
+      const restored = withTaskCompletion(normalized, !normalized.done, now);
+      return { ...col, tasks: [restored, ...col.tasks], completed: col.completed!.filter(task => task.id !== taskId), count: col.tasks.length + 1 };
+    }
 
     found = true;
     const task = col.tasks[taskIdx]!;
-    const updatedTask: TaskCard = { ...task, done: !task.done };
+    const updatedTask = withTaskCompletion(task, !task.done, now);
     const updatedTasks = [
       ...col.tasks.slice(0, taskIdx),
       updatedTask,
@@ -159,6 +190,7 @@ export function deleteCard(prev: TaskCol[], id: string): TaskCol[] {
 
 export function deleteCards(prev: TaskCol[], ids: ReadonlySet<string>): TaskCol[] {
   if (ids.size === 0) return prev;
+  prev = materializeCompleted(prev, ids);
   let found = false;
   const next = prev.map((col) => {
     const idx = col.tasks.findIndex((t) => ids.has(t.id));
@@ -197,6 +229,7 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
   if (patch.dueDate != null && !dateFields(patch.dueDate)) return prev;
   // Empty patch → no-op
   if (ids.size === 0 || !patchHasValue(patch)) return prev;
+  prev = materializeCompleted(prev, ids);
 
   let found = false;
   const next = prev.map((col) => {
@@ -217,7 +250,7 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
               : card.tag;
 
       const updatedCard: TaskCard = {
-        ...card,
+        ...(patch.done !== undefined ? withTaskCompletion(card, patch.done) : card),
         ...(patch.title !== undefined
           ? { title: { en: patch.title, zh: patch.title } }
           : {}),
@@ -226,7 +259,6 @@ export function updateCards(prev: TaskCol[], ids: ReadonlySet<string>, patch: Ta
         ...(patch.listId !== undefined ? { listId: patch.listId } : {}),
         ...(patch.priority !== undefined ? { priority: patch.priority } : {}),
         ...(patch.notes !== undefined ? { notes: patch.notes } : {}),
-        ...(patch.done !== undefined ? { done: patch.done } : {}),
         id: card.id,
       };
 
