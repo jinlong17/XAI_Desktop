@@ -1,0 +1,36 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-auth-independent-p5nnd7wk
+
+ ✓ packages/web-auth-device-session/src/auth-generation-store.test.ts (29 tests) 54ms
+ ✓ packages/web-auth-device-session/src/auth-generation-client.test.ts (8 tests) 50ms
+ ✓ packages/web-auth-device-session/src/auth-generation-coordinator.test.ts (23 tests) 226ms
+
+ Test Files  3 passed (3)
+      Tests  60 passed (60)
+   Start at  13:03:42
+   Duration  2.20s (transform 351ms, setup 0ms, collect 739ms, tests 330ms, environment 3.92s, prepare 292ms)
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > auth lifecycle coordinator > recovers OAuth envelope after coordinator remount and exchanges into the original generation
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-10:1 (2.106.1) 2026-09-09T20:03:44.446Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > auth lifecycle coordinator > reconciles another coordinator publication from durable state and detaches old client
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-17:1 (2.106.1) 2026-09-09T20:03:44.472Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > auth lifecycle coordinator > reconciles another coordinator publication from durable state and detaches old client
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-18:1 (2.106.1) 2026-09-09T20:03:44.477Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > deduplicates concurrent StrictMode-like callback redemption
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-24:1 (2.106.1) 2026-09-09T20:03:44.512Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > resumes committed candidate session after dispose before publish without redeeming consumed code again
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-25:1 (2.106.1) 2026-09-09T20:03:44.520Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > does not invent callback recovery when the server consumed code but session persistence failed
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-26:1 (2.106.1) 2026-09-09T20:03:44.528Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > automatic reconciliation can recover an error only after a genuinely new durable generation appears
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-29:1 (2.106.1) 2026-09-09T20:03:44.598Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | packages/web-auth-device-session/src/auth-generation-coordinator.test.ts > automatic reconciliation can recover an error only after a genuinely new durable generation appears
+GoTrueClient@xai.auth-client.v1:xai-web-auth:attempt-31:1 (2.106.1) 2026-09-09T20:03:44.602Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+

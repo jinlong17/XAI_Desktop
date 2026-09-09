@@ -1,0 +1,23 @@
+{
+  "ref": "c0af11ba065b0eb3ca28f0c9f9a3970cce237baf",
+  "result": {
+    "pass": false,
+    "race": {
+      "sdkWritesWhileSdkLockHeld": true,
+      "reactAccount": "B",
+      "persistedSession": null,
+      "pendingVerifier": null
+    },
+    "reopen": {
+      "clearRejected": false,
+      "stateImmediatelyAfterClear": "unauthenticated",
+      "restoredAccount": "A"
+    },
+    "sdkSignOutRace": {
+      "persistedSession": null,
+      "pendingVerifier": null,
+      "reactAccount": null
+    },
+    "meaning": "pass=false confirms unresolved correctness defects; network responses are synthetic, storage and SDK are real"
+  }
+}
