@@ -1,0 +1,67 @@
+packages/plugin-web-statistics/src/types.ts:23:  /** Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant; dated timeline is separate). */
+packages/plugin-web-statistics/src/StatisticsModule.tsx:9: *   - xai_task_cols         (Record<BucketId,TaskCol>) — for real done count
+packages/plugin-web-statistics/src/StatisticsModule.tsx:17: * `xai_task_cols` (current board, range-invariant). A user-visible
+packages/plugin-web-statistics/src/StatisticsModule.tsx:88:  // READ-ONLY: Statistics never writes xai_task_cols.
+packages/plugin-web-statistics/src/StatisticsModule.tsx:89:  const [rawTaskCols] = usePref("xai_task_cols");
+packages/xai-web-tasks/src/types.ts:92:   * Persisted inside xai_task_cols so completion survives page refresh (T-10 fix).
+packages/xai-web-tasks/src/TasksModule.tsx:7: * The task board remains backed by xai_task_cols. Editable list/tag metadata is
+packages/xai-web-tasks/src/TasksModule.tsx:74:  const [rawCols, setRawCols] = usePref("xai_task_cols");
+packages/xai-web-tasks/src/TasksModule.tsx:86:        console.warn("[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.");
+packages/plugin-web-statistics/src/internal/narrowTaskCols.ts:4: * Narrows the `unknown` value from `usePref("xai_task_cols")` into the
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:52:      const raw = getPref("xai_task_cols", scope) as unknown;
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:56:      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:69:      const raw = getPref("xai_task_cols", scope) as unknown;
+packages/xai-web-tasks/src/internal/aiMutateSubscriber.ts:78:      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+packages/plugin-web-statistics/src/internal/countDoneTasks.ts:23: * Returns the count of `done === true` cards in the raw `xai_task_cols`
+packages/xai-web-tasks/src/internal/accountMigration.ts:3:registerAccountMigrationValidator("xai_task_cols", isTaskColsArray);
+packages/plugin-web-statistics/src/internal/aggregators.ts:6: * week-start preference + clock `now` + language + raw `xai_task_cols` value.
+packages/plugin-web-statistics/src/internal/aggregators.ts:124:  // Statistics NEVER writes xai_task_cols — read-only aggregator.
+packages/xai-web-tasks/src/internal/validate.ts:4: * isTaskColsArray: validates usePref("xai_task_cols") raw value.
+packages/xai-web-tasks/src/internal/tasksReducer.ts:10: * is stored in xai_task_cols and survives page refresh.
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:48:      const raw = getPref("xai_task_cols", scope) as unknown;
+packages/xai-web-tasks/src/internal/aiCreateSubscriber.ts:54:      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx:207:  const [rawTaskCols] = usePref("xai_task_cols");
+packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.ts:33:    const rawTasks = read('xai_task_cols');
+packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.ts:50:      if (!setPref('xai_task_cols', upsertBoardLinkedTask(cols, task, bucketIdForBoardDueDate(draft.dueDate), true) as unknown as TaskColsState, scope)) throw Error('Link intent saved; task creation failed. Retry to finish.');
+packages/plugin-web-ai-chat/src/internal/contextProvider.ts:4: * Pure function: reads xai_task_cols / xai_calendar_events / xai_pomodoro_sessions /
+packages/plugin-web-ai-chat/src/internal/contextProvider.ts:200:  const rawCols = getPref("xai_task_cols");
+packages/plugin-web-ai-chat/src/internal/contextProvider.ts:225:  const rawCal = getPref("xai_calendar_events");
+packages/plugin-web-storage/src/internal/registry.ts:203:  xai_task_cols: {
+packages/plugin-web-storage/src/internal/registry.ts:204:    key: "xai_task_cols",
+packages/plugin-web-storage/src/internal/registry.ts:995:  xai_calendar_events: {
+packages/plugin-web-storage/src/internal/registry.ts:996:    key: "xai_calendar_events",
+packages/plugin-web-storage/src/internal/accountOwnership.ts:26:  "xai_calendar_events": "account",
+packages/plugin-web-storage/src/internal/accountOwnership.ts:108:  "xai_task_cols": "account",
+packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx:5: *   - usePref("xai_task_cols") + usePref("xai_calendar_events") for reactivity
+packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx:37:  const [taskStore] = usePref("xai_task_cols");
+packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx:38:  const [calStore] = usePref("xai_calendar_events");
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:91:      const raw = getPref("xai_calendar_events", scope);
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:94:      return setPref("xai_calendar_events", deleteEvent(store, id), scope) ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:105:      const raw = getPref("xai_calendar_events", scope);
+packages/xai-web-calendar/src/internal/aiMutateSubscriber.ts:112:      return setPref("xai_calendar_events", next, scope) ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
+packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx:4: * §F real-data wiring: reads `xai_calendar_events` via `usePref`, computes
+packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx:52:  const [store] = usePref("xai_calendar_events");
+packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx:68:  // Real calendar dots from xai_calendar_events
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:5: * `Record<string, UserCalEvent>` under the `xai_calendar_events` key.
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:56: * Persistence key: `xai_calendar_events` (codec "json", default {}).
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:61:  const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
+packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts:66:    const raw = localStorage.getItem(accountScope.physicalKey("xai_calendar_events", scope));
+packages/xai-web-dashboard-widgets/src/widgets/UpcomingWidget.tsx:4: * §F real-data wiring: reads `xai_calendar_events` via `usePref`, selects
+packages/xai-web-dashboard-widgets/src/widgets/UpcomingWidget.tsx:42:  const [store] = usePref("xai_calendar_events");
+packages/xai-web-cmdk/src/adapters/tasks.ts:4: * Storage: xai_task_cols (Record<BucketId, TaskCard[]>)
+packages/xai-web-calendar/src/internal/accountMigration.ts:3:registerAccountMigrationValidator("xai_calendar_events", value => {
+packages/xai-web-dashboard-widgets/src/widgets/StatTasks.tsx:4: * §F real-data wiring: reads `xai_task_cols` via `usePref`, selects
+packages/xai-web-dashboard-widgets/src/widgets/StatTasks.tsx:31:  const [store] = usePref("xai_task_cols");
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:79:      const raw = getPref("xai_calendar_events", scope);
+packages/xai-web-calendar/src/internal/aiCreateSubscriber.ts:82:      return setPref("xai_calendar_events", next, scope) ? { ok: true, targetId: created.id } : { ok: false, reason: "storage" };
+packages/xai-web-calendar/src/CalendarModule.tsx:105:  // User-created events stored via xai_calendar_events; CRUD via the hook.
+packages/xai-web-dashboard-widgets/src/internal/dataReads/isTaskColsRecord.ts:4: * Narrows the `unknown` from `usePref("xai_task_cols")` into the real
+packages/xai-web-dashboard-widgets/src/internal/dataReads/calUpcoming.ts:134: * @param store          Raw value from `usePref("xai_calendar_events")`.
+packages/xai-web-cmdk/src/internal/readModuleStates.ts:47:    tasks: getPref("xai_task_cols"),
+packages/xai-web-dashboard-widgets/src/internal/dataReads/calMonthDots.ts:90: * @param store      Raw value from `usePref("xai_calendar_events")`.
+packages/xai-web-dashboard-widgets/src/internal/dataReads/taskStats.ts:29: * Returns `{ done, total }` from the raw `xai_task_cols` store value.
+packages/xai-web-dashboard-widgets/src/internal/dataReads/notifications.ts:5: *   1. overdueTasks: reads the OVERDUE bucket from xai_task_cols (NOT §F's all-bucket countDone)
+packages/xai-web-dashboard-widgets/src/internal/dataReads/notifications.ts:6: *   2. todaysEvents: reads today's calendar events from xai_calendar_events (REUSE §F's listValidCalEvents)
+packages/xai-web-dashboard-widgets/src/internal/dataReads/notifications.ts:213: * @param store  Raw value from `usePref("xai_calendar_events")`.
+packages/xai-web-dashboard-widgets/src/internal/dataReads/isUserCalEventMap.ts:4: * Narrows the `unknown` from `usePref("xai_calendar_events")` into a map
+packages/xai-web-dashboard-widgets/src/StickyComposer.tsx:246:  const [taskColsRaw] = usePref("xai_task_cols");
