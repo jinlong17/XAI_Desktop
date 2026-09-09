@@ -36,9 +36,23 @@ node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-
 # 1 file, 6 registry-to-subscriber contract cases passed
 
 node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-ai-calendar-invalid-date/verify.config.mjs
-# retained original evidence: 2 files/cases passed
+# retained original evidence: 1 file, 2 cases passed
 ```
 
 The targeted subscriber tests exercise the real typed event bus, calendar subscriber hooks, account-scoped Storage adapter and resulting physical storage value. They assert invalid month/day, non-leap February 29, invalid time, non-finite/type/non-integer duration, no write, no request-ID consumption, a valid `2024-02-29` corrected retry, the legal `23:50 + 5 = 23:55` boundary, and rejection instead of cross-day silent clamping. The separate registry-to-subscriber test proves explicit invalid values survive conversion and are rejected as a whole operation, while an omitted optional time/duration reaches the documented defaults.
 
 This is synthetic jsdom integration evidence, not native-browser or independent acceptance. A fixed product commit is required for Sol's independent native validation before any broader AI-02 claim.
+
+## Fixed-snapshot before/after evidence
+
+The registry-to-subscriber assertions at commit `afd10ff` were copied byte-for-byte into a detached `e50ca1c` worktree. Both test and base config SHA-1 values matched the committed `afd10ff` files before execution. The isolated runner aliases the event-bus and storage package imports to the detached worktree solely so the subscriber and test share the same fixed-snapshot singleton; it does not alter an assertion or product source.
+
+```sh
+# from each detached worktree, using the shared repository Vitest binary
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/core/node_modules/.bin/vitest run \
+  --config docs/reviews/web-ai-calendar-validation-fix/verify.config.mjs
+```
+
+At `e50ca1c`, the same six assertions produced **5 correct FAIL / 1 control PASS**; see `registry-subscriber-before-e50ca1c.log`. The control is the direct Calendar-subscriber rejection of `date: "bad"`, which was already repaired by `e50ca1c`. The five failures preserve the upstream conversion defects: omitted values were eagerly inserted, create duration text/decimal values were defaulted or rounded into successful writes, and update invalid date/decimal-duration fields were discarded or rounded so the mutation succeeded.
+
+At `afd10ff`, all **6/6** assertions pass; see `registry-subscriber-after-afd10ff.log`. This bounds the evidence to A1 conversion plus subscriber semantics. It remains synthetic jsdom integration evidence and does not replace Sol's native independent verification or Astra review.
