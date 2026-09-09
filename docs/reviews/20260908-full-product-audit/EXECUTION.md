@@ -139,3 +139,5 @@ Sol4202c79精确提交六subscriber与异步receipt桥；作者eventbus22/22、T
 父646a539固定4202c79独立原生验证：六subscriber首轮6/6、整个Chrome SIGTERM退出（PID55570）后新进程55624同profile重开6/6通过。检查外部checkpoint原始字节、原target、later-human-edit不被覆盖、改变语义的同ID冲突不写入，以及新ID操作继续正常执行。另一套实际AiChat界面六操作检查6/6通过：quota失败+double-confirm只有一次写尝试，不继续模型；retry成功后业务数据+单receipt均已提交才出现唯一matching tool_result。adapter是synthetic，不称真实provider验收。两套db1eddc接入前6FAIL基线保留。明确activation只在隔离测试打开，旧客户端升级/生产启用门槛未过。
 
 Astra adc1202已确认Calendar原24断言独立全PASS，但新增reset读取失败反例仍假成功；Terra d8412d3改真实remove结果，作者原26通过，Astra独立复验进行中。Tasks D1仍需实际UI写入迁移，Terra继续实施；Board D1和migration后续范围保留。完整AI-02/REL-05均继续in_progress，正式完成13/312未变。
+
+Astra c58a647固定d8412d3独立原26/26通过，有界接受reset真实删除结果与已测Calendar恢复修复；不接受完整D1、Tasks/Board接入、D2或AI-02。原各阶段FAIL保留。
