@@ -1,5 +1,7 @@
 # REL-05 remaining consumer inventory — independent first pass
 
+> Historical first-pass inventory below. Current follow-up: Meditation preference recovery has independent `28fe049`; Matrix creation/move recovery has independent `8e50d8f`; Calendar composer CRUD has independent `3cd8870`. Habits and Countdown work is in progress and is not accepted here. POMO timer completion does not close its preference autosaves; Calendar composer completion does not close view/week-start preferences or AI subscribers. See the execution ledger for exact current evidence and boundaries. The remaining original rows are not automatically closed by shared setter changes.
+
 Web module. Read-only product audit at HEAD `419f941b7ec0391f157fa5f0e175b0a5cfbf9996`; POMO/controller/storage host files were concurrently dirty and are **not accepted** by this report. Evidence only. Initial contract: `../web-storage-write-results/20260909-rel05-diagnosis.md`.
 
 A returned boolean in shared `usePref` does not close consumers that ignore it. This is a source inventory plus one independently reproduced MED defect, not a claim of native quota coverage for every feature. Each remaining row requires its own failure/retry/account-switch acceptance.

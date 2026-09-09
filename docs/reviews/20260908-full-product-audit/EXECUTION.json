@@ -31,8 +31,12 @@
         "commit:0141ecb",
         "commit:f578ae8",
         "commit:f15aceb",
-        "../web-auth-device-session/rel02-queue-review.test.ts"
-      ]
+        "../web-auth-device-session/rel02-queue-review.test.ts",
+        "commit:5803e86",
+        "../web-auth-store-independent/20260909-review.md"
+      ],
+      "functional_status": "passed",
+      "workflow_status": "cross_tool_verification_pending"
     },
     {
       "id": "REL-03",
@@ -95,7 +99,9 @@
         "commit:8e50d8f",
         "../web-matrix-independent/20260909-independent-verification.md",
         "commit:a452d40",
-        "../web-calendar-save-recovery/20260909-diagnosis-and-fix.md"
+        "../web-calendar-save-recovery/20260909-diagnosis-and-fix.md",
+        "commit:3cd8870",
+        "../web-calendar-independent/20260909-independent-verification.md"
       ]
     },
     {

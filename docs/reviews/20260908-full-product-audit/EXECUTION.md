@@ -1,6 +1,10 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **12/312**。REL-01 已完成独立复验；REL-05 Matrix子项通过、Calendar已提交待独立验收、Habits修复中。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **12/312**。REL-02 功能PASS、跨工具验证pending分列；REL-05 Matrix与Calendar子项独立通过，Habits与Countdown继续处理。以下保留历次检查记录。
+
+REL-02 独立5803e86固定8e50d8f：9组原生初始化/迁移/故障恢复通过，包含两种顺序、并发、两种旧库、热连接扩表、blocked后重试、事务abort和同步DataError恢复。`functional_status=passed`；保留现有复合状态verification_pending和`workflow_status=cross_tool_verification_pending`。workflow.md §8跨工具验证仍未通过，不把同厂商独立验证冒充跨工具或READY_TO_SHIP；此前凭证401不是当前功能缺陷。全清单的功能完成数字也不构成发布门禁通过。
+
+REL-05 Calendar子项独立3cd8870固定a452d40通过：before正确FAIL、after原生8组及343原测试PASS。实际下载验证最新title/tag，创建唯一、edit原id更新、delete失败保留后重试、外部StorageEvent更新后的旧editing entity拒绝、A→B拒绝写入与下载。纠正描述精度：旧创建失败后隐藏表单仍有文字，缺陷是关闭editor且无可见错误，并非所有内部form均被清空。REL-05整体仍in_progress。
 
 REL-01 核销证据 c02a09a：固定9149778，原真实TT idle午夜失败断言修后通过；六实际消费者同一时刻午夜更新，Tasks Tomorrow→Today、TT跟随今天且历史选择在focus/pageshow后保留。当前整快照四时区矩阵通过，原生预定UTC边界23/25/23.5/24.5小时通过；Metrics绝对时刻证据复核并补当前组件精确断言。该编号本地时间合同已满足，不包含生产/后台服务/闭浏览器通知或跨厂商门禁。
 
