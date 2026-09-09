@@ -91,11 +91,6 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   const taskCols = useMemo<TaskCol[]>(() => groupTasksByDueDate(hydrateTaskCols(baseCols), now), [baseCols, now]);
 
-  useEffect(() => {
-    if (isTaskColsArray(rawCols) && JSON.stringify(rawCols) === JSON.stringify(taskCols)) return;
-    setRawCols(taskCols as unknown as Parameters<typeof setRawCols>[0]);
-  }, [rawCols, setRawCols, taskCols]);
-
   const persistLists = useCallback((next: TaskListMeta[]) => {
     const ok = accountScope.isReady(owner) && setPrefAutosave("task_lists", next, { scope: owner });
     if (ok) { setLists(next); setFailedSave(null); }
@@ -110,7 +105,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return ok;
   }, [owner]);
 
-  const persistCols = useCallback(async (next: TaskCol[]) => {
+  const persistCols = useCallback(async (next: TaskCol[], baseline: TaskCol[] = taskCols) => {
     if (!accountScope.isReady(owner)) {
       setFailedSave({ kind: "tasks", value: next });
       return false;
@@ -118,12 +113,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
     const result = await mutateCanonicalDataset({
       key: "xai_task_cols", scope: owner, validate: isTaskColsArray,
       initialize: () => SEED_TASK_COLS as TaskCol[],
-      mutate: () => ({ ok: true as const, data: next }),
+      mutate: current => JSON.stringify(current) === JSON.stringify(baseline)
+        ? ({ ok: true as const, data: next })
+        : ({ ok: false as const, reason: "conflict" }),
     });
     if (result.ok) { setRawCols(result.data as unknown as Parameters<typeof setRawCols>[0]); setFailedSave(null); return true; }
     setFailedSave({ kind: "tasks", value: next });
     return false;
-  }, [setRawCols, owner]);
+  }, [setRawCols, owner, taskCols]);
+
+  useEffect(() => {
+    if (isTaskColsArray(rawCols) && JSON.stringify(rawCols) === JSON.stringify(taskCols)) return;
+    void persistCols(taskCols);
+  }, [rawCols, taskCols, persistCols]);
 
   const completedIds = useMemo<ReadonlySet<string>>(() => {
     const ids = new Set<string>();
