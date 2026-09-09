@@ -1,6 +1,6 @@
 import {it,expect} from 'vitest';
-import {createTimeTrackerEntry,resumeTimeTrackerEntry,pauseTimeTrackerEntry,finishTimeTrackerEntry} from '../internal/storage';
-import {entryDuration} from '../internal/time';
+import {createTimeTrackerEntry,resumeTimeTrackerEntry,pauseTimeTrackerEntry,finishTimeTrackerEntry} from '../internal/storage.js';
+import {entryDuration} from '../internal/time.js';
 const paused=()=>({...createTimeTrackerEntry('cat_work',null,0,1000,{en:'',zh:''}),done:false});
 it('resume is idempotent while already running: one open segment',()=>{const a=resumeTimeTrackerEntry(paused(),2000);const b=resumeTimeTrackerEntry(a,3000);expect(b.segments.filter(s=>s.end===null)).toHaveLength(1);expect(entryDuration(b,4000)).toBe(3000)});
 it('ended sessions reject stale resume and stay finite',()=>{const ended=finishTimeTrackerEntry(resumeTimeTrackerEntry(paused(),2000),3000);const replay=resumeTimeTrackerEntry(ended,4000);expect(replay).toEqual(ended);expect(entryDuration(replay,5000)).toBe(2000)});

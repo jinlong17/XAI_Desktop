@@ -32,3 +32,7 @@ Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKe
 Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
 
 REL-01 changes civil-day navigation/window boundaries only. Segment splitting and cross-midnight allocation remain TT-01 follow-up work; running segment epoch values are preserved.
+
+### TT02 cross-tab state contract
+
+Single task is the default: Start while another session runs requires explicit End and start confirmation. The confirmed old running-source snapshot is rechecked inside the account-scoped lock; changed sessions reject the stale confirmation. Multiple tasks is explicitly selectable, permits distinct running sessions, and never permits duplicate open intervals within one session. Stale commands reject/replay as no-ops rather than resurrecting terminal sessions. No lock availability means writes are disabled with a visible explanation, not an emulated localStorage CAS. UI errors preserve editor drafts on the mounted page and offer a guarded download of original persisted session bytes; this export is not an unsaved-draft export or automatic cross-reload recovery.

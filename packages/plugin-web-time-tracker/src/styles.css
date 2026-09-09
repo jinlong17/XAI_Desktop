@@ -2977,3 +2977,7 @@
     grid-template-columns: 1fr;
   }
 }
+
+.module-timetrack .tt-save-error { padding: 1rem; border: 1px solid var(--border-1); border-radius: .75rem; background: var(--bg-panel); overflow-wrap: anywhere; }
+.module-timetrack .tt-save-error button, .module-timetrack .tt-mode select { min-height: 44px; }
+.module-timetrack .tt-mode { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }

@@ -7,7 +7,7 @@ import { TIME_TRACKER_CATEGORIES_KEY, readTimeTrackerCategories, readTimeTracker
 import { TIME_TRACKER_CATEGORY_COLORS } from "../internal/defaults.js";
 
 describe("TimeTrackerModule", () => {
-  it("renders bilingual module title and default categories", () => {
+  it("renders bilingual module title and default categories", async () => {
     const { rerender } = render(<TimeTrackerModule lang="en" />);
     expect(screen.getByText("Time Tracker")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Study" })).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByRole("heading", { name: "学习" })).toBeInTheDocument();
   });
 
-  it("renders and persists the compact time status cards", () => {
+  it("renders and persists the compact time status cards", async () => {
     const { container, unmount } = render(<TimeTrackerModule lang="en" />);
 
     expect(screen.getByText("Time status")).toBeInTheDocument();
@@ -34,16 +34,16 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Today remaining: 13h 30m")).toBeInTheDocument();
     expect(screen.getByText("No active timer")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Remove status card Month progress"));
     });
     expect(screen.queryByText("8 days left")).not.toBeInTheDocument();
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1"))).not.toContain("month");
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Add status card"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Month progress" }));
     });
     expect(screen.getByText("8 days left")).toBeInTheDocument();
@@ -52,13 +52,13 @@ describe("TimeTrackerModule", () => {
 
     const yearCard = screen.getByText("Year progress").closest("article");
     expect(yearCard).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.contextMenu(yearCard!);
     });
     expect(screen.queryByText("222 days left")).not.toBeInTheDocument();
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1"))).not.toContain("year");
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Hide time status"));
     });
 
@@ -71,7 +71,7 @@ describe("TimeTrackerModule", () => {
     expect(screen.queryByText("Saturday")).not.toBeInTheDocument();
     expect(screen.getByText("Time status hidden")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Show time status"));
     });
 
@@ -79,14 +79,14 @@ describe("TimeTrackerModule", () => {
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_hidden_v1"))).toBe("0");
   });
 
-  it("reorders time status cards by drag and persists the order", () => {
+  it("reorders time status cards by drag and persists the order", async () => {
     const { container } = render(<TimeTrackerModule lang="en" />);
     const dateCard = screen.getByText("Current date").closest("article");
     const monthCard = screen.getByText("Month progress").closest("article");
     expect(dateCard).not.toBeNull();
     expect(monthCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.dragStart(monthCard!, { dataTransfer: { effectAllowed: "" } });
       fireEvent.dragOver(dateCard!, { dataTransfer: { effectAllowed: "" } });
       fireEvent.dragEnd(monthCard!);
@@ -97,18 +97,18 @@ describe("TimeTrackerModule", () => {
     expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1")) ?? "[]")).toEqual(["month", "date", "year", "today", "active"]);
   });
 
-  it("creates and restores custom target time status cards", () => {
+  it("creates and restores custom target time status cards", async () => {
     render(<TimeTrackerModule lang="en" />);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Add status card"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Custom time" }));
     });
 
     expect(screen.getByText("Custom time")).toBeInTheDocument();
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Launch" } });
       fireEvent.change(screen.getByLabelText("Target time"), { target: { value: "2026-05-25T12:00" } });
       fireEvent.click(screen.getByText("Save"));
@@ -120,61 +120,61 @@ describe("TimeTrackerModule", () => {
     expect(customCards[0]?.name).toBe("Launch");
     expect(JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_tt_time_status_cards_v1")) ?? "[]").some((key: string) => key.startsWith("custom:"))).toBe(true);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Remove status card Launch"));
     });
     expect(screen.queryByText("Launch")).not.toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Add status card"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Launch" }));
     });
     expect(screen.getByText("Launch")).toBeInTheDocument();
   });
 
-  it("starts, pauses, resumes, and stops a tracked entry", () => {
+  it("starts, pauses, resumes, and stops a tracked entry", async () => {
     render(<TimeTrackerModule lang="en" />);
 
     const restCard = screen.getByRole("heading", { name: "Rest" }).closest("article");
     expect(restCard).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(restCard!).getByRole("button", { name: "Start Whole category" }));
     });
     expect(readTimeTrackerEntries()).toHaveLength(1);
     expect(screen.getByText("Active sessions")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(5_000);
       fireEvent.click(screen.getByLabelText("Pause"));
     });
     expect(readTimeTrackerEntries()[0]?.segments.at(-1)?.end).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Resume"));
     });
     expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(2);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("End"));
     });
     expect(readTimeTrackerEntries()[0]?.done).toBe(true);
   });
 
-  it("opens a fullscreen focus view from an active session and keeps timer actions intact", () => {
+  it("opens a fullscreen focus view from an active session and keeps timer actions intact", async () => {
     render(<TimeTrackerModule lang="en" />);
 
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
     });
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(5_000);
     });
 
-    act(() => {
+    await act(async () => {
       fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Code"));
     });
 
@@ -185,39 +185,39 @@ describe("TimeTrackerModule", () => {
     expect(focusDialog).toHaveTextContent("Started");
     expect(focusDialog).toHaveTextContent("Running");
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(focusDialog).getByLabelText("Pause"));
     });
     expect(readTimeTrackerEntries()[0]?.segments.at(-1)?.end).not.toBeNull();
     expect(focusDialog).toHaveTextContent("Paused");
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(focusDialog).getByLabelText("Resume"));
     });
     expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(2);
 
-    act(() => {
+    await act(async () => {
       fireEvent.keyDown(window, { key: " ", code: "Space" });
     });
     expect(readTimeTrackerEntries()[0]?.segments.at(-1)?.end).not.toBeNull();
     expect(focusDialog).toHaveTextContent("Paused");
 
-    act(() => {
+    await act(async () => {
       fireEvent.keyDown(window, { key: " ", code: "Space" });
     });
     expect(readTimeTrackerEntries()[0]?.segments).toHaveLength(3);
     expect(focusDialog).toHaveTextContent("Running");
 
-    act(() => {
+    await act(async () => {
       fireEvent.keyDown(window, { key: "Escape" });
     });
     expect(screen.queryByRole("dialog", { name: "Focus mode" })).not.toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Code"));
     });
     const reopenedDialog = screen.getByRole("dialog", { name: "Focus mode" });
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(reopenedDialog).getByLabelText("End and exit"));
     });
 
@@ -225,33 +225,33 @@ describe("TimeTrackerModule", () => {
     expect(screen.queryByRole("dialog", { name: "Focus mode" })).not.toBeInTheDocument();
   });
 
-  it("hides and reveals focus controls after idle mouse movement", () => {
+  it("hides and reveals focus controls after idle mouse movement", async () => {
     render(<TimeTrackerModule lang="en" />);
 
     const restCard = screen.getByRole("heading", { name: "Rest" }).closest("article");
     expect(restCard).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(restCard!).getByRole("button", { name: "Start Whole category" }));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.doubleClick(screen.getByLabelText("Enter focus mode Rest"));
     });
 
     const focusDialog = screen.getByRole("dialog", { name: "Focus mode" });
     expect(focusDialog).toHaveClass("controls-visible");
 
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(2_300);
     });
     expect(focusDialog).not.toHaveClass("controls-visible");
 
-    act(() => {
+    await act(async () => {
       fireEvent.mouseMove(focusDialog);
     });
     expect(focusDialog).toHaveClass("controls-visible");
   });
 
-  it("starts one entry per click under React StrictMode", () => {
+  it("starts one entry per click under React StrictMode", async () => {
     render(
       <StrictMode>
         <TimeTrackerModule lang="en" />
@@ -260,7 +260,7 @@ describe("TimeTrackerModule", () => {
 
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
     });
 
@@ -268,12 +268,12 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Active sessions").closest("section")).toHaveTextContent("Code · Study");
   });
 
-  it("adds a manual record", () => {
+  it("adds a manual record", async () => {
     render(<TimeTrackerModule lang="en" />);
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Add record"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Deep work" } });
       fireEvent.click(screen.getByText("Save"));
     });
@@ -284,18 +284,18 @@ describe("TimeTrackerModule", () => {
     expect(entries[0]?.done).toBe(true);
   });
 
-  it("collapses and restores day record details", () => {
+  it("collapses and restores day record details", async () => {
     const { unmount } = render(<TimeTrackerModule lang="en" />);
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Add record"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Review notes" } });
       fireEvent.click(screen.getByText("Save"));
     });
     expect(screen.getByText("Review notes")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Hide records"));
     });
 
@@ -307,7 +307,7 @@ describe("TimeTrackerModule", () => {
     render(<TimeTrackerModule lang="en" />);
     expect(screen.queryByText("Review notes")).not.toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Show records"));
     });
 
@@ -316,26 +316,26 @@ describe("TimeTrackerModule", () => {
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_day_records_collapsed_v1"))).toBe("0");
   });
 
-  it("adjusts a completed record time with inline hour minute second controls", () => {
+  it("adjusts a completed record time with inline hour minute second controls", async () => {
     render(<TimeTrackerModule lang="en" />);
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Add record"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Save"));
     });
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Adjust time"));
     });
     expect(screen.getByRole("spinbutton", { name: "Start time Hour" })).toHaveAttribute("aria-valuemax", "23");
     expect(screen.getByRole("spinbutton", { name: "End time Second" })).toHaveAttribute("aria-valuemax", "59");
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("Increase Start time Hour"));
       fireEvent.click(screen.getByLabelText("Increase End time Minute"));
       fireEvent.change(screen.getByLabelText("End time Second"), { target: { value: "30" } });
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(screen.getByRole("dialog", { name: "Adjust time" })).getByText("Save"));
     });
 
@@ -347,14 +347,14 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByLabelText("Adjust time")).toHaveTextContent("10:00:00 - 10:01:30");
   });
 
-  it("renders subcategory cards and starts a categorized session directly", () => {
+  it("renders subcategory cards and starts a categorized session directly", async () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
     expect(within(studyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
     expect(within(studyCard!).getByRole("button", { name: "Start Paper" })).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
     });
     expect(screen.queryByText("Pick subcategory")).not.toBeInTheDocument();
@@ -365,13 +365,13 @@ describe("TimeTrackerModule", () => {
     expect(activePanel).toHaveTextContent("Paper · Study");
   });
 
-  it("collapses and restores subcategory cards per category", () => {
+  it("collapses and restores subcategory cards per category", async () => {
     const { unmount } = render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
     expect(within(studyCard!).getByRole("button", { name: "Start Code" })).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByLabelText("Hide subcategories Study"));
     });
 
@@ -385,7 +385,7 @@ describe("TimeTrackerModule", () => {
     expect(restoredStudyCard).not.toBeNull();
     expect(within(restoredStudyCard!).queryByRole("button", { name: "Start Code" })).not.toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(restoredStudyCard!).getByLabelText("Show subcategories Study"));
     });
 
@@ -394,15 +394,16 @@ describe("TimeTrackerModule", () => {
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_category_collapsed_v1"))).toBe("[]");
   });
 
-  it("starts multiple subcategory sessions in parallel without switch confirmation", () => {
+  it("starts multiple subcategory sessions in parallel without switch confirmation", async () => {
+    localStorage.setItem("xai_tt_mode", "multi");
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Code" }));
     });
 
@@ -416,18 +417,18 @@ describe("TimeTrackerModule", () => {
     expect(activePanel).toHaveTextContent("Code · Study");
   });
 
-  it("keeps parent category totals when tracking a subcategory", () => {
+  it("keeps parent category totals when tracking a subcategory", async () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByRole("button", { name: "Start Paper" }));
     });
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(60_000);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("End"));
     });
 
@@ -436,14 +437,14 @@ describe("TimeTrackerModule", () => {
     expect(within(studyCard!).getByText("1m / 120m goal")).toBeInTheDocument();
   });
 
-  it("creates a custom category from the category editor", () => {
+  it("creates a custom category from the category editor", async () => {
     const { container } = render(<TimeTrackerModule lang="en" />);
     expect(container.querySelector(".tt-category-new")).toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByLabelText("New category"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Admin" } });
       fireEvent.click(screen.getByText("Save"));
     });
@@ -451,22 +452,22 @@ describe("TimeTrackerModule", () => {
     expect(readTimeTrackerCategories().some((category) => category.name.en === "Admin")).toBe(true);
   });
 
-  it("saves subcategory color and icon from the category editor", () => {
+  it("saves subcategory color and icon from the category editor", async () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByLabelText("Edit category"));
     });
 
     const codeRow = screen.getByLabelText("Subcategory 1").closest("li");
     expect(codeRow).not.toBeNull();
-    act(() => {
+    await act(async () => {
       fireEvent.change(within(codeRow!).getByLabelText("Code Icon"), { target: { value: "paper" } });
       fireEvent.click(within(codeRow!).getByLabelText(`Color ${TIME_TRACKER_CATEGORY_COLORS[5]}`));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Save"));
     });
 
@@ -475,12 +476,12 @@ describe("TimeTrackerModule", () => {
     expect(study?.subs[0]?.color).toBe(TIME_TRACKER_CATEGORY_COLORS[5]);
   });
 
-  it("adds a subcategory from the category card quick action", () => {
+  it("adds a subcategory from the category card quick action", async () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByLabelText("Add subcategory Study"));
     });
     const dialog = screen.getByRole("dialog");
@@ -491,12 +492,12 @@ describe("TimeTrackerModule", () => {
     expect(within(dialog).getByLabelText("writing")).toBeInTheDocument();
     expect(within(dialog).getByLabelText("fitness")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.change(within(dialog).getByLabelText("Subcategory Name"), { target: { value: "Review" } });
       fireEvent.click(within(dialog).getByLabelText(TIME_TRACKER_CATEGORY_COLORS[8]!));
       fireEvent.click(within(dialog).getByLabelText("paper"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(dialog).getByText("Save"));
     });
 
@@ -507,18 +508,18 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByRole("button", { name: "Start Review" })).toBeInTheDocument();
   });
 
-  it("opens a subcategory dialog from category settings before appending the row", () => {
+  it("opens a subcategory dialog from category settings before appending the row", async () => {
     render(<TimeTrackerModule lang="en" />);
     const studyCard = screen.getByRole("heading", { name: "Study" }).closest("article");
     expect(studyCard).not.toBeNull();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(studyCard!).getByLabelText("Edit category"));
     });
     const editor = screen.getByRole("dialog");
     expect(within(editor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(4);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(editor).getByText("Add subcategory"));
     });
     const dialogs = screen.getAllByRole("dialog");
@@ -526,19 +527,19 @@ describe("TimeTrackerModule", () => {
     expect(subDialog).toHaveTextContent("Add subcategory");
     expect(within(editor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(4);
 
-    act(() => {
+    await act(async () => {
       fireEvent.change(within(subDialog).getByLabelText("Subcategory Name"), { target: { value: "Labs" } });
       fireEvent.click(within(subDialog).getByLabelText(TIME_TRACKER_CATEGORY_COLORS[15]!));
       fireEvent.click(within(subDialog).getByLabelText("meeting"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(subDialog).getByText("Save"));
     });
 
     const updatedEditor = screen.getByRole("dialog");
     expect(within(updatedEditor).getAllByLabelText(/^Subcategory \d+$/)).toHaveLength(5);
     expect(within(updatedEditor).getByDisplayValue("Labs")).toBeInTheDocument();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(updatedEditor).getByText("Save"));
     });
 
@@ -548,7 +549,7 @@ describe("TimeTrackerModule", () => {
     expect(labs?.icon).toBe("meeting");
   });
 
-  it("backfills missing stored subcategory color and icon without dropping old data", () => {
+  it("backfills missing stored subcategory color and icon without dropping old data", async () => {
     localStorage.setItem(accountScope.physicalKey(TIME_TRACKER_CATEGORIES_KEY), JSON.stringify([
       {
         id: "cat_study",
@@ -568,13 +569,13 @@ describe("TimeTrackerModule", () => {
     expect(categories[0]?.subs[0]?.icon).toBe("code");
   });
 
-  it("hides and restores tracker sidebar insights", () => {
+  it("hides and restores tracker sidebar insights", async () => {
     render(<TimeTrackerModule lang="en" />);
 
     expect(screen.getByText("Where time went")).toBeInTheDocument();
     expect(screen.getByText("7-day trend")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getAllByLabelText("Hide insight preview")[0]!);
     });
 
@@ -583,7 +584,7 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Insights hidden")).toBeInTheDocument();
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_sidebar_insights_hidden_v1"))).toBe("1");
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Show"));
     });
 
@@ -592,10 +593,10 @@ describe("TimeTrackerModule", () => {
     expect(localStorage.getItem(accountScope.physicalKey("xai_tt_sidebar_insights_hidden_v1"))).toBe("0");
   });
 
-  it("renders the configurable insights board", () => {
+  it("renders the configurable insights board", async () => {
     render(<TimeTrackerModule lang="en" />);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getAllByText("Insights")[0]!);
     });
 
@@ -610,30 +611,30 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Focus rhythm")).toBeInTheDocument();
     expect(screen.getByText("Recent sessions")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Filters"));
     });
     expect(screen.getByText("Year")).toBeInTheDocument();
     expect(screen.getByText("Custom")).toBeInTheDocument();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Custom"));
     });
     expect(screen.getByText("From")).toBeInTheDocument();
     expect(screen.getByText("To")).toBeInTheDocument();
   });
 
-  it("renders detailed insight hover metadata after tracking time", () => {
+  it("renders detailed insight hover metadata after tracking time", async () => {
     render(<TimeTrackerModule lang="en" />);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Add record"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Research notes" } });
       fireEvent.click(screen.getByText("Save"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getAllByText("Insights")[0]!);
     });
 
@@ -647,27 +648,27 @@ describe("TimeTrackerModule", () => {
     expect(screen.getByText("Research notes").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Duration");
   });
 
-  it("deletes records in the selected insight range after confirmation", () => {
+  it("deletes records in the selected insight range after confirmation", async () => {
     render(<TimeTrackerModule lang="en" />);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Add record"));
     });
-    act(() => {
+    await act(async () => {
       fireEvent.change(screen.getByLabelText("Note"), { target: { value: "Temporary report row" } });
       fireEvent.click(screen.getByText("Save"));
     });
     expect(readTimeTrackerEntries()).toHaveLength(1);
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getAllByText("Insights")[0]!);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByText("Delete range"));
     });
 
     expect(screen.getByText(/Delete 1 complete records intersecting/)).toBeInTheDocument();
-    act(() => {
+    await act(async () => {
       fireEvent.click(within(screen.getByRole("dialog")).getByText("Delete"));
     });
 

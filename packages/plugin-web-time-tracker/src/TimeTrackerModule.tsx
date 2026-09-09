@@ -15,6 +15,7 @@ import {
   useCategoryMap,
   useTimeTrackerCategories,
   useTimeTrackerEntries,
+  useTimeTrackerMode,
 } from "./internal/storage.js";
 import {
   DAY_MS,
@@ -515,7 +516,9 @@ function readTimeStatusCustomCards(): readonly TimeStatusCustomCard[] {
 export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const scope = useRef(accountScope.capture()).current;
   const [categories, setCategories] = useTimeTrackerCategories();
-  const [entries, setEntries] = useTimeTrackerEntries();
+  const [entries, setEntries, entryRecovery] = useTimeTrackerEntries();
+  const [mode, setMode] = useTimeTrackerMode();
+  const [exportError, setExportError] = useState(false);
   const [view, setView] = useState<TrackerView>("tracker");
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [selectedKey, setSelectedKey] = useState(() => dayKey(Date.now()));
@@ -592,6 +595,18 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   function startCategory(categoryId: string, subId: string | null = null): void {
     if (!isToday) return;
+    const running = entries.filter(isRunningEntry);
+    if (mode === "single" && running.length > 0) {
+      const expected = JSON.stringify(running);
+      setConfirm({ title: lang === "zh" ? "切换计时任务？" : "Switch running task?", body: lang === "zh" ? "确认后结束当前运行中的任务，再开始新任务。" : "End the currently running task before starting this one.", confirmLabel: lang === "zh" ? "结束并开始" : "End and start", run: () => {
+        void setEntries(prev => {
+          if (JSON.stringify(prev.filter(isRunningEntry)) !== expected) throw new Error("The running task changed. Review it before switching.");
+          const stamp = Date.now();
+          return [...prev.map(entry => isRunningEntry(entry) ? finishTimeTrackerEntry(entry, stamp) : entry), createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" })];
+        });
+      }});
+      return;
+    }
     const stamp = Date.now();
     appendEntry(createTimeTrackerEntry(categoryId, subId, stamp, null, { en: "", zh: "" }));
   }
@@ -631,18 +646,20 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
     setNowMs(stamp);
   }
 
-  function saveEntry(draft: EntryDraft): void {
+  async function saveEntry(draft: EntryDraft): Promise<void> {
+    let saved: boolean;
     const stamp = Date.now();
     if (draft.id !== undefined) {
-      setEntries((prev) =>
-        prev.map((entry) =>
-          entry.id === draft.id
+      saved = await setEntries((prev) =>
+        prev.map((entry) => {
+          if (entry.id === draft.id && entryEditor?.mode === "edit" && JSON.stringify(entry) !== JSON.stringify(entryEditor.entry)) throw new Error("This record changed while editing. Export or copy your draft before reopening it.");
+          return entry.id === draft.id
             ? { ...entry, categoryId: draft.categoryId, subId: draft.subId, segments: draft.segments, note: draft.note, done: draft.done, updatedAt: stamp }
-            : entry,
-        ),
+            : entry;
+        }),
       );
     } else {
-      setEntries((prev) => [
+      saved = await setEntries((prev) => [
         ...prev,
         {
           id: uid("rec"),
@@ -656,6 +673,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
         },
       ]);
     }
+    if (!saved) return;
     setEntryEditor(null);
     setNowMs(stamp);
   }
@@ -746,6 +764,21 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   return (
     <div className="module module-timetrack">
+      {entryRecovery.error && <div className="tt-save-error" role="alert">
+        <p>{entryRecovery.error}</p>
+        <p>{lang === "zh" ? "原始数据未覆盖。重试前请检查当前任务；编辑草稿仍在当前页面。" : "Original data was not overwritten. Review current sessions before retrying; editor drafts remain on this page."}</p>
+        <button type="button" className="tt-btn" onClick={() => {
+          try {
+            const url = URL.createObjectURL(new Blob([entryRecovery.exportSource()], { type: "application/json" }));
+            const link = document.createElement("a"); link.href = url; link.download = "time-tracker-original-sessions.json";
+            link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setExportError(false);
+          } catch { setExportError(true); }
+        }}>{lang === "zh" ? "导出原始记录" : "Export original sessions"}</button>
+        {exportError && <p>{lang === "zh" ? "导出失败，请检查账户与存储权限。" : "Export failed. Check account and storage access."}</p>}
+      </div>}
+      <label className="tt-mode">{lang === "zh" ? "计时模式" : "Timer mode"} <select value={mode} onChange={event => setMode(event.target.value === "multi" ? "multi" : "single")}>
+        <option value="single">{lang === "zh" ? "单任务" : "Single task"}</option><option value="multi">{lang === "zh" ? "多任务" : "Multiple tasks"}</option>
+      </select></label>
       <header className="tt-head">
         <div className="tt-title-wrap">
           <h1 className="tt-title">
@@ -2706,10 +2739,13 @@ function EntryEditor({
   const [endValue, setEndValue] = useState(() => toInputValue(entry === undefined ? baseDay + 10 * 3_600_000 : entryLastEnd(entry, Date.now())));
   const [keepRunning, setKeepRunning] = useState(wasRunning);
   const [note, setNote] = useState(entry?.note[lang] ?? "");
+  const hasMultipleSegments = (entry?.segments.length ?? 0) > 1;
   const startMs = fromInputValue(startValue, Date.now());
   const endMs = fromInputValue(endValue, Date.now());
   const valid = categoryId !== "" && (keepRunning || endMs > startMs);
-  const durationMs = keepRunning ? Date.now() - startMs : endMs - startMs;
+  const durationMs = entry && startValue === originalStart && endValue === originalEnd && keepRunning === wasRunning
+    ? entryDuration(entry, Date.now())
+    : keepRunning ? Date.now() - startMs : endMs - startMs;
 
   function submit(event: FormEvent): void {
     event.preventDefault();
@@ -2761,16 +2797,17 @@ function EntryEditor({
         <div className="tt-field-grid">
           <label className="tt-field">
             <span>{ttCopy(lang, "startTime")}</span>
-            <input type="datetime-local" value={startValue} onChange={(event) => setStartValue(event.target.value)} />
+            <input type="datetime-local" disabled={hasMultipleSegments} value={startValue} onChange={(event) => setStartValue(event.target.value)} />
           </label>
           <label className="tt-field">
             <span>{ttCopy(lang, "endTime")}</span>
-            {keepRunning ? <div className="tt-input-static"><span className="tt-live-dot" />{ttCopy(lang, "running")}</div> : <input type="datetime-local" value={endValue} onChange={(event) => setEndValue(event.target.value)} />}
+            {keepRunning ? <div className="tt-input-static"><span className="tt-live-dot" />{ttCopy(lang, "running")}</div> : <input type="datetime-local" disabled={hasMultipleSegments} value={endValue} onChange={(event) => setEndValue(event.target.value)} />}
           </label>
         </div>
+        {hasMultipleSegments && <p>{lang === "zh" ? "此记录包含暂停时段。此处保留原始时段，可修改备注与分类。" : "This record includes paused intervals. Original intervals are preserved here; notes and category can be edited."}</p>}
         {wasRunning && (
           <label className="tt-check-row">
-            <input type="checkbox" checked={keepRunning} onChange={(event) => setKeepRunning(event.target.checked)} />
+            <input type="checkbox" disabled={hasMultipleSegments} checked={keepRunning} onChange={(event) => setKeepRunning(event.target.checked)} />
             <span>{ttCopy(lang, "keepRunning")}</span>
           </label>
         )}
