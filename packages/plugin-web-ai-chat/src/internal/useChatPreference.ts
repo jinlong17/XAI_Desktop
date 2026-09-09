@@ -1,9 +1,11 @@
-import { useCallback, useRef, useState } from "react";
-import { accountScope, usePref } from "@repo/plugin-web-storage";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { accountScope, getPref, usePref } from "@repo/plugin-web-storage";
 
 /** A failed toggle keeps its exact desired value; retry never toggles twice. */
 export function useChatPreference(key: "xai_ai_insights" | "xai_ai_voice") {
-  const [value, write] = usePref(key);
+  const [storedValue, write] = usePref(key);
+  const [value, setValue] = useState(storedValue);
+  useEffect(() => setValue(storedValue), [storedValue]);
   const [scope] = useState(() => accountScope.capture());
   const [baseline] = useState(() => { try { return localStorage.getItem(key); } catch { return undefined; } });
   const observed = useRef(baseline);
@@ -17,6 +19,7 @@ export function useChatPreference(key: "xai_ai_insights" | "xai_ai_voice") {
         setError(true); return false;
       }
       observed.current = String(pending.current.value);
+      setValue(pending.current.value);
       pending.current = null; setError(false); return true;
     } catch { setError(true); return false; }
   }, [key, scope, write]);
@@ -29,7 +32,7 @@ export function useChatPreference(key: "xai_ai_insights" | "xai_ai_voice") {
     } catch { setError(true); }
   }, [scope, value, retry]);
   const discard = () => {
-    try { accountScope.assertCurrent(scope); observed.current = localStorage.getItem(key); pending.current = null; setError(false); }
+    try { accountScope.assertCurrent(scope); observed.current = localStorage.getItem(key); setValue(getPref(key, scope)); pending.current = null; setError(false); }
     catch { setError(true); }
   };
   return { value, toggle, retry, error, pending, discard };

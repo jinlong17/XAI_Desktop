@@ -135,7 +135,13 @@
         "../web-board-composer-independent/review.md",
         "commit:d8fb98d",
         "commit:650f59c",
-        "commit:81a2346"
+        "commit:81a2346",
+        "commit:3491540",
+        "../web-ai-save-independent/review.md",
+        "../web-ai-preference-discard/review.md",
+        "commit:72296ec",
+        "commit:33723a1",
+        "commit:187225e"
       ]
     },
     {
@@ -719,7 +725,9 @@
       "status": "in_progress",
       "evidence": [
         "commit:bce7fc8",
-        "../web-ai-tool-write-receipts/20260909-create-retry-fix.md"
+        "../web-ai-tool-write-receipts/20260909-create-retry-fix.md",
+        "commit:e45f78e",
+        "commit:c353e71"
       ]
     },
     {
