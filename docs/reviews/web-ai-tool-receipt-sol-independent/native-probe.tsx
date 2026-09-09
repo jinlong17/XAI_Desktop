@@ -48,13 +48,23 @@ const waitFor = async (check: () => boolean, message: string, timeout = 4000) =>
 };
 
 const rawSet = Storage.prototype.setItem;
+const rawGet = Storage.prototype.getItem;
 let deniedKey: string | null = null;
+let deniedGetKey: string | null = null;
+let deniedWriteName = 'QuotaExceededError';
 let deniedWrites = 0;
+let observedWriteKey: string | null = null;
+let successfulObservedWrites = 0;
+Storage.prototype.getItem = function (key: string) {
+  if (key === deniedGetKey) throw new DOMException('synthetic exact-key read denial', 'SecurityError');
+  return rawGet.call(this, key);
+};
 Storage.prototype.setItem = function (key: string, value: string) {
   if (key === deniedKey) {
     deniedWrites += 1;
-    throw new DOMException('synthetic exact-key quota', 'QuotaExceededError');
+    throw new DOMException('synthetic exact-key write denial', deniedWriteName);
   }
+  if (key === observedWriteKey) successfulObservedWrites += 1;
   return rawSet.call(this, key, value);
 };
 
@@ -170,6 +180,14 @@ async function clickConfirm() {
   await delay(40);
 }
 
+async function clickConfirmTwiceSynchronously() {
+  const button = document.querySelector('.ai-confirmation-confirm') as HTMLButtonElement | null;
+  assert(button, 'Confirm button missing');
+  button.click();
+  button.click();
+  await delay(40);
+}
+
 async function run() {
   const checks: string[] = [];
   const observations: string[] = [];
@@ -232,6 +250,32 @@ async function run() {
     same(localStorage.getItem(bKey), beforeB, `${name}: B bytes changed by old A request`);
     off();
     checks.push(`${name}: native quota/retry/remount/conflict/owner business contract${name.endsWith('create') ? '' : ' plus blank/missing id rejection'}`);
+  }
+
+  // SecurityError on either canonical read or write must not become model success.
+  for (const name of names) {
+    const definition = definitions[name];
+    for (const boundary of ['read', 'write'] as const) {
+      activate(`sol-security-${boundary}-${name}`);
+      const key = seed(definition);
+      const before = rawGet.call(localStorage, key);
+      await renderNode(<WithSubscribers caseKey={`security-${boundary}-${name}`}/>);
+      await openConfirmation({ requestId: `sol-security-${boundary}-${name}`, toolName: definition.toolName, input: definition.input });
+      deniedWrites = 0;
+      deniedWriteName = 'SecurityError';
+      if (boundary === 'read') deniedGetKey = key;
+      else deniedKey = key;
+      await clickConfirm();
+      await waitFor(() => !!document.querySelector('[role="alert"]'), `${name}/${boundary} SecurityError did not render failure`);
+      same(window.__receiptStream.calls.length, 1, `${name}/${boundary} SecurityError triggered model success`);
+      same(rawGet.call(localStorage, key), before, `${name}/${boundary} SecurityError changed canonical bytes`);
+      assert(document.querySelector('.ai-confirmation-card'), `${name}/${boundary} SecurityError removed confirmation`);
+      if (boundary === 'write') same(deniedWrites, 1, `${name}: write SecurityError did not reach exact canonical write once`);
+      deniedGetKey = null;
+      deniedKey = null;
+      deniedWriteName = 'QuotaExceededError';
+    }
+    checks.push(`${name}: canonical get/write SecurityError cannot report model success`);
   }
 
   // Characterize the non-canonical signature without failing the bounded receipt phase.
@@ -308,6 +352,80 @@ async function run() {
     assert(document.querySelector('.ai-confirmation-card'), `${name}: no subscriber removed the confirmation`);
   }
   checks.push('all six tools without subscribers: visible failure, retained confirmation, no model success');
+
+  // A matching attempt must still reject receipts with the wrong request id, channel, or owner.
+  const correlationOwner = activate('sol-correlation');
+  await renderNode(<AiChatModule key="correlation" lang="en"/>);
+  const correlationRequests: any[] = [];
+  const offCorrelation = onWebEvent('web:tasks:create-requested', request => correlationRequests.push(request));
+  await openConfirmation({ requestId: 'sol-correlation', toolName: 'create_task', input: { title: 'Correlation gate', bucket: 'nodate' } });
+  await clickConfirm();
+  await waitFor(() => correlationRequests.length === 1 && !!document.querySelector('[role="status"]'), 'correlation request did not enter waiting state');
+  const correlationRequest = correlationRequests[0];
+  const emitCorrelation = (overrides: Record<string, unknown>) => emitWebEvent('web:ai:tool-write-receipt', {
+    requestId: 'sol-correlation', requestChannel: 'web:tasks:create-requested', attemptId: correlationRequest.attemptId,
+    owner: correlationOwner, ok: true, targetId: 'correlation-target', ...overrides,
+  } as any);
+  emitCorrelation({ requestId: 'wrong-request-id' });
+  emitCorrelation({ requestChannel: 'web:calendar:create-requested' });
+  emitCorrelation({ owner: { ...correlationOwner, accountId: 'wrong-owner' } });
+  await delay(120);
+  same(window.__receiptStream.calls.length, 1, 'wrong request/channel/owner receipt advanced model');
+  assert(document.querySelector('.ai-confirmation-card') && document.querySelector('[role="status"]'), 'wrong correlation receipt released waiting confirmation');
+  emitCorrelation({});
+  await waitFor(() => window.__receiptStream.calls.length === 2 && !document.querySelector('.ai-confirmation-card'), 'matching correlation receipt was not accepted');
+  offCorrelation();
+  checks.push('wrong requestId/channel/owner receipts ignored while matching receipt advances once');
+
+  // Two Confirm events in the same turn must execute one business write and one continuation.
+  activate('sol-double-confirm');
+  const doubleDefinition = definitions['tasks:update'];
+  const doubleKey = seed(doubleDefinition);
+  await renderNode(<WithSubscribers caseKey="double-confirm"/>);
+  await openConfirmation({ requestId: 'sol-double-confirm', toolName: doubleDefinition.toolName, input: doubleDefinition.input });
+  observedWriteKey = doubleKey;
+  successfulObservedWrites = 0;
+  await clickConfirmTwiceSynchronously();
+  await waitFor(() => window.__receiptStream.calls.length === 2 && !document.querySelector('.ai-confirmation-card'), 'double Confirm did not finish one continuation');
+  same(successfulObservedWrites, 1, 'double Confirm executed the canonical business write more than once');
+  same(window.__receiptStream.calls.length, 2, 'double Confirm emitted duplicate model continuations');
+  observedWriteKey = null;
+  checks.push('same-turn double Confirm produces one business write and one model continuation');
+
+  // Unmount while waiting: a later matching receipt cannot continue the disposed component.
+  const unmountOwner = activate('sol-unmount-waiting');
+  await renderNode(<AiChatModule key="unmount-waiting" lang="en"/>);
+  const unmountRequests: any[] = [];
+  const offUnmount = onWebEvent('web:tasks:create-requested', request => unmountRequests.push(request));
+  await openConfirmation({ requestId: 'sol-unmount-waiting', toolName: 'create_task', input: { title: 'Unmount gate', bucket: 'nodate' } });
+  await clickConfirm();
+  await waitFor(() => unmountRequests.length === 1, 'unmount scenario did not emit request');
+  const unmountRequest = unmountRequests[0];
+  await renderNode(null);
+  emitWebEvent('web:ai:tool-write-receipt', { requestId: 'sol-unmount-waiting', requestChannel: 'web:tasks:create-requested', attemptId: unmountRequest.attemptId, owner: unmountOwner, ok: true, targetId: 'late-after-unmount' });
+  await delay(160);
+  same(window.__receiptStream.calls.length, 1, 'receipt after component unmount triggered model continuation');
+  offUnmount();
+  checks.push('component unmount while waiting rejects later matching success');
+
+  // Real A-to-B transition while waiting: old A success cannot advance or mutate B.
+  const waitingA = activate('sol-waiting-A');
+  await renderNode(<AiChatModule key="waiting-account" lang="en"/>);
+  const switchRequests: any[] = [];
+  const offSwitch = onWebEvent('web:tasks:create-requested', request => switchRequests.push(request));
+  await openConfirmation({ requestId: 'sol-waiting-switch', toolName: 'create_task', input: { title: 'Account switch gate', bucket: 'nodate' } });
+  await clickConfirm();
+  await waitFor(() => switchRequests.length === 1, 'account-switch scenario did not emit A request');
+  const switchRequest = switchRequests[0];
+  activate('sol-waiting-B');
+  const waitingBKey = accountScope.physicalKey('xai_task_cols');
+  const waitingBBefore = rawGet.call(localStorage, waitingBKey);
+  emitWebEvent('web:ai:tool-write-receipt', { requestId: 'sol-waiting-switch', requestChannel: 'web:tasks:create-requested', attemptId: switchRequest.attemptId, owner: waitingA, ok: true, targetId: 'late-A-success' });
+  await delay(160);
+  same(window.__receiptStream.calls.length, 1, 'old A success after A-to-B transition triggered model continuation');
+  same(rawGet.call(localStorage, waitingBKey), waitingBBefore, 'old A success after switch changed B business bytes');
+  offSwitch();
+  checks.push('A-to-B transition while waiting rejects later old-A success and preserves B');
 
   // Late success from attempt 1 must not satisfy attempt 2.
   const lateOwner = activate('sol-late-attempt');

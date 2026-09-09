@@ -37,6 +37,15 @@ Actual AI UI checks also cover both blank and missing ids for every update/delet
 
 For delayed receipt correlation, attempt 1 is allowed to time out. During attempt 2, a forged success receipt for attempt 1 does not remove the card or advance the model. Only the matching attempt-2 receipt advances the model. A separate unfaulted Calendar-delete control persists an empty final store before its success continuation.
 
+The correlation and lifecycle boundary was exercised separately from the business-owner dispatch check:
+
+1. While one attempt is waiting, success-shaped receipts with the wrong requestId, request channel or owner each leave the confirmation and waiting state intact. The matching receipt then advances exactly once.
+2. Two synchronous Confirm clicks against a real Tasks update produce exactly one successful canonical-key write and one model continuation.
+3. After the waiting `AiChatModule` is unmounted, a later otherwise-matching success receipt does not invoke the continuation.
+4. When account A starts waiting and the application actually transitions to account B before a receipt arrives, a late success for A does not invoke the continuation or change B's canonical bytes. This is distinct from merely emitting an old-owner business request while B is already active.
+
+For every one of the six tools, the native browser also injects `SecurityError` independently at the exact canonical `Storage.getItem` and `Storage.setItem` boundaries. Both faults preserve the original canonical bytes, retain the confirmation, render failure and leave model-call count at one. The write-side case additionally proves that exactly one attempted canonical write reached the injected boundary. These checks establish fail-closed model reporting; they do not redefine the existing user-facing error taxonomy.
+
 ## Open scope and secondary finding
 
 The successful replay cache is a page-lifetime `WeakMap` keyed by the current `AccountScope` object. This review proves subscriber remount behavior only. It is not a durable receipt journal and cannot establish exactly-once behavior after a page reload, process restart or new account epoch. Full AI-02 must remain open until the owned durable schema, six-operation reload matrix, shared writer serialization, cross-tab concurrency and crash recovery are implemented and independently accepted.
