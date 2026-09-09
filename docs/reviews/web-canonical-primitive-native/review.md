@@ -23,3 +23,15 @@ The domain is deliberately a small validator-backed object map passed to the rea
 The documents are real browser browsing contexts inside one headless Chrome instance. Reload means actual iframe document navigation with a fresh module heap; it is not an entire browser-process close/reopen, a separate OS process guarantee, or an old-client upgrade test. The marker replacement is an explicit fault/interleaving setup, not execution of `migrateAccount`. The known migration write-race and all-writer coordination requirements therefore remain open.
 
 The activation seam is enabled only in this synthetic local profile after verifying its cold default. Production activation remains off. No account credentials, external provider requests, production service or user browser profile were used.
+
+## Ordinary writer interoperability follow-up
+
+Fixed `496039f`, run `node docs/reviews/web-canonical-primitive-native/verify-native.mjs 496039f ordinary`. This mode uses `ordinary-probe.ts`; the original default primitive probe remains available for reproducing the earlier `37252bc` run.
+
+The original seven native primitive groups plus three new ordinary-writer groups pass (**10 groups**, `native-496039f.json`). New cases invoke the actual public `mutateCanonicalDataset` from an independent browser document, using the same real Web Locks as the command API:
+
+- Concurrent command and ordinary additions preserve both updates, increment revision twice, retain old receipts, and add only the command's new receipt.
+- An ordinary edit changes the command-created record to a later human value. After actual document reload, replaying the old command preserves exact bytes and that newer value.
+- An ordinary domain clear keeps every receipt. Replaying a previously committed deletion afterwards succeeds without changing the cleared record.
+
+The small validator-backed map and direct public API remain explicit test fixtures. These are shared-writer interoperability checks, not actual Calendar/Tasks UI, six AI subscribers or an account migration. In particular, they do not contradict or resolve Astra's separate failures in Calendar domain validation, queued UI target changes, reset feedback or stale editor completion. Full D1 and AI-02 remain open.

@@ -1,0 +1,62 @@
+{
+  "requestedRef": "496039f",
+  "revision": "496039f70915d3809c3e97667e991b5703c80249",
+  "mode": "ordinary",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "checks": [
+    {
+      "name": "cold production default disabled",
+      "pass": true
+    },
+    {
+      "name": "two documents same identity serialize to one commit",
+      "pass": true,
+      "detail": [
+        {
+          "ok": true,
+          "targetId": "first",
+          "replay": false
+        },
+        {
+          "ok": true,
+          "targetId": "first",
+          "replay": true
+        }
+      ]
+    },
+    {
+      "name": "two documents distinct writes preserve both updates",
+      "pass": true
+    },
+    {
+      "name": "real document reload and semantic field reorder preserve exact bytes",
+      "pass": true
+    },
+    {
+      "name": "changed request after reload conflicts without write",
+      "pass": true
+    },
+    {
+      "name": "delete last target replay survives document reload; fresh delete refuses",
+      "pass": true
+    },
+    {
+      "name": "real queued Web Lock command rejects generation replacement",
+      "pass": true
+    },
+    {
+      "name": "real concurrent command and public ordinary writer preserve both mutations and receipts",
+      "pass": true
+    },
+    {
+      "name": "actual public-writer human edit survives old AI command replay after reload",
+      "pass": true
+    },
+    {
+      "name": "public domain clear preserves receipts and old deletion replay",
+      "pass": true
+    }
+  ]
+}

@@ -47,7 +47,8 @@ let browser;
 let server;
 let timer;
 try {
-  const probe = readFileSync(new URL('./native-probe.ts', import.meta.url), 'utf8');
+  const mode = process.argv[3] === 'ordinary' ? 'ordinary' : 'primitive';
+  const probe = readFileSync(new URL(mode === 'ordinary' ? './ordinary-probe.ts' : './native-probe.ts', import.meta.url), 'utf8');
   const bundle = await build({
     stdin: { contents: probe, resolveDir: snapshot, loader: 'tsx' },
     bundle: true,
@@ -87,7 +88,7 @@ try {
   ], { stdio: 'ignore' });
   browser.on('error', rejectResult);
   const outcome = await result;
-  const report = { requestedRef, revision, source: 'git archive with pinned @repo package imports', profile: 'isolated temporary Chrome profile', ...outcome };
+  const report = { requestedRef, revision, mode, source: 'git archive with pinned @repo package imports', profile: 'isolated temporary Chrome profile', ...outcome };
   writeFileSync(new URL(`./native-${revision.slice(0,7)}.json`, import.meta.url), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify(report, null, 2));
   if (!outcome.pass) process.exitCode = 1;
