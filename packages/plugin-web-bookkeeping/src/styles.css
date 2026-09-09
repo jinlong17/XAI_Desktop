@@ -2399,3 +2399,22 @@ textarea.bk-input,
     right: 12px;
   }
 }
+
+.bk-workspace { display: contents; }
+.bk-save-recovery {
+  position: fixed;
+  inset: auto 16px 24px;
+  z-index: 220;
+  max-width: 620px;
+  margin-inline: auto;
+  padding: 20px;
+  background: var(--surface, #fff);
+  color: var(--text, #202020);
+  border: 1px solid var(--red, #b33);
+  border-radius: 14px;
+  box-shadow: 0 12px 48px #0003;
+}
+.bk-save-recovery h3 { margin: 0 0 10px; font-size: 16px; }
+.bk-save-recovery p { line-height: 1.5; }
+.bk-save-recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-save-recovery-actions button { min-height: 40px; }

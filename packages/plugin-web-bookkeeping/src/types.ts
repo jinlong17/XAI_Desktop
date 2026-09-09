@@ -180,10 +180,15 @@ export interface NaturalLanguageDraft {
   readonly note: string;
 }
 
+export interface BookkeepingWriteResult {
+  readonly canonicalCommitted: true;
+  readonly devicePreferences: "complete" | "partial";
+  readonly failedDeviceKeys: readonly string[];
+}
 export interface BookkeepingStorageAdapter {
   readonly kind: "localStorage";
   readonly syncStatus: "device-local";
   read(): BookkeepingState;
-  write(state: BookkeepingState): void;
+  write(state: BookkeepingState): BookkeepingWriteResult;
   reset(): BookkeepingState;
 }

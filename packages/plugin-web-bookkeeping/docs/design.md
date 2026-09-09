@@ -31,3 +31,7 @@ This implementation ports the Cloud Design bookkeeping module into the Web Conso
 - No server-side exchange-rate feed; Cloud Design static rates are used.
 - No production payment, tax, bank-import, or brokerage API integration.
 - No Desktop/App promotion in this branch; any Web to App movement must pass the D3 gate.
+
+## REL-05 failure boundary
+
+Canonical business storage is the first commit boundary. Its failure stops all mirror writes and keeps the published committed state unchanged. Device preferences remain a distinct, fallible follow-up; the UI distinguishes their failure from an unsaved record. Pending state is separate from committed state, with one retained proposal and explicit recovery. All editing surfaces become inert while recovery is pending, and editor-local fields stay mounted. Retry does not rerun the business mutation, preventing duplicate transactions or balance adjustments. Captured scope and a raw canonical baseline protect stale retries; this is a conservative conflict check, not a cross-tab merge/transaction implementation.

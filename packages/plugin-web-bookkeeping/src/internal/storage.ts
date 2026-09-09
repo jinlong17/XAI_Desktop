@@ -10,7 +10,7 @@ import {
   DEFAULT_PREFS,
   createSeedBookkeepingState,
 } from "./defaults.js";
-import type { BillsView, BookkeepingState, BookkeepingStorageAdapter, CalendarMode, DashboardOrder } from "../types.js";
+import type { BillsView, BookkeepingWriteResult, BookkeepingState, BookkeepingStorageAdapter, CalendarMode, DashboardOrder } from "../types.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -35,12 +35,9 @@ function readString(key: string, scope = accountScope.capture()): string | null 
 }
 
 function writeString(key: string, value: string, scope = accountScope.capture()): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
-  } catch {
-    return;
-  }
+  if (typeof window === "undefined") throw new Error("Bookkeeping storage is unavailable.");
+  accountScope.assertCurrent(scope);
+  window.localStorage.setItem(accountScope.physicalKey(key, scope), value);
 }
 
 function readDashboardOrder(): DashboardOrder {
@@ -111,52 +108,95 @@ export function readBookkeepingState(scope = accountScope.capture()): Bookkeepin
   const parsed = safeParse(readString(BOOKKEEPING_STATE_KEY, scope));
   return normalizeState(isBookkeepingState(parsed) ? parsed : createSeedBookkeepingState());
 }
-export function writeBookkeepingState(state: BookkeepingState, scope = accountScope.capture()): void {
+function writeDevicePreferences(state: BookkeepingState, scope: ReturnType<typeof accountScope.capture>): BookkeepingWriteResult {
   accountScope.assertCurrent(scope);
+  const failedDeviceKeys: string[]=[];
+  const mirrors = [
+    [BOOKKEEPING_DASH_ORDER_KEY,state.prefs.dashboardOrder],
+    [BOOKKEEPING_DASH_SPLIT_KEY,String(state.prefs.dashboardSplit)],
+    [BOOKKEEPING_VIEW_KEY,state.prefs.billsView],
+    [BOOKKEEPING_CALENDAR_MODE_KEY,state.prefs.calendarMode],
+  ] as const;
+  for (const [key,value] of mirrors) {
+    try { writeString(key,value,scope); } catch { failedDeviceKeys.push(key); }
+  }
+  return {canonicalCommitted:true,devicePreferences:failedDeviceKeys.length ? "partial" : "complete",failedDeviceKeys};
+}
+export function writeBookkeepingState(state: BookkeepingState, scope = accountScope.capture()): BookkeepingWriteResult {
+  accountScope.assertCurrent(scope);
+  // Canonical failure stops here: no mirror writes and no committed-state event.
   writeString(BOOKKEEPING_STATE_KEY, JSON.stringify(state), scope);
-  writeString(BOOKKEEPING_DASH_ORDER_KEY, state.prefs.dashboardOrder, scope);
-  writeString(BOOKKEEPING_DASH_SPLIT_KEY, String(state.prefs.dashboardSplit), scope);
-  writeString(BOOKKEEPING_VIEW_KEY, state.prefs.billsView, scope);
-  writeString(BOOKKEEPING_CALENDAR_MODE_KEY, state.prefs.calendarMode, scope);
+  const result=writeDevicePreferences(state,scope);
   dispatchStorageEvent();
+  return result;
 }
 export const localBookkeepingStorageAdapter: BookkeepingStorageAdapter = {
   kind: "localStorage",
   syncStatus: "device-local",
   read: readBookkeepingState,
   write: writeBookkeepingState,
-  reset() { const state = createSeedBookkeepingState(); this.write(state); return state; },
+  reset() { const state = createSeedBookkeepingState(); const result=this.write(state); if(result.devicePreferences === "partial") throw new Error("Records reset, but some device preferences were not saved."); return state; },
 };
 
-export function useBookkeepingState(): readonly [BookkeepingState, (next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => void] {
+type StateUpdate = BookkeepingState | ((prev: BookkeepingState) => BookkeepingState);
+type PendingSave = { value: BookkeepingState; baseline: string | null | undefined; canonicalCommitted: boolean; failure: "write" | "device" | "conflict" | "account" };
+export interface BookkeepingSaveRecovery {
+  readonly pending: PendingSave | null;
+  retry(): boolean;
+  discard(): void;
+  exportDraft(): string;
+}
+export function useBookkeepingState(): readonly [BookkeepingState, (next: StateUpdate) => boolean, BookkeepingSaveRecovery] {
   const scope = useRef(accountScope.capture()).current;
   const [state, setState] = useState<BookkeepingState>(() => readBookkeepingState(scope));
   const stateRef = useRef(state);
-
+  const pendingRef = useRef<PendingSave | null>(null);
+  const [pending,setPending]=useState<PendingSave | null>(null);
+  const publishPending=(value: PendingSave | null)=>{pendingRef.current=value;setPending(value);};
   useEffect(() => {
     function refresh(): void {
-      if (!accountScope.isReady(scope)) return;
+      if (!accountScope.isReady(scope) || pendingRef.current) return;
       const next = readBookkeepingState(scope);
-      stateRef.current = next;
-      setState(next);
+      stateRef.current = next; setState(next);
     }
     window.addEventListener("storage", refresh);
     window.addEventListener(BOOKKEEPING_STORAGE_EVENT, refresh);
-    return () => {
-      window.removeEventListener("storage", refresh);
-      window.removeEventListener(BOOKKEEPING_STORAGE_EVENT, refresh);
-    };
-  }, []);
+    return () => { window.removeEventListener("storage", refresh); window.removeEventListener(BOOKKEEPING_STORAGE_EVENT, refresh); };
+  }, [scope]);
 
-  const setPersistedState = useCallback((next: BookkeepingState | ((prev: BookkeepingState) => BookkeepingState)) => {
-    if (!accountScope.isReady(scope)) return;
-    const value = typeof next === "function" ? next(stateRef.current) : next;
-    writeBookkeepingState(value, scope);
-    stateRef.current = value;
-    setState(value);
-  }, []);
-
-  return [state, setPersistedState];
+  const attempt=useCallback((draft: PendingSave, retry: boolean): boolean=>{
+    if (!accountScope.isReady(scope)) { publishPending({...draft,failure:"account"}); return false; }
+    try {
+      const key=accountScope.physicalKey(BOOKKEEPING_STATE_KEY,scope);
+      const current=window.localStorage.getItem(key);
+      if (retry && (draft.baseline===undefined || current!==draft.baseline)) { publishPending({...draft,failure:"conflict"}); return false; }
+      draft={...draft,baseline:current};
+      publishPending(draft);
+      const result=draft.canonicalCommitted ? writeDevicePreferences(draft.value,scope) : writeBookkeepingState(draft.value,scope);
+      const committed=normalizeState(draft.value);
+      stateRef.current=committed;setState(committed);
+      if(result.devicePreferences==="partial") {
+        publishPending({...draft,canonicalCommitted:true,baseline:JSON.stringify(draft.value),failure:"device"});return false;
+      }
+      publishPending(null);dispatchStorageEvent();return true;
+    } catch { publishPending({...draft,failure:"write"});return false; }
+  }, [scope]);
+  const setPersistedState = useCallback((next: StateUpdate): boolean => {
+    if (!accountScope.isReady(scope) || pendingRef.current) return false;
+    const value=typeof next==="function" ? next(stateRef.current) : next;
+    return attempt({value,baseline:undefined,canonicalCommitted:false,failure:"write"},false);
+  }, [attempt, scope]);
+  const recovery: BookkeepingSaveRecovery={
+    pending,
+    retry:()=>pendingRef.current ? attempt(pendingRef.current,true) : true,
+    discard:()=>{publishPending(null); if(accountScope.isReady(scope)){const next=readBookkeepingState(scope);stateRef.current=next;setState(next);}},
+    exportDraft:()=>{
+      accountScope.assertCurrent(scope);
+      if(!pendingRef.current) throw new Error("No pending bookkeeping draft.");
+      return JSON.stringify({version:1,kind:"bookkeeping-unsaved-draft",accountId:scope.accountId,canonicalCommitted:pendingRef.current.canonicalCommitted,state:pendingRef.current.value},null,2);
+    },
+  };
+  return [state,setPersistedState,recovery];
 }
 
 registerAccountMigrationValidator(BOOKKEEPING_STATE_KEY, isBookkeepingState);

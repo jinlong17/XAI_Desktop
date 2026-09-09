@@ -15,6 +15,7 @@ export { calendarDayTotals, categoryTotals, dayGroups, ledgerTransactions, parse
 export { readBookkeepingState, writeBookkeepingState, localBookkeepingStorageAdapter } from "./internal/storage.js";
 export { applyTransactionBalance, deleteTransaction, saveAccount, saveCategorySets, saveLedger, txInLedgerCurrency, upsertTransactions } from "./internal/state.js";
 export type {
+  BookkeepingWriteResult,
   AccountType,
   BillsView,
   BookkeepingAccount,
