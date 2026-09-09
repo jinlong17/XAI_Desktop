@@ -1,0 +1,90 @@
+/** Real Chrome with an isolated profile and download directory; fixtures only, no production services. */
+import { build } from '../../../node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/lib/main.js';
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawn, execFileSync } from 'node:child_process';
+import { createServer } from 'node:http';
+import assert from 'node:assert/strict';
+
+const sourceCommit = process.argv[2];
+if (!sourceCommit) throw new Error('fixed revision required');
+const root = fileURLToPath(new URL('../../../', import.meta.url));
+const output = fileURLToPath(new URL('./', import.meta.url));
+const logName = process.env.BOARD_WORKSPACE_NATIVE_LOG ?? 'native-independent.log';
+const directory = mkdtempSync(join(tmpdir(), 'xai-board-workspace-'));
+const snapshot = join(directory, 'source');
+const downloads = join(directory, 'downloads');
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const records = [];
+const record = (name, value) => { records.push({ name, ...value }); console.log(name, JSON.stringify(value)); };
+let browser, server, socket;
+try {
+  mkdirSync(snapshot); mkdirSync(downloads);
+  execFileSync('tar', ['-x', '-C', snapshot], { input: execFileSync('git', ['archive', sourceCommit], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) });
+  symlinkSync(join(root, 'node_modules'), join(snapshot, 'node_modules'));
+  const aliases = new Map();
+  for (const name of readdirSync(join(snapshot, 'packages'))) {
+    const folder = join(snapshot, 'packages', name);
+    try { const pkg = JSON.parse(readFileSync(join(folder, 'package.json'), 'utf8')); aliases.set(pkg.name, { folder, pkg }); symlinkSync(join(root, 'packages', name, 'node_modules'), join(folder, 'node_modules')); } catch {}
+  }
+  const pinnedPackages = { name: 'pinned-workspace-packages', setup(buildContext) { buildContext.onResolve({ filter: /^@repo\// }, args => { const parts = args.path.split('/'); const entry = aliases.get(parts.slice(0, 2).join('/')); if (!entry) return; const sub = parts.length > 2 ? './' + parts.slice(2).join('/') : '.'; let target = entry.pkg.exports?.[sub]; if (typeof target === 'object') target = target.import ?? target.default; if (typeof target !== 'string') throw new Error('Unresolved pinned export ' + args.path); return { path: join(entry.folder, target) }; }); } };
+  const built = await build({ stdin: { contents: readFileSync(join(output, 'native.tsx'), 'utf8'), resolveDir: snapshot, loader: 'tsx' }, plugins: [pinnedPackages], loader: { '.png': 'dataurl', '.svg': 'dataurl' }, nodePaths: [join(root, 'apps/web/node_modules')], bundle: true, format: 'esm', platform: 'browser', write: false, outfile: join(directory, 'bundle.js'), define: { 'import.meta.env': '{}' } });
+  const js = built.outputFiles.find(file => file.path.endsWith('.js')).text;
+  const css = built.outputFiles.find(file => file.path.endsWith('.css')).text;
+  server = createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>' + css + '</style><div id="app"></div><script type="module">' + js + '</script>'); });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  browser = spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', ['--headless=new', '--disable-gpu', '--no-first-run', '--disable-background-networking', '--remote-debugging-port=0', '--user-data-dir=' + join(directory, 'profile'), 'about:blank'], { stdio: 'ignore' });
+  let port;
+  for (let i = 0; i < 100; i++) { try { port = Number(readFileSync(join(directory, 'profile', 'DevToolsActivePort'), 'utf8').split('\n')[0]); break; } catch { await delay(50); } }
+  assert(port);
+  const targets = await (await fetch('http://127.0.0.1:' + port + '/json/list')).json();
+  socket = new WebSocket(targets.find(target => target.type === 'page').webSocketDebuggerUrl);
+  await new Promise(resolve => socket.addEventListener('open', resolve, { once: true }));
+  let id = 0; const pending = new Map();
+  socket.addEventListener('message', event => { const message = JSON.parse(event.data); if (message.id) { const request = pending.get(message.id); pending.delete(message.id); message.error ? request.reject(new Error(JSON.stringify(message.error))) : request.resolve(message.result); } });
+  const cdp = (method, params = {}) => new Promise((resolve, reject) => { const requestId = ++id; pending.set(requestId, { resolve, reject }); socket.send(JSON.stringify({ id: requestId, method, params })); });
+  const ev = async expression => { const result = await cdp('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }); if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails)); return result.result.value; };
+  await cdp('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
+  await cdp('Page.navigate', { url: 'http://127.0.0.1:' + server.address().port });
+  for (let i = 0; i < 100; i++) { if (await ev("!!document.querySelector('[data-testid=bv-switch]')")) break; await delay(50); }
+  const click = async selector => { await ev(`document.querySelector(${JSON.stringify(selector)}).click()`); await delay(100); };
+  const clickText = async label => { await ev(`(()=>{const button=[...document.querySelectorAll('button')].find(item=>item.textContent.trim()===${JSON.stringify(label)});if(!button)throw Error('missing '+${JSON.stringify(label)});button.click()})()`); await delay(100); };
+  const input = async (selector, value, enter = false) => { await ev(`(()=>{const element=document.querySelector(${JSON.stringify(selector)});Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(element,${JSON.stringify(value)});element.dispatchEvent(new Event('input',{bubbles:true}));${enter ? "element.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));" : ''}})()`); await delay(100); };
+  const raw = key => ev(`localStorage.getItem(${JSON.stringify(key)})`);
+  const download = async () => { let filename; for (let i = 0; i < 100; i++) { filename = readdirSync(downloads).find(name => name.endsWith('.json')); if (filename) break; await delay(50); } assert(filename); assert.equal(readdirSync(downloads).length, 1); const payload = JSON.parse(readFileSync(join(downloads, filename), 'utf8')); rmSync(join(downloads, filename)); return payload; };
+
+  record('baseline', { commit: sourceCommit, chromePid: browser.pid, harness: 'author CDP transport, reviewer scenarios' });
+  const reset = async () => { await cdp('Page.navigate', {url:'http://127.0.0.1:' + server.address().port}); for(let i=0;i<100;i++){if(await ev("!!document.querySelector('[data-testid=bv-switch]')"))break;await delay(50);} await click('[data-testid=bv-switch]'); };
+  await click('[data-testid=bv-switch]');
+  const wk = await ev('verify.workspaceKey'), bk = await ev('verify.boardKey');
+  for (const kind of ['recolor','delete']) {
+    if(kind==='delete')await reset();
+    const before=await raw(wk); await ev('verify.denyWorkspace()'); await click('[data-testid=bs-ws-'+kind+'-empty]');
+    assert.equal(await raw(wk),before); assert(await ev("!!document.querySelector('[role=alert]')"));
+    await ev('verify.restore()'); await clickText('Retry workspace change'); const saved=JSON.parse(await raw(wk)), target=saved.find(w=>w.id==='empty');
+    if(kind==='delete')assert.equal(target,undefined);else assert.notEqual(target.color,'red');
+    assert(!(await ev("!!document.querySelector('[role=alert]')"))); record(kind+'-failure-retry-native',{pass:true});
+  }
+  const failures=[];
+  await reset();
+  const malformedWorkspace=JSON.stringify([{id:'recover-me',name:{en:'Original'},color:123}]);
+  await ev(`(()=>{const key=verify.workspaceKey,value=${JSON.stringify(malformedWorkspace)};localStorage.setItem(key,value);window.dispatchEvent(new StorageEvent('storage',{key,newValue:value,storageArea:localStorage}));})()`); await delay(100);
+  await click('[data-testid=bs-new-workspace]');await input('[data-testid=bs-ws-new-name]','New');await click('[data-testid=bs-ws-new-add]');
+  const workspaceAfter=await raw(wk);const preserved=workspaceAfter===malformedWorkspace;
+  record('malformed-workspace-create',{expected:'preserve original bytes and show recovery',pass:preserved,before:malformedWorkspace,after:workspaceAfter,alert:await ev("!!document.querySelector('[role=alert]')")});if(!preserved)failures.push('malformed workspace overwritten');
+  await reset();
+  const malformedBoards=JSON.stringify([{id:'valuable-board',workspaceId:'empty',title:'Recover me'}]), directoryBefore=await raw(wk);
+  await ev(`(()=>{const key=verify.boardKey,value=${JSON.stringify(malformedBoards)};localStorage.setItem(key,value);window.dispatchEvent(new StorageEvent('storage',{key,newValue:value,storageArea:localStorage}));})()`);await delay(100);
+  await click('[data-testid=bs-ws-delete-empty]');const directoryAfter=await raw(wk);const protectedDelete=directoryBefore===directoryAfter;
+  record('malformed-board-membership-delete',{expected:'refuse deletion when membership is invalid',pass:protectedDelete,workspaceBefore:directoryBefore,workspaceAfter:directoryAfter,boardBytesUnchanged:(await raw(bk))===malformedBoards,alert:await ev("!!document.querySelector('[role=alert]')")});if(!protectedDelete)failures.push('invalid board membership allowed workspace deletion');
+  record('verdict',{passed:2,failed:failures.length,failures});assert.deepEqual(failures,[]);
+
+} finally {
+  writeFileSync(join(output, logName), records.map(record => JSON.stringify(record)).join('\n') + '\n');
+  socket?.close(); server?.closeAllConnections(); server?.close();
+  if (browser?.exitCode === null) browser.kill('SIGTERM');
+  await delay(500); if (browser?.exitCode === null) browser.kill('SIGKILL');
+  rmSync(directory, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
+}

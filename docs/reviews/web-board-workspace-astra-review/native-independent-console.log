@@ -1,0 +1,32 @@
+baseline {"commit":"3e7f17a","chromePid":98554,"harness":"author CDP transport, reviewer scenarios"}
+recolor-failure-retry-native {"pass":true}
+delete-failure-retry-native {"pass":true}
+malformed-workspace-create {"expected":"preserve original bytes and show recovery","pass":false,"before":"[{\"id\":\"recover-me\",\"name\":{\"en\":\"Original\"},\"color\":123}]","after":"[{\"id\":\"ws-personal\",\"name\":{\"en\":\"Personal\",\"zh\":\"个人\"},\"color\":\"oklch(60% 0.10 165)\"},{\"id\":\"ws-team\",\"name\":{\"en\":\"Team Workspace\",\"zh\":\"团队空间\"},\"color\":\"oklch(60% 0.14 295)\"},{\"id\":\"ws-80224fbe-89f8-4e2c-906c-380162f1cea3\",\"name\":{\"en\":\"New\",\"zh\":\"New\"},\"color\":\"oklch(62% 0.14 25)\"}]","alert":false}
+malformed-board-membership-delete {"expected":"refuse deletion when membership is invalid","pass":false,"workspaceBefore":"[{\"id\":\"ws-personal\",\"name\":{\"en\":\"Personal\",\"zh\":\"个人\"},\"color\":\"oklch(60% 0.10 165)\"},{\"id\":\"ws-team\",\"name\":{\"en\":\"Team Workspace\",\"zh\":\"团队空间\"},\"color\":\"oklch(60% 0.14 295)\"},{\"id\":\"empty\",\"name\":{\"en\":\"Empty\",\"zh\":\"空\"},\"color\":\"red\"}]","workspaceAfter":"[{\"id\":\"ws-personal\",\"name\":{\"en\":\"Personal\",\"zh\":\"个人\"},\"color\":\"oklch(60% 0.10 165)\"},{\"id\":\"ws-team\",\"name\":{\"en\":\"Team Workspace\",\"zh\":\"团队空间\"},\"color\":\"oklch(60% 0.14 295)\"}]","boardBytesUnchanged":true,"alert":false}
+verdict {"passed":2,"failed":2,"failures":["malformed workspace overwritten","invalid board membership allowed workspace deletion"]}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   'malformed workspace overwritten',
++   'invalid board membership allowed workspace deletion'
++ ]
+- []
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-workspace-astra-review/verify-independent-native.mjs:82:71 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'malformed workspace overwritten',
+    'invalid board membership allowed workspace deletion'
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.16.0
