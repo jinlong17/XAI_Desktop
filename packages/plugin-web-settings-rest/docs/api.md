@@ -1,5 +1,9 @@
 # API — plugin-web-settings-rest
 
+## 2026-09-09 account deletion receipt amendment
+
+Live coordinator deletion captures both the business generation and authentication generation before the server call. A version-2 local receipt records the original auth generation; completion requires business erasure, AI secret cleanup and that captured generation's local auth cleanup. `AccountDeletionRecoveryNotice` accepts a `clearAuth` callback supplied by the host provider bridge. It retries only the recorded original session, never a mutable current-session lookup or another server deletion. Missing cleanup support leaves the receipt pending. Version-1 local-only receipts retain their original scope; unknown-server intents are not authority to erase data.
+
 > **Package**: `@repo/plugin-web-settings-rest`
 > **Public surface**: `src/index.ts`
 

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { accountScope, generationKey } from "@repo/plugin-web-storage";
+import { readAccountDeletionReceipt } from '../internal/accountDeletionRecovery.js';
 import { deleteAccount, wipeRegisteredIDB, AccountDeleteError } from "@repo/web-auth-device-session";
 import { useWebAuthSession } from "@repo/web-auth-device-session/web";
 import { clearAccountAiSecrets } from "@repo/plugin-web-ai-chat";
@@ -46,6 +47,41 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("account deletion captures the initiating owner", () => {
+  it('modern successful cleanup completes the receipt then redirects without a second shared clear', async () => {
+    let active: { generation: string; owner: string } | null = { generation: 'auth-A', owner: 'A' };
+    const coordinator = { capture: () => active, signOut: vi.fn(async () => {
+      active = null; accountScope.lock(null);
+      return { status: 'applied', local: { status: 'applied' } };
+    }) };
+    vi.mocked(useWebAuthSession).mockReturnValue({ ...useWebAuthSession(), coordinator } as unknown as ReturnType<typeof useWebAuthSession>);
+    const { result } = renderHook(() => useAccountDeleteOrchestrator());
+    await act(async () => result.current.submit());
+    expect(readAccountDeletionReceipt('A')?.phase).toBe('complete');
+    expect(result.current.state).toBe('success'); expect(assign).toHaveBeenCalledWith('/');
+    expect(clear).not.toHaveBeenCalled(); checkPreserved();
+  });
+  it('modern cleanup after B replaces A still revokes only captured A and does not navigate B', async () => {
+    const coordinator = { capture: () => ({ generation: 'auth-A', owner: 'A' }), signOut: vi.fn(async () => ({ status: 'superseded', local: { status: 'applied' } })) };
+    vi.mocked(useWebAuthSession).mockReturnValue({ ...useWebAuthSession(), coordinator } as unknown as ReturnType<typeof useWebAuthSession>);
+    vi.mocked(deleteAccount).mockImplementationOnce(async () => { activate('B'); });
+    const { result } = renderHook(() => useAccountDeleteOrchestrator());
+    await act(async () => result.current.submit());
+    expect(coordinator.signOut).toHaveBeenCalledWith({ generation: 'auth-A', owner: 'A' }, { remote: false });
+    expect(readAccountDeletionReceipt('A')?.phase).toBe('complete');
+    expect(accountScope.capture().accountId).toBe('B');
+    expect(clear).not.toHaveBeenCalled(); expect(assign).not.toHaveBeenCalled(); checkPreserved();
+  });
+  it('does not finish its durable receipt before captured auth cleanup succeeds', async () => {
+    const coordinator = { capture: vi.fn(() => ({ generation: 'auth-A', owner: 'A' })),
+      signOut: vi.fn(async () => ({ status: 'failed', reason: 'storage-failed', local: { status: 'failed' } })) };
+    vi.mocked(useWebAuthSession).mockReturnValue({ ...useWebAuthSession(), coordinator } as unknown as ReturnType<typeof useWebAuthSession>);
+    const { result } = renderHook(() => useAccountDeleteOrchestrator());
+    await act(async () => result.current.submit());
+    expect(result.current.state).toBe('failure');
+    expect(readAccountDeletionReceipt('A')).toMatchObject({ phase: 'local-data-cleared', authGeneration: 'auth-A' });
+    expect(coordinator.signOut).toHaveBeenCalledWith({ generation: 'auth-A', owner: 'A' }, { remote: false });
+    expect(clear).not.toHaveBeenCalled(); expect(assign).not.toHaveBeenCalled(); checkPreserved();
+  });
   it("pins the server token, removes only A content/secrets, and preserves device, B and archive", async () => {
     const { result } = renderHook(() => useAccountDeleteOrchestrator());
     await act(async () => result.current.submit());

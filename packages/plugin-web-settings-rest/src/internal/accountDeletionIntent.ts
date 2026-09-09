@@ -1,5 +1,6 @@
 /** A durable intent is evidence of a request, never authorization for local erasure. */
 import { accountPrefix, type AccountScope } from "@repo/plugin-web-storage";
+import { readAccountDeletionReceipt } from './accountDeletionRecovery.js';
 
 export interface AccountDeletionIntent {
   version: 1;
@@ -42,10 +43,10 @@ export function hasUnconfirmedAccountDeletion(): boolean {
     try { value = JSON.parse(raw) as Partial<AccountDeletionIntent>; } catch { continue; }
     if (!value || value.version !== 1 || value.phase !== "server-outcome-unknown" || typeof value.accountId !== "string" || key !== keyFor(value.accountId) || typeof value.operationId !== "string" || typeof value.generation !== "string") continue;
     // A durable local receipt supersedes the unknown outcome: the server confirmed.
-    const receipt = localStorage.getItem(`${accountPrefix(value.accountId)}deleted`);
-    if (receipt) {
-      try { const r = JSON.parse(receipt); if (r?.version === 1 && r.accountId === value.accountId && ["pending", "local-data-cleared", "complete"].includes(r.phase)) continue; } catch { /* Keep the uncertain outcome visible. */ }
-    }
+    try {
+      const receipt = readAccountDeletionReceipt(value.accountId);
+      if (receipt?.generation === value.generation) continue;
+    } catch { /* Keep the uncertain outcome visible. */ }
     return true;
   }
   return false;

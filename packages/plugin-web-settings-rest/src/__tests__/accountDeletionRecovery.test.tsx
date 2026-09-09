@@ -24,6 +24,28 @@ function preserved() {
 }
 
 describe("durable local deletion recovery", () => {
+  it('keeps captured authentication cleanup pending after failure and retries that generation after reload', async () => {
+    const scope = accountScope.activate(accountScope.lock('A-private-id'), 'g1');
+    const receipt = beginAccountLocalDeletion(scope, 'auth-A-original');
+    expect(receipt.version).toBe(2);
+    const clearAuth = vi.fn().mockRejectedValueOnce(new Error('blocked auth IDB')).mockResolvedValueOnce(undefined);
+    await expect(resumeAccountLocalDeletion(receipt, clearAuth)).rejects.toThrow('blocked auth IDB');
+    expect(readAccountDeletionReceipt('A-private-id')?.phase).toBe('local-data-cleared');
+    expect(listPendingAccountDeletions()).toHaveLength(1);
+    accountScope.activate(accountScope.lock('B-private-id'), 'g2');
+    const reloaded = JSON.parse(localStorage.getItem(tombstone)!);
+    await resumeAccountLocalDeletion(reloaded, clearAuth);
+    expect(clearAuth).toHaveBeenNthCalledWith(2, { generation: 'auth-A-original', owner: 'A-private-id' });
+    expect(readAccountDeletionReceipt('A-private-id')?.phase).toBe('complete');
+    expect(accountScope.capture().accountId).toBe('B-private-id'); preserved();
+  });
+  it('never silently completes an auth-bound receipt when cleanup is unavailable', async () => {
+    const scope = accountScope.activate(accountScope.lock('A-private-id'), 'g1');
+    const receipt = beginAccountLocalDeletion(scope, 'auth-A-original');
+    await expect(resumeAccountLocalDeletion(receipt)).rejects.toThrow('unavailable');
+    expect(readAccountDeletionReceipt('A-private-id')?.phase).toBe('pending');
+    expect(localStorage.getItem(keyA)).toBe('A business');
+  });
   it("commits metadata as the tombstone before destructive work", () => {
     const receipt = start();
     expect(JSON.parse(localStorage.getItem(tombstone)!)).toEqual(receipt);

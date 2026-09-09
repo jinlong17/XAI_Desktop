@@ -32,7 +32,7 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
 
   const IS_MOCK_AUTH = isMockAuthMode();
 
-  const { client: supabaseClient, session, clearSessionStorage } = useWebAuthSession();
+  const { client: supabaseClient, session, clearSessionStorage, coordinator } = useWebAuthSession();
   const [scope] = React.useState(() => accountScope.capture());
 
   const submit = React.useCallback(async () => {
@@ -52,6 +52,10 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
         throw new AccountDeleteError("unauthorized", "Unlock the account before deleting its data");
       }
       if (currentIsMockAuth && scope.kind !== "demo") throw new AccountDeleteError("unauthorized", "Demo deletion requires a demo account");
+      const auth = currentIsMockAuth ? null : coordinator?.capture();
+      if (!currentIsMockAuth && coordinator && auth?.owner !== scope.accountId) {
+        throw new AccountDeleteError('unauthorized', 'The initiating authentication session no longer matches');
+      }
       if (!currentIsMockAuth) {
         // Live-auth: call backend FIRST (DEL-ORCH-3 sequencing).
         // supabaseClient is obtained from the SHIPPED session context.
@@ -84,10 +88,17 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
 
       // Explicit owner operations may finish after A has signed out or B has
       // signed in. They never resolve the mutable current account after an await.
-      const receipt = beginAccountLocalDeletion(scope);
-      await resumeAccountLocalDeletion(receipt);
+      const receipt = beginAccountLocalDeletion(scope, auth?.generation);
+      let navigationScope: ReturnType<typeof accountScope.capture> | undefined;
+      await resumeAccountLocalDeletion(receipt, auth && coordinator ? async captured => {
+        const result = await coordinator.signOut(captured, { remote: false });
+        if (result.status === 'failed' || result.local.status !== 'applied') throw new Error(result.reason ?? 'Authentication cleanup failed');
+        if (result.status === 'applied' && !coordinator.capture()) navigationScope = accountScope.capture();
+      } : undefined);
 
-      if (accountScope.capture() === scope) {
+      if (auth) {
+        if (navigationScope && accountScope.capture() === navigationScope) window.location.assign('/');
+      } else if (accountScope.capture() === scope) {
         const clearing = clearSessionStorage(); // synchronously invalidates A
         const clearedScope = accountScope.capture();
         await clearing;
@@ -105,7 +116,7 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
     } finally {
       isSubmittingRef.current = false;
     }
-  }, [supabaseClient, session, clearSessionStorage, scope]);
+  }, [supabaseClient, session, clearSessionStorage, coordinator, scope]);
 
   const reset = React.useCallback(() => {
     setState("idle");

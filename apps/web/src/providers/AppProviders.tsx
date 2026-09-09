@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useSyncExternalStore, type PropsWithChildren } from "react";
+import { useCallback, useEffect, useMemo, useSyncExternalStore, type PropsWithChildren } from "react";
 import {
   DeviceSessionBridge,
   useDeviceBoundFetch,
@@ -12,6 +12,16 @@ import { AccountDeletionRecoveryNotice } from "@repo/plugin-web-settings-rest";
 import { invalidateAccountIdentity } from "./AccountStorageGate.js";
 
 type WebAuthMode = "live" | "mock-authenticated" | "mock-unauthenticated";
+
+function AccountDeletionRecoveryBridge() {
+  const { coordinator } = useWebAuthSession();
+  const clearAuth = useCallback(async (captured: { generation: string; owner: string }) => {
+    if (!coordinator) throw new Error('Authentication cleanup is unavailable');
+    const result = await coordinator.signOut(captured, { remote: false });
+    if (result.status === 'failed' || result.local.status !== 'applied') throw new Error(result.reason ?? 'Authentication cleanup failed');
+  }, [coordinator]);
+  return <AccountDeletionRecoveryNotice clearAuth={clearAuth} />;
+}
 type MockAuthSession = {
   access_token: string;
   refresh_token: string;
@@ -455,7 +465,7 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <WebAuthSessionProvider client={mockClient as never} config={authMode === "live" ? config : null} onIdentityChange={invalidateAccountIdentity}>
-      <AccountDeletionRecoveryNotice />
+      <AccountDeletionRecoveryBridge />
       {transport ? (
         <DeviceSessionBridge transport={transport}>
           <TodoWebRuntimeBridge supabaseAnonKey={config?.anonKey} supabaseUrl={config?.url}>

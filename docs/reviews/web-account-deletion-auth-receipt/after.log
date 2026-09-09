@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-account-deletion-auth-receipt/recovery-contract.test.ts (3 tests) 7ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  13:23:35
+   Duration  1.20s (transform 135ms, setup 0ms, collect 172ms, tests 7ms, environment 820ms, prepare 70ms)
+
