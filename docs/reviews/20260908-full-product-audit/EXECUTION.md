@@ -152,3 +152,5 @@ Terra 5c0f46d/51338e0/66a8488 migrated Tasks ordinary writes in batches. Parent 
 No newly closed numbered item: 13/312 completed; 299 remain open.
 
 Parent fixed-35b4964 rerun now confirms all six Tasks UI assertions PASS. Terra 0a294bc awaits list/tag cascades and detail deletion before cleanup; author full Tasks regression is 156/170 with 14 failures, under active repair. Sol 8503b71 snapshots queued patches; author original Astra 11 assertions pass, Astra non-author re-review is pending. These are bounded progress, not new item closures.
+
+Astra 6efba71 independently accepts the bounded C six-subscriber repair at 8503b71: original 11 assertions all PASS. The old semantic mismatch FAIL remains archived. Native results remain attributed to their tested 4202c79 revision. Full AI-02/D1/D2/production activation are not closed. Tasks remaining async recovery/full regression work is now assigned to Sol (all Tasks product/test files); Terra independently repairs Calendar test fixtures and async expectations in Calendar tests only. This follows the user model split and separates file ownership.

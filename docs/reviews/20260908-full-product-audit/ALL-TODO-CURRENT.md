@@ -14,7 +14,7 @@
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 
-Latest execution delta: Tasks UI six independent assertions pass at `35b4964`; full Tasks package still has 14 author-reported failures under repair. Sol `8503b71` fixes queued operation snapshot mismatch and awaits Astra independent review. No additional numbered item is closed.
+Latest execution delta: Tasks UI six independent assertions pass at `35b4964`; full Tasks package still has 14 author-reported failures under repair. Sol `8503b71` fixes queued operation snapshot mismatch; Astra `6efba71` independently passed all 11 original assertions and accepted this bounded integration. No additional numbered item is closed.
 
 ## 推荐先做的批次
 
