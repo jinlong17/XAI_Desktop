@@ -28,10 +28,12 @@ try {
  copyFileSync(join(evidence,'d1-calendar-contract.test.tsx'),join(owned,'d1-calendar-contract.test.tsx'));
  copyFileSync(join(evidence,'d1-shared-writer.test.tsx'),join(owned,'d1-shared-writer.test.tsx'));
  copyFileSync(join(evidence,'d1-pending-editor.test.tsx'),join(owned,'d1-pending-editor.test.tsx'));
+ copyFileSync(join(evidence,'d1-repair-boundaries.test.tsx'),join(owned,'d1-repair-boundaries.test.tsx'));
  for (const [name, include] of [
   ['d1-calendar-independent', ['docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx']],
   ['d1-shared-independent', ['docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx']],
   ['d1-calendar-pending', ['docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx']],
+  ['d1-calendar-repair-boundaries', ['docs/reviews/web-board-workspace-astra-review/d1-repair-boundaries.test.tsx']],
  ]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
