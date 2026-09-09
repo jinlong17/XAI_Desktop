@@ -1,0 +1,37 @@
+> @repo/plugin-web-calendar@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+> vitest run "--run" "src/__tests__/aiCalendarInputValidation.test.tsx"
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-calendar
+
+ ❯ src/__tests__/aiCalendarInputValidation.test.tsx (14 tests | 1 failed) 27ms
+   ✓ Calendar AI input validation > retains documented defaults only when a legacy create request omits the fields 10ms
+   ✓ Calendar AI input validation > rejects explicit create impossible month day without writing 2ms
+   ✓ Calendar AI input validation > rejects explicit create month out of range without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-leap February 29 without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-string date without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create malformed time without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-string time without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-finite duration without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-number duration without writing 1ms
+   ✓ Calendar AI input validation > rejects explicit create non-integer duration without writing 1ms
+   × Calendar AI input validation > rejects invalid update date/time/duration without changing the target 5ms
+     → expected false to be true // Object.is equality
+   ✓ Calendar AI input validation > permits a corrected request ID once after its invalid request was rejected 1ms
+   ✓ Calendar AI input validation > keeps the confirmed duration at the legal same-day boundary 0ms
+   ✓ Calendar AI input validation > rejects a duration that would otherwise be silently clamped across the same-day boundary 1ms
+
+ FAIL  src/__tests__/aiCalendarInputValidation.test.tsx > Calendar AI input validation > rejects invalid update date/time/duration without changing the target
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/__tests__/aiCalendarInputValidation.test.tsx:106:95
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  15:01:21
+   Duration  1.05s (transform 131ms, setup 233ms, collect 49ms, tests 27ms, environment 410ms, prepare 81ms)

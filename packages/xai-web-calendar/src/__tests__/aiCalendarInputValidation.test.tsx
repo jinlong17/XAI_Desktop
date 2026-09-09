@@ -98,10 +98,11 @@ describe("Calendar AI input validation", () => {
       act(() => {
         emitUpdate({ requestId: "invalid-update-date", id: seed.id, patch: { date: "2026-02-29" }, requestedAt: "2026-09-09T00:00:00.000Z" });
         emitUpdate({ requestId: "invalid-update-time", id: seed.id, patch: { startTime: "09:60" }, requestedAt: "2026-09-09T00:00:00.000Z" });
+        emitUpdate({ requestId: "invalid-update-array-time", id: seed.id, patch: { startTime: ["09:00"] }, requestedAt: "2026-09-09T00:00:00.000Z" });
         emitUpdate({ requestId: "invalid-update-duration", id: seed.id, patch: { durationMin: Number.NaN }, requestedAt: "2026-09-09T00:00:00.000Z" });
         emitUpdate({ requestId: "invalid-update-cross-day", id: seed.id, patch: { startTime: "23:50", durationMin: 10 }, requestedAt: "2026-09-09T00:00:00.000Z" });
       });
-      expect(receipts).toHaveLength(4);
+      expect(receipts).toHaveLength(5);
       expect(receipts.every(receipt => receipt.ok === false && receipt.reason === "invalid")).toBe(true);
       expect(localStorage.getItem(key)).toBe(before);
     } finally {

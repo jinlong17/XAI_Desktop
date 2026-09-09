@@ -56,3 +56,9 @@ The registry-to-subscriber assertions at commit `afd10ff` were copied byte-for-b
 At `e50ca1c`, the same six assertions produced **5 correct FAIL / 1 control PASS**; see `registry-subscriber-before-e50ca1c.log`. The control is the direct Calendar-subscriber rejection of `date: "bad"`, which was already repaired by `e50ca1c`. The five failures preserve the upstream conversion defects: omitted values were eagerly inserted, create duration text/decimal values were defaulted or rounded into successful writes, and update invalid date/decimal-duration fields were discarded or rounded so the mutation succeeded.
 
 At `afd10ff`, all **6/6** assertions pass; see `registry-subscriber-after-afd10ff.log`. This bounds the evidence to A1 conversion plus subscriber semantics. It remains synthetic jsdom integration evidence and does not replace Sol's native independent verification or Astra review.
+
+## Follow-up: array time must be invalid, not storage
+
+Sol's independent fixed-`afd10ff` Chrome probe (`ecb588c`, retained separately in `../web-ai-calendar-sol-independent/`) found one remaining semantic receipt failure: update `startTime: ["09:00"]` made no write, but JavaScript's regex coercion accepted the array and the later `.split()` exception was reported as `storage`. The subscriber now checks `typeof p.startTime === "string"` before `HHMM_RE`.
+
+The added package regression asserts that array value with the existing invalid update cases, requires every receipt to be `{ ok: false, reason: "invalid" }`, and preserves raw storage bytes. `update-array-time-before.log` retains the correct pre-fix failure; `update-array-time-after.log` records the passing run. This remains a narrow follow-up requiring Sol's fixed-new-hash native rerun and Astra review.

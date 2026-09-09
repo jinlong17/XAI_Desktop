@@ -104,7 +104,7 @@ export function useCalendarMutateRequestSubscriber(): void {
       const p = payload.patch;
       if ((p.title !== undefined && (typeof p.title !== "string" || !p.title.trim()))
         || (p.date !== undefined && !isValidCivilDate(p.date))
-        || (p.startTime !== undefined && !HHMM_RE.test(p.startTime))
+        || (p.startTime !== undefined && (typeof p.startTime !== "string" || !HHMM_RE.test(p.startTime)))
         || (p.durationMin !== undefined && (!Number.isFinite(p.durationMin) || !Number.isInteger(p.durationMin) || p.durationMin < MIN_DURATION_MINUTES))) return { ok: false, reason: "invalid" };
       if (p.title === undefined && p.date === undefined && p.startTime === undefined && p.durationMin === undefined) return { ok: false, reason: "invalid" };
       const raw = getPref("xai_calendar_events", scope);
