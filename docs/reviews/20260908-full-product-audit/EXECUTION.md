@@ -121,3 +121,12 @@ STAT-02正式核销：905abb7固定1b7c0e0（含dafaf9e严格日期）实际Task
 TASK-02作者1b7c0e0实现完成时间/稳定来源与legacy真实撤销，d7d1733实现Board持久pending链接意图及重试；完整编号仍待独立Board移动/归档/恢复及失败路径验收。MED-01/02持久绝对时间与音频清理实施中，尚未核销。
 
 REL-06父ab8c35a：发现旧回执在auth清理前complete，已改live version2记录原authGeneration并将其清理纳入complete前；旧v1读者拒绝v2，避免只清旧参与者就成功。RecoveryNotice通过宿主coordinator只清捕获原代，不重发服务器删除、不影响新B登录。原三条receipt contract断言before3FAIL→after3PASS；Settings全42文件280通过后补两条现代导航测试，最终receipt/orchestrator/HTTP focused32通过；Settingstypes/lint与Web146/types/lint通过。真实SDK/IDB重开联合独立验收已派发，REL-06仍开放。
+
+
+## 2026-09-09 检查点：Calendar 原修复通过，新增边界继续修复
+
+Astra e407967 固定 f764731 独立重跑原20项全部PASS；新增修复边界4项中2PASS、2正确FAIL：旧delete完成仍关闭新编辑器，以及activation关闭但存在protected envelope时reset仍本地假成功。低年闰日和receipt-only revision正常编辑对照PASS。原496039f失败证据保留，作者日志与独立日志分开。
+
+Terra db1eddc 对两处做窄修，作者称原20项和新增4项全部通过，Calendar/storage类型检查通过。已经交Astra固定版本独立复核，尚无本次接受结论。Tasks与Board的D1普通UI写入迁移仍待继续，不以Calendar子批完成替代完整D1。
+
+父7b732c1准备六实际subscriber的整Chrome进程重开harness：精确Git快照、独立profile、外部原始字节checkpoint、later-human-edit及新请求业务数据断言。仅语法检查，尚未行为运行，不是验收PASS。Sol六subscriber仍为未提交实现，作者报告eventbus22/22、Tasks169/169、Calendar focused25/25及durable8/8通过；Calendar全包仍20FAIL，不能宣称全包通过。待固定提交后进行独立重开验证。正式完成仍13/312，未关闭299项。

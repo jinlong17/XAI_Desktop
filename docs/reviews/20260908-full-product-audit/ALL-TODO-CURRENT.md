@@ -10,7 +10,7 @@
 
 进行中：REL-05/06、AI-02。TT-03 当前独立复验通过，证据见 web-time-hour-independent/20260909-review.md。REL-05 的多个 consumer 已独立验收，不自动关闭整个公共合同。
 
-最新补充（不改变完整编号状态）：A1日历输入校验、Board workspace保存恢复/启动保护/queued选择修复已分别取得有界独立与主审接受。B1/B2兼容层已取得Astra有界接受；Sol的C持久回执原语已提交37252bc，Astra37项独立断言与父真实Chrome七组原语检查通过，原语有界接受；Sol并行接续复杂异步回执及六subscriber接入；Terra依据Astra7b95133合同实现D1共享普通writer和Tasks/Calendar/Board UI。Calendar D1独立a246836新增20断言中8项FAIL，已交Terra修复，尚未接受；旧客户端迁移门槛仍需验证。完整AI-02/REL-05/Board未关闭；详情清单项/附件/评论3条丢稿FAIL仍待接续。证据与限制见EXECUTION.md/EXECUTION.json。
+最新补充（不改变完整编号状态）：A1日历输入校验、Board workspace保存恢复/启动保护/queued选择修复已分别取得有界独立与主审接受。B1/B2兼容层已取得Astra有界接受；Sol的C持久回执原语已提交37252bc，Astra37项独立断言与父真实Chrome七组原语检查通过，原语有界接受；Sol并行接续复杂异步回执及六subscriber接入；Terra依据Astra7b95133合同实现D1共享普通writer和Tasks/Calendar/Board UI。Calendar D1原20断言在f764731独立全PASS，但Astra e407967新增边界仍2FAIL；Terra db1eddc已窄修，等待独立复核；旧客户端迁移门槛仍需验证。完整AI-02/REL-05/Board未关闭；详情清单项/附件/评论3条丢稿FAIL仍待接续。证据与限制见EXECUTION.md/EXECUTION.json。
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 
