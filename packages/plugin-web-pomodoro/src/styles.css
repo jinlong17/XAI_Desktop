@@ -1009,6 +1009,14 @@
   font-weight: 800;
 }
 
+.rec-state {
+  display: block;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
 @keyframes pomoPulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(.72); opacity: .72; }
