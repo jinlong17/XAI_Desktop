@@ -1,0 +1,22 @@
+import {SEED_TASK_COLS} from '../../../packages/xai-web-tasks/src/internal/seed/tasksMock';
+import React from '../../../packages/xai-web-tasks/node_modules/react';
+import {createRoot} from '../../../packages/xai-web-tasks/node_modules/react-dom/client';
+import {TasksModule} from '../../../packages/xai-web-tasks/src/TasksModule';
+import {accountScope,generationKey,generationMarkerKey} from '../../../packages/plugin-web-storage/src/index';
+import {createSeedBookkeepingState} from '../../../packages/plugin-web-bookkeeping/src/internal/defaults';
+import {useBookkeepingState} from '../../../packages/plugin-web-bookkeeping/src/internal/storage';
+const wait=()=>new Promise(r=>setTimeout(r,100));
+const assert=(v:unknown,m:string)=>{if(!v)throw Error('Probe setup failed: '+m);};
+const key=(logical:string)=>generationKey('rel05-A','fixture',logical);
+const bKey=generationKey('rel05-B','fixture','xai_bk_state_v2');
+const original=Storage.prototype.setItem;
+let blocked='';Storage.prototype.setItem=function(k,v){if(this===localStorage&&k===blocked)throw new DOMException('Synthetic quota exhausted','QuotaExceededError');return original.call(this,k,v);};
+const container=document.createElement('main');document.body.append(container);const root=createRoot(container);
+async function run(){const transition=accountScope.lock('rel05-A');localStorage.setItem(generationMarkerKey('rel05-A'),JSON.stringify({generation:'fixture',migrationId:'fixture',previous:null}));accountScope.activate(transition,'fixture');localStorage.setItem(bKey,'B original');
+localStorage.setItem(key('xai_task_cols'),JSON.stringify(SEED_TASK_COLS));root.render(React.createElement(TasksModule,{lang:'en'}));await wait();const add=container.querySelector('.icon-btn[aria-label="Add"]') as HTMLButtonElement;assert(add,'Tasks Add');add.click();await wait();const input=container.querySelector('#task-composer-title-input') as HTMLInputElement;assert(input,'Composer input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(input,'REL05 native draft');input.dispatchEvent(new Event('input',{bubbles:true}));await wait();assert(input.value==='REL05 native draft','React draft input');const before=localStorage.getItem(key('xai_task_cols'));blocked=key('xai_task_cols');(container.querySelector('.task-composer__btn--primary') as HTMLButtonElement).click();await wait();
+const tasks={originalPreserved:localStorage.getItem(key('xai_task_cols'))===before,composerOpen:!!container.querySelector('dialog.task-composer')?.hasAttribute('open'),draft:(container.querySelector('#task-composer-title-input') as HTMLInputElement|null)?.value??null,failureVisible:!!container.querySelector('[role="alert"]')};blocked='';
+const initial=createSeedBookkeepingState();initial.budgetTotal=100;initial.prefs={...initial.prefs,billsView:'detail'};const raw=JSON.stringify(initial);localStorage.setItem(key('xai_bk_state_v2'),raw);localStorage.setItem('xai_bk_view','detail');
+function BookProbe(){const [state,save]=useBookkeepingState();return React.createElement('section',{},React.createElement('output',{id:'budget'},String(state.budgetTotal)),React.createElement('button',{id:'book-save',onClick:()=>save(previous=>({...previous,budgetTotal:200,prefs:{...previous.prefs,billsView:'overview'}}))},'Save'));}
+root.render(React.createElement(BookProbe));await wait();blocked=key('xai_bk_state_v2');(container.querySelector('#book-save') as HTMLButtonElement).click();await wait();const bookkeeping={originalPreserved:localStorage.getItem(key('xai_bk_state_v2'))===raw,persistedBudget:JSON.parse(localStorage.getItem(key('xai_bk_state_v2'))!).budgetTotal,renderedBudget:Number(container.querySelector('#budget')!.textContent),deviceView:localStorage.getItem('xai_bk_view')};const otherAccountPreserved=localStorage.getItem(bKey)==='B original';
+return {pass:tasks.originalPreserved&&tasks.composerOpen&&tasks.draft==='REL05 native draft'&&tasks.failureVisible&&bookkeeping.originalPreserved&&bookkeeping.renderedBudget===100&&bookkeeping.deviceView==='detail'&&otherAccountPreserved,tasks,bookkeeping,otherAccountPreserved,meaning:'pass=false is an unresolved business correctness failure, not an accepted characterization result'};}
+run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:'FAIL '+error.stack})).finally(()=>{Storage.prototype.setItem=original;root.unmount();});
