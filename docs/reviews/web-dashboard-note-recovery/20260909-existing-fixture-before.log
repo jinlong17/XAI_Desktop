@@ -1,0 +1,143 @@
+Product/package tests fixed 88108ed; external workspace dependencies from installed symlinks. Four unchanged suites; no assertion edits.
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dash-before-0dnaya_j/packages/xai-web-dashboard-grid
+
+stderr | src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > returns the default glass appearance when no saved preference exists
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > returns span defaults when no saved layout exists
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ❯ src/__tests__/useWidgetLayout.test.tsx (4 tests | 1 failed) 19ms
+   ✓ useWidgetLayout > returns span defaults when no saved layout exists 10ms
+   × useWidgetLayout > persists normalized widget layout to xai_pref_dashboard_widget_layout 7ms
+     → expected {} to deeply equal { Object (weather) }
+   ✓ useWidgetLayout > ignores unknown widget ids 1ms
+   ✓ useWidgetLayout > layoutFromResize clamps grid cols and height 0ms
+ ❯ src/__tests__/useWidgetAppearance.test.tsx (5 tests | 1 failed) 21ms
+   ✓ useWidgetAppearance > returns the default glass appearance when no saved preference exists 10ms
+   × useWidgetAppearance > persists normalized widget appearance to xai_pref_dashboard_widget_appearance 7ms
+     → expected {} to deeply equal { weather: { tone: 'rose', …(1) } }
+   ✓ useWidgetAppearance > ignores unknown widget ids 1ms
+   ✓ useWidgetAppearance > removes the saved item when a widget appearance is reset 1ms
+   ✓ useWidgetAppearance > maps appearance preferences into widget glass CSS variables 0ms
+stderr | src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | src/__tests__/registration.test.tsx > DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (en path)
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ❯ src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests | 3 failed) 80ms
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 1: dashboardWidgetRegistrations is a non-empty array 1ms
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 2: every entry has the WidgetRegistration shape 1ms
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 3: all registered ids are unique (no dedupe drift) 0ms
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 4: every span is one of the 9 declared WidgetSpanClass literals 0ms
+   × DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default 48ms
+     → Account storage is locked or the operation belongs to a previous account.
+   × DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5b: DashboardSlotHost still works under lang=zh (no en-only regression) 17ms
+     → Account storage is locked or the operation belongs to a previous account.
+   ✓ DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 6: 4 type aliases compile against the row #11 registrations 0ms
+   × DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 7: every render(ctx) returns something React can mount (no early-throw on row #11 widgets) 11ms
+     → Account storage is locked or the operation belongs to a previous account.
+ ❯ src/__tests__/registration.test.tsx (13 tests | 3 failed) 103ms
+   ✓ dashboardGridSlotRegistration > AC-REG-1: moduleId === 'dashboard' 5ms
+   ✓ dashboardGridSlotRegistration > AC-REG-2: icon === 'layout' 0ms
+   ✓ dashboardGridSlotRegistration > AC-REG-3: i18nKey === 'nav.dashboard' 0ms
+   ✓ dashboardGridSlotRegistration > AC-REG-4: railOrder === 4 0ms
+   ✓ dashboardGridSlotRegistration > AC-REG-5: showInRail === true 0ms
+   ✓ dashboardGridSlotRegistration > AC-REG-6: children[0].path === '' and children[1].path === '*' 1ms
+   ✓ dashboardGridSlotRegistration > AC-REG-6: children render functions are functions 0ms
+   ✓ dashboardGridSlotRegistration > label === 'Dashboard' 0ms
+   ✓ dashboardGridSlotRegistration > defaultChildPath === '' 0ms
+   × DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (en path) 48ms
+     → Account storage is locked or the operation belongs to a previous account.
+   × DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (zh path) 17ms
+     → Account storage is locked or the operation belongs to a previous account.
+   × DashboardSlotHost > renders row #11 dashboardWidgetRegistrations (all widget shells, not empty state) 12ms
+     → Account storage is locked or the operation belongs to a previous account.
+   ✓ DashboardSlotHost > deep-links from calendar widget change the app route 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5: DashboardSlotHost forwards the array, NOT the empty default
+ FAIL  src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 5b: DashboardSlotHost still works under lang=zh (no en-only regression)
+ FAIL  src/__tests__/DashboardSlotHost.composition.test.tsx > DashboardSlotHost composition — row-#10 ↔ row-#11 contract (regression for 2026-05-24 cold-read) > locks invariant 7: every render(ctx) returns something React can mount (no early-throw on row #11 widgets)
+ FAIL  src/__tests__/registration.test.tsx > DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (en path)
+ FAIL  src/__tests__/registration.test.tsx > DashboardSlotHost > AC-REG-7: reads lang from useWebShell() (zh path)
+ FAIL  src/__tests__/registration.test.tsx > DashboardSlotHost > renders row #11 dashboardWidgetRegistrations (all widget shells, not empty state)
+Error: Account storage is locked or the operation belongs to a previous account.
+ ❯ Object.physicalKey ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage/src/internal/accountScope.ts:53:83
+     51|       if (ownershipForKey(key) === 'device') return key;
+     52|       assertCurrent(scope);
+     53|       if (scope.kind === 'locked' || !scope.accountId || !scope.genera…
+       |                                                                                   ^
+     54|       if (typeof localStorage !== 'undefined' && localStorage.getItem(…
+     55|       return generationKey(scope.accountId, scope.generation, key, sco…
+ ❯ readJson ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker/src/internal/storage.ts:102:61
+ ❯ readTimeTrackerCategories ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker/src/internal/storage.ts:112:15
+ ❯ getTimeTrackerSnapshot ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker/src/internal/storage.ts:192:22
+ ❯ TimeTrackerWidget ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/src/widgets/TimeTrackerWidget.tsx:11:20
+ ❯ Object.react_stack_bottom_frame ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/__tests__/useWidgetAppearance.test.tsx > useWidgetAppearance > persists normalized widget appearance to xai_pref_dashboard_widget_appearance
+AssertionError: expected {} to deeply equal { weather: { tone: 'rose', …(1) } }
+
+- Expected
++ Received
+
+- {
+-   "weather": {
+-     "alpha": 0.72,
+-     "tone": "rose",
+-   },
+- }
++ {}
+
+ ❯ src/__tests__/useWidgetAppearance.test.tsx:28:7
+     26|     expect(
+     27|       JSON.parse(localStorage.getItem("xai_pref_dashboard_widget_appea…
+     28|     ).toEqual({
+       |       ^
+     29|       weather: { tone: "rose", alpha: 0.72 },
+     30|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/__tests__/useWidgetLayout.test.tsx > useWidgetLayout > persists normalized widget layout to xai_pref_dashboard_widget_layout
+AssertionError: expected {} to deeply equal { Object (weather) }
+
+- Expected
++ Received
+
+- {
+-   "weather": {
+-     "cols": 9,
+-     "minHeight": 288,
+-   },
+- }
++ {}
+
+ ❯ src/__tests__/useWidgetLayout.test.tsx:28:90
+     26|       result.current.setWidgetLayout("weather", { cols: 9, minHeight: …
+     27|     });
+     28|     expect(JSON.parse(localStorage.getItem("xai_pref_dashboard_widget_…
+       |                                                                                          ^
+     29|       weather: { cols: 9, minHeight: 288 },
+     30|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  8 failed | 22 passed (30)
+   Start at  14:01:20
+   Duration  1.47s (transform 678ms, setup 417ms, collect 1.71s, tests 223ms, environment 1.24s, prepare 285ms)
+
+
+exit=1
