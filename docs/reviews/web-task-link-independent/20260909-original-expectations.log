@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-task-completion-link/reproduction.test.ts (5 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  13:33:08
+   Duration  360ms (transform 90ms, setup 0ms, collect 93ms, tests 3ms, environment 0ms, prepare 85ms)
+
