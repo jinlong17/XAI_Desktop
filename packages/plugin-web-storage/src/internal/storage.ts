@@ -187,29 +187,31 @@ export function setPref<K extends WebPrefKey>(
 // removePref
 // ---------------------------------------------------------------------------
 
-export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): void {
-  if (typeof window === "undefined") return;
+/** Returns whether physical removal completed; callers must not infer success from a missing read fallback. */
+export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): boolean {
+  if (typeof window === "undefined") return false;
   if (isCanonicalCommandKey(key)) {
     let existing: string | null;
     try {
       existing = localStorage.getItem(accountScope.physicalKey(key, scope));
     } catch {
       console.warn(`[plugin-web-storage] refusing canonical removal because ${key} could not be read.`);
-      return;
+      return false;
     }
     if (canonicalWriteBlocked(key, existing)) {
       console.warn(`[plugin-web-storage] refusing legacy removal of protected canonical ${key}.`);
-      return;
+      return false;
     }
   }
   try {
     localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {
-    return;
+    return false;
   }
   const entry = PREF_REGISTRY[key];
   // Notify same-tab subscribers that the value is back to default
   publishSameTab(key, entry.default, scope);
+  return true;
 }
 
 // Suppress unused variable warning for guardStorage

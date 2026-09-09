@@ -214,8 +214,8 @@ function usePrefBrowser<K extends WebPrefKey>(
       const state = readCanonicalCommandSnapshot(key, scope);
       if (isCanonicalCommandActivationEnabled() || state.status === "envelope" || state.status === "corrupt" || state.status === "unsupported" || state.status === "unavailable") return;
     }
-    removePref(key, scope);
-    if (isCanonicalCommandKey(key) && readRawPref(key, scope) !== null) return;
+    const removed = removePref(key, scope);
+    if (isCanonicalCommandKey(key) && !removed) return;
     setValueInternal(effectiveDefault);
     setIsDefault(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
