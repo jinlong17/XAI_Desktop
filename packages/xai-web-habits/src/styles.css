@@ -1352,6 +1352,13 @@
   overflow: auto;
 }
 .module-habits.has-save-error { grid-template-rows: auto minmax(0, 1fr); }
+@media (max-width: 1024px) {
+  .module-habits.has-save-error {
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    align-content: start;
+  }
+}
 .habits-save-recovery button {
   min-height: 44px;
   padding: 0.5rem 0.75rem;
