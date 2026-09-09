@@ -784,3 +784,8 @@ Scope limit: this closes REL-03 compatibility for Settings and the implemented l
 ## REL-04 export scope and device recovery
 
 Account records remain the primary download. Device-wide export is a separate collapsed details section with two explicitly unchecked history choices. Bilingual scope text explains shared layout settings, possible other-owner history, and the lack of direct file restore. Controls retain native keyboard behavior, 44px targets and wrapping. A captured scope prevents stale account panes from issuing downloads after identity changes.
+
+
+## REL-06 durable pre-request intent
+
+The global recovery notice distinguishes confirmed local cleanup from an unconfirmed server request. An unknown request has no local-cleanup button, never replays the server request, and never changes the active account. This preserves uncertainty after reload without claiming a backend reconciliation capability. The operation ID is local bookkeeping; no unsupported server idempotency contract is claimed.

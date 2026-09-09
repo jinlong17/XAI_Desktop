@@ -881,3 +881,8 @@ Scope limit: this closes REL-03 compatibility for Settings and the implemented l
 ## REL-04 export scope and device recovery
 
 Account settings now downloads account records with a lifecycle manifest. A separate DeviceRecoveryExport control calls exportDeviceRecoveryData with includeLegacy/includeArchives, both false initially. This is a read-only JSON preservation export, not a restore API. Known device preferences are included; current account namespaces, authentication stores and BYOK stores are excluded. Unsafe/unrecognized selected history is omitted with manifest reasons and visible omission counts.
+
+
+## REL-06 durable pre-request intent
+
+Before a live account-delete request, the orchestrator writes and reads back an account-scoped deletion-intent containing only owner, generation, operation ID, phase and timestamp. Storage refusal prevents the server call. The intent is NOT a local deletion authorization. A confirmed durable deletion receipt supersedes it; only that receipt enables local cleanup. Uncertain network/server outcomes remain discoverable. Authorization denials discard only their matching operation intent.

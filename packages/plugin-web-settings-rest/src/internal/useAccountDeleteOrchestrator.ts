@@ -2,6 +2,7 @@
 import * as React from "react";
 import { accountScope } from "@repo/plugin-web-storage";
 import { beginAccountLocalDeletion, resumeAccountLocalDeletion } from "./accountDeletionRecovery.js";
+import { prepareAccountDeletionIntent, discardRejectedDeletionIntent } from "./accountDeletionIntent.js";
 import {
   deleteAccount,
   AccountDeleteError,
@@ -60,12 +61,18 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
         // Suppress implicit signOut: the shared client may already belong to B.
         // Idempotency (DEL-ORCH-4): if deleteAccount throws kind="already_deleted",
         // treat as success and proceed to local wipe (account is gone).
+        const intent = prepareAccountDeletionIntent(scope);
         try {
           await deleteAccount(supabaseClient, { accessToken: session.access_token, signOutAfterDelete: false });
         } catch (err) {
           if (err instanceof AccountDeleteError && err.kind === "already_deleted") {
             // Idempotent — proceed to wipe (account already deleted server-side).
           } else {
+            // Authorization denial permits discarding only this request's intent.
+            // Network/server failures may occur after mutation and stay discoverable.
+            if (err instanceof AccountDeleteError && ["unauthorized", "forbidden"].includes(err.kind)) {
+              discardRejectedDeletionIntent(intent);
+            }
             throw err;
           }
         }

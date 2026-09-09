@@ -1491,3 +1491,8 @@ it("AB7: ZH locale renders ZH tooltip on each disabled link", () => {
 ## REL-04 export scope and device recovery
 
 REL-04 UI implementation: account export scope/exclusion copy, manifest omission feedback, separate device settings/history download and safe default choices. Preserves original local data and account deletion semantics. Settings full suite 41 files/269 tests passed before one additional omission-feedback case; typecheck and lint passed. Focused final tests and independent browser verification are recorded separately. No restore, cloud backup or hosted deployment acceptance claimed.
+
+
+## REL-06 durable pre-request intent
+
+REL-06 additional bounded fix: persist verified non-destructive intent before requesting live deletion; display unresolved server outcome after reload. Full backend reconciliation, process-kill testing and auth/cache cleanup participants remain open. No hosted deletion or complete REL-06 acceptance claimed.

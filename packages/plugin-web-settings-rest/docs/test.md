@@ -633,3 +633,8 @@ Implementation verification: **40 test files / 266 tests PASS**, package typeche
 ## REL-04 export scope and device recovery
 
 REL-04: DeviceRecoveryExport tests inspect actual Blob JSON: device layout included, A/B account data and unselected history excluded; explicit legacy raw bytes retained exactly; stale account pane refuses download; credential-named history omitted with visible feedback and source retention. Account export test now also requires manifest and restoreSupported:false while preserving account/legacy isolation assertions. Browser download/render verification remains an independent layer.
+
+
+## REL-06 durable pre-request intent
+
+REL-06 pre-request intent: actual deleteAccount + orchestrator integration tests inject native Storage quota, response loss and post-server receipt failure. Assert zero server calls on first intent write failure; unknown outcome retains account bytes and token-free intent after remount with B; no local retry button without confirmed receipt. HTTP 401/403/404/500 remain unable to authorize local erasure. Existing recovery and captured-owner tests remain unchanged.
