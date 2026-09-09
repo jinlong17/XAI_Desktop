@@ -39,6 +39,11 @@ const clear = () => new Promise((resolve,reject) => {
   const other=createIndexedDbStore({storeName:name==='session'?'device':'session'});await other.setItem('new','new');
   assert(await store.getItem('legacy')==='old',name+' preserve');count++;
  }
+ const a=createIndexedDbStore({dbName:'warm-custom',storeName:'alpha'});
+ await a.setItem('old','preserved');
+ const b=createIndexedDbStore({dbName:'warm-custom',storeName:'beta'});
+ await Promise.all([a.setItem('new','A'),b.setItem('new','B')]);
+ assert(await a.getItem('old')==='preserved' && await a.getItem('new')==='A' && await b.getItem('new')==='B','warm concurrent custom upgrade');count++;
  await clear();await fetch('/result',{method:'POST',body:'PASS '+count});
 })().catch(e=>{fetch('/result',{method:'POST',body:'FAIL '+e.stack});});
 `;
@@ -56,8 +61,8 @@ try {
  browser=spawn(process.env.CHROME_BINARY || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--no-default-browser-check','--disable-background-networking','--user-data-dir='+join(directory,'profile'),url],{stdio:'ignore'});
  browser.on('error',error=>receive('FAIL '+error.message));
  const result=await finished;
- if(result!=='PASS 5')throw Error(String(result));
- console.log('PASS 5 real Chromium IndexedDB scenarios: both orders, concurrent initialization, both v1 migrations; real native IndexedDB; isolated temporary profile.');
+ if(result!=='PASS 6')throw Error(String(result));
+ console.log('PASS 6 real Chromium IndexedDB scenarios: both orders, concurrent initialization, both v1 migrations, warm concurrent custom upgrade; real native IndexedDB; isolated temporary profile.');
 } finally {
  clearTimeout(timeout);browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();
  await new Promise(resolve=>setTimeout(resolve,500));

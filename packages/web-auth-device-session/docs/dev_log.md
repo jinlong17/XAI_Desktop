@@ -237,3 +237,7 @@ Added to `packages/web-auth-device-session/src/`:
 - `wipeRegisteredIDB()` operates on a frozen static list; list is not dynamically expanded at runtime (DEL-IDB-LIST-1).
 - `signOut()` is best-effort (non-throwing); account deletion success does not depend on signOut success (R9 risk mitigation).
 - `already_deleted` (404) is treated as idempotent success and proceeds to signOut (DEL-ORCH-4 / R3 idempotency).
+
+### REL-02 parent verification follow-up · 2026-09-09
+
+Executor: Codex parent review/fix. Status remains FIX_READY_FOR_VERIFY. Independent review found a warm custom-store upgrade race, reproduced by the new 53rd test (InvalidStateError). Added per-database operation queue through callback completion. All 53 package tests and six isolated real-Chromium scenarios now pass. Cross-vendor reviewer could not authenticate (401 revoked OAuth), so independent cross-vendor approval remains pending; no READY_TO_SHIP claim. Next: independent review of follow-up and cross-vendor verification when available.

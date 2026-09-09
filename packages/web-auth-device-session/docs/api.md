@@ -180,3 +180,7 @@ Rules:
 `createIndexedDbStore({ dbName?, storeName? })` keeps its existing promise-based get/set/remove API. Default database: `xai-web-auth`; default store: `session`. Both default auth/device stores are initialized together at minimum version 2, without deleting v1 records. Custom names remain valid and custom stores are added using schema upgrades. Get returns null for absent keys; write/delete resolve on transaction completion.
 
 Open/transaction failures reject the operation; callers may retry. A blocked schema upgrade rejects with `InvalidStateError` describing that another tab must close before retry. Version-change notifications release cached connections, including for database deletion. No auth token or device identifier is logged or migrated outside the owning database. PKCE routing to sessionStorage is unchanged.
+
+### REL-02 warm-schema concurrency follow-up
+
+Store operations sharing a database are queued through completion of the idb-keyval callback promise. A schema extension waits for prior operations to finish before closing the connection; callers already awaiting a warm connection cannot receive a closed database. Rejected operations release the queue so later retries remain possible. This serialization is scoped to one IDBFactory/database and does not serialize unrelated databases.

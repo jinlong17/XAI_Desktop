@@ -140,3 +140,13 @@ it('closes a late successful connection after a blocked request has rejected', a
   await store.setItem('token', 'retry');
   expect(await store.getItem('token')).toBe('retry');
 });
+
+it('keeps an existing store operation valid while another caller adds a custom store', async () => {
+  const a = createIndexedDbStore({ dbName: 'warm-custom', storeName: 'alpha' });
+  await a.setItem('old', 'preserved');
+  const b = createIndexedDbStore({ dbName: 'warm-custom', storeName: 'beta' });
+  await Promise.all([a.setItem('new', 'A'), b.setItem('new', 'B')]);
+  expect(await a.getItem('old')).toBe('preserved');
+  expect(await a.getItem('new')).toBe('A');
+  expect(await b.getItem('new')).toBe('B');
+});

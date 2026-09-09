@@ -19,6 +19,7 @@ interface DatabaseState {
   stores: Set<string>;
   connection?: IDBDatabase;
   opening?: Promise<IDBDatabase>;
+  operation?: Promise<unknown>;
 }
 
 // Separate factories also isolate test environments and embedded browser contexts.
@@ -103,8 +104,16 @@ function createUseStore(options: CreateIndexedDbStoreOptions = {}): UseStore {
       byName.set(name, state);
     }
     state.stores.add(storeName);
-    const db = await getDatabase(factory, name, state);
-    return callback(db.transaction(storeName, mode).objectStore(storeName));
+    // Keep schema upgrades behind active operations: closing a warm connection
+    // between awaiting getDatabase and creating its transaction invalidates it.
+    const database = state;
+    const run = async () => {
+      const db = await getDatabase(factory, name, database);
+      return callback(db.transaction(storeName, mode).objectStore(storeName));
+    };
+    const operation = (database.operation ?? Promise.resolve()).then(run, run);
+    database.operation = operation.then(() => undefined, () => undefined);
+    return operation;
   };
 }
 

@@ -9,3 +9,9 @@
 - Claude 独立只读审查进程已实际启动，随后以401退出：OAuth access token has been revoked。未运行审查，不能计作跨厂商PASS。
 
 结论：功能回归和本地真实浏览器验证通过；跨厂商验证未完成，工作流仍为 FIX_READY_FOR_VERIFY，REL-02 不关闭。真实登录服务 E2E 不属于上述测试证据。
+
+## Follow-up: independently reproduced warm-connection race
+
+The original 52 tests missed an interleaving: after alpha is open, run alpha.setItem and the first beta.setItem concurrently in the same custom database. The beta schema upgrade closed alpha's connection before alpha resumed its awaited transaction creation. Added regression failed with InvalidStateError at storage.ts transaction creation.
+
+Fix: queue complete store operations per database, including the callback promise; rejected operations release the queue. After the fix, 53/53 package tests and six real-Chromium scenarios passed, including the newly reproduced interleaving. This supersedes the earlier five-scenario coverage count, not the outstanding cross-vendor gate. The follow-up code change still requires independent review.
