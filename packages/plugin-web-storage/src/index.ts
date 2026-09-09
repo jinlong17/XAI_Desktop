@@ -53,6 +53,7 @@ export {
   commitCanonicalCommand,
   mutateCanonicalDataset,
   canonicalDatasetLockName,
+  isCanonicalCommandActivationEnabled,
   setCanonicalCommandActivationForTests,
   canonicalCommandSignature,
   canonicalCommandReceiptId,

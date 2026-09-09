@@ -18,7 +18,7 @@ import {
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
 import { accountScope, type AccountScope } from "./accountScope.js";
-import { isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
+import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
 export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
 import { publishSameTab } from "./sameTabBus.js";
 
@@ -35,7 +35,9 @@ export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string)
 }
 
 function canonicalWriteBlocked<K extends WebPrefKey>(key: K, raw: string | null): boolean {
-  if (!isCanonicalCommandKey(key) || raw === null) return false;
+  if (!isCanonicalCommandKey(key)) return false;
+  if (isCanonicalCommandActivationEnabled()) return true;
+  if (raw === null) return false;
   const decoded = decode(PREF_REGISTRY[key].codec, raw);
   if (decoded === null) return true;
   const state = readCanonicalCommandState(decoded);

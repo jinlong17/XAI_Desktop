@@ -43,6 +43,10 @@ export function setCanonicalCommandActivationForTests(enabled: boolean): void {
   commandActivation = enabled;
 }
 
+export function isCanonicalCommandActivationEnabled(): boolean {
+  return commandActivation;
+}
+
 export type CanonicalCommandFailureReason =
   | "activation-disabled"
   | "lock-unavailable"
