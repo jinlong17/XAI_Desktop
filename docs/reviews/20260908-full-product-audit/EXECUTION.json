@@ -31,7 +31,7 @@
     },
     {
       "id": "REL-03",
-      "status": "in_progress",
+      "status": "verification_pending",
       "evidence": [
         "commit:44fa05c",
         "../web-account-data-isolation/20260909-rel03-diagnosis.md",
@@ -43,7 +43,10 @@
         "commit:5ae7b7a",
         "commit:23b83e4",
         "commit:96d1914",
-        "../web-account-data-isolation/20260909-host-integration.md"
+        "../web-account-data-isolation/20260909-host-integration.md",
+        "commit:992f688",
+        "commit:9638dbe",
+        "../web-account-data-isolation/20260909-joint-independent-review.md"
       ]
     },
     {
@@ -54,7 +57,10 @@
     {
       "id": "REL-05",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:3399f88",
+        "../web-storage-write-results/20260909-rel05-diagnosis.md"
+      ]
     },
     {
       "id": "REL-06",
