@@ -1,0 +1,6 @@
+{"name":"baseline","commit":"b353cbb","chromePid":16584}
+{"name":"actual-create-latest-download-stable-id-retry","pass":true}
+{"name":"actual-rename-latest-download-retry","pass":true}
+{"name":"normal-and-failed-pick-retry","pass":true}
+{"name":"old-account-retry-export-denied","pass":true}
+{"name":"PASS","scope":"Board workspace CRUD and ordinary board selection","checks":4}

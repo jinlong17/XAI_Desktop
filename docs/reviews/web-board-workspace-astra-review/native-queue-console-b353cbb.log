@@ -1,0 +1,5 @@
+baseline {"commit":"b353cbb","scope":"same-account layout write between selection scheduling and its microtask"}
+active-only {"expectedActive":"b-pm","activeAfter":"b-pm","sourcePreserved":true,"pass":true}
+board-replaced {"expectedActive":"stale-id","activeAfter":"stale-id","sourcePreserved":true,"pass":true}
+board-removed {"expectedActive":"stale-id","activeAfter":"stale-id","sourcePreserved":true,"pass":true}
+verdict {"cases":3,"failed":[]}

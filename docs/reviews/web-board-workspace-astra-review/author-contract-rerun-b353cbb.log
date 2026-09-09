@@ -1,0 +1,40 @@
+revision=b353cbb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-AqvAp5
+
+ ✓ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx (10 tests) 1380ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  15:13:50
+   Duration  5.54s (transform 1.81s, setup 715ms, collect 2.02s, tests 1.38s, environment 821ms, prepare 123ms)
+
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > create rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > rename rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > recolor rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > delete rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > pick rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > workspace create keeps its stable id, exports the latest name, and retries once
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > normal board pick persists from an absent active id, and failed pick retries without leaving the switcher
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > external replacement or deletion wins, then discard leaves the current rendered data operable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > a pending A workspace draft cannot retry or export into account B
+[plugin-web-storage] quota exceeded for xai_board_workspaces.

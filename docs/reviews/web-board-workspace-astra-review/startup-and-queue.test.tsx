@@ -36,3 +36,9 @@ for(const mode of ['active-only','board-replaced','board-removed'] as const) it(
  expect(localStorage.getItem(activeKey())).toBe(expectedActive);
  if(mode!=='active-only')expect(localStorage.getItem(boardKey())).toBe(expectedBoard);
 });
+it('stable valid source still corrects a genuinely stale active selection', async () => {
+ setPref('xai_boards_v2',makeDefaultBoards());setPref('xai_active_board','stale-id');
+ render(<BoardWorkspacesModule lang="en" />);await settle();
+ expect(localStorage.getItem(activeKey())).toBe('b-default');
+ expect(readBoardStorage(JSON.parse(localStorage.getItem(boardKey())!)).status).toBe('valid');
+});
