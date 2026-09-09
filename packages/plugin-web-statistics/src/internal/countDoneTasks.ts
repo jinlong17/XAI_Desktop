@@ -4,6 +4,21 @@
 
 import { narrowTaskCols } from "./narrowTaskCols.js";
 
+/** Explicit-offset ISO instants only; Date.parse alone normalizes impossible dates. */
+function completionInstant(value: unknown): number | null {
+  if (typeof value !== 'string') return null;
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,3})?(Z|[+-](\d{2}):(\d{2}))$/.exec(value);
+  if (!match) return null;
+  const year = Number(match[1]), month = Number(match[2]), day = Number(match[3]);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month < 1 || month > 12 || day < 1 || day > days[month - 1]!
+    || Number(match[4]) > 23 || Number(match[5]) > 59 || Number(match[6]) > 59
+    || (match[7] !== 'Z' && (Number(match[8]) > 23 || Number(match[9]) > 59))) return null;
+  const instant = Date.parse(value);
+  return Number.isFinite(instant) ? instant : null;
+}
+
 /**
  * Returns the count of `done === true` cards in the raw `xai_task_cols`
  * store value.  Reads from `col.tasks` (+ optional `col.completed`).
@@ -23,9 +38,7 @@ export function readTaskCompletions(store: unknown): Array<{ completedAt: number
     if (!card || typeof card !== 'object') return;
     const value = card as Record<string, unknown>;
     if (value.done !== true && !(legacyCompleted && value.done === undefined)) return;
-    const at = typeof value.completedAt === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value.completedAt)
-      ? Date.parse(value.completedAt) : NaN;
-    completed.push({ completedAt: Number.isFinite(at) ? at : null });
+    completed.push({ completedAt: completionInstant(value.completedAt) });
   };
   for (const col of Object.values(store)) {
     // Primary card list

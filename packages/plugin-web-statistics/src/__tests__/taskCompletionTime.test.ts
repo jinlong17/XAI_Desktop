@@ -42,3 +42,15 @@ it('undo removes the event and recompletion uses its new instant, not the old bu
   expect(aggregate([{ tasks: [{ done: false }] }]).taskBuckets.every(n => n === 0)).toBe(true);
   expect(aggregate([{ tasks: [{ done: true, completedAt: at(9) }] }]).taskBuckets).toEqual([0, 0, 1, 0, 0, 0, 0]);
 });
+
+it.each(['2026-02-30T12:00:00.000Z', '2026-04-31T12:00:00Z', '2026-09-09T24:00:00Z', '2026-09-09T09:00:00'])('does not normalize invalid or timezone-less completion %s', completedAt => {
+  const value = aggregate([{ tasks: [{ done: true, completedAt }] }]);
+  expect(value.undatedCompletedTasks).toBe(1);
+  expect(value.taskBuckets.every(n => n === 0)).toBe(true);
+});
+
+it('accepts a real leap day and an explicit offset without changing the instant', () => {
+  const tasks = [{ tasks: [{ done: true, completedAt: '2024-02-29T10:00:00.000Z' }, { done: true, completedAt: '2026-09-08T12:00:00+02:00' }] }];
+  expect(aggregate(tasks).undatedCompletedTasks).toBe(0);
+  expect(aggregate(tasks).taskBuckets.reduce((a, b) => a + b, 0)).toBe(1);
+});
