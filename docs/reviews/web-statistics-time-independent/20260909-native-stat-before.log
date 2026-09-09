@@ -1,0 +1,6 @@
+{"name":"baseline","head":"2b1759b","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"pomo-list-after-early-end","persisted":{"id":"pomo_b201f431-d191-4f3e-b15d-a5c5a1994bc6","mode":"focus","startedAt":"2026-09-09T17:00:00.000Z","finishedAt":"2026-09-09T17:06:00.000Z","durationMs":1500000,"elapsedMs":60000,"completed":false,"deadline":"2026-09-09T17:30:00.000Z","schemaVersion":2,"recordedAt":"2026-09-09T17:06:00.000Z"},"list":[],"expectedOneMinuteIncompleteRow":true,"pass":false}
+{"name":"actual-statistics-route","kpi":"0h 1m"}
+{"name":"legacy-short-zero","minutes":1.5,"unknown":5,"notice":"5 focus records in this range have no valid measured duration and are excluded from time totals. Original records are preserved.","rawPreserved":true}
+{"name":"390px-zh","notice":"当前范围内有 5 条专注记录缺少有效实际时长，未计入时长统计。原始记录已保留。","geometry":{"left":20,"right":360,"width":390,"scroll":390}}
+{"name":"PARTIAL","statisticsElapsedPass":true,"pomoIncompleteListPass":false}
