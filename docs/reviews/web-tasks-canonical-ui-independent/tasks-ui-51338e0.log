@@ -1,0 +1,799 @@
+revision=51338e0
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-parent-tasks-d1-mphXCv
+
+stdout | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+queued-target {"preserved":false}
+
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx (4 tests | 2 failed) 1384ms
+   ✓ real checkbox persists completion and preserves existing durable receipts 117ms
+   × queued checkbox refuses a changed target without overwriting newer external bytes 1101ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+   × queued checkbox never drops an unrelated externally added task 81ms
+     → expected [ 'existing' ] to include 'external'
+   ✓ render and checkbox do not repair a present invalid domain by overwriting it with demo tasks 86ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  16:35:29
+   Duration  3.32s (transform 559ms, setup 0ms, collect 947ms, tests 1.38s, environment 599ms, prepare 130ms)
+
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > real checkbox persists completion and preserves existing durable receipts
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox never drops an unrelated externally added task
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > render and checkbox do not repair a present invalid domain by overwriting it with demo tasks
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":7,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":1,"tasks":[{"id":"existing","title":{"en":"External newer title","zh":"External newer title"},"tag":"work","tags":["work"],"priority":"normal","listId":"inbox"}]}],"receipts":{"original":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"existing"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+Received: "{"format":"xai-command-state","version":1,"revision":8,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":1,"tasks":[{"id":"existing","title":{"en":"Original","zh":"Original"},"tag":"work","tags":["work"],"priority":"normal","listId":"inbox","done":true,"completedAt":"2026-09-09T19:00:00.000Z"}]}],"receipts":{"original":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"existing"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx:32:43
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"module module-tasks"[39m
+    [36m>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"All"[39m
+        [33mclass[39m=[32m"module-sidebar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"sidebar-section"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"true"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h7v2H2v-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mAll[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M5 1a1 1 0 011 1v1h4V2a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2h1V2a1 1 0 011-1zm7 4H4v7h8V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mToday[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 1a7 7 0 100 14A7 7 0 008 1zm1 4a1 1 0 10-2 0v3.586L5.707 10.293a1 1 0 001.414 1.414l2-2A1 1 0 009 9V5z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mTomorrow[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3a1 1 0 000 2h9.586L11.293 6.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L12.586 3H3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mNext 7 Days[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 3a1 1 0 011-1h10a1 1 0 011 1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414L14 12.414V14H2v-1.586l2.707-2.707a1 1 0 00-1.414-1.414L2 9.586V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mInbox[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"list-row"[39m
+            [33mdata-active[39m=[32m"false"[39m
+            [33mrole[39m=[32m"button"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mviewBox[39m=[32m"0 0 16 16"[39m
+              [33mwidth[39m=[32m"16"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M2 11h12v2H2v-2zm0-4h8v2H2V7zm0-4h12v2H2V3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"grow"[39m
+            [36m>[39m
+              [0mSummary[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"count"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+     ...
+ ❯ waitForWrapper ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx:32:75
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox never drops an unrelated externally added task
+AssertionError: expected [ 'existing' ] to include 'external'
+ ❯ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx:38:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
