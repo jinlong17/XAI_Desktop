@@ -46,6 +46,7 @@ import {
   loadWorkspacesOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
+  readBoardStorage,
   archiveCard as archiveCardOp,
   archiveList as archiveListOp,
   canManageBoardList,
@@ -197,6 +198,76 @@ function loadViewByBoardIdOrEmpty(raw: unknown): Record<string, BoardViewId> {
   return result;
 }
 
+type BoardStorageBaseline = Readonly<{
+  owner: ReturnType<typeof accountScope.capture>;
+  physicalKey: string | null;
+  raw: string | null;
+}>;
+
+function captureBoardStorageBaseline(): BoardStorageBaseline {
+  const owner = accountScope.capture();
+  try {
+    const physicalKey = accountScope.physicalKey("xai_boards_v2", owner);
+    return { owner, physicalKey, raw: localStorage.getItem(physicalKey) };
+  } catch {
+    return { owner, physicalKey: null, raw: null };
+  }
+}
+
+function isStableAbsentBoardStorage(
+  baseline: BoardStorageBaseline,
+  rendered: unknown,
+): boolean {
+  try {
+    accountScope.assertCurrent(baseline.owner);
+    return (
+      baseline.physicalKey !== null &&
+      baseline.raw === null &&
+      rendered === null &&
+      accountScope.physicalKey("xai_boards_v2", baseline.owner) ===
+        baseline.physicalKey &&
+      localStorage.getItem(baseline.physicalKey) === null
+    );
+  } catch {
+    return false;
+  }
+}
+
+function boardAutomationSourceError(
+  baseline: BoardStorageBaseline,
+  rendered: unknown,
+): string | null {
+  try {
+    accountScope.assertCurrent(baseline.owner);
+    if (
+      baseline.physicalKey === null ||
+      accountScope.physicalKey("xai_boards_v2", baseline.owner) !==
+        baseline.physicalKey
+    ) {
+      return "Board storage ownership changed. Reopen before running automation.";
+    }
+    const raw = localStorage.getItem(baseline.physicalKey);
+    if (raw === null) {
+      return "Board storage is missing. Reopen before running automation.";
+    }
+    let stored: unknown;
+    try {
+      stored = JSON.parse(raw);
+    } catch {
+      return "Saved board data is unusable. Existing data was kept; recover it before running automation.";
+    }
+    if (readBoardStorage(stored).status !== "valid") {
+      return "Saved board data is unusable. Existing data was kept; recover it before running automation.";
+    }
+    if (JSON.stringify(stored) !== JSON.stringify(rendered)) {
+      return "Board storage changed. Reopen before running automation.";
+    }
+    return null;
+  } catch {
+    return "Board storage ownership changed. Reopen before running automation.";
+  }
+}
+
 export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   // ---- Persisted state ---------------------------------------------------
   const [rawBoards, setRawBoards] = usePref("xai_boards_v2");
@@ -205,6 +276,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [rawPanels, setRawPanels] = usePref("xai_board_panels");
   const [rawInbox, setRawInbox] = usePref("xai_board_inbox");
   const [rawTaskCols] = usePref("xai_task_cols");
+  const [boardStorageBaseline] = useState(captureBoardStorageBaseline);
+  const [automationError, setAutomationError] = useState<string | null>(null);
   const linkOwner = useRef(accountScope.capture()).current;
   const [taskLinkError, setTaskLinkError] = useState<string | null>(null);
   const [rawViewByBoardId, setRawViewByBoardId] = usePref(
@@ -247,15 +320,23 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   // ---- One-time defensive seed (Rec2 from feature-review) ----------------
   useEffect(() => {
-    if (rawBoards === null) {
-      setRawBoards(makeDefaultBoards() as unknown as typeof rawBoards);
+    if (isStableAbsentBoardStorage(boardStorageBaseline, rawBoards)) {
+      if (!setRawBoards(makeDefaultBoards() as unknown as typeof rawBoards)) {
+        setAutomationError(
+          "Initial board setup was not saved. Existing storage was kept; retry after storage is available.",
+        );
+      }
     }
-    // Only fire once on initial mount with null prefs.
+    // Only fire once when the physical key was genuinely absent at mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---- Sync active id if it has drifted ----------------------------------
-  if (activeBoardId && activeBoardId !== activeBoard.id) {
+  if (
+    activeBoardId &&
+    activeBoardId !== activeBoard.id &&
+    boardAutomationSourceError(boardStorageBaseline, rawBoards) === null
+  ) {
     queueMicrotask(() => setActiveBoardId(activeBoard.id));
   }
 
@@ -463,34 +544,54 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const applyAutomationToActiveBoard = useCallback(
     (options: Parameters<typeof applyBoardAutomationLite>[1] = {}) => {
+      const sourceError = boardAutomationSourceError(
+        boardStorageBaseline,
+        rawBoards,
+      );
+      if (sourceError) {
+        setAutomationError(sourceError);
+        return false;
+      }
       const result = applyBoardAutomationLite(activeBoard.lists, options);
-      if (!result.changed) return result;
+      if (!result.changed) {
+        setAutomationError(null);
+        return true;
+      }
 
       const nextBoards = boards.map((board) =>
         board.id === activeBoard.id ? { ...board, lists: result.lists } : board,
       );
-      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
-      return result;
+      if (!setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown)) {
+        setAutomationError(
+          "Automation was not saved. Existing data was kept; retry after storage is available.",
+        );
+        return false;
+      }
+      setAutomationError(null);
+      return true;
     },
-    [activeBoard.id, activeBoard.lists, boards, rawBoards, setRawBoards],
+    [activeBoard.id, activeBoard.lists, boardStorageBaseline, boards, rawBoards, setRawBoards],
   );
 
   useEffect(() => {
-    if (rawBoards === null) return;
+    if (rawBoards === null && boardStorageBaseline.raw === null) return;
     const todayKey = `${activeBoard.id}:${isoDateFromOffset(0)}`;
     if (automationAppliedKey === todayKey) return;
-    applyAutomationToActiveBoard({ now: new Date() });
-    setAutomationAppliedKey(todayKey);
+    if (applyAutomationToActiveBoard({ now: new Date() })) {
+      setAutomationAppliedKey(todayKey);
+    }
   }, [
     activeBoard.id,
     applyAutomationToActiveBoard,
     automationAppliedKey,
+    boardStorageBaseline.raw,
     rawBoards,
   ]);
 
   const runAutomationPresets = useCallback(() => {
-    applyAutomationToActiveBoard({ now: new Date() });
-    setAutomationAppliedKey(`${activeBoard.id}:${isoDateFromOffset(0)}`);
+    if (applyAutomationToActiveBoard({ now: new Date() })) {
+      setAutomationAppliedKey(`${activeBoard.id}:${isoDateFromOffset(0)}`);
+    }
   }, [activeBoard.id, applyAutomationToActiveBoard]);
 
   const toggleBoardVisibility = useCallback(() => {
@@ -945,6 +1046,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
       </header>
 
       <div className="board-canvas">
+        {automationError && (
+          <section role="alert" className="board-composer-recovery">
+            <p>{automationError}</p>
+          </section>
+        )}
         {isPM && activeView === "board" && overviewOpen && panels.board && (
           <StatusOverviewBanner
             lists={activeCardLists}

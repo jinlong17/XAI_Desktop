@@ -272,17 +272,51 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     expect(screen.getByText("切换看板")).toBeInTheDocument();
   });
 
-  it("BWM18: 0 boards forced → defensive seed populates on mount", async () => {
+  it("BWM18: an empty persisted board array renders the fallback without crashing", async () => {
     localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify([]));
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
       await Promise.resolve();
     });
-    // pickActiveBoard on empty array → makeDefaultBoards()[0]; subsequent persistence will re-seed via effect since rawBoards is null only — for [] we still recover via pickActiveBoard.
+    // The UI has a safe fallback, but the stored empty array is not authorized
+    // to be replaced by the fallback data.
     expect(screen.getByTestId("board-title-btn").textContent).toContain(
       makeDefaultBoards()[0]!.name.en,
     );
   });
+
+  it.each([
+    ["schema-invalid", '[{"id":"valuable-board","workspaceId":"empty","title":"Recover me"}]'],
+    ["json-null", "null"],
+    ["syntax-invalid", "{broken"],
+    ["empty-array", "[]"],
+  ])(
+    "BWM18b: %s board storage is preserved through mount, automatic automation, and manual automation",
+    async (_kind, boardRaw) => {
+      const boardKey = accountScope.physicalKey("xai_boards_v2");
+      const activeKey = accountScope.physicalKey("xai_active_board");
+      localStorage.setItem(boardKey, boardRaw);
+      localStorage.setItem(activeKey, "valuable-board");
+
+      render(<BoardWorkspacesModule lang="en" />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(boardKey)).toBe(boardRaw);
+      expect(localStorage.getItem(activeKey)).toBe("valuable-board");
+      expect(screen.getByRole("alert")).toHaveTextContent("Existing data was kept");
+
+      fireEvent.click(screen.getByTestId("automation-run-btn"));
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(localStorage.getItem(boardKey)).toBe(boardRaw);
+      expect(localStorage.getItem(activeKey)).toBe("valuable-board");
+    },
+  );
 
   it("BWM19: Inbox toggles on immediately while an alternate board view is active", () => {
     render(<BoardWorkspacesModule lang="en" />);
