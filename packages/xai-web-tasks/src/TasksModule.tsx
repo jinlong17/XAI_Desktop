@@ -188,8 +188,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
     if (id === "all") setCollectionBoardMode("grouped");
   }
 
-  const handleToggle = useCallback((taskId: string) => {
-    persistCols(toggleComplete(taskCols, taskId));
+  const handleToggle = useCallback(async (taskId: string) => {
+    await persistCols(toggleComplete(taskCols, taskId));
   }, [taskCols, persistCols]);
 
   const handleSelectTask = useCallback((taskId: string) => {
@@ -227,13 +227,13 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setOverColId((o) => (o === colId ? null : o));
   }
 
-  function handleDrop(e: React.DragEvent<HTMLElement>, toColId: BucketId) {
+  async function handleDrop(e: React.DragEvent<HTMLElement>, toColId: BucketId) {
     e.preventDefault();
     const data = readTaskPayload(e);
     setOverColId(null);
     setDragging(null);
     if (!data || data.fromColId === toColId) return;
-    persistCols(moveCard(taskCols, data.taskId, data.fromColId, toColId));
+    await persistCols(moveCard(taskCols, data.taskId, data.fromColId, toColId));
   }
 
   const [composer, setComposer] = useState<{ open: boolean; bucket: BucketId }>({
@@ -256,14 +256,14 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setComposer((c) => ({ ...c, open: false }));
   }
 
-  function handleTaskDropToList(taskId: string, listId: string) {
+  async function handleTaskDropToList(taskId: string, listId: string) {
     const ids = selectedIds.has(taskId) ? selectedIds : new Set([taskId]);
-    persistCols(updateCards(taskCols, ids, { listId }));
+    await persistCols(updateCards(taskCols, ids, { listId }));
   }
 
-  function handleTaskDropToTag(taskId: string, tagId: string) {
+  async function handleTaskDropToTag(taskId: string, tagId: string) {
     const ids = selectedIds.has(taskId) ? selectedIds : new Set([taskId]);
-    persistCols(addTagToTasks(taskCols, ids, tagId));
+    await persistCols(addTagToTasks(taskCols, ids, tagId));
   }
 
   function handleReorderList(fromId: string, toId: string) {
@@ -317,34 +317,34 @@ export function TasksModule({ lang }: TasksModuleProps) {
     if (activeView.kind === "tag" && activeView.id === tagId) selectTagView("all");
   }
 
-  function handleBulkComplete() {
-    persistCols(updateCards(taskCols, selectedIds, { done: true }));
+  async function handleBulkComplete() {
+    await persistCols(updateCards(taskCols, selectedIds, { done: true }));
   }
 
-  function handleBulkDelete() {
-    if (!persistCols(deleteCards(taskCols, selectedIds))) return;
+  async function handleBulkDelete() {
+    if (!await persistCols(deleteCards(taskCols, selectedIds))) return;
     setSelectedIds(new Set());
     if (editingTaskId && selectedIds.has(editingTaskId)) setEditingTaskId(null);
   }
 
-  function handleBulkList(listId: string) {
+  async function handleBulkList(listId: string) {
     if (!listId) return;
-    persistCols(updateCards(taskCols, selectedIds, { listId }));
+    await persistCols(updateCards(taskCols, selectedIds, { listId }));
   }
 
-  function handleBulkTag(tagId: string) {
+  async function handleBulkTag(tagId: string) {
     if (!tagId) return;
-    persistCols(updateCards(taskCols, selectedIds, { tags: [tagId], tag: tagId as TaskTagId }));
+    await persistCols(updateCards(taskCols, selectedIds, { tags: [tagId], tag: tagId as TaskTagId }));
   }
 
-  function handleBulkBucket(bucketId: BucketId | "") {
+  async function handleBulkBucket(bucketId: BucketId | "") {
     if (!bucketId) return;
-    persistCols(moveManyToBucket(taskCols, selectedIds, bucketId));
+    await persistCols(moveManyToBucket(taskCols, selectedIds, bucketId));
   }
 
-  function handleBulkPriority(priority: TaskPriority | "") {
+  async function handleBulkPriority(priority: TaskPriority | "") {
     if (!priority) return;
-    persistCols(updateCards(taskCols, selectedIds, { priority }));
+    await persistCols(updateCards(taskCols, selectedIds, { priority }));
   }
 
   async function handleDetailSave(id: string, patch: {
