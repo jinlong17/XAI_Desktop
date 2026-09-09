@@ -1,0 +1,9 @@
+{"name":"baseline","head":"0b166054fecb51aa143edfddc88c1345a4955332","requestedRef":"0b16605","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"native-add-download","filename":"habits-unsaved-change.json"}
+{"name":"add-failure-latest-download-retry","pass":true,"count":3}
+{"name":"native-diary-download","filename":"habits-unsaved-change.json"}
+{"name":"mobile-layout","list":{"top":172.015625,"bottom":822,"height":649.984375,"left":20,"right":552},"detail":{"top":172.015625,"bottom":822,"height":649.984375,"left":570,"right":1420},"recovery":{"top":18,"bottom":154.015625,"height":136.015625,"left":20,"right":1420}}
+{"name":"onchange-navigation-latest-diary","pass":true,"heights":[44,44,44]}
+{"name":"checkin-failure-no-false-event","pass":true}
+{"name":"baseline-and-account-isolation","pass":true,"deniedExportCreatedNoFile":true}
+{"name":"PASS","scope":"actual module, real JSON downloads, add/diary/checkin faults, latest drafts, navigation guards, baseline and owner"}

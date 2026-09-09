@@ -1,0 +1,23 @@
+baseline {"head":"45a2a06a8966902d5d480b6805d76ea8c2dfbfdd","requestedRef":"45a2a06","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+native-add-download {"filename":"habits-unsaved-change.json"}
+add-failure-latest-download-retry {"pass":true,"count":3}
+native-diary-download {"filename":"habits-unsaved-change.json"}
+mobile-layout {"list":{"top":212.015625,"bottom":418.765625,"height":206.75},"detail":{"top":224.015625,"bottom":1389.578125,"height":1165.5625},"recovery":{"top":12,"bottom":200.015625,"height":188.015625}}
+onchange-navigation-latest-diary {"pass":true,"heights":[44,44,44]}
+checkin-failure-no-false-event {"pass":true}
+baseline-and-account-isolation {"pass":true,"deniedExportCreatedNoFile":true}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Mobile failed-save list and detail must not overlap
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-habits-save-independent/verify-native.mjs:60:2 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0
