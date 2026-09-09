@@ -29,14 +29,14 @@
 |---|---|---|---|---|
 | 2026-09-09 10:53 PDT | bug-diagnose (Codex) | Reproduced missing device store; recorded root cause and schema migration strategy. | — | bug-fix |
 
-| 2026-09-09 10:57 PDT | bug-fix (Codex) | Goal: preserve auth/device storage. Done: shared schema, migration and failure lifecycle; Tests: 52/52 package regressions, package/Web type checks; Risks: real browser/live auth not verified. | fix(web-auth-device-session): migrate shared auth database safely | bug-verify |
+| 2026-09-09 10:57 PDT | bug-fix (Codex) | Goal: preserve auth/device storage. Done: shared schema, migration and failure lifecycle; Tests: 52/52 package regressions, package/Web type checks; Risks: real browser/live auth not verified. | `0141ecb` | bug-verify |
 
 ### REL-02 Fix Result
 
 - Implemented default schema v2 and custom-store upgrades; no deletion or clearing during migration.
 - Reproduction now passes. Existing PKCE memory tests remain unchanged.
 - Verification requested from independent reviewer; no READY_TO_SHIP or cross-vendor PASS claimed.
-- Commit reference: `fix(web-auth-device-session): migrate shared auth database safely` (hash recorded in the subsequent evidence receipt).
+- Commit reference: `0141ecb` — `fix(web-auth-device-session): migrate shared auth database safely`.
 
 ## Historical W3 Status Panel
 
