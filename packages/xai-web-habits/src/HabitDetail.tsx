@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * HabitDetail — right-pane view router for the Habits module.
  *
@@ -144,20 +145,20 @@ function aggregateMonthCount(
 }
 
 function elapsedDaysForMonth(today: Date, displayedMonth: { year: number; month0: number }): number {
-  if (today.getUTCFullYear() === displayedMonth.year && today.getUTCMonth() === displayedMonth.month0) {
-    return today.getUTCDate();
+  if (today.getFullYear() === displayedMonth.year && today.getMonth() === displayedMonth.month0) {
+    return today.getDate();
   }
-  return new Date(Date.UTC(displayedMonth.year, displayedMonth.month0 + 1, 0)).getUTCDate();
+  return new Date(displayedMonth.year, displayedMonth.month0 + 1, 0).getDate();
 }
 
 function buildRecentDays(days: number, today: Date): Date[] {
   const result: Date[] = [];
   for (let i = days - 1; i >= 0; i--) {
-    result.push(new Date(Date.UTC(
-      today.getUTCFullYear(),
-      today.getUTCMonth(),
-      today.getUTCDate() - i,
-    )));
+    result.push(new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - i,
+    ));
   }
   return result;
 }
@@ -217,7 +218,7 @@ export function HabitDetail({
   setDiary,
 }: HabitDetailProps) {
   const { s } = useI18n(lang);
-  const now = new Date();
+  const { now } = useLocalDayClock();
 
   if (viewMode === "all") {
     return (
@@ -276,7 +277,7 @@ export function HabitDetail({
   const monthlyRate = computeMonthlyRate(checkIns, now);
   const streak = computeStreak(checkIns, now);
   const { numerator, denominator } = compute365(checkIns, now);
-  const displayedDate = new Date(Date.UTC(displayedMonth.year, displayedMonth.month0, 1));
+  const displayedDate = new Date(displayedMonth.year, displayedMonth.month0, 1);
   const mk = toMonthKey(displayedDate);
   const diaryText = diary[mk] ?? "";
   const c = COPY[lang];
@@ -457,9 +458,9 @@ function HabitStatsView({
   const monthChecks = aggregateMonthCount(habits, allCheckIns, displayedMonth);
   const currentStreaks = habits.map((habit) => computeStreak(allCheckIns[habit.id] ?? {}, today));
   const maxStreak = currentStreaks.length > 0 ? Math.max(...currentStreaks) : 0;
-  const elapsedDays = today.getUTCFullYear() === displayedMonth.year && today.getUTCMonth() === displayedMonth.month0
-    ? today.getUTCDate()
-    : new Date(Date.UTC(displayedMonth.year, displayedMonth.month0 + 1, 0)).getUTCDate();
+  const elapsedDays = today.getFullYear() === displayedMonth.year && today.getMonth() === displayedMonth.month0
+    ? today.getDate()
+    : new Date(displayedMonth.year, displayedMonth.month0 + 1, 0).getDate();
   const possible = Math.max(1, habits.length * elapsedDays);
   const monthRate = Math.round((monthChecks / possible) * 100);
   const recentDays = buildRecentDays(112, today);

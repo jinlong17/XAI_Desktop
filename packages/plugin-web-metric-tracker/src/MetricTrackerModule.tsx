@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { Icon } from "./internal/icons.js";
@@ -94,8 +95,10 @@ function draftFromRecord(record: WeightRecord): RecordDraft {
   };
 }
 
-function measuredAtFromDraft(draft: RecordDraft): string {
-  return `${draft.date}T${draft.time || "08:00"}:00.000`;
+function measuredAtFromDraft(draft: RecordDraft): string | null {
+  const date = draft.dateMode === "custom" ? draft.date : dateForMode(draft.dateMode);
+  const instant = new Date(`${date}T${draft.time || "08:00"}:00.000`);
+  return Number.isFinite(instant.getTime()) ? instant.toISOString() : null;
 }
 
 function dateForMode(mode: DateMode): string {
@@ -126,7 +129,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
     preferredUnit: state.profile.preferredUnit,
   }));
 
-  const now = useMemo(() => new Date(), []);
+  const { now } = useLocalDayClock();
   const activeRange = useMemo(() => rangeWindow(range, now, customStart, customEnd), [range, now, customStart, customEnd]);
   const previewWindow = useMemo(() => rangeWindow(previewRange, now, previewCustomStart, previewCustomEnd), [previewRange, now, previewCustomStart, previewCustomEnd]);
   const rangeRecords = useMemo(() => filterRecordsByRange(state.records, activeRange), [state.records, activeRange]);
@@ -176,13 +179,15 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   function saveRecord(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     if (!isValidPositiveNumber(draft.weight)) return;
+    const measuredAt = measuredAtFromDraft(draft);
+    if (!measuredAt) return;
     const nowIso = new Date().toISOString();
     setState((prev) => upsertWeightRecord(prev, {
       id: draft.id ?? createWeightRecordId(),
       metricId: "weight",
       value: Number(draft.weight),
       unit: draft.unit,
-      measuredAt: measuredAtFromDraft(draft),
+      measuredAt,
       note: draft.note.trim(),
       createdAt: draft.createdAt,
     }, nowIso));

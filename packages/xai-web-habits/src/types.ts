@@ -13,7 +13,7 @@ import type { Lang } from "@repo/plugin-web-tokens";
 /** Stable opaque habit id. Format: `"h_" + 8 random hex chars`. */
 export type HabitId = string;
 
-/** UTC day key, format `YYYY-MM-DD`. Matches the event payload's `date` field. */
+/** local civil day key, format `YYYY-MM-DD`. Matches the event payload's `date` field. */
 export type DateKey = string;
 
 /** UTC month key, format `YYYY-MM`. */

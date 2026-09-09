@@ -70,9 +70,9 @@ describe("WeekView", () => {
     // Week containing Mar 8 2026 (spring-forward day)
     renderWeekView({ activeDate: "2026-03-08", weekStart: 0 });
     const dstCol = screen.getByTestId("cal-day-col-2026-03-08");
-    // DST day column renders 24 rows (23 real + 1 DST marker)
+    // DST day column renders 23 real hour rows
     const rows = dstCol.querySelectorAll(".cal-hour-row");
-    expect(rows.length).toBe(24);
+    expect(rows.length).toBe(23);
   });
 
   it("AC-WEEK-8: DST fall-back day has 25 row elements", () => {

@@ -17,8 +17,8 @@ export function buildMonthGrid(
   weekStart: WeekStart,
 ): MonthGridCell[] {
   const startDow = weekStart === "sun" ? 0 : 1;
-  const firstDay = new Date(Date.UTC(year, month0, 1));
-  const firstDow = firstDay.getUTCDay();
+  const firstDay = new Date(year, month0, 1);
+  const firstDow = firstDay.getDay();
   const paddingBefore = ((firstDow - startDow) + 7) % 7;
   const numDays = daysInMonth(year, month0);
   const totalCells = Math.max(35, Math.ceil((paddingBefore + numDays) / 7) * 7);

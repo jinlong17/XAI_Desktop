@@ -1,3 +1,4 @@
+import { localDateKey } from "@repo/plugin-web-tokens";
 /**
  * @internal — AddHabitDialog.tsx
  * Complete modal for habit creation.
@@ -47,7 +48,7 @@ export interface AddHabitDialogProps {
 }
 
 function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
+  return localDateKey(new Date());
 }
 
 export function AddHabitDialog({ open, lang, onClose, onSave }: AddHabitDialogProps) {

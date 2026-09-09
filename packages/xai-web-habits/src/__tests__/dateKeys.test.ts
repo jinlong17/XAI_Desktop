@@ -24,39 +24,39 @@ describe("pad2", () => {
 
 describe("utcDateKey", () => {
   it("AC-DATE-1: returns YYYY-MM-DD", () => {
-    expect(utcDateKey(new Date(Date.UTC(2026, 4, 23)))).toBe("2026-05-23");
+    expect(utcDateKey(new Date(2026, 4, 23))).toBe("2026-05-23");
   });
   it("pads month and day", () => {
-    expect(utcDateKey(new Date(Date.UTC(2026, 0, 1)))).toBe("2026-01-01");
+    expect(utcDateKey(new Date(2026, 0, 1))).toBe("2026-01-01");
   });
 });
 
 describe("monthKey", () => {
   it("AC-DATE-2: returns YYYY-MM", () => {
-    expect(monthKey(new Date(Date.UTC(2026, 4, 23)))).toBe("2026-05");
+    expect(monthKey(new Date(2026, 4, 23))).toBe("2026-05");
   });
 });
 
 describe("weekDates", () => {
   it("AC-DATE-3: weekStart=sun returns 7 dates, first is Sunday", () => {
-    // 2026-05-23 is a Saturday (getUTCDay() = 6)
-    const now = new Date(Date.UTC(2026, 4, 23));
+    // 2026-05-23 is a Saturday (getDay() = 6)
+    const now = new Date(2026, 4, 23);
     const dates = weekDates(now, "sun");
     expect(dates).toHaveLength(7);
-    expect(dates[0]!.getUTCDay()).toBe(0); // Sunday
+    expect(dates[0]!.getDay()).toBe(0); // Sunday
   });
 
   it("AC-DATE-4: weekStart=mon returns 7 dates, first is Monday", () => {
-    const now = new Date(Date.UTC(2026, 4, 23));
+    const now = new Date(2026, 4, 23);
     const dates = weekDates(now, "mon");
     expect(dates).toHaveLength(7);
-    expect(dates[0]!.getUTCDay()).toBe(1); // Monday
+    expect(dates[0]!.getDay()).toBe(1); // Monday
   });
 
   it("AC-DATE-5: rolls correctly across month boundaries", () => {
-    // 2026-05-01 is a Friday (getUTCDay() = 5)
+    // 2026-05-01 is a Friday (getDay() = 5)
     // With weekStart=sun, the week starts on 2026-04-26 (Sunday)
-    const now = new Date(Date.UTC(2026, 4, 1));
+    const now = new Date(2026, 4, 1);
     const dates = weekDates(now, "sun");
     expect(dates).toHaveLength(7);
     expect(utcDateKey(dates[0]!)).toBe("2026-04-26"); // Sunday

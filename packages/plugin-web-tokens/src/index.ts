@@ -19,3 +19,6 @@ export {
   applyBgTone,
   applyRailPos,
 } from "./apply.js";
+
+export { localDateKey, parseLocalDateKey, addLocalDays, startOfLocalDay, nextLocalDayStart } from "./localDate.js";
+export { useLocalDayClock } from "./useLocalDayClock.js";

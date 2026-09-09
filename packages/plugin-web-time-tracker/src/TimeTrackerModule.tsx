@@ -1,3 +1,4 @@
+import { addLocalDays, nextLocalDayStart } from "@repo/plugin-web-tokens";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import type { CopyKey } from "./internal/copy.js";
@@ -376,7 +377,7 @@ function daysLeftAfterToday(endExclusiveMs: number, nowMs: number): number {
 }
 
 function todayRemainingMs(nowMs: number): number {
-  return Math.max(0, startOfDay(nowMs) + DAY_MS - nowMs);
+  return Math.max(0, nextLocalDayStart(nowMs).getTime() - nowMs);
 }
 
 function dateInputValue(ts: number): string {
@@ -384,7 +385,7 @@ function dateInputValue(ts: number): string {
 }
 
 function endOfDayExclusive(key: string): number {
-  return keyToDate(key) + DAY_MS;
+  return nextLocalDayStart(keyToDate(key)).getTime();
 }
 
 function rangeLabel(startMs: number, endMs: number, lang: Lang): string {
@@ -1523,7 +1524,7 @@ function exportEntriesCsv(
 
 function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang: Lang, selectedKey: string) {
   return Array.from({ length: 7 }, (_, index) => {
-    const start = startOfDay(nowMs - (6 - index) * DAY_MS);
+    const start = startOfDay(addLocalDays(nowMs, -(6 - index)).getTime());
     const key = dayKey(start);
     const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
     const value = entries
@@ -2780,7 +2781,7 @@ function InsightsBoard({
   readonly onDeleteRange: (rangeEntries: readonly TimeTrackerEntry[], label: string) => void;
 }) {
   const [range, setRange] = useState<InsightRange>("week");
-  const [customStart, setCustomStart] = useState(() => dateInputValue(nowMs - 29 * DAY_MS));
+  const [customStart, setCustomStart] = useState(() => dateInputValue(addLocalDays(nowMs, -29).getTime()));
   const [customEnd, setCustomEnd] = useState(() => dateInputValue(nowMs));
   const [cards, setCards] = useState(readInsightBoard);
   const [adding, setAdding] = useState(false);
@@ -2793,8 +2794,8 @@ function InsightsBoard({
 
   const customA = keyToDate(customStart);
   const customB = endOfDayExclusive(customEnd);
-  const customRangeStart = Math.min(customA, customB - DAY_MS);
-  const customRangeEnd = Math.max(customA + DAY_MS, customB);
+  const customRangeStart = Math.min(customA, addLocalDays(customB, -1).getTime());
+  const customRangeEnd = Math.max(nextLocalDayStart(customA).getTime(), customB);
   const rangeStart = range === "week"
     ? startOfWeek(nowMs)
     : range === "month"
@@ -2804,7 +2805,7 @@ function InsightsBoard({
         : range === "custom"
           ? customRangeStart
           : 0;
-  const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : startOfDay(nowMs) + DAY_MS;
+  const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : nextLocalDayStart(nowMs).getTime();
   const inRange = entries.filter((entry) => {
     const start = entryStart(entry);
     return start >= rangeStart && start < rangeEnd;
@@ -3023,7 +3024,7 @@ function InsightContent({
   if (card.type === "trend-7d" || card.type === "trend-30d") {
     const count = card.type === "trend-7d" ? 7 : 30;
     const rows = Array.from({ length: count }, (_, index) => {
-      const start = startOfDay(nowMs - (count - 1 - index) * DAY_MS);
+      const start = startOfDay(addLocalDays(nowMs, -(count - 1 - index)).getTime());
       const key = dayKey(start);
       const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
       const value = dayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
@@ -3276,9 +3277,9 @@ function Heatmap({ entries, nowMs, lang }: { readonly entries: readonly TimeTrac
   const cells: Array<{ readonly key: string; readonly value: number; readonly count: number }> = [];
   let max = 1;
   const today = startOfDay(nowMs);
-  const start = today - (weeks * 7 - 1) * DAY_MS;
+  const start = addLocalDays(today, -(weeks * 7 - 1)).getTime();
   for (let index = 0; index < weeks * 7; index += 1) {
-    const ts = start + index * DAY_MS;
+    const ts = addLocalDays(start, index).getTime();
     const key = dayKey(ts);
     const rows = entries.filter((entry) => dayKey(entryStart(entry)) === key);
     const value = rows.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);

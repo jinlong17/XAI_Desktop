@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * CalendarModule — top-level calendar surface.
  *
@@ -42,7 +43,6 @@ import {
   boardCalendarEventsByDate,
   mergeEventsForMonth as mergeBoardFeedForMonth,
 } from "./internal/boardCalendarFeed.js";
-import { utcDateKey } from "./internal/dateKeys.js";
 import { tryParseDateKey, dateKeyMonth, formatDateKey, stepDateKey } from "./internal/parseDateKey.js";
 import { WeekView } from "./WeekView.js";
 import { DayView } from "./DayView.js";
@@ -79,7 +79,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   // P4: view is now persisted via xai_calendar_view.
   const [viewRaw, setViewPref] = usePref("xai_calendar_view", "month");
   const view: CalendarView = toView(viewRaw as string);
-  const todayKey = useMemo(() => utcDateKey(new Date()), []);
+  const { dayKey: todayKey } = useLocalDayClock();
 
   // Wrap setViewPref to enforce CalendarView typing.
   const setView = useCallback((v: CalendarView) => {

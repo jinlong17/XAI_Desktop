@@ -54,12 +54,12 @@ describe("TimeGrid", () => {
     expect(hourRows.length).toBe(24);
   });
 
-  it("AC-TIMEGRID-4: spring-forward day has 24 total labels (23 real + 1 DST)", () => {
+  it("AC-TIMEGRID-4: spring-forward day has 23 real hour labels", () => {
     const dstDayKey = "2026-03-08";
     renderTimeGrid({ dayKeys: [dstDayKey], dayLabels: ["Sun 8"] });
     const container = screen.getByTestId("cal-time-grid");
     const hourRows = container.querySelectorAll(".cal-hour-row");
-    expect(hourRows.length).toBe(24);
+    expect(hourRows.length).toBe(23);
   });
 
   it("AC-TIMEGRID-5: fall-back day has 25 hour-row elements", () => {

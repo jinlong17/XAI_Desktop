@@ -1,6 +1,7 @@
+import { nextLocalDayStart } from "@repo/plugin-web-tokens";
 import type { DateRange, RangeId } from "../types.js";
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+
 
 export function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -47,7 +48,7 @@ export function formatWeekRange(date: Date, lang: "en" | "zh" = "zh"): string {
 }
 
 export function rangeWindow(id: RangeId, now = new Date(), customStart?: string, customEnd?: string): DateRange {
-  const todayEnd = new Date(startOfDay(now).getTime() + DAY_MS - 1);
+  const todayEnd = new Date(nextLocalDayStart(now).getTime() - 1);
   if (id === "all") return { id, start: null, end: null };
   if (id === "custom") {
     const start = customStart ? startOfDay(new Date(`${customStart}T00:00:00`)) : null;

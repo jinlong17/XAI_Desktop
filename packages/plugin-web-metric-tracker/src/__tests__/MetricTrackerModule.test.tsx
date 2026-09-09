@@ -39,6 +39,7 @@ describe("MetricTrackerModule", () => {
     fireEvent.click(screen.getByText("保存记录"));
     const state = readMetricTrackerState();
     expect(state.records.some((record) => record.value === 71.8 && record.note === "测试新增")).toBe(true);
+    expect(state.records.find((record) => record.note === "测试新增")?.measuredAt).toMatch(/Z$/);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 

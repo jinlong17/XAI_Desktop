@@ -1,26 +1,4 @@
-# Time Tracker API
-
-Package: `@repo/plugin-web-time-tracker`
-
-Public exports:
-
-- `timeTrackerWebModuleRegistration`
-- `TimeTrackerModule`
-- `getTimeTrackerSnapshot(nowMs?)`
-- `readTimeTrackerCategories()`
-- `readTimeTrackerEntries()`
-- `writeTimeTrackerEntries(entries)`
-- time helpers: `entryDuration`, `entryStart`, `formatDuration`, `formatTimer`, `dayKey`, `startOfDay`, `startOfWeek`
-
-Storage keys:
-
-- `xai_tt_categories_v2`
-- `xai_tt_entries_v2`
-- `xai_tt_mode`
-- `xai_tt_insights_v1`
-
-The storage model is segment-based. A live entry has `done=false` and its last segment has `end=null`.
-
+# plugin-web-statistics — design
 
 ## REL-01 amendment — 2026-09-09 local civil time
 
@@ -30,4 +8,3 @@ Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKe
 
 Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
 
-REL-01 changes civil-day navigation/window boundaries only. Segment splitting and cross-midnight allocation remain TT-01 follow-up work; running segment epoch values are preserved.

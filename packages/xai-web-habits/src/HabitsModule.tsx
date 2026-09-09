@@ -43,8 +43,8 @@ export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
   );
   const [displayedMonth, setDisplayedMonth] = useState<{ year: number; month0: number }>(
     () => ({
-      year: new Date().getUTCFullYear(),
-      month0: new Date().getUTCMonth(),
+      year: new Date().getFullYear(),
+      month0: new Date().getMonth(),
     }),
   );
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -68,8 +68,8 @@ export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
       setViewMode("calendar");
     }
     setDisplayedMonth({
-      year: new Date().getUTCFullYear(),
-      month0: new Date().getUTCMonth(),
+      year: new Date().getFullYear(),
+      month0: new Date().getMonth(),
     });
   }
 
@@ -131,8 +131,8 @@ export function HabitsModule({ lang, weekStart = "sun" }: HabitsModuleProps) {
     setSelectedId(newHabit.id);
     setViewMode("calendar");
     setDisplayedMonth({
-      year: new Date().getUTCFullYear(),
-      month0: new Date().getUTCMonth(),
+      year: new Date().getFullYear(),
+      month0: new Date().getMonth(),
     });
     setAddDialogOpen(false);
   }

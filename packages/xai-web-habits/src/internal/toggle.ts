@@ -19,7 +19,7 @@ import { computeStreak } from "./computeStreak.js";
  *
  * @param state     Current HabitsState blob.
  * @param habitId   Habit whose check-in to toggle.
- * @param dateKey   UTC day key (YYYY-MM-DD) to toggle.
+ * @param dateKey   local civil day key (YYYY-MM-DD) to toggle.
  */
 export function toggleCheckIn(
   state: HabitsState,

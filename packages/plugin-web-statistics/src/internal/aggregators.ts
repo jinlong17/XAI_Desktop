@@ -1,3 +1,4 @@
+import { parseLocalDateKey } from "@repo/plugin-web-tokens";
 /**
  * @internal — pure aggregator functions.
  *
@@ -61,9 +62,9 @@ function isInRange(s: PomodoroSessionRecord, start: Date, end: Date): boolean {
 }
 
 function dateKey(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = `${d.getUTCMonth() + 1}`.padStart(2, "0");
-  const day = `${d.getUTCDate()}`.padStart(2, "0");
+  const y = d.getFullYear();
+  const m = `${d.getMonth() + 1}`.padStart(2, "0");
+  const day = `${d.getDate()}`.padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
@@ -157,7 +158,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let hit = false;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         hit = true;
         break;
@@ -187,7 +188,7 @@ export function aggregateRange(
     const t = Date.parse(s.finishedAt);
     if (!Number.isFinite(t)) continue;
     if (t < w.start.getTime() || t > w.end.getTime()) continue;
-    const hr = new Date(t).getUTCHours();
+    const hr = new Date(t).getHours();
     hourDistribution[hr] = (hourDistribution[hr] ?? 0) + minutesOf(s);
   }
   const maxHour = hourDistribution.reduce((a, b) => Math.max(a, b), 0);
@@ -199,7 +200,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let inRange = 0;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         inRange++;
       }
@@ -232,7 +233,7 @@ export function aggregateRange(
     const checkIns = habits.checkIns[h.id] ?? {};
     let kept = 0;
     for (const dk of Object.keys(checkIns)) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t) && t >= w.start.getTime() && t <= w.end.getTime()) {
         kept++;
       }
@@ -265,6 +266,10 @@ export function aggregateRange(
   };
 }
 
+function civilDayOrdinal(date: Date): number {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86_400_000;
+}
+
 function countQualifyingDays(
   range: RangeId,
   start: Date,
@@ -274,26 +279,26 @@ function countQualifyingDays(
   if (range === "week") return 7;
   if (range === "month") {
     // Days from month-start to today (capped at month-end).
-    const days = Math.floor((end.getTime() - start.getTime()) / 86_400_000) + 1;
+    const days = civilDayOrdinal(end) - civilDayOrdinal(start) + 1;
     return Math.max(1, Math.min(days, 31));
   }
   // range === "all"
   let earliest: number | null = null;
   for (const habitId of Object.keys(habits.checkIns)) {
     for (const dk of Object.keys(habits.checkIns[habitId] ?? {})) {
-      const t = Date.parse(`${dk}T00:00:00Z`);
+      const t = (parseLocalDateKey(dk)?.getTime() ?? Number.NaN);
       if (Number.isFinite(t)) {
         if (earliest === null || t < earliest) earliest = t;
       }
     }
   }
   if (earliest === null) return 1;
-  const days = Math.floor((end.getTime() - earliest) / 86_400_000) + 1;
+  const days = civilDayOrdinal(end) - civilDayOrdinal(new Date(earliest)) + 1;
   return Math.max(1, Math.min(days, 365));
 }
 
 /**
- * Compute current streak by counting consecutive UTC day keys backward
+ * Compute current streak by counting consecutive local civil day keys backward
  * from `now` while a check-in is present. Stops at the first gap.
  */
 export function computeStreak(

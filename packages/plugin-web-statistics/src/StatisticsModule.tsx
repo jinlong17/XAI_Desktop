@@ -1,3 +1,4 @@
+import { useLocalDayClock } from "@repo/plugin-web-tokens";
 /**
  * StatisticsModule.tsx — top-level composition for @repo/plugin-web-statistics.
  *
@@ -91,7 +92,7 @@ export function StatisticsModule({
   const weekStart = narrowWeekStart(rawWeekStart);
 
   // `now` is captured once per mount; aggregators are pure given `now`.
-  const now = useMemo(() => new Date(), []);
+  const { now } = useLocalDayClock();
 
   const agg: RangeAggregate = useMemo(
     () => aggregateRange(range, sessions, habits, weekStart, now, lang, rawTaskCols),

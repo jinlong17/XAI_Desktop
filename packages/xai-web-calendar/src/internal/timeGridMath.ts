@@ -1,10 +1,11 @@
+import { parseLocalDateKey, nextLocalDayStart } from "@repo/plugin-web-tokens";
 /**
  * @internal — hour-grid math for Week/Day views.
  *
  * All hour labels are LOCAL clock (getHours()) per design.md §15.2 #2 (UX-correct,
  * matches every shipped consumer calendar app).
  *
- * DST handling: a table of known 2026 US Pacific transitions is used for v1.
+ * DST handling: device-local midnight boundaries and actual offset transitions.
  * Future row may substitute Intl.DateTimeFormat per api.md §10.9 fallback note.
  *
  * Design ref: design.md §15.7 timeGridMath signatures.
@@ -19,31 +20,41 @@ export interface DstShift {
   kind: "spring-forward" | "fall-back";
   /** The row index AFTER which the shift label is inserted. */
   atRow: number;
+  /** Actual offset change; supports half-hour transitions. */
+  deltaHours?: number;
+  transitionHour?: number;
 }
 
 /** The result of `dstHoursForDay`: how many hour-rows the day has + optional shift. */
 export interface DstHoursResult {
-  hours: 23 | 24 | 25;
+  hours: number;
   shift?: DstShift;
 }
 
 /**
  * Returns the number of hour rows for a given date key (local calendar date).
  *
- * Implementation: hard-coded 2026 US Pacific DST table per design.md §15.2 #2.
+ * Implementation: derive current device-local offsets for the requested day.
  * - 2026-03-08: spring-forward (clocks skip 02:00 → 03:00) → 23 rows.
  * - 2026-11-01: fall-back (01:00 appears twice) → 25 rows.
  *
  * All other dates: 24 rows (standard).
  */
 export function dstHoursForDay(dateKey: string): DstHoursResult {
-  if (dateKey === "2026-03-08") {
-    return { hours: 23, shift: { kind: "spring-forward", atRow: 1 } }; // skip row at 02:00
+  const start = parseLocalDateKey(dateKey);
+  if (!start) return { hours: 24 };
+  const end = nextLocalDayStart(start);
+  const hours = (end.getTime() - start.getTime()) / 3_600_000;
+  const initialOffset = start.getTimezoneOffset();
+  for (let t = start.getTime() + 60_000; t < end.getTime(); t += 60_000) {
+    const instant = new Date(t);
+    if (instant.getTimezoneOffset() !== initialOffset) {
+      const deltaHours = (initialOffset - instant.getTimezoneOffset()) / 60;
+      const transitionHour = instant.getHours() + instant.getMinutes() / 60;
+      return { hours, shift: { kind: deltaHours > 0 ? "spring-forward" : "fall-back", atRow: Math.max(0, Math.floor((t - start.getTime()) / 3_600_000) - 1), deltaHours, transitionHour } };
+    }
   }
-  if (dateKey === "2026-11-01") {
-    return { hours: 25, shift: { kind: "fall-back", atRow: 1 } }; // repeat row after 01:00
-  }
-  return { hours: 24 };
+  return { hours };
 }
 
 /**
@@ -76,8 +87,12 @@ export function parseHHMM(s: string): { hours: number; minutes: number } | null 
 export function hourToRow(hours: number, minutes: number, dst?: DstShift): number {
   let row = hours + minutes / 60;
   // Spring-forward: rows after the skipped hour shift down by 1
-  if (dst?.kind === "spring-forward" && hours >= 3) {
-    row -= 1;
+  // Ambiguous floating HH:MM resolves to the earlier occurrence.
+  const threshold = dst?.transitionHour === undefined
+    ? (dst?.kind === "spring-forward" ? 3 : 2)
+    : dst.transitionHour - (dst.kind === "fall-back" ? (dst.deltaHours ?? -1) : 0);
+  if (dst && row >= threshold) {
+    row -= dst.deltaHours ?? (dst.kind === "spring-forward" ? 1 : -1);
   }
   return row;
 }
@@ -123,31 +138,21 @@ export function rowsForBlock(
 export interface HourLabel {
   label: string;
   isDst: boolean;
+  durationHours?: number;
 }
 
 export function buildHourLabels(dateKey: string): HourLabel[] {
-  const { hours, shift } = dstHoursForDay(dateKey);
+  const start = parseLocalDateKey(dateKey);
+  if (!start) return [];
+  const end = nextLocalDayStart(start).getTime();
   const labels: HourLabel[] = [];
-  if (hours === 23 && shift?.kind === "spring-forward") {
-    // Skip 02:00
-    for (let h = 0; h < 24; h++) {
-      if (h === 2) continue; // skipped hour
-      labels.push({ label: String(h).padStart(2, "0"), isDst: false });
-    }
-    // Insert DST marker after row corresponding to 01:00 (row 1)
-    labels.splice(2, 0, { label: "(DST)", isDst: true });
-  } else if (hours === 25 && shift?.kind === "fall-back") {
-    // Repeat 01:00
-    for (let h = 0; h < 24; h++) {
-      labels.push({ label: String(h).padStart(2, "0"), isDst: false });
-      if (h === 1) {
-        labels.push({ label: "01 (DST)", isDst: true }); // repeated slot
-      }
-    }
-  } else {
-    for (let h = 0; h < 24; h++) {
-      labels.push({ label: String(h).padStart(2, "0"), isDst: false });
-    }
+  const seen = new Set<string>();
+  for (let t = start.getTime(); t < end; t += 3_600_000) {
+    const instant = new Date(t);
+    const label = String(instant.getHours()).padStart(2, "0") + (instant.getMinutes() ? `:${String(instant.getMinutes()).padStart(2, "0")}` : "");
+    const isDst = seen.has(label) || (labels.length > 0 && instant.getTimezoneOffset() !== new Date(t - 3_600_000).getTimezoneOffset());
+    labels.push({ label: seen.has(label) ? `${label} (DST)` : label, isDst, durationHours: Math.min(1, (end - t) / 3_600_000) });
+    seen.add(label);
   }
   return labels;
 }

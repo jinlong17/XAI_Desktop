@@ -1,3 +1,4 @@
+import { localDateKey, startOfLocalDay, parseLocalDateKey } from "@repo/plugin-web-tokens";
 import type { Lang, TimeTrackerEntry, TimeTrackerSegment } from "../types.js";
 
 export const MINUTE_MS = 60_000;
@@ -8,8 +9,7 @@ function pad(n: number): string {
 }
 
 export function dayKey(ts: number): string {
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  return localDateKey(ts);
 }
 
 export function fromInputValue(value: string, fallback: number): number {
@@ -18,7 +18,7 @@ export function fromInputValue(value: string, fallback: number): number {
 }
 
 export function keyToDate(key: string): number {
-  const ts = new Date(`${key}T00:00:00`).getTime();
+  const ts = parseLocalDateKey(key)?.getTime() ?? Number.NaN;
   return Number.isFinite(ts) ? ts : startOfDay(Date.now());
 }
 
@@ -34,9 +34,7 @@ export function toInputValue(ts: number): string {
 }
 
 export function startOfDay(ts: number): number {
-  const d = new Date(ts);
-  d.setHours(0, 0, 0, 0);
-  return d.getTime();
+  return startOfLocalDay(ts).getTime();
 }
 
 export function startOfWeek(ts: number): number {

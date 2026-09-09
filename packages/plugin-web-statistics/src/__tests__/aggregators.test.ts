@@ -45,7 +45,7 @@ describe("aggregateRange — single focus session current week", () => {
     expect(agg.kpis.tasksTrend).toBe("—");
     expect(agg.kpis.focusMinutesTotal).toBe(25);
     expect(agg.kpis.focusTrend).toBe("—");
-    expect(agg.peakHour).toBe(9);
+    expect(agg.peakHour).toBe(new Date("2026-05-20T09:00:00Z").getHours());
   });
 });
 
@@ -77,9 +77,9 @@ describe("aggregateRange — hour distribution", () => {
       focus("2026-05-22T14:00:00Z", 25),
     ];
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en");
-    expect(agg.hourDistribution[9]).toBe(50);
-    expect(agg.hourDistribution[14]).toBe(25);
-    expect(agg.peakHour).toBe(9);
+    expect(agg.hourDistribution[new Date("2026-05-20T09:00:00Z").getHours()]).toBe(50);
+    expect(agg.hourDistribution[new Date("2026-05-22T14:00:00Z").getHours()]).toBe(25);
+    expect(agg.peakHour).toBe(new Date("2026-05-20T09:00:00Z").getHours());
   });
 });
 
