@@ -1,0 +1,69 @@
+
+> @repo/plugin-web-board-workspaces@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+
+ ✓ src/__tests__/InboxPanel.test.tsx (12 tests) 87ms
+ ✓ src/__tests__/BoardSwitcher.test.tsx (16 tests) 177ms
+ ✓ src/__tests__/StatusOverviewBanner.test.tsx (10 tests) 91ms
+ ✓ src/__tests__/PlannerPanel.test.tsx (15 tests) 191ms
+ ✓ src/__tests__/BoardCreator.test.tsx (10 tests) 252ms
+ ✓ src/__tests__/FilterPopover.test.tsx (12 tests) 284ms
+ ✓ src/__tests__/CardDetailDialog.test.tsx (16 tests) 137ms
+ ✓ src/__tests__/ShareModal.test.tsx (10 tests) 151ms
+stderr | src/__tests__/shareUrl.test.ts > generateShareUrl > SU-6 crypto.subtle === undefined fallback returns boardId.slice(0,8)
+[shareUrl] SubtleCrypto unavailable; using boardId slice fallback
+
+ ✓ src/__tests__/shareUrl.test.ts (6 tests) 31ms
+ ✓ src/__tests__/BoardDeleteConfirmDialog.test.tsx (11 tests) 116ms
+ ✓ src/__tests__/ringMath.test.ts (16 tests) 8ms
+ ✓ src/__tests__/shareContract.test.ts (3 tests) 14ms
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+ ✓ src/__tests__/taskLinkCommand.test.ts (6 tests) 34ms
+ ✓ src/__tests__/types.test.ts (3 tests) 10ms
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > active selection quota is partial success; retry only opens one existing board
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+ ✓ src/__tests__/savedFilters.test.ts (5 tests) 5ms
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > newer raw wins over a failed create retry
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ✓ src/__tests__/index-barrel.test.ts (4 tests) 5ms
+stderr | src/__tests__/BoardCreateRecovery.test.tsx > Board creator ordered persistence > old owner cannot retry or export its failed creation into B
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ✓ src/__tests__/BoardCreateRecovery.test.tsx (4 tests) 1427ms
+   ✓ Board creator ordered persistence > canonical quota retains latest editor and never selects nonexistent board  427ms
+   ✓ Board creator ordered persistence > active selection quota is partial success; retry only opens one existing board  406ms
+   ✓ Board creator ordered persistence > newer raw wins over a failed create retry  303ms
+ ✓ src/__tests__/panelOps.test.ts (19 tests) 34ms
+ ✓ src/__tests__/guards.test.ts (12 tests) 3ms
+ ✓ src/__tests__/filterState.test.ts (8 tests) 4ms
+ ✓ src/__tests__/responsiveStyles.test.ts (3 tests) 2ms
+ ✓ src/__tests__/registration.test.tsx (6 tests) 3ms
+stderr | src/__tests__/BoardWorkspacesModule.test.tsx > TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx (85 tests) 5329ms
+
+ Test Files  23 passed (23)
+      Tests  292 passed (292)
+   Start at  14:00:52
+   Duration  9.76s (transform 2.72s, setup 8.32s, collect 10.04s, tests 8.39s, environment 15.85s, prepare 3.67s)
+
