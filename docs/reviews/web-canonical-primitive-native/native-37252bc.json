@@ -1,0 +1,49 @@
+{
+  "requestedRef": "37252bc",
+  "revision": "37252bcafe8efbd24cb8514d3e564c61fcabf3dc",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "checks": [
+    {
+      "name": "cold production default disabled",
+      "pass": true
+    },
+    {
+      "name": "two documents same identity serialize to one commit",
+      "pass": true,
+      "detail": [
+        {
+          "ok": true,
+          "targetId": "first",
+          "replay": false
+        },
+        {
+          "ok": true,
+          "targetId": "first",
+          "replay": true
+        }
+      ]
+    },
+    {
+      "name": "two documents distinct writes preserve both updates",
+      "pass": true
+    },
+    {
+      "name": "real document reload and semantic field reorder preserve exact bytes",
+      "pass": true
+    },
+    {
+      "name": "changed request after reload conflicts without write",
+      "pass": true
+    },
+    {
+      "name": "delete last target replay survives document reload; fresh delete refuses",
+      "pass": true
+    },
+    {
+      "name": "real queued Web Lock command rejects generation replacement",
+      "pass": true
+    }
+  ]
+}
