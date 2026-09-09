@@ -1,5 +1,6 @@
 import { beforeEach, expect, it } from 'vitest';
-import { accountScope, generationKey, generationMarkerKey } from '../internal/accountScope.js';
+import { accountScope, accountPrefix, generationKey, generationMarkerKey } from '../internal/accountScope.js';
+import { readGeneration } from '../internal/accountMigration.js';
 import { deleteAccountLocalData, exportAccountLocalData } from '../internal/accountDataLifecycle.js';
 beforeEach(()=>localStorage.clear());
 it('cleans captured A after a switch without removing B, preferences or unowned records',()=>{
@@ -30,4 +31,16 @@ it('tombstones prevent an old account from re-creating removed data',()=>{
   deleteAccountLocalData(a);
   expect(()=>accountScope.physicalKey('xai_ai_convos',a)).toThrow();
   expect(accountScope.physicalKey('xai_pref_theme',a)).toBe('xai_pref_theme');
+});
+
+it('preserves a deletion recovery receipt and enforces the tombstone while cleanup retries',()=>{
+  const a=accountScope.activate(accountScope.lock('A'),'one');
+  const key=accountPrefix('A')+'deleted';
+  const receipt=JSON.stringify({version:1,accountId:'A',kind:'account',generation:'one',phase:'pending',updatedAt:123});
+  localStorage.setItem(key,receipt);
+  localStorage.setItem(generationKey('A','one','xai_ai_convos'),'private');
+  deleteAccountLocalData(a);
+  expect(localStorage.getItem(key)).toBe(receipt);
+  expect(()=>accountScope.physicalKey('xai_ai_convos',a)).toThrow();
+  expect(()=>readGeneration(localStorage,'A')).toThrow(/deleted/);
 });

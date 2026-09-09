@@ -51,7 +51,7 @@ export function createAccountScopeController() {
       if (ownershipForKey(key) === 'device') return key;
       assertCurrent(scope);
       if (scope.kind === 'locked' || !scope.accountId || !scope.generation) throw new AccountScopeError();
-      if (typeof localStorage !== 'undefined' && localStorage.getItem(`${accountPrefix(scope.accountId, scope.kind === 'demo')}deleted`) === '1') throw new AccountScopeError();
+      if (typeof localStorage !== 'undefined' && localStorage.getItem(`${accountPrefix(scope.accountId, scope.kind === 'demo')}deleted`) !== null) throw new AccountScopeError();
       return generationKey(scope.accountId, scope.generation, key, scope.kind === 'demo');
     },
     isReady(scope: AccountScope = current) { return scope === current && scope.kind !== 'locked'; },

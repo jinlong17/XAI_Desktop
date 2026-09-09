@@ -17,7 +17,7 @@ export const browserMigrationLock: MigrationLock = async (name, run) => {
 };
 
 export function readGeneration(storage: Pick<Storage, 'getItem'>, accountId: string, demo = false): GenerationMarker | null {
-  if (storage.getItem(`${accountPrefix(accountId, demo)}deleted`) === '1') throw new Error('This account has been deleted on this device.');
+  if (storage.getItem(`${accountPrefix(accountId, demo)}deleted`) !== null) throw new Error('This account has been deleted on this device.');
   const raw = storage.getItem(generationMarkerKey(accountId, demo));
   if (raw === null) return null;
   const value: unknown = JSON.parse(raw);
@@ -131,7 +131,7 @@ export async function rollbackAccount(input: {
     if (!journalRaw) throw new Error('Rollback journal missing; current data retained.');
     const journal = JSON.parse(journalRaw) as { accountId?: string; generation?: string; previousRaw?: string | null };
     if (journal.accountId !== accountId || journal.generation !== marker.generation || (journal.previousRaw !== null && typeof journal.previousRaw !== 'string')) throw new Error('Invalid rollback journal; current data retained.');
-    if (typeof journal.previousRaw === 'string') readGeneration({ getItem: () => journal.previousRaw! }, accountId, demo);
+    if (typeof journal.previousRaw === 'string') readGeneration({ getItem: key => key === generationMarkerKey(accountId, demo) ? journal.previousRaw! : null }, accountId, demo);
     if (journal.previousRaw === null) storage.removeItem(generationMarkerKey(accountId, demo));
     else storage.setItem(generationMarkerKey(accountId, demo), journal.previousRaw!);
     return readGeneration(storage, accountId, demo);

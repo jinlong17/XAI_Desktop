@@ -28,6 +28,6 @@ export function exportAccountLocalData(scope: AccountScope, storage: Store = loc
 export function deleteAccountLocalData(scope: AccountScope, storage: Store = localStorage): void {
   const ownedPrefix=prefix(scope), tombstone=`${ownedPrefix}deleted`;
   // Stop older tabs from creating new account records while scoped cleanup is in progress.
-  storage.setItem(tombstone,'1');
+  if (storage.getItem(tombstone) === null) storage.setItem(tombstone,'1');
   for(const key of keys(storage)) if(key.startsWith(ownedPrefix) && key!==tombstone) storage.removeItem(key);
 }
