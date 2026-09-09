@@ -1,0 +1,31 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-HZTL9h/source/packages/xai-web-dashboard-grid
+
+ ✓ src/__tests__/AddWidgetPicker.test.tsx (23 tests) 148ms
+ ✓ src/__tests__/DashHeader.recovery.test.tsx (4 tests) 181ms
+ ✓ src/__tests__/DashHeader.test.tsx (16 tests) 211ms
+ ✓ src/__tests__/DashboardModule.remove.test.tsx (4 tests) 94ms
+ ✓ src/__tests__/DashboardModule.events.test.tsx (10 tests) 172ms
+ ✓ src/__tests__/DashboardModule.persist.test.tsx (7 tests) 222ms
+ ✓ src/__tests__/WidgetShell.test.tsx (26 tests) 289ms
+ ✓ src/__tests__/DashboardModule.render.test.tsx (5 tests) 261ms
+ ✓ src/__tests__/DashboardSlotHost.composition.test.tsx (8 tests) 340ms
+ ✓ src/__tests__/registration.test.tsx (13 tests) 377ms
+ ✓ src/__tests__/DashboardModule.picker.test.tsx (6 tests) 235ms
+ ✓ src/__tests__/EmptyState.test.tsx (5 tests) 224ms
+ ✓ src/__tests__/greeting.test.ts (7 tests) 71ms
+ ✓ src/__tests__/useDashOrder.test.tsx (9 tests) 46ms
+ ✓ src/__tests__/useDashOrder.removeWidget.test.tsx (6 tests) 36ms
+ ✓ src/__tests__/DashboardModule.lang.test.tsx (3 tests) 116ms
+ ✓ src/__tests__/useGridDrag.test.tsx (11 tests) 103ms
+ ✓ src/__tests__/useWidgetAppearance.test.tsx (5 tests) 25ms
+ ✓ src/__tests__/useDashOrder.addWidget.test.tsx (5 tests) 22ms
+ ✓ src/__tests__/sanitizeOrder.test.ts (14 tests) 4ms
+ ✓ src/__tests__/useWidgetLayout.test.tsx (4 tests) 17ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 3ms
+
+ Test Files  22 passed (22)
+      Tests  196 passed (196)
+   Start at  14:07:33
+   Duration  5.92s (transform 2.07s, setup 6.50s, collect 5.67s, tests 3.20s, environment 15.29s, prepare 2.10s)
+

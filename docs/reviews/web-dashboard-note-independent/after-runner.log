@@ -1,0 +1,7 @@
+baseline {"commit":"8eb163d","browser":"Chrome/152.0.7977.83"}
+original-correct-oracle {"editor":true,"error":true,"bytes":"Original note"}
+actual-download-latest-retry {"pass":true}
+failed-clear-retry {"pass":true}
+raw-conflict {"pass":true}
+cross-account-no-write-no-download {"pass":true}
+PASS {"scope":"Dashboard header note only","checks":5}
