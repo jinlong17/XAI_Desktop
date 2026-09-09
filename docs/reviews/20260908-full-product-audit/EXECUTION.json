@@ -67,7 +67,9 @@
         "commit:3399f88",
         "../web-storage-write-results/20260909-rel05-diagnosis.md",
         "commit:aff8175",
-        "../web-storage-write-results/independent-write-failure.test.tsx"
+        "../web-storage-write-results/independent-write-failure.test.tsx",
+        "commit:dd744f5",
+        "commit:9222519"
       ]
     },
     {
@@ -78,7 +80,10 @@
         "commit:a1ed33a",
         "commit:762778c",
         "commit:35d7b11",
-        "../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx"
+        "../../../packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx",
+        "commit:23bd23c",
+        "commit:65e87b7",
+        "../web-account-deletion-reliability/20260909-legacy-wipe-verification.md"
       ]
     },
     {
