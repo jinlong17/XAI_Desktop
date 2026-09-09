@@ -1,0 +1,7 @@
+Command:
+pnpm --filter @repo/plugin-web-storage check-types
+
+> @repo/plugin-web-storage@0.0.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-storage
+> tsc --noEmit
+
+Exit status: 0

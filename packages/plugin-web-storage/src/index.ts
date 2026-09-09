@@ -50,12 +50,20 @@ export {
   readCanonicalCommandState,
   readCanonicalCommandSnapshot,
   findCanonicalCommandReceipt,
+  commitCanonicalCommand,
+  setCanonicalCommandActivationForTests,
+  canonicalCommandSignature,
+  canonicalCommandReceiptId,
 } from "./internal/canonicalCommandState.js";
 export type {
   CanonicalCommandKey,
   CanonicalCommandEnvelope,
   CanonicalCommandReceipt,
   CanonicalCommandRead,
+  CanonicalCommandInput,
+  CanonicalCommandMutation,
+  CanonicalCommitResult,
+  CanonicalCommandFailureReason,
 } from "./internal/canonicalCommandState.js";
 export type {
   GetPrefAutosaveOptions,

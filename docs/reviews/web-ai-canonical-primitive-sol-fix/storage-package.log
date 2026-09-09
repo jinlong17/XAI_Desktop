@@ -1,0 +1,14 @@
+Command:
+pnpm --filter @repo/plugin-web-storage test
+
+ ✓ src/__tests__/dataExport.test.ts (8 tests) 12ms
+ ✓ src/__tests__/registry.test.ts (15 tests) 8ms
+ ✓ src/__tests__/accountDataLifecycle.test.ts (7 tests) 5ms
+ ✓ src/__tests__/parity-design-md.test.ts (2 tests) 3ms
+ ✓ src/__tests__/migrate.test.ts (5 tests) 2ms
+ ✓ src/__tests__/accountScope.test.ts (4 tests) 2ms
+
+ Test Files  18 passed (18)
+      Tests  153 passed (153)
+   Start at  15:48:59
+   Duration  2.84s (transform 714ms, setup 0ms, collect 1.63s, tests 1.23s, environment 9.62s, prepare 1.48s)
