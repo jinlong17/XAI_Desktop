@@ -165,6 +165,8 @@ describe('corrupt generation metadata fails closed', () => {
     { version: 1, generation: A.generation, owner: null, state: 'candidate', entries: [['session', 123]] },
     { version: 1, generation: A.generation, owner: 'wrong-owner', state: 'candidate', entries: [] },
     { version: 1, generation: A.generation, owner: 'account-A', state: 'revoked', entries: [['session', 'retained']] },
+    { version: 1, generation: A.generation, owner: null, state: 'candidate', entries: [], sessionOwner: 'account-A' },
+    { version: 1, generation: A.generation, owner: 'account-A', state: 'active', entries: [], sessionOwner: 'account-B', sessionKey: 'session' },
   ])('does not overwrite malformed row %#', async raw => {
     const key = `${prefix}generation:${A.generation}`;
     await putRaw(key, raw);
@@ -184,4 +186,69 @@ describe('corrupt generation metadata fails closed', () => {
     expect(await store.revoke({ ...A, owner: 'account-A' })).toEqual({ status: 'failed', reason: 'schema-invalid' });
     expect(await createIndexedDbStore().getItem(`${prefix}active`)).toEqual(raw);
   });
+});
+
+describe('atomic session owner claim', () => {
+  it('binds an unpublished candidate to its actual session owner and rejects wrong-owner publication', async () => {
+    const store = createAuthGenerationStore(); await store.createCandidate(A);
+    expect(await store.setSessionItem(A, 'session', 'A-session', 'account-A')).toEqual({ status: 'applied' });
+    expect(await store.publish({ lease: A, owner: 'account-B', expectedActive: null })).toMatchObject({ reason: 'owner-mismatch' });
+    expect(await store.readActive()).toBeNull(); expect(await store.getItem(A, 'session')).toBe('A-session');
+    expect(await store.publish({ lease: A, owner: 'account-A', expectedActive: null })).toEqual({ status: 'applied' });
+    expect(await store.setSessionItem(A, 'session', 'B-session', 'account-B')).toMatchObject({ reason: 'owner-mismatch' });
+    expect(await store.getItem(A, 'session')).toBe('A-session');
+  });
+
+  it('refuses generic overwrite or owner replacement after removing claimed session bytes', async () => {
+    const store = createAuthGenerationStore(); await store.createCandidate(A);
+    await store.setSessionItem(A, 'session', 'A-session', 'account-A');
+    expect(await store.setItem(A, 'session', 'generic-bypass')).toMatchObject({ reason: 'session-owner-required' });
+    expect(await store.setSessionItem(A, 'other-session', 'alias-bypass', 'account-A')).toMatchObject({ reason: 'session-owner-required' });
+    await store.removeItem(A, 'session');
+    expect(await store.setSessionItem(A, 'session', 'B-session', 'account-B')).toMatchObject({ reason: 'owner-mismatch' });
+    expect(await store.setSessionItem(A, 'session', 'A-refresh', 'account-A')).toEqual({ status: 'applied' });
+  });
+
+  it('cannot race a candidate session writer into a different-owner publication', async () => {
+    const store = createAuthGenerationStore(); const other = createAuthGenerationStore(); await store.createCandidate(A);
+    const [write, publish] = await Promise.all([
+      store.setSessionItem(A, 'session', 'A-session', 'account-A'),
+      other.publish({ lease: A, owner: 'account-B', expectedActive: null })
+    ]);
+    expect([write, publish].filter(result => result.status === 'applied')).toHaveLength(1);
+    expect([write, publish].filter(result => result.status === 'superseded')).toEqual([{ status: 'superseded', reason: 'owner-mismatch' }]);
+    const active = await store.readActive();
+    expect(active?.owner === 'account-B' ? await store.getItem(A, 'session') === null : await store.getItem(A, 'session') === 'A-session').toBe(true);
+  });
+
+  it('accepts an old version-1 row without claims but respects its bound owner on first session write', async () => {
+    const store = await activeA();
+    expect(await store.setSessionItem(A, 'session', 'wrong', 'account-B')).toMatchObject({ reason: 'owner-mismatch' });
+    expect(await store.getItem(A, 'session')).toBe('original-A');
+    expect(await store.setSessionItem(A, 'session', 'A-refresh', 'account-A')).toEqual({ status: 'applied' });
+    expect(await store.setItem(A, 'session', 'generic')).toMatchObject({ reason: 'session-owner-required' });
+  });
+
+  it('imported session binds a claim and rejects a candidate already claimed by another owner', async () => {
+    const raw = createIndexedDbStore(); await raw.setItem('legacy-session', 'original-legacy');
+    const store = createAuthGenerationStore(); await store.createCandidate(A);
+    await store.setSessionItem(A, 'session', 'A-session', 'account-A');
+    expect(await store.importLegacy({ lease: A, owner: 'account-B', expectedActive: null, legacyKey: 'legacy-session', expectedRaw: 'original-legacy', destinationKey: 'session' })).toMatchObject({ reason: 'owner-mismatch' });
+    expect(await store.importLegacy({ lease: A, owner: 'account-A', expectedActive: null, legacyKey: 'legacy-session', expectedRaw: 'original-legacy', destinationKey: 'session' })).toEqual({ status: 'applied' });
+    expect(await store.setItem(A, 'session', 'generic')).toMatchObject({ reason: 'session-owner-required' });
+    expect(await raw.getItem('legacy-session')).toBe('original-legacy');
+  });
+});
+
+// A failed first claim may be retried, but must not leave a hidden owner binding.
+it('aborted first session write preserves the unclaimed candidate', async () => {
+  const store = createAuthGenerationStore(); await store.createCandidate(A);
+  const original = IDBObjectStore.prototype.put;
+  const fault = vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementation(function(this: IDBObjectStore, value, key) {
+    const request = original.call(this, value, key); this.transaction.abort(); return request;
+  });
+  expect(await store.setSessionItem(A, 'session', 'A-session', 'account-A')).toEqual({ status: 'failed', reason: 'transaction-failed' });
+  fault.mockRestore();
+  expect(await store.getItem(A, 'session')).toBeNull();
+  expect(await store.setSessionItem(A, 'session', 'B-session', 'account-B')).toEqual({ status: 'applied' });
 });

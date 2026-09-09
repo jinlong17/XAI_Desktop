@@ -5,7 +5,7 @@ export interface AuthGenerationLease { readonly generation: string }
 export interface ActiveAuthGeneration extends AuthGenerationLease { readonly owner: string }
 export type AuthGenerationFailure =
   | 'invalid-input' | 'transaction-failed' | 'schema-invalid' | 'generation-exists' | 'lease-revoked'
-  | 'lease-missing' | 'active-changed' | 'owner-mismatch' | 'not-candidate' | 'legacy-changed' | 'legacy-already-imported';
+  | 'session-owner-required' | 'lease-missing' | 'active-changed' | 'owner-mismatch' | 'not-candidate' | 'legacy-changed' | 'legacy-already-imported';
 export type AuthGenerationMutationResult =
   | { status: 'applied' }
   | { status: 'superseded'; reason: AuthGenerationFailure }
@@ -38,6 +38,8 @@ export interface AuthGenerationStore {
   cancelCandidate(lease: AuthGenerationLease): Promise<AuthGenerationMutationResult>;
   getItem(lease: AuthGenerationLease, key: string): Promise<string | null>;
   setItem(lease: AuthGenerationLease, key: string, value: string): Promise<AuthGenerationMutationResult>;
+  /** Owner must be derived from the actual SDK session, not current UI identity. */
+  setSessionItem(lease: AuthGenerationLease, key: string, value: string, owner: string): Promise<AuthGenerationMutationResult>;
   removeItem(lease: AuthGenerationLease, key: string): Promise<AuthGenerationMutationResult>;
   readRecovery(): Promise<AuthGenerationRecovery[]>;
   /** Atomically compares legacy bytes, copies and publishes; never deletes the legacy row. */
@@ -57,6 +59,9 @@ interface GenerationRow {
   owner: string | null;
   state: 'candidate' | 'active' | 'revoked';
   entries: [string, string][];
+  /** Optional for compatibility with the original version-1 foundation rows. */
+  sessionOwner?: string;
+  sessionKey?: string;
 }
 const applied: AuthGenerationMutationResult = { status: 'applied' };
 const superseded = (reason: AuthGenerationFailure): AuthGenerationMutationResult => ({ status: 'superseded', reason });
@@ -86,6 +91,8 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
     if (row.version !== 1 || !validName(row.generation) || (expectedGeneration !== undefined && row.generation !== expectedGeneration)) return false;
     if (!['candidate', 'active', 'revoked'].includes(row.state)) return false;
     if (row.owner !== null && !validName(row.owner)) return false;
+    if ((row.sessionOwner === undefined) !== (row.sessionKey === undefined)) return false;
+    if (row.sessionOwner !== undefined && (!validName(row.sessionOwner) || !validName(row.sessionKey) || (row.owner !== null && row.owner !== row.sessionOwner))) return false;
     if ((row.state === 'candidate' && row.owner !== null) || (row.state === 'active' && row.owner === null)) return false;
     if (!Array.isArray(row.entries) || !row.entries.every(entry => Array.isArray(entry) && entry.length === 2 && validName(entry[0]) && typeof entry[1] === 'string')) return false;
     return new Set(row.entries.map(([key]) => key)).size === row.entries.length && (row.state !== 'revoked' || row.entries.length === 0);
@@ -135,7 +142,8 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
     readRow(store, input.lease, row => {
       if (!row) return finish(superseded('lease-missing'));
       if (row.state === 'revoked') return finish(superseded('lease-revoked'));
-      if (row.owner !== null && row.owner !== input.owner) return finish(superseded('owner-mismatch'));
+      if ((row.owner !== null && row.owner !== input.owner) || (row.sessionOwner !== undefined && row.sessionOwner !== input.owner)) return finish(superseded('owner-mismatch'));
+      if (imported && row.sessionKey !== undefined && row.sessionKey !== imported.destinationKey) return finish(superseded('session-owner-required'));
       // Published generations cannot be resurrected or rebound after replacement.
       if (row.state !== 'candidate') return finish(superseded('not-candidate'));
       readPointer(store, pointer => {
@@ -159,6 +167,8 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
           const request = store.get(imported.legacyKey);
           request.onsuccess = () => {
             if (request.result !== imported.expectedRaw) return finish(superseded('legacy-changed'));
+            row.sessionOwner = input.owner;
+            row.sessionKey = imported.destinationKey;
             row.entries = row.entries.filter(([key]) => key !== imported.destinationKey);
             row.entries.push([imported.destinationKey, imported.expectedRaw]);
             // Retaining old bytes must not allow a later bootstrap to reimport
@@ -240,6 +250,22 @@ export function createAuthGenerationStore(options: CreateAuthGenerationStoreOpti
       lease = { generation: lease.generation };
       return mutate((store, finish) => readRow(store, lease, row => checkLease(store, row, reason => {
         if (reason) return finish(superseded(reason));
+        if (row!.sessionKey === key) return finish(superseded('session-owner-required'));
+        row!.entries = row!.entries.filter(([entryKey]) => entryKey !== key);
+        row!.entries.push([key, value]);
+        store.put(row, rowKey(lease.generation));
+        finish(applied);
+      })));
+    },
+    setSessionItem(lease, key, value, owner) {
+      if (!validLease(lease) || !validName(key) || typeof value !== 'string' || !validName(owner)) return invalid();
+      lease = { generation: lease.generation };
+      return mutate((store, finish) => readRow(store, lease, row => checkLease(store, row, reason => {
+        if (reason) return finish(superseded(reason));
+        if ((row!.owner !== null && row!.owner !== owner) || (row!.sessionOwner !== undefined && row!.sessionOwner !== owner)) return finish(superseded('owner-mismatch'));
+        if (row!.sessionKey !== undefined && row!.sessionKey !== key) return finish(superseded('session-owner-required'));
+        row!.sessionOwner = owner;
+        row!.sessionKey = key;
         row!.entries = row!.entries.filter(([entryKey]) => entryKey !== key);
         row!.entries.push([key, value]);
         store.put(row, rowKey(lease.generation));
