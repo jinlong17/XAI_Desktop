@@ -13,7 +13,8 @@ import { buildTodayContext } from "../internal/contextProvider.js";
 
 // We spy on getPref to avoid depending on real localStorage in unit tests.
 // The contextProvider reads keys directly via getPref().
-vi.mock("@repo/plugin-web-storage", () => ({
+vi.mock("@repo/plugin-web-storage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@repo/plugin-web-storage")>()),
   getPref: vi.fn().mockReturnValue(null),
   setPref: vi.fn(),
 }));

@@ -22,7 +22,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ---- Mock setup BEFORE any imports that use these modules ----
-vi.mock("@repo/plugin-web-storage", () => ({
+vi.mock("@repo/plugin-web-storage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@repo/plugin-web-storage")>()),
   getPref: vi.fn(),
   setPref: vi.fn(),
 }));

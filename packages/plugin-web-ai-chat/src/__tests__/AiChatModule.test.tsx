@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * AiChatModule integration tests.
  *
@@ -50,7 +52,7 @@ describe("AiChatModule integration (I)", () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
-    localStorage.clear();
+    act(() => resetAccountFixture());
     void aiKeyStorage.clearKey("anthropic").catch(() => undefined);
     void aiKeyStorage.clearKey("openai-compatible").catch(() => undefined);
   });
@@ -107,7 +109,7 @@ describe("AiChatModule integration (I)", () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(ADAPTER_DELAY_MAX_MS + 50);
     });
-    const raw = localStorage.getItem("xai_ai_convos");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_ai_convos"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!) as Array<{ title: string; summary?: string; messages?: unknown[] }>;
     expect(parsed[0]?.title).toBe("weekly review");
@@ -137,7 +139,7 @@ describe("AiChatModule integration (I)", () => {
     // messages cleared
     expect(container.querySelector(".ai-thread")).toBeNull();
     // convos intact
-    expect(localStorage.getItem("xai_ai_convos")).not.toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_convos"))).not.toBeNull();
   });
 
   it("I7: insights toggle flips xai_ai_insights and hides starters", () => {
@@ -150,7 +152,7 @@ describe("AiChatModule integration (I)", () => {
       fireEvent.click(toggle);
     });
     expect(container.querySelectorAll(".ai-starter").length).toBe(0);
-    expect(localStorage.getItem("xai_ai_insights")).toBe("false");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_insights"))).toBe("false");
   });
 
   it("I8: voice mic toggle flips xai_ai_voice and swaps the icon aria-label", () => {
@@ -164,7 +166,7 @@ describe("AiChatModule integration (I)", () => {
         container.querySelector<HTMLButtonElement>('button[aria-label="Voice off"]')!,
       );
     });
-    expect(localStorage.getItem("xai_ai_voice")).toBe("true");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_voice"))).toBe("true");
     expect(
       container.querySelector('button[aria-label="Voice on"]'),
     ).not.toBeNull();
@@ -177,8 +179,7 @@ describe("AiChatModule integration (I)", () => {
   });
 
   it("I10: corrupted convo entries are filtered with dev warning", () => {
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([{}, { id: "ok", title: "t", time: "1" }]),
     );
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
@@ -198,7 +199,7 @@ describe("AiChatModule integration (I)", () => {
     expect(container.querySelector(".ai-stage")?.className).not.toContain(
       "thinking",
     );
-    expect(localStorage.getItem("xai_ai_convos")).toBeNull();
+    expect(localStorage.getItem(accountScope.physicalKey("xai_ai_convos"))).toBeNull();
   });
 
   it("I11b: small screens start with the chat sidebar collapsed", () => {
@@ -262,8 +263,7 @@ describe("AiChatModule integration (I)", () => {
 
   it("I14: clicking an existing convo row loads its persisted messages", async () => {
     // Seed two convos in storage.
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([
         {
           id: "c1",
@@ -332,8 +332,7 @@ describe("AiChatModule integration (I)", () => {
   });
 
   it("I14b: persisted active conversation restores after remount", async () => {
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([
         {
           id: "c-restored",
@@ -353,8 +352,7 @@ describe("AiChatModule integration (I)", () => {
   });
 
   it("I14c: deleting a conversation removes it from storage and clears active thread", async () => {
-    localStorage.setItem(
-      "xai_ai_convos",
+    localStorage.setItem(accountScope.physicalKey("xai_ai_convos"),
       JSON.stringify([
         {
           id: "c-delete",
@@ -372,7 +370,7 @@ describe("AiChatModule integration (I)", () => {
       fireEvent.click(deleteButton);
     });
     expect(container.textContent).not.toContain("delete question");
-    const parsed = JSON.parse(localStorage.getItem("xai_ai_convos") ?? "[]") as unknown[];
+    const parsed = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_ai_convos")) ?? "[]") as unknown[];
     expect(parsed.length).toBe(0);
   });
 
@@ -810,7 +808,7 @@ describe("AiChatModule integration (I)", () => {
     );
 
     // Capture localStorage BEFORE render
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -827,7 +825,7 @@ describe("AiChatModule integration (I)", () => {
     });
 
     // KEY ASSERTION: localStorage has NOT changed — no silent write occurred
-    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    const taskColsAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(taskColsAfter).toBe(taskColsBefore); // no store mutation before Confirm
 
     // Also verify NO web:tasks:create-requested event was emitted
@@ -867,7 +865,7 @@ describe("AiChatModule integration (I)", () => {
       },
     );
 
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -896,7 +894,7 @@ describe("AiChatModule integration (I)", () => {
     });
 
     // KEY ASSERTION: no store mutation on Cancel (tool_result is LLM conversation only)
-    const taskColsAfter = localStorage.getItem("xai_task_cols");
+    const taskColsAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(taskColsAfter).toBe(taskColsBefore);
 
     // Wait for final acknowledgement stream + thinking cleared
@@ -1102,7 +1100,7 @@ describe("AiChatModule integration (I)", () => {
       return origEmit(channel as Parameters<typeof origEmit>[0], ...args as [Parameters<typeof origEmit>[1]]);
     });
 
-    const taskColsBefore = localStorage.getItem("xai_task_cols");
+    const taskColsBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     const { container } = render(<AiChatModule lang="en" />);
     const inp = container.querySelector<HTMLInputElement>(".ai-input")!;
@@ -1117,7 +1115,7 @@ describe("AiChatModule integration (I)", () => {
     // NOT clicking Confirm → no write event
     expect(emitted).not.toContain("web:tasks:delete-requested");
     // localStorage unchanged
-    expect(localStorage.getItem("xai_task_cols")).toBe(taskColsBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(taskColsBefore);
 
     vi.restoreAllMocks();
   });
@@ -1459,7 +1457,7 @@ describe("AiChatModule integration (I)", () => {
     const taskCols = [
       { id: "next7", tasks: [{ id: "t-ctx-1", title: SENTINEL_TASK_TITLE, done: false }] },
     ];
-    localStorage.setItem("xai_task_cols", JSON.stringify(taskCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(taskCols));
 
     // Capture streamCompleteChat calls from AiChatModule.
     const streamMod = await import("../internal/claudeStreamAdapter.js");
@@ -1497,7 +1495,7 @@ describe("AiChatModule integration (I)", () => {
     // When the real streamCompleteChat runs, buildTodayContext reads this and injects context.
     // The data is present — injection would happen in the non-mocked adapter.
     // (Full injection assertion is at claudeStreamAdapter.test.ts level via fetch body capture.)
-    const rawCols = localStorage.getItem("xai_task_cols");
+    const rawCols = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(rawCols).not.toBeNull();
     expect(rawCols).toContain(SENTINEL_TASK_TITLE);
   });

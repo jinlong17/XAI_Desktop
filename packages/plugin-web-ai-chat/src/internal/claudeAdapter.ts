@@ -1,3 +1,4 @@
+import { accountScope, AccountScopeError } from "@repo/plugin-web-storage";
 /**
  * claudeAdapter — completeChat entry point.
  *
@@ -40,10 +41,13 @@ export const DEMO_REPLY_ZH = _DEMO_ZH;
  * @throws LlmError if the real adapter call fails (propagated to caller).
  */
 export async function completeChat(text: string, lang: Lang): Promise<string> {
+  const scope = accountScope.capture();
+  if (!accountScope.isReady(scope)) throw new AccountScopeError();
   // Check whether a real API key is configured.
   const provider = (getPref("xai_ai_provider") as string) || "anthropic";
   const providerPreset = getAiProviderPreset(provider);
   const apiKey = await aiKeyStorage.loadKey(providerPreset.id);
+  accountScope.assertCurrent(scope);
 
   if (!apiKey) {
     // No key configured — preserve Option A demo behaviour.
@@ -53,6 +57,7 @@ export async function completeChat(text: string, lang: Lang): Promise<string> {
     await new Promise<void>((resolve) => {
       setTimeout(resolve, delay);
     });
+    accountScope.assertCurrent(scope);
     return lang === "zh" ? DEMO_REPLY_ZH : DEMO_REPLY_EN;
   }
 
@@ -63,6 +68,7 @@ export async function completeChat(text: string, lang: Lang): Promise<string> {
     lang,
     model: (getPref("xai_ai_model_default") as string) || providerPreset.defaultModel,
   })) {
+    accountScope.assertCurrent(scope);
     accumulated = chunk.accumulated;
     if (chunk.done) break;
   }

@@ -38,7 +38,7 @@ export { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
 export type { StreamChunk, StreamRequest } from "./internal/claudeStreamAdapter.js";
 
 // Typed key-storage helper namespace (consumed by Settings → AI pane).
-export { aiKeyStorage } from "./internal/secretStore.js";
+export { aiKeyStorage, aiSecretMigrationParticipant, inspectLegacyAiSecrets, clearAccountAiSecrets } from "./internal/secretStore.js";
 export type { AiKeyStorage, AiProvider } from "./internal/secretStore.js";
 
 export {
@@ -55,3 +55,8 @@ export type {
 
 // Public error union (consumed by Settings → AI pane + ErrorBanner).
 export type { LlmError, LlmErrorKind } from "./internal/llmErrors.js";
+
+// Owner-provided validation runs before any explicit legacy conversation import.
+import { registerAccountMigrationValidator } from "@repo/plugin-web-storage";
+import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
+registerAccountMigrationValidator("xai_ai_convos", (value: unknown) => Array.isArray(value) && value.every(isAiConvoRecord));

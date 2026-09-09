@@ -14,7 +14,6 @@ import { get as idbGet, createStore as idbCreateStore } from "idb-keyval";
 beforeEach(async () => {
   await aiKeyStorage.clearKey("anthropic");
   await aiKeyStorage.clearKey("openai-compatible");
-  localStorage.clear();
 });
 
 describe("no-plaintext-key invariant (NP)", () => {
@@ -31,14 +30,14 @@ describe("no-plaintext-key invariant (NP)", () => {
 
     // Check raw IDB value
     const customStore = idbCreateStore("xai-web-ai-secrets", "secrets");
-    const raw: string | undefined = await idbGet("anthropic", customStore);
+    const raw: string | undefined = await idbGet(`scoped:v2:${encodeURIComponent(JSON.stringify(["account","ai-test-account","test","anthropic"]))}`, customStore);
     expect(raw).toBeDefined();
     // The raw string is JSON — must not contain the plaintext.
     expect(raw).not.toContain(plaintext);
 
     // Extra: the JSON is a valid StoredSecretBlob shape.
     const parsed = JSON.parse(raw!) as Record<string, unknown>;
-    expect(parsed.version).toBe(1);
+    expect(parsed.version).toBe(2);
     expect(parsed.algo).toBe("AES-GCM");
     expect(parsed.kdfIterations).toBe(600_000);
     expect(typeof parsed.ciphertext).toBe("string"); // base64

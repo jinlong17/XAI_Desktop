@@ -1,3 +1,4 @@
+import { accountScope, AccountScopeError } from "@repo/plugin-web-storage";
 /**
  * claudeStreamAdapter — streamCompleteChat async generator.
  *
@@ -79,7 +80,7 @@ export interface StreamChunk {
  * If no API key is configured, throws LlmError({kind:"BadKey",detail:"not-set"}).
  * On streaming-unavailable, falls back to completeChat and yields one final chunk.
  */
-export async function* streamCompleteChat(
+async function* streamOwnedChat(
   req: StreamRequest,
 ): AsyncIterable<StreamChunk> {
   const { text, model, signal } = req;
@@ -89,6 +90,7 @@ export async function* streamCompleteChat(
   const providerPreset = getAiProviderPreset(provider);
   const providerKind = providerPreset.transport;
   const apiKey = await aiKeyStorage.loadKey(providerPreset.id);
+  if (signal?.aborted) return;
 
   if (!apiKey) {
     const err: LlmError = { kind: "BadKey", status: 401, detail: "not-set" };
@@ -151,6 +153,7 @@ export async function* streamCompleteChat(
       return;
     }
     const llmErr = await classifyError(err instanceof Error ? err : new Error(String(err)));
+    if (signal?.aborted) return;
     _emitError(llmErr, providerKind);
     throw llmErr;
   }
@@ -158,6 +161,7 @@ export async function* streamCompleteChat(
   // 5. Handle non-200 responses.
   if (!response.ok) {
     const llmErr = await classifyError(response);
+    if (signal?.aborted) return;
     if (llmErr.kind === "RateLimited") {
       emitWebEvent("web:ai:rate-limited", {
         provider: providerKind,
@@ -165,7 +169,8 @@ export async function* streamCompleteChat(
         occurredAt: new Date().toISOString(),
       });
     } else {
-      _emitError(llmErr, providerKind);
+      if (signal?.aborted) return;
+    _emitError(llmErr, providerKind);
     }
     throw llmErr;
   }
@@ -178,7 +183,8 @@ export async function* streamCompleteChat(
       return;
     } catch (err) {
       const llmErr = await classifyError(err instanceof Error ? err : new Error(String(err)));
-      _emitError(llmErr, providerKind);
+      if (signal?.aborted) return;
+    _emitError(llmErr, providerKind);
       throw llmErr;
     }
   }
@@ -364,6 +370,7 @@ export async function* streamCompleteChat(
   } catch (err) {
     if (signal?.aborted) return;
     const llmErr = await classifyError(err instanceof Error ? err : new Error(String(err)));
+    if (signal?.aborted) return;
     _emitError(llmErr, providerKind);
     throw llmErr;
   }
@@ -474,4 +481,22 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : null;
+}
+
+/** Bind the complete generator lifetime (including tool round trips) to its owner. */
+export async function* streamCompleteChat(req: StreamRequest): AsyncIterable<StreamChunk> {
+ const scope=accountScope.capture();
+ if(!accountScope.isReady(scope))throw new AccountScopeError();
+ const ctrl=new AbortController();
+ const abort=()=>ctrl.abort();
+ const unsubscribe=accountScope.subscribe(abort);
+ req.signal?.addEventListener("abort",abort,{once:true});
+ if(req.signal?.aborted)ctrl.abort();
+ try {
+  for await(const chunk of streamOwnedChat({...req,signal:ctrl.signal})){
+   accountScope.assertCurrent(scope);
+   if(ctrl.signal.aborted)return;
+   yield chunk;
+  }
+ } finally {unsubscribe();req.signal?.removeEventListener("abort",abort);ctrl.abort();}
 }

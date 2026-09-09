@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/vitest";
 // fake-indexeddb MUST be imported before any IDB-using module — it patches
 // globalThis.indexedDB in-process so tests can run without a real browser.
 import "fake-indexeddb/auto";
-import { afterEach, vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 
 // WebCrypto guard — fail fast if jsdom is missing crypto.subtle.
 if (typeof globalThis.crypto?.subtle === "undefined") {
@@ -43,4 +43,12 @@ afterEach(() => {
   // We do NOT call indexedDB.deleteDatabase() here because idb-keyval's
   // createStore memoizes the DB promise in a closure, and deleting the DB
   // makes subsequent opens hang until the delete request resolves.
+});
+
+// Tests explicitly enter an isolated committed account; production starts locked.
+beforeEach(async () => {
+ const { accountScope, generationMarkerKey } = await import("@repo/plugin-web-storage");
+ const transition=accountScope.lock("ai-test-account");
+ localStorage.setItem(generationMarkerKey("ai-test-account"),JSON.stringify({generation:"test",migrationId:"test",previous:null}));
+ accountScope.activate(transition,"test");
 });

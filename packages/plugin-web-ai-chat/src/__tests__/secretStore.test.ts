@@ -55,25 +55,25 @@ describe("secretStore (SC)", () => {
     expect(await aiKeyStorage.loadKey("deepseek")).toBe("deepseek-key");
   });
 
-  it("SC5: load with corrupted ciphertext — returns null (auto-clears row)", async () => {
+  it("SC5: load with corrupted ciphertext — returns null and preserves damaged row", async () => {
     // Save a valid key first.
     await aiKeyStorage.saveKey("anthropic", "sk-ant-valid-key");
     // Tamper with the stored blob by writing invalid base64 ciphertext.
     const store = idbCreateStore("xai-web-ai-secrets", "secrets");
-    const raw: string = (await idbGet("anthropic", store)) as string;
+    const raw: string = (await idbGet(`scoped:v2:${encodeURIComponent(JSON.stringify(["account","ai-test-account","test","anthropic"]))}`, store)) as string;
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     // Replace ciphertext with random garbage (will cause AES-GCM decrypt to fail).
     parsed.ciphertext = btoa("garbage-ciphertext-that-wont-decrypt-correctly-at-all");
     const { set: idbSet } = await import("idb-keyval");
-    await idbSet("anthropic", JSON.stringify(parsed), store);
+    await idbSet(`scoped:v2:${encodeURIComponent(JSON.stringify(["account","ai-test-account","test","anthropic"]))}`, JSON.stringify(parsed), store);
 
     // loadKey should catch the decrypt error, auto-clear the row, and return null.
     const result = await aiKeyStorage.loadKey("anthropic");
     expect(result).toBeNull();
 
     // Confirm the row was auto-cleared.
-    const rawAfter = await idbGet("anthropic", store);
-    expect(rawAfter).toBeUndefined();
+    const rawAfter = await idbGet(`scoped:v2:${encodeURIComponent(JSON.stringify(["account","ai-test-account","test","anthropic"]))}`, store);
+    expect(rawAfter).toBeDefined();
   });
 
   it("SC6: save with crypto.subtle unavailable — throws", async () => {
@@ -129,7 +129,7 @@ describe("secretStore (SC)", () => {
 
     // Directly access the IDB row.
     const customStore = idbCreateStore("xai-web-ai-secrets", "secrets");
-    const raw: string | undefined = await idbGet("anthropic", customStore);
+    const raw: string | undefined = await idbGet(`scoped:v2:${encodeURIComponent(JSON.stringify(["account","ai-test-account","test","anthropic"]))}`, customStore);
     expect(raw).toBeDefined();
     // The stored JSON string must NOT contain the plaintext.
     expect(raw).not.toContain(plaintext);

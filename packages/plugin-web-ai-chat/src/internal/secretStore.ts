@@ -1,78 +1,51 @@
-/**
- * secretStore — IndexedDB + WebCrypto AES-GCM-256 API key storage.
- *
- * Keys are encrypted with PBKDF2-HMAC-SHA256 (600k iterations) deriving an
- * AES-GCM-256 key whose passphrase is the device UUID from
- * `createDeviceIdentityStore().ensure()` (already SHIPPED in web-auth-device-session).
- *
- * IDB store name: "xai-web-ai-secrets". One row per provider.
- *
- * Shape per row:
- *   { version:1, ciphertext:Uint8Array, iv:Uint8Array, salt:Uint8Array,
- *     kdfIterations:600000, algo:"AES-GCM" }
- *
- * Design: packages/xai-web-ai-chat/docs/design.md FA-2 (2026-05-25 Extension)
- * API contract: packages/xai-web-ai-chat/docs/api.md §12.2
- */
-
-import { getPref } from "@repo/plugin-web-storage";
-import { createIndexedDbStore, createDeviceIdentityStore } from "@repo/web-auth-device-session";
+import {
+  accountScope,
+  AccountScopeError,
+  readGeneration,
+  type AccountScope,
+  type SecretMigrationContext,
+  type SecretMigrationParticipant,
+  getPref,
+} from "@repo/plugin-web-storage";
+import {
+  createIndexedDbStore,
+  createDeviceIdentityStore,
+} from "@repo/web-auth-device-session";
 import { resolveProvider } from "./llmProvider.js";
 import { classifyError, type LlmError } from "./llmErrors.js";
 import { getAiProviderPreset, type AiProviderId } from "./providerPresets.js";
-
-// ---- Types -----------------------------------------------------------------
-
 export type AiProvider = AiProviderId;
-
-interface StoredSecretBlob {
-  version: 1;
-  ciphertext: Uint8Array;
-  iv: Uint8Array;
-  salt: Uint8Array;
-  kdfIterations: 600000;
-  algo: "AES-GCM";
-}
-
 export interface AiKeyStorage {
-  /** Returns the plaintext API key for the given provider, or null if not set. */
   loadKey(provider: AiProvider): Promise<string | null>;
-  /** Persists the plaintext API key encrypted via AES-GCM. Overwrites any existing entry. */
   saveKey(provider: AiProvider, plaintext: string): Promise<void>;
-  /** Removes the stored entry for the given provider. Idempotent. */
   clearKey(provider: AiProvider): Promise<void>;
-  /** Issues a 1-token messages request to validate the stored key. Returns LlmError on failure. */
-  testConnection(provider: AiProvider): Promise<{ ok: true } | { ok: false; error: LlmError }>;
+  testConnection(
+    provider: AiProvider,
+  ): Promise<{ ok: true } | { ok: false; error: LlmError }>;
 }
-
-// ---- IDB store -------------------------------------------------------------
-
-const AI_SECRETS_DB = "xai-web-ai-secrets";
-const AI_SECRETS_STORE = "secrets";
-
-// Factory: creates a fresh IDB store reference each call — necessary for test
-// isolation (fake-indexeddb is reset per test; a module-level singleton would
-// hold a stale reference after the test deletes the database).
+const ENC = new TextEncoder(),
+  DEC = new TextDecoder(),
+  KDF_ITERATIONS = 600_000;
+const providers: AiProvider[] = [
+  "anthropic",
+  "openai-compatible",
+  "gemini",
+  "deepseek",
+];
 function getSecretStore() {
   return createIndexedDbStore({
-    dbName: AI_SECRETS_DB,
-    storeName: AI_SECRETS_STORE,
+    dbName: "xai-web-ai-secrets",
+    storeName: "secrets",
   });
 }
-
-// ---- WebCrypto helpers -----------------------------------------------------
-
-const ENC = new TextEncoder();
-const DEC = new TextDecoder();
-
-const KDF_ITERATIONS = 600_000;
-
-/**
- * Derives an AES-GCM-256 CryptoKey from the device UUID passphrase + a random salt.
- */
-async function deriveKey(passphrase: string, salt: Uint8Array): Promise<CryptoKey> {
+async function deriveKey(
+  passphrase: string,
+  salt: Uint8Array,
+): Promise<CryptoKey> {
   if (!globalThis.crypto?.subtle) {
-    throw new Error("[secretStore] crypto.subtle is unavailable in this environment.");
+    throw new Error(
+      "[secretStore] crypto.subtle is unavailable in this environment.",
+    );
   }
   const passphraseBytes = ENC.encode(passphrase);
   // Cast to Uint8Array<ArrayBuffer> — our Uint8Arrays are always backed by
@@ -111,171 +84,364 @@ async function getDeviceUuid(): Promise<string> {
   return createDeviceIdentityStore().ensure();
 }
 
-// ---- Serialize/deserialize IDB blob ----------------------------------------
-// idb-keyval stores values as JSON strings. We convert Uint8Arrays to/from
-// base64 for JSON-safe storage.
-
-function uint8ToBase64(u8: Uint8Array): string {
-  let bin = "";
-  for (let i = 0; i < u8.length; i++) {
-    bin += String.fromCharCode(u8[i]!);
-  }
-  return btoa(bin);
+type Owner = {
+  kind: "account" | "demo";
+  accountId: string;
+  generation: string;
+  provider: AiProvider;
+};
+interface Envelope {
+  version: 1 | 2;
+  ciphertext: string;
+  iv: string;
+  salt: string;
+  kdfIterations: number;
+  algo: string;
+  owner?: Owner;
 }
-
-function base64ToUint8(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const u8 = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) {
-    u8[i] = bin.charCodeAt(i);
-  }
-  return u8;
+function bytes(value: Uint8Array): ArrayBuffer {
+  return value.buffer.slice(
+    value.byteOffset,
+    value.byteOffset + value.byteLength,
+  ) as ArrayBuffer;
 }
-
-interface SerializedBlob {
-  version: 1;
-  ciphertext: string; // base64
-  iv: string;         // base64
-  salt: string;       // base64
-  kdfIterations: 600000;
-  algo: "AES-GCM";
+function b64(value: Uint8Array): string {
+  return btoa(Array.from(value, (b) => String.fromCharCode(b)).join(""));
 }
-
-function blobToJson(blob: StoredSecretBlob): string {
-  const s: SerializedBlob = {
-    version: 1,
-    ciphertext: uint8ToBase64(blob.ciphertext),
-    iv: uint8ToBase64(blob.iv),
-    salt: uint8ToBase64(blob.salt),
-    kdfIterations: 600_000,
-    algo: "AES-GCM",
+function unb64(value: string): Uint8Array {
+  return Uint8Array.from(atob(value), (c) => c.charCodeAt(0));
+}
+function ownerData(owner: Owner): ArrayBuffer {
+  return bytes(
+    ENC.encode(
+      JSON.stringify([
+        2,
+        owner.kind,
+        owner.accountId,
+        owner.generation,
+        owner.provider,
+      ]),
+    ),
+  );
+}
+function rowKey(owner: Owner): string {
+  return `scoped:v2:${encodeURIComponent(JSON.stringify([owner.kind, owner.accountId, owner.generation, owner.provider]))}`;
+}
+function ownerFor(scope: AccountScope, provider: AiProvider): Owner {
+  if (scope.kind === "locked" || !scope.accountId || !scope.generation)
+    throw new AccountScopeError();
+  return {
+    kind: scope.kind,
+    accountId: scope.accountId,
+    generation: scope.generation,
+    provider,
   };
-  return JSON.stringify(s);
 }
-
-function blobFromJson(raw: string): StoredSecretBlob | null {
-  try {
-    const s = JSON.parse(raw) as Partial<SerializedBlob>;
-    if (s.version !== 1) return null;
-    return {
-      version: 1,
-      ciphertext: base64ToUint8(s.ciphertext ?? ""),
-      iv: base64ToUint8(s.iv ?? ""),
-      salt: base64ToUint8(s.salt ?? ""),
-      kdfIterations: 600_000,
-      algo: "AES-GCM",
-    };
-  } catch {
-    return null;
-  }
+function assertReady(scope: AccountScope): void {
+  accountScope.assertCurrent(scope);
+  if (!accountScope.isReady(scope) || !scope.accountId)
+    throw new AccountScopeError();
+  if (
+    readGeneration(localStorage, scope.accountId, scope.kind === "demo")
+      ?.generation !== scope.generation
+  )
+    throw new AccountScopeError();
 }
-
-// ---- aiKeyStorage implementation -------------------------------------------
-
+async function encrypt(
+  plaintext: string,
+  owner: Owner,
+  guard: () => void,
+): Promise<string> {
+  guard();
+  const uuid = await getDeviceUuid();
+  guard();
+  const salt = crypto.getRandomValues(new Uint8Array(32)),
+    iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(uuid, salt);
+  guard();
+  const encrypted = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: bytes(iv), additionalData: ownerData(owner) },
+    key,
+    bytes(ENC.encode(plaintext)),
+  );
+  guard();
+  return JSON.stringify({
+    version: 2,
+    owner,
+    ciphertext: b64(new Uint8Array(encrypted)),
+    iv: b64(iv),
+    salt: b64(salt),
+    kdfIterations: KDF_ITERATIONS,
+    algo: "AES-GCM",
+  } satisfies Envelope);
+}
+async function decrypt(
+  raw: string,
+  owner: Owner | null,
+  guard: () => void,
+): Promise<string> {
+  guard();
+  const blob = JSON.parse(raw) as Envelope;
+  if (
+    blob.kdfIterations !== KDF_ITERATIONS ||
+    blob.algo !== "AES-GCM" ||
+    (owner
+      ? blob.version !== 2 ||
+        JSON.stringify(blob.owner) !== JSON.stringify(owner)
+      : blob.version !== 1)
+  )
+    throw new Error("Secret ownership/envelope mismatch");
+  const uuid = await getDeviceUuid();
+  guard();
+  const key = await deriveKey(uuid, unb64(blob.salt));
+  guard();
+  const plain = await crypto.subtle.decrypt(
+    {
+      name: "AES-GCM",
+      iv: bytes(unb64(blob.iv)),
+      ...(owner ? { additionalData: ownerData(owner) } : {}),
+    },
+    key,
+    bytes(unb64(blob.ciphertext)),
+  );
+  guard();
+  return DEC.decode(plain);
+}
 export const aiKeyStorage: AiKeyStorage = {
   async loadKey(provider) {
-    const raw = await getSecretStore().getItem(provider);
+    const scope = accountScope.capture();
+    if (!accountScope.isReady(scope)) return null;
+    assertReady(scope);
+    const guard = () => assertReady(scope),
+      owner = ownerFor(scope, provider);
+    const raw = await getSecretStore().getItem(rowKey(owner));
+    guard();
     if (!raw) return null;
-    const blob = blobFromJson(raw);
-    if (!blob) {
-      // Corrupted — auto-clear and treat as missing.
-      await getSecretStore().removeItem(provider);
-      return null;
-    }
-    const uuid = await getDeviceUuid();
     try {
-      const key = await deriveKey(uuid, blob.salt);
-      // Ensure plain ArrayBuffer backing for the WebCrypto API calls.
-      const iv = new Uint8Array(
-        (blob.iv.buffer as ArrayBuffer).slice(blob.iv.byteOffset, blob.iv.byteOffset + blob.iv.byteLength),
-      );
-      const ciphertext = blob.ciphertext.buffer.slice(
-        blob.ciphertext.byteOffset,
-        blob.ciphertext.byteOffset + blob.ciphertext.byteLength,
-      ) as ArrayBuffer;
-      const plainBuf = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv },
-        key,
-        ciphertext,
-      );
-      return DEC.decode(plainBuf);
-    } catch {
-      // Decrypt failure (e.g. device id rotated) — auto-clear row, return null.
-      await getSecretStore().removeItem(provider);
+      return await decrypt(raw, owner, guard);
+    } catch (_error) {
+      guard();
       return null;
-    }
+    } // preserve damaged ciphertext for explicit recovery
   },
-
   async saveKey(provider, plaintext) {
-    if (!globalThis.crypto?.subtle) {
-      throw new Error("[secretStore] crypto.subtle is unavailable — cannot encrypt API key.");
-    }
-    const uuid = await getDeviceUuid();
-    const salt = crypto.getRandomValues(new Uint8Array(32));
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const key = await deriveKey(uuid, salt);
-    const plaintextBuf = ENC.encode(plaintext);
-    const plaintextAb = plaintextBuf.buffer.slice(
-      plaintextBuf.byteOffset,
-      plaintextBuf.byteOffset + plaintextBuf.byteLength,
-    ) as ArrayBuffer;
-    const ivBuf = new Uint8Array(iv.buffer.slice(iv.byteOffset, iv.byteOffset + iv.byteLength));
-    const ciphertextBuf = await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv: ivBuf },
-      key,
-      plaintextAb,
-    );
-    const blob: StoredSecretBlob = {
-      version: 1,
-      ciphertext: new Uint8Array(ciphertextBuf),
-      iv,
-      salt,
-      kdfIterations: 600_000,
-      algo: "AES-GCM",
-    };
-    await getSecretStore().setItem(provider, blobToJson(blob));
+    const scope = accountScope.capture();
+    const guard = () => assertReady(scope);
+    guard();
+    const owner = ownerFor(scope, provider),
+      raw = await encrypt(plaintext, owner, guard);
+    guard();
+    await getSecretStore().setItem(rowKey(owner), raw);
+    guard();
   },
-
   async clearKey(provider) {
-    await getSecretStore().removeItem(provider);
+    const scope = accountScope.capture();
+    assertReady(scope);
+    await getSecretStore().removeItem(rowKey(ownerFor(scope, provider)));
+    assertReady(scope);
   },
-
   async testConnection(provider) {
-    const plaintext = await aiKeyStorage.loadKey(provider);
-    if (!plaintext) {
-      const err: LlmError = {
-        kind: "BadKey",
-        status: 401,
-        detail: "not-set",
-      };
-      return { ok: false, error: err };
-    }
+    const scope = accountScope.capture(),
+      guard = () => assertReady(scope);
+    guard();
+    const ctrl = new AbortController(),
+      unsubscribe = accountScope.subscribe(() => ctrl.abort());
     try {
-      const config = resolveProvider(plaintext);
-      const preset = getAiProviderPreset(provider);
+      const plaintext = await aiKeyStorage.loadKey(provider);
+      guard();
+      if (!plaintext)
+        return {
+          ok: false,
+          error: { kind: "BadKey", status: 401, detail: "not-set" },
+        };
+      const config = resolveProvider(plaintext),
+        preset = getAiProviderPreset(provider);
       const modelId =
         provider === "anthropic"
           ? config.resolveModelId("haiku")
           : String(getPref("xai_ai_model_default") || preset.defaultModel);
-      const body = config.buildBody({
-        modelId,
-        messages: [{ role: "user", content: "hi" }],
-        stream: false,
-        maxTokens: 1,
-      });
       const res = await fetch(config.url, {
         method: "POST",
         headers: config.headers,
-        body: JSON.stringify(body),
+        body: JSON.stringify(
+          config.buildBody({
+            modelId,
+            messages: [{ role: "user", content: "hi" }],
+            stream: false,
+            maxTokens: 1,
+          }),
+        ),
+        signal: ctrl.signal,
       });
+      guard();
       if (!res.ok) {
-        const err = await classifyError(res);
-        return { ok: false, error: err };
+        const error = await classifyError(res);
+        guard();
+        return { ok: false, error };
       }
       return { ok: true };
-    } catch (e) {
-      const err = await classifyError(e instanceof Error ? e : new Error(String(e)));
-      return { ok: false, error: err };
+    } catch (error) {
+      guard();
+      const classified = await classifyError(
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      guard();
+      return { ok: false, error: classified };
+    } finally {
+      unsubscribe();
     }
   },
 };
+function migrationOwner(
+  input: SecretMigrationContext,
+  provider: AiProvider,
+  generation = input.generation,
+): Owner {
+  return {
+    kind: input.demo ? "demo" : "account",
+    accountId: input.accountId,
+    generation,
+    provider,
+  };
+}
+function migrationKey(input: SecretMigrationContext): string {
+  return `migration:v2:${encodeURIComponent(JSON.stringify([input.demo, input.accountId, input.generation, input.migrationId]))}`;
+}
+/** Host passes this to migrateAccount. Candidate rows stay invisible until the storage generation marker commits. */
+export const aiSecretMigrationParticipant: SecretMigrationParticipant = {
+  async stage(input) {
+    const scope = accountScope.capture();
+    const guard = () => {
+      accountScope.assertCurrent(scope);
+      if (
+        scope.kind !== "locked" ||
+        scope.accountId !== input.accountId ||
+        (input.demo && input.adoptLegacy)
+      )
+        throw new AccountScopeError();
+    };
+    guard();
+    const staged: Record<string, string> = {};
+    for (const provider of providers) {
+      const owner = migrationOwner(input, provider),
+        previous = input.previousGeneration
+          ? migrationOwner(input, provider, input.previousGeneration)
+          : null;
+      const previousRaw = previous
+        ? await getSecretStore().getItem(rowKey(previous))
+        : null;
+      guard();
+      const legacyRaw = input.adoptLegacy
+        ? await getSecretStore().getItem(provider)
+        : null;
+      guard();
+      if (previousRaw && legacyRaw)
+        throw new Error(`Secret import conflict: ${provider}`);
+      if (!previousRaw && !legacyRaw) continue;
+      const plaintext = await decrypt(
+        (previousRaw ?? legacyRaw)!,
+        previousRaw ? previous : null,
+        guard,
+      );
+      const candidate = await encrypt(plaintext, owner, guard);
+      guard();
+      await getSecretStore().setItem(rowKey(owner), candidate);
+      guard();
+      staged[rowKey(owner)] = candidate;
+    }
+    await getSecretStore().setItem(migrationKey(input), JSON.stringify(staged));
+    guard();
+  },
+  async verify(input) {
+    const scope = accountScope.capture();
+    const guard = () => {
+      accountScope.assertCurrent(scope);
+      if (scope.kind !== "locked" || scope.accountId !== input.accountId)
+        throw new AccountScopeError();
+    };
+    guard();
+    const raw = await getSecretStore().getItem(migrationKey(input));
+    guard();
+    if (raw === null) throw new Error("Secret staging receipt missing");
+    const staged = JSON.parse(raw) as Record<string, string>;
+    for (const provider of providers) {
+      const owner = migrationOwner(input, provider),
+        key = rowKey(owner);
+      if (staged[key] === undefined) continue;
+      const candidate = await getSecretStore().getItem(key);
+      guard();
+      if (candidate !== staged[key])
+        throw new Error("Secret staging verification failed");
+      await decrypt(candidate!, owner, guard);
+    }
+  },
+};
+/** Metadata-only quarantine discovery; never decrypts or assigns an owner. */
+export async function inspectLegacyAiSecrets(): Promise<AiProvider[]> {
+  const scope = accountScope.capture(),
+    found: AiProvider[] = [];
+  for (const provider of providers) {
+    const raw = await getSecretStore().getItem(provider);
+    accountScope.assertCurrent(scope);
+    if (raw !== null) found.push(provider);
+  }
+  return found;
+}
+
+/** Explicitly authorized account erasure: a captured owner stays the target after sign-out. */
+export async function clearAccountAiSecrets(
+  scope: AccountScope,
+): Promise<void> {
+  if (scope.kind === "locked" || !scope.accountId)
+    throw new AccountScopeError();
+  const owner = Object.freeze({ kind: scope.kind, accountId: scope.accountId });
+  await getSecretStore().getItem("__schema_probe__");
+  await new Promise<void>((resolve, reject) => {
+    const request = indexedDB.open("xai-web-ai-secrets");
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error("Secret database is blocked"));
+    request.onsuccess = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("secrets")) {
+        db.close();
+        resolve();
+        return;
+      }
+      const transaction = db.transaction("secrets", "readwrite");
+      transaction.oncomplete = () => {
+        db.close();
+        resolve();
+      };
+      transaction.onabort = () => {
+        db.close();
+        reject(transaction.error ?? new Error("Secret erase aborted"));
+      };
+      const cursor = transaction.objectStore("secrets").openCursor();
+      cursor.onsuccess = () => {
+        const row = cursor.result;
+        if (!row) return;
+        try {
+          const key = String(row.key);
+          let owned = false;
+          if (key.startsWith("scoped:v2:")) {
+            const tuple = JSON.parse(
+              decodeURIComponent(key.slice("scoped:v2:".length)),
+            ) as unknown[];
+            owned = tuple[0] === owner.kind && tuple[1] === owner.accountId;
+          } else if (key.startsWith("migration:v2:")) {
+            const tuple = JSON.parse(
+              decodeURIComponent(key.slice("migration:v2:".length)),
+            ) as unknown[];
+            owned =
+              tuple[0] === (owner.kind === "demo") &&
+              tuple[1] === owner.accountId;
+          }
+          if (owned) row.delete();
+        } catch {
+          /* malformed keys remain quarantined */
+        }
+        row.continue();
+      };
+    };
+  });
+}

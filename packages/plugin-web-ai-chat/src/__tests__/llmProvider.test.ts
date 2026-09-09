@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { resetAccountFixture } from "./accountTestSetup.js";
 /**
  * llmProvider tests — LP1..LP6.
  *
@@ -11,7 +13,7 @@ import { resolveProvider, ANTHROPIC_MODEL_IDS } from "../internal/llmProvider.js
 
 beforeEach(() => {
   // Reset prefs to defaults before each test.
-  localStorage.clear();
+  resetAccountFixture();
 });
 
 describe("llmProvider resolveProvider (LP)", () => {
@@ -37,8 +39,8 @@ describe("llmProvider resolveProvider (LP)", () => {
   });
 
   it("LP2: OpenAI-compatible provider — correct URL/headers/body", () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
 
     const config = resolveProvider("gsk_test");
 
@@ -56,8 +58,8 @@ describe("llmProvider resolveProvider (LP)", () => {
   });
 
   it("LP3: OpenAI-compatible with empty base URL — throws config error", () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify(""));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify(""));
 
     expect(() => resolveProvider("key")).toThrow(/base URL/i);
   });
@@ -68,15 +70,15 @@ describe("llmProvider resolveProvider (LP)", () => {
     expect(anthropicConfig.provider).toBe("anthropic");
 
     // Switch to openai-compatible.
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
     const oaiConfig = resolveProvider("key-b");
     expect(oaiConfig.provider).toBe("openai-compatible");
     expect(oaiConfig.url).toContain("api.groq.com");
   });
 
   it("LP4b: Gemini preset resolves to its OpenAI-compatible endpoint and model", () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("gemini"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("gemini"));
 
     const config = resolveProvider("gemini-test-key");
 
@@ -91,7 +93,7 @@ describe("llmProvider resolveProvider (LP)", () => {
   });
 
   it("LP4c: DeepSeek preset resolves to its OpenAI-compatible endpoint and model", () => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("deepseek"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("deepseek"));
 
     const config = resolveProvider("deepseek-test-key");
 
@@ -115,7 +117,7 @@ describe("llmProvider resolveProvider (LP)", () => {
   });
 
   it("LP6: Stream pref OFF — body.stream is false", () => {
-    localStorage.setItem("xai_ai_streaming", "false");
+    localStorage.setItem(accountScope.physicalKey("xai_ai_streaming"), "false");
     const config = resolveProvider("sk-ant-test");
     const body = config.buildBody({
       modelId: ANTHROPIC_MODEL_IDS["haiku"],

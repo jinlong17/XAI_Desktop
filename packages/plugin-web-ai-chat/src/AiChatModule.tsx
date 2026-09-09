@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AiChatModule — root route component for the AI Chat module.
  *
@@ -151,6 +152,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   // ---- Refs ---------------------------------------------------------------
   const endRef = useRef<HTMLDivElement | null>(null);
   const mountedRef = useRef(true);
+  const ownerRef = useRef(accountScope.capture());
+  const ownerCurrent = () => accountScope.isReady(ownerRef.current);
   /** AbortController for the currently-active stream. Created per processQueue call. */
   const abortCtrlRef = useRef<AbortController | null>(null);
   /**
@@ -169,8 +172,21 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const hydratedActiveRef = useRef(false);
   const suppressNextPersistRef = useRef(false);
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef.current = ownerCurrent();
+    const unsubscribe = accountScope.subscribe(() => {
+      mountedRef.current = false;
+      abortCtrlRef.current?.abort();
+      pendingSendQueueRef.current = [];
+      setMessages([]);
+      setInput("");
+      setAttachments([]);
+      setActiveConvo(null);
+      setPendingConfirmation(null);
+      setBannerError(null);
+      setThinking(false);
+    });
     return () => {
+      unsubscribe();
       mountedRef.current = false;
       // Abort any in-flight stream when component unmounts.
       abortCtrlRef.current?.abort();
@@ -179,6 +195,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
   const persistConvoMessages = useCallback(
     (id: string, nextMessages: readonly AiMessage[]) => {
+      if (!ownerCurrent()) return;
       setRawConvos((prev) => {
         const safe: AiConvoRecord[] = Array.isArray(prev)
           ? (prev as unknown[]).filter(isAiConvoRecord)
@@ -282,7 +299,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * shows the orb continuously across queued resends).
    */
   const processQueue = useCallback(async () => {
-    if (processingRef.current) return;
+    if (!ownerCurrent() || processingRef.current) return;
     if (pendingSendQueueRef.current.length === 0) return;
     processingRef.current = true;
     try {
@@ -316,7 +333,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
             // P3: send tool definitions on the Anthropic provider.
             tools: AI_TOOLS,
           })) {
-            if (!mountedRef.current) return;
+            if (!mountedRef.current || !ownerCurrent()) return;
             accumulated = chunk.accumulated;
 
             if (!placeholderInserted) {
@@ -349,7 +366,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           streamError = err as LlmError;
         }
 
-        if (!mountedRef.current) return;
+        if (!mountedRef.current || !ownerCurrent()) return;
 
         if (streamError != null) {
           // Remove any partial placeholder bubble and set error banner.
@@ -390,7 +407,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
 
         pendingSendQueueRef.current.shift();
       }
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
     } finally {
       processingRef.current = false;
       abortCtrlRef.current = null;
@@ -400,6 +417,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   // ---- Send flow ----------------------------------------------------------
   const send = useCallback(
     (textOverride?: string) => {
+      if (!ownerCurrent()) return;
       const text = (textOverride ?? input).trim();
       if (!text) return;
       const userMsg: AiMessage = {
@@ -539,7 +557,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * The tool_result is conversational feedback to LLM only — NOT a write path.
    */
   const handleCancel = useCallback(() => {
-    if (!pendingConfirmation) return;
+    if (!pendingConfirmation || !ownerCurrent()) return;
 
     const snapshot = pendingConfirmation;
     setPendingConfirmation(null);
@@ -549,7 +567,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     // This is LLM conversation only — does NOT trigger any store write.
     const queuedItem = { text: snapshot.preambleText || "(cancelled)", lang };
     void (async () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || !ownerCurrent()) return;
       setThinking(true);
 
       const ctrl = new AbortController();
@@ -583,7 +601,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           signal: ctrl.signal,
           priorMessages,
         })) {
-          if (!mountedRef.current) return;
+          if (!mountedRef.current || !ownerCurrent()) return;
           if (!inserted) {
             inserted = true;
             setMessages((m) => [
@@ -607,7 +625,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         }
       }
 
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
       abortCtrlRef.current = null;
     })();
   }, [pendingConfirmation, lang, model]);
@@ -622,7 +640,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * (no second round-trip — bounded invariant enforced).
    */
   const handleConfirm = useCallback(() => {
-    if (!pendingConfirmation) return;
+    if (!pendingConfirmation || !ownerCurrent()) return;
 
     const snapshot = pendingConfirmation;
 
@@ -704,7 +722,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     // text only (no second execution, no second round-trip).
     const queuedItem = { text: snapshot.preambleText || snapshot.toolUse.name, lang };
     void (async () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || !ownerCurrent()) return;
       setThinking(true);
 
       const ctrl = new AbortController();
@@ -738,7 +756,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           signal: ctrl.signal,
           priorMessages,
         })) {
-          if (!mountedRef.current) return;
+          if (!mountedRef.current || !ownerCurrent()) return;
           if (!inserted) {
             inserted = true;
             setMessages((m) => [
@@ -762,7 +780,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         }
       }
 
-      if (mountedRef.current) setThinking(false);
+      if (mountedRef.current && ownerCurrent()) setThinking(false);
       abortCtrlRef.current = null;
     })();
   }, [pendingConfirmation, lang, model]);

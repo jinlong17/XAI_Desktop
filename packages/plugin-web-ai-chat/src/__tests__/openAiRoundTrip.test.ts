@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * openAiRoundTrip.test.ts — OAI-RT-1..3 + OAI-PARITY-1..2
  *
@@ -24,7 +25,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ---- Mock setup BEFORE imports that depend on these modules ----
-vi.mock("@repo/plugin-web-storage", () => ({
+vi.mock("@repo/plugin-web-storage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@repo/plugin-web-storage")>()),
   getPref: vi.fn(),
   setPref: vi.fn(),
 }));
@@ -100,8 +102,8 @@ async function collectChunks(gen: AsyncIterable<{ accumulated: string; done: boo
 
 describe("OAI-RT-1: assistant turn with tool_use block → OpenAI assistant with tool_calls", () => {
   beforeEach(() => {
-    localStorage.setItem("xai_ai_provider", JSON.stringify("openai-compatible"));
-    localStorage.setItem("xai_ai_base_url", JSON.stringify("https://api.groq.com/openai/v1"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_provider"), JSON.stringify("openai-compatible"));
+    localStorage.setItem(accountScope.physicalKey("xai_ai_base_url"), JSON.stringify("https://api.groq.com/openai/v1"));
     mockGetPref.mockImplementation((key: string) => {
       if (key === "xai_ai_provider") return "openai-compatible";
       if (key === "xai_ai_base_url") return "https://api.groq.com/openai/v1";
