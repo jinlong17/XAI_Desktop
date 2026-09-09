@@ -21,6 +21,11 @@ import {
   addDays,
   dayKey,
   entryDuration,
+  entriesInWindow,
+  entriesOnDay,
+  entryDayTotals,
+  entryHourTotals,
+  sourceEntry,
   entryLastEnd,
   entryStart,
   formatClock,
@@ -540,19 +545,19 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
 
   useEffect(() => {
     writeTrackerUi(SIDEBAR_INSIGHTS_KEY, sidebarInsightsHidden ? "1" : "0", scope);
-  }, [sidebarInsightsHidden]);
+  }, [sidebarInsightsHidden, scope]);
 
   useEffect(() => {
     writeTrackerUi(CATEGORY_COLLAPSED_KEY, JSON.stringify([...collapsedCategoryIds]), scope);
-  }, [collapsedCategoryIds]);
+  }, [collapsedCategoryIds, scope]);
 
   useEffect(() => {
     writeTrackerUi(DAY_RECORDS_COLLAPSED_KEY, dayRecordsCollapsed ? "1" : "0", scope);
-  }, [dayRecordsCollapsed]);
+  }, [dayRecordsCollapsed, scope]);
 
   useEffect(() => {
     writeTrackerUi(TIME_STATUS_HIDDEN_KEY, timeStatusHidden ? "1" : "0", scope);
-  }, [timeStatusHidden]);
+  }, [timeStatusHidden, scope]);
 
   useEffect(() => {
     if (focusEntryId !== null && focusEntry === null) setFocusEntryId(null);
@@ -562,8 +567,8 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   const isToday = selectedKey === todayKey;
   const weekStart = startOfWeek(nowMs);
   const selectedEntries = useMemo(
-    () => liveEntries.filter((entry) => dayKey(entryStart(entry)) === selectedKey),
-    [liveEntries, selectedKey],
+    () => entriesOnDay(liveEntries, selectedKey, nowMs),
+    [liveEntries, selectedKey, nowMs],
   );
   const doneForDay = useMemo(
     () => selectedEntries.filter((entry) => entry.done).sort((a, b) => entryStart(b) - entryStart(a)),
@@ -571,10 +576,10 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
   );
   const selectedByCategory = useMemo(() => totalByCategory(selectedEntries, nowMs), [nowMs, selectedEntries]);
   const selectedTotal = useMemo(() => selectedEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, selectedEntries]);
-  const todayEntries = useMemo(() => liveEntries.filter((entry) => dayKey(entryStart(entry)) === todayKey), [liveEntries, todayKey]);
+  const todayEntries = useMemo(() => entriesOnDay(liveEntries, todayKey, nowMs), [liveEntries, todayKey, nowMs]);
   const todayTotal = useMemo(() => todayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0), [nowMs, todayEntries]);
   const weekTotal = useMemo(
-    () => liveEntries.filter((entry) => entryStart(entry) >= weekStart).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
+    () => entriesInWindow(liveEntries, weekStart, nowMs, nowMs).reduce((total, entry) => total + entryDuration(entry, nowMs), 0),
     [liveEntries, nowMs, weekStart],
   );
   const trend = useMemo(() => buildDayTrend(liveEntries, nowMs, lang, selectedKey), [lang, liveEntries, nowMs, selectedKey]);
@@ -781,7 +786,7 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                       onPause={pauseEntry}
                       onResume={resumeEntry}
                       onStop={stopEntry}
-                      onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                      onEdit={() => setEntryEditor({ mode: "edit", entry: sourceEntry(entry) })}
                       onFocus={() => setFocusEntryId(entry.id)}
                     />
                   ))}
@@ -869,11 +874,12 @@ export function TimeTrackerModule({ lang }: TimeTrackerModuleProps) {
                     {doneForDay.map((entry) => (
                       <RecordRow
                         key={entry.id}
-                        entry={entry}
+                        entry={sourceEntry(entry)}
+                        dayContributionMs={entryDuration(entry, nowMs)}
                         category={categoryMap.get(entry.categoryId)}
                         lang={lang}
                         nowMs={nowMs}
-                        onEdit={() => setEntryEditor({ mode: "edit", entry })}
+                        onEdit={() => setEntryEditor({ mode: "edit", entry: sourceEntry(entry) })}
                         onAdjustTime={adjustEntryTime}
                         onDelete={() =>
                           setConfirm({
@@ -1176,12 +1182,12 @@ function TimeStatusPanel({
   useEffect(() => {
     if (typeof window === "undefined") return;
     writeTrackerUi(TIME_STATUS_CARDS_KEY, JSON.stringify(visibleCardKeys), scope);
-  }, [visibleCardKeys]);
+  }, [visibleCardKeys, scope]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     writeTrackerUi(TIME_STATUS_CUSTOM_CARDS_KEY, JSON.stringify(customCards), scope);
-  }, [customCards]);
+  }, [customCards, scope]);
 
   function removeCard(key: TimeStatusCardKey): void {
     setVisibleCardKeys((prev) => prev.filter((item) => item !== key));
@@ -1501,8 +1507,10 @@ function exportEntriesCsv(
   lang: Lang,
   categoryMap: ReadonlyMap<string, TimeTrackerCategory>,
   label: string,
+  rangeStart: number,
+  rangeEnd: number,
 ): void {
-  const headers = ["Date", "Category", "Subcategory", "Start", "End", "Duration", "Duration minutes", "Note", "Status"];
+  const headers = ["Date", "Category", "Subcategory", "Start", "End", "Duration", "Duration minutes", "Note", "Status", "Source ID", "Range start", "Range end exclusive", "Timezone", "Source start", "Source end", "Contribution ms"];
   const rows = list.map((entry) => {
     const category = categoryMap.get(entry.categoryId);
     const start = entryStart(entry);
@@ -1515,9 +1523,16 @@ function exportEntriesCsv(
       formatClock(start),
       end,
       formatDuration(duration),
-      Math.round(duration / 60_000),
+      duration / 60_000,
       entry.note[lang] || entry.note.en,
       isRunningEntry(entry) ? ttCopy(lang, "running") : ttCopy(lang, "records"),
+      entry.id,
+      new Date(rangeStart).toISOString(),
+      new Date(Math.min(rangeEnd, nowMs)).toISOString(),
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      new Date(start).toISOString(),
+      isRunningEntry(entry) ? "" : new Date(entryLastEnd(entry, nowMs)).toISOString(),
+      duration,
     ];
   });
   const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
@@ -1529,9 +1544,8 @@ function buildDayTrend(entries: readonly TimeTrackerEntry[], nowMs: number, lang
   return Array.from({ length: 7 }, (_, index) => {
     const start = startOfDay(addLocalDays(nowMs, -(6 - index)).getTime());
     const key = dayKey(start);
-    const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
-    const value = entries
-      .filter((entry) => dayKey(entryStart(entry)) === key)
+    const dayEntries = entriesOnDay(entries, key, nowMs);
+    const value = dayEntries
       .reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
     return {
       key,
@@ -1981,6 +1995,7 @@ function FocusModeOverlay({
 
 function RecordRow({
   entry,
+  dayContributionMs,
   category,
   lang,
   nowMs,
@@ -1989,6 +2004,7 @@ function RecordRow({
   onDelete,
 }: {
   readonly entry: TimeTrackerEntry;
+  readonly dayContributionMs: number;
   readonly category: TimeTrackerCategory | undefined;
   readonly lang: Lang;
   readonly nowMs: number;
@@ -2075,7 +2091,7 @@ function RecordRow({
         </span>
         {entry.note[lang] !== "" && <small>{entry.note[lang]}</small>}
       </div>
-      <b>{formatDuration(entryDuration(entry, nowMs))}</b>
+      <b title={`${lang === "zh" ? "所选日期" : "Selected day"}: ${formatDuration(dayContributionMs)} · ${lang === "zh" ? "完整记录" : "Complete record"}: ${formatDuration(entryDuration(entry, nowMs))}`}>{formatDuration(dayContributionMs)}</b>
       <div className="tt-row-actions">
         <button type="button" aria-label={ttCopy(lang, "editRecord")} onClick={onEdit}><IconGlyph name="sliders" size={14} /></button>
         <button type="button" aria-label={ttCopy(lang, "delete")} onClick={onDelete}><IconGlyph name="trash" size={14} /></button>
@@ -2334,7 +2350,7 @@ function CategoryDetail({
   readonly onEdit: () => void;
   readonly onStartSub: (subId: string) => void;
 }) {
-  const dayEntries = entries.filter((entry) => entry.categoryId === category.id && dayKey(entryStart(entry)) === selectedKey);
+  const dayEntries = entriesOnDay(entries.filter((entry) => entry.categoryId === category.id), selectedKey, nowMs);
   const total = dayEntries.reduce((sum, entry) => sum + entryDuration(entry, nowMs), 0);
   const bySub = new Map<string, number>();
   for (const entry of dayEntries) {
@@ -2794,7 +2810,7 @@ function InsightsBoard({
 
   useEffect(() => {
     writeTrackerUi(INSIGHTS_KEY, JSON.stringify(cards), scope);
-  }, [cards]);
+  }, [cards, scope]);
 
   const customA = keyToDate(customStart);
   const customB = endOfDayExclusive(customEnd);
@@ -2810,10 +2826,7 @@ function InsightsBoard({
           ? customRangeStart
           : 0;
   const rangeEnd = range === "custom" ? customRangeEnd : range === "all" ? Number.POSITIVE_INFINITY : nextLocalDayStart(nowMs).getTime();
-  const inRange = entries.filter((entry) => {
-    const start = entryStart(entry);
-    return start >= rangeStart && start < rangeEnd;
-  });
+  const inRange = entriesInWindow(entries, rangeStart, rangeEnd, nowMs);
   const rangeTotal = inRange.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
   const activeInRange = inRange.filter(isActiveEntry).length;
   const reportLabel = rangeLabel(rangeStart, rangeEnd, lang);
@@ -2847,10 +2860,10 @@ function InsightsBoard({
 	        </div>
 	        <div className="tt-report-actions">
 	          <button type="button" className="tt-btn" title={ttCopy(lang, "resetBoard")} onClick={() => setCards(defaultInsightBoard())}><IconGlyph name="sync" size={14} /></button>
-	          <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel)}>
+	          <button type="button" className="tt-btn" disabled={inRange.length === 0} onClick={() => exportEntriesCsv(inRange, nowMs, lang, categoryMap, reportLabel, rangeStart, rangeEnd)}>
 	            <IconGlyph name="download" size={14} />{ttCopy(lang, "exportCsv")}
 	          </button>
-	          <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange, reportLabel)}>
+	          <button type="button" className="tt-btn tt-btn-danger" disabled={inRange.length === 0} onClick={() => onDeleteRange(inRange.map(sourceEntry), reportLabel)}>
 	            <IconGlyph name="trash" size={14} />{ttCopy(lang, "deleteRange")}
 	          </button>
 	          <div className="tt-add-menu-wrap">
@@ -2958,7 +2971,7 @@ function InsightContent({
   const today = dayKey(nowMs);
   const sum = (items: readonly TimeTrackerEntry[]) => items.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
   if (card.type === "today-total") {
-    const todayRows = entries.filter((entry) => dayKey(entryStart(entry)) === today);
+    const todayRows = entriesOnDay(entries, today, nowMs);
     const total = sum(todayRows);
     return (
       <InsightNumber
@@ -2981,33 +2994,33 @@ function InsightContent({
     );
   }
   if (card.type === "week-total") {
-    const rows = entries.filter((entry) => entryStart(entry) >= startOfWeek(nowMs));
+    const rows = entriesInWindow(entries, startOfWeek(nowMs), nowMs, nowMs);
     const total = sum(rows);
     return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "week")} detail={detailText([ttCopy(lang, "week"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "month-total") {
-    const rows = entries.filter((entry) => entryStart(entry) >= startOfMonth(nowMs));
+    const rows = entriesInWindow(entries, startOfMonth(nowMs), nowMs, nowMs);
     const total = sum(rows);
     return <InsightNumber value={formatDuration(total)} sub={ttCopy(lang, "month")} detail={detailText([ttCopy(lang, "month"), formatDuration(total), entryCountText(rows.length, lang)])} />;
   }
   if (card.type === "avg-day") {
-    const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size || 1;
+    const days = new Set(inRange.flatMap((entry) => [...entryDayTotals(entry, nowMs).keys()])).size || 1;
     const total = sum(inRange);
     return <InsightNumber value={formatDuration(total / days)} sub={ttCopy(lang, "avgPerDay")} detail={detailText([`${days} ${ttCopy(lang, "daysTracked")}`, `${ttCopy(lang, "duration")}: ${formatDuration(total)}`])} />;
   }
   if (card.type === "days-tracked") {
-    const days = new Set(inRange.map((entry) => dayKey(entryStart(entry)))).size;
+    const days = new Set(inRange.flatMap((entry) => [...entryDayTotals(entry, nowMs).keys()])).size;
     return <InsightNumber value={String(days)} sub={ttCopy(lang, "daysTracked")} detail={detailText([ttCopy(lang, "daysTracked"), `${days}`, entryCountText(inRange.length, lang)])} />;
   }
   if (card.type === "donut-today" || card.type === "donut-range") {
-    const list = card.type === "donut-today" ? entries.filter((entry) => dayKey(entryStart(entry)) === today) : inRange;
+    const list = card.type === "donut-today" ? entriesOnDay(entries, today, nowMs) : inRange;
     return <DistributionInsight list={list} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "cat-ranking") {
     return <RankingInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "goal-progress") {
-    const list = entries.filter((entry) => dayKey(entryStart(entry)) === today);
+    const list = entriesOnDay(entries, today, nowMs);
     return <GoalInsight categories={categories} list={list} nowMs={nowMs} lang={lang} />;
   }
   if (card.type === "sub-split") {
@@ -3018,9 +3031,13 @@ function InsightContent({
     const buckets = [0, 0, 0, 0, 0, 0, 0];
     const counts = [0, 0, 0, 0, 0, 0, 0];
     for (const entry of inRange) {
-      const bucket = (new Date(entryStart(entry)).getDay() + 6) % 7;
-      buckets[bucket] = (buckets[bucket] ?? 0) + entryDuration(entry, nowMs);
-      counts[bucket] = (counts[bucket] ?? 0) + 1;
+      const counted = new Set<number>();
+      for (const [key, value] of entryDayTotals(entry, nowMs)) {
+        const bucket = (new Date(keyToDate(key)).getDay() + 6) % 7;
+        buckets[bucket] = (buckets[bucket] ?? 0) + value;
+        counted.add(bucket);
+      }
+      for (const bucket of counted) counts[bucket] = (counts[bucket] ?? 0) + 1;
     }
     const labels = lang === "zh" ? ["一", "二", "三", "四", "五", "六", "日"] : ["M", "T", "W", "T", "F", "S", "S"];
     return <MiniBars rows={buckets.map((value, index) => ({ key: String(index), value, label: labels[index] ?? "", title: formatDuration(value), detail: detailText([labels[index] ?? "", formatDuration(value), entryCountText(counts[index] ?? 0, lang)]) }))} />;
@@ -3030,7 +3047,7 @@ function InsightContent({
     const rows = Array.from({ length: count }, (_, index) => {
       const start = startOfDay(addLocalDays(nowMs, -(count - 1 - index)).getTime());
       const key = dayKey(start);
-      const dayEntries = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+      const dayEntries = entriesOnDay(entries, key, nowMs);
       const value = dayEntries.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
       return {
         key,
@@ -3045,10 +3062,7 @@ function InsightContent({
   if (card.type === "by-hour") {
     const buckets = Array.from({ length: 24 }, () => 0);
     for (const entry of inRange) {
-      for (const segment of entry.segments) {
-        const bucket = new Date(segment.start).getHours();
-        buckets[bucket] = (buckets[bucket] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
-      }
+      entryHourTotals(entry, nowMs).forEach((value, hour) => { buckets[hour] = (buckets[hour] ?? 0) + value; });
     }
     return <HourChart values={buckets} lang={lang} />;
   }
@@ -3065,7 +3079,7 @@ function InsightContent({
     return <FocusRhythmInsight list={inRange} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   if (card.type === "recent-sessions") {
-    return <RecentSessionsInsight list={entries} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
+    return <RecentSessionsInsight list={entriesInWindow(entries, Number.NEGATIVE_INFINITY, nowMs, nowMs).map(sourceEntry)} nowMs={nowMs} lang={lang} categoryMap={categoryMap} />;
   }
   return null;
 }
@@ -3285,7 +3299,7 @@ function Heatmap({ entries, nowMs, lang }: { readonly entries: readonly TimeTrac
   for (let index = 0; index < weeks * 7; index += 1) {
     const ts = addLocalDays(start, index).getTime();
     const key = dayKey(ts);
-    const rows = entries.filter((entry) => dayKey(entryStart(entry)) === key);
+    const rows = entriesOnDay(entries, key, nowMs);
     const value = rows.reduce((total, entry) => total + entryDuration(entry, nowMs), 0);
     max = Math.max(max, value);
     cells.push({ key, value, count: rows.length });
@@ -3325,14 +3339,12 @@ function RangeSummaryInsight({
   const hourTotals = Array.from({ length: 24 }, () => 0);
   let longest: TimeTrackerEntry | undefined;
   for (const entry of list) {
-    const key = dayKey(entryStart(entry));
     const value = entryDuration(entry, nowMs);
-    const current = dayTotals.get(key) ?? { value: 0, count: 0 };
-    dayTotals.set(key, { value: current.value + value, count: current.count + 1 });
-    for (const segment of entry.segments) {
-      const hour = new Date(segment.start).getHours();
-      hourTotals[hour] = (hourTotals[hour] ?? 0) + Math.max(0, (segment.end ?? nowMs) - segment.start);
+    for (const [key, contribution] of entryDayTotals(entry, nowMs)) {
+      const current = dayTotals.get(key) ?? { value: 0, count: 0 };
+      dayTotals.set(key, { value: current.value + contribution, count: current.count + 1 });
     }
+    entryHourTotals(entry, nowMs).forEach((duration, hour) => { hourTotals[hour] = (hourTotals[hour] ?? 0) + duration; });
     if (longest === undefined || value > entryDuration(longest, nowMs)) longest = entry;
   }
   const bestDay = Array.from(dayTotals.entries()).sort((a, b) => b[1].value - a[1].value)[0];
@@ -3438,15 +3450,13 @@ function FocusRhythmInsight({
 }) {
   const hours = Array.from({ length: 24 }, () => ({ total: 0, count: 0, categoryTotals: new Map<string, number>() }));
   for (const entry of list) {
-    for (const segment of entry.segments) {
-      const hour = new Date(segment.start).getHours();
-      const value = Math.max(0, (segment.end ?? nowMs) - segment.start);
+    entryHourTotals(entry, nowMs).forEach((value, hour) => {
       const bucket = hours[hour];
-      if (bucket === undefined) continue;
+      if (bucket === undefined || value <= 0) return;
       bucket.total += value;
       bucket.count += 1;
       bucket.categoryTotals.set(entry.categoryId, (bucket.categoryTotals.get(entry.categoryId) ?? 0) + value);
-    }
+    });
   }
   const max = Math.max(...hours.map((hour) => hour.total), 1);
   if (max <= 1) return <NoData lang={lang} />;

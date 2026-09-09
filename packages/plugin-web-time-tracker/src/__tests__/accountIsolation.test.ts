@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { expect, it } from 'vitest';
 import { accountScope } from '@repo/plugin-web-storage';
 import { readTimeTrackerEntries, writeTimeTrackerEntries } from '../internal/storage.js';
 it('isolates time entries and rejects a retained previous account writer', () => {

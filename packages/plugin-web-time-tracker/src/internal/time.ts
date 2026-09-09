@@ -59,12 +59,70 @@ export function entryLastEnd(entry: TimeTrackerEntry, nowMs: number): number {
 }
 
 export function segmentDuration(segment: TimeTrackerSegment, nowMs: number): number {
-  const end = segment.end ?? nowMs;
-  return Math.max(0, end - segment.start);
+  const end = Math.min(segment.end ?? nowMs, nowMs);
+  return Number.isFinite(segment.start) && Number.isFinite(end) ? Math.max(0, end - segment.start) : 0;
 }
 
 export function entryDuration(entry: TimeTrackerEntry, nowMs: number): number {
-  return entry.segments.reduce((total, segment) => total + segmentDuration(segment, nowMs), 0);
+  return accountingSegments(entry, nowMs).reduce((total, segment) => total + segmentDuration(segment, nowMs), 0);
+}
+
+/** Read-only report views keep original segments/IDs. Metadata never enters persisted JSON. */
+const accountingWindows = new WeakMap<TimeTrackerEntry, { source: TimeTrackerEntry; start: number; end: number }>();
+export function sourceEntry(entry: TimeTrackerEntry): TimeTrackerEntry {
+  return accountingWindows.get(entry)?.source ?? entry;
+}
+export function accountingSegments(entry: TimeTrackerEntry, nowMs: number): readonly TimeTrackerSegment[] {
+  const window = accountingWindows.get(entry);
+  const start = window?.start ?? Number.NEGATIVE_INFINITY;
+  const end = Math.min(window?.end ?? nowMs, nowMs);
+  return entry.segments.flatMap(segment => {
+    if (!Number.isFinite(segment.start) || !Number.isFinite(segment.end ?? nowMs)) return [];
+    const a = Math.max(start, segment.start);
+    const b = Math.min(end, segment.end ?? nowMs);
+    return b > a ? [{ start: a, end: b }] : [];
+  });
+}
+export function entriesInWindow(entries: readonly TimeTrackerEntry[], start: number, end: number, nowMs: number): readonly TimeTrackerEntry[] {
+  return entries.flatMap(entry => {
+    const previous = accountingWindows.get(entry);
+    const view = { ...sourceEntry(entry) };
+    accountingWindows.set(view, { source: sourceEntry(entry), start: Math.max(start, previous?.start ?? start), end: Math.min(end, previous?.end ?? end, nowMs) });
+    return entryDuration(view, nowMs) > 0 ? [view] : [];
+  });
+}
+export function entriesOnDay(entries: readonly TimeTrackerEntry[], key: string, nowMs: number): readonly TimeTrackerEntry[] {
+  return entriesInWindow(entries, keyToDate(key), keyToDate(addDays(key, 1)), nowMs);
+}
+/** Split at civil midnight; 23/25-hour days preserve elapsed milliseconds. */
+export function entryDayTotals(entry: TimeTrackerEntry, nowMs: number): ReadonlyMap<string, number> {
+  const result = new Map<string, number>();
+  for (const segment of accountingSegments(entry, nowMs)) {
+    let cursor = segment.start;
+    const end = segment.end ?? nowMs;
+    while (cursor < end) {
+      const key = dayKey(cursor);
+      const stop = Math.min(end, keyToDate(addDays(key, 1)));
+      result.set(key, (result.get(key) ?? 0) + stop - cursor);
+      cursor = stop;
+    }
+  }
+  return result;
+}
+/** Epoch-minute boundaries retain repeated DST hours (including half-hour transitions). */
+export function entryHourTotals(entry: TimeTrackerEntry, nowMs: number): readonly number[] {
+  const result = Array.from({ length: 24 }, () => 0);
+  for (const segment of accountingSegments(entry, nowMs)) {
+    let cursor = segment.start;
+    const end = segment.end ?? nowMs;
+    while (cursor < end) {
+      const stop = Math.min(end, (Math.floor(cursor / MINUTE_MS) + 1) * MINUTE_MS);
+      const hour = new Date(cursor).getHours();
+      result[hour] = (result[hour] ?? 0) + stop - cursor;
+      cursor = stop;
+    }
+  }
+  return result;
 }
 
 export function isActiveEntry(entry: TimeTrackerEntry): boolean {

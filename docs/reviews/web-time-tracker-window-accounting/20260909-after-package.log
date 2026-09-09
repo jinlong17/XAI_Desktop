@@ -1,0 +1,20 @@
+
+> @repo/plugin-web-time-tracker@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-time-tracker
+
+ ✓ src/__tests__/localDate.test.ts (1 test) 3ms
+ ✓ src/__tests__/accountIsolation.test.ts (1 test) 5ms
+ ✓ src/__tests__/time.test.ts (3 tests) 5ms
+ ✓ src/__tests__/windowAccounting.test.ts (7 tests) 15ms
+ ✓ src/__tests__/registration.test.tsx (1 test) 3ms
+ ✓ src/__tests__/windowConsumers.test.tsx (26 tests) 901ms
+ ✓ src/__tests__/TimeTrackerModule.test.tsx (24 tests) 1607ms
+
+ Test Files  7 passed (7)
+      Tests  63 passed (63)
+   Start at  12:16:32
+   Duration  3.34s (transform 690ms, setup 2.12s, collect 1.69s, tests 2.54s, environment 5.16s, prepare 772ms)
+

@@ -1,7 +1,7 @@
 import { accountScope, registerAccountMigrationValidator, type AccountScope } from "@repo/plugin-web-storage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TIME_TRACKER_CATEGORIES } from "./defaults.js";
-import { entryDuration, entryStart, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
+import { entryDuration, entriesInWindow, isRunningEntry, startOfDay, startOfWeek } from "./time.js";
 import type {
   LocalizedText,
   TimeTrackerCategory,
@@ -189,8 +189,8 @@ export function getTimeTrackerSnapshot(nowMs = Date.now()): TimeTrackerSnapshot 
   const entries = readTimeTrackerEntries();
   const todayStart = startOfDay(nowMs);
   const weekStart = startOfWeek(nowMs);
-  const todayEntries = entries.filter((entry) => entryStart(entry) >= todayStart);
-  const weekEntries = entries.filter((entry) => entryStart(entry) >= weekStart);
+  const todayEntries = entriesInWindow(entries, todayStart, nowMs, nowMs);
+  const weekEntries = entriesInWindow(entries, weekStart, nowMs, nowMs);
   const activeEntries = entries.filter(isRunningEntry);
   const byCategory = new Map<string, number>();
   for (const entry of todayEntries) {
@@ -230,7 +230,7 @@ export function useTimeTrackerStorage<T>(read: (scope?: AccountScope) => T, writ
       window.removeEventListener("storage", refresh);
       window.removeEventListener(TIME_TRACKER_STORAGE_EVENT, refresh);
     };
-  }, [read]);
+  }, [read, scope]);
 
   const setStored = useCallback(
     (next: T | ((prev: T) => T)) => {
@@ -240,7 +240,7 @@ export function useTimeTrackerStorage<T>(read: (scope?: AccountScope) => T, writ
       write(nextValue, scope);
       setValue(nextValue);
     },
-    [write],
+    [write, scope],
   );
 
   return [value, setStored] as const;

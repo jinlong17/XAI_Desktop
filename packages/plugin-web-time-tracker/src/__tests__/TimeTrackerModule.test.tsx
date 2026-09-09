@@ -638,7 +638,7 @@ describe("TimeTrackerModule", () => {
     });
 
     expect(screen.getByText("Range summary")).toBeInTheDocument();
-    expect(screen.getByText("Longest session").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Research notes");
+    expect(screen.getByText("Longest contribution in range").closest(".tt-tip")?.getAttribute("data-tip")).toContain("Research notes");
     const studyTip = screen
       .getAllByText("Study")
       .map((element) => element.closest(".tt-tip")?.getAttribute("data-tip") ?? "")
@@ -666,7 +666,7 @@ describe("TimeTrackerModule", () => {
       fireEvent.click(screen.getByText("Delete range"));
     });
 
-    expect(screen.getByText(/Delete 1 records/)).toBeInTheDocument();
+    expect(screen.getByText(/Delete 1 complete records intersecting/)).toBeInTheDocument();
     act(() => {
       fireEvent.click(within(screen.getByRole("dialog")).getByText("Delete"));
     });
