@@ -12,6 +12,7 @@ const sourceCommit = process.argv[2];
 if (!sourceCommit) throw new Error('fixed revision required');
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const output = fileURLToPath(new URL('./', import.meta.url));
+const logName = process.env.BOARD_WORKSPACE_NATIVE_LOG ?? 'native-results.log';
 const directory = mkdtempSync(join(tmpdir(), 'xai-board-workspace-'));
 const snapshot = join(directory, 'source');
 const downloads = join(directory, 'downloads');
@@ -74,7 +75,7 @@ try {
   await click('[data-testid=bv-switch]'); await click('[data-testid=bs-new-workspace]'); await input('[data-testid=bs-ws-new-name]', 'A-only'); await ev('verify.denyWorkspace()'); await click('[data-testid=bs-ws-new-add]'); await ev('verify.restore()'); const aKey = await ev('verify.workspaceKey'), aBytes = await raw(aKey); const b = await ev('verify.switchToB()'); const bBytes = await raw(b.workspaceKey); await clickText('Retry workspace change'); await clickText('Export workspace draft'); assert.equal(await raw(aKey), aBytes); assert.equal(await raw(b.workspaceKey), bBytes); assert.equal(readdirSync(downloads).length, 0); assert((await ev('document.body.innerText')).includes('Export failed')); record('old-account-retry-export-denied', { pass: true });
   record('PASS', { scope: 'Board workspace CRUD and ordinary board selection', checks: 4 });
 } finally {
-  writeFileSync(join(output, 'native-results.log'), records.map(record => JSON.stringify(record)).join('\n') + '\n');
+  writeFileSync(join(output, logName), records.map(record => JSON.stringify(record)).join('\n') + '\n');
   socket?.close(); server?.closeAllConnections(); server?.close();
   if (browser?.exitCode === null) browser.kill('SIGTERM');
   await delay(500); if (browser?.exitCode === null) browser.kill('SIGKILL');

@@ -1,6 +1,6 @@
 # Board workspace save recovery — author verification
 
-Commit `1ae0ee8` makes workspace create, rename, recolor, empty-only delete,
+Product commit `3e7f17a` makes workspace create, rename, recolor, empty-only delete,
 and ordinary board selection wait for a successful persistence result. A failed
 write keeps the switcher open with a recovery notice and Retry, Export, and
 Discard actions. The recovery hook captures its account scope and the raw
@@ -20,12 +20,18 @@ Validation completed on this commit:
   replacement/removal refusal, recovery after Discard, and A-to-B refusal.
 - `pnpm --filter @repo/plugin-web-board-workspaces test`: 25 files / 299 tests
   passed. `typecheck` and `lint --max-warnings 0` both exited zero.
-- `node docs/reviews/web-board-workspace-save-fix/verify-native.mjs 1ae0ee8`:
+- `node docs/reviews/web-board-workspace-save-fix/verify-native.mjs 3e7f17a`:
   isolated headless Chrome used a fresh profile and download directory. It
   verified real downloaded JSON for the latest create and rename drafts,
   create-id stability through retry, normal and failed ordinary board selection,
-  and old-account retry/export refusal. The recorded output is
-  `native-results.log`.
+  and old-account retry/export refusal. The fixed-product output is
+  `native-results-3e7f17a.log`; the earlier `native-results.log` for `1ae0ee8`
+  is retained as historical evidence and is not the acceptance target.
+
+Native coverage is limited to create, rename, ordinary board selection, and
+old-account refusal. Recolor and workspace deletion have only the component
+tests in this batch, including successful empty deletion and unavailable
+last/nonempty deletion. They are not claimed as native-browser coverage.
 
 The test fixtures deliberately synthesize storage quota failures and contain no
 production account, browser profile, or external service. This is author
