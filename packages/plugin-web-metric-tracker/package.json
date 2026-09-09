@@ -6,7 +6,8 @@
   "description": "Metric Tracker module for XAI Web Console \u2014 V1 weight logging, BMI, trends, goals, and share-card export.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/storage.ts"
   ],
   "exports": {
     ".": {

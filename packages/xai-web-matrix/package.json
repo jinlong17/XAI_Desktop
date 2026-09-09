@@ -5,7 +5,9 @@
   "type": "module",
   "description": "Eisenhower 2×2 Matrix module for XAI Web Console (W2 row #13).",
   "sideEffects": [
-    "./src/matrix.css"
+    "./src/matrix.css",
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

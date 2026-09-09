@@ -6,7 +6,8 @@
   "description": "Board (Kanban) core module for XAI Web Console — canonical Board/Card/List schema (DESIGN.md §9.3) + Kanban view + 10-color list-color palette (tokens.css OKLCH; no hard-coded hex) + native HTML5 cross-list DnD with atomic-move + in-row add-card + add-list composers + bilingual rendering + persistence via usePref on xai_boards_v2 + xai_active_board. Foundation layer for downstream rows xai-web-board-views (#8) and xai-web-board-workspaces (#9).",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

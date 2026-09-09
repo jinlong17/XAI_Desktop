@@ -6,7 +6,8 @@
   "description": "Calendar module for XAI Web Console (W2 row #12) — Month grid + 4-color event chips + view switcher + deep-link receive on web:shell:module-change.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

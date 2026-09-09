@@ -6,7 +6,8 @@
   "description": "Bookkeeping module for XAI Web Console \u2014 ledgers, accounts, records, budgets, assets, investments, recurring rules, local persistence, and sync-ready modeling.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/storage.ts"
   ],
   "exports": {
     ".": {

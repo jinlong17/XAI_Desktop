@@ -6,7 +6,8 @@
   "description": "Meditation module for XAI Web Console (W2 row #16) — 5 scene gradients + 4 live clock variants + 5 ambient sounds + 5 durations + fullscreen player with rising particles + 8s breathing ring.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

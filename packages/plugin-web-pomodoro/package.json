@@ -6,7 +6,8 @@
   "description": "Pomodoro module for XAI Web Console — circular timer with absolute-timestamp accuracy, Start/Pause/Resume/End, 4 overview cards, 7-day focus-record list.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

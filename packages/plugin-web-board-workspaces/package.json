@@ -6,7 +6,8 @@
   "description": "Board workspace + multi-board layer for XAI Web Console — Workspace chips, Board Switcher modal (search + scope tabs + grouped grid + New board), Board Creator (3 templates: Basic Kanban / PM for Teams / Blank), PM Status Overview SVG ring chart with live percentages, 4-button multi-panel switcher (Inbox 260px / Planner 320px / Board flex / Switch boards trigger) with at-least-one-open invariant, bilingual via per-file STR tables, persistence via usePref on xai_board_panels + xai_board_inbox with boundary narrowing (both SHIPPED unknown-typed slots). Wraps @repo/plugin-web-board-core's BoardView + schema + helpers + seed.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

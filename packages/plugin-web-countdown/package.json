@@ -6,7 +6,8 @@
   "description": "Countdown module for XAI Web Console — bilingual countdown card grid with add/edit/delete and live remaining-days.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

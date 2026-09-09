@@ -6,7 +6,8 @@
   "description": "Tasks module for XAI Web Console — 4-bucket DnD board with date-rewrite and persistence.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

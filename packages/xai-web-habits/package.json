@@ -6,7 +6,8 @@
   "description": "Habits module for XAI Web Console (W2 row #15) — check-toggle, persistence, 6/365 progress, month calendar, diary.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/accountMigration.ts"
   ],
   "exports": {
     ".": {

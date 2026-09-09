@@ -6,7 +6,9 @@
   "description": "Time Tracker module for XAI Web Console \u2014 category-based time tracking with pause/resume, manual records, local persistence, and dashboard summary support.",
   "sideEffects": [
     "./src/styles.css",
-    "./src/index.ts"
+    "./src/index.ts",
+    "./src/internal/storage.ts",
+    "./src/TimeTrackerModule.tsx"
   ],
   "exports": {
     ".": {
