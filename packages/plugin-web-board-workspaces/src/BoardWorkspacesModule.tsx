@@ -31,6 +31,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { accountScope, usePref } from "@repo/plugin-web-storage";
+import { useBoardCreateRecovery, type BoardCreateDraft } from "./internal/useBoardCreateRecovery.js";
 import { ensureBoardTaskLink } from "./internal/taskLinkCommand.js";
 import {
   findBoardLinkedTask,
@@ -38,7 +39,6 @@ import {
 } from "@repo/plugin-web-tasks";
 import {
   BoardView,
-  BOARD_TEMPLATES,
   applyBoardAutomationLite,
   loadBoardsOrDefault,
   loadWorkspacesOrDefault,
@@ -553,28 +553,21 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   }, [boardVisibility, writeActiveBoard]);
 
   // ---- Switcher actions --------------------------------------------------
-  const createBoard = useCallback(
-    (templateId: BoardTemplate, name: string, workspaceId: string) => {
-      const tpl = BOARD_TEMPLATES.find((t) => t.id === templateId);
-      if (!tpl) return;
-      const newId = "b-" + Date.now().toString(36);
-      const newBoard: Board = {
-        id: newId,
-        workspaceId,
-        name: { en: name, zh: name },
-        cover: tpl.cover,
-        template: templateId,
-        lists: tpl.lists() as BoardListData[],
-      };
-      setRawBoards(
-        preserveBoardStorageFormat(rawBoards, [...boards, newBoard]) as unknown,
-      );
-      setActiveBoardId(newId);
-      setCreateOpen(false);
-      setSwitcherOpen(false);
-    },
-    [boards, rawBoards, setRawBoards, setActiveBoardId],
-  );
+  const boardCreation = useBoardCreateRecovery(rawBoards, workspaces, setRawBoards, setActiveBoardId);
+  const [boardCreateExportFailed, setBoardCreateExportFailed] = useState(false);
+  const createBoard = (templateId: BoardTemplate, name: string, workspaceId: string) => {
+    if (boardCreation.create({ templateId, name, workspaceId })) {
+      setCreateOpen(false); setSwitcherOpen(false); setBoardCreateExportFailed(false);
+    }
+  };
+  const exportBoardCreate = (draft: BoardCreateDraft) => {
+    try {
+      const blob = new Blob([JSON.stringify(boardCreation.snapshot(draft), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob), link = document.createElement('a');
+      link.href = url; link.download = 'board-create-recovery.json'; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000); setBoardCreateExportFailed(false);
+    } catch { setBoardCreateExportFailed(true); }
+  };
 
   const deleteBoard = useCallback(
     (id: string) => {
@@ -1184,7 +1177,11 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
         <BoardCreator
           lang={lang}
           workspaces={workspaces}
-          onCancel={() => setCreateOpen(false)}
+          error={boardCreation.error}
+          created={boardCreation.created}
+          exportFailed={boardCreateExportFailed}
+          onExport={exportBoardCreate}
+          onCancel={() => { boardCreation.reset(); setBoardCreateExportFailed(false); setCreateOpen(false); }}
           onCreate={createBoard}
         />
       )}

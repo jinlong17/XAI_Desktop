@@ -1710,3 +1710,6 @@
 }
 
 .task-link-retry { min-height: 44px; }
+
+.bc-create-recovery { padding: 1rem; border: 1px solid var(--border); border-radius: .5rem; overflow-wrap: anywhere; }
+.bc-create-recovery .btn, .board-creator .bc-foot .btn { min-height: 44px; }
