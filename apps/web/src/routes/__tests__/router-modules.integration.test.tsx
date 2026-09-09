@@ -1,3 +1,4 @@
+import { prepareAccountFixture } from "../../__tests__/accountFixture.js";
 // @vitest-environment jsdom
 
 /**
@@ -97,6 +98,7 @@ interface MountedApp {
 }
 
 async function mountRouter(initialEntries: string[]): Promise<MountedApp> {
+  prepareAccountFixture("router-modules-test-account");
   const container = document.createElement("div");
   document.body.appendChild(container);
   const root = createRoot(container);

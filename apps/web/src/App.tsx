@@ -34,6 +34,7 @@ import {
   applyRailPos,
 } from "@repo/plugin-web-tokens";
 import { usePref } from "@repo/plugin-web-storage";
+import { AccountStorageGate, invalidateAccountIdentity } from "./providers/AccountStorageGate.js";
 import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
 import {
   Shell,
@@ -186,6 +187,7 @@ function AppInner() {
   //        3) hard-redirect to "/" so AuthRouteGate takes over.
   const { client, clearSessionStorage } = useWebAuthSession();
   const handleSignOut = useCallback(async () => {
+    invalidateAccountIdentity(null);
     try {
       if (client && typeof client.auth?.signOut === "function") {
         await client.auth.signOut();
@@ -238,9 +240,11 @@ function AppInner() {
 
 export function App() {
   return (
-    <CommandPaletteProvider>
-      <AppInner />
-    </CommandPaletteProvider>
+    <AccountStorageGate>
+      <CommandPaletteProvider>
+        <AppInner />
+      </CommandPaletteProvider>
+    </AccountStorageGate>
   );
 }
 

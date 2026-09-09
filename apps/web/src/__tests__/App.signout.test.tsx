@@ -1,3 +1,4 @@
+import { prepareAccountFixture } from "./accountFixture.js";
 /**
  * App.signout.test.tsx — APP-SO1..APP-SO4
  *
@@ -59,7 +60,7 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
     get client() { return mockSessionConfig.client; },
     clearSessionStorage: mockClearSessionStorage,
     state: "authenticated",
-    session: null,
+    session: { user: { id: "host-test-account" } },
     deviceId: null,
     syncVersion: "2026-05",
     refreshSession: vi.fn(),
@@ -70,6 +71,7 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
 
 beforeEach(() => {
   localStorage.clear();
+  prepareAccountFixture();
   document.documentElement.removeAttribute("data-theme");
   document.documentElement.removeAttribute("data-density");
   document.documentElement.removeAttribute("data-rail-pos");
