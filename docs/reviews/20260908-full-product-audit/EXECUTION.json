@@ -6,10 +6,12 @@
   "items": [
     {
       "id": "REL-01",
-      "status": "in_progress",
+      "status": "verification_pending",
       "evidence": [
         "commit:2f04bd4",
-        "../web-local-time-contract/20260909-bug-diagnose.md"
+        "../web-local-time-contract/20260909-bug-diagnose.md",
+        "commit:337d2b8",
+        "../web-local-time-contract/20260909-parent-verification.md"
       ]
     },
     {
