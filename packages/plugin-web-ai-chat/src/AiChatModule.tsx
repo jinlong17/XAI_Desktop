@@ -206,7 +206,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           ? (prev as unknown[]).filter(isAiConvoRecord)
           : [];
         const index = safe.findIndex((c) => c.id === id);
-        if (index < 0) return safe;
+        if (index < 0) throw new Error("Conversation seed is not available; preserve the draft.");
 
         const storedMessages = normalizeMessages(nextMessages);
         const last = storedMessages[storedMessages.length - 1];

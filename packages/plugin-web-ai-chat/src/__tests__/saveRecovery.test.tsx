@@ -117,3 +117,13 @@ it.each(["Hide insights", "Voice off"])("device preference failure is visible an
   expect(localStorage.getItem(key)).not.toBe(before);
   expect(s.container.querySelector(".ai-save-recovery")).toBeNull();
 });
+it("discard refreshes canonical conversations even when external event was never delivered", async () => {
+  const s = setup(); await s.send("original");
+  const external = s.records(); external[0].title = "External title"; external[0].messages = [{ role: "user", text: "External transcript", attachments: null }];
+  localStorage.setItem(s.key, JSON.stringify(external));
+  await s.send("local conflict");
+  fireEvent.click(screen.getByText("Discard unsaved content"));
+  fireEvent.click(screen.getByText("External title", { selector: ".ai-convo-title" }));
+  expect(s.container.querySelector(".ai-content")?.textContent).toContain("External transcript");
+  expect(s.container.querySelector(".ai-content")?.textContent).not.toContain("local conflict");
+});

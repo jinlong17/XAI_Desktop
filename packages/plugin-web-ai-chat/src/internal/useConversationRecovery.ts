@@ -9,10 +9,12 @@ type Pending = { records: AiConvoRecord[]; baseline: string | null; operation: O
 /** Mounted-page recovery only. The original raw baseline survives every failed retry. */
 export function useConversationRecovery() {
   const [raw, write] = usePref("xai_ai_convos");
+  const [restored, setRestored] = useState<{ source: typeof raw; records: AiConvoRecord[] } | null>(null);
+  const visibleRaw = restored?.source === raw ? restored.records : raw;
   const [scope] = useState(() => accountScope.capture());
   const pending = useRef<Pending | null>(null);
   const committed = useRef<AiConvoRecord[]>([]);
-  committed.current = Array.isArray(raw) ? (raw as unknown[]).filter(isAiConvoRecord) : [];
+  committed.current = Array.isArray(visibleRaw) ? (visibleRaw as unknown[]).filter(isAiConvoRecord) : [];
   const [error, setError] = useState<"unsaved" | "conflict" | "owner" | null>(null);
   const read = useCallback(() => {
     accountScope.assertCurrent(scope);
@@ -67,16 +69,17 @@ export function useConversationRecovery() {
       const parsed: unknown = baseline === null ? [] : JSON.parse(baseline);
       if (!Array.isArray(parsed) || !parsed.every(isAiConvoRecord)) { setError("conflict"); return false; }
       observed.current = baseline;
+      setRestored({ source: raw, records: parsed });
       committed.current = parsed;
       pending.current = null;
       setError(null);
       return true;
     } catch { setError("unsaved"); return false; }
-  }, [scope, read]);
+  }, [scope, read, raw]);
   const snapshot = useCallback(() => {
     accountScope.assertCurrent(scope);
     if (!accountScope.isReady(scope)) throw new Error("Account changed");
     return { records: pending.current?.records ?? committed.current, operation: pending.current?.operation ?? null };
   }, [scope]);
-  return { raw, save, retry, discard, snapshot, error, pending };
+  return { raw: visibleRaw, save, retry, discard, snapshot, error, pending };
 }
