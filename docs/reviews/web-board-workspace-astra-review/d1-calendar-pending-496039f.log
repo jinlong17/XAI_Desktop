@@ -1,0 +1,36 @@
+revision=496039f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-mMUaHk
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx > completion of a pending old create must not close the subsequently opened editor or erase its draft
+old-completion-new-editor {"editorOpen":false,"latestDraft":"New unsaved editor draft"}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx (1 test | 1 failed) 328ms
+   × completion of a pending old create must not close the subsequently opened editor or erase its draft 327ms
+     → expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:14:41
+   Duration  1.73s (transform 389ms, setup 342ms, collect 349ms, tests 328ms, environment 411ms, prepare 65ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx > completion of a pending old create must not close the subsequently opened editor or erase its draft
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx > completion of a pending old create must not close the subsequently opened editor or erase its draft
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx:19:84
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

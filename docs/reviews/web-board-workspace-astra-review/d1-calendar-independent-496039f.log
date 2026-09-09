@@ -1,0 +1,173 @@
+revision=496039f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-tt63pf
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+invalid-civil-date {"accepted":true,"physicalWritten":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+invalid-duration {"accepted":true,"physicalWritten":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+invalid-recurrence {"accepted":true,"physicalWritten":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+queued-save {"bytesPreserved":false,"editorOpen":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+queued-delete {"bytesPreserved":false,"editorOpen":false}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx (11 tests | 6 failed) 787ms
+   × Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event 21ms
+     → expected { …(8) } to be null
+     → expected '{"format":"xai-command-state","versio…' to be null
+   × Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event 4ms
+     → expected { …(8) } to be null
+     → expected '{"format":"xai-command-state","versio…' to be null
+   × Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event 6ms
+     → expected { …(8) } to be null
+     → expected '{"format":"xai-command-state","versio…' to be null
+   × invalid current domain rejects repair-looking update without silently retaining an impossible persisted date 4ms
+     → expected { id: 'e1', title: 'Changed', …(6) } to be null
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+   × real CalendarModule queued save must preserve an externally edited target and keep recovery open 217ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected false to be true // Object.is equality
+   × real CalendarModule queued delete must preserve an externally edited target and keep recovery open 137ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected false to be true // Object.is equality
+   ✓ queued create merges a legitimate external addition and creates exactly one draft 201ms
+   ✓ quota failure retains latest edited form and retry commits the latest draft once 182ms
+   ✓ composer catches an actual rejected Promise, preserves the draft, and permits retry 14ms
+   ✓ missing target update/delete refuses without creating an empty replacement record 1ms
+   ✓ queued A-to-B create refuses and keeps both account records untouched 1ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 5 passed (11)
+   Start at  16:13:44
+   Duration  2.15s (transform 394ms, setup 294ms, collect 379ms, tests 787ms, environment 425ms, prepare 70ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > invalid current domain rejects repair-looking update without silently retaining an impossible persisted date
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > queued create merges a legitimate external addition and creates exactly one draft
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > quota failure retains latest edited form and retry commits the latest draft once
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+AssertionError: expected { …(8) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "colorPreset": "mint",
+  "createdAt": "2026-05-22T17:00:00.000Z",
+  "endISO": "2026-04-31T10:00",
+  "id": "b4d79dee-c99a-4631-8412-56d2127dbc3a",
+  "recurrence": null,
+  "startISO": "2026-04-31T09:00",
+  "title": "Original",
+  "updatedAt": "2026-05-22T17:00:00.000Z",
+}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:22:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+AssertionError: expected '{"format":"xai-command-state","versio…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":{\"b4d79dee-c99a-4631-8412-56d2127dbc3a\":{\"id\":\"b4d79dee-c99a-4631-8412-56d2127dbc3a\",\"title\":\"Original\",\"startISO\":\"2026-04-31T09:00\",\"endISO\":\"2026-04-31T10:00\",\"colorPreset\":\"mint\",\"recurrence\":null,\"createdAt\":\"2026-05-22T17:00:00.000Z\",\"updatedAt\":\"2026-05-22T17:00:00.000Z\"}},\"receipts\":{}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:22:68
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > invalid current domain rejects repair-looking update without silently retaining an impossible persisted date
+AssertionError: expected { id: 'e1', title: 'Changed', …(6) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "colorPreset": "mint",
+  "createdAt": "2026-05-22T00:00:00.000Z",
+  "endISO": "2026-04-31T10:00",
+  "id": "e1",
+  "recurrence": null,
+  "startISO": "2026-04-31T09:00",
+  "title": "Changed",
+  "updatedAt": "2026-05-22T17:00:00.000Z",
+}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:27:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > invalid current domain rejects repair-looking update without silently retaining an impossible persisted date
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":1,"data":{"e1":{"id":"e1","title":"Original","startISO":"2026-04-31T09:00","endISO":"2026-04-31T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-05-22T00:00:00.000Z","updatedAt":"2026-05-22T00:00:00.000Z"}},"receipts":{}}"
+Received: "{"format":"xai-command-state","version":1,"revision":2,"data":{"e1":{"id":"e1","title":"Changed","startISO":"2026-04-31T09:00","endISO":"2026-04-31T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-05-22T00:00:00.000Z","updatedAt":"2026-05-22T17:00:00.000Z"}},"receipts":{}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:27:68
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":2,"data":{"e1":{"id":"e1","title":"External newer edit","startISO":"2026-05-22T09:00","endISO":"2026-05-22T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-05-22T00:00:00.000Z","updatedAt":"2026-05-22T00:00:00.000Z"}},"receipts":{}}"
+Received: "{"format":"xai-command-state","version":1,"revision":3,"data":{"e1":{"id":"e1","title":"My stale edit","startISO":"2026-05-22T09:00","endISO":"2026-05-22T10:00","colorPreset":"mint","recurrence":null,"createdAt":"2026-05-22T00:00:00.000Z","updatedAt":"2026-05-22T17:00:00.000Z","allDay":false,"reminder":"none"}},"receipts":{}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:39:43
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx:39:75
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
