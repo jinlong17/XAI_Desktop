@@ -2,7 +2,7 @@
 
 最新检查点（2026-09-09）：正式完成 **13/312**。Board workspace保存恢复及启动/queued选择有界接受：产品b353cbb，作者944c5ef，Astra独立501feb7。原queued三反例组件与Chrome通过，正常修正/absent seed/legacy及envelope保存失败重试通过，启动四类损坏八断言通过；包313、作者契约10、浏览器4路径分层记录不合计。原失败证据保留，不宣称原九条旧oracle全部PASS；全Board/REL-05仍开放。
 
-B1已提交fb3ae2f：结果型兼容读取、domain投影、旧sync保护及迁移解包，作者storage136测试/types通过；原六durable断言继续FAIL。父独立1831585固定fb3ae2f发现removePref读取失败被readRawPref吞成null后实际删除envelope（1正确FAIL/1正常拒绝对照PASS），已交Terra先窄修再继续B2，B1未通过独立验收。Astra7c59d3f实际SW/启动链审查确认缺少旧进程排空和版本激活屏障，默认关闭首次envelope激活，不能把仅协议代码完成当完整AI02通过。
+B1有界接受：fb3ae2f与修复7b584b3经Astra de3bf16独立新13断言及storage136/137分别通过；父1831585删除漏洞FAIL由96df149固定原2断言PASS核验，原日志保留。B2实现5c13fec已提交，Calendar/Board raw读取、迁移域校验及raw生命周期测试通过，Astra正在固定快照独立审查。C下一实际批次为storage异步canonical提交原语与故障/重放测试，再接六类订阅和D普通writer；原六持久重放FAIL仍未关闭。Astra7c59d3f已确认SW/启动链缺少旧实例排空及版本激活屏障，首次envelope激活保持默认关闭。
 
 A1 Calendar有界主审接受仍为20a0748/Sol a9b88ba/Astra8045d5d，完整AI-02未关闭。Terra现接已批准B-D：兼容表示→六动作durable→全部writer共同锁及生命周期适配，首先保留原六重放FAIL，再实现分阶段测试。Module已从workspace修复释放，仅由同一Terra按B-D需要适配caller；详情三丢稿FAIL及架构继续排在该共享文件批次之后。
 
