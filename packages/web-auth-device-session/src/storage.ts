@@ -91,7 +91,8 @@ async function getDatabase(factory: IDBFactory, name: string, state: DatabaseSta
   }
 }
 
-function createUseStore(options: CreateIndexedDbStoreOptions = {}): UseStore {
+// Package-internal transaction access for atomic auth persistence participants.
+export function createIndexedDbTransactionStore(options: CreateIndexedDbStoreOptions = {}): UseStore {
   const name = options.dbName ?? DEFAULT_DB_NAME;
   const storeName = options.storeName ?? DEFAULT_STORE_NAME;
   return async (mode, callback) => {
@@ -118,7 +119,7 @@ function createUseStore(options: CreateIndexedDbStoreOptions = {}): UseStore {
 }
 
 export function createIndexedDbStore(options: CreateIndexedDbStoreOptions = {}): KeyValueStore {
-  const store = createUseStore(options);
+  const store = createIndexedDbTransactionStore(options);
   return {
     async getItem(key: string) {
       const value = await get<string>(key, store);
