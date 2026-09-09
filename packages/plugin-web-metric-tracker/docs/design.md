@@ -40,3 +40,5 @@ Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKe
 Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
 
 New/edited measurements serialize measuredAt as an explicit UTC ISO instant after resolving the entered local clock. Today/yesterday quick-entry dates resolve at save time. Legacy offsetless records are preserved (their historical source timezone cannot be reconstructed); they retain legacy device-local interpretation until edited.
+
+The edit draft retains original measuredAt plus its initial date/time inputs. Minute-precision controls cannot round-trip an absolute instant in repeated DST hours or with sub-minute precision, so unchanged civil inputs preserve the original instant.

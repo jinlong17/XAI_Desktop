@@ -55,3 +55,21 @@ describe("MetricTrackerModule", () => {
     expect(readMetricTrackerState().records.find((record) => record.id === "mw_20260525")?.deleted).toBe(true);
   });
 });
+
+describe('editing keeps absolute measurement instants', () => {
+  it.each(['2026-11-01T09:30:00.000Z', '2026-09-09T18:30:45.123Z'])(
+    'retains %s when only weight changes', original => {
+      const state = readMetricTrackerState();
+      localStorage.setItem('xai_metric_tracker_state_v1', JSON.stringify({
+        ...state, records: [{ ...state.records[0], id: 'instant-test', measuredAt: original }],
+      }));
+      render(<MetricTrackerModule lang="en" />);
+      fireEvent.click(within(screen.getByRole('tablist', { name: 'Record range' })).getByRole('button', { name: 'All time' }));
+      fireEvent.click(screen.getByLabelText('Edit record'));
+      fireEvent.change(screen.getByLabelText('Weight value'), { target: { value: '73.2' } });
+      fireEvent.click(screen.getByText('Save changes'));
+      expect(readMetricTrackerState().records[0]?.measuredAt).toBe(original);
+      expect(readMetricTrackerState().records[0]?.value).toBe(73.2);
+    },
+  );
+});

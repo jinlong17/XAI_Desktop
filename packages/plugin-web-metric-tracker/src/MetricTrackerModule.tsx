@@ -29,6 +29,9 @@ type SortDirection = "desc" | "asc";
 interface RecordDraft {
   readonly id: string | null;
   readonly createdAt?: string;
+  readonly originalMeasuredAt?: string;
+  readonly originalDate?: string;
+  readonly originalTime?: string;
   readonly weight: string;
   readonly unit: WeightUnit;
   readonly dateMode: DateMode;
@@ -86,6 +89,9 @@ function draftFromRecord(record: WeightRecord): RecordDraft {
   return {
     id: record.id,
     createdAt: record.createdAt,
+    originalMeasuredAt: record.measuredAt,
+    originalDate: toDateInputValue(measured),
+    originalTime: toTimeInputValue(measured),
     weight: String(record.value),
     unit: record.unit,
     dateMode: "custom",
@@ -97,6 +103,11 @@ function draftFromRecord(record: WeightRecord): RecordDraft {
 
 function measuredAtFromDraft(draft: RecordDraft): string | null {
   const date = draft.dateMode === "custom" ? draft.date : dateForMode(draft.dateMode);
+  // A minute-resolution civil input cannot round-trip seconds or a DST fold.
+  // Preserve the original instant until the user actually changes date/time.
+  if (draft.originalMeasuredAt && date === draft.originalDate && draft.time === draft.originalTime) {
+    return draft.originalMeasuredAt;
+  }
   const instant = new Date(`${date}T${draft.time || "08:00"}:00.000`);
   return Number.isFinite(instant.getTime()) ? instant.toISOString() : null;
 }
