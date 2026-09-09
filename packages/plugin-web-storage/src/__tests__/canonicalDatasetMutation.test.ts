@@ -35,6 +35,13 @@ beforeEach(() => {
 afterEach(() => { setCanonicalCommandActivationForTests(false); _clearAllListeners(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe("ordinary canonical dataset writer", () => {
+  it("is disabled with command-envelope activation and never enters the lock", async () => {
+    const scope = activate();
+    setCanonicalCommandActivationForTests(false);
+    const request = navigator.locks.request as ReturnType<typeof vi.fn>;
+    await expect(mutateCanonicalDataset(input(scope, { initialize: () => ({ items: [] }) }))).resolves.toEqual({ ok: false, reason: "activation-disabled" });
+    expect(request).not.toHaveBeenCalled();
+  });
   it("preserves a command receipt, commits once, and publishes domain data despite a faulty listener", async () => {
     const scope = activate();
     await expect(commitCanonicalCommand({
@@ -87,5 +94,22 @@ describe("ordinary canonical dataset writer", () => {
     } }))).resolves.toEqual({ ok: false, reason: "account-changed" });
     expect(localStorage.getItem(physical)).toBe(raw);
     expect(localStorage.getItem(`${accountPrefix(scope.accountId!)}deleted`)).toBeNull();
+  });
+
+  it("does not accept a mutated-in-place no-op or skip the final owner check", async () => {
+    const scope = activate();
+    const physical = key(scope);
+    localStorage.setItem(physical, JSON.stringify({ items: [] }));
+    await expect(mutateCanonicalDataset(input(scope, { mutate: data => {
+      data.items.push("in-place");
+      return { ok: true, data };
+    } }))).resolves.toMatchObject({ ok: true, changed: true });
+    expect(readCanonicalCommandState<Domain>(JSON.parse(localStorage.getItem(physical)!))).toMatchObject({ data: { items: ["in-place"] } });
+    const nextScope = activate("noop-owner");
+    localStorage.setItem(key(nextScope), JSON.stringify({ items: [] }));
+    await expect(mutateCanonicalDataset(input(nextScope, { mutate: data => {
+      activate("replacement-noop");
+      return { ok: true, data };
+    } }))).resolves.toEqual({ ok: false, reason: "account-changed" });
   });
 });

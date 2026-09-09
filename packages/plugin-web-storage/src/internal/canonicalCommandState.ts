@@ -222,6 +222,7 @@ function currentLocks(): LockManager | null {
  * the single physical write has committed.
  */
 export async function mutateCanonicalDataset<T>(input: CanonicalDatasetInput<T>): Promise<CanonicalDatasetResult<T>> {
+  if (!commandActivation) return { ok: false, reason: "activation-disabled" };
   let key: CanonicalCommandKey;
   let scope: AccountScope;
   let validate: (value: unknown) => value is T;
@@ -259,14 +260,23 @@ export async function mutateCanonicalDataset<T>(input: CanonicalDatasetInput<T>)
       catch { return { ok: false, reason: "recovery-required" }; }
       const revision = envelope?.revision ?? 0;
       if (expectedRevision !== undefined && expectedRevision !== revision) return { ok: false, reason: "conflict" };
+      let originalEncoded: string;
+      try { originalEncoded = JSON.stringify(data); } catch { return { ok: false, reason: "recovery-required" }; }
       let outcome: CanonicalDatasetMutation<T>;
       try { outcome = mutate(data); } catch { return { ok: false, reason: "invalid" }; }
       if (!outcome || typeof outcome !== "object" || typeof outcome.ok !== "boolean") return { ok: false, reason: "invalid" };
       if (!outcome.ok) return { ok: false, reason: outcome.reason };
       try { if (!validate(outcome.data)) return { ok: false, reason: "invalid" }; }
       catch { return { ok: false, reason: "invalid" }; }
-      const changed = JSON.stringify(data) !== JSON.stringify(outcome.data) || state.status === "absent";
-      if (!changed) return { ok: true, data, revision, changed: false };
+      let outcomeEncoded: string;
+      try { outcomeEncoded = JSON.stringify(outcome.data); } catch { return { ok: false, reason: "invalid" }; }
+      const changed = originalEncoded !== outcomeEncoded || state.status === "absent";
+      if (!changed) {
+        const final = checkCurrentDataset(scope, key);
+        if (!final.ok) return final;
+        if (final.physicalKey !== first.physicalKey) return { ok: false, reason: "account-changed" };
+        return { ok: true, data, revision, changed: false };
+      }
       if (revision >= Number.MAX_SAFE_INTEGER) return { ok: false, reason: "capacity" };
       const next: CanonicalCommandEnvelope<T> = {
         format: "xai-command-state", version: 1, revision: revision + 1, data: outcome.data,
