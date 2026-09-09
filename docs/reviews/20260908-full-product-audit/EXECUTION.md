@@ -2,7 +2,7 @@
 
 最新检查点（2026-09-09）：正式完成 **13/312**。Board workspace保存恢复及启动/queued选择有界接受：产品b353cbb，作者944c5ef，Astra独立501feb7。原queued三反例组件与Chrome通过，正常修正/absent seed/legacy及envelope保存失败重试通过，启动四类损坏八断言通过；包313、作者契约10、浏览器4路径分层记录不合计。原失败证据保留，不宣称原九条旧oracle全部PASS；全Board/REL-05仍开放。
 
-B1有界接受：fb3ae2f与修复7b584b3经Astra de3bf16独立新13断言及storage136/137分别通过；父1831585删除漏洞FAIL由96df149固定原2断言PASS核验，原日志保留。B2实现5c13fec已提交，Calendar/Board raw读取、迁移域校验及raw生命周期测试通过，Astra正在固定快照独立审查。C下一实际批次为storage异步canonical提交原语与故障/重放测试，再接六类订阅和D普通writer；原六持久重放FAIL仍未关闭。Astra7c59d3f已确认SW/启动链缺少旧实例排空及版本激活屏障，首次envelope激活保持默认关闭。
+B1有界接受：fb3ae2f与修复7b584b3经Astra de3bf16独立新13断言及storage136/137分别通过；父1831585删除漏洞FAIL由96df149固定原2断言PASS核验，原日志保留。B2实现5c13fec经Astra b20c7ea独立19项得到17PASS/2FAIL：JSONnull或envelope data:null误当absent，导致在拒绝任务写入前改变Boardpending。Terra已接taskLink窄修；Calendar投影、合法低年份/闰日迁移和raw生命周期层通过但B2整体未接受。C原语草稿尚未提交/验收，已将storage所有权转交Sol完成复杂实现和测试，Terra不得混入其文件；后续C需非作者独立验收。原六持久重放FAIL仍未关闭。Astra7c59d3f已确认SW/启动链缺少旧实例排空及版本激活屏障，首次envelope激活保持默认关闭。
 
 A1 Calendar有界主审接受仍为20a0748/Sol a9b88ba/Astra8045d5d，完整AI-02未关闭。Terra现接已批准B-D：兼容表示→六动作durable→全部writer共同锁及生命周期适配，首先保留原六重放FAIL，再实现分阶段测试。Module已从workspace修复释放，仅由同一Terra按B-D需要适配caller；详情三丢稿FAIL及架构继续排在该共享文件批次之后。
 
