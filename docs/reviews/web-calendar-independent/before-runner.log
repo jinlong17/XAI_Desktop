@@ -1,0 +1,21 @@
+baseline {"commit":"a452d40^","browser":"Chrome/152.0.7977.83"}
+create-correct-oracle {"dialogRetained":false,"draftRetained":true,"errorVisible":false,"bytesUnchanged":true}
+delete-correct-oracle {"dialogRetained":false,"errorVisible":false,"bytesUnchanged":true}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(create.dialogRetained&&create.draftRetained&&create.errorVisible&&create.bytesUnchanged)
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-calendar-independent/verify-native.mjs:37:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.16.0
