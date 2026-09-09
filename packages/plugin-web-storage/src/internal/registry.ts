@@ -457,6 +457,11 @@ export const PREF_REGISTRY = {
   // ---- Meditation (§S8 — declared by xai-web-meditation #16) ----------------
   // Opaque storage type; canonical declarations live in @repo/plugin-web-meditation.
   // proposed: false — canonical name approved by worker brief #16.
+  xai_meditation_active: {
+    key: "xai_meditation_active", codec: "json", default: null as unknown, schemaVersion: 1,
+    owner: "xai-web-meditation", category: "module",
+  } satisfies PrefEntry<unknown>,
+
   xai_meditation_prefs: {
     key: "xai_meditation_prefs",
     codec: "json",

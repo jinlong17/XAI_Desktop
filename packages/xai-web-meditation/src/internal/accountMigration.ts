@@ -13,3 +13,6 @@ registerAccountMigrationValidator("xai_meditation_prefs", value => {
   const normalized = validatePrefs(value) as unknown as Record<string, unknown>;
   return Object.entries(raw).every(([key,item]) => key === "schemaVersion" || sameValue(item, normalized[key]));
 });
+
+// Active timers are device execution state; never adopt an unscoped timer.
+registerAccountMigrationValidator("xai_meditation_active", value => value === null);

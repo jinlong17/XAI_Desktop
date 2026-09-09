@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { accountScope } from '@repo/plugin-web-storage';
-import { MeditationModule } from '../MeditationModule';
+import { MeditationModule } from '../MeditationModule.js';
 
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 const key = () => accountScope.physicalKey('xai_meditation_prefs');

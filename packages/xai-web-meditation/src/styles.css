@@ -1366,3 +1366,24 @@
     min-width: 44px;
   }
 }
+
+/* Playback permission and completion feedback remains above scene layers. */
+.med-player .med-player-notice {
+  position: absolute;
+  z-index: 5;
+  inset: 1rem 4rem auto 1rem;
+  padding: 1rem;
+  color: var(--text-1);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: 0.75rem;
+}
+.med-player .med-player-notice button {
+  min-height: 44px;
+  margin-inline-start: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: inherit;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-1);
+  border-radius: 0.5rem;
+}

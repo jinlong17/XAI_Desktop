@@ -33,6 +33,7 @@ export const LOCAL_KEY_OWNERSHIP: Readonly<Record<string, LocalOwnership>> = Obj
   "xai_dashboard_weather": "account",
   "xai_habits_state": "account",
   "xai_matrix_state": "account",
+  "xai_meditation_active": "account",
   "xai_meditation_prefs": "account",
   "xai_metric_tracker_state_v1": "account",
   "xai_pet_id": "device",

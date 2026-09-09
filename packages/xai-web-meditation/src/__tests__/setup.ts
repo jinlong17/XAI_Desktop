@@ -20,3 +20,11 @@ beforeEach(() => {
 
 // Explicit authenticated context; raw Storage remains unmodified.
 beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });
+
+// Explicit unit-only Web Locks model. Native concurrency is checked separately.
+beforeEach(() => {
+  let queue = Promise.resolve<unknown>(undefined);
+  Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: (_name: string, action: () => unknown) => {
+    const next = queue.then(action); queue = next.catch(() => undefined); return next;
+  } } });
+});

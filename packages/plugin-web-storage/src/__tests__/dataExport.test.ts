@@ -22,8 +22,8 @@ it('keeps compatible account fields and accounts for every declared record in th
  localStorage.setItem(generationKey('B','one','xai_task_cols'),'B');
  localStorage.setItem('xai_bk_dash_order','quick-first');
  const data=exportAccountLocalData(scope);
- expect(data).toMatchObject({version:1,accountId:'A',generation:'one',manifest:{scope:'account-current-generation',restoreSupported:false,counts:{account:39,device:0}}});
- expect(Object.keys(data.records)).toHaveLength(39);
+ expect(data).toMatchObject({version:1,accountId:'A',generation:'one',manifest:{scope:'account-current-generation',restoreSupported:false,counts:{account:40,device:0}}});
+ expect(Object.keys(data.records)).toHaveLength(40);
  expect(data.manifest.categories.flatMap(category=>category.keys).sort()).toEqual(Object.keys(data.records).sort());
  expect(data.manifest.excluded).toContain('unassigned-originals-and-archives');
 });

@@ -2,7 +2,7 @@
  * MeditationModule — render + i18n + preview reflection.
  */
 import { describe, it, expect } from "vitest";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { MeditationModule } from "../MeditationModule.js";
 
 describe("MeditationModule render", () => {
@@ -129,9 +129,9 @@ describe("MeditationModule render", () => {
     expect(screen.getByRole("button", { name: /Start session/i })).toBeInTheDocument();
   });
 
-  it("start session hides config and progress chrome", () => {
+  it("start session hides config and progress chrome", async () => {
     const { container } = render(<MeditationModule lang="en" />);
-    fireEvent.click(screen.getByRole("button", { name: /Start session/i }));
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: /Start session/i })); });
 
     expect(container.querySelector(".med-config")).toBeNull();
     expect(container.querySelector(".med-pickers")).toBeNull();

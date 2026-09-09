@@ -97,6 +97,7 @@ describe("AC-PARITY-1: all §9.2 keys are in PREF_REGISTRY", () => {
 // they are documented in the owning row's docs/api.md instead.
 const OWNER_ROW_EXEMPT_KEYS: ReadonlySet<string> = new Set([
   "xai_pomodoro_active",      // POMO-01 durable active/pending session (2026-09-09)
+  "xai_meditation_active",    // MED-01 durable account-scoped execution state (2026-09-09)
   "xai_matrix_state",       // xai-web-matrix #13
   "xai_habits_state",       // xai-web-habits #15
   "xai_pref_week_start",    // xai-web-calendar #12 (xai_pref_* family per ADR-0007 §S8)
