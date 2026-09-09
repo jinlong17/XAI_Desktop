@@ -37,7 +37,7 @@ import React, {
   useState,
 } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import { useChatPreference } from "./internal/useChatPreference.js";
 import { emitWebEvent, useWebEventListener } from "@repo/xai-web-event-bus";
 import { AiAurora } from "./AiAurora.js";
 import { BreathingOrb } from "./BreathingOrb.js";
@@ -48,6 +48,7 @@ import { ErrorBanner } from "./ErrorBanner.js";
 import { ConfirmationCard } from "./ConfirmationCard.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
 import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
+import { useConversationRecovery } from "./internal/useConversationRecovery.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
 import { makeConvoFromUserText } from "./internal/makeConvoFromUserText.js";
 import type { LlmError } from "./internal/llmErrors.js";
@@ -103,7 +104,9 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const zh = lang === "zh";
 
   // ---- Persistence: usePref + boundary predicate filter ------------------
-  const [rawConvos, setRawConvos] = usePref("xai_ai_convos");
+  const { raw: rawConvos, save: saveConvos, retry: retryConvos, discard: discardConvos, snapshot: conversationSnapshot, error: saveError, pending: pendingSave } = useConversationRecovery();
+  const [navigationNotice, setNavigationNotice] = useState(false);
+  const [exportFailed, setExportFailed] = useState(false);
   const convos: AiConvoRecord[] = useMemo(() => {
     if (!Array.isArray(rawConvos)) return [];
     const out: AiConvoRecord[] = [];
@@ -121,8 +124,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     return out;
   }, [rawConvos]);
 
-  const [showInsights, setShowInsights] = usePref("xai_ai_insights");
-  const [voiceOn, setVoiceOn] = usePref("xai_ai_voice");
+  const insights = useChatPreference("xai_ai_insights");
+  const voice = useChatPreference("xai_ai_voice");
+  const showInsights = insights.value;
+  const voiceOn = voice.value;
 
   // ---- Local (non-persisted) state ----------------------------------------
   const [messages, setMessages] = useState<AiMessage[]>([]);
@@ -196,7 +201,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const persistConvoMessages = useCallback(
     (id: string, nextMessages: readonly AiMessage[]) => {
       if (!ownerCurrent()) return;
-      setRawConvos((prev) => {
+      saveConvos((prev) => {
         const safe: AiConvoRecord[] = Array.isArray(prev)
           ? (prev as unknown[]).filter(isAiConvoRecord)
           : [];
@@ -217,7 +222,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
         return [updated, ...safe.filter((c) => c.id !== id)];
       });
     },
-    [lang, setRawConvos],
+    [lang, saveConvos],
   );
 
   useEffect(() => {
@@ -418,6 +423,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const send = useCallback(
     (textOverride?: string) => {
       if (!ownerCurrent()) return;
+      if (pendingSave.current && pendingSave.current.operation !== "messages") { setNavigationNotice(true); return; }
+      setNavigationNotice(false);
       const text = (textOverride ?? input).trim();
       if (!text) return;
       const userMsg: AiMessage = {
@@ -432,7 +439,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       if (!activeConvo) {
         const seed = makeConvoFromUserText(text, lang);
         setActiveConvo(seed.id);
-        setRawConvos((prev) => {
+        saveConvos((prev) => {
           const safe: AiConvoRecord[] = Array.isArray(prev)
             ? (prev as unknown[]).filter(isAiConvoRecord)
             : [];
@@ -445,10 +452,10 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       pendingSendQueueRef.current.push({ text, lang });
       void processQueue();
     },
-    [input, attachments, activeConvo, lang, setRawConvos, processQueue],
+    [input, attachments, activeConvo, lang, saveConvos, processQueue, pendingSave],
   );
 
-  const handleNewChat = useCallback(() => {
+  const resetChat = useCallback(() => {
     abortCtrlRef.current?.abort();
     pendingSendQueueRef.current = [];
     processingRef.current = false;
@@ -461,54 +468,51 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     setBannerError(null);
   }, []);
 
-  const handleSelectConvo = useCallback(
-    (id: string) => {
-      const selected = convos.find((c) => c.id === id);
-      abortCtrlRef.current?.abort();
-      pendingSendQueueRef.current = [];
-      processingRef.current = false;
+  const canLeave = useCallback(() => {
+    if (!ownerCurrent()) return false;
+    if (pendingSave.current || thinking || input || attachments.length) {
+      setNavigationNotice(true);
+      return false;
+    }
+    return true;
+  }, [pendingSave, thinking, input, attachments]);
+
+  const handleNewChat = useCallback(() => {
+    if (canLeave()) resetChat();
+  }, [canLeave, resetChat]);
+
+  const handleSelectConvo = useCallback((id: string) => {
+    if (!canLeave()) return;
+    const selected = convos.find(c => c.id === id);
+    if (!selected) return;
+    saveConvos(prev => prev.map(c => c.id === id ? { ...c, activeAt: new Date().toISOString() } : c), "select", () => {
+      resetChat();
       suppressNextPersistRef.current = true;
       setActiveConvo(id);
-      setMessages(selected?.messages ? normalizeMessages(selected.messages) : []);
-      setInput("");
-      setAttachments([]);
-      setThinking(false);
-      setPendingConfirmation(null);
-      setBannerError(null);
-      setRawConvos((prev) => {
-        const safe: AiConvoRecord[] = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isAiConvoRecord)
-          : [];
-        const now = new Date().toISOString();
-        return safe.map((c) => (c.id === id ? { ...c, activeAt: now } : c));
-      });
-    },
-    [convos, setRawConvos],
-  );
+      setMessages(normalizeMessages(selected.messages ?? []));
+      setNavigationNotice(false);
+    });
+  }, [canLeave, convos, saveConvos, resetChat]);
 
-  const handleDeleteConvo = useCallback(
-    (id: string) => {
-      setRawConvos((prev) => {
-        const safe: AiConvoRecord[] = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isAiConvoRecord)
-          : [];
-        return safe.filter((c) => c.id !== id);
-      });
-      if (activeConvo === id) {
-        abortCtrlRef.current?.abort();
-        pendingSendQueueRef.current = [];
-        processingRef.current = false;
-        setActiveConvo(null);
-        setMessages([]);
-        setInput("");
-        setAttachments([]);
-        setThinking(false);
-        setPendingConfirmation(null);
-        setBannerError(null);
-      }
-    },
-    [activeConvo, setRawConvos],
-  );
+  const handleDeleteConvo = useCallback((id: string) => {
+    if (!canLeave()) return;
+    saveConvos(prev => prev.filter(c => c.id !== id), "delete", () => {
+      if (activeConvo === id) resetChat();
+      setNavigationNotice(false);
+    });
+  }, [canLeave, saveConvos, activeConvo, resetChat]);
+
+  const exportDraft = () => {
+    try {
+      const snapshot = conversationSnapshot();
+      const blob = new Blob([JSON.stringify({ version: 1, ...snapshot, activeConvo, messages: normalizeMessages(messages), input, attachments, preferences: { insights: insights.pending.current, voice: voice.pending.current } }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url; anchor.download = "ai-chat-unsaved.json"; anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      setExportFailed(false);
+    } catch { setExportFailed(true); }
+  };
 
   const handleAttachFiles = useCallback((files: File[]) => {
     if (files.length === 0) return;
@@ -526,13 +530,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const handleInsightsToggle = useCallback(() => {
-    setShowInsights((v) => !v);
-  }, [setShowInsights]);
-
-  const handleVoiceToggle = useCallback(() => {
-    setVoiceOn((v) => !v);
-  }, [setVoiceOn]);
+  const handleInsightsToggle = insights.toggle;
+  const handleVoiceToggle = voice.toggle;
 
   const handleStarter = useCallback(
     (prompt: string) => {
@@ -898,6 +897,14 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           );
         })()}
 
+        {(saveError || navigationNotice || exportFailed || insights.error || voice.error) && (
+          <div className="ai-save-recovery" role="alert">
+            <p>{exportFailed ? (zh ? "导出失败，账户可能已切换。" : "Export failed. The account may have changed.") : saveError === "conflict" ? (zh ? "未保存：已有更新的数据，不能覆盖。请导出草稿。" : "Not saved: newer stored data cannot be overwritten. Export the draft.") : (zh ? "内容尚未保存。请保持页面打开，重试或导出草稿后再离开。" : "Unsaved content. Keep this page open; retry or export the draft before leaving.")}</p>
+            <button type="button" onClick={() => { const conversationsOk = retryConvos(); const insightsOk = insights.retry(); const voiceOk = voice.retry(); if (conversationsOk && insightsOk && voiceOk) setNavigationNotice(false); }}>{zh ? "重试保存" : "Retry save"}</button>
+            <button type="button" onClick={exportDraft}>{zh ? "导出草稿" : "Export draft"}</button>
+            <button type="button" disabled={thinking} onClick={() => { if (discardConvos()) { insights.discard(); voice.discard(); resetChat(); setNavigationNotice(false); setExportFailed(false); } }}>{zh ? "放弃未保存内容" : "Discard unsaved content"}</button>
+          </div>
+        )}
         <AiComposer
           input={input}
           onInputChange={setInput}

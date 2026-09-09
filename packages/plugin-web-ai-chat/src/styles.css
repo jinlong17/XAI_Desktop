@@ -1103,3 +1103,18 @@
     contain: paint;
   }
 }
+
+.ai-save-recovery {
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  margin: 8px 16px;
+  padding: 12px;
+  max-height: 30vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card, #fff);
+}
+.ai-save-recovery p { margin: 0 0 8px; }
+.ai-save-recovery button { min-height: 44px; margin: 4px; padding: 8px 12px; }

@@ -1,0 +1,29 @@
+import { useCallback, useRef, useState } from "react";
+import { accountScope, usePref } from "@repo/plugin-web-storage";
+
+/** A failed toggle keeps its exact desired value; retry never toggles twice. */
+export function useChatPreference(key: "xai_ai_insights" | "xai_ai_voice") {
+  const [value, write] = usePref(key);
+  const [scope] = useState(() => accountScope.capture());
+  const pending = useRef<{ value: boolean; baseline: string | null } | null>(null);
+  const [error, setError] = useState(false);
+  const retry = useCallback(() => {
+    if (!pending.current) return true;
+    try {
+      accountScope.assertCurrent(scope);
+      if (localStorage.getItem(key) !== pending.current.baseline || !write(pending.current.value)) {
+        setError(true); return false;
+      }
+      pending.current = null; setError(false); return true;
+    } catch { setError(true); return false; }
+  }, [key, scope, write]);
+  const toggle = useCallback(() => {
+    try {
+      accountScope.assertCurrent(scope);
+      if (!pending.current) pending.current = { value: !value, baseline: localStorage.getItem(key) };
+      retry();
+    } catch { setError(true); }
+  }, [key, scope, value, retry]);
+  const discard = () => { pending.current = null; setError(false); };
+  return { value, toggle, retry, error, pending, discard };
+}
