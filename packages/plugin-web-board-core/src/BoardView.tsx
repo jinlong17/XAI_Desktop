@@ -22,6 +22,7 @@ export interface BoardViewProps {
   lists: BoardListData[];
   lang: "en" | "zh";
 
+  composerLocked?: boolean;
   // Composer states (lifted to caller)
   draftListId: string | null;
   setDraftListId: (next: string | null) => void;
@@ -78,6 +79,7 @@ interface DragState {
 export function BoardView({
   lists,
   lang,
+  composerLocked = false,
   draftListId,
   setDraftListId,
   composerText,
@@ -184,7 +186,7 @@ export function BoardView({
     }
     if (event.key === "Escape") {
       event.preventDefault();
-      setShowListComposer(false);
+      if (!composerLocked) setShowListComposer(false);
     }
   };
 
@@ -197,10 +199,11 @@ export function BoardView({
           lang={lang}
           isComposer={draftListId === list.id}
           openComposer={() => {
+            if (composerLocked) return;
             setDraftListId(list.id);
             setComposerText("");
           }}
-          closeComposer={() => setDraftListId(null)}
+          closeComposer={() => { if (!composerLocked) setDraftListId(null); }}
           composerText={composerText}
           setComposerText={setComposerText}
           addCard={() => addCard(list.id)}
@@ -271,7 +274,7 @@ export function BoardView({
             <button
               type="button"
               className="icon-btn"
-              onClick={() => setShowListComposer(false)}
+              onClick={() => { if (!composerLocked) setShowListComposer(false); }}
               aria-label={lang === "zh" ? "取消" : "Cancel"}
             >
               ✕
@@ -282,7 +285,7 @@ export function BoardView({
         <button
           type="button"
           className="add-list-btn"
-          onClick={() => setShowListComposer(true)}
+          onClick={() => { if (!composerLocked) setShowListComposer(true); }}
           data-testid="add-list-btn"
         >
           {lang === "zh" ? "+ 添加列" : "+ Add a list"}

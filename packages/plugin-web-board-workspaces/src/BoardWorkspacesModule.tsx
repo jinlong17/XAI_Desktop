@@ -32,6 +32,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { accountScope, usePref } from "@repo/plugin-web-storage";
 import { useBoardCreateRecovery, type BoardCreateDraft } from "./internal/useBoardCreateRecovery.js";
+import { useBoardComposerRecovery } from "./internal/useBoardComposerRecovery.js";
 import { ensureBoardTaskLink } from "./internal/taskLinkCommand.js";
 import {
   findBoardLinkedTask,
@@ -44,8 +45,6 @@ import {
   loadWorkspacesOrDefault,
   makeDefaultBoards,
   pickActiveBoard,
-  addCardToListById,
-  addNewList,
   archiveCard as archiveCardOp,
   archiveList as archiveListOp,
   canManageBoardList,
@@ -277,7 +276,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           ? { ...board, lists: updater(board.lists) }
           : board,
       );
-      setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
+      return setRawBoards(preserveBoardStorageFormat(rawBoards, nextBoards) as unknown);
     },
     [boards, activeBoard.id, rawBoards, setRawBoards],
   );
@@ -489,6 +488,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [composerText, setComposerText] = useState<string>("");
   const [showListComposer, setShowListComposer] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>("");
+  const composerRecovery = useBoardComposerRecovery(rawBoards, activeBoard.id, setRawBoards);
+  const [composerExportFailed, setComposerExportFailed] = useState(false);
   const [listMenu, setListMenu] = useState<string | null>(null);
   const [cardMenu, setCardMenu] = useState<string | null>(null);
 
@@ -622,30 +623,18 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   }, [deleteBoard, pendingDelete, setInbox]);
 
   // ---- Kanban-view ops ---------------------------------------------------
-  const addCard = useCallback(
-    (listId: string) => {
-      const text = composerText.trim();
-      if (!text) {
-        setDraftListId(null);
-        return;
-      }
-      writeLists((prev) => addCardToListById(prev, listId, text));
-      setComposerText("");
-      setDraftListId(null);
-    },
-    [composerText, writeLists],
-  );
-
-  const addList = useCallback(() => {
-    const text = newListName.trim();
-    if (!text) {
-      setShowListComposer(false);
-      return;
+  const addCard = (listId: string) => {
+    if (!composerText.trim() && !composerRecovery.error) { setDraftListId(null); return; }
+    if (composerRecovery.submit('card', composerText, listId)) {
+      setComposerText(""); setDraftListId(null); setComposerExportFailed(false);
     }
-    writeLists((prev) => addNewList(prev, text));
-    setNewListName("");
-    setShowListComposer(false);
-  }, [newListName, writeLists]);
+  };
+  const addList = () => {
+    if (!newListName.trim() && !composerRecovery.error) { setShowListComposer(false); return; }
+    if (composerRecovery.submit('list', newListName)) {
+      setNewListName(""); setShowListComposer(false); setComposerExportFailed(false);
+    }
+  };
 
   const setListColor = useCallback(
     (listId: string, color: BoardListColorId | null) => {
@@ -1018,6 +1007,23 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           />
         )}
 
+        {composerRecovery.error && <section role="alert" className="board-composer-recovery">
+          <p>{lang === 'zh' ? '更改未保存，草稿仍在本页面。离开前请重试或导出。' : 'Changes were not saved. Your draft stays on this page; retry or export before leaving.'} {composerRecovery.error}</p>
+          <button type="button" className="btn" onClick={() => {
+            if (composerRecovery.pending?.kind === 'card') addCard(composerRecovery.pending.listId!); else addList();
+          }}>{lang === 'zh' ? '重试保存' : 'Retry save'}</button>
+          <button type="button" className="btn" onClick={() => {
+            try {
+              const draft = composerRecovery.pending?.kind === 'card' ? composerText : newListName;
+              const blob = new Blob([JSON.stringify(composerRecovery.snapshot(draft), null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob), anchor = document.createElement('a');
+              anchor.href = url; anchor.download = 'board-composer-draft.json'; document.body.appendChild(anchor); anchor.click(); anchor.remove();
+              setTimeout(() => URL.revokeObjectURL(url), 1000); setComposerExportFailed(false);
+            } catch { setComposerExportFailed(true); }
+          }}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+          <button type="button" className="btn" onClick={() => { composerRecovery.discard(); setDraftListId(null); setShowListComposer(false); setComposerText(''); setNewListName(''); setComposerExportFailed(false); }}>{lang === 'zh' ? '放弃草稿' : 'Discard draft'}</button>
+          {composerExportFailed && <p>{lang === 'zh' ? '导出失败或账户已更改。' : 'Export failed or the account changed.'}</p>}
+        </section>}
         <div className={panelsClass} data-testid="board-panels">
           {panels.inbox && (
             <InboxPanel
@@ -1036,6 +1042,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
                   <BoardView
                     lists={filteredLists}
                     lang={lang}
+                    composerLocked={!!composerRecovery.error}
                     draftListId={draftListId}
                     setDraftListId={setDraftListId}
                     composerText={composerText}
