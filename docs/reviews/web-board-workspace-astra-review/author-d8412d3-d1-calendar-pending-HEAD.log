@@ -1,0 +1,19 @@
+revision=HEAD
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-Yi4p9Z
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx > completion of a pending old create must not close the subsequently opened editor or erase its draft
+old-completion-new-editor {"editorOpen":true,"latestDraft":"New unsaved editor draft"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx (1 test) 309ms
+   ✓ completion of a pending old create must not close the subsequently opened editor or erase its draft  309ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  16:29:04
+   Duration  1.37s (transform 346ms, setup 234ms, collect 330ms, tests 309ms, environment 226ms, prepare 63ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx > completion of a pending old create must not close the subsequently opened editor or erase its draft
+[plugin-web-storage] refusing legacy write over protected canonical xai_calendar_events.
