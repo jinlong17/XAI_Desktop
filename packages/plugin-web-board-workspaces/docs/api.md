@@ -631,3 +631,9 @@ The modal displays:
 `createMockBoardShareEnvelope(boardId, visibility)` and
 `web:board:share-requested` both include `visibility`. This is still a mock
 share contract, not a backend ACL or invite grant.
+
+## TASK-02 recoverable Task-link creation
+
+Creating a Task link saves a `BoardCard.taskLink.pending` intent first, ensures the Task identified by stable Board/card source second, then removes pending as acknowledgement. Each write checks captured account ownership and reports failure; these are ordered writes, not one cross-key transaction. Task-write failure leaves the original title/date request on the card for explicit Retry after reload. Acknowledgement failure means the Task already exists; retry preserves its ID, user edits, done and completedAt. Moving or archiving/restoring the source card/list preserves its intent and link. Only boardId/cardId define source identity; listId is location metadata. Unlink remains Board-only and does not delete the Task.
+
+Concurrent direct Board/Task writers outside this command do not participate in a shared database transaction. The command rereads canonical Board data before each Board write and refuses missing or conflicting identities. This contract does not authorize unrelated overwrite or claim a general cross-feature transaction facility.

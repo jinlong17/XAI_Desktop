@@ -104,6 +104,10 @@ function isBoardCardTaskLink(value: unknown): value is BoardCardTaskLink {
   if (value.source !== "xai-web-tasks") return false;
   if (!isString(value.taskId) || value.taskId.length === 0) return false;
   if (!isString(value.createdAt) || value.createdAt.length === 0) return false;
+  if (value.pending !== undefined) {
+    if (!isObject(value.pending) || !isObject(value.pending.title) || !isString(value.pending.title.en) || !isString(value.pending.title.zh)) return false;
+    if (value.pending.dueDate !== undefined && !isString(value.pending.dueDate)) return false;
+  }
   return true;
 }
 

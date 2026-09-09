@@ -1797,3 +1797,18 @@ describe("BWM-WS — workspace CRUD", () => {
     expect(after).not.toBe(before);
   });
 });
+
+it("TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once", () => {
+  const view=render(<BoardWorkspacesModule lang="en"/>);
+  fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+  const key=accountScope.physicalKey("xai_task_cols"),native=Storage.prototype.setItem;
+  const fail=vi.spyOn(Storage.prototype,"setItem").mockImplementation(function(this:Storage,k,v){if(k===key)throw new DOMException("quota","QuotaExceededError");native.call(this,k,v)});
+  fireEvent.click(screen.getByTestId("card-detail-create-task"));
+  expect(screen.getByRole("alert")).toHaveTextContent("task creation failed");
+  expect(getStoredCard("bc1").taskLink?.pending).toBeDefined();
+  fail.mockRestore();view.unmount();render(<BoardWorkspacesModule lang="en"/>);
+  fireEvent.click(screen.getAllByTestId("board-card")[0]!);
+  fireEvent.click(screen.getByTestId("card-detail-retry-task"));
+  expect(getStoredCard("bc1").taskLink?.pending).toBeUndefined();
+  expect(getStoredTask("bt-b-default-bc1").task.source?.cardId).toBe("bc1");
+});

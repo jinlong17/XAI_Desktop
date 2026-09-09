@@ -77,6 +77,8 @@ export interface BoardCardTaskLink {
   source: "xai-web-tasks";
   taskId: string;
   createdAt: string;
+  /** Durable create-link intent; cleared only after the Task write succeeds. */
+  pending?: { title: { en: string; zh: string }; dueDate?: string };
 }
 
 export interface BoardMemberOption {

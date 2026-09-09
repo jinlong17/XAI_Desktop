@@ -29,14 +29,12 @@
  * can toggle Inbox / Planner / Switch-boards regardless of view.
  */
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { usePref } from "@repo/plugin-web-storage";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { accountScope, usePref } from "@repo/plugin-web-storage";
+import { ensureBoardTaskLink } from "./internal/taskLinkCommand.js";
 import {
-  bucketIdForBoardDueDate,
   findBoardLinkedTask,
   loadTaskColsOrSeed,
-  taskCardFromBoardLink,
-  upsertBoardLinkedTask,
 } from "@repo/plugin-web-tasks";
 import {
   BoardView,
@@ -206,7 +204,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [rawWorkspaces, setRawWorkspaces] = usePref("xai_board_workspaces");
   const [rawPanels, setRawPanels] = usePref("xai_board_panels");
   const [rawInbox, setRawInbox] = usePref("xai_board_inbox");
-  const [rawTaskCols, setRawTaskCols] = usePref("xai_task_cols");
+  const [rawTaskCols] = usePref("xai_task_cols");
+  const linkOwner = useRef(accountScope.capture()).current;
+  const [taskLinkError, setTaskLinkError] = useState<string | null>(null);
   const [rawViewByBoardId, setRawViewByBoardId] = usePref(
     "xai_board_view_by_id",
   );
@@ -834,39 +834,9 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const createLinkedTask = useCallback(() => {
     if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
-    const list = rawLists.find((entry) => entry.id === activeCardRef.listId);
-    const card = list?.cards.find((entry) => entry.id === activeCardRef.cardId);
-    if (!list || !card || card.archived === true) return;
-    const source: BoardTaskLinkSource = {
-      type: "board-card",
-      boardId: activeBoard.id,
-      listId: activeCardRef.listId,
-      cardId: activeCardRef.cardId,
-    };
-    const task = taskCardFromBoardLink({
-      ...source,
-      title: card.title,
-      dueDate: card.dueDate,
-    });
-    const bucketId = bucketIdForBoardDueDate(card.dueDate);
-    setRawTaskCols(
-      upsertBoardLinkedTask(taskCols, task, bucketId) as unknown as typeof rawTaskCols,
-    );
-    updateCard(activeCardRef.listId, activeCardRef.cardId, {
-      taskLink: {
-        source: "xai-web-tasks",
-        taskId: task.id,
-        createdAt: new Date().toISOString(),
-      },
-    });
-  }, [
-    activeBoard.id,
-    activeCardRef,
-    rawLists,
-    setRawTaskCols,
-    taskCols,
-    updateCard,
-  ]);
+    const result = ensureBoardTaskLink(activeBoard.id, activeCardRef.cardId, linkOwner);
+    setTaskLinkError(result.ok ? null : result.message);
+  }, [activeBoard.id, activeCardRef, linkOwner]);
 
   const unlinkActiveCardTask = useCallback(() => {
     patchActiveCard({ taskLink: undefined });
@@ -1243,6 +1213,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           listName={resolveListName(activeCardContext.list, lang)}
           lang={lang}
           taskLinkStatus={activeTaskLinkStatus}
+          taskLinkError={taskLinkError}
           labelCatalog={labelCatalog}
           memberCatalog={memberCatalog}
           onCreateLabel={createLabel}
