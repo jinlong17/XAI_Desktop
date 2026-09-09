@@ -21,6 +21,7 @@
 
 import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
 import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
+import { isValidCivilDate } from "./civilDate.js";
 import { updateEvent, deleteEvent } from "./eventStore/eventStore.js";
 import type { UserCalEvent } from "./eventStore/types.js";
 
@@ -30,8 +31,9 @@ function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
-const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 const HHMM_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const MIN_DURATION_MINUTES = 5;
+const LAST_END_MINUTE = 23 * 60 + 55;
 
 /** Builds startISO/endISO when date+startTime+durationMin are patched. */
 function buildISOTimes(
@@ -41,7 +43,7 @@ function buildISOTimes(
     startTime?: string;
     durationMin?: number;
   },
-): { startISO?: string; endISO?: string } {
+): { startISO?: string; endISO?: string } | null {
   // Only recompute if at least one time-related field is patched.
   if (patch.date === undefined && patch.startTime === undefined && patch.durationMin === undefined) {
     return {};
@@ -58,21 +60,21 @@ function buildISOTimes(
     parseInt(existing.startISO.slice(14, 16), 10);
   const baseDurationMin = Math.max(5, existingEndMin - existingStartMin);
 
-  const newDate = typeof patch.date === "string" && DATE_RE.test(patch.date)
-    ? patch.date
-    : baseDate;
-  const newStart = typeof patch.startTime === "string" && HHMM_RE.test(patch.startTime)
-    ? patch.startTime
-    : baseStartTime;
-  const newDur = typeof patch.durationMin === "number" && patch.durationMin > 0
-    ? Math.round(patch.durationMin)
-    : baseDurationMin;
+  const newDate = patch.date ?? baseDate;
+  const newStart = patch.startTime ?? baseStartTime;
+  const newDur = patch.durationMin ?? baseDurationMin;
+  if (!isValidCivilDate(newDate)
+    || !HHMM_RE.test(newStart)
+    || !Number.isFinite(newDur)
+    || !Number.isInteger(newDur)
+    || newDur < MIN_DURATION_MINUTES) return null;
 
   const [hStr, mStr] = newStart.split(":");
   const h = parseInt(hStr ?? "9", 10);
   const m = parseInt(mStr ?? "0", 10);
   const startMin = h * 60 + m;
-  const endMin = Math.min(startMin + newDur, 23 * 60 + 55);
+  const endMin = startMin + newDur;
+  if (endMin > LAST_END_MINUTE) return null;
   const endH = Math.floor(endMin / 60);
   const endM = endMin % 60;
 
@@ -100,14 +102,17 @@ export function useCalendarMutateRequestSubscriber(): void {
       const id = typeof payload.id === "string" ? payload.id.trim() : "";
       if (!id || !isObject(payload.patch)) return { ok: false, reason: "invalid" };
       const p = payload.patch;
-      if ((p.title !== undefined && (typeof p.title !== "string" || !p.title.trim())) || (p.date !== undefined && !DATE_RE.test(p.date)) || (p.startTime !== undefined && !HHMM_RE.test(p.startTime)) || (p.durationMin !== undefined && (!Number.isFinite(p.durationMin) || p.durationMin < 5))) return { ok: false, reason: "invalid" };
+      if ((p.title !== undefined && (typeof p.title !== "string" || !p.title.trim()))
+        || (p.date !== undefined && !isValidCivilDate(p.date))
+        || (p.startTime !== undefined && !HHMM_RE.test(p.startTime))
+        || (p.durationMin !== undefined && (!Number.isFinite(p.durationMin) || !Number.isInteger(p.durationMin) || p.durationMin < MIN_DURATION_MINUTES))) return { ok: false, reason: "invalid" };
       if (p.title === undefined && p.date === undefined && p.startTime === undefined && p.durationMin === undefined) return { ok: false, reason: "invalid" };
       const raw = getPref("xai_calendar_events", scope);
       const store = isObject(raw) ? raw as Record<string, UserCalEvent> : {};
       if (!Object.hasOwn(store, id)) return { ok: false, reason: "not-found" };
       const existing = store[id]!;
       const times = buildISOTimes(existing, p);
-      if (times.startISO && times.endISO && (times.endISO <= times.startISO || !Number.isFinite(Date.parse(times.endISO)))) return { ok: false, reason: "invalid" };
+      if (times === null) return { ok: false, reason: "invalid" };
       const { next } = updateEvent(store, id, { ...(p.title !== undefined ? { title: p.title.trim() } : {}), ...times });
       return setPref("xai_calendar_events", next, scope) ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
     });

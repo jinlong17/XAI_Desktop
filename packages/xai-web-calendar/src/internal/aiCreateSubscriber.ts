@@ -21,11 +21,13 @@
 
 import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
 import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
+import { isValidCivilDate } from "./civilDate.js";
 import { createEvent } from "./eventStore/eventStore.js";
 import type { UserCalEvent } from "./eventStore/types.js";
 
-const DATE_RE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 const HHMM_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const MIN_DURATION_MINUTES = 5;
+const LAST_END_MINUTE = 23 * 60 + 55;
 
 function todayDateKey(): string {
   const d = new Date();
@@ -37,33 +39,28 @@ function todayDateKey(): string {
 /**
  * Computes startISO and endISO from date + startTime + durationMin.
  * startISO: "YYYY-MM-DDTHH:MM" local-clock.
- * endISO: same day, startTime + durationMin (clamped to 23:55 same day).
- * Minimum duration = 5 min (clamp per UserCalEvent invariant).
+ * endISO: same day, startTime + durationMin.
+ * Inputs are already validated. A request that would cross the supported
+ * same-day boundary is rejected instead of silently changing its duration.
  */
 function buildISOTimes(
   date: string,
   startTime: string,
   durationMin: number,
-): { startISO: string; endISO: string } {
-  // Validate / default
-  const safeDate = DATE_RE.test(date) ? date : todayDateKey();
-  const safeStart = HHMM_RE.test(startTime) ? startTime : "09:00";
-  const safeDur = Math.max(5, Math.round(typeof durationMin === "number" ? durationMin : 60));
-
-  const [hStr, mStr] = safeStart.split(":");
+): { startISO: string; endISO: string } | null {
+  const [hStr, mStr] = startTime.split(":");
   const h = parseInt(hStr ?? "9", 10);
   const m = parseInt(mStr ?? "0", 10);
 
   const startMinutes = h * 60 + m;
-  let endMinutes = startMinutes + safeDur;
-  // Clamp to same day: max 23*60 + 55 = 1435 minutes
-  endMinutes = Math.min(endMinutes, 23 * 60 + 55);
+  const endMinutes = startMinutes + durationMin;
+  if (endMinutes > LAST_END_MINUTE) return null;
 
   const endH = Math.floor(endMinutes / 60);
   const endM = endMinutes % 60;
 
-  const startISO = `${safeDate}T${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-  const endISO = `${safeDate}T${String(endH).padStart(2, "0")}:${String(endM).padStart(2, "0")}`;
+  const startISO = `${date}T${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+  const endISO = `${date}T${String(endH).padStart(2, "0")}:${String(endM).padStart(2, "0")}`;
 
   return { startISO, endISO };
 }
@@ -74,8 +71,21 @@ export function useCalendarCreateRequestSubscriber(): void {
     executeToolWrite("web:calendar:create-requested", payload, scope, () => {
       const title = typeof payload.title === "string" ? payload.title.trim() : "";
       if (!title) return { ok: false, reason: "invalid" };
-      const { startISO, endISO } = buildISOTimes(payload.date, payload.startTime, payload.durationMin);
-      if (endISO <= startISO || !Number.isFinite(Date.parse(startISO)) || !Number.isFinite(Date.parse(endISO))) return { ok: false, reason: "invalid" };
+      // Defaults are only for fields genuinely omitted by a legacy producer.
+      // Explicit malformed values must not be rewritten into another confirmed operation.
+      const date = payload.date === undefined ? todayDateKey() : payload.date;
+      const startTime = payload.startTime === undefined ? "09:00" : payload.startTime;
+      const durationMin = payload.durationMin === undefined ? 60 : payload.durationMin;
+      if (!isValidCivilDate(date)
+        || typeof startTime !== "string"
+        || !HHMM_RE.test(startTime)
+        || typeof durationMin !== "number"
+        || !Number.isFinite(durationMin)
+        || !Number.isInteger(durationMin)
+        || durationMin < MIN_DURATION_MINUTES) return { ok: false, reason: "invalid" };
+      const times = buildISOTimes(date, startTime, durationMin);
+      if (!times) return { ok: false, reason: "invalid" };
+      const { startISO, endISO } = times;
       const raw = getPref("xai_calendar_events", scope);
       const store = typeof raw === "object" && raw !== null && !Array.isArray(raw) ? raw as Record<string, UserCalEvent> : {};
       const { next, created } = createEvent(store, { title, startISO, endISO, colorPreset: "mint", recurrence: null });
