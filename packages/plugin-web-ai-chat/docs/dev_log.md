@@ -27,4 +27,4 @@ Composite encrypted key rows + AAD, committed-marker checks, explicit legacy par
 
 | Time | Executor | Action | Commits | Next |
 |---|---|---|---|---|
-| 2026-09-09 11:22 | Codex bug-fix | Implement and test bounded AI ownership/migration/async lifecycle repair | pending | Combined independent bug-verify |
+| 2026-09-09 11:22 | Codex bug-fix | Implement and test bounded AI ownership/migration/async lifecycle repair | ebb91c2 | Combined independent bug-verify |
