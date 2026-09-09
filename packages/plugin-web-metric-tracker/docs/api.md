@@ -39,3 +39,8 @@ Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.
 New/edited measurements serialize measuredAt as an explicit UTC ISO instant after resolving the entered local clock. Today/yesterday quick-entry dates resolve at save time. Legacy offsetless records are preserved (their historical source timezone cannot be reconstructed); they retain legacy device-local interpretation until edited.
 
 REL-01 independent verification follow-up: editing weight/note/unit without changing the displayed date/time preserves the original measuredAt string, including DST fold identity, seconds and milliseconds. Only an effective date/time change constructs a new instant from the civil inputs.
+
+
+## REL-05 metric save recovery
+
+useMetricTrackerState preserves its first two tuple positions; the setter now returns boolean and a third MetricSaveRecovery member exposes failure/retry/discard/snapshot. Failed writes never publish the candidate as committed. A pending snapshot retains the raw baseline captured before mutation; retry refuses a changed baseline. Snapshot access and writes check captured account scope. This is an optimistic check, not a cross-tab atomic transaction.

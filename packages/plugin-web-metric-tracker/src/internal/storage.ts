@@ -112,17 +112,33 @@ export function createWeightRecordId(now = Date.now()): string {
   return `mw_${now.toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export function useMetricTrackerState(): readonly [MetricTrackerState, (next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => void] {
+export interface MetricSaveRecovery {
+  failure: "write" | "conflict" | "account" | null;
+  retry(): boolean;
+  discard(): void;
+  snapshot(): MetricTrackerState | null;
+}
+export function useMetricTrackerState(): readonly [MetricTrackerState, (next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => boolean, MetricSaveRecovery] {
   const scope = useRef(accountScope.capture()).current;
-  const [state, setState] = useState<MetricTrackerState>(() => readMetricTrackerState(scope));
+  const baseline = useRef<string | null>(null);
+  const [state, setState] = useState<MetricTrackerState>(() => {
+    const value = readMetricTrackerState(scope);
+    if (typeof window !== "undefined") baseline.current = localStorage.getItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope));
+    return value;
+  });
   const stateRef = useRef(state);
+  const pending = useRef<{ value: MetricTrackerState; baseline: string | null } | null>(null);
+  const [failure, setFailure] = useState<MetricSaveRecovery["failure"]>(null);
 
   useEffect(() => {
     function refresh(): void {
       if (!accountScope.isReady(scope)) return;
-      const next = readMetricTrackerState(scope);
-      stateRef.current = next;
-      setState(next);
+      try {
+        const next = readMetricTrackerState(scope);
+        baseline.current = localStorage.getItem(accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope));
+        stateRef.current = next;
+        setState(next);
+      } catch { setFailure("write"); }
     }
     window.addEventListener("storage", refresh);
     window.addEventListener(METRIC_TRACKER_STORAGE_EVENT, refresh);
@@ -130,17 +146,38 @@ export function useMetricTrackerState(): readonly [MetricTrackerState, (next: Me
       window.removeEventListener("storage", refresh);
       window.removeEventListener(METRIC_TRACKER_STORAGE_EVENT, refresh);
     };
-  }, []);
+  }, [scope]);
 
+  const commit = useCallback((value: MetricTrackerState): boolean => {
+    if (!accountScope.isReady(scope)) { setFailure("account"); return false; }
+    pending.current = { value, baseline: pending.current ? pending.current.baseline : baseline.current };
+    try {
+      const key = accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope);
+      const raw = localStorage.getItem(key);
+      if (raw !== pending.current.baseline) { setFailure("conflict"); return false; }
+      writeMetricTrackerState(value, scope);
+      stateRef.current = value;
+      setState(value);
+      baseline.current = JSON.stringify(value);
+      pending.current = null;
+      setFailure(null);
+      return true;
+    } catch {
+      setFailure("write");
+      return false;
+    }
+  }, [scope]);
   const setPersisted = useCallback((next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => {
-    if (!accountScope.isReady(scope)) return;
-    const value = typeof next === "function" ? next(stateRef.current) : next;
-    writeMetricTrackerState(value, scope);
-    stateRef.current = value;
-    setState(value);
-  }, []);
-
-  return [state, setPersisted];
+    if (!accountScope.isReady(scope)) { setFailure("account"); return false; }
+    return commit(typeof next === "function" ? next(stateRef.current) : next);
+  }, [commit, scope]);
+  const recovery: MetricSaveRecovery = {
+    failure,
+    retry: () => pending.current ? commit(pending.current.value) : false,
+    discard: () => { pending.current = null; setFailure(null); },
+    snapshot: () => { accountScope.assertCurrent(scope); accountScope.physicalKey(METRIC_TRACKER_STATE_KEY, scope); return pending.current?.value ?? null; },
+  };
+  return [state, setPersisted, recovery];
 }
 
 registerAccountMigrationValidator(METRIC_TRACKER_STATE_KEY, value => isRecord(value) && value["schemaVersion"] === 1 && isWeightProfile(value["profile"]) && Array.isArray(value["records"]) && value["records"].every(isWeightRecord));

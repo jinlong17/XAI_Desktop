@@ -34,3 +34,8 @@ Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.
 New/edited measurements serialize measuredAt as an explicit UTC ISO instant after resolving the entered local clock. Today/yesterday quick-entry dates resolve at save time. Legacy offsetless records are preserved (their historical source timezone cannot be reconstructed); they retain legacy device-local interpretation until edited.
 
 Independent Chrome review reproduced unchanged-time edits moving the second Pacific 01:30 occurrence by one hour and truncating seconds/milliseconds. Added component regressions for 2026-11-01T09:30:00.000Z and 2026-09-09T18:30:45.123Z; changing weight alone must preserve exact measuredAt. Package suite: 16 passing tests after fix. Browser re-verification is tracked in docs/reviews/web-local-time-contract.
+
+
+## REL-05 metric save recovery
+
+REL-05 Metrics: full 7 files/22 tests PASS. Five new tests cover native Storage quota with retained editor/latest draft and one successful retry; read denial after hydration with recoverable pending profile; conflict refusal against newer raw bytes; stale A retry/export refusal with B bytes retained; actual Blob JSON containing the pending snapshot and latest edited record draft. Existing absolute-time edit and account-isolation assertions remain. Package typecheck/lint passed before the final copy-only scope explanation. Independent browser verification is still required.

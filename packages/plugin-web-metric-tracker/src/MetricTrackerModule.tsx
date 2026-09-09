@@ -124,7 +124,8 @@ function isValidPositiveNumber(value: string): boolean {
 }
 
 export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
-  const [state, setState] = useMetricTrackerState();
+  const [state, setState, recovery] = useMetricTrackerState();
+  const [recoveryExportFailed, setRecoveryExportFailed] = useState(false);
   const [range, setRange] = useState<RangeId>("30d");
   const [previewRange, setPreviewRange] = useState<RangeId>("30d");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
@@ -187,13 +188,13 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
     resetDraft();
   }
 
-  function saveRecord(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
+  function saveRecord(event?: FormEvent<HTMLFormElement>): void {
+    event?.preventDefault();
     if (!isValidPositiveNumber(draft.weight)) return;
     const measuredAt = measuredAtFromDraft(draft);
     if (!measuredAt) return;
     const nowIso = new Date().toISOString();
-    setState((prev) => upsertWeightRecord(prev, {
+    const saved = setState((prev) => upsertWeightRecord(prev, {
       id: draft.id ?? createWeightRecordId(),
       metricId: "weight",
       value: Number(draft.weight),
@@ -202,8 +203,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
       note: draft.note.trim(),
       createdAt: draft.createdAt,
     }, nowIso));
-    resetDraft();
-    setEntryOpen(false);
+    if (saved) { resetDraft(); setEntryOpen(false); }
   }
 
   function saveProfile(): void {
@@ -214,6 +214,26 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
     };
     setState((prev) => updateWeightProfile(prev, next));
   }
+
+  function exportPending(): void {
+    let url: string | undefined;
+    try {
+      const snapshot = recovery.snapshot(); // Refuses exports from a stale account.
+      url = URL.createObjectURL(new Blob([JSON.stringify({ version: 1, kind: "metric-unsaved-draft", snapshot, recordDraft: entryOpen ? draft : null, profileDraft }, null, 2)], { type: "application/json" }));
+      const link = document.createElement("a"); link.href = url; link.download = "xai-metric-unsaved-draft.json";
+      document.body.append(link); try { link.click(); } finally { link.remove(); }
+      setRecoveryExportFailed(false);
+    } catch { setRecoveryExportFailed(true); }
+    finally { if (url) { const completed = url; setTimeout(() => URL.revokeObjectURL(completed), 1000); } }
+  }
+  const saveFailure = recovery.failure ? <section className="mt-save-failure" role="alert">
+    <p>{recovery.failure === "account" ? t(lang, "账户已更改，请重新打开此页面。", "Account changed. Reopen this page.") : recovery.failure === "conflict" ? t(lang, "已有更新的数据，未覆盖。请导出草稿后重新打开页面。", "Newer data exists and was not overwritten. Export your draft, then reopen this page.") : t(lang, "保存未完成，草稿仍保留在此页面。请检查浏览器存储权限或空间后重试。", "Saving failed. Your draft remains on this page. Check browser storage access or space, then retry.")}</p>
+    <p>{t(lang, "草稿文件包含现有指标记录及未保存修改，仅用于保留内容，暂不支持直接导入。", "The draft file includes existing metric records and unsaved edits. It preserves your content; direct import is not supported.")}</p>
+    <button type="button" onClick={() => { if (entryOpen) saveRecord(); else recovery.retry(); }}>{t(lang, "重试保存", "Retry save")}</button>
+    <button type="button" onClick={exportPending}>{t(lang, "导出未保存草稿", "Export unsaved draft")}</button>
+    <button type="button" onClick={() => { recovery.discard(); setRecoveryExportFailed(false); }}>{t(lang, "放弃待保存快照", "Discard pending snapshot")}</button>
+    {recoveryExportFailed && <p>{t(lang, "无法导出，请确认仍在原账户。", "Could not export. Check that the original account is still active.")}</p>}
+  </section> : null;
 
   function downloadShareCard(): void {
     const url = createShareCardDataUrl({
@@ -243,6 +263,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
 
   return (
     <div className="module module-metrics">
+      {!entryOpen && saveFailure}
       <header className="mt-top">
         <div>
           <h1 className="mt-title"><Icon name="target" size={20} />{t(lang, "指标追踪", "Metric Tracker")}</h1>
@@ -411,6 +432,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
           if (event.target === event.currentTarget) closeEntry();
         }}>
           <section className="mt-panel mt-modal-card" role="dialog" aria-modal="true" aria-labelledby="mt-entry-title">
+            {saveFailure}
             <div className="mt-panel-head">
               <div>
                 <h2 id="mt-entry-title">{draft.id ? t(lang, "更新记录", "Update log") : t(lang, "记一下", "Quick log")}</h2>

@@ -42,3 +42,8 @@ Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.
 New/edited measurements serialize measuredAt as an explicit UTC ISO instant after resolving the entered local clock. Today/yesterday quick-entry dates resolve at save time. Legacy offsetless records are preserved (their historical source timezone cannot be reconstructed); they retain legacy device-local interpretation until edited.
 
 The edit draft retains original measuredAt plus its initial date/time inputs. Minute-precision controls cannot round-trip an absolute instant in repeated DST hours or with sub-minute precision, so unchanged civil inputs preserve the original instant.
+
+
+## REL-05 metric save recovery
+
+Source diagnosis: the repository setter previously propagated storage exceptions without user-visible recovery; record save then reset/closed its editor if the setter returned normally. The new failure panel is rendered inside the active record dialog or in the module for profile/delete operations. It preserves submitted snapshot and latest editor inputs, supports retry/export/discard, and closes a record editor only on successful commit. Export scope text states that the file contains existing records plus unsaved edits and is not a direct-import format. Drafts remain in this mounted page; reload persistence remains REL-09.
