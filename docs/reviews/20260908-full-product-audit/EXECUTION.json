@@ -150,7 +150,13 @@
         "../web-ai-preference-independent/review.md",
         "commit:32023cf",
         "commit:e1e3697",
-        "../web-board-workspace-astra-review/20260909-astra-review.md"
+        "../web-board-workspace-astra-review/20260909-astra-review.md",
+        "commit:1053463",
+        "commit:38c056e",
+        "commit:ac0e090",
+        "../web-board-workspace-astra-review/20260909-1053463-rereview.md",
+        "commit:a8774fd",
+        "../web-board-detail-save-diagnosis/review.md"
       ]
     },
     {
@@ -749,7 +755,9 @@
         "../web-ai-calendar-validation-fix/review.md",
         "commit:afd10ff",
         "commit:2d74022",
-        "../web-ai-tool-receipt-sol-independent/review.md"
+        "../web-ai-tool-receipt-sol-independent/review.md",
+        "commit:8bcd1d6",
+        "commit:fd1dce1"
       ]
     },
     {

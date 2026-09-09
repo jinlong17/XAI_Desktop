@@ -1,10 +1,10 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。Calendar A1两笔修复e50ca1c/afd10ff已提交：严格下游日期/时间/时长校验，加上游registry保留显式参数而非默认/取整/丢弃。父在e50ca1c独立复跑原dd10cb8两非法日期断言PASS；作者afd10ff整链路6例及AI280/Calendar359测试通过，尚待固定快照独立完整A1验收。Terra补上游修复前后证据。
+最新检查点（2026-09-09）：正式完成 **13/312**。Board工作区1053463仅修好hook拒绝损坏数据，Astra ac0e090仍要求修改：预存schema-invalid、JSON null、语法损坏、[]四场景在Module启动时被seed/automation覆盖；单独阻止board写入后active选择仍从valuable-board被改为b-default。正确启动反例保留，Terra正在扩到初始化/自动及手动automation/queued selection的共用源校验。原9组件6PASS/3FAIL，其中一项为正常seed自动化改变有效数据的断言边界，不与两个真实损坏保护FAIL混淆。完整Board/REL-05未关闭。
 
-Sol独立2d74022固定daff8ef原生六工具quota/retry、subscriber重挂、冲突、旧owner、无subscriber、非法ID及迟到attempt检查通过，仅限页内回执；正在补错request/channel/owner回执、重复确认和等待期间卸载/换账号边界。JSON.stringify键顺序造成同语义冲突已记录。完整AI-02仍开放，Astra原六动作新epoch重放FAIL尚未解决。
+Board详情a8774fd固定d7f1987新增3正确FAIL：清单项、附件、评论在canonical写入被拒后丢失编辑稿；原字节未变，后续alert断言尚未执行。Astra已批准下一批架构（ac0e090中的20260909-detail-repair-architecture.md），须待当前Module所有权释放再实施，不能仅把void当成功或仅在会消失的Modal中保留草稿。
 
-Board Astra独立e1e3697固定3e7f17a结论CHANGES REQUIRED：结构损坏workspace被create/retry覆盖，损坏board被默认数据替代后误允许删除工作区。新增组件5PASS/4FAIL、独立Chrome2PASS/2FAIL，原作者10组件/4Chrome及包299分别通过，各层不合计。两P1已交原Terra修复，不排除到REL-07。以下保留历次检查记录。
+AI-02页内回执Sol补充8bcd1d6：固定daff8ef错误request/channel/owner回执、重复Confirm、等待卸载/换账号、六工具读写SecurityError均通过；完整持久幂等仍开放。Calendar A1 afd10ff上游前后同6断言证据fd1dce1已提交（before5FAIL/1PASS→after6PASS）。Sol固定afd10ff独立native发现array时间误报storage而非invalid，Terra接最小类型校验修复；A1未通过最终验收。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 
