@@ -33,6 +33,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "rea
 import { accountScope, usePref } from "@repo/plugin-web-storage";
 import { useBoardCreateRecovery, type BoardCreateDraft } from "./internal/useBoardCreateRecovery.js";
 import { useBoardComposerRecovery } from "./internal/useBoardComposerRecovery.js";
+import { useWorkspaceSaveRecovery } from "./internal/useWorkspaceSaveRecovery.js";
 import { ensureBoardTaskLink } from "./internal/taskLinkCommand.js";
 import {
   findBoardLinkedTask,
@@ -369,67 +370,12 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   );
 
   // ---- Workspace CRUD (W3) ------------------------------------------------
-  const writeWorkspaces = useCallback(
-    (updater: (prev: BoardWorkspace[]) => BoardWorkspace[]) => {
-      setRawWorkspaces(
-        updater(loadWorkspacesOrDefault(rawWorkspaces)) as unknown as typeof rawWorkspaces,
-      );
-    },
-    [rawWorkspaces, setRawWorkspaces],
-  );
-
-  const createWorkspace = useCallback(
-    (name: string) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      writeWorkspaces((prev) => {
-        const color =
-          BOARD_MEMBER_PALETTE[prev.length % BOARD_MEMBER_PALETTE.length]!;
-        const id = `ws-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-        return [...prev, { id, name: { en: trimmed, zh: trimmed }, color }];
-      });
-    },
-    [writeWorkspaces],
-  );
-
-  const renameWorkspace = useCallback(
-    (id: string, name: string) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      writeWorkspaces((prev) =>
-        prev.map((ws) =>
-          ws.id === id ? { ...ws, name: { en: trimmed, zh: trimmed } } : ws,
-        ),
-      );
-    },
-    [writeWorkspaces],
-  );
-
-  const recolorWorkspace = useCallback(
-    (id: string) => {
-      writeWorkspaces((prev) =>
-        prev.map((ws) => {
-          if (ws.id !== id) return ws;
-          const idx = BOARD_MEMBER_PALETTE.indexOf(ws.color);
-          const color =
-            BOARD_MEMBER_PALETTE[(idx + 1) % BOARD_MEMBER_PALETTE.length]!;
-          return { ...ws, color };
-        }),
-      );
-    },
-    [writeWorkspaces],
-  );
-
-  const deleteWorkspace = useCallback(
-    (id: string) => {
-      // Guard: never delete the last workspace or one that still holds boards.
-      if (boards.some((board) => board.workspaceId === id)) return;
-      writeWorkspaces((prev) =>
-        prev.length > 1 ? prev.filter((ws) => ws.id !== id) : prev,
-      );
-    },
-    [boards, writeWorkspaces],
-  );
+  const workspaceRecovery = useWorkspaceSaveRecovery(rawWorkspaces, rawBoards, activeBoardId, setRawWorkspaces, setActiveBoardId);
+  const [workspaceExportFailed, setWorkspaceExportFailed] = useState(false);
+  const createWorkspace = (name: string) => workspaceRecovery.run('create', undefined, name);
+  const renameWorkspace = (id: string, name: string) => workspaceRecovery.run('rename', id, name);
+  const recolorWorkspace = (id: string) => workspaceRecovery.run('recolor', id);
+  const deleteWorkspace = (id: string) => workspaceRecovery.run('delete', id);
 
   // ---- Board metadata editing (W2: name / icon / description / cover) ----
   const updateBoardMeta = useCallback(
@@ -1164,15 +1110,32 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           boards={boards}
           activeBoardId={activeBoard.id}
           onPick={(id) => {
-            setActiveBoardId(id);
-            setSwitcherOpen(false);
+            if (workspaceRecovery.run('pick', id)) setSwitcherOpen(false);
           }}
           onCreate={() => {
             setCreateOpen(true);
             setSwitcherOpen(false);
           }}
           onRequestDelete={requestBoardDelete}
-          onClose={() => setSwitcherOpen(false)}
+          onClose={() => { if (!workspaceRecovery.error) setSwitcherOpen(false); }}
+          saveError={workspaceRecovery.error}
+          pendingAction={workspaceRecovery.pending?.kind}
+          onRetrySave={(name) => {
+            const pending = workspaceRecovery.pending;
+            if (!pending) return false;
+            const success = workspaceRecovery.run(pending.kind, pending.id, name ?? pending.name);
+            if (success && pending.kind === 'pick') setSwitcherOpen(false);
+            return success;
+          }}
+          onDiscardSave={() => { workspaceRecovery.discard(); setWorkspaceExportFailed(false); }}
+          exportFailed={workspaceExportFailed}
+          onExportSave={(name) => {
+            try {
+              const blob = new Blob([JSON.stringify(workspaceRecovery.snapshot(name), null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob), anchor = document.createElement('a'); anchor.href = url; anchor.download = 'workspace-change-draft.json'; document.body.appendChild(anchor); anchor.click(); anchor.remove();
+              setTimeout(() => URL.revokeObjectURL(url), 1000); setWorkspaceExportFailed(false);
+            } catch { setWorkspaceExportFailed(true); }
+          }}
           onCreateWorkspace={createWorkspace}
           onRenameWorkspace={renameWorkspace}
           onRecolorWorkspace={recolorWorkspace}

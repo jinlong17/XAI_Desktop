@@ -1,0 +1,4863 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > create rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > rename rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > recolor rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > delete rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_board_workspaces.
+
+stderr | docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > pick rejected write remains visibly recoverable
+[plugin-web-storage] quota exceeded for xai_active_board.
+
+ ❯ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx (5 tests | 5 failed) 1453ms
+   × create rejected write remains visibly recoverable 443ms
+     → Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"board-toolbar"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "My Project Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-title-wrap"[39m
+    [33mdata-testid[39m=[32m"board-title-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board settings":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Board settings"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-settings-btn"[39m
+    [33mtitle[39m=[32m"Board settings"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"vp-btn active"[39m
+    [33mdata-testid[39m=[32m"vp-btn-board"[39m
+    [33mdata-view[39m=[32m"board"[39m
+    [33mtitle[39m=[32m"Board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Table":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-table"[39m
+    [33mdata-view[39m=[32m"table"[39m
+    [33mtitle[39m=[32m"Table"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+    [33mdata-view[39m=[32m"calendar"[39m
+    [33mtitle[39m=[32m"Calendar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+    [33mdata-view[39m=[32m"dashboard"[39m
+    [33mtitle[39m=[32m"Dashboard"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Timeline":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+    [33mdata-view[39m=[32m"timeline"[39m
+    [33mtitle[39m=[32m"Timeline"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Map":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-map"[39m
+    [33mdata-view[39m=[32m"map"[39m
+    [33mtitle[39m=[32m"Map"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"overview-toggle"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Filter":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"filter-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived cards":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-cards-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Automate":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"automation-run-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Private":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-visibility-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Share":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn primary"[39m
+    [33mdata-testid[39m=[32m"share-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a list":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-list-btn"[39m
+    [33mdata-testid[39m=[32m"add-list-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-inbox"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Planner":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-planner"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn active"[39m
+    [33mdata-testid[39m=[32m"bv-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Switch boards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Close":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "All":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Team Workspace":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Empty":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Workspace":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-ws-add"[39m
+    [33mdata-testid[39m=[32m"bs-new-workspace"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ New board":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn primary bs-new"[39m
+    [33mdata-testid[39m=[32m"bs-new-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-personal"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-personal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "My Project Board 14 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card active"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-default"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-team"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.14 295);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-team"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Project Management 12 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-pm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-pm"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Q3 Marketing Launch 2 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-marketing"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-marketing"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-empty"[39m
+    [33mstyle[39m=[32m"background: red;"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Delete workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete workspace"[39m
+    [33mclass[39m=[32m"icon-btn danger"[39m
+    [33mdata-testid[39m=[32m"bs-ws-delete-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "My Project Board":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Backlog":
+  [36m<h2 />[39m
+
+  Name "Today":
+  [36m<h2 />[39m
+
+  Name "Week":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "Done":
+  [36m<h2 />[39m
+
+  Name "Personal":
+  [36m<h3 />[39m
+
+  Name "Team Workspace":
+  [36m<h3 />[39m
+
+  Name "Empty":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  toolbar:
+
+  Name "Switch view":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Switch view"[39m
+    [33mclass[39m=[32m"view-picker"[39m
+    [33mdata-testid[39m=[32m"view-picker"[39m
+    [33mrole[39m=[32m"toolbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mdata-testid[39m=[32m"bs-search-input"[39m
+    [33mplaceholder[39m=[32m"Search your boards…"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+   × rename rejected write remains visibly recoverable 487ms
+     → Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"board-toolbar"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "My Project Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-title-wrap"[39m
+    [33mdata-testid[39m=[32m"board-title-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board settings":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Board settings"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-settings-btn"[39m
+    [33mtitle[39m=[32m"Board settings"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"vp-btn active"[39m
+    [33mdata-testid[39m=[32m"vp-btn-board"[39m
+    [33mdata-view[39m=[32m"board"[39m
+    [33mtitle[39m=[32m"Board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Table":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-table"[39m
+    [33mdata-view[39m=[32m"table"[39m
+    [33mtitle[39m=[32m"Table"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+    [33mdata-view[39m=[32m"calendar"[39m
+    [33mtitle[39m=[32m"Calendar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+    [33mdata-view[39m=[32m"dashboard"[39m
+    [33mtitle[39m=[32m"Dashboard"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Timeline":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+    [33mdata-view[39m=[32m"timeline"[39m
+    [33mtitle[39m=[32m"Timeline"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Map":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-map"[39m
+    [33mdata-view[39m=[32m"map"[39m
+    [33mtitle[39m=[32m"Map"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"overview-toggle"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Filter":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"filter-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived cards":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-cards-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Automate":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"automation-run-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Private":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-visibility-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Share":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn primary"[39m
+    [33mdata-testid[39m=[32m"share-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a list":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-list-btn"[39m
+    [33mdata-testid[39m=[32m"add-list-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-inbox"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Planner":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-planner"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn active"[39m
+    [33mdata-testid[39m=[32m"bv-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Switch boards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Close":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "All":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Team Workspace":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Empty":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Workspace":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-ws-add"[39m
+    [33mdata-testid[39m=[32m"bs-new-workspace"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ New board":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn primary bs-new"[39m
+    [33mdata-testid[39m=[32m"bs-new-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-personal"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-personal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "My Project Board 14 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card active"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-default"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-team"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.14 295);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-team"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Project Management 12 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-pm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-pm"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Q3 Marketing Launch 2 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-marketing"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-marketing"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-empty"[39m
+    [33mstyle[39m=[32m"background: red;"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Delete workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete workspace"[39m
+    [33mclass[39m=[32m"icon-btn danger"[39m
+    [33mdata-testid[39m=[32m"bs-ws-delete-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "My Project Board":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Backlog":
+  [36m<h2 />[39m
+
+  Name "Today":
+  [36m<h2 />[39m
+
+  Name "Week":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "Done":
+  [36m<h2 />[39m
+
+  Name "Personal":
+  [36m<h3 />[39m
+
+  Name "Team Workspace":
+  [36m<h3 />[39m
+
+  Name "Empty":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  toolbar:
+
+  Name "Switch view":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Switch view"[39m
+    [33mclass[39m=[32m"view-picker"[39m
+    [33mdata-testid[39m=[32m"view-picker"[39m
+    [33mrole[39m=[32m"toolbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mdata-testid[39m=[32m"bs-search-input"[39m
+    [33mplaceholder[39m=[32m"Search your boards…"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+   × recolor rejected write remains visibly recoverable 256ms
+     → Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"board-toolbar"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "My Project Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-title-wrap"[39m
+    [33mdata-testid[39m=[32m"board-title-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board settings":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Board settings"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-settings-btn"[39m
+    [33mtitle[39m=[32m"Board settings"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"vp-btn active"[39m
+    [33mdata-testid[39m=[32m"vp-btn-board"[39m
+    [33mdata-view[39m=[32m"board"[39m
+    [33mtitle[39m=[32m"Board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Table":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-table"[39m
+    [33mdata-view[39m=[32m"table"[39m
+    [33mtitle[39m=[32m"Table"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+    [33mdata-view[39m=[32m"calendar"[39m
+    [33mtitle[39m=[32m"Calendar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+    [33mdata-view[39m=[32m"dashboard"[39m
+    [33mtitle[39m=[32m"Dashboard"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Timeline":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+    [33mdata-view[39m=[32m"timeline"[39m
+    [33mtitle[39m=[32m"Timeline"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Map":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-map"[39m
+    [33mdata-view[39m=[32m"map"[39m
+    [33mtitle[39m=[32m"Map"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"overview-toggle"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Filter":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"filter-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived cards":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-cards-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Automate":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"automation-run-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Private":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-visibility-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Share":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn primary"[39m
+    [33mdata-testid[39m=[32m"share-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a list":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-list-btn"[39m
+    [33mdata-testid[39m=[32m"add-list-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-inbox"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Planner":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-planner"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn active"[39m
+    [33mdata-testid[39m=[32m"bv-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Switch boards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Close":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "All":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Team Workspace":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Empty":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Workspace":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-ws-add"[39m
+    [33mdata-testid[39m=[32m"bs-new-workspace"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ New board":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn primary bs-new"[39m
+    [33mdata-testid[39m=[32m"bs-new-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-personal"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-personal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "My Project Board 14 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card active"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-default"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-team"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.14 295);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-team"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Project Management 12 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-pm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-pm"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Q3 Marketing Launch 2 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-marketing"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-marketing"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-empty"[39m
+    [33mstyle[39m=[32m"background: red;"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Delete workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete workspace"[39m
+    [33mclass[39m=[32m"icon-btn danger"[39m
+    [33mdata-testid[39m=[32m"bs-ws-delete-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "My Project Board":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Backlog":
+  [36m<h2 />[39m
+
+  Name "Today":
+  [36m<h2 />[39m
+
+  Name "Week":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "Done":
+  [36m<h2 />[39m
+
+  Name "Personal":
+  [36m<h3 />[39m
+
+  Name "Team Workspace":
+  [36m<h3 />[39m
+
+  Name "Empty":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  toolbar:
+
+  Name "Switch view":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Switch view"[39m
+    [33mclass[39m=[32m"view-picker"[39m
+    [33mdata-testid[39m=[32m"view-picker"[39m
+    [33mrole[39m=[32m"toolbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mdata-testid[39m=[32m"bs-search-input"[39m
+    [33mplaceholder[39m=[32m"Search your boards…"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+   × delete rejected write remains visibly recoverable 231ms
+     → Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"board-toolbar"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "My Project Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-title-wrap"[39m
+    [33mdata-testid[39m=[32m"board-title-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board settings":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Board settings"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-settings-btn"[39m
+    [33mtitle[39m=[32m"Board settings"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"vp-btn active"[39m
+    [33mdata-testid[39m=[32m"vp-btn-board"[39m
+    [33mdata-view[39m=[32m"board"[39m
+    [33mtitle[39m=[32m"Board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Table":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-table"[39m
+    [33mdata-view[39m=[32m"table"[39m
+    [33mtitle[39m=[32m"Table"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+    [33mdata-view[39m=[32m"calendar"[39m
+    [33mtitle[39m=[32m"Calendar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+    [33mdata-view[39m=[32m"dashboard"[39m
+    [33mtitle[39m=[32m"Dashboard"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Timeline":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+    [33mdata-view[39m=[32m"timeline"[39m
+    [33mtitle[39m=[32m"Timeline"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Map":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-map"[39m
+    [33mdata-view[39m=[32m"map"[39m
+    [33mtitle[39m=[32m"Map"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"overview-toggle"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Filter":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"filter-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived cards":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-cards-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Automate":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"automation-run-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Private":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-visibility-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Share":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn primary"[39m
+    [33mdata-testid[39m=[32m"share-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a list":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-list-btn"[39m
+    [33mdata-testid[39m=[32m"add-list-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-inbox"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Planner":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-planner"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn active"[39m
+    [33mdata-testid[39m=[32m"bv-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Switch boards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Close":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "All":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Team Workspace":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Empty":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Workspace":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-ws-add"[39m
+    [33mdata-testid[39m=[32m"bs-new-workspace"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ New board":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn primary bs-new"[39m
+    [33mdata-testid[39m=[32m"bs-new-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-personal"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-personal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "My Project Board 14 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card active"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-default"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-team"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.14 295);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-team"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Project Management 12 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-pm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-pm"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Q3 Marketing Launch 2 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-marketing"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-marketing"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-empty"[39m
+    [33mstyle[39m=[32m"background: red;"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Delete workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete workspace"[39m
+    [33mclass[39m=[32m"icon-btn danger"[39m
+    [33mdata-testid[39m=[32m"bs-ws-delete-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "My Project Board":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Backlog":
+  [36m<h2 />[39m
+
+  Name "Today":
+  [36m<h2 />[39m
+
+  Name "Week":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "Done":
+  [36m<h2 />[39m
+
+  Name "Personal":
+  [36m<h3 />[39m
+
+  Name "Team Workspace":
+  [36m<h3 />[39m
+
+  Name "Empty":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  toolbar:
+
+  Name "Switch view":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Switch view"[39m
+    [33mclass[39m=[32m"view-picker"[39m
+    [33mdata-testid[39m=[32m"view-picker"[39m
+    [33mrole[39m=[32m"toolbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mdata-testid[39m=[32m"bs-search-input"[39m
+    [33mplaceholder[39m=[32m"Search your boards…"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+   × pick rejected write remains visibly recoverable 35ms
+     → Unable to find an element by: [data-testid="bs-scrim"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > create rejected write remains visibly recoverable
+ FAIL  docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > rename rejected write remains visibly recoverable
+ FAIL  docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > recolor rejected write remains visibly recoverable
+ FAIL  docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > delete rejected write remains visibly recoverable
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"board-toolbar"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bl-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-head"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"bs-group-h"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "My Project Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-title-wrap"[39m
+    [33mdata-testid[39m=[32m"board-title-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board settings":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Board settings"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-settings-btn"[39m
+    [33mtitle[39m=[32m"Board settings"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"vp-btn active"[39m
+    [33mdata-testid[39m=[32m"vp-btn-board"[39m
+    [33mdata-view[39m=[32m"board"[39m
+    [33mtitle[39m=[32m"Board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Table":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-table"[39m
+    [33mdata-view[39m=[32m"table"[39m
+    [33mtitle[39m=[32m"Table"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+    [33mdata-view[39m=[32m"calendar"[39m
+    [33mtitle[39m=[32m"Calendar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+    [33mdata-view[39m=[32m"dashboard"[39m
+    [33mtitle[39m=[32m"Dashboard"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Timeline":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+    [33mdata-view[39m=[32m"timeline"[39m
+    [33mtitle[39m=[32m"Timeline"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Map":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"vp-btn"[39m
+    [33mdata-testid[39m=[32m"vp-btn-map"[39m
+    [33mdata-view[39m=[32m"map"[39m
+    [33mtitle[39m=[32m"Map"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"overview-toggle"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Filter":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"filter-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Archived cards":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"archive-cards-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Automate":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"automation-run-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Private":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn"[39m
+    [33mdata-testid[39m=[32m"board-visibility-toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Share":
+  [36m<button[39m
+    [33mclass[39m=[32m"board-icon-btn primary"[39m
+    [33mdata-testid[39m=[32m"share-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "List actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"List actions"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bl-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Card actions":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Card actions"[39m
+    [33mclass[39m=[32m"bc-menu-btn"[39m
+    [33mdata-testid[39m=[32m"card-menu-open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a card":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-card-btn"[39m
+    [33mdata-testid[39m=[32m"add-card-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Add a list":
+  [36m<button[39m
+    [33mclass[39m=[32m"add-list-btn"[39m
+    [33mdata-testid[39m=[32m"add-list-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inbox":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-inbox"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Planner":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-planner"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Board":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn active"[39m
+    [33mdata-testid[39m=[32m"bv-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Switch boards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bv-btn"[39m
+    [33mdata-testid[39m=[32m"bv-switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Close":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "All":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Personal":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Team Workspace":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Empty":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ Workspace":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-ws-add"[39m
+    [33mdata-testid[39m=[32m"bs-new-workspace"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "+ New board":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn primary bs-new"[39m
+    [33mdata-testid[39m=[32m"bs-new-board"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-personal"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-personal"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "My Project Board 14 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card active"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-default"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-ws-team"[39m
+    [33mstyle[39m=[32m"background: oklch(0.6 0.14 295);"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-ws-team"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Project Management 12 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-pm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-pm"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Q3 Marketing Launch 2 cards":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-card"[39m
+    [33mdata-testid[39m=[32m"bs-card-b-marketing"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "🗑":
+  [36m<button[39m
+    [33mclass[39m=[32m"bs-delete"[39m
+    [33mdata-testid[39m=[32m"bs-delete-b-marketing"[39m
+    [33mtitle[39m=[32m"Delete"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Change color":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Change color"[39m
+    [33mclass[39m=[32m"ws-dot ws-dot-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-recolor-empty"[39m
+    [33mstyle[39m=[32m"background: red;"[39m
+    [33mtitle[39m=[32m"Change color"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rename workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Rename workspace"[39m
+    [33mclass[39m=[32m"icon-btn"[39m
+    [33mdata-testid[39m=[32m"bs-ws-rename-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Delete workspace":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Delete workspace"[39m
+    [33mclass[39m=[32m"icon-btn danger"[39m
+    [33mdata-testid[39m=[32m"bs-ws-delete-empty"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "My Project Board":
+  [36m<h1[39m
+    [33mclass[39m=[32m"module-title"[39m
+  [36m/>[39m
+
+  Name "Backlog":
+  [36m<h2 />[39m
+
+  Name "Today":
+  [36m<h2 />[39m
+
+  Name "Week":
+  [36m<h2 />[39m
+
+  Name "Later":
+  [36m<h2 />[39m
+
+  Name "Done":
+  [36m<h2 />[39m
+
+  Name "Personal":
+  [36m<h3 />[39m
+
+  Name "Team Workspace":
+  [36m<h3 />[39m
+
+  Name "Empty":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  toolbar:
+
+  Name "Switch view":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Switch view"[39m
+    [33mclass[39m=[32m"view-picker"[39m
+    [33mdata-testid[39m=[32m"view-picker"[39m
+    [33mrole[39m=[32m"toolbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"board-card"[39m
+    [33mdata-testid[39m=[32m"board-card"[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mdata-testid[39m=[32m"bs-search-input"[39m
+    [33mplaceholder[39m=[32m"Search your boards…"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx:16:149
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx > pick rejected write remains visibly recoverable
+TestingLibraryElementError: Unable to find an element by: [data-testid="bs-scrim"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"board-module board-workspaces-module"[39m
+      [33mdata-testid[39m=[32m"board-workspaces-module"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"board-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ws-chip"[39m
+          [33mdata-testid[39m=[32m"ws-chip"[39m
+          [33mstyle[39m=[32m"background: oklch(0.6 0.1 165);"[39m
+        [36m>[39m
+          [0mPe[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-title-wrap"[39m
+          [33mdata-testid[39m=[32m"board-title-btn"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"module-title"[39m
+          [36m>[39m
+            [0mMy Project Board[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m▾[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Board settings"[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"board-settings-btn"[39m
+          [33mtitle[39m=[32m"Board settings"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m✎[0m
+        [36m</button>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"view-picker-wrap"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Switch view"[39m
+            [33mclass[39m=[32m"view-picker"[39m
+            [33mdata-testid[39m=[32m"view-picker"[39m
+            [33mrole[39m=[32m"toolbar"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"vp-btn active"[39m
+              [33mdata-testid[39m=[32m"vp-btn-board"[39m
+              [33mdata-view[39m=[32m"board"[39m
+              [33mtitle[39m=[32m"Board"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-kanban"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mBoard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-table"[39m
+              [33mdata-view[39m=[32m"table"[39m
+              [33mtitle[39m=[32m"Table"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-grid"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTable[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-calendar"[39m
+              [33mdata-view[39m=[32m"calendar"[39m
+              [33mtitle[39m=[32m"Calendar"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-calendar"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mCalendar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-dashboard"[39m
+              [33mdata-view[39m=[32m"dashboard"[39m
+              [33mtitle[39m=[32m"Dashboard"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-barchart"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mDashboard[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-timeline"[39m
+              [33mdata-view[39m=[32m"timeline"[39m
+              [33mtitle[39m=[32m"Timeline"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-gantt"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mTimeline[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"vp-btn"[39m
+              [33mdata-testid[39m=[32m"vp-btn-map"[39m
+              [33mdata-view[39m=[32m"map"[39m
+              [33mtitle[39m=[32m"Map"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"vp-icon vp-icon-globe"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"vp-label"[39m
+              [36m>[39m
+                [0mMap[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"board-count"[39m
+        [36m>[39m
+          [0m14[0m
+          [0m [0m
+          [0mcards[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"grow"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"board-members"[39m
+          [33mdata-testid[39m=[32m"board-members"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"board-icon-btn"[39m
+          [33mdata-testid[39m=[32m"overview-toggle"[39m
+          [33mdisabled[3...
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-board-workspace-save-fix/save-contract.test.tsx:16:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  14:26:27
+   Duration  3.19s (transform 590ms, setup 223ms, collect 777ms, tests 1.45s, environment 338ms, prepare 67ms)
+
