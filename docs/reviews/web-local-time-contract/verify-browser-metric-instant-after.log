@@ -1,0 +1,25 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{"zone":"America/Los_Angeles","results":[{"original":"2026-11-01T09:30:00.000Z","saved":"2026-11-01T09:30:00.000Z","unchanged":true,"deltaMs":0,"explicitEdit":"2026-11-01T11:15:00.000Z","expected":"2026-11-01T11:15:00.000Z","displayed":[{"type":"text","value":"71"},{"type":"date","value":"2026-11-01"},{"type":"time","value":"01:30"}]},{"original":"2026-09-09T18:30:45.123Z","saved":"2026-09-09T18:30:45.123Z","unchanged":true,"deltaMs":0,"explicitEdit":"2026-09-09T10:15:00.000Z","expected":"2026-09-09T10:15:00.000Z","displayed":[{"type":"text","value":"71"},{"type":"date","value":"2026-09-09"},{"type":"time","value":"11:30"}]}]}
