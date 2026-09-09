@@ -247,3 +247,17 @@ Executor: Codex parent review/fix. Status remains FIX_READY_FOR_VERIFY. Independ
 Executor: Codex parent bug-fix; independent test author: rel01_independent_verify. Implemented identity callback and stale refresh guards, synchronous account invalidation before clear, and captured-token deletion options. Parent reran 60 package tests successfully; package typecheck passed before deletion option extension and is rerun at integration. Status: sub-fix implemented, REL-03 joint verification pending. No remote account mutation or hosted auth claim.
 
 References checked: Supabase changelog index and https://supabase.com/docs/reference/javascript/auth-onauthstatechange. Auth callback stays synchronous; SDK/config versions unchanged. The relevant changelog self-hosted API_EXTERNAL_URL change does not apply to this local lifecycle repair.
+
+## 2026-09-09 — REL-06 bounded 404 fix
+
+- Current Phase: BUG_VERIFY
+- Status: FIX_READY_FOR_VERIFY
+- Executor: Codex / rel01_independent_verify (bug-fix role)
+- Updated: 2026-09-09
+- Suggested Next: bug-verify
+- Root cause: generic routing 404 conflated with business deletion; SDK Response status ignored.
+- Change: fail every non-success HTTP status, preserve 2xx, use actual SDK response/context status. No unverified business code is invented. Prior historical entries describing blanket 404 success are superseded by this entry.
+- Tests: 13 files / 70 tests passed, including native Response + real FunctionsHttpError boundary cases.
+- Risk: externally deployed undocumented 404 idempotency now reports failure and preserves local data until its contract is verified. Complete deletion durability/IDB/auth/cache coordination remains REL-06 work; see diagnosis commit 27b8925.
+- Commit: this entry is included in the exact bounded fix commit (identify via Git history).
+- Work Log: independent diagnosis committed first; API, deployment contract and regression tests updated together; no production services invoked.

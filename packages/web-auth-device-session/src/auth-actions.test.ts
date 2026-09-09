@@ -9,7 +9,7 @@ import {
   AccountDeleteError,
   type StringStorage
 } from "./auth-actions";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { FunctionsHttpError, type SupabaseClient } from "@supabase/supabase-js";
 
 function createStorage(): StringStorage {
   const map = new Map<string, string>();
@@ -90,7 +90,7 @@ describe("auth actions", () => {
 // ---------------------------------------------------------------------------
 
 function createDeleteClient(
-  invokeResult: { error?: { status?: number } | null; data?: unknown } = { error: null, data: {} },
+  invokeResult: { error?: { status?: number; context?: Response } | null; data?: unknown; response?: Response; status?: number } = { error: null, data: {} },
   signOutError: unknown = null,
   invokeThrows?: unknown
 ) {
@@ -154,11 +154,45 @@ describe("deleteAccount (gap-closure row #9)", () => {
     });
   });
 
-  it("DAA-7: 404 idempotency — treats as success (kind=already_deleted path); signOut still called", async () => {
-    // 404 maps to "already_deleted" which is idempotent — proceeds to signOut.
+  it("DAA-7: a generic 404 cannot authorize local deletion or sign-out", async () => {
     const client = createDeleteClient({ error: { status: 404 } });
+    await expect(deleteAccount(client)).rejects.toMatchObject({ kind: "server" });
+    expect(client.auth.signOut).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    '{"code":"NOT_FOUND","message":"Requested function was not found"}',
+    '{"code":"already_deleted"}',
+    '<html>Route not found</html>',
+    '{invalid',
+  ])("rejects real FunctionsHttpError 404 without inventing a business contract: %s", async (body) => {
+    const response = new Response(body, { status: 404 });
+    const client = createDeleteClient({ error: new FunctionsHttpError(response), data: null });
+    await expect(deleteAccount(client)).rejects.toMatchObject({ kind: "server" });
+    expect(client.auth.signOut).not.toHaveBeenCalled();
+    // Unknown error payloads are not consumed or treated as deletion authority.
+    expect(await response.clone().text()).toBe(body);
+  });
+
+  it.each([401, 403, 500])("maps SDK Response status %s", async (status) => {
+    const response = new Response('{}', { status });
+    const client = createDeleteClient({ error: new FunctionsHttpError(response), response });
+    await expect(deleteAccount(client)).rejects.toMatchObject({
+      kind: status === 401 ? "unauthorized" : status === 403 ? "forbidden" : "server",
+    });
+    expect(client.auth.signOut).not.toHaveBeenCalled();
+  });
+
+  it("rejects response-only 404 even if an adapter supplies no error", async () => {
+    const client = createDeleteClient({ error: null, data: { code: "already_deleted" }, response: new Response('{}', { status: 404 }) });
+    await expect(deleteAccount(client, { signOutAfterDelete: false })).rejects.toMatchObject({ kind: "server" });
+    expect(client.auth.signOut).not.toHaveBeenCalled();
+  });
+
+  it.each([200, 204])("preserves existing successful HTTP %s receipts", async (status) => {
+    const client = createDeleteClient({ error: null, data: status === 200 ? { success: true } : null, response: new Response(null, { status }) });
     await expect(deleteAccount(client)).resolves.toBeUndefined();
-    expect((client.auth.signOut as ReturnType<typeof vi.fn>)).toHaveBeenCalledTimes(1);
+    expect(client.auth.signOut).toHaveBeenCalledTimes(1);
   });
 
   it("DAA-8: signOut failure — does NOT throw (best-effort, R9: account is gone)", async () => {

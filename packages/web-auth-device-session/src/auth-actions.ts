@@ -203,10 +203,12 @@ export interface DeleteAccountOptions {
  *
  * Flow:
  * 1. Call `client.functions.invoke("account-delete")`.
- * 2. On HTTP 200 or 404 (already_deleted): call `client.auth.signOut()` (best-effort, non-throwing).
+ * 2. On successful invocation: call `client.auth.signOut()` (best-effort, non-throwing).
  * 3. Throw `AccountDeleteError` on all other outcomes.
  *
- * The caller is responsible for local-clear (localStorage wipe + IDB wipe + redirect)
+ * Generic 404 (including an uncontracted already_deleted body) is a failure.
+ * The deployed handler has no verified business idempotency receipt contract.
+ * The caller is responsible for captured-owner local cleanup
  * AFTER this function resolves. NEVER mutate local state before this resolves.
  *
  * Edge Function deployment: apps/web/deploy/README.md §"Account-Delete Edge Function"
@@ -226,7 +228,8 @@ export async function deleteAccount(
 
   /** Typed shape of Supabase FunctionsResponse for the account-delete edge function. */
   interface AccountDeleteInvokeResult {
-    error?: { status?: number; message?: string } | null;
+    error?: { status?: number; message?: string; context?: { status?: number } } | null;
+    response?: { status: number };
     data?: unknown;
     status?: number;
   }
@@ -236,28 +239,23 @@ export async function deleteAccount(
       method: "POST",
       ...(options.accessToken ? { headers: { Authorization: `Bearer ${options.accessToken}` } } : {}),
     });
-    status = result.error?.status
+    status = result.response?.status ?? result.error?.context?.status ?? result.error?.status
       ?? (typeof result.status === "number" ? result.status : undefined);
     invokeError = result.error ?? null;
   } catch (err) {
     throw new AccountDeleteError("network", "Network error during account-delete invoke", err);
   }
 
-  // Map HTTP status to AccountDeleteErrorKind.
-  if (invokeError) {
+  // FunctionsHttpError exposes the Response through context (and SDK response).
+  // An HTTP failure must never authorize local deletion, even when an adapter
+  // omits error or an unverified body claims "already_deleted".
+  if (invokeError || (status != null && (status < 200 || status >= 300))) {
     const kind: AccountDeleteErrorKind =
       status === 401 ? "unauthorized"
       : status === 403 ? "forbidden"
-      : status === 404 ? "already_deleted"
-      : status != null && status >= 500 ? "server"
+      : status === 404 || (status != null && status >= 500) ? "server"
       : "unknown";
-
-    if (kind === "already_deleted") {
-      // 404 is idempotent — treat as success (proceed to signOut).
-      // Fall through to signOut below.
-    } else {
-      throw new AccountDeleteError(kind, `account-delete returned ${status ?? "unknown"}`, invokeError);
-    }
+    throw new AccountDeleteError(kind, `account-delete returned ${status ?? "unknown"}`, invokeError);
   }
 
   if (options.signOutAfterDelete === false) return;

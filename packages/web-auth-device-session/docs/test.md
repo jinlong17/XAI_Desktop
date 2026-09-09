@@ -100,3 +100,7 @@ Baseline first regression failed with NotFoundError (device store absent). After
 REL-02 follow-up: warm custom database alpha write concurrent with first beta write reproduced InvalidStateError before the operation queue fix. Package regression now contains 53 passing tests. The standalone real-Chromium probe at docs/reviews/web-auth-device-session/verify-browser-idb.mjs verifies six scenarios including this race in an isolated profile. Cross-vendor review remains unavailable (Claude OAuth revoked); these results do not close that gate.
 
 REL-03: session-lifecycle.test.tsx adds six independently authored React Provider checks for late bootstrap, token refresh, synchronous clear, unmount, client replacement and explicit session changes. auth-actions.test.ts additionally checks frozen deletion Authorization and disabled automatic sign-out. Current package run: 13 files, 60 tests PASS. These use synthetic sessions and do not prove hosted authentication or remote account deletion.
+
+## REL-06 generic 404 regression (2026-09-09)
+
+13 files / 70 tests pass, including 24 auth-actions cases. Uses actual installed Supabase `FunctionsHttpError` with native `Response`: function-not-found, invented already_deleted code, HTML and malformed body 404 all reject; 401/403/500 map from context status; response-only 404 rejects; normal HTTP 200/204 succeeds; captured-token/no-sign-out behavior remains. Error body remains readable. No live server account deleted. Independent verification and wider REL-06 gates remain pending.
