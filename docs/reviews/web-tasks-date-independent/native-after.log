@@ -1,0 +1,8 @@
+{"name":"baseline","head":"2b1759ba6cb5e017d62f3fd38ab4866dad2c06c0","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":1440}
+{"name":"year-boundary-selectors-counts","today":2,"tomorrow":1,"next7":3,"legacyDateNotInferred":true,"pass":true}
+{"name":"native-DST-civil-window","zone":"America/Los_Angeles","now":"2026-03-07T12:00:00","pass":true}
+{"name":"native-DST-civil-window","zone":"America/Los_Angeles","now":"2026-10-31T12:00:00","pass":true}
+{"name":"native-DST-civil-window","zone":"Australia/Lord_Howe","now":"2026-04-04T12:00:00","pass":true}
+{"name":"native-midnight-without-reload","pageMounts":6,"pass":true}
+{"name":"actual-hidden-page-return","hidden":"hidden","nowVisible":true,"pass":true}
+{"name":"PASS","checks":6,"scope":"real Tasks Module/sidebar/chip/list; year+DST+native midnight+visibility; TASK01 only"}
