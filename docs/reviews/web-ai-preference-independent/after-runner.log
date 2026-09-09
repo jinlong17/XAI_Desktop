@@ -1,0 +1,11 @@
+baseline {"head":"24da17d786064d65794c58ef9da71418824b4539","requestedRef":"24da17d","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+insights-pending-json {"filename":"ai-chat-unsaved.json"}
+insights-quota-exact-desired-retry {"pass":true}
+voice-pending-json {"filename":"ai-chat-unsaved.json"}
+voice-quota-exact-desired-retry {"pass":true}
+insights-discard-observation {"raw":"false","on":false,"writes":0}
+insights-first-external-conflict-discard {"pass":true}
+voice-discard-observation {"raw":"true","on":true,"writes":0}
+voice-first-external-conflict-discard {"pass":true}
+old-owner-retry-export-discard-toggle-rejected {"pass":true}
+PASS {"scope":"actual AI Module + native Storage; 2 exact downloaded pending preference JSON files; device keys remain device-owned"}

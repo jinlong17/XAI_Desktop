@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-wwRTOe/source
+
+ ✓ docs/reviews/web-ai-preference-discard/save-contract.test.tsx (1 test) 96ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  14:27:43
+   Duration  1.67s (transform 315ms, setup 115ms, collect 528ms, tests 96ms, environment 540ms, prepare 61ms)
+

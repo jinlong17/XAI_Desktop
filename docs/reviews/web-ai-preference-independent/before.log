@@ -1,0 +1,6 @@
+{"name":"baseline","head":"187225ef63fb9057fae32314c7cb5860c81c3a7c","requestedRef":"24da17d^","source":"isolated git archive; every @repo import pinned","browser":"Chrome/152.0.7977.83","viewport":390}
+{"name":"insights-pending-json","filename":"ai-chat-unsaved.json"}
+{"name":"insights-quota-exact-desired-retry","pass":true}
+{"name":"voice-pending-json","filename":"ai-chat-unsaved.json"}
+{"name":"voice-quota-exact-desired-retry","pass":true}
+{"name":"insights-discard-observation","raw":"false","on":true,"writes":0}
