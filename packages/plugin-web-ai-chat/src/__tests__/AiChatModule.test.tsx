@@ -947,7 +947,12 @@ describe("AiChatModule integration (I)", () => {
     // Spy on emitWebEvent to capture the write event.
     const { onWebEvent } = await import("@repo/xai-web-event-bus");
     const emittedEvents: unknown[] = [];
-    const unsub = onWebEvent("web:tasks:create-requested", (e) => emittedEvents.push(e));
+    // This adapter-boundary test supplies an explicit successful business receipt.
+    // Actual native storage failure/receipt behavior has separate integration tests.
+    const unsub = onWebEvent("web:tasks:create-requested", (e) => {
+      emittedEvents.push(e);
+      emitWebEvent("web:ai:tool-write-receipt", { requestId: e.requestId, requestChannel: "web:tasks:create-requested", attemptId: e.attemptId, owner: e.owner!, ok: true });
+    });
 
     try {
       const { container } = render(<AiChatModule lang="en" />);
@@ -1030,7 +1035,10 @@ describe("AiChatModule integration (I)", () => {
 
     const { onWebEvent } = await import("@repo/xai-web-event-bus");
     const allWriteEvents: unknown[] = [];
-    const unsub1 = onWebEvent("web:tasks:create-requested", (e) => allWriteEvents.push({ type: "task", e }));
+    const unsub1 = onWebEvent("web:tasks:create-requested", (e) => {
+      allWriteEvents.push({ type: "task", e });
+      emitWebEvent("web:ai:tool-write-receipt", { requestId: e.requestId, requestChannel: "web:tasks:create-requested", attemptId: e.attemptId, owner: e.owner!, ok: true });
+    });
     const unsub2 = onWebEvent("web:calendar:create-requested", (e) => allWriteEvents.push({ type: "calendar", e }));
 
     try {
@@ -1258,8 +1266,13 @@ describe("AiChatModule integration (I)", () => {
 
     const emittedPayloads: Array<{ channel: string; payload?: unknown }> = [];
     const eventBus = await import("@repo/xai-web-event-bus");
+    const actualEmit = eventBus.emitWebEvent;
     vi.spyOn(eventBus, "emitWebEvent").mockImplementation((channel, payload) => {
       emittedPayloads.push({ channel: channel as string, payload });
+      if (channel === "web:tasks:delete-requested") {
+        const request = payload as import("@repo/xai-web-event-bus").WebEventMap["web:tasks:delete-requested"];
+        actualEmit("web:ai:tool-write-receipt", { requestId: request.requestId, requestChannel: channel, attemptId: request.attemptId, owner: request.owner!, ok: true });
+      }
     });
 
     const { container } = render(<AiChatModule lang="en" />);

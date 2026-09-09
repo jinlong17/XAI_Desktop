@@ -15,3 +15,5 @@
 export { emitWebEvent, onWebEvent } from './emitter';
 export { useWebEventListener } from './listener';
 export type { WebEventMap, WebEventKey } from './events';
+export { executeToolWrite } from './toolWriteReceipt';
+export type { ToolWriteChannel, ToolWriteResult } from './toolWriteReceipt';

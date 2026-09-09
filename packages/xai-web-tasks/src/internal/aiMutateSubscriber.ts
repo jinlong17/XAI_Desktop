@@ -22,9 +22,8 @@
  * @internal
  */
 
-import { useRef } from "react";
-import { useWebEventListener } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
+import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
 import { deleteCard, updateCard, moveCard } from "./tasksReducer.js";
 import type { TaskCol, BucketId, TaskTagId } from "../types.js";
 
@@ -44,107 +43,40 @@ function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
-// ---- Idempotency seen-set bound (Rec4 pattern) ------------------------------
-const MAX_SEEN = 100;
-
-// ---- Helper: read current TaskCol[] imperatively ----------------------------
-
-function readCols(): TaskCol[] {
-  const rawCols = getPref("xai_task_cols") as unknown;
-  return Array.isArray(rawCols) ? (rawCols as TaskCol[]) : [];
-}
-
-function writeCols(cols: TaskCol[]): void {
-  setPref("xai_task_cols", cols as unknown as import("@repo/plugin-web-storage").TaskColsState);
-}
-
-/**
- * useTaskMutateRequestSubscriber — zero-UI React hook for delete + update.
- *
- * Mount ONCE in apps/web/src/App.tsx as a Shell-sibling to guarantee
- * route-independent liveness. Mounted alongside the SHIPPED
- * useTaskCreateRequestSubscriber (same precedent, same location).
- *
- * @returns void — renders nothing; side-effect only.
- */
 export function useTaskMutateRequestSubscriber(): void {
-  // Bounded seen-sets — one per channel.
-  const seenDeleteRef = useRef<Set<string>>(new Set());
-  const seenUpdateRef = useRef<Set<string>>(new Set());
-
-  // ---- delete handler -------------------------------------------------------
-  useWebEventListener("web:tasks:delete-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-    const id = typeof payload.id === "string" ? payload.id.trim() : "";
-    if (!id) return;
-
-    // Idempotency guard
-    if (requestId) {
-      if (seenDeleteRef.current.has(requestId)) return;
-      if (seenDeleteRef.current.size >= MAX_SEEN) seenDeleteRef.current.clear();
-      seenDeleteRef.current.add(requestId);
-    }
-
-    const cols = readCols();
-    const next = deleteCard(cols, id);
-    if (next !== cols) {
-      // Only write if something actually changed (deleteCard returns prev ref on no-op).
-      writeCols(next);
-    }
+  useWebEventListener("web:tasks:delete-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:tasks:delete-requested", payload, scope, () => {
+      const id = typeof payload.id === "string" ? payload.id.trim() : "";
+      if (!id) return { ok: false, reason: "invalid" };
+      const raw = getPref("xai_task_cols", scope) as unknown;
+      const cols = Array.isArray(raw) ? raw as TaskCol[] : [];
+      if (!cols.some(col => col.tasks.some(task => task.id === id))) return { ok: false, reason: "not-found" };
+      const next = deleteCard(cols, id);
+      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+        ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
+    });
   });
-
-  // ---- update handler -------------------------------------------------------
-  useWebEventListener("web:tasks:update-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-    const id = typeof payload.id === "string" ? payload.id.trim() : "";
-    if (!id) return;
-
-    // Idempotency guard
-    if (requestId) {
-      if (seenUpdateRef.current.has(requestId)) return;
-      if (seenUpdateRef.current.size >= MAX_SEEN) seenUpdateRef.current.clear();
-      seenUpdateRef.current.add(requestId);
-    }
-
-    // Parse the patch (from the event payload).
-    const rawPatch = isObject(payload.patch) ? payload.patch : {};
-    const newTitle = typeof rawPatch["title"] === "string" ? rawPatch["title"].trim() || undefined : undefined;
-    const newBucket = isValidBucket(rawPatch["bucket"]) ? rawPatch["bucket"] : undefined;
-    const newTag = isValidTag(rawPatch["tag"]) ? rawPatch["tag"] : undefined;
-
-    // Nothing actionable?
-    if (newTitle === undefined && newBucket === undefined && newTag === undefined) return;
-
-    let cols = readCols();
-
-    // ED-6: bucket change → moveCard composition at subscriber level.
-    // moveCard moves the card AND rewrites its date fields for the new bucket.
-    // Then updateCard handles any remaining title/tag delta.
-    if (newBucket !== undefined) {
-      // Find the card's current column.
-      let fromColId: BucketId | undefined;
-      for (const col of cols) {
-        if (col.tasks.find((t) => t.id === id)) {
-          fromColId = col.id as BucketId;
-          break;
-        }
+  useWebEventListener("web:tasks:update-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:tasks:update-requested", payload, scope, () => {
+      const id = typeof payload.id === "string" ? payload.id.trim() : "";
+      if (!id || !isObject(payload.patch)) return { ok: false, reason: "invalid" };
+      const p = payload.patch;
+      const title = typeof p.title === "string" ? p.title.trim() : undefined;
+      if ((p.title !== undefined && !title) || (p.bucket !== undefined && !isValidBucket(p.bucket)) || (p.tag !== undefined && !isValidTag(p.tag))) return { ok: false, reason: "invalid" };
+      if (title === undefined && p.bucket === undefined && p.tag === undefined) return { ok: false, reason: "invalid" };
+      const raw = getPref("xai_task_cols", scope) as unknown;
+      let cols = Array.isArray(raw) ? raw as TaskCol[] : [];
+      const from = cols.find(col => col.tasks.some(task => task.id === id));
+      if (!from) return { ok: false, reason: "not-found" };
+      if (p.bucket && from.id !== p.bucket) {
+        if (!cols.some(col => col.id === p.bucket)) return { ok: false, reason: "invalid" };
+        cols = moveCard(cols, id, from.id as BucketId, p.bucket);
       }
-      if (fromColId !== undefined && fromColId !== newBucket) {
-        cols = moveCard(cols, id, fromColId, newBucket);
-      }
-    }
-
-    // Apply title/tag patch (if any).
-    const patch: { title?: string; tag?: TaskTagId } = {};
-    if (newTitle !== undefined) patch.title = newTitle;
-    if (newTag !== undefined) patch.tag = newTag;
-    const next = (patch.title !== undefined || patch.tag !== undefined)
-      ? updateCard(cols, id, patch)
-      : cols;
-
-    // Only write if something changed.
-    if (next !== cols || (newBucket !== undefined)) {
-      writeCols(next);
-    }
+      const next = updateCard(cols, id, { ...(title !== undefined ? { title } : {}), ...(p.tag !== undefined ? { tag: p.tag } : {}) });
+      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+        ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
+    });
   });
 }

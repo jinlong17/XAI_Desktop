@@ -19,9 +19,8 @@
  * @internal
  */
 
-import { useRef } from "react";
-import { useWebEventListener } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
+import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
 import { createEvent } from "./eventStore/eventStore.js";
 import type { UserCalEvent } from "./eventStore/types.js";
 
@@ -69,61 +68,18 @@ function buildISOTimes(
   return { startISO, endISO };
 }
 
-// ---- Idempotency seen-set bound (Rec4) --------------------------------------
-const MAX_SEEN = 100;
-
-/**
- * useCalendarCreateRequestSubscriber — zero-UI React hook.
- *
- * Mount ONCE in apps/web/src/App.tsx as a Shell-sibling to guarantee
- * route-independent liveness (R4 mitigation — CS-3 assertion).
- *
- * @returns void — renders nothing; side-effect only.
- */
 export function useCalendarCreateRequestSubscriber(): void {
-  // Bounded seen-set — cleared on unmount.
-  const seenRef = useRef<Set<string>>(new Set());
-
-  useWebEventListener("web:calendar:create-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-
-    // Idempotency guard (Rec4: bounded seen-set).
-    if (requestId) {
-      if (seenRef.current.has(requestId)) return;
-      if (seenRef.current.size >= MAX_SEEN) {
-        seenRef.current.clear();
-      }
-    }
-
-    const title = typeof payload.title === "string" ? payload.title.trim() : "";
-    if (!title) return;
-
-    const date = typeof payload.date === "string" ? payload.date : "";
-    const startTime = typeof payload.startTime === "string" ? payload.startTime : "09:00";
-    const durationMin = typeof payload.durationMin === "number" ? payload.durationMin : 60;
-
-    const { startISO, endISO } = buildISOTimes(date, startTime, durationMin);
-
-    const partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt"> = {
-      title,
-      startISO,
-      endISO,
-      colorPreset: "mint",
-      recurrence: null,
-    };
-
-    // Read the current store imperatively (not via usePref hook).
-    const rawStore = getPref("xai_calendar_events");
-    const store: Record<string, UserCalEvent> =
-      typeof rawStore === "object" && rawStore !== null && !Array.isArray(rawStore)
-        ? (rawStore as Record<string, UserCalEvent>)
-        : {};
-
-    // Execute via the pure createEvent reducer.
-    const { next } = createEvent(store, partial);
-
-    // Write back via imperative setPref (storage-event → useUserCalEvents in mounted CalendarModule updates reactively).
-    // Only committed requests are deduplicated; rejected writes remain retryable.
-    if (setPref("xai_calendar_events", next) && requestId) seenRef.current.add(requestId);
+  useWebEventListener("web:calendar:create-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:calendar:create-requested", payload, scope, () => {
+      const title = typeof payload.title === "string" ? payload.title.trim() : "";
+      if (!title) return { ok: false, reason: "invalid" };
+      const { startISO, endISO } = buildISOTimes(payload.date, payload.startTime, payload.durationMin);
+      if (endISO <= startISO || !Number.isFinite(Date.parse(startISO)) || !Number.isFinite(Date.parse(endISO))) return { ok: false, reason: "invalid" };
+      const raw = getPref("xai_calendar_events", scope);
+      const store = typeof raw === "object" && raw !== null && !Array.isArray(raw) ? raw as Record<string, UserCalEvent> : {};
+      const { next, created } = createEvent(store, { title, startISO, endISO, colorPreset: "mint", recurrence: null });
+      return setPref("xai_calendar_events", next, scope) ? { ok: true, targetId: created.id } : { ok: false, reason: "storage" };
+    });
   });
 }

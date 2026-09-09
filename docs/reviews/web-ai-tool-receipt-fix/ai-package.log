@@ -1,0 +1,159 @@
+
+> @repo/plugin-web-ai-chat@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-ai-chat
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-ai-chat
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed seed keeps latest complete transcript and retries one stable conversation
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed seed keeps latest complete transcript and retries one stable conversation
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed seed keeps latest complete transcript and retries one stable conversation
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed seed keeps latest complete transcript and retries one stable conversation
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > new chat cannot replace failed message draft; export contains latest transcript and input
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > new chat cannot replace failed message draft; export contains latest transcript and input
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed delete retains current conversation until successful retry
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > external raw change blocks retry and later sends rather than overwriting
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > external raw change blocks retry and later sends rather than overwriting
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > old A retry and export cannot act under B
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > old A retry and export cannot act under B
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > failed selection keeps active transcript and activates target only after retry
+[plugin-web-storage] quota exceeded for xai_ai_convos.
+
+stderr | src/__tests__/saveRecovery.test.tsx > device preference failure is visible and retry does not toggle twice: Hide insights
+[plugin-web-storage] quota exceeded for xai_ai_insights.
+
+ ✓ src/__tests__/claudeAdapter.test.ts (8 tests) 728ms
+   ✓ claudeAdapter (A) > A8: with API key + mock returns 401 → re-throws LlmError BadKey  420ms
+stderr | src/__tests__/saveRecovery.test.tsx > device preference failure is visible and retry does not toggle twice: Voice off
+[plugin-web-storage] quota exceeded for xai_ai_voice.
+
+ ✓ src/__tests__/saveRecovery.test.tsx (11 tests) 789ms
+ ✓ src/__tests__/openAiToolProtocol.test.ts (5 tests) 1323ms
+   ✓ OAI-STREAM-3: text-only turn (finish_reason:stop) — no false toolUse surfaced > yields accumulated text and no toolUse on a normal text response  327ms
+   ✓ OAI-STREAM-4: defensive finish_reason — tool_calls accumulated by stream-end even if finish_reason is 'stop' > surfaces toolUse when tool_calls accumulated but finish_reason is 'stop' (compat-server robustness)  326ms
+stderr | src/__tests__/AiChatModule.test.tsx > AiChatModule integration (I) > IT-DEL-4: bounded — after Confirm+tool_result, second tool_use NOT executed (cap=1)
+An update to AiChatModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to AiChatModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to AiChatModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to AiChatModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to AiChatModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/__tests__/secretStore.test.ts (9 tests) 1803ms
+   ✓ secretStore (SC) > SC3: save twice with different plaintexts — load returns the latest  426ms
+   ✓ secretStore (SC) > SC4b: Gemini and DeepSeek use independent encrypted key rows  575ms
+ ✓ src/__tests__/AiChatModule.test.tsx (38 tests) 1893ms
+ ✓ src/__tests__/AiSidebar.test.tsx (8 tests) 434ms
+ ✓ src/__tests__/accountAsync.test.tsx (4 tests) 254ms
+ ✓ src/__tests__/MarkdownMessage.test.tsx (1 test) 145ms
+ ✓ src/__tests__/ErrorBanner.test.tsx (5 tests) 77ms
+ ✓ src/__tests__/AiComposer.test.tsx (8 tests) 178ms
+ ✓ src/__tests__/claudeStreamAdapter.test.ts (10 tests) 3041ms
+   ✓ claudeStreamAdapter streamCompleteChat (CS) > CS2: happy path OpenAI-compatible — yields 2 chunks then done  540ms
+   ✓ claudeStreamAdapter streamCompleteChat (CS) > CS3: mid-stream abort via AbortController.abort() — iterator returns early; no throw  315ms
+   ✓ claudeStreamAdapter streamCompleteChat (CS) > CS4: BadKey 401 — throws LlmError({kind:'BadKey'})  369ms
+   ✓ claudeStreamAdapter streamCompleteChat (CS) > CS6: Network reject — throws LlmError({kind:'Network'}) + emits web:ai:request-failed  409ms
+   ✓ claudeStreamAdapter streamCompleteChat (CS) > CS7: Server 503 — throws LlmError({kind:'Server', status:503}) + emits web:ai:request-failed  327ms
+ ✓ src/__tests__/AiThread.test.tsx (8 tests) 242ms
+ ✓ src/__tests__/ConfirmationCard.test.tsx (8 tests) 344ms
+ ✓ src/__tests__/no-plaintext-key.test.ts (1 test) 258ms
+ ✓ src/__tests__/BreathingOrb.test.tsx (3 tests) 76ms
+ ✓ src/__tests__/starInstances.test.ts (7 tests) 66ms
+ ✓ src/__tests__/makeConvoFromUserText.test.ts (7 tests) 23ms
+ ✓ src/__tests__/llmErrors.test.ts (12 tests) 89ms
+ ✓ src/__tests__/AiAurora.test.tsx (6 tests) 195ms
+ ✓ src/__tests__/accountSecrets.test.ts (10 tests) 4430ms
+   ✓ copies the previous generation, verifies, and preserves rollback  839ms
+   ✓ retains original bytes when staged verification fails  476ms
+   ✓ quarantines provider-only legacy ciphertext unless separately adopted  827ms
+   ✓ rejects a decrypted key that completes after owner invalidation  370ms
+   ✓ aborts connection tests and discards their result on account change  484ms
+   ✓ deletes captured account generations while preserving B and unowned ciphertext  803ms
+ ✓ src/__tests__/toolRegistry.test.ts (19 tests) 84ms
+ ✓ src/__tests__/sseParser.test.ts (8 tests) 72ms
+ ✓ src/__tests__/openAiRoundTrip.test.ts (6 tests) 45ms
+ ✓ src/__tests__/contextProvider.test.ts (14 tests) 49ms
+ ✓ src/__tests__/isAiConvoRecord.test.ts (8 tests) 38ms
+ ✓ src/__tests__/openAiAntiDrift.test.ts (6 tests) 36ms
+ ✓ src/__tests__/backCompat.test.ts (5 tests) 41ms
+ ✓ src/__tests__/toolUseProtocol.test.ts (8 tests) 20ms
+ ✓ src/__tests__/openAiToolFormat.test.ts (15 tests) 7ms
+ ✓ src/__tests__/llmProvider.test.ts (8 tests) 10ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 3ms
+ ✓ src/__tests__/index-barrel.test.ts (7 tests) 3ms
+
+ Test Files  32 passed (32)
+      Tests  278 passed (278)
+   Start at  14:26:54
+   Duration  7.87s (transform 1.08s, setup 3.86s, collect 5.19s, tests 16.80s, environment 16.21s, prepare 2.70s)
+

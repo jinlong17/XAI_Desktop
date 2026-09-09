@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-ai-tool-receipt-fix/no-subscriber.test.tsx (1 test) 1806ms
+   ✓ does not tell the model that a tool succeeded when no business subscriber replies  1806ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  14:23:42
+   Duration  3.45s (transform 456ms, setup 141ms, collect 725ms, tests 1.81s, environment 427ms, prepare 101ms)
+

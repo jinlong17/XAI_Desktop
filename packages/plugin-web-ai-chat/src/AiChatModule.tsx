@@ -47,6 +47,7 @@ import { AiThread } from "./AiThread.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { ConfirmationCard } from "./ConfirmationCard.js";
 import { IconList, IconPlus, IconSparkle } from "./internal/icons.js";
+import { requestToolWrite } from "./internal/requestToolWrite.js";
 import { streamCompleteChat } from "./internal/claudeStreamAdapter.js";
 import { useConversationRecovery } from "./internal/useConversationRecovery.js";
 import { isAiConvoRecord } from "./internal/isAiConvoRecord.js";
@@ -138,6 +139,9 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
   const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarOpen);
   const [model] = useState<AiModelId>("haiku");
   /** Non-null when there is an active LlmError to display. */
+  const [toolWriteError, setToolWriteError] = useState<string | null>(null);
+  const [toolWriteWaiting, setToolWriteWaiting] = useState(false);
+  const toolWriteBusy = useRef(false);
   const [bannerError, setBannerError] = useState<LlmError | null>(null);
 
   /**
@@ -188,6 +192,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       setActiveConvo(null);
       setPendingConfirmation(null);
       setBannerError(null);
+      setToolWriteError(null);
+      setToolWriteWaiting(false);
       setThinking(false);
     });
     return () => {
@@ -425,6 +431,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       if (!ownerCurrent()) return;
       if (pendingSave.current && pendingSave.current.operation !== "messages") { setNavigationNotice(true); return; }
       setNavigationNotice(false);
+      if (pendingConfirmation || toolWriteBusy.current) return;
       const text = (textOverride ?? input).trim();
       if (!text) return;
       const userMsg: AiMessage = {
@@ -452,7 +459,7 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
       pendingSendQueueRef.current.push({ text, lang });
       void processQueue();
     },
-    [input, attachments, activeConvo, lang, saveConvos, processQueue, pendingSave],
+    [input, attachments, activeConvo, lang, saveConvos, processQueue, pendingSave, pendingConfirmation],
   );
 
   const resetChat = useCallback(() => {
@@ -556,10 +563,11 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * The tool_result is conversational feedback to LLM only — NOT a write path.
    */
   const handleCancel = useCallback(() => {
-    if (!pendingConfirmation || !ownerCurrent()) return;
+    if (!pendingConfirmation || !ownerCurrent() || toolWriteBusy.current) return;
 
     const snapshot = pendingConfirmation;
     setPendingConfirmation(null);
+    setToolWriteError(null);
     pendingSendQueueRef.current.shift();
 
     // Send tool_result(is_error:true) to LLM for a bounded final acknowledgement.
@@ -638,81 +646,28 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
    * turn again contains a tool_use, it is displayed as text but NOT executed
    * (no second round-trip — bounded invariant enforced).
    */
-  const handleConfirm = useCallback(() => {
-    if (!pendingConfirmation || !ownerCurrent()) return;
+  const handleConfirm = useCallback(async () => {
+    if (!pendingConfirmation || !ownerCurrent() || toolWriteBusy.current) return;
 
     const snapshot = pendingConfirmation;
 
-    // Find the tool and compute the write event spec.
     const tool = findTool(snapshot.toolUse.name);
-    if (tool) {
-      const writeEvent = tool.toWriteEvent(
-        snapshot.toolUse.input,
-        snapshot.toolUse.id,
-      );
-
-      // CRITICAL: emit the write event EXACTLY ONCE, ONLY here (no-silent-write invariant).
-      // The owning-module subscriber (mounted in App.tsx) consumes this event
-      // and executes via its own pure reducer + setPref.
-      // ED-8: 4 new delete/update channels follow the SAME single-emit-site pattern.
-      if (writeEvent.channel === "web:tasks:create-requested") {
-        const p = writeEvent.payload as {
-          requestId: string;
-          title: string;
-          bucket: "overdue" | "next7" | "later" | "nodate";
-          tag?: "study" | "work" | "personal" | "todo" | "other";
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:create-requested", p);
-      } else if (writeEvent.channel === "web:calendar:create-requested") {
-        const p = writeEvent.payload as {
-          requestId: string;
-          title: string;
-          date: string;
-          startTime: string;
-          durationMin: number;
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:create-requested", p);
-      } else if (writeEvent.channel === "web:tasks:delete-requested") {
-        // P2 (xai-web-ai-tool-edit-delete): delete task branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:delete-requested", p);
-      } else if (writeEvent.channel === "web:calendar:delete-requested") {
-        // P2 (xai-web-ai-tool-edit-delete): delete calendar event branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:delete-requested", p);
-      } else if (writeEvent.channel === "web:tasks:update-requested") {
-        // P3 (xai-web-ai-tool-edit-delete): update task branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          patch: { title?: string; bucket?: "overdue" | "next7" | "later" | "nodate"; tag?: "study" | "work" | "personal" | "todo" | "other" };
-          requestedAt: string;
-        };
-        emitWebEvent("web:tasks:update-requested", p);
-      } else if (writeEvent.channel === "web:calendar:update-requested") {
-        // P3 (xai-web-ai-tool-edit-delete): update calendar event branch
-        const p = writeEvent.payload as {
-          requestId: string;
-          id: string;
-          patch: { title?: string; date?: string; startTime?: string; durationMin?: number };
-          requestedAt: string;
-        };
-        emitWebEvent("web:calendar:update-requested", p);
-      }
-    }
+    if (!tool) { setToolWriteError("invalid-tool"); return; }
+    toolWriteBusy.current = true;
+    setToolWriteWaiting(true);
+    setToolWriteError(null);
+    let result: { ok: boolean; reason?: string };
+    try {
+      result = await requestToolWrite(tool.toWriteEvent(snapshot.toolUse.input, snapshot.toolUse.id), snapshot.toolUse.id, ownerRef.current);
+    } catch { result = { ok: false, reason: "request-failed" }; }
+    toolWriteBusy.current = false;
+    if (!mountedRef.current || !ownerCurrent()) return;
+    setToolWriteWaiting(false);
+    if (!result.ok) { setToolWriteError(result.reason ?? "storage"); return; }
 
     // Clear the confirmation card and advance the queue.
     setPendingConfirmation(null);
+    setToolWriteError(null);
     pendingSendQueueRef.current.shift();
 
     // Bounded single round-trip: send tool_result(success) back to LLM and
@@ -880,6 +835,8 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           />
         )}
 
+        {toolWriteError && <div className="ai-save-recovery" role="alert">{zh ? "工具操作未保存或未收到确认。请重试确认；不会报告成功。" : "Tool not saved or not confirmed. Retry Confirm; success has not been reported."} <span>{toolWriteError}</span></div>}
+        {toolWriteWaiting && <p role="status">{zh ? "正在等待保存确认…" : "Waiting for save confirmation…"}</p>}
         {/* P3: ConfirmationCard — shown when model returns a tool_use block.
             CRITICAL: rendering this card does NOT execute any write.
             Write event emitted ONLY on explicit Confirm click (P4). */}
@@ -888,12 +845,14 @@ export function AiChatModule({ lang }: AiChatModuleProps) {
           if (!tool) return null;
           const spec = tool.toConfirmation(pendingConfirmation.toolUse.input);
           return (
+            <fieldset disabled={toolWriteWaiting} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             <ConfirmationCard
               spec={spec}
               lang={lang}
               onConfirm={handleConfirm}
               onCancel={handleCancel}
             />
+            </fieldset>
           );
         })()}
 

@@ -19,9 +19,8 @@
  * @internal
  */
 
-import { useRef } from "react";
-import { useWebEventListener } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
+import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
 import { updateEvent, deleteEvent } from "./eventStore/eventStore.js";
 import type { UserCalEvent } from "./eventStore/types.js";
 
@@ -83,97 +82,34 @@ function buildISOTimes(
   return { startISO, endISO };
 }
 
-// ---- Idempotency seen-set bound (Rec4 pattern) ------------------------------
-const MAX_SEEN = 100;
-
-/**
- * useCalendarMutateRequestSubscriber — zero-UI React hook for delete + update.
- *
- * Mount ONCE in apps/web/src/App.tsx as a Shell-sibling to guarantee
- * route-independent liveness. Mounted alongside the SHIPPED
- * useCalendarCreateRequestSubscriber.
- *
- * @returns void — renders nothing; side-effect only.
- */
 export function useCalendarMutateRequestSubscriber(): void {
-  const seenDeleteRef = useRef<Set<string>>(new Set());
-  const seenUpdateRef = useRef<Set<string>>(new Set());
-
-  // ---- delete handler -------------------------------------------------------
-  useWebEventListener("web:calendar:delete-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-    const id = typeof payload.id === "string" ? payload.id.trim() : "";
-    if (!id) return;
-
-    if (requestId) {
-      if (seenDeleteRef.current.has(requestId)) return;
-      if (seenDeleteRef.current.size >= MAX_SEEN) seenDeleteRef.current.clear();
-      seenDeleteRef.current.add(requestId);
-    }
-
-    const rawStore = getPref("xai_calendar_events");
-    const store: Record<string, UserCalEvent> =
-      isObject(rawStore) ? (rawStore as Record<string, UserCalEvent>) : {};
-
-    const next = deleteEvent(store, id);
-    if (next !== store) {
-      setPref("xai_calendar_events", next);
-    }
-  });
-
-  // ---- update handler -------------------------------------------------------
-  useWebEventListener("web:calendar:update-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-    const id = typeof payload.id === "string" ? payload.id.trim() : "";
-    if (!id) return;
-
-    if (requestId) {
-      if (seenUpdateRef.current.has(requestId)) return;
-      if (seenUpdateRef.current.size >= MAX_SEEN) seenUpdateRef.current.clear();
-      seenUpdateRef.current.add(requestId);
-    }
-
-    const rawPatch = isObject(payload.patch) ? payload.patch : {};
-    const newTitle = typeof rawPatch["title"] === "string" ? rawPatch["title"].trim() || undefined : undefined;
-    const newDate = typeof rawPatch["date"] === "string" && DATE_RE.test(rawPatch["date"])
-      ? rawPatch["date"]
-      : undefined;
-    const newStartTime = typeof rawPatch["startTime"] === "string" && HHMM_RE.test(rawPatch["startTime"])
-      ? rawPatch["startTime"]
-      : undefined;
-    const newDurationMin = typeof rawPatch["durationMin"] === "number" && rawPatch["durationMin"] > 0
-      ? rawPatch["durationMin"]
-      : undefined;
-
-    // Nothing actionable?
-    if (newTitle === undefined && newDate === undefined && newStartTime === undefined && newDurationMin === undefined) {
-      return;
-    }
-
-    const rawStore = getPref("xai_calendar_events");
-    const store: Record<string, UserCalEvent> =
-      isObject(rawStore) ? (rawStore as Record<string, UserCalEvent>) : {};
-
-    const existing = store[id];
-    if (!existing) return; // unknown id — no-op (safe silent no-op per §14.6)
-
-    // Build ISO times if any time-related field changed.
-    const isoTimes = buildISOTimes(existing, {
-      date: newDate,
-      startTime: newStartTime,
-      durationMin: newDurationMin,
+  useWebEventListener("web:calendar:delete-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:calendar:delete-requested", payload, scope, () => {
+      const id = typeof payload.id === "string" ? payload.id.trim() : "";
+      if (!id) return { ok: false, reason: "invalid" };
+      const raw = getPref("xai_calendar_events", scope);
+      const store = isObject(raw) ? raw as Record<string, UserCalEvent> : {};
+      if (!Object.hasOwn(store, id)) return { ok: false, reason: "not-found" };
+      return setPref("xai_calendar_events", deleteEvent(store, id), scope) ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
     });
-
-    const patch: Partial<Omit<UserCalEvent, "id" | "createdAt">> = {};
-    if (newTitle !== undefined) patch.title = newTitle;
-    if (isoTimes.startISO !== undefined) patch.startISO = isoTimes.startISO;
-    if (isoTimes.endISO !== undefined) patch.endISO = isoTimes.endISO;
-
-    if (Object.keys(patch).length === 0) return; // nothing to apply
-
-    const { next } = updateEvent(store, id, patch);
-    if (next !== store) {
-      setPref("xai_calendar_events", next);
-    }
+  });
+  useWebEventListener("web:calendar:update-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:calendar:update-requested", payload, scope, () => {
+      const id = typeof payload.id === "string" ? payload.id.trim() : "";
+      if (!id || !isObject(payload.patch)) return { ok: false, reason: "invalid" };
+      const p = payload.patch;
+      if ((p.title !== undefined && (typeof p.title !== "string" || !p.title.trim())) || (p.date !== undefined && !DATE_RE.test(p.date)) || (p.startTime !== undefined && !HHMM_RE.test(p.startTime)) || (p.durationMin !== undefined && (!Number.isFinite(p.durationMin) || p.durationMin < 5))) return { ok: false, reason: "invalid" };
+      if (p.title === undefined && p.date === undefined && p.startTime === undefined && p.durationMin === undefined) return { ok: false, reason: "invalid" };
+      const raw = getPref("xai_calendar_events", scope);
+      const store = isObject(raw) ? raw as Record<string, UserCalEvent> : {};
+      if (!Object.hasOwn(store, id)) return { ok: false, reason: "not-found" };
+      const existing = store[id]!;
+      const times = buildISOTimes(existing, p);
+      if (times.startISO && times.endISO && (times.endISO <= times.startISO || !Number.isFinite(Date.parse(times.endISO)))) return { ok: false, reason: "invalid" };
+      const { next } = updateEvent(store, id, { ...(p.title !== undefined ? { title: p.title.trim() } : {}), ...times });
+      return setPref("xai_calendar_events", next, scope) ? { ok: true, targetId: id } : { ok: false, reason: "storage" };
+    });
   });
 }

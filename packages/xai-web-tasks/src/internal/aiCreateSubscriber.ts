@@ -19,9 +19,8 @@
  * @internal
  */
 
-import { useRef } from "react";
-import { useWebEventListener } from "@repo/xai-web-event-bus";
-import { getPref, setPref } from "@repo/plugin-web-storage";
+import { executeToolWrite, useWebEventListener } from "@repo/xai-web-event-bus";
+import { accountScope, getPref, setPref } from "@repo/plugin-web-storage";
 import { addCard } from "./tasksReducer.js";
 import { SEED_TASK_COLS } from "./seed/tasksMock.js";
 import type { TaskCol, BucketId, TaskTagId } from "../types.js";
@@ -38,66 +37,22 @@ function isValidTag(v: unknown): v is TaskTagId {
   );
 }
 
-// ---- Idempotency seen-set bound (Rec4) --------------------------------------
-const MAX_SEEN = 100;
-
-/**
- * useTaskCreateRequestSubscriber — zero-UI React hook.
- *
- * Mount ONCE in apps/web/src/App.tsx as a Shell-sibling to guarantee
- * route-independent liveness (R4 mitigation — TS-3 assertion).
- *
- * @returns void — renders nothing; side-effect only.
- */
 export function useTaskCreateRequestSubscriber(): void {
-  // Bounded seen-set — cleared on unmount (when the ref is GC'd with the component).
-  const seenRef = useRef<Set<string>>(new Set());
-
-  useWebEventListener("web:tasks:create-requested", (payload) => {
-    const requestId = typeof payload.requestId === "string" ? payload.requestId : "";
-
-    // Idempotency guard (Rec4: bounded seen-set).
-    if (requestId) {
-      if (seenRef.current.has(requestId)) return; // duplicate — skip
-      // Bound the set size to prevent unbounded growth.
-      if (seenRef.current.size >= MAX_SEEN) {
-        // Clear the oldest entries by rebuilding (simple approach for bounded sessions).
-        seenRef.current.clear();
-      }
-    }
-
-    const title = typeof payload.title === "string" ? payload.title.trim() : "";
-    if (!title) return;
-
-    const bucket: BucketId = isValidBucket(payload.bucket) ? payload.bucket : "next7";
-    const tag = isValidTag(payload.tag) ? payload.tag : undefined;
-    // Rec3: derive withDate from bucket (bucket !== "nodate" → withDate=true).
-    const withDate = bucket !== "nodate";
-
-    // Read the current store imperatively (not via usePref hook).
-    // Cast through unknown: the registry type (TaskColsState = Record<string, boolean>)
-    // is a legacy placeholder; the real runtime value is TaskCol[].
-    //
-    // Bucket columns must exist for addCard to land the card. A fresh / never-
-    // persisted store is `{}` (registry default) or `[]` (no columns) — addCard
-    // into a missing bucket would no-op and silently DROP the task, and writing
-    // `[]` back would poison TasksModule's seed fallback. So when the stored
-    // value is not a non-empty TaskCol[], seed from the SAME SEED_TASK_COLS that
-    // TasksModule uses, guaranteeing the 4 buckets are present.
-    // VERIFIED via the 2026-05-29 live Gemini in-app smoke (task was dropped on a
-    // never-opened-Tasks profile before this fix).
-    const rawCols = getPref("xai_task_cols") as unknown;
-    const cols =
-      Array.isArray(rawCols) && rawCols.length > 0
-        ? (rawCols as TaskCol[])
-        : (SEED_TASK_COLS as TaskCol[]);
-
-    // Execute via the INTERNAL pure reducer.
-    const next = addCard(cols, { title, tag, withDate }, bucket);
-
-    // Write back via imperative setPref.
-    // Cast through unknown for the same registry-type mismatch reason.
-    // Only committed requests are deduplicated; rejected writes remain retryable.
-    if (setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState) && requestId) seenRef.current.add(requestId);
+  useWebEventListener("web:tasks:create-requested", payload => {
+    const scope = accountScope.capture();
+    executeToolWrite("web:tasks:create-requested", payload, scope, () => {
+      const title = typeof payload.title === "string" ? payload.title.trim() : "";
+      if (!title) return { ok: false, reason: "invalid" };
+      const bucket: BucketId = isValidBucket(payload.bucket) ? payload.bucket : "next7";
+      const tag = isValidTag(payload.tag) ? payload.tag : undefined;
+      const raw = getPref("xai_task_cols", scope) as unknown;
+      const cols = Array.isArray(raw) && raw.length ? raw as TaskCol[] : SEED_TASK_COLS as TaskCol[];
+      const next = addCard(cols, { title, tag, withDate: bucket !== "nodate" }, bucket);
+      if (next === cols) return { ok: false, reason: "invalid" };
+      const created = next.find(col => col.id === bucket)?.tasks[0];
+      if (!created) return { ok: false, reason: "invalid" };
+      return setPref("xai_task_cols", next as unknown as import("@repo/plugin-web-storage").TaskColsState, scope)
+        ? { ok: true, targetId: created.id } : { ok: false, reason: "storage" };
+    });
   });
 }
