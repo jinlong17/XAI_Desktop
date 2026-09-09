@@ -1,0 +1,14 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,setPref} from './packages/plugin-web-storage/src/index';
+import {makeDefaultBoards} from './packages/plugin-web-board-core/src/index';
+import {BoardWorkspacesModule} from './packages/plugin-web-board-workspaces/src/BoardWorkspacesModule';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-board-workspaces/src/styles.css';
+accountScope.activate(accountScope.lock('fixture-A'),'A');
+const boards=makeDefaultBoards();setPref('xai_boards_v2',boards);setPref('xai_active_board',boards[0].id);
+const key=accountScope.physicalKey('xai_boards_v2'),activeKey=accountScope.physicalKey('xai_active_board'),nativeSet=Storage.prototype.setItem;let activeAttempts=0,boardWrites=0,denied:string|null=null;
+Storage.prototype.setItem=function(k,v){if(k===activeKey)activeAttempts++;if(k===key)boardWrites++;if(k===denied)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)};
+(window as any).verify={key,activeKey,activeAttempts:()=>activeAttempts,boardWrites:()=>boardWrites,deny(which='board'){activeAttempts=0;boardWrites=0;denied=which==='board'?key:activeKey},restore(){denied=null},switch(){accountScope.activate(accountScope.lock('fixture-B'),'B');const bKey=accountScope.physicalKey('xai_boards_v2');nativeSet.call(localStorage,bKey,JSON.stringify(boards));return bKey}};
+createRoot(document.getElementById('app')!).render(<BoardWorkspacesModule lang="en"/>);

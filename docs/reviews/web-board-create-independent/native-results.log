@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"885a111","chromePid":67820}
+{"name":"original-correct-oracle","editorRetained":true,"errorVisible":true,"bytesUnchanged":true,"activeAttempts":0}
+{"name":"real-download-latest-create","pass":true}
+{"name":"partial-success-retry-same-board","pass":true}
+{"name":"newer-baseline-preserved","pass":true}
+{"name":"cross-account-no-write-no-export","pass":true}
+{"name":"partial-A-cannot-open-or-export-after-B","pass":true}
+{"name":"PASS","scope":"BoardCreator only","checks":6}
