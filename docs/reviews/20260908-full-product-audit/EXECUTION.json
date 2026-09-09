@@ -203,7 +203,8 @@
         "commit:2274185",
         "../web-account-deletion-auth-independent/20260909-review.md",
         "commit:0ed1582",
-        "../web-canonical-migration-write-race/review.md"
+        "../web-canonical-migration-write-race/review.md",
+        "commit:fa90dae"
       ]
     },
     {
@@ -795,7 +796,10 @@
         "commit:19cfee4",
         "../web-board-workspace-astra-review/20260909-b2-aca0193-acceptance.md",
         "commit:0ed1582",
-        "../web-canonical-migration-write-race/review.md"
+        "../web-canonical-migration-write-race/review.md",
+        "commit:fa90dae",
+        "commit:946ded3",
+        "../web-board-workspace-astra-review/20260909-c-primitive-test-preparation.md"
       ]
     },
     {
