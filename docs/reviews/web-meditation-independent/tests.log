@@ -1,0 +1,29 @@
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-metrics-save-eaeoCw/source/packages/xai-web-meditation
+
+ ✓ src/__tests__/durableSession.test.ts (13 tests) 24ms
+ ✓ src/__tests__/ClockDisplay.test.tsx (14 tests) 58ms
+ ✓ src/__tests__/MeditationPlayer.test.tsx (18 tests) 444ms
+ ✓ src/__tests__/MeditationModule.pick.test.tsx (6 tests) 870ms
+ ✓ src/__tests__/ambientLifecycle.test.tsx (4 tests) 28ms
+ ✓ src/__tests__/MeditationModule.render.test.tsx (14 tests) 1180ms
+ ✓ src/__tests__/validate.test.ts (12 tests) 4ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 6ms
+ ✓ src/__tests__/formatRemaining.test.ts (7 tests) 12ms
+ ✓ src/__tests__/MeditationModule.persist.test.tsx (10 tests) 2238ms
+   ✓ MeditationModule persistence > saves, selects, edits, and deletes a custom scene  895ms
+ ✓ src/__tests__/MeditationModule.saveRecovery.test.tsx (5 tests) 2294ms
+   ✓ Meditation save recovery > retains a failed new scene and retries the latest draft exactly once  666ms
+   ✓ Meditation save recovery > does not reset the editor or publish deletion until storage succeeds  350ms
+   ✓ Meditation save recovery > rejects old account retry and export after switching identity  821ms
+ ✓ src/__tests__/getScene.test.ts (2 tests) 2ms
+ ✓ src/__tests__/styles.css.tokens.test.ts (5 tests) 4ms
+ ✓ src/__tests__/registry-presence.test.ts (7 tests) 3ms
+ ✓ src/__tests__/registration.test.tsx (7 tests) 3ms
+ ✓ src/__tests__/computeAnalogAngles.test.ts (5 tests) 2ms
+
+ Test Files  16 passed (16)
+      Tests  134 passed (134)
+   Start at  13:37:07
+   Duration  4.14s (transform 591ms, setup 3.81s, collect 1.39s, tests 7.17s, environment 9.02s, prepare 1.52s)
+
