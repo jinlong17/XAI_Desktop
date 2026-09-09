@@ -81,7 +81,9 @@
         "commit:6fa451f",
         "commit:da35b3b",
         "../web-save-consumer-inventory/20260909-inventory.md",
-        "../../../packages/xai-web-meditation/docs/test.md"
+        "../../../packages/xai-web-meditation/docs/test.md",
+        "commit:28fe049",
+        "../web-save-consumer-inventory/20260909-med-after.md"
       ]
     },
     {
@@ -103,7 +105,14 @@
         "commit:498ceb9",
         "commit:faecd79",
         "commit:3d39533",
-        "../web-auth-session-cleanup/20260909-generation-client.md"
+        "../web-auth-session-cleanup/20260909-generation-client.md",
+        "commit:d801f5e",
+        "commit:4001170",
+        "commit:d895b0b",
+        "commit:23c3423",
+        "commit:cfc2d6d",
+        "commit:e1c3b01",
+        "../web-auth-session-cleanup/20260909-host-integration.md"
       ]
     },
     {
@@ -150,8 +159,13 @@
     },
     {
       "id": "TT-02",
-      "status": "pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "commit:ba20658",
+        "commit:64caa5a",
+        "commit:082766b",
+        "../web-time-tracker-session-independent/20260909-report.md"
+      ]
     },
     {
       "id": "TT-03",
@@ -193,7 +207,9 @@
       "status": "in_progress",
       "evidence": [
         "commit:b6cf0ee",
-        "../web-pomodoro-durable-session/20260909-diagnosis.md"
+        "../web-pomodoro-durable-session/20260909-diagnosis.md",
+        "commit:ce4b767",
+        "../web-pomodoro-durable-session/20260909-fix.md"
       ]
     },
     {
@@ -201,7 +217,9 @@
       "status": "in_progress",
       "evidence": [
         "commit:b6cf0ee",
-        "../web-pomodoro-durable-session/20260909-diagnosis.md"
+        "../web-pomodoro-durable-session/20260909-diagnosis.md",
+        "commit:ce4b767",
+        "../web-pomodoro-durable-session/20260909-fix.md"
       ]
     },
     {

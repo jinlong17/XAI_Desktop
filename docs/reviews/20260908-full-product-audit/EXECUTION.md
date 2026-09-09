@@ -29,3 +29,14 @@ TT-01正式核销：c5b08a7实现与8d951e9独立固定快照验收满足窗口�
 REL-06 SDK适配faecd79及原子owner补丁498ceb9已提交。父完整auth16文件109测试、check-types通过，并直接复跑原生SDK探针PASS；3d39533保留before owner错配与after正确拒绝证据。旧退出、刷新及广播不破坏B，A代不能写入B身份；coordinator及页面/host尚未接入，因此REL-06仍in_progress。原生probe验证本机临时profile和synthetic HTTP，不等同生产认证验收。
 
 REL-05消费者核销6fa451f：已逐功能列出剩余写调用与证据边界，STAT仅只读，不应误列为缺少保存恢复的写消费者。MED独立复现首次新场景保存失败后重试写空数组/悬空id。父修复da35b3b：仅成功后推进编辑id/删除reset，保留pending与最新editor，增加重试/手动恢复JSON导出/discard、账户边界与较新数据冲突保护。14文件117测试、check-types、lint通过；增强Blob内容检查后5focused测试通过。独立真实下载及交互验收正在进行，REL-05保持in_progress，MED计时恢复/初始坏schema并未随本次修复完成。
+
+
+## 2026-09-09 检查点：TT-02 核销与认证宿主接线
+
+TT-02 正式核销：ba20658/64caa5a 实现与 082766b 独立固定快照验收覆盖该编号全部要求。原始状态断言5/5、TT-01原断言11/11、完整包78/78、真实Chrome双tab11/11通过；反复resume/end保持有限时长，锁内检查单任务策略与原始revision，保存失败保留编辑器，损坏数据实际下载逐字节一致。多段时间控件禁用、恢复仅导出边界明确；不关闭TT-03/04/07。当前完成2/312。
+
+REL-06：d895b0b coordinator及23c3423作者native证据已固定。父cfc2d6d接入真实配置provider、登录/注册/OAuth/reset页面、路由恢复错误、捕获代退出和DeviceSessionBridge过期请求隔离。父auth18文件137测试、Web27文件146测试、两包types、Web lint/build及独立DeviceBridge原5断言复跑通过。真实页面整条认证流程已交Agent独立验收；临时profile/synthetic HTTP不代表生产认证通过。REL-06完整删除合同仍在进行。
+
+POMO-01/02：ce4b767持久会话与pending→history→clear结算已提交。父直接复跑verify-close-reopen-native.mjs：关闭整个Chrome进程、跨绝对deadline后同profile重开，恢复同一id并仅结算一次；verify-crash-native.mjs五项故障恢复通过。独立审查新发现旧revision冲突会留下永久retryAction，导致合法Resume被拒；作者正在修复，两个编号均未关闭。
+
+REL-05 MED：28fe049独立真实页面验证保存失败、最新草稿重试、删除失败保留编辑器、较新原始数据冲突与账户切换，以及实际JSON下载和390px恢复按钮通过。只覆盖挂载页面内恢复，不关闭MED计时持续/跨重载草稿或整个REL-05。
