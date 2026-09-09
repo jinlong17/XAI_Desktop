@@ -8,7 +8,7 @@ export interface GuardResolution {
   reason?: "auth_required" | "already_authenticated";
 }
 
-export function resolveAuthRouteGuard(state: "loading" | "authenticated" | "unauthenticated" | "unconfigured"): GuardResolution {
+export function resolveAuthRouteGuard(state: "loading" | "authenticated" | "unauthenticated" | "unconfigured" | "error"): GuardResolution {
   if (state === "authenticated") {
     return {
       allow: false,
@@ -21,14 +21,14 @@ export function resolveAuthRouteGuard(state: "loading" | "authenticated" | "unau
 }
 
 export function resolveAppRouteGuard(
-  state: "loading" | "authenticated" | "unauthenticated" | "unconfigured",
+  state: "loading" | "authenticated" | "unauthenticated" | "unconfigured" | "error",
   nextPath: string
 ): GuardResolution {
   if (state === "authenticated") {
     return { allow: true };
   }
 
-  if (state === "loading") {
+  if (state === "loading" || state === "error") {
     return { allow: false };
   }
 
@@ -63,12 +63,15 @@ export interface AuthRouteGateProps extends PropsWithChildren {
 export function AuthRouteGate({ children, fallback = null, navigate }: AuthRouteGateProps) {
   const { state } = useWebAuthSession();
   const guard = resolveAuthRouteGuard(state);
+  const completionPath = typeof window !== 'undefined' && ['/auth/callback', '/auth/verify', '/auth/reset-password'].includes(window.location.pathname);
+  const redirectTo = guard.redirectTo && typeof window !== 'undefined'
+    ? resolveSafeNextPath(new URLSearchParams(window.location.search).get('next')).path : guard.redirectTo;
 
   useEffect(() => {
-    maybeRedirect(guard.redirectTo, navigate);
-  }, [guard.redirectTo, navigate]);
+    if (!completionPath) maybeRedirect(redirectTo, navigate);
+  }, [redirectTo, navigate, completionPath]);
 
-  if (!guard.allow) {
+  if (!guard.allow && !completionPath) {
     return <>{fallback}</>;
   }
 
@@ -94,13 +97,19 @@ function resolvePath(path?: string): string {
 }
 
 export function AppRouteGate({ children, path, fallback = null, navigate }: AppRouteGateProps) {
-  const { state } = useWebAuthSession();
+  const { state, coordinator } = useWebAuthSession();
   const guard = resolveAppRouteGuard(state, resolvePath(path));
 
   useEffect(() => {
     maybeRedirect(guard.redirectTo, navigate);
   }, [guard.redirectTo, navigate]);
 
+  if (state === 'error') {
+    return <div role="alert">Unable to restore this session. Your stored data has not been reset.
+      <button type="button" onClick={() => { void coordinator?.bootstrap(); }}>Retry session recovery</button>
+      <a href="/auth/login">Go to sign in</a>
+    </div>;
+  }
   if (!guard.allow) {
     return <>{fallback}</>;
   }

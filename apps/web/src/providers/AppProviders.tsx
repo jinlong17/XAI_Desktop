@@ -437,7 +437,7 @@ function resolveWebSupabaseConfig() {
 
 export function AppProviders({ children }: PropsWithChildren) {
   const authMode = resolveWebAuthMode();
-  const config = resolveWebSupabaseConfig();
+  const config = useMemo(() => resolveWebSupabaseConfig(), []);
   const mockSession = authMode === "mock-authenticated" ? createMockSession() : null;
   const mockClient = useMemo<MockSupabaseLikeClient | null>(
     () => (authMode === "live" ? null : createMockSupabaseClient(mockSession)),

@@ -105,7 +105,7 @@ function writeLocalPref<T>(key: string, value: T): void {
 
 // ---- AppInner — consumes CommandPaletteProvider context --------------------
 
-function AppInner() {
+function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => void }) {
   const { open: openPalette } = useCommandPalette();
 
   // ---- AI tool layer: always-on write subscribers (P4 xai-web-ai-tool-layer) --
@@ -185,8 +185,18 @@ function AppInner() {
   // Reads from WebAuthSessionProvider (already mounted in AppProviders via main.tsx).
   // Steps: 1) best-effort Supabase backend sign-out  2) clear React session state
   //        3) hard-redirect to "/" so AuthRouteGate takes over.
-  const { client, clearSessionStorage } = useWebAuthSession();
+  const { client, clearSessionStorage, coordinator } = useWebAuthSession();
   const handleSignOut = useCallback(async () => {
+    onSignOutError(false);
+    if (coordinator) {
+      const captured = coordinator.capture();
+      if (!captured) { onSignOutError(true); return; }
+      invalidateAccountIdentity(null);
+      const result = await coordinator.signOut(captured);
+      if (result.status === 'failed') { onSignOutError(true); return; }
+      if (result.status === 'applied') window.location.assign('/');
+      return;
+    }
     invalidateAccountIdentity(null);
     try {
       if (client && typeof client.auth?.signOut === "function") {
@@ -197,7 +207,7 @@ function AppInner() {
     }
     await clearSessionStorage();
     window.location.assign("/");
-  }, [client, clearSessionStorage]);
+  }, [client, clearSessionStorage, coordinator, onSignOutError]);
 
   return (
     <WebShellProvider
@@ -239,12 +249,19 @@ function AppInner() {
 // ---- App component — wraps AppInner in CommandPaletteProvider --------------
 
 export function App() {
+  const [signOutError, setSignOutError] = useState(false);
+  const { coordinator } = useWebAuthSession();
   return (
+    <>
+    {signOutError && <div role="alert">Sign-out did not complete.
+      <button type="button" onClick={() => { setSignOutError(false); void coordinator?.bootstrap(); }}>Recover session and retry</button>
+    </div>}
     <AccountStorageGate>
       <CommandPaletteProvider>
-        <AppInner />
+        <AppInner onSignOutError={setSignOutError} />
       </CommandPaletteProvider>
     </AccountStorageGate>
+    </>
   );
 }
 

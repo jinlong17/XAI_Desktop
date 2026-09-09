@@ -51,6 +51,7 @@ const mockClearSessionStorage = vi.fn();
 // Use a mutable config so APP-SO4 can set client=null without a factory override
 const mockSessionConfig = {
   client: null as { auth: { signOut: typeof mockSignOut } } | null,
+  coordinator: undefined as { capture: () => { generation: string; owner: string }; signOut: ReturnType<typeof vi.fn> } | undefined,
 };
 // Default: client with auth.signOut
 mockSessionConfig.client = { auth: { signOut: mockSignOut } };
@@ -58,6 +59,7 @@ mockSessionConfig.client = { auth: { signOut: mockSignOut } };
 vi.mock("@repo/web-auth-device-session/web", () => ({
   useWebAuthSession: () => ({
     get client() { return mockSessionConfig.client; },
+    get coordinator() { return mockSessionConfig.coordinator; },
     clearSessionStorage: mockClearSessionStorage,
     state: "authenticated",
     session: { user: { id: "host-test-account" } },
@@ -70,6 +72,7 @@ vi.mock("@repo/web-auth-device-session/web", () => ({
 }));
 
 beforeEach(() => {
+  mockSessionConfig.coordinator = undefined;
   localStorage.clear();
   prepareAccountFixture();
   document.documentElement.removeAttribute("data-theme");
@@ -118,6 +121,29 @@ async function triggerSignOutConfirm(container: HTMLElement) {
 }
 
 describe("App.tsx handleSignOut (APP-SO1..APP-SO4)", () => {
+  it('live cleanup failure is visible and does not redirect or call shared cleanup', async () => {
+    mockSessionConfig.coordinator = { capture: () => ({ generation: 'A-login', owner: 'A' }), signOut: vi.fn(async () => ({ status: 'failed', reason: 'storage-failed' })) };
+    const { container } = renderApp(); await triggerSignOutConfirm(container);
+    expect(container.textContent).toContain('Sign-out did not complete');
+    expect(assignMock).not.toHaveBeenCalled(); expect(mockClearSessionStorage).not.toHaveBeenCalled();
+    expect(mockSignOut).not.toHaveBeenCalled();
+  });
+
+  it('superseded A cleanup cannot navigate away from a new B login', async () => {
+    const captured = { generation: 'A-login', owner: 'A' };
+    const signOut = vi.fn(async () => ({ status: 'superseded' }));
+    mockSessionConfig.coordinator = { capture: () => captured, signOut };
+    const { container } = renderApp(); await triggerSignOutConfirm(container);
+    expect(signOut).toHaveBeenCalledWith(captured);
+    expect(assignMock).not.toHaveBeenCalled(); expect(mockClearSessionStorage).not.toHaveBeenCalled();
+  });
+
+  it('live confirmed cleanup redirects through the coordinator only', async () => {
+    mockSessionConfig.coordinator = { capture: () => ({ generation: 'A-login', owner: 'A' }), signOut: vi.fn(async () => ({ status: 'applied' })) };
+    const { container } = renderApp(); await triggerSignOutConfirm(container);
+    expect(assignMock).toHaveBeenCalledWith('/'); expect(mockClearSessionStorage).not.toHaveBeenCalled();
+    expect(mockSignOut).not.toHaveBeenCalled();
+  });
   it("APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called", async () => {
     const { container } = renderApp();
     await triggerSignOutConfirm(container);

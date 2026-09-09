@@ -60,8 +60,8 @@ export interface WebAuthPageProps {
 }
 
 export function WebAuthPage({ path, search }: WebAuthPageProps) {
-  const { client, setSession } = useWebAuthSession();
-  const [mode, setMode] = useState<"login" | "signup" | "reset" | "reset-complete">("login");
+  const { client, setSession, coordinator, authError } = useWebAuthSession();
+  const [mode, setMode] = useState<"login" | "signup" | "reset" | "reset-complete">(getRoutePath(path) === '/auth/reset-password' ? 'reset-complete' : 'login');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -71,15 +71,27 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
   const searchParams = useMemo(() => new URLSearchParams(getSearch(search)), [search]);
   const safeNext = resolveSafeNextPath(searchParams.get("next")).path;
   const completionRoute = resolveAuthCompletionRoute(currentPath);
+  const callbackClient = coordinator ? null : client;
 
   useEffect(() => {
-    if (!client || !completionRoute) {
+    if ((!callbackClient && !coordinator) || !completionRoute) {
       return;
     }
 
     let active = true;
+    if (coordinator) {
+      const generation = searchParams.get('xai_auth_attempt');
+      const code = searchParams.get('code');
+      if (!generation || !code) { setError('invalid-attempt'); return; }
+      void coordinator.completeCallback({ generation, code }).then(result => {
+        if (!active) return;
+        if (result.status === 'applied') navigateTo(result.nextPath ?? safeNext);
+        else if (result.status === 'failed') setError(result.reason ?? 'pkce_exchange_failed');
+      });
+      return () => { active = false; };
+    }
     const requirePkceState = completionRoute === "oauth-callback";
-    void handleAuthCallback(client, undefined, { requirePkceState })
+    void handleAuthCallback(callbackClient!, undefined, { requirePkceState })
       .then(({ session, nextPath }) => {
         if (!active) {
           return;
@@ -104,11 +116,11 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
     return () => {
       active = false;
     };
-  }, [client, completionRoute, setSession]);
+  }, [callbackClient, coordinator, completionRoute, setSession, searchParams, safeNext]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!client) {
+    if (!client && !coordinator) {
       setError("auth_unconfigured");
       return;
     }
@@ -117,25 +129,47 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
     setMessage(null);
 
     try {
+      if (coordinator) {
+        const origin = window.location.origin;
+        const result = mode === 'login'
+          ? await coordinator.signInWithPassword({ email, password, nextPath: safeNext })
+          : mode === 'signup'
+            ? await coordinator.signUp({ email, password, nextPath: safeNext, redirectTo: `${origin}/auth/verify?next=${encodeURIComponent(safeNext)}` })
+            : mode === 'reset'
+              ? await coordinator.requestPasswordReset({ email, nextPath: '/auth/reset-password', redirectTo: `${origin}/auth/verify?next=${encodeURIComponent('/auth/reset-password')}` })
+              : coordinator.capture()
+                ? await coordinator.updatePassword(coordinator.capture()!, password)
+                : { status: 'failed', reason: 'auth_required' };
+        if (result.status === 'failed') { setError(result.reason ?? 'auth_unknown_error'); return; }
+        if (result.status === 'superseded') return;
+        if (mode === 'login' && result.status === 'applied') navigateTo(safeNext);
+        else if (mode === 'signup') {
+          if (result.status === 'applied') navigateTo(safeNext);
+          else setMessage('signup_verification_sent');
+        }
+        else if (mode === 'reset') setMessage('password_reset_email_sent');
+        else if (mode === 'reset-complete') { setMessage('password_reset_complete'); navigateTo('/app'); }
+        return;
+      }
       if (mode === "login") {
-        await signInWithEmail(client, email, password);
+        await signInWithEmail(client!, email, password);
         navigateTo(safeNext);
         return;
       }
 
       if (mode === "signup") {
-        await signUpWithEmail(client, email, password, safeNext);
+        await signUpWithEmail(client!, email, password, safeNext);
         setMessage("signup_verification_sent");
         return;
       }
 
       if (mode === "reset") {
-        await requestPasswordReset(client, email, safeNext);
+        await requestPasswordReset(client!, email, safeNext);
         setMessage("password_reset_email_sent");
         return;
       }
 
-      await completePasswordReset(client, password);
+      await completePasswordReset(client!, password);
       setMessage("password_reset_complete");
       navigateTo("/auth/login");
     } catch (submitError: unknown) {
@@ -144,14 +178,18 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
   }
 
   async function onOAuth(provider: "google" | "apple") {
-    if (!client) {
+    if (!client && !coordinator) {
       setError("auth_unconfigured");
       return;
     }
 
     setError(null);
     try {
-      await startOAuthLogin(client, provider, safeNext);
+      if (coordinator) {
+        const result = await coordinator.startOAuth({ provider, nextPath: safeNext, redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}` });
+        if (result.status === 'failed') setError(result.reason ?? 'oauth_start_failed');
+        else if (result.status === 'pending' && result.url) navigateTo(result.url);
+      } else await startOAuthLogin(client!, provider, safeNext);
     } catch (oauthError: unknown) {
       setError(oauthError instanceof Error ? oauthError.message : "oauth_start_failed");
     }
@@ -160,6 +198,7 @@ export function WebAuthPage({ path, search }: WebAuthPageProps) {
   return (
     <main className="host-page">
       <h1>Authentication</h1>
+      {authError && <div role="alert">Unable to restore the session. <button type="button" onClick={() => { void coordinator?.bootstrap(); }}>Retry session recovery</button></div>}
       <p>Route: {currentPath}</p>
       <form onSubmit={onSubmit} className="auth-form">
         <input
