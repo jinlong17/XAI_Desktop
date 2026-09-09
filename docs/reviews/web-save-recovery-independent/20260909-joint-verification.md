@@ -42,3 +42,7 @@ The three Bookkeeping recovery buttons measure 40px high at 390px. Project Front
 - CSV import and budget inline editor have author tests; they were reviewed as close-on-success callbacks but not independently replayed in this joint probe. Category/ledger/account/recurring/investment are independently covered as listed. Do not represent every possible editor action as exercised.
 - Tests cover specific quota failures, not all browser permission-denial modes, tab crashes, serialization errors, alternate locales or full production host navigation. Native screenshot uses package CSS and actual module components, not a hosted production route.
 - No real backend, user account, browser profile, cloud synchronization or production data was accessed. No cross-vendor PASS is claimed. Parent owns overall REL-05, TODO and release decisions.
+
+## Follow-up — 44px touch targets independently verified
+
+Author correction `45d0665` increases Bookkeeping recovery controls to 44px. Re-ran the full native probe against that immutable revision with `REL05_VERIFY_REF=45d0665 REL05_VERIFY_LOG=20260909-native-44px.log REL05_SCREENSHOT=390px-bookkeeping-recovery-44px.png`. All three controls now measure exactly 44px at 390px; panel stays inside viewport (x16–374, y588–820). Updated screenshot inspected. All three actual draft downloads, Tasks/BK retry, partial mirror and B-boundary checks still PASS. The earlier 40px observation remains historical evidence and is now resolved. Original baseline log/screenshot preserved.
