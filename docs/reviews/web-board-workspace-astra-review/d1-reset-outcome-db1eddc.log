@@ -1,0 +1,55 @@
+revision=db1eddc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-9AZGCb
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+reset-failed-read {"reads":3,"removeCalls":0,"localValue":{},"isDefault":true}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx (2 tests | 1 failed) 17ms
+   × reset must preserve local state if the removal read and its outcome read fail after a successful preflight 15ms
+     → expected {} to deeply equal { e1: { title: 'Keep legacy bytes' } }
+     → expected true to be false // Object.is equality
+   ✓ a readable legacy removal still resets only after actual successful removal 1ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  16:26:55
+   Duration  669ms (transform 109ms, setup 0ms, collect 191ms, tests 17ms, environment 208ms, prepare 84ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+AssertionError: expected {} to deeply equal { e1: { title: 'Keep legacy bytes' } }
+
+- Expected
++ Received
+
+- {
+-   "e1": {
+-     "title": "Keep legacy bytes",
+-   },
+- }
++ {}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx:12:141
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx > reset must preserve local state if the removal read and its outcome read fail after a successful preflight
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-reset-outcome.test.tsx:12:191
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
