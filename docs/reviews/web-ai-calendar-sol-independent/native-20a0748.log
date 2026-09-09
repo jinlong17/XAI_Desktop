@@ -1,0 +1,48 @@
+{
+  "requestedRef": "20a0748",
+  "revision": "20a07480b35d4a9af796b68601416edbeed84548",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "invalidCases": 22,
+  "invalidPassed": 22,
+  "validControls": [
+    {
+      "name": "leap-create",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "omitted-create-defaults",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "2350-plus-5-create",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "leap-update",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "2350-plus-5-update",
+      "pass": true,
+      "canonicalWrites": 1
+    }
+  ],
+  "correction": {
+    "pass": true,
+    "canonicalWrites": 1,
+    "receiptResults": [
+      "invalid",
+      "success",
+      "success"
+    ]
+  },
+  "failures": [],
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "syntheticOnly": true
+}

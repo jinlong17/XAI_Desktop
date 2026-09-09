@@ -1,5 +1,20 @@
 # AI Calendar input validation A1 — Sol independent native review
 
+## Final bounded verdict at fixed `20a0748`
+
+Fixed repaired revision: `20a07480b35d4a9af796b68601416edbeed84548`.
+
+**PASS for the bounded A1 Calendar input-validation repair.** The exact unchanged runner and assertion matrix that produced the `afd10ff` failure now exits 0: all 22 invalid raw-input chains return `invalid`, perform zero canonical writes, preserve bytes and withhold model success; all five valid controls persist exactly once and receive a matching model continuation; the same-request invalid → corrected → replay sequence still commits exactly once.
+
+The original failure below and `native-afd10ff.log` remain preserved. The independent after output is `native-20a0748.log`, produced by:
+
+```bash
+node docs/reviews/web-ai-calendar-sol-independent/verify-native.mjs 20a0748
+# exit 0; 22/22 invalid and 5/5 valid controls pass
+```
+
+This independent PASS closes only the local A1 repair gate. It does not close complete AI-02, authorize phases B–D, or verify durable reload/new-epoch idempotency, cross-tab serialization, crash recovery, a real provider, hosted authentication or production deployment. Those remain subject to the Astra architecture/closure gate.
+
 ## Verdict at fixed `afd10ff`
 
 Fixed revision: `afd10ff174cdb26e7f2b37202e8f41db58a2e623`.
