@@ -1,0 +1,30 @@
+
+> @repo/plugin-web-pomodoro@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-pomodoro
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-pomodoro
+
+ ✓ src/__tests__/validate.test.ts (11 tests) 9ms
+ ✓ src/__tests__/TimerRing.test.tsx (4 tests) 47ms
+ ✓ src/__tests__/useTimerTick.test.tsx (8 tests) 48ms
+ ✓ src/__tests__/PomodoroOverview.test.tsx (7 tests) 60ms
+ ✓ src/__tests__/FocusRecordList.test.tsx (8 tests) 63ms
+ ✓ src/__tests__/eventEmit.integration.test.tsx (6 tests) 557ms
+ ✓ src/__tests__/durableSession.test.ts (11 tests) 38ms
+ ✓ src/__tests__/formatLocalTime.test.ts (3 tests) 4ms
+ ✓ src/__tests__/derivedCounters.test.ts (15 tests) 8ms
+ ✓ src/__tests__/sessionsReducer.test.ts (7 tests) 5ms
+ ✓ src/__tests__/registration.test.tsx (3 tests) 4ms
+ ✓ src/__tests__/nextMode.test.ts (10 tests) 6ms
+ ✓ src/__tests__/PomodoroModule.test.tsx (21 tests) 1953ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 5ms
+ ✓ src/__tests__/formatDuration.test.ts (5 tests) 4ms
+ ✓ src/__tests__/computeRemainingMs.test.ts (8 tests) 4ms
+ ✓ src/__tests__/formatRecordDate.test.ts (8 tests) 4ms
+
+ Test Files  17 passed (17)
+      Tests  140 passed (140)
+   Start at  12:44:04
+   Duration  4.22s (transform 748ms, setup 3.32s, collect 2.72s, tests 2.82s, environment 12.42s, prepare 2.00s)
+

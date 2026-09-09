@@ -527,3 +527,15 @@ declaration was already shipped in W1 per ADR §S7.
   "owner": "xai-web-pomodoro row #14"
 }
 ```
+
+## 2026-09-09 — durable local session addendum (POMO-01/02)
+
+The public `@repo/plugin-web-pomodoro/session-host` subpath exports `PomodoroSessionHost`. Mount it once inside the unlocked account-data Gate, above route contents. This entry does not import the Pomodoro route or its styles. Timer hooks are observers of a package-owned controller; route teardown does not terminate its durable session.
+
+`xai_pomodoro_active` is a registered account-private JSON record containing version, account data generation, stable sessionId, revision, mode, configured duration, original start, accumulated elapsed, current run start/deadline and running/paused/settlement-pending phase. It is included by registry-derived local lifecycle/export/delete machinery. This is unrelated to authentication IndexedDB generation and does not enable cloud sync. Device display preferences stay device-owned.
+
+Every mutation acquires a same-origin Web Lock scoped by account kind/id, account data generation and feature, re-reads authoritative bytes and verifies account scope. Without Web Locks the controller is read-only with an explicit reason. Start/pause/resume/discard publish state only after storage succeeds. End freezes its command time; automatic completion uses the durable deadline. Settlement writes pending intent, appends history at most once by id, then clears pending. Retry after history success only clears pending; it preserves the first recordedAt. A failed End pending write retains an in-memory recovery draft as well as the old durable active state.
+
+The compatible `PomodoroSession[]` history retains existing fields and adds optional `schemaVersion:2`, `deadline` and `recordedAt` on new rows. `finishedAt` is actual business completion (deadline for completed timers), `elapsedMs` excludes pauses, and `recordedAt` is first successful local recording. Corrupt history/active bytes are preserved and block destructive overwrites. An active record bound to another data generation is not silently resumed; raw recovery export is available.
+
+The existing finished event adds optional `sessionId` and `recordedAt`; legacy `durationMs` remains actual elapsed. History is the durable fact, events are best-effort post-commit notifications. Exactly-once history is not an exactly-once notification promise across a crash. Closing the browser stops JavaScript and alerts; reopening reconciles the preserved deadline. Automatic completion selects a next mode when the route UI is present but does not automatically start another session.

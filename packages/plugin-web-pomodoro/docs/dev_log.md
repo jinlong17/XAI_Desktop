@@ -189,3 +189,19 @@ Dual-perspective analysis would add no signal. Single-vector diagnosis is the ri
 | 2026-05-24 20:37 | claude-sonnet-4-6 | bug-fix — implemented minimal test-only fix in `src/__tests__/derivedCounters.test.ts`: replaced `const TODAY_LOCAL = localDateKey(new Date())` (module-import-time eager eval) with `const TODAY_LOCAL = "2026-05-23"` (literal pinned to `vitest.setup.ts` TEST_NOW anchor); removed now-unused `localDateKey` import; added inline comment explaining why module-top-level `new Date()` must not be used here. Ran `pnpm --filter @repo/plugin-web-pomodoro test`: 122/122 pass (16 test files, exit 0). DC3 and DC4 now green. Zero production code touched. Roadmap: `xai-web-console-gap-closure.md` row #1 (W0). | 1a9ba10 | bug-verify |
 | 2026-05-24 20:41 | claude-opus-4-7 | bug-verify — independent re-run on PDT host (real-host date 2026-05-24). Reviewed commit 1a9ba10 diff: scope clean (2 files, test + dev_log only), literal `"2026-05-23"` confirmed to match `vitest.setup.ts:17` `new Date(2026, 4, 23, 14, 30, 0)` local anchor, removed `localDateKey` import truly unused (grep zero matches), inline comment honest. Re-ran `pnpm --filter @repo/plugin-web-pomodoro test` → 122/122 pass exit 0 (DC3+DC4 now green). Re-ran `pnpm --filter @repo/web test` → 100/100 pass, no new failures, `/app/pomodoro` integration test (AC-W6-FIX-4) green. Boundary: full DC1..DC9 + streak surface (15 tests) all green; TZ/DST analysis confirms literal is timezone-invariant and 2026-05-23 is clear of DST boundaries. Commit message format conformant. Status flipped to READY_TO_SHIP. | — | ship |
 | 2026-05-24 21:00 | claude-sonnet-4-6 | ship — verified all 3 commits (1a9ba10 fix, 235eca1 chore, 3035a85 docs) already pushed to `main` branch at `github.com:jinlong17/XAI_Desktop.git` (push confirmed: `735f233..3035a85 main -> main`). git status clean, `git log origin/main..HEAD` empty. Flipped dev_log Status Panel to SHIPPED. This is the W0 pipeline-validator row for `xai-web-console-gap-closure` roadmap — ship confirms bug-diagnose → bug-fix → bug-verify → roadmap-loop reconcile → ship pipeline is end-to-end functional. Next `xai-roadmap-loop` run will reconcile manifest row #1 from READY_TO_SHIP → SHIPPED, unlocking wave 1 (rows #2/#3/#4/#5). | 1a9ba10, 235eca1, 3035a85 + this SHIPPED-flip commit | — (workflow complete) |
+
+## Iteration — 2026-09-09 POMO-01/02 durable session
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | web / plugin-web-pomodoro |
+| Title | Persist active/paused/deadline state and settle by sessionId without false saved results |
+| Current Phase | BUG_FIX |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex /root/rel02_auth_fix |
+| Updated | 2026-09-09 |
+| Suggested Next | bug-verify (independent) |
+| Verify Cross-vendor | Not performed for this iteration; historical panel does not apply |
+
+Work Log: Diagnosed in b6cf0ee; implemented registered account active/pending WAL, scope/generation Web Locks, idempotent history and actual deadline/recordedAt semantics. Added lightweight Gate host, observer hook, explicit failure/retry/raw recovery export and post-commit events. Preserved old history schema compatibility and owner device preferences. Existing tests await asynchronous locks; original business assertions preserved. Evidence and reproduction commands: `docs/reviews/web-pomodoro-durable-session/20260909-fix.md`. Independent verification and parent push remain pending.

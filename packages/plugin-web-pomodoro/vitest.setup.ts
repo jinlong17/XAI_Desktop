@@ -30,3 +30,17 @@ afterEach(() => {
 
 // Explicit authenticated context; raw Storage remains unmodified.
 beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });
+
+// Browser primitive fixture: exclusive callbacks run sequentially, as Web Locks do.
+// Product code never substitutes this when the real API is unavailable.
+beforeEach(() => {
+  const queues = new Map<string, Promise<unknown>>();
+  Object.defineProperty(navigator, "locks", { configurable: true, value: {
+    request: (name: string, run: () => unknown) => {
+      const previous = queues.get(name) ?? Promise.resolve();
+      const result = previous.then(run);
+      queues.set(name, result.catch(() => undefined));
+      return result;
+    },
+  } });
+});

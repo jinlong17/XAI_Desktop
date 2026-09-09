@@ -27,5 +27,5 @@ export function appendSession(
   prev: PomodoroSession[],
   session: PomodoroSession,
 ): PomodoroSession[] {
-  return [...prev, session];
+  return prev.some(row => row.id === session.id) ? prev : [...prev, session];
 }

@@ -14,30 +14,30 @@ import { PomodoroModule } from "../PomodoroModule.js";
 
 describe("eventEmit integration", () => {
   // EE1: subscribe via onWebEvent; trigger session completion; assert single event fires
-  it("EE1: emits exactly one event on session End", () => {
+  it("EE1: emits exactly one event on session End", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) => events.push(p));
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(3000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     unsub();
   });
 
   // EE2: End-early emits event with correct payload
-  it("EE2: event fires on End-early with correct payload shape", () => {
+  it("EE2: event fires on End-early with correct payload shape", async () => {
     const events: Array<{ mode: string; durationMs: number; finishedAt: string }> = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) =>
       events.push(p as { mode: string; durationMs: number; finishedAt: string }),
     );
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(5000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(5000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     const e = events[0]!;
@@ -50,16 +50,16 @@ describe("eventEmit integration", () => {
   });
 
   // EE3: payload mode/durationMs/finishedAt matches session record
-  it("EE3: payload durationMs equals session.elapsedMs", () => {
+  it("EE3: payload durationMs equals session.elapsedMs", async () => {
     const events: Array<{ mode: string; durationMs: number; finishedAt: string }> = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) =>
       events.push(p as { mode: string; durationMs: number; finishedAt: string }),
     );
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(3000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw && events.length > 0) {
@@ -75,36 +75,36 @@ describe("eventEmit integration", () => {
   });
 
   // EE4: no event fires on Pause
-  it("EE4: no event fires on Pause", () => {
+  it("EE4: no event fires on Pause", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) => events.push(p));
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(2000); });
-    act(() => { fireEvent.click(screen.getByTestId("pause-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("pause-btn")); });
 
     expect(events.length).toBe(0);
     unsub();
   });
 
   // EE5: no event fires on Resume
-  it("EE5: no event fires on Resume", () => {
+  it("EE5: no event fires on Resume", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) => events.push(p));
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(2000); });
-    act(() => { fireEvent.click(screen.getByTestId("pause-btn")); });
-    act(() => { fireEvent.click(screen.getByTestId("continue-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("pause-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("continue-btn")); });
 
     expect(events.length).toBe(0);
     unsub();
   });
 
   // EE-strict: StrictMode double-mount yields one emit (not two)
-  it("EE-strict: StrictMode double-mount → exactly one emit per session", () => {
+  it("EE-strict: StrictMode double-mount → exactly one emit per session", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) => events.push(p));
 
@@ -113,9 +113,9 @@ describe("eventEmit integration", () => {
         <PomodoroModule lang="en" />
       </React.StrictMode>,
     );
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(3000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     unsub();

@@ -23,7 +23,7 @@ function selectOneMinuteCustomPreset() {
 
 describe("PomodoroModule", () => {
   // M1: empty state (no sessions) — idle UI, all-zero counters, no records
-  it("M1: renders idle state with zero counters and no records", () => {
+  it("M1: renders idle state with zero counters and no records", async () => {
     render(<PomodoroModule lang="en" />);
     expect(screen.getByText("Pomodoro")).toBeTruthy();
     expect(screen.getByTestId("start-btn")).toBeTruthy();
@@ -37,64 +37,64 @@ describe("PomodoroModule", () => {
   });
 
   // M2: click Start → state running, ring begins
-  it("M2: Start click transitions to running state", () => {
+  it("M2: Start click transitions to running state", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
     expect(screen.getByTestId("pause-btn")).toBeTruthy();
     expect(screen.getByTestId("end-btn")).toBeTruthy();
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
   });
 
   // M3: tick to zero → session persisted
-  it("M3: tick to zero writes session", () => {
+  it("M3: tick to zero writes session", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { selectOneMinuteCustomPreset(); });
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(60 * 1000 + 2000); });
+    await act(async () => { selectOneMinuteCustomPreset(); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(60 * 1000 + 2000); });
     // Module still renders without crash
     expect(document.querySelector(".module-pomo")).toBeTruthy();
     expect(screen.getByTestId("completion-notice").textContent).toContain("complete");
   });
 
   // M4 / M15: mute icon toggles
-  it("M4/M15: mute icon toggles muted state (UI-only)", () => {
+  it("M4/M15: mute icon toggles muted state (UI-only)", async () => {
     render(<PomodoroModule lang="en" />);
     const muteBtn = screen.getByTestId("mute-btn");
     const ariaLabelBefore = muteBtn.getAttribute("aria-label");
-    act(() => { fireEvent.click(muteBtn); });
+    await act(async () => { fireEvent.click(muteBtn); });
     const ariaLabelAfter = muteBtn.getAttribute("aria-label");
     expect(ariaLabelAfter).not.toBe(ariaLabelBefore);
   });
 
   // M5: Pause mid-run → state paused, remaining frozen
-  it("M5: Pause mid-run freezes remaining", () => {
+  it("M5: Pause mid-run freezes remaining", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(2000); });
-    act(() => { fireEvent.click(screen.getByTestId("pause-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("pause-btn")); });
     // Check paused state label
     expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
     // Advance more time — state remains paused
-    act(() => { vi.advanceTimersByTime(5000); });
+    await act(async () => { vi.advanceTimersByTime(5000); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
   });
 
   // M6: Resume from paused → running again
-  it("M6: Resume continues from paused state", () => {
+  it("M6: Resume continues from paused state", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(1000); });
-    act(() => { fireEvent.click(screen.getByTestId("pause-btn")); });
-    act(() => { fireEvent.click(screen.getByTestId("continue-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("pause-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("continue-btn")); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
   });
 
   // M7: End mid-run → completed=false session
-  it("M7: End mid-run writes completed=false session", () => {
+  it("M7: End mid-run writes completed=false session", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(5000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(5000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw) {
@@ -109,46 +109,46 @@ describe("PomodoroModule", () => {
   });
 
   // M8: stop keeps current mode; completed sessions advance by cycle
-  it("M8: Stop keeps focus mode; completed focus advances to break", () => {
+  it("M8: Stop keeps focus mode; completed focus advances to break", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(5000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(5000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
     expect(document.querySelector(".focus-pill")?.textContent).toContain("Focus");
 
-    act(() => { selectOneMinuteCustomPreset(); });
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(60 * 1000 + 2000); });
+    await act(async () => { selectOneMinuteCustomPreset(); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(60 * 1000 + 2000); });
     expect(document.querySelector(".focus-pill")?.textContent).toContain("Short Break");
   });
 
   // M9+M10: emits web:pomodoro:session-finished on End
-  it("M9+M10: emits event on session End", () => {
+  it("M9+M10: emits event on session End", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (payload) => {
       events.push(payload);
     });
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(3000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     unsub();
   });
 
   // M11: payload contains correct mode/durationMs/finishedAt
-  it("M11: event payload has correct shape", () => {
+  it("M11: event payload has correct shape", async () => {
     const events: Array<{ mode: string; durationMs: number; finishedAt: string }> = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (payload) =>
       events.push(payload as { mode: string; durationMs: number; finishedAt: string }),
     );
 
     render(<PomodoroModule lang="en" />);
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(5000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(5000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     const e = events[0]!;
@@ -159,7 +159,7 @@ describe("PomodoroModule", () => {
   });
 
   // M12: lang switch en ↔ zh re-renders labels
-  it("M12: lang switch en↔zh re-renders labels", () => {
+  it("M12: lang switch en↔zh re-renders labels", async () => {
     const { rerender } = render(<PomodoroModule lang="en" />);
     expect(screen.getByText("Pomodoro")).toBeTruthy();
     rerender(<PomodoroModule lang="zh" />);
@@ -167,7 +167,7 @@ describe("PomodoroModule", () => {
   });
 
   // M13: StrictMode double-mount no double-emit
-  it("M13: StrictMode double-mount → exactly one emit per session", () => {
+  it("M13: StrictMode double-mount → exactly one emit per session", async () => {
     const events: unknown[] = [];
     const unsub = onWebEvent("web:pomodoro:session-finished", (p) => events.push(p));
 
@@ -176,16 +176,16 @@ describe("PomodoroModule", () => {
         <PomodoroModule lang="en" />
       </React.StrictMode>,
     );
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(3000); });
-    act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    await act(async () => { fireEvent.click(screen.getByTestId("end-btn")); });
 
     expect(events.length).toBe(1);
     unsub();
   });
 
   // M14: corrupted localStorage entry filtered + DEV warn
-  it("M14: corrupted localStorage entry is filtered out silently", () => {
+  it("M14: corrupted localStorage entry is filtered out silently", async () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     localStorage.setItem(
       accountScope.physicalKey("xai_pomodoro_sessions"),
@@ -200,123 +200,123 @@ describe("PomodoroModule", () => {
     warnSpy.mockRestore();
   });
 
-  it("M16: duration presets and custom minutes update the idle timer", () => {
+  it("M16: duration presets and custom minutes update the idle timer", async () => {
     render(<PomodoroModule lang="en" />);
 
-    act(() => { fireEvent.click(screen.getByTestId("preset-focus-30")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("preset-focus-30")); });
     expect(screen.getByText("30:00")).toBeTruthy();
 
-    act(() => { selectOneMinuteCustomPreset(); });
+    await act(async () => { selectOneMinuteCustomPreset(); });
     expect(screen.getByText("1:00")).toBeTruthy();
   });
 
-  it("M17: display style and theme color controls update selected state", () => {
+  it("M17: display style and theme color controls update selected state", async () => {
     render(<PomodoroModule lang="en" />);
 
-    act(() => { fireEvent.click(screen.getByTestId("style-minimal")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("style-minimal")); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-display-style")).toBe("minimal");
     expect(screen.getByTestId("style-minimal").getAttribute("aria-pressed")).toBe("true");
 
-    act(() => { fireEvent.click(screen.getByTestId("theme-blue")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("theme-blue")); });
     expect(screen.getByTestId("theme-blue").getAttribute("aria-pressed")).toBe("true");
     expect((document.querySelector(".module-pomo") as HTMLElement).style.getPropertyValue("--accent-hue")).toBe("245");
   });
 
-  it("M19: fullscreen focus can open after changing color before the timer starts", () => {
+  it("M19: fullscreen focus can open after changing color before the timer starts", async () => {
     render(<PomodoroModule lang="en" />);
 
     const fullscreenBtn = screen.getByTestId("fullscreen-btn");
     expect(fullscreenBtn).not.toBeDisabled();
     expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
 
-    act(() => { fireEvent.click(screen.getByTestId("theme-blue")); });
-    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("theme-blue")); });
+    await act(async () => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("true");
     expect(screen.getByTestId("pomo-focus-overlay")).toBeTruthy();
     expect(screen.getByTestId("focus-start-btn")).toBeTruthy();
     expect(fullscreenBtn.getAttribute("aria-label")).toBe("Exit fullscreen");
 
-    act(() => { fireEvent.click(screen.getByTestId("focus-start-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("focus-start-btn")); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
 
-    act(() => { fireEvent.keyDown(window, { key: "Escape" }); });
+    await act(async () => { fireEvent.keyDown(window, { key: "Escape" }); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("false");
     expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
   });
 
-  it("M20: fullscreen focus controls reveal on pointer movement and idle-hide", () => {
+  it("M20: fullscreen focus controls reveal on pointer movement and idle-hide", async () => {
     render(<PomodoroModule lang="en" />);
 
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
 
     const overlay = screen.getByTestId("pomo-focus-overlay");
     expect(overlay.getAttribute("data-controls-visible")).toBe("false");
 
-    act(() => { fireEvent.pointerMove(overlay); });
+    await act(async () => { fireEvent.pointerMove(overlay); });
     expect(overlay.getAttribute("data-controls-visible")).toBe("true");
 
-    act(() => { vi.advanceTimersByTime(2500); });
+    await act(async () => { vi.advanceTimersByTime(2500); });
     expect(overlay.getAttribute("data-controls-visible")).toBe("false");
   });
 
-  it("M21: fullscreen focus buttons keep timer state and Stop exits fullscreen", () => {
+  it("M21: fullscreen focus buttons keep timer state and Stop exits fullscreen", async () => {
     render(<PomodoroModule lang="en" />);
 
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
 
     expect(screen.getByTestId("focus-pause-btn")).toBeTruthy();
-    act(() => { fireEvent.click(screen.getByTestId("focus-pause-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("focus-pause-btn")); });
     expect(screen.getByTestId("focus-continue-btn")).toBeTruthy();
     expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
 
-    act(() => { fireEvent.click(screen.getByTestId("focus-continue-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("focus-continue-btn")); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
 
-    act(() => { fireEvent.click(screen.getByTestId("focus-stop-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("focus-stop-btn")); });
     expect(document.querySelector(".module-pomo")?.getAttribute("data-fullscreen")).toBe("false");
     expect(screen.queryByTestId("pomo-focus-overlay")).toBeNull();
   });
 
-  it("M22: Space toggles start, pause, and continue while fullscreen", () => {
+  it("M22: Space toggles start, pause, and continue while fullscreen", async () => {
     render(<PomodoroModule lang="en" />);
 
-    act(() => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
+    await act(async () => { fireEvent.doubleClick(screen.getByTestId("pomo-timer-frame")); });
     expect(screen.getByTestId("focus-start-btn")).toBeTruthy();
 
-    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    await act(async () => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
 
-    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    await act(async () => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Paused");
 
-    act(() => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
+    await act(async () => { fireEvent.keyDown(window, { key: " ", code: "Space" }); });
     expect(screen.getByTestId("timer-state").textContent).toBe("Focusing");
   });
 
-  it("M18: sound selection, preview, and mute controls are interactive", () => {
+  it("M18: sound selection, preview, and mute controls are interactive", async () => {
     render(<PomodoroModule lang="en" />);
 
     const select = screen.getByTestId("sound-select") as HTMLSelectElement;
-    act(() => {
+    await act(async () => {
       fireEvent.change(select, { target: { value: "bell" } });
     });
     expect(select.value).toBe("bell");
 
-    act(() => { fireEvent.click(screen.getByTestId("sound-preview-btn")); });
+    await act(async () => { fireEvent.click(screen.getByTestId("sound-preview-btn")); });
 
     const muteBtn = screen.getByTestId("mute-btn");
-    act(() => { fireEvent.click(muteBtn); });
+    await act(async () => { fireEvent.click(muteBtn); });
     expect(muteBtn.getAttribute("aria-label")).toBe("Unmute");
   });
 
   // AC-SCHEMA-6: elapsedMs === durationMs for completed sessions (strict equality)
-  it("AC-SCHEMA-6: for tick-to-zero session, elapsedMs === durationMs (strict)", () => {
+  it("AC-SCHEMA-6: for tick-to-zero session, elapsedMs === durationMs (strict)", async () => {
     render(<PomodoroModule lang="en" />);
-    act(() => { selectOneMinuteCustomPreset(); });
-    act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
-    act(() => { vi.advanceTimersByTime(60 * 1000 + 500); });
+    await act(async () => { selectOneMinuteCustomPreset(); });
+    await act(async () => { fireEvent.click(screen.getByTestId("start-btn")); });
+    await act(async () => { vi.advanceTimersByTime(60 * 1000 + 500); });
 
     const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw) {

@@ -13,10 +13,8 @@ import React, { useCallback, useEffect, useMemo, useState, useRef } from "react"
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { getPrefAutosave, usePref, usePrefAutosave } from "@repo/plugin-web-storage";
-import { emitWebEvent } from "@repo/xai-web-event-bus";
 import type { PomodoroSession, PomodoroMode } from "./types.js";
 import { isPomodoroSession } from "./internal/validate.js";
-import { appendSession } from "./internal/sessionsReducer.js";
 import { nextMode } from "./internal/nextMode.js";
 import { formatDuration } from "./internal/formatDuration.js";
 import { notifySessionEnd } from "./internal/notifications.js";
@@ -191,7 +189,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const { t } = useI18n(lang);
 
   // ---- Persistence: usePref with boundary validation ----------------------
-  const [rawSessions, setRawSessions] = usePref("xai_pomodoro_sessions");
+  const [rawSessions] = usePref("xai_pomodoro_sessions");
   const sessions: PomodoroSession[] = useMemo(() => {
     if (!Array.isArray(rawSessions)) return [];
     return (rawSessions as unknown[]).filter((x): x is PomodoroSession => {
@@ -252,7 +250,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   usePrefAutosave("pomodoro_muted", muted);
 
   // ---- Emit dedup guard (StrictMode double-mount safe) --------------------
-  const emittedSessionIdsRef = useRef<Set<string>>(new Set());
+
 
   // Ref to the accent dot for direct DOM transform in rAF loop
   const accentDotRef = useRef<SVGCircleElement | null>(null);
@@ -266,10 +264,6 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   // Stable ref to completedFocusCount to avoid stale closure in onTickToZero
   const completedFocusCountRef = useRef(completedFocusCount);
   completedFocusCountRef.current = completedFocusCount;
-
-  // Stable ref for setRawSessions (stable from usePref)
-  const setRawSessionsRef = useRef(setRawSessions);
-  setRawSessionsRef.current = setRawSessions;
 
   // Ref to hold timerTick.reset so onTickToZero can call it
   const resetRef = useRef<((nextMode: PomodoroMode, durationMs?: number) => void) | null>(null);
@@ -290,51 +284,9 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   // Implement the callback (stable, uses refs only)
   onTickToZeroRef.current = (
     mode: PomodoroMode,
-    durationMs: number,
+    _durationMs: number,
     elapsedMs: number,
-    sessionId: string,
-    sessionStartedAt: string,
   ) => {
-    const finishedAt = new Date().toISOString();
-    const record: PomodoroSession = {
-      id: sessionId,
-      mode,
-      startedAt: sessionStartedAt,
-      finishedAt,
-      durationMs,
-      // For tick-to-zero (completed=true), elapsedMs === durationMs (AC-SCHEMA-6)
-      elapsedMs,
-      completed: true,
-    };
-
-    // Persist
-    try {
-      setRawSessionsRef.current((prev) => {
-        const prevArr = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isPomodoroSession)
-          : [];
-        return appendSession(prevArr, record);
-      });
-    } catch (e) {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("[plugin-web-pomodoro] localStorage quota error:", e);
-      }
-    }
-
-    // Emit (once per sessionId — StrictMode guard)
-    if (!emittedSessionIdsRef.current.has(sessionId)) {
-      emittedSessionIdsRef.current.add(sessionId);
-      /**
-       * Note: durationMs in payload === actual elapsed (=== configured durationMs for
-       * tick-to-zero sessions). Statistics consumers should treat this as "actual time spent."
-       */
-      emitWebEvent("web:pomodoro:session-finished", {
-        mode,
-        durationMs: elapsedMs,
-        finishedAt,
-      });
-    }
-
     playPromptSound(soundId, muted);
     notifySessionEnd(mode, elapsedMs);
     setIsFullscreen(false);
@@ -342,9 +294,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
     // Advance mode
     const focusCountAfter =
-      mode === "focus"
-        ? completedFocusCountRef.current + 1
-        : completedFocusCountRef.current;
+      completedFocusCountRef.current;
     const nextModeValue = nextMode(mode, focusCountAfter);
     const nextPreset = defaultPresetForMode(nextModeValue);
     setActivePresetId(nextPreset.id);
@@ -375,6 +325,12 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
     dotRef: accentDotRef,
     dotProgressMode: displayStyle === "ring" ? "remaining" : "elapsed",
     onTickToZero,
+    onCommitted: (record) => {
+      if (!record.completed) {
+        setIsFullscreen(false);
+        setCompletionNotice(lang === "zh" ? "本次计时已停止并保存。" : "Timer stopped and saved.");
+      }
+    },
   });
 
   useEffect(() => {
@@ -413,68 +369,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   // ---- Stop button handler ------------------------------------------------
   function handleStop() {
-    if (timerState.kind === "idle") return;
-
-    let elapsedMs: number;
-    const mode = timerState.mode;
-    const durationMs = timerState.durationMs;
-    const sessionId = timerState.sessionId;
-    const sessionStartedAt = timerState.sessionStartedAt;
-
-    if (timerState.kind === "running") {
-      const now = Date.now();
-      const remaining = Math.max(
-        0,
-        timerState.remainingAtStartMs - (now - timerState.startedAt),
-      );
-      const elapsedThisRun = timerState.remainingAtStartMs - remaining;
-      elapsedMs = timerState.elapsedBeforePauseMs + elapsedThisRun;
-    } else {
-      // paused
-      elapsedMs = timerState.elapsedSoFarMs;
-    }
-
-    end();
-    setIsFullscreen(false);
-    setFocusControlsVisible(false);
-
-    const finishedAt = new Date().toISOString();
-    const record: PomodoroSession = {
-      id: sessionId,
-      mode,
-      startedAt: sessionStartedAt,
-      finishedAt,
-      durationMs,
-      elapsedMs,
-      completed: false,
-    };
-
-    // Persist
-    try {
-      setRawSessions((prev) => {
-        const prevArr = Array.isArray(prev)
-          ? (prev as unknown[]).filter(isPomodoroSession)
-          : [];
-        return appendSession(prevArr, record);
-      });
-    } catch (e) {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("[plugin-web-pomodoro] localStorage quota error:", e);
-      }
-    }
-
-    // Emit (End-early always emits)
-    if (!emittedSessionIdsRef.current.has(sessionId)) {
-      emittedSessionIdsRef.current.add(sessionId);
-      emitWebEvent("web:pomodoro:session-finished", {
-        mode,
-        durationMs: elapsedMs,
-        finishedAt,
-      });
-    }
-
-    setCompletionNotice(lang === "zh" ? "本次计时已停止并保存。" : "Timer stopped and saved.");
-    reset(mode, durationMs);
+    if (timerState.kind !== "idle") end();
   }
 
   function handleReset() {
@@ -608,6 +503,17 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       data-running={isRunning ? "true" : "false"}
       style={moduleStyle}
     >
+      {timerTick.error && <section role="alert" className="pomo-notice pomo-recovery">
+        <p>{timerTick.error}</p>
+        <button type="button" onClick={() => { void timerTick.retry(); }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>
+        <button type="button" onClick={() => {
+          try {
+            const blob = new Blob([timerTick.exportRecovery()], { type: "application/json" });
+            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+            anchor.href = url; anchor.download = "pomodoro-recovery.json"; anchor.click(); URL.revokeObjectURL(url);
+          } catch { /* Scope changed: do not export another account. */ }
+        }}>{lang === "zh" ? "导出恢复数据" : "Export recovery data"}</button>
+      </section>}
       {/* Module header */}
       <header className="module-head pomo-head">
         <div className="pomo-title-block">
@@ -727,6 +633,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                   type="button"
                   className="btn primary"
                   aria-label={t.pomo.start}
+                  disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
                   data-testid="start-btn"
                   onClick={() => {
                     setCompletionNotice(null);
@@ -742,7 +649,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={t.pomo.pause}
-                    data-testid="pause-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="pause-btn"
                     onClick={pause}
                   >
                     {t.pomo.pause}
@@ -751,7 +659,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={lang === "zh" ? "停止" : "Stop"}
-                    data-testid="end-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="end-btn"
                     onClick={handleStop}
                   >
                     {lang === "zh" ? "停止" : "Stop"}
@@ -764,7 +673,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn primary"
                     aria-label={t.pomo.continue}
-                    data-testid="continue-btn"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="continue-btn"
                     onClick={resume}
                   >
                     {t.pomo.continue}
@@ -773,7 +683,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     type="button"
                     className="btn ghost"
                     aria-label={lang === "zh" ? "停止" : "Stop"}
-                    data-testid="end-btn-paused"
+                    disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="end-btn-paused"
                     onClick={handleStop}
                   >
                     {lang === "zh" ? "停止" : "Stop"}
@@ -784,7 +695,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn ghost"
                 aria-label={lang === "zh" ? "重置" : "Reset"}
-                data-testid="reset-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="reset-btn"
                 onClick={handleReset}
               >
                 {lang === "zh" ? "重置" : "Reset"}
@@ -1001,7 +913,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn primary"
                 aria-label={t.pomo.start}
-                data-testid="focus-start-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-start-btn"
                 onClick={() => {
                   setCompletionNotice(null);
                   start(selectedDurationMs);
@@ -1015,7 +928,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn ghost"
                 aria-label={t.pomo.pause}
-                data-testid="focus-pause-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-pause-btn"
                 onClick={pause}
               >
                 {t.pomo.pause}
@@ -1026,7 +940,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn primary"
                 aria-label={t.pomo.continue}
-                data-testid="focus-continue-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-continue-btn"
                 onClick={resume}
               >
                 {t.pomo.continue}
@@ -1037,7 +952,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 type="button"
                 className="btn ghost"
                 aria-label={lang === "zh" ? "停止" : "Stop"}
-                data-testid="focus-stop-btn"
+                disabled={!timerTick.available || !!timerTick.error || timerTick.settlementPending}
+                  data-testid="focus-stop-btn"
                 onClick={handleStop}
               >
                 {lang === "zh" ? "停止" : "Stop"}

@@ -17,11 +17,12 @@ const wait=()=>new Promise(resolve=>setTimeout(resolve,100));
  const results=JSON.parse(localStorage.getItem('diagnostic-results')??'[]');
  if(phase==='running'){
   results.push({case:'real page reload running session',expected:'running',actual:timer.timerState.kind});
-  timer.start(60000);await wait();timer.pause();await wait();
+  if(timer.timerState.kind==='idle') timer.start(60000);await wait();timer.pause();await wait();
   localStorage.setItem('diagnostic-results',JSON.stringify(results));localStorage.setItem('diagnostic-phase','paused');location.reload();return;
  }
  results.push({case:'real page reload paused session',expected:'paused',actual:timer.timerState.kind});
- timer.start(60000);await wait();
+ // Recovery now preserves pause; resume that session before observing it in another window.
+ if(timer.timerState.kind==='paused') timer.resume(); else timer.start(60000);await wait();
  const observer=new Promise(resolve=>window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data.probe==='observer')resolve(event.data.kind);}));
  const child=window.open('/observer');const kind=await observer;child?.close();
  results.push({case:'second browser window same account observes active session',expected:'running',actual:kind});

@@ -1,3 +1,4 @@
+import { PomodoroSessionHost } from "@repo/plugin-web-pomodoro/session-host";
 import { useEffect, useState, type PropsWithChildren } from 'react';
 import { AccountDataGate, accountScope } from '@repo/plugin-web-storage';
 import { aiSecretMigrationParticipant } from '@repo/plugin-web-ai-chat';
@@ -56,5 +57,5 @@ export function AccountStorageGate({ children }: PropsWithChildren) {
   const identityConfirmed = expected === null || expected.accountId === accountId;
   let lang: 'en' | 'zh' = 'en';
   try { if (JSON.parse(localStorage.getItem('xai_pref_lang') ?? '"en"') === 'zh') lang = 'zh'; } catch { /* use English */ }
-  return <AccountDataGate accountId={accountId} authenticated={state === 'authenticated' && identityConfirmed} demo={import.meta.env.VITE_WEB_AUTH_MODE === 'mock-authenticated'} lang={lang} secrets={aiSecretMigrationParticipant}>{children}</AccountDataGate>;
+  return <AccountDataGate accountId={accountId} authenticated={state === 'authenticated' && identityConfirmed} demo={import.meta.env.VITE_WEB_AUTH_MODE === 'mock-authenticated'} lang={lang} secrets={aiSecretMigrationParticipant}><PomodoroSessionHost />{children}</AccountDataGate>;
 }

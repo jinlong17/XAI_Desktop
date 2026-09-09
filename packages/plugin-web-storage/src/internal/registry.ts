@@ -362,6 +362,11 @@ export const PREF_REGISTRY = {
   // in their own feature-plan. A rename triggers a one-line migration via the
   // future registerMigration helper.
 
+  xai_pomodoro_active: {
+    key: "xai_pomodoro_active", codec: "json", default: null as unknown, schemaVersion: 1,
+    owner: "xai-web-pomodoro", category: "module",
+  } satisfies PrefEntry<unknown>,
+
   xai_pomodoro_sessions: {
     key: "xai_pomodoro_sessions",
     codec: "json",

@@ -211,6 +211,9 @@ export interface EventMap {
 
   // Pomodoro session completion (owner: xai-web-pomodoro row #14) — declaration only in W1
   'web:pomodoro:session-finished': {
+    /** Durable settlement identity and first local commit time (v2 senders). */
+    sessionId?: string;
+    recordedAt?: string;
     /** Mode that just finished. */
     mode: 'focus' | 'short-break' | 'long-break';
     /** Duration in ms of the just-finished session. */

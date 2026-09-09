@@ -161,6 +161,7 @@ describe("AC-REG-7: Default type matches codec", () => {
 // Each W2 row that owns persisted state appends one entry here following the
 // §S8 owner-row registration pattern; the count grows as those rows ship.
 const OWNER_ROW_ADDITIONS = [
+  "xai_pomodoro_active",      // POMO-01 durable active/pending session (2026-09-09)
   "xai_matrix_state",         // xai-web-matrix #13
   "xai_habits_state",         // xai-web-habits #15
   "xai_pref_week_start",      // xai-web-calendar #12 (first consumer of xai_pref_* family)

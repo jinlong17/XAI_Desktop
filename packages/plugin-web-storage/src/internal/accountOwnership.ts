@@ -38,6 +38,7 @@ export const LOCAL_KEY_OWNERSHIP: Readonly<Record<string, LocalOwnership>> = Obj
   "xai_pet_id": "device",
   "xai_pet_pos": "device",
   "xai_pomodoro_sessions": "account",
+  "xai_pomodoro_active": "account",
   "xai_pref_collab_default_share": "account",
   "xai_pref_collab_mention_notify": "device",
   "xai_pref_collab_show_avatars": "device",

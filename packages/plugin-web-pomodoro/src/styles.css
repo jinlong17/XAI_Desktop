@@ -1261,3 +1261,6 @@
     min-height: 44px;
   }
 }
+
+.pomo-recovery button { min-height: 44px; margin: 4px; }
+.pomo-recovery p { overflow-wrap: anywhere; }

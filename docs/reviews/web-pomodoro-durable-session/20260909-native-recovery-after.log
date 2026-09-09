@@ -1,0 +1,1 @@
+{"diagnosis":true,"results":[{"case":"real page reload running session","expected":"running","actual":"running"},{"case":"real page reload paused session","expected":"paused","actual":"paused"},{"case":"second browser window same account observes active session","expected":"running","actual":"running"}],"expectationFailures":0}
