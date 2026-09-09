@@ -2,7 +2,26 @@
 
 Baseline `2b1759ba6cb5e017d62f3fd38ab4866dad2c06c0`. No product edits. Native runner pins the whole Git snapshot including all @repo imports; actual PomodoroModule, application PomodoroSessionHost and StatisticsModule are rendered in real isolated Chrome152, with actual scoped localStorage. Native clock advances are deterministic synthetic instants, not claims of six minutes of elapsed wall testing.
 
-## Baseline finding / status
+## Final numbered conclusions at `ab94f84`
+
+- **STAT-01: PASS**, complete for its current elapsed-time / legacy compatibility acceptance contract.
+- **POMO-03: PASS**, complete for its current early-End record/list/statistics acceptance contract.
+
+Fix `ab94f84` follows Statistics implementation `2b1759b`. The same actual native session now displays one `1:00` row labeled `Ended early · Incomplete`; Chinese also displays 未完成. Real Pomodoro overview shows completed round counts0/0 and actual focus durations1m/1m, agreeing with actual Statistics route/reload KPI1minute. The persisted session remains completed=false and elapsedMs60,000 after five paused minutes. This closes the independently found visibility and duration-sum gaps without incorrectly counting an incomplete round as completed.
+
+The same zero/two short sessions/five invalid or missing elapsed cases, current range notices, heatmap/hour/range totals and raw-byte preservation assertions pass on the fixed snapshot. Original STAT01 three correct assertions were independently rerun3PASS; STAT02 was explicitly filtered out and is not accepted. No author package totals are added to independent coverage.
+
+Run:
+
+```
+STAT_VERIFY_REF=ab94f84 STAT_EXPECT_FIXED=1 STAT_VERIFY_LOG=20260909-native-stat-after.log STAT_SCREENSHOT=390px-statistics-zh-after.png node docs/reviews/web-statistics-time-independent/verify-native-stat.mjs
+```
+
+Evidence: `20260909-native-stat-after.log`, `20260909-original-stat01-three.log`, and three390px screenshots: `390px-pomodoro-incomplete-after.png`, `390px-statistics-en-after.png`, `390px-statistics-zh-after.png`. All screenshots visually inspected; the incomplete record and both overview durations are visible together, bilingual Statistics text wraps within the viewport. Original before log/screenshot remain unchanged. No product source changes by verifier.
+
+STAT02/03/04, entire Statistics/Pomodoro release, cross-device synchronization and historical data repair remain separate. Range/date limitations below are explicitly retained and do not change the measured-duration conclusion.
+
+## Baseline finding / status (preserved)
 
 Statistics measured-duration aggregation passes the cases below, but the numbered items cannot yet be closed: **POMO FocusRecordList hides all incomplete focus records**, so an early-End row never appears or carries an incomplete label. This contradicts the requested list/KPI agreement and POMO03's explicit incomplete record requirement. Found in source and independently reproduced with actual native modules. Parent is fixing this separate gap.
 
