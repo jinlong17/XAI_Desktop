@@ -1,6 +1,6 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。已按用户要求切换为 Astra 主审、Terra 实现、Sol 独立验收，Luna 按需轻量任务，见 MODEL-ROUTING.md。AI-02 页内持久回执阶段 daff8ef 正在由 Astra/Sol 独立审查，跨整页重载的持久幂等未完成；父905b116补canonical迁移消费链清单。Board工作区保存恢复由Terra接管，尚未验收。REL-05最新有界独立证据：AI设备偏好1277086、Dashboard grid/AI工具栏32023cf；整体REL-05仍开放。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **13/312**。Astra主审9df552e确认完整AI-02仍开放：固定daff8ef六动作同账户同generation新epoch重放6例正确FAIL；Calendar非法日期dd10cb8两例FAIL列P1并批准A1。新Terra专门实施A1；原Terra继续Board工作区保存恢复，Sol独立验证daff8ef页内回执。Astra已给同canonical envelope/普通写保留receipt/同键并发协议的完整分阶段验收，后续完成仍须主审复核。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 

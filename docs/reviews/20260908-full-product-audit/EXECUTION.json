@@ -738,7 +738,11 @@
         "commit:daff8ef",
         "../web-ai-tool-receipt-fix/handoff.md",
         "commit:905b116",
-        "../web-canonical-receipt-migration-inventory/review.md"
+        "../web-canonical-receipt-migration-inventory/review.md",
+        "commit:dd10cb8",
+        "../web-ai-calendar-invalid-date/review.md",
+        "commit:9df552e",
+        "../web-ai-tool-receipt-astra-review/review.md"
       ]
     },
     {
