@@ -8,7 +8,7 @@
  * Design: design.md §5.2, design.md §8 error semantics
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type { HabitId, MonthKey } from "./types.js";
@@ -19,25 +19,33 @@ interface DiaryCardProps {
   /** Current persisted value (or "" if absent). */
   value: string;
   /** Called on blur with the new value (only if it differs from `value`). */
-  setValue: (habitId: HabitId, monthKey: MonthKey, text: string) => void;
+  setValue: (habitId: HabitId, monthKey: MonthKey, text: string) => boolean | void;
+  onDraftChange?: (habitId: HabitId, monthKey: MonthKey, text: string) => void;
+  resetToken?: number;
   emptyHint: string;
   lang: Lang;
 }
 
-export function DiaryCard({ habitId, monthKey, value, setValue, emptyHint, lang }: DiaryCardProps) {
+export function DiaryCard({ habitId, monthKey, value, setValue, emptyHint, lang, onDraftChange, resetToken }: DiaryCardProps) {
   const { s } = useI18n(lang);
   // Local mirror for keystrokes
   const [localValue, setLocalValue] = useState(value);
 
+  const dirty = useRef(false);
+  const identity = useRef({ habitId, monthKey, resetToken });
   // Sync local state when persisted value changes (cross-tab update or habit switch)
   useEffect(() => {
-    setLocalValue(value);
-  }, [value, habitId, monthKey]);
+    const previous = identity.current;
+    if (previous.habitId !== habitId || previous.monthKey !== monthKey || previous.resetToken !== resetToken || !dirty.current || value === localValue) {
+      dirty.current = false; setLocalValue(value);
+    }
+    identity.current = { habitId, monthKey, resetToken };
+  }, [value, habitId, monthKey, resetToken, localValue]);
 
   function handleBlur() {
     // Equality guard — skip no-op writes (AC-DIARY-4)
     if (localValue !== value) {
-      setValue(habitId, monthKey, localValue);
+      if (setValue(habitId, monthKey, localValue) !== false) dirty.current = false;
     }
   }
 
@@ -50,7 +58,7 @@ export function DiaryCard({ habitId, monthKey, value, setValue, emptyHint, lang 
       <textarea
         className="log-textarea"
         value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
+        onChange={(e) => { dirty.current = true; setLocalValue(e.target.value); onDraftChange?.(habitId, monthKey, e.target.value); }}
         onBlur={handleBlur}
         placeholder={emptyHint}
         aria-label={lang === "zh" ? "习惯日记" : "Habit diary"}

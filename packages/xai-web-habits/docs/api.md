@@ -411,3 +411,11 @@ This section supersedes historical UTC-day / fixed-24-hour / 2026-Pacific-only a
 Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKey`, `addLocalDays`, `startOfLocalDay`, `nextLocalDayStart`, `useLocalDayClock`. The hook refreshes on midnight, focus, pageshow, visible and a 60-second system-clock/time-zone calibration. It cleans timers/listeners on unmount and makes no closed-page execution promise. User-selected historical dates are preserved when today advances.
 
 Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
+
+## REL05 save-result recovery (2026-09-09)
+
+`usePersistedHabits.setState(next, options?)` returns boolean. Options identify the pending operation (seed/create/checkin/diary), its optional original byte baseline, and an after-success callback. Check-in events use the callback and cannot report failed writes as successful. Recovery exposes failure/kind, captured-account baseline/export snapshot, retry, explicit discard and a live pending predicate.
+
+`AddHabitDialog.onSave` accepts boolean or void for backward compatibility; `false` keeps all fields open. Optional failure/export/discard props provide native-dialog recovery. The real module returns boolean and advances selection only after success.
+
+DiaryCard keeps per-habit/per-month blur persistence. Optional draft-change/reset props let the module retain latest text and its first-edit baseline. Dirty text survives external value updates; failed saves block local habit/month/view switches until resolved. This is in-memory recovery, with manual JSON export, not a cross-reload journal or atomic cross-tab transaction.

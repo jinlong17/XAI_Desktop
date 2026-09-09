@@ -1337,3 +1337,27 @@
     min-height: 44px !important;
   }
 }
+
+.habits-save-recovery {
+  padding: 1rem;
+  color: var(--text-1);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.module-habits > .habits-save-recovery {
+  grid-column: 1 / -1;
+  max-height: 30vh;
+  overflow: auto;
+}
+.module-habits.has-save-error { grid-template-rows: auto minmax(0, 1fr); }
+.habits-save-recovery button {
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem;
+  color: inherit;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-1);
+  border-radius: 0.5rem;
+}

@@ -47,7 +47,9 @@ interface HabitDetailProps {
   onToggle: (habitId: HabitId, dateKey: DateKey) => void;
   onPrevMonth: () => void;
   onNextMonth: () => void;
-  setDiary: (habitId: HabitId, mk: MonthKey, text: string) => void;
+  setDiary: (habitId: HabitId, mk: MonthKey, text: string) => boolean | void;
+  onDiaryDraft?: (habitId: HabitId, mk: MonthKey, text: string) => void;
+  diaryResetToken?: number;
 }
 
 const COPY = {
@@ -216,6 +218,8 @@ export function HabitDetail({
   onPrevMonth,
   onNextMonth,
   setDiary,
+  onDiaryDraft,
+  diaryResetToken,
 }: HabitDetailProps) {
   const { s } = useI18n(lang);
   const { now } = useLocalDayClock();
@@ -365,6 +369,8 @@ export function HabitDetail({
         monthKey={mk}
         value={diaryText}
         setValue={setDiary}
+        onDraftChange={onDiaryDraft}
+        resetToken={diaryResetToken}
         emptyHint={s("habits.empty_log")}
         lang={lang}
       />

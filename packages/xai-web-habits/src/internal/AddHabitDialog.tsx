@@ -44,14 +44,17 @@ export interface AddHabitDialogProps {
   open: boolean;
   lang: Lang;
   onClose: () => void;
-  onSave: (habit: HabitDraft) => void;
+  onSave: (habit: HabitDraft) => boolean | void;
+  saveError?: string | null; exportFailed?: boolean;
+  onExportDraft?: (draft: HabitDraft) => void;
+  onDiscard?: () => void;
 }
 
 function todayKey(): string {
   return localDateKey(new Date());
 }
 
-export function AddHabitDialog({ open, lang, onClose, onSave }: AddHabitDialogProps) {
+export function AddHabitDialog({ open, lang, onClose, onSave, saveError, exportFailed, onExportDraft, onDiscard }: AddHabitDialogProps) {
   const { t } = useI18n(lang);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const explicitCloseRef = useRef(false);
@@ -83,39 +86,34 @@ export function AddHabitDialog({ open, lang, onClose, onSave }: AddHabitDialogPr
     if (!el) return;
     const handleClose = () => {
       if (!explicitCloseRef.current) {
+        if (saveError) { el.showModal(); return; }
         onClose();
       }
       explicitCloseRef.current = false;
     };
+    const cancel = (event: Event) => { if (saveError) event.preventDefault(); };
+    el.addEventListener('cancel', cancel);
     el.addEventListener("close", handleClose);
-    return () => el.removeEventListener("close", handleClose);
-  }, [onClose]);
+    return () => { el.removeEventListener("close", handleClose); el.removeEventListener('cancel', cancel); };
+  }, [onClose, saveError]);
 
   const canSave = title.trim() !== "";
 
+  function currentDraft(): HabitDraft {
+    const primary = title.trim(), secondary = titleAlt.trim() || primary;
+    return { emoji: habitEmojiForIcon(icon), icon, color, category, startDate,
+      reminder: { enabled: reminderEnabled, time: reminderTime }, frequency: { type: frequency },
+      title: lang === 'zh' ? { en: secondary, zh: primary } : { en: primary, zh: secondary } };
+  }
   function handleSave() {
-    if (!canSave) return;
-    const primary = title.trim();
-    const secondary = titleAlt.trim() || primary;
-    const finalTitle = lang === "zh"
-      ? { en: secondary, zh: primary }
-      : { en: primary, zh: secondary };
+    if (!canSave || onSave(currentDraft()) === false) return;
     explicitCloseRef.current = true;
     dialogRef.current?.close();
-    onSave({
-      emoji: habitEmojiForIcon(icon),
-      icon,
-      color,
-      category,
-      startDate,
-      reminder: { enabled: reminderEnabled, time: reminderTime },
-      frequency: { type: frequency },
-      title: finalTitle,
-    });
     resetForm();
   }
 
   function handleCancel() {
+    if (saveError) return;
     explicitCloseRef.current = true;
     dialogRef.current?.close();
     onClose();
@@ -264,9 +262,15 @@ export function AddHabitDialog({ open, lang, onClose, onSave }: AddHabitDialogPr
           </div>
         </div>
 
+        {saveError && <div className="habits-save-recovery" role="alert">
+          <p>{saveError}</p>
+          <button type="button" onClick={() => onExportDraft?.(currentDraft())}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+          <p>{lang === 'zh' ? '导出仅供手动恢复，当前不支持导入。' : 'Export is for manual recovery; import is not supported.'}</p>
+          {exportFailed && <p>{lang === 'zh' ? '导出失败，请检查账户和存储权限。' : 'Export failed. Check account and storage access.'}</p>}
+        </div>}
         <div className="hb-dialog-actions">
-          <button type="button" className="hb-btn" onClick={handleCancel}>
-            {t.common.cancel}
+          <button type="button" className="hb-btn" onClick={() => { if (saveError) onDiscard?.(); else handleCancel(); }}>
+            {saveError ? (lang === "zh" ? "放弃草稿" : "Discard draft") : t.common.cancel}
           </button>
           <button
             type="button"
@@ -274,7 +278,7 @@ export function AddHabitDialog({ open, lang, onClose, onSave }: AddHabitDialogPr
             onClick={handleSave}
             disabled={!canSave}
           >
-            {t.common.save}
+            {saveError ? (lang === "zh" ? "重试保存" : "Retry save") : t.common.save}
           </button>
         </div>
       </dialog>
