@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+ ✓ docs/reviews/web-time-tracker-window-accounting/window-reproduction.test.tsx (11 tests) 219ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  12:20:13
+   Duration  1.81s (transform 346ms, setup 0ms, collect 544ms, tests 219ms, environment 716ms, prepare 82ms)
+
