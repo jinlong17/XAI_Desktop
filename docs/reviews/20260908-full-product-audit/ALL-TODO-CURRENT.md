@@ -10,7 +10,7 @@
 
 进行中：REL-05/06、AI-02。TT-03 当前独立复验通过，证据见 web-time-hour-independent/20260909-review.md。REL-05 的多个 consumer 已独立验收，不自动关闭整个公共合同。
 
-最新补充（尚未改变完整编号状态）：Habits 保存恢复与 390/768/1024/1440px 布局独立通过（bc57f1f）；Board 创建恢复独立通过（996199b）；Dashboard 备注恢复独立通过（81f5623）。这两者均只覆盖页内恢复，不代表关闭浏览器后的草稿持久化已完成。
+最新补充（不改变完整编号状态）：Habits、Board创建及卡片/列表、Dashboard备注及grid、AI会话及设备偏好已分别完成页内恢复的独立验收。AI-02页内回执阶段daff8ef仍待Astra/Sol审查；跨整页重载持久幂等尚未完成，Board工作区恢复由Terra继续。各自证据及限制见EXECUTION.md/EXECUTION.json，不等同关页草稿持久化或完整REL-05通过。
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 

@@ -145,7 +145,10 @@
         "../web-dashboard-grid-independent/review.md",
         "commit:8865d17",
         "commit:53854f4",
-        "../web-ai-toolbar-independent/review.md"
+        "../web-ai-toolbar-independent/review.md",
+        "commit:1277086",
+        "../web-ai-preference-independent/review.md",
+        "commit:32023cf"
       ]
     },
     {
@@ -731,7 +734,11 @@
         "commit:bce7fc8",
         "../web-ai-tool-write-receipts/20260909-create-retry-fix.md",
         "commit:e45f78e",
-        "commit:c353e71"
+        "commit:c353e71",
+        "commit:daff8ef",
+        "../web-ai-tool-receipt-fix/handoff.md",
+        "commit:905b116",
+        "../web-canonical-receipt-migration-inventory/review.md"
       ]
     },
     {

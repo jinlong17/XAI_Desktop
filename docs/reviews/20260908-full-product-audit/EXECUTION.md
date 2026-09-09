@@ -1,6 +1,6 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。TT-03 当前固定 cd3146b 独立复验：20 类 Insights/module/widget、5 份实际 CSV、跨小时毫秒余量、23/25/24.5/23.5h DST 与明确 UTC 范围通过，完整包 82 测试通过，按编号既定范围核销。REL-05 AI 对话和 Board composer 修复进行中；Dashboard grid 诊断发现旧 A 回调写 B 及保存失败路径，进入修复。完整 REL-05 保持开放。AI-02 新增创建请求故障恢复：Tasks/Calendar 仅在写入成功后记录 requestId，原 2FAIL→2PASS，Tasks165及Calendar低并发重跑343通过；初次Calendar超时/测试回调清理错误保留证据，清理测试修正后4PASS。完整工具业务回执仍未实现，AI-02保持in_progress。Board新增卡片/列表页内恢复及BoardCreator外部删除边界现已父独立固定dea0af6原生通过，见web-board-composer-independent；AI会话650f59c作者完成待独立，工具业务回执继续实现。AI会话独立3491540在390/1440功能通过，设备偏好Discard旧显示另修待独立，窄屏顶部遮挡另修中；Dashboard grid33723a1作者208测试/native通过待独立。AI-02创建重试子项独立c353e71通过，完整receipt仍开放。Dashboard grid33723a1父独立native通过含外部删除不复活；AI顶部遮挡8865d17父独立390px几何/长对话滚动通过。两者均为bounded验收，不新增完整编号关闭。以下保留历次检查记录。
+最新检查点（2026-09-09）：正式完成 **13/312**。已按用户要求切换为 Astra 主审、Terra 实现、Sol 独立验收，Luna 按需轻量任务，见 MODEL-ROUTING.md。AI-02 页内持久回执阶段 daff8ef 正在由 Astra/Sol 独立审查，跨整页重载的持久幂等未完成；父905b116补canonical迁移消费链清单。Board工作区保存恢复由Terra接管，尚未验收。REL-05最新有界独立证据：AI设备偏好1277086、Dashboard grid/AI工具栏32023cf；整体REL-05仍开放。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 
