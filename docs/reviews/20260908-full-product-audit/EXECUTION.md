@@ -27,3 +27,5 @@ POMO-01/02诊断b6cf0ee已复现：8个正确预期中7FAIL/1对照PASS，原生
 TT-01正式核销：c5b08a7实现与8d951e9独立固定快照验收满足窗口相交、跨日/周/月归属及未来记录排除的完整编号范围；原11断言、全部20 Insights、module/widget、5次真实CSV下载、源记录编辑/删除及LA/Lord Howe四组DST边界通过。独立审查明确无阻止TT-01关闭的额外条件，EXECUTION.json标记completed；当前完成1/312。TT-02/03、分类删除事务、性能、跨tab与后台运行均不随之关闭。主日计数文案歧义作为后续UX问题保留。
 
 REL-06 SDK适配faecd79及原子owner补丁498ceb9已提交。父完整auth16文件109测试、check-types通过，并直接复跑原生SDK探针PASS；3d39533保留before owner错配与after正确拒绝证据。旧退出、刷新及广播不破坏B，A代不能写入B身份；coordinator及页面/host尚未接入，因此REL-06仍in_progress。原生probe验证本机临时profile和synthetic HTTP，不等同生产认证验收。
+
+REL-05消费者核销6fa451f：已逐功能列出剩余写调用与证据边界，STAT仅只读，不应误列为缺少保存恢复的写消费者。MED独立复现首次新场景保存失败后重试写空数组/悬空id。父修复da35b3b：仅成功后推进编辑id/删除reset，保留pending与最新editor，增加重试/手动恢复JSON导出/discard、账户边界与较新数据冲突保护。14文件117测试、check-types、lint通过；增强Blob内容检查后5focused测试通过。独立真实下载及交互验收正在进行，REL-05保持in_progress，MED计时恢复/初始坏schema并未随本次修复完成。
