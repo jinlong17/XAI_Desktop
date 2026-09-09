@@ -165,3 +165,5 @@ Parent 56f1aaf independently expanded real TasksModule verification at 94f1183: 
 Parent 1829c3a records the next approved Board D1 contract at fixed 94f1183: linking against absent Tasks or an existing canonical envelope fails at the task phase (2 correct FAIL). Invalid physical null/envelope-null still refuse before Board intent (2 PASS). This must be fixed through the common async Tasks writer while preserving ordered intent/task/ack and owner/source rechecks, not by restoring a synchronous bypass. Board D1 implementation remains pending after current dependency work.
 
 The full 312-item objective is unchanged: 13 completed, 299 open.
+
+Astra 1660df9 independently accepts Calendar test adaptation at fixed 9a7e66b: 50 files / 372 tests and the original 26 D1 assertions all PASS. Real UI interactions and error assertions remain intact; the old 20 FAIL record is retained. The known redundant post-commit legacy setter warning is a cleanup item, not a new corruption claim. Terra now implements the approved Board D1 async command and actual Module integration; Sol retains exclusive Tasks product/test ownership. No whole D1 or numbered item is closed.
