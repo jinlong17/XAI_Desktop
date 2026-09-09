@@ -1,0 +1,27 @@
+revision=aca0193
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-b2-eaWEfz
+
+ ✓ packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts (9 tests) 13ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  15:33:51
+   Duration  915ms (transform 309ms, setup 165ms, collect 302ms, tests 13ms, environment 203ms, prepare 48ms)
+
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts > reads task data from an envelope but leaves durable receipt bytes untouched until the coordinated writer lands
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
