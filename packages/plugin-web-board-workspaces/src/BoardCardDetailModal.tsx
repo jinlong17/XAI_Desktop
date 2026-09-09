@@ -515,7 +515,7 @@ export function BoardCardDetailSurface({
             {taskLinkError && <p role="alert">{taskLinkError}</p>}
             {card.taskLink?.pending && <div role="status">
               <p>{lang === "zh" ? "任务链接尚未全部保存。原始创建意图已保留，请重试完成。" : "Task linking is not fully saved. The original request is retained; retry to finish."}</p>
-              <button type="button" className="btn" onClick={onCreateLinkedTask} data-testid="card-detail-retry-task">{lang === "zh" ? "重试链接" : "Retry linking"}</button>
+              <button type="button" className="btn task-link-retry" onClick={onCreateLinkedTask} data-testid="card-detail-retry-task">{lang === "zh" ? "重试链接" : "Retry linking"}</button>
             </div>}
             {card.taskLink ? (
               <div className="cd-task-link-row">

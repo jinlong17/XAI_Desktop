@@ -36,6 +36,9 @@ export function ensureBoardTaskLink(boardId: string, cardId: string, scope: Acco
     const existing = findBoardLinkedTask(cols, source);
     const draft = current.card.taskLink?.pending ?? { title: current.card.title, ...(current.card.dueDate ? { dueDate: current.card.dueDate } : {}) };
     const task = existing?.task ?? taskCardFromBoardLink({ ...source, ...draft });
+    if (!existing && cols.some(col => [...col.tasks, ...(col.completed ?? [])].some(row => row.id === task.id))) {
+      throw Error('Another task uses this identifier. Review the source before linking; existing data was preserved.');
+    }
     const intent: BoardCardTaskLink = current.card.taskLink?.pending
       ? current.card.taskLink
       : { source: 'xai-web-tasks', taskId: task.id, createdAt: current.card.taskLink?.createdAt ?? new Date().toISOString(), pending: draft };

@@ -70,7 +70,7 @@ export function bucketIdForBoardDueDate(
   const parts = parseIsoDateOnly(dueDate);
   if (!parts) return "nodate";
   const delta = dayNumberUtc(parts) - todayNumberUtc(now);
-  if (delta < 0) return "overdue";
+  if (delta <= 0) return "overdue";
   if (delta <= 7) return "next7";
   return "later";
 }

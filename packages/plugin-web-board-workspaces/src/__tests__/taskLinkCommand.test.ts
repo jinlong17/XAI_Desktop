@@ -2,6 +2,7 @@ import {it,expect,vi} from 'vitest';
 import {accountScope} from '@repo/plugin-web-storage';
 import {makeDefaultBoards,archiveCard,restoreCard,moveCardToList,archiveList,restoreList} from '@repo/plugin-web-board-core';
 import type {Board,BoardCardData} from '@repo/plugin-web-board-core';
+import {loadTaskColsOrSeed} from '@repo/plugin-web-tasks';
 import type {TaskCol,TaskCard} from '@repo/plugin-web-tasks';
 import {ensureBoardTaskLink} from '../internal/taskLinkCommand.js';
 const boardKey=()=>accountScope.physicalKey('xai_boards_v2'),taskKey=()=>accountScope.physicalKey('xai_task_cols');
@@ -31,4 +32,11 @@ it('pending link follows stable card through move and card/list archive restorat
 it('old account callback cannot write B or erase A pending intent',()=>{
  seed();const captured=accountScope.capture(),aKey=boardKey(),bytes=localStorage.getItem(aKey);accountScope.activate(accountScope.lock('other'),'fixture');
  expect(ensureBoardTaskLink('b-default','bc1',captured).ok).toBe(false);expect(localStorage.getItem(boardKey())).toBeNull();expect(localStorage.getItem(aKey)).toBe(bytes);
+});
+
+it('legacy task ID collision never overwrites another source or publishes a false link',()=>{
+ seed();const cols=loadTaskColsOrSeed(null);cols[0]={...cols[0]!,tasks:[{id:'bt-b-default-bc1',title:{en:'unrelated',zh:'unrelated'}}]};
+ const bytes=JSON.stringify(cols);localStorage.setItem(taskKey(),bytes);
+ expect(ensureBoardTaskLink('b-default','bc1',accountScope.capture())).toMatchObject({ok:false,phase:'intent'});
+ expect(localStorage.getItem(taskKey())).toBe(bytes);expect(card().taskLink).toBeUndefined();
 });
