@@ -1,10 +1,10 @@
 # 全清单执行台账
 
-最新检查点（2026-09-09）：正式完成 **13/312**。A1 Calendar有界主审接受：20a0748修复非字符串时间分类；Sol a9b88ba与Astra8045d5d分别固定20a0748原生复验22非法/5有效/同id纠正及重放通过，ecb588c原FAIL保留。Astra批准进入9df552e原B-D canonical单记录及全部writer协调；完整AI-02仍in_progress，不将A1或页内回执当持久幂等完成。Luna3241ffd补当前迁移入口清单，实施按该清单和Astra完整方案执行。
+最新检查点（2026-09-09）：正式完成 **13/312**。Board workspace保存恢复及启动/queued选择有界接受：产品b353cbb，作者944c5ef，Astra独立501feb7。原queued三反例组件与Chrome通过，正常修正/absent seed/legacy及envelope保存失败重试通过，启动四类损坏八断言通过；包313、作者契约10、浏览器4路径分层记录不合计。原失败证据保留，不宣称原九条旧oracle全部PASS；全Board/REL-05仍开放。
 
-Board 034ef46的四种预存损坏数据/静态选择保护已通过Astra复验，但8045d5d三个同账号queued-selection组件及Chrome反例仍FAIL：校验后active变化、board替换或删除，旧callback会覆盖选择。Terra接执行时同时核对owner、physical源及预期active的窄修。正常seed/automation重试单列已通过；原9断言6PASS/3FAIL中有效seed字节与新增多alert边界另有说明，不伪造全通过。整体Board/REL-05保持开放，下一批详情3丢稿FAIL与架构a8774fd/ac0e090仍待当前Module所有权释放后接续。
+A1 Calendar有界主审接受仍为20a0748/Sol a9b88ba/Astra8045d5d，完整AI-02未关闭。Terra现接已批准B-D：兼容表示→六动作durable→全部writer共同锁及生命周期适配，首先保留原六重放FAIL，再实现分阶段测试。Module已从workspace修复释放，仅由同一Terra按B-D需要适配caller；详情三丢稿FAIL及架构继续排在该共享文件批次之后。
 
-父Web整合1364de5固定a81234e产品树：27files146tests与check-types通过，产品树检查期间不变；不替代独立Chrome或生产验收。以下保留历次检查记录。
+Luna3241ffd入口清单及Astra501feb7旧客户端补充共同约束迁移：新WebLocks不能约束旧JS；首次envelope激活前需可验证旧进程排空/升级/防旧版重入，否则完整AI-02/rollout gate开放，不以新客户端并发PASS冒充旧tab保护。父Web整合1364de5的146测试/types为局部整合证据，不是部署或完整持久幂等验收。以下保留历次检查记录。
 
 REL-05 Countdown父独立91f544e：固定179e6d5全workspace，before正确create/delete FAIL、after原7组加独立native preset故障恢复8组PASS；实际下载最新稿/原bytes、唯一重试、Pin、baseline和A→B均通过。原包128测试复跑通过，包源码与固定提交无差异。仍是子项，不声称跨tab事务/全功能触控/跨reload稿恢复。
 

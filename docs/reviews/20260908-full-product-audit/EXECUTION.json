@@ -160,7 +160,11 @@
         "commit:034ef46",
         "commit:a81234e",
         "commit:8045d5d",
-        "../web-board-workspace-astra-review/20260909-034ef46-rereview.md"
+        "../web-board-workspace-astra-review/20260909-034ef46-rereview.md",
+        "commit:b353cbb",
+        "commit:944c5ef",
+        "commit:501feb7",
+        "../web-board-workspace-astra-review/20260909-b353cbb-acceptance.md"
       ]
     },
     {
@@ -769,7 +773,9 @@
         "../web-board-workspace-astra-review/20260909-a1-astra-entry-gate.md",
         "commit:3241ffd",
         "../web-canonical-preflight-current/CHECKLIST.md",
-        "commit:1364de5"
+        "commit:1364de5",
+        "commit:501feb7",
+        "../web-board-workspace-astra-review/20260909-canonical-old-client-rollout-gate.md"
       ]
     },
     {
