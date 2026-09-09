@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * M1..M15 — PomodoroModule integration tests.
  * test.md §2
@@ -95,7 +96,7 @@ describe("PomodoroModule", () => {
     act(() => { vi.advanceTimersByTime(5000); });
     act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
 
-    const raw = localStorage.getItem("xai_pomodoro_sessions");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw) {
       const sessions = JSON.parse(raw);
       if (sessions.length > 0) {
@@ -187,7 +188,7 @@ describe("PomodoroModule", () => {
   it("M14: corrupted localStorage entry is filtered out silently", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     localStorage.setItem(
-      "xai_pomodoro_sessions",
+      accountScope.physicalKey("xai_pomodoro_sessions"),
       JSON.stringify([{ id: "bad", mode: "focus", startedAt: "x" }]),
     );
     render(<PomodoroModule lang="en" />);
@@ -317,7 +318,7 @@ describe("PomodoroModule", () => {
     act(() => { fireEvent.click(screen.getByTestId("start-btn")); });
     act(() => { vi.advanceTimersByTime(60 * 1000 + 500); });
 
-    const raw = localStorage.getItem("xai_pomodoro_sessions");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw) {
       const sessions = JSON.parse(raw);
       const completed = sessions.filter((s: { completed: boolean }) => s.completed);

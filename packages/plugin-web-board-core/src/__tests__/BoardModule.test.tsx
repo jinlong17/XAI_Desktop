@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, expect, test } from "vitest";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { BoardModule } from "../BoardModule.js";
@@ -16,8 +17,8 @@ describe("BoardModule", () => {
 
   test("BM2 mount with persisted xai_boards_v2 + xai_active_board renders matching board", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-pm");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-pm");
     render(<BoardModule lang="en" />);
     expect(screen.getByTestId("board-title").textContent).toBe("Project Management");
   });
@@ -48,15 +49,15 @@ describe("BoardModule", () => {
   });
 
   test("BM5 mount with malformed xai_boards_v2 falls back to seed (no crash)", () => {
-    localStorage.setItem("xai_boards_v2", '"garbage"');
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), '"garbage"');
     render(<BoardModule lang="en" />);
     expect(screen.getByTestId("board-title").textContent).toBe("My Project Board");
   });
 
   test("BM6 mount with stale xai_active_board id resolves to boards[0]", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "no-such-board");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "no-such-board");
     render(<BoardModule lang="en" />);
     expect(screen.getByTestId("board-title").textContent).toBe(seed[0]!.name.en);
   });
@@ -81,7 +82,7 @@ describe("BoardModule", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_boards_v2");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     expect(raw).not.toBe(null);
     // Parsed value should be an array.
     expect(Array.isArray(JSON.parse(raw!))).toBe(true);
@@ -90,7 +91,7 @@ describe("BoardModule", () => {
   test("BM9 mount from v1 envelope and add-card preserves envelope storage", () => {
     const seed = makeDefaultBoards();
     localStorage.setItem(
-      "xai_boards_v2",
+      accountScope.physicalKey("xai_boards_v2"),
       JSON.stringify(createBoardStorageEnvelope(seed)),
     );
 
@@ -100,7 +101,7 @@ describe("BoardModule", () => {
     fireEvent.change(ta, { target: { value: "Envelope card" } });
     fireEvent.keyDown(ta, { key: "Enter" });
 
-    const raw = localStorage.getItem("xai_boards_v2");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(isBoardStorageEnvelopeV1(parsed)).toBe(true);

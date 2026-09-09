@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * useStickies hook tests — AC-HOOK-1..4
  *
@@ -36,7 +37,7 @@ describe("AC-HOOK-3: create persists to localStorage", () => {
     act(() => {
       result.current.create({ text: "Persisted", color: "sky" });
     });
-    const raw = localStorage.getItem("xai_dashboard_stickies");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_stickies"));
     expect(raw).not.toBeNull();
     const stored = JSON.parse(raw!);
     const values = Object.values(stored) as { text: string }[];

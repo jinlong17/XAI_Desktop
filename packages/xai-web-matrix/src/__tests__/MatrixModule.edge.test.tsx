@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * P3 Edge case tests:
  * - Empty all four quadrants (drag only card out of each) → empty-state hint
@@ -43,7 +44,7 @@ function setupOneCardPerQuadrant() {
     q3: [{ id: "e3", title: { en: "Card Q3", zh: "Q3卡片" } }],
     q4: [{ id: "e4", title: { en: "Card Q4", zh: "Q4卡片" } }],
   };
-  localStorage.setItem(MATRIX_STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(accountScope.physicalKey(MATRIX_STORAGE_KEY), JSON.stringify(state));
 }
 
 describe("MatrixModule edge cases", () => {
@@ -123,7 +124,7 @@ describe("MatrixModule edge cases", () => {
       q3: makeCards("q3c", 25),
       q4: makeCards("q4c", 25),
     };
-    localStorage.setItem(MATRIX_STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(accountScope.physicalKey(MATRIX_STORAGE_KEY), JSON.stringify(state));
 
     render(
       <Wrapper>

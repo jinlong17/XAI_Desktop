@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 
@@ -43,7 +44,7 @@ describe("WorldClocks", () => {
     const { container } = render(<WorldClocks lang="en" now={MAY_22_2026} />);
     fireEvent.click(container.querySelector("[data-tz-add]")!);
     fireEvent.click(container.querySelector("[data-tz-add-id='paris']")!);
-    expect(localStorage.getItem("xai_zones")).toContain("paris");
+    expect(localStorage.getItem(accountScope.physicalKey("xai_zones"))).toContain("paris");
     // Picker closes after selection
     expect(container.querySelector(".tz-picker")).toBeNull();
   });
@@ -63,7 +64,7 @@ describe("WorldClocks", () => {
 
   it("AC-WORLDCLOCKS-7: removing the last zone is prevented", () => {
     // Pre-populate with single zone
-    localStorage.setItem("xai_zones", JSON.stringify(["shanghai"]));
+    localStorage.setItem(accountScope.physicalKey("xai_zones"), JSON.stringify(["shanghai"]));
     const { container } = render(<WorldClocks lang="en" now={MAY_22_2026} />);
     expect(container.querySelectorAll(".tz-row-list")).toHaveLength(1);
     fireEvent.click(container.querySelector("[data-tz-remove='shanghai']")!);
@@ -96,7 +97,7 @@ describe("WorldClocks", () => {
   });
 
   it("filters unknown zone ids from storage on render", () => {
-    localStorage.setItem("xai_zones", JSON.stringify(["shanghai", "atlantis", "london"]));
+    localStorage.setItem(accountScope.physicalKey("xai_zones"), JSON.stringify(["shanghai", "atlantis", "london"]));
     const { container } = render(<WorldClocks lang="en" now={MAY_22_2026} />);
     const ids = Array.from(container.querySelectorAll(".tz-row-list")).map((r) =>
       r.getAttribute("data-tz-id"),

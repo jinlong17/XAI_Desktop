@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * useWeather hook tests — AC-WHOOK-1..4
  *
@@ -39,7 +40,7 @@ describe("AC-WHOOK-1: set(draft) persists to xai_dashboard_weather; weather refl
     act(() => {
       result.current.set({ city: "Shanghai", temp: 30, condition: "cloudy" });
     });
-    const raw = localStorage.getItem("xai_dashboard_weather");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_weather"));
     expect(raw).not.toBeNull();
     const stored = JSON.parse(raw!);
     expect(stored.city).toBe("Shanghai");
@@ -76,7 +77,7 @@ describe("AC-WHOOK-2: clear() persists null; weather becomes null", () => {
       result.current.clear();
     });
     expect(result.current.weather).toBeNull();
-    const raw = localStorage.getItem("xai_dashboard_weather");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_dashboard_weather"));
     // After clear, stored value should be null (JSON.stringify(null) = "null")
     expect(raw === null || raw === "null").toBe(true);
   });

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-PERSIST-1..6: Persistence correctness tests.
  */
@@ -39,7 +40,7 @@ describe("HabitsModule persistence", () => {
     render(<Wrapper><HabitsModule lang="en" /></Wrapper>);
     const cell = document.querySelector(".hcell.today")!;
     await act(async () => { fireEvent.click(cell); });
-    const raw = localStorage.getItem(HABITS_STORAGE_KEY);
+    const raw = localStorage.getItem(accountScope.physicalKey(HABITS_STORAGE_KEY));
     expect(raw).toBeTruthy();
     const state = JSON.parse(raw!) as HabitsState;
     const habitId = state.habits[0]?.id ?? "";
@@ -66,7 +67,7 @@ describe("HabitsModule persistence", () => {
   });
 
   it("AC-PERSIST-4: corrupted JSON in localStorage falls back gracefully", () => {
-    localStorage.setItem(HABITS_STORAGE_KEY, "not-json");
+    localStorage.setItem(accountScope.physicalKey(HABITS_STORAGE_KEY), "not-json");
     expect(() => {
       render(<Wrapper><HabitsModule lang="en" /></Wrapper>);
     }).not.toThrow();
@@ -77,7 +78,7 @@ describe("HabitsModule persistence", () => {
 
   it("AC-PERSIST-5: schemaVersion mismatch falls back to default + seed", () => {
     localStorage.setItem(
-      HABITS_STORAGE_KEY,
+      accountScope.physicalKey(HABITS_STORAGE_KEY),
       JSON.stringify({ schemaVersion: 99, habits: [], checkIns: {}, diaries: {} })
     );
     render(<Wrapper><HabitsModule lang="en" /></Wrapper>);
@@ -97,7 +98,7 @@ describe("HabitsModule persistence", () => {
     };
     await act(async () => {
       const event = new StorageEvent("storage", {
-        key: HABITS_STORAGE_KEY,
+        key: accountScope.physicalKey(HABITS_STORAGE_KEY),
         newValue: JSON.stringify(newState),
         storageArea: localStorage,
       });

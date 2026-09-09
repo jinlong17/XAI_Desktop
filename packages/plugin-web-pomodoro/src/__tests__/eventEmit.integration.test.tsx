@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * EE1..EE5 — web:pomodoro:session-finished event emission integration tests.
  * test.md §2
@@ -60,7 +61,7 @@ describe("eventEmit integration", () => {
     act(() => { vi.advanceTimersByTime(3000); });
     act(() => { fireEvent.click(screen.getByTestId("end-btn")); });
 
-    const raw = localStorage.getItem("xai_pomodoro_sessions");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_pomodoro_sessions"));
     if (raw && events.length > 0) {
       const sessions = JSON.parse(raw);
       const session = sessions[0];

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * BoardModule integration tests (BM1..BM8)
  *
@@ -146,7 +147,7 @@ describe("BoardModule integration", () => {
     // Pre-seed an orphan entry in localStorage
     const orphanKey = "deleted-board-id-xyz";
     localStorage.setItem(
-      "xai_board_view_by_id",
+      accountScope.physicalKey("xai_board_view_by_id"),
       JSON.stringify({ [orphanKey]: "table" }),
     );
     // The active board id will be different (from default seed)

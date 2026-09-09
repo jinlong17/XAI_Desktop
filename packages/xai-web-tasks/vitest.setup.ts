@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { beforeEach as beforeAccountTest } from "vitest";
 import { vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
@@ -30,3 +32,6 @@ afterEach(() => {
   localStorage.clear();
   cleanup();
 });
+
+// Explicit authenticated context; raw Storage remains unmodified.
+beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });

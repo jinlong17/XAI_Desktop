@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * T-MWIRE-1..2, T-MCR-1..3, T-MNOEMIT-1 — MatrixModule card create tests (EP2).
  *
@@ -149,7 +150,7 @@ describe("MatrixModule card create", () => {
     await submitComposer("Persisted card test");
 
     // Read localStorage
-    const raw = localStorage.getItem("xai_matrix_state");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_matrix_state"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!) as { q1: Array<{ title: { en: string } }> };
     const q1Cards = parsed.q1;
@@ -184,7 +185,7 @@ describe("MatrixModule card create", () => {
     await submitComposer("Refresh-survival card");
 
     // Verify card is in localStorage before unmount
-    const rawBefore = localStorage.getItem("xai_matrix_state");
+    const rawBefore = localStorage.getItem(accountScope.physicalKey("xai_matrix_state"));
     expect(rawBefore).toBeTruthy();
     const parsedBefore = JSON.parse(rawBefore!) as { q1: Array<{ title: { en: string } }> };
     expect(parsedBefore.q1.some((c) => c.title.en === "Refresh-survival card")).toBe(true);

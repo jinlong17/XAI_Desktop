@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * persistence.test.tsx — T-PER-1..3 + T-CR-1..3 + T-PER-DONE-1..2 + T-FILT-COUNT
  *
@@ -44,7 +45,7 @@ describe("TasksModule persistence", () => {
     fireEvent.dragStart(firstCard, { dataTransfer });
     fireEvent.drop(nodateCol, { dataTransfer, preventDefault: () => {} });
 
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!) as unknown[];
     expect(Array.isArray(parsed)).toBe(true);
@@ -57,7 +58,7 @@ describe("TasksModule persistence", () => {
 
   // T-PER-3: pre-seeded bogus localStorage → falls back to seed + DEV warn
   it("T-PER-3: bogus localStorage falls back to seed + console.warn fired once", () => {
-    localStorage.setItem("xai_task_cols", "{bogus}");
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), "{bogus}");
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     render(<TasksModule lang="en" />);
@@ -114,7 +115,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     expect(cardTitles).toContain("My new task");
 
     // localStorage should have been updated with a valid array
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!) as unknown[];
     expect(Array.isArray(parsed)).toBe(true);
@@ -177,7 +178,7 @@ describe("TasksModule create flow + persistence (T-CR)", () => {
     act(() => { fireEvent.click(saveBtn); });
 
     // Verify it's in localStorage before unmount
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
 
     // Unmount the module (simulates navigation away)
@@ -220,7 +221,7 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
     expect(firstCard.classList.contains("is-completed")).toBe(true);
 
     // localStorage must now contain done:true for that card
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
     expect(Array.isArray(parsed)).toBe(true);
@@ -247,7 +248,7 @@ describe("TasksModule completion persistence (T-PER-DONE)", () => {
     });
 
     // Verify written to localStorage before unmount
-    const raw = localStorage.getItem("xai_task_cols");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(raw).not.toBeNull();
     const parsed = JSON.parse(raw!) as Array<{ id: string; tasks: Array<{ id: string; done?: boolean }> }>;
     const toggledCardId = parsed.find((c) => c.id === "overdue")!.tasks[0]!.id;
@@ -291,7 +292,7 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     render(<TasksModule lang="en" />);
 
     // Capture the localStorage state BEFORE applying filters (may be null on fresh render)
-    const snapshotBefore = localStorage.getItem("xai_task_cols");
+    const snapshotBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
 
     // Apply all 6 smart-list filters in sequence via the pure selector (no DOM interaction)
     const cols = JSON.parse(JSON.stringify(SEED_TASK_COLS)) as Parameters<typeof filterCardsByList>[0];
@@ -301,7 +302,7 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     }
 
     // localStorage must be byte-identical to before (the selector wrote nothing)
-    const snapshotAfter = localStorage.getItem("xai_task_cols");
+    const snapshotAfter = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(snapshotAfter).toBe(snapshotBefore);
   });
 
@@ -325,7 +326,7 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
     fireEvent.drop(nodateCol, { dataTransfer, preventDefault: () => {} });
 
     // Capture localStorage after the DnD write
-    const rawAfterDnd = localStorage.getItem("xai_task_cols");
+    const rawAfterDnd = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     expect(rawAfterDnd).not.toBeNull();
 
     // Apply all filters — localStorage must stay identical
@@ -334,6 +335,6 @@ describe("filterCardsByList — T-FILT-COUNT storage byte-identical (FP2)", () =
       filterCardsByList(colsForFilter, list);
     }
 
-    expect(localStorage.getItem("xai_task_cols")).toBe(rawAfterDnd);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(rawAfterDnd);
   });
 });

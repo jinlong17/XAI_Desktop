@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-EVENT-1..7: web:habits:checkin-recorded event bus tests.
  */
@@ -76,7 +77,7 @@ describe("HabitsModule event bus", () => {
 
     await act(async () => {
       window.dispatchEvent(new StorageEvent("storage", {
-        key: "xai_habits_state",
+        key: accountScope.physicalKey("xai_habits_state"),
         newValue: JSON.stringify({ schemaVersion: 1, habits: [], checkIns: {}, diaries: {} }),
         storageArea: localStorage,
       }));
@@ -126,7 +127,7 @@ describe("HabitsModule event bus", () => {
     unsub();
 
     // Get the stored state to find the first habit id
-    const raw = localStorage.getItem("xai_habits_state")!;
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_habits_state"))!;
     const state = JSON.parse(raw) as { habits: Array<{ id: string }> };
     expect(habitIdReceived).toBe(state.habits[0]?.id);
   });

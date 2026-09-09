@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { beforeEach as beforeAccountTest } from "vitest";
 /**
  * Vitest setup — @repo/plugin-web-dashboard-widgets.
  *
@@ -51,3 +53,6 @@ afterEach(() => {
     /* jsdom edge: nothing to do */
   }
 });
+
+// Explicit authenticated context; raw Storage remains unmodified.
+beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });

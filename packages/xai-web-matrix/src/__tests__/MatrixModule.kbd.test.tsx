@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-KBD-1..6: Keyboard a11y fallback tests.
  */
@@ -151,7 +152,7 @@ describe("MatrixModule keyboard a11y", () => {
     // Pre-populate Q1 via localStorage
     const { MATRIX_STORAGE_KEY } = await import("../constants.js");
     localStorage.setItem(
-      MATRIX_STORAGE_KEY,
+      accountScope.physicalKey(MATRIX_STORAGE_KEY),
       JSON.stringify({
         schemaVersion: 1,
         q1: [{ id: "kbd-test-card", title: { en: "Test", zh: "测试" } }],

@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * TasksModule.test.tsx — T-MOD-1..T-MOD-6 + T-COL-1 + T-EMPTY-1..2
  *
@@ -227,7 +228,7 @@ describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
         { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
       ]
     ));
-    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(emptyCols));
 
     render(<TasksModule lang="en" />);
 
@@ -262,7 +263,7 @@ describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
         { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
       ]
     ));
-    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(emptyCols));
 
     render(<TasksModule lang="en" />);
 
@@ -290,7 +291,7 @@ describe("TasksModule — T-EMPTY-1 board-level empty state EN (D-QT)", () => {
         { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
       ]
     ));
-    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(emptyCols));
 
     render(<TasksModule lang="en" />);
 
@@ -313,7 +314,7 @@ describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
         { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
       ]
     ));
-    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(emptyCols));
 
     render(<TasksModule lang="zh" />);
 
@@ -340,7 +341,7 @@ describe("TasksModule — T-EMPTY-2 board-level empty state ZH (D-QT)", () => {
         { id: "nodate",  key: "no_date",     count: 0, action: "add",      tasks: [] },
       ]
     ));
-    localStorage.setItem("xai_task_cols", JSON.stringify(emptyCols));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(emptyCols));
 
     render(<TasksModule lang="zh" />);
 

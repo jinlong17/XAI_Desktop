@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * useUserCalEvents — React hook bridging EventStore + usePref.
  * 8 cases including AC-PERSIST-CREATE-4 (cross-tab storage event).
@@ -30,7 +31,7 @@ describe("useUserCalEvents — CRUD", () => {
     expect(result.current.list).toHaveLength(1);
     expect(result.current.list[0]?.title).toBe("First");
     // Persistence: read raw localStorage value.
-    const raw = localStorage.getItem("xai_calendar_events");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_calendar_events"));
     expect(raw).toBeTruthy();
     expect(JSON.parse(raw!)).toHaveProperty(result.current.list[0]!.id);
   });
@@ -135,10 +136,10 @@ describe("useUserCalEvents — cross-tab sync (AC-PERSIST-CREATE-4)", () => {
       },
     };
     act(() => {
-      localStorage.setItem("xai_calendar_events", JSON.stringify(externalValue));
+      localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(externalValue));
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: "xai_calendar_events",
+          key: accountScope.physicalKey("xai_calendar_events"),
           newValue: JSON.stringify(externalValue),
           oldValue: null,
           storageArea: localStorage,

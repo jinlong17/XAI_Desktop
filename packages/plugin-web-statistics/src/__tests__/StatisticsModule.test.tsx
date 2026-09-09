@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { setPref } from "@repo/plugin-web-storage";
@@ -135,10 +136,10 @@ describe("StatisticsModule", () => {
     act(() => {
       setPref("xai_task_cols", { overdue: { tasks: [{ done: true }] } } as never);
     });
-    const stateBefore = localStorage.getItem("xai_task_cols");
+    const stateBefore = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
     render(<StatisticsModule lang="en" />);
     // Storage value must be byte-identical (not mutated by Statistics)
-    expect(localStorage.getItem("xai_task_cols")).toBe(stateBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))).toBe(stateBefore);
     void originalStorage;
   });
 

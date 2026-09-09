@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
@@ -10,7 +11,7 @@ import { isTaskColsArray } from "../internal/validate.js";
 import { taskCardFromBoardLink } from "../taskLink.js";
 import type { TaskCol } from "../types.js";
 const empty = (): TaskCol[] => SEED_TASK_COLS.map(c => ({ ...c, tasks: [], completed: [], count: 0 }));
-const stored = (): TaskCol[] => JSON.parse(localStorage.getItem("xai_task_cols")!);
+const stored = (): TaskCol[] => JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))!);
 
 describe("REL-01 dueDate lifecycle", () => {
   it("creates, patches, moves and roundtrips without losing source or legacy metadata", () => {
@@ -51,7 +52,7 @@ describe("REL-01 dueDate lifecycle", () => {
 
   it("actual composer → detail edit → reload → local midnight refresh", () => {
     vi.setSystemTime(new Date(2026, 11, 31, 23, 59, 58));
-    localStorage.setItem("xai_task_cols", JSON.stringify(empty()));
+    localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(empty()));
     const view = render(<TasksModule lang="en" />);
     fireEvent.click(screen.getByRole("button", { name: "New task" }));
     const dialog = document.querySelector("dialog.task-composer")!;

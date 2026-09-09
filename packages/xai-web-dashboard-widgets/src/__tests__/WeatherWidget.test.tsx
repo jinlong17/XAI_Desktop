@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * WeatherWidget tests — AC-WEATHER-REAL-1..8
  *
@@ -80,7 +81,7 @@ describe("AC-WEATHER-REAL-3: seeded UserWeather → renders temp + city + condit
       condition: "cloudy",
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
 
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelector(".ww-temp")?.textContent).toBe("30°");
@@ -106,7 +107,7 @@ describe("AC-WEATHER-REAL-4: each of the 3 conditions renders its mapped icon", 
         condition,
         updatedAt: "2026-05-29T12:00:00.000Z",
       };
-      localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+      localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
       const { container } = render(<WeatherWidget lang="en" />);
       expect(container.querySelector(`[data-icon="${iconName}"]`)).not.toBeNull();
       expect(container.textContent).toContain(label);
@@ -124,7 +125,7 @@ describe("AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows value
       lo: 18,
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="en" />);
     const hiLo = container.querySelector(".ww-hilo");
     expect(hiLo).not.toBeNull();
@@ -139,7 +140,7 @@ describe("AC-WEATHER-REAL-5: optional hi/lo — present → .ww-hilo shows value
       condition: "rainy",
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelector(".ww-hilo")).toBeNull();
   });
@@ -181,7 +182,7 @@ describe("AC-WEATHER-REAL-7: forecast renders only when live provider data inclu
       condition: "sunny",
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelectorAll(".wwf-day")).toHaveLength(0);
   });
@@ -201,7 +202,7 @@ describe("AC-WEATHER-REAL-7: forecast renders only when live provider data inclu
         { date: "2026-06-02", condition: "rainy", hi: 29, lo: 24 },
       ],
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.querySelectorAll(".wwf-day")).toHaveLength(2);
     expect(container.textContent).toContain(STR_WEATHER.source_open_meteo.en);
@@ -218,7 +219,7 @@ describe("AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior", 
       timezone: "Asia/Shanghai",
       updatedAt: "2026-06-01T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const fetchWeather = vi.fn(async () => ({
       city: "Shanghai",
       provider: "open-meteo" as const,
@@ -241,14 +242,14 @@ describe("AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior", 
     expect(fetchWeather).toHaveBeenCalledOnce();
     expect(container.textContent).toContain(STR_WEATHER.source_open_meteo.en);
     expect(container.textContent).toContain(`${STR_WEATHER.humidity.en} 74%`);
-    const stored = JSON.parse(localStorage.getItem("xai_dashboard_weather")!);
+    const stored = JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_dashboard_weather"))!);
     expect(stored.fetchedAt).toBeTruthy();
     expect(stored.temp).toBe(28);
   });
 
   it("fresh Open-Meteo cache skips network refresh", () => {
     localStorage.setItem(
-      "xai_dashboard_weather",
+      accountScope.physicalKey("xai_dashboard_weather"),
       JSON.stringify({
         city: "Shanghai",
         provider: "open-meteo",
@@ -268,7 +269,7 @@ describe("AC-WEATHER-REAL-8: Open-Meteo refresh, cache, and fallback behavior", 
 
   it("failed live refresh keeps saved fallback visible and opens editor from the warning", async () => {
     localStorage.setItem(
-      "xai_dashboard_weather",
+      accountScope.physicalKey("xai_dashboard_weather"),
       JSON.stringify({
         city: "Shanghai",
         provider: "open-meteo",
@@ -310,7 +311,7 @@ describe("AC-WEATHER-REAL-9: bilingual — empty label + condition labels render
       condition: "sunny",
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="en" />);
     expect(container.textContent).toContain(STR_WEATHER.cond_sunny.en);
   });
@@ -322,7 +323,7 @@ describe("AC-WEATHER-REAL-9: bilingual — empty label + condition labels render
       condition: "cloudy",
       updatedAt: "2026-05-29T12:00:00.000Z",
     };
-    localStorage.setItem("xai_dashboard_weather", JSON.stringify(seeded));
+    localStorage.setItem(accountScope.physicalKey("xai_dashboard_weather"), JSON.stringify(seeded));
     const { container } = render(<WeatherWidget lang="zh" />);
     expect(container.textContent).toContain(STR_WEATHER.cond_cloudy.zh);
   });

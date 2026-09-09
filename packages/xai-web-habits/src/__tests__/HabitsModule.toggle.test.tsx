@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-TOGGLE-1..5 + AC-STAT-7: Toggle interaction and stat card live recalc.
  */
@@ -32,7 +33,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 function getStoredState(): HabitsState | null {
-  const raw = localStorage.getItem(HABITS_STORAGE_KEY);
+  const raw = localStorage.getItem(accountScope.physicalKey(HABITS_STORAGE_KEY));
   if (!raw) return null;
   return JSON.parse(raw) as HabitsState;
 }

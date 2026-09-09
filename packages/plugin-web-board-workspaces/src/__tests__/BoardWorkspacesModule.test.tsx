@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * BWM1..BWM18 + BWM-EXT-1..6 — top-level orchestrator integration tests.
  * Gap-closure row #6 additions: BWM-EXT-1..6 (Filter + Share)
@@ -37,13 +38,13 @@ function getStoredCard(cardId: string): BoardCardData {
 }
 
 function getStoredBoards(): Board[] {
-  const raw = localStorage.getItem("xai_boards_v2");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
   if (!raw) throw new Error("xai_boards_v2 not persisted");
   return JSON.parse(raw) as Board[];
 }
 
 function getStoredTaskCols(): TaskCol[] {
-  const raw = localStorage.getItem("xai_task_cols");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_task_cols"));
   if (!raw) throw new Error("xai_task_cols not persisted");
   return JSON.parse(raw) as TaskCol[];
 }
@@ -52,7 +53,7 @@ function getStoredBoardFilters(): Record<
   string,
   { labels?: string[]; members?: string[]; dueRange?: string }
 > {
-  const raw = localStorage.getItem("xai_board_filter_by_id");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_board_filter_by_id"));
   return raw ? JSON.parse(raw) as Record<
     string,
     { labels?: string[]; members?: string[]; dueRange?: string }
@@ -84,9 +85,9 @@ function seedAltView(view: "table" | "calendar" | "timeline") {
     ...seed[0]!.lists[0]!.cards[0]!,
     dueDate: isoDateFromOffset(0, today),
   };
-  localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-  localStorage.setItem("xai_active_board", "b-default");
-  localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": view }));
+  localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+  localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+  localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": view }));
 }
 
 describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
@@ -108,7 +109,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_boards_v2");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -148,8 +149,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM6: clicking another board card in switcher sets active + closes modal", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("board-title-btn"));
     fireEvent.click(screen.getByTestId("bs-card-b-pm"));
@@ -159,8 +160,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM7: deleting a board via dialog confirm removes it (B-12 new confirmation flow)", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("board-title-btn"));
     // Click trash on a non-active board (b-pm) → triggers BoardDeleteConfirmDialog
@@ -180,7 +181,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_board_panels");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_panels"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -196,7 +197,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       await Promise.resolve();
     });
     // Invariant kept board: true; panel still rendered
-    const raw = localStorage.getItem("xai_board_panels");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_panels"));
     const parsed = JSON.parse(raw!);
     expect(parsed[0].board).toBe(true);
   });
@@ -215,8 +216,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM12: PM template board + overview toggle mounts StatusOverviewBanner", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-pm");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-pm");
     render(<BoardWorkspacesModule lang="en" />);
     expect(screen.queryByTestId("status-overview")).not.toBeInTheDocument();
     fireEvent.click(screen.getByTestId("overview-toggle"));
@@ -225,8 +226,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
 
   it("BWM13: non-PM board → overview toggle is disabled", () => {
     const seed = makeDefaultBoards();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default"); // kanban
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default"); // kanban
     render(<BoardWorkspacesModule lang="en" />);
     const btn = screen.getByTestId("overview-toggle") as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
@@ -241,7 +242,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    const raw = localStorage.getItem("xai_board_inbox");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_board_inbox"));
     expect(raw).toBeTruthy();
     const parsed = JSON.parse(raw!);
     expect(Array.isArray(parsed)).toBe(true);
@@ -249,13 +250,13 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM15: malformed xai_board_panels → renders seed without crash", () => {
-    localStorage.setItem("xai_board_panels", '"garbage"');
+    localStorage.setItem(accountScope.physicalKey("xai_board_panels"), '"garbage"');
     expect(() => render(<BoardWorkspacesModule lang="en" />)).not.toThrow();
     expect(screen.getByTestId("board-panels").className).toContain("board-panels-single");
   });
 
   it("BWM16: malformed xai_board_inbox → renders seed inbox when inbox opened", () => {
-    localStorage.setItem("xai_board_inbox", '"garbage"');
+    localStorage.setItem(accountScope.physicalKey("xai_board_inbox"), '"garbage"');
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getByTestId("bv-inbox"));
     // Seed inbox has the 3 messages — confirm en first one
@@ -272,7 +273,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM18: 0 boards forced → defensive seed populates on mount", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify([]));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify([]));
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
       await Promise.resolve();
@@ -374,7 +375,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => { await Promise.resolve(); });
 
-    const boardsBefore = localStorage.getItem("xai_boards_v2");
+    const boardsBefore = localStorage.getItem(accountScope.physicalKey("xai_boards_v2"));
     fireEvent.click(screen.getByTestId("filter-btn"));
     fireEvent.click(screen.getByTestId("fp-label-l1"));
     fireEvent.click(screen.getByTestId("fp-member-u1"));
@@ -387,11 +388,11 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       priorities: [],
       dueRange: "today",
     });
-    expect(localStorage.getItem("xai_boards_v2")).toBe(boardsBefore);
+    expect(localStorage.getItem(accountScope.physicalKey("xai_boards_v2"))).toBe(boardsBefore);
   });
 
   it("BWM-SAVED-FILTER-1: remount restores the saved filter for the active board", async () => {
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
     }));
 
@@ -408,9 +409,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-SAVED-FILTER-2: board switch restores each board's own saved filter", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: [], dueRange: "today" },
       "b-pm": { labels: ["pm-forms"], members: ["u2"], dueRange: "overdue" },
     }));
@@ -439,7 +440,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-SAVED-FILTER-3: Clear persists the active board reset", async () => {
-    localStorage.setItem("xai_board_filter_by_id", JSON.stringify({
+    localStorage.setItem(accountScope.physicalKey("xai_board_filter_by_id"), JSON.stringify({
       "b-default": { labels: ["l1"], members: ["u1"], dueRange: "today" },
     }));
 
@@ -564,7 +565,7 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   });
 
   it("BWM-DETAIL-4: invalid attachment URL is rejected without mutating the card", async () => {
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
     render(<BoardWorkspacesModule lang="en" />);
 
     fireEvent.click(screen.getAllByTestId("board-card")[1]!);
@@ -660,8 +661,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         },
       ],
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -751,8 +752,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       dueLate: true,
       dueDate: undefined,
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -800,8 +801,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       ],
       checklist: { done: 1, total: 2 },
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("board-card")[0]!);
@@ -916,8 +917,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM-LIST-2: add-card targets listId after archived gaps, not visible index", async () => {
     const seed = makeDefaultBoards() as Board[];
     seed[0]!.lists[1] = { ...seed[0]!.lists[1]!, archived: true };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     fireEvent.click(screen.getAllByTestId("add-card-btn")[1]!);
@@ -979,9 +980,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
   it("BWM-LIST-4: archived lists are hidden from alternate table view", () => {
     const seed = makeDefaultBoards() as Board[];
     seed[0]!.lists[0] = { ...seed[0]!.lists[0]!, archived: true };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": "table" }));
 
     render(<BoardWorkspacesModule lang="en" />);
 
@@ -1086,9 +1087,9 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
       ...seed[0]!.lists[0]!.cards[0]!,
       archived: true,
     };
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
-    localStorage.setItem("xai_board_view_by_id", JSON.stringify({ "b-default": "table" }));
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_board_view_by_id"), JSON.stringify({ "b-default": "table" }));
 
     render(<BoardWorkspacesModule lang="en" />);
 
@@ -1133,8 +1134,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         ],
       },
     ];
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
@@ -1169,8 +1170,8 @@ describe("BoardWorkspacesModule (BWM1..BWM18)", () => {
         ],
       },
     ];
-    localStorage.setItem("xai_boards_v2", JSON.stringify(seed));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(seed));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
 
     render(<BoardWorkspacesModule lang="en" />);
     await act(async () => {
@@ -1204,8 +1205,8 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
   });
 
   it("BW-Del-Board-1: click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with mode='board'", () => {
@@ -1263,7 +1264,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
   it("BW-Del-Card-1: click × in InboxPanel → BoardDeleteConfirmDialog mounts with mode='card'", () => {
     // Seed an inbox card
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Test idea", zh: "测试想法" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1281,7 +1282,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-2: Cancel → dialog unmounts + inbox card still present", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Keep me", zh: "保留" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1297,7 +1298,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-3: Confirm → dialog unmounts + inbox card removed", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([{ id: "ix-test", text: { en: "Delete me", zh: "删掉" } }]),
     );
     render(<BoardWorkspacesModule lang="en" />);
@@ -1312,7 +1313,7 @@ describe("BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-2
 
   it("BW-Del-Card-4: Cancel for card A, then open dialog for card B → state is per-pending-delete (no stale label)", () => {
     localStorage.setItem(
-      "xai_board_inbox",
+      accountScope.physicalKey("xai_board_inbox"),
       JSON.stringify([
         { id: "ix-a", text: { en: "Card A", zh: "卡片A" } },
         { id: "ix-b", text: { en: "Card B", zh: "卡片B" } },
@@ -1510,8 +1511,8 @@ describe("BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5)", () => {
     localStorage.clear();
     vi.clearAllMocks();
     // Seed boards for a deterministic active board
-    localStorage.setItem("xai_boards_v2", JSON.stringify(makeDefaultBoards()));
-    localStorage.setItem("xai_active_board", "b-default");
+    localStorage.setItem(accountScope.physicalKey("xai_boards_v2"), JSON.stringify(makeDefaultBoards()));
+    localStorage.setItem(accountScope.physicalKey("xai_active_board"), "b-default");
   });
 
   it("BW-Open-0: CardDetailDialog is not in DOM on initial render (conditional mount)", () => {
@@ -1719,7 +1720,7 @@ describe("BWM-SET — board settings + priority filter", () => {
 // ---- BWM-WS — Wave 3: workspace CRUD ----------------------------------------
 
 function getStoredWorkspaces(): { id: string; name: { en: string; zh: string }; color: string }[] {
-  const raw = localStorage.getItem("xai_board_workspaces");
+  const raw = localStorage.getItem(accountScope.physicalKey("xai_board_workspaces"));
   if (!raw) throw new Error("xai_board_workspaces not persisted");
   return JSON.parse(raw) as { id: string; name: { en: string; zh: string }; color: string }[];
 }

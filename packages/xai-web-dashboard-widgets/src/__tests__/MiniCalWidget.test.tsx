@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * MiniCalWidget — real-data tests (§F rewrite).
  *
@@ -16,7 +17,7 @@ import { MiniCalWidget } from "../widgets/MiniCalWidget.js";
 const MAY_22_2026 = new Date(2026, 4, 22, 10, 30, 0);
 
 function seedCalEvents(store: unknown) {
-  localStorage.setItem("xai_calendar_events", JSON.stringify(store));
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(store));
 }
 
 function makeEvent(id: string, startISO: string, colorPreset = "mint") {

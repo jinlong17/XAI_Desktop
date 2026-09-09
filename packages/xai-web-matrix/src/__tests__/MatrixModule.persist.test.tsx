@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * AC-PERSIST-1..6: Persistence + reload simulation tests.
  */
@@ -58,7 +59,7 @@ describe("MatrixModule persistence", () => {
 
     const cardId = await dragCardToQ1();
 
-    const raw = localStorage.getItem(MATRIX_STORAGE_KEY);
+    const raw = localStorage.getItem(accountScope.physicalKey(MATRIX_STORAGE_KEY));
     expect(raw).toBeTruthy();
     const stored = JSON.parse(raw!) as MatrixState;
     expect(stored.q1.some((c) => c.id === cardId)).toBe(true);
@@ -111,7 +112,7 @@ describe("MatrixModule persistence", () => {
   });
 
   it("AC-PERSIST-4: corrupted JSON falls back to default (no exception)", async () => {
-    localStorage.setItem(MATRIX_STORAGE_KEY, "not-valid-json{{{");
+    localStorage.setItem(accountScope.physicalKey(MATRIX_STORAGE_KEY), "not-valid-json{{{");
     expect(() => {
       render(
         <Wrapper>
@@ -127,7 +128,7 @@ describe("MatrixModule persistence", () => {
 
   it("AC-PERSIST-5: wrong schemaVersion falls back to default", async () => {
     localStorage.setItem(
-      MATRIX_STORAGE_KEY,
+      accountScope.physicalKey(MATRIX_STORAGE_KEY),
       JSON.stringify({ schemaVersion: 99, q1: [], q2: [], q3: [], q4: [] })
     );
     render(
@@ -144,7 +145,7 @@ describe("MatrixModule persistence", () => {
   it("AC-PERSIST-6: cross-tab storage event updates state", async () => {
     // Start with empty state
     localStorage.setItem(
-      MATRIX_STORAGE_KEY,
+      accountScope.physicalKey(MATRIX_STORAGE_KEY),
       JSON.stringify({ schemaVersion: 1, q1: [], q2: [], q3: [], q4: [] })
     );
     render(
@@ -167,7 +168,7 @@ describe("MatrixModule persistence", () => {
     await act(async () => {
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: MATRIX_STORAGE_KEY,
+          key: accountScope.physicalKey(MATRIX_STORAGE_KEY),
           newValue,
           storageArea: localStorage,
         })

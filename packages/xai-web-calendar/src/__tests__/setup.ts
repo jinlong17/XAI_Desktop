@@ -1,3 +1,5 @@
+import { accountScope } from "@repo/plugin-web-storage";
+import { beforeEach as beforeAccountTest } from "vitest";
 /**
  * Vitest global setup for @repo/plugin-web-calendar tests.
  *
@@ -34,3 +36,6 @@ beforeEach(() => {
   localStorage.clear();
   vi.clearAllMocks();
 });
+
+// Explicit authenticated context; raw Storage remains unmodified.
+beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });

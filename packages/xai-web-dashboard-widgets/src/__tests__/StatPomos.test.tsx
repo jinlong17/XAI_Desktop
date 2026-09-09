@@ -1,3 +1,4 @@
+import { accountScope } from "@repo/plugin-web-storage";
 /**
  * StatPomos — real-data tests (§F rewrite).
  *
@@ -17,7 +18,7 @@ import { render, screen } from "@testing-library/react";
 import { StatPomos } from "../widgets/StatPomos.js";
 
 function seedPomoSessions(store: unknown) {
-  localStorage.setItem("xai_pomodoro_sessions", JSON.stringify(store));
+  localStorage.setItem(accountScope.physicalKey("xai_pomodoro_sessions"), JSON.stringify(store));
 }
 
 beforeEach(() => {
