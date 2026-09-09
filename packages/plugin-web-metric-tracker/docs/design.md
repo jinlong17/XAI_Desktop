@@ -47,3 +47,6 @@ The edit draft retains original measuredAt plus its initial date/time inputs. Mi
 ## REL-05 metric save recovery
 
 Source diagnosis: the repository setter previously propagated storage exceptions without user-visible recovery; record save then reset/closed its editor if the setter returned normally. The new failure panel is rendered inside the active record dialog or in the module for profile/delete operations. It preserves submitted snapshot and latest editor inputs, supports retry/export/discard, and closes a record editor only on successful commit. Export scope text states that the file contains existing records plus unsaved edits and is not a direct-import format. Drafts remain in this mounted page; reload persistence remains REL-09.
+
+
+Independent review reproduced stale profile retry and a new operation overwriting the failed snapshot. The module now tracks record/profile/delete ownership of the pending operation. Retry reads the latest matching editor, unrelated entry points are disabled, and closing a failed record editor only hides it: the latest draft remains available for export and retry. Explicit discard releases the operation.

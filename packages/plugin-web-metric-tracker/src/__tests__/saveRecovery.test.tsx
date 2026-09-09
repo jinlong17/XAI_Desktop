@@ -87,3 +87,26 @@ it("downloads the pending snapshot together with the latest edited record draft"
   expect(downloaded).toMatchObject({ kind: "metric-unsaved-draft", recordDraft: { weight: "82" } });
   expect(downloaded.snapshot.records[0]).toMatchObject({ value: 81 });
 });
+it("retries the latest profile draft and blocks unrelated record creation while unresolved", () => {
+  render(<MetricTrackerModule lang="en" />);
+  const target = screen.getByLabelText(/Target/);
+  fireEvent.change(target, { target: { value: "63" } });
+  const reject = blockWrite();
+  fireEvent.click(screen.getByRole("button", { name: "Save goal settings" }));
+  expect(screen.getByRole("button", { name: "Log" })).toBeDisabled();
+  fireEvent.change(target, { target: { value: "64" } });
+  reject.mockRestore();
+  fireEvent.click(screen.getByRole("button", { name: "Retry save" }));
+  expect(readMetricTrackerState().profile.targetWeightKg).toBe(64);
+  expect(screen.queryByRole("alert")).toBeNull();
+});
+it("preserves the original pending operation when a caller tries another mutation", () => {
+  const { result } = renderHook(() => useMetricTrackerState());
+  const reject = blockWrite();
+  act(() => { result.current[1](old => ({ ...old, profile: { ...old.profile, targetWeightKg: 63 } })); });
+  reject.mockRestore();
+  act(() => { expect(result.current[1](old => ({ ...old, profile: { ...old.profile, targetWeightKg: 64 } }))).toBe(false); });
+  expect(result.current[2].snapshot()?.profile.targetWeightKg).toBe(63);
+  act(() => { expect(result.current[2].retry()).toBe(true); });
+  expect(readMetricTrackerState().profile.targetWeightKg).toBe(63);
+});

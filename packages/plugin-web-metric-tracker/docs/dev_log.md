@@ -18,3 +18,6 @@ Executor: Codex parent bug-fix. Independent Chromium review found unchanged date
 ## REL-05 metric save recovery
 
 REL-05 Metrics bounded implementation: boolean commit result, pending snapshot, visible failure, retry/export/discard and editor close-after-success. No initial unreadable-storage recovery, process-restart draft persistence or cross-tab atomicity claimed. Independent review requested; whole REL-05 remains open.
+
+
+Independent review found additional stale-profile and cross-operation failure modes in the initial patch. Fixed with explicit pending-operation ownership and retained closed record drafts. Do not treat the first patch commit as independently accepted; use the follow-up and independent report.

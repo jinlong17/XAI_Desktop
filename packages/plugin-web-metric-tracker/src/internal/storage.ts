@@ -118,7 +118,7 @@ export interface MetricSaveRecovery {
   discard(): void;
   snapshot(): MetricTrackerState | null;
 }
-export function useMetricTrackerState(): readonly [MetricTrackerState, (next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => boolean, MetricSaveRecovery] {
+export function useMetricTrackerState(): readonly [MetricTrackerState, (next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState), replacePending?: boolean) => boolean, MetricSaveRecovery] {
   const scope = useRef(accountScope.capture()).current;
   const baseline = useRef<string | null>(null);
   const [state, setState] = useState<MetricTrackerState>(() => {
@@ -167,8 +167,9 @@ export function useMetricTrackerState(): readonly [MetricTrackerState, (next: Me
       return false;
     }
   }, [scope]);
-  const setPersisted = useCallback((next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState)) => {
+  const setPersisted = useCallback((next: MetricTrackerState | ((prev: MetricTrackerState) => MetricTrackerState), replacePending = false) => {
     if (!accountScope.isReady(scope)) { setFailure("account"); return false; }
+    if (pending.current && !replacePending) return false;
     return commit(typeof next === "function" ? next(stateRef.current) : next);
   }, [commit, scope]);
   const recovery: MetricSaveRecovery = {

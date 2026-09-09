@@ -44,3 +44,6 @@ REL-01 independent verification follow-up: editing weight/note/unit without chan
 ## REL-05 metric save recovery
 
 useMetricTrackerState preserves its first two tuple positions; the setter now returns boolean and a third MetricSaveRecovery member exposes failure/retry/discard/snapshot. Failed writes never publish the candidate as committed. A pending snapshot retains the raw baseline captured before mutation; retry refuses a changed baseline. Snapshot access and writes check captured account scope. This is an optimistic check, not a cross-tab atomic transaction.
+
+
+Follow-up: while a pending write exists, the setter rejects unrelated calls by default. Its optional replacePending flag is reserved for resubmitting the same editor operation. The original raw baseline remains fixed; replacing a draft does not bypass conflict detection.

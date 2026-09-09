@@ -126,6 +126,7 @@ function isValidPositiveNumber(value: string): boolean {
 export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   const [state, setState, recovery] = useMetricTrackerState();
   const [recoveryExportFailed, setRecoveryExportFailed] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"record" | "profile" | "delete" | null>(null);
   const [range, setRange] = useState<RangeId>("30d");
   const [previewRange, setPreviewRange] = useState<RangeId>("30d");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
@@ -174,22 +175,25 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   }
 
   function openNewDraft(): void {
+    if (recovery.failure) { if (pendingAction === "record") setEntryOpen(true); return; }
     resetDraft();
     setEntryOpen(true);
   }
 
   function openRecordDraft(record: WeightRecord): void {
+    if (recovery.failure) return;
     setDraft(draftFromRecord(record));
     setEntryOpen(true);
   }
 
   function closeEntry(): void {
     setEntryOpen(false);
-    resetDraft();
+    if (!recovery.failure) resetDraft();
   }
 
   function saveRecord(event?: FormEvent<HTMLFormElement>): void {
     event?.preventDefault();
+    if (recovery.failure && pendingAction !== "record") return;
     if (!isValidPositiveNumber(draft.weight)) return;
     const measuredAt = measuredAtFromDraft(draft);
     if (!measuredAt) return;
@@ -202,24 +206,33 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
       measuredAt,
       note: draft.note.trim(),
       createdAt: draft.createdAt,
-    }, nowIso));
+    }, nowIso), pendingAction === "record");
+    setPendingAction(saved ? null : "record");
     if (saved) { resetDraft(); setEntryOpen(false); }
   }
 
   function saveProfile(): void {
+    if (recovery.failure && pendingAction !== "profile") return;
     const next: WeightProfile = {
       heightCm: Number(profileDraft.heightCm) || state.profile.heightCm,
       targetWeightKg: Number(profileDraft.targetWeightKg) || state.profile.targetWeightKg,
       preferredUnit: profileDraft.preferredUnit,
     };
-    setState((prev) => updateWeightProfile(prev, next));
+    const saved = setState((prev) => updateWeightProfile(prev, next), pendingAction === "profile");
+    setPendingAction(saved ? null : "profile");
+  }
+
+  function removeRecord(id: string): void {
+    if (recovery.failure) return;
+    const saved = setState(prev => deleteWeightRecord(prev, id));
+    setPendingAction(saved ? null : "delete");
   }
 
   function exportPending(): void {
     let url: string | undefined;
     try {
       const snapshot = recovery.snapshot(); // Refuses exports from a stale account.
-      url = URL.createObjectURL(new Blob([JSON.stringify({ version: 1, kind: "metric-unsaved-draft", snapshot, recordDraft: entryOpen ? draft : null, profileDraft }, null, 2)], { type: "application/json" }));
+      url = URL.createObjectURL(new Blob([JSON.stringify({ version: 1, kind: "metric-unsaved-draft", snapshot, recordDraft: pendingAction === "record" ? draft : null, profileDraft }, null, 2)], { type: "application/json" }));
       const link = document.createElement("a"); link.href = url; link.download = "xai-metric-unsaved-draft.json";
       document.body.append(link); try { link.click(); } finally { link.remove(); }
       setRecoveryExportFailed(false);
@@ -229,9 +242,9 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
   const saveFailure = recovery.failure ? <section className="mt-save-failure" role="alert">
     <p>{recovery.failure === "account" ? t(lang, "账户已更改，请重新打开此页面。", "Account changed. Reopen this page.") : recovery.failure === "conflict" ? t(lang, "已有更新的数据，未覆盖。请导出草稿后重新打开页面。", "Newer data exists and was not overwritten. Export your draft, then reopen this page.") : t(lang, "保存未完成，草稿仍保留在此页面。请检查浏览器存储权限或空间后重试。", "Saving failed. Your draft remains on this page. Check browser storage access or space, then retry.")}</p>
     <p>{t(lang, "草稿文件包含现有指标记录及未保存修改，仅用于保留内容，暂不支持直接导入。", "The draft file includes existing metric records and unsaved edits. It preserves your content; direct import is not supported.")}</p>
-    <button type="button" onClick={() => { if (entryOpen) saveRecord(); else recovery.retry(); }}>{t(lang, "重试保存", "Retry save")}</button>
+    <button type="button" onClick={() => { if (pendingAction === "record") saveRecord(); else if (pendingAction === "profile") saveProfile(); else if (recovery.retry()) setPendingAction(null); }}>{t(lang, "重试保存", "Retry save")}</button>
     <button type="button" onClick={exportPending}>{t(lang, "导出未保存草稿", "Export unsaved draft")}</button>
-    <button type="button" onClick={() => { recovery.discard(); setRecoveryExportFailed(false); }}>{t(lang, "放弃待保存快照", "Discard pending snapshot")}</button>
+    <button type="button" onClick={() => { recovery.discard(); setPendingAction(null); setRecoveryExportFailed(false); }}>{t(lang, "放弃待保存快照", "Discard pending snapshot")}</button>
     {recoveryExportFailed && <p>{t(lang, "无法导出，请确认仍在原账户。", "Could not export. Check that the original account is still active.")}</p>}
   </section> : null;
 
@@ -269,7 +282,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
           <h1 className="mt-title"><Icon name="target" size={20} />{t(lang, "指标追踪", "Metric Tracker")}</h1>
           <p className="mt-subtitle">{t(lang, "记录长期关注的数字指标。第一版聚焦体重、BMI、目标进度和分享图片。", "Track long-term numeric metrics. V1 focuses on weight, BMI, goals, and share cards.")}</p>
         </div>
-        <button className="mt-primary" type="button" onClick={openNewDraft}>
+        <button className="mt-primary" type="button" disabled={!!recovery.failure && pendingAction !== "record"} onClick={openNewDraft}>
           <Icon name="plus" />{t(lang, "记一下", "Log")}
         </button>
       </header>
@@ -297,7 +310,7 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
             <div>
               <span>{t(lang, "目标体重", "Target")}</span>
               <strong>{formatWeight(state.profile.targetWeightKg, state.profile.preferredUnit)}<small>{state.profile.preferredUnit === "kg" ? "kg" : "斤"}</small></strong>
-              <button type="button" onClick={saveProfile} aria-label={t(lang, "保存目标设置", "Save goal settings")}><Icon name="edit" /></button>
+              <button type="button" disabled={!!recovery.failure && pendingAction !== "profile"} onClick={saveProfile} aria-label={t(lang, "保存目标设置", "Save goal settings")}><Icon name="edit" /></button>
             </div>
           </div>
           <div className="mt-progress">
@@ -377,8 +390,8 @@ export function MetricTrackerModule({ lang }: MetricTrackerModuleProps) {
                       <span className="mt-record-bmi">BMI {recordBmi?.toFixed(1) ?? "—"}</span>
                       <span className="mt-record-note">{record.note || t(lang, "未填写备注", "No note")}</span>
                       <div className="mt-row-actions">
-                        <button type="button" aria-label={t(lang, "编辑记录", "Edit record")} onClick={() => openRecordDraft(record)}><Icon name="edit" /></button>
-                        <button type="button" aria-label={t(lang, "删除记录", "Delete record")} onClick={() => setState((prev) => deleteWeightRecord(prev, record.id))}><Icon name="trash" /></button>
+                        <button type="button" disabled={!!recovery.failure} aria-label={t(lang, "编辑记录", "Edit record")} onClick={() => openRecordDraft(record)}><Icon name="edit" /></button>
+                        <button type="button" disabled={!!recovery.failure} aria-label={t(lang, "删除记录", "Delete record")} onClick={() => removeRecord(record.id)}><Icon name="trash" /></button>
                       </div>
                     </div>
                   );
