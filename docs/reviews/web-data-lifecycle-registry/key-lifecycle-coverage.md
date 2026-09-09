@@ -1,5 +1,7 @@
 # REL-04 — 114-key lifecycle coverage
 
+> Historical snapshot below (revision recorded in `key-lifecycle-coverage.json`), not the current key count. At `6887879`, the ownership map contains **116 keys: 40 account-local and 76 device-local**. New `xai_pomodoro_active` and `xai_meditation_active` are account-local. See [current snapshot](current-ownership-6887879.json) and [timer lifecycle verification](20260909-timer-lifecycle-check.md). The original 114-key table and its source line numbers are retained as historical evidence.
+
 Each existing inventory key matches the current runtime ownership map: 38 account-local, 76 device-local. `registered` means the old PREF_REGISTRY typed codec table, not lifecycle coverage: the three standalone repositories deliberately use their own codecs. Account-private dynamic `xai_pref_*` values are additionally enumerated at runtime.
 
 A = active generation raw export + all owned generations deletion + explicit validated legacy adoption. D = device-scoped, retained on account deletion and omitted from account export/migration by policy. Source line points to current runtime ownership; original owner/source metadata is preserved in JSON.
