@@ -1,0 +1,33 @@
+{
+  "requestedRef": "daff8ef",
+  "revision": "daff8ef2c69f5543f161f309c345b0e138808b35",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "checks": [
+    "tasks:create: native quota/retry/remount/conflict/owner business contract",
+    "tasks:update: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "tasks:delete: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "calendar:create: native quota/retry/remount/conflict/owner business contract",
+    "calendar:update: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "calendar:delete: native quota/retry/remount/conflict/owner business contract plus blank/missing id rejection",
+    "tasks:create: actual AI UI reports success only after persisted retry",
+    "tasks:update: actual AI UI reports success only after persisted retry",
+    "tasks:delete: actual AI UI reports success only after persisted retry",
+    "calendar:create: actual AI UI reports success only after persisted retry",
+    "calendar:update: actual AI UI reports success only after persisted retry",
+    "calendar:delete: actual AI UI reports success only after persisted retry",
+    "tasks:update: actual AI UI withholds model success for blank and missing ids",
+    "tasks:delete: actual AI UI withholds model success for blank and missing ids",
+    "calendar:update: actual AI UI withholds model success for blank and missing ids",
+    "calendar:delete: actual AI UI withholds model success for blank and missing ids",
+    "all six tools without subscribers: visible failure, retained confirmation, no model success",
+    "late wrong attempt ignored; matching retry attempt alone advances model",
+    "unfaulted normal control persists final-event deletion before model success"
+  ],
+  "observations": [
+    "JSON.stringify signature treats semantically identical object properties in a different insertion order as request-conflict; current tool registry emits stable order, but the shared helper is not canonical"
+  ],
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "syntheticOnly": true
+}
