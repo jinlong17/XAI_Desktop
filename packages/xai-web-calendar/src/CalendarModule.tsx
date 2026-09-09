@@ -157,6 +157,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
 
   const handleComposerSave = useCallback(
     async (event: UserCalEvent) => {
+      const operation = composer;
       if (composer.mode === "edit" && composer.editing) {
         if (JSON.stringify(getById(composer.editing.id)) !== JSON.stringify(composer.editing)) {
           throw new Error("Calendar event changed; reopen before saving");
@@ -171,7 +172,7 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
           tag: event.tag,
           notes: event.notes,
           reminder: event.reminder,
-        });
+        }, composer.editing);
         if (!saved) throw new Error("Calendar changes were not saved");
       } else {
         const saved = await create({
@@ -188,22 +189,23 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
         if (!saved) throw new Error("Calendar changes were not saved");
       }
       setActiveDate(event.startISO.slice(0, 10));
-      setComposer(COMPOSER_CLOSED);
+      setComposer(current => current === operation ? COMPOSER_CLOSED : current);
     },
     [composer, create, update, getById],
   );
 
   const handleComposerDelete = useCallback(
     async (id: string) => {
+      const operation = composer;
       if (JSON.stringify(getById(id)) !== JSON.stringify(composer.editing)) {
         throw new Error("Calendar event changed; reopen before deleting");
       }
-      if (!await remove(id)) throw new Error("Calendar changes were not saved");
+      if (!await remove(id, composer.editing ?? undefined)) throw new Error("Calendar changes were not saved");
       // composer.onDelete already calls onClose internally; we still snap
       // state back to ensure no edge case leaves the dialog open.
-      setComposer(COMPOSER_CLOSED);
+      setComposer(current => current === operation ? COMPOSER_CLOSED : current);
     },
-    [remove, getById, composer.editing],
+    [remove, getById, composer],
   );
 
   // Merge fixture + user events for the Month view.

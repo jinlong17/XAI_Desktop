@@ -22,6 +22,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { accountScope, mutateCanonicalDataset, usePref } from "@repo/plugin-web-storage";
 import type { UserCalEvent } from "./types.js";
+import { isCalendarEventStore } from "../aiCommandDomain.js";
 import {
   createEvent,
   updateEvent,
@@ -43,9 +44,10 @@ export interface UserCalEventsApi {
   update: (
     id: string,
     patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>,
+    expected?: UserCalEvent,
   ) => Promise<UserCalEvent | null>;
   /** Remove + persist; no-op when id missing. */
-  remove: (id: string) => Promise<boolean>;
+  remove: (id: string, expected?: UserCalEvent) => Promise<boolean>;
   /** Read by id. */
   getById: (id: string) => UserCalEvent | null;
 }
@@ -61,13 +63,7 @@ export function useUserCalEvents(): UserCalEventsApi {
   const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
   const events = eventsRaw as Record<string, UserCalEvent>;
   const [scope] = useState(() => accountScope.capture());
-  const valid = useCallback((value: unknown): value is Record<string, UserCalEvent> => {
-    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-    return Object.entries(value).every(([id, event]) => !!event && typeof event === "object"
-      && event.id === id && typeof event.title === "string" && typeof event.startISO === "string"
-      && typeof event.endISO === "string" && typeof event.createdAt === "string" && typeof event.updatedAt === "string"
-      && ["mint", "amber", "blue", "violet", "rose"].includes(event.colorPreset));
-  }, []);
+  const valid = useCallback(isCalendarEventStore, []);
   const commit = useCallback(async (mutate: (current: Record<string, UserCalEvent>) => { ok: true; data: Record<string, UserCalEvent> } | { ok: false; reason: "not-found" | "conflict" }) => {
     if (!accountScope.isReady(scope)) return null;
     const result = await mutateCanonicalDataset({ key: "xai_calendar_events", scope, validate: valid, initialize: () => ({}), mutate });
@@ -88,9 +84,10 @@ export function useUserCalEvents(): UserCalEventsApi {
   );
 
   const update = useCallback(
-    async (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => {
+    async (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>, expected?: UserCalEvent) => {
       let updated: UserCalEvent | null = null;
       const saved = await commit(current => {
+        if (expected && JSON.stringify(current[id]) !== JSON.stringify(expected)) return { ok: false, reason: "conflict" };
         const result = updateEvent(current, id, patch);
         updated = result.updated;
         return result.updated ? { ok: true, data: result.next } : { ok: false, reason: "not-found" };
@@ -101,8 +98,10 @@ export function useUserCalEvents(): UserCalEventsApi {
   );
 
   const remove = useCallback(
-    async (id: string) => {
-      const saved = await commit(current => current[id] ? { ok: true, data: deleteEvent(current, id) } : { ok: false, reason: "not-found" });
+    async (id: string, expected?: UserCalEvent) => {
+      const saved = await commit(current => !current[id] ? { ok: false, reason: "not-found" }
+        : expected && JSON.stringify(current[id]) !== JSON.stringify(expected) ? { ok: false, reason: "conflict" }
+          : { ok: true, data: deleteEvent(current, id) });
       return saved !== null;
     },
     [commit],

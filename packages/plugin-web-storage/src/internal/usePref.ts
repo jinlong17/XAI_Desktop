@@ -16,6 +16,7 @@ import { PREF_REGISTRY, type WebPrefKey, type WebPrefValue } from "./registry.js
 import { getPref, setPref, removePref, subscribeSameTab, readRawPref, decodeStoredPrefValue } from "./storage.js";
 import { accountScope } from "./accountScope.js";
 import { ownershipForKey } from "./accountOwnership.js";
+import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey } from "./canonicalCommandState.js";
 
 // ---------------------------------------------------------------------------
 // PrefMeta
@@ -209,6 +210,7 @@ function usePrefBrowser<K extends WebPrefKey>(
   // ---- reset --------------------------------------------------------------
 
   const reset = useCallback(() => {
+    if (isCanonicalCommandKey(key) && isCanonicalCommandActivationEnabled()) return;
     removePref(key, scope);
     setValueInternal(effectiveDefault);
     setIsDefault(true);
