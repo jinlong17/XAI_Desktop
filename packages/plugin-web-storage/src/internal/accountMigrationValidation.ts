@@ -1,6 +1,7 @@
 import { PREF_REGISTRY, type WebPrefKey } from './registry.js';
 import { ACCOUNT_LOCAL_KEYS } from './accountOwnership.js';
 import { decode } from './codec.js';
+import { isCanonicalCommandKey, readCanonicalCommandState } from './canonicalCommandState.js';
 
 const validators = new Map<string, (value: unknown) => boolean>();
 /** Owner-provided guards prevent a corrupt imported blob being normalized into a seed. */
@@ -20,6 +21,12 @@ export function accountMigrationIssue(key: string, raw: string): string | null {
   let value: unknown;
   try { value = codec === "json" ? JSON.parse(raw) : decode(codec, raw); } catch { return "Stored value cannot be decoded; original data is retained."; }
   if (value === null && codec !== "json") return 'Stored value cannot be decoded; original data is retained.';
+  if (isCanonicalCommandKey(key)) {
+    const state = readCanonicalCommandState(value);
+    if (state.status === 'corrupt') return 'Stored canonical command data is invalid; original data is retained.';
+    if (state.status === 'unsupported') return 'Stored canonical command version is unsupported; original data is retained.';
+    if (state.status === 'envelope' || state.status === 'legacy') value = state.data;
+  }
   if (codec === 'string' || codec === 'boolean' || codec === 'number') return null;
   if (primitiveJsonKeys.has(key)) return typeof value === 'string' ? null : 'Expected a text setting.';
   if (stringArrayKeys.has(key)) return Array.isArray(value) && value.every(item => typeof item === 'string') ? null : 'Expected an array of strings.';

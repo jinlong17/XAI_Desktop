@@ -44,6 +44,19 @@ export {
   setPrefAutosave,
   removePrefAutosave,
 } from "./internal/storage.js";
+export {
+  CANONICAL_COMMAND_KEYS,
+  isCanonicalCommandKey,
+  readCanonicalCommandState,
+  readCanonicalCommandSnapshot,
+  findCanonicalCommandReceipt,
+} from "./internal/canonicalCommandState.js";
+export type {
+  CanonicalCommandKey,
+  CanonicalCommandEnvelope,
+  CanonicalCommandReceipt,
+  CanonicalCommandRead,
+} from "./internal/canonicalCommandState.js";
 export type {
   GetPrefAutosaveOptions,
   SetPrefAutosaveOptions,

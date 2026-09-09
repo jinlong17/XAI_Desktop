@@ -18,6 +18,27 @@ import {
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
 import { accountScope, type AccountScope } from "./accountScope.js";
+import { isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
+
+/** Decode one physical preference value into the domain projection readers expect. */
+export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string): WebPrefValue<K> | null {
+  const decoded = decode(PREF_REGISTRY[key].codec, raw);
+  if (decoded === null) return null;
+  if (!isCanonicalCommandKey(key)) return decoded as WebPrefValue<K>;
+  const state = readCanonicalCommandState(decoded);
+  if (state.status === "legacy" || state.status === "envelope") {
+    return state.data as WebPrefValue<K>;
+  }
+  return null;
+}
+
+function canonicalWriteBlocked<K extends WebPrefKey>(key: K, raw: string | null): boolean {
+  if (!isCanonicalCommandKey(key) || raw === null) return false;
+  const decoded = decode(PREF_REGISTRY[key].codec, raw);
+  if (decoded === null) return true;
+  const state = readCanonicalCommandState(decoded);
+  return state.status === "envelope" || state.status === "corrupt" || state.status === "unsupported";
+}
 
 export function readRawPref(key: string, scope = accountScope.capture()): string | null {
   if (typeof window === "undefined") return null;
@@ -129,7 +150,7 @@ export function getPref<K extends WebPrefKey>(key: K, scope = accountScope.captu
   if (raw === null) {
     return entry.default as WebPrefValue<K>;
   }
-  const decoded = decode(entry.codec, raw);
+  const decoded = decodeStoredPrefValue(key, raw);
   if (decoded === null) {
     console.warn(
       `[plugin-web-storage] decode failed for ${key}:`,
@@ -177,6 +198,10 @@ export function setPref<K extends WebPrefKey>(
     }
     return false;
   }
+  if (canonicalWriteBlocked(key, existing)) {
+    console.warn(`[plugin-web-storage] refusing legacy write over protected canonical ${key}.`);
+    return false;
+  }
   if (existing === encoded) {
     // Value unchanged — skip write. Same-tab subscribers do NOT get notified
     // (value didn't actually change).
@@ -214,6 +239,11 @@ export function setPref<K extends WebPrefKey>(
 
 export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.capture()): void {
   if (typeof window === "undefined") return;
+  const existing = readRawPref(key, scope);
+  if (canonicalWriteBlocked(key, existing)) {
+    console.warn(`[plugin-web-storage] refusing legacy removal of protected canonical ${key}.`);
+    return;
+  }
   try {
     localStorage.removeItem(accountScope.physicalKey(key, scope));
   } catch {

@@ -13,8 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { PREF_REGISTRY, type WebPrefKey, type WebPrefValue } from "./registry.js";
-import { getPref, setPref, removePref, subscribeSameTab, readRawPref } from "./storage.js";
-import { decode } from "./codec.js";
+import { getPref, setPref, removePref, subscribeSameTab, readRawPref, decodeStoredPrefValue } from "./storage.js";
 import { accountScope } from "./accountScope.js";
 import { ownershipForKey } from "./accountOwnership.js";
 
@@ -175,7 +174,7 @@ function usePrefBrowser<K extends WebPrefKey>(
         // Decode the value from the event directly (avoids re-reading from
         // localStorage which may not be updated yet in all jsdom environments,
         // and faithfully reflects what the other tab wrote).
-        const decoded = decode(entry.codec, event.newValue);
+        const decoded = decodeStoredPrefValue(key, event.newValue);
         if (decoded !== null) {
           setValueInternal(decoded as WebPrefValue<K>);
           setIsDefault(false);
