@@ -1,0 +1,19 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stdout | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Tasks retains the open composer and draft when native Storage rejects its write
+REL05 Tasks observed {"persistedUnchanged":true,"composerOpen":true,"draft":"REL05 unrecoverable draft","visibleFailure":true}
+
+stderr | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Tasks retains the open composer and draft when native Storage rejects its write
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stdout | docs/reviews/web-storage-write-results/independent-write-failure.test.tsx > Bookkeeping does not publish proposed business state when its canonical native write fails
+REL05 Bookkeeping observed {"persistedBudget":100,"renderedBudget":100,"deviceView":"detail"}
+
+ ✓ docs/reviews/web-storage-write-results/independent-write-failure.test.tsx (2 tests) 166ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  12:00:33
+   Duration  2.39s (transform 251ms, setup 0ms, collect 388ms, tests 166ms, environment 1.05s, prepare 204ms)
+

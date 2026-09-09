@@ -1,0 +1,29 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-save-recovery-independent/joint-save.test.tsx > Tasks detail retains edited title, notes and date after rejection and commits exactly one matching task
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+stderr | docs/reviews/web-save-recovery-independent/joint-save.test.tsx > Tasks list metadata failure remains retryable and creates exactly one item
+[plugin-web-storage] quota exceeded for xai_pref_task_lists.
+
+stderr | docs/reviews/web-save-recovery-independent/joint-save.test.tsx > Tasks tag metadata failure remains retryable and creates exactly one item
+[plugin-web-storage] quota exceeded for xai_pref_task_tags.
+
+stderr | docs/reviews/web-save-recovery-independent/joint-save.test.tsx > Tasks retained detail retry and export reject the replaced owner
+[plugin-web-storage] quota exceeded for xai_task_cols.
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-save-recovery-independent/joint-save.test.tsx > Tasks failed task deletion keeps the detail and original persisted record
+[plugin-web-storage] quota exceeded for xai_task_cols.
+
+ ✓ docs/reviews/web-save-recovery-independent/joint-save.test.tsx (13 tests) 2508ms
+   ✓ Bookkeeping 新建账本 keeps the editor until an explicit discard  722ms
+   ✓ Bookkeeping 分类与备注 keeps the editor until an explicit discard  379ms
+   ✓ Tasks tag metadata failure remains retryable and creates exactly one item  316ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  12:02:54
+   Duration  4.10s (transform 339ms, setup 0ms, collect 556ms, tests 2.51s, environment 700ms, prepare 79ms)
+
