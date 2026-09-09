@@ -51,3 +51,14 @@ STAT-01/02 原始复现ed7009f四断言全部FAIL。2b1759b仅修STAT-01：KPI/�
 REL-06 独立3637866：固定cfc2d6d基础60测试、native双页面11场景通过；原c0af11b三竞态原封复现。当前只证明代隔离、清理失败不假成功与显式重试；首次持久化写入完全失败后不能承诺跨重启退出意图保留，服务端global撤销与账号删除合同仍未闭。独立实际host流程继续进行。
 
 本次git:sync-check -- --fetch已检查：所有长期分支与远端对齐、无local-only refs/reflog commits，23个stash均有远端可恢复ref，Agent/Skill/Workflow无untracked。唯一失败为并行Agent正在生成的未提交验收文件；不能描述工作树为clean。未执行深度unreachable扫描（本次非迁移/清理）。
+
+
+## 2026-09-09 检查点：7 项正式核销
+
+TASK-01通过0a3a944独立固定快照验收：真实Tasks日期与sidebar/chip/list计数一致、跨年及三组DST、午夜不刷新更新、hidden→visible恢复、旧无年标签不猜日期，包162测试通过。该项已有REL-01实现，本次按证据核销，未重复重写。
+
+STAT-01/POMO-03独立666171d先发现提前结束列表隐藏及POMO时长漏计；父ab94f84补完整消费者后，e747076固定快照实际Chrome复验通过：25分钟配置，25秒工作+5分钟暂停+35秒工作，elapsed60000且completedfalse，列表1:00/双语未完成，概览时长1m而完成轮数0，Statistics实际路由与刷新1min。unknown/zero/多短会话、原始字节不改和390px截图亦通过。两编号分别核销；现已完成TT-01、TT-02、POMO-01、POMO-02、POMO-03、TASK-01、STAT-01，共7/312。
+
+REL-06宿主d8501f3独立验收：真实路由曾吞掉退出专用提示，父10a90ce将错误标记提升至provider后，原完整native断言通过。实际登录/失败隔离/整Chrome进程重开/OAuth StrictMode单次exchange/reset/双页旧A迟到不覆盖B通过；synthetic HTTP、不含生产服务、CSS/SW，不关闭整个REL-06。
+
+STAT-02消费者580bbde已提交：真实completedAt日期分桶、无时间只显示当前总数、旧completed[]缺失done兼容、invalid/future不造历史；原四诊断断言通过，Statistics23文件166测试、types/lint通过。Task/Board生产者TASK-02正并行实施，完整链路需待其固定提交后独立验收。MED-01/02进入绝对时间持久会话与音频停止修复，尚无完成结论。

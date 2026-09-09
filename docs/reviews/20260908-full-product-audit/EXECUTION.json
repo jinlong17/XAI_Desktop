@@ -113,7 +113,10 @@
         "commit:cfc2d6d",
         "commit:e1c3b01",
         "../web-auth-session-cleanup/20260909-host-integration.md",
-        "commit:3637866"
+        "commit:3637866",
+        "commit:10a90ce",
+        "commit:d8501f3",
+        "../web-auth-host-independent/20260909-independent-review.md"
       ]
     },
     {
@@ -231,10 +234,14 @@
     },
     {
       "id": "POMO-03",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:2b1759b",
-        "../web-statistics-time-contract/20260909-stat01-fix.md"
+        "../web-statistics-time-contract/20260909-stat01-fix.md",
+        "commit:ab94f84",
+        "commit:666171d",
+        "commit:e747076",
+        "../web-statistics-time-independent/20260909-independent-review.md"
       ]
     },
     {
@@ -249,12 +256,12 @@
     },
     {
       "id": "MED-01",
-      "status": "pending",
+      "status": "in_progress",
       "evidence": []
     },
     {
       "id": "MED-02",
-      "status": "pending",
+      "status": "in_progress",
       "evidence": []
     },
     {
@@ -269,12 +276,15 @@
     },
     {
       "id": "TASK-01",
-      "status": "verification_pending",
-      "evidence": []
+      "status": "completed",
+      "evidence": [
+        "commit:0a3a944",
+        "../web-tasks-date-independent/20260909-report.md"
+      ]
     },
     {
       "id": "TASK-02",
-      "status": "pending",
+      "status": "in_progress",
       "evidence": []
     },
     {
@@ -384,11 +394,15 @@
     },
     {
       "id": "STAT-01",
-      "status": "verification_pending",
+      "status": "completed",
       "evidence": [
         "commit:ed7009f",
         "commit:2b1759b",
-        "../web-statistics-time-contract/20260909-stat01-fix.md"
+        "../web-statistics-time-contract/20260909-stat01-fix.md",
+        "commit:ab94f84",
+        "commit:666171d",
+        "commit:e747076",
+        "../web-statistics-time-independent/20260909-independent-review.md"
       ]
     },
     {
@@ -396,7 +410,9 @@
       "status": "in_progress",
       "evidence": [
         "commit:ed7009f",
-        "../web-statistics-time-contract/20260909-diagnosis.md"
+        "../web-statistics-time-contract/20260909-diagnosis.md",
+        "commit:580bbde",
+        "../web-statistics-time-contract/20260909-stat02-consumer.md"
       ]
     },
     {
