@@ -175,3 +175,12 @@ describe("deleteAccount (gap-closure row #9)", () => {
     expect(err.name).toBe("AccountDeleteError");
   });
 });
+
+it('binds deletion to the initiating token and leaves replacement account sign-out to the owner', async () => {
+  const client = createDeleteClient();
+  await deleteAccount(client, { accessToken: 'synthetic-account-A-token', signOutAfterDelete: false });
+  expect(client.functions.invoke).toHaveBeenCalledWith('account-delete', {
+    method: 'POST', headers: { Authorization: 'Bearer synthetic-account-A-token' },
+  });
+  expect(client.auth.signOut).not.toHaveBeenCalled();
+});

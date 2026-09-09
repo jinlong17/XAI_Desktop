@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type PropsWithChildren
 } from "react";
@@ -34,6 +35,8 @@ export interface WebAuthSessionProviderProps extends PropsWithChildren {
   config?: WebSupabaseClientConfig | null;
   storage?: SupportedStorage;
   deviceStore?: DeviceIdentityStore;
+  /** Synchronous invalidation before publishing a different identity; never await auth APIs here. */
+  onIdentityChange?: (accountId: string | null) => void;
 }
 
 function createClientFromConfig(
@@ -54,7 +57,8 @@ export function WebAuthSessionProvider({
   client,
   config,
   storage,
-  deviceStore
+  deviceStore,
+  onIdentityChange
 }: WebAuthSessionProviderProps) {
   const resolvedStorage = useMemo(
     () => storage ?? (config ? createAuthSessionStorage() : undefined),
@@ -66,23 +70,39 @@ export function WebAuthSessionProvider({
   );
   const identityStore = useMemo(() => deviceStore ?? createDeviceIdentityStore(), [deviceStore]);
 
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSessionState] = useState<Session | null>(null);
   const [state, setState] = useState<AuthState>(runtimeClient ? "loading" : "unconfigured");
   const [deviceId, setDeviceId] = useState<string | null>(null);
 
-  const refreshSession = useCallback(async () => {
-    if (!runtimeClient) {
-      setSession(null);
-      setState("unconfigured");
-      return null;
+  const sessionRef = useRef<Session | null>(null);
+  const revision = useRef(0);
+  const identity = useRef<string | null | undefined>(undefined);
+  const setSession = useCallback((next: Session | null) => {
+    revision.current += 1;
+    const accountId = next?.user?.id ?? null;
+    if (identity.current !== accountId) {
+      onIdentityChange?.(accountId);
+      identity.current = accountId;
     }
+    sessionRef.current = next;
+    setSessionState(next);
+    setState(next ? "authenticated" : runtimeClient ? "unauthenticated" : "unconfigured");
+  }, [onIdentityChange, runtimeClient]);
 
-    const { data } = await runtimeClient.auth.getSession();
-    const nextSession = data.session ?? null;
-    setSession(nextSession);
-    setState(nextSession ? "authenticated" : "unauthenticated");
-    return nextSession;
-  }, [runtimeClient]);
+  const refreshSession = useCallback(async () => {
+    const requestRevision = ++revision.current;
+    if (!runtimeClient) { setSession(null); return null; }
+    try {
+      const { data, error } = await runtimeClient.auth.getSession();
+      if (requestRevision !== revision.current) return sessionRef.current;
+      const next = error ? null : data.session ?? null;
+      setSession(next);
+      return next;
+    } catch {
+      if (requestRevision === revision.current) setSession(null);
+      return sessionRef.current;
+    }
+  }, [runtimeClient, setSession]);
 
   const ensureDeviceIdentity = useCallback(async () => {
     const value = await identityStore.ensure();
@@ -91,6 +111,8 @@ export function WebAuthSessionProvider({
   }, [identityStore]);
 
   const clearSessionStorage = useCallback(async () => {
+    // Revoke pending reads and account handles before any asynchronous clearing.
+    setSession(null);
     const storageKey = config?.storageKey ?? DEFAULT_STORAGE_KEY;
     try {
       await resolvedStorage?.removeItem(storageKey);
@@ -98,9 +120,7 @@ export function WebAuthSessionProvider({
     } catch {
       // Best-effort local auth clear; React state below is still authoritative.
     }
-    setSession(null);
-    setState(runtimeClient ? "unauthenticated" : "unconfigured");
-  }, [config?.storageKey, resolvedStorage, runtimeClient]);
+  }, [config?.storageKey, resolvedStorage, setSession]);
 
   useEffect(() => {
     let active = true;
@@ -110,11 +130,12 @@ export function WebAuthSessionProvider({
       if (active) {
         setDeviceId(value);
       }
-    });
+    }).catch(() => undefined);
 
     if (!runtimeClient) {
       return () => {
         active = false;
+        revision.current += 1;
       };
     }
 
@@ -126,14 +147,14 @@ export function WebAuthSessionProvider({
       }
 
       setSession(authSession);
-      setState(authSession ? "authenticated" : "unauthenticated");
     });
 
     return () => {
       active = false;
+      revision.current += 1;
       subscription.unsubscribe();
     };
-  }, [identityStore, refreshSession, runtimeClient]);
+  }, [identityStore, refreshSession, runtimeClient, setSession]);
 
   const value = useMemo<WebAuthSessionContextValue>(
     () => ({
@@ -147,7 +168,7 @@ export function WebAuthSessionProvider({
       clearSessionStorage,
       setSession
     }),
-    [state, session, runtimeClient, deviceId, refreshSession, ensureDeviceIdentity, clearSessionStorage]
+    [state, session, runtimeClient, deviceId, refreshSession, ensureDeviceIdentity, clearSessionStorage, setSession]
   );
 
   return <WebAuthSessionContext.Provider value={value}>{children}</WebAuthSessionContext.Provider>;

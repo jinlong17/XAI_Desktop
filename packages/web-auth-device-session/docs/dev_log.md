@@ -241,3 +241,9 @@ Added to `packages/web-auth-device-session/src/`:
 ### REL-02 parent verification follow-up · 2026-09-09
 
 Executor: Codex parent review/fix. Status remains FIX_READY_FOR_VERIFY. Independent review found a warm custom-store upgrade race, reproduced by the new 53rd test (InvalidStateError). Added per-database operation queue through callback completion. All 53 package tests and six isolated real-Chromium scenarios now pass. Cross-vendor reviewer could not authenticate (401 revoked OAuth), so independent cross-vendor approval remains pending; no READY_TO_SHIP claim. Next: independent review of follow-up and cross-vendor verification when available.
+
+### REL-03 auth lifecycle sub-fix — 2026-09-09
+
+Executor: Codex parent bug-fix; independent test author: rel01_independent_verify. Implemented identity callback and stale refresh guards, synchronous account invalidation before clear, and captured-token deletion options. Parent reran 60 package tests successfully; package typecheck passed before deletion option extension and is rerun at integration. Status: sub-fix implemented, REL-03 joint verification pending. No remote account mutation or hosted auth claim.
+
+References checked: Supabase changelog index and https://supabase.com/docs/reference/javascript/auth-onauthstatechange. Auth callback stays synchronous; SDK/config versions unchanged. The relevant changelog self-hosted API_EXTERNAL_URL change does not apply to this local lifecycle repair.

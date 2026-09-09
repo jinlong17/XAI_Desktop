@@ -184,3 +184,9 @@ Open/transaction failures reject the operation; callers may retry. A blocked sch
 ### REL-02 warm-schema concurrency follow-up
 
 Store operations sharing a database are queued through completion of the idb-keyval callback promise. A schema extension waits for prior operations to finish before closing the connection; callers already awaiting a warm connection cannot receive a closed database. Rejected operations release the queue so later retries remain possible. This serialization is scoped to one IDBFactory/database and does not serialize unrelated databases.
+
+### REL-03 identity lifecycle
+
+`WebAuthSessionProvider.onIdentityChange(accountId)` is synchronous and runs before a different identity is published. Hosts use it to revoke account-local handles; do not call async auth APIs from this callback. Same-user token refresh does not invalidate identity. Session refresh uses a revision guard: a newer auth event, explicit setSession/clear, unmount or replacement client invalidates earlier pending reads. `clearSessionStorage` revokes identity before awaiting storage.
+
+Account-scoped deletion passes `DeleteAccountOptions.accessToken` from the initiating session and `signOutAfterDelete: false`. This freezes the server request identity and lets the caller clear only the still-current initiating account. It prevents a delayed deletion result from signing out a replacement account through a shared client.

@@ -187,6 +187,10 @@ export class AccountDeleteError extends Error {
  * Options for `deleteAccount()`.
  */
 export interface DeleteAccountOptions {
+  /** Bind the server request to the initiating session even if the shared client switches accounts. */
+  readonly accessToken?: string;
+  /** Account-scoped callers clear only the captured identity themselves after success. */
+  readonly signOutAfterDelete?: boolean;
   /**
    * Optional progress callback — called at each phase.
    * Consumers may use this to show in-progress UI copy.
@@ -230,6 +234,7 @@ export async function deleteAccount(
   try {
     const result: AccountDeleteInvokeResult = await client.functions.invoke("account-delete", {
       method: "POST",
+      ...(options.accessToken ? { headers: { Authorization: `Bearer ${options.accessToken}` } } : {}),
     });
     status = result.error?.status
       ?? (typeof result.status === "number" ? result.status : undefined);
@@ -254,6 +259,8 @@ export async function deleteAccount(
       throw new AccountDeleteError(kind, `account-delete returned ${status ?? "unknown"}`, invokeError);
     }
   }
+
+  if (options.signOutAfterDelete === false) return;
 
   // Sign out (best-effort — account is gone, so sign-out failure is non-blocking).
   onProgress?.("signing-out");
