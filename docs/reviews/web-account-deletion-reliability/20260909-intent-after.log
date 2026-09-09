@@ -1,0 +1,4 @@
+{"commit":"35d7b11","scenario":"first-write-denied","ok":true,"serverCalls":0,"dataRetained":true}
+{"commit":"35d7b11","scenario":"response-lost","ok":true,"serverCalls":1,"unknownAfterReload":true,"BPreserved":true,"tokenAbsent":true}
+{"commit":"35d7b11","scenario":"receipt-write-denied","ok":true,"serverCalls":1,"unknownAfterReload":true,"BPreserved":true,"tokenAbsent":true}
+{"commit":"35d7b11","scenario":"retry-unauthorized","ok":true,"serverCalls":1,"unknownRetained":true,"firstIntent":"{\"version\":1,\"accountId\":\"A-fixture\",\"generation\":\"g1\",\"operationId\":\"7bcc1a28-c52d-48a8-a351-63c94c536309\",\"phase\":\"server-outcome-unknown\",\"createdAt\":\"2026-09-09T18:56:10.478Z\"}","finalIntent":"{\"version\":1,\"accountId\":\"A-fixture\",\"generation\":\"g1\",\"operationId\":\"7bcc1a28-c52d-48a8-a351-63c94c536309\",\"phase\":\"server-outcome-unknown\",\"createdAt\":\"2026-09-09T18:56:10.478Z\"}"}
