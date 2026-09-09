@@ -1,0 +1,162 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+
+stderr | docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > failed record save cannot report saved or discard retryable completion
+[plugin-web-storage] quota exceeded for xai_pomodoro_sessions.
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx (8 tests | 7 failed) 102ms
+   × running session survives route unmount/remount under the same account 16ms
+     → expected 'idle' to be 'running' // Object.is equality
+   × paused session survives remount without counting away time 4ms
+     → expected [ 'idle', 1500000 ] to deeply equal [ 'paused', 1440000 ]
+   × two same-account observers see one active session rather than independent controllers 2ms
+     → expected 'idle' to be 'running' // Object.is equality
+   × identity lock removes the old active timer from the current observer 1ms
+     → expected 'running' to be 'idle' // Object.is equality
+   × late return records actual deadline, not the callback observation time 42ms
+     → expected '2026-06-01T10:30:00.030Z' to be '2026-06-01T10:25:00.000Z' // Object.is equality
+   × session append is idempotent by stable sessionId 2ms
+     → expected [ { id: 'same', …(6) }, …(1) ] to have a length of 1 but got 2
+   × failed record save cannot report saved or discard retryable completion 32ms
+     → expected <div class="pomo-notice" …(2)></div> to be null
+   ✓ control: in-mount pause/resume excludes pause time 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > running session survives route unmount/remount under the same account
+AssertionError: expected 'idle' to be 'running' // Object.is equality
+
+Expected: "running"
+Received: "idle"
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:16:46
+     14|  const original=first.result.current.timerState;first.unmount();vi.set…
+     15|  const next=renderHook(()=>useTimerTick());
+     16|  expect(next.result.current.timerState.kind).toBe('running');
+       |                                              ^
+     17|  if(original.kind==='running' && next.result.current.timerState.kind==…
+     18| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > paused session survives remount without counting away time
+AssertionError: expected [ 'idle', 1500000 ] to deeply equal [ 'paused', 1440000 ]
+
+- Expected
++ Received
+
+  [
+-   "paused",
+-   1440000,
++   "idle",
++   1500000,
+  ]
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:22:131
+     20|  const first=renderHook(()=>useTimerTick());act(()=>first.result.curre…
+     21|  const remaining=first.result.current.displayedRemainingMs;first.unmou…
+     22|  const next=renderHook(()=>useTimerTick());expect([next.result.current…
+       |                                                                                                                                   ^
+     23| });
+     24| it('two same-account observers see one active session rather than inde…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > two same-account observers see one active session rather than independent controllers
+AssertionError: expected 'idle' to be 'running' // Object.is equality
+
+Expected: "running"
+Received: "idle"
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:26:45
+     24| it('two same-account observers see one active session rather than inde…
+     25|  const one=renderHook(()=>useTimerTick()); const two=renderHook(()=>us…
+     26|  expect(two.result.current.timerState.kind).toBe('running');
+       |                                             ^
+     27| });
+     28| it('identity lock removes the old active timer from the current observ…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > identity lock removes the old active timer from the current observer
+AssertionError: expected 'running' to be 'idle' // Object.is equality
+
+Expected: "idle"
+Received: "running"
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:31:46
+     29|  const hook=renderHook(()=>useTimerTick());act(()=>hook.result.current…
+     30|  act(()=>{accountScope.activate(accountScope.lock('pomo-B'),'fixture')…
+     31|  expect(hook.result.current.timerState.kind).toBe('idle');
+       |                                              ^
+     32| });
+     33| it('late return records actual deadline, not the callback observation …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > late return records actual deadline, not the callback observation time
+AssertionError: expected '2026-06-01T10:30:00.030Z' to be '2026-06-01T10:25:00.000Z' // Object.is equality
+
+Expected: "2026-06-01T10:25:00.000Z"
+Received: "2026-06-01T10:30:00.030Z"
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:37:64
+     35|  vi.setSystemTime(now+30*60_000);act(()=>vi.advanceTimersByTime(32));
+     36|  const records=JSON.parse(localStorage.getItem(accountScope.physicalKe…
+     37|  expect(records).toHaveLength(1);expect(records[0].finishedAt).toBe(ne…
+       |                                                                ^
+     38|  expect(records[0].recordedAt).toBeDefined();
+     39| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > session append is idempotent by stable sessionId
+AssertionError: expected [ { id: 'same', …(6) }, …(1) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:42:59
+     40| it('session append is idempotent by stable sessionId', () => {
+     41|  const session={id:'same',mode:'focus' as const,startedAt:new Date(now…
+     42|  expect(appendSession(appendSession([],session),session)).toHaveLength…
+       |                                                           ^
+     43| });
+     44| it('failed record save cannot report saved or discard retryable comple…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx > failed record save cannot report saved or discard retryable completion
+AssertionError: expected <div class="pomo-notice" …(2)></div> to be null
+
+- Expected: 
+null
+
++ Received: 
+<div
+  class="pomo-notice"
+  data-testid="completion-notice"
+  role="status"
+>
+  Timer stopped and saved.
+</div>
+
+ ❯ docs/reviews/web-pomodoro-durable-session/reproduction.test.tsx:49:102
+     47|  vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(k,v…
+     48|  fireEvent.click(screen.getByTestId('end-btn'));
+     49|  expect(localStorage.getItem(key)).toBeNull();expect(screen.queryByTex…
+       |                                                                                                      ^
+     50|  expect(screen.getByRole('alert').textContent).toMatch(/retry|save/i);
+     51| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  12:21:02
+   Duration  2.08s (transform 235ms, setup 0ms, collect 442ms, tests 102ms, environment 987ms, prepare 81ms)
+

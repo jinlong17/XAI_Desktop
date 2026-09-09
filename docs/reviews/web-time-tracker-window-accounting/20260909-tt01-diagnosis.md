@@ -75,4 +75,4 @@ TZ=America/Los_Angeles node packages/core/node_modules/vitest/vitest.mjs run --c
 5. CSV 与删除不直接复用变形实体。报告 CSV 应有 range start/end、time zone、source id、raw start/end、窗口贡献（保留 ms 或秒）；原始会话导出可另字段保留全长。删除范围确认解释“删除相交的完整记录”，并保持取消/源 id 流；不默认仅删切片。
 6. 验收：11正确预期转绿；每一 InsightType、主卡/category/detail、snapshot/widget 同源数据断言；跨周/月/年、custom 正反日期、open/paused 多段、now前后、DST 23/25h、零/反向段边界、跨小时和 tooltip/CSV毫秒合计。确认编辑/删除仍引用原 entry，完整计时跨午夜不中断。再 native Chrome 复核页面+widget一致。
 
-本轮只诊断，不改 schema、import/export 原始数据，不碰 TT-02 编辑多段任务与 TT-04 性能任务；相关编辑保持原记录是本修复不可破坏的约束。重叠记录之间是否合并属于另一产品语义，本策略按每个 session 累加，与现有可并行计时一致。
+本轮只诊断，不改 schema、import/export 原始数据，不碰 TT-02 编辑多段任务与 TT-07 性能任务；相关编辑保持原记录是本修复不可破坏的约束。重叠记录之间是否合并属于另一产品语义，本策略按每个 session 累加，与现有可并行计时一致。
