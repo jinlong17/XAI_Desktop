@@ -7,7 +7,10 @@
     {
       "id": "REL-01",
       "status": "in_progress",
-      "evidence": []
+      "evidence": [
+        "commit:2f04bd4",
+        "../web-local-time-contract/20260909-bug-diagnose.md"
+      ]
     },
     {
       "id": "REL-02",
@@ -16,13 +19,18 @@
         "../web-auth-device-session/20260909-rel02-verification.md",
         "../web-auth-device-session/verify-browser-idb.mjs",
         "commit:0141ecb",
-        "commit:f578ae8"
+        "commit:f578ae8",
+        "commit:f15aceb",
+        "../web-auth-device-session/rel02-queue-review.test.ts"
       ]
     },
     {
       "id": "REL-03",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:44fa05c",
+        "../web-account-data-isolation/20260909-rel03-diagnosis.md"
+      ]
     },
     {
       "id": "REL-04",

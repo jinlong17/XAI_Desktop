@@ -15,3 +15,11 @@
 The original 52 tests missed an interleaving: after alpha is open, run alpha.setItem and the first beta.setItem concurrently in the same custom database. The beta schema upgrade closed alpha's connection before alpha resumed its awaited transaction creation. Added regression failed with InvalidStateError at storage.ts transaction creation.
 
 Fix: queue complete store operations per database, including the callback promise; rejected operations release the queue. After the fix, 53/53 package tests and six real-Chromium scenarios passed, including the newly reproduced interleaving. This supersedes the earlier five-scenario coverage count, not the outstanding cross-vendor gate. The follow-up code change still requires independent review.
+
+## Independent follow-up checks
+
+A separate Agent reviewed the parent-authored queue change in f15aceb and added three independent tests: synchronous callback failure followed by a queued schema extension, transaction abort followed by another write, and a warm read concurrent with schema extension. Parent reran all three successfully using:
+
+`node packages/core/node_modules/vitest/vitest.mjs run --config docs/reviews/web-auth-device-session/rel02-queue-review.config.mjs`
+
+These tests are separate from the 53 package tests. Follow-up review found no remaining blocker in the queue logic. Cross-vendor gate is still pending; same-vendor independent review is not mislabeled as cross-vendor PASS.
