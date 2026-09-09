@@ -1,0 +1,81 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:49:
+      745 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:49:
+      753 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:47:
+      761 │ ....meta !== "undefined" && (import.meta as { env?: { DEV?: boole...
+          ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+{
+  "base": "394efad",
+  "frozenSourceFiles": 42,
+  "pass": true,
+  "initial": {
+    "sixFailurePaths": true,
+    "originalBytesPreserved": true,
+    "visibleFailure": true,
+    "retryVisible": true,
+    "exportVisible": true
+  },
+  "exported": {
+    "version": 1,
+    "kind": "pomodoro-preference-draft",
+    "values": {
+      "preset": "custom",
+      "customMinutes": 61,
+      "displayStyle": "digital",
+      "theme": "violet",
+      "sound": "digital",
+      "muted": true
+    }
+  },
+  "checks": [
+    "Six native quota paths preserve original preference bytes",
+    "Latest six values exported through actual Blob and retried to native Storage",
+    "Running timer active/history bytes unchanged by preference failure and retry",
+    "Single failed theme retry writes only theme"
+  ],
+  "pids": [
+    61117
+  ]
+}
