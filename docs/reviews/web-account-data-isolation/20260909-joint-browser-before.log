@@ -1,0 +1,245 @@
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-tasks/src/TasksModule.tsx:82:17:
+      82 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AvatarMenu.tsx:132:25:
+      132 │                   typeof import.meta !== "undefined" &&
+          ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-shell/src/AppRail.tsx:51:13:
+      51 │       typeof import.meta !== "undefined" &&
+         ╵              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/SettingsFooter.tsx:45:15:
+      45 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:745:17:
+      745 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:753:17:
+      753 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-tokens/src/i18n.ts:761:15:
+      761 │     if (typeof import.meta !== "undefined" && (import.meta as { e...
+          ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts:39:15:
+      39 │         typeof import.meta !== "undefined" &&
+         ╵                ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-dashboard-grid/src/DashboardGrid.tsx:53:21:
+      53 │         const meta = import.meta as ImportMeta & { env?: { DEV?: b...
+         ╵                      ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/internal/validate.ts:31:11:
+      31 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:98:17:
+      98 │       if (typeof import.meta !== "undefined" && (import.meta as { ...
+         ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:132:17:
+      132 │       if (typeof import.meta !== "undefined" && (import.meta as {...
+          ╵                  ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/xai-web-settings-appearance/src/AppearancePane.tsx:179:19:
+      179 │         if (typeof import.meta !== "undefined" && (import.meta as...
+          ╵                    ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "iife" output format and will be empty [empty-import-meta]
+
+    packages/plugin-web-countdown/src/CountdownCardView.tsx:33:11:
+      33 │     typeof import.meta !== "undefined" &&
+         ╵            ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-tasks/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-tasks/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-tasks/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-matrix/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-matrix/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-matrix/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/plugin-web-countdown/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/plugin-web-countdown/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/plugin-web-countdown/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-habits/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-habits/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-habits/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/plugin-web-pomodoro/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/plugin-web-pomodoro/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/plugin-web-pomodoro/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-meditation/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-meditation/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-meditation/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-calendar/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-calendar/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-calendar/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/plugin-web-board-workspaces/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/plugin-web-board-workspaces/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/plugin-web-board-workspaces/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/xai-web-dashboard-widgets/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/xai-web-dashboard-widgets/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/xai-web-dashboard-widgets/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+▲ [WARNING] Ignoring this import because "packages/plugin-web-board-core/src/internal/accountMigration.ts" was marked as having no side effects [ignored-bare-import]
+
+    packages/plugin-web-board-core/src/index.ts:1:7:
+      1 │ import "./internal/accountMigration.js";
+        ╵        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It was excluded from the "sideEffects" array in the enclosing "package.json" file:
+
+    packages/plugin-web-board-core/package.json:7:2:
+      7 │   "sideEffects": [
+        ╵   ~~~~~~~~~~~~~
+
+file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-account-data-isolation/verify-browser-joint-independent.mjs:27
+ if(typeof result!=='string'||!result.startsWith('{')||!JSON.parse(result).pass)throw Error(String(result));
+                                                                                      ^
+
+Error: FAIL Error: Production-bundled owner validators unavailable: xai_board_filter_by_id, xai_board_inbox, xai_board_panels, xai_board_workspaces, xai_boards_v2, xai_calendar_events, xai_countdowns, xai_dashboard_stickies, xai_dashboard_weather, xai_habits_state, xai_matrix_state, xai_meditation_prefs, xai_pomodoro_sessions, xai_task_cols
+    at assert (http://127.0.0.1:58851/frame:62244:19)
+    at run (http://127.0.0.1:58851/frame:62265:5)
+    at http://127.0.0.1:58851/frame:62333:3
+    at http://127.0.0.1:58851/frame:62334:3
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-account-data-isolation/verify-browser-joint-independent.mjs:27:87
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.16.0
