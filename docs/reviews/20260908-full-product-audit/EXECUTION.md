@@ -130,3 +130,12 @@ Astra e407967 固定 f764731 独立重跑原20项全部PASS；新增修复边界
 Terra db1eddc 对两处做窄修，作者称原20项和新增4项全部通过，Calendar/storage类型检查通过。已经交Astra固定版本独立复核，尚无本次接受结论。Tasks与Board的D1普通UI写入迁移仍待继续，不以Calendar子批完成替代完整D1。
 
 父7b732c1准备六实际subscriber的整Chrome进程重开harness：精确Git快照、独立profile、外部原始字节checkpoint、later-human-edit及新请求业务数据断言。仅语法检查，尚未行为运行，不是验收PASS。Sol六subscriber仍为未提交实现，作者报告eventbus22/22、Tasks169/169、Calendar focused25/25及durable8/8通过；Calendar全包仍20FAIL，不能宣称全包通过。待固定提交后进行独立重开验证。正式完成仍13/312，未关闭299项。
+
+
+## 2026-09-09 检查点：六实际AI操作整浏览器重开与UI回执验证通过
+
+Sol4202c79精确提交六subscriber与异步receipt桥；作者eventbus22/22、Tasks169/169、Calendar focused25/25、durable10/10、三包types/lint通过。Calendar全包352/372（20FAIL）明确保留，旧fixture兼容问题尚未关闭。
+
+父646a539固定4202c79独立原生验证：六subscriber首轮6/6、整个Chrome SIGTERM退出（PID55570）后新进程55624同profile重开6/6通过。检查外部checkpoint原始字节、原target、later-human-edit不被覆盖、改变语义的同ID冲突不写入，以及新ID操作继续正常执行。另一套实际AiChat界面六操作检查6/6通过：quota失败+double-confirm只有一次写尝试，不继续模型；retry成功后业务数据+单receipt均已提交才出现唯一matching tool_result。adapter是synthetic，不称真实provider验收。两套db1eddc接入前6FAIL基线保留。明确activation只在隔离测试打开，旧客户端升级/生产启用门槛未过。
+
+Astra adc1202已确认Calendar原24断言独立全PASS，但新增reset读取失败反例仍假成功；Terra d8412d3改真实remove结果，作者原26通过，Astra独立复验进行中。Tasks D1仍需实际UI写入迁移，Terra继续实施；Board D1和migration后续范围保留。完整AI-02/REL-05均继续in_progress，正式完成13/312未变。
