@@ -78,6 +78,8 @@ export { DeviceSessionBridge, useDeviceBoundFetch } from "./components/DeviceSes
 export type { DeviceSessionBridgeProps } from "./components/DeviceSessionBridge";
 
 export { createAuthGenerationStore, AuthGenerationStorageError } from './auth-generation-store';
+export { createAuthGenerationClient, AuthGenerationClientStorageError, AUTH_GENERATION_SESSION_KEY } from './auth-generation-client';
+export type { AuthGenerationClientOptions } from './auth-generation-client';
 export type {
   AuthGenerationLease, ActiveAuthGeneration, AuthGenerationFailure,
   AuthGenerationMutationResult, AuthGenerationRecovery, AuthGenerationStore,
