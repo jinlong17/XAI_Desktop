@@ -22,6 +22,7 @@ import { ownershipForKey } from "./accountOwnership.js";
 // PrefMeta
 // ---------------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Retain the public generic argument for source compatibility.
 export interface PrefMeta<T> {
   readonly schemaVersion: number;
   /** true when value is the registry default (key absent from storage). */
@@ -43,7 +44,7 @@ export function usePref<K extends WebPrefKey>(
     next:
       | WebPrefValue<K>
       | ((prev: WebPrefValue<K>) => WebPrefValue<K>),
-  ) => void,
+  ) => boolean,
   meta: PrefMeta<WebPrefValue<K>>,
 ] {
   const entry = PREF_REGISTRY[key];
@@ -66,6 +67,7 @@ export function usePref<K extends WebPrefKey>(
         console.warn(
           "[plugin-web-storage] setPref called during SSR; no-op.",
         );
+        return false;
       },
       ssrMeta,
     ] as const;
@@ -92,7 +94,7 @@ function usePrefBrowser<K extends WebPrefKey>(
     next:
       | WebPrefValue<K>
       | ((prev: WebPrefValue<K>) => WebPrefValue<K>),
-  ) => void,
+  ) => boolean,
   meta: PrefMeta<WebPrefValue<K>>,
 ] {
   const entry = PREF_REGISTRY[key];
@@ -138,9 +140,11 @@ function usePrefBrowser<K extends WebPrefKey>(
           : next;
       const ok = setPref(key, nextValue, scope);
       if (ok) {
+        valueRef.current = nextValue;
         setValueInternal(nextValue);
         setIsDefault(false);
       }
+      return ok;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [key],

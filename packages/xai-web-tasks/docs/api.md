@@ -484,7 +484,7 @@ export interface TaskComposerProps {
   /** Bucket pre-selected when the dialog opens (the column whose + was clicked). */
   defaultBucket: BucketId;
   /** Called after validation passes with the draft + chosen bucket. */
-  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => void;
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => boolean | void;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
 }
@@ -691,3 +691,10 @@ New empty-state strings append to `src/internal/strings.ts` (en+zh), mirroring t
 | Any filter applied | always | `localStorage.getItem("xai_task_cols")` is byte-identical before/after (T-FILT-NOMUT). The filter writes nothing. |
 
 No error UI beyond the honest empty state.
+
+
+## REL-05 — save and recovery contract
+
+`TaskComposer.onSave` supports an explicit `false` result for a rejected write (legacy void callbacks remain compatible). The module's handler returns the actual committed result; rejected saves retain the dialog and complete draft. Details and list/tag editors likewise display failed state without publishing proposed values as committed. Retry is the existing Save action on the latest form; successful create commits once and closes. `Export draft` downloads versioned JSON containing the editable fields, not account credentials. Export and retry are denied after the captured account scope is revoked.
+
+`persistCols`, `persistLists` and `persistTags` now return the write outcome. Metadata state is updated after the write; bulk/detail deletion clears selection or closes only after successful persistence. A failed non-editor action offers its retained proposal as an explicit retry/export; no background replay writes it into a later account.

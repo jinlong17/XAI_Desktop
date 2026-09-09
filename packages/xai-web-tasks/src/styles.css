@@ -1228,3 +1228,14 @@
     outline-offset: -6px;
   }
 }
+
+/* A failed write stays beside the editable draft, with an explicit download. */
+.task-save-failure {
+  border: 1px solid var(--danger, #e53e3e);
+  border-radius: 8px;
+  padding: 12px;
+  margin-block: 12px;
+  overflow-wrap: anywhere;
+}
+.task-save-failure p { margin: 0 0 8px; }
+.task-save-failure button { min-height: 44px; }

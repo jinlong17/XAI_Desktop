@@ -1,3 +1,27 @@
+# REL-05 Tasks failed-save recovery — current iteration
+
+| Field | Value |
+|---|---|
+| Workflow | BUGFIX |
+| Target | xai-web-tasks / shared usePref setter |
+| Title | Failed persistence discards Tasks drafts and hides metadata failure |
+| Current Phase | BUG_VERIFY |
+| Status | FIX_READY_FOR_VERIFY |
+| Executor | Codex bug-fix (explicit role switch after independent reproduction) |
+| Updated | 2026-09-09 11:57 America/Los_Angeles |
+| Suggested Next | independent bug-verify |
+| Verify Cross-vendor | pending; no hosted-auth or cross-vendor claim |
+
+Diagnosis: parent `docs/reviews/web-storage-write-results/20260909-rel05-diagnosis.md` and independent reproduction commit `aff8175`. Scope is this Tasks sub-fix and the shared setter result; other REL-05 consumers remain separate work.
+
+Strategy: propagate existing write success, publish metadata after success, preserve rejected editor state with visible retry/export, and bind recovery to captured account scope. No new data namespace or background replay.
+
+## Work Log
+
+- 2026-09-09 11:57 — Codex bug-fix: implemented result-aware Tasks create/detail/metadata handling, scoped draft export and retry, deletion close/reference safeguards; retained original independent regression unchanged. Native Chrome recovery chain PASS; independent Tasks regression PASS; final Tasks suite 17 files / 162 PASS; shared usePref two files / 16 PASS; Tasks and storage typechecks PASS. Tasks package lint PASS; shared changed files lint PASS using the same React config (storage has no standalone ESLint config). Commit: this scoped fix changeset; next: an independent verifier must review because the initial reviewer explicitly switched to implementation.
+
+---
+
 # REL-01 Tasks dueDate repair — current iteration
 
 | Field | Value |

@@ -367,3 +367,11 @@ Each phase ends with `feature-build` STOP per Workflow V2.
 - Any reducer mutation change (`moveCard`/`toggleComplete`/`addCard` untouched).
 - Any `plugin-web-storage` registry, `plugin-web-tokens`, `packages/core`, host-shell, other-plugin, SHIPPED-archive, ADR, or `dev`-branch edit.
 - Header "Filters"/"More" buttons (T-06/T-07 — separate).
+
+## REL-05 — rejected writes retain editable drafts
+
+The shared `usePref` setter reports committed success. Tasks publishes list/tag metadata only after its scoped autosave succeeds, and closes the composer or metadata dialog only after a committed save. Detail editing retains the current form across failure and language changes. Failed deletion keeps the detail panel open. A visible failure panel beside each editor offers an explicit JSON export of its latest form values; retry uses the current form, not an older queued snapshot.
+
+Every write and draft export uses the module/editor's captured account scope. The host still unmounts account-specific UI on identity changes; retained callbacks independently reject old-account retry/export. Drafts are deliberately in memory while the editor stays open; the explicit download is the recovery artifact if the user needs to close the page. This does not claim that unsaved drafts survive an unannounced page/process exit.
+
+Non-editor actions retain their failed proposed state with retry/export. List/tag deletion first commits dependent task references, then removes metadata: a canonical task write failure cannot leave dangling metadata references. A later metadata failure keeps the old metadata and reports a retryable failed removal; these two keys are not an atomic transaction.
