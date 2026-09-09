@@ -167,3 +167,10 @@ Parent 1829c3a records the next approved Board D1 contract at fixed 94f1183: lin
 The full 312-item objective is unchanged: 13 completed, 299 open.
 
 Astra 1660df9 independently accepts Calendar test adaptation at fixed 9a7e66b: 50 files / 372 tests and the original 26 D1 assertions all PASS. Real UI interactions and error assertions remain intact; the old 20 FAIL record is retained. The known redundant post-commit legacy setter warning is a cleanup item, not a new corruption claim. Terra now implements the approved Board D1 async command and actual Module integration; Sol retains exclusive Tasks product/test ownership. No whole D1 or numbered item is closed.
+
+
+## 2026-09-09: Board D1 four-path recovery and native Tasks baseline
+
+Terra 6a1adac implements asynchronous Board intent -> canonical Tasks writer -> acknowledgement and actual modal pending behavior. Author Board 26 files / 316 tests, types/lint PASS. Parent fixed-archive original four Board assertions independently pass unchanged; Astra broader queued/source/owner/UI review is active. Do not infer full Board/D1 acceptance from these four paths.
+
+Parent b899396 adds actual TasksModule native Chrome verification at fixed 94f1183. Legitimate absent startup fails; quota conflict retry and latest composer draft retry controls pass. Restart stage is not reached until all initial cases pass. An initial wrong empty-board Add selector is archived as a harness attempt, not a product defect. Sol Tasks implementation is still uncommitted and awaits fixed-version after verification. No new item closure.

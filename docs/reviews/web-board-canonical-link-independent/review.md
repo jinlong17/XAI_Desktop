@@ -11,3 +11,7 @@ node docs/reviews/web-board-canonical-link-independent/verify-fixed.mjs 94f1183
 ```
 
 Evidence: board-link-94f1183.log. Real command and storage are used in jsdom; lock scheduling is injected. This baseline is not an actual Board UI/native concurrency test. Subsequent verification must still cover failed intent/task/ack recovery, captured source/owner revalidation after awaits, queued external changes, and actual Module pending/error behavior. No whole D1 or numbered item is accepted here.
+
+## After implementation: fixed 6a1adac
+
+Parent/non-author reran the same four assertions from a fresh archive: 4/4 PASS (board-link-6a1adac.log). Both legitimate entry paths now create exactly one linked task, retain receipts and complete acknowledgement; repeats preserve exact Tasks bytes. Both invalid-null controls remain unchanged. This accepts only the four tested command paths; Astra broader Board D1 review is in progress.
