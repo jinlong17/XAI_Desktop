@@ -23,7 +23,7 @@ import type {
   TasksModuleProps,
 } from "./types.js";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { accountScope, getPrefAutosave, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
+import { accountScope, getPrefAutosave, mutateCanonicalDataset, setPrefAutosave, usePref } from "@repo/plugin-web-storage";
 import { SEED_TASK_COLS } from "./internal/seed/tasksMock.js";
 import { isTaskColsArray } from "./internal/validate.js";
 import {
@@ -110,11 +110,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
     return ok;
   }, [owner]);
 
-  const persistCols = useCallback((next: TaskCol[]) => {
-    const ok = accountScope.isReady(owner) && setRawCols(next as unknown as Parameters<typeof setRawCols>[0]);
-    if (ok) setFailedSave(null);
-    else setFailedSave({ kind: "tasks", value: next });
-    return ok;
+  const persistCols = useCallback(async (next: TaskCol[]) => {
+    if (!accountScope.isReady(owner)) {
+      setFailedSave({ kind: "tasks", value: next });
+      return false;
+    }
+    const result = await mutateCanonicalDataset({
+      key: "xai_task_cols", scope: owner, validate: isTaskColsArray,
+      initialize: () => SEED_TASK_COLS as TaskCol[],
+      mutate: () => ({ ok: true as const, data: next }),
+    });
+    if (result.ok) { setRawCols(result.data as unknown as Parameters<typeof setRawCols>[0]); setFailedSave(null); return true; }
+    setFailedSave({ kind: "tasks", value: next });
+    return false;
   }, [setRawCols, owner]);
 
   const completedIds = useMemo<ReadonlySet<string>>(() => {
@@ -237,9 +245,10 @@ export function TasksModule({ lang }: TasksModuleProps) {
     setComposer({ open: true, bucket: bucketId });
   }
 
-  function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
-    const ok = persistCols(addCard(taskCols, draft, targetBucket));
-    if (ok) setComposer((c) => ({ ...c, open: false }));
+  async function handleComposerSave(draft: NewTaskDraft, targetBucket: BucketId) {
+    const operation = composer;
+    const ok = await persistCols(addCard(taskCols, draft, targetBucket));
+    if (ok) setComposer(current => current === operation ? { ...current, open: false } : current);
     return ok;
   }
 
@@ -338,7 +347,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
     persistCols(updateCards(taskCols, selectedIds, { priority }));
   }
 
-  function handleDetailSave(id: string, patch: {
+  async function handleDetailSave(id: string, patch: {
     title: string;
     bucket: BucketId;
     listId: string;
@@ -1226,7 +1235,7 @@ function TaskDetailPanel({
     notes: string;
     dueDate?: string | null;
     done: boolean;
-  }) => boolean;
+  }) => Promise<boolean>;
   onDelete: (id: string) => void;
   onClose: () => void;
 }) {
@@ -1329,15 +1338,15 @@ function TaskDetailPanel({
       <footer>
         <button
           className="task-composer__btn task-composer__btn--primary"
-          onClick={() => {
+          onClick={async () => {
             if (title.trim()) {
-              setSaveFailed(!onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done }));
+              setSaveFailed(!await onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done }));
             }
           }}
         >
           {lang === "zh" ? "保存" : "Save"}
         </button>
-        <button className="task-composer__btn" onClick={() => setSaveFailed(!onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true }))}>
+        <button className="task-composer__btn" onClick={async () => setSaveFailed(!await onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true }))}>
           {lang === "zh" ? "完成" : "Complete"}
         </button>
         <button className="task-composer__btn task-danger-btn" onClick={() => onDelete(task.id)}>

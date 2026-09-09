@@ -45,7 +45,7 @@ export interface TaskComposerProps {
   tags?: ReadonlyArray<TaskTagMeta>;
   defaultListId?: string;
   /** Called after validation passes with the draft + chosen bucket. */
-  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => boolean | void;
+  onSave: (draft: NewTaskDraft, targetBucket: BucketId) => boolean | void | Promise<boolean | void>;
   /** Called on ESC / backdrop click / Cancel (changes discarded). */
   onClose: () => void;
 }
@@ -134,7 +134,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
   );
 
   const handleSave = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
+    async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       const trimmed = title.trim();
       if (trimmed.length === 0) {
@@ -151,7 +151,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
         withDate,
         ...(withDate && bucket !== "nodate" && dueDate ? { dueDate } : {}),
       };
-      setSaveFailed(onSave(draft, bucket) === false);
+      setSaveFailed((await onSave(draft, bucket)) === false);
     },
     [title, tag, listId, priority, bucket, withDate, dueDate, onSave],
   );
