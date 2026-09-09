@@ -227,6 +227,29 @@ describe("TS-UPD-3: update idempotency — duplicate requestId → only one upda
     // First update applied, second is no-op
     expect(card?.title.en).toBe("First update");
   });
+
+  it("commits the validated patch snapshot when the dispatched object changes while queued", async () => {
+    writeSeed();
+    renderHook(() => useTaskMutateRequestSubscriber());
+    const patch = { bucket: "later" as const, tag: "work" as const };
+
+    act(() => {
+      emitWebEvent("web:tasks:update-requested", {
+        requestId: "req-upd-mutable-patch",
+        id: "t-upd-a",
+        patch,
+        requestedAt: new Date().toISOString(),
+      });
+    });
+    (patch as { bucket: string; tag: string }).bucket = "nodate";
+    (patch as { bucket: string; tag: string }).tag = "personal";
+    await settleCanonicalCommands();
+
+    const cols = getPref("xai_task_cols") as unknown as ColsRaw;
+    const card = cols.find((col) => col.id === "later")!.tasks.find((task) => task.id === "t-upd-a");
+    expect(card?.tag).toBe("work");
+    expect(cols.find((col) => col.id === "nodate")!.tasks).toHaveLength(0);
+  });
 });
 
 describe("TS-UPD-4: no cross-plugin import — aiMutateSubscriber does not import from plugin-web-ai-chat", () => {

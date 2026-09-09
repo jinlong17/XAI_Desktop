@@ -75,12 +75,12 @@ export function useTaskMutateRequestSubscriber(): void {
         let cols = initial;
         const from = cols.find(col => col.tasks.some(task => task.id === id));
         if (!from) return { ok: false, reason: "not-found" };
-        if (p.bucket && from.id !== p.bucket) {
-          cols = moveCard(cols, id, from.id as BucketId, p.bucket);
+        if (patch.bucket && from.id !== patch.bucket) {
+          cols = moveCard(cols, id, from.id as BucketId, patch.bucket);
         }
         const next = updateCard(cols, id, {
-          ...(title !== undefined ? { title } : {}),
-          ...(p.tag !== undefined ? { tag: p.tag } : {}),
+          ...(patch.title !== undefined ? { title: patch.title } : {}),
+          ...(patch.tag !== undefined ? { tag: patch.tag } : {}),
         });
         return { ok: true, data: next, targetId: id };
       },
