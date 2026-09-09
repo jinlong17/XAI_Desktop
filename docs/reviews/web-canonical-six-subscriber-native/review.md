@@ -1,6 +1,6 @@
 # Six subscribers: whole Chrome process reopen verification
 
-Status: pre-integration baseline executed; **six initial operations fail; restart phase not reached**. No production or AI-02 closure claim.
+Status: fixed 4202c79 passes all six operations before and after whole-process restart; pre-integration failures retained. No production or AI-02 closure claim.
 
 The runner archives a supplied Git commit and builds the actual Tasks and Calendar subscriber hooks with their event bus and public storage writer. It uses a temporary HTTP origin, isolated Chrome profile, and synthetic account data. Product source is resolved from the archive, excluding concurrent worktree edits.
 
@@ -21,3 +21,7 @@ Preparation validation: runner JavaScript syntax checked with `node --check`; be
 ## Before integration: fixed db1eddc
 
 The isolated native run reached all six actual subscriber hooks. Every initial operation returned a correlated `storage` failure under explicit activation, so the runner correctly refused to proceed to restart. This baseline predates the asynchronous canonical subscriber integration: activated legacy synchronous writes are rejected. It does not imply production activation is enabled. Evidence: `native-db1eddc.json`, command exited 1. Preserve the same assertions for the integration commit and report both phases independently.
+
+## After integration: fixed 4202c79
+
+The unchanged harness passed all six initial operations and all six reopened-process cases. Chrome PID 55570 exited after SIGTERM; new PID 55624 reused the isolated origin/profile. No forced termination was required. External checkpoints matched exact raw records after restart; original targets replayed without recreating deletes or overwriting later human edits, semantic conflicts preserved bytes, and fresh requests continued with verified business results. Evidence: native-4202c79.json (exit 0). This independently verifies the six real subscriber paths across fresh browser heaps, within the explicit test activation and synthetic-account scope above.

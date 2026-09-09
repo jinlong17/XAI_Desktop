@@ -15,3 +15,7 @@ node docs/reviews/web-ai-canonical-continuation-native/verify-native.mjs <fixed-
 All six cases failed before reaching persistence: explicit canonical activation rejects the old synchronous writer, so the actual write-attempt count was zero rather than the expected one. The UI retained the failed confirmation and no success continuation occurred. The error message says “multiple writes” but its numeric evidence is expected 1 / actual 0; it is not evidence of duplicated writes. The unchanged assertion will distinguish the integrated path in the after run. See native-db1eddc.json (exit 1).
 
 This complements the separate whole-Chrome restart harness. It does not prove reload/restart continuation, production activation, old-client rollout, or provider transport correctness. Both native suites need the committed subscriber integration before after verification.
+
+## After integration: fixed 4202c79
+
+All six actual AiChat UI scenarios passed the unchanged assertions (native-4202c79.json, exit 0). Double-confirm under quota denial attempted one write, retained the confirmation and original bytes, and sent no success continuation. Retry committed matching business data and exactly one durable receipt before the captured outgoing continuation; exactly one matching tool_result and no duplicate continuation were observed. The adapter is synthetic, so this is native UI/subscriber/storage acceptance rather than a live provider transport check.

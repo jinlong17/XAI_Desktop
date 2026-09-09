@@ -1,0 +1,94 @@
+{
+  "requestedRef": "4202c79",
+  "revision": "4202c7931e90d0adae91d928fcf45c42830f7e90",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 55570,
+  "reopenedPid": 55624,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "tasks:create",
+        "pass": true
+      },
+      {
+        "name": "tasks:update",
+        "pass": true
+      },
+      {
+        "name": "tasks:delete",
+        "pass": true
+      },
+      {
+        "name": "calendar:create",
+        "pass": true
+      },
+      {
+        "name": "calendar:update",
+        "pass": true
+      },
+      {
+        "name": "calendar:delete",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "tasks:create": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":2,\"tasks\":[{\"id\":\"ff03ba4a-a466-4dd1-8a0f-42c1c62d2875\",\"title\":{\"en\":\"Created once\",\"zh\":\"Created once\"},\"tag\":\"work\",\"tags\":[\"work\"],\"priority\":\"normal\"},{\"id\":\"existing\",\"title\":{\"en\":\"Initial\",\"zh\":\"Initial\"},\"tag\":\"study\"}]}],\"receipts\":{\"[\\\"web:tasks:create-requested\\\",\\\"original-tasks:create\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"bucket\\\":\\\"nodate\\\",\\\"tag\\\":\\\"work\\\",\\\"title\\\":\\\"Created once\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"ff03ba4a-a466-4dd1-8a0f-42c1c62d2875\"},\"committedAt\":\"2026-09-09T23:31:15.495Z\"}}}",
+        "targetId": "ff03ba4a-a466-4dd1-8a0f-42c1c62d2875"
+      },
+      "tasks:update": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":1,\"tasks\":[{\"id\":\"existing\",\"title\":{\"en\":\"Later human value\",\"zh\":\"Later human value\"},\"tag\":\"work\"}]}],\"receipts\":{\"[\\\"web:tasks:update-requested\\\",\\\"original-tasks:update\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"existing\\\",\\\"patch\\\":{\\\"tag\\\":\\\"work\\\",\\\"title\\\":\\\"Tool committed\\\"}}\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T23:31:15.510Z\"}}}",
+        "targetId": "existing"
+      },
+      "tasks:delete": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":0,\"tasks\":[]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":0,\"tasks\":[]},{\"id\":\"later\",\"key\":\"later\",\"count\":0,\"tasks\":[]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":0,\"tasks\":[]}],\"receipts\":{\"[\\\"web:tasks:delete-requested\\\",\\\"original-tasks:delete\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"existing\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T23:31:15.525Z\"}}}",
+        "targetId": "existing"
+      },
+      "calendar:create": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":{\"existing\":{\"id\":\"existing\",\"title\":\"Initial\",\"startISO\":\"2026-09-09T09:00\",\"endISO\":\"2026-09-09T10:00\",\"colorPreset\":\"mint\",\"recurrence\":null,\"createdAt\":\"2026-09-09T00:00:00.000Z\",\"updatedAt\":\"2026-09-09T00:00:00.000Z\"},\"6d8806c0-86d6-4fca-9299-c5d62191c78d\":{\"title\":\"Created once\",\"startISO\":\"2026-09-09T11:00\",\"endISO\":\"2026-09-09T11:30\",\"colorPreset\":\"mint\",\"recurrence\":null,\"id\":\"6d8806c0-86d6-4fca-9299-c5d62191c78d\",\"createdAt\":\"2026-09-09T23:31:15.537Z\",\"updatedAt\":\"2026-09-09T23:31:15.537Z\"}},\"receipts\":{\"[\\\"web:calendar:create-requested\\\",\\\"original-calendar:create\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"date\\\":\\\"2026-09-09\\\",\\\"durationMin\\\":30,\\\"startTime\\\":\\\"11:00\\\",\\\"title\\\":\\\"Created once\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"6d8806c0-86d6-4fca-9299-c5d62191c78d\"},\"committedAt\":\"2026-09-09T23:31:15.537Z\"}}}",
+        "targetId": "6d8806c0-86d6-4fca-9299-c5d62191c78d"
+      },
+      "calendar:update": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":2,\"data\":{\"existing\":{\"id\":\"existing\",\"title\":\"Later human value\",\"startISO\":\"2026-09-09T09:00\",\"endISO\":\"2026-09-09T09:30\",\"colorPreset\":\"mint\",\"recurrence\":null,\"createdAt\":\"2026-09-09T00:00:00.000Z\",\"updatedAt\":\"2026-09-09T12:00:00Z\"}},\"receipts\":{\"[\\\"web:calendar:update-requested\\\",\\\"original-calendar:update\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"existing\\\",\\\"patch\\\":{\\\"durationMin\\\":30,\\\"title\\\":\\\"Tool committed\\\"}}\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T23:31:15.550Z\"}}}",
+        "targetId": "existing"
+      },
+      "calendar:delete": {
+        "raw": "{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":{},\"receipts\":{\"[\\\"web:calendar:delete-requested\\\",\\\"original-calendar:delete\\\"]\":{\"operationVersion\":1,\"signature\":\"{\\\"id\\\":\\\"existing\\\"}\",\"result\":{\"ok\":true,\"targetId\":\"existing\"},\"committedAt\":\"2026-09-09T23:31:15.564Z\"}}}",
+        "targetId": "existing"
+      }
+    }
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "tasks:create",
+        "pass": true
+      },
+      {
+        "name": "tasks:update",
+        "pass": true
+      },
+      {
+        "name": "tasks:delete",
+        "pass": true
+      },
+      {
+        "name": "calendar:create",
+        "pass": true
+      },
+      {
+        "name": "calendar:update",
+        "pass": true
+      },
+      {
+        "name": "calendar:delete",
+        "pass": true
+      }
+    ]
+  }
+}

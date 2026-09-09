@@ -1,0 +1,34 @@
+{
+  "requestedRef": "4202c79",
+  "revision": "4202c7931e90d0adae91d928fcf45c42830f7e90",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "cases": [
+    {
+      "name": "tasks:create",
+      "pass": true
+    },
+    {
+      "name": "tasks:update",
+      "pass": true
+    },
+    {
+      "name": "tasks:delete",
+      "pass": true
+    },
+    {
+      "name": "calendar:create",
+      "pass": true
+    },
+    {
+      "name": "calendar:update",
+      "pass": true
+    },
+    {
+      "name": "calendar:delete",
+      "pass": true
+    }
+  ],
+  "scope": "Real AiChat UI/subscribers/native storage; synthetic stream adapter, no provider network"
+}
