@@ -1118,3 +1118,19 @@
 }
 .ai-save-recovery p { margin: 0 0 8px; }
 .ai-save-recovery button { min-height: 44px; margin: 4px; padding: 8px 12px; border: 1px solid var(--border-1); border-radius: 8px; background: var(--bg-panel-2); color: var(--text-1); }
+
+/* Keep the scroll viewport below the floating tools, including after scrolling.
+   Empty-state spacing remains owned by .ai-welcome. */
+.ai-content:has(.ai-thread) {
+  margin-block-start: 4.625rem;
+}
+.ai-content > .ai-thread {
+  padding-block-start: 0.75rem;
+}
+.ai-composer-wrap .ai-input,
+.ai-composer-wrap .ai-send {
+  min-height: 2.75rem;
+}
+.ai-composer-wrap .ai-send {
+  min-width: 2.75rem;
+}
