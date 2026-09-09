@@ -17,6 +17,15 @@ describe("local civil date contract", () => {
       const next = nextLocalDayStart(start);
       const expected = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 1);
       expect(next.getTime()).toBe(expected.getTime());
+      const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const knownHours: Record<string, Record<string, number>> = {
+        "America/Los_Angeles": { "2026-03-08": 23, "2026-11-01": 25 },
+        "Australia/Lord_Howe": { "2026-04-05": 24.5, "2026-10-04": 23.5 },
+        "UTC": { "2026-03-08": 24, "2026-11-01": 24 },
+        "Asia/Shanghai": { "2026-03-08": 24, "2026-11-01": 24 },
+      };
+      const known = knownHours[zone]?.[key];
+      if (known !== undefined) expect((next.getTime() - start.getTime()) / 3_600_000).toBe(known);
       expect(localDateKey(next)).not.toBe(key);
       expect((next.getTime() - start.getTime()) / 60_000).toBe(1440 + next.getTimezoneOffset() - start.getTimezoneOffset());
     }

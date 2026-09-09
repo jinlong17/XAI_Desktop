@@ -53,9 +53,7 @@ export function TimeGrid({
   lang,
   onUserEventClick,
 }: TimeGridProps): JSX.Element {
-  // Build hour labels for the first column (representative day for DST table)
-  // For a week view, each day may technically have different DST, but our table
-  // only has 2026-03-08 and 2026-11-01 as special days. We use per-day labels.
+  // Each displayed civil day has its own actual local elapsed-hour rows.
   const hourLabelsByDay = useMemo(() => {
     return dayKeys.map((dk) => buildHourLabels(dk));
   }, [dayKeys]);

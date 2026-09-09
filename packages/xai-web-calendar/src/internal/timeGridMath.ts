@@ -6,7 +6,6 @@ import { parseLocalDateKey, nextLocalDayStart } from "@repo/plugin-web-tokens";
  * matches every shipped consumer calendar app).
  *
  * DST handling: device-local midnight boundaries and actual offset transitions.
- * Future row may substitute Intl.DateTimeFormat per api.md §10.9 fallback note.
  *
  * Design ref: design.md §15.7 timeGridMath signatures.
  */
@@ -38,7 +37,7 @@ export interface DstHoursResult {
  * - 2026-03-08: spring-forward (clocks skip 02:00 → 03:00) → 23 rows.
  * - 2026-11-01: fall-back (01:00 appears twice) → 25 rows.
  *
- * All other dates: 24 rows (standard).
+ * Other dates follow their own device-local offset transitions.
  */
 export function dstHoursForDay(dateKey: string): DstHoursResult {
   const start = parseLocalDateKey(dateKey);
