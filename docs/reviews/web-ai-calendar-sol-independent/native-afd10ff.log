@@ -1,0 +1,57 @@
+{
+  "requestedRef": "afd10ff",
+  "revision": "afd10ff174cdb26e7f2b37202e8f41db58a2e623",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "invalidCases": 22,
+  "invalidPassed": 21,
+  "validControls": [
+    {
+      "name": "leap-create",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "omitted-create-defaults",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "2350-plus-5-create",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "leap-update",
+      "pass": true,
+      "canonicalWrites": 1
+    },
+    {
+      "name": "2350-plus-5-update",
+      "pass": true,
+      "canonicalWrites": 1
+    }
+  ],
+  "correction": {
+    "pass": true,
+    "canonicalWrites": 1,
+    "receiptResults": [
+      "invalid",
+      "success",
+      "success"
+    ]
+  },
+  "failures": [
+    {
+      "name": "update array time that string-coerces valid",
+      "expectedReason": "invalid",
+      "observedReason": "storage",
+      "confirmation": "Update event (id: event) — at: 09:00",
+      "canonicalWrites": 0,
+      "modelCalls": 1
+    }
+  ],
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "syntheticOnly": true
+}
