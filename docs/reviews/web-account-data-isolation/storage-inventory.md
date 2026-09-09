@@ -1,5 +1,7 @@
 # REL-03 storage key ownership inventory
 
+> Historical proposal snapshot below, not the current count or isolation verdict. Current ownership at `6887879` contains116 keys (40account/76device); see `../web-data-lifecycle-registry/current-ownership-6887879.json`. Current isolation evidence is in `../web-account-scope-current-independent/20260909-review.md`. Non-localStorage authentication families are declared separately in `LOCAL_DATA_FAMILIES`; they are excluded from business exports and must not be inferred from this historical table.
+
 114 current Web localStorage keys: 85 registered and 29 additional concrete keys. Scope column is the proposed migration classification, not a claim that isolation exists.
 
 | Key | Owner | Proposed scope | Evidence |

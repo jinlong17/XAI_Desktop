@@ -43,6 +43,8 @@ export const LOCAL_DATA_FAMILIES = Object.freeze([
   { pattern: 'original unnamespaced account keys', dataClass: 'unassigned-originals', handling: 'Explicit recovery export choice; retained during account deletion.' },
   { pattern: 'xai:legacy:v1:archive:*', dataClass: 'unassigned-archive', handling: 'Explicit recovery export choice; raw safe archive envelopes retained byte-for-byte.' },
   { pattern: 'xai_oauth_pending_* (sessionStorage)', dataClass: 'temporary-auth', handling: 'Never exported; identity-scoped lifecycle.' },
+  { pattern: 'xai.auth-attempt.v1:<base>:<generation> / pending (sessionStorage)', dataClass: 'temporary-auth', handling: 'Never exported by business JSON APIs; coordinator removes captured-generation envelope and removes pending pointer only when it still targets that generation. Cleanup failure is reported separately.' },
+  { pattern: 'xai.auth-client.v1:<base>:<generation>-code-verifier (sessionStorage)', dataClass: 'temporary-auth-secret', handling: 'Never exported; SDK participant gates reads/writes by durable generation lease. Coordinator cleanup targets the captured verifier only; replacement-generation verifiers are retained.' },
   { pattern: 'xai-web-auth (IndexedDB)', dataClass: 'auth-and-device-material', handling: 'Never exported by local data JSON APIs.' },
   { pattern: 'xai-web-ai-secrets (IndexedDB)', dataClass: 'encrypted-secret', handling: 'Never exported by local data JSON APIs; captured-owner secret erasure uses the AI participant.' },
   { pattern: 'web-encrypted-cache-<namespace>-<accountId> (IndexedDB)', dataClass: 'dormant-account-cache', handling: 'No active Web consumer; lifecycle participant required before activation.' },
