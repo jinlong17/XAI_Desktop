@@ -5,14 +5,13 @@
  * hints in the open xai_pref_* family so existing dashboard order migrations
  * are not disturbed.
  */
-import { useCallback, useEffect, useMemo, useState, type PointerEvent } from "react";
+import { useCallback, useMemo, type PointerEvent } from "react";
 
-import { getPrefAutosave, setPrefAutosave } from "@repo/plugin-web-storage";
+import { useWidgetMapRecovery } from "./useWidgetMapRecovery.js";
 
 import type { WidgetRegistration, WidgetSpanClass } from "../types.js";
 
 const LAYOUT_PREF_SUFFIX = "dashboard_widget_layout";
-const LAYOUT_PREF_KEY = `xai_pref_${LAYOUT_PREF_SUFFIX}`;
 const MIN_COLS = 2;
 const MAX_COLS = 12;
 const MIN_HEIGHT = 112;
@@ -70,21 +69,8 @@ function normalizeMap(value: unknown): WidgetLayoutMap {
   return next;
 }
 
-function readLayout(): WidgetLayoutMap {
-  return normalizeMap(
-    getPrefAutosave<WidgetLayoutMap>(LAYOUT_PREF_SUFFIX, {
-      codec: "json",
-      defaultValue: {},
-    }),
-  );
-}
-
 export function defaultWidgetLayout(span: WidgetSpanClass): WidgetLayoutItem {
   return DEFAULT_LAYOUT_BY_SPAN[span];
-}
-
-function writeLayout(next: WidgetLayoutMap): void {
-  setPrefAutosave(LAYOUT_PREF_SUFFIX, next, { codec: "json" });
 }
 
 function computeColumnWidth(gridEl: HTMLElement | null): number {
@@ -97,17 +83,9 @@ function computeColumnWidth(gridEl: HTMLElement | null): number {
 }
 
 export function useWidgetLayout(widgets: readonly WidgetRegistration[]) {
-  const [layoutMap, setLayoutMap] = useState<WidgetLayoutMap>(() => readLayout());
+  const { value: layoutMap, update, recovery } = useWidgetMapRecovery(LAYOUT_PREF_SUFFIX, normalizeMap);
 
   const knownIds = useMemo(() => new Set(widgets.map((w) => w.id)), [widgets]);
-
-  useEffect(() => {
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === LAYOUT_PREF_KEY) setLayoutMap(readLayout());
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
 
   const getLayout = useCallback(
     (id: string, span: WidgetSpanClass): WidgetLayoutItem => {
@@ -122,13 +100,9 @@ export function useWidgetLayout(widgets: readonly WidgetRegistration[]) {
       if (!knownIds.has(id)) return;
       const normalized = normalizeItem(nextItem);
       if (!normalized) return;
-      setLayoutMap((prev) => {
-        const next = { ...prev, [id]: normalized };
-        writeLayout(next);
-        return next;
-      });
+      return update(prev => ({ ...prev, [id]: normalized }));
     },
-    [knownIds],
+    [knownIds, update],
   );
 
   const createResizeSnapshot = useCallback(
@@ -151,7 +125,7 @@ export function useWidgetLayout(widgets: readonly WidgetRegistration[]) {
     [getLayout],
   );
 
-  return { getLayout, setWidgetLayout, createResizeSnapshot } as const;
+  return { getLayout, setWidgetLayout, createResizeSnapshot, recovery } as const;
 }
 
 export function layoutFromResize(

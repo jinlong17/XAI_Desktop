@@ -9,8 +9,10 @@
  * The grid itself does NOT know widget internals — it calls
  * registration.render(ctx) and renders the result inside <WidgetShell>.
  */
-import { useCallback, useMemo, useRef, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, type PointerEvent as ReactPointerEvent } from "react";
 
+import { accountScope } from "@repo/plugin-web-storage";
+import { DashboardSaveRecovery, type DashboardRecovery } from "./DashboardSaveRecovery.js";
 import type { Lang } from "@repo/plugin-web-tokens";
 
 import { useDashOrder } from "./internal/useDashOrder.js";
@@ -37,6 +39,7 @@ export interface DashboardGridProps {
    * Owned by DashboardModule (uses rawSetOrder directly to bypass sanitize).
    */
   onRemove?: (id: string) => void;
+  orderState?: { order: string[]; setOrder: (next: string[]) => boolean; recovery: DashboardRecovery };
 }
 
 /**
@@ -64,13 +67,16 @@ function useRegistryMap(widgets: WidgetRegistration[]): Map<string, WidgetRegist
   }, [widgets]);
 }
 
-export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardGridProps) {
+export function DashboardGrid({ widgets, lang, now, goTo, onRemove, orderState }: DashboardGridProps) {
   const registryMap = useRegistryMap(widgets);
 
   // Deduped widgets in their original registration order (used by sanitizeOrder).
   const dedupedWidgets = useMemo(() => Array.from(registryMap.values()), [registryMap]);
 
-  const [order, setOrder] = useDashOrder(dedupedWidgets);
+  const ownOrder = useDashOrder(dedupedWidgets, !orderState);
+  const order = orderState?.order ?? ownOrder[0];
+  const setOrder = orderState?.setOrder ?? ownOrder[1];
+  const orderRecovery = orderState?.recovery ?? ownOrder.recovery;
 
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const lastRects = useRef<Record<string, DOMRect>>({});
@@ -78,12 +84,18 @@ export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardG
 
   useFlipReorder(order, itemRefs, lastRects);
   const { drag, startDrag } = useGridDrag({ order, setOrder, itemRefs });
-  const { getLayout, setWidgetLayout, createResizeSnapshot } = useWidgetLayout(dedupedWidgets);
-  const { getAppearance, setWidgetAppearance, resetWidgetAppearance } =
+  const { getLayout, setWidgetLayout, createResizeSnapshot, recovery: layoutRecovery } = useWidgetLayout(dedupedWidgets);
+  const { getAppearance, setWidgetAppearance, resetWidgetAppearance, recovery: appearanceRecovery } =
     useWidgetAppearance(dedupedWidgets);
 
+  const resizeCleanup = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    const off = accountScope.subscribe(() => resizeCleanup.current?.());
+    return () => { off(); resizeCleanup.current?.(); };
+  }, []);
   const startResize = useCallback(
     (id: string, event: ReactPointerEvent<HTMLButtonElement>) => {
+      resizeCleanup.current?.();
       const reg = registryMap.get(id);
       if (!reg) return;
       const snapshot = createResizeSnapshot(id, reg.span, event, gridRef.current);
@@ -95,8 +107,10 @@ export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardG
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
         window.removeEventListener("pointercancel", onUp);
+        resizeCleanup.current = null;
       };
 
+      resizeCleanup.current = onUp;
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
       window.addEventListener("pointercancel", onUp);
@@ -110,6 +124,9 @@ export function DashboardGrid({ widgets, lang, now, goTo, onRemove }: DashboardG
 
   return (
     <>
+      {!orderState && <DashboardSaveRecovery recovery={orderRecovery} lang={lang} label="Order" />}
+      <DashboardSaveRecovery recovery={layoutRecovery} lang={lang} label="Layout" />
+      <DashboardSaveRecovery recovery={appearanceRecovery} lang={lang} label="Appearance" />
       <div
         ref={gridRef}
         className={`dash-grid${drag ? " is-dragging" : ""}`}

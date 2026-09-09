@@ -18,6 +18,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { emitWebEvent } from "@repo/xai-web-event-bus";
+import { sanitizeOrder, arraysEqual } from "./internal/sanitizeOrder.js";
+import { useOrderSaveRecovery } from "./internal/useOrderSaveRecovery.js";
+import { DashboardSaveRecovery } from "./DashboardSaveRecovery.js";
 import { usePref } from "@repo/plugin-web-storage";
 
 import "./styles.css";
@@ -45,6 +48,13 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // The picker hides widgets that are explicitly present in the user's stored
   // order. Missing registered widgets remain available to add later.
   const [rawOrder, rawSetOrder] = usePref("xai_dash_order");
+  const orderSave = useOrderSaveRecovery(rawOrder, rawSetOrder);
+  const sanitizedOrder = sanitizeOrder(rawOrder, widgets);
+  useEffect(() => {
+    if (!arraysEqual(rawOrder, sanitizedOrder)) orderSave.save(sanitizedOrder, undefined, 'sanitize');
+    // Reconciliation belongs to this order owner, not a second grid subscription.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawOrder.join('|'), sanitizedOrder.join('|')]);
 
   // Session-remove set (Audit Top-10 #9, D-06):
   // Tracks ids explicitly removed in this session so rendering updates before
@@ -56,11 +66,11 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // addWidget helper: appends id to the raw persisted order if not already
   // present and if the id exists in the registered widgets catalog.
   const addWidgetToOrder = useCallback(
-    (id: string) => {
+    (id: string, after?: () => void) => {
       const knownIds = new Set(widgets.map((w) => w.id));
       if (!knownIds.has(id)) return;
       if (rawOrder.includes(id)) return;
-      rawSetOrder([...rawOrder, id]);
+      orderSave.save([...rawOrder, id], () => {
       // Clear from session-remove set so the widget re-appears in the grid.
       setRemovedInSession((prev) => {
         if (!prev.has(id)) return prev;
@@ -68,8 +78,10 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
         next.delete(id);
         return next;
       });
+      after?.();
+      }, `add:${id}`);
     },
-    [widgets, rawOrder, rawSetOrder],
+    [widgets, rawOrder, orderSave],
   );
 
   // removeWidget helper (Audit Top-10 #9, D-06):
@@ -78,15 +90,16 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   const removeWidgetFromOrder = useCallback(
     (id: string) => {
       if (!rawOrder.includes(id)) return; // idempotent no-op
-      rawSetOrder(rawOrder.filter((x) => x !== id));
+      orderSave.save(rawOrder.filter((x) => x !== id), () => {
       setRemovedInSession((prev) => {
         if (prev.has(id)) return prev;
         const next = new Set(prev);
         next.add(id);
         return next;
       });
+      }, `remove:${id}`);
     },
-    [rawOrder, rawSetOrder],
+    [rawOrder, orderSave],
   );
 
   // Emit web:dashboard:add-widget-clicked on every Add-widget interaction;
@@ -106,9 +119,10 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
   // Order per api.md §S14.6 (REC-1): addWidget → emit → close.
   const handlePickerAdd = useCallback(
     (widgetId: string) => {
-      addWidgetToOrder(widgetId);
-      emitWebEvent("web:dashboard:widget-added", { widgetId, source: "picker" });
-      setPickerOpen(false);
+      addWidgetToOrder(widgetId, () => {
+        emitWebEvent("web:dashboard:widget-added", { widgetId, source: "picker" });
+        setPickerOpen(false);
+      });
     },
     [addWidgetToOrder],
   );
@@ -146,6 +160,7 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
         <EmptyState lang={lang} onAddWidget={handleAddFromEmpty} />
       ) : (
         <DashboardGrid
+          orderState={{ order: sanitizedOrder, setOrder: orderSave.save, recovery: orderSave.recovery }}
           widgets={activeWidgets}
           lang={lang}
           now={now}
@@ -153,7 +168,9 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
           onRemove={removeWidgetFromOrder}
         />
       )}
+      {!pickerOpen && <DashboardSaveRecovery recovery={orderSave.recovery} lang={lang} label="Order" />}
       <AddWidgetPicker
+        recovery={<DashboardSaveRecovery recovery={orderSave.recovery} lang={lang} label="Order" />}
         open={pickerOpen}
         lang={lang}
         widgets={widgets}

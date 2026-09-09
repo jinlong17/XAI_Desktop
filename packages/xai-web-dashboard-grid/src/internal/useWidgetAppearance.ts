@@ -4,14 +4,13 @@
  * Layout/order are stored separately. This hook owns only the visual tint and
  * opacity for each widget card shell.
  */
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
-import { getPrefAutosave, setPrefAutosave } from "@repo/plugin-web-storage";
+import { useWidgetMapRecovery } from "./useWidgetMapRecovery.js";
 
 import type { WidgetRegistration } from "../types.js";
 
 const APPEARANCE_PREF_SUFFIX = "dashboard_widget_appearance";
-const APPEARANCE_PREF_KEY = `xai_pref_${APPEARANCE_PREF_SUFFIX}`;
 const MIN_ALPHA = 0.18;
 const MAX_ALPHA = 0.72;
 
@@ -100,19 +99,6 @@ function normalizeMap(value: unknown): WidgetAppearanceMap {
   return next;
 }
 
-function readAppearance(): WidgetAppearanceMap {
-  return normalizeMap(
-    getPrefAutosave<WidgetAppearanceMap>(APPEARANCE_PREF_SUFFIX, {
-      codec: "json",
-      defaultValue: {},
-    }),
-  );
-}
-
-function writeAppearance(next: WidgetAppearanceMap): void {
-  setPrefAutosave(APPEARANCE_PREF_SUFFIX, next, { codec: "json" });
-}
-
 export function toneMetaFor(tone: WidgetGlassTone): WidgetGlassToneMeta {
   return WIDGET_GLASS_TONES.find((item) => item.tone === tone) ?? DEFAULT_TONE_META;
 }
@@ -134,17 +120,9 @@ export function widgetAppearanceCssVars(
 }
 
 export function useWidgetAppearance(widgets: readonly WidgetRegistration[]) {
-  const [appearanceMap, setAppearanceMap] = useState<WidgetAppearanceMap>(() => readAppearance());
+  const { value: appearanceMap, update, recovery } = useWidgetMapRecovery(APPEARANCE_PREF_SUFFIX, normalizeMap);
 
   const knownIds = useMemo(() => new Set(widgets.map((w) => w.id)), [widgets]);
-
-  useEffect(() => {
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === APPEARANCE_PREF_KEY) setAppearanceMap(readAppearance());
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
 
   const getAppearance = useCallback(
     (id: string): WidgetAppearanceItem => {
@@ -159,28 +137,23 @@ export function useWidgetAppearance(widgets: readonly WidgetRegistration[]) {
       if (!knownIds.has(id)) return;
       const normalized = normalizeItem(nextItem);
       if (!normalized) return;
-      setAppearanceMap((prev) => {
-        const next = { ...prev, [id]: normalized };
-        writeAppearance(next);
-        return next;
-      });
+      return update(prev => ({ ...prev, [id]: normalized }));
     },
-    [knownIds],
+    [knownIds, update],
   );
 
   const resetWidgetAppearance = useCallback(
     (id: string) => {
       if (!knownIds.has(id)) return;
-      setAppearanceMap((prev) => {
+      return update((prev) => {
         if (!(id in prev)) return prev;
         const next = { ...prev };
         delete next[id];
-        writeAppearance(next);
         return next;
       });
     },
-    [knownIds],
+    [knownIds, update],
   );
 
-  return { getAppearance, setWidgetAppearance, resetWidgetAppearance } as const;
+  return { getAppearance, setWidgetAppearance, resetWidgetAppearance, recovery } as const;
 }
