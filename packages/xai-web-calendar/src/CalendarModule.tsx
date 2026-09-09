@@ -158,6 +158,9 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
   const handleComposerSave = useCallback(
     (event: UserCalEvent) => {
       if (composer.mode === "edit" && composer.editing) {
+        if (JSON.stringify(getById(composer.editing.id)) !== JSON.stringify(composer.editing)) {
+          throw new Error("Calendar event changed; reopen before saving");
+        }
         update(composer.editing.id, {
           title: event.title,
           startISO: event.startISO,
@@ -185,17 +188,20 @@ export function CalendarModule({ lang }: CalendarModuleProps): JSX.Element {
       setActiveDate(event.startISO.slice(0, 10));
       setComposer(COMPOSER_CLOSED);
     },
-    [composer, create, update],
+    [composer, create, update, getById],
   );
 
   const handleComposerDelete = useCallback(
     (id: string) => {
+      if (JSON.stringify(getById(id)) !== JSON.stringify(composer.editing)) {
+        throw new Error("Calendar event changed; reopen before deleting");
+      }
       remove(id);
       // composer.onDelete already calls onClose internally; we still snap
       // state back to ensure no edge case leaves the dialog open.
       setComposer(COMPOSER_CLOSED);
     },
-    [remove],
+    [remove, getById, composer.editing],
   );
 
   // Merge fixture + user events for the Month view.

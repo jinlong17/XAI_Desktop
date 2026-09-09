@@ -37,6 +37,7 @@
 import type { ChangeEvent, MouseEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
+import { accountScope } from "@repo/plugin-web-storage";
 import type {
   EventColorPreset,
   EventReminderPreset,
@@ -153,12 +154,18 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
     makeInitialState(mode, event, defaultDateKey),
   );
   const [errors, setErrors] = useState<ValidationError[]>([]);
+  const [saveFailure, setSaveFailure] = useState<"save" | "delete" | null>(null);
+  const [exportFailed, setExportFailed] = useState(false);
+  const owner = useRef(accountScope.capture());
 
   // Reset form when (mode, event, defaultDateKey) changes — e.g. operator
   // re-opens the dialog for a different event without unmounting.
   useEffect(() => {
     setForm(makeInitialState(mode, event, defaultDateKey));
     setErrors([]);
+    setSaveFailure(null);
+    setExportFailed(false);
+    owner.current = accountScope.capture();
   }, [mode, event, defaultDateKey]);
 
   // Open/close imperatively to keep HTML semantics.
@@ -242,7 +249,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           reminder: form.reminder,
           updatedAt: now,
         };
-        onSave(patched);
+        try { onSave(patched); setSaveFailure(null); } catch { setSaveFailure("save"); }
       } else {
         const created: UserCalEvent = {
           id: createEventId(),
@@ -258,7 +265,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
           createdAt: now,
           updatedAt: now,
         };
-        onSave(created);
+        try { onSave(created); setSaveFailure(null); } catch { setSaveFailure("save"); }
       }
     },
     [form, mode, event, onSave],
@@ -268,8 +275,11 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       if (mode !== "edit" || !event || !onDelete) return;
-      onDelete(event.id);
-      onClose();
+      try {
+        onDelete(event.id);
+        setSaveFailure(null);
+        onClose();
+      } catch { setSaveFailure("delete"); }
     },
     [mode, event, onDelete, onClose],
   );
@@ -308,6 +318,23 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
         <h2 id="event-composer-title" className="event-composer__title">
           {title}
         </h2>
+
+        {saveFailure && <div role="alert" className="event-composer__recovery">
+          <p>{lang === "zh" ? "更改未保存。草稿仍保留在此页面；请重试，或导出后关闭并重新打开以处理账户或数据冲突。" : "Changes were not saved. Your draft is kept on this page. Retry, or export before reopening to resolve an account or data conflict."}</p>
+          <button type="button" className="event-composer__btn" onClick={() => {
+            try {
+              if (!accountScope.isReady(owner.current)) throw new Error("Account changed");
+              const blob = new Blob([JSON.stringify({ version: 1, kind: "calendar-unsaved-draft", operation: saveFailure, eventId: event?.id ?? null, form }, null, 2)], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url; link.download = "calendar-unsaved-draft.json";
+              document.body.appendChild(link); link.click(); link.remove();
+              setExportFailed(false);
+              setTimeout(() => URL.revokeObjectURL(url), 1000);
+            } catch { setExportFailed(true); }
+          }}>{lang === "zh" ? "导出当前草稿" : "Export current draft"}</button>
+          {exportFailed && <p>{lang === "zh" ? "导出失败或账户已更改；未下载文件。" : "Export failed or the account changed; no file was downloaded."}</p>}
+        </div>}
 
         {/* Title field */}
         <div className="event-composer__field">
@@ -566,7 +593,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
               onClick={handleDelete}
               aria-label={`${s(STR_EVENT_COMPOSER, "btn_delete", lang)}: ${event.title}`}
             >
-              {s(STR_EVENT_COMPOSER, "btn_delete", lang)}
+              {saveFailure === "delete" ? (lang === "zh" ? "重试删除" : "Retry delete") : s(STR_EVENT_COMPOSER, "btn_delete", lang)}
             </button>
           ) : (
             <span />
@@ -584,7 +611,7 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
               className="event-composer__btn event-composer__btn--primary"
               onClick={handleSave}
             >
-              {s(STR_EVENT_COMPOSER, "btn_save", lang)}
+              {saveFailure === "save" ? (lang === "zh" ? "重试保存" : "Retry save") : s(STR_EVENT_COMPOSER, "btn_save", lang)}
             </button>
           </div>
         </div>

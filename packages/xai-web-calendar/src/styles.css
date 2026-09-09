@@ -987,6 +987,7 @@
 }
 .event-composer__actions--right { display: flex; gap: 8px; }
 .event-composer__btn {
+  min-height: 44px;
   padding: 6px 14px;
   border-radius: var(--r-xs, 4px);
   font-size: var(--fs-sm, 14px);

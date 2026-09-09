@@ -1,5 +1,11 @@
 # API Contract — @repo/plugin-web-calendar
 
+## Save failure recovery (2026-09-09)
+
+`useUserCalEvents` mutations throw when persistence fails, the captured account is no longer ready, or raw events differ from the mutation snapshot. The composer catches these failures, keeps the current form open, and offers retry and a manual JSON draft export. Edit/delete also reject changes to the original event while the editor was open. A successful return means the local write succeeded; it does not imply cloud synchronization.
+
+Draft exports contain the current form's local date/time fields and operation; they are recovery documents, not the account export format and not an import API. Export is restricted to the captured account. Cancel/backdrop/Escape explicitly discard the form as before. Drafts are not persisted across page closure. Synchronous baseline checking is not a cross-tab atomic transaction. View/week-start preferences and AI event subscribers have separate write contracts.
+
 > Public surface, types, and side-effect contracts.
 > Companion to `design.md` (12 sections) and `test.md` (AC traceability).
 

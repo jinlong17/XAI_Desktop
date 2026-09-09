@@ -19,8 +19,8 @@
  *     reference; `setPref` updates the React state inside `usePref`).
  */
 
-import { useCallback, useMemo } from "react";
-import { usePref } from "@repo/plugin-web-storage";
+import { useCallback, useMemo, useState } from "react";
+import { accountScope, usePref } from "@repo/plugin-web-storage";
 import type { UserCalEvent } from "./types.js";
 import {
   createEvent,
@@ -60,33 +60,42 @@ export function useUserCalEvents(): UserCalEventsApi {
   // concrete UserCalEvent shape here (single point of truth).
   const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
   const events = eventsRaw as Record<string, UserCalEvent>;
+  const [scope] = useState(() => accountScope.capture());
+  const persist = useCallback((next: Record<string, UserCalEvent>) => {
+    if (!accountScope.isReady(scope)) throw new Error("Calendar account changed");
+    const raw = localStorage.getItem(accountScope.physicalKey("xai_calendar_events", scope));
+    if (JSON.stringify(raw === null ? {} : JSON.parse(raw)) !== JSON.stringify(events)) {
+      throw new Error("Calendar data changed; reopen before saving");
+    }
+    if (!setEventsRaw(next)) throw new Error("Calendar changes were not saved");
+  }, [events, scope, setEventsRaw]);
 
   const list = useMemo(() => listEvents(events), [events]);
 
   const create = useCallback(
     (partial: Omit<UserCalEvent, "id" | "createdAt" | "updatedAt">) => {
       const { next, created } = createEvent(events, partial);
-      setEventsRaw(next);
+      persist(next);
       return created;
     },
-    [events, setEventsRaw],
+    [events, persist],
   );
 
   const update = useCallback(
     (id: string, patch: Partial<Omit<UserCalEvent, "id" | "createdAt">>) => {
       const { next, updated } = updateEvent(events, id, patch);
-      if (updated) setEventsRaw(next);
+      if (updated) persist(next);
       return updated;
     },
-    [events, setEventsRaw],
+    [events, persist],
   );
 
   const remove = useCallback(
     (id: string) => {
       const next = deleteEvent(events, id);
-      if (next !== events) setEventsRaw(next);
+      if (next !== events) persist(next);
     },
-    [events, setEventsRaw],
+    [events, persist],
   );
 
   const getById = useCallback(
