@@ -1,0 +1,11 @@
+revision=151982b
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-ordinary-review-AMWsj9
+
+ ✓ docs/reviews/web-canonical-ordinary-writer-review/ordinary-writer.test.ts (4 tests) 7ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  16:06:52
+   Duration  790ms (transform 102ms, setup 0ms, collect 112ms, tests 7ms, environment 368ms, prepare 79ms)

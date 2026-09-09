@@ -11,3 +11,7 @@ Web; fixed product `3a764a16d8da3df91e00ed2e9a7cd3925fec57ac`. The runner import
 The positive control enables activation and performs an immutable update; it correctly writes revision 1 with the expected value. The tests use the real persisted generation marker and physical localStorage key, with an injected serial lock. They do not claim cross-tab concurrency.
 
 Minimum repair remains within Terra's shared-storage ownership: consistent activation guard, a pre-mutation snapshot or explicit mutation refusal instead of a post-mutation same-object comparison, and final checks on the no-op path. Preserve the fixed failure log and rerun these same business oracles. The current C primitive bounded acceptance is unchanged; ordinary-writer/UI/D1 and full AI-02 remain open.
+
+## Fixed follow-up
+
+Product `151982b` was tested through the identical independent runner and four business assertions. Result **4/4 PASS**, `independent-151982b.log`; original `3a764a1` failure evidence is retained. The three demonstrated activation/false-save/no-op-owner defects are repaired within this bounded scope. This is not a full shared-writer, UI, D1 or AI-02 acceptance. Terra continues actual Calendar/Tasks/Board caller integration.
