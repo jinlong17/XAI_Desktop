@@ -1,7 +1,7 @@
 import { afterEach, expect, it } from 'vitest';
 import { accountScope, createAccountScopeController, generationKey, generationMarkerKey } from '../../../packages/plugin-web-storage/src/internal/accountScope.js';
 import { migrateAccount, readGeneration, type MigrationLock } from '../../../packages/plugin-web-storage/src/internal/accountMigration.js';
-import { setPref } from '../../../packages/plugin-web-storage/src/internal/storage.js';
+import { setPref, setPrefAutosave } from '../../../packages/plugin-web-storage/src/internal/storage.js';
 import { SEED_TASK_COLS } from '../../../packages/xai-web-tasks/src/internal/seed/tasksMock.js';
 
 // Two controllers represent independent page runtimes sharing the same physical store.
@@ -44,6 +44,38 @@ for (const timing of ['before', 'stage', 'verify'] as const) {
     console.log({timing,migrationRejected:Boolean(migrationError),visibleGeneration:visible.generation,oldGenerationHasLatest:localStorage.getItem(originalKey)===JSON.stringify(latest),visibleGenerationHasLatest:visibleRaw===JSON.stringify(latest)});
     // Either a safe migration refusal or a merged/serialized success may satisfy this oracle.
     // Returning migration success while publishing an older Tasks snapshot may not.
+    expect(visibleRaw).toBe(JSON.stringify(latest));
+  });
+}
+
+for (const timing of ['before', 'stage'] as const) {
+  it(`successful account autosave remains visible across migration: ${timing}`, async () => {
+    const accountId = 'autosave-migration-race';
+    localStorage.setItem(generationMarkerKey(accountId), JSON.stringify({generation:'initial',migrationId:'initial',previous:null}));
+    const scope = accountScope.activate(accountScope.lock(accountId), 'initial');
+    const suffix = 'migration_race_private';
+    const logicalKey = `xai_pref_${suffix}`;
+    const physicalKey = generationKey(accountId, 'initial', logicalKey);
+    const latest = {text:'Acknowledged latest account preference'};
+    localStorage.setItem(physicalKey, JSON.stringify({text:'Initial preference'}));
+    let acknowledged = false;
+    const save = () => {
+      acknowledged = setPrefAutosave(suffix, latest, {scope});
+      expect(acknowledged).toBe(true);
+      expect(localStorage.getItem(physicalKey)).toBe(JSON.stringify(latest));
+    };
+    if(timing === 'before') save();
+    const controller = createAccountScopeController();
+    let rejected = false;
+    try {
+      await migrateAccount({storage:localStorage,controller,transition:controller.lock(accountId),choice:'empty',lock,newId:()=>`autosave-${timing}`,
+        secrets:{stage:async()=>{if(timing==='stage')save();},verify:async()=>{}},
+      });
+    } catch { rejected = true; }
+    expect(acknowledged).toBe(true);
+    const visible = readGeneration(localStorage, accountId)!;
+    const visibleRaw = localStorage.getItem(generationKey(accountId, visible.generation, logicalKey));
+    console.log({domain:'account-autosave',timing,rejected,visibleGeneration:visible.generation,visibleHasLatest:visibleRaw===JSON.stringify(latest)});
     expect(visibleRaw).toBe(JSON.stringify(latest));
   });
 }
