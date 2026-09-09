@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
-import { render, fireEvent, screen } from "@testing-library/react";
-import { setPref } from "@repo/plugin-web-storage";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { accountScope, setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
 
@@ -31,6 +31,10 @@ function userEvent(
   };
 }
 
+function seedCalendarEvents(events: Record<string, UserCalEvent>) {
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(events));
+}
+
 describe("CalendarModule event CRUD integration (P4)", () => {
   it("AC-CREATE-7: toolbar + opens create composer on today (not activeDate)", () => {
     vi.useFakeTimers();
@@ -48,7 +52,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
 
   it("AC-EDIT-4: clicking a user block in Week view opens edit composer", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       w1: userEvent("w1", "Week Edit Target", "2026-05-22T09:00", "2026-05-22T10:00"),
     });
     render(<CalendarModule lang="en" />);
@@ -97,7 +101,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
     }
   });
 
-  it("AC-QUICK-CREATE-2: created event renders on its source date with tag", () => {
+  it("AC-QUICK-CREATE-2: created event renders on its source date with tag", async () => {
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
@@ -117,7 +121,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
       });
       fireEvent.click(screen.getByText("Save"));
 
-      const created = screen.getByText("Strategy Review");
+      const created = await screen.findByText("Strategy Review");
       expect(created).toBeTruthy();
       const chip = created.closest(".cal-event") as HTMLElement;
       expect(chip?.getAttribute("data-source")).toBe("user");
@@ -128,11 +132,11 @@ describe("CalendarModule event CRUD integration (P4)", () => {
     }
   });
 
-  it("AC-DELETE-2: deleting a month user event removes it from the date cell", () => {
+  it("AC-DELETE-2: deleting a month user event removes it from the date cell", async () => {
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date("2026-05-22T10:00:00.000Z"));
-      setPref("xai_calendar_events", {
+      seedCalendarEvents({
         del1: userEvent("del1", "Delete Target", "2026-05-22T14:00", "2026-05-22T15:00"),
       });
       render(<CalendarModule lang="en" />);
@@ -140,7 +144,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
       fireEvent.click(screen.getByText("Delete Target"));
       fireEvent.click(screen.getByText("Delete"));
 
-      expect(screen.queryByText("Delete Target")).toBeNull();
+      await waitFor(() => expect(screen.queryByText("Delete Target")).toBeNull());
     } finally {
       vi.useRealTimers();
     }
@@ -148,7 +152,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
 
   it("AC-EDIT-5: clicking a user block in Day view opens edit composer", () => {
     setPref("xai_calendar_view", "day");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       d1: userEvent("d1", "Day Edit Target", "2026-05-22T14:00", "2026-05-22T15:00"),
     });
     render(<CalendarModule lang="en" />);
@@ -161,7 +165,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
 
   it("AC-OVERLAP-1: two overlapping user events render side-by-side in Week view", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       o1: userEvent("o1", "Overlap A", "2026-05-21T09:00", "2026-05-21T11:00"),
       o2: userEvent("o2", "Overlap B", "2026-05-21T10:00", "2026-05-21T12:00"),
     });
@@ -175,7 +179,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
 
   it("AC-OVERLAP-2: three overlapping user events render 3-way columns", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       o1: userEvent("o1", "Overlap 3A", "2026-05-22T09:00", "2026-05-22T11:00"),
       o2: userEvent("o2", "Overlap 3B", "2026-05-22T09:30", "2026-05-22T11:30"),
       o3: userEvent("o3", "Overlap 3C", "2026-05-22T10:00", "2026-05-22T12:00"),
@@ -192,7 +196,7 @@ describe("CalendarModule event CRUD integration (P4)", () => {
 
   it("AC-OVERLAP-3: fixture and user events in same slot both render and keep source tags", () => {
     setPref("xai_calendar_view", "week");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       fxu: userEvent("fxu", "User Fixture Overlap", "2026-05-22T11:30", "2026-05-22T12:00"),
     });
     render(<CalendarModule lang="en" />);

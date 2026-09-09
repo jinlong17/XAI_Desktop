@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, fireEvent, screen, act } from "@testing-library/react";
-import { setPref } from "@repo/plugin-web-storage";
+import { accountScope, setPref } from "@repo/plugin-web-storage";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
@@ -24,6 +24,10 @@ function userEvent(
   };
 }
 
+function seedCalendarEvents(events: Record<string, UserCalEvent>) {
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(events));
+}
+
 function focusDate(dateKey: string): void {
   act(() => {
     emitWebEvent("web:shell:module-change", {
@@ -41,7 +45,7 @@ function switchToDay(): void {
 describe("CalendarModule DST x recurrence integration (P4)", () => {
   it("AC-DST-RECUR-1: daily 09:30 recurrence is stable across Mar 7/8/9 around spring-forward", () => {
     setPref("xai_calendar_view", "month");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       dr1: userEvent(
         "dr1",
         "DST Daily 09:30",
@@ -74,7 +78,7 @@ describe("CalendarModule DST x recurrence integration (P4)", () => {
 
   it("AC-DST-RECUR-2: weekly recurrence anchored on fall-back day appears on Nov 8 + Nov 15", () => {
     setPref("xai_calendar_view", "month");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       dr2: userEvent(
         "dr2",
         "DST Weekly 09:30",

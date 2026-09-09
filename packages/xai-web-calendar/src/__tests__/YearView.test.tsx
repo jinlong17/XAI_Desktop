@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { setPref } from "@repo/plugin-web-storage";
+import { accountScope, setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 import type { UserCalEvent } from "../internal/eventStore/types.js";
 
@@ -18,6 +18,10 @@ function event(over: Partial<UserCalEvent> = {}): UserCalEvent {
     updatedAt: "2026-05-01T00:00:00.000Z",
     ...over,
   };
+}
+
+function seedCalendarEvents(events: Record<string, UserCalEvent>) {
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(events));
 }
 
 beforeEach(() => {
@@ -80,7 +84,7 @@ describe("YearView", () => {
 
   it("caps year-view dots at six and renders overflow as +N", () => {
     setPref("xai_calendar_view", "year");
-    setPref("xai_calendar_events", Object.fromEntries(
+    seedCalendarEvents(Object.fromEntries(
       Array.from({ length: 8 }, (_, index) => {
         const id = `year-overflow-${index + 1}`;
         const hour = String(9 + index).padStart(2, "0");
@@ -103,7 +107,7 @@ describe("YearView", () => {
 
   it("shows user event colors/tags and opens edit from the event dot", () => {
     setPref("xai_calendar_view", "year");
-    setPref("xai_calendar_events", {
+    seedCalendarEvents({
       "year-evt-1": event(),
     });
     render(<CalendarModule lang="en" />);

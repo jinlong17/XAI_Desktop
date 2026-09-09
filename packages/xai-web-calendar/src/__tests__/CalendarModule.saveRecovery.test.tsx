@@ -1,9 +1,14 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { accountScope, setPref } from "@repo/plugin-web-storage";
 import { CalendarModule } from "../CalendarModule.js";
 
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
+
+function seedCalendarEvents(events: Record<string, unknown>) {
+  localStorage.setItem(accountScope.physicalKey("xai_calendar_events"), JSON.stringify(events));
+}
+
 function failWrites() {
   const original = Storage.prototype.setItem;
   const key = accountScope.physicalKey("xai_calendar_events");
@@ -13,38 +18,42 @@ function failWrites() {
   });
   return key;
 }
-it("keeps a failed new event and its latest draft available for retry", () => {
+it("keeps a failed new event and its latest draft available for retry", async () => {
   render(<CalendarModule lang="en" />);
   fireEvent.click(screen.getByLabelText("Add event"));
   const input = document.getElementById("event-composer-title-input") as HTMLInputElement;
   fireEvent.change(input, { target: { value: "Unsaved calendar draft" } });
   const key = failWrites();
   fireEvent.click(screen.getByRole("button", { name: "Save" }));
-  expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
-  expect(input.value).toBe("Unsaved calendar draft");
-  expect(screen.getByRole("alert").textContent).toMatch(/not saved/i);
-  expect(localStorage.getItem(key)).toBeNull();
+  await waitFor(() => {
+    expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
+    expect(input.value).toBe("Unsaved calendar draft");
+    expect(screen.getByRole("alert").textContent).toMatch(/not saved/i);
+    expect(localStorage.getItem(key)).toBeNull();
+  });
   fireEvent.change(input, { target: { value: "Latest calendar draft" } });
   vi.restoreAllMocks();
   fireEvent.click(screen.getByRole("button", { name: /retry save/i }));
-  const events = Object.values(JSON.parse(localStorage.getItem(key)!)) as { title: string }[];
+  await waitFor(() => expect(localStorage.getItem(key)).not.toBeNull());
+  const events = Object.values(JSON.parse(localStorage.getItem(key)!).data) as { title: string }[];
   expect(events.map(event => event.title)).toEqual(["Latest calendar draft"]);
 });
-it("keeps the editor and record when deletion fails", () => {
+it("keeps the editor and record when deletion fails", async () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(2026, 4, 22, 10));
   setPref("xai_calendar_view", "week");
-  setPref("xai_calendar_events", { event: { id: "event", title: "Keep this record", startISO: "2026-05-22T09:00", endISO: "2026-05-22T10:00", colorPreset: "rose", recurrence: null, createdAt: "2026-05-22T00:00:00Z", updatedAt: "2026-05-22T00:00:00Z" } });
+  seedCalendarEvents({ event: { id: "event", title: "Keep this record", startISO: "2026-05-22T09:00", endISO: "2026-05-22T10:00", colorPreset: "rose", recurrence: null, createdAt: "2026-05-22T00:00:00Z", updatedAt: "2026-05-22T00:00:00Z" } });
   render(<CalendarModule lang="en" />);
   fireEvent.click(screen.getByTitle("Keep this record"));
   const key = failWrites();
   const before = localStorage.getItem(key);
   fireEvent.click(screen.getByRole("button", { name: "Delete: Keep this record" }));
+  await vi.advanceTimersByTimeAsync(0);
   expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
   expect(localStorage.getItem(key)).toBe(before);
   expect(screen.getByRole("alert").textContent).toMatch(/not saved/i);
 });
-it("exports the latest unsaved form and refuses old-account retry and export", () => {
+it("exports the latest unsaved form and refuses old-account retry and export", async () => {
   vi.useFakeTimers();
   render(<CalendarModule lang="en" />);
   fireEvent.click(screen.getByLabelText("Add event"));
@@ -52,6 +61,8 @@ it("exports the latest unsaved form and refuses old-account retry and export", (
   fireEvent.change(input, { target: { value: "First draft" } });
   const key = failWrites();
   fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await vi.advanceTimersByTimeAsync(0);
+  expect(screen.getByRole("alert").textContent).toMatch(/not saved/i);
   fireEvent.change(input, { target: { value: "Latest export" } });
   let downloaded = "";
   const OriginalBlob = Blob;
@@ -74,16 +85,19 @@ it("exports the latest unsaved form and refuses old-account retry and export", (
   expect(localStorage.getItem(key)).toBeNull();
   expect(localStorage.getItem(accountScope.physicalKey("xai_calendar_events"))).toBeNull();
 });
-it("does not overwrite newer raw events when retrying a failed draft", () => {
+it("does not overwrite newer raw events when retrying a failed draft", async () => {
   render(<CalendarModule lang="en" />);
   fireEvent.click(screen.getByLabelText("Add event"));
   fireEvent.change(document.getElementById("event-composer-title-input")!, { target: { value: "Old draft" } });
   const key = failWrites();
   fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(screen.getByRole("alert").textContent).toMatch(/not saved/i));
   vi.restoreAllMocks();
   const newer = '{"external":{"id":"external","title":"Newer data"}}';
   localStorage.setItem(key, newer);
   fireEvent.click(screen.getByRole("button", { name: /retry save/i }));
-  expect(localStorage.getItem(key)).toBe(newer);
-  expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
+  await waitFor(() => {
+    expect(localStorage.getItem(key)).toBe(newer);
+    expect((document.querySelector("dialog.event-composer") as HTMLDialogElement).open).toBe(true);
+  });
 });
