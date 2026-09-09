@@ -142,3 +142,8 @@ Connections close and invalidate their cache on `versionchange`/`close`. Open fa
 REL-02 follow-up: serialize the full store operation per database, rather than only the open promise. Otherwise adding a store can synchronously close a cached connection while an earlier caller is awaiting it. Keep the queue failure-tolerant and scoped to the database; retain v1 data and existing custom-store behavior.
 
 REL-03: the auth package reports identity transitions through an injected synchronous callback, keeping local business-storage ownership in plugin-web-storage. Monotonic refresh revisions prevent stale getSession results from resurrecting an older account. Identity derives from session.user.id, never metadata/email/device ID. Auth events update tokens for the same user without resetting the local generation.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 corrects the historical best-effort reset contract. No current account flow calls this broad helper; retain captured-owner row erasers for shared auth/AI data. Aggregate all failures without replacing them with success. Do not close another owner's database or add shared-store deletion to the account workflow. Late native completion cannot change the already reported failure; retry after releasing blockers establishes a new result.

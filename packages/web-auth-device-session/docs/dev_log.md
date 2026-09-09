@@ -261,3 +261,8 @@ References checked: Supabase changelog index and https://supabase.com/docs/refer
 - Risk: externally deployed undocumented 404 idempotency now reports failure and preserves local data until its contract is verified. Complete deletion durability/IDB/auth/cache coordination remains REL-06 work; see diagnosis commit 27b8925.
 - Commit: this entry is included in the exact bounded fix commit (identify via Git history).
 - Work Log: independent diagnosis committed first; API, deployment contract and regression tests updated together; no production services invoked.
+
+
+## REL-06 legacy database reset result contract
+
+REL-06 bounded legacy helper correction: failures now reject, deprecated origin-wide ownership documented. Auth75/typecheck and isolated native blocked/release/retry checks PASS. No caller reintroduced; complete account cleanup participant and cross-tab coordination work remain open.
