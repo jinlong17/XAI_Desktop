@@ -12,7 +12,7 @@ const sourceCommit = process.argv[2];
 if (!sourceCommit) throw new Error('fixed revision required');
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const output = fileURLToPath(new URL('./', import.meta.url));
-const logName = process.env.BOARD_WORKSPACE_NATIVE_LOG ?? 'native-independent.log';
+const logName = process.env.BOARD_WORKSPACE_NATIVE_LOG ?? 'native-selection-source.log';
 const directory = mkdtempSync(join(tmpdir(), 'xai-board-workspace-'));
 const snapshot = join(directory, 'source');
 const downloads = join(directory, 'downloads');
@@ -55,31 +55,13 @@ try {
   const raw = key => ev(`localStorage.getItem(${JSON.stringify(key)})`);
   const download = async () => { let filename; for (let i = 0; i < 100; i++) { filename = readdirSync(downloads).find(name => name.endsWith('.json')); if (filename) break; await delay(50); } assert(filename); assert.equal(readdirSync(downloads).length, 1); const payload = JSON.parse(readFileSync(join(downloads, filename), 'utf8')); rmSync(join(downloads, filename)); return payload; };
 
-  record('baseline', { commit: sourceCommit, chromePid: browser.pid, harness: 'author CDP transport, reviewer scenarios' });
-  const reset = async () => { await cdp('Page.navigate', {url:'http://127.0.0.1:' + server.address().port}); for(let i=0;i<100;i++){if(await ev("!!document.querySelector('[data-testid=bv-switch]')"))break;await delay(50);} await click('[data-testid=bv-switch]'); };
-  await click('[data-testid=bv-switch]');
-  const wk = await ev('verify.workspaceKey'), bk = await ev('verify.boardKey');
-  for (const kind of ['recolor','delete']) {
-    if(kind==='delete')await reset();
-    const before=await raw(wk); await ev('verify.denyWorkspace()'); await click('[data-testid=bs-ws-'+kind+'-empty]');
-    assert.equal(await raw(wk),before); assert(await ev("!!document.querySelector('[role=alert]')"));
-    await ev('verify.restore()'); await clickText('Retry workspace change'); const saved=JSON.parse(await raw(wk)), target=saved.find(w=>w.id==='empty');
-    if(kind==='delete')assert.equal(target,undefined);else assert.notEqual(target.color,'red');
-    assert(!(await ev("!!document.querySelector('[role=alert]')"))); record(kind+'-failure-retry-native',{pass:true});
-  }
-  const failures=[];
-  await reset();
-  const malformedWorkspace=JSON.stringify([{id:'recover-me',name:{en:'Original'},color:123}]);
-  await ev(`(()=>{const key=verify.workspaceKey,value=${JSON.stringify(malformedWorkspace)};localStorage.setItem(key,value);window.dispatchEvent(new StorageEvent('storage',{key,newValue:value,storageArea:localStorage}));})()`); await delay(100);
-  await click('[data-testid=bs-new-workspace]');await input('[data-testid=bs-ws-new-name]','New');await click('[data-testid=bs-ws-new-add]');
-  const workspaceAfter=await raw(wk);const preserved=workspaceAfter===malformedWorkspace;
-  record('malformed-workspace-create',{expected:'preserve original bytes and show recovery',pass:preserved,before:malformedWorkspace,after:workspaceAfter,alert:await ev("!!document.querySelector('[role=alert]')")});if(!preserved)failures.push('malformed workspace overwritten');
-  await reset();
-  const malformedBoards=JSON.stringify([{id:'valuable-board',workspaceId:'empty',title:'Recover me'}]), directoryBefore=await raw(wk);
-  await ev(`(()=>{const key=verify.boardKey,value=${JSON.stringify(malformedBoards)};localStorage.setItem(key,value);window.dispatchEvent(new StorageEvent('storage',{key,newValue:value,storageArea:localStorage}));})()`);await delay(100);
-  await click('[data-testid=bs-ws-delete-empty]');const directoryAfter=await raw(wk);const protectedDelete=directoryBefore===directoryAfter;
-  record('malformed-board-membership-delete',{expected:'refuse deletion when membership is invalid',pass:protectedDelete,workspaceBefore:directoryBefore,workspaceAfter:directoryAfter,boardBytesUnchanged:(await raw(bk))===malformedBoards,alert:await ev("!!document.querySelector('[role=alert]')")});if(!protectedDelete)failures.push('invalid board membership allowed workspace deletion');
-  record('verdict',{passed:4-failures.length,failed:failures.length,failures});assert.deepEqual(failures,[]);
+  record('baseline',{commit:sourceCommit,scope:'invalid board source must not correct active selection from defaults'});
+  await cdp('Page.navigate',{url:'http://127.0.0.1:'+server.address().port+'?corrupt=board&active=valuable-board&denyboard=1'});await delay(300);
+  const expected=JSON.stringify([{id:'valuable-board',workspaceId:'empty',title:'Recover me'}]);
+  const boardAfter=await raw(await ev('verify.boardKey')),activeAfter=await raw(await ev('verify.activeKey'));
+  record('selection-with-invalid-source',{boardBytesPreserved:boardAfter===expected,expectedActive:'valuable-board',activeAfter,pass:activeAfter==='valuable-board'});
+  assert.equal(boardAfter,expected,'fixture must block canonical fallback writes to isolate active-selection effect');
+  assert.equal(activeAfter,'valuable-board','Invalid source must not implicitly replace the persisted selection');
 
 } finally {
   writeFileSync(join(output, logName), records.map(record => JSON.stringify(record)).join('\n') + '\n');

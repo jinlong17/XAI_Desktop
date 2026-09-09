@@ -35,4 +35,10 @@ Storage.prototype.setItem = function(key, value) {
     return { workspaceKey: accountScope.physicalKey('xai_board_workspaces'), boardKey: accountScope.physicalKey('xai_boards_v2') };
   },
 };
+const corruptMode = new URLSearchParams(location.search).get('corrupt');
+const corruptFixtures: Record<string, string> = { board: JSON.stringify([{ id: 'valuable-board', workspaceId: 'empty', title: 'Recover me' }]), 'board-null': 'null', 'board-syntax': '{broken', 'board-empty': '[]' };
+if (corruptMode && corruptFixtures[corruptMode]) localStorage.setItem(boardKey, corruptFixtures[corruptMode]!);
+const activeFixture = new URLSearchParams(location.search).get('active');
+if (activeFixture) localStorage.setItem(activeKey, activeFixture);
+if (new URLSearchParams(location.search).get('denyboard') === '1') denied = boardKey;
 createRoot(document.getElementById('app')!).render(<BoardWorkspacesModule lang="en" />);

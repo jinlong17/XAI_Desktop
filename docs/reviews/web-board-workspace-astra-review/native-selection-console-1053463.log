@@ -1,0 +1,22 @@
+baseline {"commit":"1053463","scope":"invalid board source must not correct active selection from defaults"}
+selection-with-invalid-source {"boardBytesPreserved":true,"expectedActive":"valuable-board","activeAfter":"b-default","pass":false}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Invalid source must not implicitly replace the persisted selection
++ actual - expected
+
++ 'b-default'
+- 'valuable-board'
+
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-board-workspace-astra-review/verify-selection-native.mjs:64:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'b-default',
+  expected: 'valuable-board',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.16.0
