@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-ai-create-retry-independent/verify-original-contract.py", line 9, in <module>
+    content.extractall(snapshot, filter='data')
+TypeError: extractall() got an unexpected keyword argument 'filter'

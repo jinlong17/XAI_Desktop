@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"e45f78e","chromePid":76757}
+{"name":"tasks-quota-same-id-one-record-and-no-duplicate-write","pass":true}
+{"name":"tasks-invalid-title-corrected-same-id","pass":true}
+{"name":"tasks-normal-success-control","pass":true}
+{"name":"calendar-quota-same-id-one-record-and-no-duplicate-write","pass":true}
+{"name":"calendar-invalid-title-corrected-same-id","pass":true}
+{"name":"calendar-normal-success-control","pass":true}
+{"name":"PASS","scope":"in-instance bounded Tasks/Calendar create request retry; no model/ack acceptance"}
