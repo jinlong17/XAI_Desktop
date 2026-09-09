@@ -30,14 +30,17 @@ export function ensureBoardTaskLink(boardId: string, cardId: string, scope: Acco
   try {
     const current = boardsNow();
     const source = { type: 'board-card' as const, boardId, listId: current.list.id, cardId };
-    const rawTasks = read('xai_task_cols');
-    const taskState = rawTasks === null ? { status: 'absent' as const } : readCanonicalCommandState(rawTasks);
+    accountScope.assertCurrent(scope);
+    const rawTaskBytes = localStorage.getItem(accountScope.physicalKey('xai_task_cols', scope));
+    const taskState = rawTaskBytes === null
+      ? { status: 'absent' as const }
+      : readCanonicalCommandState(JSON.parse(rawTaskBytes));
     if (taskState.status === 'corrupt' || taskState.status === 'unsupported' || taskState.status === 'unavailable') {
       throw Error('Task data needs recovery; original bytes were preserved.');
     }
     const taskData = taskState.status === 'absent' ? null : taskState.data;
     const cols = loadTaskColsOrSeed(taskData);
-    if (taskData !== null && cols !== taskData) throw Error('Task data needs recovery; original bytes were preserved.');
+    if (taskState.status !== 'absent' && cols !== taskData) throw Error('Task data needs recovery; original bytes were preserved.');
     const existing = findBoardLinkedTask(cols, source);
     const draft = current.card.taskLink?.pending ?? { title: current.card.title, ...(current.card.dueDate ? { dueDate: current.card.dueDate } : {}) };
     const task = existing?.task ?? taskCardFromBoardLink({ ...source, ...draft });

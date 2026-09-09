@@ -49,3 +49,8 @@ it('reads task data from an envelope but leaves durable receipt bytes untouched 
  expect(localStorage.getItem(taskKey())).toBe(raw);
  expect(card().taskLink?.pending).toBeDefined();
 });
+it.each([JSON.stringify(null),JSON.stringify({format:'xai-command-state',version:1,revision:1,data:null,receipts:{}})])('invalid non-absent task bytes %s never save Board intent',raw=>{
+ seed();const scope=accountScope.capture(),before=localStorage.getItem(boardKey());localStorage.setItem(taskKey(),raw);
+ expect(ensureBoardTaskLink('b-default','bc1',scope)).toMatchObject({ok:false,phase:'intent'});
+ expect(localStorage.getItem(boardKey())).toBe(before);expect(localStorage.getItem(taskKey())).toBe(raw);
+});
