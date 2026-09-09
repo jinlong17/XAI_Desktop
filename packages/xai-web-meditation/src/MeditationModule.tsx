@@ -5,7 +5,7 @@
  * fullscreen overlay when `active` is true.
  */
 
-import { useMemo, useState, type JSX } from "react";
+import { useMemo, useRef, useState, type JSX } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
 import type {
   AmbientSoundId,
@@ -17,6 +17,7 @@ import type {
   Duration,
   DurationMode,
   MeditationModuleProps,
+  MeditationPrefs,
   PresetDuration,
   Scene,
   SceneAnimation,
@@ -116,7 +117,15 @@ function draftFromCurrent(scene: Scene, prefs: ReturnType<typeof useMeditationPr
 
 export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   const { s } = useI18n(lang);
-  const [prefs, setPrefs] = useMeditationPrefs();
+  const [prefs, persistPrefs, recovery] = useMeditationPrefs();
+  const pendingAction = useRef<'preferences' | 'scene' | 'delete' | null>(null);
+  const [exportFailed, setExportFailed] = useState(false);
+  const setPrefs = (next: MeditationPrefs, action: 'preferences' | 'scene' | 'delete' = 'preferences'): boolean => {
+    if (pendingAction.current && (pendingAction.current !== action || action !== 'scene')) return false;
+    const saved = persistPrefs(next, pendingAction.current === 'scene');
+    pendingAction.current = saved ? null : action;
+    return saved;
+  };
   const [active, setActive] = useState<boolean>(false);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
   const [fixedDraft, setFixedDraft] = useState<string>("60");
@@ -145,8 +154,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const setVolume = (volume: number): void => {
-    setPrefs({ ...prefs, volume });
-    ambient.setVolume(volume);
+    if (setPrefs({ ...prefs, volume })) ambient.setVolume(volume);
   };
 
   const applyCustomScene = (custom: CustomScene): void => {
@@ -177,7 +185,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const onPickSound = (sound: AmbientSoundId): void => {
-    setPrefs({ ...prefs, sound });
+    if (!setPrefs({ ...prefs, sound })) return;
     if (sound === "none") {
       ambient.pause();
       return;
@@ -201,7 +209,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
     const customFixedDurations = isBuiltIn || exists
       ? prefs.customFixedDurations
       : [...prefs.customFixedDurations, minutes].sort((a, b) => a - b);
-    setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" });
+    if (!setPrefs({ ...prefs, customFixedDurations, duration: minutes, durationMode: "preset" })) return;
     setFixedDraft(String(minutes));
   };
 
@@ -221,6 +229,7 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const onStart = (): void => {
+    if (pendingAction.current) return;
     ambient.pause();
     setSettingsOpen(false);
     setActive(true);
@@ -231,16 +240,19 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
   };
 
   const startNewScene = (): void => {
+    if (pendingAction.current) return;
     setEditingSceneId("new");
     setDraft(draftFromCurrent(scene, prefs));
   };
 
   const editCustomScene = (custom: CustomScene): void => {
+    if (pendingAction.current) return;
     setEditingSceneId(custom.id);
     setDraft({ ...custom });
   };
 
   const saveCustomScene = (): void => {
+    if (pendingAction.current && pendingAction.current !== 'scene') return;
     const id = editingSceneId === "new" ? makeCustomSceneId() : editingSceneId;
     const nextScene: CustomScene = {
       id,
@@ -261,23 +273,53 @@ export function MeditationModule({ lang }: MeditationModuleProps): JSX.Element {
       editingSceneId === "new"
         ? [...prefs.customScenes, nextScene]
         : prefs.customScenes.map((item) => (item.id === id ? nextScene : item));
-    setPrefs({ ...prefs, customScenes, scene: id });
+    if (!setPrefs({ ...prefs, customScenes, scene: id }, 'scene')) return;
     setEditingSceneId(id);
     setDraft({ ...nextScene });
   };
 
   const deleteCustomScene = (id: CustomSceneId): void => {
     const customScenes = prefs.customScenes.filter((item) => item.id !== id);
-    setPrefs({
+    if (!setPrefs({
       ...prefs,
       customScenes,
       scene: prefs.scene === id ? "ocean" : prefs.scene,
-    });
+    }, 'delete')) return;
     startNewScene();
+  };
+
+  const retrySave = (): void => {
+    if (pendingAction.current === 'scene') { saveCustomScene(); return; }
+    const action = pendingAction.current;
+    if (!recovery.retry()) return;
+    pendingAction.current = null;
+    if (action === 'delete') startNewScene();
+  };
+  const exportDraft = (): void => {
+    try {
+      const snapshot = recovery.snapshot();
+      if (!snapshot) throw new Error('No pending draft');
+      const blob = new Blob([JSON.stringify({ version: 1, kind: 'meditation-unsaved-draft', snapshot, sceneDraft: draft, fixedDurationDraft: fixedDraft }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'meditation-unsaved-draft.json';
+      document.body.append(link);
+      try { link.click(); } finally { link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); }
+      setExportFailed(false);
+    } catch { setExportFailed(true); }
   };
 
   return (
     <div className={"module module-meditation" + (active ? " is-playing" : "")}>
+      {recovery.failure && <div className="med-save-recovery" role="alert">
+        <p>{lang === 'zh' ? '尚未保存。请重试、导出草稿或放弃此次更改后继续。' : 'Not saved. Retry, export the draft, or discard this change before continuing.'}</p>
+        {recovery.failure === 'conflict' && <p>{lang === 'zh' ? '已有较新的数据，未覆盖。请先导出草稿。' : 'Newer stored data was preserved. Export your draft first.'}</p>}
+        <p>{lang === 'zh' ? '导出包含设置、自定义场景和未保存编辑；仅供手动恢复，当前不支持导入。' : 'Export includes settings, custom scenes and unsaved edits for manual recovery. Import is not supported.'}</p>
+        <button type="button" onClick={retrySave}>{lang === 'zh' ? '重试保存' : 'Retry save'}</button>
+        <button type="button" onClick={exportDraft}>{lang === 'zh' ? '导出草稿' : 'Export draft'}</button>
+        <button type="button" onClick={() => { recovery.discard(); pendingAction.current = null; setExportFailed(false); }}>{lang === 'zh' ? '放弃此次更改' : 'Discard change'}</button>
+        {exportFailed && <p>{lang === 'zh' ? '导出失败，请检查账户和存储访问权限。' : 'Export failed. Check account and storage access.'}</p>}
+      </div>}
       {!active && (
       <div className="med-config">
         <header className="module-head">

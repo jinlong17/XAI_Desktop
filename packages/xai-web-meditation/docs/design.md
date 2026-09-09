@@ -453,3 +453,7 @@ keep the dependency surface minimal. **Confirmed in Q during plan.**
 - **Stats integration** — out of scope for #16. Statistics row #20 will
   add the event-bus consumer once meditation declares an emit; not now.
 - **Reduced-data mode** — not implemented (orthogonal to motion).
+
+## 2026-09-09 failed-save recovery
+
+A visible alert offers Retry save, Export draft and Discard change. The custom-scene editor stays editable after a failed save; starting a different scene or an unrelated mutation is blocked until the proposal is resolved. New scene ids are only installed into editor state after persistence succeeds, preventing the previous failed-new→empty-map retry bug. Failed deletion retains both stored scene and editor draft. Recovery controls have 44px minimum height and remain above the player if a volume save fails. Downloads explicitly disclose settings/custom scenes/unsaved edits and manual recovery only.

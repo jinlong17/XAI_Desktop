@@ -302,3 +302,9 @@ All present in `plugin-web-tokens/src/i18n.ts` lines 174–188 (EN) +
 `oklch()` is mandatory; users on older browsers see the browser's CSS
 fallback `currentColor` for unrecognized color functions — visually
 degraded but functional. (Same constraint as matrix / habits / pomodoro.)
+
+## 2026-09-09 save-result contract
+
+`useMeditationPrefs` now returns `[prefs, commit(next, replacePending?), recovery]`. Commit returns true only after the shared storage setter succeeds. Recovery exposes failure (`write`, `conflict`, `account`), retry, discard and a scope-checked snapshot. A failed proposal is retained in mounted-page memory; unrelated mutations cannot replace it. Retry compares the original failed-write baseline and refuses to overwrite newer bytes. This is not an atomic multi-tab transaction. Initial corrupt/unknown-schema decoding remains a separate REL-07 concern.
+
+Scene creation/editing advances the editor id only after success; deletion resets the editor only after success. Retrying a scene uses its latest editor values. Failed preference writes do not start playback or publish an audio change. The JSON recovery download contains committed-context settings/scenes plus the attempted proposal and current editor drafts; it has no import API. Refresh/route unmount/browser close can still discard in-memory drafts (REL-09). Captured account handles guard retry and export.

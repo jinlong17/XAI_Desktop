@@ -27,6 +27,34 @@
   animation: none;
 }
 
+.module-meditation .med-save-recovery {
+  padding: 1rem;
+  color: var(--text-1);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-1);
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.module-meditation .med-save-recovery button {
+  min-height: 44px;
+  margin: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  color: inherit;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-1);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.module-meditation.is-playing .med-save-recovery {
+  position: absolute;
+  z-index: calc(var(--meditation-player-z) + 1);
+  inset: 1rem 1rem auto;
+  max-height: 45vh;
+  overflow: auto;
+}
+
 .module-meditation .module-head {
   display: flex;
   align-items: center;
