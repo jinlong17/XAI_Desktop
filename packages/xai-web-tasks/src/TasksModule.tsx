@@ -68,7 +68,7 @@ type CollectionBoardMode = "grouped" | "time";
 export function TasksModule({ lang }: TasksModuleProps) {
   const { s } = useI18n(lang);
   const owner = useRef(accountScope.capture()).current;
-  const [failedSave, setFailedSave] = useState<{ kind: "tasks" | "lists" | "tags"; value: TaskCol[] | TaskListMeta[] | TaskTagMeta[] } | null>(null);
+  const [failedSave, setFailedSave] = useState<{ kind: "tasks" | "lists" | "tags"; value: TaskCol[] | TaskListMeta[] | TaskTagMeta[]; baseline?: TaskCol[] } | null>(null);
   const { now } = useLocalDayClock();
 
   const [rawCols, setRawCols] = usePref("xai_task_cols");
@@ -107,7 +107,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   const persistCols = useCallback(async (next: TaskCol[], baseline: TaskCol[] = taskCols) => {
     if (!accountScope.isReady(owner)) {
-      setFailedSave({ kind: "tasks", value: next });
+      setFailedSave({ kind: "tasks", value: next, baseline });
       return false;
     }
     const result = await mutateCanonicalDataset({
@@ -118,7 +118,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
         : ({ ok: false as const, reason: "conflict" }),
     });
     if (result.ok) { setRawCols(result.data as unknown as Parameters<typeof setRawCols>[0]); setFailedSave(null); return true; }
-    setFailedSave({ kind: "tasks", value: next });
+    setFailedSave({ kind: "tasks", value: next, baseline });
     return false;
   }, [setRawCols, owner, taskCols]);
 
@@ -395,7 +395,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
       {failedSave && !composer.open && !editingTaskId && !metaEditor && <div>
         <TaskSaveFailure lang={lang} owner={owner} draft={failedSave} />
         <button onClick={() => {
-          if (failedSave.kind === "tasks") persistCols(failedSave.value as TaskCol[]);
+          if (failedSave.kind === "tasks") void persistCols(failedSave.value as TaskCol[], failedSave.baseline ?? taskCols);
           else if (failedSave.kind === "lists") persistLists(failedSave.value as TaskListMeta[]);
           else persistTags(failedSave.value as TaskTagMeta[]);
         }}>{lang === "zh" ? "重试保存" : "Retry save"}</button>
