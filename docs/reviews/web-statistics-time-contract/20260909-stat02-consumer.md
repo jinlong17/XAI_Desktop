@@ -1,0 +1,7 @@
+# STAT-02 recorded completion consumer
+
+Statistics no longer places all current completed tasks into the last date bucket. It reads `completedAt` and distributes actual recorded completion instants across the local range. The current-board KPI remains a total, explicitly separate from the timeline. With no usable dates there is no date chart. Legacy undated rows are disclosed without modifying their raw source; legacy completed containers infer only missing done=true, never override an explicit false. Invalid/future dates cannot fabricate past activity.
+
+TASK-02's owner is implementing real timestamps on completion/undo and stable Board identity concurrently. This commit is the consumer half, not a full STAT-02 acceptance or TASK-02 closure. Independent actual Task completion→Statistics→undo/recompletion/reload is still required after the producer commit.
+
+Validation: original diagnosis four assertions now PASS unchanged (`stat02-after.log`); Statistics 23 files / 166 tests PASS; typecheck/lint PASS. A prior test explicitly asserting the incorrect last-bucket fill was replaced with the requested undated-total behavior. New tests verify real dates, out-of-range dates, legacy completed containers, invalid/future instants, undo/recompletion inputs and actual module no-history/mixed-history display. This is synthetic consumer verification; no real producer or browser acceptance is claimed.

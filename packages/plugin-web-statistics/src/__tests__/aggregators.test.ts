@@ -205,8 +205,7 @@ describe("aggregateRange — month / all ranges", () => {
 });
 
 describe("aggregateRange — invariants", () => {
-  it("A14: tasksTotal === sum(taskBuckets) === real done count from xai_task_cols (replaced proxy)", () => {
-    // With real taskCols: 2 done cards → tasksTotal = 2, placed in last bucket
+  it("A14: undated current completions contribute to total but never fabricate a date bucket", () => {
     const taskCols = {
       overdue: { tasks: [{ done: true }, { done: false }] },
       next7:   { tasks: [{ done: true }] },
@@ -219,10 +218,9 @@ describe("aggregateRange — invariants", () => {
     const agg = aggregateRange("week", sessions, EMPTY_HABITS_STATE, 0, NOW, "en", taskCols);
     // tasksTotal = real count (2), not session count (3)
     expect(agg.kpis.tasksTotal).toBe(2);
-    // taskBuckets sum equals tasksTotal
-    expect(agg.taskBuckets.reduce((a, b) => a + b, 0)).toBe(2);
-    // The total is placed in the last bucket (honest fill)
-    expect(agg.taskBuckets[agg.taskBuckets.length - 1]).toBe(2);
+    expect(agg.taskBuckets.every(n => n === 0)).toBe(true);
+    expect(agg.undatedCompletedTasks).toBe(2);
+    expect(agg.taskSeriesAvailable).toBe(false);
   });
 
   it("A15: focusMinutesTotal === sum(focusBuckets)", () => {

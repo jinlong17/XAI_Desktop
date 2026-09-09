@@ -1,5 +1,11 @@
 # plugin-web-statistics — api
 
+## STAT-02 consumer amendment — 2026-09-09 recorded completion dates
+
+The current completed total and dated timeline are separate. Timeline buckets use valid ISO `completedAt` instants of currently completed tasks. Missing, invalid and future timestamps remain in the current total but never become a last-bucket event. Without any usable completion dates the module displays only the current total and an explicit no-history message; mixed records disclose the undated count beside the timeline.
+
+Compatibility with TASK-02: `done: true` is completed; in the legacy `completed[]` container only an absent `done` implies completion, while explicit false is respected. Undone rows never contribute, even if a stale timestamp remains. Reads never assign timestamps or modify persisted data. The owner will generate a fresh UTC ISO timestamp on a real incomplete→complete transition, preserve it on idempotent completion/moves and remove it on undo. Consumer support alone does not establish that every Task/Board producer follows that contract.
+
 ## STAT-01 amendment — 2026-09-09 measured focus time
 
 `elapsedMs` is the actual focus duration, excluding pauses. `durationMs` remains the configured limit and is never substituted for elapsed work. A finite elapsed value from zero through the configured duration is measured; missing, negative, nonnumeric, nonfinite or over-limit values are unknown. Legacy rows remain readable and unchanged, but unknown duration contributes no measured minutes. `RangeAggregate.unmeasuredFocusSessions` counts such focus rows in the selected time range and the module displays a bilingual exclusion notice.

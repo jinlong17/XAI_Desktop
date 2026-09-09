@@ -20,7 +20,7 @@ export type KpiCellId = "tasks" | "focus" | "habits" | "daily-avg";
  * or "—" when the prior window is empty. Never null.
  */
 export interface StatisticsKpis {
-  /** Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant — no completion timestamp on TaskCard; see api.md §0). */
+  /** Real count of `done === true` cards in `xai_task_cols` (current board, range-invariant; dated timeline is separate). */
   tasksTotal: number;
   /** Total focus minutes summed across the active range. */
   focusMinutesTotal: number;
@@ -79,6 +79,9 @@ export interface RangeAggregate {
   range: RangeId;
   /** Current-range focus rows missing a valid actual duration, excluded from measured totals. */
   unmeasuredFocusSessions: number;
+  /** Completed current tasks lacking a usable historical completion instant. */
+  undatedCompletedTasks: number;
+  taskSeriesAvailable: boolean;
   labels: string[];
   focusBuckets: number[];
   taskBuckets: number[];

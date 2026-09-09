@@ -236,11 +236,21 @@ export function StatisticsModule({
               </span>
             </div>
           </div>
+          {agg.taskSeriesAvailable ? <>
+          <p className="muted">{lang === 'zh'
+            ? `所选范围内有 ${agg.taskBuckets.reduce((a, b) => a + b, 0)} 条带完成时间的任务`
+            : `${agg.taskBuckets.reduce((a, b) => a + b, 0)} dated task completions in the selected range`}</p>
           <BarChart
             labels={agg.labels}
             data={agg.taskBuckets}
             colorVar="var(--blue)"
           />
+          </> : <p className="muted" data-testid="tasks-no-history">{lang === 'zh'
+            ? '尚无完成时间记录，仅显示当前已完成总数。'
+            : 'No completion dates recorded. Showing the current completed total only.'}</p>}
+          {agg.undatedCompletedTasks > 0 && agg.taskSeriesAvailable && <p className="muted">{lang === 'zh'
+            ? `${agg.undatedCompletedTasks} 条已完成任务没有有效完成时间，未计入时间序列。`
+            : `${agg.undatedCompletedTasks} completed tasks have no valid completion date and are excluded from the timeline.`}</p>}
         </div>
 
         {/* Productive hours (24-hour bar) */}

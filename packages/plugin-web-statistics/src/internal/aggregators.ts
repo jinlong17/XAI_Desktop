@@ -13,17 +13,9 @@ import { parseLocalDateKey } from "@repo/plugin-web-tokens";
  * api.md §5.2..§5.8.
  *
  * @remarks
- * Tasks metric: `kpis.tasksTotal` is the REAL count of `done === true` cards
- * in `xai_task_cols` (current board, range-invariant — no completion timestamp
- * on `TaskCard`). `kpis.tasksTrend` is always `"—"` (honest: no prior-window
- * baseline for a timestamp-less count). The pomodoro-as-tasks proxy has been
- * retired. Statistics NEVER writes `xai_task_cols`.
- *
- * `taskBuckets` is an honest current-state total fill: the real `done` count
- * is placed in the last bucket, all others are zero. This is NOT a time series
- * — the array length equals `labels.length` so the BarChart leaf is unchanged.
- * The Tasks BarChart panel header carries a user-visible "current board" marker
- * (REC-1 / B1 Path 1) that frames this honestly.
+ * tasksTotal is the current completed total. taskBuckets uses only recorded
+ * completedAt instants. Legacy undated rows remain in the total and are
+ * disclosed separately; no date or task trend is invented. Reads never write.
  */
 
 import type { Lang } from "@repo/plugin-web-tokens";
@@ -36,7 +28,7 @@ import type {
   StatisticsKpis,
 } from "../types.js";
 import { RING_PALETTE } from "./colors.js";
-import { countDoneTasks } from "./countDoneTasks.js";
+import { readTaskCompletions } from "./countDoneTasks.js";
 import { type HabitsStateRecord } from "./isHabitsStateRecord.js";
 import { type PomodoroSessionRecord } from "./isPomodoroSession.js";
 import {
@@ -130,13 +122,20 @@ export function aggregateRange(
   // Real tasks done count (current board, range-invariant).
   // The proxy (counting focus sessions as tasks) has been retired.
   // Statistics NEVER writes xai_task_cols — read-only aggregator.
-  const currentTasksTotal = countDoneTasks(rawTaskCols);
+  const completions = readTaskCompletions(rawTaskCols);
+  const currentTasksTotal = completions.length;
 
-  // Honest taskBuckets fill: place the real total in the last bucket,
-  // zeros elsewhere. NOT a time series. JSDoc above explains why.
+  // Only actual completion instants belong in the timeline. Legacy/future
+  // dates remain in the current total without inventing a historical event.
   const taskBuckets = new Array<number>(w.labels.length).fill(0);
-  if (w.labels.length > 0 && currentTasksTotal > 0) {
-    taskBuckets[w.labels.length - 1] = currentTasksTotal;
+  let undatedCompletedTasks = 0;
+  for (const completion of completions) {
+    if (completion.completedAt === null || completion.completedAt > now.getTime()) {
+      undatedCompletedTasks++;
+      continue;
+    }
+    const index = bucketIndexFor(completion.completedAt, w.bucketBoundaries, w.end);
+    if (index >= 0) taskBuckets[index] = (taskBuckets[index] ?? 0) + 1;
   }
 
   // KPIs derived from current vs prior window totals
@@ -174,8 +173,7 @@ export function aggregateRange(
     focusMinutesTotal: currentFocusMinutes,
     habitsKeptStr,
     dailyAvgMinutes,
-    // tasksTrend is always "—": no honest prior-window for a timestamp-less
-    // current-board count. The proxy's fabricated +N% trend has been retired.
+    // The current-board total is not a historical delta; leave its trend unset.
     tasksTrend: "—",
     focusTrend: trendPercent(currentFocusMinutes, priorFocusMinutes),
     habitsKeptTrend:
@@ -256,6 +254,8 @@ export function aggregateRange(
 
   return {
     range,
+    undatedCompletedTasks,
+    taskSeriesAvailable: completions.length > undatedCompletedTasks,
     unmeasuredFocusSessions: focusSessions.filter(s => isInRange(s, w.start, w.end) && measuredDurationMs(s) === null).length,
     labels: w.labels,
     focusBuckets,
