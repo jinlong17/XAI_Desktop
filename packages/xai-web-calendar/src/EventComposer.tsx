@@ -158,10 +158,12 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
   const [exportFailed, setExportFailed] = useState(false);
   const [pending, setPending] = useState(false);
   const owner = useRef(accountScope.capture());
+  const session = useRef(0);
 
   // Reset form when (mode, event, defaultDateKey) changes — e.g. operator
   // re-opens the dialog for a different event without unmounting.
   useEffect(() => {
+    session.current += 1;
     setForm(makeInitialState(mode, event, defaultDateKey));
     setErrors([]);
     setSaveFailure(null);
@@ -277,11 +279,12 @@ export function EventComposer(props: EventComposerProps): ReactElement | null {
     async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       if (pending || mode !== "edit" || !event || !onDelete) return;
+      const operationSession = session.current;
       try {
         setPending(true);
         await onDelete(event.id);
         setSaveFailure(null);
-        onClose();
+        if (session.current === operationSession) onClose();
       } catch { setSaveFailure("delete"); } finally { setPending(false); }
     },
     [mode, event, onDelete, onClose, pending],

@@ -16,7 +16,7 @@ import { PREF_REGISTRY, type WebPrefKey, type WebPrefValue } from "./registry.js
 import { getPref, setPref, removePref, subscribeSameTab, readRawPref, decodeStoredPrefValue } from "./storage.js";
 import { accountScope } from "./accountScope.js";
 import { ownershipForKey } from "./accountOwnership.js";
-import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey } from "./canonicalCommandState.js";
+import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandSnapshot } from "./canonicalCommandState.js";
 
 // ---------------------------------------------------------------------------
 // PrefMeta
@@ -210,8 +210,12 @@ function usePrefBrowser<K extends WebPrefKey>(
   // ---- reset --------------------------------------------------------------
 
   const reset = useCallback(() => {
-    if (isCanonicalCommandKey(key) && isCanonicalCommandActivationEnabled()) return;
+    if (isCanonicalCommandKey(key)) {
+      const state = readCanonicalCommandSnapshot(key, scope);
+      if (isCanonicalCommandActivationEnabled() || state.status === "envelope" || state.status === "corrupt" || state.status === "unsupported" || state.status === "unavailable") return;
+    }
     removePref(key, scope);
+    if (isCanonicalCommandKey(key) && readRawPref(key, scope) !== null) return;
     setValueInternal(effectiveDefault);
     setIsDefault(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
