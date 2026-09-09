@@ -93,7 +93,9 @@
         "commit:65e87b7",
         "../web-account-deletion-reliability/20260909-legacy-wipe-verification.md",
         "commit:c0af11b",
-        "../web-auth-session-cleanup/20260909-rel06-independent-diagnosis.md"
+        "../web-auth-session-cleanup/20260909-rel06-independent-diagnosis.md",
+        "commit:2cec3c5",
+        "../web-auth-session-cleanup/20260909-generation-foundation.md"
       ]
     },
     {
@@ -176,13 +178,19 @@
     },
     {
       "id": "POMO-01",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:b6cf0ee",
+        "../web-pomodoro-durable-session/20260909-diagnosis.md"
+      ]
     },
     {
       "id": "POMO-02",
-      "status": "pending",
-      "evidence": []
+      "status": "in_progress",
+      "evidence": [
+        "commit:b6cf0ee",
+        "../web-pomodoro-durable-session/20260909-diagnosis.md"
+      ]
     },
     {
       "id": "POMO-03",

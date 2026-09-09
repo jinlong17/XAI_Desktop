@@ -19,3 +19,7 @@ REL-05：Tasks/Bookkeeping 的独立验收已完成（7102f22）：原始2例、
 TT-01：6cd137e复现跨日/周/月归属、未来污染、DST与暂停段问题；c5b08a7统一窗口交集统计，保留原记录用于编辑/删除，并接入全部Insights和widget。作者原始11例及包内63例通过；已交独立Agent核验真实浏览器、CSV与源记录边界，保持verification_pending。TT-03小时/CSV关联实现已接入但未独立关闭。编号以TODO为准：TT-04为分类删除事务，统计性能为TT-07。
 
 REL-06：c0af11b使用实际Supabase SDK与原生浏览器持久化复现旧清理删除新账户、吞错后恢复旧账户、旧signOut完成后删除新会话三条竞态。原子generation存储基础正在实施，尚未接入SDK、宿主与全部清理参与者；不能把基础设施完成视为整体修复通过。生产认证、真实跨标签页及浏览器重启仍需对应验收。
+
+REL-06原子存储基础已提交2cec3c5：候选/发布/撤销、schema错误保留、legacy防重放，作者31个generation+storage检查与6个原生双context检查通过。SDK接入审查发现同一已发布generation仍可能被另一账户登录写入，正在补原子session owner声明及SDK适配；基础提交不代表原始三项竞态已完整修复。
+
+POMO-01/02诊断b6cf0ee已复现：8个正确预期中7FAIL/1对照PASS，原生running/paused刷新与第二窗口观察3项失败。失败日志是缺陷证据，runner退出0仅表示采集成功。已启动持久会话、Web Lock下权威重读、pending→幂等history→清理和应用级controller实施；刷新、真实关tab重开与双tab结算仍须修后独立验证。
