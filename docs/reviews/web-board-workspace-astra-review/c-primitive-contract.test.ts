@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { accountScope, generationKey, generationMarkerKey, accountPrefix } from '@repo/plugin-web-storage';
-import { BINDING_READY, runPrimitive, type Data, type Input, type Lock } from './c-primitive-adapter.js';
+import { BINDING_READY, runPrimitive, signatureFor, receiptIdentity, resetActivation, type Data, type Input, type Lock } from './c-primitive-adapter.js';
 
 beforeAll(() => { if (!BINDING_READY) throw Error('PREPARATION ONLY: fixed-commit C binding not supplied.'); });
 const logical = 'xai_calendar_events';
@@ -8,7 +8,8 @@ const owner = 'astra-c';
 const generation = 'g1';
 const physical = generationKey(owner, generation, logical);
 const marker = generationMarkerKey(owner);
-const receipt = { operationVersion: 1, signature: 'delete:item:v1', result: { ok: true, targetId: 'item' }, committedAt: '2026-09-09T12:00:00.000Z' };
+const deleteOperation = 'delete:item:v1';
+const receipt = { operationVersion: 1, signature: signatureFor(deleteOperation), result: { ok: true, targetId: 'item' }, committedAt: '2026-09-09T12:00:00.000Z' };
 const envelope = (data: unknown = {}, receipts: Record<string, unknown> = {}, revision = 1) => ({ format: 'xai-command-state', version: 1, revision, data, receipts });
 const validate = (value: unknown): value is Data => value !== null && typeof value === 'object' && !Array.isArray(value) && Object.values(value).every(row => row !== null && typeof row === 'object' && typeof row.title === 'string');
 const lock: Lock = async (_name, run) => run();
@@ -20,7 +21,7 @@ beforeEach(() => {
   localStorage.clear(); accountScope.activate(accountScope.lock(owner), generation);
   localStorage.setItem(marker, JSON.stringify({ generation, migrationId: 'existing', previous: null }));
 });
-afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); resetActivation(); });
 
 it('activation is disabled by default: no mutator or storage write', async () => {
   const mutate = vi.fn(opts().mutate); const write = operations();
@@ -32,7 +33,7 @@ it('first physically absent dataset commits data and receipt together with exact
   expect(result).toEqual({ ok: true, targetId: 'item' });
   expect(write.mock.calls).toHaveLength(1); expect(write.mock.calls[0]![0]).toBe(physical);
   const value = JSON.parse(bytes()!); expect(value.data.item.title).toBe('Created');
-  expect(Object.values(value.receipts)).toContainEqual(expect.objectContaining({ signature: 'create:item:v1', result: { ok: true, targetId: 'item' } }));
+  expect(Object.values(value.receipts)).toContainEqual(expect.objectContaining({ signature: signatureFor('create:item:v1'), result: { ok: true, targetId: 'item' } }));
 });
 it('valid legacy upgrades once, preserving the existing data alongside receipt', async () => {
   put({ old: { title: 'Old' } }); const write = operations();
@@ -53,10 +54,10 @@ it('quota before the only write preserves exact legacy bytes and leaves request 
   expect((await runPrimitive(opts())).ok).toBe(true); expect(bytes()).toBe(committed);
 });
 it('receipt replay precedes mutation/target lookup and survives fresh same-account scope', async () => {
-  expect((await runPrimitive(opts({ signature: receipt.signature, mutate: () => ({ data: {}, targetId: 'item' }) }))).ok).toBe(true);
+  expect((await runPrimitive(opts({ signature: deleteOperation, mutate: () => ({ data: {}, targetId: 'item' }) }))).ok).toBe(true);
   const raw = bytes(); accountScope.activate(accountScope.lock(owner), generation);
   const mutate = vi.fn(() => { throw Error('target no longer exists'); }); const write = operations();
-  expect(await runPrimitive(opts({ signature: receipt.signature, mutate }))).toEqual({ ok: true, targetId: 'item' });
+  expect(await runPrimitive(opts({ signature: deleteOperation, mutate }))).toEqual({ ok: true, targetId: 'item' });
   expect(mutate).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(bytes()).toBe(raw);
 });
 it('lost response after commit replays the exact saved result with no second mutation or write', async () => {
@@ -71,15 +72,15 @@ it('same request with different signature conflicts without calling mutator', as
   expect(mutate).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(bytes()).toBe(raw);
 });
 it('full receipt capacity rejects a new identity but permits existing replay without eviction', async () => {
-  const receipts = Object.fromEntries(Array.from({ length: 512 }, (_, i) => [`ai:r${i}`, receipt])); put(envelope({}, receipts)); const raw = bytes();
+  const receipts = Object.fromEntries(Array.from({ length: 512 }, (_, i) => [receiptIdentity(`ai:r${i}`), receipt])); put(envelope({}, receipts)); const raw = bytes();
   const mutate = vi.fn(opts().mutate); const write = operations();
   expect((await runPrimitive(opts({ requestId: 'ai:new', mutate }))).ok).toBe(false);
-  expect(await runPrimitive(opts({ requestId: 'ai:r0', signature: receipt.signature, mutate }))).toEqual({ ok: true, targetId: 'item' });
+  expect(await runPrimitive(opts({ requestId: 'ai:r0', signature: deleteOperation, mutate }))).toEqual({ ok: true, targetId: 'item' });
   expect(mutate).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(bytes()).toBe(raw);
 });
 it.each(['__proto__','constructor','toString'])('receipt identity %s remains an own JSON property and replays safely', async requestId => {
   expect((await runPrimitive(opts({ requestId }))).ok).toBe(true); const raw = bytes();
-  expect(Object.hasOwn(JSON.parse(raw!).receipts, requestId)).toBe(true);
+  expect(Object.hasOwn(JSON.parse(raw!).receipts, receiptIdentity(requestId))).toBe(true);
   const mutate = vi.fn(() => { throw Error('must not replay'); });
   expect((await runPrimitive(opts({ requestId, mutate }))).ok).toBe(true); expect(mutate).not.toHaveBeenCalled(); expect(bytes()).toBe(raw);
 });

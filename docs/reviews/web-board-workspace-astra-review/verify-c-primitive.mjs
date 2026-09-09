@@ -27,8 +27,11 @@ try {
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
  copyFileSync(join(evidence,'c-primitive-contract.test.ts'),join(owned,'c-primitive-contract.test.ts'));
  copyFileSync(join(evidence,'c-primitive-adapter.ts'),join(owned,'c-primitive-adapter.ts'));
+ copyFileSync(join(evidence,'c-primitive-boundaries.test.ts'),join(owned,'c-primitive-boundaries.test.ts'));
  for (const [name, include] of [
   ['c-primitive-independent', ['docs/reviews/web-board-workspace-astra-review/c-primitive-contract.test.ts']],
+  ['c-primitive-boundaries', ['docs/reviews/web-board-workspace-astra-review/c-primitive-boundaries.test.ts']],
+  ['c-storage-package', ['packages/plugin-web-storage/src/__tests__/**/*.{test,spec}.{ts,tsx}']],
  ]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
