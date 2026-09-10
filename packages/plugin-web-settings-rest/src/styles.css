@@ -602,6 +602,36 @@
   .collab-recovery-fields { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
 }
 
+/* ---- Date & Time recovery ------------------------------------------- */
+.dt-recovery-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.dt-recovery-field > span { min-inline-size: 0; overflow-wrap: anywhere; }
+.dt-recovery-field button,
+.dt-recovery-actions button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-inline: 0.5rem;
+}
+.dt-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.dt-recovery-actions p { flex-basis: 100%; margin: 0; }
+.dt-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (max-width: 430px) {
+  .dt-recovery-field { grid-template-columns: minmax(0, 1fr) auto; }
+  .dt-recovery-field button:first-of-type { grid-column: 2; }
+}
+
 /* ---- Sticky Note pane ------------------------------------------------ */
 .sticky-pane {
   padding: 16px;

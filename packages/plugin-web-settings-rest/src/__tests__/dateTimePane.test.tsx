@@ -1,10 +1,15 @@
 /**
  * DT1..DT6 — dateTimePane tests (test.md §3 P2)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { dateTimePane } from "../panes/dateTimePane.js";
 import { getPref } from "@repo/plugin-web-storage";
+
+beforeEach(() => {
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!)() } });
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("dateTimePane", () => {
   it("DT1: renders without error", () => {
@@ -37,22 +42,22 @@ describe("dateTimePane", () => {
     expect(vals).toContain("saturday");
   });
 
-  it("DT5: changing start-week persists xai_pref_dt_start_week", () => {
+  it("DT5: changing start-week persists xai_pref_dt_start_week", async () => {
     const { container } = render(dateTimePane.render({ lang: "en" }));
     const sel = container.querySelector<HTMLSelectElement>(
       'select[aria-label="Start week on"]',
     );
     fireEvent.change(sel!, { target: { value: "sunday" } });
-    expect(getPref("xai_pref_dt_start_week")).toBe("sunday");
+    await waitFor(() => expect(getPref("xai_pref_dt_start_week")).toBe("sunday"));
   });
 
-  it("DT6: toggling lunar flips xai_pref_dt_lunar", () => {
+  it("DT6: toggling lunar flips xai_pref_dt_lunar", async () => {
     const { container } = render(dateTimePane.render({ lang: "en" }));
     expect(getPref("xai_pref_dt_lunar")).toBe(true);
     const toggle = container.querySelector<HTMLButtonElement>(
       'button[aria-label="Show Lunar Calendar"]',
     );
     fireEvent.click(toggle!);
-    expect(getPref("xai_pref_dt_lunar")).toBe(false);
+    await waitFor(() => expect(getPref("xai_pref_dt_lunar")).toBe(false));
   });
 });

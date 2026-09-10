@@ -50,6 +50,7 @@ interface Pane {
 
 interface PaneRenderProps {
   lang: Lang;              // "en" | "zh"
+  registerDepartureGuard?: (guard: PaneDepartureGuard) => (() => void);
 }
 ```
 
@@ -125,6 +126,14 @@ Persists to `xai_pref_smart_lists` (JSON codec, object keyed by SmartListId).
 5 controls:
 - `xai_pref_dt_start_week` — select (monday/sunday/saturday)
 - `xai_pref_dt_lunar` / `_week_numbers` / `_holidays` / `_timezone` — toggles
+
+Each device-owned field uses the asynchronous preference binding and retains a
+field-local draft until its matching verified write succeeds. When current work
+exists, the pane supplies the optional `registerDepartureGuard` bridge with
+blocking, export and discard callbacks. Its sparse recovery download is named
+`date-time-draft.json` and contains only current unresolved device fields under
+`values.device`; source-only read errors expose Reload without creating a draft
+or a departure block.
 
 ### §4.6 morePane — id: "more"
 
