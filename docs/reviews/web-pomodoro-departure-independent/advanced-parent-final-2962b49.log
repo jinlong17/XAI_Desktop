@@ -1,0 +1,12 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-wAvqxj
+
+ ✓ docs/reviews/web-pomodoro-departure-independent/advanced.test.tsx (8 tests) 829ms
+   ✓ actual Shell AppRail keeps failed preference until explicit Stay or discard  335ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:58:32
+   Duration  14.46s (transform 7.49s, setup 0ms, collect 11.81s, tests 829ms, environment 731ms, prepare 93ms)

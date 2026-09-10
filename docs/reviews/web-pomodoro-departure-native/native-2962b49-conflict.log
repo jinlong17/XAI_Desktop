@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"2962b49","browser":"Chrome/152.0.7977.83"}
+{"name":"mixed-conflict-native-recovery","pass":true,"data":{"version":1,"kind":"pomodoro-preference-draft","values":{"preset":"focus-25","customMinutes":45,"displayStyle":"apple","theme":"violet","sound":"bell","muted":false}},"scope":"Real Chrome/full Shell/native locks/physical storage with a dispatched external StorageEvent; actual hit-tested conflict click and disk export"}
+{"name":"departure","pass":true,"mode":"conflict","runtimeErrors":0}

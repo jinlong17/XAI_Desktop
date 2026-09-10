@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"2962b49","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-six-value-departure-export","pass":true,"mode":"pending","data":{"version":1,"kind":"pomodoro-preference-draft","values":{"preset":"focus-25","customMinutes":45,"displayStyle":"apple","theme":"violet","sound":"soft-chime","muted":false}}}
+{"name":"departure","pass":true,"mode":"pending","runtimeErrors":0}
