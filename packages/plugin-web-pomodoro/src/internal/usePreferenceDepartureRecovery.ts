@@ -109,6 +109,21 @@ export function usePreferenceDepartureRecovery({
     changed();
   }, [changed]);
 
+  const discardFields = useCallback((fields: readonly PomodoroPreferenceField[]) => {
+    const discarded: Draft[] = [];
+    for (const field of fields) {
+      const draft = draftsRef.current.get(field);
+      if (!draft) continue;
+      draftsRef.current.delete(field);
+      discarded.push(draft);
+    }
+    for (const draft of discarded) draft.discard();
+    if (discarded.length > 0) {
+      setExportFailed(false);
+      changed();
+    }
+  }, [changed]);
+
   const exportDraft = useCallback((decisionEpoch = epochRef.current) => {
     let anchor: HTMLAnchorElement | null = null;
     let url: string | null = null;
@@ -171,6 +186,7 @@ export function usePreferenceDepartureRecovery({
     edit,
     retryDrafts,
     discardDrafts,
+    discardFields,
     exportDraft,
     hasDrafts: draftsRef.current.size > 0,
     draftVersion,

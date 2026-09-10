@@ -224,6 +224,14 @@ export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleP
   const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
   const preferenceSourceProblem = preferenceSaves.some(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
   const sourcePreferenceSaves = preferenceSaves.filter(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
+  const conflictingPreferenceFields = [
+    presetSave.meta.status === "conflict" ? "preset" : null,
+    minutesSave.meta.status === "conflict" ? "customMinutes" : null,
+    styleSave.meta.status === "conflict" ? "displayStyle" : null,
+    themeSave.meta.status === "conflict" ? "theme" : null,
+    soundSave.meta.status === "conflict" ? "sound" : null,
+    mutedSave.meta.status === "conflict" ? "muted" : null,
+  ].filter((field): field is "preset" | "customMinutes" | "displayStyle" | "theme" | "sound" | "muted" => field !== null);
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
   const preferenceRecovery = usePreferenceDepartureRecovery({
@@ -518,7 +526,7 @@ export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleP
       {preferenceRecovery.hasDrafts && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
         <button type="button" onClick={preferenceRecovery.retryDrafts}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
-        <button type="button" onClick={preferenceRecovery.discardDrafts}>{lang === "zh" ? "丢弃当前偏好草稿" : "Discard current preference drafts"}</button>
+        {conflictingPreferenceFields.length > 0 && <button type="button" onClick={() => preferenceRecovery.discardFields(conflictingPreferenceFields)}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>}
         <button type="button" onClick={() => preferenceRecovery.exportDraft()}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
         {preferenceRecovery.exportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
       </section>}
