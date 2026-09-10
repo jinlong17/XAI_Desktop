@@ -522,7 +522,8 @@ export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleP
         <button type="button" onClick={() => preferenceRecovery.exportDraft()}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
         {preferenceRecovery.exportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
       </section>}
-      {preferenceSourceProblem && !preferenceRecovery.hasDrafts && <section className="pomo-source-recovery">
+      {preferenceSourceProblem && <section role="alert" className="pomo-notice pomo-source-recovery">
+        <p>{lang === "zh" ? "部分偏好来源无法读取。修复来源后可重新读取，不会覆盖其他草稿。" : "Some preference sources could not be read. Repair the source, then reload it without replacing other drafts."}</p>
         <button type="button" onClick={() => { sourcePreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>
       </section>}
       {timerTick.conflict && <p role="status" className="pomo-notice">{lang === "zh" ? "计时已在其他标签页更改，现已刷新。请检查当前状态后重新操作。" : "The timer changed in another tab and has been refreshed. Review its current state before choosing an action."}</p>}
