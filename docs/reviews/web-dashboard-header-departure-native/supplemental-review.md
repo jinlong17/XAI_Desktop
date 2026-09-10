@@ -22,3 +22,7 @@ These are product failures at the blur/reservation boundary, not Chrome startup 
 ## Before evidence
 
 At `41fb4d1`, the real offset-conflict route escaped to Tasks without a dialog, and unavailable-source plus a no-move native pointer produced a false beforeunload warning in both languages. Full-denial memory export and A to B to locked device export were already positive controls. Early `sol-before` files that failed before reaching product assertions were fixture-development output and are intentionally excluded.
+
+## Mixed two-field native controls at 9193353
+
+Both real physical-key locks were held before route departure. With note and offset simultaneously pending, the URL remained `/app/dashboard`, the dialog stayed open, and both physical values remained original. Releasing only offset persisted `40` while note stayed original and the route remained held; its eventual note failure exported the exact latest note plus `40`. The reverse persisted the latest note while offset stayed `0`, remained held after offset failure, and exported the exact latest note plus desired offset `40`. Both disk files matched the complete established schema and Runtime remained clean.
