@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"0d7f885","browser":"Chrome/152.0.7977.83"}
+{"name":"rail-observation","path":"/app/pomodoro","dialog":true}
+{"name":"departure","pass":true,"mode":"rail","runtimeErrors":0}
