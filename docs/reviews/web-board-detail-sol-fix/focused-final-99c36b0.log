@@ -1,0 +1,38 @@
+revision=99c36b0
+
+> @repo/plugin-web-board-workspaces@0.0.0 typecheck /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> tsc --noEmit
+
+
+> @repo/plugin-web-board-workspaces@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+> eslint --max-warnings 0 .
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+
+ ✓ src/__tests__/responsiveStyles.test.ts (4 tests) 4ms
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > keeps a failed draft visible when its target disappears and blocks close before that
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > retries the latest inline draft once and clears the editor only after commit
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > revalidates the latest attachment fields and keeps an invalid retry editable
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest checklist recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest attachment recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/BoardDetailSaveRecovery.test.tsx > Board detail append recovery > downloads the latest activity recovery with original target context
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ✓ src/__tests__/BoardDetailSaveRecovery.test.tsx (16 tests) 484ms
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  18:31:56
+   Duration  2.10s (transform 604ms, setup 431ms, collect 757ms, tests 488ms, environment 718ms, prepare 192ms)
+
