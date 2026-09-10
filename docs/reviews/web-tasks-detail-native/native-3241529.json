@@ -1,0 +1,26 @@
+{
+  "requestedRef": "3241529",
+  "revision": "32415295f212c48d69dbd29387635422392a8888",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "detail-conflict",
+      "pass": false,
+      "error": "Error: Detail save overwrote or recreated the external target"
+    },
+    {
+      "name": "detail-quota-conflict",
+      "pass": false,
+      "error": "Error: Detail save overwrote or recreated the external target"
+    },
+    {
+      "name": "detail-missing",
+      "pass": false,
+      "error": "Error: External mutation hid or replaced the unsaved detail"
+    }
+  ],
+  "checkpoint": {},
+  "scope": "Actual Tasks detail UI, public canonical competing writer, native WebLocks and storage; reopened persisted data only, no unsaved draft durability or production claim"
+}
