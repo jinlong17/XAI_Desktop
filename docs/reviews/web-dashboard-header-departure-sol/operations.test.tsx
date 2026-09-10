@@ -59,8 +59,8 @@ it("equal-value predecessor success cannot clear a newer equal-value failed inte
     baseSet.call(this, key, value);
   });
   enterNote(ui, "Same value"); ui.save();
-  enterNote(ui, "Different revision"); ui.save();
-  enterNote(ui, "Same value"); ui.save();
+  fireEvent.change(ui.input(), { target: { value: "Different revision" } });
+  fireEvent.change(ui.input(), { target: { value: "Same value" } }); ui.save();
   await release(); await flush(24);
   expect(nativeGet.call(localStorage, noteKey)).toBe("Same value");
   expect(ui.input().value).toBe("Same value");
@@ -94,6 +94,7 @@ it("note failure with position success and the reverse each keep only the failed
     baseSet.call(this, key, value);
   });
   enterNote(ui, "Second saved note"); ui.save();
+  await flush(20);
   beginMove(ui.note, 8); move(ui.note, 70, 8); finishMove(ui.note, 70, 8);
   await flush(20);
   expect(nativeGet.call(localStorage, noteKey)).toBe("Second saved note");
