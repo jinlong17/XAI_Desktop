@@ -334,7 +334,6 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: D
       sessionRef.current = session;
       setFrozenSession(false);
       setNoteIssue(null);
-      guardTokenRef.current = {};
       setDraftVersion(version => version + 1);
       return session;
     } catch {

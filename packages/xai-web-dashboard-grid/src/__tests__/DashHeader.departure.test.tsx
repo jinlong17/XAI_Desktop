@@ -52,6 +52,15 @@ describe("DashHeader departure capability", () => {
     expect(ui.queryByRole("textbox")).toBeNull();
   });
 
+  it("keeps the already-registered guard current during the edit turn", async () => {
+    const ui = mount();
+    const registeredBeforeEdit = ui.guard();
+    fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
+    fireEvent.change(ui.getByRole("textbox"), { target: { value: "Route before blur" } });
+    expect(registeredBeforeEdit.isCurrent()).toBe(true);
+    expect(registeredBeforeEdit.isBlocking()).toBe(true);
+  });
+
   it("rejects a captured A capability after account B becomes current", async () => {
     const ui = mount();
     fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
