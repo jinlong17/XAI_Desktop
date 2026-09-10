@@ -140,6 +140,14 @@ const STR = {
   "smartLists.show": { en: "Show", zh: "显示" },
   "smartLists.if-not-empty": { en: "Show if not empty", zh: "不空显示" },
   "smartLists.hide": { en: "Hide", zh: "隐藏" },
+  "smartLists.saving": { en: "Saving Smart Lists choices…", zh: "正在保存智能列表选择…" },
+  "smartLists.saved": { en: "Smart Lists choices saved", zh: "智能列表选择已保存" },
+  "smartLists.notSaved": { en: "Smart Lists choices were not saved", zh: "智能列表选择未保存" },
+  "smartLists.conflict": { en: "Saved Smart Lists choices changed elsewhere. Your local choices are still shown.", zh: "已保存的智能列表选择已在其他位置更改。当前仍显示本地选择。" },
+  "smartLists.sourceUnavailable": { en: "Saved Smart Lists data is unavailable or invalid. Repair it, then reload saved choices.", zh: "已保存的智能列表数据不可用或无效。修复后请重新加载已保存的选择。" },
+  "smartLists.retry": { en: "Retry", zh: "重试" },
+  "smartLists.reload": { en: "Reload saved choices", zh: "重新加载已保存的选择" },
+  "smartLists.discardAndReload": { en: "Discard local Smart Lists changes and reload saved choices", zh: "放弃本地智能列表更改并重新加载已保存的选择" },
 
   // Notifications pane
   "notif.enable": { en: "Enable notifications", zh: "启用通知" },

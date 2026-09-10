@@ -11,27 +11,17 @@
 import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
-import type { WebPrefKey } from "@repo/plugin-web-storage";
+import { accountScope, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
-import type { SmartListId, SmartListVisibility } from "../types.js";
-
-type SmartListsMap = Readonly<Record<SmartListId, SmartListVisibility>>;
-
-const DEFAULT_MAP: SmartListsMap = {
-  all: "show",
-  today: "show",
-  tomorrow: "show",
-  next7: "show",
-  assigned: "if-not-empty",
-  inbox: "show",
-  summary: "show",
-  tags: "show",
-  filters: "show",
-  completed: "show",
-  wont_do: "if-not-empty",
-  trash: "show",
-} as const;
+import {
+  isSmartListVisibility,
+  isSmartListsMap,
+  SMART_LIST_VISIBILITIES,
+  smartListVisibilityFor,
+  type SmartListsMap,
+  withSmartListVisibility,
+} from "../internal/smartListsPreference.js";
+import type { SmartListId } from "../types.js";
 
 interface SectionDef {
   readonly groupKey: "smartLists.defaultLists" | "smartLists.organize" | "smartLists.others";
@@ -68,22 +58,36 @@ const SECTIONS: readonly SectionDef[] = [
   },
 ] as const;
 
-const VISIBILITY_KEYS: readonly SmartListVisibility[] = [
-  "show",
-  "if-not-empty",
-  "hide",
-] as const;
-
 function SmartListsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
+  const smartListsSave = usePrefAutosaveAsync("xai_pref_smart_lists", { validate: isSmartListsMap });
+  const editSmartLists = smartListsSave.edit;
+  const scope = React.useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const latestModesRef = React.useRef<SmartListsMap>(smartListsSave.value);
+  const sessionEpochRef = React.useRef(scope.epoch);
 
-  const [modes, setModes] = usePref(
-    "xai_pref_smart_lists" as WebPrefKey,
-  ) as readonly [SmartListsMap, (v: SmartListsMap) => void, unknown];
+  // A caller draft is session-bound: it never carries A's desired map into B.
+  if (sessionEpochRef.current !== scope.epoch) {
+    sessionEpochRef.current = scope.epoch;
+    latestModesRef.current = smartListsSave.value;
+  }
+  React.useLayoutEffect(() => {
+    sessionEpochRef.current = scope.epoch;
+    if (smartListsSave.meta.status === "idle" || smartListsSave.meta.status === "saved") {
+      latestModesRef.current = smartListsSave.value;
+    }
+  }, [scope.epoch, smartListsSave.meta.status, smartListsSave.value]);
 
-  const currentModes: SmartListsMap =
-    modes && typeof modes === "object" ? (modes as SmartListsMap) : DEFAULT_MAP;
+  const editable = smartListsSave.meta.source === "absent" || smartListsSave.meta.source === "valid";
+  const changeVisibility = React.useCallback((id: SmartListId, value: string) => {
+    if (!editable || !isSmartListVisibility(value)) return;
+    const next = withSmartListVisibility(latestModesRef.current, id, value);
+    if (!isSmartListsMap(next)) return;
+    latestModesRef.current = next;
+    void editSmartLists(next);
+  }, [editable, editSmartLists]);
+  const needsRecovery = smartListsSave.meta.status === "error" || smartListsSave.meta.status === "conflict";
 
   return (
     <div className="smart-lists-pane">
@@ -98,16 +102,12 @@ function SmartListsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
                 <span className="grow" />
                 <select
                   className="sl-select"
-                  value={currentModes[item.id] ?? "show"}
-                  onChange={(e) =>
-                    setModes({
-                      ...currentModes,
-                      [item.id]: e.target.value as SmartListVisibility,
-                    })
-                  }
+                  value={smartListVisibilityFor(smartListsSave.value, item.id)}
+                  onChange={(e) => changeVisibility(item.id, e.target.value)}
                   aria-label={t(item.nameKey)}
+                  disabled={!editable}
                 >
-                  {VISIBILITY_KEYS.map((v) => (
+                  {SMART_LIST_VISIBILITIES.map((v) => (
                     <option key={v} value={v}>
                       {t(`smartLists.${v}`)}
                     </option>
@@ -118,6 +118,27 @@ function SmartListsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
           </div>
         </div>
       ))}
+      {(smartListsSave.meta.status === "pending" || smartListsSave.meta.status === "saved") && (
+        <p className="smart-lists-save-status" role="status" aria-live="polite">
+          {smartListsSave.meta.status === "pending" ? t("smartLists.saving") : t("smartLists.saved")}
+        </p>
+      )}
+      {needsRecovery && (
+        <div className="smart-lists-recovery" role="alert">
+          <p>{smartListsSave.meta.status === "conflict" ? t("smartLists.conflict") : t("smartLists.notSaved")}</p>
+          {smartListsSave.meta.status === "error" && (smartListsSave.meta.source === "invalid" || smartListsSave.meta.source === "unavailable") && (
+            <p>{t("smartLists.sourceUnavailable")}</p>
+          )}
+          <div className="smart-lists-recovery-actions">
+            <button type="button" onClick={() => void smartListsSave.retry()}>{t("smartLists.retry")}</button>
+            {smartListsSave.meta.status === "conflict" ? (
+              <button type="button" onClick={smartListsSave.meta.reload}>{t("smartLists.discardAndReload")}</button>
+            ) : (smartListsSave.meta.source === "invalid" || smartListsSave.meta.source === "unavailable") ? (
+              <button type="button" onClick={smartListsSave.meta.reload}>{t("smartLists.reload")}</button>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
