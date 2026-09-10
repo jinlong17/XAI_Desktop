@@ -96,6 +96,8 @@ export interface DashboardModuleProps {
   registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
   /** Whether the app host has reserved a guarded departure intent. */
   isDeparturePending?: () => boolean;
+  /** App-owned recognition for a pointer target that will navigate away. */
+  isDepartureTarget?: (target: EventTarget | null) => boolean;
 }
 
 /**

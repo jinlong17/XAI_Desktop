@@ -19,6 +19,10 @@ const KNOWN_MODULE_IDS: ReadonlySet<WebModuleId> = new Set<WebModuleId>([
 function DashboardModuleRoute(): React.ReactElement {
   const { lang } = useWebShell();
   const navigate = useNavigate();
+  const isDepartureTarget = React.useCallback((target: EventTarget | null) => {
+    if (!(target instanceof Element)) return false;
+    return Boolean(target.closest(".app-rail .rail-items .rail-btn, .mc-jump"));
+  }, []);
   const goTo = React.useCallback((moduleId: string) => {
     if (!KNOWN_MODULE_IDS.has(moduleId as WebModuleId)) return;
     emitWebEvent("web:shell:module-change", { moduleId: moduleId as WebModuleId, source: "mini-cal" });
@@ -33,6 +37,7 @@ function DashboardModuleRoute(): React.ReactElement {
           goTo={goTo}
           registerDepartureGuard={registerDepartureGuard}
           isDeparturePending={isDeparturePending}
+          isDepartureTarget={isDepartureTarget}
         />
       )}
     </DepartureCoordinator>

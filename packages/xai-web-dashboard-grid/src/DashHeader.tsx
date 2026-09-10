@@ -35,6 +35,8 @@ export interface DashHeaderProps {
   registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
   /** True while the app host holds a guarded departure intent. */
   isDeparturePending?: () => boolean;
+  /** App-owned recognition for a pointer target that will navigate away. */
+  isDepartureTarget?: (target: EventTarget | null) => boolean;
 }
 
 /** PlusIcon — minimal inline SVG matching the prototype's <Icon name="plus" size={14}/>. */
@@ -175,9 +177,11 @@ type OffsetOperation = {
   readonly id: number;
   readonly value: number;
   readonly raw: string | null;
+  /** Only a failed hook operation owns an opaque hook retry token. */
+  readonly retryable: boolean;
 };
 
-export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isDeparturePending }: DashHeaderProps) {
+export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isDeparturePending, isDepartureTarget }: DashHeaderProps) {
   const { s } = useI18n(lang);
   const greetingKey = pickGreetingKey(now);
   const greeting = s(greetingKey);
@@ -188,6 +192,11 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
   const inputRef = useRef<HTMLInputElement>(null);
   const isDeparturePendingRef = useRef(isDeparturePending);
   isDeparturePendingRef.current = isDeparturePending;
+  const isDepartureTargetRef = useRef(isDepartureTarget);
+  isDepartureTargetRef.current = isDepartureTarget;
+  const navigationPointerRef = useRef(false);
+  const deferredNavigationBlurRef = useRef(false);
+  const blurTimerRef = useRef<number | null>(null);
   const laneRef = useRef<HTMLDivElement>(null);
   const noteRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<OffsetGesture | null>(null);
@@ -285,7 +294,6 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     disposedRef.current = false;
     return () => { disposedRef.current = true; guardTokenRef.current = {}; };
   }, []);
-
   const clampNoteOffset = useCallback((value: number): number => {
     const laneEl = laneRef.current;
     const noteEl = noteRef.current;
@@ -421,9 +429,38 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     // Pointerdown and the coordinator's dialog focus both blur the editor
     // before their click/navigation turn completes. Let that turn reserve its
     // first departure intent before deciding whether this was an ordinary blur.
-    window.setTimeout(() => {
-      if (!isDeparturePendingRef.current?.()) saveDraft();
+    if (navigationPointerRef.current) {
+      deferredNavigationBlurRef.current = true;
+      return;
+    }
+    blurTimerRef.current = window.setTimeout(() => {
+      blurTimerRef.current = null;
+      if (!disposedRef.current && !isDeparturePendingRef.current?.()) saveDraft();
     }, 0);
+  }, [saveDraft]);
+
+  useEffect(() => {
+    const settleNavigationPointer = () => {
+      navigationPointerRef.current = false;
+      if (!deferredNavigationBlurRef.current) return;
+      deferredNavigationBlurRef.current = false;
+      blurTimerRef.current = window.setTimeout(() => {
+        blurTimerRef.current = null;
+        if (!disposedRef.current && !isDeparturePendingRef.current?.()) saveDraft();
+      }, 0);
+    };
+    const capturePointerDown = (event: PointerEvent) => {
+      navigationPointerRef.current = Boolean(isDepartureTargetRef.current?.(event.target));
+    };
+    document.addEventListener("pointerdown", capturePointerDown, true);
+    window.addEventListener("pointerup", settleNavigationPointer, true);
+    window.addEventListener("pointercancel", settleNavigationPointer, true);
+    return () => {
+      document.removeEventListener("pointerdown", capturePointerDown, true);
+      window.removeEventListener("pointerup", settleNavigationPointer, true);
+      window.removeEventListener("pointercancel", settleNavigationPointer, true);
+      if (blurTimerRef.current !== null) window.clearTimeout(blurTimerRef.current);
+    };
   }, [saveDraft]);
 
   const clearNote = useCallback(() => {
@@ -455,14 +492,19 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     }
     if (offsetOperationRef.current !== operation) return;
     offsetOperationRef.current = null;
-    failedOffsetOperationRef.current = null;
-    setOffsetIssue(null);
-    setOffsetSourceConflict(false);
+    // A predecessor may settle after a newer caller-preflight failure. It has
+    // committed its own value, but must not clear the newer recovery identity
+    // or let the source effect snap the visible desired coordinate backwards.
+    if (failedOffsetOperationRef.current === null || failedOffsetOperationRef.current === operation) {
+      failedOffsetOperationRef.current = null;
+      setOffsetIssue(null);
+      setOffsetSourceConflict(false);
+    }
     setDraftVersion(version => version + 1);
   }, [clampNoteOffset, setVisibleOffset]);
 
   const submitOffset = useCallback((value: number, raw: string | null, retry = false) => {
-    const operation = { id: ++nextOffsetOperationId.current, value, raw };
+    const operation = { id: ++nextOffsetOperationId.current, value, raw, retryable: false };
     try {
       const current = localStorage.getItem("xai_pref_dashboard_header_note_x");
       if (offsetSave.meta.source === "unavailable" || (!retry && (current !== raw || offsetSave.meta.raw !== raw))) throw new Error("conflict");
@@ -476,13 +518,14 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       setDraftVersion(version => version + 1);
       return;
     }
-    offsetOperationRef.current = operation;
+    const hookOperation = { ...operation, retryable: !retry || offsetOperationRef.current === null };
+    offsetOperationRef.current = hookOperation;
     if (!retry) failedOffsetOperationRef.current = null;
     setOffsetIssue(null);
     setOffsetSourceConflict(false);
     setDraftVersion(version => version + 1);
     const attempt = retry ? offsetSave.retry() : offsetSave.edit(value);
-    void attempt.then((result) => settleOffset(operation, result), () => settleOffset(operation, { ok: false, reason: "storage" }));
+    void attempt.then((result) => settleOffset(hookOperation, result), () => settleOffset(hookOperation, { ok: false, reason: "storage" }));
   }, [offsetSave, settleOffset]);
 
   const retrySave = () => {
@@ -498,7 +541,10 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     const failedOffset = failedOffsetOperationRef.current;
     if (offsetIssue && failedOffset) {
       const latest = noteOffsetRef.current;
-      submitOffset(latest, failedOffset.raw, latest === failedOffset.value);
+      const canUseRetryToken = latest === failedOffset.value
+        && failedOffset.retryable
+        && offsetOperationRef.current === null;
+      submitOffset(latest, failedOffset.raw, canUseRetryToken);
     }
   };
 

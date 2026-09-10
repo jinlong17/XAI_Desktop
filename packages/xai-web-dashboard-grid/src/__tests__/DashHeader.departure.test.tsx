@@ -114,6 +114,34 @@ describe("DashHeader departure capability", () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
+  it("holds a navigation-pointer blur across a slow click until the host reserves departure", async () => {
+    let pending = false;
+    const holder: { current: DashboardHeaderDepartureGuard | null } = { current: null };
+    const ui = render(<DashHeader
+      lang="en"
+      now={new Date()}
+      isDeparturePending={() => pending}
+      isDepartureTarget={target => target instanceof Element && target.classList.contains("mc-jump")}
+      registerDepartureGuard={next => { holder.current = next; return () => undefined; }}
+    />);
+    fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
+    const input = ui.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Slow navigation draft" } });
+    const navigationButton = document.createElement("button");
+    navigationButton.className = "mc-jump";
+    document.body.appendChild(navigationButton);
+    fireEvent.pointerDown(navigationButton, { pointerId: 14 });
+    fireEvent.blur(input);
+    await new Promise(resolve => window.setTimeout(resolve, 5));
+    expect(localStorage.getItem(noteKey)).toBe("Saved A");
+    pending = true;
+    fireEvent.pointerUp(navigationButton, { pointerId: 14 });
+    await new Promise(resolve => window.setTimeout(resolve, 0));
+    expect(localStorage.getItem(noteKey)).toBe("Saved A");
+    expect(holder.current?.isBlocking()).toBe(true);
+    navigationButton.remove();
+  });
+
   it("rejects a captured A capability after account B becomes current", async () => {
     const ui = mount();
     fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
