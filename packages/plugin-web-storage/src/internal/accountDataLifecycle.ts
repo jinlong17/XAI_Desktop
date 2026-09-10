@@ -3,6 +3,7 @@ import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationL
 import { ownershipForKey } from './accountOwnership.js';
 import { recoveryKeyExclusion } from './lifecycleDeclaration.js';
 import { makeExportManifest, type ExportOmission } from './dataExport.js';
+import { accountDeletionReceiptKey, decodeAccountDeletionReceipt, type AccountDeletionReceipt } from './accountDeletionReceipt.js';
 type Store = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>;
 function prefix(scope: AccountScope) {
   if (scope.kind === 'locked' || !scope.accountId || !scope.generation) throw new Error('A captured authenticated account scope is required.');
@@ -32,13 +33,72 @@ export function exportAccountLocalData(scope: AccountScope, storage: Store = loc
 }
 /** After confirmed account deletion: never target whatever account is current now. */
 export function deleteAccountLocalData(scope: AccountScope, storage: Store = localStorage): void {
+  if ((scope.kind !== 'account' && scope.kind !== 'demo') || !scope.accountId || !scope.generation) throw new Error('A captured authenticated account scope is required.');
   const ownedPrefix=prefix(scope), tombstone=`${ownedPrefix}deleted`;
   // Stop older tabs from creating new account records while scoped cleanup is in progress.
-  if (storage.getItem(tombstone) === null) storage.setItem(tombstone,'1');
+  if (storage.getItem(tombstone) === null) storage.setItem(tombstone, JSON.stringify({
+    version: 1, accountId: scope.accountId, kind: scope.kind, generation: scope.generation, phase: 'pending', updatedAt: new Date().toISOString(),
+  } satisfies AccountDeletionReceipt));
   for(const key of keys(storage)) if(key.startsWith(ownedPrefix) && key!==tombstone) storage.removeItem(key);
 }
 
 export type AccountDeletionResult = Readonly<{ ok: true }> | Readonly<{ ok: false; reason: 'lock-unavailable' | 'account-changed' | 'recovery-required' | 'storage' }>;
+export type AccountDeletionResumeResult = Readonly<{ ok: true; receipt: AccountDeletionReceipt; raw: string }> | Readonly<{ ok: false; reason: 'lock-unavailable' | 'receipt-changed' | 'recovery-required' | 'storage' }>;
+
+function eraseUnderReceipt(receipt: AccountDeletionReceipt, storage: Store): void {
+  const ownedPrefix = generationKey(receipt.accountId, receipt.generation, '', receipt.kind === 'demo');
+  const tombstone = accountDeletionReceiptKey(receipt.accountId, receipt.kind === 'demo');
+  for (const key of keys(storage)) if (key.startsWith(ownedPrefix) && key !== tombstone) storage.removeItem(key);
+}
+
+/** Resume only a complete, matching durable deletion receipt; never infer authority from a tombstone string. */
+export async function resumeAccountLocalDataDeletion(
+  expected: AccountDeletionReceipt,
+  expectedRaw: string,
+  storage: Store = localStorage,
+  lock: AccountCoordinationLock = browserAccountLock,
+): Promise<AccountDeletionResumeResult> {
+  const demo = expected.kind === 'demo';
+  try {
+    return await lock(accountLifecycleLockName(expected.accountId, demo), 'exclusive', async () => {
+      const receiptKey = accountDeletionReceiptKey(expected.accountId, demo);
+      const raw = storage.getItem(receiptKey);
+      const current = decodeAccountDeletionReceipt(raw, expected.accountId, demo);
+      if (!current || raw !== expectedRaw || current.generation !== expected.generation || current.version !== expected.version
+        || current.phase !== expected.phase || current.authGeneration !== expected.authGeneration) return { ok: false, reason: 'receipt-changed' } as const;
+      if (current.phase === 'complete') return { ok: true, receipt: current, raw } as const;
+      const markerRaw = storage.getItem(generationMarkerKey(expected.accountId, demo));
+      if (markerRaw !== null && !hasCommittedGenerationMarker(markerRaw, expected.generation)) return { ok: false, reason: 'recovery-required' } as const;
+      eraseUnderReceipt(current, storage);
+      const next: AccountDeletionReceipt = { ...current, phase: 'local-data-cleared', updatedAt: new Date().toISOString() };
+      const nextRaw = JSON.stringify(next);
+      storage.setItem(receiptKey, nextRaw);
+      if (storage.getItem(receiptKey) !== nextRaw) return { ok: false, reason: 'storage' } as const;
+      return { ok: true, receipt: next, raw: nextRaw } as const;
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '';
+    return { ok: false, reason: message.toLowerCase().includes('lock') ? 'lock-unavailable' : 'storage' };
+  }
+}
+
+export async function completeAccountLocalDataDeletion(
+  expected: AccountDeletionReceipt, expectedRaw: string, storage: Store = localStorage, lock: AccountCoordinationLock = browserAccountLock,
+): Promise<AccountDeletionResumeResult> {
+  const demo = expected.kind === 'demo';
+  try {
+    return await lock(accountLifecycleLockName(expected.accountId, demo), 'exclusive', async () => {
+      const key = accountDeletionReceiptKey(expected.accountId, demo), raw = storage.getItem(key);
+      const current = decodeAccountDeletionReceipt(raw, expected.accountId, demo);
+      if (!current || raw !== expectedRaw || current.phase !== expected.phase || current.generation !== expected.generation || current.authGeneration !== expected.authGeneration) return { ok: false, reason: 'receipt-changed' } as const;
+      if (current.phase === 'complete') return { ok: true, receipt: current, raw } as const;
+      const next: AccountDeletionReceipt = { ...current, phase: 'complete', updatedAt: new Date().toISOString() }, nextRaw = JSON.stringify(next);
+      storage.setItem(key, nextRaw);
+      if (storage.getItem(key) !== nextRaw) return { ok: false, reason: 'storage' } as const;
+      return { ok: true, receipt: next, raw: nextRaw } as const;
+    });
+  } catch (error) { return { ok: false, reason: error instanceof Error && error.message.toLowerCase().includes('lock') ? 'lock-unavailable' : 'storage' }; }
+}
 
 /** Exclusive, retry-safe local account cleanup. Existing synchronous callers remain uncoordinated. */
 export async function deleteAccountLocalDataAccount(
@@ -53,9 +113,12 @@ export async function deleteAccountLocalDataAccount(
       const ownedPrefix = prefix(scope);
       const tombstone = `${ownedPrefix}deleted`;
       const markerRaw = storage.getItem(generationMarkerKey(scope.accountId!, scope.kind === 'demo'));
-      // A tombstone proves this exact captured generation already entered
-      // exclusive cleanup, so it may resume after the marker was removed.
-      if (storage.getItem(tombstone) === null && !hasCommittedGenerationMarker(markerRaw, scope.generation!)) {
+      const tombstoneRaw = storage.getItem(tombstone);
+      const receipt = decodeAccountDeletionReceipt(tombstoneRaw, scope.accountId!, scope.kind === 'demo');
+      if (tombstoneRaw !== null && (!receipt || receipt.generation !== scope.generation)) {
+        return { ok: false, reason: 'recovery-required' } as const;
+      }
+      if (tombstoneRaw === null && !hasCommittedGenerationMarker(markerRaw, scope.generation!)) {
         return { ok: false, reason: 'recovery-required' } as const;
       }
       deleteAccountLocalData(scope, storage);

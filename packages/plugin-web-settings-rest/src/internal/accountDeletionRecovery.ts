@@ -1,23 +1,18 @@
 /** Durable metadata only: survives sign-out, reload and partial local cleanup. */
-import { accountPrefix, deleteAccountLocalData, type AccountScope } from "@repo/plugin-web-storage";
+import {
+  accountDeletionReceiptKey, accountLifecycleLockName, accountScope, browserAccountLock,
+  completeAccountLocalDataDeletion, decodeAccountDeletionReceipt, generationMarkerKey,
+  hasCommittedGenerationMarker, resumeAccountLocalDataDeletion, type AccountDeletionReceipt, type AccountScope,
+} from "@repo/plugin-web-storage";
 import { clearAccountAiSecrets } from "@repo/plugin-web-ai-chat";
 
-export interface AccountDeletionReceipt {
-  readonly version: 1 | 2;
-  readonly accountId: string;
-  readonly kind: "account" | "demo";
-  readonly generation: string;
-  readonly phase: "pending" | "local-data-cleared" | "complete";
-  readonly updatedAt: string;
-  /** Captured auth generation, separate from business data generation. */
-  readonly authGeneration?: string;
-}
+export type { AccountDeletionReceipt } from "@repo/plugin-web-storage";
 export type AccountAuthCleanup = (captured: { generation: string; owner: string }) => Promise<void>;
 const RECEIPT_EVENT = "xai:account-deletion-receipt";
 function receiptKey(accountId: string, demo: boolean): string {
   // The tombstone itself is the durable receipt: one atomic metadata write
   // precedes every destructive operation. The storage eraser preserves it.
-  return `${accountPrefix(accountId, demo)}deleted`;
+  return accountDeletionReceiptKey(accountId, demo);
 }
 export function subscribeAccountDeletionReceipts(listener: () => void): () => void {
   const storage = (event: StorageEvent) => { if (event.key === null || event.key.endsWith(":deleted")) listener(); };
@@ -50,34 +45,40 @@ function write(receipt: AccountDeletionReceipt): AccountDeletionReceipt {
 export function readAccountDeletionReceipt(accountId: string, demo = false): AccountDeletionReceipt | null {
   const raw = localStorage.getItem(receiptKey(accountId, demo));
   if (!raw) return null;
-  const value: unknown = JSON.parse(raw);
-  if (!value || typeof value !== "object") throw new Error("Invalid account deletion receipt");
-  const r = value as Partial<AccountDeletionReceipt>;
-  if ((r.version !== 1 && r.version !== 2) || r.accountId !== accountId || r.kind !== (demo ? "demo" : "account") ||
-      typeof r.generation !== "string" || !r.generation || typeof r.updatedAt !== "string" ||
-      !["pending", "local-data-cleared", "complete"].includes(r.phase ?? "") ||
-      (r.version === 2 && (r.kind !== 'account' || typeof r.authGeneration !== 'string' || !r.authGeneration)) ||
-      (r.version === 1 && r.authGeneration !== undefined)) throw new Error("Invalid account deletion receipt");
-  return { version: r.version, accountId, kind: r.kind, generation: r.generation, phase: r.phase!, updatedAt: r.updatedAt,
-    ...(r.authGeneration ? { authGeneration: r.authGeneration } : {}) };
+  const receipt = decodeAccountDeletionReceipt(raw, accountId, demo);
+  if (!receipt) throw new Error("Invalid account deletion receipt");
+  return receipt;
 }
-export function beginAccountLocalDeletion(scope: AccountScope, authGeneration?: string): AccountDeletionReceipt {
+export async function beginAccountLocalDeletion(scope: AccountScope, authGeneration?: string): Promise<AccountDeletionReceipt> {
   if (scope.kind === "locked" || !scope.accountId || !scope.generation) throw new Error("Captured account is required");
   if (authGeneration !== undefined && (scope.kind !== 'account' || !authGeneration)) throw new Error('Invalid captured auth generation');
-  // Version 2 prevents older clients from silently completing only v1 participants.
-  return write({ version: authGeneration ? 2 : 1, accountId: scope.accountId, kind: scope.kind, generation: scope.generation, phase: "pending", updatedAt: new Date().toISOString(),
-    ...(authGeneration ? { authGeneration } : {}) });
+  return browserAccountLock(accountLifecycleLockName(scope.accountId, scope.kind === 'demo'), 'exclusive', async () => {
+    accountScope.assertCurrent(scope);
+    const marker = localStorage.getItem(generationMarkerKey(scope.accountId!, scope.kind === 'demo'));
+    if (!hasCommittedGenerationMarker(marker, scope.generation!)) throw new Error('Account deletion requires a complete current marker');
+    const key = receiptKey(scope.accountId!, scope.kind === 'demo');
+    if (localStorage.getItem(key) !== null) throw new Error('A prior account deletion receipt must be resolved first');
+    return write({ version: authGeneration ? 2 : 1, accountId: scope.accountId!, kind: scope.kind as 'account' | 'demo', generation: scope.generation!, phase: "pending", updatedAt: new Date().toISOString(),
+      ...(authGeneration ? { authGeneration } : {}) });
+  });
 }
 /** Retry confirmed local erasure; auth cleanup must target only the captured generation. */
 export async function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
+  const key = receiptKey(receipt.accountId, receipt.kind === 'demo');
+  const expectedRaw = localStorage.getItem(key);
   const saved = readAccountDeletionReceipt(receipt.accountId, receipt.kind === "demo");
-  if (!saved || saved.generation !== receipt.generation) throw new Error("Account deletion receipt no longer matches");
+  if (!saved || !expectedRaw || saved.generation !== receipt.generation || expectedRaw !== JSON.stringify(receipt)) throw new Error("Account deletion receipt no longer matches");
   if (saved.phase === "complete") return saved;
   if (saved.authGeneration && !clearAuth) throw new Error('Authentication cleanup is unavailable; recovery remains pending');
+  const local = await resumeAccountLocalDataDeletion(saved, expectedRaw);
+  if (!local.ok) throw new Error(`Local account cleanup refused: ${local.reason}`);
+  const cleared = local.receipt;
   const scope: AccountScope = Object.freeze({ kind: saved.kind, accountId: saved.accountId, generation: saved.generation, epoch: -1 });
-  deleteAccountLocalData(scope);
-  const cleared = write({ ...saved, phase: "local-data-cleared", updatedAt: new Date().toISOString() });
   await clearAccountAiSecrets(scope);
   if (saved.authGeneration) await clearAuth!({ generation: saved.authGeneration, owner: saved.accountId });
-  return write({ ...cleared, phase: "complete", updatedAt: new Date().toISOString() });
+  const currentRaw = localStorage.getItem(key);
+  if (currentRaw !== local.raw) throw new Error('Account deletion receipt changed during cleanup');
+  const complete = await completeAccountLocalDataDeletion(cleared, local.raw);
+  if (!complete.ok) throw new Error(`Account deletion completion refused: ${complete.reason}`);
+  return complete.receipt;
 }

@@ -88,7 +88,7 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
 
       // Explicit owner operations may finish after A has signed out or B has
       // signed in. They never resolve the mutable current account after an await.
-      const receipt = beginAccountLocalDeletion(scope, auth?.generation);
+      const receipt = await beginAccountLocalDeletion(scope, auth?.generation);
       let navigationScope: ReturnType<typeof accountScope.capture> | undefined;
       await resumeAccountLocalDeletion(receipt, auth && coordinator ? async captured => {
         const result = await coordinator.signOut(captured, { remote: false });

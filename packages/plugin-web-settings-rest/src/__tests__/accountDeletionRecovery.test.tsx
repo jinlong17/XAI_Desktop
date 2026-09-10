@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { accountPrefix, accountScope, generationKey } from "@repo/plugin-web-storage";
+import { accountPrefix, accountScope, generationKey, generationMarkerKey } from "@repo/plugin-web-storage";
 import { clearAccountAiSecrets } from "@repo/plugin-web-ai-chat";
 import { AccountDeletionRecoveryNotice } from "../AccountDeletionRecoveryNotice.js";
 import { beginAccountLocalDeletion, listPendingAccountDeletions, readAccountDeletionReceipt, resumeAccountLocalDeletion } from "../internal/accountDeletionRecovery.js";
@@ -8,12 +8,14 @@ vi.mock("@repo/plugin-web-ai-chat", () => ({ clearAccountAiSecrets: vi.fn() }));
 const keyA = generationKey("A-private-id", "g1", "xai_task_cols");
 const keyB = generationKey("B-private-id", "g2", "xai_task_cols");
 const tombstone = `${accountPrefix("A-private-id")}deleted`;
-function start() {
+async function start() {
   const scope = accountScope.activate(accountScope.lock("A-private-id"), "g1");
+  localStorage.setItem(generationMarkerKey("A-private-id"), JSON.stringify({ generation: "g1", migrationId: "fixture", previous: null }));
   return beginAccountLocalDeletion(scope);
 }
 beforeEach(() => {
   vi.clearAllMocks(); vi.mocked(clearAccountAiSecrets).mockResolvedValue(undefined);
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!)() } });
   localStorage.setItem(keyA, "A business"); localStorage.setItem(keyB, "B business");
   localStorage.setItem("xai_task_cols", "unowned content"); localStorage.setItem("xai_lang", "zh");
 });
@@ -26,7 +28,8 @@ function preserved() {
 describe("durable local deletion recovery", () => {
   it('keeps captured authentication cleanup pending after failure and retries that generation after reload', async () => {
     const scope = accountScope.activate(accountScope.lock('A-private-id'), 'g1');
-    const receipt = beginAccountLocalDeletion(scope, 'auth-A-original');
+    localStorage.setItem(generationMarkerKey('A-private-id'), JSON.stringify({ generation: 'g1', migrationId: 'fixture', previous: null }));
+    const receipt = await beginAccountLocalDeletion(scope, 'auth-A-original');
     expect(receipt.version).toBe(2);
     const clearAuth = vi.fn().mockRejectedValueOnce(new Error('blocked auth IDB')).mockResolvedValueOnce(undefined);
     await expect(resumeAccountLocalDeletion(receipt, clearAuth)).rejects.toThrow('blocked auth IDB');
@@ -41,13 +44,14 @@ describe("durable local deletion recovery", () => {
   });
   it('never silently completes an auth-bound receipt when cleanup is unavailable', async () => {
     const scope = accountScope.activate(accountScope.lock('A-private-id'), 'g1');
-    const receipt = beginAccountLocalDeletion(scope, 'auth-A-original');
+    localStorage.setItem(generationMarkerKey('A-private-id'), JSON.stringify({ generation: 'g1', migrationId: 'fixture', previous: null }));
+    const receipt = await beginAccountLocalDeletion(scope, 'auth-A-original');
     await expect(resumeAccountLocalDeletion(receipt)).rejects.toThrow('unavailable');
     expect(readAccountDeletionReceipt('A-private-id')?.phase).toBe('pending');
     expect(localStorage.getItem(keyA)).toBe('A business');
   });
-  it("commits metadata as the tombstone before destructive work", () => {
-    const receipt = start();
+  it("commits metadata as the tombstone before destructive work", async () => {
+    const receipt = await start();
     expect(JSON.parse(localStorage.getItem(tombstone)!)).toEqual(receipt);
     expect(receipt.phase).toBe("pending");
     expect(Object.keys(receipt).sort()).toEqual(["accountId", "generation", "kind", "phase", "updatedAt", "version"]);
@@ -55,7 +59,7 @@ describe("durable local deletion recovery", () => {
     expect(listPendingAccountDeletions()).toEqual([receipt]);
   });
   it("finishes only captured A after scope and in-memory state changed to B", async () => {
-    start();
+    await start();
     const serialized = localStorage.getItem(tombstone)!;
     accountScope.activate(accountScope.lock("B-private-id"), "g2");
     const restored = JSON.parse(serialized);
@@ -67,19 +71,19 @@ describe("durable local deletion recovery", () => {
     expect(listPendingAccountDeletions()).toEqual([]);
   });
   it("retains a retryable receipt after secret cleanup fails and marks complete only on success", async () => {
-    const receipt = start(); vi.mocked(clearAccountAiSecrets).mockRejectedValueOnce(new Error("blocked IDB"));
+    const receipt = await start(); vi.mocked(clearAccountAiSecrets).mockRejectedValueOnce(new Error("blocked IDB"));
     await expect(resumeAccountLocalDeletion(receipt)).rejects.toThrow("blocked IDB");
     expect(readAccountDeletionReceipt("A-private-id")?.phase).toBe("local-data-cleared"); preserved();
     await resumeAccountLocalDeletion(readAccountDeletionReceipt("A-private-id")!);
     expect(readAccountDeletionReceipt("A-private-id")?.phase).toBe("complete");
   });
   it("does not mark a successful receipt if the final metadata write fails", async () => {
-    const receipt = start(); const original = Storage.prototype.setItem;
+    const receipt = await start(); const original = Storage.prototype.setItem;
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) {
       if (key === tombstone && JSON.parse(value).phase === "complete") throw new DOMException("full", "QuotaExceededError");
       return original.call(this, key, value);
     });
-    await expect(resumeAccountLocalDeletion(receipt)).rejects.toThrow("full");
+    await expect(resumeAccountLocalDeletion(receipt)).rejects.toThrow("completion refused: storage");
     expect(readAccountDeletionReceipt("A-private-id")?.phase).toBe("local-data-cleared"); preserved();
   });
   it("does not authorize cleanup from mismatched-owner, incomplete or legacy metadata", () => {
@@ -93,7 +97,7 @@ describe("durable local deletion recovery", () => {
 
 describe("recovery notice outside authenticated routes", () => {
   it("survives unmount/remount, shows no identity/content, and completes local cleanup while signed out", async () => {
-    start(); accountScope.lock(null);
+    await start(); accountScope.lock(null);
     const first = render(<AccountDeletionRecoveryNotice />);
     expect(screen.getByRole("button", { name: "Retry local cleanup" })).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("A-private-id"); expect(document.body.textContent).not.toContain("A business");
@@ -105,7 +109,7 @@ describe("recovery notice outside authenticated routes", () => {
     expect(accountScope.capture().kind).toBe("locked");
   });
   it("keeps the failure visible and allows explicit retry without touching B", async () => {
-    start(); accountScope.activate(accountScope.lock("B-private-id"), "g2");
+    await start(); accountScope.activate(accountScope.lock("B-private-id"), "g2");
     vi.mocked(clearAccountAiSecrets).mockRejectedValueOnce(new Error("blocked"));
     render(<AccountDeletionRecoveryNotice lang="en" />);
     fireEvent.click(screen.getByRole("button", { name: "Retry local cleanup" }));
@@ -118,7 +122,7 @@ describe("recovery notice outside authenticated routes", () => {
   it("appears when an already-mounted sign-in page receives a new pending receipt", async () => {
     render(<AccountDeletionRecoveryNotice lang="zh" />);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
-    act(() => { start(); });
+    await act(async () => { await start(); });
     expect(screen.getByRole("button", { name: "重试本地清理" })).toBeInTheDocument();
   });
 });
