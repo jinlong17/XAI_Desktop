@@ -1,6 +1,7 @@
 import { accountMigrationIssue } from './accountMigrationValidation.js';
 import { ACCOUNT_LOCAL_KEYS, LOCAL_KEY_OWNERSHIP, ownershipForKey } from './accountOwnership.js';
 import { accountPrefix, generationKey, generationMarkerKey, type AccountScope, type AccountScopeController } from './accountScope.js';
+import { accountLifecycleLockName, browserAccountLock } from './accountCoordination.js';
 
 type Store = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>;
 export interface GenerationMarker { generation: string; migrationId: string; previous: string | null }
@@ -12,9 +13,31 @@ export interface SecretMigrationParticipant {
 }
 export type MigrationLock = <T>(name: string, run: () => Promise<T>) => Promise<T>;
 export const browserMigrationLock: MigrationLock = async (name, run) => {
-  if (typeof navigator === 'undefined' || !navigator.locks) throw new Error('Exclusive migration lock unavailable. Close other tabs and use a supported browser.');
-  return navigator.locks.request(name, run);
+  if (typeof navigator === 'undefined' || !navigator.locks) {
+    throw new Error('Exclusive migration lock unavailable. Close other tabs and use a supported browser.');
+  }
+  return browserAccountLock(name, 'exclusive', run);
 };
+
+function generationSource(storage: Store, accountId: string, generation: string, demo: boolean): Record<string, string> {
+  const result: Record<string, string> = {};
+  const ownedPrefix = generationKey(accountId, generation, '', demo);
+  for (let index = 0; index < storage.length; index++) {
+    const physical = storage.key(index);
+    if (!physical?.startsWith(ownedPrefix)) continue;
+    const logical = decodeURIComponent(physical.slice(ownedPrefix.length));
+    if (ownershipForKey(logical) !== 'account') throw new Error('Invalid key found inside account generation; recovery required.');
+    const raw = storage.getItem(physical);
+    if (raw !== null) result[logical] = raw;
+  }
+  return result;
+}
+
+function sameRawRecords(left: Record<string, string>, right: Record<string, string>): boolean {
+  const leftKeys = Object.keys(left).sort(), rightKeys = Object.keys(right).sort();
+  return leftKeys.length === rightKeys.length
+    && leftKeys.every((key, index) => key === rightKeys[index] && left[key] === right[key]);
+}
 
 export function readGeneration(storage: Pick<Storage, 'getItem'>, accountId: string, demo = false): GenerationMarker | null {
   if (storage.getItem(`${accountPrefix(accountId, demo)}deleted`) !== null) throw new Error('This account has been deleted on this device.');
@@ -56,7 +79,7 @@ export async function migrateAccount(input: {
   if (input.adoptLegacySecrets && (input.choice !== 'import' || !input.secrets)) throw new Error('Secret adoption requires explicit import and a secret participant.');
   if (demo && input.choice === 'import') throw new Error('Demo mode cannot adopt unowned production data.');
   const prefix = accountPrefix(accountId, demo);
-  return (input.lock ?? browserMigrationLock)(`${prefix}migration`, async () => {
+  return (input.lock ?? browserMigrationLock)(accountLifecycleLockName(accountId, demo), async () => {
     controller.assertCurrent(transition);
     const previousRaw = storage.getItem(generationMarkerKey(accountId, demo));
     const previous = readGeneration(storage, accountId, demo);
@@ -76,18 +99,8 @@ export async function migrateAccount(input: {
     for (const key of selected) {
       if (previous && storage.getItem(generationKey(accountId, previous.generation, key, demo)) !== null) throw new Error(`Import conflict requires explicit resolution: ${key}`);
     }
-    const candidate: Record<string, string> = {};
-    if (previous) {
-      const ownedPrefix = generationKey(accountId, previous.generation, '', demo);
-      for (let index = 0; index < storage.length; index++) {
-        const physical = storage.key(index);
-        if (!physical?.startsWith(ownedPrefix)) continue;
-        const logical = decodeURIComponent(physical.slice(ownedPrefix.length));
-        if (ownershipForKey(logical) !== 'account') throw new Error('Invalid key found inside account generation; recovery required.');
-        const raw = storage.getItem(physical);
-        if (raw !== null) candidate[logical] = raw;
-      }
-    }
+    const copiedSource = previous ? generationSource(storage, accountId, previous.generation, demo) : {};
+    const candidate: Record<string, string> = { ...copiedSource };
     for (const key of selected) candidate[key] = source[key]!;
     const archive = JSON.stringify({ version: 1, owner: 'unassigned', source });
     const archiveKey = `xai:legacy:v1:archive:${encodeURIComponent(migrationId)}`;
@@ -104,6 +117,10 @@ export async function migrateAccount(input: {
       await input.secrets.verify(participant);
     }
     controller.assertCurrent(transition);
+    if (!sameRawRecords(demo ? {} : inspectLegacy(storage), source)) throw new Error('Legacy source changed during migration.');
+    if (previous && !sameRawRecords(generationSource(storage, accountId, previous.generation, demo), copiedSource)) {
+      throw new Error('Account generation source changed during migration.');
+    }
     for (const [key, raw] of Object.entries(candidate)) {
       if (storage.getItem(generationKey(accountId, generation, key, demo)) !== raw) throw new Error(`Staged value verification failed: ${key}`);
     }
@@ -122,7 +139,7 @@ export async function rollbackAccount(input: {
   const { storage, controller, transition } = input;
   if (!transition.accountId || transition.kind !== 'locked') throw new Error('Rollback requires a locked account.');
   const accountId = transition.accountId, demo = input.demo ?? false;
-  return (input.lock ?? browserMigrationLock)(`${accountPrefix(accountId, demo)}migration`, async () => {
+  return (input.lock ?? browserMigrationLock)(accountLifecycleLockName(accountId, demo), async () => {
     controller.assertCurrent(transition);
     const marker = readGeneration(storage, accountId, demo);
     if (!marker) return null;

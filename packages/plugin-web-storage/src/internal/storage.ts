@@ -17,7 +17,9 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
-import { accountScope, type AccountScope } from "./accountScope.js";
+import { AccountScopeError, accountScope, type AccountScope } from "./accountScope.js";
+import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from "./accountCoordination.js";
+import { ownershipForKey } from "./accountOwnership.js";
 import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
 export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
 import { publishSameTab } from "./sameTabBus.js";
@@ -47,6 +49,47 @@ function canonicalWriteBlocked<K extends WebPrefKey>(key: K, raw: string | null)
 export function readRawPref(key: string, scope = accountScope.capture()): string | null {
   if (typeof window === "undefined") return null;
   try { return localStorage.getItem(accountScope.physicalKey(key, scope)); } catch { return null; }
+}
+
+export type AccountWriteFailureReason = "lock-unavailable" | "account-changed" | "recovery-required" | "deleted" | "storage" | "invalid";
+export type AccountWriteResult = Readonly<{ ok: true }> | Readonly<{ ok: false; reason: AccountWriteFailureReason }>;
+export interface AccountWriteOptions { scope?: AccountScope; lock?: AccountCoordinationLock }
+
+function assertCurrentAccountGeneration(scope: AccountScope): void {
+  accountScope.assertCurrent(scope);
+  if ((scope.kind !== "account" && scope.kind !== "demo") || !scope.accountId || !scope.generation) throw new Error("account-changed");
+  const demo = scope.kind === "demo";
+  const prefix = `xai:${demo ? "demo" : "account"}:v1:${encodeURIComponent(scope.accountId)}:`;
+  if (localStorage.getItem(`${prefix}deleted`) !== null) throw new Error("deleted");
+  const raw = localStorage.getItem(`${prefix}committed-generation`);
+  if (raw === null) throw new Error("recovery-required");
+  const marker: unknown = JSON.parse(raw);
+  if (!marker || typeof marker !== "object" || (marker as { generation?: unknown }).generation !== scope.generation) throw new Error("recovery-required");
+}
+
+function accountWriteFailure(error: unknown): AccountWriteResult {
+  if (error instanceof AccountScopeError) return { ok: false, reason: "account-changed" };
+  const reason = error instanceof Error ? error.message : "storage";
+  if (reason === "account-changed" || reason === "recovery-required" || reason === "deleted") return { ok: false, reason };
+  return { ok: false, reason: reason.includes("lock") ? "lock-unavailable" : "storage" };
+}
+
+async function coordinateAccountWrite(
+  key: string,
+  scope: AccountScope,
+  lock: AccountCoordinationLock | undefined,
+  write: () => boolean,
+): Promise<AccountWriteResult> {
+  try {
+    if (ownershipForKey(key) === "device") return write() ? { ok: true } : { ok: false, reason: "storage" };
+    if (!scope.accountId || scope.kind === "locked") return { ok: false, reason: "account-changed" };
+    return await (lock ?? browserAccountLock)(accountLifecycleLockName(scope.accountId, scope.kind === "demo"), "shared", async () => {
+      assertCurrentAccountGeneration(scope);
+      return write() ? { ok: true } : { ok: false, reason: "storage" };
+    });
+  } catch (error) {
+    return accountWriteFailure(error);
+  }
 }
 
 
@@ -183,6 +226,12 @@ export function setPref<K extends WebPrefKey>(
   return true;
 }
 
+/** Coordinated account-pref write. Existing synchronous callers retain their boolean contract. */
+export async function setPrefAccount<K extends WebPrefKey>(key: K, value: WebPrefValue<K>, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  return coordinateAccountWrite(key, scope, options?.lock, () => setPref(key, value, scope));
+}
+
 // ---------------------------------------------------------------------------
 // removePref
 // ---------------------------------------------------------------------------
@@ -212,6 +261,12 @@ export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.ca
   // Notify same-tab subscribers that the value is back to default
   publishSameTab(key, entry.default, scope);
   return true;
+}
+
+/** Coordinated account-pref removal with an explicit committed/refused result. */
+export async function removePrefAccount<K extends WebPrefKey>(key: K, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  return coordinateAccountWrite(key, scope, options?.lock, () => removePref(key, scope));
 }
 
 // Suppress unused variable warning for guardStorage
@@ -398,6 +453,13 @@ export function setPrefAutosave<T>(
   return true;
 }
 
+/** Coordinated account autosave write. The legacy boolean API remains unchanged. */
+export async function setPrefAutosaveAccount<T>(suffix: string, value: T, options?: SetPrefAutosaveOptions & AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const key = `xai_pref_${suffix}`;
+  return coordinateAccountWrite(key, scope, options?.lock, () => setPrefAutosave(suffix, value, { scope, codec: options?.codec }));
+}
+
 /**
  * Remove an arbitrary `xai_pref_${suffix}` key.
  *
@@ -415,4 +477,18 @@ export function removePrefAutosave(suffix: string, scope = accountScope.capture(
     return;
   }
   publishSameTab(key, undefined, scope);
+}
+
+/** Coordinated account autosave removal. */
+export async function removePrefAutosaveAccount(suffix: string, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+  const scope = options?.scope ?? accountScope.capture();
+  const key = `xai_pref_${suffix}`;
+  return coordinateAccountWrite(key, scope, options?.lock, () => {
+    if (!validateSuffix("removePrefAutosave", suffix) || typeof window === "undefined") return false;
+    try {
+      localStorage.removeItem(accountScope.physicalKey(key, scope));
+      publishSameTab(key, undefined, scope);
+      return true;
+    } catch { return false; }
+  });
 }

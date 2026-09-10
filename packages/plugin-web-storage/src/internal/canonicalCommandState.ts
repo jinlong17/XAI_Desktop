@@ -1,5 +1,6 @@
 import type { AccountScope } from "./accountScope.js";
 import { accountPrefix, accountScope, generationKey, generationMarkerKey } from "./accountScope.js";
+import { accountLifecycleLockName, browserAccountLock } from "./accountCoordination.js";
 import { publishSameTab } from "./sameTabBus.js";
 
 export const CANONICAL_COMMAND_KEYS = [
@@ -241,10 +242,11 @@ export async function mutateCanonicalDataset<T>(input: CanonicalDatasetInput<T>)
       return { ok: false, reason: "invalid" };
     }
   } catch { return { ok: false, reason: "invalid" }; }
+  if ((scope.kind !== "account" && scope.kind !== "demo") || !scope.accountId) return { ok: false, reason: "account-changed" };
   const locks = currentLocks();
   if (!locks) return { ok: false, reason: "lock-unavailable" };
   try {
-    return await locks.request(canonicalDatasetLockName(scope, key), async (): Promise<CanonicalDatasetResult<T>> => {
+    return await browserAccountLock(accountLifecycleLockName(scope.accountId, scope.kind === "demo"), "shared", async () => locks.request(canonicalDatasetLockName(scope, key), async (): Promise<CanonicalDatasetResult<T>> => {
       const first = checkCurrentDataset(scope, key);
       if (!first.ok) return first;
       const state = readPhysicalCommandState(first.physicalKey);
@@ -299,8 +301,10 @@ export async function mutateCanonicalDataset<T>(input: CanonicalDatasetInput<T>)
       try { localStorage.setItem(first.physicalKey, encoded); } catch { return { ok: false, reason: "storage" }; }
       publishSameTab(key, outcome.data, scope);
       return { ok: true, data: outcome.data, revision: next.revision, changed: true };
-    });
-  } catch { return { ok: false, reason: "lock-failed" }; }
+    }));
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error && error.message.includes("lock unavailable") ? "lock-unavailable" : "lock-failed" };
+  }
 }
 
 function copyReceipts(receipts: Record<string, CanonicalCommandReceipt>): Record<string, CanonicalCommandReceipt> {
@@ -340,10 +344,11 @@ export async function commitCanonicalCommand<T>(input: CanonicalCommandInput<T>)
     return { ok: false, reason: "invalid" };
   }
   if (receiptId === null || signature === null) return { ok: false, reason: "invalid" };
+  if ((scope.kind !== "account" && scope.kind !== "demo") || !scope.accountId) return { ok: false, reason: "account-changed" };
   const locks = currentLocks();
   if (!locks) return { ok: false, reason: "lock-unavailable" };
   try {
-    return await locks.request(lockName, async (): Promise<CanonicalCommitResult> => {
+    return await browserAccountLock(accountLifecycleLockName(scope.accountId, scope.kind === "demo"), "shared", async () => locks.request(lockName, async (): Promise<CanonicalCommitResult> => {
       const firstCheck = checkCurrentDataset(scope, key);
       if (!firstCheck.ok) return firstCheck;
       const state = readPhysicalCommandState(firstCheck.physicalKey);
@@ -429,9 +434,9 @@ export async function commitCanonicalCommand<T>(input: CanonicalCommandInput<T>)
       }
       publishSameTab(key, mutationData, scope);
       return { ok: true, targetId, replay: false };
-    });
-  } catch {
-    return { ok: false, reason: "lock-failed" };
+    }));
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error && error.message.includes("lock unavailable") ? "lock-unavailable" : "lock-failed" };
   }
 }
 

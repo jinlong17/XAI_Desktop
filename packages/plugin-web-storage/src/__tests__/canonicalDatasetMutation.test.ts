@@ -42,6 +42,26 @@ describe("ordinary canonical dataset writer", () => {
     await expect(mutateCanonicalDataset(input(scope, { initialize: () => ({ items: [] }) }))).resolves.toEqual({ ok: false, reason: "activation-disabled" });
     expect(request).not.toHaveBeenCalled();
   });
+  it("takes the account shared lock before each canonical dataset lock", async () => {
+    const calls: Array<{ name: string; mode: string | null }> = [];
+    vi.stubGlobal("navigator", { locks: { request: vi.fn(async (name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => {
+      const run = typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!;
+      calls.push({ name, mode: typeof optionsOrRun === "function" ? null : optionsOrRun.mode ?? null });
+      return run();
+    }) } });
+    const scope = activate("ordered");
+    await expect(mutateCanonicalDataset(input(scope, { initialize: () => ({ items: [] }) }))).resolves.toMatchObject({ ok: true });
+    await expect(commitCanonicalCommand({
+      key: "xai_task_cols", scope, channel: "web:tasks:create", requestId: "ordered", operation: { title: "ordered" },
+      validate, mutate: data => ({ ok: true, data, targetId: "ordered" }),
+    })).resolves.toMatchObject({ ok: true });
+    expect(calls).toEqual([
+      { name: "xai:account:v1:ordered:lifecycle", mode: "shared" },
+      { name: expect.stringContaining("xai:canonical:account:ordered:fixture:xai_task_cols"), mode: null },
+      { name: "xai:account:v1:ordered:lifecycle", mode: "shared" },
+      { name: expect.stringContaining("xai:canonical:account:ordered:fixture:xai_task_cols"), mode: null },
+    ]);
+  });
   it("preserves a command receipt, commits once, and publishes domain data despite a faulty listener", async () => {
     const scope = activate();
     await expect(commitCanonicalCommand({

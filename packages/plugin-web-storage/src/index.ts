@@ -37,13 +37,20 @@ export { PREF_REGISTRY } from "./internal/registry.js";
 export {
   getPref,
   setPref,
+  setPrefAccount,
   removePref,
+  removePrefAccount,
   isPrefKey,
   // Open-ended xai_pref_* family — typed read/write/remove (mirrors usePrefAutosave).
   getPrefAutosave,
   setPrefAutosave,
+  setPrefAutosaveAccount,
   removePrefAutosave,
+  removePrefAutosaveAccount,
 } from "./internal/storage.js";
+export type { AccountWriteOptions, AccountWriteResult, AccountWriteFailureReason } from "./internal/storage.js";
+export { accountLifecycleLockName, browserAccountLock } from "./internal/accountCoordination.js";
+export type { AccountCoordinationLock, AccountLockMode } from "./internal/accountCoordination.js";
 export {
   CANONICAL_COMMAND_KEYS,
   isCanonicalCommandKey,
@@ -90,7 +97,7 @@ export { migrate } from "./internal/migrate.js";
 
 // Account-local isolation and explicit legacy migration (REL-03).
 export { accountScope, createAccountScopeController, createScopedStorage, AccountScopeError, accountPrefix, generationKey, generationMarkerKey } from "./internal/accountScope.js";
-export type { AccountScope, AccountScopeController } from "./internal/accountScope.js";
+export type { AccountScope, AccountScopeController, ScopedStorageWriteResult } from "./internal/accountScope.js";
 export { LOCAL_KEY_OWNERSHIP, ACCOUNT_LOCAL_KEYS, ownershipForKey } from "./internal/accountOwnership.js";
 export { inspectLegacy, migrateAccount, readGeneration, rollbackAccount, browserMigrationLock, listAccountMigrations } from "./internal/accountMigration.js";
 export type { GenerationMarker, SecretMigrationParticipant, SecretMigrationContext, MigrationLock, MigrationJournalInfo } from "./internal/accountMigration.js";
@@ -101,7 +108,8 @@ export { registerAccountMigrationValidator, accountMigrationIssue } from "./inte
 export { AccountDataGate, requestAccountDataManagement } from "./AccountDataGate.js";
 export type { AccountDataGateProps } from "./AccountDataGate.js";
 
-export { exportAccountLocalData, deleteAccountLocalData } from "./internal/accountDataLifecycle.js";
+export { exportAccountLocalData, deleteAccountLocalData, deleteAccountLocalDataAccount } from "./internal/accountDataLifecycle.js";
+export type { AccountDeletionResult } from "./internal/accountDataLifecycle.js";
 
 // Declared local-data lifecycles and explicit recovery export (REL-04).
 export { LOCAL_DATA_LIFECYCLE, LOCAL_DATA_FAMILIES, lifecycleForKey } from "./internal/lifecycleDeclaration.js";

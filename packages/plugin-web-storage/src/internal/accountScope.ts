@@ -1,4 +1,5 @@
 import { ownershipForKey } from './accountOwnership.js';
+import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from './accountCoordination.js';
 
 export type AccountScope = Readonly<{
   kind: 'locked' | 'account' | 'demo';
@@ -60,13 +61,39 @@ export function createAccountScopeController() {
 export type AccountScopeController = ReturnType<typeof createAccountScopeController>;
 export const accountScope = createAccountScopeController();
 
+export type ScopedStorageWriteResult = Readonly<{ ok: true }> | Readonly<{ ok: false; reason: 'lock-unavailable' | 'account-changed' | 'recovery-required' | 'storage' }>;
+
 export function createScopedStorage(storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>, controller = accountScope) {
   const scope = controller.capture();
+  const assertMarker = () => {
+    controller.assertCurrent(scope);
+    if ((scope.kind !== 'account' && scope.kind !== 'demo') || !scope.accountId || !scope.generation) throw new Error('account-changed');
+    const raw = storage.getItem(generationMarkerKey(scope.accountId, scope.kind === 'demo'));
+    if (raw === null) throw new Error('recovery-required');
+    const marker: unknown = JSON.parse(raw);
+    if (!marker || typeof marker !== 'object' || (marker as { generation?: unknown }).generation !== scope.generation) throw new Error('recovery-required');
+  };
+  const coordinated = async (key: string, write: () => void, lock: AccountCoordinationLock = browserAccountLock): Promise<ScopedStorageWriteResult> => {
+    try {
+      if (ownershipForKey(key) === 'device') { write(); return { ok: true }; }
+      if (!scope.accountId || scope.kind === 'locked') return { ok: false, reason: 'account-changed' };
+      return await lock(accountLifecycleLockName(scope.accountId, scope.kind === 'demo'), 'shared', async () => {
+        assertMarker(); write(); return { ok: true };
+      });
+    } catch (error) {
+      if (error instanceof AccountScopeError) return { ok: false, reason: 'account-changed' };
+      const reason = error instanceof Error ? error.message : '';
+      if (reason === 'account-changed' || reason === 'recovery-required') return { ok: false, reason };
+      return { ok: false, reason: reason.includes('lock') ? 'lock-unavailable' : 'storage' };
+    }
+  };
   return {
     scope,
     getItem(key: string) { return storage.getItem(controller.physicalKey(key, scope)); },
     setItem(key: string, value: string) { storage.setItem(controller.physicalKey(key, scope), value); },
     removeItem(key: string) { storage.removeItem(controller.physicalKey(key, scope)); },
+    setItemAccount(key: string, value: string, lock?: AccountCoordinationLock) { return coordinated(key, () => storage.setItem(controller.physicalKey(key, scope), value), lock); },
+    removeItemAccount(key: string, lock?: AccountCoordinationLock) { return coordinated(key, () => storage.removeItem(controller.physicalKey(key, scope)), lock); },
     assertCurrent() { controller.assertCurrent(scope); },
   };
 }

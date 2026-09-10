@@ -1,4 +1,5 @@
-import { accountPrefix, generationKey, type AccountScope } from './accountScope.js';
+import { accountPrefix, accountScope, generationKey, generationMarkerKey, type AccountScope } from './accountScope.js';
+import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from './accountCoordination.js';
 import { ownershipForKey } from './accountOwnership.js';
 import { recoveryKeyExclusion } from './lifecycleDeclaration.js';
 import { makeExportManifest, type ExportOmission } from './dataExport.js';
@@ -35,4 +36,33 @@ export function deleteAccountLocalData(scope: AccountScope, storage: Store = loc
   // Stop older tabs from creating new account records while scoped cleanup is in progress.
   if (storage.getItem(tombstone) === null) storage.setItem(tombstone,'1');
   for(const key of keys(storage)) if(key.startsWith(ownedPrefix) && key!==tombstone) storage.removeItem(key);
+}
+
+export type AccountDeletionResult = Readonly<{ ok: true }> | Readonly<{ ok: false; reason: 'lock-unavailable' | 'account-changed' | 'recovery-required' | 'storage' }>;
+
+/** Exclusive, retry-safe local account cleanup. Existing synchronous callers remain uncoordinated. */
+export async function deleteAccountLocalDataAccount(
+  scope: AccountScope,
+  storage: Store = localStorage,
+  lock: AccountCoordinationLock = browserAccountLock,
+): Promise<AccountDeletionResult> {
+  if (!scope.accountId || scope.kind === 'locked') return { ok: false, reason: 'account-changed' };
+  try {
+    return await lock(accountLifecycleLockName(scope.accountId, scope.kind === 'demo'), 'exclusive', async () => {
+      try { accountScope.assertCurrent(scope); } catch { return { ok: false, reason: 'account-changed' } as const; }
+      const markerRaw = storage.getItem(generationMarkerKey(scope.accountId!, scope.kind === 'demo'));
+      if (markerRaw === null) return { ok: false, reason: 'recovery-required' } as const;
+      try {
+        const marker: unknown = JSON.parse(markerRaw);
+        if (!marker || typeof marker !== 'object' || (marker as { generation?: unknown }).generation !== scope.generation) {
+          return { ok: false, reason: 'account-changed' } as const;
+        }
+      } catch { return { ok: false, reason: 'recovery-required' } as const; }
+      deleteAccountLocalData(scope, storage);
+      return { ok: true } as const;
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '';
+    return { ok: false, reason: message.includes('lock') ? 'lock-unavailable' : 'storage' };
+  }
 }
