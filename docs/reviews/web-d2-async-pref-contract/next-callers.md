@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Dashboard账号内容d129950/Astra4a66e86、设备位置830dd2b/Astra a6b50c3、Pomodoro六项设备偏好7785e92/Astra ba9affc均已按各自合同有界接受。当前直接legacy usePrefAutosave TSX调用搜索为零；历史八/七处数字保留为基线。剩余usePref见03b0363固定AST库存，不能将只读绑定计为writer。
+当前增量：Smart Lists存储调用方40ffbe1获Astra a663891原39条接受；完整导出/离开合同8565ca6尚未接受。Terra6bf02de已通过父导出/卸载/侧栏旅程，但父b18939e真实程序导航替换目的地仍FAIL。每个调用方须分别核对[恢复能力矩阵](caller-recovery-matrix.md)，不能从异步保存通过推导所有离开和崩溃场景完成。Dashboard账号内容d129950/Astra4a66e86、设备位置830dd2b/Astra a6b50c3、Pomodoro六项设备偏好7785e92/Astra ba9affc均已按各自合同有界接受。当前直接legacy usePrefAutosave TSX调用搜索为零；历史八/七处数字保留为基线。剩余usePref见03b0363固定AST库存，不能将只读绑定计为writer。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
