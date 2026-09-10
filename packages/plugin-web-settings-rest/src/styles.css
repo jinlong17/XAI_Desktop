@@ -558,7 +558,35 @@
   background: var(--panel, #fff);
 }
 .collab-recovery p { margin: 0; }
-.collab-recovery p + p { margin-top: 6px; }
+.collab-recovery-fields {
+  display: grid;
+  gap: 0.5rem;
+}
+.collab-recovery-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 44px;
+}
+.collab-recovery-field p {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.collab-recovery-field strong,
+.collab-recovery-field span {
+  display: block;
+}
+.collab-recovery-field span {
+  font-size: 0.78rem;
+  color: var(--text-2, oklch(50% 0 0));
+}
+.collab-recovery-field button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-inline: 0.45rem;
+  white-space: nowrap;
+}
 .collab-recovery-actions {
   display: flex;
   flex-wrap: wrap;
@@ -566,9 +594,12 @@
   margin-top: 10px;
 }
 .collab-recovery-actions button {
-  flex: 1 1 10rem;
+  flex: 1 1 8rem;
   min-height: 44px;
   max-inline-size: 100%;
+}
+@media (min-width: 768px) {
+  .collab-recovery-fields { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
 }
 
 /* ---- Sticky Note pane ------------------------------------------------ */

@@ -165,11 +165,16 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
       {exportFailed && <p role="alert">{t("collab.exportFailed")}</p>}
     </div>}
     {needsRecovery.length > 0 && <div className="collab-recovery" role="alert">
-      {needsRecovery.map(({ id, label, pref }) => <p key={id}><strong>{label}:</strong> {pref.meta.status === "conflict" ? t("collab.conflict") : pref.meta.source === "invalid" || pref.meta.source === "unavailable" ? t("collab.sourceUnavailable") : t("collab.notSaved")}</p>)}
-      <div className="collab-recovery-actions">{needsRecovery.map(({ id, label, pref }) => {
+      <div className="collab-recovery-fields">{needsRecovery.map(({ id, label, pref }) => {
         const sourceOnly = !isCurrentDraft(id, draftsRef.current[id]) && (pref.meta.source === "invalid" || pref.meta.source === "unavailable");
-        return <React.Fragment key={id}>{!sourceOnly && <button type="button" onClick={() => retry(id, pref)}>{`${t("collab.retry")} ${label}`}</button>}<button type="button" onClick={() => discard(id, pref)}>{sourceOnly ? `${t("collab.reload")} ${label}` : `${t("collab.discardAndReload")} ${label}`}</button></React.Fragment>;
-      })}{hasCurrentDraft() && <button type="button" onClick={exportDraft}>{t("collab.export")}</button>}</div>
+        const message = pref.meta.status === "conflict" ? t("collab.conflict") : pref.meta.source === "invalid" || pref.meta.source === "unavailable" ? t("collab.sourceUnavailable") : t("collab.notSaved");
+        return <div className="collab-recovery-field" key={id}>
+          <p><strong>{label}</strong><span>{message}</span></p>
+          {!sourceOnly && <button type="button" aria-label={`${t("collab.retry")} ${label}`} onClick={() => retry(id, pref)}>{t("collab.retry")}</button>}
+          <button type="button" aria-label={sourceOnly ? `${t("collab.reload")} ${label}` : `${t("collab.discardAndReload")} ${label}`} onClick={() => discard(id, pref)}>{sourceOnly ? t("collab.reload") : t("collab.discard")}</button>
+        </div>;
+      })}</div>
+      {hasCurrentDraft() && <div className="collab-recovery-actions"><button type="button" onClick={exportDraft}>{t("collab.export")}</button></div>}
       {exportFailed && <p>{t("collab.exportFailed")}</p>}
     </div>}
     <SectionBlock>

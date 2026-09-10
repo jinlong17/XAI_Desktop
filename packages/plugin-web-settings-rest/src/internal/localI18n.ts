@@ -287,6 +287,7 @@ const STR = {
   "collab.conflict": { en: "Changed elsewhere. Your selection is still local.", zh: "已在其他位置更改；你的选择仍保留在本地。" },
   "collab.sourceUnavailable": { en: "Saved value needs recovery. Repair storage, then reload.", zh: "已保存的值需要恢复。修复存储后重新加载。" },
   "collab.discardAndReload": { en: "Discard local changes and reload", zh: "放弃本地更改并重新加载" },
+  "collab.discard": { en: "Discard", zh: "放弃" },
   "collab.export": { en: "Export current draft", zh: "导出当前草稿" },
   "collab.exportFailed": { en: "Could not export the draft. Your local changes remain available.", zh: "无法导出草稿；本地更改仍然可用。" },
 

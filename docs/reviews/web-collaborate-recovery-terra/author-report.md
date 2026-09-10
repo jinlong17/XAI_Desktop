@@ -72,6 +72,12 @@ recovery behavior was changed.
   token before reading current state. The focused regression holds a device
   operation, changes account epoch, and proves the old guard is inert while the
   false device selection remains visible. Independent rerun remains required.
+- Native 375px visual evidence then found the all-field recovery action stack
+  pushed Export below the first viewport despite valid 44px targets. The pane
+  now groups each field's status with compact visible Retry/Discard controls,
+  retains full per-field accessible names, and uses a mobile-first grid that
+  expands only from 768px. The parent must verify the required five viewport
+  widths and the first-viewport Export placement.
 
 ## Independent validation still required
 
