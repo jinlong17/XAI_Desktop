@@ -26,3 +26,9 @@ At `41fb4d1`, the real offset-conflict route escaped to Tasks without a dialog, 
 ## Mixed two-field native controls at 9193353
 
 Both real physical-key locks were held before route departure. With note and offset simultaneously pending, the URL remained `/app/dashboard`, the dialog stayed open, and both physical values remained original. Releasing only offset persisted `40` while note stayed original and the route remained held; its eventual note failure exported the exact latest note plus `40`. The reverse persisted the latest note while offset stayed `0`, remained held after offset failure, and exported the exact latest note plus desired offset `40`. Both disk files matched the complete established schema and Runtime remained clean.
+
+## Fixed c9a388d result
+
+`c9a388d` fixes both 120ms slow-pointer departure paths: AppRail and widget preserve the original physical note, retain the latest input, stay on Dashboard and open the dialog. Both mixed partial directions, offset conflict, full-denial export, device owner/lock export and both source-only visual modes remain PASS with Runtime 0.
+
+The ordinary Tab blur positive control regresses: after five seconds the focused element has moved to the Header icon button, there is no dialog, but physical storage remains `Original note` instead of `Ordinary blur saved note`. This is a product failure because the same CDP Tab oracle passed at `9193353`, and the contract requires non-departure blur Save.

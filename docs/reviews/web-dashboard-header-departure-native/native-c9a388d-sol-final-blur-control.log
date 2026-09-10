@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c9a388d","browser":"Chrome/152.0.7977.83"}
+{"name":"blur-control-observation","path":"/app/dashboard","dialog":false,"note":"Original note","active":"dash-note__icon-btn"}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Original note'\n- 'Ordinary blur saved note'\n     ^\n"}

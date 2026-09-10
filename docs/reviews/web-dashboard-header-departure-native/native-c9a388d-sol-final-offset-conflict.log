@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c9a388d","browser":"Chrome/152.0.7977.83"}
+{"name":"offset-conflict-observation","offset":"35","visual":"60px","recovery":"Note or position was not saved. Drafts stay on this page only; retry or export before leaving.The account or saved content changed. Export your draft and reopen to avoid overwriting newer data.Retry note saveExport note draft","path":"/app/dashboard","dialog":true}
+{"name":"supplemental","pass":true,"mode":"offset-conflict","runtimeErrors":0}
