@@ -352,7 +352,10 @@
         "../web-smart-lists-recovery-contract/contract.md",
         "../web-d2-smart-lists-astra/review-40ffbe1.md",
         "../web-d2-smart-lists-draft-native/review.md",
-        "../web-d2-smart-lists-host-native/review.md"
+        "../web-d2-smart-lists-host-native/review.md",
+        "commit:b18939e",
+        "commit:f27c6d1",
+        "../web-d2-async-pref-contract/caller-recovery-matrix.md"
       ]
     },
     {
