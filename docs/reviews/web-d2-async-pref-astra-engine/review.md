@@ -53,6 +53,9 @@ No product or parent test was changed; no push. Full async-pref batch, D2, AI-02
 
 ## Terra repair verification — 2c5dc31
 
+**Author-provided evidence only; this addendum is not an Astra acceptance.**
+See [Astra’s independent fixed follow-up](review-2c5dc31.md) for the separate verdict.
+
 The rejected `5ed9329` archive remains the subject of this review and its before
 log is unchanged. Terra repaired the four bounded groups in product commit
 `2c5dc319126541085e7620c4c9ae23413db2c816`. Re-running this review's unchanged

@@ -1,0 +1,127 @@
+INDEPENDENT ASTRA product=2c5dc319126541085e7620c4c9ae23413db2c816 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-8wpb44t7 test_sha256=dd1560de7e743f1d08801bc21b95e55a9adf03fdb2d7da395516fb475b421f7e
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-8wpb44t7/packages/plugin-web-storage
+
+ × src/__tests__/astraEngine.test.ts > registered default validation cannot be bypassed by the new dynamic-absence flag 7ms
+   → expected { ok: true, value: 'invalid', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+ × src/__tests__/astraEngine.test.ts > throwing default validator resolves typed refusal instead of escaping the new prevalidation boundary 1ms
+   → promise rejected "Error: validator fault" instead of resolving
+ × src/__tests__/astraEngine.test.ts > registered same-codec autosave reset publishes its validated registry default to the same-key subscriber 2ms
+   → expected "spy" to be called once with arguments: [ 'comment' ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   "comment",
++   undefined,
+  ]
+
+
+Number of calls: 1
+
+ × src/__tests__/astraEngine.test.ts > open-ended string codec refuses object input rather than coercing the public generic value 1ms
+   → expected { ok: true } to match object { ok: false, reason: 'invalid' }
+ ✓ src/__tests__/astraEngine.test.ts > control: legitimate registered string/boolean and dynamic JSON create/reset still work 1ms
+ ✓ src/__tests__/astraEngine.test.ts > control: observed external replacement clears uncertain attribution and stale raw-baseline retry refuses 1ms
+ ✓ src/__tests__/astraEngine.test.ts > control: uncertain reconciliation checks generation admission and publishes only once on valid same-owner retry 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > registered default validation cannot be bypassed by the new dynamic-absence flag
+AssertionError: expected { ok: true, value: 'invalid', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:14:93
+     12| it('registered default validation cannot be bypassed by the new dynami…
+     13|  const b=binding();const observer=vi.fn();subscribeSameTab(key,observe…
+     14|  expect(await mutatePref({...b,reset:true,allowAbsentDefault:true,defa…
+       |                                                                                             ^
+     15|  expect(observer).not.toHaveBeenCalled();expect(localStorage.getItem(p…
+     16| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > throwing default validator resolves typed refusal instead of escaping the new prevalidation boundary
+AssertionError: promise rejected "Error: validator fault" instead of resolving
+ ❯ src/__tests__/astraEngine.test.ts:18:133
+     16| });
+     17| it('throwing default validator resolves typed refusal instead of escap…
+     18|  const b=binding();await expect(mutatePref({...b,validate:(_v:unknown)…
+       |                                                                                                                                     ^
+     19|  expect(localStorage.getItem(physical())).toBeNull();
+     20| });
+
+Caused by: Error: validator fault
+ ❯ Object.validate src/__tests__/astraEngine.test.ts:18:93
+ ❯ validate src/internal/prefMutation.ts:111:60
+ ❯ mutatePref src/internal/prefMutation.ts:112:58
+ ❯ src/__tests__/astraEngine.test.ts:18:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > registered same-codec autosave reset publishes its validated registry default to the same-key subscriber
+AssertionError: expected "spy" to be called once with arguments: [ 'comment' ]
+
+Received: 
+
+  1st spy call:
+
+  [
+-   "comment",
++   undefined,
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/__tests__/astraEngine.test.ts:25:71
+     23|  expect(await setPrefAutosaveAccount('collab_default_share','edit',{sc…
+     24|  expect(await removePrefAutosaveAccount('collab_default_share',{scope:…
+     25|  expect(localStorage.getItem(physical())).toBeNull();expect(observer).…
+       |                                                                       ^
+     26| });
+     27| it('open-ended string codec refuses object input rather than coercing …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > open-ended string codec refuses object input rather than coercing the public generic value
+AssertionError: expected { ok: true } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:28:129
+     26| });
+     27| it('open-ended string codec refuses object input rather than coercing …
+     28|  const b=binding();expect(await setPrefAutosaveAccount('repair_dynamic…
+       |                                                                                                                                 ^
+     29|  expect(localStorage.getItem(physical('xai_pref_repair_dynamic_string'…
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  19:45:03
+   Duration  848ms (transform 86ms, setup 0ms, collect 101ms, tests 13ms, environment 418ms, prepare 81ms)
+
+EXIT_CODE=1

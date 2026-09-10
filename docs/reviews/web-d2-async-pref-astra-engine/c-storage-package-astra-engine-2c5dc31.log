@@ -1,0 +1,415 @@
+revision=2c5dc31
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-tseUaX
+
+ ✓ packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx (7 tests) 15ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx (3 tests) 24ms
+ ✓ packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx (10 tests) 28ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountCoordination.test.ts (11 tests) 9ms
+ ✓ packages/plugin-web-storage/src/__tests__/usePref.test.tsx (13 tests) 45ms
+ ✓ packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx (14 tests) 29ms
+ ✓ packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx (5 tests) 71ms
+ ✓ packages/plugin-web-storage/src/__tests__/canonicalDatasetMutation.test.ts (7 tests) 27ms
+ ✓ packages/plugin-web-storage/src/__tests__/registry.test.ts (15 tests) 19ms
+ ✓ packages/plugin-web-storage/src/__tests__/imperative.test.ts (16 tests) 9ms
+ ✓ packages/plugin-web-storage/src/__tests__/canonicalCommandCommit.test.ts (15 tests) 25ms
+ ✓ packages/plugin-web-storage/src/__tests__/consumer.test.tsx (4 tests) 18ms
+ ✓ packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx (3 tests) 18ms
+ ✓ packages/plugin-web-storage/src/__tests__/dataExport.test.ts (8 tests) 19ms
+ ✓ packages/plugin-web-storage/src/__tests__/migrate.test.ts (5 tests) 2ms
+ ✓ packages/plugin-web-storage/src/__tests__/ssr.test.ts (12 tests) 291ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountScope.test.ts (4 tests) 3ms
+ ✓ packages/plugin-web-storage/src/__tests__/prefMutation.test.ts (3 tests) 4ms
+ ✓ packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts (2 tests) 2ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountMigration.test.ts (10 tests) 7ms
+ ✓ packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts (7 tests) 6ms
+
+ Test Files  21 passed (21)
+      Tests  174 passed (174)
+   Start at  19:45:54
+   Duration  2.66s (transform 790ms, setup 0ms, collect 1.87s, tests 672ms, environment 9.53s, prepare 1.93s)
+
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > hides the previous account value and prevents a captured hook setter writing to B
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-1: initial value is registry default when storage empty > usePref('xai_accent_hue') returns 165
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx > canonical command state B1 reader > projects an envelope to ordinary readers but blocks old sync writers and removal
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx > canonical command state B1 reader > fails closed when an envelope cannot be read before removal
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > hides the previous account value and prevents a captured hook setter writing to B
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-1: initial value is registry default when storage empty > usePref('xai_accent_hue') returns 165
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-2: initial value from localStorage when key present > seeded 200 → value === 200
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+[plugin-web-storage] quota exceeded for xai_pref_pomodoro_sound.
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+[plugin-web-storage] quota exceeded for xai_pref_pomodoro_sound.
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > hides the previous account value and prevents a captured hook setter writing to B
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-2: initial value from localStorage when key present > seeded 200 → value === 200
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-3: setValue updates state and writes localStorage > setValue(220) → value === 220 and localStorage has '220'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > hides the previous account value and prevents a captured hook setter writing to B
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-3: setValue updates state and writes localStorage > setValue(220) → value === 220 and localStorage has '220'
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > ignores storage events for another account and legacy unscoped keys
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > reports failed autosave and retries the latest value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > resaves when the key changes even if the value is unchanged
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > resaves when the key changes even if the value is unchanged
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > resaves when the key changes even if the value is unchanged
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > ignores storage events for another account and legacy unscoped keys
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-3: setValue updates state and writes localStorage > setValue(220) → value === 220 and localStorage has '220'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-4: functional updater works > from default 165, setValue(prev => prev + 1) yields 166
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > resaves when the key changes even if the value is unchanged
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-1: first render writes to xai_pref_${suffix} > renders with value 'compact' → xai_pref_appearance_density === '"compact"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-1: first render writes to xai_pref_${suffix} > renders with value 'compact' → xai_pref_appearance_density === '"compact"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-4: functional updater works > from default 165, setValue(prev => prev + 1) yields 166
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > ignores storage events for another account and legacy unscoped keys
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > cancels an old mounted autosave after identity changes
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-1: first render writes to xai_pref_${suffix} > renders with value 'compact' → xai_pref_appearance_density === '"compact"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-2: re-render with new value updates stored value > changing from compact to comfortable updates localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > cancels an old mounted autosave after identity changes
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-4: functional updater works > from default 165, setValue(prev => prev + 1) yields 166
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-5: meta.isDefault true when key absent > empty storage → meta.isDefault === true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > cancels an old mounted autosave after identity changes
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-2: re-render with new value updates stored value > changing from compact to comfortable updates localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-5: meta.isDefault true when key absent > empty storage → meta.isDefault === true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-6: meta.isDefault flips to false after setValue > after setValue → meta.isDefault === false
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > cancels an old mounted autosave after identity changes
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-6: meta.isDefault flips to false after setValue > after setValue → meta.isDefault === false
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-2: re-render with new value updates stored value > changing from compact to comfortable updates localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-2: re-render with new value updates stored value > changing from compact to comfortable updates localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-6: meta.isDefault flips to false after setValue > after setValue → meta.isDefault === false
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx > cancels an old mounted autosave after identity changes
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-7: meta.reset restores default and removes localStorage key > set then reset → value=165, key absent, isDefault=true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-2: re-render with new value updates stored value > changing from compact to comfortable updates localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-3: same value re-render does NOT call setItem again > rendering same value twice skips second setItem call
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-7: meta.reset restores default and removes localStorage key > set then reset → value=165, key absent, isDefault=true
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-3: same value re-render does NOT call setItem again > rendering same value twice skips second setItem call
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-3: same value re-render does NOT call setItem again > rendering same value twice skips second setItem call
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-7: meta.reset restores default and removes localStorage key > set then reset → value=165, key absent, isDefault=true
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-7: meta.reset restores default and removes localStorage key > set then reset → value=165, key absent, isDefault=true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-3: same value re-render does NOT call setItem again > rendering same value twice skips second setItem call
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-8: cross-tab storage event updates value > dispatching StorageEvent updates value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-4: options.codec='string' writes raw string > usePrefAutosave('x', 'abc', { codec: 'string' }) stores 'abc', not '"abc"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-4: options.codec='string' writes raw string > usePrefAutosave('x', 'abc', { codec: 'string' }) stores 'abc', not '"abc"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-8: cross-tab storage event updates value > dispatching StorageEvent updates value
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-8: cross-tab storage event updates value > dispatching StorageEvent updates value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-9: storage event with key=null resets to default > key=null event resets value to 165
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-4: options.codec='string' writes raw string > usePrefAutosave('x', 'abc', { codec: 'string' }) stores 'abc', not '"abc"'
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-9: storage event with key=null resets to default > key=null event resets value to 165
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-5: isPrefKey regex guard > isPrefKey('xai_pref_x') === true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-5: isPrefKey regex guard > isPrefKey('xai_accent_hue') === false
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-5: isPrefKey regex guard > isPrefKey('random') === false
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx > AC-AUTO-5: isPrefKey regex guard > isPrefKey('xai_pref_appearance_density') === true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-9: storage event with key=null resets to default > key=null event resets value to 165
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-10: two hook instances observe same-tab writes via pub/sub > setValue from instance A is observed by instance B
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-10: two hook instances observe same-tab writes via pub/sub > setValue from instance A is observed by instance B
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-10: two hook instances observe same-tab writes via pub/sub > setValue from instance A is observed by instance B
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-11: defaultOverride overrides registry default when storage empty > usePref('xai_accent_hue', 99) returns 99 when storage empty
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-11: defaultOverride overrides registry default when storage empty > usePref('xai_accent_hue', 99) returns 99 when storage empty
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-12: JSON parse failure returns default and logs > corrupt xai_zones value returns [] and warns
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > AC-HOOK-12: JSON parse failure returns default and logs > corrupt xai_zones value returns [] and warns
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > meta.schemaVersion > is 1 for xai_accent_hue in v1
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.test.tsx > meta.schemaVersion > is 1 for xai_accent_hue in v1
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-1: getPrefAutosave returns defaultValue when key absent > returns defaultValue when xai_pref_${suffix} is not in localStorage
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-1: getPrefAutosave returns defaultValue when key absent > returns undefined when no defaultValue is provided and key is absent
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes value 'compact' then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes value 'compact' then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes value 'compact' then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes complex object then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes complex object then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-2: usePrefAutosave -> getPrefAutosave round-trip (json) > hook writes complex object then getPrefAutosave reads it back
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-3: getPrefAutosave matches usePrefAutosave codec > string codec write then string codec read returns the raw value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-3: getPrefAutosave matches usePrefAutosave codec > string codec write then string codec read returns the raw value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-3: getPrefAutosave matches usePrefAutosave codec > string codec write then string codec read returns the raw value
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-4: consumer seeds initial state from getPrefAutosave (api.md §3.2 contract) > Settings panel re-mount picks up previously-autosaved value as seed
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-5: setPrefAutosave / getPrefAutosave imperative round-trip > setPrefAutosave('x', { a: 1 }) -> getPrefAutosave returns { a: 1 }
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-5: setPrefAutosave / getPrefAutosave imperative round-trip > compare-before-write: identical setPrefAutosave call still returns true
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-6: removePrefAutosave restores default on read > after removePrefAutosave, getPrefAutosave returns defaultValue
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-7: decode failure falls back to defaultValue > corrupt JSON in xai_pref_${suffix} returns defaultValue and warns
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-8: suffix containing '/' is rejected in dev > getPrefAutosave with '/' throws in development
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-8: suffix containing '/' is rejected in dev > setPrefAutosave with '/' throws in development
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-8: suffix containing '/' is rejected in dev > removePrefAutosave with '/' throws in development
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx > AC-AUTO-RP-9: SSR fallback returns defaultValue without touching window > when window is undefined, getPrefAutosave returns defaultValue
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/consumer.test.tsx > AC-E2E-3: consumer component mounts without error > PetPicker mock component using usePref('xai_pet_id') mounts and renders
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'abc' stored for number codec xai_accent_hue returns 165
+[plugin-web-storage] decode failed for xai_accent_hue: Error: Cannot decode stored value with codec "number"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-tseUaX/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-tseUaX/packages/plugin-web-storage/src/__tests__/imperative.test.ts:99:12
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | packages/plugin-web-storage/src/__tests__/imperative.test.ts > AC-IMP-8: type-mismatched value returns default > 'notbool' stored for boolean codec xai_ai_insights returns true (default)
+[plugin-web-storage] decode failed for xai_ai_insights: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-tseUaX/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-c-tseUaX/packages/plugin-web-storage/src/__tests__/imperative.test.ts:104:12
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@vitest+runner@3.2.7/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+stderr | packages/plugin-web-storage/src/__tests__/consumer.test.tsx > AC-E2E-3: consumer component mounts without error > PetPicker mock component using usePref('xai_pet_id') mounts and renders
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/consumer.test.tsx > AC-E2E-3: consumer component mounts without error > multi-key consumer mounts cleanly
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/consumer.test.tsx > AC-E2E-3: consumer component mounts without error > multi-key consumer mounts cleanly
+The current testing environment is not configured to support act(...)
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx > returns false after a native quota rejection without changing the committed value
+[plugin-web-storage] quota exceeded for xai_ai_model_default.
+
+stderr | packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx > a captured setter returns false after the account changes and leaves B untouched
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | packages/plugin-web-storage/src/__tests__/ssr.test.ts > AC-SSR-3: setPref returns false in SSR and does not throw > setPref('xai_accent_hue', 200) returns false and no throw
+[plugin-web-storage] setPref called during SSR; no-op.
+
+stderr | packages/plugin-web-storage/src/__tests__/ssr.test.ts > AC-SSR-8: setPrefAutosave / removePrefAutosave no-op safely in SSR > setPrefAutosave('x', 'v') returns false in Node and does not throw
+[plugin-web-storage] setPrefAutosave called during SSR; no-op.
