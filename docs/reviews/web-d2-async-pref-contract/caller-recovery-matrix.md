@@ -1,10 +1,10 @@
 # 调用方恢复能力与剩余验收
 
-检查点：产品6bf02de，父独立证据b18939e。以原REL-05、REL-09和Smart Lists完整8565ca6合同为标准。下表是接续排程，不新增编号关闭；“未证明”不是已复现的故障，必须通过对应产品路径检查后判定。保存、导出、普通离开与强制失效分别验收。
+检查点：产品a2c0fe0，Astra独立接受75aa0e8；父UI补充5f4c4ff。以原REL-05、REL-09和Smart Lists完整8565ca6合同为标准。下表是接续排程，不新增编号关闭；“未证明”不是已复现的故障，必须通过对应产品路径检查后判定。保存、导出、普通离开与强制失效分别验收。
 
 | 调用方 | 真实保存与最新草稿重试 | 实际草稿导出 | 浏览器卸载 | 普通路由及自愿退出账号 | 强制失效/崩溃的未提交恢复 |
 | --- | --- | --- | --- | --- | --- |
-| Smart Lists完整map | Astra a663891原39接受；父6bf02de native5及已保存map整进程重开通过 | 父ef97c1f quota及所有Storage读写拒绝后实际disk JSON通过；完整异常/prototype/owner矩阵待Astra | ef97c1f未保存阻止事件、Retry后解除通过；全状态矩阵待Astra | 6bf02de侧栏Stay/Export/Escape/Discard/focus通过；**程序二次导航替换原目标FAIL**，实际App/owner竞争待完整审查 | 开放；不是beforeunload可保证的能力 |
+| Smart Lists完整map | Astra a663891原39接受；a2c0fe0回归通过 | Astra75aa0e8完整export接受，父实际disk/full-denial通过 | 当前未保存/Retry/Discard等合同通过；非崩溃保证 | Astra75aa0e8当前用户恢复有界接受，same-turn/POP/owner/cleanup通过；Stay移动点击宽度P2待修 | 开放；不是beforeunload可保证的能力 |
 | Dashboard账号便签 | d129950 / Astra4a66e86有界接受 | 已有实际disk导出证据；全存储拒绝出口以原合同边界为准 | 原有界证据保留 | 尚未证明完整AppRail/host卸载及退出账号保护 | 开放，不由已保存数据重开证明 |
 | Dashboard设备位置 | 830dd2b / Astra a6b50c3有界接受 | 以原设备位置合同为准，不继承便签内容导出证据 | 原有界证据保留 | 尚未证明完整宿主离开保护 | 开放，不能把已保存位置恢复称未保存拖动恢复 |
 | Pomodoro六项设备偏好 | 7785e92 / Astra ba9affc有界接受 | 六项最新选择实际disk导出+Retry证据保留 | 原设备合同未加入新guard，不算通过 | 尚未证明普通host导航/自愿退出时保存失败草稿保护 | 开放；另与实际active timer/session持久链分开 |
