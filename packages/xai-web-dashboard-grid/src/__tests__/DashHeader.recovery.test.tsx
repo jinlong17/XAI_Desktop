@@ -56,5 +56,11 @@ describe("Dashboard header persistence recovery", () => {
   await waitFor(()=>expect(ui.getByRole("alert")).toBeTruthy());expect(localStorage.getItem(offset)).toBe("null");expect(writes.mock.calls.filter(call=>call[0]===offset)).toEqual([]);
   nativeSet.call(localStorage,offset,"80");fireEvent.click(ui.getByText("Reload note position"));await waitFor(()=>expect(ui.queryByRole("alert")).toBeNull());expect(writes.mock.calls.filter(call=>call[0]===offset)).toEqual([]);
  });
+ it("reload cancels an invalid-source pending position without an old completion polluting recovery", async () => {
+  const offset="xai_pref_dashboard_header_note_x";localStorage.setItem(offset,"null");let unlock!:()=>void,entered!:()=>void;const gate=new Promise<void>(resolve=>{unlock=resolve;});const waiting=new Promise<void>(resolve=>{entered=resolve;});
+  vi.stubGlobal("navigator",{locks:{request:async(_name:string,optionsOrRun:unknown,maybeRun?:()=>Promise<unknown>)=>{const run=typeof optionsOrRun==="function"?optionsOrRun as ()=>Promise<unknown>:maybeRun!;entered();await gate;return run();}}});
+  const ui=mount();const lane=ui.container.querySelector(".dash-note-lane")!;const note=ui.container.querySelector(".dash-note")!;Object.defineProperty(lane,"clientWidth",{value:760});Object.defineProperty(note,"offsetWidth",{value:360});const writes=vi.spyOn(Storage.prototype,"setItem");
+  fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:4});fireEvent.pointerMove(note,{clientX:240,pointerId:4});fireEvent.pointerUp(note,{clientX:240,pointerId:4});await waiting;fireEvent.click(ui.getByText("Reload note position"));nativeSet.call(localStorage,offset,"80");fireEvent.click(ui.getByText("Reload note position"));unlock();await waitFor(()=>expect(ui.queryByRole("alert")).toBeNull());expect(writes.mock.calls.filter(call=>call[0]===offset)).toEqual([]);
+ });
 
 });
