@@ -23,6 +23,12 @@ function externalOffset(raw: string) {
   window.dispatchEvent(new StorageEvent("storage", { key: offsetKey, oldValue, newValue: raw, storageArea: localStorage }));
 }
 
+function enterNote(ui: ReturnType<typeof mount>, value: string) {
+  if (!ui.queryByRole("textbox")) ui.edit();
+  if (!ui.queryByRole("textbox")) ui.edit();
+  fireEvent.change(ui.input(), { target: { value } });
+}
+
 it("pending Retry cannot attribute predecessor success to a newer queued failure", async () => {
   const ui = mount();
   await flush();
@@ -52,9 +58,9 @@ it("equal-value predecessor success cannot clear a newer equal-value failed inte
     if (key === noteKey && value === "Same value" && ++sameWrites === 2) throw new Error("new same-value quota");
     baseSet.call(this, key, value);
   });
-  changeNote(ui, "Same value"); ui.save();
-  fireEvent.change(ui.input(), { target: { value: "Different revision" } }); ui.save();
-  fireEvent.change(ui.input(), { target: { value: "Same value" } }); ui.save();
+  enterNote(ui, "Same value"); ui.save();
+  enterNote(ui, "Different revision"); ui.save();
+  enterNote(ui, "Same value"); ui.save();
   await release(); await flush(24);
   expect(nativeGet.call(localStorage, noteKey)).toBe("Same value");
   expect(ui.input().value).toBe("Same value");
@@ -72,7 +78,7 @@ it("note failure with position success and the reverse each keep only the failed
   });
   beginMove(ui.note); move(ui.note, 45); finishMove(ui.note, 45);
   await flush(20);
-  changeNote(ui, "Failed note"); ui.save();
+  enterNote(ui, "Failed note"); ui.save();
   await flush(20);
   expect(nativeGet.call(localStorage, offsetKey)).toBe("45");
   expect(nativeGet.call(localStorage, noteKey)).toBe("Original A");
@@ -87,7 +93,7 @@ it("note failure with position success and the reverse each keep only the failed
     if (key === offsetKey) throw new Error("offset quota");
     baseSet.call(this, key, value);
   });
-  changeNote(ui, "Second saved note"); ui.save();
+  enterNote(ui, "Second saved note"); ui.save();
   beginMove(ui.note, 8); move(ui.note, 70, 8); finishMove(ui.note, 70, 8);
   await flush(20);
   expect(nativeGet.call(localStorage, noteKey)).toBe("Second saved note");

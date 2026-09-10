@@ -40,6 +40,7 @@ it("one sibling success cannot release the other failed field", async () => {
     baseSet.call(this, key, value);
   });
   changeNote(ui, "Saved note"); ui.save();
+  await flush(20);
   beginMove(ui.note); move(ui.note, 80); finishMove(ui.note, 80);
   await flush(20);
   expect(nativeGet.call(localStorage, noteKey)).toBe("Saved note");

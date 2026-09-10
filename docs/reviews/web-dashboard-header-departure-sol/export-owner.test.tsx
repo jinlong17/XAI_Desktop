@@ -8,8 +8,8 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 it("current memory export survives complete storage denial and preserves both sources", async () => {
   const ui = mount();
-  changeNote(ui, "Latest memory note");
   beginMove(ui.note); move(ui.note, 75);
+  changeNote(ui, "Latest memory note");
   const beforeNote = nativeGet.call(localStorage, noteKey);
   const beforeOffset = nativeGet.call(localStorage, offsetKey);
   vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("denied"); });
