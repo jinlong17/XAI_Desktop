@@ -60,4 +60,16 @@ describe("collaboratePane", () => {
       expect(getPref("xai_pref_collab_mention_notify")).toBe(false);
     });
   });
+
+  it("offers a memory export while a current device edit is pending", async () => {
+    const locks = createSmartListsLockManager();
+    vi.stubGlobal("navigator", { locks });
+    let release!: () => void;
+    const held = locks.request("xai:pref:v1:xai_pref_collab_show_avatars", { mode: "exclusive" }, () => new Promise<void>(resolve => { release = resolve; }));
+    const ui = render(collaboratePane.render({ lang: "en" }));
+    fireEvent.click(ui.getByRole("switch", { name: "Show collaborator avatars" }));
+    await waitFor(() => expect(ui.getByRole("button", { name: "Export current draft" })).toBeInTheDocument());
+    release();
+    await held;
+  });
 });

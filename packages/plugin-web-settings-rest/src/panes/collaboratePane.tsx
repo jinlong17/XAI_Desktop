@@ -152,6 +152,9 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
     <h3 className="pane-title">{s("settings.collaborate")}</h3>
     {anyPending && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saving")}</p>}
     {!hasCurrentDraft() && anySaved && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saved")}</p>}
+    {hasCurrentDraft() && needsRecovery.length === 0 && <div className="collab-recovery">
+      <div className="collab-recovery-actions"><button type="button" onClick={exportDraft}>{t("collab.export")}</button></div>
+    </div>}
     {needsRecovery.length > 0 && <div className="collab-recovery" role="alert">
       {needsRecovery.map(({ id, label, pref }) => <p key={id}><strong>{label}:</strong> {pref.meta.status === "conflict" ? t("collab.conflict") : pref.meta.source === "invalid" || pref.meta.source === "unavailable" ? t("collab.sourceUnavailable") : t("collab.notSaved")}</p>)}
       <div className="collab-recovery-actions">{needsRecovery.map(({ id, label, pref }) => {
