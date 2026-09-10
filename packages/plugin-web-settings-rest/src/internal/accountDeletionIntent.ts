@@ -12,6 +12,9 @@ export interface AccountDeletionIntent {
 }
 const EVENT = "xai:account-deletion-intent";
 const keyFor = (accountId: string) => `${accountPrefix(accountId)}deletion-intent`;
+export function accountDeletionIntentRaw(intent: AccountDeletionIntent): string | null {
+  return localStorage.getItem(keyFor(intent.accountId));
+}
 export function prepareAccountDeletionIntent(scope: AccountScope): AccountDeletionIntent {
   if (scope.kind !== "account" || !scope.accountId || !scope.generation) throw new Error("An authenticated account is required");
   // A later rejected request cannot resolve an earlier request's lost response.

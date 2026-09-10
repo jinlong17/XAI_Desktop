@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { accountScope, generationKey } from "@repo/plugin-web-storage";
+import { accountScope, generationKey, generationMarkerKey } from "@repo/plugin-web-storage";
 import { readAccountDeletionReceipt } from '../internal/accountDeletionRecovery.js';
 import { deleteAccount, wipeRegisteredIDB, AccountDeleteError } from "@repo/web-auth-device-session";
 import { useWebAuthSession } from "@repo/web-auth-device-session/web";
@@ -18,7 +18,11 @@ function deferred() {
   const promise = new Promise<void>(done => { resolve = done; });
   return { promise, resolve };
 }
-function activate(id: string, demo = false) { return accountScope.activate(accountScope.lock(id), "g1", demo); }
+function activate(id: string, demo = false) {
+  const scope = accountScope.activate(accountScope.lock(id), "g1", demo);
+  localStorage.setItem(generationMarkerKey(id, demo), JSON.stringify({ generation: "g1", migrationId: "fixture", previous: null }));
+  return scope;
+}
 let assign: ReturnType<typeof vi.fn>;
 let clear: ReturnType<typeof vi.fn>;
 let scope: ReturnType<typeof accountScope.capture>;
@@ -33,6 +37,9 @@ beforeEach(() => {
   vi.mocked(deleteAccount).mockResolvedValue(undefined);
   vi.mocked(clearAccountAiSecrets).mockResolvedValue(undefined);
   scope = activate("A");
+  localStorage.setItem(generationMarkerKey("A"), JSON.stringify({ generation: "g1", migrationId: "fixture", previous: null }));
+  localStorage.setItem(generationMarkerKey("B"), JSON.stringify({ generation: "g1", migrationId: "fixture", previous: null }));
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!)() } });
   localStorage.setItem(rawKey("A"), "A content");
   localStorage.setItem(rawKey("B"), "B content");
   localStorage.setItem("xai_task_cols", "unowned archive");

@@ -1,8 +1,8 @@
 /** Account deletion owns only the captured account. Server success precedes local cleanup. */
 import * as React from "react";
 import { accountScope } from "@repo/plugin-web-storage";
-import { beginAccountLocalDeletion, resumeAccountLocalDeletion } from "./accountDeletionRecovery.js";
-import { prepareAccountDeletionIntent, discardRejectedDeletionIntent } from "./accountDeletionIntent.js";
+import { beginAccountLocalDeletion, beginConfirmedAccountLocalDeletion, resumeAccountLocalDeletion } from "./accountDeletionRecovery.js";
+import { prepareAccountDeletionIntent, discardRejectedDeletionIntent, accountDeletionIntentRaw } from "./accountDeletionIntent.js";
 import {
   deleteAccount,
   AccountDeleteError,
@@ -56,6 +56,8 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
       if (!currentIsMockAuth && coordinator && auth?.owner !== scope.accountId) {
         throw new AccountDeleteError('unauthorized', 'The initiating authentication session no longer matches');
       }
+      let confirmedIntent: ReturnType<typeof prepareAccountDeletionIntent> | undefined;
+      let confirmedIntentRaw: string | null = null;
       if (!currentIsMockAuth) {
         // Live-auth: call backend FIRST (DEL-ORCH-3 sequencing).
         // supabaseClient is obtained from the SHIPPED session context.
@@ -66,6 +68,8 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
         // Idempotency (DEL-ORCH-4): if deleteAccount throws kind="already_deleted",
         // treat as success and proceed to local wipe (account is gone).
         const intent = prepareAccountDeletionIntent(scope);
+        confirmedIntent = intent; confirmedIntentRaw = accountDeletionIntentRaw(intent);
+        if (!confirmedIntentRaw) throw new AccountDeleteError('unknown', 'Deletion intent was not persisted');
         try {
           await deleteAccount(supabaseClient, { accessToken: session.access_token, signOutAfterDelete: false });
         } catch (err) {
@@ -88,7 +92,9 @@ export function useAccountDeleteOrchestrator(): UseAccountDeleteOrchestratorResu
 
       // Explicit owner operations may finish after A has signed out or B has
       // signed in. They never resolve the mutable current account after an await.
-      const receipt = await beginAccountLocalDeletion(scope, auth?.generation);
+      const receipt = confirmedIntent
+        ? await beginConfirmedAccountLocalDeletion(scope, auth?.generation, confirmedIntent.operationId, confirmedIntentRaw!)
+        : await beginAccountLocalDeletion(scope, auth?.generation);
       let navigationScope: ReturnType<typeof accountScope.capture> | undefined;
       await resumeAccountLocalDeletion(receipt, auth && coordinator ? async captured => {
         const result = await coordinator.signOut(captured, { remote: false });

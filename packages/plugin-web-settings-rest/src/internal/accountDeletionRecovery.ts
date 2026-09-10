@@ -1,6 +1,6 @@
 /** Durable metadata only: survives sign-out, reload and partial local cleanup. */
 import {
-  accountDeletionReceiptKey, accountLifecycleLockName, accountScope, browserAccountLock,
+  accountDeletionReceiptKey, accountLifecycleLockName, accountPrefix, accountScope, browserAccountLock,
   completeAccountLocalDataDeletion, decodeAccountDeletionReceipt, generationMarkerKey,
   hasCommittedGenerationMarker, resumeAccountLocalDataDeletion, type AccountDeletionReceipt, type AccountScope,
 } from "@repo/plugin-web-storage";
@@ -68,6 +68,23 @@ export async function beginAccountLocalDeletion(scope: AccountScope, authGenerat
     if (localStorage.getItem(key) !== null) throw new Error('A prior account deletion receipt must be resolved first');
     return write({ version: authGeneration ? 2 : 1, accountId: scope.accountId!, kind: scope.kind as 'account' | 'demo', generation: scope.generation!, phase: "pending", updatedAt: new Date().toISOString(),
       ...(authGeneration ? { authGeneration } : {}) });
+  });
+}
+/** Server-confirmed continuation may finish captured A after A→B, but only if
+ * its original unknown-outcome intent bytes still identify that operation. */
+export async function beginConfirmedAccountLocalDeletion(scope: AccountScope, authGeneration: string | undefined, operationId: string, intentRaw: string): Promise<AccountDeletionReceipt> {
+  if (scope.kind !== 'account' || !scope.accountId || !scope.generation) throw new Error('Captured account is required');
+  const accountId = scope.accountId, generation = scope.generation;
+  return browserAccountLock(accountLifecycleLockName(accountId), 'exclusive', async () => {
+    const intentKey = `${accountPrefix(accountId)}deletion-intent`;
+    if (localStorage.getItem(intentKey) !== intentRaw) throw new Error('Confirmed deletion intent changed');
+    const intent = JSON.parse(intentRaw) as { version?: unknown; accountId?: unknown; generation?: unknown; operationId?: unknown; phase?: unknown };
+    if (intent.version !== 1 || intent.accountId !== accountId || intent.generation !== generation || intent.operationId !== operationId || intent.phase !== 'server-outcome-unknown') throw new Error('Confirmed deletion intent is invalid');
+    const marker = localStorage.getItem(generationMarkerKey(accountId));
+    if (!hasCommittedGenerationMarker(marker, generation)) throw new Error('Account deletion requires a complete marker');
+    const key = receiptKey(accountId, false);
+    if (localStorage.getItem(key) !== null) throw new Error('A prior account deletion receipt must be resolved first');
+    return write({ version: authGeneration ? 2 : 1, accountId, kind: 'account', generation, phase: 'pending', updatedAt: new Date().toISOString(), ...(authGeneration ? { authGeneration } : {}) });
   });
 }
 /** Retry confirmed local erasure; auth cleanup must target only the captured generation. */
