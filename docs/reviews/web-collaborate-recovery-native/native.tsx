@@ -1,6 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {prefMutationLockName} from './packages/plugin-web-storage/src/internal/prefMutation';
 import {collaboratePane} from './packages/plugin-web-settings-rest/src/panes/collaboratePane';
 import './packages/plugin-web-tokens/src/tokens.css';
 import './packages/plugin-web-tokens/src/layout.css';
@@ -14,4 +15,5 @@ const nativeSet=Storage.prototype.setItem;const nativeGet=Storage.prototype.getI
 (window as any).verify.denyThree=()=>{Storage.prototype.setItem=function(k,v){if(keys.includes(k)||k===accountKey)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}};
 (window as any).verify.denyAll=()=>{Storage.prototype.getItem=function(){throw new DOMException('denied','SecurityError')};Storage.prototype.setItem=function(){throw new DOMException('denied','SecurityError')}};
 (window as any).verify.switchOwner=()=>{const next='collaborate-native-b';accountScope.activate(accountScope.lock(next),'g1');nativeSet.call(localStorage,generationMarkerKey(next),JSON.stringify({generation:'g1',migrationId:'fixture-b',previous:null}));accountKey=accountScope.physicalKey('xai_pref_collab_default_share');};
+(window as any).verify.holdDevice=async()=>{let acquired!:()=>void;const ready=new Promise<void>(r=>acquired=r);const gate=new Promise<void>(r=>{(window as any).verify.releaseDevice=r});void navigator.locks.request(prefMutationLockName(keys[0]),{mode:'exclusive'},async()=>{acquired();await gate});await ready};
 createRoot(document.getElementById('app')!).render(collaboratePane.render({lang:'en'}));

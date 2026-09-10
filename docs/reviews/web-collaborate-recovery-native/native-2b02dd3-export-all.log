@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"2b02dd3","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-mixed-scope-download","pass":true,"mode":"export-all","data":{"version":1,"kind":"collaborate-draft","values":{"account":{"default_share":"edit"},"device":{"show_avatars":false,"mention_notify":false}}},"scope":"Actual disk JSON of current unsaved fields; account owner transition controlled, no provider or durable crash claim"}

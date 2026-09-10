@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'device-controls';if(!['device-controls','export-all','export-denied','export-device-after-owner','partial-export','host-departure'].includes(mode))throw Error('Unknown mode');
+const mode=process.argv[3]??'device-controls';if(!['device-controls','export-all','export-denied','export-device-after-owner','partial-export','host-departure','pending-export'].includes(mode))throw Error('Unknown mode');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -51,6 +51,15 @@ try{
  assert(await ev('[...document.querySelectorAll("button")].some(e=>/retry/i.test(e.textContent))'),'Device draft Retry missing');
  assert(await ev('[...document.querySelectorAll("button")].some(e=>/export/i.test(e.textContent))'),'Device draft Export missing');
  record('device-failure-recovery',{pass:true,scope:'Two actual device controls under quota; account default-share and full mixed-scope contract are separate'});
+ }else if(mode==='pending-export'){
+  await ev('verify.holdDevice()');await ev('document.querySelectorAll("[role=switch]")[0].click()');await delay(180);
+  assert.equal(await ev('verify.readAll()[0]'),null,'Pending preference wrote before lock');
+  assert.equal(await ev('document.querySelector("[role=switch]").getAttribute("aria-checked")'),'false');
+  const label=await ev('[...document.querySelectorAll("button")].find(e=>/export/i.test(e.textContent))?.textContent.trim()');assert(label,'Pending actual draft has no Export control');await text(label);
+  let filename;for(let i=0;i<60;i++){filename=readdirSync(downloads).find(f=>f.endsWith('.json'));if(filename)break;await delay(50)}assert.equal(filename,'collaborate-draft.json');
+  const data=JSON.parse(readFileSync(join(downloads,filename),'utf8'));assert.deepEqual(data,{version:1,kind:'collaborate-draft',values:{account:{},device:{show_avatars:false}}});
+  const warn=()=>ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()');assert(await warn(),'Pending export cleared unload');
+  await ev('verify.releaseDevice()');await delay(250);assert.equal(await ev('verify.readAll()[0]'),'false');assert.equal(await warn(),false);record('pending-draft-download',{pass:true,data,scope:'Actual native held device key, pending disk export, release and verified save'});
  }else{
   await ev(mode==='partial-export'?'verify.deny()':'verify.denyThree()');
   await ev('(()=>{const e=document.querySelector("select");Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,"value").set.call(e,"edit");e.dispatchEvent(new Event("change",{bubbles:true}))})()');await delay(180);

@@ -63,3 +63,7 @@ This is parent native evidence, not complete independent acceptance. The host no
 ## Mobile rendered dialog: visible, narrow Stay hit target
 
 At fixeda2c0fe0 the actual composed host/dialog is rendered at375×812 with full Settings styles. Parent directly viewed [mobile image](dialog-a2c0fe0-375.png). [Mobile geometry](native-a2c0fe0-mobile.log) passes viewport containment, no horizontal overflow and44px **height** for all actions; that first mode did not assert width. The stricter [44×44 target mode](native-a2c0fe0-mobile-targets.log) correctly fails: Stay is only29.61px wide despite44px height. This is a narrow responsive usability issue, not a reversal of the independently accepted persistence/departure behavior. Terra's next scoped Styles ownership includes minimum inline target size; routing arbitration remains unchanged. The original geometry and stricter failure both remain preserved.
+
+## Fixed 2bbc696 target-width after
+
+The unchanged [44×44 native target oracle](native-2bbc696-mobile-targets.log) passes after the narrow shared dialog Styles adjustment: Stay is50.39px wide and44px high. Parent directly viewed the [375px rendered image](dialog-2bbc696-375-targets.png); all actions remain readable within the viewport. The a2c0fe0 width failure is preserved. This closes that specific measured hit-width issue, not all frontend design work.
