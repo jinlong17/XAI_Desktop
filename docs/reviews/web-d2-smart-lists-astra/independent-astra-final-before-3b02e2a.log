@@ -1,0 +1,203 @@
+revision=3b02e2a fixed_commit=3b02e2ae2f15b04498030301ded14f6c27c66725
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx (39 tests | 23 failed) 690ms
+   ✓ actual all producer preserves siblings and inert prototype extensions 71ms
+   ✓ actual today producer preserves siblings and inert prototype extensions 22ms
+   ✓ actual tomorrow producer preserves siblings and inert prototype extensions 23ms
+   ✓ actual next7 producer preserves siblings and inert prototype extensions 22ms
+   ✓ actual assigned producer preserves siblings and inert prototype extensions 19ms
+   ✓ actual inbox producer preserves siblings and inert prototype extensions 19ms
+   ✓ actual summary producer preserves siblings and inert prototype extensions 18ms
+   ✓ actual tags producer preserves siblings and inert prototype extensions 20ms
+   ✓ actual filters producer preserves siblings and inert prototype extensions 19ms
+   ✓ actual completed producer preserves siblings and inert prototype extensions 19ms
+   ✓ actual wont_do producer preserves siblings and inert prototype extensions 18ms
+   ✓ actual trash producer preserves siblings and inert prototype extensions 17ms
+   ✓ valid sparse/empty source null does not seed or fill fields 14ms
+   ✓ valid sparse/empty source {} does not seed or fill fields 14ms
+   ✓ valid sparse/empty source {"assigned":"hide","wont_do":"if-not-empty","extension":"ok"} does not seed or fill fields 14ms
+   × invalid source null retains bytes and explicitly reloads repaired map 13ms
+     → expected null not to be null
+   × invalid source [] retains bytes and explicitly reloads repaired map 4ms
+     → expected null not to be null
+   × invalid source 42 retains bytes and explicitly reloads repaired map 4ms
+     → expected null not to be null
+   × invalid source "text" retains bytes and explicitly reloads repaired map 3ms
+     → expected null not to be null
+   × invalid source {oops retains bytes and explicitly reloads repaired map 5ms
+     → expected null not to be null
+   × invalid source {"all":"unsupported"} retains bytes and explicitly reloads repaired map 4ms
+     → expected null not to be null
+   × invalid source {"today":null} retains bytes and explicitly reloads repaired map 5ms
+     → expected null not to be null
+   × invalid source {"extension":false} retains bytes and explicitly reloads repaired map 4ms
+     → expected null not to be null
+   × read unavailable source shows recovery and explicit repair reload is read-only 4ms
+     → expected null not to be null
+   × forged DOM option is not persisted 18ms
+     → expected '{"all":"evil"}' to be '{}' // Object.is equality
+   × held writer collects three rapid edits and predecessor completion never loses newer fields 39ms
+     → expected '{"extension":"keep","all":"show","tod…' to be '{"extension":"keep"}' // Object.is equality
+   × quota latest map Retry is single-flight and keeps combined edits 28ms
+     → expected 'show' to be 'hide' // Object.is equality
+   × dirty external {"all":"show","extension":"external"} conflicts whole-map, Retry refuses, explicit discard refreshes next edit base 20ms
+     → expected 'show' to be 'hide' // Object.is equality
+   × dirty external null conflicts whole-map, Retry refuses, explicit discard refreshes next edit base 20ms
+     → expected 'show' to be 'hide' // Object.is equality
+   ✓ clean same-tab public mutation and storage events project only actual physical owner data 53ms
+   × lock missing is visible refusal, then actual Retry saves 14ms
+     → expected null not to be null
+   × lock reject is visible refusal, then actual Retry saves 13ms
+     → expected null not to be null
+   × uncertain same-map Retry reconciles one write and later explicit edit is independent 12ms
+     → expected null not to be null
+   × queued original owner refuses after B and cannot leak draft 14ms
+     → expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+   × queued original owner refuses after locked and cannot leak draft 14ms
+     → expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+   × queued original owner refuses after unmount and cannot leak draft 15ms
+     → expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+   × queued original owner refuses after marker and cannot leak draft 15ms
+     → expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+   × queued original owner refuses after tombstone and cannot leak draft 15ms
+     → expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+   × actual migration includes earlier acknowledged UI choice then excludes queued stale-generation choice 24ms
+     → expected '{"extension":"keep","all":"hide","tod…' to be '{"extension":"keep","all":"hide"}' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  23 failed | 16 passed (39)
+   Start at  21:37:02
+   Duration  1.91s (transform 189ms, setup 0ms, collect 344ms, tests 690ms, environment 498ms, prepare 122ms)
+
+
+stderr | docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source null retains bytes and explicitly reloads repaired map
+[plugin-web-storage] decode failed for xai_pref_smart_lists: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at SmartListsPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-settings-rest/src/panes/smartListsPane.tsx:81:29)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source {oops retains bytes and explicitly reloads repaired map
+[plugin-web-storage] decode failed for xai_pref_smart_lists: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at SmartListsPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-kGpwrK/packages/plugin-web-settings-rest/src/panes/smartListsPane.tsx:81:29)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > quota latest map Retry is single-flight and keeps combined edits
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source null retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source [] retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source 42 retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source "text" retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source {oops retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source {"all":"unsupported"} retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source {"today":null} retains bytes and explicitly reloads repaired map
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > invalid source {"extension":false} retains bytes and explicitly reloads repaired map
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:13:304
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > read unavailable source shows recovery and explicit repair reload is read-only
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:14:344
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > forged DOM option is not persisted
+AssertionError: expected '{"all":"evil"}' to be '{}' // Object.is equality
+
+Expected: "{}"
+Received: "{"all":"evil"}"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:15:281
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > held writer collects three rapid edits and predecessor completion never loses newer fields
+AssertionError: expected '{"extension":"keep","all":"show","tod…' to be '{"extension":"keep"}' // Object.is equality
+
+Expected: "{"extension":"keep"}"
+Received: "{"extension":"keep","all":"show","today":"if-not-empty"}"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:16:369
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > quota latest map Retry is single-flight and keeps combined edits
+AssertionError: expected 'show' to be 'hide' // Object.is equality
+
+Expected: "hide"
+Received: "show"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:17:243
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > dirty external {"all":"show","extension":"external"} conflicts whole-map, Retry refuses, explicit discard refreshes next edit base
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > dirty external null conflicts whole-map, Retry refuses, explicit discard refreshes next edit base
+AssertionError: expected 'show' to be 'hide' // Object.is equality
+
+Expected: "hide"
+Received: "show"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:18:347
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > lock missing is visible refusal, then actual Retry saves
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > lock reject is visible refusal, then actual Retry saves
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:20:362
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > uncertain same-map Retry reconciles one write and later explicit edit is independent
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:21:632
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > queued original owner refuses after B and cannot leak draft
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > queued original owner refuses after locked and cannot leak draft
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > queued original owner refuses after unmount and cannot leak draft
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > queued original owner refuses after marker and cannot leak draft
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > queued original owner refuses after tombstone and cannot leak draft
+AssertionError: expected '{"extension":"A-only","all":"hide"}' to be '{"extension":"A-only"}' // Object.is equality
+
+Expected: "{"extension":"A-only"}"
+Received: "{"extension":"A-only","all":"hide"}"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:22:753
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx > actual migration includes earlier acknowledged UI choice then excludes queued stale-generation choice
+AssertionError: expected '{"extension":"keep","all":"hide","tod…' to be '{"extension":"keep","all":"hide"}' // Object.is equality
+
+Expected: "{"extension":"keep","all":"hide"}"
+Received: "{"extension":"keep","all":"hide","today":"hide"}"
+
+ ❯ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx:23:872
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
