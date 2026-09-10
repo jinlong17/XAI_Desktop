@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c604951","browser":"Chrome/152.0.7977.83"}
+{"name":"unload-observation","warning":false}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Actual failed preference draft lacks browser unload warning"}

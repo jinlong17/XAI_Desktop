@@ -8,7 +8,7 @@
 | Dashboard账号便签 | d129950 / Astra4a66e86有界接受 | 已有实际disk导出证据；全存储拒绝出口以原合同边界为准 | 原有界证据保留 | 尚未证明完整AppRail/host卸载及退出账号保护 | 开放，不由已保存数据重开证明 |
 | Dashboard设备位置 | 830dd2b / Astra a6b50c3有界接受 | 以原设备位置合同为准，不继承便签内容导出证据 | 原有界证据保留 | 尚未证明完整宿主离开保护 | 开放，不能把已保存位置恢复称未保存拖动恢复 |
 | Pomodoro六项设备偏好 | 7785e92 / Astra ba9affc有界接受 | 六项最新选择实际disk导出+Retry证据保留 | 原设备合同未加入新guard，不算通过 | 尚未证明普通host导航/自愿退出时保存失败草稿保护 | 开放；另与实际active timer/session持久链分开 |
-| Collaborate完整三控件 | 父c604951独立37接受，account/device分离 | 精确当前实际草稿，native全拒绝/partial/epoch/pending通过 | 当前实际草稿生命周期通过，非崩溃保证 | 实际host8/最终native departure、scope权限/focus/英中44px通过 | 开放 |
+| Collaborate完整三控件 | 父c604951原37通过；Astra新增aggregate Saved反例后接受暂撤回，ad689dd待复验 | 精确当前实际草稿，native全拒绝/partial/epoch/pending通过 | 当前实际草稿生命周期通过，非崩溃保证 | 实际host8/最终native departure、scope权限/focus/英中44px通过 | 开放 |
 | 其余直接typed、scoped/raw、业务writer与secrets | 03b0363库存与D2全writer合同逐项处理，不把只读投影计入writer | 每个实际编辑入口分别核对 | 分入口核对 | 分入口核对 | REL-09明确包含日记、AI输入、便签、账单等，不能只检查设置页 |
 
 执行顺序：先让Astra完成Smart Lists的8565ca6整合同验收并处理其所有正确FAIL；再为Collaborate现有已转换设置补齐上述缺失列，同时按库存明确邻近两个仍旧writer的完整范围；之后按D2台账推进其他调用方。这个次序不授权改写storage/auth架构、恢复密钥、启用跨模块同步或部署。SET-06的Smart Lists任务selector/计数接线仍是独立待办。

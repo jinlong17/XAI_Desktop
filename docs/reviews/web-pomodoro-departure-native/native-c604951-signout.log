@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c604951","browser":"Chrome/152.0.7977.83"}
+{"name":"signout-observation","outcome":true,"dialog":false}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ true\n- 'unresolved'\n"}

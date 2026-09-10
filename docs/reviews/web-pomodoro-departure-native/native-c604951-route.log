@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c604951","browser":"Chrome/152.0.7977.83"}
+{"name":"route-observation","path":"/app/dashboard","dialog":false}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Actual registration left the failed preference draft\n+ actual - expected\n\n+ '/app/dashboard'\n- '/app/pomodoro'\n        ^\n"}
