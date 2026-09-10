@@ -74,19 +74,21 @@ function SmartListsPaneContent({ lang, registerDepartureGuard }: PaneRenderProps
   const scope = React.useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
   const latestModesRef = React.useRef<SmartListsMap>(smartListsSave.value);
   const sessionEpochRef = React.useRef(scope.epoch);
-  const draftRef = React.useRef<{ readonly scope: typeof scope; readonly values: SmartListsMap } | null>(null);
+  const bindingRef = React.useRef<{ readonly token: object; readonly scope: typeof scope }>({ token: {}, scope });
+  const draftRef = React.useRef<{ readonly token: object; readonly values: SmartListsMap } | null>(null);
   const [hasDraft, setHasDraft] = React.useState(false);
   const [exportFailed, setExportFailed] = React.useState(false);
 
   // A caller draft is session-bound: it never carries A's desired map into B.
   if (sessionEpochRef.current !== scope.epoch) {
     sessionEpochRef.current = scope.epoch;
+    bindingRef.current = { token: {}, scope };
     latestModesRef.current = smartListsSave.value;
     draftRef.current = null;
   }
   React.useLayoutEffect(() => {
     sessionEpochRef.current = scope.epoch;
-    if (draftRef.current?.scope !== scope) {
+    if (draftRef.current?.token !== bindingRef.current.token) {
       draftRef.current = null;
       setHasDraft(false);
       setExportFailed(false);
@@ -110,53 +112,58 @@ function SmartListsPaneContent({ lang, registerDepartureGuard }: PaneRenderProps
     const next = withSmartListVisibility(latestModesRef.current, id, value);
     if (!isSmartListsMap(next)) return;
     latestModesRef.current = next;
-    draftRef.current = { scope, values: next };
+    draftRef.current = { token: bindingRef.current.token, values: next };
     setHasDraft(true);
     setExportFailed(false);
     void editSmartLists(next);
   }, [editable, editSmartLists, scope]);
   const needsRecovery = smartListsSave.meta.status === "error" || smartListsSave.meta.status === "conflict";
+  const binding = bindingRef.current;
+  const isCurrentBinding = React.useCallback(() => (
+    bindingRef.current.token === binding.token && accountScope.capture() === binding.scope
+  ), [binding]);
   const hasCurrentDraft = React.useCallback(() => {
     const draft = draftRef.current;
-    return draft !== null && accountScope.capture() === draft.scope && isSmartListsMap(draft.values);
-  }, []);
+    return isCurrentBinding() && draft !== null && draft.token === binding.token && isSmartListsMap(draft.values);
+  }, [binding, isCurrentBinding]);
   const exportDraft = React.useCallback(() => {
     const draft = draftRef.current;
-    if (!draft || accountScope.capture() !== draft.scope || !isSmartListsMap(draft.values)) return;
+    if (!isCurrentBinding() || !draft || draft.token !== binding.token || !isSmartListsMap(draft.values)) return;
     let url: string | null = null;
     let anchor: HTMLAnchorElement | null = null;
     try {
       const payload = JSON.stringify({ version: 1, kind: "smart-lists-draft", values: draft.values });
       const blob = new Blob([payload], { type: "application/json" });
       url = URL.createObjectURL(blob);
-      if (accountScope.capture() !== draft.scope) throw new Error("stale-owner");
+      if (!isCurrentBinding() || draftRef.current?.token !== binding.token) throw new Error("stale-owner");
       anchor = document.createElement("a");
       anchor.href = url;
       anchor.download = "smart-lists-draft.json";
       anchor.style.display = "none";
       document.body.appendChild(anchor);
-      if (accountScope.capture() !== draft.scope) throw new Error("stale-owner");
+      if (!isCurrentBinding() || draftRef.current?.token !== binding.token) throw new Error("stale-owner");
       anchor.click();
       setExportFailed(false);
     } catch {
-      if (accountScope.capture() === draft.scope) setExportFailed(true);
+      if (isCurrentBinding() && draftRef.current?.token === binding.token) setExportFailed(true);
     } finally {
       try { anchor?.remove(); } catch { /* no state change for cleanup failure */ }
       try { if (url) URL.revokeObjectURL(url); } catch { /* no state change for cleanup failure */ }
     }
-  }, []);
+  }, [binding, isCurrentBinding]);
   const discardDraft = React.useCallback(() => {
+    if (!isCurrentBinding() || draftRef.current?.token !== binding.token) return;
     draftRef.current = null;
     setHasDraft(false);
     reloadSmartLists();
-  }, [reloadSmartLists]);
+  }, [binding, isCurrentBinding, reloadSmartLists]);
   const guard = React.useMemo<PaneDepartureGuard>(() => ({
-    token: draftRef,
+    token: binding.token,
     isBlocking: hasCurrentDraft,
-    isCurrent: hasCurrentDraft,
+    isCurrent: isCurrentBinding,
     exportDraft,
     discardDraft,
-  }), [discardDraft, exportDraft, hasCurrentDraft]);
+  }), [binding, discardDraft, exportDraft, hasCurrentDraft, isCurrentBinding]);
   React.useEffect(() => registerDepartureGuard?.(guard), [guard, hasDraft, registerDepartureGuard, smartListsSave.meta.status]);
   React.useEffect(() => {
     if (!hasDraft) return;
