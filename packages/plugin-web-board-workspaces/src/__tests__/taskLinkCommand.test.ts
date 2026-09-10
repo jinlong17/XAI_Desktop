@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { accountScope, generationMarkerKey, readCanonicalCommandState, setCanonicalCommandActivationForTests } from "@repo/plugin-web-storage";
+import { accountScope, generationMarkerKey, readCanonicalCommandState, setCanonicalCommandActivationForTests, setPref } from "@repo/plugin-web-storage";
 import { makeDefaultBoards, archiveCard, restoreCard, moveCardToList, archiveList, restoreList } from "@repo/plugin-web-board-core";
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import { loadTaskColsOrSeed } from "@repo/plugin-web-tasks";
@@ -79,4 +79,30 @@ it.each([JSON.stringify(null), JSON.stringify({ format: "xai-command-state", ver
   seed(); const scope = accountScope.capture(), before = localStorage.getItem(boardKey()); localStorage.setItem(taskKey(), raw);
   expect(await ensureBoardTaskLink("b-default", "bc1", scope)).toMatchObject({ ok: false, phase: "intent" });
   expect(localStorage.getItem(boardKey())).toBe(before); expect(localStorage.getItem(taskKey())).toBe(raw);
+});
+
+it("present JSON-null Board bytes refuse before publishing an intent or Task", async () => {
+  const scope = accountScope.capture();
+  localStorage.setItem(boardKey(), "null");
+  expect(await ensureBoardTaskLink("b-default", "bc1", scope)).toMatchObject({ ok: false, phase: "intent" });
+  expect(localStorage.getItem(boardKey())).toBe("null");
+  expect(localStorage.getItem(taskKey())).toBeNull();
+});
+
+it("a newer same-ID pending intent is retained after the Task write", async () => {
+  seed(); const scope = accountScope.capture(), native = Storage.prototype.setItem;
+  let replaced = false;
+  const replace = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) {
+    native.call(this, key, value);
+    if (key !== taskKey() || replaced) return;
+    replaced = true;
+    const boards = JSON.parse(localStorage.getItem(boardKey())!) as Board[];
+    const card = boards[0]!.lists.flatMap((list) => list.cards).find((entry) => entry.id === "bc1")!;
+    card.taskLink = { ...card.taskLink!, pending: { title: { en: "New request", zh: "新请求" }, dueDate: "2026-10-10" } };
+    expect(setPref("xai_boards_v2", boards, scope)).toBe(true);
+  });
+  expect(await ensureBoardTaskLink("b-default", "bc1", scope)).toMatchObject({ ok: false, phase: "acknowledgement" });
+  replace.mockRestore();
+  expect(card().taskLink?.pending).toEqual({ title: { en: "New request", zh: "新请求" }, dueDate: "2026-10-10" });
+  expect(task().title).toEqual({ en: "Onboarding flow concepts", zh: "新人引导流程概念" });
 });

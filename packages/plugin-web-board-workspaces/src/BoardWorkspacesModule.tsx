@@ -586,6 +586,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
     activeCardState.current = activeCardRef;
     taskLinkOperation.current += 1;
     setTaskLinkPending(false);
+    setTaskLinkError(null);
   }, [activeCardRef]);
   const [automationAppliedKey, setAutomationAppliedKey] = useState<string | null>(null);
 

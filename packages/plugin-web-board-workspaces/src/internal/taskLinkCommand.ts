@@ -10,17 +10,34 @@ function isTaskCols(value: unknown): value is TaskCol[] {
   return Array.isArray(value) && loadTaskColsOrSeed(value) === value;
 }
 
+function sameTaskLink(left: BoardCardTaskLink | undefined, right: BoardCardTaskLink): boolean {
+  return left?.source === right.source
+    && left.taskId === right.taskId
+    && left.createdAt === right.createdAt
+    && left.pending?.title.en === right.pending?.title.en
+    && left.pending?.title.zh === right.pending?.title.zh
+    && left.pending?.dueDate === right.pending?.dueDate;
+}
+
+function taskMatchesIntent(task: ReturnType<typeof taskCardFromBoardLink>, intent: BoardCardTaskLink): boolean {
+  return task.id === intent.taskId
+    && task.title.en === intent.pending?.title.en
+    && task.title.zh === intent.pending?.title.zh
+    && task.dueDate === intent.pending?.dueDate;
+}
+
 /** A recoverable ordered command, not an atomic transaction across storage keys. */
 export async function ensureBoardTaskLink(boardId: string, cardId: string, scope: AccountScope): Promise<TaskLinkResult> {
   let phase: LinkPhase = "intent";
-  const read = (key: string): unknown => {
+  const read = (key: string): { present: boolean; value: unknown } => {
     accountScope.assertCurrent(scope);
     const raw = localStorage.getItem(accountScope.physicalKey(key, scope));
-    return raw === null ? null : JSON.parse(raw);
+    return { present: raw !== null, value: raw === null ? null : JSON.parse(raw) };
   };
   const boardCard = () => {
-    const raw = read("xai_boards_v2");
-    if (raw !== null && readBoardStorage(raw).status !== "valid") throw Error("Board data needs recovery; original bytes were preserved.");
+    const stored = read("xai_boards_v2");
+    if (!stored.present || readBoardStorage(stored.value).status !== "valid") throw Error("Board data needs recovery; original bytes were preserved.");
+    const raw = stored.value;
     const boards = loadBoardsOrDefault(raw);
     const board = boards.find((entry) => entry.id === boardId);
     const list = board?.lists.find((entry) => entry.cards.some((card) => card.id === cardId));
@@ -79,6 +96,9 @@ export async function ensureBoardTaskLink(boardId: string, cardId: string, scope
     if (!intent.pending || intent.taskId !== proposed.id) {
       throw Error("The stored link identity conflicts with the task. Original data was preserved.");
     }
+    if (existing && !taskMatchesIntent(existing.task, intent)) {
+      throw Error("The stored link intent conflicts with the existing task. Review the current card.");
+    }
     if (!initial.card.taskLink?.pending) saveLink(intent);
 
     phase = "task";
@@ -91,10 +111,10 @@ export async function ensureBoardTaskLink(boardId: string, cardId: string, scope
         let current;
         try { current = boardCard(); } catch { return { ok: false, reason: "conflict" as const }; }
         const liveLink = current.card.taskLink;
-        if (!liveLink?.pending || liveLink.taskId !== intent.taskId) return { ok: false, reason: "conflict" as const };
+        if (!liveLink?.pending || !sameTaskLink(liveLink, intent)) return { ok: false, reason: "conflict" as const };
         const source = { type: "board-card" as const, boardId, listId: current.list.id, cardId };
         const linked = findBoardLinkedTask(cols, source);
-        if (linked) return linked.task.id === intent.taskId ? { ok: true, data: cols } : { ok: false, reason: "conflict" as const };
+        if (linked) return taskMatchesIntent(linked.task, intent) ? { ok: true, data: cols } : { ok: false, reason: "conflict" as const };
         if (cols.some((col) => [...col.tasks, ...(col.completed ?? [])].some((row) => row.id === intent.taskId))) {
           return { ok: false, reason: "conflict" as const };
         }
@@ -111,8 +131,8 @@ export async function ensureBoardTaskLink(boardId: string, cardId: string, scope
 
     phase = "acknowledgement";
     const latest = boardCard().card.taskLink;
-    if (!latest?.pending || latest.taskId !== intent.taskId) throw Error("The link changed while saving. Review the current card.");
-    const complete = { ...latest };
+    if (!latest?.pending || !sameTaskLink(latest, intent)) throw Error("The link changed while saving. Review the current card.");
+    const complete: BoardCardTaskLink = { ...latest };
     delete complete.pending;
     saveLink(complete);
     return { ok: true };
