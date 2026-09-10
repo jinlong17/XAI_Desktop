@@ -67,7 +67,8 @@ export async function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt
   const key = receiptKey(receipt.accountId, receipt.kind === 'demo');
   const expectedRaw = localStorage.getItem(key);
   const saved = readAccountDeletionReceipt(receipt.accountId, receipt.kind === "demo");
-  if (!saved || !expectedRaw || saved.generation !== receipt.generation || expectedRaw !== JSON.stringify(receipt)) throw new Error("Account deletion receipt no longer matches");
+  if (!saved || !expectedRaw || saved.generation !== receipt.generation || saved.version !== receipt.version
+    || saved.authGeneration !== receipt.authGeneration) throw new Error("Account deletion receipt no longer matches");
   if (saved.phase === "complete") return saved;
   if (saved.authGeneration && !clearAuth) throw new Error('Authentication cleanup is unavailable; recovery remains pending');
   const local = await resumeAccountLocalDataDeletion(saved, expectedRaw);
