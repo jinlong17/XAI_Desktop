@@ -1,0 +1,16 @@
+revision=9424081 fixed_commit=94240814af78449802e99cfc3fab23f94ef9dc59
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-eVpJjG
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/completion.test.tsx (2 tests) 441ms
+   ✓ real one-minute completion persists exactly one history/event despite next-preset fault and Retry cannot replay timer settlement  380ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  21:07:24
+   Duration  1.54s (transform 262ms, setup 0ms, collect 461ms, tests 441ms, environment 339ms, prepare 83ms)
+
+
+stderr | docs/reviews/web-d2-pomo-device-astra/completion.test.tsx > real one-minute completion persists exactly one history/event despite next-preset fault and Retry cannot replay timer settlement
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.

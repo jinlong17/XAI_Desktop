@@ -1,0 +1,32 @@
+revision=2b666ed fixed_commit=2b666eda345268efe9e0697bfc1fc8dc4474dc63
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-4Nj6ng
+
+ ✓ packages/plugin-web-pomodoro/src/__tests__/derivedCounters.test.ts (16 tests) 18ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/durableSession.test.ts (14 tests) 24ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/useTimerTick.test.tsx (8 tests) 71ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/PomodoroOverview.test.tsx (7 tests) 56ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/FocusRecordList.test.tsx (8 tests) 94ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/eventEmit.integration.test.tsx (6 tests) 1390ms
+   ✓ eventEmit integration > EE3: payload durationMs equals session.elapsedMs  409ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/TimerRing.test.tsx (4 tests) 37ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/computeRemainingMs.test.ts (8 tests) 5ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/validate.test.ts (11 tests) 4ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/sessionsReducer.test.ts (7 tests) 4ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/index-barrel.test.ts (5 tests) 18ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/nextMode.test.ts (10 tests) 5ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/PomodoroModule.test.tsx (21 tests) 3211ms
+   ✓ PomodoroModule > M3: tick to zero writes session  722ms
+   ✓ PomodoroModule > M8: Stop keeps focus mode; completed focus advances to break  372ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatLocalTime.test.ts (3 tests) 6ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/preferenceRecovery.test.tsx (1 test) 316ms
+   ✓ reports failed preferences and exports/retries the latest choice  315ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatRecordDate.test.ts (8 tests) 4ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/registration.test.tsx (3 tests) 10ms
+ ✓ packages/plugin-web-pomodoro/src/__tests__/formatDuration.test.ts (5 tests) 13ms
+
+ Test Files  18 passed (18)
+      Tests  145 passed (145)
+   Start at  21:10:08
+   Duration  6.38s (transform 2.66s, setup 8.34s, collect 7.45s, tests 5.28s, environment 13.38s, prepare 2.94s)
