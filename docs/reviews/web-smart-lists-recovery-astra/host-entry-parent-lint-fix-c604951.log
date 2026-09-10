@@ -1,0 +1,11 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-OZFofE
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/host-entry.test.tsx (3 tests) 260ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  23:17:01
+   Duration  2.03s (transform 687ms, setup 0ms, collect 1.09s, tests 260ms, environment 265ms, prepare 89ms)

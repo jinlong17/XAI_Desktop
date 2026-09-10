@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Smart Lists a2c0fe0恢复逻辑已获Astra75aa0e8有界接受，375 Stay触控缺口已修。Collaborate产品2a536c1经Terra逐批修复纯pending导出反馈、真实host渲染循环、旧scope回调、375恢复区超首屏及同值后继草稿误清。父固定独立contracts31/host8、原生七模式、完整CSS五宽度及375弹窗通过；Smart host10/entry3/wrapper5/export8/App5和Settings292通过，两项types通过。Settings lint仍因未变化的Smart Lists scope依赖警告失败，不宣称全部门禁通过。完整feature最终复核及合同剩余边界仍待完成，父作为非作者执行独立验证，Terra实现，Luna只读核对；运行时新Astra Agent初始化仍受thread limit限制。强制失效/崩溃未提交恢复、SET-06及其他REL-05/09/D2范围开放。正式完成13/312，未关闭299项。
+当前增量：Collaborate当前用户完整三控件恢复由父主审在c604951有界接受：独立37/host8、七模式native与最终departure、英中五宽度/375弹窗、Settings293及Smart完整受影响回归通过；Settings lint及双types通过。该接受不关闭REL-05/09/D2或崩溃/强制失效恢复。下一批为Pomodoro六项device偏好的完整普通离开恢复，保留已接受Dv2存储/重试/完整六值导出及timer合同。固定c604951真实注册路由基线9项：6项卸载、route、signout失败，clean对照通过；完整合同见web-pomodoro-departure-contract。父主审、Terra实现、Luna只读库存；正式完成13/312，未关闭299项。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 

@@ -1,0 +1,11 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-mSedLv
+
+ ✓ docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx (39 tests) 1264ms
+
+ Test Files  1 passed (1)
+      Tests  39 passed (39)
+   Start at  23:17:14
+   Duration  2.21s (transform 194ms, setup 0ms, collect 343ms, tests 1.26s, environment 229ms, prepare 52ms)

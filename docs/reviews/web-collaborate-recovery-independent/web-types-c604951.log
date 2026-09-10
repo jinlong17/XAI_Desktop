@@ -1,0 +1,6 @@
+HEAD=c604951
+exit=0
+
+> @repo/web@0.1.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web
+> tsc --noEmit
+

@@ -1,0 +1,11 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-hJOomv
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx (37 tests) 555ms
+
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+   Start at  23:18:03
+   Duration  1.77s (transform 295ms, setup 0ms, collect 498ms, tests 555ms, environment 381ms, prepare 78ms)
