@@ -1,0 +1,21 @@
+{
+  "requestedRef": "a82efa0",
+  "revision": "a82efa0f6d44d0ca8414df164b31209c757f2591",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": false,
+      "error": "Error: UI write bypassed an actually held account lifecycle lock or fault"
+    },
+    {
+      "name": "quota-retains-latest-draft",
+      "pass": false,
+      "error": "Error: Latest selection was lost instead of retained for recovery"
+    }
+  ],
+  "checkpoint": {},
+  "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+}
