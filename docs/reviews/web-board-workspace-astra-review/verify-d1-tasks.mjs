@@ -25,8 +25,8 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
- for (const file of ['d1-tasks-parent-baseline.test.tsx','d1-tasks-boundaries.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
- for (const [name, include] of [['d1-tasks-parent-baseline', ['docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx']], ['d1-tasks-boundaries', ['docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx']], ['d1-tasks-package', ['packages/xai-web-tasks/src/__tests__/*.{test,spec}.{ts,tsx}']]]) {
+ for (const file of ['d1-tasks-parent-baseline.test.tsx','d1-tasks-boundaries.test.tsx','d1-tasks-repair-continuation.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
+ for (const [name, include] of [['d1-tasks-parent-baseline', ['docs/reviews/web-board-workspace-astra-review/d1-tasks-parent-baseline.test.tsx']], ['d1-tasks-boundaries', ['docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx']], ['d1-tasks-continuation', ['docs/reviews/web-board-workspace-astra-review/d1-tasks-repair-continuation.test.tsx']], ['d1-tasks-package', ['packages/xai-web-tasks/src/__tests__/*.{test,spec}.{ts,tsx}']]]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
   const suiteRoot = name === 'd1-tasks-package' ? join(dir,'packages/xai-web-tasks') : dir;
