@@ -3,7 +3,7 @@ import { act, fireEvent } from '@testing-library/react';
 import { accountScope } from '@repo/plugin-web-storage';
 import { onWebEvent } from '@repo/xai-web-event-bus';
 import { prefMutationLockName } from '../../../packages/plugin-web-storage/src/internal/prefMutation';
-import { fixture, cases, key, defaults, nativeGet, nativeSet, flush, hold, activate, external, timerBytes, withGuard, unload, deny, clickRetry, invoke, type Name } from './fixture';
+import { fixture, cases, key, defaults, nativeGet, nativeSet, flush, hold, activate, external, timerBytes, withGuard, unload, deny, clickRetry, exportCapture, invoke, type Name } from './fixture';
 fixture();
 
 for (const row of cases) it(`${row.name}: discard clears only its actual failed draft, preserving successful siblings and timer bytes`, async () => {
@@ -131,6 +131,34 @@ it('targeted conflict discard preserves another latest quota-failed choice and i
   fault.mockRestore(); clickRetry(ui); await flush();
   expect(nativeGet.call(localStorage, key('sound'))).toBe('"bell"');
   expect(nativeGet.call(localStorage, key('theme'))).toBe('"violet"'); expect(unload()).toBe(false);
+});
+
+for (const action of ['inline', 'departure'] as const) it(`after conflict-only recovery, remaining failure still exports and supports explicit ${action} discard`, async () => {
+  const { ui, guard } = withGuard(); await flush(); const release = await hold('theme');
+  try { fireEvent.click(ui.getByTestId('theme-blue')); act(() => external('theme', 'violet')); }
+  finally { await release(); }
+  deny(['sound']); fireEvent.change(ui.getByTestId('sound-select'), { target: { value: 'bell' } }); await flush();
+  fireEvent.click(ui.getByRole('button', { name: 'Discard conflicting preferences' })); await flush();
+  expect(guard().isBlocking()).toBe(true); expect(unload()).toBe(true);
+  expect(ui.queryByRole('button', { name: 'Discard conflicting preferences' })).toBeNull();
+  expect(ui.getByRole('button', { name: 'Discard current preference drafts' })).toBeTruthy();
+  const before = Object.keys(defaults).map(name => nativeGet.call(localStorage, key(name as Name)));
+  const timers = timerBytes(); const capture = exportCapture();
+  fireEvent.click(ui.getByRole('button', { name: 'Export current preferences' })); await flush();
+  expect(capture.clicks).toEqual(['pomodoro-preferences.json']);
+  expect(await capture.json()).toEqual({ version: 1, kind: 'pomodoro-preference-draft', values: { preset: 'focus-25', customMinutes: 45, displayStyle: 'apple', theme: 'violet', sound: 'bell', muted: false } });
+  expect(Object.keys(defaults).map(name => nativeGet.call(localStorage, key(name as Name)))).toEqual(before);
+  expect(guard().isBlocking()).toBe(true); expect(unload()).toBe(true);
+  const reads = vi.spyOn(Storage.prototype, 'getItem'); const writes = vi.spyOn(Storage.prototype, 'setItem');
+  if (action === 'inline') fireEvent.click(ui.getByRole('button', { name: 'Discard current preference drafts' }));
+  else await invoke(() => guard().discardDraft());
+  await flush();
+  expect(guard().isBlocking()).toBe(false); expect(unload()).toBe(false);
+  expect((ui.getByTestId('sound-select') as HTMLSelectElement).value).toBe('soft-chime');
+  expect(ui.getByTestId('theme-violet').getAttribute('aria-pressed')).toBe('true');
+  expect(reads.mock.calls.filter(([k]) => k === key('theme'))).toHaveLength(0);
+  expect(writes.mock.calls.filter(([k]) => k.startsWith('xai_pref_pomodoro_'))).toHaveLength(0);
+  expect(timerBytes()).toEqual(timers);
 });
 
 it('running timer is not a preference draft and preference discard leaves its actual active record untouched', async () => {
