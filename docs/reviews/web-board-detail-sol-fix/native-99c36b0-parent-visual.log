@@ -1,0 +1,5 @@
+{"name":"baseline","revision":"99c36b0","chromePid":18500}
+{"name":"checklist-download-retry-1280","pass":true,"filename":"board-detail-checklist-draft.json","proposalId":"chk-517f8911-dc32-42f4-9f66-11f2a139b21e","layout":{"innerWidth":1280,"scrollWidth":1280,"left":229,"right":1051,"buttonHeight":44}}
+{"name":"attachment-download-retry-768","pass":true,"filename":"board-detail-attachment-draft.json","proposalId":"att-01720eae-c0a1-4d0a-a65a-14a4bfab81aa","layout":{"innerWidth":768,"scrollWidth":768,"left":25,"right":743,"buttonHeight":44}}
+{"name":"activity-download-retry-390","pass":true,"filename":"board-detail-activity-draft.json","proposalId":"act-52d34f1e-1530-4e63-acf1-e71143620a50","layout":{"innerWidth":390,"scrollWidth":390,"left":25,"right":365,"buttonHeight":44}}
+{"name":"PASS","scope":"Board detail checklist, attachment, and activity recovery"}

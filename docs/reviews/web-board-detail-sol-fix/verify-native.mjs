@@ -19,6 +19,8 @@ import { build } from "../../../node_modules/.pnpm/esbuild@0.28.1/node_modules/e
 const root = fileURLToPath(new URL("../../../", import.meta.url));
 const output = fileURLToPath(new URL("./", import.meta.url));
 const revision = process.argv[2];
+const suffix = process.argv[3] || "";
+if (suffix && !/^[a-z0-9-]+$/.test(suffix)) throw new Error("Invalid evidence suffix");
 if (!revision) throw new Error("Pinned revision required");
 const directory = mkdtempSync(join(tmpdir(), "xai-board-detail-native-"));
 const snapshot = join(directory, "source");
@@ -241,6 +243,10 @@ try {
     assert(layout.scrollWidth <= layout.innerWidth);
     assert(layout.left >= 0 && layout.right <= layout.innerWidth);
     assert(layout.buttonHeight >= 44);
+    if (suffix === "parent-visual") {
+      const capture = await cdp("Page.captureScreenshot", {format:"png",captureBeyondViewport:false});
+      writeFileSync(join(output, `recovery-${revision}-${scenario.kind}-${scenario.width}.png`), Buffer.from(capture.data,"base64"));
+    }
 
     await click("[data-testid=card-detail-export-draft]");
     let filename;
@@ -294,7 +300,7 @@ try {
   record("PASS", { scope: "Board detail checklist, attachment, and activity recovery" });
 } finally {
   writeFileSync(
-    join(output, `native-${revision}.log`),
+    join(output, `native-${revision}${suffix ? `-${suffix}` : ""}.log`),
     records.map((entry) => JSON.stringify(entry)).join("\n") + "\n",
   );
   socket?.close();
