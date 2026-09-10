@@ -1,0 +1,12 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {smartListsPane} from './packages/plugin-web-settings-rest/src/panes/smartListsPane';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-settings-shell/src/styles.css';
+import './packages/plugin-web-settings-rest/src/styles.css';
+const owner='smart-visual';accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
+const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;
+(window as any).verify={key,restore(){Storage.prototype.setItem=nativeSet},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}}};
+createRoot(document.getElementById('app')!).render(smartListsPane.render({lang:'en'}));

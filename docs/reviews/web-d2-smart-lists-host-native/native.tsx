@@ -1,0 +1,17 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {createBrowserRouter,RouterProvider} from 'react-router';
+import {WebShellProvider} from './packages/xai-web-shell/src/index';
+import {composedSettingsRegistration} from './apps/web/src/routes/modules/composedSettingsRegistration';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-settings-shell/src/styles.css';
+import './packages/plugin-web-settings-rest/src/styles.css';
+const owner='smart-visual';accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
+const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;
+(window as any).verify={key,restore(){Storage.prototype.setItem=nativeSet},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}}};
+history.replaceState(null,'','/app/settings/smart_lists');
+const Composed=composedSettingsRegistration.children[0].render;
+const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);
+createRoot(document.getElementById('app')!).render(<WebShellProvider modules={[composedSettingsRegistration]} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);
