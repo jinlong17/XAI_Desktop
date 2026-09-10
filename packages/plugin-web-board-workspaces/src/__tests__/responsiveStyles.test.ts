@@ -37,4 +37,19 @@ describe("responsive board workspace styles", () => {
       /\.card-detail\s*\{[^}]*width:\s*calc\(100vw - 20px\);/s,
     );
   });
+
+  it("keeps detail recovery usable at desktop, tablet, and 390px phone widths", () => {
+    expect(cssText).toMatch(
+      /\.board-detail-recovery\s*\{[^}]*width:\s*min\(620px, 100%\);[^}]*max-height:\s*calc\(100vh - 36px\);/s,
+    );
+    expect(cssText).toMatch(
+      /@media \(max-width: 900px\)[\s\S]*?\.cd-save-recovery-actions \.btn\s*\{[^}]*flex:\s*1 1 150px;/s,
+    );
+    expect(cssText).toMatch(
+      /@media \(max-width: 480px\)[\s\S]*?\.cd-save-recovery-actions\s*\{[^}]*flex-direction:\s*column;/s,
+    );
+    expect(cssText).toMatch(
+      /\.cd-save-recovery-actions \.btn\s*\{[^}]*min-height:\s*44px;/s,
+    );
+  });
 });

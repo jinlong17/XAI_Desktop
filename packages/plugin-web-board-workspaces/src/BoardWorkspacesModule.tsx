@@ -34,6 +34,11 @@ import { accountScope, usePref } from "@repo/plugin-web-storage";
 import { useBoardCreateRecovery, type BoardCreateDraft } from "./internal/useBoardCreateRecovery.js";
 import { useBoardComposerRecovery } from "./internal/useBoardComposerRecovery.js";
 import { useWorkspaceSaveRecovery } from "./internal/useWorkspaceSaveRecovery.js";
+import {
+  useBoardDetailSaveRecovery,
+  type BoardDetailAppendDraft,
+  type BoardDetailTarget,
+} from "./internal/useBoardDetailSaveRecovery.js";
 import { ensureBoardTaskLink } from "./internal/taskLinkCommand.js";
 import {
   findBoardLinkedTask,
@@ -597,6 +602,8 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   const [newListName, setNewListName] = useState<string>("");
   const composerRecovery = useBoardComposerRecovery(rawBoards, activeBoard.id, setRawBoards);
   const [composerExportFailed, setComposerExportFailed] = useState(false);
+  const detailRecovery = useBoardDetailSaveRecovery(setRawBoards);
+  const [detailExportFailed, setDetailExportFailed] = useState(false);
   const [listMenu, setListMenu] = useState<string | null>(null);
   const [cardMenu, setCardMenu] = useState<string | null>(null);
 
@@ -909,16 +916,35 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
   // setRawBoards = one storage write.
   const updateCard = useCallback(
     (listId: string, cardId: string, patch: Partial<BoardCardData>) => {
-      writeLists((prev) => updateCardInList(prev, listId, cardId, patch));
+      let found = false;
+      const saved = writeLists((prev) => {
+        found = prev.some(
+          (list) =>
+            list.id === listId &&
+            list.archived !== true &&
+            list.cards.some((card) => card.id === cardId && card.archived !== true),
+        );
+        return found ? updateCardInList(prev, listId, cardId, patch) : prev;
+      });
+      return found && saved;
     },
     [writeLists],
   );
 
   const openCard = useCallback(
     (cardId: string, listId: string) => {
+      const unresolved = detailRecovery.pending;
+      if (
+        unresolved &&
+        (unresolved.target.boardId !== activeBoard.id ||
+          unresolved.target.listId !== listId ||
+          unresolved.target.cardId !== cardId)
+      ) {
+        return;
+      }
       setActiveCardRef({ boardId: activeBoard.id, listId, cardId });
     },
-    [activeBoard.id],
+    [activeBoard.id, detailRecovery.pending],
   );
 
   const activeCardContext =
@@ -935,11 +961,85 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
   const patchActiveCard = useCallback(
     (patch: Partial<BoardCardData>) => {
-      if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
-      updateCard(activeCardRef.listId, activeCardRef.cardId, patch);
+      if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return false;
+      return updateCard(activeCardRef.listId, activeCardRef.cardId, patch);
     },
     [activeBoard.id, activeCardRef, updateCard],
   );
+
+  const activeDetailTarget: BoardDetailTarget | null = useMemo(
+    () =>
+      activeCardRef
+        ? {
+            boardId: activeCardRef.boardId,
+            listId: activeCardRef.listId,
+            cardId: activeCardRef.cardId,
+          }
+        : null,
+    [activeCardRef],
+  );
+  const pendingForActiveCard =
+    activeDetailTarget &&
+    detailRecovery.pending &&
+    detailRecovery.pending.target.boardId === activeDetailTarget.boardId &&
+    detailRecovery.pending.target.listId === activeDetailTarget.listId &&
+    detailRecovery.pending.target.cardId === activeDetailTarget.cardId
+      ? detailRecovery.pending
+      : null;
+
+  const submitDetailAppend = useCallback(
+    (draft: BoardDetailAppendDraft) => {
+      if (!activeDetailTarget) return false;
+      setDetailExportFailed(false);
+      return detailRecovery.submit(activeDetailTarget, draft);
+    },
+    [activeDetailTarget, detailRecovery],
+  );
+
+  const updateDetailAppendDraft = useCallback(
+    (draft: BoardDetailAppendDraft) => {
+      if (!activeDetailTarget) return;
+      detailRecovery.updateDraft(activeDetailTarget, draft);
+    },
+    [activeDetailTarget, detailRecovery],
+  );
+
+  const retryDetailAppend = useCallback(() => {
+    setDetailExportFailed(false);
+    return detailRecovery.retry();
+  }, [detailRecovery]);
+
+  const exportDetailAppend = useCallback(() => {
+    try {
+      const snapshot = detailRecovery.snapshot();
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `board-detail-${snapshot.operation}-draft.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setDetailExportFailed(false);
+      return true;
+    } catch {
+      setDetailExportFailed(true);
+      return false;
+    }
+  }, [detailRecovery]);
+
+  const discardDetailAppend = useCallback(() => {
+    detailRecovery.discard();
+    setDetailExportFailed(false);
+  }, [detailRecovery]);
+
+  const closeActiveCard = useCallback(() => {
+    if (pendingForActiveCard) return;
+    setActiveCardRef(null);
+  }, [pendingForActiveCard]);
 
   const createLinkedTask = useCallback(async () => {
     if (!activeCardRef || activeCardRef.boardId !== activeBoard.id) return;
@@ -1369,6 +1469,7 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
 
       {activeCardContext && (
         <BoardCardDetailModal
+          key={`${activeBoard.id}:${activeCardRef?.listId ?? ""}:${activeCardRef?.cardId ?? ""}`}
           card={activeCardContext.card}
           listName={resolveListName(activeCardContext.list, lang)}
           lang={lang}
@@ -1386,9 +1487,47 @@ export function BoardWorkspacesModule({ lang }: BoardWorkspacesModuleProps) {
           onCreateLinkedTask={createLinkedTask}
           onUnlinkTask={unlinkActiveCardTask}
           onPatchCard={patchActiveCard}
-          onClose={() => setActiveCardRef(null)}
+          appendRecovery={pendingForActiveCard}
+          appendRecoveryError={detailRecovery.error}
+          onSubmitAppend={submitDetailAppend}
+          onUpdateAppendDraft={updateDetailAppendDraft}
+          onRetryAppend={retryDetailAppend}
+          onExportAppend={exportDetailAppend}
+          onDiscardAppend={discardDetailAppend}
+          onClose={closeActiveCard}
         />
       )}
+
+      {detailRecovery.pending && (!activeCardContext || !pendingForActiveCard) ? (
+        <div className="board-detail-recovery-scrim" data-testid="board-detail-recovery-surface">
+          <section className="board-detail-recovery" role="alert">
+            <h3>{lang === "zh" ? "未保存的卡片详情" : "Unsaved card detail"}</h3>
+            <p>
+              {lang === "zh"
+                ? "目标已关闭、更改或不可用。草稿仍由原账户和目标保护。"
+                : "The target was closed, changed, or became unavailable. The draft remains protected by its original account and target."}
+              {detailRecovery.error ? ` ${detailRecovery.error}` : ""}
+            </p>
+            <pre data-testid="board-detail-recovery-draft">
+              {JSON.stringify(detailRecovery.pending.draft, null, 2)}
+            </pre>
+            <div className="cd-save-recovery-actions">
+              <button type="button" className="btn" onClick={retryDetailAppend} data-testid="board-detail-recovery-retry">
+                {lang === "zh" ? "重试保存" : "Retry save"}
+              </button>
+              <button type="button" className="btn" onClick={exportDetailAppend} data-testid="board-detail-recovery-export">
+                {lang === "zh" ? "导出草稿" : "Export draft"}
+              </button>
+              <button type="button" className="btn" onClick={discardDetailAppend} data-testid="board-detail-recovery-discard">
+                {lang === "zh" ? "放弃草稿" : "Discard draft"}
+              </button>
+            </div>
+            {detailExportFailed ? (
+              <p>{lang === "zh" ? "草稿无法导出或账户已更改。" : "The draft could not be exported or the account changed."}</p>
+            ) : null}
+          </section>
+        </div>
+      ) : null}
 
       {pendingDelete && (
         <BoardDeleteConfirmDialog

@@ -3,8 +3,6 @@ import {
   BOARD_INTEGRATION_PROVIDERS,
   BOARD_LABEL_PALETTE,
   BOARD_PRIORITIES,
-  createBoardCardComment,
-  createBoardIntegrationAttachment,
   memberInitials,
 } from "@repo/plugin-web-board-core";
 import type {
@@ -17,6 +15,10 @@ import type {
   BoardMemberOption,
 } from "@repo/plugin-web-board-core";
 import type { Lang } from "./internal/strings.js";
+import type {
+  BoardDetailAppendDraft,
+  BoardDetailSaveRecoveryState,
+} from "./internal/useBoardDetailSaveRecovery.js";
 
 export interface BoardCardDetailModalProps {
   card: BoardCardData;
@@ -38,6 +40,13 @@ export interface BoardCardDetailModalProps {
   onCreateLinkedTask?: () => void;
   onUnlinkTask?: () => void;
   onPatchCard: (patch: Partial<BoardCardData>) => void;
+  appendRecovery?: BoardDetailSaveRecoveryState | null;
+  appendRecoveryError?: string | null;
+  onSubmitAppend: (draft: BoardDetailAppendDraft) => boolean;
+  onUpdateAppendDraft: (draft: BoardDetailAppendDraft) => void;
+  onRetryAppend: () => boolean;
+  onExportAppend: () => boolean;
+  onDiscardAppend: () => void;
   onClose: () => void;
 }
 
@@ -84,11 +93,15 @@ const STR = {
   you: { en: "You", zh: "我" },
   empty: { en: "No items yet", zh: "暂无内容" },
   remove: { en: "Remove", zh: "移除" },
+  saveFailed: {
+    en: "This addition was not saved. Your latest draft is retained.",
+    zh: "此次添加未保存，最新草稿已保留。",
+  },
+  retrySave: { en: "Retry save", zh: "重试保存" },
+  exportDraft: { en: "Export draft", zh: "导出草稿" },
+  discardDraft: { en: "Discard draft", zh: "放弃草稿" },
+  exportFailed: { en: "The draft could not be exported.", zh: "草稿无法导出。" },
 };
-
-function makeId(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-}
 
 function patchTitle(value: string): BoardCardData["title"] {
   return { en: value, zh: value };
@@ -131,14 +144,33 @@ export function BoardCardDetailSurface({
   onCreateLinkedTask,
   onUnlinkTask,
   onPatchCard,
+  appendRecovery = null,
+  appendRecoveryError = null,
+  onSubmitAppend,
+  onUpdateAppendDraft,
+  onRetryAppend,
+  onExportAppend,
+  onDiscardAppend,
   onClose,
 }: BoardCardDetailSurfaceProps) {
-  const [checklistText, setChecklistText] = useState("");
+  const recoveryDraft = appendRecovery?.draft;
+  const [checklistText, setChecklistText] = useState(
+    recoveryDraft?.kind === "checklist" ? recoveryDraft.text : "",
+  );
   const [integrationProviderId, setIntegrationProviderId] =
-    useState<BoardIntegrationProviderId>("link");
-  const [attachmentUrl, setAttachmentUrl] = useState("");
-  const [attachmentTitle, setAttachmentTitle] = useState("");
-  const [activityText, setActivityText] = useState("");
+    useState<BoardIntegrationProviderId>(
+      recoveryDraft?.kind === "attachment" ? recoveryDraft.providerId : "link",
+    );
+  const [attachmentUrl, setAttachmentUrl] = useState(
+    recoveryDraft?.kind === "attachment" ? recoveryDraft.url : "",
+  );
+  const [attachmentTitle, setAttachmentTitle] = useState(
+    recoveryDraft?.kind === "attachment" ? recoveryDraft.title : "",
+  );
+  const [activityText, setActivityText] = useState(
+    recoveryDraft?.kind === "activity" ? recoveryDraft.body : "",
+  );
+  const [exportFailed, setExportFailed] = useState(false);
   const [labelEditorOpen, setLabelEditorOpen] = useState(false);
   const [memberEditorOpen, setMemberEditorOpen] = useState(false);
   const [newLabelName, setNewLabelName] = useState("");
@@ -191,42 +223,49 @@ export function BoardCardDetailSurface({
   const addChecklistItem = () => {
     const text = checklistText.trim();
     if (!text) return;
-    replaceChecklistItems([
-      ...checklistItems,
-      { id: makeId("chk"), text, done: false },
-    ]);
-    setChecklistText("");
+    const saved = onSubmitAppend({ kind: "checklist", text: checklistText });
+    if (saved) setChecklistText("");
   };
 
   const addAttachment = () => {
-    const result = createBoardIntegrationAttachment({
-      id: makeId("att"),
+    const saved = onSubmitAppend({
+      kind: "attachment",
       providerId: integrationProviderId,
       url: attachmentUrl,
       title: attachmentTitle,
     });
-    if (result.status !== "valid") return;
-    onPatchCard({
-      attachments: [
-        ...attachments,
-        result.attachment,
-      ],
-    });
-    setAttachmentUrl("");
-    setAttachmentTitle("");
+    if (saved) {
+      setAttachmentUrl("");
+      setAttachmentTitle("");
+    }
   };
 
   const addActivityComment = () => {
-    const result = createBoardCardComment({
-      id: makeId("act"),
+    if (!activityText.trim()) return;
+    const saved = onSubmitAppend({
+      kind: "activity",
       body: activityText,
-      createdAt: new Date().toISOString(),
-      authorId: "local-user",
       authorName: STR.you[lang],
     });
-    if (result.status !== "valid") return;
-    onPatchCard({ activity: [result.entry, ...activity] });
-    setActivityText("");
+    if (saved) setActivityText("");
+  };
+
+  const clearRecoveredDraft = () => {
+    if (appendRecovery?.draft.kind === "checklist") setChecklistText("");
+    if (appendRecovery?.draft.kind === "attachment") {
+      setAttachmentUrl("");
+      setAttachmentTitle("");
+    }
+    if (appendRecovery?.draft.kind === "activity") setActivityText("");
+  };
+
+  const retryRecoveredDraft = () => {
+    if (onRetryAppend()) clearRecoveredDraft();
+  };
+
+  const discardRecoveredDraft = () => {
+    clearRecoveredDraft();
+    onDiscardAppend();
   };
 
   return (
@@ -252,6 +291,26 @@ export function BoardCardDetailSurface({
             x
           </button>
         </header>
+
+        {appendRecovery && appendRecoveryError ? (
+          <section className="cd-save-recovery" role="alert" data-testid="card-detail-save-recovery">
+            <p>{STR.saveFailed[lang]} {appendRecoveryError}</p>
+            <div className="cd-save-recovery-actions">
+              <button type="button" className="btn" onClick={retryRecoveredDraft} data-testid="card-detail-retry-save">
+                {STR.retrySave[lang]}
+              </button>
+              <button type="button" className="btn" data-testid="card-detail-export-draft" onClick={() => {
+                setExportFailed(onExportAppend() !== true);
+              }}>
+                {STR.exportDraft[lang]}
+              </button>
+              <button type="button" className="btn" onClick={discardRecoveredDraft} data-testid="card-detail-discard-draft">
+                {STR.discardDraft[lang]}
+              </button>
+            </div>
+            {exportFailed ? <p>{STR.exportFailed[lang]}</p> : null}
+          </section>
+        ) : null}
 
         <div className="cd-body">
           <section className="cd-section">
@@ -617,7 +676,11 @@ export function BoardCardDetailSurface({
             <div className="cd-inline-form">
               <input
                 value={checklistText}
-                onChange={(event) => setChecklistText(event.target.value)}
+                onChange={(event) => {
+                  const text = event.target.value;
+                  setChecklistText(text);
+                  onUpdateAppendDraft({ kind: "checklist", text });
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") addChecklistItem();
                 }}
@@ -674,9 +737,16 @@ export function BoardCardDetailSurface({
             <div className="cd-attachment-form">
               <select
                 value={integrationProviderId}
-                onChange={(event) =>
-                  setIntegrationProviderId(event.target.value as BoardIntegrationProviderId)
-                }
+                onChange={(event) => {
+                  const providerId = event.target.value as BoardIntegrationProviderId;
+                  setIntegrationProviderId(providerId);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId,
+                    url: attachmentUrl,
+                    title: attachmentTitle,
+                  });
+                }}
                 aria-label={STR.integrationProvider[lang]}
                 data-testid="card-detail-integration-provider"
               >
@@ -688,13 +758,31 @@ export function BoardCardDetailSurface({
               </select>
               <input
                 value={attachmentUrl}
-                onChange={(event) => setAttachmentUrl(event.target.value)}
+                onChange={(event) => {
+                  const url = event.target.value;
+                  setAttachmentUrl(url);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId: integrationProviderId,
+                    url,
+                    title: attachmentTitle,
+                  });
+                }}
                 placeholder={STR.url[lang]}
                 data-testid="card-detail-attachment-url"
               />
               <input
                 value={attachmentTitle}
-                onChange={(event) => setAttachmentTitle(event.target.value)}
+                onChange={(event) => {
+                  const title = event.target.value;
+                  setAttachmentTitle(title);
+                  onUpdateAppendDraft({
+                    kind: "attachment",
+                    providerId: integrationProviderId,
+                    url: attachmentUrl,
+                    title,
+                  });
+                }}
                 placeholder={STR.title[lang]}
                 data-testid="card-detail-attachment-title"
               />
@@ -714,7 +802,11 @@ export function BoardCardDetailSurface({
             <div className="cd-inline-form">
               <input
                 value={activityText}
-                onChange={(event) => setActivityText(event.target.value)}
+                onChange={(event) => {
+                  const body = event.target.value;
+                  setActivityText(body);
+                  onUpdateAppendDraft({ kind: "activity", body, authorName: STR.you[lang] });
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") addActivityComment();
                 }}
