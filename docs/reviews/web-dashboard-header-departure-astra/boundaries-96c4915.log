@@ -1,0 +1,11 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-MeGsIX
+
+ ✓ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx (5 tests) 274ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  01:31:02
+   Duration  2.79s (transform 735ms, setup 1.07s, collect 275ms, tests 274ms, environment 594ms, prepare 115ms)

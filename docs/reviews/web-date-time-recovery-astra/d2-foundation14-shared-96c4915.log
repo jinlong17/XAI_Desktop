@@ -1,0 +1,29 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4 original_assertions=docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-dLX7Xj
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses typed rather than trusting generation alone
+incomplete-marker {"kind":"typed","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+incomplete-marker {"kind":"scoped","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+incomplete-marker {"kind":"deletion","result":{"ok":false,"reason":"recovery-required"},"bytes":"[\"keep\"]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"set","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"remove","result":{"ok":false,"reason":"recovery-required"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+deletion-retry {"retry":{"ok":true},"remaining":null}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts (14 tests) 13ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  01:31:23
+   Duration  1.50s (transform 405ms, setup 0ms, collect 573ms, tests 13ms, environment 513ms, prepare 67ms)
