@@ -1,0 +1,498 @@
+revision=a6ad06d
+test-fixture=review-owned only; package run unmodified
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-Iz9j7V/packages/plugin-web-settings-rest
+
+ ✓ src/__tests__/smartListsPane.test.tsx (6 tests) 74ms
+ ✓ src/__tests__/accountPane.test.tsx (12 tests) 152ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx (5 tests) 244ms
+ ✓ src/__tests__/integrationsPane.test.tsx (18 tests) 238ms
+ ✓ src/__tests__/stickyPane.test.tsx (10 tests) 113ms
+ ✓ src/__tests__/aiPane.test.tsx (13 tests) 170ms
+ ✓ src/__tests__/morePane.test.tsx (12 tests) 286ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx (10 tests) 64ms
+ ✓ src/__tests__/CallbackPage.test.tsx (9 tests) 96ms
+ ✓ src/__tests__/integrationDisconnectButton.test.tsx (3 tests) 82ms
+ ✓ src/__tests__/notificationsPane.test.tsx (9 tests) 75ms
+ ✓ src/__tests__/premiumPane.test.tsx (9 tests) 87ms
+ ✓ src/__tests__/dateTimePane.test.tsx (6 tests) 50ms
+ ✓ src/__tests__/DeviceRecoveryExport.test.tsx (4 tests) 100ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx (19 tests) 152ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx (6 tests) 66ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx (10 tests) 183ms
+ ✓ src/__tests__/aboutPane.test.tsx (7 tests) 73ms
+ ✓ src/__tests__/hotkeysPane.test.tsx (3 tests) 130ms
+ ✓ src/__tests__/collaboratePane.test.tsx (4 tests) 152ms
+ ✓ src/__tests__/premiumDisclosureBanner.test.tsx (3 tests) 27ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx (5 tests) 37ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx (5 tests) 49ms
+ ✓ src/__tests__/PremiumTierBadge.test.tsx (2 tests) 19ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx (7 tests) 90ms
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx (15 tests | 8 failed) 84ms
+   × account deletion captures the initiating owner > modern successful cleanup completes the receipt then redirects without a second shared clear 15ms
+     → expected undefined to be 'complete' // Object.is equality
+   × account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B 3ms
+     → expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+   × account deletion captures the initiating owner > does not finish its durable receipt before captured auth cleanup succeeds 6ms
+     → expected null to match object { phase: 'local-data-cleared', …(1) }
+   × account deletion captures the initiating owner > pins the server token, removes only A content/secrets, and preserves device, B and archive 4ms
+     → expected 'A content' to be null
+   × account deletion captures the initiating owner > mock-auth deletes only the demo scope and never invokes the real server 11ms
+     → expected 'demo content' to be null
+   ✓ account deletion captures the initiating owner > does not allow mock mode to delete a real account namespace 8ms
+   ✓ account deletion captures the initiating owner > server failure preserves all local content and exposes the failure 2ms
+   × account deletion captures the initiating owner > already-deleted server outcome still performs scoped local cleanup 4ms
+     → expected 'failure' to be 'success' // Object.is equality
+   ✓ account deletion captures the initiating owner > secret cleanup failure is not reported as successful deletion 2ms
+   × account deletion captures the initiating owner > suppresses duplicate submit while the server request is pending 3ms
+     → expected "spy" to be called once, but got 0 times
+   × account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone 2ms
+     → expected 'A content' to be null
+   ✓ account deletion captures the initiating owner > switching during asynchronous secret cleanup does not clear B authentication 2ms
+   ✓ account deletion captures the initiating owner > switching during auth storage clearing does not navigate away from B 19ms
+   ✓ account deletion captures the initiating owner > a callback captured before account switch cannot start deletion as B 1ms
+   ✓ account deletion captures the initiating owner > locked scope rejects deletion before any backend or local action 3ms
+ ✓ src/__tests__/integrationStubBanner.test.tsx (2 tests) 28ms
+ ✓ src/__tests__/no-hex-literals.test.ts (1 test) 8ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts (6 tests) 8ms
+ ✓ src/__tests__/oauthState.test.ts (12 tests) 6ms
+ ✓ src/__tests__/no-stripe-secret-key.test.ts (2 tests) 8ms
+ ✓ src/__tests__/no-stripe-js-bundle.test.ts (2 tests) 8ms
+ ✓ src/__tests__/usePremiumTier.test.tsx (6 tests) 16ms
+ ✓ src/__tests__/no-localstorage-clear.test.ts (2 tests) 19ms
+ ✓ src/__tests__/pkce.test.ts (8 tests) 5ms
+ ✓ src/__tests__/usePremiumConfig.test.tsx (3 tests) 2ms
+ ✓ src/__tests__/integrationProviders.test.ts (4 tests) 3ms
+ ✓ src/__tests__/no-math-random.test.ts (7 tests) 3ms
+ ✓ src/__tests__/restPanesById.test.ts (3 tests) 3ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts (5 tests) 6ms
+ ✓ src/__tests__/index-barrel.test.ts (3 tests) 2ms
+ ✓ src/__tests__/premiumTier.test.ts (4 tests) 2ms
+
+ Test Files  1 failed | 41 passed (42)
+      Tests  8 failed | 274 passed (282)
+   Start at  18:12:28
+   Duration  6.80s (transform 1.66s, setup 5.76s, collect 6.17s, tests 3.02s, environment 19.25s, prepare 3.41s)
+
+
+stderr | src/__tests__/morePane.test.tsx > REL-03 a stale reset callback cannot reset B or device settings
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > modern successful cleanup completes the receipt then redirects without a second shared clear
+AssertionError: expected undefined to be 'complete' // Object.is equality
+
+- Expected: 
+"complete"
+
++ Received: 
+undefined
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:59:52
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B
+AssertionError: expected "spy" to be called with arguments: [ Array(2) ]
+
+Number of calls: 0
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:69:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > does not finish its durable receipt before captured auth cleanup succeeds
+AssertionError: expected null to match object { phase: 'local-data-cleared', …(1) }
+
+- Expected: 
+{
+  "authGeneration": "auth-A",
+  "phase": "local-data-cleared",
+}
+
++ Received: 
+null
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:81:45
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > pins the server token, removes only A content/secrets, and preserves device, B and archive
+AssertionError: expected 'A content' to be null
+
+- Expected: 
+null
+
++ Received: 
+"A content"
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:89:47
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > mock-auth deletes only the demo scope and never invokes the real server
+AssertionError: expected 'demo content' to be null
+
+- Expected: 
+null
+
++ Received: 
+"demo content"
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:101:53
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > already-deleted server outcome still performs scoped local cleanup
+AssertionError: expected 'failure' to be 'success' // Object.is equality
+
+Expected: "success"
+Received: "failure"
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:124:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > suppresses duplicate submit while the server request is pending
+AssertionError: expected "spy" to be called once, but got 0 times
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:139:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone
+AssertionError: expected 'A content' to be null
+
+- Expected: 
+null
+
++ Received: 
+"A content"
+
+ ❯ src/__tests__/useAccountDeleteOrchestrator.test.tsx:147:47
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯

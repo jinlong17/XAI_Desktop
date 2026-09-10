@@ -1,0 +1,185 @@
+revision=a6ad06d
+test-fixture=review-owned only; package run unmodified
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-6vvzY7
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > local account deletion removes prior and candidate records before declaring local-data-cleared
+all-account-cleanup {"result":{"ok":true,"receipt":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"local-data-cleared","updatedAt":"2026-09-10T01:13:31.645Z","authGeneration":"auth-A"},"raw":"{\"version\":2,\"accountId\":\"slice-A\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"local-data-cleared\",\"updatedAt\":\"2026-09-10T01:13:31.645Z\",\"authGeneration\":\"auth-A\"}"},"remaining":["xai:account:v1:slice-A:prior:xai_ai_convos","xai:account:v1:slice-A:candidate:xai_ai_convos"]}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > complete transition refuses a pending receipt whose local data has not been cleared
+premature-complete {"result":{"ok":true,"receipt":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:13:31.648Z","authGeneration":"auth-A"},"raw":"{\"version\":2,\"accountId\":\"slice-A\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:13:31.648Z\",\"authGeneration\":\"auth-A\"}"},"remaining":"not cleared"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > same-page in-flight recovery cannot return success for a different requested auth identity
+samepage-identity [{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:13:31.711Z","authGeneration":"auth-A"}},{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:13:31.711Z","authGeneration":"auth-A"}}]
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > independent Settings module instances serialize recovery participants across their shared origin locks
+independent-coordinators {"concurrent":2,"authCalls":1,"settled":[{"status":"rejected","reason":{}},{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:13:31.807Z","authGeneration":"auth-A"}}]}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts (6 tests | 6 failed) 172ms
+   × strict shared receipt decoder rejects truthy non-string auth generations 5ms
+     → expected { version: 2, …(6) } to be null
+     → expected { version: 2, …(6) } to be null
+     → expected { version: 2, …(6) } to be null
+   × local account deletion removes prior and candidate records before declaring local-data-cleared 3ms
+     → expected [ …(2) ] to deeply equal []
+   × complete transition refuses a pending receipt whose local data has not been cleared 2ms
+     → expected true to be false // Object.is equality
+     → expected '{"version":2,"accountId":"slice-A","k…' to be '{"version":2,"accountId":"slice-A","k…' // Object.is equality
+   × same-page in-flight recovery cannot return success for a different requested auth identity 63ms
+     → expected 'fulfilled' to be 'rejected' // Object.is equality
+   × independent Settings module instances serialize recovery participants across their shared origin locks 96ms
+     → expected 2 to be 1 // Object.is equality
+     → expected [ 'rejected', 'fulfilled' ] to deeply equal [ 'fulfilled', 'fulfilled' ]
+   × replacement after local cleanup but before its await resumes prevents the next secret participant 3ms
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "slice-A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  18:13:30
+   Duration  958ms (transform 149ms, setup 0ms, collect 183ms, tests 172ms, environment 328ms, prepare 65ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > strict shared receipt decoder rejects truthy non-string auth generations
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > strict shared receipt decoder rejects truthy non-string auth generations
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > strict shared receipt decoder rejects truthy non-string auth generations
+AssertionError: expected { version: 2, …(6) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "accountId": "slice-A",
+  "authGeneration": 7,
+  "generation": "g1",
+  "kind": "account",
+  "phase": "pending",
+  "updatedAt": "2026-09-09T00:00:00.000Z",
+  "version": 2,
+}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:15:138
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > local account deletion removes prior and candidate records before declaring local-data-cleared
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "xai:account:v1:slice-A:prior:xai_ai_convos",
++   "xai:account:v1:slice-A:candidate:xai_ai_convos",
++ ]
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:22:97
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > complete transition refuses a pending receipt whose local data has not been cleared
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:28:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > complete transition refuses a pending receipt whose local data has not been cleared
+AssertionError: expected '{"version":2,"accountId":"slice-A","k…' to be '{"version":2,"accountId":"slice-A","k…' // Object.is equality
+
+Expected: "{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"pending","updatedAt":"2026-09-09T00:00:00.000Z","authGeneration":"auth-A"}"
+Received: "{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:13:31.648Z","authGeneration":"auth-A"}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:28:73
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > same-page in-flight recovery cannot return success for a different requested auth identity
+AssertionError: expected 'fulfilled' to be 'rejected' // Object.is equality
+
+Expected: "rejected"
+Received: "fulfilled"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:36:129
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > independent Settings module instances serialize recovery participants across their shared origin locks
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:47:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > independent Settings module instances serialize recovery participants across their shared origin locks
+AssertionError: expected [ 'rejected', 'fulfilled' ] to deeply equal [ 'fulfilled', 'fulfilled' ]
+
+- Expected
++ Received
+
+  [
+-   "fulfilled",
++   "rejected",
+    "fulfilled",
+  ]
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:47:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > replacement after local cleanup but before its await resumes prevents the next secret participant
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "slice-A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts:54:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
