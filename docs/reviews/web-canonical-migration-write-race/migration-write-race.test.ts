@@ -1,7 +1,7 @@
 import { afterEach, expect, it } from 'vitest';
 import { accountScope, createAccountScopeController, generationKey, generationMarkerKey } from '../../../packages/plugin-web-storage/src/internal/accountScope.js';
 import { migrateAccount, readGeneration, type MigrationLock } from '../../../packages/plugin-web-storage/src/internal/accountMigration.js';
-import { setPref, setPrefAutosave } from '../../../packages/plugin-web-storage/src/internal/storage.js';
+import { setPref, setPrefAutosave, removePrefAutosave } from '../../../packages/plugin-web-storage/src/internal/storage.js';
 import { SEED_TASK_COLS } from '../../../packages/xai-web-tasks/src/internal/seed/tasksMock.js';
 
 // Two controllers represent independent page runtimes sharing the same physical store.
@@ -77,5 +77,36 @@ for (const timing of ['before', 'stage'] as const) {
     const visibleRaw = localStorage.getItem(generationKey(accountId, visible.generation, logicalKey));
     console.log({domain:'account-autosave',timing,rejected,visibleGeneration:visible.generation,visibleHasLatest:visibleRaw===JSON.stringify(latest)});
     expect(visibleRaw).toBe(JSON.stringify(latest));
+  });
+}
+
+for (const mutation of ['add', 'remove'] as const) {
+  it(`migration must preserve the complete current source key set after a successful ${mutation}`, async () => {
+    const accountId = `migration-keyset-${mutation}`;
+    localStorage.setItem(generationMarkerKey(accountId), JSON.stringify({generation:'initial',migrationId:'initial',previous:null}));
+    const scope = accountScope.activate(accountScope.lock(accountId), 'initial');
+    const suffix = 'migration_keyset_private';
+    const logical = `xai_pref_${suffix}`;
+    const physical = generationKey(accountId, 'initial', logical);
+    const expected = mutation === 'add' ? JSON.stringify({text:'New acknowledged key'}) : null;
+    if (mutation === 'remove') localStorage.setItem(physical, JSON.stringify({text:'Before removal'}));
+    const controller = createAccountScopeController();
+    let operationObserved = false;
+    let migrationRejected = false;
+    try {
+      await migrateAccount({storage:localStorage,controller,transition:controller.lock(accountId),choice:'empty',lock,newId:()=>mutation,
+        secrets:{stage:async()=>{
+          if (mutation === 'add') expect(setPrefAutosave(suffix, {text:'New acknowledged key'}, {scope})).toBe(true);
+          else removePrefAutosave(suffix, scope);
+          expect(localStorage.getItem(physical)).toBe(expected);
+          operationObserved = true;
+        },verify:async()=>{}},
+      });
+    } catch { migrationRejected = true; }
+    expect(operationObserved).toBe(true);
+    const marker = readGeneration(localStorage, accountId)!;
+    const visible = localStorage.getItem(generationKey(accountId, marker.generation, logical));
+    console.log({mutation,migrationRejected,visibleGeneration:marker.generation,expected,visible});
+    expect(visible).toBe(expected);
   });
 }
