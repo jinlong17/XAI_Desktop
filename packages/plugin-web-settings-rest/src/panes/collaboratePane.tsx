@@ -15,6 +15,10 @@ import { useI18n } from "@repo/plugin-web-tokens";
 import { localI18n } from "../internal/localI18n.js";
 import type { DefaultShare } from "../types.js";
 
+function isDefaultShare(value: unknown): value is DefaultShare {
+  return value === "comment" || value === "edit" || value === "view";
+}
+
 function CollaboratePaneContent({ lang }: PaneRenderProps): React.ReactElement {
   const { s } = useI18n(lang);
   const t = localI18n(lang);
@@ -25,7 +29,7 @@ function CollaboratePaneContent({ lang }: PaneRenderProps): React.ReactElement {
 
   const defaultSharePref = usePrefAutosaveAsync(
     "xai_pref_collab_default_share" as WebPrefKey,
-    { validate: (value): value is DefaultShare => value === "comment" || value === "edit" || value === "view" },
+    { validate: isDefaultShare },
   );
 
   const [mentionNotify, setMentionNotify] = usePref(
