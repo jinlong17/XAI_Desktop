@@ -17,3 +17,11 @@ The separate account-note native four and whole-process saved reopen four remain
 Actual device-only export still downloads the expected JSON with latest offset40 and unchanged account note: [log](../web-d2-dashboard-device-export-native/native-76edb0c.log). Persistent offset is now null because absent mount no longer seeds0; the denied drag leaves that original absence unchanged. This expected protocol delta does not weaken the downloaded payload or account-data assertions.
 
 Full Dv1 contract remains subject to Astra independent acceptance. No Dv2 or numbered-item closure.
+
+## Expanded native gesture checks at 68ea7a3
+
+The five-case probe at 68ea7a3 passes: original mount/lock/account controls, unfinished dirty gesture unload cancellation, and an earlier40 save followed by a still-active70 gesture with resize. The newer gesture remains70 and commits70 after release. Each of the four successful saved-position cases passes Page.reload. [After log](native-68ea7a3.log).
+
+An attempted expanded76 before run produced original3 PASS and gesture-unload FAIL in tool stdout, then did not complete the overlapping-gestures check. The owned Node71387/Chrome71446 handles remained live; a second CDP connection returned “No dialog is showing”, while Runtime.evaluate timed out. The parent terminated only these owned processes after confirming the unfinished diagnostic and cleaned their isolated temporary directory. Root cause is undetermined; this is not an overlap PASS or an additional product defect. No final expanded-before file was emitted, and the original committed three-case native-76edb0c.log remains unchanged. The original Astra component overlap failure retains its separate valid evidence.
+
+The runner now requires a new suffix if an evidence filename already exists, preventing accidental replacement. Source-feedback contract checks remain under Astra review; five native passes do not close the fullDv1 slice.

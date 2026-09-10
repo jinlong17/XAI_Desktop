@@ -1,6 +1,6 @@
 /** Real Chrome, isolated profile/download directory. Synthetic fixtures only. No server auth. */
 import { build } from '../../../node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/lib/main.js';
-import { mkdtempSync, mkdirSync, rmSync, readFileSync, readdirSync, writeFileSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, rmSync, readFileSync, readdirSync, writeFileSync, symlinkSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
+const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');const evidenceSuffix=process.argv[3]||'';if(evidenceSuffix&&!/^[a-z0-9-]+$/.test(evidenceSuffix))throw Error('Invalid suffix');const evidencePath=join(output,`native-${sourceCommit}${evidenceSuffix?'-'+evidenceSuffix:''}.log`);if(existsSync(evidencePath))throw Error('Evidence exists; use a new suffix');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
 execFileSync('tar',['-x','-C',snapshot],{input:execFileSync('git',['archive',sourceCommit],{cwd:root,maxBuffer:100*1024*1024})});
 symlinkSync(join(root,'node_modules'),join(snapshot,'node_modules'));
@@ -36,11 +36,21 @@ const offset='xai_pref_dashboard_header_note_x';
 const offsetBytes=()=>ev('localStorage.getItem("xai_pref_dashboard_header_note_x")');
 const reload=async()=>{await cdp('Page.reload');for(let i=0;i<100;i++){if(await ev("!!window.verify?.holdOffset && !!document.querySelector('.dash-note__display')")){await delay(80);return;}await delay(50);}throw Error('Reload did not render fixture');};
 const drag=async()=>{const p=await ev(`(()=>{const r=document.querySelector('.dash-note').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);await cdp('Input.dispatchMouseEvent',{type:'mousePressed',x:p.x,y:p.y,button:'left',clickCount:1});await cdp('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x+40,y:p.y,button:'left',buttons:1});await cdp('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x+40,y:p.y,button:'left',clickCount:1});await delay(150);};
-for(const name of ['absent-mount','held-device-lock','account-switch']){
+for(const name of ['absent-mount','held-device-lock','account-switch','gesture-unload','overlapping-gestures']){
  let locked=false;
  try{
   await ev(name==='absent-mount'?'localStorage.removeItem("xai_pref_dashboard_header_note_x")':'localStorage.setItem("xai_pref_dashboard_header_note_x","0")');await reload();
   if(name==='absent-mount'){assert.equal(await offsetBytes(),null,'Mount must not seed absent device offset');record(name,{pass:true});continue;}
+  if(name==='gesture-unload'||name==='overlapping-gestures'){
+   if(name==='overlapping-gestures'){await ev('verify.holdOffset()');locked=true;await drag();assert.equal(await offsetBytes(),'0','First gesture did not wait');}
+   const p=await ev(`(()=>{const r=document.querySelector('.dash-note').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);const delta=name==='gesture-unload'?40:30;
+   await cdp('Input.dispatchMouseEvent',{type:'mousePressed',x:p.x,y:p.y,button:'left',clickCount:1});await cdp('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x+delta,y:p.y,button:'left',buttons:1});await delay(80);
+   try{
+    if(name==='gesture-unload'){assert(await ev(`(()=>{const e=new Event('beforeunload',{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()`),'Unfinished dirty gesture has no unload protection');}
+    else{await ev('verify.releaseOffset()');locked=false;for(let i=0;i<100&&(await offsetBytes())!=='40';i++)await delay(20);assert.equal(await offsetBytes(),'40');await delay(80);await ev('window.dispatchEvent(new Event("resize"))');await delay(50);assert.equal(await ev(`document.querySelector('.dash-note').style.getPropertyValue('--dash-note-x')`),'70px','Earlier completion/resize replaced newer unended gesture');}
+   }finally{await cdp('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x+delta,y:p.y,button:'left',clickCount:1});}
+   const intended=name==='gesture-unload'?'40':'70';for(let i=0;i<100&&(await offsetBytes())!==intended;i++)await delay(20);assert.equal(await offsetBytes(),intended,'Final gesture could not save its intended position');await reload();assert.equal(await offsetBytes(),intended);record(name,{pass:true,reload:true});continue;
+  }
   if(name==='held-device-lock'){await ev('verify.holdOffset()');locked=true;}else{await ev('verify.switchDeviceAccount()');await delay(100);}
   await drag();
   if(locked){assert.equal(await offsetBytes(),'0','Native device lock did not hold drag persistence');await ev('verify.releaseOffset()');locked=false;}
@@ -49,4 +59,4 @@ for(const name of ['absent-mount','held-device-lock','account-switch']){
   await reload();assert.equal(await offsetBytes(),'40','Reload did not retain saved device position');record(name,{pass:true,reload:true});
  }catch(error){record(name,{pass:false,error:String(error)});process.exitCode=1;}finally{if(locked)await ev('verify.releaseOffset()');}
 }
-}finally{writeFileSync(join(output,`native-${sourceCommit}.log`),records.map(r=>JSON.stringify(r)).join('\n')+'\n');socket?.close();browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();await delay(500);browser?.kill('SIGKILL');rmSync(directory,{recursive:true,force:true});}
+}finally{writeFileSync(evidencePath,records.map(r=>JSON.stringify(r)).join('\n')+'\n');socket?.close();browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();await delay(500);browser?.kill('SIGKILL');rmSync(directory,{recursive:true,force:true});}
