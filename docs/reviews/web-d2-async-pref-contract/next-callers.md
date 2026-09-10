@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Pomodoro完整当前用户六偏好恢复合同已获Astra051212a独立接受，固定2962b49：原16及mixedfollowon18、export7、既有Dv224/完成2通过；父原9/扩展8和同SHA真实Chrome十模式全部通过（711ddbd），Sol最终作者门禁2ae8272归属单列。历史源恢复/视觉/权限/Retry/冲突FAIL保留。Collaborate6254cb4和共享协调器ba7f0da接受保持有效。下一为Dashboard Header账号便签与设备位置的完整host恢复合同，保留d129950/830dd2b已有接受。正式完成13/312、未关闭299项；REL-05/09/D2继续开放。
+当前增量：Pomodoro完整当前用户六偏好恢复合同已获Astra051212a独立接受，固定2962b49：原16及mixedfollowon18、export7、既有Dv224/完成2通过；父原9/扩展8和同SHA真实Chrome十模式全部通过（711ddbd），Sol最终作者门禁2ae8272归属单列。历史源恢复/视觉/权限/Retry/冲突FAIL保留。Collaborate6254cb4和共享协调器ba7f0da接受保持有效。下一Dashboard Header完整合同a62d8a2/e4a32a1已提交，保留d129950/830dd2b已有接受；父实际注册+Shell五条baseline在ef722d8为4正确FAIL/1cleanPASS。Terra实施，Sol独立physical/owner/export，父host/native，Astra最终复核。正式完成13/312、未关闭299项；REL-05/09/D2继续开放。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
