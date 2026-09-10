@@ -1,0 +1,20 @@
+INDEPENDENT ASTRA product=20a4591f1418e07e57208bbe4567d8f183c5ffd3 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-y97ego07 test_sha256=da15f8f94fc583ade4a14cdd49212ad2dd7d180799c0f9cfd57e5296e7aa8da0
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-y97ego07/packages/plugin-web-storage
+
+ ✓ src/__tests__/astraHooks.test.tsx > reset failure preserves the latest clean externally projected value rather than resurrecting a stale local draft 14ms
+ ✓ src/__tests__/astraHooks.test.tsx > reset then failed save cannot resurrect the discarded draft during the next pending session 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > registered hook default projection uses the registered domain guard even when no caller validator is supplied 1ms
+ ✓ src/__tests__/astraHooks.test.tsx > a validator exception on an edit resolves a typed invalid outcome rather than escaping the hook API 1ms
+ ✓ src/__tests__/astraHooks.test.tsx > device async hook retains its pending operation across account switch without acquiring an account lock 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > control: queued owner switch cancels account work and same-key remount remains independent 1ms
+ ✓ src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > control: uncertain reset retains its token for duplicate retry and notifies the clean sibling without another remove 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > control: failed draft keeps original baseline through external conflict and explicit reload adopts current bytes 1ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  20:17:57
+   Duration  584ms (transform 77ms, setup 0ms, collect 112ms, tests 27ms, environment 219ms, prepare 70ms)
+
+EXIT_CODE=0

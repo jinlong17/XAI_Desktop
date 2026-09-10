@@ -49,3 +49,23 @@ Both forms use the same async controller. Its binding identity includes the full
 | Settings TypeScript | passed |
 
 These are author checks for the open-ended binding commit. Astra's later independent review of the earlier `d6184ee` controller found six separate hook defects; `69c8318` does not claim those failures are fixed or close D2. The raw addendum logs use the `dynamic-*-69c8318.log` names beside this report.
+
+## Independent-rejection repair (`20a4591`)
+
+This follow-up repairs the six failures fixed by Astra in `2bd330a` without changing the accepted mutation engine. The autosave wrapper now renders the controller's single optimistic/committed value instead of retaining a second stale draft. A clean projection and successful reset therefore become the baseline for later failure or pending states.
+
+Registered hooks compose the storage-owned codec/domain validator with any caller validator, and every caller validator invocation is caught as a typed invalid result. Device bindings keep a device-scoped controller across account changes, while account-owned controllers still invalidate on owner/epoch changes and all controllers still invalidate on unmount or key changes.
+
+When a successful operation observed a newer committed raw value and has no queued draft, the controller re-reads that valid source as clean state. It does not mark the already-applied functional updater as failed or make it retryable. Queued work continues through the engine, where absolute writes retain their raw conflict baseline.
+
+| Check | Result |
+| --- | --- |
+| Author hook contract | 17/17 passed |
+| Astra unchanged nine-case runner | 9/9 passed |
+| Astra unchanged functional diagnostic | 1/1 passed |
+| Storage package | 22/22 files, 193/193 tests passed |
+| Storage TypeScript | passed |
+| Settings package | 42/42 files, 282/282 tests passed |
+| Settings TypeScript | passed |
+
+The functional diagnostic ended with physical `167`, hook A at `167/idle`, and hook B at `167/saved`; after a physical `170` plus storage event, both hooks rendered `170/idle`. Raw logs use the `repair-*-20a4591.log` names. Parent native checks and Astra's final fixed-hash review remain independent gates. Dashboard caller conversion and full D2 remain open.
