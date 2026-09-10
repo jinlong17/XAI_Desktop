@@ -1170,7 +1170,18 @@
     min-height: 44px;
   }
 
+  .module-dashboard .dash-note__editor,
+  .module-dashboard .dash-note__input {
+    min-height: 44px;
+  }
+
+  .module-dashboard .dash-note__input {
+    height: 44px;
+  }
+
   .module-dashboard .dash-add,
+  .module-dashboard .dash-note__icon-btn,
+  .module-dashboard .dash-note__clear,
   .module-dashboard .widget-shell__remove,
   .module-dashboard .widget-shell__appearance,
   .module-dashboard .widget-shell__resize {
@@ -1179,6 +1190,13 @@
     min-width: 46px;
     min-height: 46px;
     transform: none;
+  }
+
+  .module-dashboard .dash-add {
+    width: auto;
+    min-width: 112px;
+    max-width: 100%;
+    padding-inline: 14px;
   }
 
   .module-dashboard .widget-shell__remove {
