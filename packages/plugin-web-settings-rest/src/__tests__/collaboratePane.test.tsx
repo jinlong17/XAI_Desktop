@@ -3,9 +3,10 @@
  */
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import * as React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { act, render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { collaboratePane } from "../panes/collaboratePane.js";
 import { accountScope, generationMarkerKey, getPref } from "@repo/plugin-web-storage";
+import type { PaneDepartureGuard } from "@repo/plugin-web-settings-shell";
 import { createSmartListsLockManager } from "./smartListsLockFixture.js";
 
 beforeEach(() => {
@@ -101,6 +102,33 @@ describe("collaboratePane", () => {
     const exportButton = await ui.findByRole("button", { name: "Export current draft" });
     fireEvent.click(exportButton);
     expect(await ui.findByText("Could not export the draft. Your local changes remain available.")).toBeInTheDocument();
+    expect(ui.getByRole("switch", { name: "Show collaborator avatars" })).toHaveAttribute("aria-checked", "false");
+    release();
+    await held;
+  });
+
+  it("makes an old guard inert after an account epoch while keeping a device draft", async () => {
+    const locks = createSmartListsLockManager();
+    vi.stubGlobal("navigator", { locks });
+    let captured: PaneDepartureGuard | null = null;
+    const register = (guard: PaneDepartureGuard) => {
+      captured = guard;
+      return () => undefined;
+    };
+    let release!: () => void;
+    const held = locks.request("xai:pref:v1:xai_pref_collab_show_avatars", { mode: "exclusive" }, () => new Promise<void>(resolve => { release = resolve; }));
+    const ui = render(collaboratePane.render({ lang: "en", registerDepartureGuard: register }));
+    await waitFor(() => expect(captured).not.toBeNull());
+    fireEvent.click(ui.getByRole("switch", { name: "Show collaborator avatars" }));
+    await waitFor(() => expect(captured?.isBlocking()).toBe(true));
+    const oldGuard = captured!;
+    await act(async () => {
+      accountScope.activate(accountScope.lock("B"), "g2");
+      localStorage.setItem(generationMarkerKey("B"), JSON.stringify({ generation: "g2", migrationId: "fixture", previous: null }));
+    });
+    expect(oldGuard.isCurrent()).toBe(false);
+    expect(oldGuard.isBlocking()).toBe(false);
+    oldGuard.discardDraft();
     expect(ui.getByRole("switch", { name: "Show collaborator avatars" })).toHaveAttribute("aria-checked", "false");
     release();
     await held;

@@ -66,6 +66,12 @@ recovery behavior was changed.
   epoch-token changes and draft-version host notification. A focused stateful
   registration callback test passes; the independent router-host suite must
   rerun this exact commit.
+- The subsequent independent mixed-scope contract run found that the stabilized
+  old guard delegated to current callbacks and could discard a surviving device
+  draft after A to B. Each guard operation now checks its own captured composite
+  token before reading current state. The focused regression holds a device
+  operation, changes account epoch, and proves the old guard is inert while the
+  false device selection remains visible. Independent rerun remains required.
 
 ## Independent validation still required
 

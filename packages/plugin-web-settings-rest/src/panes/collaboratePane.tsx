@@ -129,14 +129,17 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   }, [currentComposite, discard]);
   const guardToken = compositeTokenRef.current;
   const departureLabel = s("settings.collaborate");
-  const guard = React.useMemo<PaneDepartureGuard>(() => ({
-    token: guardToken,
-    label: departureLabel,
-    isCurrent: () => currentComposite() && compositeTokenRef.current === guardToken,
-    isBlocking: hasCurrentDraft,
-    exportDraft,
-    discardDraft: discardAll,
-  }), [currentComposite, departureLabel, discardAll, exportDraft, guardToken, hasCurrentDraft]);
+  const guard = React.useMemo<PaneDepartureGuard>(() => {
+    const isCurrent = () => currentComposite() && compositeTokenRef.current === guardToken;
+    return {
+      token: guardToken,
+      label: departureLabel,
+      isCurrent,
+      isBlocking: () => isCurrent() && hasCurrentDraft(),
+      exportDraft: () => { if (isCurrent()) exportDraft(); },
+      discardDraft: () => { if (isCurrent()) discardAll(); },
+    };
+  }, [currentComposite, departureLabel, discardAll, exportDraft, guardToken, hasCurrentDraft]);
   React.useEffect(() => registerDepartureGuard?.(guard), [draftVersion, guard, registerDepartureGuard]);
   React.useEffect(() => {
     if (!hasCurrentDraft()) return;
