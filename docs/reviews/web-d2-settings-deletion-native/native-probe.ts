@@ -9,7 +9,7 @@ const secretKey=(owner:string)=>'scoped:v2:'+encodeURIComponent(JSON.stringify([
 async function run(){
  const initial=new URLSearchParams(location.search).get('phase')==='initial';const cases:any[]=[];const checkpoint:Record<string,any>={};
  if(initial)localStorage.clear();
- for(const name of ['held-account-lock','concurrent-cross-account-recovery']){
+ for(const name of ['held-account-lock','concurrent-cross-account-recovery','cross-context-recovery']){
   let release:(()=>void)|undefined;let holder:Promise<unknown>|undefined;
   try{
    const a='native-delete-'+name,b=a+'-B',aKey=generationKey(a,'g1','xai_ai_convos'),bKey=generationKey(b,'g1','xai_ai_convos');
@@ -27,6 +27,16 @@ async function run(){
     const operation=resumeAccountLocalDeletion(receipt,auth);await delay(80);
     const remainedPending=localStorage.getItem(aKey)==='A private'&&readAccountDeletionReceipt(a)?.phase==='pending'&&authCalls===0;
     release!();await holder;await operation;assert(remainedPending,'Cleanup bypassed an actually held native account lock');
+   }else if(name==='cross-context-recovery'){
+    const frame=document.createElement('iframe');frame.src='/?phase=worker';
+    let ready!:()=>void,done!:()=>void,started!:()=>void,enter!:()=>void,unblock!:()=>void;
+    const readyPromise=new Promise<void>(r=>ready=r),donePromise=new Promise<void>(r=>done=r),startedPromise=new Promise<void>(r=>started=r),entered=new Promise<void>(r=>enter=r),gate=new Promise<void>(r=>unblock=r);
+    let childError:string|undefined;
+    const listener=(event:MessageEvent)=>{if(event.source!==frame.contentWindow)return;const d=event.data;if(d.type==='ready')ready();if(d.type==='started')started();if(d.type==='auth'){authCalls++;if(d.owner.owner!==a||d.owner.generation!=='auth-'+a)childError='Wrong child auth owner';}if(d.type==='done'){childError ||= d.error;done();}};
+    window.addEventListener('message',listener);document.body.append(frame);
+    try{await readyPromise;const first=resumeAccountLocalDeletion(receipt,async owner=>{await auth(owner);enter();await gate;});await entered;
+     frame.contentWindow!.postMessage({type:'resume',receipt},location.origin);await startedPromise;await delay(100);unblock();await first;await donePromise;assert(!childError,'Separate context recovery failed: '+childError);
+    }finally{unblock();window.removeEventListener('message',listener);frame.remove();}
    }else await Promise.all([resumeAccountLocalDeletion(receipt,auth),resumeAccountLocalDeletion(receipt,auth)]);
    assert(authCalls===1,'Concurrent recovery repeated auth participant: '+authCalls);assert(!accountHeldDuringAuth,'Account lifecycle lock held during async auth participant');
    assert(readAccountDeletionReceipt(a)?.phase==='complete','Cleanup not durably complete');assert(localStorage.getItem(aKey)===null&&localStorage.getItem(bKey)==='B private','Wrong account local cleanup');assert(accountScope.capture().accountId===b,'Recovery changed current B account');
@@ -36,4 +46,9 @@ async function run(){
  }
  return {pass:cases.every(c=>c.pass),cases,...(initial?{checkpoint}:{}),scope:'Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim'};
 }
-run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));
+if(new URLSearchParams(location.search).get('phase')==='worker'){
+ window.addEventListener('message',async event=>{if(event.source!==parent||event.origin!==location.origin||event.data.type!=='resume')return;
+ parent.postMessage({type:'started'},location.origin);
+ try{await resumeAccountLocalDeletion(event.data.receipt,async owner=>{parent.postMessage({type:'auth',owner},location.origin);});parent.postMessage({type:'done'},location.origin);}catch(error){parent.postMessage({type:'done',error:String(error)},location.origin);}
+ });parent.postMessage({type:'ready'},location.origin);
+}else run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));

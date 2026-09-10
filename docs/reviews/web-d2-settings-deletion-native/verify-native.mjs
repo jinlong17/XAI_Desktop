@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const requestedRef = process.argv[2];
+const suffix = process.argv[3] || '';
+if (suffix && !/^[a-z0-9-]+$/.test(suffix)) throw new Error('Invalid evidence suffix');
 if (!requestedRef) throw new Error('Usage: node verify-native.mjs <fixed-git-revision>');
 const revision = execFileSync('git', ['rev-parse', `${requestedRef}^{commit}`], { cwd: root, encoding: 'utf8' }).trim();
 const temporary = mkdtempSync(join(tmpdir(), 'xai-tasks-ui-reopen-'));
@@ -113,7 +115,7 @@ try {
     outcome = {pass:before.pass && after.pass,firstPid,reopenedPid:browser.pid,termination:'SIGTERM with observed process exit; no SIGKILL fallback',before,after};
   }
   const report = { requestedRef, revision, source: 'git archive with pinned @repo package imports', profile: 'isolated temporary Chrome profile', ...outcome };
-  writeFileSync(new URL(`./native-${revision.slice(0,7)}.json`, import.meta.url), JSON.stringify(report, null, 2) + "\n");
+  writeFileSync(new URL(`./native-${revision.slice(0,7)}${suffix ? `-${suffix}` : ''}.json`, import.meta.url), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify(report, null, 2));
   if (!outcome.pass) process.exitCode = 1;
 } finally {
