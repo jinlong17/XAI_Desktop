@@ -1,0 +1,10 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {PomodoroModule} from './packages/plugin-web-pomodoro/src/PomodoroModule';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+const defaults={preset:'focus-25',custom_minutes:45,display_style:'apple',theme:'coral',sound:'soft-chime',muted:false};
+for(const [suffix,value] of Object.entries(defaults))localStorage.setItem('xai_pref_pomodoro_'+suffix,JSON.stringify(value));
+const nativeSet=Storage.prototype.setItem;
+(window as any).verify={deny(){Storage.prototype.setItem=function(k,v){if(k==='xai_pref_pomodoro_theme')throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},restore(){Storage.prototype.setItem=nativeSet}};
+createRoot(document.getElementById('app')!).render(<PomodoroModule lang="en"/>);

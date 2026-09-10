@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"6981111","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-six-choice-export","pass":true,"data":{"version":1,"kind":"pomodoro-preference-draft","values":{"preset":"focus-25","customMinutes":45,"displayStyle":"apple","theme":"violet","sound":"soft-chime","muted":false}},"themeRaw":"\"violet\"","scope":"Actual disk download and latest preference retry, no account marker, no timer session or process-reopen claim"}
