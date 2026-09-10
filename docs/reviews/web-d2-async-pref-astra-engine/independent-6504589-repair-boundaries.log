@@ -1,0 +1,18 @@
+INDEPENDENT ASTRA product=650458908342013acffd7a43fc5161f7d687fea2 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-3jc_ortd test_sha256=dd1560de7e743f1d08801bc21b95e55a9adf03fdb2d7da395516fb475b421f7e
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-3jc_ortd/packages/plugin-web-storage
+
+ ✓ src/__tests__/astraEngine.test.ts > registered default validation cannot be bypassed by the new dynamic-absence flag 2ms
+ ✓ src/__tests__/astraEngine.test.ts > throwing default validator resolves typed refusal instead of escaping the new prevalidation boundary 0ms
+ ✓ src/__tests__/astraEngine.test.ts > registered same-codec autosave reset publishes its validated registry default to the same-key subscriber 1ms
+ ✓ src/__tests__/astraEngine.test.ts > open-ended string codec refuses object input rather than coercing the public generic value 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: legitimate registered string/boolean and dynamic JSON create/reset still work 1ms
+ ✓ src/__tests__/astraEngine.test.ts > control: observed external replacement clears uncertain attribution and stale raw-baseline retry refuses 1ms
+ ✓ src/__tests__/astraEngine.test.ts > control: uncertain reconciliation checks generation admission and publishes only once on valid same-owner retry 1ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  19:54:35
+   Duration  1.10s (transform 97ms, setup 0ms, collect 117ms, tests 6ms, environment 420ms, prepare 104ms)
+
+EXIT_CODE=0
