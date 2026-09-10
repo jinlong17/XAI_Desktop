@@ -12,6 +12,14 @@ const dir = mkdtempSync(join(tmpdir(), 'xai-astra-tasks-d1-'));
 try {
  execFileSync('tar', ['-x', '-C', dir], { input: execFileSync('git', ['archive', revision], { cwd: root, maxBuffer: 100 * 1024 * 1024 }) });
  symlinkSync(join(root, 'node_modules'), join(dir, 'node_modules'));
+ // Explicit test-only integration overlay. Product sources remain the pinned archive.
+ const testOverlay = process.env.ASTRA_TASKS_LOCK_FIXTURE === '1';
+ const fixturePaths = ['packages/xai-web-tasks/vitest.setup.ts','packages/xai-web-tasks/src/__tests__/webLocksHarness.ts','packages/xai-web-tasks/src/__tests__/canonicalSubscriberHarness.ts','packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx'];
+ // Independent assertions also use this named-lock helper on older archives.
+ const helper = 'packages/xai-web-tasks/src/__tests__/webLocksHarness.ts';
+ copyFileSync(join(root,helper),join(dir,helper));
+ if (testOverlay) for (const path of fixturePaths) copyFileSync(join(root,path),join(dir,path));
+
  const aliases = [];
  for (const name of readdirSync(join(dir, 'packages'))) {
   const folder = join(dir, 'packages', name);
@@ -35,7 +43,7 @@ try {
   const result = spawnSync(join(root,'packages/plugin-web-board-workspaces/node_modules/.bin/vitest'), ['run','--config',config], {cwd:suiteRoot,encoding:'utf8',maxBuffer:20*1024*1024});
   if (result.error) throw result.error;
   if (result.status !== 0) process.exitCode = result.status ?? 1;
-  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
+  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\nreviewLockHelper=packages/xai-web-tasks/src/__tests__/webLocksHarness.ts\ntestOnlyOverlay=${testOverlay ? fixturePaths.join(",") : "none"}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
   console.log(name, 'exit='+result.status, result.stdout.slice(-1600));
  }
 } finally { rmSync(dir, {recursive:true,force:true}); }

@@ -1,3 +1,4 @@
+import { createTestLockManager } from "./src/__tests__/webLocksHarness.js";
 import {
   accountScope,
   generationMarkerKey,
@@ -50,15 +51,6 @@ beforeAccountTest(() => {
     previous: null,
   }));
   setCanonicalCommandActivationForTests(true);
-  let tail = Promise.resolve();
-  vi.stubGlobal("navigator", {
-    locks: {
-      request: vi.fn(<T>(_name: string, callback: () => Promise<T>): Promise<T> => {
-        const result = tail.then(callback);
-        tail = result.then(() => undefined, () => undefined);
-        return result;
-      }),
-    },
-  });
+  vi.stubGlobal("navigator", { locks: createTestLockManager() });
   void scope;
 });

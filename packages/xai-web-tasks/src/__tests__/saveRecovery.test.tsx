@@ -1,3 +1,4 @@
+import { createTestLockManager } from "./webLocksHarness.js";
 import React from 'react';
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
@@ -58,7 +59,7 @@ describe('Tasks recoverable writes',()=>{
  it('does not let an old queued detail deletion close a newer detail session',async()=>{
   render(<TasksModule lang="en"/>);await waitFor(()=>expect(localStorage.getItem(key('xai_task_cols'))).not.toBeNull());
   const cards=Array.from(document.querySelectorAll('.task-card')) as HTMLElement[];fireEvent.click(cards[0]!);const firstTitle=(within(screen.getByLabelText('Task details')).getByLabelText('Title') as HTMLInputElement).value;
-  let release!:()=>void;vi.stubGlobal('navigator',{locks:{request:vi.fn(<T,>(_name:string,callback:()=>Promise<T>)=>new Promise<T>(resolve=>{release=()=>{void callback().then(resolve);};}))}});
+  let release!:()=>void;vi.stubGlobal('navigator',{locks:createTestLockManager((_name,callback)=>new Promise(resolve=>{release=()=>{void Promise.resolve(callback()).then(resolve);};}))});
   fireEvent.click(within(screen.getByLabelText('Task details')).getByRole('button',{name:'Delete'}));
   fireEvent.click(within(screen.getByLabelText('Task details')).getByRole('button',{name:'Close'}));fireEvent.click(cards[1]!);
   const newerPanel=screen.getByLabelText('Task details');const newerTitle=(within(newerPanel).getByLabelText('Title') as HTMLInputElement).value;expect(newerTitle).not.toBe(firstTitle);
@@ -76,7 +77,7 @@ describe('Tasks recoverable writes',()=>{
  it('keeps a newer selection and detail session when an older bulk delete completes',async()=>{
   localStorage.setItem(key('xai_task_cols'),envelope());render(<TasksModule lang="en"/>);
   fireEvent.click(screen.getAllByRole('checkbox',{name:'Select task'})[0]!);fireEvent.click(document.querySelectorAll('.task-card')[0]!);
-  let release!:()=>void;vi.stubGlobal('navigator',{locks:{request:vi.fn(<T,>(_name:string,callback:()=>Promise<T>)=>new Promise<T>(resolve=>{release=()=>{void callback().then(resolve);};}))}});
+  let release!:()=>void;vi.stubGlobal('navigator',{locks:createTestLockManager((_name,callback)=>new Promise(resolve=>{release=()=>{void Promise.resolve(callback()).then(resolve);};}))});
   fireEvent.click(within(screen.getByRole('region',{name:'Bulk actions'})).getByRole('button',{name:'Delete'}));fireEvent.click(within(screen.getByLabelText('Task details')).getByRole('button',{name:'Close'}));fireEvent.click(within(screen.getByRole('region',{name:'Bulk actions'})).getByRole('button',{name:'Clear'}));
   fireEvent.click(screen.getAllByRole('checkbox',{name:'Select task'})[1]!);fireEvent.click(document.querySelectorAll('.task-card')[1]!);release();await act(async()=>{});
   expect(storedRows().map(task=>task.id)).toEqual(['t2']);expect(screen.getByLabelText('Task details')).toBeTruthy();expect(screen.getByRole('region',{name:'Bulk actions'})).toBeTruthy();
@@ -95,6 +96,6 @@ describe('Tasks recoverable writes',()=>{
  });
  it('does not overwrite a newer explicit completion edit when an older save resolves',async()=>{
   const completed={...row('t1','Completed'),done:true,completedAt:'2026-09-09T19:00:00.000Z'};localStorage.setItem(key('xai_task_cols'),envelope([completed]));render(<TasksModule lang="en"/>);fireEvent.click(document.querySelector('.task-card')!);const panel=screen.getByLabelText('Task details');const checkbox=within(panel).getByLabelText('Mark complete');
-  let release!:()=>void;vi.stubGlobal('navigator',{locks:{request:vi.fn(<T,>(_name:string,callback:()=>Promise<T>)=>new Promise<T>(resolve=>{release=()=>{void callback().then(resolve);};}))}});fireEvent.click(within(panel).getByRole('button',{name:'Save'}));fireEvent.click(checkbox);expect(checkbox).not.toBeChecked();release();await waitFor(()=>expect(within(panel).getByRole('button',{name:'Save'})).not.toBeDisabled());expect(checkbox).not.toBeChecked();
+  let release!:()=>void;vi.stubGlobal('navigator',{locks:createTestLockManager((_name,callback)=>new Promise(resolve=>{release=()=>{void Promise.resolve(callback()).then(resolve);};}))});fireEvent.click(within(panel).getByRole('button',{name:'Save'}));fireEvent.click(checkbox);expect(checkbox).not.toBeChecked();release();await waitFor(()=>expect(within(panel).getByRole('button',{name:'Save'})).not.toBeDisabled());expect(checkbox).not.toBeChecked();
  });
 });

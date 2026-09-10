@@ -1,3 +1,4 @@
+import { createTestLockManager } from "./webLocksHarness.js";
 import { act } from "@testing-library/react";
 import { vi } from "vitest";
 import {
@@ -6,7 +7,7 @@ import {
   setCanonicalCommandActivationForTests,
 } from "@repo/plugin-web-storage";
 
-let lockTail: Promise<void> = Promise.resolve();
+let locks = createTestLockManager();
 
 export function enableCanonicalSubscriberTests(): void {
   const scope = accountScope.capture();
@@ -16,16 +17,8 @@ export function enableCanonicalSubscriberTests(): void {
     previous: null,
   }));
   setCanonicalCommandActivationForTests(true);
-  lockTail = Promise.resolve();
-  vi.stubGlobal("navigator", {
-    locks: {
-      request: vi.fn(<T>(_name: string, callback: () => Promise<T>): Promise<T> => {
-        const result = lockTail.then(callback);
-        lockTail = result.then(() => undefined, () => undefined);
-        return result;
-      }),
-    },
-  });
+  locks = createTestLockManager();
+  vi.stubGlobal("navigator", { locks });
 }
 
 export function disableCanonicalSubscriberTests(): void {
@@ -35,7 +28,7 @@ export function disableCanonicalSubscriberTests(): void {
 
 export async function settleCanonicalCommands(): Promise<void> {
   await act(async () => {
-    await lockTail;
+    await locks.idle();
     await Promise.resolve();
   });
 }

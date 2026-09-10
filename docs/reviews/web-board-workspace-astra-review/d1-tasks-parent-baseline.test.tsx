@@ -1,3 +1,4 @@
+import { createTestLockManager } from "../../../packages/xai-web-tasks/src/__tests__/webLocksHarness.js";
 import React from 'react';
 import {beforeEach,afterEach,it,expect,vi} from 'vitest';
 import {render,fireEvent,act,waitFor,cleanup,screen} from '@testing-library/react';
@@ -15,7 +16,7 @@ const checkbox=()=>document.querySelector('.cbx') as HTMLElement;
 beforeEach(()=>{
  localStorage.clear();accountScope.activate(accountScope.lock('tasks-ui'),'g1');localStorage.setItem(generationMarkerKey('tasks-ui'),JSON.stringify({generation:'g1',migrationId:'test',previous:null}));
  setCanonicalCommandActivationForTests(true);vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date(2026,8,9,12));
- vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>Promise<unknown>)=>run()}});
+ vi.stubGlobal('navigator',{locks:createTestLockManager()});
 });
 afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();vi.unstubAllGlobals();setCanonicalCommandActivationForTests(false);});
 it('real checkbox persists completion and preserves existing durable receipts',async()=>{
@@ -25,7 +26,7 @@ it('real checkbox persists completion and preserves existing durable receipts',a
 });
 it('queued checkbox refuses a changed target without overwriting newer external bytes',async()=>{
  localStorage.setItem(key(),envelope());render(<TasksModule lang="en"/>);await act(async()=>{});
- let release!:()=>void;const gate=new Promise<void>(r=>release=r);vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>Promise<unknown>)=>{await gate;return run();}}});
+ let release!:()=>void;const gate=new Promise<void>(r=>release=r);vi.stubGlobal('navigator',{locks:createTestLockManager(async(_name,run)=>{await gate;return run();})});
  fireEvent.click(checkbox());const newer=envelope('External newer title',false,7);localStorage.setItem(key(),newer);
  await act(async()=>{release();await gate;});await act(async()=>{});
  console.log('queued-target',JSON.stringify({preserved:localStorage.getItem(key())===newer}));
@@ -33,7 +34,7 @@ it('queued checkbox refuses a changed target without overwriting newer external 
 });
 it('queued checkbox never drops an unrelated externally added task',async()=>{
  localStorage.setItem(key(),envelope());render(<TasksModule lang="en"/>);await act(async()=>{});
- let release!:()=>void;const gate=new Promise<void>(r=>release=r);vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>Promise<unknown>)=>{await gate;return run();}}});
+ let release!:()=>void;const gate=new Promise<void>(r=>release=r);vi.stubGlobal('navigator',{locks:createTestLockManager(async(_name,run)=>{await gate;return run();})});
  fireEvent.click(checkbox());localStorage.setItem(key(),envelope('Original',true,7));await act(async()=>{release();await gate;});await act(async()=>{});
  expect(data().data.flatMap((c:any)=>c.tasks).map((t:any)=>t.id)).toContain('external');expect(data().receipts).toEqual({original:receipt});
 });
