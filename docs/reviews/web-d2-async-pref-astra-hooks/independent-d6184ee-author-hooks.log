@@ -1,0 +1,20 @@
+Independent Astra execution; product=d6184ee24eb1f72d826fc3548e4099845e5c628b; archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-hooks-package-q4ewvmtu; original package source/tests, no overlay
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-hooks-package-q4ewvmtu/packages/plugin-web-storage
+
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > serializes independent functional hooks against the latest persisted value 12ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > hides an A draft in B and old completion cannot affect the B session 9ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > invalidates queued work on unmount and a same-key remount stays independent 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > orders pending edit, reset, and newer edit and only the latest becomes Saved 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > does not revert a newer visible draft when its predecessor commits 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > shares an active retry attempt and performs one physical write 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > adopts a clean storage event but preserves a pending draft as a conflict 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > projects a verified same-tab save into a clean sibling hook 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > retries an engine-attributed uncertain commit without a second write or false conflict 2ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  20:07:03
+   Duration  660ms (transform 83ms, setup 0ms, collect 121ms, tests 33ms, environment 244ms, prepare 81ms)
+
+EXIT_CODE=0

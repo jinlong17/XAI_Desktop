@@ -1,0 +1,34 @@
+INDEPENDENT ASTRA product=d6184ee24eb1f72d826fc3548e4099845e5c628b archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-3odojsx6 test_sha256=261d5bede7033c2cd5978d25fc86c4398bf7459aeb5e5b5c0e8a755808390557
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-3odojsx6/packages/plugin-web-storage
+
+stdout | src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted
+after-two-successful-functional-writes {"physical":"167","a":{"value":165,"status":"conflict","error":"conflict"},"b":{"value":167,"status":"saved","error":null}}
+after-clean-physical-storage-change {"physical":"170","a":{"value":165,"status":"conflict"},"b":{"value":170,"status":"idle"}}
+
+ × src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted 20ms
+   → expected 165 to be 170 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted
+AssertionError: expected 165 to be 170 // Object.is equality
+
+- Expected
++ Received
+
+- 170
++ 165
+
+ ❯ src/__tests__/astraHooks.test.tsx:25:665
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  20:07:02
+   Duration  1.09s (transform 89ms, setup 0ms, collect 131ms, tests 20ms, environment 630ms, prepare 94ms)
+
+EXIT_CODE=1

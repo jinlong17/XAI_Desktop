@@ -1,0 +1,115 @@
+INDEPENDENT ASTRA product=d6184ee24eb1f72d826fc3548e4099845e5c628b archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-lqcii97t test_sha256=da15f8f94fc583ade4a14cdd49212ad2dd7d180799c0f9cfd57e5296e7aa8da0
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-lqcii97t/packages/plugin-web-storage
+
+ × src/__tests__/astraHooks.test.tsx > reset failure preserves the latest clean externally projected value rather than resurrecting a stale local draft 19ms
+   → expected 'view' to be 'edit' // Object.is equality
+ × src/__tests__/astraHooks.test.tsx > reset then failed save cannot resurrect the discarded draft during the next pending session 3ms
+   → expected 'view' to be 'comment' // Object.is equality
+ × src/__tests__/astraHooks.test.tsx > registered hook default projection uses the registered domain guard even when no caller validator is supplied 2ms
+   → expected 'valid' to be 'invalid' // Object.is equality
+ × src/__tests__/astraHooks.test.tsx > a validator exception on an edit resolves a typed invalid outcome rather than escaping the hook API 2ms
+   → expected Error: domain validator failed to be undefined
+ × src/__tests__/astraHooks.test.tsx > device async hook retains its pending operation across account switch without acquiring an account lock 4ms
+   → expected { ok: false, reason: 'invalid', …(2) } to match object { ok: true }
+(3 matching properties omitted from actual)
+ ✓ src/__tests__/astraHooks.test.tsx > control: queued owner switch cancels account work and same-key remount remains independent 2ms
+ × src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted 2ms
+   → expected 165 to be 170 // Object.is equality
+ ✓ src/__tests__/astraHooks.test.tsx > control: uncertain reset retains its token for duplicate retry and notifies the clean sibling without another remove 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > control: failed draft keeps original baseline through external conflict and explicit reload adopts current bytes 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > reset failure preserves the latest clean externally projected value rather than resurrecting a stale local draft
+AssertionError: expected 'view' to be 'edit' // Object.is equality
+
+Expected: "edit"
+Received: "view"
+
+ ❯ src/__tests__/astraHooks.test.tsx:28:111
+     26|  const native=Storage.prototype.removeItem;vi.spyOn(Storage.prototype,…
+     27|  await act(async()=>{expect(await h.value.reset()).toMatchObject({ok:f…
+     28|  expect(localStorage.getItem(p)).toBe('edit');expect(h.value.meta.stat…
+       |                                                                                                               ^
+     29| });
+     30| it('reset then failed save cannot resurrect the discarded draft during…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > reset then failed save cannot resurrect the discarded draft during the next pending session
+AssertionError: expected 'view' to be 'comment' // Object.is equality
+
+Expected: "comment"
+Received: "view"
+
+ ❯ src/__tests__/astraHooks.test.tsx:34:118
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > registered hook default projection uses the registered domain guard even when no caller validator is supplied
+AssertionError: expected 'valid' to be 'invalid' // Object.is equality
+
+Expected: "invalid"
+Received: "valid"
+
+ ❯ src/__tests__/astraHooks.test.tsx:37:119
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > a validator exception on an edit resolves a typed invalid outcome rather than escaping the hook API
+AssertionError: expected Error: domain validator failed to be undefined
+
+- Expected: 
+undefined
+
++ Received: 
+Error {
+  "message": "domain validator failed",
+}
+
+ ❯ src/__tests__/astraHooks.test.tsx:42:17
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > device async hook retains its pending operation across account switch without acquiring an account lock
+AssertionError: expected { ok: false, reason: 'invalid', …(2) } to match object { ok: true }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
++   "ok": false,
+  }
+
+ ❯ src/__tests__/astraHooks.test.tsx:47:17
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/__tests__/astraHooks.test.tsx > control: functional hooks update latest persisted data once each and stale storage event payload is not trusted
+AssertionError: expected 165 to be 170 // Object.is equality
+
+- Expected
++ Received
+
+- 170
++ 165
+
+ ❯ src/__tests__/astraHooks.test.tsx:54:226
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  20:05:34
+   Duration  1.03s (transform 91ms, setup 0ms, collect 133ms, tests 39ms, environment 451ms, prepare 73ms)
+
+EXIT_CODE=1
