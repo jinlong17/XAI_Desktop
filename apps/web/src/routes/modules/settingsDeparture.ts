@@ -1,16 +1,22 @@
-/** Narrow host delegate for the currently mounted composed Settings pane. */
-export type SettingsDepartureReason = "sign-out";
-export interface SettingsDepartureDelegate {
-  readonly requestDeparture: (reason: SettingsDepartureReason) => Promise<boolean>;
+/** Narrow host delegate for the currently mounted guarded Web module. */
+export type DepartureReason = "sign-out";
+export interface DepartureDelegate {
+  readonly requestDeparture: (reason: DepartureReason) => Promise<boolean>;
 }
 
-let current: SettingsDepartureDelegate | null = null;
+let current: DepartureDelegate | null = null;
 
-export function registerSettingsDepartureDelegate(delegate: SettingsDepartureDelegate): () => void {
+export function registerDepartureDelegate(delegate: DepartureDelegate): () => void {
   current = delegate;
   return () => { if (current === delegate) current = null; };
 }
 
-export function requestSettingsDeparture(reason: SettingsDepartureReason): Promise<boolean> {
+export function requestDeparture(reason: DepartureReason): Promise<boolean> {
   return current ? current.requestDeparture(reason) : Promise.resolve(true);
 }
+
+/** Compatibility names retained for App and existing independent test seams. */
+export type SettingsDepartureReason = DepartureReason;
+export type SettingsDepartureDelegate = DepartureDelegate;
+export const registerSettingsDepartureDelegate = registerDepartureDelegate;
+export const requestSettingsDeparture = requestDeparture;

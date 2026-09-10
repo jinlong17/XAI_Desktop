@@ -13,12 +13,13 @@ import React, { useCallback, useEffect, useMemo, useState, useRef } from "react"
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { usePref, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
-import type { PomodoroSession, PomodoroMode } from "./types.js";
+import type { PomodoroSession, PomodoroMode, PomodoroDepartureGuardRegistration } from "./types.js";
 import { isPomodoroSession } from "./internal/validate.js";
 import { nextMode } from "./internal/nextMode.js";
 import { formatDuration } from "./internal/formatDuration.js";
 import { notifySessionEnd } from "./internal/notifications.js";
 import { useTimerTick } from "./internal/useTimerTick.js";
+import { usePreferenceDepartureRecovery } from "./internal/usePreferenceDepartureRecovery.js";
 import { TimerRing } from "./TimerRing.js";
 import { PomodoroOverview } from "./PomodoroOverview.js";
 import { FocusRecordList } from "./FocusRecordList.js";
@@ -35,6 +36,8 @@ import {
 export interface PomodoroModuleProps {
   /** Active language. Drives useI18n bundle. */
   lang: Lang;
+  /** Optional Web-host bridge for route/sign-out protection of preference drafts. */
+  registerDepartureGuard?: PomodoroDepartureGuardRegistration;
 }
 
 const DISPLAY_STYLE_IDS = [
@@ -185,7 +188,7 @@ function playPromptSound(soundId: PomodoroSoundId, muted: boolean) {
   }
 }
 
-export function PomodoroModule({ lang }: PomodoroModuleProps) {
+export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleProps) {
   const { t } = useI18n(lang);
 
   // ---- Persistence: usePref with boundary validation ----------------------
@@ -219,13 +222,44 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const [focusControlsVisible, setFocusControlsVisible] = useState(false);
 
   const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
-  const preferencesUnsaved = preferenceSaves.some(result => result.meta.pending || result.meta.status === "error" || result.meta.status === "conflict");
   const preferenceSourceProblem = preferenceSaves.some(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
-  const conflictingPreferenceSaves = preferenceSaves.filter(result => result.meta.status === "conflict");
   const sourcePreferenceSaves = preferenceSaves.filter(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
-  const [preferenceExportFailed, setPreferenceExportFailed] = useState(false);
+  const preferenceRecovery = usePreferenceDepartureRecovery({
+    lang,
+    registerDepartureGuard,
+    snapshot: { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted },
+    validateSnapshot: (values) => isPresetId(values.preset)
+      && typeof values.customMinutes === "number"
+      && Number.isFinite(values.customMinutes)
+      && values.customMinutes >= 1
+      && values.customMinutes <= 180
+      && isDisplayStyle(values.displayStyle)
+      && isThemeId(values.theme)
+      && isSoundId(values.sound)
+      && typeof values.muted === "boolean",
+  });
+  const { edit: editPreference } = preferenceRecovery;
+
+  const editPreset = useCallback((value: PomodoroPresetId) => editPreference(
+    "preset", value, presetSave.edit, presetSave.retry, presetSave.meta.reload,
+  ), [editPreference, presetSave.edit, presetSave.meta.reload, presetSave.retry]);
+  const editMinutes = useCallback((value: number) => editPreference(
+    "customMinutes", value, minutesSave.edit, minutesSave.retry, minutesSave.meta.reload,
+  ), [editPreference, minutesSave.edit, minutesSave.meta.reload, minutesSave.retry]);
+  const editStyle = useCallback((value: PomodoroDisplayStyle) => editPreference(
+    "displayStyle", value, styleSave.edit, styleSave.retry, styleSave.meta.reload,
+  ), [editPreference, styleSave.edit, styleSave.meta.reload, styleSave.retry]);
+  const editTheme = useCallback((value: PomodoroThemeId) => editPreference(
+    "theme", value, themeSave.edit, themeSave.retry, themeSave.meta.reload,
+  ), [editPreference, themeSave.edit, themeSave.meta.reload, themeSave.retry]);
+  const editSound = useCallback((value: PomodoroSoundId) => editPreference(
+    "sound", value, soundSave.edit, soundSave.retry, soundSave.meta.reload,
+  ), [editPreference, soundSave.edit, soundSave.meta.reload, soundSave.retry]);
+  const editMuted = useCallback((value: boolean) => editPreference(
+    "muted", value, mutedSave.edit, mutedSave.retry, mutedSave.meta.reload,
+  ), [editPreference, mutedSave.edit, mutedSave.meta.reload, mutedSave.retry]);
 
   // ---- Emit dedup guard (StrictMode double-mount safe) --------------------
 
@@ -275,7 +309,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       completedFocusCountRef.current;
     const nextModeValue = nextMode(mode, focusCountAfter);
     const nextPreset = defaultPresetForMode(nextModeValue);
-    void presetSave.edit(nextPreset.id);
+    void editPreset(nextPreset.id);
     setCompletionNotice(
       lang === "zh"
         ? `${modeLabelFor(mode)}完成，已切换到${modeLabelFor(nextModeValue)}。`
@@ -360,7 +394,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   }
 
   function handlePresetClick(presetId: PomodoroPresetId) {
-    void presetSave.edit(presetId);
+    void editPreset(presetId);
     setCompletionNotice(null);
     const preset = presetForId(presetId);
     const mode = preset?.mode ?? "focus";
@@ -372,8 +406,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   function handleCustomMinutesChange(value: number) {
     const nextMinutesValue = clampCustomMinutes(value);
-    void minutesSave.edit(nextMinutesValue);
-    void presetSave.edit("custom");
+    void editMinutes(nextMinutesValue);
+    void editPreset("custom");
     setCompletionNotice(null);
     if (timerState.kind === "idle") {
       reset("focus", minutesToMs(nextMinutesValue));
@@ -481,22 +515,15 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       data-running={isRunning ? "true" : "false"}
       style={moduleStyle}
     >
-      {preferencesUnsaved && <section role="alert" className="pomo-notice pomo-recovery">
+      {preferenceRecovery.hasDrafts && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
-        <button type="button" onClick={() => { preferenceSaves.filter(result => (result.meta.status === "error" || result.meta.status === "conflict") && result.meta.source !== "invalid" && result.meta.source !== "unavailable").forEach(result => { void result.retry(); }); }}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
-        {conflictingPreferenceSaves.length > 0 && <button type="button" onClick={() => { conflictingPreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>}
-        {preferenceSourceProblem && <button type="button" onClick={() => { sourcePreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>}
-        <button type="button" onClick={() => {
-          try {
-            const values = { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted };
-            const blob = new Blob([JSON.stringify({ version: 1, kind: "pomodoro-preference-draft", values }, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
-            anchor.href = url; anchor.download = "pomodoro-preferences.json";
-            document.body.appendChild(anchor); anchor.click(); anchor.remove();
-            setTimeout(() => URL.revokeObjectURL(url), 1000); setPreferenceExportFailed(false);
-          } catch { setPreferenceExportFailed(true); }
-        }}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
-        {preferenceExportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
+        <button type="button" onClick={preferenceRecovery.retryDrafts}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
+        <button type="button" onClick={preferenceRecovery.discardDrafts}>{lang === "zh" ? "丢弃当前偏好草稿" : "Discard current preference drafts"}</button>
+        <button type="button" onClick={() => preferenceRecovery.exportDraft()}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
+        {preferenceRecovery.exportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
+      </section>}
+      {preferenceSourceProblem && !preferenceRecovery.hasDrafts && <section className="pomo-source-recovery">
+        <button type="button" onClick={() => { sourcePreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>
       </section>}
       {timerTick.conflict && <p role="status" className="pomo-notice">{lang === "zh" ? "计时已在其他标签页更改，现已刷新。请检查当前状态后重新操作。" : "The timer changed in another tab and has been refreshed. Review its current state before choosing an action."}</p>}
       {timerTick.error && <section role="alert" className="pomo-notice pomo-recovery">
@@ -535,7 +562,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 ? "静音"
                 : "Mute"
           }
-          onClick={() => { const next = !mutedRef.current; mutedRef.current = next; void mutedSave.edit(next); }}
+          onClick={() => { const next = !mutedRef.current; mutedRef.current = next; void editMuted(next); }}
           data-testid="mute-btn"
         >
           {muted ? <IconSoundOff /> : <IconSound />}
@@ -756,7 +783,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     className={`pomo-style-btn${displayStyle === id ? " active" : ""}`}
                     aria-pressed={displayStyle === id}
                     data-testid={`style-${id}`}
-                    onClick={() => { void styleSave.edit(id); }}
+                    onClick={() => { void editStyle(id); }}
                   >
                     {label(lang, DISPLAY_STYLE_LABELS[id])}
                   </button>
@@ -776,7 +803,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     aria-label={label(lang, theme.label)}
                     aria-pressed={themeId === theme.id}
                     data-testid={`theme-${theme.id}`}
-                    onClick={() => { void themeSave.edit(theme.id); }}
+                    onClick={() => { void editTheme(theme.id); }}
                   />
                 ))}
               </div>
@@ -790,7 +817,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                   value={soundId}
                   aria-label={lang === "zh" ? "选择提示音" : "Select alert sound"}
                   data-testid="sound-select"
-                  onChange={(event) => { const next = event.target.value; if (isSoundId(next)) void soundSave.edit(next); }}
+                  onChange={(event) => { const next = event.target.value; if (isSoundId(next)) void editSound(next); }}
                 >
                   {SOUND_CHOICES.map((sound) => (
                     <option key={sound.id} value={sound.id}>

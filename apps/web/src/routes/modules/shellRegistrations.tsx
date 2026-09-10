@@ -24,7 +24,7 @@ import { tasksWebModuleRegistration } from "@repo/plugin-web-tasks";
 // xai-web-habits row #15
 import { habitsSlotRegistration } from "@repo/plugin-web-habits";
 // xai-web-pomodoro row #14
-import { pomodoroWebModuleRegistration } from "@repo/plugin-web-pomodoro";
+import { pomodoroRegistration } from "./pomodoroRegistration.js";
 // xai-web-time-tracker · Claude Design Time Tracker merge
 import { timeTrackerWebModuleRegistration } from "@repo/plugin-web-time-tracker";
 // xai-web-bookkeeping · Cloud Design bookkeeping module merge
@@ -73,7 +73,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   withDisabledFallback(dashboardGridSlotRegistration, "dashboard"),  // row #10
   withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
   withDisabledFallback(matrixSlotRegistration, "matrix"),
-  withDisabledFallback(pomodoroWebModuleRegistration, "pomodoro"),
+  withDisabledFallback(pomodoroRegistration, "pomodoro"),
   timeTrackerWebModuleRegistration,  // not toggleable in Settings V1; mirrors Claude Design rail item
   bookkeepingWebModuleRegistration,  // not toggleable in Settings V1; Cloud Design bookkeeping module
   metricTrackerWebModuleRegistration,  // not toggleable in Settings V1; metric tracker V1

@@ -8,6 +8,20 @@
 /** The three modes of a Pomodoro session. */
 export type PomodoroMode = "focus" | "short-break" | "long-break";
 
+/** Optional host capability for protecting submitted preference drafts. */
+export interface PomodoroDepartureGuard {
+  readonly token: object;
+  readonly label?: string;
+  readonly isBlocking: () => boolean;
+  readonly isCurrent: () => boolean;
+  readonly exportDraft: () => void;
+  readonly discardDraft: () => void;
+}
+
+export type PomodoroDepartureGuardRegistration = (
+  guard: PomodoroDepartureGuard,
+) => () => void;
+
 /**
  * A completed or partial Pomodoro session record.
  *

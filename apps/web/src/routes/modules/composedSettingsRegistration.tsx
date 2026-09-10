@@ -21,7 +21,7 @@ import { SectionBlock } from "@repo/plugin-web-settings-shell";
 import type { Pane, SettingsPaneId } from "@repo/plugin-web-settings-shell";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { composeSettingsPaneRegistry } from "./settingsPaneComposition.js";
-import { registerSettingsDepartureDelegate } from "./settingsDeparture.js";
+import { registerDepartureDelegate } from "./settingsDeparture.js";
 import { DepartureCoordinator } from "./departureCoordinator.js";
 
 // ---- ComposedSettingsModule -------------------------------------------------
@@ -75,7 +75,7 @@ function ComposedSettingsModule(): React.ReactElement {
   return (
     <div className="module module-settings">
       <div className="settings-shell panel">
-        <DepartureCoordinator lang={lang} registerSignOutDelegate={registerSettingsDepartureDelegate}>
+        <DepartureCoordinator lang={lang} registerSignOutDelegate={registerDepartureDelegate}>
           {({ registerDepartureGuard, isDeparturePending }) => (
             <>
               <aside className="settings-sidebar">

@@ -2,7 +2,11 @@
 
 ## Preference save recovery — 2026-09-09
 
-The six device-local preferences (preset, custom minutes, display style, theme, sound and mute) consume autosave results. Failed writes keep the selected value active in the current page and display an unsaved notice, retry and a current-values JSON download. Retry only writes preferences currently marked unsaved. This recovery surface is separate from durable session settlement; it does not rewrite session or history records. Export is a manual preference draft, not a cloud backup or import contract. Other autosave consumers need their own UI integration.
+The six device-local preferences (preset, custom minutes, display style, theme, sound and mute) consume autosave results. Every valid explicit edit owns an independent latest-draft identity from submission until its matching write verifies. Failed, pending, conflicting and uncertain writes keep the selected value active and expose retry, targeted discard and a current-values JSON download. Retry preserves the failed hook operation and only retries fields with current drafts; an older equal-value success cannot clear a newer failed intent.
+
+`PomodoroModule` accepts an optional `registerDepartureGuard` host capability. The standalone component remains usable without it. While mounted, actual preference drafts register `beforeunload` and a host route/sign-out guard; source-only errors and a clean mount do not. Account epoch changes revoke old dialog/export/discard permission while retaining device-owned drafts for a fresh decision. Explicit discard reloads only fields with current drafts. Export is `pomodoro-preferences.json`, version 1, kind `pomodoro-preference-draft`, with the complete six-value `values` object and can run from the in-memory snapshot when storage is unavailable.
+
+This recovery surface is separate from durable session settlement. It never reads, exports, retries, resets or discards `xai_pomodoro_active` or `xai_pomodoro_sessions`; export is a manual preference draft, not a cloud backup or import contract. Other autosave consumers need their own UI integration.
 
 ## POMO-03 amendment — 2026-09-09 partial focus records
 
@@ -116,6 +120,8 @@ import type { Lang } from "@repo/plugin-web-tokens";
 export interface PomodoroModuleProps {
   /** Active language. Drives useI18n bundle. */
   lang: Lang;
+  /** Optional host bridge for guarded route/sign-out departure. */
+  registerDepartureGuard?: PomodoroDepartureGuardRegistration;
 }
 
 export function PomodoroModule(props: PomodoroModuleProps): JSX.Element;
