@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Pomodoro完整恢复合同已获Astra051212a接受，Collaborate6254cb4及共享协调器ba7f0da接受保持有效。Header当前产品9193353修复Astra4aecaa6三条正确FAIL；Astra原5边界新版本全部通过，尚有其余完整合同门禁。父actualHost原5/advanced5/新followon2及原account parent2全部通过，原native device5/savedreload4通过（9ba8655）；父八个native模式含中英文五宽度通过（fd0e740，启动端口诊断与重跑归属明确）。Sol扩展native证据b8cb6e4确认offset冲突、全存储拒绝导出、A→B→locked设备恢复和source-only中英文通过，但writable未提交备注在导航pointerdown停留后先blur保存：slow-rail/slow-widget两条正确FAIL，普通Tab保存正例PASS。Terra继续修复该真实交互时序，Astra补targeted-read/zero-write与导出setup边界，最终独立门禁仍开放。历史41/0f/3e失败和有界通过证据保留。正式完成13/312，未关闭299；REL-05/09/D2不因此关闭。
+当前增量：Pomodoro完整恢复合同051212a、Collaborate6254cb4及共享协调器ba7f0da接受保持有效。Header最新产品c9a388d：父actualHost原5/advanced5/followon2全部通过，Smart host10/entry3/wrapper5/export8/App5、Collaborate8、Pomodoro18/7/24/2与actual9/8共享回归全通过（1bdc844）。Astra确认原5边界通过，修正可达Retry成功/失败业务断言后recovery11通过；919旧完成覆盖新位置的真实失败见f6e1ff5，历史原FAIL保留。Sol确认c9慢速rail/widget已保护未提交文本且混合两方向通过，但普通Tab blur在c9出现真实保存回归（919原正例通过）；Terra继续修复稳定blur会话/导航目标/取消边界，完整Header仍不接受。919原parent2、native device5/reload4与八个Header native通过证据9ba8655/fd0e740保留，不能替代最终版本所需复验。正式完成13/312，未关闭299；REL-05/09/D2仍开放。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
