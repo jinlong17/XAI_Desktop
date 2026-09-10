@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"c604951","browser":"Chrome/152.0.7977.83"}
+{"name":"unrecovered-source-and-saved-sibling","statuses":["Saved"],"text":"Collaborate\n\nSaved\n\nShow collaborator avatars\nSaved value needs recovery. Repair storage, then reload.\n\nReload\nShow collaborator avatars\nDefault share permission\nCan comment\nCan edit\nView only\nNotify on @ mentions","raw":["invalid-boolean",null,"edit"]}
+{"name":"device-failure-recovery","pass":false,"error":"AssertionError [ERR_ASSERTION]: Aggregate Saved while another field needs source recovery"}
