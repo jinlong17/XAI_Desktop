@@ -3,7 +3,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {createBrowserRouter,RouterProvider} from 'react-router';
 import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
-import {WebShellProvider} from './packages/xai-web-shell/src/index';
+import {WebShellProvider,Shell} from './packages/xai-web-shell/src/index';
 import {webShellModuleRegistrations} from './apps/web/src/routes/modules/shellRegistrations';
 import {requestSettingsDeparture} from './apps/web/src/routes/modules/settingsDeparture';
 import './packages/plugin-web-tokens/src/tokens.css';
@@ -14,7 +14,7 @@ const defaults={preset:'focus-25',custom_minutes:45,display_style:'apple',theme:
 for(const [suffix,value] of Object.entries(defaults))localStorage.setItem('xai_pref_pomodoro_'+suffix,JSON.stringify(value));
 const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
 const registration=webShellModuleRegistrations.find(r=>r.moduleId==='pomodoro')!;const Module=registration.children.find(r=>r.path==='')!.render;
-history.replaceState(null,'','/app/pomodoro');const router=createBrowserRouter([{path:'/app/pomodoro',element:<Module/>},{path:'/app/dashboard',element:<div>Dashboard destination</div>}]);
+history.replaceState(null,'','/app/pomodoro');const router=createBrowserRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'pomodoro',element:<Module/>},{path:'dashboard',element:<div>Dashboard destination</div>}]}]);
 (window as any).verify={deny(){Storage.prototype.setItem=function(k,v){if(k==='xai_pref_pomodoro_theme')throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},router,signoutResult:'unresolved',signout(){void requestSettingsDeparture('sign-out').then(x=>{(window as any).verify.signoutResult=x})}};
 (window as any).verify.readTheme=()=>nativeGet.call(localStorage,'xai_pref_pomodoro_theme');
 (window as any).verify.denyAll=()=>{Storage.prototype.getItem=function(){throw new DOMException('denied','SecurityError')};Storage.prototype.setItem=function(){throw new DOMException('denied','SecurityError')}};

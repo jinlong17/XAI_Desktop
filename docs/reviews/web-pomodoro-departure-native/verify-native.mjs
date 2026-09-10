@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const sourceCommit=process.argv[2];const mode=process.argv[3]??'unload';if(!['unload','route','signout'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
+const sourceCommit=process.argv[2];const mode=process.argv[3]??'unload';if(!['unload','route','signout','rail','export','export-denied','owner','pending'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
 execFileSync('tar',['-x','-C',snapshot],{input:execFileSync('git',['archive',sourceCommit],{cwd:root,maxBuffer:100*1024*1024})});
@@ -23,7 +23,7 @@ for(const name of readdirSync(join(snapshot,'packages'))){
 const pinnedPackages={name:'pinned-workspace-packages',setup(build){build.onResolve({filter:/^@repo\//},args=>{const parts=args.path.split('/');const entry=aliases.get(parts.slice(0,2).join('/'));if(!entry)return;const sub=parts.length>2?'./'+parts.slice(2).join('/'):'.';let target=entry.pkg.exports?.[sub];if(typeof target==='object')target=target.import??target.default;if(typeof target!=='string')throw Error('Unresolved pinned export '+args.path);return {path:join(entry.folder,target)};});}};
 const downloads=join(directory,'downloads');mkdirSync(downloads);const delay=ms=>new Promise(r=>setTimeout(r,ms));let server,browser,socket;const records=[];const runtimeErrors=[];const record=(name,value)=>{records.push({name,...value});console.log(name,JSON.stringify(value));};
 try{
-const built=await build({stdin:{contents:readFileSync(join(output,'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
+const built=await build({stdin:{contents:readFileSync(join(output,mode==='rail'?'native-shell.tsx':'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
 browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
@@ -35,10 +35,21 @@ const click=async selector=>{await ev(`document.querySelector(${JSON.stringify(s
 record('baseline',{commit:sourceCommit,browser:(await cdp('Browser.getVersion')).product});
 try{
  assert.equal(runtimeErrors.length,0,'Runtime mount error '+runtimeErrors.slice(0,3).join(' | '));
- await ev('verify.deny()');await click('[data-testid="theme-blue"]');await click('[data-testid="theme-violet"]');
+ await ev(mode==='pending'?'verify.holdTheme()':'verify.deny()');await click('[data-testid="theme-blue"]');await click('[data-testid="theme-violet"]');
  assert.equal(await ev('localStorage.getItem("xai_pref_pomodoro_theme")'),'"coral"');assert.equal(await ev('document.querySelector("[data-testid=theme-violet]").getAttribute("aria-pressed")'),'true');
  if(mode==='unload'){const warning=await ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()');record('unload-observation',{warning});assert(warning,'Actual failed preference draft lacks browser unload warning');}
  if(mode==='route'){await ev('verify.router.navigate("/app/dashboard")');await delay(200);const observation=await ev('({path:location.pathname,dialog:!!document.querySelector("[role=dialog]")})');record('route-observation',observation);assert.equal(observation.path,'/app/pomodoro','Actual registration left the failed preference draft');assert(observation.dialog,'Missing current draft decision');}
+ if(mode==='rail'){await click('.app-rail [aria-label="Dashboard"],.rail [aria-label="Dashboard"]');const observation=await ev('({path:location.pathname,dialog:!!document.querySelector("[role=dialog]")})');record('rail-observation',observation);assert.equal(observation.path,'/app/pomodoro');assert(observation.dialog);}
+ if(['export','export-denied','owner','pending'].includes(mode)){
+ await ev('verify.router.navigate("/app/dashboard")');await delay(180);assert.equal(await ev('location.pathname'),'/app/pomodoro');assert(await ev('!!document.querySelector("[role=dialog]")'));
+ if(mode==='owner'){await ev('verify.switchOwner()');await delay(180);assert.equal(await ev('!!document.querySelector("[role=dialog]")'),false,'Old decision survived owner change');assert.equal(await ev('document.querySelector("[data-testid=theme-violet]").getAttribute("aria-pressed")'),'true');await ev('verify.router.navigate("/app/dashboard")');await delay(180);assert(await ev('!!document.querySelector("[role=dialog]")'));}
+ if(mode==='export-denied')await ev('verify.denyAll()');
+ await ev('[...document.querySelectorAll("[role=dialog] button")].find(e=>/export/i.test(e.textContent)).click()');await delay(180);
+ let filename;for(let i=0;i<80;i++){filename=readdirSync(downloads).find(f=>f.endsWith('.json'));if(filename)break;await delay(50)}assert.equal(filename,'pomodoro-preferences.json');const data=JSON.parse(readFileSync(join(downloads,filename),'utf8'));assert.deepEqual(data,{version:1,kind:'pomodoro-preference-draft',values:{preset:'focus-25',customMinutes:45,displayStyle:'apple',theme:'violet',sound:'soft-chime',muted:false}});
+ assert.equal(await ev('location.pathname'),'/app/pomodoro','Export navigated');assert(await ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()'),'Export cleared draft warning');
+ if(mode==='pending'){await ev('verify.releaseTheme()');for(let i=0;i<80;i++){if(await ev('location.pathname')==='/app/dashboard')break;await delay(50)}assert.equal(await ev('location.pathname'),'/app/dashboard');assert.equal(await ev('verify.readTheme()'),'"violet"');}else{assert.equal(await ev('verify.readTheme()'),'"coral"');}
+ record('actual-six-value-departure-export',{pass:true,mode,data});
+ }
  if(mode==='signout'){await ev('verify.signout()');await delay(200);const observation=await ev('({outcome:verify.signoutResult,dialog:!!document.querySelector("[role=dialog]")})');record('signout-observation',observation);assert.equal(observation.outcome,'unresolved');assert(observation.dialog);}
  assert.equal(runtimeErrors.length,0,'Runtime interaction error '+runtimeErrors.slice(0,3).join(' | '));record('departure',{pass:true,mode,runtimeErrors:0});
 }catch(error){record('departure',{pass:false,error:String(error)});process.exitCode=1;}
