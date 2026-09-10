@@ -41,3 +41,11 @@ The first scanner failed to unwrap `as` assertions on key arguments and reported
 | `packages/xai-web-tasks/src/TasksModule.tsx` |  | `xai_task_cols` L80 |
 
 Luna identified three downstream paths: Dashboard order→useOrderSaveRecovery, Board workspace→useWorkspaceSaveRecovery, and pet selection→onSelect. These require source review before conversion. Read-only Appearance hook projections still coexist with separate setPref/removePref calls; FeaturesPane has a separate raw reset path; Tasks has list/tag autosave metadata alongside accepted canonical task commands. Thus a read-only binding is not proof that its whole file has no writers. Account/device classification and next-batch design belong to Astra's source review. No product modifications or gate closures are part of this inventory.
+
+## Refreshed scheduling inventory at c9a388d
+
+Parent reran the unchanged AST scanner against immutable `c9a388d`:29 files /85 bindings,63 distinct literal keys plus2 dynamic sites;65 setter bindings (62 directly invoked,3 downstream-only),20 read-only bindings. Machine evidence: [bindings-c9a388d.json](bindings-c9a388d.json).
+
+Compared with ce38758, exactly three old direct bindings disappeared: Smart Lists `xai_pref_smart_lists`, Collaborate `xai_pref_collab_show_avatars` and `xai_pref_collab_mention_notify`. There are no newly added direct `usePref` bindings. This agrees with their accepted migrations; it does not erase other writers in those files or turn all remaining setters into proven defects. Header's async integration is outside this direct-old-hook scan and remains under final review.
+
+The historical table above retains its original fixed revision. Use the new JSON for current scheduling after Header acceptance. The scan still excludes wrapper/indirect/raw/secrets/non-TSX writers; whole D2/REL-05 coverage requires its broader contract. No numbered audit item is closed by this inventory refresh.
