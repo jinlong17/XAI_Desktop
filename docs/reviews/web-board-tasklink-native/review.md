@@ -15,3 +15,5 @@ Calibration is preserved separately: `native-49a55e5-parent-before-fixture-repai
 ```sh
 node docs/reviews/web-board-tasklink-native/verify-native.mjs 49a55e5 parent-admitted-fixture
 ```
+
+Parent independently ran the complete fixed `8ab38ed` Board package after the test-only lock adapter repair: 27 files / 336 tests PASS in `../web-board-detail-sol-fix/parent-tasklink-fixed-8ab38ed.log`. The actual native product path above was already passing before that fixture change. These are separate evidence layers; Astra still reviews the fixture migration and original independent oracles.
