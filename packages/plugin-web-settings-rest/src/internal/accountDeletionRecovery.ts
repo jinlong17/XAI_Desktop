@@ -9,6 +9,7 @@ import { clearAccountAiSecrets } from "@repo/plugin-web-ai-chat";
 export type { AccountDeletionReceipt } from "@repo/plugin-web-storage";
 export type AccountAuthCleanup = (captured: { generation: string; owner: string }) => Promise<void>;
 const RECEIPT_EVENT = "xai:account-deletion-receipt";
+const recoveryFlights = new Map<string, Promise<AccountDeletionReceipt>>();
 function receiptKey(accountId: string, demo: boolean): string {
   // The tombstone itself is the durable receipt: one atomic metadata write
   // precedes every destructive operation. The storage eraser preserves it.
@@ -63,7 +64,7 @@ export async function beginAccountLocalDeletion(scope: AccountScope, authGenerat
   });
 }
 /** Retry confirmed local erasure; auth cleanup must target only the captured generation. */
-export async function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
+async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
   const key = receiptKey(receipt.accountId, receipt.kind === 'demo');
   const expectedRaw = localStorage.getItem(key);
   const saved = readAccountDeletionReceipt(receipt.accountId, receipt.kind === "demo");
@@ -83,4 +84,19 @@ export async function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt
   const complete = await completeAccountLocalDataDeletion(cleared, local.raw);
   if (!complete.ok) throw new Error(`Account deletion completion refused: ${complete.reason}`);
   return complete.receipt;
+}
+
+/** Same-page recovery callers share one captured-owner workflow; storage still
+ * supplies the short cross-tab account-exclusive sections. */
+export function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
+  const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}`;
+  const active = recoveryFlights.get(key);
+  if (active) return active;
+  const operation = resumeAccountLocalDeletionOnce(receipt, clearAuth);
+  recoveryFlights.set(key, operation);
+  void operation.then(
+    () => { if (recoveryFlights.get(key) === operation) recoveryFlights.delete(key); },
+    () => { if (recoveryFlights.get(key) === operation) recoveryFlights.delete(key); },
+  );
+  return operation;
 }
