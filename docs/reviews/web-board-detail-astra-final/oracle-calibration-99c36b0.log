@@ -1,0 +1,48 @@
+revision=99c36b0
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-vR4Xvt
+
+ ❯ docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx (5 tests | 1 failed) 166ms
+   × independent checklist oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 27ms
+     → expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+   ✓ independent attachment oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 4ms
+   ✓ independent activity oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry 3ms
+   ✓ proposal collision preserves external data and draft; discard does not persist 1ms
+   ✓ discard clears only failed append, retains other typed input, never appends via close 129ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  18:35:08
+   Duration  2.07s (transform 536ms, setup 249ms, collect 652ms, tests 166ms, environment 427ms, prepare 88ms)
+
+
+stderr | docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > discard clears only failed append, retains other typed input, never appends via close
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx > independent checklist oracle: two rejected physical writes; latest append only; all other canonical data unchanged; no duplicate on repeat retry
+AssertionError: expected [ { id: 'b-default', …(5) }, …(2) ] to deeply equal [ { id: 'b-default', …(5) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -7,11 +7,11 @@
+          "cards": [
+            {
+              "attach": 1,
+              "checklist": {
+                "done": 2,
+-               "total": 5,
++               "total": 6,
+              },
+              "cover": "linear-gradient(135deg, oklch(78% 0.10 295), oklch(62% 0.12 245))",
+              "due": "5/24",
+              "id": "bc1",
+              "labels": [
+
+ ❯ docs/reviews/web-board-detail-astra-final/detail-contract.test.tsx:35:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

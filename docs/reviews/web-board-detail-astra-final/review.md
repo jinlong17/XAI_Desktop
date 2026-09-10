@@ -1,0 +1,30 @@
+# Astra final review: Board detail append recovery
+
+Verdict: ACCEPTED within the approved three-append slice at immutable product `99c36b0` (main repair `5c6ed8e`). No blocking finding in this slice. This does not close full Board, REL-05, D2, ordinary-field recovery, linked-task recovery, or release readiness.
+
+Module: web. Read-only product review. Reviewed the `ac0e090` architecture contract, original preserved three desired-business failures, author `14b044c` report, source, project `web design/DESIGN.md`, frontend-responsive-ui and redesign skills. Start checkout was clean at `ea6dc67`; concurrent Settings work was left alone. Only this evidence directory is owned by this review.
+
+## Evidence and independent assertion boundaries
+
+- `independent-99c36b0.log`: **8/8 independent business probes PASS** against a fresh `git archive`. Reviewer-written assertions, real module/views/hooks and native jsdom Storage. The three append tests each reject two physical `setItem` calls, retain identity, edit fields, commit once, verify latest values, inspect complete canonical board data and envelope metadata, and refuse a redundant retry. Legacy checklist synthesis/count is explicitly checked. Attachment provider changes to Linear; comment timestamp remains fixed.
+- The other five probes exercise proposal collision without overwrite, explicit discard that clears only the failed input without implicit append, and the real Table priority editor / Calendar drop / Timeline drag through the Module callback into persisted board data. The view tests compare all boards against the post-mount baseline and permit only their intended patch plus the established date compatibility fields. Existing initialization automation is therefore not mistaken for a callback regression.
+- `author-tests-rerun-99c36b0.log`: **16 semantic + 4 responsive tests PASS** independently rerun from fixed source. These are author assertions, not 20 new independent assertions. They cover missing/corrupt/replaced bytes, deleted/archived/moved target, A→B retry/export refusal, latest invalid attachment, blocked close/Escape/scrim/card switching, parent recovery after target unmount, and export payloads. The jsdom export tests alone do not prove downloads.
+- Parent-owned `../web-board-detail-save-diagnosis/independent-parent-final-99c36b0.log` reruns the original unchanged three rejection regressions: 3 PASS. Parent-owned `../web-board-detail-sol-fix/native-99c36b0-parent-independent.log` and `native-99c36b0-parent-visual.log` supply real isolated Chrome downloads, retry, persisted one-entry identity and reload. They are parent execution evidence, not executions by this reviewer.
+- Personally inspected the parent's actual PNGs for 390/768/1280 widths in `../web-board-detail-sol-fix/`. Recovery is readable and inside the panel, three mobile actions stack with ample targets, wider views use a row, and there is no visible horizontal clipping. This is focused recovery-state visual review, not full accessibility or every viewport acceptance.
+- Full workspaces package stays **326 PASS / 9 FAIL**, compared with **309 PASS / 9 FAIL** at `8105cc9`. Author immutable logs retain identical six taskLinkCommand and three Task-link Module failure names. This review does not claim package PASS, and does not demand unrelated D2 writer modernization as a condition of this slice.
+
+## Source contract assessment
+
+`internal/useBoardDetailSaveRecovery.ts:156` validates captured owner/physical key, canonical JSON and target eligibility before constructing the append. It refuses changed raw source at line 196; unchanged eligible source is patched narrowly and retains storage format. A same-ID exact existing proposal is acknowledged without rewriting external bytes (lines 187–194); a different proposal payload refuses. Successful persistence also requires physical read-back equality (lines 215–225). The proposal ID and activity timestamp are created once on first submission; edited fields update only the pending draft. Snapshot export checks the original owner and carries original raw bytes and target context.
+
+`BoardWorkspacesModule.tsx:605` owns recovery above conditional `activeCardContext`. Its separate recovery surface at line 1500 survives target disappearance. Card switching and close are guarded; the detail component clears fields only after the boolean append receipt. Export returns independently from save and leaves pending state intact. Discard resets the intended operation. `updateCard` returns actual found-and-saved status; the existing shared view consumers safely ignore its new return value. Their actual successful persistence is covered by the three added view probes. Unlink continues through `patchActiveCard`; broad linked-task failure recovery remains outside this contract.
+
+## Non-blocking design observation
+
+Retry, Export and Discard have equal visual weight in the recovery panel (`styles.css:821`). A future focused UX pass could make Retry primary and distinguish destructive Discard, while retaining the calm token-based console styling. Current explicit labels and separate action targets satisfy this bounded recovery contract. No full redesign is recommended.
+
+## Reproduction and fixture calibration
+
+Run `node docs/reviews/web-board-detail-astra-final/verify-fixed.mjs 99c36b0` for both owned probes and author test rerun. Dependencies are reused from the local installation; all product source resolves into the immutable archive.
+
+`oracle-calibration-99c36b0.log` and `view-fixture-calibration-99c36b0.log` preserve initial reviewer-fixture failures. These are not product defects: the first oracle omitted the expected legacy checklist total increment, and the initial view oracle compared against pre-mount data, selected the first sorted row without isolating a target, and omitted legacy date compatibility fields. The corrected tests explicitly assert these allowed business changes rather than dropping the full-data comparison. The final authoritative run is `independent-99c36b0.log`.
