@@ -24,7 +24,7 @@ async function run(){
    const scope=accountScope.activate(accountScope.lock(account),'g1');const key=accountScope.physicalKey('xai_task_cols',scope);
    const old=(window as any).__checkpoint?.[name];
    if(initial&&name!=='startup')localStorage.setItem(key,JSON.stringify({format:'xai-command-state',version:1,revision:1,data:columns(name==='retry-conflict'),receipts:{prior:receipt}}));
-   if(!initial){assert(old,'Missing external checkpoint');assert(localStorage.getItem(key)===old.raw,'Lost persisted bytes after whole Chrome restart');}
+   if(!initial){assert(old,'Missing external checkpoint');assert(localStorage.getItem(key)===old.raw,'Stored bytes differ after whole Chrome restart: '+JSON.stringify({expected:old.raw,actual:localStorage.getItem(key)}));}
    root=createRoot(document.getElementById('app')!);root.render(React.createElement(TasksModule,{lang:'en'}));await until(()=>document.querySelector('.module-tasks'),'TasksModule did not mount');await delay(60);
    if(initial){
     if(name==='startup'){

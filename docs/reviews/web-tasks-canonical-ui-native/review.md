@@ -15,3 +15,11 @@ node docs/reviews/web-tasks-canonical-ui-native/verify-native.mjs <fixed-commit>
 ```
 
 Pending after-run: committed Sol Tasks D1 implementation. This suite does not promise that uncommitted drafts survive browser termination; it verifies committed data, recovery UI while mounted, and subsequent restart behavior separately. Full Tasks D1 still needs independent scope review, including detail sessions, cascades and all action paths.
+
+## Fixed 3241529 after-run and encoding diagnosis
+
+All three initial actual-UI cases and all three whole-process reopen cases now PASS. Chrome PID 72943 exited normally via SIGTERM; PID 72961 reopened the isolated profile/origin. Exact persisted bytes, newer human title, latest saved composer draft and receipt preservation match the external checkpoint. Product code is the fixed 3241529 archive. See native-3241529.json.
+
+Two earlier observations on the same commit are retained as native-3241529-first-observation.json and native-3241529-encoding-diagnosis.json. The apparent startup mismatch was a harness error: the HTML response lacked a UTF-8 declaration, so the re-injected non-ASCII checkpoint decoded incorrectly. Actual persisted Chinese text, revision and receipts were correct. Comparing actual/expected diagnostic bytes identified this; the runner now sets UTF-8 Content-Type and meta charset and decodes accumulated POST buffers once. No Tasks product change or weakened assertion was used to obtain PASS. The first empty-board selector attempt also remains separately classified as harness evidence.
+
+This is bounded native UI/storage/restart evidence, not full Tasks D1 acceptance, production activation, visual review, or durability of uncommitted drafts. Astra independently reviews the full implementation scope.

@@ -34,3 +34,7 @@ Parent independently archived 35b4964 and reran the six assertions unchanged: 6/
 The expanded suite retains the previous six PASS and adds two correct FAIL (6 PASS / 2 FAIL, tasks-ui-startup-94f1183.log). A physically absent account record fails to initialize its valid canonical seed. A valid legacy task missing optional list/tags/priority metadata fails to normalize through the writer. The displayed hydrated/grouped snapshot is used as the comparison baseline against the unhydrated stored record, so legitimate startup normalization conflicts with itself. These are actual TasksModule checks with explicit activation, valid marker and lock support; they are not missing test activation failures. The original six cases remain unchanged.
 
 Command: `node docs/reviews/web-tasks-canonical-ui-independent/verify-fixed.mjs 94f1183 tasks-ui startup`. Assigned to Sol together with the remaining Tasks D1 recovery work; no acceptance inferred.
+
+## Complete author batch: fixed 3241529
+
+Parent independently archived 3241529 and reran all eight assertions unchanged: 8/8 PASS (tasks-ui-parent-after-3241529.log). The two startup/legacy normalization failures are repaired while all prior write/retry/data-preservation cases stay green. Author runs are separately labelled tasks-ui-sol-after-3241529.log and author-unpinned-tasks-ui-retry-HEAD.log and are not counted as independent evidence. Full Tasks D1 Astra review remains pending.

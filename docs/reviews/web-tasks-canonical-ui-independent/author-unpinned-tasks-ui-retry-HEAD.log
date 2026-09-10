@@ -1,0 +1,24 @@
+revision=HEAD
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-parent-tasks-d1-xzujTt
+
+stdout | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > queued checkbox refuses a changed target without overwriting newer external bytes
+queued-target {"preserved":true}
+
+ ✓ docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx (6 tests) 468ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  16:38:41
+   Duration  1.62s (transform 208ms, setup 0ms, collect 384ms, tests 468ms, environment 415ms, prepare 83ms)
+
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > real checkbox persists completion and preserves existing durable receipts
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > render and checkbox do not repair a present invalid domain by overwriting it with demo tasks
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-tasks-canonical-ui-independent/tasks-ui.test.tsx > failed checkbox retry preserves its original baseline; external change=false
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.

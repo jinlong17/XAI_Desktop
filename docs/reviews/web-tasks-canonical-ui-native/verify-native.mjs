@@ -69,16 +69,16 @@ try {
   });
   server = createServer((request, response) => {
     if (request.url === '/result') {
-      let body = '';
-      request.on('data', chunk => { body += chunk; });
+      const chunks = [];
+      request.on('data', chunk => { chunks.push(chunk); });
       request.on('end', () => {
         response.end('ok');
-        try { resolveResult(JSON.parse(body)); } catch (error) { rejectResult(error); }
+        try { resolveResult(JSON.parse(Buffer.concat(chunks).toString('utf8'))); } catch (error) { rejectResult(error); }
       });
       return;
     }
-    response.setHeader('Content-Type', 'text/html');
-    response.end(`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><main id="app"></main><script>window.__checkpoint=${JSON.stringify(checkpoint).replaceAll("<", "\\u003c")};</script><script type="module">${bundle.outputFiles[0].text}</script>`);
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.end(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><main id="app"></main><script>window.__checkpoint=${JSON.stringify(checkpoint).replaceAll("<", "\\u003c")};</script><script type="module">${bundle.outputFiles[0].text}</script>`);
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
