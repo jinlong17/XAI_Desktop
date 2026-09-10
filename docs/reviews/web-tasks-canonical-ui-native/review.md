@@ -26,3 +26,8 @@ This is bounded native UI/storage/restart evidence, not full Tasks D1 acceptance
 # Follow-up fixed Tasks repair
 
 Parent independently reran the unchanged native suite at `170c526`: startup, conflicting checkbox retry and composer latest-draft retry all pass initially; their three persisted-state/UI checks pass after whole Chrome PID 83961 exits via SIGTERM and PID 83995 reopens the same profile. Evidence `native-170c526.json`. The earlier fixed/before/encoding diagnostic evidence is retained. These are the same bounded scenarios, not a new claim about every Tasks interaction or unsaved-draft durability.
+
+
+## Integrated fixed verification at e9fb5e7
+
+Parent independently reran the unchanged native initial assertions on fixed `e9fb5e7`, including Tasks repair `0c4b6b4` and the native adapter repair: 3 initial cases PASS, then 3 persisted-state/UI cases PASS after observed Chrome SIGTERM exit, PID 91754 → 91770. See `native-e9fb5e7.json`. Prior failing logs and author evidence remain separate. The original scope limitations still apply; this does not accept the remaining D2 foundation failures or every product caller.

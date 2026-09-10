@@ -13,3 +13,8 @@ node docs/reviews/web-account-coordination-native/verify-native.mjs e9ff409
 ```
 
 The suite's subsequent restart phase, if initial checks pass on a repair, only verifies persisted autosave bytes. It does not establish all-client coordination, every UI writer, universal old-client admission, multi-store atomicity or D2 completion.
+
+
+## Integrated fixed verification at e9fb5e7
+
+Parent independently reran the unchanged native initial assertions on fixed `e9fb5e7`, including Tasks repair `0c4b6b4` and the native adapter repair: 3 initial cases PASS, then 1 persisted-state/UI cases PASS after observed Chrome SIGTERM exit, PID 91589 → 91605. See `native-e9fb5e7.json`. Prior failing logs and author evidence remain separate. The original scope limitations still apply; this does not accept the remaining D2 foundation failures or every product caller.

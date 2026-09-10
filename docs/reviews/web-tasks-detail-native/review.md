@@ -15,3 +15,8 @@ node docs/reviews/web-tasks-detail-native/verify-native.mjs 3241529
 The unchanged runner and three assertions pass at `170c526`: three initial detail recovery cases, followed by three persisted-state/UI checks after Chrome PID 83894 exits via SIGTERM and PID 83912 starts with the same isolated profile. Evidence: `native-170c526.json`. The prior correct failures remain intact. This verifies visible latest draft recovery during the current page lifetime and preservation of the external committed data; it does not assert that closing the browser persists an unsaved draft.
 
 The parent separately reran Astra's unchanged 18 boundaries at this snapshot (18 PASS; `../web-board-workspace-astra-review/d1-tasks-boundaries-parent-170c526.log`). Full Tasks D1 scope acceptance remains with the non-author Astra reviewer.
+
+
+## Integrated fixed verification at e9fb5e7
+
+Parent independently reran the unchanged native initial assertions on fixed `e9fb5e7`, including Tasks repair `0c4b6b4` and the native adapter repair: 3 initial cases PASS, then 3 persisted-state/UI cases PASS after observed Chrome SIGTERM exit, PID 91661 → 91677. See `native-e9fb5e7.json`. Prior failing logs and author evidence remain separate. The original scope limitations still apply; this does not accept the remaining D2 foundation failures or every product caller.
