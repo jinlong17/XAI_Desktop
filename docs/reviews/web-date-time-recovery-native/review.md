@@ -22,3 +22,16 @@ The earlier `before-clean`, `before-controls`, `keyboard-before-clean`, `raw-key
 The complete Astra contract remains `../web-date-time-recovery-contract/contract.md`. This before suite does not cover the complete after host/history/first-intent, latest-operation/partial/owner, lock/uncertainty, native disk export or bilingual five-width/focus matrix. Those remain required before final caller acceptance. Terra implementation and Sol independent tests are separate owned files; no product files were changed by this evidence batch. Header acceptance remains unchanged; no REL/D2/312-item closure is inferred.
 
 Run `node docs/reviews/web-date-time-recovery-native/verify-native.mjs <fixed-sha> <mode> <unique-suffix>`. Modes: controls, route, rail, signout, unload, clean. Existing logs cannot be overwritten.
+
+
+## First implementation and expanded native matrix
+
+Fixed2c09719 original six native modes all PASS: controls, route, rail, signout, unload, clean (all-five physical save/new-document reload). They remain distinct from full caller acceptance.
+
+Fixede9213fb expanded native PASS: real held-save completion releases route; unchanged uncertainty Retry has one total write; all-five and sparse full-Storage-denial downloads produce exact disk JSON with zero export reads/writes; A→B→locked cancels old signout while preserving/exporting device draft and allowing pending device commit; source-only invalid data has no false unload/signout protection; actual keyboard Shift-Tab/Tab trap and Escape focus return pass. Parent advanced-host12 now PASS at e9213fb (separate log).
+
+Both EN and ZH recovery layouts pass all five widths375/414/768/1024/1440 plus375dialog geometry, viewport containment, actual elementFromPoint hit checks, and44px recovery targets. EN evidence uses expanded suffix; ZH uses localized suffix and trusted Chinese typeahead 周 to select 周日. The earlier expanded visual-zh run used English s, which correctly did not select a Chinese option; that failure is an input setup diagnostic, excluded from product findings. PNGs preserve rendered states. Parent manually inspected EN375/768/1440 and ZH375/1440/dialog375 and found a real visual defect despite green geometry: global44px height stretches the Toggle track to46x44, yielding a grey circle with its knob at top-left. Mobile Discard also wraps into a separate full-width row. Terra owns a DateTime-scoped CSS correction; no visual acceptance yet.
+
+## Confirmed uncertain Retry external-overwrite defect
+
+`native-e9213fb-before-fix-uncertainty-conflict.log` is a correct native FAIL: initial timezone true→false physically writes once but readback throws; external storage update then sets true; actual Retry Time Zone causes a second application write of false, overwriting external bytes. The disk observation and writes list substantiate the defect independently of Sol component tests. Shared-layer architecture review is assigned to Astra; a DateTime raw preflight workaround is paused. No REL/D2/whole-caller closure.
