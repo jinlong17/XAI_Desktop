@@ -1,0 +1,11 @@
+INDEPENDENT ASTRA product=5ed93291714f94f42678b9223ee98440f796209f archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-ukko6k69 test_sha256=9714f9d9e4c3ce6dda2914fdd792988356c697c4d9b49c9e1597854a46fc1bc8
+Traceback (most recent call last):
+  File "/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs/reviews/web-d2-async-pref-astra-engine/run.py", line 19, in <module>
+    result=subprocess.run([str(repo/'node_modules/.bin/vitest'),'run','src/__tests__/astraEngine.test.ts','--reporter=verbose'],cwd=root/'packages/plugin-web-storage')
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1821, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.bin/vitest'

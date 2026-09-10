@@ -1,0 +1,240 @@
+INDEPENDENT ASTRA product=5ed93291714f94f42678b9223ee98440f796209f archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-50we0b0c test_sha256=9714f9d9e4c3ce6dda2914fdd792988356c697c4d9b49c9e1597854a46fc1bc8
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-engine-50we0b0c/packages/plugin-web-storage
+
+ ✓ src/__tests__/astraEngine.test.ts > control: absent create, raw baseline conflict, valid reset and no-op have truthful bytes/publication 3ms
+ × src/__tests__/astraEngine.test.ts > registered key codec cannot be replaced by a JSON codec through public mutatePref 6ms
+   → expected { ok: true, value: 'edit', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+ × src/__tests__/astraEngine.test.ts > registered autosave codec cannot disagree with the registry on an absent key 1ms
+   → expected { ok: true } to match object { ok: false }
+ × src/__tests__/astraEngine.test.ts > typed public Account setter must not coerce an object into a registered boolean 0ms
+   → expected { ok: true } to match object { ok: false, reason: 'invalid' }
+ × src/__tests__/astraEngine.test.ts > typed public Account setter must not turn an invalid domain source into a replacement default 0ms
+   → expected { ok: true } to match object { ok: false, reason: 'invalid' }
+ × src/__tests__/astraEngine.test.ts > typed public Account reset must not authorize deletion of an invalid domain source 0ms
+   → expected { ok: true } to match object { ok: false, reason: 'invalid' }
+ × src/__tests__/astraEngine.test.ts > invalid absent default is rejected before invoking a functional updater 0ms
+   → expected { ok: true, value: 'edit', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+ × src/__tests__/astraEngine.test.ts > invalid absent reset default cannot be returned as a successful validated snapshot 0ms
+   → expected { ok: true, value: 'invalid', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+ × src/__tests__/astraEngine.test.ts > unclassified key resolves to typed invalid refusal rather than rejecting its Promise 1ms
+   → promise rejected "Error: Unclassified local storage key: xa…" instead of resolving
+ ✓ src/__tests__/astraEngine.test.ts > control: validator/updater failure, physical null and failed exact read never write 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: generic and both registered public canonical set/reset preserve original bytes 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: all four public pref/autosave APIs wait for the same full physical key lock 1ms
+ ✓ src/__tests__/astraEngine.test.ts > control: independent functional callers update latest persisted value, not stale snapshots 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: queued key-lock owner change refuses before writing 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: queued key-lock marker change refuses before writing 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: queued key-lock tombstone change refuses before writing 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: unavailable/rejected account or key lock never falls back to a physical write 0ms
+ ✓ src/__tests__/astraEngine.test.ts > control: device branch takes only a key lock and observer exceptions cannot turn commit into failure 0ms
+ × src/__tests__/astraEngine.test.ts > public write retry reconciles a physically committed but unpublished readback-uncertain save 1ms
+   → expected "spy" to be called 1 times, but got 0 times
+ × src/__tests__/astraEngine.test.ts > public reset retry reconciles a physically removed but unpublished readback-uncertain reset 1ms
+   → expected "spy" to be called 1 times, but got 0 times
+ ✓ src/__tests__/astraEngine.test.ts > control: before-migration async write is copied; independently queued writer waits then refuses stale generation 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > registered key codec cannot be replaced by a JSON codec through public mutatePref
+AssertionError: expected { ok: true, value: 'edit', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:45:61
+     43| it('registered key codec cannot be replaced by a JSON codec through pu…
+     44|   const b=binding();
+     45|   expect(await mutatePref({...b,codec:'json',next:'edit'})).toMatchObj…
+       |                                                             ^
+     46|   expect(localStorage.getItem(physical())).toBeNull();
+     47| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > registered autosave codec cannot disagree with the registry on an absent key
+AssertionError: expected { ok: true } to match object { ok: false }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:50:112
+     48| it('registered autosave codec cannot disagree with the registry on an …
+     49|   const b=binding();
+     50|   expect(await setPrefAutosaveAccount('collab_default_share','edit',{s…
+       |                                                                                                                ^
+     51|   expect(localStorage.getItem(physical())).toBeNull();
+     52| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > typed public Account setter must not coerce an object into a registered boolean
+AssertionError: expected { ok: true } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:55:81
+     53| it('typed public Account setter must not coerce an object into a regis…
+     54|   const b=binding(); const device='xai_pref_collab_show_avatars';
+     55|   expect(await setPrefAccount(device, {} as never,{scope:b.scope,lock:…
+       |                                                                                 ^
+     56|   expect(localStorage.getItem(device)).toBeNull();
+     57| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > typed public Account setter must not turn an invalid domain source into a replacement default
+AssertionError: expected { ok: true } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:60:72
+     58| it('typed public Account setter must not turn an invalid domain source…
+     59|   const b=binding(); localStorage.setItem(physical(),'corrupt-permissi…
+     60|   expect(await setPrefAccount(key,'edit',{scope:b.scope,lock:direct}))…
+       |                                                                        ^
+     61|   expect(localStorage.getItem(physical())).toBe('corrupt-permission');
+     62| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > typed public Account reset must not authorize deletion of an invalid domain source
+AssertionError: expected { ok: true } to match object { ok: false, reason: 'invalid' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:65:68
+     63| it('typed public Account reset must not authorize deletion of an inval…
+     64|   const b=binding(); localStorage.setItem(physical(),'corrupt-permissi…
+     65|   expect(await removePrefAccount(key,{scope:b.scope,lock:direct})).toM…
+       |                                                                    ^
+     66|   expect(localStorage.getItem(physical())).toBe('corrupt-permission');
+     67| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > invalid absent default is rejected before invoking a functional updater
+AssertionError: expected { ok: true, value: 'edit', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:70:64
+     68| it('invalid absent default is rejected before invoking a functional up…
+     69|   const b=binding(); const next=vi.fn(()=> 'edit');
+     70|   expect(await mutatePref({...b,defaultValue:'invalid',next})).toMatch…
+       |                                                                ^
+     71|   expect(next).not.toHaveBeenCalled(); expect(localStorage.getItem(phy…
+     72| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > invalid absent reset default cannot be returned as a successful validated snapshot
+AssertionError: expected { ok: true, value: 'invalid', …(3) } to match object { ok: false, reason: 'invalid' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "invalid",
++   "ok": true,
+  }
+
+ ❯ src/__tests__/astraEngine.test.ts:75:70
+     73| it('invalid absent reset default cannot be returned as a successful va…
+     74|   const b=binding();
+     75|   expect(await mutatePref({...b,defaultValue:'invalid',reset:true})).t…
+       |                                                                      ^
+     76| });
+     77| it('unclassified key resolves to typed invalid refusal rather than rej…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > unclassified key resolves to typed invalid refusal rather than rejecting its Promise
+AssertionError: promise rejected "Error: Unclassified local storage key: xa…" instead of resolving
+ ❯ src/__tests__/astraEngine.test.ts:79:82
+     77| it('unclassified key resolves to typed invalid refusal rather than rej…
+     78|   const b=binding();
+     79|   await expect(mutatePref({...b,key:'xai_unclassified_engine_probe',ne…
+       |                                                                                  ^
+     80| });
+     81| it('control: validator/updater failure, physical null and failed exact…
+
+Caused by: Error: Unclassified local storage key: xai_unclassified_engine_probe
+ ❯ ownershipForKey src/internal/accountOwnership.ts:126:21
+ ❯ mutatePref src/internal/prefMutation.ts:65:17
+ ❯ src/__tests__/astraEngine.test.ts:79:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > public write retry reconciles a physically committed but unpublished readback-uncertain save
+AssertionError: expected "spy" to be called 1 times, but got 0 times
+ ❯ src/__tests__/astraEngine.test.ts:133:107
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/__tests__/astraEngine.test.ts > public reset retry reconciles a physically removed but unpublished readback-uncertain reset
+AssertionError: expected "spy" to be called 1 times, but got 0 times
+ ❯ src/__tests__/astraEngine.test.ts:139:103
+    137|   const fault=vi.spyOn(Storage.prototype,'getItem').mockImplementation…
+    138|   expect(await removePrefAccount(key,{scope:b.scope,lock:direct})).toM…
+    139|   expect(await removePrefAccount(key,{scope:b.scope,lock:direct})).toE…
+       |                                                                                                       ^
+    140| });
+    141| it('control: before-migration async write is copied; independently que…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 11 passed (21)
+   Start at  19:34:39
+   Duration  1.14s (transform 104ms, setup 0ms, collect 115ms, tests 18ms, environment 451ms, prepare 124ms)
+
+EXIT_CODE=1
