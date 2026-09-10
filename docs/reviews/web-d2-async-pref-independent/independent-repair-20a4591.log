@@ -1,0 +1,11 @@
+revision=20a4591
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-cj5hwv
+
+ ✓ docs/reviews/web-d2-async-pref-independent/contracts.test.tsx (2 tests) 15ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  20:17:51
+   Duration  1.39s (transform 174ms, setup 0ms, collect 416ms, tests 15ms, environment 475ms, prepare 76ms)

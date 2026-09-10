@@ -1,0 +1,81 @@
+{
+  "requestedRef": "20a4591",
+  "revision": "20a4591f1418e07e57208bbe4567d8f183c5ffd3",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 52702,
+  "reopenedPid": 52777,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "quota-retains-latest-draft",
+        "pass": true
+      },
+      {
+        "name": "two-document-functional",
+        "pass": true
+      },
+      {
+        "name": "account-switch-pending",
+        "pass": true
+      },
+      {
+        "name": "readback-uncertain",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "raw": "edit"
+      },
+      "quota-retains-latest-draft": {
+        "raw": "edit"
+      },
+      "two-document-functional": {
+        "raw": "2"
+      },
+      "account-switch-pending": {
+        "raw": "comment",
+        "extraKey": "xai:account:v1:async-pref-native-account-switch-pending-B:g1:xai_pref_collab_default_share",
+        "extraRaw": "view"
+      },
+      "readback-uncertain": {
+        "raw": "edit"
+      }
+    },
+    "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "quota-retains-latest-draft",
+        "pass": true
+      },
+      {
+        "name": "two-document-functional",
+        "pass": true
+      },
+      {
+        "name": "account-switch-pending",
+        "pass": true
+      },
+      {
+        "name": "readback-uncertain",
+        "pass": true
+      }
+    ],
+    "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+  }
+}
