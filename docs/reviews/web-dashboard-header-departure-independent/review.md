@@ -11,3 +11,11 @@ The runner copies this directory's unchanged business oracle into a fixed archiv
 ## Extended actual host before matrix
 
 `advanced-baseline-2962b49.log`: five correct failures covering actual Back/first POP, signout-first competing route, source-only invalid offset falsely warning on unload, epoch cancellation and unmount cancellation. Four scenarios stop at the absent initial host hold; their later epoch/discard/history assertions are not represented as executed. The source-only case independently reaches the existing Reload control, then fails the new contract's explicit no-fake-draft unload requirement. This preserves required source recovery UI and does not relabel the accepted Dv1 physical save protocol missing.
+
+## Header9193353 current checkpoint
+
+Parent fixed9193353 original departure5 and advanced5 PASS. New followon2 PASS at both41fb4d1 and9193353 using actual production registration and coordinator with a named lock: the latest pending save releases only the first route; an earlier save completion cannot release newer unsubmitted text, and explicit dialog discard retains the earlier committed bytes. These are component host integrations, not native pointer tests.
+
+The initial `followon-before-41fb4d1.log` records a passing exploratory version that programmatically invoked background Retry/Save while a dialog existed. It is not used to certify a physically reachable modal interaction. The committed followon fixture and `followon-reachable-before-41fb4d1.log` replace those actions with already-pending lock completion and visible dialog discard. No product failure is inferred from this fixture refinement.
+
+The original accepted account parent2 also PASS at9193353 (`../web-d2-dashboard-note-astra/original-parent-header-parent-9193353.log`). Original device native5 and four saved-position reload controls PASS (`../web-d2-device-offset-native/native-9193353-header-parent.log`). Unsaved process-crash durability is not inferred. Full Header acceptance remains open, including separately reproduced slow-pointer blur failures.

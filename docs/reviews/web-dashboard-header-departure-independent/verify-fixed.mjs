@@ -27,12 +27,13 @@ try {
  aliases.push({find:'react-router',replacement:join(root,'apps/web/node_modules/react-router')});
  aliases.push({find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-dashboard-header-departure-independent'); mkdirSync(owned, {recursive:true});
- for(const file of ['departure.test.tsx','advanced.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
+ for(const file of ['departure.test.tsx','advanced.test.tsx','followon.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
 
  symlinkSync(join(root,'apps/web/node_modules'),join(dir,'apps/web/node_modules'));
  for (const [name, include] of [
  ['departure',['docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx']],
  ['advanced',['docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx']],
+ ['followon',['docs/reviews/web-dashboard-header-departure-independent/followon.test.tsx']],
  ]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
