@@ -1,0 +1,82 @@
+revision=977369e fixed_commit=977369e433fc2e2a783011432c8da9494eb268c1
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-YVChfz
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx (30 tests | 2 failed) 446ms
+   ✓ absent mount and rerender preserve all absent physical sources without a draft 55ms
+   ✓ actual share producer saves exact own source and leaves siblings absent 14ms
+   ✓ actual avatars producer saves exact own source and leaves siblings absent 10ms
+   ✓ actual mentions producer saves exact own source and leaves siblings absent 9ms
+   ✓ invalid share source is retained on mount without fake draft or seed 7ms
+   ✓ invalid avatars source is retained on mount without fake draft or seed 6ms
+   ✓ invalid mentions source is retained on mount without fake draft or seed 5ms
+   ✓ share waits for its actual key lock with latest draft 10ms
+   ✓ avatars waits for its actual key lock with latest draft 10ms
+   ✓ mentions waits for its actual key lock with latest draft 8ms
+   ✓ account exclusive blocks share while independent device choice commits 13ms
+   ✓ three same-turn toggles use latest desired values 27ms
+   ✓ repairing one invalid device source preserves a failed sibling draft 18ms
+   × pending device operation survives account epoch and old combined guard is inert 16ms
+     → expected 'true' to be 'false' // Object.is equality
+   ✓ unchanged uncertain device Retry verifies without duplicate physical commit 15ms
+   ✓ source conflict discard is read-only and preserves another failed field 34ms
+   ✓ clean external values project all three controls without writing 12ms
+   ✓ forged share selection cannot persist or create a draft 9ms
+   ✓ missing locks retains latest choice without raw fallback write 11ms
+   ✓ retry of the only failed field never reattempts saved siblings 17ms
+   ✓ old export and discard capabilities are revoked after unmount 9ms
+   ✓ owner change at URL setup cancels and cleans old export without a click 14ms
+   ✓ failed export setup reports separate error while quota draft remains 13ms
+   ✓ failed export setup reports separate error while pure pending draft remains 12ms
+   ✓ actual migration preserves acknowledged share and fences queued old generation while devices remain independent 20ms
+   ✓ initial read denial repairs through read-only Reload without a fabricated draft 8ms
+   ✓ device uncertainty after external retains correct token and never duplicates prior commit 16ms
+   ✓ device uncertainty after owner retains correct token and never duplicates prior commit 14ms
+   ✓ device uncertainty after edited retains correct token and never duplicates prior commit 20ms
+   × old combined export callback refuses while fresh device-only export remains available after owner replacement 13ms
+     → expected [ 'collaborate-draft.json' ] to have a length of +0 but got 1
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 28 passed (30)
+   Start at  23:01:56
+   Duration  1.63s (transform 261ms, setup 0ms, collect 460ms, tests 446ms, environment 373ms, prepare 68ms)
+
+
+stderr | docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx > old combined export callback refuses while fresh device-only export remains available after owner replacement
+An update to CollaboratePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx > pending device operation survives account epoch and old combined guard is inert
+AssertionError: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx:21:522
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx > old combined export callback refuses while fresh device-only export remains available after owner replacement
+AssertionError: expected [ 'collaborate-draft.json' ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx:35:513
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

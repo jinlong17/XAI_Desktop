@@ -1,0 +1,11 @@
+revision=e08cd8c fixed_commit=e08cd8ca221ceef2f12c9de074186842e3cb1beb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-FbbISA
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/host.test.tsx (8 tests) 389ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:03:51
+   Duration  2.11s (transform 610ms, setup 0ms, collect 1.00s, tests 389ms, environment 417ms, prepare 76ms)

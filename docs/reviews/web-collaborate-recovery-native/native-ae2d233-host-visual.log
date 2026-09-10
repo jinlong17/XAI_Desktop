@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"ae2d233","browser":"Chrome/152.0.7977.83"}
+{"name":"device-failure-recovery","pass":false,"error":"AssertionError [ERR_ASSERTION]: Runtime errors during mount: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.\n\n1 !== 0\n"}

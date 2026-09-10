@@ -37,3 +37,11 @@ Initial `host-mixed-ae2d233.log` only contains the terminated worker IPC diagnos
 Likely feedback path: the pane guard depends on newly allocated translator/function and preference result identities; its registration effect calls the host's state-changing registration on every render. Terra is assigned a caller-local stabilization with current scope/session/draft semantics preserved. Do not modify the accepted host arbitration to hide the loop.
 
 The prior seven native interaction PASS results did not assert absence of React update-depth errors; they are insufficient to accept settled rendering. Full host assertions must be reached after this defect is fixed. Numbered closure remains unchanged.
+
+## Stable guard regression and recovery
+
+`977369e` fixes the composed-host mount loop: original seven host scenarios PASS, but the original pending-device old-guard test fails. The stable callbacks now read current refs and the old guard's discard callback clears the surviving device draft after A→B. The added explicit old-export test also reproduces a stale capability issuing a download. `contracts-old-capability-977369e.log` has 28 PASS / 2 FAIL, both old capability revocation failures; the original 29-test result remains separately preserved.
+
+Terra `e08cd8c` binds blocking/export/discard operations to the guard's captured composite token. Fixed `contracts-token-fixed-e08cd8c.log`: **30/30 PASS**. Fixed `host-token-fixed-e08cd8c.log`: original **7/7 PASS**. Extended `host-latest-e08cd8c.log`: **8/8 PASS**, including an older verified share write followed by a newer failed share intent keeping the first navigation blocked until the latest Retry succeeds.
+
+The independent native runner now enables Runtime events before navigation and fails on console errors or uncaught runtime exceptions. Fixed `ae2d233` fails at actual browser mount with React's maximum-update-depth message, confirming the component-level loop. Fixed `e08cd8c` reaches visual measurement without that mount error, but fails the first 375px recovery geometry oracle. See the native review. This remains a partial acceptance; full presentation and affected regressions are not waived.
