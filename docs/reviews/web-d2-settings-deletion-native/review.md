@@ -30,3 +30,7 @@ Fixed a6ad06d retains both original initial PASS controls, while the new cross-c
 ```sh
 node docs/reviews/web-d2-settings-deletion-native/verify-native.mjs a6ad06d cross-context-before
 ```
+
+## Cross-context repaired run
+
+Parent independently ran the expanded unchanged three-case native suite at fixed `f43dff6`: held account lock, same-page recovery and independent iframe recovery all PASS, then all three exact persisted receipt/account/IndexedDB checks PASS after observed process exit and restart (Chrome PID 6223 → 6253). No forced termination fallback was used. Evidence is `native-f43dff6-parent-cross-context-after.json`; the author's separate run is retained as `author-native-f43dff6.json`. This verifies the recovery lock repair within the probe scope. Confirmed server-success A→B admission and original operationId binding remain under implementation, so this does not accept the complete Settings/D2 slice.
