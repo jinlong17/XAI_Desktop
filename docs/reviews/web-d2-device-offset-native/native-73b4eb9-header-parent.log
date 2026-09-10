@@ -1,0 +1,6 @@
+{"name":"baseline","commit":"73b4eb9","browser":"Chrome/152.0.7977.83"}
+{"name":"absent-mount","pass":true}
+{"name":"held-device-lock","pass":true,"reload":true}
+{"name":"account-switch","pass":true,"reload":true}
+{"name":"gesture-unload","pass":true,"reload":true}
+{"name":"overlapping-gestures","pass":true,"reload":true}

@@ -1,0 +1,12 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-JqosIx
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx (5 tests) 1037ms
+   ✓ actual Back remains on Header and replays the first POP only after explicit discard  348ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  00:56:45
+   Duration  12.03s (transform 5.80s, setup 0ms, collect 8.83s, tests 1.04s, environment 855ms, prepare 557ms)

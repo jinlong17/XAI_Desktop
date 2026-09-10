@@ -29,3 +29,9 @@ These checks do not close Header: Sol's new real ordinary-Tab blur control fails
 ## Fixedf64ad44 final mechanism checkpoint
 
 Parent original host5, advanced5 and reachable followon2 all PASS. Original accepted account parent2 and device native5/four saved-position reload controls also PASS at this exact revision. These preserve first-intent, latest-completion, epoch/unmount and physical persistence behavior. Astra's final contract review remains authoritative; truthful note-only/frozen source messaging is still being checked separately.
+
+## Fixed73b4eb9 Retry correction checkpoint
+
+Parent reran the unchanged host5/advanced5/reachable followon2: all12 PASS. Original device native5 and four saved-position reload controls also PASS at73b4eb9. Those logs use the fixed Git archive, not the concurrently edited worktree. The original account parent2 was last executed atf64ad44 and remains separately attributed.
+
+Source comparison `git diff f64ad44 73b4eb9 -- packages apps` confines the product delta to Header source-copy selection and offset Retry/settlement ownership (plus focused tests); app adapter, navigation blur, shared coordinator/storage, Smart Lists, Collaborate and Pomodoro source did not change. Therefore priorf64 note-only native8/ENZH andc9 shared regression evidence keep their versioned scope. Affected offset/Retry tests and corrected source-copy branches receive new independent checks. Full Header acceptance still requires Sol original42 and Astra/new-token/copy reconciliation; passing this parent subset does not close it.
