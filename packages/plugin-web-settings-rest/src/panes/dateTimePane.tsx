@@ -36,7 +36,7 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
   const decisionTokenRef = React.useRef<object>({});
   const deviceSessionRef = React.useRef<object>({});
   const draftsRef = React.useRef<Drafts>(emptyDrafts());
-  const [, setDraftVersion] = React.useState(0);
+  const [draftVersion, setDraftVersion] = React.useState(0);
   const [exportFailed, setExportFailed] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
 
@@ -125,7 +125,7 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
       discardDraft: () => { if (isCurrent()) discardAll(); },
     };
     return registerDepartureGuard(guard);
-  }, [currentScope, discardAll, exportDraft, guardToken, hasCurrentDraft, lang, registerDepartureGuard, scope]);
+  }, [currentScope, discardAll, draftVersion, exportDraft, guardToken, hasCurrentDraft, lang, registerDepartureGuard, scope]);
   const hasActualDraft = hasCurrentDraft();
   const hasSourceIssue = fields.some(field => prefs[field].meta.source === "invalid" || prefs[field].meta.source === "unavailable" || prefs[field].meta.status === "error");
   React.useEffect(() => {
