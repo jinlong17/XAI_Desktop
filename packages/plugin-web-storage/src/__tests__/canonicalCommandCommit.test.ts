@@ -64,7 +64,7 @@ beforeEach(() => {
   setCanonicalCommandActivationForTests(true);
   vi.stubGlobal("navigator", {
     locks: {
-      request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()),
+      request: vi.fn(async (_name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!)()),
     },
   });
 });
@@ -320,7 +320,7 @@ describe("canonical command C primitive", () => {
     localStorage.setItem(key, JSON.stringify({ items: [] }));
     let release: (() => void) | undefined;
     const gate = new Promise<void>(resolve => { release = resolve; });
-    vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => { await gate; return callback(); }) } });
+    vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => { await gate; return (typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!)(); }) } });
     const pending = commitCanonicalCommand(defaultInput(scope));
     activate("replacement-owner");
     release!();

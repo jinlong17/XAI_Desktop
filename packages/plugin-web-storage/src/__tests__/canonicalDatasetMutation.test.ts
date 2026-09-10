@@ -30,7 +30,7 @@ beforeEach(() => {
   localStorage.clear();
   _clearAllListeners();
   setCanonicalCommandActivationForTests(true);
-  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
+  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, optionsOrRun: LockOptions | (() => Promise<unknown>), maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun : maybeRun!)()) } });
 });
 afterEach(() => { setCanonicalCommandActivationForTests(false); _clearAllListeners(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 

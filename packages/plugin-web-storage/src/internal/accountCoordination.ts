@@ -13,14 +13,5 @@ export const browserAccountLock: AccountCoordinationLock = async (name, mode, ru
   if (typeof navigator === "undefined" || !navigator.locks) {
     throw new Error("Account coordination lock unavailable.");
   }
-  // Some existing test adapters implement the older two-argument form. Native
-  // Web Locks has the three-argument form and receives the requested mode.
-  const request = navigator.locks.request as unknown as (
-    name: string,
-    optionsOrRun: LockOptions | (() => Promise<unknown>),
-    maybeRun?: () => Promise<unknown>,
-  ) => Promise<unknown>;
-  return request.length < 3
-    ? request(name, run) as Promise<ReturnType<typeof run>>
-    : request(name, { mode }, run) as Promise<ReturnType<typeof run>>;
+  return navigator.locks.request(name, { mode }, run);
 };
