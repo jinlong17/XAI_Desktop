@@ -60,7 +60,7 @@ export interface UserCalEventsApi {
 export function useUserCalEvents(): UserCalEventsApi {
   // The registry default is `Record<string, unknown>`; cast to the
   // concrete UserCalEvent shape here (single point of truth).
-  const [eventsRaw, setEventsRaw] = usePref("xai_calendar_events");
+  const [eventsRaw] = usePref("xai_calendar_events");
   const events = eventsRaw as Record<string, UserCalEvent>;
   const [scope] = useState(() => accountScope.capture());
   const valid = useCallback(isCalendarEventStore, []);
@@ -68,9 +68,8 @@ export function useUserCalEvents(): UserCalEventsApi {
     if (!accountScope.isReady(scope)) return null;
     const result = await mutateCanonicalDataset({ key: "xai_calendar_events", scope, validate: valid, initialize: () => ({}), mutate });
     if (!result.ok) return null;
-    setEventsRaw(result.data);
     return result.data;
-  }, [scope, valid, setEventsRaw]);
+  }, [scope, valid]);
 
   const list = useMemo(() => listEvents(events), [events]);
 
