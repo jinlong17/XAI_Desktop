@@ -17,10 +17,18 @@ export type {
   WidgetSpanClass,
   WidgetRenderContext,
   DashboardModuleProps,
+  DashboardHeaderDepartureGuard,
+  DashboardHeaderDepartureGuardRegistration,
 } from "./types.js";
 ```
 
 `src/internal/*` is private. Importing from `@repo/plugin-web-dashboard-grid/src/internal/...` is forbidden per CLAUDE.md Code Boundaries.
+
+`DashboardModuleProps.registerDepartureGuard` is an optional host capability.
+It receives a token-bound Header guard with current-owner `isCurrent`, actual
+note/device draft `isBlocking`, and explicit export/discard actions. The
+package remains standalone when it is omitted; the Web app supplies the shared
+departure coordinator and owns route replay and sign-out arbitration.
 
 ---
 
