@@ -1,0 +1,138 @@
+revision=b152399
+test-fixture=review-owned only; package run unmodified
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-dUSqOy
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=false
+entry-snapshot {"replace":false,"outcome":{"status":"fulfilled","value":{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:25:42.044Z"}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:25:42.044Z\"}","record":null,"secret":1,"auth":1}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+entry-snapshot {"replace":true,"outcome":{"status":"fulfilled","value":{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:25:42.045Z"}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:25:42.045Z\"}","record":null,"secret":1,"auth":1}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts (2 tests | 1 failed) 10ms
+   ✓ queued recovery keeps the entry receipt authority; same-identity raw replacement=false 3ms
+   × queued recovery keeps the entry receipt authority; same-identity raw replacement=true 6ms
+     → expected 'fulfilled' to be 'rejected' // Object.is equality
+     → expected '{"version":2,"kind":"account","accoun…' to be '{"version":2,"kind":"account","accoun…' // Object.is equality
+     → expected null to be 'retained account bytes' // Object.is equality
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "snapshot-A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "generation": "auth-A",
+        "owner": "snapshot-A",
+      },
+    ]
+
+
+Number of calls: 1
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  18:25:41
+   Duration  649ms (transform 119ms, setup 0ms, collect 162ms, tests 10ms, environment 218ms, prepare 74ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+AssertionError: expected 'fulfilled' to be 'rejected' // Object.is equality
+
+Expected: "rejected"
+Received: "fulfilled"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts:21:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+AssertionError: expected '{"version":2,"kind":"account","accoun…' to be '{"version":2,"kind":"account","accoun…' // Object.is equality
+
+Expected: "{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"pending","updatedAt":"2026-09-10T00:00:00.000Z"}"
+Received: "{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:25:42.045Z"}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts:21:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+AssertionError: expected null to be 'retained account bytes' // Object.is equality
+
+- Expected: 
+"retained account bytes"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts:21:165
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "accountId": "snapshot-A",
+        "epoch": -1,
+        "generation": "g1",
+        "kind": "account",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts:21:220
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      Object {
+        "generation": "auth-A",
+        "owner": "snapshot-A",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts:21:256
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯

@@ -25,8 +25,8 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
- for (const file of ['named-lock-fixture.ts','d2-settings-orchestrator.test.tsx','d2-settings-slice.test.ts']) copyFileSync(join(evidence,file),join(owned,file));
- for (const [name, include] of [['d2-settings-orchestrator', ['docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx']], ['d2-settings-slice', ['docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts']], ['d2-settings-package', ['src/__tests__/**/*.{test,spec}.{ts,tsx}']]]) {
+ for (const file of ['named-lock-fixture.ts','d2-settings-orchestrator.test.tsx','d2-settings-slice.test.ts','d2-settings-entry-snapshot.test.ts']) copyFileSync(join(evidence,file),join(owned,file));
+ for (const [name, include] of [['d2-settings-orchestrator', ['docs/reviews/web-board-workspace-astra-review/d2-settings-orchestrator.test.tsx']], ['d2-settings-slice', ['docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts']], ['d2-settings-entry-snapshot', ['docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts']], ['d2-settings-package', ['src/__tests__/**/*.{test,spec}.{ts,tsx}']]]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
   const suiteRoot = name === 'd2-settings-package' ? join(dir,'packages/plugin-web-settings-rest') : dir;
