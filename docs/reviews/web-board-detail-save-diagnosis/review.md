@@ -24,3 +24,7 @@ The current Terra workspace-corruption repair owns a separate hook and should fi
 # Current baseline for the approved repair
 
 Parent reran the unchanged three original assertions at fixed `c201a1d`: all three still correctly fail because rejected physical writes clear editable checklist, attachment and activity drafts. `independent-parent-c201a1d.log` retains the current result. The runner now uses revision/suffix filenames, leaving the original `before.log` and `independent.log` untouched. The source/storage-refusal assertions pass before the failing input-value assertion; the subsequent alert check is not reached and is not claimed verified. Implementation follows Astra's separate `20260909-detail-repair-architecture.md`.
+
+## Parent fixed repair regression
+
+At fixed product `5c6ed8e`, the unchanged original three failure-path tests PASS in `independent-parent-after-5c6ed8e.log`. Each retains the real rejected board storage write and unchanged physical bytes checks, and now reaches retained draft/alert assertions successfully. This is the three original regressions only; full architecture acceptance, actual downloads, responsive browser evidence and shared-caller package regressions remain pending.
