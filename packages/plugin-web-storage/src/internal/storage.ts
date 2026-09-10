@@ -17,7 +17,7 @@ import {
   type WebPrefValue,
 } from "./registry.js";
 import { encode, decode } from "./codec.js";
-import { AccountScopeError, accountScope, type AccountScope } from "./accountScope.js";
+import { AccountScopeError, accountScope, hasCommittedGenerationMarker, type AccountScope } from "./accountScope.js";
 import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from "./accountCoordination.js";
 import { ownershipForKey } from "./accountOwnership.js";
 import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
@@ -63,8 +63,7 @@ function assertCurrentAccountGeneration(scope: AccountScope): void {
   if (localStorage.getItem(`${prefix}deleted`) !== null) throw new Error("deleted");
   const raw = localStorage.getItem(`${prefix}committed-generation`);
   if (raw === null) throw new Error("recovery-required");
-  const marker: unknown = JSON.parse(raw);
-  if (!marker || typeof marker !== "object" || (marker as { generation?: unknown }).generation !== scope.generation) throw new Error("recovery-required");
+  if (!hasCommittedGenerationMarker(raw, scope.generation)) throw new Error("recovery-required");
 }
 
 function accountWriteFailure(error: unknown): AccountWriteResult {

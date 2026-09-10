@@ -1,4 +1,4 @@
-import { accountPrefix, accountScope, generationKey, generationMarkerKey, type AccountScope } from './accountScope.js';
+import { accountPrefix, accountScope, generationKey, generationMarkerKey, hasCommittedGenerationMarker, type AccountScope } from './accountScope.js';
 import { accountLifecycleLockName, browserAccountLock, type AccountCoordinationLock } from './accountCoordination.js';
 import { ownershipForKey } from './accountOwnership.js';
 import { recoveryKeyExclusion } from './lifecycleDeclaration.js';
@@ -50,14 +50,14 @@ export async function deleteAccountLocalDataAccount(
   try {
     return await lock(accountLifecycleLockName(scope.accountId, scope.kind === 'demo'), 'exclusive', async () => {
       try { accountScope.assertCurrent(scope); } catch { return { ok: false, reason: 'account-changed' } as const; }
+      const ownedPrefix = prefix(scope);
+      const tombstone = `${ownedPrefix}deleted`;
       const markerRaw = storage.getItem(generationMarkerKey(scope.accountId!, scope.kind === 'demo'));
-      if (markerRaw === null) return { ok: false, reason: 'recovery-required' } as const;
-      try {
-        const marker: unknown = JSON.parse(markerRaw);
-        if (!marker || typeof marker !== 'object' || (marker as { generation?: unknown }).generation !== scope.generation) {
-          return { ok: false, reason: 'account-changed' } as const;
-        }
-      } catch { return { ok: false, reason: 'recovery-required' } as const; }
+      // A tombstone proves this exact captured generation already entered
+      // exclusive cleanup, so it may resume after the marker was removed.
+      if (storage.getItem(tombstone) === null && !hasCommittedGenerationMarker(markerRaw, scope.generation!)) {
+        return { ok: false, reason: 'recovery-required' } as const;
+      }
       deleteAccountLocalData(scope, storage);
       return { ok: true } as const;
     });

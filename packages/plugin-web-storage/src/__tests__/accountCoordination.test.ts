@@ -1,4 +1,4 @@
-import { beforeEach, expect, it } from "vitest";
+import { beforeEach, expect, it, vi } from "vitest";
 import { accountScope, createAccountScopeController, createScopedStorage, generationKey, generationMarkerKey } from "../internal/accountScope.js";
 import { deleteAccountLocalDataAccount } from "../internal/accountDataLifecycle.js";
 import { migrateAccount, readGeneration, type MigrationLock } from "../internal/accountMigration.js";
@@ -53,6 +53,47 @@ it("deletes captured account data only after exclusive coordination", async () =
   };
   expect(await deleteAccountLocalDataAccount(scope, localStorage, lock)).toEqual({ ok: true });
   expect(localStorage.getItem(generationKey("A", "one", "xai_ai_convos"))).toBeNull();
+});
+
+it("requires a complete committed marker for typed and scoped async writes", async () => {
+  const scope = active();
+  localStorage.setItem(generationMarkerKey("A"), JSON.stringify({ generation: "one" }));
+  const physical = generationKey("A", "one", "xai_ai_convos");
+  localStorage.setItem(physical, JSON.stringify(["keep"]));
+  expect(await setPrefAccount("xai_ai_convos", [], { scope, lock: shared })).toEqual({ ok: false, reason: "recovery-required" });
+  expect(await createScopedStorage(localStorage).setItemAccount("xai_ai_convos", "[]", shared)).toEqual({ ok: false, reason: "recovery-required" });
+  expect(localStorage.getItem(physical)).toBe(JSON.stringify(["keep"]));
+});
+
+it("refuses raw scoped writes and removals for canonical receipt records", async () => {
+  active();
+  const physical = generationKey("A", "one", "xai_task_cols");
+  const raw = JSON.stringify({ format: "xai-command-state", version: 1, revision: 1, data: [], receipts: { prior: { operationVersion: 1, signature: "saved", result: { ok: true, targetId: "t" }, committedAt: "2026-09-09T00:00:00.000Z" } } });
+  localStorage.setItem(physical, raw);
+  const scoped = createScopedStorage(localStorage);
+  expect(await scoped.setItemAccount("xai_task_cols", "[]", shared)).toEqual({ ok: false, reason: "recovery-required" });
+  expect(await scoped.removeItemAccount("xai_task_cols", shared)).toEqual({ ok: false, reason: "recovery-required" });
+  expect(localStorage.getItem(physical)).toBe(raw);
+});
+
+it("resumes a tombstoned deletion after a record-removal failure", async () => {
+  const scope = active();
+  const physical = generationKey("A", "one", "xai_ai_convos");
+  localStorage.setItem(physical, "[]");
+  const native = Storage.prototype.removeItem;
+  const fault = vi.spyOn(Storage.prototype, "removeItem").mockImplementation(function (this: Storage, key: string) {
+    if (key === physical) throw new Error("remove fault");
+    native.call(this, key);
+  });
+  const exclusiveLock = async <T>(_name: string, mode: "shared" | "exclusive", run: () => Promise<T>) => {
+    expect(mode).toBe("exclusive");
+    return run();
+  };
+  expect((await deleteAccountLocalDataAccount(scope, localStorage, exclusiveLock)).ok).toBe(false);
+  expect(localStorage.getItem(generationMarkerKey("A"))).toBeNull();
+  fault.mockRestore();
+  expect(await deleteAccountLocalDataAccount(scope, localStorage, exclusiveLock)).toEqual({ ok: true });
+  expect(localStorage.getItem(physical)).toBeNull();
 });
 
 it("refuses publication when an acknowledged old-generation source changes during secret staging", async () => {

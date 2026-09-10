@@ -23,6 +23,21 @@ export function generationKey(accountId: string, generation: string, key: string
   return `${accountPrefix(accountId, demo)}${encodeURIComponent(generation)}:${encodeURIComponent(key)}`;
 }
 
+/** The committed marker is an ownership proof, not merely a generation label. */
+export function hasCommittedGenerationMarker(raw: string | null, generation: string): boolean {
+  if (raw === null) return false;
+  try {
+    const marker: unknown = JSON.parse(raw);
+    return marker !== null
+      && typeof marker === "object"
+      && (marker as { generation?: unknown }).generation === generation
+      && typeof (marker as { migrationId?: unknown }).migrationId === "string"
+      && (marker as { migrationId: string }).migrationId.length > 0
+      && Object.hasOwn(marker, "previous")
+      && ((marker as { previous?: unknown }).previous === null || typeof (marker as { previous?: unknown }).previous === "string");
+  } catch { return false; }
+}
+
 /** Every async writer and hook setter must capture a handle, not look up the next account. */
 export function createAccountScopeController() {
   let current: AccountScope = Object.freeze({ kind: 'locked', accountId: null, generation: null, epoch: 0 });
@@ -70,12 +85,14 @@ export function createScopedStorage(storage: Pick<Storage, 'getItem' | 'setItem'
     if ((scope.kind !== 'account' && scope.kind !== 'demo') || !scope.accountId || !scope.generation) throw new Error('account-changed');
     const raw = storage.getItem(generationMarkerKey(scope.accountId, scope.kind === 'demo'));
     if (raw === null) throw new Error('recovery-required');
-    const marker: unknown = JSON.parse(raw);
-    if (!marker || typeof marker !== 'object' || (marker as { generation?: unknown }).generation !== scope.generation) throw new Error('recovery-required');
+    if (!hasCommittedGenerationMarker(raw, scope.generation)) throw new Error('recovery-required');
   };
   const coordinated = async (key: string, write: () => void, lock: AccountCoordinationLock = browserAccountLock): Promise<ScopedStorageWriteResult> => {
     try {
       if (ownershipForKey(key) === 'device') { write(); return { ok: true }; }
+      // Raw scoped storage cannot safely preserve canonical receipt envelopes.
+      // Canonical data has its own account-then-dataset writer.
+      if (key === 'xai_task_cols' || key === 'xai_calendar_events') return { ok: false, reason: 'recovery-required' };
       if (!scope.accountId || scope.kind === 'locked') return { ok: false, reason: 'account-changed' };
       return await lock(accountLifecycleLockName(scope.accountId, scope.kind === 'demo'), 'shared', async () => {
         assertMarker(); write(); return { ok: true };
