@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','back','back-programmatic','same-turn-routes','same-turn-route-signout','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=(mode==='baseline'?'':'-'+mode)+(process.argv[4]?'-'+process.argv[4]:'');
+const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','back','back-programmatic','same-turn-routes','same-turn-route-signout','cleanup','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=(mode==='baseline'?'':'-'+mode)+(process.argv[4]?'-'+process.argv[4]:'');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}${evidenceSuffix}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -30,6 +30,7 @@ if(['owner-signout','route-signout','same-turn-route-signout'].includes(mode))fi
 (window as any).verify.signoutResult='not-requested';
 (window as any).verify.requestSignOut=()=>{(window as any).verify.signoutResult='pending';void requestSettingsDeparture('sign-out').then(result=>{(window as any).verify.signoutResult=result})};`);
 if(mode.startsWith('back'))fixtureSource=fixtureSource.replace("const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);","const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);await router.navigate('/app/settings/notifications',{replace:true});await router.navigate('/app/settings/smart_lists');");
+if(mode==='cleanup')fixtureSource=fixtureSource.replace("const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);","const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>},{path:'/outside',element:<div>Outside Settings</div>},{path:'/outside-next',element:<div>Outside Next</div>}]);const originalNavigate=router.navigate;(window as any).verify.navigationRestored=()=>router.navigate===originalNavigate;");
 const built=await build({stdin:{contents:fixtureSource,resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -53,6 +54,14 @@ try{
   throw Error('Actual host sidebar unmounted dirty pane without a guard; return selection='+restored);
  }
  assert(await ev('!!document.querySelector("dialog[open], [role=dialog], [role=alertdialog]")'),'Blocked departure dialog missing');
+ if(mode==='cleanup'){
+  await text('Discard local changes and leave');await ev('verify.navigate("/outside")');await delay(200);
+  assert.equal(await ev('location.pathname'),'/outside');assert(await ev('verify.navigationRestored()'),'Unmount did not restore router navigation method');
+  await ev('verify.navigate("/outside-next")');await delay(180);assert.equal(await ev('location.pathname'),'/outside-next');
+  await ev('history.back()');await delay(200);assert.equal(await ev('location.pathname'),'/outside');
+  assert(!await ev('!!document.querySelector("[role=dialog]")'),'Old Settings guard blocked an outside route');
+  record('native-router-cleanup',{pass:true,scope:'Actual composed host unmount restores original method; outside navigation and Back remain usable'});
+ }
  if(mode.startsWith('same-turn')){
   if(mode==='same-turn-route-signout')assert.equal(await ev('verify.signoutResult'),false,'Later same-turn sign-out claimed first route intent');
   await text('Discard local changes and leave');assert.equal(await ev('location.pathname'),'/app/settings/notifications','Later same-turn route replaced first intent');
