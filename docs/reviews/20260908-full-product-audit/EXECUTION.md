@@ -188,3 +188,6 @@ Astra b4344a4 rejects Board D1 6a1adac pending three fixes despite original four
 
 
 Settings consumer baseline `33832b1`: fixed c201a1d retains two unfenced cleanup failures and one cross-account partial-retry control. Awaiting Astra receipt-bound durable recovery contract before author API/caller work. Board detail `ec8f86e`: unchanged three draft-loss failures reproduced at c201a1d; Sol implements the previously approved detail recovery contract. Tasks D1 is bounded accepted by dbc2e69. No numbered closure.
+
+
+Parent native Settings baseline `8679232`, fixed ea5ba0b: actual Chrome/native WebLocks and IndexedDB reproduce held-account-lock bypass and concurrent duplicate synthetic auth cleanup (2 correct FAIL). Actual opaque A/B secret rows and isolated profile; no server deletion/provider calls. The approved receipt/single-flight implementation remains under Terra; before assertions are retained for fixed repair rerun.
