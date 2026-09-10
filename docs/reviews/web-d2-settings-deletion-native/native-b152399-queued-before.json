@@ -1,0 +1,38 @@
+{
+  "requestedRef": "b152399",
+  "revision": "b152399d4722e2f2e9af72d8ae40180c957ee950",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": true
+    },
+    {
+      "name": "concurrent-cross-account-recovery",
+      "pass": true
+    },
+    {
+      "name": "cross-context-recovery",
+      "pass": true
+    },
+    {
+      "name": "queued-receipt-replacement",
+      "pass": false,
+      "error": "Error: Queued stale receipt recovered after same-identity raw replacement"
+    }
+  ],
+  "checkpoint": {
+    "held-account-lock": {
+      "receipt": "{\"version\":2,\"accountId\":\"native-delete-held-account-lock\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:28:44.977Z\",\"authGeneration\":\"auth-native-delete-held-account-lock\"}"
+    },
+    "concurrent-cross-account-recovery": {
+      "receipt": "{\"version\":2,\"accountId\":\"native-delete-concurrent-cross-account-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:28:45.023Z\",\"authGeneration\":\"auth-native-delete-concurrent-cross-account-recovery\"}"
+    },
+    "cross-context-recovery": {
+      "receipt": "{\"version\":2,\"accountId\":\"native-delete-cross-context-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:28:45.198Z\",\"authGeneration\":\"auth-native-delete-cross-context-recovery\"}"
+    }
+  },
+  "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+}
