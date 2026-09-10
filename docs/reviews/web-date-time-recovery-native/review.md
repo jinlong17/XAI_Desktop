@@ -47,3 +47,8 @@ At fixed visual-only18f4e82, both visual and visual-zh modes pass all five width
 ## Shared repair fixed96c4915
 
 All sixteen current native modes pass; detailed executor/version/limitations are in `../web-date-time-recovery-independent/shared-96c4915.md`. This includes the preserved uncertainty-read-retry beforee921 failure and actual cross-document no-overwrite after. Full shared and caller acceptance remain with Astra.
+
+
+## Latest queued choice followed by Retry: new native counterexample
+
+`native-96c4915-before-fix-latest-pending-retry.log` reproduces Astra d38fdd1 through actual keyboard and mouse: hold start-week's real key lock; trusted s selectsSunday while physicalMonday; trusted second s selectsSaturday while physicalMonday; actual Retry twice; release; first write succeedsSunday, second physical attempt throws quota. Final visibleSaturday remains, but beforeunload warning and export/recovery actions disappear. This is a correct P1 caller attribution failure, not invalid input or a setup exception (Runtime0). The earlier passing pending tests used a different order and remain valid for that sequence. Terra owns the caller retry eligibility repair; the shared API promise contract is protected.

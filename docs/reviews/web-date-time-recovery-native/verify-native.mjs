@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-date-time-native-'));
-const sourceCommit=process.argv[2];const mode=process.argv[3]??'controls';if(!['controls','route','rail','signout','unload','clean','pending','uncertainty','export-all','export-sparse','owner','visual','visual-zh','focus','source','uncertainty-conflict','crossdoc-conflict','toggle-states','uncertainty-read-retry'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
+const sourceCommit=process.argv[2];const mode=process.argv[3]??'controls';if(!['controls','route','rail','signout','unload','clean','pending','uncertainty','export-all','export-sparse','owner','visual','visual-zh','focus','source','uncertainty-conflict','crossdoc-conflict','toggle-states','uncertainty-read-retry','latest-pending-retry'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
 const evidenceTag=sourceCommit+(process.argv[4]?'-'+process.argv[4]:'');
 if(existsSync(join(output,`native-${evidenceTag}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -60,6 +60,8 @@ try{
   }
  }else if(mode==='source'){
   assert.equal(await warning(),false);assert(await ev('!!document.querySelector(".dt-pane [role=alert]")'));assert.equal(await ev('document.querySelector(".dt-recovery-actions")'),null);await ev('verify.signout()');await waitFor('verify.signoutResult===true','Source-only incorrectly blocked');assert.equal((await ev('verify.writes()')).length,0);record('source-only',{pass:true});
+ }else if(mode==='latest-pending-retry'){
+  await ev('verify.hold(0);verify.failWriteNth(0,2)');await change(0);assert.equal((await selected()).week,'sunday');await change(0);assert.equal((await selected()).week,'saturday');await button('Retry Start week on');await button('Retry Start week on');await ev('verify.release(0)');await waitFor('verify.attempts()[verify.keys[0]]===2','Second attempt not reached');await delay(100);const state={raw:await ev('verify.read()'),selected:await selected(),warning:await warning(),recovery:await ev('!!document.querySelector(".dt-recovery-actions")')};record('latest-pending-retry-observation',state);assert.equal(state.raw[0],'sunday');assert.equal(state.selected.week,'saturday');assert(state.warning&&state.recovery,'Predecessor Retry cleared newer failed recovery');
  }else if(mode==='pending'){
   await ev('verify.hold(1)');await change(1);assert.equal((await ev('verify.read()'))[1],'true');await ev('verify.router.navigate("/app/settings/notifications")');assert(await ev('!!document.querySelector("[role=dialog]")'));await ev('verify.release(1)');await waitFor('location.pathname==="/app/settings/notifications"','Verified pending save failed to release route');assert.equal((await ev('verify.read()'))[1],'false');record('pending-release',{pass:true});
  }else if(mode==='uncertainty-read-retry'){
