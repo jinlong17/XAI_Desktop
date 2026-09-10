@@ -1,0 +1,11 @@
+revision=2fed984
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-BTPxfc
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-calendar-publication.test.tsx (2 tests) 17ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:15:00
+   Duration  888ms (transform 139ms, setup 311ms, collect 32ms, tests 17ms, environment 234ms, prepare 83ms)

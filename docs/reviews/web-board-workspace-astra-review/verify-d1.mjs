@@ -30,7 +30,9 @@ try {
  copyFileSync(join(evidence,'d1-pending-editor.test.tsx'),join(owned,'d1-pending-editor.test.tsx'));
  copyFileSync(join(evidence,'d1-repair-boundaries.test.tsx'),join(owned,'d1-repair-boundaries.test.tsx'));
  copyFileSync(join(evidence,'d1-reset-outcome.test.tsx'),join(owned,'d1-reset-outcome.test.tsx'));
+ copyFileSync(join(evidence,'d1-calendar-publication.test.tsx'),join(owned,'d1-calendar-publication.test.tsx'));
  for (const [name, include] of [
+  ['d1-calendar-publication', ['docs/reviews/web-board-workspace-astra-review/d1-calendar-publication.test.tsx']],
   ['d1-calendar-independent', ['docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx']],
   ['d1-shared-independent', ['docs/reviews/web-board-workspace-astra-review/d1-shared-writer.test.tsx']],
   ['d1-calendar-pending', ['docs/reviews/web-board-workspace-astra-review/d1-pending-editor.test.tsx']],
@@ -43,7 +45,7 @@ try {
   const result = spawnSync(join(root,'packages/plugin-web-board-workspaces/node_modules/.bin/vitest'), ['run','--config',config], {cwd:dir,encoding:'utf8',maxBuffer:20*1024*1024});
   if (result.error) throw result.error;
   if (result.status !== 0) process.exitCode = result.status ?? 1;
-  writeFileSync(join(evidence,name+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
+  writeFileSync(join(evidence,name+(process.argv[4]?'-'+process.argv[4]:'')+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
   console.log(name, 'exit='+result.status, result.stdout.slice(-1600));
  }
 } finally { rmSync(dir, {recursive:true,force:true}); }

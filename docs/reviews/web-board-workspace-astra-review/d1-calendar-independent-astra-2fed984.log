@@ -1,0 +1,26 @@
+revision=2fed984
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d1-goISDG
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-civil-date instead of admitting a merely string-shaped event
+invalid-civil-date {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-duration instead of admitting a merely string-shaped event
+invalid-duration {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > Calendar writer refuses invalid-recurrence instead of admitting a merely string-shaped event
+invalid-recurrence {"accepted":false,"physicalWritten":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued save must preserve an externally edited target and keep recovery open
+queued-save {"bytesPreserved":true,"editorOpen":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx > real CalendarModule queued delete must preserve an externally edited target and keep recovery open
+queued-delete {"bytesPreserved":true,"editorOpen":true}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-calendar-contract.test.tsx (11 tests) 878ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  17:15:03
+   Duration  2.13s (transform 418ms, setup 214ms, collect 427ms, tests 878ms, environment 260ms, prepare 69ms)

@@ -1,0 +1,11 @@
+revision=728822d
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-yeUCJq
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-board-parent-baseline.test.ts (4 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  17:13:45
+   Duration  1.22s (transform 345ms, setup 0ms, collect 480ms, tests 9ms, environment 373ms, prepare 65ms)
