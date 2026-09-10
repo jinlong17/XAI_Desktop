@@ -1,0 +1,27 @@
+{
+  "requestedRef": "e9ff409",
+  "revision": "e9ff409768a8fcf92cf9a4de3adf7685700b987e",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "native shared adapter",
+      "pass": false,
+      "error": "TypeError: Failed to execute 'request' on 'LockManager': Illegal invocation"
+    },
+    {
+      "name": "public account autosave",
+      "pass": false,
+      "error": "Error: Public async autosave refused with native available lock: {\"ok\":false,\"reason\":\"storage\"}"
+    },
+    {
+      "name": "public account migration",
+      "pass": false,
+      "error": "TypeError: Failed to execute 'request' on 'LockManager': Illegal invocation"
+    }
+  ],
+  "checkpoint": {},
+  "nativeRequestArity": 2,
+  "scope": "Native Chrome public adapter and account APIs; no mocked navigator, no activation or product UI acceptance"
+}
