@@ -1,0 +1,11 @@
+revision=af32234 fixed_commit=af32234025e0424c4f479b083460332fb1541877
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-EsGuon
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/host-wrapper.test.tsx (5 tests) 445ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  23:41:22
+   Duration  2.19s (transform 653ms, setup 0ms, collect 1.03s, tests 445ms, environment 286ms, prepare 102ms)
