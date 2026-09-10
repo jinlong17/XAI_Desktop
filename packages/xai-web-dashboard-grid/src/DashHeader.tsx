@@ -225,6 +225,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
   const guardTokenRef = useRef<object>({});
   const [noteIssue, setNoteIssue] = useState<string | null>(null);
   const [offsetIssue, setOffsetIssue] = useState<string | null>(null);
+  const [offsetSourceConflict, setOffsetSourceConflict] = useState(false);
   const [frozenSession, setFrozenSession] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
   const editingRef = useRef(editing);
@@ -248,7 +249,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
   const offsetHookIssue = offsetSave.meta.status === "error" ? (offsetSave.meta.error ?? "storage") : null;
   const offsetActualDraft = offsetPending || offsetIssue !== null || offsetGestureDirty || failedOffsetOperationRef.current !== null;
   const hasCurrentDraft = noteActualDraft || offsetActualDraft;
-  const hasSourceOnlyIssue = noteSourceIssue !== null || offsetSourceIssue !== null || offsetHookIssue !== null;
+  const hasSourceOnlyIssue = noteSourceIssue !== null || offsetSourceIssue !== null || offsetHookIssue !== null || offsetSourceConflict;
   const hasRecoveryNotice = hasCurrentDraft || frozenSession || hasSourceOnlyIssue;
   // A frozen A session may retain recovery state, but it must never render A's
   // committed text in B's active header.
@@ -456,21 +457,29 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     offsetOperationRef.current = null;
     failedOffsetOperationRef.current = null;
     setOffsetIssue(null);
+    setOffsetSourceConflict(false);
     setDraftVersion(version => version + 1);
   }, [clampNoteOffset, setVisibleOffset]);
 
   const submitOffset = useCallback((value: number, raw: string | null, retry = false) => {
+    const operation = { id: ++nextOffsetOperationId.current, value, raw };
     try {
       const current = localStorage.getItem("xai_pref_dashboard_header_note_x");
       if (offsetSave.meta.source === "unavailable" || (!retry && (current !== raw || offsetSave.meta.raw !== raw))) throw new Error("conflict");
     } catch {
+      // A moved gesture has a real desired coordinate even if the caller-side
+      // raw preflight rejects it before the async hook can enqueue. Retain that
+      // operation so guard/export/discard have the same truth as the visible
+      // coordinate, rather than treating it as a source-only problem.
+      failedOffsetOperationRef.current = operation;
       setOffsetIssue("conflict");
+      setDraftVersion(version => version + 1);
       return;
     }
-    const operation = { id: ++nextOffsetOperationId.current, value, raw };
     offsetOperationRef.current = operation;
     if (!retry) failedOffsetOperationRef.current = null;
     setOffsetIssue(null);
+    setOffsetSourceConflict(false);
     setDraftVersion(version => version + 1);
     const attempt = retry ? offsetSave.retry() : offsetSave.edit(value);
     void attempt.then((result) => settleOffset(operation, result), () => settleOffset(operation, { ok: false, reason: "storage" }));
@@ -500,6 +509,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       offsetOperationRef.current = null;
     }
     offsetSave.meta.reload();
+    setOffsetSourceConflict(false);
     setDraftVersion(version => version + 1);
   }, [offsetSave.meta]);
 
@@ -511,9 +521,15 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       let raw: string | null;
       try {
         raw = localStorage.getItem("xai_pref_dashboard_header_note_x");
-        if (offsetSave.meta.source === "unavailable" || offsetSave.meta.raw !== raw) throw new Error("conflict");
+        if (offsetSave.meta.source === "unavailable") throw new Error("unavailable");
+        if (offsetSave.meta.raw !== raw) {
+          setOffsetSourceConflict(true);
+          setDraftVersion(version => version + 1);
+          return;
+        }
       } catch {
-        setOffsetIssue("conflict");
+        // Merely pressing without crossing the movement threshold is never a
+        // position draft. The hook's source alert remains available for repair.
         return;
       }
       dragRef.current = {
@@ -757,12 +773,12 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       </button>
       {hasRecoveryNotice && <section role="alert" className="dash-note-recovery">
         {hasCurrentDraft ? <p>{frozenSession ? (lang === "zh" ? "当前设备位置尚未保存，可以导出或重试；此前账户的备注不会包含在此恢复操作中。" : "The current device position is unsaved and can be retried or exported. This recovery does not include the previous account's note.") : (lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving.")}</p> : <p>{lang === "zh" ? "备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。" : "The saved note position source is unavailable. Reload it; this is not a new unsaved draft."}</p>}
-        {(noteIssue === "conflict" || noteIssue === "account-changed" || offsetIssue === "conflict") && !frozenSession && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
+        {(noteIssue === "conflict" || noteIssue === "account-changed" || offsetIssue === "conflict" || offsetSourceConflict) && !frozenSession && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
         {frozenSession && <p>{lang === "zh" ? "此前账户的备注草稿保留在此会话中，但当前账户不能导出或放弃它。" : "The previous account's note draft remains protected in this session, but the current account cannot export or discard it."}</p>}
-        {(hasCurrentDraft || frozenSession) && <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>}
+        {(hasCurrentDraft || frozenSession || offsetSourceConflict) && <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>}
         {noteSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => noteSave.meta.reload()}>{lang === "zh" ? "重新读取备注" : "Reload dashboard note"}</button>}
         {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={reloadOffsetSource}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
-        {hasCurrentDraft && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => exportCurrentDraft()}>{frozenSession ? (lang === "zh" ? "导出当前设备位置草稿" : "Export current device draft") : (lang === "zh" ? "导出备注草稿" : "Export note draft")}</button>}
+        {hasCurrentDraft && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => exportCurrentDraft(account, guardToken)}>{frozenSession ? (lang === "zh" ? "导出当前设备位置草稿" : "Export current device draft") : (lang === "zh" ? "导出备注草稿" : "Export note draft")}</button>}
         {frozenSession && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => setExportFailed(true)}>{lang === "zh" ? "导出旧备注草稿" : "Export note draft"}</button>}
         {exportFailed && <p>{lang === "zh" ? "导出失败，请重试。" : "Export failed. Please retry."}</p>}
       </section>}

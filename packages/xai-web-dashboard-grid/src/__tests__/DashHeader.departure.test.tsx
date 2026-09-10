@@ -5,6 +5,7 @@ import type { DashboardHeaderDepartureGuard } from "../types.js";
 import { DashHeader } from "../DashHeader.js";
 
 const nativeSet = Storage.prototype.setItem;
+const nativeGet = Storage.prototype.getItem;
 let noteKey = "";
 
 function activate(owner: string, generation: string) {
@@ -75,6 +76,42 @@ describe("DashHeader departure capability", () => {
     const currentGuard = holder.current;
     if (!currentGuard) throw new Error("Header guard was not registered");
     expect(currentGuard.isBlocking()).toBe(true);
+  });
+
+  it("keeps a moved position whose caller raw preflight rejects as a real draft", async () => {
+    const ui = mount();
+    const lane = ui.container.querySelector(".dash-note-lane")!;
+    const note = ui.container.querySelector(".dash-note")!;
+    Object.defineProperty(lane, "clientWidth", { value: 760 });
+    Object.defineProperty(note, "offsetWidth", { value: 360 });
+    fireEvent.pointerDown(note, { button: 0, pointerId: 9, clientX: 100 });
+    fireEvent.pointerMove(note, { pointerId: 9, clientX: 160 });
+    nativeSet.call(localStorage, "xai_pref_dashboard_header_note_x", "95");
+    fireEvent.pointerUp(note, { pointerId: 9, clientX: 160 });
+    await waitFor(() => expect(ui.guard().isBlocking()).toBe(true));
+    expect(note.getAttribute("style")).toContain("60px");
+    const event = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    ui.guard().discardDraft();
+    await waitFor(() => expect(ui.guard().isBlocking()).toBe(false));
+    expect(localStorage.getItem("xai_pref_dashboard_header_note_x")).toBe("95");
+  });
+
+  it("does not make an unavailable position source dirty on an unmoved press", async () => {
+    const offsetKey = "xai_pref_dashboard_header_note_x";
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(function(this: Storage, key: string) {
+      if (key === offsetKey) throw new Error("denied");
+      return nativeGet.call(this, key);
+    });
+    const ui = mount();
+    const note = ui.container.querySelector(".dash-note")!;
+    fireEvent.pointerDown(note, { button: 0, pointerId: 10, clientX: 100 });
+    fireEvent.pointerUp(note, { pointerId: 10, clientX: 100 });
+    expect(ui.guard().isBlocking()).toBe(false);
+    const event = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
   });
 
   it("rejects a captured A capability after account B becomes current", async () => {
