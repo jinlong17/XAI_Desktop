@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { accountScope, generationMarkerKey } from "@repo/plugin-web-storage";
 
 import { DashHeader } from "../DashHeader.js";
