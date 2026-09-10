@@ -5,6 +5,7 @@ import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import { loadTaskColsOrSeed } from "@repo/plugin-web-tasks";
 import type { TaskCol, TaskCard } from "@repo/plugin-web-tasks";
 import { ensureBoardTaskLink } from "../internal/taskLinkCommand.js";
+import { createTestLockManager } from "./webLocksHarness.js";
 
 const boardKey = () => accountScope.physicalKey("xai_boards_v2");
 const taskKey = () => accountScope.physicalKey("xai_task_cols");
@@ -21,7 +22,7 @@ function task(): TaskCard { return taskCols().flatMap((col) => [...col.tasks, ..
 beforeEach(() => {
   setCanonicalCommandActivationForTests(true);
   localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({ generation: "fixture", migrationId: "test", previous: null }));
-  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
+  vi.stubGlobal("navigator", { locks: createTestLockManager() });
 });
 afterEach(() => setCanonicalCommandActivationForTests(false));
 
@@ -73,6 +74,28 @@ it("adds a Board task through the canonical envelope while retaining durable rec
   expect(state.status).toBe("envelope");
   if (state.status === "envelope") expect(state.envelope.receipts["ai:task-create"]).toBeDefined();
   expect(task().id).toBe("bt-b-default-bc1");
+});
+
+it("serializes concurrent same-owner attempts and retries acknowledgement without another Task commit", async () => {
+  seed();
+  const scope = accountScope.capture();
+  const locks = createTestLockManager();
+  vi.stubGlobal("navigator", { locks });
+  const taskWrites = vi.spyOn(Storage.prototype, "setItem");
+  const [first, second] = await Promise.all([
+    ensureBoardTaskLink("b-default", "bc1", scope),
+    ensureBoardTaskLink("b-default", "bc1", scope),
+  ]);
+
+  expect([first, second].filter((result) => result.ok)).toHaveLength(1);
+  expect([first, second].find((result) => !result.ok)).toMatchObject({ ok: false, phase: "acknowledgement" });
+  expect(taskWrites.mock.calls.filter(([key]) => key === taskKey())).toHaveLength(1);
+  expect(taskCols().flatMap((col) => [...col.tasks, ...(col.completed ?? [])]).filter((entry) => entry.source?.cardId === "bc1")).toHaveLength(1);
+  expect(card().taskLink?.pending).toBeUndefined();
+  expect(await ensureBoardTaskLink("b-default", "bc1", scope)).toEqual({ ok: true });
+  expect(taskWrites.mock.calls.filter(([key]) => key === taskKey())).toHaveLength(1);
+  expect(locks.calls.filter(({ name }) => name.endsWith(":lifecycle")).every(({ mode }) => mode === "shared")).toBe(true);
+  expect(locks.calls.filter(({ name }) => name.includes(":xai_task_cols")).every(({ mode }) => mode === "exclusive")).toBe(true);
 });
 
 it.each([JSON.stringify(null), JSON.stringify({ format: "xai-command-state", version: 1, revision: 1, data: null, receipts: {} })])("invalid non-absent task bytes %s never save Board intent", async (raw) => {

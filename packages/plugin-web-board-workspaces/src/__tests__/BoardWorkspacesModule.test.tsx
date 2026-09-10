@@ -11,6 +11,7 @@ import { BOARD_COVER_PRESETS, DEFAULT_BOARD_LABELS, makeDefaultBoards, isoDateFr
 import type { Board, BoardCardData } from "@repo/plugin-web-board-core";
 import type { TaskCol } from "@repo/plugin-web-tasks";
 import { BoardWorkspacesModule } from "../BoardWorkspacesModule.js";
+import { createTestLockManager } from "./webLocksHarness.js";
 
 // Mock xai-web-event-bus for ShareModal's emitWebEvent
 vi.mock("@repo/xai-web-event-bus", () => ({
@@ -28,7 +29,7 @@ beforeEach(() => {
   accountScope.activate(accountScope.lock("consumer-test"), "fixture");
   localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({ generation: "fixture", migrationId: "test", previous: null }));
   setCanonicalCommandActivationForTests(true);
-  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
+  vi.stubGlobal("navigator", { locks: createTestLockManager() });
 });
 
 function getStoredCard(cardId: string): BoardCardData {
