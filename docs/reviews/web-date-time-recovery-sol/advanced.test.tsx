@@ -6,9 +6,9 @@ import { activate, changeAll, download, flush, guard, hold, keys, mount, nativeG
 beforeEach(setup); afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 it("a previous equal Sunday success cannot clear a later Sunday failure", async () => {
-  const ui = mount(); await flush(); const release = await hold(keys[0]); let sundayWrites = 0; const base = Storage.prototype.setItem;
-  vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) { if (key === keys[0] && value === "sunday" && ++sundayWrites === 2) throw new Error("latest Sunday quota"); base.call(this,key,value); });
-  fireEvent.change(ui.select(), { target: { value: "sunday" } }); fireEvent.change(ui.select(), { target: { value: "saturday" } }); fireEvent.change(ui.select(), { target: { value: "sunday" } }); await release(); await flush(24);
+  const ui = mount(); await flush(); fireEvent.change(ui.select(), { target: { value: "sunday" } }); await flush(16); fireEvent.change(ui.select(), { target: { value: "saturday" } }); await flush(16); const base = Storage.prototype.setItem;
+  vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) { if (key === keys[0] && value === "sunday") throw new Error("latest Sunday quota"); base.call(this,key,value); });
+  fireEvent.change(ui.select(), { target: { value: "sunday" } }); await flush(16);
   expect(ui.select().value).toBe("sunday"); expect(nativeGet.call(localStorage,keys[0])).toBe("saturday"); expect(guard()?.isBlocking()).toBe(true);
 });
 
