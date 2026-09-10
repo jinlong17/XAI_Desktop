@@ -1,0 +1,13 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {collaboratePane} from './packages/plugin-web-settings-rest/src/panes/collaboratePane';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+import './packages/plugin-web-settings-shell/src/styles.css';
+import './packages/plugin-web-settings-rest/src/styles.css';
+const owner='collaborate-native';accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
+const keys=['xai_pref_collab_show_avatars','xai_pref_collab_mention_notify'];
+const nativeSet=Storage.prototype.setItem;
+(window as any).verify={keys,attempts:[] as string[],deny(){Storage.prototype.setItem=function(k,v){if(keys.includes(k)){(window as any).verify.attempts.push(k);throw new DOMException('quota','QuotaExceededError')}nativeSet.call(this,k,v)}}};
+createRoot(document.getElementById('app')!).render(collaboratePane.render({lang:'en'}));
