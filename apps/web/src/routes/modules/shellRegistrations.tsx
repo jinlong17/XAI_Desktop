@@ -38,7 +38,7 @@ import { meditationSlotRegistration } from "@repo/plugin-web-meditation";
 // xai-web-calendar row #12
 import { calendarSlotRegistration } from "@repo/plugin-web-calendar";
 // xai-web-dashboard-grid row #10
-import { dashboardGridSlotRegistration } from "@repo/plugin-web-dashboard-grid";
+import { dashboardRegistration } from "./dashboardRegistration.js";
 // xai-web-board-workspaces row #9 (workspace + multi-board layer wrapping row #7 board-core)
 import { boardWorkspacesWebModuleRegistration } from "@repo/plugin-web-board-workspaces";
 // xai-web-statistics row #20
@@ -70,7 +70,7 @@ export const webShellModuleRegistrations: WebModuleSlotRegistration[] = [
   aiChatWebModuleRegistration,  // xai-web-ai-chat row #18 (railOrder 1) — not toggleable
   withDisabledFallback(tasksWebModuleRegistration, "tasks"),
   withDisabledFallback(boardWorkspacesWebModuleRegistration, "board"),  // row #9 replaces row #7 wrapper
-  withDisabledFallback(dashboardGridSlotRegistration, "dashboard"),  // row #10
+  withDisabledFallback(dashboardRegistration, "dashboard"),  // row #10
   withDisabledFallback(calendarSlotRegistration, "calendar"),  // row #12
   withDisabledFallback(matrixSlotRegistration, "matrix"),
   withDisabledFallback(pomodoroRegistration, "pomodoro"),

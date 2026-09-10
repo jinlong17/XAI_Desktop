@@ -20,6 +20,7 @@ import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { accountScope, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import type { AccountScope, PrefMutationResult } from "@repo/plugin-web-storage";
+import type { DashboardHeaderDepartureGuardRegistration } from "./types.js";
 
 import { formatDashboardDate, pickGreetingKey } from "./internal/greeting.js";
 
@@ -30,6 +31,8 @@ export interface DashHeaderProps {
   now: Date;
   /** Click handler for the Add-widget button. Wired in P3. */
   onAddWidget?: () => void;
+  /** Optional app-owned host departure registration. */
+  registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
 }
 
 /** PlusIcon — minimal inline SVG matching the prototype's <Icon name="plus" size={14}/>. */
@@ -166,11 +169,12 @@ type OffsetGesture = {
 };
 
 type OffsetOperation = {
+  readonly id: number;
   readonly value: number;
   readonly raw: string | null;
 };
 
-export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
+export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: DashHeaderProps) {
   const { s } = useI18n(lang);
   const greetingKey = pickGreetingKey(now);
   const greeting = s(greetingKey);
@@ -184,6 +188,8 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const dragRef = useRef<OffsetGesture | null>(null);
   const suppressNextEditRef = useRef(false);
   const account = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const accountRef = useRef(account);
+  accountRef.current = account;
   const noteSave = usePrefAutosaveAsync<string>(HEADER_NOTE_SUFFIX, HEADER_NOTE_OPTIONS);
   const [committedNote, setCommittedNote] = useState(noteSave.value);
   const [draft, setDraft] = useState(noteSave.value);
@@ -195,6 +201,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const offsetOperationRef = useRef<OffsetOperation | null>(null);
   const ignoredOffsetOperationsRef = useRef(new Set<OffsetOperation>());
   const failedOffsetOperationRef = useRef<OffsetOperation | null>(null);
+  const nextOffsetOperationId = useRef(0);
   const [movingNote, setMovingNote] = useState<boolean>(false);
   const sessionRef = useRef<NoteSession | null>(null);
   const operationRef = useRef<NoteOperation | null>(null);
@@ -202,20 +209,36 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const draftRef = useRef(draft);
   const nextSessionId = useRef(0);
   const nextOperationId = useRef(0);
+  const [draftVersion, setDraftVersion] = useState(0);
+  const disposedRef = useRef(false);
+  const guardTokenRef = useRef<object>({});
   const [noteIssue, setNoteIssue] = useState<string | null>(null);
   const [offsetIssue, setOffsetIssue] = useState<string | null>(null);
   const [frozenSession, setFrozenSession] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
+  const editingRef = useRef(editing);
+  const committedNoteRef = useRef(committedNote);
+  const frozenSessionRef = useRef(frozenSession);
+  editingRef.current = editing;
+  committedNoteRef.current = committedNote;
+  frozenSessionRef.current = frozenSession;
   const notePending = operationRef.current !== null && noteIssue === null;
-  const noteUnresolved = notePending || noteIssue !== null || frozenSession;
+  const noteSourceIssue = noteSave.meta.source === "invalid" || noteSave.meta.source === "unavailable"
+    ? noteSave.meta.source
+    : null;
+  const noteActualDraft = !frozenSession && (
+    (editing && draft !== committedNote) || operationRef.current !== null || failedOperationRef.current !== null
+  );
   const offsetPending = offsetOperationRef.current !== null && offsetIssue === null;
   const offsetGestureDirty = dragRef.current?.moved === true;
   const offsetSourceIssue = offsetSave.meta.source === "invalid" || offsetSave.meta.source === "unavailable"
     ? offsetSave.meta.source
     : null;
   const offsetHookIssue = offsetSave.meta.status === "error" ? (offsetSave.meta.error ?? "storage") : null;
-  const offsetUnresolved = offsetPending || offsetIssue !== null || offsetGestureDirty || offsetSourceIssue !== null || offsetHookIssue !== null;
-  const unsaved = noteUnresolved || offsetUnresolved;
+  const offsetActualDraft = offsetPending || offsetIssue !== null || offsetGestureDirty || failedOffsetOperationRef.current !== null;
+  const hasCurrentDraft = noteActualDraft || offsetActualDraft;
+  const hasSourceOnlyIssue = noteSourceIssue !== null || offsetSourceIssue !== null || offsetHookIssue !== null;
+  const hasRecoveryNotice = hasCurrentDraft || frozenSession || hasSourceOnlyIssue;
   // A frozen A session may retain recovery state, but it must never render A's
   // committed text in B's active header.
   const displayNote = frozenSession ? noteSave.value : committedNote;
@@ -231,13 +254,25 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     setNoteIssue("account-changed");
     setCommittedNote(noteSave.value);
     setEditing(false);
+    guardTokenRef.current = {};
+    setDraftVersion(version => version + 1);
   }, [account, noteSave.value]);
   useEffect(() => {
-    if (!unsaved && !(editing && draft !== committedNote)) return;
+    // Every owner epoch gets a distinct decision capability. This makes an
+    // old callback refuse itself even when a host happens to retain it.
+    guardTokenRef.current = {};
+    setDraftVersion(version => version + 1);
+  }, [account]);
+  useEffect(() => {
+    if (!hasCurrentDraft && !frozenSession) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [unsaved, editing, draft, committedNote]);
+  }, [hasCurrentDraft, frozenSession]);
+  useEffect(() => {
+    disposedRef.current = false;
+    return () => { disposedRef.current = true; guardTokenRef.current = {}; };
+  }, []);
 
   const clampNoteOffset = useCallback((value: number): number => {
     const laneEl = laneRef.current;
@@ -277,6 +312,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const setDraftText = useCallback((value: string) => {
     draftRef.current = value;
     setDraft(value);
+    setDraftVersion(version => version + 1);
   }, []);
 
   const openSession = useCallback((): NoteSession | null => {
@@ -289,6 +325,8 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       sessionRef.current = session;
       setFrozenSession(false);
       setNoteIssue(null);
+      guardTokenRef.current = {};
+      setDraftVersion(version => version + 1);
       return session;
     } catch {
       setNoteIssue("conflict");
@@ -313,6 +351,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       operationRef.current = null;
       failedOperationRef.current = operation;
       setNoteIssue(result.reason);
+      setDraftVersion(version => version + 1);
       return;
     }
     operationRef.current = null;
@@ -328,6 +367,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       // against the physical result of the operation that just completed.
       sessionRef.current = { ...current, raw: result.raw };
     }
+    setDraftVersion(version => version + 1);
   }, []);
 
   const submit = useCallback((text: string, retry = false) => {
@@ -350,6 +390,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     operationRef.current = operation;
     if (!retry) failedOperationRef.current = null;
     setNoteIssue(null);
+    setDraftVersion(version => version + 1);
     // The successful preflight is intentionally adjacent to enqueueing: the engine repeats
     // the raw check inside its physical-key lock for the remaining race window.
     const attempt = retry ? noteSave.retry() : noteSave.edit(text);
@@ -377,6 +418,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       offsetOperationRef.current = null;
       failedOffsetOperationRef.current = operation;
       setOffsetIssue(result.reason);
+      setDraftVersion(version => version + 1);
       return;
     }
     const gesture = dragRef.current;
@@ -392,6 +434,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     offsetOperationRef.current = null;
     failedOffsetOperationRef.current = null;
     setOffsetIssue(null);
+    setDraftVersion(version => version + 1);
   }, [clampNoteOffset, setVisibleOffset]);
 
   const submitOffset = useCallback((value: number, raw: string | null, retry = false) => {
@@ -404,10 +447,11 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       setOffsetIssue("conflict");
       return;
     }
-    const operation = { value, raw };
+    const operation = { id: ++nextOffsetOperationId.current, value, raw };
     offsetOperationRef.current = operation;
     if (!retry) failedOffsetOperationRef.current = null;
     setOffsetIssue(null);
+    setDraftVersion(version => version + 1);
     const attempt = retry ? offsetSave.retry() : offsetSave.edit(value);
     void attempt.then((result) => settleOffset(operation, result), () => settleOffset(operation, { ok: false, reason: "storage" }));
   }, [offsetSave, settleOffset]);
@@ -436,6 +480,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       offsetOperationRef.current = null;
     }
     offsetSave.meta.reload();
+    setDraftVersion(version => version + 1);
   }, [offsetSave.meta]);
 
   const startNoteMove = useCallback(
@@ -458,7 +503,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         raw,
         moved: false,
       };
-      event.currentTarget.setPointerCapture?.(event.pointerId);
+      setDraftVersion(version => version + 1);
     },
     [editing, offsetSave.meta.raw, offsetSave.meta.source],
   );
@@ -469,11 +514,13 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       if (!drag || drag.pointerId !== event.pointerId) return;
       const deltaX = event.clientX - drag.startX;
       if (Math.abs(deltaX) > 3) {
+        event.currentTarget.setPointerCapture?.(event.pointerId);
         drag.moved = true;
         setMovingNote(true);
         const next = clampNoteOffset(drag.startOffset + deltaX);
         offsetDesiredRef.current = next;
         setVisibleOffset(next);
+        setDraftVersion(version => version + 1);
       }
     },
     [clampNoteOffset, setVisibleOffset],
@@ -486,8 +533,113 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     dragRef.current = null;
     setMovingNote(false);
     event.currentTarget.releasePointerCapture?.(event.pointerId);
+    setDraftVersion(version => version + 1);
     if (drag.moved) submitOffset(noteOffsetRef.current, drag.raw);
   }, [submitOffset]);
+
+  // The host guard deliberately reads the current refs. A note is only a
+  // current-user draft when its captured edit session still belongs to the
+  // active account. Position work is device-local and therefore survives an
+  // account epoch without lending the old note session to the new owner.
+  const hasLiveCurrentDraft = useCallback(() => {
+    const currentScope = accountScope.capture();
+    const noteSession = sessionRef.current;
+    const noteCurrent = !frozenSessionRef.current
+      && noteSession?.scope === currentScope
+      && ((editingRef.current && draftRef.current !== committedNoteRef.current)
+        || operationRef.current !== null || failedOperationRef.current !== null);
+    const offsetCurrent = dragRef.current?.moved === true
+      || offsetOperationRef.current !== null || failedOffsetOperationRef.current !== null;
+    return Boolean(noteCurrent || offsetCurrent);
+  }, []);
+
+  const discardCurrentDraft = useCallback(() => {
+    if (!hasLiveCurrentDraft()) return;
+    const currentScope = accountScope.capture();
+    const noteSession = sessionRef.current;
+    const discardNote = !frozenSessionRef.current && noteSession?.scope === currentScope
+      && ((editingRef.current && draftRef.current !== committedNoteRef.current)
+        || operationRef.current !== null || failedOperationRef.current !== null);
+    if (discardNote) {
+      operationRef.current = null;
+      failedOperationRef.current = null;
+      sessionRef.current = null;
+      setNoteIssue(null);
+      setDraftText(noteSave.value);
+      setEditing(false);
+      noteSave.meta.reload();
+    }
+    const discardOffset = dragRef.current?.moved === true
+      || offsetOperationRef.current !== null || failedOffsetOperationRef.current !== null;
+    if (discardOffset) {
+      const active = offsetOperationRef.current;
+      if (active) ignoredOffsetOperationsRef.current.add(active);
+      dragRef.current = null;
+      offsetOperationRef.current = null;
+      failedOffsetOperationRef.current = null;
+      setMovingNote(false);
+      setOffsetIssue(null);
+      offsetSave.meta.reload();
+    }
+    setExportFailed(false);
+    setDraftVersion(version => version + 1);
+  }, [hasLiveCurrentDraft, noteSave, offsetSave, setDraftText]);
+
+  const exportCurrentDraft = useCallback((decisionScope = accountScope.capture(), decisionToken = guardTokenRef.current) => {
+    let anchor: HTMLAnchorElement | null = null;
+    let url: string | null = null;
+    const stillCurrent = () => !disposedRef.current
+      && guardTokenRef.current === decisionToken
+      && accountScope.capture() === decisionScope
+      && hasLiveCurrentDraft();
+    try {
+      if (!stillCurrent()) return;
+      const noteSession = sessionRef.current;
+      const noteIsCurrent = !frozenSessionRef.current && noteSession?.scope === decisionScope;
+      // A source failure cannot establish account ownership. Current editable
+      // text is safe; otherwise use only a valid live current projection.
+      const note = noteIsCurrent
+        ? (editingRef.current ? draftRef.current : committedNoteRef.current)
+        : noteSave.meta.source === "valid" || noteSave.meta.source === "absent"
+          ? noteSave.value
+          : "";
+      const offset = normalizeHeaderNoteOffset(noteOffsetRef.current);
+      if (typeof note !== "string" || !Number.isFinite(offset)) throw new Error("invalid-draft");
+      const blob = new Blob([JSON.stringify({ version: 1, kind: "dashboard-note-draft", note, noteOffset: offset }, null, 2)], { type: "application/json" });
+      url = URL.createObjectURL(blob);
+      if (!stillCurrent()) return;
+      anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "dashboard-note-draft.json";
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      if (!stillCurrent()) return;
+      anchor.click();
+      if (stillCurrent()) setExportFailed(false);
+    } catch {
+      if (!disposedRef.current && guardTokenRef.current === decisionToken && accountScope.capture() === decisionScope) setExportFailed(true);
+    } finally {
+      try { anchor?.remove(); } catch { /* export cleanup never changes drafts */ }
+      try { if (url) URL.revokeObjectURL(url); } catch { /* export cleanup never changes drafts */ }
+    }
+  }, [hasLiveCurrentDraft, noteSave.meta.source, noteSave.value]);
+
+  const guardToken = guardTokenRef.current;
+  useEffect(() => {
+    if (!registerDepartureGuard) return undefined;
+    const decisionScope = account;
+    const isCurrent = () => !disposedRef.current
+      && guardTokenRef.current === guardToken
+      && accountScope.capture() === decisionScope;
+    return registerDepartureGuard({
+      token: guardToken,
+      label: lang === "zh" ? "工作台备注" : "Dashboard header",
+      isCurrent,
+      isBlocking: () => isCurrent() && hasLiveCurrentDraft(),
+      exportDraft: () => { if (isCurrent()) exportCurrentDraft(decisionScope, guardToken); },
+      discardDraft: () => { if (isCurrent()) discardCurrentDraft(); },
+    });
+  }, [account, discardCurrentDraft, draftVersion, exportCurrentDraft, guardToken, hasLiveCurrentDraft, lang, registerDepartureGuard]);
 
   const noteStyle = {
     "--dash-note-x": `${noteOffset}px`,
@@ -527,7 +679,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
                     event.preventDefault();
                     saveDraft();
                   }
-                  if (event.key === "Escape" && !noteUnresolved) {
+                  if (event.key === "Escape" && !notePending && noteIssue === null && !frozenSession) {
                     sessionRef.current = null;
                     setDraftText(committedNote);
                     setEditing(false);
@@ -580,29 +732,14 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         <PlusIcon />
         <span>{addWidget}</span>
       </button>
-      {unsaved && <section role="alert" className="dash-note-recovery">
-        <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p>
+      {hasRecoveryNotice && <section role="alert" className="dash-note-recovery">
+        {hasCurrentDraft ? <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p> : <p>{lang === "zh" ? "备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。" : "The saved note position source is unavailable. Reload it; this is not a new unsaved draft."}</p>}
         {(noteIssue === "conflict" || noteIssue === "account-changed" || frozenSession || offsetIssue === "conflict") && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
-        <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>
+        {(hasCurrentDraft || frozenSession) && <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>}
+        {noteSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => noteSave.meta.reload()}>{lang === "zh" ? "重新读取备注" : "Reload dashboard note"}</button>}
         {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={reloadOffsetSource}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
-        <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
-          try {
-            const session = sessionRef.current;
-            if (session) {
-              if (frozenSession || session.scope !== accountScope.capture()) throw new Error("account-changed");
-              accountScope.assertCurrent(session.scope);
-            } else {
-              // A device-only offset recovery has no note session to validate;
-              // validate the active account scope before exporting its committed note.
-              accountScope.physicalKey("xai_pref_dashboard_header_note", accountScope.capture());
-            }
-            const blob = new Blob([JSON.stringify({ version: 1, kind: "dashboard-note-draft", note: editing ? draftRef.current : displayNote, noteOffset }, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
-            anchor.href = url; anchor.download = "dashboard-note-draft.json";
-            document.body.appendChild(anchor); anchor.click(); anchor.remove();
-            setTimeout(() => URL.revokeObjectURL(url), 1000); setExportFailed(false);
-          } catch { setExportFailed(true); }
-        }}>{lang === "zh" ? "导出备注草稿" : "Export note draft"}</button>
+        {hasCurrentDraft && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => exportCurrentDraft()}>{lang === "zh" ? "导出备注草稿" : "Export note draft"}</button>}
+        {frozenSession && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => setExportFailed(true)}>{lang === "zh" ? "导出旧备注草稿" : "Export note draft"}</button>}
         {exportFailed && <p>{lang === "zh" ? "导出失败，请重试。" : "Export failed. Please retry."}</p>}
       </section>}
     </header>

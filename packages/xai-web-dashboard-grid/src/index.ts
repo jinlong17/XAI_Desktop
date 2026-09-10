@@ -21,4 +21,6 @@ export type {
   WidgetSpanClass,
   WidgetRenderContext,
   DashboardModuleProps,
+  DashboardHeaderDepartureGuard,
+  DashboardHeaderDepartureGuardRegistration,
 } from "./types.js";

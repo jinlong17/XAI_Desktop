@@ -8,6 +8,20 @@
 import type { ReactNode } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 
+/** Optional host capability for protecting current Header recovery work. */
+export interface DashboardHeaderDepartureGuard {
+  readonly token: object;
+  readonly label?: string;
+  readonly isBlocking: () => boolean;
+  readonly isCurrent: () => boolean;
+  readonly exportDraft: () => void;
+  readonly discardDraft: () => void;
+}
+
+export type DashboardHeaderDepartureGuardRegistration = (
+  guard: DashboardHeaderDepartureGuard,
+) => () => void;
+
 /**
  * Supported grid span classes — each matches a CSS rule in @repo/plugin-web-tokens
  * (layout.css). Ported from web design/module-dashboard.jsx:9-20.
@@ -78,6 +92,8 @@ export interface DashboardModuleProps {
    * emits web:shell:module-change.
    */
   goTo?: (moduleId: string) => void;
+  /** App-owned departure coordinator registration. Optional for standalone use. */
+  registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
 }
 
 /**

@@ -31,7 +31,7 @@ import { DashHeader } from "./DashHeader.js";
 import { EmptyState } from "./EmptyState.js";
 import type { DashboardModuleProps } from "./types.js";
 
-export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
+export function DashboardModule({ lang, widgets, goTo, registerDepartureGuard }: DashboardModuleProps) {
   const [now, setNow] = useState<Date>(() => new Date());
   const [pickerOpen, setPickerOpen] = useState<boolean>(false);
 
@@ -155,7 +155,7 @@ export function DashboardModule({ lang, widgets, goTo }: DashboardModuleProps) {
 
   return (
     <div className="module module-dashboard">
-      <DashHeader lang={lang} now={now} onAddWidget={handleAddFromHeader} />
+      <DashHeader lang={lang} now={now} onAddWidget={handleAddFromHeader} registerDepartureGuard={registerDepartureGuard} />
       {widgets.length === 0 ? (
         <EmptyState lang={lang} onAddWidget={handleAddFromEmpty} />
       ) : (
