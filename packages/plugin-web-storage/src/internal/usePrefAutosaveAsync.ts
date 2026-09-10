@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { accountScope } from "./accountScope.js";
 import type { WebPrefKey, WebPrefValue } from "./registry.js";
 import { usePrefAsync, type PrefAsyncMeta } from "./usePrefAsync.js";
 import type { PrefMutationResult } from "./prefMutation.js";
@@ -12,10 +13,12 @@ export function usePrefAutosaveAsync<K extends WebPrefKey>(key: K, options?: { v
   readonly meta: PrefAsyncMeta<WebPrefValue<K>>;
 } {
   const [value, setValue, meta] = usePrefAsync(key, options);
-  const [draft, setDraft] = useState(value);
+  const binding = `${String(key)}:${accountScope.capture().epoch}`;
+  const [draft, setDraft] = useState({ binding, value });
   const edit = useCallback(async (next: WebPrefValue<K>) => {
-    setDraft(next);
+    setDraft({ binding, value: next });
     return setValue(next);
-  }, [setValue]);
-  return { value: meta.pending || meta.status === "error" || meta.status === "conflict" ? draft : value, edit, retry: meta.retry, reset: meta.reset, meta };
+  }, [binding, setValue]);
+  const localDraft = draft.binding === binding ? draft.value : value;
+  return { value: meta.pending || meta.status === "error" || meta.status === "conflict" ? localDraft : value, edit, retry: meta.retry, reset: meta.reset, meta };
 }
