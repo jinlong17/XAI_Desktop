@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=mode==='baseline'?'':'-'+mode;
+const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=mode==='baseline'?'':'-'+mode;
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}${evidenceSuffix}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -25,7 +25,11 @@ for(const name of readdirSync(join(snapshot,'packages'))){
 const pinnedPackages={name:'pinned-workspace-packages',setup(build){build.onResolve({filter:/^@repo\//},args=>{const parts=args.path.split('/');const entry=aliases.get(parts.slice(0,2).join('/'));if(!entry)return;const sub=parts.length>2?'./'+parts.slice(2).join('/'):'.';let target=entry.pkg.exports?.[sub];if(typeof target==='object')target=target.import??target.default;if(typeof target!=='string')throw Error('Unresolved pinned export '+args.path);return {path:join(entry.folder,target)};});}};
 const downloads=join(directory,'downloads');mkdirSync(downloads);const delay=ms=>new Promise(r=>setTimeout(r,ms));let server,browser,socket;const records=[];const record=(name,value)=>{records.push({name,...value});console.log(name,JSON.stringify(value));};
 try{
-const built=await build({stdin:{contents:readFileSync(join(output,'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
+let fixtureSource=readFileSync(join(output,'native.tsx'),'utf8');
+if(['owner-signout','route-signout'].includes(mode))fixtureSource=fixtureSource.replace('// HOST_DEPARTURE_DELEGATE_PROBE',`import {requestSettingsDeparture} from './apps/web/src/routes/modules/settingsDeparture';
+(window as any).verify.signoutResult='not-requested';
+(window as any).verify.requestSignOut=()=>{(window as any).verify.signoutResult='pending';void requestSettingsDeparture('sign-out').then(result=>{(window as any).verify.signoutResult=result})};`);
+const built=await build({stdin:{contents:fixtureSource,resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
 browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
@@ -41,13 +45,27 @@ try{
  assert.equal(await ev('localStorage.getItem(verify.key)'),JSON.stringify({extension:'future-value'}));
  assert(await ev('!!document.querySelector("[role=alert]")'),'Actual unsaved feedback missing');
  const sidebar=async label=>{await ev(`(()=>{const e=[...document.querySelectorAll('.settings-sidebar [role=button]')].find(e=>e.textContent.trim()===${JSON.stringify(label)});if(!e)throw Error('missing actual sidebar '+${JSON.stringify(label)});e.focus();e.click()})()`);await delay(180)};
- await sidebar('Notifications');
+ if(mode==='owner-signout'){await ev('verify.requestSignOut()');await delay(180)}else await sidebar('Notifications');
  const pane=await ev('document.querySelector(".settings-detail").dataset.pane');
  if(pane!=='smart_lists'){
   await sidebar('Smart Lists');const restored=await ev('document.querySelectorAll(".sl-select")[0].value');
   throw Error('Actual host sidebar unmounted dirty pane without a guard; return selection='+restored);
  }
  assert(await ev('!!document.querySelector("dialog[open], [role=dialog], [role=alertdialog]")'),'Blocked departure dialog missing');
+ if(mode==='owner-signout'){
+  await ev('verify.switchOwner()');await delay(200);
+  assert.equal(await ev('verify.signoutResult'),false,'Account replacement did not cancel original sign-out');
+  assert(!await ev('!!document.querySelector("[role=dialog]")'),'A decision dialog remains for B');
+  await choose(0,'hide');assert(await ev('!!document.querySelector("[role=alert]")'),'B own failure missing');
+  assert.equal(await ev('document.querySelectorAll(".sl-select")[0].value'),'hide');
+  record('owner-replaces-signout',{pass:true,scope:'Actual scope replacement cancels original host decision before B edit; controlled accounts, no provider request'});
+ }
+ if(mode==='route-signout'){
+  await ev('verify.requestSignOut()');await delay(180);
+  assert.equal(await ev('verify.signoutResult'),false,'Unrelated sign-out gained a pending decision during route intent');
+  await text('Discard local changes and leave');assert.equal(await ev('location.pathname'),'/app/settings/notifications');
+  assert.equal(await ev('verify.signoutResult'),false);record('route-refuses-signout',{pass:true});
+ }
  if(mode==='journey'){
   await text('Export current draft');
   let filename;for(let i=0;i<60;i++){filename=readdirSync(downloads).find(f=>f.endsWith('.json'));if(filename)break;await delay(50)}
@@ -69,6 +87,14 @@ try{
   assert.equal(await ev('location.pathname'),'/app/settings/notifications','Repeated departure replaced original Notifications intent');
   assert.equal(await bytes(),JSON.stringify({extension:'future-value'}));
   record('original-navigation-intent',{pass:true});
+ }
+ if(mode==='focus-trap'){
+  await ev('(()=>{const buttons=document.querySelectorAll("[role=dialog] button");buttons[buttons.length-1].focus()})()');
+  await cdp('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});await delay(100);
+  assert(await ev('document.activeElement===document.querySelector("[role=dialog] button")'),'Native Tab escaped modal instead of wrapping');
+  await cdp('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});await delay(100);
+  assert(await ev('(()=>{const buttons=document.querySelectorAll("[role=dialog] button");return document.activeElement===buttons[buttons.length-1]})()'),'Native Shift+Tab escaped modal');
+  record('native-modal-tab-trap',{pass:true});
  }
  if(mode==='focus'){
   assert(await ev('document.querySelector("[role=dialog]").contains(document.activeElement)'),'Dialog did not receive focus');

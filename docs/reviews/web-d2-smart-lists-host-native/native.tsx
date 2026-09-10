@@ -9,10 +9,12 @@ import './packages/plugin-web-tokens/src/layout.css';
 import './packages/plugin-web-settings-shell/src/styles.css';
 import './packages/plugin-web-settings-rest/src/styles.css';
 const owner='smart-visual';accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
-const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;
+let key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;
 (window as any).verify={key,restore(){Storage.prototype.setItem=nativeSet},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}}};
 history.replaceState(null,'','/app/settings/smart_lists');
 const Composed=composedSettingsRegistration.children[0].render;
 const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);
+// HOST_DEPARTURE_DELEGATE_PROBE
+(window as any).verify.switchOwner=()=>{const next='smart-native-b';accountScope.activate(accountScope.lock(next),'g1');nativeSet.call(localStorage,generationMarkerKey(next),JSON.stringify({generation:'g1',migrationId:'fixture-b',previous:null}));key=accountScope.physicalKey('xai_pref_smart_lists');nativeSet.call(localStorage,key,JSON.stringify({extension:'owner-b'}));(window as any).verify.key=key;};
 (window as any).verify.navigate=(path:string)=>{void router.navigate(path)};
 createRoot(document.getElementById('app')!).render(<WebShellProvider modules={[composedSettingsRegistration]} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);

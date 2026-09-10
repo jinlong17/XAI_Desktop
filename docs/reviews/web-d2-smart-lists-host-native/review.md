@@ -25,3 +25,13 @@ Unchanged `journey`, `intent`, and `focus` modes all pass on fixed `6bf02de`: [f
 ## Fixed 6bf02de: programmatic destination replacement remains reproducible
 
 A separate [programmatic mode](native-6bf02de-programmatic.log) uses the same real Notifications sidebar to start departure, then calls the actual data router's `navigate('/app/settings/appearance')` while blocked. Discard incorrectly goes to Appearance instead of the initial Notifications intent. This is a correct FAIL on6bf02de and shows why the sidebar-only intent pass does not prove route-level coalescing. The fixture exposes the real router method without mocking the blocker, guard, pane, or navigation implementation. Astra has this evidence for complete contract review.
+
+## Fixed 6bf02de: native owner, mixed intent and keyboard failures
+
+Three additional modes reproduce Astra's remaining host concerns in actual Chrome:
+
+- [owner-signout](native-6bf02de-owner-signout.log): the actual host departure delegate opens A's sign-out decision. Replacing the synthetic active scope with B leaves A's Promise pending instead of cancelling it false. The later B-edit preservation assertions are not reached.
+- [route-signout](native-6bf02de-route-signout.log): a Notifications route already awaiting a decision must refuse the unrelated subsequent sign-out. It instead leaves sign-out pending. The final original-route Discard assertion is not reached.
+- [focus-trap](native-6bf02de-focus-trap.log): real Chrome Tab from the dialog's final action escapes instead of wrapping to its first action. The reverse Shift+Tab assertion is not reached.
+
+All three correctly fail on6bf02de. The account transition is fixture setup through the actual accountScope; the host delegate and pane/router behavior are real, while no provider is contacted. The delegate import is included only for the two sign-out modes, so old initial-host baselines that predate the helper remain buildable. No App auth integration result is inferred from these host-only probes. Original assertions/logs remain unchanged; Sol owns product repair and Astra the complete23+39 acceptance chain.
