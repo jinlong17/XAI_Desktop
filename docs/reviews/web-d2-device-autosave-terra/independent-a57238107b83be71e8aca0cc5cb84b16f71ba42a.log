@@ -1,0 +1,11 @@
+revision=a57238107b83be71e8aca0cc5cb84b16f71ba42a
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-FM39c2
+
+ ✓ docs/reviews/web-d2-device-offset-independent/contracts.test.tsx (3 tests) 49ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  20:54:55
+   Duration  877ms (transform 152ms, setup 0ms, collect 281ms, tests 49ms, environment 311ms, prepare 58ms)
