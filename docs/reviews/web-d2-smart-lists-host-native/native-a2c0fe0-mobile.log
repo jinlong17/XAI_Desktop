@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"a2c0fe0","browser":"Chrome/152.0.7977.83"}
+{"name":"mobile-dialog-layout","width":375,"height":812,"scroll":375,"dialog":{"left":16,"right":359,"top":607.984375,"bottom":796,"height":188.015625},"buttons":[{"text":"Stay","left":37,"right":66.609375,"top":679,"bottom":723,"height":44},{"text":"Export current draft","left":74.609375,"right":208.71875,"top":679,"bottom":723,"height":44},{"text":"Discard local changes and leave","left":37,"right":254.21875,"top":731,"bottom":775,"height":44}]}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

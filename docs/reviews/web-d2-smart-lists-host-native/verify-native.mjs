@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','back','back-programmatic','same-turn-routes','same-turn-route-signout','cleanup','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=(mode==='baseline'?'':'-'+mode)+(process.argv[4]?'-'+process.argv[4]:'');
+const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','back','back-programmatic','same-turn-routes','same-turn-route-signout','cleanup','mobile','mobile-targets','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=(mode==='baseline'?'':'-'+mode)+(process.argv[4]?'-'+process.argv[4]:'');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}${evidenceSuffix}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -37,7 +37,7 @@ server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.en
 browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
 let port;for(let i=0;i<300;i++){try{port=Number(readFileSync(join(directory,'profile','DevToolsActivePort'),'utf8').split('\n')[0]);break}catch{await delay(50)}}assert(port);
 const targets=await(await fetch('http://127.0.0.1:'+port+'/json/list')).json();socket=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise(r=>socket.addEventListener('open',r,{once:true}));let id=0;const pending=new Map();socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result)}});const cdp=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});socket.send(JSON.stringify({id:n,method,params}))});const ev=async expression=>{const r=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value};
-await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});await cdp('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});await cdp('Page.navigate',{url:'http://127.0.0.1:'+server.address().port});for(let i=0;i<100;i++){if(await ev("document.querySelectorAll('.sl-select').length===12"))break;await delay(50)}
+await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});await cdp('Emulation.setDeviceMetricsOverride',{width:mode.startsWith('mobile')?375:1440,height:mode.startsWith('mobile')?812:900,deviceScaleFactor:1,mobile:mode.startsWith('mobile')});await cdp('Page.navigate',{url:'http://127.0.0.1:'+server.address().port});for(let i=0;i<100;i++){if(await ev("document.querySelectorAll('.sl-select').length===12"))break;await delay(50)}
 
 const click=async selector=>{await ev(`document.querySelector(${JSON.stringify(selector)}).click()`);await delay(180)};const text=async label=>{await ev(`(()=>{const e=[...document.querySelectorAll('button')].find(e=>e.textContent.trim()===${JSON.stringify(label)});if(!e)throw Error('missing '+${JSON.stringify(label)});e.click()})()`);await delay(180)};const input=async value=>{await ev(`(()=>{const e=document.querySelector('input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}))})()`);await delay(180)};const bytes=()=>ev('localStorage.getItem(verify.key)');
 record('baseline',{commit:sourceCommit,browser:(await cdp('Browser.getVersion')).product});
@@ -54,6 +54,12 @@ try{
   throw Error('Actual host sidebar unmounted dirty pane without a guard; return selection='+restored);
  }
  assert(await ev('!!document.querySelector("dialog[open], [role=dialog], [role=alertdialog]")'),'Blocked departure dialog missing');
+ if(mode.startsWith('mobile')){
+  const layout=await ev('(()=>{const rect=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height}};const d=document.querySelector("[role=dialog]");return {width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,dialog:rect(d),buttons:[...d.querySelectorAll("button")].map(e=>({text:e.textContent,...rect(e)}))}})()');
+  const screenshot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`dialog-${sourceCommit}-375${mode==='mobile-targets'?'-targets':''}.png`),Buffer.from(screenshot.data,'base64'));record('mobile-dialog-layout',layout);
+  assert(layout.scroll<=layout.width,'Host horizontally overflows');assert(layout.dialog.left>=0&&layout.dialog.right<=layout.width&&layout.dialog.top>=0&&layout.dialog.bottom<=layout.height,'Dialog outside mobile viewport');
+  for(const button of layout.buttons){assert(button.height>=44,'Dialog target below44px');if(mode==='mobile-targets')assert(button.right-button.left>=44,'Dialog target width below44px');assert(button.left>=0&&button.right<=layout.width,'Dialog action horizontally clipped');}
+ }
  if(mode==='cleanup'){
   await text('Discard local changes and leave');await ev('verify.navigate("/outside")');await delay(200);
   assert.equal(await ev('location.pathname'),'/outside');assert(await ev('verify.navigationRestored()'),'Unmount did not restore router navigation method');

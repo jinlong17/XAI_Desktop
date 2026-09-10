@@ -59,3 +59,7 @@ This is parent native evidence, not complete independent acceptance. The host no
 ## Fixed a2c0fe0: router wrapper lifetime
 
 [Native cleanup](native-a2c0fe0-cleanup.log) passes. The fixture captures the original router.navigate before mounting the real composed host, exercises the actual dirty-draft Discard path, then navigates outside Settings. After actual unmount the method identity is restored; navigation to another outside page and browser Back work without a stale Settings dialog. Only this mode adds two simple external fixture routes; ordinary Smart/Back fixtures are unchanged. This specifically verifies the newly introduced wrapper's lifetime in actual Chrome, complementing independent navigation-parameter review.
+
+## Mobile rendered dialog: visible, narrow Stay hit target
+
+At fixeda2c0fe0 the actual composed host/dialog is rendered at375×812 with full Settings styles. Parent directly viewed [mobile image](dialog-a2c0fe0-375.png). [Mobile geometry](native-a2c0fe0-mobile.log) passes viewport containment, no horizontal overflow and44px **height** for all actions; that first mode did not assert width. The stricter [44×44 target mode](native-a2c0fe0-mobile-targets.log) correctly fails: Stay is only29.61px wide despite44px height. This is a narrow responsive usability issue, not a reversal of the independently accepted persistence/departure behavior. Terra's next scoped Styles ownership includes minimum inline target size; routing arbitration remains unchanged. The original geometry and stricter failure both remain preserved.
