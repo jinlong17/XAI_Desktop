@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Collaborate完整恢复已获Astra6254cb4接受；共享协调器抽取已获Astra ba7f0da接受。Pomodoro 0d7f885完整离页接线，b01b67c修复源恢复入口，e1a69fb修复恢复区遮挡。父原9/扩展8、native rail/route/signout/unload、denied/owner/pending导出分别通过；中英完整Shell五宽度与375弹窗在e1通过，原视觉FAIL与修复后证据见6844ce1/528ab18。990ac52已修复旧guard丢弃、下载同步账号切换、pending Retry误归属，Astra原14/7/24/2通过，父原9/扩展8及Smart/Collaborate/App回归、native pending通过（00900dc）。扩展合同仍有旧epoch isBlocking及冲突专属丢弃两项FAIL，Sol继续修复；Pomodoro完整合同尚未接受。正式完成13/312，未关闭299项，REL-05/09/D2仍开放。
+当前增量：Pomodoro完整当前用户六偏好恢复合同已获Astra051212a独立接受，固定2962b49：原16及mixedfollowon18、export7、既有Dv224/完成2通过；父原9/扩展8和同SHA真实Chrome十模式全部通过（711ddbd），Sol最终作者门禁2ae8272归属单列。历史源恢复/视觉/权限/Retry/冲突FAIL保留。Collaborate6254cb4和共享协调器ba7f0da接受保持有效。下一为Dashboard Header账号便签与设备位置的完整host恢复合同，保留d129950/830dd2b已有接受。正式完成13/312、未关闭299项；REL-05/09/D2继续开放。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
