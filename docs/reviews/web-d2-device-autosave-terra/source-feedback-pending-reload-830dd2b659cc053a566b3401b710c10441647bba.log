@@ -1,0 +1,11 @@
+revision=830dd2b659cc053a566b3401b710c10441647bba fixed_commit=830dd2b659cc053a566b3401b710c10441647bba
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-eZX4fc
+
+ ✓ docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx (3 tests) 64ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  20:56:24
+   Duration  774ms (transform 166ms, setup 230ms, collect 53ms, tests 64ms, environment 201ms, prepare 76ms)

@@ -1,0 +1,11 @@
+revision=830dd2b659cc053a566b3401b710c10441647bba fixed_commit=830dd2b659cc053a566b3401b710c10441647bba
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-B5lpd8
+
+ ✓ docs/reviews/web-d2-dashboard-note-astra/contracts.test.tsx (11 tests) 239ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  20:56:30
+   Duration  1.12s (transform 203ms, setup 269ms, collect 56ms, tests 239ms, environment 260ms, prepare 93ms)
