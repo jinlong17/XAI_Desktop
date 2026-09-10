@@ -21,3 +21,17 @@ it.each([false,true])('queued recovery keeps the entry receipt authority; same-i
  if(replace){expect.soft(outcome.status).toBe('rejected');expect.soft(localStorage.getItem(receiptKey)).toBe(replacement);expect.soft(localStorage.getItem(record)).toBe('retained account bytes');expect.soft(secret).not.toHaveBeenCalled();expect(auth).not.toHaveBeenCalled();}
  else{expect(outcome.status).toBe('fulfilled');expect(JSON.parse(localStorage.getItem(receiptKey)!).phase).toBe('complete');expect(localStorage.getItem(record)).toBeNull();expect(secret).toHaveBeenCalledTimes(1);expect(auth).toHaveBeenCalledTimes(1);}
 });
+it('new raw identity while an old same-page recovery is active gets its own authorized outcome',async()=>{
+ const receipt={version:2 as const,kind:'account' as const,accountId:'snapshot-A',generation:'g1',authGeneration:'auth-A',phase:'pending' as const,updatedAt:'2026-09-09T00:00:00.000Z'};
+ const key=accountDeletionReceiptKey(receipt.accountId);localStorage.setItem(key,JSON.stringify(receipt));
+ const locks=createTestLockManager();vi.stubGlobal('navigator',{locks});let release!:()=>void;const gate=new Promise<void>(resolve=>release=resolve);
+ secret.mockImplementationOnce(()=>gate).mockResolvedValue(undefined);
+ const oldAuth=vi.fn().mockResolvedValue(undefined),newAuth=vi.fn().mockResolvedValue(undefined);
+ const first=resumeAccountLocalDeletion(receipt,oldAuth);await vi.waitFor(()=>expect(secret).toHaveBeenCalledTimes(1));
+ const replacement={...receipt,updatedAt:'2026-09-10T00:00:00.000Z'};localStorage.setItem(key,JSON.stringify(replacement));
+ const second=resumeAccountLocalDeletion(replacement,newAuth);const sharesOldPromise=first===second;
+ const completed=Promise.allSettled([first,second]);release();const outcomes=await completed;
+ console.log('active-new-raw',JSON.stringify({sharesOldPromise,outcomes,oldAuth:oldAuth.mock.calls.length,newAuth:newAuth.mock.calls.length,receipt:localStorage.getItem(key)}));
+ expect.soft(sharesOldPromise).toBe(false);expect(outcomes[0].status).toBe('rejected');expect.soft(outcomes[1].status).toBe('fulfilled');expect(oldAuth).not.toHaveBeenCalled();expect(newAuth).toHaveBeenCalledTimes(1);
+ expect(JSON.parse(localStorage.getItem(key)!).phase).toBe('complete');
+});
