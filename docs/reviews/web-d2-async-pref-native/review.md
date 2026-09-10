@@ -12,3 +12,7 @@ Harness initialization initially lacked a ReactDOM resolver and stopped before p
 ## First fixed implementation
 
 At `5ed9329` both original native cases remain correct FAIL: the held lock now preserves old physical bytes, but the actual pane loses latest selection during pending; the quota case also loses latest selection after a confirmed rejected write. `native-5ed9329-parent-initial.json` preserves this transition rather than calling the original failure wholly fixed. Parent stable-validator hook two-case suite passes at this same revision; the rendered consumer boundary needs further repair. No process-reopen claim is made after initial failure.
+
+## Repaired real pane
+
+Fixed `04d036b` passes both unchanged initial browser cases: held native lifecycle lock preserves physical comment while select edit and Saving remain visible; quota failure preserves edit with Not saved/Retry, then Retry commits raw string edit. Both physical-value checks also pass after observed Chrome SIGTERM exit and whole-process reopen (PID 30302 → 30329), no forced fallback. Evidence `native-04d036b-parent-pane-validator.json`. This accepts neither the complete hook/session/reset contract nor all async preference APIs; those remain independently reviewed.
