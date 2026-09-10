@@ -1,0 +1,688 @@
+revision=3241529
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/xai-web-tasks
+
+ ✓ src/__tests__/completionContract.test.tsx (3 tests) 347ms
+   ✓ legacy completed group checkbox truly restores the task without inventing completion time  339ms
+ ✓ src/__tests__/TaskComposer.test.tsx (12 tests) 587ms
+ ✓ src/__tests__/registration.test.tsx (5 tests) 439ms
+   ✓ tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading  429ms
+ ✓ src/__tests__/dueDate.test.tsx (3 tests) 933ms
+   ✓ REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh  925ms
+ ✓ src/__tests__/aiMutateSubscriber.test.tsx (9 tests) 80ms
+ ✓ src/__tests__/aiCreateSubscriber.test.tsx (9 tests) 85ms
+ ✓ src/__tests__/TasksSidebar.test.tsx (6 tests) 247ms
+ ✓ src/__tests__/persistence.test.tsx (10 tests) 1774ms
+   ✓ TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)  332ms
+   ✓ TasksModule persistence > T-PER-2: after DnD move, localStorage xai_task_cols is a JSON array with updated cols  431ms
+ ✓ src/__tests__/TasksModule.test.tsx (15 tests) 1871ms
+   ✓ TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en  402ms
+   ✓ TasksModule — T-MOD-3 checkbox toggle > T-MOD-3: clicking checkbox toggles is-completed class on card  342ms
+ ✓ src/__tests__/tasksReducer.test.ts (29 tests) 30ms
+ ✓ src/__tests__/filterCardsByList.test.ts (24 tests) 18ms
+ ✓ src/__tests__/taskLink.test.ts (7 tests) 7ms
+ ✓ src/__tests__/seed.test.ts (4 tests) 5ms
+ ✓ src/__tests__/index-barrel.test.ts (11 tests) 8ms
+ ✓ src/__tests__/canonicalMigrationCompatibility.test.ts (2 tests) 8ms
+ ✓ src/__tests__/dateForCol.test.ts (5 tests) 8ms
+ ✓ src/__tests__/validate.test.ts (9 tests) 5ms
+ ✓ src/__tests__/ids.test.ts (2 tests) 5ms
+ ✓ src/__tests__/saveRecovery.test.tsx (7 tests) 3269ms
+   ✓ Tasks recoverable writes > retains and exports the latest composer draft, then retries exactly once  1065ms
+   ✓ Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry  442ms
+   ✓ Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry  426ms
+   ✓ Tasks recoverable writes > does not close failed detail deletion or delete list metadata before task references commit  472ms
+   ✓ Tasks recoverable writes > does not let an old queued detail deletion close a newer detail session  355ms
+
+ Test Files  19 passed (19)
+      Tests  172 passed (172)
+   Start at  17:13:01
+   Duration  4.78s (transform 791ms, setup 4.76s, collect 2.23s, tests 9.72s, environment 8.89s, prepare 1.62s)
+
+
+stderr | src/__tests__/TaskComposer.test.tsx > TaskComposer — T-TC-3 valid save with tag > T-TC-3: title + tag work + Save → onSave({title, tag:'work', withDate:false}, 'later') called once
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TaskComposer.test.tsx > TaskComposer — T-TC-4 tag none by default > T-TC-4: default tag is None → onSave draft has no tag property
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TaskComposer.test.tsx > TaskComposer — T-TC-5 bucket retarget > T-TC-5: retarget bucket to overdue → second arg of onSave is overdue
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TaskComposer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/persistence.test.tsx > TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/persistence.test.tsx > TasksModule persistence > T-PER-1: empty localStorage → renders seed (Overdue column has 10 cards)
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-1 EN column headers > T-MOD-1: renders 4 column headers in correct order for lang=en
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/registration.test.tsx > tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/registration.test.tsx > tasksWebModuleRegistration — T-REG-2 RTL render > T-REG-2: TasksModuleRoute inside WebShellProvider renders EN Tasks heading
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-2 ZH column headers > T-MOD-2: renders 4 column headers in correct order for lang=zh
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-2 ZH column headers > T-MOD-2: renders 4 column headers in correct order for lang=zh
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/persistence.test.tsx > TasksModule persistence > T-PER-3: bogus localStorage falls back to seed + console.warn fired once
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/dueDate.test.tsx > REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/dueDate.test.tsx > REL-01 dueDate lifecycle > actual composer → detail edit → reload → local midnight refresh
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-4 DnD overdue → nodate > T-MOD-4: dragging a card from overdue to nodate strips its date element
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-4 DnD overdue → nodate > T-MOD-4: dragging a card from overdue to nodate strips its date element
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-5 drop-target highlight > T-MOD-5: while dragging over later column, it has drop-target class
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-5 drop-target highlight > T-MOD-5: while dragging over later column, it has drop-target class
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-6 drag hint while dragging > T-MOD-6: drag-hint element appears while a card is being dragged
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-MOD-6 drag hint while dragging > T-MOD-6: drag-hint element appears while a card is being dragged
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-COL-1 + button opens composer > T-COL-1: clicking + on a column with action===add opens the composer with that bucket pre-selected
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-COL-1 + button opens composer > T-COL-1: clicking + on a column with action===add opens the composer with that bucket pre-selected
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-EMPTY-1 board-level empty state EN (D-QT) > T-EMPTY-1b: clicking 'Today' (overdue bucket) when overdue is empty shows 'Nothing due today or overdue' (D-QT)
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — T-EMPTY-1 board-level empty state EN (D-QT) > T-EMPTY-1b: clicking 'Today' (overdue bucket) when overdue is empty shows 'Nothing due today or overdue' (D-QT)
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > renders All lists as list-grouped cards instead of time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > renders All lists as list-grouped cards instead of time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/persistence.test.tsx > filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: localStorage xai_task_cols is byte-identical before and after applying all filters
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/persistence.test.tsx > filterCardsByList — T-FILT-COUNT storage byte-identical (FP2) > T-FILT-COUNT: localStorage xai_task_cols is byte-identical before and after applying all filters
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > renders All tags as tag-grouped cards instead of time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > renders All tags as tag-grouped cards instead of time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_lists.
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed list metadata and retains its editor for retry
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > can switch an All lists overview back to time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/TasksModule.test.tsx > TasksModule — collection overview boards > can switch an All lists overview back to time buckets
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+[plugin-web-storage] quota exceeded for xai_pref_task_tags.
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not publish failed tag metadata and retains its editor for retry
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/__tests__/saveRecovery.test.tsx > Tasks recoverable writes > does not let an old queued detail deletion close a newer detail session
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TasksModule inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act

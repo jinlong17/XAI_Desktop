@@ -1,0 +1,150 @@
+revision=3241529
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+stale-detail {"failed":false,"preserved":false,"actual":"My unsaved title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+stale-detail {"failed":true,"preserved":false,"actual":"My unsaved title"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > queued missing detail target leaves the failed draft visibly recoverable
+missing-detail {"panel":false,"alert":false,"draftVisible":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old bulk-delete completion must preserve newer selection and detail session
+bulk-new-session {"panel":false,"selected":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting list metadata must also reassign references in valid completed storage
+completed-cascade {"kind":"list","completed":{"id":"completed","title":{"en":"Completed row","zh":"Completed row"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox","done":true}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting tag metadata must also reassign references in valid completed storage
+completed-cascade {"kind":"tag","completed":{"id":"completed","title":{"en":"Completed row","zh":"Completed row"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox","done":true}}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx (18 tests | 6 failed) 1599ms
+   ✓ valid empty envelope remains empty, retains receipts, and avoids seed writes 64ms
+   ✓ invalid present null refuses normalization without loss 141ms
+   ✓ invalid present {bad refuses normalization without loss 74ms
+   ✓ invalid present {"bad":"shape"} refuses normalization without loss 83ms
+   ✓ invalid present {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} refuses normalization without loss 86ms
+   × detail stale draft must not overwrite observed newer target; prior quota=false 98ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected null not to be null
+   × detail stale draft must not overwrite observed newer target; prior quota=true 105ms
+     → expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+     → expected null not to be null
+   ✓ queued detail save checks its baseline, keeps latest form, and refuses external change 83ms
+   × queued missing detail target leaves the failed draft visibly recoverable 57ms
+     → expected null not to be null
+   ✓ actual detail duplicate save is pending once and preserves receipts 74ms
+   ✓ old pending create completion keeps a newly opened composer draft 151ms
+   ✓ composer catches actual rejected Promise and retains retryable draft 18ms
+   ✓ queued old-owner detail save refuses both account records 129ms
+   ✓ actual list cascade waits for Task write and preserves metadata on failure 114ms
+   ✓ actual tag cascade waits for Task write and preserves metadata on failure 98ms
+   × old bulk-delete completion must preserve newer selection and detail session 112ms
+     → expected null not to be null
+     → expected null not to be null
+   × deleting list metadata must also reassign references in valid completed storage 56ms
+     → expected 'inbox' not to be 'inbox' // Object.is equality
+   × deleting tag metadata must also reassign references in valid completed storage 56ms
+     → expected [ 'study' ] to not include 'study'
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 12 passed (18)
+   Start at  17:12:58
+   Duration  2.44s (transform 214ms, setup 0ms, collect 364ms, tests 1.60s, environment 224ms, prepare 45ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present null refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {bad refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"bad":"shape"} refuses normalization without loss
+[plugin-web-tasks] usePref('xai_task_cols') returned non-array shape — falling back to seed.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > invalid present {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} refuses normalization without loss
+[plugin-web-storage] decode failed for xai_task_cols: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/storage.ts:107:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at TasksModule (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-pulQuF/packages/xai-web-tasks/src/TasksModule.tsx:74:21)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+AssertionError: expected '{"format":"xai-command-state","versio…' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":9,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":2,"tasks":[{"id":"t1","title":{"en":"External title","zh":"External title"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"},{"id":"t2","title":{"en":"Second","zh":"Second"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"}]}],"receipts":{"prior":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"t1"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+Received: "{"format":"xai-command-state","version":1,"revision":10,"data":[{"id":"overdue","key":"overdue","count":0,"tasks":[]},{"id":"next7","key":"next_7_days","count":0,"tasks":[]},{"id":"later","key":"later","count":0,"tasks":[]},{"id":"nodate","key":"no_date","count":2,"tasks":[{"id":"t1","title":{"en":"My unsaved title","zh":"My unsaved title"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox","done":false,"notes":""},{"id":"t2","title":{"en":"Second","zh":"Second"},"tag":"study","tags":["study"],"priority":"normal","listId":"inbox"}]}],"receipts":{"prior":{"operationVersion":1,"signature":"retained","result":{"ok":true,"targetId":"t1"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:30:357
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=false
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > detail stale draft must not overwrite observed newer target; prior quota=true
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:30:416
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > queued missing detail target leaves the failed draft visibly recoverable
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:33:602
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old bulk-delete completion must preserve newer selection and detail session
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:41:906
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > old bulk-delete completion must preserve newer selection and detail session
+AssertionError: expected null not to be null
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:41:980
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting list metadata must also reassign references in valid completed storage
+AssertionError: expected 'inbox' not to be 'inbox' // Object.is equality
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:45:254
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx > deleting tag metadata must also reassign references in valid completed storage
+AssertionError: expected [ 'study' ] to not include 'study'
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-tasks-boundaries.test.tsx:45:300
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
