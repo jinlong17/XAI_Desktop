@@ -1,0 +1,5 @@
+{"name":"baseline","commit":"f64ad44","browser":"Chrome/152.0.7977.83"}
+{"name":"keyboard-entry-observation","editor":true,"active":"dash-note__input","events":[{"name":"keydown","key":"Enter","target":"dash-note__display"},{"name":"keypress","key":"Enter","target":"dash-note__display"},{"name":"click","target":"dash-note__display"},{"name":"keyup","key":"Enter","target":""}]}
+{"name":"widget-observation","path":"/app/dashboard","dialog":true,"note":"Original note","blockers":[],"widgetEvents":[{"name":"pointerdown","target":"mc-jump","text":"Open Calendar "},{"name":"pointerup","target":"mc-jump","text":"Open Calendar "},{"name":"click","target":"mc-jump","text":"Open Calendar "}]}
+{"name":"departure","pass":true,"mode":"widget","runtimeErrors":0}
+{"name":"supplemental","pass":true,"mode":"widget","runtimeErrors":0}

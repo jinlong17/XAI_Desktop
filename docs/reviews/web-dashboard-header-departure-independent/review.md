@@ -25,3 +25,7 @@ The original accepted account parent2 also PASS at9193353 (`../web-d2-dashboard-
 The original Header departure5, advanced5 and reachable followon2 all PASS. Parent independently reran unchanged shared contracts at the same fixed product: Smart Lists host10, entry3, wrapper5, export8, App5; Collaborate host8; Pomodoro complete draft18, export7, Dv224, completion2, actual host9 and advanced8. All PASS. Logs remain in their original reviewer directories with `header-parent-c9a388d` attribution; this is a parent execution of unchanged assertions, not a new acceptance by their original reviewer.
 
 These checks do not close Header: Sol's new real ordinary-Tab blur control fails atc9 despite slow navigation now passing. Further caller fixes and final independent reconciliation remain required. No shared coordinator/engine source was changed by this product batch.
+
+## Fixedf64ad44 final mechanism checkpoint
+
+Parent original host5, advanced5 and reachable followon2 all PASS. Original accepted account parent2 and device native5/four saved-position reload controls also PASS at this exact revision. These preserve first-intent, latest-completion, epoch/unmount and physical persistence behavior. Astra's final contract review remains authoritative; truthful note-only/frozen source messaging is still being checked separately.

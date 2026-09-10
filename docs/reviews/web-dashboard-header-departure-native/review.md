@@ -51,3 +51,9 @@ English and Chinese full CSS each PASS375/414/768/1024/1440 plus375 departure di
 The same eight parent modes PASS: route, actual rail, signout, dispatched unload, unsubmitted programmatic departure, widget after quota failure, and English/Chinese full CSS. Chinese375 dialog screenshot was manually inspected again. Each passing mode reports zero runtime errors. The separate Sol slow-pointer oracles exercise writable unsubmitted text and still fail; these eight passes do not contradict those failures.
 
 Initial rail and English visual attempts did not start product execution: Chrome's DevToolsActivePort file was read before a positive port was available, producing `assert(port)` with actual0. Their empty logs are retained as startup diagnostics, not product failures. Sol corrected the harness wait in ac32efe to continue until a positive port; both modes then PASS with `startup-retry` suffix. Tests were run with reduced Chrome concurrency.
+
+## Fixedf64ad44 final parent native mechanism checks
+
+All eight original parent modes PASS at fixedf64ad44: unsubmitted, widget, rail, route, signout, dispatched unload, visual and visual-zh. Runtime errors are zero in every mode. English/Chinese375/414/768/1024/1440 and375 dialog retain contained,44px hit-testable controls and no horizontal overflow. Parent manually inspected English375 recovery and Chinese375 dialog screenshots. These are isolated synthetic account/native browser checks, not production deployment or unsaved crash survival.
+
+Sol separately owns slow-pointer/ordinary-blur/cancel/mixed/owner/full-denial/source layouts; this entry does not substitute for their final evidence. Pending truthful source-only/frozen copy changes require affected-branch checks, while unchanged mechanism results keep their explicit fixed revision.
