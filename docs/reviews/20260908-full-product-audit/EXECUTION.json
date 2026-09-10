@@ -461,7 +461,12 @@
         "commit:8c05c85",
         "../web-date-time-recovery-contract/contract.md",
         "../web-date-time-recovery-contract/remaining-writers.md",
-        "../web-date-time-recovery-independent/review.md"
+        "../web-date-time-recovery-independent/review.md",
+        "commit:2c09719",
+        "commit:e9213fb",
+        "commit:34cff59",
+        "commit:8407ab8",
+        "../web-date-time-recovery-native/review.md"
       ]
     },
     {

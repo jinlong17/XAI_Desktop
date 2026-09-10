@@ -193,3 +193,10 @@ Settings consumer baseline `33832b1`: fixed c201a1d retains two unfenced cleanup
 
 
 Parent native Settings baseline `8679232`, fixed ea5ba0b: actual Chrome/native WebLocks and IndexedDB reproduce held-account-lock bypass and concurrent duplicate synthetic auth cleanup (2 correct FAIL). Actual opaque A/B secret rows and isolated profile; no server deletion/provider calls. The approved receipt/single-flight implementation remains under Terra; before assertions are retained for fixed repair rerun.
+
+
+## 2026-09-10 Date & Time完整调用方复验
+
+Date & Time当前实现2c09719，caller通知修复e9213fb。父34cff59原host8通过/新增host12曾有2个all-clean不放行失败，e921现12全部通过；父8407ab8原native六模式、expanded pending/uncertainty正控/磁盘全量与稀疏导出/owner/source/focus及中英五宽度几何通过。手工截图发现开关轨道变圆和移动恢复按钮布局问题，Terra局部CSS修复中。Sol b64d499/36e5507与父native均确认uncertain写入后外部恢复原值，Retry仍覆盖外部值；Astra正在确定共享prefMutation/token修复与影响回归，不以DateTime raw预检绕过。完整DateTime及REL/D2仍未验收，13/312正式完成、299未关闭。
+
+证据：`../web-date-time-recovery-independent/review.md`、`../web-date-time-recovery-native/review.md`。新反例要求共享层裁决；本轮不新增编号关闭。

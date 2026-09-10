@@ -1,5 +1,7 @@
 # 真实 autosave 调用方接续
 
+最新验证检查点（2026-09-10）：Date & Time当前实现2c09719，caller通知修复e9213fb。父34cff59原host8通过/新增host12曾有2个all-clean不放行失败，e921现12全部通过；父8407ab8原native六模式、expanded pending/uncertainty正控/磁盘全量与稀疏导出/owner/source/focus及中英五宽度几何通过。手工截图发现开关轨道变圆和移动恢复按钮布局问题，Terra局部CSS修复中。Sol b64d499/36e5507与父native均确认uncertain写入后外部恢复原值，Retry仍覆盖外部值；Astra正在确定共享prefMutation/token修复与影响回归，不以DateTime raw预检绕过。完整DateTime及REL/D2仍未验收，13/312正式完成、299未关闭。
+
 当前增量：Dashboard Header完整当前会话恢复合同已获Astra106f1d8接受，固定73b4eb9：Astra boundaries5/recovery12/blur4/copy6共27、Sol原42、父actualHost5/5/2及nativeDv1五/已保存重开四、Sol受影响native六全部通过。正常uncertainty Retry实际单次写入且正确清除guard/unload；f64旧39/42失败和所有历史正确反例保留。作者3595cbd全包228/shell11及lint/type通过，父4600368的f64八native/中英五宽度、Solccf72e3的交互及e119 source-copy、c9共享门禁1bdc844按无变源码明确归属复用。接受文档web-dashboard-header-departure-astra/acceptance-73b4eb9.md逐层对齐，不宣称未保存崩溃恢复。Pomodoro051212a、Collaborate6254cb4、共享协调器ba7f0da接受保持有效。后续按完整writer合同继续；库存2ea710f固定c9为29files/85bindings/65setters，仅直接旧hook排程输入不是全部writer覆盖率。正式完成13/312，未关闭299；REL-05/09/D2不因此核销。 当前接续为完整Date & Time五控件合同3638e21：父fixed73 actualSettings+FullShell原8已在8c05c85确认7正确FAIL/1cleanPASS，五个quota选择丢失、普通路由/退出无拦截；Sol冻结完整字段/recovery before，Terra按合同实施，父继续host/native，Astra最终接受。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
