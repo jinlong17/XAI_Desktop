@@ -14,3 +14,20 @@ for(const failLatest of [false,true])it(`Retry after a newer queued choice obser
   expect(ui.select().value).toBe('saturday');expect.soft(guard()?.isBlocking()).toBe(failLatest);expect.soft(unload()).toBe(failLatest);
   if(failLatest)expect(ui.getByRole('button',{name:'Export Date & Time draft'})).toBeTruthy();
 });
+it('same-field source Reload cannot later acknowledge a different value as the retained draft Retry',async()=>{
+  nativeSet.call(localStorage,keys[0],'invalid-week');const ui=mount();await flush();
+  fireEvent.change(ui.select(),{target:{value:'sunday'}});await flush(16);expect(guard()?.isBlocking()).toBe(true);
+  nativeSet.call(localStorage,keys[0],'monday');
+  const reload=ui.queryByRole('button',{name:/Reload.*Start week on/i});
+  if(reload){fireEvent.click(reload);await flush(16);expect(ui.select().value).toBe('sunday');expect(guard()?.isBlocking()).toBe(true);}
+  fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(16);
+  // Either retain the unresolved Sunday against its original failed baseline,
+  // or truly commit Sunday through an explicitly permitted retry. A verified
+  // Monday cannot acknowledge the user's retained Sunday.
+  const raw=nativeGet.call(localStorage,keys[0]);expect(ui.select().value).toBe('sunday');
+  expect(raw==='sunday'||guard()?.isBlocking()===true).toBe(true);
+});
+it('source-only repaired Reload remains a clean read-only positive control',async()=>{
+  nativeSet.call(localStorage,keys[0],'invalid-week');const ui=mount();await flush();nativeSet.call(localStorage,keys[0],'saturday');const writes=vi.spyOn(Storage.prototype,'setItem');
+  fireEvent.click(ui.getByRole('button',{name:/Reload.*Start week on/i}));await flush(16);expect(ui.select().value).toBe('saturday');expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(writes).not.toHaveBeenCalled();expect(guard()?.isBlocking()).toBe(false);expect(unload()).toBe(false);
+});
