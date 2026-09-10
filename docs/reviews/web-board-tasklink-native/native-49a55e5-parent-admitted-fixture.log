@@ -1,0 +1,5 @@
+{"name":"baseline","revision":"49a55e5","chromePid":23613}
+{"name":"failed-task-write","pass":true,"taskId":"bt-b-default-bc1"}
+{"name":"reload-retry-one-task","pass":true,"taskId":"bt-b-default-bc1"}
+{"name":"second-reload-stable","pass":true,"taskId":"bt-b-default-bc1"}
+{"name":"PASS","scope":"Actual Board detail task-link failure, durable pending intent, page reload and retry with native WebLocks; synthetic account, no whole-browser restart claim"}
