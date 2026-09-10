@@ -16,3 +16,7 @@ At `5ed9329` both original native cases remain correct FAIL: the held lock now p
 ## Repaired real pane
 
 Fixed `04d036b` passes both unchanged initial browser cases: held native lifecycle lock preserves physical comment while select edit and Saving remain visible; quota failure preserves edit with Not saved/Retry, then Retry commits raw string edit. Both physical-value checks also pass after observed Chrome SIGTERM exit and whole-process reopen (PID 30302 → 30329), no forced fallback. Evidence `native-04d036b-parent-pane-validator.json`. This accepts neither the complete hook/session/reset contract nor all async preference APIs; those remain independently reviewed.
+
+## Native two-document functional serialization
+
+At fixed `04d036b`, the expanded suite adds an independent same-origin iframe with its own module/account scope. The parent holds the actual physical-key exclusive Web Lock, queues one increment from each document, confirms no early physical mutation, then releases. Both public mutatePref operations succeed, each updater runs once, and raw counter equals 2. All three initial cases and all three process-reopen checks PASS, Chrome PID 31421 → 31477 (`native-04d036b-parent-two-document.json`). This supplies the contract's native two-document update preservation layer; it does not prove every hook session, reset, uncertain commit or old synchronous writer is coordinated.

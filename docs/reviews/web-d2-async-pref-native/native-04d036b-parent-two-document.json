@@ -1,0 +1,57 @@
+{
+  "requestedRef": "04d036b",
+  "revision": "04d036b66d82ffdbc878465e7d9cd60f0e2e6beb",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 31421,
+  "reopenedPid": 31477,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "quota-retains-latest-draft",
+        "pass": true
+      },
+      {
+        "name": "two-document-functional",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "raw": "edit"
+      },
+      "quota-retains-latest-draft": {
+        "raw": "edit"
+      },
+      "two-document-functional": {
+        "raw": "2"
+      }
+    },
+    "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "quota-retains-latest-draft",
+        "pass": true
+      },
+      {
+        "name": "two-document-functional",
+        "pass": true
+      }
+    ],
+    "scope": "Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim"
+  }
+}

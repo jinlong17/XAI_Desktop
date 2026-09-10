@@ -1,6 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index.ts';
+import {accountScope,generationMarkerKey,mutatePref} from './packages/plugin-web-storage/src/index.ts';
+import {prefMutationLockName} from './packages/plugin-web-storage/src/internal/prefMutation.ts';
 import {accountLifecycleLockName} from './packages/plugin-web-storage/src/internal/accountCoordination.ts';
 import {collaboratePane} from './packages/plugin-web-settings-rest/src/panes/collaboratePane.tsx';
 const delay=(ms:number)=>new Promise(r=>setTimeout(r,ms));
@@ -8,10 +9,20 @@ function assert(v:unknown,message:string):asserts v{if(!v)throw Error(message);}
 async function run(){
  const cases:any[]=[];const checkpoint:Record<string,any>={};const initial=new URLSearchParams(location.search).get('phase')==='initial';
  if(initial)localStorage.clear();
- for(const name of ['held-account-lock','quota-retains-latest-draft']){
-  const owner='async-pref-native-'+name,key=accountScope.physicalKey('xai_pref_collab_default_share',accountScope.activate(accountScope.lock(owner),'g1'));
+ for(const name of ['held-account-lock','quota-retains-latest-draft','two-document-functional']){
+  const owner='async-pref-native-'+name,key=accountScope.physicalKey(name==='two-document-functional'?'xai_pref_native_counter':'xai_pref_collab_default_share',accountScope.activate(accountScope.lock(owner),'g1'));
   if(!initial){try{assert(localStorage.getItem(key)===(window as any).__checkpoint[name].raw,'Reopened preference changed');cases.push({name,pass:true});}catch(e){cases.push({name,pass:false,error:String(e)});}continue;}
   localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));localStorage.setItem(key,'comment');
+  if(name==='two-document-functional'){
+   localStorage.setItem(key,'0');let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(r=>release=r),started=new Promise<void>(r=>entered=r);
+   const held=navigator.locks.request(prefMutationLockName(key),{mode:'exclusive'},async()=>{entered();await gate;});await started;
+   const frame=document.createElement('iframe');frame.src='/?phase=worker';let ready!:()=>void,childStarted!:()=>void,done!:(v:any)=>void;const readyP=new Promise<void>(r=>ready=r),childStartedP=new Promise<void>(r=>childStarted=r),doneP=new Promise<any>(r=>done=r);
+   const listener=(event:MessageEvent)=>{if(event.source!==frame.contentWindow)return;if(event.data.type==='ready')ready();if(event.data.type==='started')childStarted();if(event.data.type==='done')done(event.data);};window.addEventListener('message',listener);document.body.append(frame);
+   try{await readyP;let calls=0;const first=mutatePref({key:'xai_pref_native_counter',codec:'json',defaultValue:0,validate:(v:unknown):v is number=>typeof v==='number',scope:accountScope.capture(),next:(v:number)=>{calls++;return v+1;}});
+    frame.contentWindow!.postMessage({type:'increment',owner},location.origin);await childStartedP;await delay(100);assert(localStorage.getItem(key)==='0','Native key lock did not hold both document writes');release();await held;
+    const [a,b]=await Promise.all([first,doneP]);assert(a.ok&&b.result?.ok,'A participating document failed');assert(calls===1&&b.calls===1,'Functional updater repeated');assert(localStorage.getItem(key)==='2','Two document increments lost an update');checkpoint[name]={raw:'2'};cases.push({name,pass:true});
+   }catch(e){cases.push({name,pass:false,error:String(e)});}finally{release();await held;window.removeEventListener('message',listener);frame.remove();}continue;
+  }
   const host=document.createElement('div');document.body.append(host);const root=createRoot(host);let release:(()=>void)|undefined,held:Promise<unknown>|undefined;
   const native=Storage.prototype.setItem;let rejected=0;
   try{
@@ -36,4 +47,8 @@ async function run(){
  }
  return {pass:cases.every(c=>c.pass),cases,...(initial?{checkpoint}:{}),scope:'Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim'};
 }
-run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));
+if(new URLSearchParams(location.search).get('phase')==='worker'){
+ window.addEventListener('message',async event=>{if(event.source!==parent||event.origin!==location.origin||event.data.type!=='increment')return;const scope=accountScope.activate(accountScope.lock(event.data.owner),'g1');let calls=0;parent.postMessage({type:'started'},location.origin);
+ try{const result=await mutatePref({key:'xai_pref_native_counter',codec:'json',defaultValue:0,validate:(v:unknown):v is number=>typeof v==='number',scope,next:(v:number)=>{calls++;return v+1;}});parent.postMessage({type:'done',result,calls},location.origin);}catch(error){parent.postMessage({type:'done',error:String(error),calls},location.origin);}
+ });parent.postMessage({type:'ready'},location.origin);
+}else run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));
