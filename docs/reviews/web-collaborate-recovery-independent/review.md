@@ -21,3 +21,19 @@ Locks use the named shared/exclusive test fixture, not native Web Locks. Export 
 Actual migration controller fencing; source-unavailable repair; older-success/newer-failure and ABA sequencing; uncertainty external replacement, edited targets and account changes; complete composed-host mixed-scope pending/success/owner/sign-out scenarios; rendered Collaborate recovery at 375/414/768/1024/1440 with full CSS, focus and 44px controls; affected Smart Lists host/entry/export and App preflight regression; final package/type checks. Acceptance must reconcile every row in `web-collaborate-recovery-contract/contract.md`.
 
 Runner archives the requested immutable product revision and overlays only reviewer assertions/fixture. Existing evidence filenames cannot be overwritten. No product source changes, deployment, or numbered closure in this reviewer checkpoint.
+
+## Extended review on ae2d233
+
+Terra fixes the pure-pending export message in `ae2d233`. `contracts-migration-corrected-ae2d233.log` is **29/29 PASS**, including the unchanged export-error oracle, actual account migration fencing with independent device save, read-unavailable repair, and device uncertainty after external change or account change.
+
+The first extended uncertainty-edited assertion wrongly required an immediate second write. The accepted engine contract gives changed targets a normal original baseline, not the old uncertainty token; because the first write changed raw storage without acknowledged readback, the new target must remain a conflict. The corrected oracle requires only one physical write, unchanged committed false, latest intended true retained, and unchanged Retry refusing to overwrite. Both first diagnostic logs remain preserved. This is a fixture expectation correction, not a product defect or weakened baseline protection. Forged selector coverage now inserts a real forged option before dispatching its value.
+
+### Confirmed real composed-host mount loop — not accepted
+
+`host-bounded-loop-ae2d233.log`: all seven scenarios stop at the common initial mount oracle because React reports **Maximum update depth exceeded**. These are seven reproductions of one mount defect, not seven independently reached navigation failures. Real `composedSettingsRegistration`, WebShellProvider and memory data router are used, with Node-compatible AbortController.
+
+Initial `host-mixed-ae2d233.log` only contains the terminated worker IPC diagnostic. The worker consumed sustained CPU without settling. After source inspection identified the guard-registration feedback path, the worker was stopped, and the independent oracle was made bounded: intercept only React's explicit maximum-update-depth diagnostic, record it and throw, then assert no such diagnostic at mount. Ordinary console output is retained. It now fails deterministically in under a second rather than spinning. No product mocks or guard replacement were introduced.
+
+Likely feedback path: the pane guard depends on newly allocated translator/function and preference result identities; its registration effect calls the host's state-changing registration on every render. Terra is assigned a caller-local stabilization with current scope/session/draft semantics preserved. Do not modify the accepted host arbitration to hide the loop.
+
+The prior seven native interaction PASS results did not assert absence of React update-depth errors; they are insufficient to accept settled rendering. Full host assertions must be reached after this defect is fixed. Numbered closure remains unchanged.

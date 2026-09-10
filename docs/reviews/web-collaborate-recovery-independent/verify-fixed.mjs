@@ -27,11 +27,12 @@ try {
  aliases.push({find:'react-router',replacement:join(root,'apps/web/node_modules/react-router')});
  aliases.push({find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-collaborate-recovery-independent'); mkdirSync(owned, {recursive:true});
- for(const file of ['contracts.test.tsx','fixture.tsx']) copyFileSync(join(evidence,file),join(owned,file));
+ for(const file of ['contracts.test.tsx','fixture.tsx','host.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
 
  symlinkSync(join(root,'apps/web/node_modules'),join(dir,'apps/web/node_modules'));
  for (const [name, include] of [
  ['contracts',['docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx']],
+ ['host',['docs/reviews/web-collaborate-recovery-independent/host.test.tsx']],
  ['package',['packages/plugin-web-settings-rest/src/__tests__/**/*.{test,spec}.{ts,tsx}']],
  ]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
