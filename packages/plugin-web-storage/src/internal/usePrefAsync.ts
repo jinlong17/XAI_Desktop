@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { decode, encode } from "./codec.js";
 import { accountScope, type AccountScope } from "./accountScope.js";
+import { ownershipForKey } from "./accountOwnership.js";
 import { PREF_REGISTRY, type PrefCodec, type WebPrefKey, type WebPrefValue } from "./registry.js";
-import { mutatePref, type PrefMutationReason, type PrefMutationResult, type PrefSource } from "./prefMutation.js";
+import { mutatePref, validatePrefCodecValue, validateRegisteredPrefValue, type PrefMutationReason, type PrefMutationResult, type PrefSource } from "./prefMutation.js";
 import { subscribeSameTab } from "./sameTabBus.js";
 
 export type PrefAsyncStatus = "idle" | "dirty" | "pending" | "saved" | "error" | "conflict";
@@ -53,13 +54,17 @@ type Controller<T> = View<T> & {
   observedRaw: string | null | undefined;
 };
 
+function safelyValid<T>(validate: (value: unknown) => value is T, value: unknown): value is T {
+  try { return validate(value); } catch { return false; }
+}
+
 function readSnapshot<T>(key: string, codec: Parameters<typeof decode>[0], fallback: T, validate: (value: unknown) => value is T, scope: AccountScope): Omit<View<T>, "binding" | "status" | "error"> {
-  try {
-    const raw = localStorage.getItem(accountScope.physicalKey(key, scope));
-    if (raw === null) return { value: fallback, raw, source: "absent" };
-    const value = decode(codec, raw);
-    return value !== null && validate(value) ? { value, raw, source: "valid" } : { value: fallback, raw, source: "invalid" };
-  } catch { return { value: fallback, raw: null, source: "unavailable" }; }
+  let raw: string | null;
+  try { raw = localStorage.getItem(accountScope.physicalKey(key, scope)); }
+  catch { return { value: fallback, raw: null, source: "unavailable" }; }
+  if (raw === null) return { value: fallback, raw, source: "absent" };
+  const value = decode(codec, raw);
+  return value !== null && safelyValid(validate, value) ? { value, raw, source: "valid" } : { value: fallback, raw, source: "invalid" };
 }
 
 function initialView<T>(binding: string, source: Omit<View<T>, "binding" | "status" | "error">): View<T> {
@@ -71,12 +76,11 @@ function controllerFrom<T>(view: View<T>, scope: AccountScope): Controller<T> {
   return { ...view, scope, disposed: false, running: false, sequence: 0, visualSequence: 0, queue: [], failed: null, activePromise: null, observedRaw: undefined };
 }
 
-export function prefCodecValidator<T>(codec: Parameters<typeof decode>[0]): (value: unknown) => value is T {
+export function prefCodecValidator<T>(codec: Parameters<typeof decode>[0], key?: string): (value: unknown) => value is T {
   return (value: unknown): value is T => {
-    if (codec === "string") return typeof value === "string";
     try {
-      const encoded = encode(codec, value);
-      return encoded !== null && decode(codec, encoded) !== null;
+      return validatePrefCodecValue(codec, value)
+        && (key === undefined || validateRegisteredPrefValue(key, value));
     } catch { return false; }
   };
 }
@@ -89,9 +93,12 @@ function refusal<T>(reason: PrefMutationReason): PrefMutationResult<T> {
 export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: PrefAsyncBinding<T>): readonly [T, (next: Setter<T>) => Promise<PrefMutationResult<T>>, PrefAsyncMeta<T>] {
   const validateRef = useRef(validate);
   validateRef.current = validate;
-  const scope = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const owner = ownershipForKey(key);
+  const capturedScope = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const scopeIdentity = owner === "device" ? "device" : capturedScope.epoch;
+  const scope = useMemo(() => capturedScope, [scopeIdentity]);
   const encodedDefault = encode(codec, defaultValue);
-  const binding = JSON.stringify([key, codec, encodedDefault, scope.epoch]);
+  const binding = JSON.stringify([key, codec, encodedDefault, scopeIdentity]);
   const fresh = useMemo(
     () => initialView(binding, readSnapshot(key, codec, defaultValue, validateRef.current, scope)),
     [binding, codec, key, scope],
@@ -165,8 +172,8 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
     controller.running = true;
     const liveValidate = (value: unknown): value is T => !controller.disposed
       && controllerRef.current === controller
-      && accountScope.capture() === controller.scope
-      && validateRef.current(value);
+      && (owner === "device" || accountScope.capture() === controller.scope)
+      && safelyValid(validateRef.current, value);
     const expectedRaw = request.kind === "reset" || typeof request.next !== "function" ? controller.raw : undefined;
     const attempt = mutatePref<T>({
       key,
@@ -197,14 +204,18 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
       controller.source = result.source;
       const observedConflict = controller.observedRaw !== undefined && controller.observedRaw !== result.raw;
       controller.observedRaw = undefined;
-      if (observedConflict) {
-        controller.failed = controller.queue.at(-1) ?? request;
-        update(controller, { status: "conflict", error: "conflict" });
-        return;
-      }
       if (controller.queue.length > 0) {
         update(controller, { status: "pending", error: null });
         queueMicrotask(() => run(controller));
+        return;
+      }
+      if (observedConflict) {
+        const next = readSnapshot(key, codec, defaultValue, validateRef.current, controller.scope);
+        update(controller, {
+          ...next,
+          status: next.source === "valid" || next.source === "absent" ? "idle" : "error",
+          error: next.source === "valid" || next.source === "absent" ? null : next.source,
+        });
         return;
       }
       if (request.sequence >= controller.visualSequence) controller.visualSequence = request.sequence;
@@ -213,7 +224,7 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
   }, [codec, defaultValue, key, update]);
 
   const enqueue = useCallback((controller: Controller<T>, request: Omit<Request<T>, "resolves">): Promise<PrefMutationResult<T>> => {
-    if (controller.disposed || controllerRef.current !== controller || accountScope.capture() !== controller.scope) return Promise.resolve(refusal("account-changed"));
+    if (controller.disposed || controllerRef.current !== controller || (owner === "account" && accountScope.capture() !== controller.scope)) return Promise.resolve(refusal("account-changed"));
     controller.failed = null;
     return new Promise((resolve) => {
       const tail = controller.queue.at(-1);
@@ -233,7 +244,7 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
     if (!controller || controller.binding !== binding || controller.disposed) return Promise.resolve(refusal("account-changed"));
     const sequence = ++controller.sequence;
     if (typeof next !== "function") {
-      if (!validateRef.current(next)) {
+      if (!safelyValid(validateRef.current, next)) {
         update(controller, { status: "error", error: "invalid" });
         return Promise.resolve(refusal("invalid"));
       }
@@ -289,11 +300,15 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
 export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyncOptions<WebPrefValue<K>>): readonly [WebPrefValue<K>, (next: Setter<WebPrefValue<K>>) => Promise<PrefMutationResult<WebPrefValue<K>>>, PrefAsyncMeta<WebPrefValue<K>>] {
   type T = WebPrefValue<K>;
   const entry = PREF_REGISTRY[key];
-  const defaultValidate = useMemo(() => prefCodecValidator<T>(entry.codec), [entry.codec]);
+  const defaultValidate = useMemo(() => prefCodecValidator<T>(entry.codec, key), [entry.codec, key]);
+  const validate = useMemo(() => {
+    if (!options?.validate) return defaultValidate;
+    return (value: unknown): value is T => defaultValidate(value) && safelyValid(options.validate!, value);
+  }, [defaultValidate, options?.validate]);
   return usePrefAsyncBinding({
     key,
     codec: entry.codec,
     defaultValue: entry.default as T,
-    validate: options?.validate ?? defaultValidate,
+    validate,
   });
 }

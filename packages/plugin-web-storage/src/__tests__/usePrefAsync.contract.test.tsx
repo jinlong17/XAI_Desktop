@@ -353,3 +353,92 @@ it("rejects incomplete, malformed, and registry-inconsistent open-ended bindings
   expect(() => resolvePrefAutosaveAsyncBinding("bad_default", { codec: "number", defaultValue: Number.POSITIVE_INFINITY, validate: validNumber })).toThrow(TypeError);
   expect(() => resolvePrefAutosaveAsyncBinding("collab_default_share", { codec: "json", defaultValue: {}, validate: (value): value is object => typeof value === "object" && value !== null })).toThrow(TypeError);
 });
+
+it("uses the registered domain validator when the caller does not repeat it", () => {
+  localStorage.setItem(physical(), "corrupt-permission");
+  const hook = renderPrefHook(() => usePrefAsync(prefKey));
+  expect(hook.result.current[0]).toBe("comment");
+  expect(hook.result.current[2].source).toBe("invalid");
+  expect(hook.result.current[2].status).toBe("error");
+});
+
+it("turns a throwing edit validator into a typed invalid result", async () => {
+  localStorage.setItem(physical(), "comment");
+  const hook = renderPrefHook(() => usePrefAsync(prefKey, {
+    validate: (value): value is "comment" | "edit" | "view" => {
+      if (value === "view") throw new Error("validator fault");
+      return validShare(value);
+    },
+  }));
+  let result!: Awaited<ReturnType<typeof hook.result.current[1]>>;
+  await act(async () => { result = await hook.result.current[1]("view"); });
+  expect(result).toMatchObject({ ok: false, reason: "invalid" });
+  expect(localStorage.getItem(physical())).toBe("comment");
+});
+
+it("keeps a device preference write alive across an account switch", async () => {
+  const key = "xai_accent_hue";
+  localStorage.setItem(key, "165");
+  const hook = renderPrefHook(() => usePrefAsync(key, { validate: validNumber }));
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const held = navigator.locks.request(prefMutationLockName(key), () => gate);
+  let pending!: Promise<unknown>;
+  act(() => { pending = hook.result.current[1](166); });
+  act(() => { activate("async-hooks-B", "g2"); });
+  release();
+  let result: unknown;
+  await act(async () => { await held; result = await pending; });
+  expect(result).toMatchObject({ ok: true });
+  expect(localStorage.getItem(key)).toBe("166");
+  expect(hook.result.current[0]).toBe(166);
+});
+
+it("keeps projected and reset values as the autosave draft baseline", async () => {
+  const scope = accountScope.capture();
+  const key = physical(scope);
+  localStorage.setItem(key, "view");
+  const hook = renderPrefHook(() => usePrefAutosaveAsync(prefKey, { validate: validShare }));
+  localStorage.setItem(key, "edit");
+  act(() => { window.dispatchEvent(new StorageEvent("storage", { key, newValue: "stale", storageArea: localStorage })); });
+  expect(hook.result.current.value).toBe("edit");
+
+  const nativeRemove = Storage.prototype.removeItem;
+  const remove = vi.spyOn(Storage.prototype, "removeItem").mockImplementation(function (this: Storage, target) {
+    if (target === key) throw new DOMException("quota", "QuotaExceededError");
+    return nativeRemove.call(this, target);
+  });
+  await act(async () => { await hook.result.current.reset(); });
+  expect(hook.result.current.value).toBe("edit");
+  expect(hook.result.current.meta.status).toBe("error");
+  remove.mockRestore();
+
+  await act(async () => { hook.result.current.meta.reload(); await hook.result.current.reset(); });
+  expect(hook.result.current.value).toBe("comment");
+  const held = holdLifecycle("async-hooks-A");
+  let pending!: Promise<unknown>;
+  act(() => { pending = hook.result.current.retry(); });
+  expect(hook.result.current.value).toBe("comment");
+  held.release();
+  await act(async () => { await held.held; await pending; });
+  expect(hook.result.current.value).toBe("comment");
+});
+
+it("adopts the latest committed value after concurrent functional saves", async () => {
+  const key = "xai_accent_hue";
+  localStorage.setItem(key, "165");
+  const first = renderPrefHook(() => usePrefAsync(key));
+  const second = renderPrefHook(() => usePrefAsync(key));
+  const add = vi.fn((value: number) => value + 1);
+  await act(async () => { await Promise.all([first.result.current[1](add), second.result.current[1](add)]); });
+  expect(add).toHaveBeenCalledTimes(2);
+  expect(localStorage.getItem(key)).toBe("167");
+  expect(first.result.current[0]).toBe(167);
+  expect(second.result.current[0]).toBe(167);
+  expect(first.result.current[2].status).not.toBe("conflict");
+
+  localStorage.setItem(key, "170");
+  act(() => { window.dispatchEvent(new StorageEvent("storage", { key, newValue: "stale", storageArea: localStorage })); });
+  expect(first.result.current[0]).toBe(170);
+  expect(second.result.current[0]).toBe(170);
+});

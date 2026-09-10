@@ -1,6 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
-import { encode } from "./codec.js";
-import { accountScope } from "./accountScope.js";
+import { useCallback } from "react";
 import { ownershipForKey } from "./accountOwnership.js";
 import { PREF_REGISTRY, type PrefCodec, type WebPrefKey, type WebPrefValue } from "./registry.js";
 import { validatePrefCodecValue, validateRegisteredPrefValue, type PrefMutationResult } from "./prefMutation.js";
@@ -36,6 +34,15 @@ function validDefault<T>(key: string, options: UsePrefAutosaveAsyncDynamicOption
   }
 }
 
+function composeValidator<T>(key: string, codec: PrefCodec, validate?: (value: unknown) => value is T): (value: unknown) => value is T {
+  const boundary = prefCodecValidator<T>(codec, key);
+  if (!validate) return boundary;
+  return (value: unknown): value is T => {
+    if (!boundary(value)) return false;
+    try { return validate(value); } catch { return false; }
+  };
+}
+
 /** Resolve and validate an autosave binding before any hook state is created. */
 export function resolvePrefAutosaveAsyncBinding<T>(
   keyOrSuffix: string,
@@ -47,7 +54,7 @@ export function resolvePrefAutosaveAsyncBinding<T>(
       key: keyOrSuffix,
       codec: registered.codec,
       defaultValue: registered.default as T,
-      validate: options?.validate ?? prefCodecValidator<T>(registered.codec),
+      validate: composeValidator(keyOrSuffix, registered.codec, options?.validate),
     };
   }
 
@@ -69,7 +76,7 @@ export function resolvePrefAutosaveAsyncBinding<T>(
   const generatedEntry = PREF_REGISTRY[key as WebPrefKey];
   if (generatedEntry && generatedEntry.codec !== options.codec) throw new TypeError("Registered preference codec mismatch");
   if (!validDefault(key, options)) throw new TypeError("Invalid preference defaultValue");
-  return { key, codec: options.codec, defaultValue: options.defaultValue, validate: options.validate };
+  return { key, codec: options.codec, defaultValue: options.defaultValue, validate: composeValidator(key, options.codec, options.validate) };
 }
 
 /** Explicit draft-owning async variant; the legacy autosave hook remains write-only. */
@@ -81,17 +88,6 @@ export function usePrefAutosaveAsync<T>(
 ): PrefAutosaveAsyncResult<T> {
   const resolved = resolvePrefAutosaveAsyncBinding(keyOrSuffix, options);
   const [value, setValue, meta] = usePrefAsyncBinding(resolved);
-  const encodedDefault = encode(resolved.codec, resolved.defaultValue);
-  const epoch = accountScope.capture().epoch;
-  const binding = useMemo(
-    () => JSON.stringify([resolved.key, resolved.codec, encodedDefault, epoch]),
-    [encodedDefault, epoch, resolved.codec, resolved.key],
-  );
-  const [draft, setDraft] = useState({ binding, value });
-  const edit = useCallback(async (next: T) => {
-    setDraft({ binding, value: next });
-    return setValue(next);
-  }, [binding, setValue]);
-  const localDraft = draft.binding === binding ? draft.value : value;
-  return { value: meta.pending || meta.status === "error" || meta.status === "conflict" ? localDraft : value, edit, retry: meta.retry, reset: meta.reset, meta };
+  const edit = useCallback((next: T) => setValue(next), [setValue]);
+  return { value, edit, retry: meta.retry, reset: meta.reset, meta };
 }
