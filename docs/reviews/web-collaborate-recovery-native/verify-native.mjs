@@ -10,12 +10,13 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode='device-controls';
+const mode=process.argv[3]??'device-controls';if(!['device-controls','export-all','export-denied','export-device-after-owner','partial-export','host-departure'].includes(mode))throw Error('Unknown mode');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
 execFileSync('tar',['-x','-C',snapshot],{input:execFileSync('git',['archive',sourceCommit],{cwd:root,maxBuffer:100*1024*1024})});
 symlinkSync(join(root,'node_modules'),join(snapshot,'node_modules'));
+if(mode==='host-departure')symlinkSync(join(root,'apps/web/node_modules'),join(snapshot,'apps/web/node_modules'));
 const aliases=new Map();
 for(const name of readdirSync(join(snapshot,'packages'))){
  const folder=join(snapshot,'packages',name);
@@ -24,7 +25,7 @@ for(const name of readdirSync(join(snapshot,'packages'))){
 const pinnedPackages={name:'pinned-workspace-packages',setup(build){build.onResolve({filter:/^@repo\//},args=>{const parts=args.path.split('/');const entry=aliases.get(parts.slice(0,2).join('/'));if(!entry)return;const sub=parts.length>2?'./'+parts.slice(2).join('/'):'.';let target=entry.pkg.exports?.[sub];if(typeof target==='object')target=target.import??target.default;if(typeof target!=='string')throw Error('Unresolved pinned export '+args.path);return {path:join(entry.folder,target)};});}};
 const downloads=join(directory,'downloads');mkdirSync(downloads);const delay=ms=>new Promise(r=>setTimeout(r,ms));let server,browser,socket;const records=[];const record=(name,value)=>{records.push({name,...value});console.log(name,JSON.stringify(value));};
 try{
-const built=await build({stdin:{contents:readFileSync(join(output,'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
+const built=await build({stdin:{contents:readFileSync(join(output,mode==='host-departure'?'native-host.tsx':'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
 browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
@@ -35,6 +36,7 @@ await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads
 const click=async selector=>{await ev(`document.querySelector(${JSON.stringify(selector)}).click()`);await delay(180)};const text=async label=>{await ev(`(()=>{const e=[...document.querySelectorAll('button')].find(e=>e.textContent.trim()===${JSON.stringify(label)});if(!e)throw Error('missing '+${JSON.stringify(label)});e.click()})()`);await delay(180)};const input=async value=>{await ev(`(()=>{const e=document.querySelector('input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}))})()`);await delay(180)};const bytes=()=>ev('localStorage.getItem(verify.key)');
 record('baseline',{commit:sourceCommit,browser:(await cdp('Browser.getVersion')).product});
 try{
+ if(mode==='device-controls'){
  assert.deepEqual(await ev('[...document.querySelectorAll("[role=switch]")].map(e=>e.getAttribute("aria-checked"))'),['true','true']);
  assert.deepEqual(await ev('verify.keys.map(k=>localStorage.getItem(k))'),[null,null],'Mount seeded device preferences');
  await ev('verify.deny()');
@@ -49,5 +51,24 @@ try{
  assert(await ev('[...document.querySelectorAll("button")].some(e=>/retry/i.test(e.textContent))'),'Device draft Retry missing');
  assert(await ev('[...document.querySelectorAll("button")].some(e=>/export/i.test(e.textContent))'),'Device draft Export missing');
  record('device-failure-recovery',{pass:true,scope:'Two actual device controls under quota; account default-share and full mixed-scope contract are separate'});
+ }else{
+  await ev(mode==='partial-export'?'verify.deny()':'verify.denyThree()');
+  await ev('(()=>{const e=document.querySelector("select");Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,"value").set.call(e,"edit");e.dispatchEvent(new Event("change",{bubbles:true}))})()');await delay(180);
+  for(const index of [0,1]){await ev(`document.querySelectorAll('[role=switch]')[${index}].click()`);await delay(180)}
+  if(mode==='export-device-after-owner'){await ev('verify.switchOwner()');await delay(200);assert.equal(await ev('document.querySelector("select").value'),'comment','Old account selection leaked into B');}
+  if(mode==='export-denied')await ev('verify.denyAll()');
+  const sidebar=async()=>{await ev('(()=>{const e=[...document.querySelectorAll(".settings-sidebar [role=button]")].find(e=>e.textContent.trim()==="Notifications");e.focus();e.click()})()');await delay(180)};
+  if(mode==='host-departure'){await sidebar();assert.equal(await ev('document.querySelector(".settings-detail").dataset.pane'),'collaborate','Actual host left unsaved Collaborate');assert(await ev('!!document.querySelector("[role=dialog]")'),'Departure dialog missing');assert(!await ev('document.querySelector("[role=dialog]").textContent.includes("Smart Lists")'),'Collaborate decision mislabeled Smart Lists');}
+  const label=await ev('[...document.querySelectorAll("button")].find(e=>/export/i.test(e.textContent))?.textContent.trim()');assert(label,'Actual current-draft export missing');if(mode==='host-departure'){await ev('[...document.querySelectorAll("[role=dialog] button")].find(e=>/export/i.test(e.textContent)).click()');await delay(180)}else await text(label);
+  let filename;for(let i=0;i<60;i++){filename=readdirSync(downloads).find(f=>f.endsWith('.json'));if(filename)break;await delay(50)}
+  assert.equal(filename,'collaborate-draft.json');const data=JSON.parse(readFileSync(join(downloads,filename),'utf8'));
+  const expected={version:1,kind:'collaborate-draft',values:{account:['partial-export','export-device-after-owner'].includes(mode)?{}:{default_share:'edit'},device:{show_avatars:false,mention_notify:false}}};assert.deepEqual(data,expected);
+  assert.deepEqual(await ev('[...document.querySelectorAll("[role=switch]")].map(e=>e.getAttribute("aria-checked"))'),['false','false'],'Device draft lost on export/owner change');
+  const raw=await ev('verify.readAll()');assert.deepEqual(raw.slice(0,2),[null,null]);if(mode==='partial-export')assert.notEqual(raw[2],null,'Successful account sibling did not persist');else assert.equal(raw[2],null,'Failed/unmodified current account source changed');
+  assert(await ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()'),'Export cleared remaining drafts unload guard');
+  if(mode==='host-departure'){await text('Stay');assert.equal(await ev('location.pathname'),'/app/settings/collaborate');await sidebar();await text('Discard local changes and leave');assert.equal(await ev('location.pathname'),'/app/settings/notifications');assert.deepEqual(await ev('verify.readAll()'),[null,null,null],'Leave wrote defaults/drafts');}
+  record('actual-mixed-scope-download',{pass:true,mode,data,scope:'Actual disk JSON of current unsaved fields; account owner transition controlled, no provider or durable crash claim'});
+ }
+
 }catch(error){record('device-failure-recovery',{pass:false,error:String(error)});process.exitCode=1;}
 }finally{writeFileSync(join(output,`native-${sourceCommit}-${mode}.log`),records.map(r=>JSON.stringify(r)).join('\n')+'\n');socket?.close();browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();await delay(500);browser?.kill('SIGKILL');rmSync(directory,{recursive:true,force:true});}

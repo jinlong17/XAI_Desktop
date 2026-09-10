@@ -1,7 +1,9 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
-import {collaboratePane} from './packages/plugin-web-settings-rest/src/panes/collaboratePane';
+import {createBrowserRouter,RouterProvider} from 'react-router';
+import {WebShellProvider} from './packages/xai-web-shell/src/index';
+import {composedSettingsRegistration} from './apps/web/src/routes/modules/composedSettingsRegistration';
 import './packages/plugin-web-tokens/src/tokens.css';
 import './packages/plugin-web-tokens/src/layout.css';
 import './packages/plugin-web-settings-shell/src/styles.css';
@@ -14,4 +16,6 @@ const nativeSet=Storage.prototype.setItem;const nativeGet=Storage.prototype.getI
 (window as any).verify.denyThree=()=>{Storage.prototype.setItem=function(k,v){if(keys.includes(k)||k===accountKey)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}};
 (window as any).verify.denyAll=()=>{Storage.prototype.getItem=function(){throw new DOMException('denied','SecurityError')};Storage.prototype.setItem=function(){throw new DOMException('denied','SecurityError')}};
 (window as any).verify.switchOwner=()=>{const next='collaborate-native-b';accountScope.activate(accountScope.lock(next),'g1');nativeSet.call(localStorage,generationMarkerKey(next),JSON.stringify({generation:'g1',migrationId:'fixture-b',previous:null}));accountKey=accountScope.physicalKey('xai_pref_collab_default_share');};
-createRoot(document.getElementById('app')!).render(collaboratePane.render({lang:'en'}));
+history.replaceState(null,'','/app/settings/collaborate');
+const Composed=composedSettingsRegistration.children[0].render;const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);
+createRoot(document.getElementById('app')!).render(<WebShellProvider modules={[composedSettingsRegistration]} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);
