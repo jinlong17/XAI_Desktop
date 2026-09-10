@@ -75,6 +75,7 @@ export async function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt
   const cleared = local.receipt;
   const scope: AccountScope = Object.freeze({ kind: saved.kind, accountId: saved.accountId, generation: saved.generation, epoch: -1 });
   await clearAccountAiSecrets(scope);
+  if (localStorage.getItem(key) !== local.raw) throw new Error('Account deletion receipt changed during cleanup');
   if (saved.authGeneration) await clearAuth!({ generation: saved.authGeneration, owner: saved.accountId });
   const currentRaw = localStorage.getItem(key);
   if (currentRaw !== local.raw) throw new Error('Account deletion receipt changed during cleanup');

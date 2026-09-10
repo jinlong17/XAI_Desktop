@@ -69,6 +69,9 @@ export async function resumeAccountLocalDataDeletion(
       if (current.phase === 'complete') return { ok: true, receipt: current, raw } as const;
       const markerRaw = storage.getItem(generationMarkerKey(expected.accountId, demo));
       if (markerRaw !== null && !hasCommittedGenerationMarker(markerRaw, expected.generation)) return { ok: false, reason: 'recovery-required' } as const;
+      // A partial deletion intentionally removes the old marker; the validated
+      // receipt remains the only authority for a later resume.
+      if (markerRaw !== null) storage.removeItem(generationMarkerKey(expected.accountId, demo));
       eraseUnderReceipt(current, storage);
       const next: AccountDeletionReceipt = { ...current, phase: 'local-data-cleared', updatedAt: new Date().toISOString() };
       const nextRaw = JSON.stringify(next);
