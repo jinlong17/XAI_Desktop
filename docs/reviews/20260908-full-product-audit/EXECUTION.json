@@ -327,7 +327,12 @@
         "commit:6981111",
         "commit:dfe0fce",
         "../web-d2-pomo-controls-native/review.md",
-        "../web-d2-pomo-export-native/review.md"
+        "../web-d2-pomo-export-native/review.md",
+        "commit:7785e92",
+        "commit:ba9affc",
+        "commit:6f4140c",
+        "commit:03b0363",
+        "../web-d2-pomo-device-astra/review-7785e9.md"
       ]
     },
     {
@@ -528,7 +533,12 @@
     {
       "id": "POMO-05",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:353e418",
+        "commit:40079c7",
+        "commit:03b0363",
+        "../web-d2-pomo-recovery-visual/review.md"
+      ]
     },
     {
       "id": "MED-01",

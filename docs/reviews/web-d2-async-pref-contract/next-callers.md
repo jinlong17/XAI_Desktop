@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Dashboard账号便签d129950已获Astra4a66e86接受，设备位置830dd2b已获Astra a6b50c3/9424081完整Dv1有界接受。Dv2六项Pomodoro设备偏好开始实施，尚未接受；下表及后文七处搜索数字保留历史基线，不能作为当前搜索结果。
+当前增量：Dashboard账号内容d129950/Astra4a66e86、设备位置830dd2b/Astra a6b50c3、Pomodoro六项设备偏好7785e92/Astra ba9affc均已按各自合同有界接受。当前直接legacy usePrefAutosave TSX调用搜索为零；历史八/七处数字保留为基线。剩余usePref见03b0363固定AST库存，不能将只读绑定计为writer。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
@@ -15,3 +15,5 @@
 共享hooks会话、重置、不确定提交、动态绑定与实际Collaborate已由a25423c接受，Dashboard账号内容已由4a66e86接受。下一批七个device直接调用由Astra另定合同；尚未宣称这些device位置/偏好或其他普通writer全部转换，也未解冻发布/跨模块门禁。
 
 设备接续合同已固定于9f1b20a：[Dv1位置→Dv2六项偏好](../web-d2-device-autosave-contract/contract.md)。修复前独立证据：Dv1父9693b3e三失败，Dv2父47e625b两失败（其中mount逐键覆盖六项）。Terra先实施Dv1，接受后再接Dv2；这些基线不是整个D2覆盖率。
+
+下一批由Astra结合[直接绑定库存](../web-d2-pref-binding-inventory/review.md)与既有D2全writer合同确定；不自动关闭typed setter、scoped/raw、timers、secrets或旧客户端激活门禁。
