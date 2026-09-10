@@ -33,3 +33,19 @@ Raw logs are stored beside this report. They were produced with the exact Storag
 ## Boundary
 
 The existing Collaborate pane already consumes the registered async autosave hook, so no pane source change was required. Parent-owned native Chrome checks remain the independent UI/Web Locks evidence. This bounded commit does not add the still-required open-ended suffix/codec/default/validator hook binding, migrate other consumers, or close D2.
+
+## Open-ended binding addendum (`69c8318`)
+
+`usePrefAutosaveAsync` now also accepts an explicit suffix plus `codec`, `defaultValue`, and runtime `validate` function. It generates `xai_pref_${suffix}`, verifies the ownership classification, rejects malformed/prefixed suffixes, rejects invalid defaults, and refuses a codec that conflicts with a generated registered key. Registered callers retain their existing overload and behavior.
+
+Both forms use the same async controller. Its binding identity includes the full key, codec, encoded default, and account epoch. The new tests prove account-scoped raw string and JSON persistence, no write on mount or invalid edit, same-tab JSON projection, and controlled rejection of missing or inconsistent binding declarations.
+
+| Check | Result |
+| --- | --- |
+| Focused hook contract | 12/12 passed |
+| Storage package | 22/22 files, 188/188 tests passed |
+| Storage TypeScript | passed |
+| Settings package | 42/42 files, 282/282 tests passed |
+| Settings TypeScript | passed |
+
+These are author checks for the open-ended binding commit. Astra's later independent review of the earlier `d6184ee` controller found six separate hook defects; `69c8318` does not claim those failures are fixed or close D2. The raw addendum logs use the `dynamic-*-69c8318.log` names beside this report.
