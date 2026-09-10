@@ -1,6 +1,6 @@
 # 异步偏好保存：逐条验收状态
 
-父任务检查点：engine `6504589` 经 Astra `e75d5b3` 有界接受；hooks `d6184ee` 作者证据 `8c49657`，父独立原 hook 2 条、真实 Chrome 5 场景及整进程重开 5 组全部通过。Astra `2bd330a` 固定 hooks 独立 9 例为 3 PASS / 6 FAIL，尚不接受；open-ended binding 仍在实现。原失败日志保留，不将局部通过合并为整批通过。
+父任务检查点：engine `6504589` 经 Astra `e75d5b3` 有界接受；hooks `d6184ee` 作者证据 `8c49657`，父独立原 hook 2 条、真实 Chrome 5 场景及整进程重开 5 组全部通过。Astra `2bd330a` 固定 hooks 独立 9 例为 3 PASS / 6 FAIL，尚不接受；open-ended binding 已由 `69c8318` 实现，作者 `d15aec5` 和父独立 `725d719` 三条通过；最终整合验收仍待原六失败修复。原失败日志保留，不将局部通过合并为整批通过。
 
 | 合同范围 | 已有证据 | 当前结论 / 剩余工作 |
 | --- | --- | --- |
@@ -16,7 +16,7 @@
 | ordered reset、reset→new edit、duplicate retry、失效队列 | Sol d618作者9条聚焦合同；Astra固定hooks复核中 | 固定 d618 独立复核出现失败，须按原断言修复后验收。 |
 | 同 tab / storage event 投影，clean 更新、dirty 保留冲突、explicit reload | Sol d618作者合同已覆盖，Astra复核中 | 固定 d618 独立复核出现失败，须按原断言修复后验收。 |
 | readback uncertainty 与 hook 的原基线重试衔接 | 父固定d618 native readback-uncertain通过，原2c失败保留 | 该真实流程有界通过；不能将普通冲突当覆盖许可。 |
-| open-ended autosave hook 绑定（suffix/codec/default/validator） | 282 的 hook 仍以注册 WebPrefKey 为签名；引擎支持动态键不等于 hook 绑定完成 | 尚未完成；需实际支持合同声明的动态绑定并独立验收。 |
+| open-ended autosave hook 绑定（suffix/codec/default/validator） | Sol 69c8318；父725d719固定3条：account string/no mount/reset、JSON schema及reload、suffix变更queued失效通过 | 已实现并有界验证，需与原六失败修复一起固定整合复验。 |
 | 完整包与回归 | Astra固定650 storage176、C37/shared8/foundation14/admission2/types通过；Sol固定d618作者storage185/Settings282/types通过 | 分层记录；完整hooks独立复核仍待。 |
 | 其他 writer / scoped raw / global reset / provider / timer / export-import / 旧客户端 | 不属于本切片可关闭范围，仍在 D2 调用方清单 | 保持开放；production admission 不改变。 |
 
