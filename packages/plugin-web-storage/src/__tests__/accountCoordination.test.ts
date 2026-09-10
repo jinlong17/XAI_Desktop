@@ -1,11 +1,14 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { accountScope, createAccountScopeController, createScopedStorage, generationKey, generationMarkerKey } from "../internal/accountScope.js";
+import { accountLifecycleLockName } from "../internal/accountCoordination.js";
+import { prefMutationLockName } from "../internal/prefMutation.js";
 import { deleteAccountLocalDataAccount } from "../internal/accountDataLifecycle.js";
 import { migrateAccount, readGeneration, type MigrationLock } from "../internal/accountMigration.js";
 import { removePrefAccount, removePrefAutosave, setPrefAccount, setPrefAutosave, setPrefAutosaveAccount } from "../internal/storage.js";
 
-const shared = async <T>(_name: string, mode: "shared" | "exclusive", run: () => Promise<T>) => {
-  expect(mode).toBe("shared");
+const shared = async <T>(name: string, mode: "shared" | "exclusive", run: () => Promise<T>) => {
+  if (mode === "shared") expect(name).toBe(accountLifecycleLockName("A"));
+  else expect(name).toBe(prefMutationLockName(generationKey("A", "one", "xai_ai_convos")));
   return run();
 };
 const exclusive: MigrationLock = async (_name, run) => run();

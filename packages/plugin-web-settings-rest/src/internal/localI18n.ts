@@ -269,6 +269,11 @@ const STR = {
   "collab.canEdit": { en: "Can edit", zh: "可编辑" },
   "collab.viewOnly": { en: "View only", zh: "只读" },
   "collab.mentionNotify": { en: "Notify on @ mentions", zh: "接收 @ 提及通知" },
+  "collab.saving": { en: "Saving", zh: "正在保存" },
+  "collab.saved": { en: "Saved", zh: "已保存" },
+  "collab.notSaved": { en: "Not saved", zh: "未保存" },
+  "collab.retry": { en: "Retry", zh: "重试" },
+  "collab.reload": { en: "Reload", zh: "重新加载" },
 
   // Sticky pane
   "sticky.defaultColor": { en: "Default Color", zh: "默认颜色" },

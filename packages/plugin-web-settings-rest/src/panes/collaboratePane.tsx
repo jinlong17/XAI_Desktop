@@ -9,7 +9,7 @@
 import * as React from "react";
 import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shell";
-import { usePref } from "@repo/plugin-web-storage";
+import { usePref, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import type { WebPrefKey } from "@repo/plugin-web-storage";
 import { useI18n } from "@repo/plugin-web-tokens";
 import { localI18n } from "../internal/localI18n.js";
@@ -23,9 +23,10 @@ function CollaboratePaneContent({ lang }: PaneRenderProps): React.ReactElement {
     "xai_pref_collab_show_avatars" as WebPrefKey,
   ) as readonly [boolean, (v: boolean) => void, unknown];
 
-  const [defaultShare, setDefaultShare] = usePref(
+  const defaultSharePref = usePrefAutosaveAsync(
     "xai_pref_collab_default_share" as WebPrefKey,
-  ) as readonly [DefaultShare, (v: DefaultShare) => void, unknown];
+    { validate: (value): value is DefaultShare => value === "comment" || value === "edit" || value === "view" },
+  );
 
   const [mentionNotify, setMentionNotify] = usePref(
     "xai_pref_collab_mention_notify" as WebPrefKey,
@@ -43,16 +44,21 @@ function CollaboratePaneContent({ lang }: PaneRenderProps): React.ReactElement {
           />
         </SettingRow>
         <SettingRow label={t("collab.defaultShare")}>
-          <select
-            className="sl-select"
-            value={defaultShare}
-            onChange={(e) => setDefaultShare(e.target.value as DefaultShare)}
-            aria-label={t("collab.defaultShare")}
-          >
-            <option value="comment">{t("collab.canComment")}</option>
-            <option value="edit">{t("collab.canEdit")}</option>
-            <option value="view">{t("collab.viewOnly")}</option>
-          </select>
+          <div>
+            <select
+              className="sl-select"
+              value={defaultSharePref.value as DefaultShare}
+              onChange={(e) => { const next = e.target.value; if (next === "comment" || next === "edit" || next === "view") void defaultSharePref.edit(next); }}
+              aria-label={t("collab.defaultShare")}
+            >
+              <option value="comment">{t("collab.canComment")}</option>
+              <option value="edit">{t("collab.canEdit")}</option>
+              <option value="view">{t("collab.viewOnly")}</option>
+            </select>
+            <span role="status" aria-live="polite">{defaultSharePref.meta.status === "pending" ? t("collab.saving") : defaultSharePref.meta.status === "saved" ? t("collab.saved") : defaultSharePref.meta.error ? t("collab.notSaved") : ""}</span>
+            {(defaultSharePref.meta.status === "error" || defaultSharePref.meta.status === "conflict") && <button type="button" onClick={() => void defaultSharePref.meta.retry()}>{t("collab.retry")}</button>}
+            {defaultSharePref.meta.status === "conflict" && <button type="button" onClick={defaultSharePref.meta.reload}>{t("collab.reload")}</button>}
+          </div>
         </SettingRow>
         <SettingRow label={t("collab.mentionNotify")}>
           <Toggle

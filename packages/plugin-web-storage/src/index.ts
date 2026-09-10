@@ -49,6 +49,8 @@ export {
   removePrefAutosaveAccount,
 } from "./internal/storage.js";
 export type { AccountWriteOptions, AccountWriteResult, AccountWriteFailureReason } from "./internal/storage.js";
+export { mutatePref, prefMutationLockName } from "./internal/prefMutation.js";
+export type { PrefMutationOptions, PrefMutationReason, PrefMutationResult, PrefSource } from "./internal/prefMutation.js";
 export { accountLifecycleLockName, browserAccountLock } from "./internal/accountCoordination.js";
 export type { AccountCoordinationLock, AccountLockMode } from "./internal/accountCoordination.js";
 export {
@@ -91,6 +93,9 @@ export type { PrefMeta } from "./internal/usePref.js";
 // ---- usePrefAutosave hook --------------------------------------------------
 export { usePrefAutosave } from "./internal/usePrefAutosave.js";
 export type { UsePrefAutosaveOptions, PrefAutosaveResult } from "./internal/usePrefAutosave.js";
+export { usePrefAsync } from "./internal/usePrefAsync.js";
+export type { PrefAsyncMeta, PrefAsyncStatus, UsePrefAsyncOptions } from "./internal/usePrefAsync.js";
+export { usePrefAutosaveAsync } from "./internal/usePrefAutosaveAsync.js";
 
 // ---- migrate stub (v1 — no registered migrations) -------------------------
 export { migrate } from "./internal/migrate.js";

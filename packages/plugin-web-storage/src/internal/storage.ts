@@ -23,6 +23,7 @@ import { ownershipForKey } from "./accountOwnership.js";
 import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
 export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
 import { publishSameTab } from "./sameTabBus.js";
+import { mutatePref } from "./prefMutation.js";
 
 /** Decode one physical preference value into the domain projection readers expect. */
 export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string): WebPrefValue<K> | null {
@@ -228,7 +229,9 @@ export function setPref<K extends WebPrefKey>(
 /** Coordinated account-pref write. Existing synchronous callers retain their boolean contract. */
 export async function setPrefAccount<K extends WebPrefKey>(key: K, value: WebPrefValue<K>, options?: AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
-  return coordinateAccountWrite(key, scope, options?.lock, () => setPref(key, value, scope));
+  const entry = PREF_REGISTRY[key];
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => encode(entry.codec, candidate) !== null, next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 // ---------------------------------------------------------------------------
@@ -265,7 +268,9 @@ export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.ca
 /** Coordinated account-pref removal with an explicit committed/refused result. */
 export async function removePrefAccount<K extends WebPrefKey>(key: K, options?: AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
-  return coordinateAccountWrite(key, scope, options?.lock, () => removePref(key, scope));
+  const entry = PREF_REGISTRY[key];
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => encode(entry.codec, candidate) !== null, reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 // Suppress unused variable warning for guardStorage
@@ -375,6 +380,8 @@ export interface SetPrefAutosaveOptions {
   scope?: AccountScope;
   /** Codec used to serialize. Default: "json". Must match the reader's codec. */
   codec?: PrefCodec;
+  /** Optional runtime domain validator for explicit coordinated async writers. */
+  validate?: (value: unknown) => boolean;
 }
 
 /**
@@ -456,7 +463,11 @@ export function setPrefAutosave<T>(
 export async function setPrefAutosaveAccount<T>(suffix: string, value: T, options?: SetPrefAutosaveOptions & AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
   const key = `xai_pref_${suffix}`;
-  return coordinateAccountWrite(key, scope, options?.lock, () => setPrefAutosave(suffix, value, { scope, codec: options?.codec }));
+  if (!validateSuffix("setPrefAutosave", suffix)) return { ok: false, reason: "invalid" };
+  const codec = options?.codec ?? "json";
+  const valid = (candidate: unknown): candidate is T => (options?.validate?.(candidate) ?? encode(codec, candidate) !== null);
+  const result = await mutatePref({ key, codec, defaultValue: value, validate: valid, next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
 /**
@@ -479,15 +490,11 @@ export function removePrefAutosave(suffix: string, scope = accountScope.capture(
 }
 
 /** Coordinated account autosave removal. */
-export async function removePrefAutosaveAccount(suffix: string, options?: AccountWriteOptions): Promise<AccountWriteResult> {
+export async function removePrefAutosaveAccount(suffix: string, options?: SetPrefAutosaveOptions & AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
   const key = `xai_pref_${suffix}`;
-  return coordinateAccountWrite(key, scope, options?.lock, () => {
-    if (!validateSuffix("removePrefAutosave", suffix) || typeof window === "undefined") return false;
-    try {
-      localStorage.removeItem(accountScope.physicalKey(key, scope));
-      publishSameTab(key, undefined, scope);
-      return true;
-    } catch { return false; }
-  });
+  if (!validateSuffix("removePrefAutosave", suffix)) return { ok: false, reason: "invalid" };
+  const codec = options?.codec ?? "json";
+  const result = await mutatePref<unknown>({ key, codec, defaultValue: undefined, validate: (value): value is unknown => options?.validate?.(value) ?? value !== undefined, reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
+  return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
