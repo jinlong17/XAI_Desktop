@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"9193353","browser":"Chrome/152.0.7977.83"}
+{"name":"slow-pointer-observation","path":"/app/dashboard","dialog":false,"note":"Slow pointer unsaved note"}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Slow pointer unsaved note'\n- 'Original note'\n"}

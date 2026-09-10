@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"41fb4d1","browser":"Chrome/152.0.7977.83"}
+{"name":"source-visual-375","text":"备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。重新读取备注位置","scroll":375,"recovery":{"x":14,"y":289.395751953125,"right":361,"bottom":417.427001953125},"button":{"text":"重新读取备注位置","x":31,"y":356.427001953125,"right":171,"bottom":400.427001953125,"width":140,"height":44,"hit":true}}
+{"name":"source-visual-414","text":"备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。重新读取备注位置","scroll":414,"recovery":{"x":14,"y":289.25,"right":400,"bottom":417.28125},"button":{"text":"重新读取备注位置","x":31,"y":356.28125,"right":171,"bottom":400.28125,"width":140,"height":44,"hit":true}}
+{"name":"source-visual-768","text":"备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。重新读取备注位置","scroll":768,"recovery":{"x":86,"y":289.25,"right":754,"bottom":396.265625},"button":{"text":"重新读取备注位置","x":103,"y":335.265625,"right":243,"bottom":379.265625,"width":140,"height":44,"hit":true}}
+{"name":"source-visual-1024","text":"备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。重新读取备注位置","scroll":1024,"recovery":{"x":90,"y":149.25,"right":1006,"bottom":256.265625},"button":{"text":"重新读取备注位置","x":107,"y":195.265625,"right":247,"bottom":239.265625,"width":140,"height":44,"hit":true}}
+{"name":"source-visual-1440","text":"备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。重新读取备注位置","scroll":1440,"recovery":{"x":87.453125,"y":155.25,"right":1416,"bottom":262.265625},"button":{"text":"重新读取备注位置","x":104.453125,"y":201.265625,"right":244.453125,"bottom":245.265625,"width":140,"height":44,"hit":true}}
+{"name":"source-only-observation","warning":true,"path":"/app/tasks","dialog":false}
+{"name":"departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n"}
