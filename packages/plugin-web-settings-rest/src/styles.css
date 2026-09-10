@@ -605,20 +605,54 @@
 /* ---- Date & Time recovery ------------------------------------------- */
 .dt-recovery-field {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
   gap: 0.4rem;
   margin: 0.4rem 0;
   color: var(--text-2, oklch(50% 0 0));
   font-size: 0.82rem;
 }
-.dt-recovery-field > span { min-inline-size: 0; overflow-wrap: anywhere; }
+.dt-recovery-field > span { grid-column: 1 / -1; min-inline-size: 0; overflow-wrap: anywhere; }
 .dt-recovery-field button,
 .dt-recovery-actions button {
   min-inline-size: 44px;
   min-block-size: 44px;
   padding-inline: 0.5rem;
 }
+.dt-recovery-field button { inline-size: 100%; }
+.dt-recovery-field button:only-of-type { grid-column: 1 / -1; }
+
+/* The global touch rule enlarges the button box. Keep Date & Time's visible
+   switch track centered inside that 44px target, rather than stretching its
+   20px track and leaving the knob at its old corner offset. */
+.module-settings .dt-pane .toggle {
+  inline-size: 44px;
+  block-size: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  background: transparent;
+}
+.module-settings .dt-pane .toggle.on { background: transparent; }
+.module-settings .dt-pane .toggle::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 4px;
+  inline-size: 36px;
+  block-size: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.module-settings .dt-pane .toggle.on::before { background: var(--accent); }
+.module-settings .dt-pane .toggle-knob {
+  inset-block-start: 14px;
+  inset-inline-start: 6px;
+  inline-size: 16px;
+  block-size: 16px;
+  z-index: 1;
+}
+.module-settings .dt-pane .toggle.on .toggle-knob { transform: translateX(16px); }
 .dt-recovery-actions {
   display: flex;
   flex-wrap: wrap;
@@ -627,9 +661,11 @@
 }
 .dt-recovery-actions p { flex-basis: 100%; margin: 0; }
 .dt-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
-@media (max-width: 430px) {
-  .dt-recovery-field { grid-template-columns: minmax(0, 1fr) auto; }
-  .dt-recovery-field button:first-of-type { grid-column: 2; }
+@media (min-width: 768px) {
+  .dt-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .dt-recovery-field > span { grid-column: auto; }
+  .dt-recovery-field button { inline-size: auto; }
+  .dt-recovery-field button:only-of-type { grid-column: auto; }
 }
 
 /* ---- Sticky Note pane ------------------------------------------------ */
