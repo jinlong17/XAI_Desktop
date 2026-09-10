@@ -12,6 +12,7 @@ const testMode='__NATIVE_MODE__';const owner='header-native-A';localStorage.setI
 const key=accountScope.physicalKey('xai_pref_dashboard_header_note');localStorage.setItem(key,'Original note');localStorage.setItem('xai_pref_dashboard_header_note_x','0');localStorage.setItem(accountScope.physicalKey('xai_dash_order'),JSON.stringify(['mini-cal']));
 const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
 if(testMode.startsWith('source-only'))Storage.prototype.getItem=function(k){if(k==='xai_pref_dashboard_header_note_x')throw new DOMException('unavailable','SecurityError');return nativeGet.call(this,k)};
+if(testMode.startsWith('note-source'))Storage.prototype.getItem=function(k){if(k===key)throw new DOMException('unavailable','SecurityError');return nativeGet.call(this,k)};
 const registration=webShellModuleRegistrations.find(r=>r.moduleId==='dashboard')!;const Module=registration.children.find(r=>r.path==='')!.render;
 history.replaceState(null,'','/app/dashboard');const router=createBrowserRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'dashboard',element:<Module/>},{path:'tasks',element:<div>Tasks destination</div>},{path:'calendar',element:<div>Calendar destination</div>}]}]);
 let releaseOffset:(()=>void)|null=null,releaseNote:(()=>void)|null=null;let heldOffset:Promise<unknown>|null=null,heldNote:Promise<unknown>|null=null;
