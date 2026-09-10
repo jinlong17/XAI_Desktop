@@ -1,3 +1,4 @@
+import { createTestLockManager } from "./named-lock-fixture.js";
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { accountScope, generationKey, generationMarkerKey, canonicalCommandSignature as signature, canonicalCommandReceiptId as identity, commitCanonicalCommand, setCanonicalCommandActivationForTests } from '@repo/plugin-web-storage';
 const owner = 'astra-c-boundary';
@@ -6,7 +7,7 @@ const channel = 'calendar';
 type Data = Record<string,{ title:string }>;
 const validate = (v:unknown):v is Data => !!v && typeof v==='object' && !Array.isArray(v) && Object.values(v).every(row => !!row && typeof row==='object' && typeof row.title==='string');
 const input = () => ({ key:'xai_calendar_events' as const, scope:accountScope.capture(),channel,requestId:'r1',operation:{ action:'create',title:'One' },validate,initialize:()=>({}),mutate:(data:Data)=>({ok:true as const,data:{...data,item:{title:'One'}},targetId:'item'}) });
-beforeEach(()=>{localStorage.clear();accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'existing',previous:null}));setCanonicalCommandActivationForTests(true);vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>Promise<unknown>)=>run()}});});
+beforeEach(()=>{localStorage.clear();accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'existing',previous:null}));setCanonicalCommandActivationForTests(true);vi.stubGlobal('navigator',{locks:createTestLockManager()});});
 afterEach(()=>{setCanonicalCommandActivationForTests(false);vi.restoreAllMocks();vi.unstubAllGlobals();});
 
 it('semantic key order replays the stored result while array order causes real request conflict',async()=>{
@@ -33,7 +34,7 @@ it('channel/request composition is unambiguous with exact part and encoded ident
  expect(identity('"'.repeat(192),'"'.repeat(192))).toBeNull();
 });
 it('oversized operation and request identity are refused before locks or mutation',async()=>{
- const request=vi.fn(async(_name:string,run:()=>Promise<unknown>)=>run());vi.stubGlobal('navigator',{locks:{request}});const mutate=vi.fn(input().mutate);
+ const request=vi.fn(createTestLockManager().request);vi.stubGlobal('navigator',{locks:{request}});const mutate=vi.fn(input().mutate);
  expect(await commitCanonicalCommand({...input(),operation:'x'.repeat(16383),mutate})).toEqual({ok:false,reason:'invalid'});
  expect(await commitCanonicalCommand({...input(),requestId:'x'.repeat(193),mutate})).toEqual({ok:false,reason:'invalid'});
  expect(request).not.toHaveBeenCalled();expect(mutate).not.toHaveBeenCalled();expect(localStorage.getItem(physical)).toBeNull();

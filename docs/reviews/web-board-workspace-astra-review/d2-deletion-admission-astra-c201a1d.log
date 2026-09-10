@@ -1,0 +1,74 @@
+revision=c201a1d
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d2-MI6aXZ
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: corrupt-tombstone-missing-marker
+deletion-admission {"scenario":"corrupt-tombstone-missing-marker","result":{"ok":true},"before":{"xai:account:v1:delete-admission:deleted":"not a deletion receipt","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:deleted":"not a deletion receipt"}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker
+deletion-admission {"scenario":"legacy-tombstone-conflicting-marker","result":{"ok":true},"before":{"xai:account:v1:delete-admission:committed-generation":"{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}","xai:account:v1:delete-admission:deleted":"1","xai:account:v1:delete-admission:g1:xai_ai_convos":"[\"old retained\"]","xai:account:v1:delete-admission:g2:xai_ai_convos":"[\"new retained\"]"},"after":{"xai:account:v1:delete-admission:deleted":"1"}}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts (2 tests | 2 failed) 8ms
+   × deletion refuses unproven generation recovery: corrupt-tombstone-missing-marker 7ms
+     → expected true to be false // Object.is equality
+     → expected { …(1) } to deeply equal { …(3) }
+   × deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker 1ms
+     → expected true to be false // Object.is equality
+     → expected { …(1) } to deeply equal { …(4) }
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:58:07
+   Duration  958ms (transform 119ms, setup 0ms, collect 147ms, tests 8ms, environment 512ms, prepare 86ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: corrupt-tombstone-missing-marker
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts:15:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: corrupt-tombstone-missing-marker
+AssertionError: expected { …(1) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+    "xai:account:v1:delete-admission:deleted": "not a deletion receipt",
+-   "xai:account:v1:delete-admission:g1:xai_ai_convos": "[\"old retained\"]",
+-   "xai:account:v1:delete-admission:g2:xai_ai_convos": "[\"new retained\"]",
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts:15:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts > deletion refuses unproven generation recovery: legacy-tombstone-conflicting-marker
+AssertionError: expected { …(1) } to deeply equal { …(4) }
+
+- Expected
++ Received
+
+  {
+-   "xai:account:v1:delete-admission:committed-generation": "{\"generation\":\"g2\",\"migrationId\":\"newer-migration\",\"previous\":\"g1\"}",
+    "xai:account:v1:delete-admission:deleted": "1",
+-   "xai:account:v1:delete-admission:g1:xai_ai_convos": "[\"old retained\"]",
+-   "xai:account:v1:delete-admission:g2:xai_ai_convos": "[\"new retained\"]",
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts:15:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯

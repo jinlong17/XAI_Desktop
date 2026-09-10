@@ -120,8 +120,8 @@ it.each(['generation-changed','generation-removed','tombstone','owner-changed'])
   expect(localStorage.getItem(generationKey('other', 'g2', logical))).toBeNull();
 });
 it('two same-identity commands serialized by the supplied lock commit only once', async () => {
-  let tail = Promise.resolve(); const names: string[] = [];
-  const serial: Lock = (name, run) => { names.push(name); const next = tail.then(run); tail = next.then(() => {}, () => {}); return next; };
+  const tails = new Map<string, Promise<void>>(); const names: string[] = [];
+  const serial: Lock = (name, run) => { names.push(name); const next = (tails.get(name) ?? Promise.resolve()).then(run); tails.set(name, next.then(() => {}, () => {})); return next; };
   const mutate = vi.fn(opts().mutate); const write = operations();
   const result = await Promise.all([runPrimitive(opts({ lock: serial, mutate })), runPrimitive(opts({ lock: serial, mutate }))]);
   expect(result).toEqual([{ ok: true, targetId: 'item' }, { ok: true, targetId: 'item' }]);

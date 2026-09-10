@@ -25,8 +25,8 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
- copyFileSync(join(evidence,'d2-foundation-independent.test.ts'),join(owned,'d2-foundation-independent.test.ts'));
- for (const [name, include] of [['d2-foundation-independent', ['docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts']]]) {
+ for (const file of ['d2-foundation-independent.test.ts','d2-deletion-admission.test.ts']) copyFileSync(join(evidence,file),join(owned,file));
+ for (const [name, include] of [['d2-foundation-independent', ['docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts']], ['d2-deletion-admission', ['docs/reviews/web-board-workspace-astra-review/d2-deletion-admission.test.ts']]]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
   const suiteRoot = name === 'd1-board-package' ? join(dir,'packages/plugin-web-board-workspaces') : dir;

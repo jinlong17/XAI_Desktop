@@ -25,6 +25,7 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
+ copyFileSync(join(evidence,'named-lock-fixture.ts'),join(owned,'named-lock-fixture.ts'));
  copyFileSync(join(evidence,'d1-calendar-contract.test.tsx'),join(owned,'d1-calendar-contract.test.tsx'));
  copyFileSync(join(evidence,'d1-shared-writer.test.tsx'),join(owned,'d1-shared-writer.test.tsx'));
  copyFileSync(join(evidence,'d1-pending-editor.test.tsx'),join(owned,'d1-pending-editor.test.tsx'));

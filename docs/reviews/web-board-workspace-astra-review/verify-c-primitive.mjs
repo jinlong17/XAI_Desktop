@@ -25,6 +25,7 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
+ copyFileSync(join(evidence,'named-lock-fixture.ts'),join(owned,'named-lock-fixture.ts'));
  copyFileSync(join(evidence,'c-primitive-contract.test.ts'),join(owned,'c-primitive-contract.test.ts'));
  copyFileSync(join(evidence,'c-primitive-adapter.ts'),join(owned,'c-primitive-adapter.ts'));
  copyFileSync(join(evidence,'c-primitive-boundaries.test.ts'),join(owned,'c-primitive-boundaries.test.ts'));
@@ -39,7 +40,7 @@ try {
   const result = spawnSync(join(root,'packages/plugin-web-board-workspaces/node_modules/.bin/vitest'), ['run','--config',config], {cwd:dir,encoding:'utf8',maxBuffer:20*1024*1024});
   if (result.error) throw result.error;
   if (result.status !== 0) process.exitCode = result.status ?? 1;
-  writeFileSync(join(evidence,name+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
+  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
   console.log(name, 'exit='+result.status, result.stdout.slice(-1600));
  }
 } finally { rmSync(dir, {recursive:true,force:true}); }

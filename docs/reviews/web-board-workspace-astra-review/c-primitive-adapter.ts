@@ -1,3 +1,4 @@
+import { createTestLockManager } from "./named-lock-fixture.js";
 /** Reviewer-owned binding seam. Bind only to the author's fixed committed API. */
 import type { AccountScope } from '@repo/plugin-web-storage';
 import { commitCanonicalCommand, setCanonicalCommandActivationForTests, canonicalCommandReceiptId, canonicalCommandSignature } from '@repo/plugin-web-storage';
@@ -20,10 +21,15 @@ export const channel = 'astra:calendar-command';
 export const signatureFor = canonicalCommandSignature;
 export const receiptIdentity = (requestId: string) => canonicalCommandReceiptId(channel, requestId)!;
 export const resetActivation = () => setCanonicalCommandActivationForTests(false);
+const managers = new WeakMap<Lock, ReturnType<typeof createTestLockManager>>();
 export async function runPrimitive(input: Input): Promise<Outcome> {
   // Omitted activation leaves the production default untouched.
   if (input.enabled !== undefined) setCanonicalCommandActivationForTests(input.enabled);
-  if (input.lock) vi.stubGlobal('navigator', { locks: { request: input.lock } });
+  if (input.lock) {
+    let manager = managers.get(input.lock);
+    if (!manager) { manager = createTestLockManager((name, run) => input.lock!(name, async () => run())); managers.set(input.lock, manager); }
+    vi.stubGlobal('navigator', { locks: manager });
+  }
   const result = await commitCanonicalCommand({
     key: 'xai_calendar_events', scope: input.scope, channel,
     requestId: input.requestId, operation: input.signature,
