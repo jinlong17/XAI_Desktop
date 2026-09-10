@@ -23,7 +23,7 @@ import { ownershipForKey } from "./accountOwnership.js";
 import { isCanonicalCommandActivationEnabled, isCanonicalCommandKey, readCanonicalCommandState } from "./canonicalCommandState.js";
 export { _clearAllListeners, publishSameTab, subscribeSameTab } from "./sameTabBus.js";
 import { publishSameTab } from "./sameTabBus.js";
-import { mutatePref } from "./prefMutation.js";
+import { mutatePref, validateRegisteredPrefValue } from "./prefMutation.js";
 
 /** Decode one physical preference value into the domain projection readers expect. */
 export function decodeStoredPrefValue<K extends WebPrefKey>(key: K, raw: string): WebPrefValue<K> | null {
@@ -230,7 +230,7 @@ export function setPref<K extends WebPrefKey>(
 export async function setPrefAccount<K extends WebPrefKey>(key: K, value: WebPrefValue<K>, options?: AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
   const entry = PREF_REGISTRY[key];
-  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => encode(entry.codec, candidate) !== null, next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => validateRegisteredPrefValue(key, candidate), next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
   return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
@@ -269,7 +269,7 @@ export function removePref<K extends WebPrefKey>(key: K, scope = accountScope.ca
 export async function removePrefAccount<K extends WebPrefKey>(key: K, options?: AccountWriteOptions): Promise<AccountWriteResult> {
   const scope = options?.scope ?? accountScope.capture();
   const entry = PREF_REGISTRY[key];
-  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => encode(entry.codec, candidate) !== null, reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
+  const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate: (candidate): candidate is WebPrefValue<K> => validateRegisteredPrefValue(key, candidate), reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
   return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
 
@@ -465,7 +465,7 @@ export async function setPrefAutosaveAccount<T>(suffix: string, value: T, option
   const key = `xai_pref_${suffix}`;
   if (!validateSuffix("setPrefAutosave", suffix)) return { ok: false, reason: "invalid" };
   const codec = options?.codec ?? "json";
-  const valid = (candidate: unknown): candidate is T => (options?.validate?.(candidate) ?? encode(codec, candidate) !== null);
+  const valid = (candidate: unknown): candidate is T => options?.validate?.(candidate) ?? (typeof encode(codec, candidate) === "string" && validateRegisteredPrefValue(key, candidate));
   const result = await mutatePref({ key, codec, defaultValue: value, validate: valid, next: value, scope, accountLock: options?.lock, keyLock: options?.lock });
   return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
@@ -495,6 +495,6 @@ export async function removePrefAutosaveAccount(suffix: string, options?: SetPre
   const key = `xai_pref_${suffix}`;
   if (!validateSuffix("removePrefAutosave", suffix)) return { ok: false, reason: "invalid" };
   const codec = options?.codec ?? "json";
-  const result = await mutatePref<unknown>({ key, codec, defaultValue: undefined, validate: (value): value is unknown => options?.validate?.(value) ?? value !== undefined, reset: true, scope, accountLock: options?.lock, keyLock: options?.lock });
+  const result = await mutatePref<unknown>({ key, codec, defaultValue: undefined, validate: (value): value is unknown => options?.validate?.(value) ?? (typeof encode(codec, value) === "string" && validateRegisteredPrefValue(key, value)), reset: true, allowAbsentDefault: true, scope, accountLock: options?.lock, keyLock: options?.lock });
   return result.ok ? { ok: true } : { ok: false, reason: result.reason === "canonical" || result.reason === "conflict" || result.reason === "unavailable" || result.reason === "readback-uncertain" ? "storage" : result.reason };
 }
