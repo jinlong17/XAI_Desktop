@@ -46,7 +46,7 @@ export type AccountDeletionResult = Readonly<{ ok: true }> | Readonly<{ ok: fals
 export type AccountDeletionResumeResult = Readonly<{ ok: true; receipt: AccountDeletionReceipt; raw: string }> | Readonly<{ ok: false; reason: 'lock-unavailable' | 'receipt-changed' | 'recovery-required' | 'storage' }>;
 
 function eraseUnderReceipt(receipt: AccountDeletionReceipt, storage: Store): void {
-  const ownedPrefix = generationKey(receipt.accountId, receipt.generation, '', receipt.kind === 'demo');
+  const ownedPrefix = accountPrefix(receipt.accountId, receipt.kind === 'demo');
   const tombstone = accountDeletionReceiptKey(receipt.accountId, receipt.kind === 'demo');
   for (const key of keys(storage)) if (key.startsWith(ownedPrefix) && key !== tombstone) storage.removeItem(key);
 }
@@ -95,6 +95,7 @@ export async function completeAccountLocalDataDeletion(
       const current = decodeAccountDeletionReceipt(raw, expected.accountId, demo);
       if (!current || raw !== expectedRaw || current.phase !== expected.phase || current.generation !== expected.generation || current.authGeneration !== expected.authGeneration) return { ok: false, reason: 'receipt-changed' } as const;
       if (current.phase === 'complete') return { ok: true, receipt: current, raw } as const;
+      if (current.phase !== 'local-data-cleared') return { ok: false, reason: 'recovery-required' } as const;
       const next: AccountDeletionReceipt = { ...current, phase: 'complete', updatedAt: new Date().toISOString() }, nextRaw = JSON.stringify(next);
       storage.setItem(key, nextRaw);
       if (storage.getItem(key) !== nextRaw) return { ok: false, reason: 'storage' } as const;
@@ -118,7 +119,7 @@ export async function deleteAccountLocalDataAccount(
       const markerRaw = storage.getItem(generationMarkerKey(scope.accountId!, scope.kind === 'demo'));
       const tombstoneRaw = storage.getItem(tombstone);
       const receipt = decodeAccountDeletionReceipt(tombstoneRaw, scope.accountId!, scope.kind === 'demo');
-      if (tombstoneRaw !== null && (!receipt || receipt.generation !== scope.generation)) {
+      if (tombstoneRaw !== null && (!receipt || receipt.generation !== scope.generation || (markerRaw !== null && !hasCommittedGenerationMarker(markerRaw, scope.generation)))) {
         return { ok: false, reason: 'recovery-required' } as const;
       }
       if (tombstoneRaw === null && !hasCommittedGenerationMarker(markerRaw, scope.generation!)) {

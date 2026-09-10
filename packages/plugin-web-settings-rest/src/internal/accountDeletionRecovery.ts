@@ -76,6 +76,8 @@ async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, c
   if (!local.ok) throw new Error(`Local account cleanup refused: ${local.reason}`);
   const cleared = local.receipt;
   const scope: AccountScope = Object.freeze({ kind: saved.kind, accountId: saved.accountId, generation: saved.generation, epoch: -1 });
+  await Promise.resolve();
+  if (localStorage.getItem(key) !== local.raw) throw new Error('Account deletion receipt changed before secret cleanup');
   await clearAccountAiSecrets(scope);
   if (localStorage.getItem(key) !== local.raw) throw new Error('Account deletion receipt changed during cleanup');
   if (saved.authGeneration) await clearAuth!({ generation: saved.authGeneration, owner: saved.accountId });

@@ -20,7 +20,7 @@ export function decodeAccountDeletionReceipt(raw: string | null, accountId: stri
       || receipt.kind !== (demo ? "demo" : "account") || typeof receipt.generation !== "string" || !receipt.generation
       || typeof receipt.updatedAt !== "string" || !Number.isFinite(Date.parse(receipt.updatedAt))
       || (receipt.phase !== "pending" && receipt.phase !== "local-data-cleared" && receipt.phase !== "complete")) return null;
-    if (receipt.version === 2 && (!receipt.authGeneration || receipt.kind !== "account")) return null;
+    if (receipt.version === 2 && (receipt.kind !== "account" || typeof receipt.authGeneration !== "string" || !receipt.authGeneration)) return null;
     if (receipt.version === 1 && receipt.authGeneration !== undefined) return null;
     return receipt as AccountDeletionReceipt;
   } catch { return null; }
