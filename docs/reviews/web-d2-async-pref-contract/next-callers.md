@@ -13,3 +13,5 @@
 原始搜索共八处（历史基线；当前剩七处）：一处账号内容、七处设备设置。归属来自 `accountOwnership.ts` 的逐键声明，并非从前缀推断。另有31个非测试 TSX 文件直接使用旧 `usePref(...)`，数量不是完整调用方覆盖率；普通 set/remove、scoped raw、其他扩展名/包装函数及业务直写仍须按 D2 清单逐项迁移。
 
 共享hooks会话、重置、不确定提交、动态绑定与实际Collaborate已由a25423c接受，Dashboard账号内容已由4a66e86接受。下一批七个device直接调用由Astra另定合同；尚未宣称这些device位置/偏好或其他普通writer全部转换，也未解冻发布/跨模块门禁。
+
+设备接续合同已固定于9f1b20a：[Dv1位置→Dv2六项偏好](../web-d2-device-autosave-contract/contract.md)。修复前独立证据：Dv1父9693b3e三失败，Dv2父47e625b两失败（其中mount逐键覆盖六项）。Terra先实施Dv1，接受后再接Dv2；这些基线不是整个D2覆盖率。
