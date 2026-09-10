@@ -1,0 +1,298 @@
+revision=2c09719 fixed_commit=2c097197cc5cff869b875b5e1baa8b7656b5de76
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-UZI4He
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx (6 tests | 4 failed) 23ms
+   × set uncertain token refuses externally restored original baseline without another write/remove/notice 9ms
+     → expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+     → expected 'false' to be 'true' // Object.is equality
+     → expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      false,
+    ]
+
+
+Number of calls: 1
+
+   × reset uncertain token refuses externally restored original baseline without another write/remove/notice 2ms
+     → expected { ok: true, value: true, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+     → expected null to be 'true' // Object.is equality
+     → expected "removeItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+    ]
+
+
+Number of calls: 1
+
+     → expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      true,
+    ]
+
+
+Number of calls: 1
+
+   ✓ set unchanged token verifies once with zero further mutations and one reconciliation notice 1ms
+   ✓ reset unchanged token verifies once with zero further mutations and one reconciliation notice 0ms
+   × unknown token cannot degrade into a normal set when expected baseline matches 1ms
+     → expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+     → expected 'false' to be 'true' // Object.is equality
+     → expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+   × public hook retains an issued uncertainty token across a transient read-denied Retry 11ms
+     → expected false to be true // Object.is equality
+     → expected 'conflict' to be 'saved' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  01:25:34
+   Duration  904ms (transform 141ms, setup 215ms, collect 66ms, tests 23ms, environment 315ms, prepare 76ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "conflict",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:26:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:27:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:28:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > set uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      false,
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:28:116
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected { ok: true, value: true, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "conflict",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:26:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected null to be 'true' // Object.is equality
+
+- Expected: 
+"true"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:27:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected "removeItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:28:73
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > reset uncertain token refuses externally restored original baseline without another write/remove/notice
+AssertionError: expected "spy" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st spy call:
+
+    Array [
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:28:116
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > unknown token cannot degrade into a normal set when expected baseline matches
+AssertionError: expected { ok: true, value: false, …(3) } to match object { ok: false, reason: 'conflict' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "reason": "conflict",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:37:156
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > unknown token cannot degrade into a normal set when expected baseline matches
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:37:246
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > unknown token cannot degrade into a normal set when expected baseline matches
+AssertionError: expected "setItem" to not be called at all, but actually been called 1 times
+
+Received: 
+
+  1st setItem call:
+
+    Array [
+      "xai_pref_dt_timezone",
+      "false",
+    ]
+
+
+Number of calls: 1
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:37:278
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > public hook retains an issued uncertainty token across a transient read-denied Retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:46:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx > public hook retains an issued uncertainty token across a transient read-denied Retry
+AssertionError: expected 'conflict' to be 'saved' // Object.is equality
+
+Expected: "saved"
+Received: "conflict"
+
+ ❯ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx:47:116
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
