@@ -1,0 +1,81 @@
+# Complete Settings Date & Time preference recovery
+
+Astra, Web, 2026-09-10. Generic next implementation contract, parent-approved after complete Header acceptance106f1d8. Fixed product baseline `73b4eb9184c06764a3befd101961a3856988022f`; this pane and the accepted Settings seam are unchanged by subsequent evidence commits. This document specifies work, not a product PASS. Parent owns overall ordering/ledger; Terra implements the complete caller, Sol independently verifies field/mixed/owner/export behavior, parent verifies real Settings host/native before→after, and Astra accepts the full contract. Do not instantiate a Workflow V2 template or change the full312-item objective.
+
+## Complete existing caller and source inventory
+
+The selected unit is all five live settings in `packages/plugin-web-settings-rest/src/panes/dateTimePane.tsx`, including its actual Settings registration and all recovery/departure behavior. Source inspection finds five direct `usePref` bindings, five UI mutation handlers, and no independent raw write/reset in this pane. Existing tuple casts erase setter results and do not constitute async failure handling. The original six pane tests cover rendering/bilingual labels/options plus only two normal persistence paths; they do not prove the whole five-field caller.
+
+Ownership comes from `plugin-web-storage/src/internal/accountOwnership.ts`, and defaults/codecs from `registry.ts`, not key-prefix inference:
+
+| Field identifier / existing control | Exact logical and physical device key | Existing domain / default / encoding |
+| --- | --- | --- |
+| `start_week` / Start week on | `xai_pref_dt_start_week` | Exactly `monday`, `sunday`, `saturday`; default `monday`; raw string codec, no JSON quotes. |
+| `lunar` / Show Lunar Calendar | `xai_pref_dt_lunar` | Strict boolean, defaulttrue; existing boolean codec. |
+| `week_numbers` / Show Week Numbers (W) | `xai_pref_dt_week_numbers` | Strict boolean, defaulttrue; existing boolean codec. |
+| `holidays` / Show Holidays | `xai_pref_dt_holidays` | Strict boolean, defaulttrue; existing boolean codec. |
+| `timezone` / Time Zone | `xai_pref_dt_timezone` | Strict boolean, defaulttrue; existing boolean codec. |
+
+All five are **device-owned** and stay unscoped. Preserve existing EN/ZH controls, start-week three-option order/domain, timezone description, immediate editing and no new Save footer. Preserve the current key/codec/default/owner/schema and existing paneid `date_time`, icon/title and sidebar placement.
+
+This batch fixes persistence/recovery of the controls that exist. Calendar's separate `xai_pref_week_start`, calendar view, lunar/holiday rendering and downstream product wiring retain their own audit items; do not equate `dt_start_week` with that key or claim calendar propagation merely because the settings key saves. The existing timezone boolean is not an IANA timezone selector and does not authorize one. No new preference, permission request, network notification, account conversion, alias migration or dual write is added.
+
+## Persistence, draft truth and exact attribution
+
+Use the accepted explicit `usePrefAutosaveAsync` family with runtime validators and consume actual async results. Preserve the shared engine and its exclusive physical-key lock, strict baseline/readback, no-op and uncertain-token semantics. Do not make legacy synchronous APIs silently return Promises or create a second effect/raw persistence path.
+
+1. Mount/re-render a valid or absent source without writes/removes. Render the existing default only for absence as specified by the hook; malformed/invalid/unavailable sources stay visibly recoverable and never seed defaults. Invalid start-week strings and wrong boolean encodings/types do not silently become valid values. Invalid DOM values cannot enter persistence as a legitimate edit.
+2. Every valid user change becomes visible immediately and creates its own field/session/operation identity before enqueueing. Physical storage can remain old while the real named key lock is held. Pending state does not block collecting a newer legitimate choice. Toggle succession uses the latest intent, avoiding stale rendered inversion when two clicks occur before a commit.
+3. Only the matching latest verified success clears that field's draft. Older success, older failure and an equal value cannot clear or replace a successor. Include a legal public sequence that returns to a previous value after intervening input with a later failed operation; a previous successful equal value is not evidence for the newer attempt. Do not invent private-state access to make an unreachable submission.
+4. Quota, denied storage, lock unavailable/rejection, conflict and uncertain readback retain the user's latest choice and accurate pending/error feedback. Promise rejection does not become an unhandled rejection or false Saved. A real external raw replacement is not implicit overwrite authority. Retry retains the original baseline/token when unchanged; a changed user intent receives its own operation. Uncertain physical commit followed by unchanged Retry verifies with one total write; changed external bytes remain preserved and unresolved.
+5. Retry while the latest field is pending is ignored or safely idempotent for that same operation; it must not resolve a later intent using a predecessor Promise. Repeated Retry cannot duplicate a physical operation or prematurely clear protection. Temporary failure before a Retry can use its token must not destroy that token. If the new caller has no separate preflight, use the corresponding public failure boundary and document it instead of adding redundant preflight code.
+6. Each key settles independently. One successful field neither retries nor rewrites a failed sibling; partial failures retain precisely their own latest values. Global Saved is allowed only when no actual current drafts, pending operations or unresolved source/field errors remain. After targeted read-only source repair or genuine all-field success, retain a truthful Saved positive control. Avoid deleting every success indication to pass negative tests.
+
+Source health is distinct from actual user work. Initial invalid/unavailable source alone shows a localized field-specific message and Reload, but no fake pending/unsaved export or host/unload block. A valid edit attempted after such an error is actual work: retain its chosen value on refusal and let the user export/discard it without silently overwriting the source. Repairing one source must not discard/retry an unrelated actual draft. Preserve the source issue until it really rereads valid/absent; no broad success based only on sibling status.
+
+## Complete current recovery and file export
+
+Provide clear EN/ZH field-labelled Retry, Discard/reload and source-only Reload actions as applicable. Provide a current-all draft discard for the Settings host. Per-field discard detaches its pending callbacks then reloads only that field through the existing safe metadata API; all-discard includes only actual drafts. Both perform **zero storage writes/removes**, preserve saved siblings and their bytes, and cannot reread unrelated fields merely to clear combined UI. Reload of a source-only field does not take authority over a failed sibling. Old completions after discard/reload/unmount cannot restore obsolete recovery or clear newer work.
+
+Add one current-draft download, available even while pending or while all Storage get/set operations fail. The concrete format is filename `date-time-draft.json`, JSON:
+
+```json
+{"version":1,"kind":"date-time-draft","values":{"device":{"start_week":"sunday","lunar":false,"week_numbers":false,"holidays":false,"timezone":false}}}
+```
+
+The `device` object contains exactly the **actual unresolved draft fields** at the permitted snapshot; it is sparse if only some fields are drafts. With all five changed/pending/failed it contains all five. Never insert successful/default/source-only fields just to fill the example, and never add account data or an account envelope to this device-only format. Validate each emitted field against the table. No empty download when there are no drafts. This is a recoverable data file, not a new import feature or cloud backup.
+
+Export from captured permitted memory, with no source reads/writes/removes. Export and Stay retain every draft/error/token and guard; file creation never means Saved or automatic navigation. Failures in Blob, URL creation, append or click retain state and show a separate localized export error. Cleanup anchor/URL best-effort, including late setup failure. Recheck live permission before setup and immediately before actual click, including a synchronous epoch/disposal change inside Blob/URL/append. Old inline callbacks and old host capabilities cannot export after scope change; fresh current export is the required positive control. Check disk bytes in native Chrome, not only intercepted JSON or a callback counter.
+
+## Device persistence and current host permission
+
+Device writes and field drafts survive A→B, locked/no-account and same-account epoch changes. No account physical key read/write, account lock, marker or tombstone admission may be introduced for these five preferences. A real held device-key mutation must still finish or retain its own recovery after an account change; an unrelated account lock must not serialize/block it.
+
+Host permission has a separate lifecycle: an epoch change invalidates the previous decision token and cancels the old route/signout intent. Every old `isCurrent`, `isBlocking`, `exportDraft` and `discardDraft` independently refuses using the **live** scope and disposal state, including before React rerenders. A fresh permission may guard/export/discard the surviving device drafts even when locked. Do not erase device work to revoke an old permission, inherit an old decision into the new scope, or introduce the Header-specific frozen-account note exception here.
+
+Unmount removes this registration/unload listener and detaches caller callbacks; it does not promise to undo an already committed operation or persist unsaved memory across crash. Beforeunload only warns synchronously for actual current work; it performs no async save/export or storage writes. Verified all-clean and initial source-only state do not warn.
+
+## Actual Settings host and UI
+
+Use existing `PaneRenderProps.registerDepartureGuard` and the accepted composed Settings/coordinator seam. The current `dateTimePane.render` must pass the optional bridge into its actual content. Keep standalone `dateTimePane.render({lang})` compatible. Do not copy a router/signout state machine or change shared coordinator/auth code to make one pane pass.
+
+The full real producer matrix includes switching Settings sidebar pane, close/back paths actually exposed by Settings, AppRail/programmatic module navigation, numeric Back/Forward/relative router semantics through the existing seam, and voluntary App sign-out. Protect same-turn competing intentions and preserve the first one; keep actual URL/history/current pane unchanged while held. All latest drafts verified clean may release that one intent once; partial success, a newer pending/failed field or a newer choice keeps it held. Stay/Escape/export do not release it. Explicit current-all discard then leave may release exactly once. Owner epoch cancels the old intent while fresh device protection remains.
+
+Use the localized participant title Date & Time/日期与时间 (existing locale title if it differs), specific field names and plain recovery explanations. The actual Settings composed route must contain this pane; a standalone mocked guard alone does not prove host wiring. Preserve existing focus trap, Escape/Stay focus return, keyboard select/toggle behavior and accessible status/alert announcements. At375/414/768/1024/1440 in EN/ZH, show all five fields and recovery/actions without horizontal overflow or overlapping/covered controls; recovery controls and375 dialog targets meet44px, containment and actual hit/click tests. Inspect screenshots as well as geometry. Existing settings body scrolling is permitted; content must remain reachable.
+
+## Ownership, order and complete acceptance
+
+Terra owns `plugin-web-settings-rest/src/panes/dateTimePane.tsx`, a narrowly scoped new internal helper if necessary, this pane's tests, its locale/API documentation and narrowly scoped recovery CSS. Use one coherent local operation model; do not refactor accepted Collaborate/Pomodoro/Header into a new generic helper as an incidental dependency. Existing shared hook/engine, ownership/registry, Settings host/coordinator, reset/deletion, adjacent panes and reviewer evidence are protected. A demonstrated shared defect must receive its own correct before oracle and explicit impact review before broad changes.
+
+Parent has executed the actual production ComposedSettings + full Shell baseline at73: `../web-date-time-recovery-independent/host-before-73b4eb9.log`, seven correct FAILs and one clean PASS. Each of the five quota paths loses the latest choice while preserving old physical bytes (start-week sunday returns to monday; each boolean false returns totrue); pane navigation escapes to Notifications and voluntary sign-out returns true. Preserve `host.test.tsx` and these business assertions unchanged. This is real component host evidence, not yet native browser or the full caller matrix. Sol freezes the remaining public five-field/recovery assertions with real hooks/storage before implementation. Baseline red must be a correct business failure, not a missing fixture/import or assumed private API. Terra can then deliver the complete five-field caller, author tests and fixed product SHA; independent suites rerun unchanged against an archive. Source review reconciles the whole contract and all correct failures before Astra acceptance. No partial green subset closes this caller.
+
+| Required verification | Concrete scope |
+| --- | --- |
+| Original and all five fields | Preserve original DT1–DT6 business assertions, awaiting real async completion where needed; additionally normal/absent/invalid/unavailable/pending/quota/retry per field, physical keys/codecs/defaults, true↔false and all three start-week values. No mount writes, no false Saved. |
+| Operation and source attribution | Latest queued and same-value successor, pending/duplicate Retry, lock refusal/rejection, uncertain one-write recovery/changed-token conflict, cross-document external bytes and source-only repair. Healthy controls and restored-source success remain positive controls. |
+| Partial and targeted recovery | At least both select-fails/boolean-succeeds and boolean-fails/select-succeeds; multiple/all-five pending; one conflict plus unrelated quota failure; targeted discard/reload zero writes/no sibling reads, leftover field still retry/export/host guarded; all-discard and late completion ignored. |
+| Owner/export | A→B→locked during real device lock; stale same-turn guard/inline export/discard refusal, fresh current/locked positives; no account read/lock; exact sparse/all-five native disk export with full storage denial; setup and click failure cleanup and permission changes. |
+| Real host/native | Actual composed Settings/complete Shell navigation matrix above, first-intent/latest completion/epoch/unmount; real native select/toggle, locks/storage/uncertainty, disk export, saved reload controls, source-only/no false unload, EN/ZH CSS/hit/focus/manual. No product-hook mocking. |
+| Final regression | Settings-rest package/types/lint, actual composition/registration and Settings host tests; Web types/lint as affected. Preserve complete accepted Collaborate/Smart host/export and Header/Pomodoro contracts. Reuse fixed prior shared results only after confirming their source/dependencies unchanged; rerun material shared deltas, never silently relabel old logs as new executions. |
+
+Acceptance covers this complete Date & Time mounted-session preference caller only. It does not close all Settings controls, all85 direct bindings/65 setters, or D2/REL/AI totals. The remaining all-writer obligations are explicitly carried in `remaining-writers.md`; no legacy/indirect/raw/timer/secret category is removed by choosing a bounded complete caller.
