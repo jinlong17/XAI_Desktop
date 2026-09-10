@@ -9,3 +9,7 @@ Parent fixed archive `edc185b`, isolated Chrome profile, actual Pomodoro DOM han
 ## Fixed async caller 2b666ed
 
 The unchanged five cases PASS, including the full clean projection then dirty conflict scenario (latest violet stays visible, external blue physical bytes preserved, recovery alert present). [After](native-2b666ed-after.json). Chrome80794 exits with SIGTERM and observed exit; fresh Chrome80899 reopens the same isolated profile and the final six physical keys match. This final checkpoint contains the externally accepted blue source; the unsaved violet intent is not claimed durable after process exit. Full Dv2 contract acceptance remains Astra's separate review.
+
+## Recovery successor 7785e92
+
+All five unchanged native scenarios remain PASS at [7785e92](native-7785e92-final.json), including clean/dirty other-document controls. Chrome84552 exits normally by observed SIGTERM and Chrome84626 reopens the final six-key checkpoint unchanged. Same scope boundaries apply.

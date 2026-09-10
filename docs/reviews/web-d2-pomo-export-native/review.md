@@ -5,3 +5,5 @@ Parent uses actual Pomodoro with project CSS in isolated Chrome/CDP. All six val
 Both fixed archives PASS: [legacy 6981111](native-6981111.log), [async caller 2b666ed](native-2b666ed.log). This is a preserved recovery behavior, not a newly reproduced failure. No timer session, account permission, whole-process unsaved recovery, full-shell visual or six independent mutations are claimed.
 
 [Actual component fixture](native.tsx), [fixed runner](verify-native.mjs). Temporary synthetic browser profile and downloads are removed after recording assertions.
+
+The unchanged actual disk export and latest quota Retry remain PASS at the recovery successor [7785e92](native-7785e92.log).

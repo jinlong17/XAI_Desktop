@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"2b666ed","mode":"conflict","browser":"Chrome/152.0.7977.83"}
+{"name":"targeted-preference-recovery","pass":false,"error":"Error: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":0,\"columnNumber\":127,\"scriptId\":\"12\",\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: missing Discard conflicting preferences\\n    at <anonymous>:1:134\\n    at <anonymous>:1:197\",\"objectId\":\"1544747281808409455.2.2\"}}"}
