@@ -311,6 +311,24 @@ describe("PomodoroModule", () => {
     expect(muteBtn.getAttribute("aria-label")).toBe("Unmute");
   });
 
+  it("persists all six device preferences only through explicit controls", async () => {
+    render(<PomodoroModule lang="en" />);
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("preset-focus-30"));
+      fireEvent.change(screen.getByTestId("custom-minutes-input"), { target: { value: "42" } });
+      fireEvent.click(screen.getByTestId("style-ring"));
+      fireEvent.click(screen.getByTestId("theme-violet"));
+      fireEvent.change(screen.getByTestId("sound-select"), { target: { value: "bell" } });
+      fireEvent.click(screen.getByTestId("mute-btn"));
+    });
+    expect(localStorage.getItem("xai_pref_pomodoro_preset")).toBe('"custom"');
+    expect(localStorage.getItem("xai_pref_pomodoro_custom_minutes")).toBe("42");
+    expect(localStorage.getItem("xai_pref_pomodoro_display_style")).toBe('"ring"');
+    expect(localStorage.getItem("xai_pref_pomodoro_theme")).toBe('"violet"');
+    expect(localStorage.getItem("xai_pref_pomodoro_sound")).toBe('"bell"');
+    expect(localStorage.getItem("xai_pref_pomodoro_muted")).toBe("true");
+  });
+
   // AC-SCHEMA-6: elapsedMs === durationMs for completed sessions (strict equality)
   it("AC-SCHEMA-6: for tick-to-zero session, elapsedMs === durationMs (strict)", async () => {
     render(<PomodoroModule lang="en" />);
