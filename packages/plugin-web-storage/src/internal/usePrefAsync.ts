@@ -182,7 +182,7 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
       validate: liveValidate,
       ...(request.kind === "reset" ? { reset: true } : { next: request.next }),
       ...(expectedRaw !== undefined ? { expectedRaw } : {}),
-      ...(request.reconcileToken ? { reconcileToken: request.reconcileToken } : {}),
+      ...(request.reconcileToken !== undefined ? { reconcileToken: request.reconcileToken } : {}),
       scope: controller.scope,
     }).catch(() => refusal<T>("storage"));
     controller.activePromise = attempt;

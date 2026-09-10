@@ -160,7 +160,7 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
       // ordinary mutation, even if an external writer restored the old raw
       // baseline. Keep it through temporary unreadable storage so a later
       // Retry can still verify the same physical bytes under this key lock.
-      if (suppliedToken) {
+      if (suppliedToken !== undefined) {
         const uncertain = uncertainByToken.get(suppliedToken);
         const common = uncertain
           && uncertain.physicalKey === physicalKey
