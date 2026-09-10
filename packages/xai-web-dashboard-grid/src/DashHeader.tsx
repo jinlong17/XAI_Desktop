@@ -193,6 +193,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const noteOffsetRef = useRef(noteOffset);
   const offsetDesiredRef = useRef(offsetSave.value);
   const offsetOperationRef = useRef<OffsetOperation | null>(null);
+  const ignoredOffsetOperationsRef = useRef(new Set<OffsetOperation>());
   const failedOffsetOperationRef = useRef<OffsetOperation | null>(null);
   const [movingNote, setMovingNote] = useState<boolean>(false);
   const sessionRef = useRef<NoteSession | null>(null);
@@ -370,6 +371,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   }, [frozenSession, notePending, openSession, setDraftText, submit]);
 
   const settleOffset = useCallback((operation: OffsetOperation, result: PrefMutationResult<number>) => {
+    if (ignoredOffsetOperationsRef.current.delete(operation)) return;
     if (!result.ok) {
       if (offsetOperationRef.current !== operation) return;
       offsetOperationRef.current = null;
@@ -426,6 +428,15 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       submitOffset(latest, failedOffset.raw, latest === failedOffset.value);
     }
   };
+
+  const reloadOffsetSource = useCallback(() => {
+    const active = offsetOperationRef.current;
+    if (active) {
+      ignoredOffsetOperationsRef.current.add(active);
+      offsetOperationRef.current = null;
+    }
+    offsetSave.meta.reload();
+  }, [offsetSave.meta]);
 
   const startNoteMove = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -573,7 +584,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p>
         {(noteIssue === "conflict" || noteIssue === "account-changed" || frozenSession || offsetIssue === "conflict") && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>
-        {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => offsetSave.meta.reload()}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
+        {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={reloadOffsetSource}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
           try {
             const session = sessionRef.current;
