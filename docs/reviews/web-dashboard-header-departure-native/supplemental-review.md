@@ -32,3 +32,13 @@ Both real physical-key locks were held before route departure. With note and off
 `c9a388d` fixes both 120ms slow-pointer departure paths: AppRail and widget preserve the original physical note, retain the latest input, stay on Dashboard and open the dialog. Both mixed partial directions, offset conflict, full-denial export, device owner/lock export and both source-only visual modes remain PASS with Runtime 0.
 
 The ordinary Tab blur positive control regresses: after five seconds the focused element has moved to the Header icon button, there is no dialog, but physical storage remains `Original note` instead of `Ordinary blur saved note`. This is a product failure because the same CDP Tab oracle passed at `9193353`, and the contract requires non-departure blur Save.
+
+## Fixed f64ad44 result
+
+All thirteen Sol native supplemental modes pass at `f64ad44`: ordinary Tab blur, both slow navigation paths, slow non-navigation release, Add Widget blur, visible Topbar Preferences to Settings, offset conflict, full-denial export, device owner/locked export, both mixed partial directions and source-only EN/ZH. Each reports Runtime 0.
+
+The unchanged Sol component/legacy matrix exposes three mechanism regressions at this revision: operation uncertainty Retry remains guarded (3/4), and the original device suite leaves beforeunload active after quota Retry and unchanged uncertainty Retry (11/13). Physical persistence assertions before those final warning checks pass; the defect is stale recovery/warning settlement, not loss of the successful stored value. The other suites pass: component 5/5, export-owner 5/5, account-note 11/11, source-feedback 3/3 and reload-pending 1/1, for 39/42 overall.
+
+## Truthful source copy at e11968d
+
+The four new real-browser copy modes pass in EN/ZH at 375/414/768/1024/1440 with contained, hit-testable 44px controls and Runtime 0. A healthy-offset, note-source-only failure identifies the dashboard note source and leaves unload/host navigation clean. A frozen A note identifies the previous account note without claiming unsaved device position, preserves the legacy unload warning, and does not lend B a host dialog.

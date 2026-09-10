@@ -1,0 +1,8 @@
+{"name":"baseline","commit":"e11968d","browser":"Chrome/152.0.7977.83"}
+{"name":"truthful-copy-375","text":"已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。重新读取备注","scroll":375,"recovery":{"x":14,"y":289.39544677734375,"right":361,"bottom":417.42669677734375},"buttons":[{"text":"重新读取备注","width":111,"height":44,"x":31,"right":142,"hit":true}]}
+{"name":"truthful-copy-414","text":"已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。重新读取备注","scroll":414,"recovery":{"x":14,"y":289.25,"right":400,"bottom":417.28125},"buttons":[{"text":"重新读取备注","width":111,"height":44,"x":31,"right":142,"hit":true}]}
+{"name":"truthful-copy-768","text":"已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。重新读取备注","scroll":768,"recovery":{"x":86,"y":289.25,"right":754,"bottom":396.265625},"buttons":[{"text":"重新读取备注","width":111,"height":44,"x":103,"right":214,"hit":true}]}
+{"name":"truthful-copy-1024","text":"已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。重新读取备注","scroll":1024,"recovery":{"x":90,"y":149.25,"right":1006,"bottom":256.265625},"buttons":[{"text":"重新读取备注","width":111,"height":44,"x":107,"right":218,"hit":true}]}
+{"name":"truthful-copy-1440","text":"已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。重新读取备注","scroll":1440,"recovery":{"x":87.453125,"y":155.25,"right":1416,"bottom":262.265625},"buttons":[{"text":"重新读取备注","width":111,"height":44,"x":104.453125,"right":215.453125,"hit":true}]}
+{"name":"truthful-copy-observation","warning":false,"path":"/app/tasks","dialog":false}
+{"name":"supplemental","pass":true,"mode":"note-source-zh","runtimeErrors":0}

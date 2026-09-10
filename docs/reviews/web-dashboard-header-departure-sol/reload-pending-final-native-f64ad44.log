@@ -1,0 +1,11 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-faKpwH
+
+ ✓ docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx (1 test) 49ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  00:52:59
+   Duration  808ms (transform 182ms, setup 258ms, collect 51ms, tests 49ms, environment 210ms, prepare 43ms)

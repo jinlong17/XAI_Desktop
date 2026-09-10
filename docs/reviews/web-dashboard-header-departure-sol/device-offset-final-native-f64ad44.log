@@ -1,0 +1,56 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-iCdPhB
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (13 tests | 2 failed) 203ms
+   ✓ gesture movement is local and dirty until pointerup commits exactly its final position 72ms
+   ✓ pointercancel terminates a moved gesture with its final position; a plain click never writes 13ms
+   ✓ resize clamps only presentation and later expansion restores desired saved coordinate without writes 7ms
+   ✓ clean storage event adopts device coordinate while a gesture retains frozen raw and latest local position 10ms
+   ✓ raw replacement during gesture is preserved even without a storage event 7ms
+   ✓ external replacement while final position waits for key lock refuses without losing draft 7ms
+   ✓ two gestures while first save waits preserve final latest intent and correct predecessor baseline 10ms
+   × quota preserves latest second gesture, exports its position and retries through actual save 26ms
+     → expected true to be false // Object.is equality
+   × unchanged uncertainty retry reconciles one physical write and clears only verified position recovery 11ms
+     → expected true to be false // Object.is equality
+   ✓ uncertain retry does not overwrite a subsequent external position 10ms
+   ✓ pending device final position survives A to B to locked account without an account admission lock 9ms
+   ✓ holding an account lifecycle lock does not prevent an explicit device gesture commit 8ms
+   ✓ earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline 12ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 passed (13)
+   Start at  00:52:52
+   Duration  1.01s (transform 177ms, setup 230ms, collect 64ms, tests 203ms, environment 212ms, prepare 84ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > quota preserves latest second gesture, exports its position and retries through actual save
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:30:1202
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > unchanged uncertainty retry reconciles one physical write and clears only verified position recovery
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:31:475
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
