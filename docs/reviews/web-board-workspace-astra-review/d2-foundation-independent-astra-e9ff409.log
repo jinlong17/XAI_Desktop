@@ -1,0 +1,187 @@
+revision=e9ff409
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-d2-Glpu3g
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses typed rather than trusting generation alone
+incomplete-marker {"kind":"typed","result":{"ok":true},"bytes":"[]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+incomplete-marker {"kind":"scoped","result":{"ok":true},"bytes":"[]"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+incomplete-marker {"kind":"deletion","result":{"ok":true},"bytes":null}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"set","result":{"ok":true},"preserved":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+scoped-canonical {"operation":"remove","result":{"ok":true},"preserved":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+deletion-retry {"retry":{"ok":false,"reason":"recovery-required"},"remaining":"[\"remaining\"]"}
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts (14 tests | 7 failed) 16ms
+   ✓ async pref and autosave round trips publish committed data once and isolate an observer exception 3ms
+   ✓ tombstone blocks typed async writing without recreating data 0ms
+   ✓ tombstone blocks scoped async writing without recreating data 0ms
+   × incomplete persisted marker refuses typed rather than trusting generation alone 5ms
+     → expected true to be false // Object.is equality
+     → expected '[]' to be '["keep"]' // Object.is equality
+   × incomplete persisted marker refuses scoped rather than trusting generation alone 1ms
+     → expected true to be false // Object.is equality
+     → expected '[]' to be '["keep"]' // Object.is equality
+   × incomplete persisted marker refuses deletion rather than trusting generation alone 1ms
+     → expected true to be false // Object.is equality
+     → expected null to be '["keep"]' // Object.is equality
+   × new scoped async set cannot discard a protected canonical receipt record 1ms
+     → expected true to be false // Object.is equality
+     → expected '[]' to be '{"format":"xai-command-state","versio…' // Object.is equality
+   × new scoped async remove cannot discard a protected canonical receipt record 0ms
+     → expected true to be false // Object.is equality
+     → expected null to be '{"format":"xai-command-state","versio…' // Object.is equality
+   ✓ typed account API still refuses protected canonical replacement 0ms
+   × partial deletion can retry after the first pass removed its generation marker 1ms
+     → expected { ok: false, …(1) } to deeply equal { ok: true }
+     → expected '["remaining"]' to be null
+   × successful deletion is idempotently retryable while retaining its tombstone 0ms
+     → expected { ok: false, …(1) } to deeply equal { ok: true }
+   ✓ queued captured owner refusal cannot target B 0ms
+   ✓ canonical ordinary write requests account shared before dataset exclusive and true no-op preserves bytes 1ms
+   ✓ writer queued outside exclusive migration stage waits then refuses stale generation 1ms
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 7 passed (14)
+   Start at  17:45:05
+   Duration  903ms (transform 116ms, setup 0ms, collect 152ms, tests 16ms, environment 338ms, prepare 58ms)
+
+
+stderr | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > typed account API still refuses protected canonical replacement
+[plugin-web-storage] refusing legacy write over protected canonical xai_task_cols.
+
+stderr | docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > typed account API still refuses protected canonical replacement
+[plugin-web-storage] refusing legacy removal of protected canonical xai_task_cols.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses typed rather than trusting generation alone
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:14:649
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses typed rather than trusting generation alone
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses scoped rather than trusting generation alone
+AssertionError: expected '[]' to be '["keep"]' // Object.is equality
+
+Expected: "["keep"]"
+Received: "[]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:14:702
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > incomplete persisted marker refuses deletion rather than trusting generation alone
+AssertionError: expected null to be '["keep"]' // Object.is equality
+
+- Expected: 
+"[\"keep\"]"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:14:702
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:15:553
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async set cannot discard a protected canonical receipt record
+AssertionError: expected '[]' to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+Expected: "{"format":"xai-command-state","version":1,"revision":4,"data":[],"receipts":{"prior":{"operationVersion":1,"signature":"kept","result":{"ok":true,"targetId":"old"},"committedAt":"2026-09-09T00:00:00Z"}}}"
+Received: "[]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:15:615
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > new scoped async remove cannot discard a protected canonical receipt record
+AssertionError: expected null to be '{"format":"xai-command-state","versio…' // Object.is equality
+
+- Expected: 
+"{\"format\":\"xai-command-state\",\"version\":1,\"revision\":4,\"data\":[],\"receipts\":{\"prior\":{\"operationVersion\":1,\"signature\":\"kept\",\"result\":{\"ok\":true,\"targetId\":\"old\"},\"committedAt\":\"2026-09-09T00:00:00Z\"}}}"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:15:615
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: true }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
++   "ok": false,
++   "reason": "recovery-required",
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:17:862
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > partial deletion can retry after the first pass removed its generation marker
+AssertionError: expected '["remaining"]' to be null
+
+- Expected: 
+null
+
++ Received: 
+"[\"remaining\"]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:17:922
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts > successful deletion is idempotently retryable while retaining its tombstone
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: true }
+
+- Expected
++ Received
+
+  {
+-   "ok": true,
++   "ok": false,
++   "reason": "recovery-required",
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d2-foundation-independent.test.ts:18:326
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
