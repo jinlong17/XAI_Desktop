@@ -1,0 +1,16 @@
+workspace HEAD=2a536c16ff839dd1281d7a2b484478532ac5f9a0
+exit=1
+
+> @repo/plugin-web-settings-rest@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest
+> eslint --max-warnings 0 .
+
+
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/src/panes/smartListsPane.tsx
+  119:6  warning  React Hook React.useCallback has an unnecessary dependency: 'scope'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @repo/plugin-web-settings-rest@0.0.0 lint: `eslint --max-warnings 0 .`
+Exit status 1
+ESLint found too many warnings (maximum: 0).

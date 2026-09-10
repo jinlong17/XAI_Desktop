@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Smart Lists当前用户恢复逻辑a2c0fe0已获Astra75aa0e8有界接受，父新增mobile Stay宽度小于44px待Styles窄修。下一Collaborate三控件mixed-scope完整合同已固定，Terra正在实施；不能从此关闭全REL-05/09。Dashboard账号内容、设备位置及Pomodoro六项原有界接受保留。逐调用方当前恢复状态见[恢复矩阵](caller-recovery-matrix.md)，历史数量与已完成批次记录见下文。
+当前增量：Smart Lists a2c0fe0恢复逻辑已获Astra75aa0e8有界接受，375 Stay触控缺口已修。Collaborate产品2a536c1经Terra逐批修复纯pending导出反馈、真实host渲染循环、旧scope回调、375恢复区超首屏及同值后继草稿误清。父固定独立contracts31/host8、原生七模式、完整CSS五宽度及375弹窗通过；Smart host10/entry3/wrapper5/export8/App5和Settings292通过，两项types通过。Settings lint仍因未变化的Smart Lists scope依赖警告失败，不宣称全部门禁通过。完整feature最终复核及合同剩余边界仍待完成，父作为非作者执行独立验证，Terra实现，Luna只读核对；运行时新Astra Agent初始化仍受thread limit限制。强制失效/崩溃未提交恢复、SET-06及其他REL-05/09/D2范围开放。正式完成13/312，未关闭299项。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 

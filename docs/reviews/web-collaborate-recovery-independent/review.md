@@ -45,3 +45,23 @@ The prior seven native interaction PASS results did not assert absence of React 
 Terra `e08cd8c` binds blocking/export/discard operations to the guard's captured composite token. Fixed `contracts-token-fixed-e08cd8c.log`: **30/30 PASS**. Fixed `host-token-fixed-e08cd8c.log`: original **7/7 PASS**. Extended `host-latest-e08cd8c.log`: **8/8 PASS**, including an older verified share write followed by a newer failed share intent keeping the first navigation blocked until the latest Retry succeeds.
 
 The independent native runner now enables Runtime events before navigation and fails on console errors or uncaught runtime exceptions. Fixed `ae2d233` fails at actual browser mount with React's maximum-update-depth message, confirming the component-level loop. Fixed `e08cd8c` reaches visual measurement without that mount error, but fails the first 375px recovery geometry oracle. See the native review. This remains a partial acceptance; full presentation and affected regressions are not waived.
+
+## Same-value successor attribution remains a confirmed blocker
+
+On `1e81df0`, the extended31-test suite has30 PASS /1 FAIL in `contracts-aba-lock-1e81df0.log`. Hold the actual account preference key; select edit, then view and edit while the first operation is pending. Allow the first key admission/physical edit write, reject the second key admission. The hook correctly retains the failed latest operation and Retry, but the pane's earlier success callback clears the latest equal-valued draft because it compares only session and value. `beforeunload` is incorrectly removed and the export draft is lost. Terra is assigned per-edit draft identity matching; no shared engine change is authorized.
+
+The first fixture (`contracts-aba-e08cd8c.log`) expected two physical writes for equal successive values and failed before exercising this defect. The engine correctly treats matching committed raw as a no-op, so that diagnostic is not a product defect. The corrected fixture observes/rejects the actual second physical-key lock admission, which is required even for a no-op, and reaches the incorrect draft-clear oracle. Both logs are retained.
+
+## Current checkpoint — product2a536c1
+
+Terra changes success matching to per-edit draft identity. The original same-value lock-rejection oracle now passes. Parent fixed-revision verification:
+
+- Independent contracts:31/31 PASS, `contracts-final-batch-2a536c1.log`.
+- Real composed host:8/8 PASS, `host-final-batch-2a536c1.log`.
+- Native current pane/device/export/denial/partial/owner/departure/pending: all seven modes PASS with Runtime error checks enabled, in the sibling native directory.
+- Full CSS:375/414/768/1024/1440 recovery geometry PASS; actual375 departure dialog is within viewport, correctly labelled, focus-contained, and all actions44px or larger. Parent directly inspected the final375 dialog screenshot. Runtime errors:0.
+- Affected unchanged Smart Lists host10, entry3, wrapper5, export8 and App5 PASS on the same fixed product. Settings package43 files/292 tests PASS. These overlapping layers are deliberately not combined into a coverage total.
+- Settings-rest typecheck and Web check-types PASS on workspace HEAD2a536c1 with only parent reviewer artifacts dirty.
+- Settings-rest lint **FAIL** on one existing `smartListsPane.tsx:119` exhaustive-deps warning (`scope` is an unnecessary dependency). The file is byte-identical between accepted Smart Listsa2c0fe0 and2a536c1 (`git diff --exit-code`=0). No Collaborate lint findings. Do not describe all checks as green, or silently change previously accepted Smart Lists semantics to suppress it.
+
+This checkpoint resolves the reproduced pending-export feedback, composed-host render loop, stale combined callbacks, mobile recovery geometry and same-value successor draft defects. It does not itself close a numbered audit item or substitute for the complete feature decision. Before that decision, reconcile the contract's remaining explicit edges (including only-current-draft targeted all-discard, localized recovery presentation and additional export setup/click cleanup variants), and handle the existing lint warning under a narrow separate ownership decision. Forced auth unmount, browser crash, durable unavailable-storage drafts and global REL-05/REL-09/D2 remain open.

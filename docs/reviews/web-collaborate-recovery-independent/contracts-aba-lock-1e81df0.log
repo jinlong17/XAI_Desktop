@@ -1,0 +1,60 @@
+revision=1e81df0 fixed_commit=1e81df0a478702c22e901f8b1d4765e076894dc1
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UkvcO6
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx (31 tests | 1 failed) 495ms
+   ✓ absent mount and rerender preserve all absent physical sources without a draft 57ms
+   ✓ actual share producer saves exact own source and leaves siblings absent 14ms
+   ✓ actual avatars producer saves exact own source and leaves siblings absent 10ms
+   ✓ actual mentions producer saves exact own source and leaves siblings absent 10ms
+   ✓ invalid share source is retained on mount without fake draft or seed 8ms
+   ✓ invalid avatars source is retained on mount without fake draft or seed 6ms
+   ✓ invalid mentions source is retained on mount without fake draft or seed 6ms
+   ✓ share waits for its actual key lock with latest draft 10ms
+   ✓ avatars waits for its actual key lock with latest draft 10ms
+   ✓ mentions waits for its actual key lock with latest draft 11ms
+   ✓ account exclusive blocks share while independent device choice commits 15ms
+   ✓ three same-turn toggles use latest desired values 26ms
+   ✓ repairing one invalid device source preserves a failed sibling draft 19ms
+   ✓ pending device operation survives account epoch and old combined guard is inert 13ms
+   ✓ unchanged uncertain device Retry verifies without duplicate physical commit 14ms
+   ✓ source conflict discard is read-only and preserves another failed field 24ms
+   ✓ clean external values project all three controls without writing 9ms
+   ✓ forged share selection cannot persist or create a draft 7ms
+   ✓ missing locks retains latest choice without raw fallback write 11ms
+   ✓ retry of the only failed field never reattempts saved siblings 17ms
+   ✓ old export and discard capabilities are revoked after unmount 8ms
+   ✓ owner change at URL setup cancels and cleans old export without a click 15ms
+   ✓ failed export setup reports separate error while quota draft remains 14ms
+   ✓ failed export setup reports separate error while pure pending draft remains 13ms
+   ✓ actual migration preserves acknowledged share and fences queued old generation while devices remain independent 26ms
+   ✓ initial read denial repairs through read-only Reload without a fabricated draft 10ms
+   ✓ device uncertainty after external retains correct token and never duplicates prior commit 21ms
+   ✓ device uncertainty after owner retains correct token and never duplicates prior commit 17ms
+   ✓ device uncertainty after edited retains correct token and never duplicates prior commit 24ms
+   ✓ old combined export callback refuses while fresh device-only export remains available after owner replacement 22ms
+   × same-value successor failure cannot be cleared by earlier successful matching value 28ms
+     → expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 passed (31)
+   Start at  23:06:37
+   Duration  1.85s (transform 283ms, setup 0ms, collect 520ms, tests 495ms, environment 436ms, prepare 100ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx > same-value successor failure cannot be cleared by earlier successful matching value
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx:37:760
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

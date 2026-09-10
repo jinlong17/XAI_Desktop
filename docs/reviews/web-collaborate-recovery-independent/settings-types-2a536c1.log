@@ -1,0 +1,6 @@
+workspace HEAD=2a536c16ff839dd1281d7a2b484478532ac5f9a0
+exit=0
+
+> @repo/plugin-web-settings-rest@0.0.0 typecheck /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest
+> tsc --noEmit
+
