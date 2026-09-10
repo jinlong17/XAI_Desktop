@@ -1272,9 +1272,15 @@
 
 .pomo-recovery {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
+  align-self: flex-start;
   inline-size: min(100%, 460px);
   gap: 0.5rem;
+}
+
+.pomo-source-recovery {
+  flex: 0 0 auto;
 }
 
 .pomo-recovery p {
