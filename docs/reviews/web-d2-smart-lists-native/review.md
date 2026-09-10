@@ -9,3 +9,7 @@ The unchanged after probe will also require latest pending selection, actual Ret
 ## Expanded two-document baseline
 
 The expanded same-version probe adds a real second-document map replacement while the first document has a dirty queued edit. [Extended before](native-3b02e2a-extended-before.json) is4 correct FAIL /1 control PASS; the new failure loses the first document's local map after the other document's storage event. Its later actual Retry/refusal and explicit whole-map discard assertions are retained for after but cannot be reached on this failing baseline. The original four-case raw result remains unchanged. The runner now refuses overwriting an existing evidence filename.
+
+## Fixed caller40ffbe1
+
+The unchanged expanded five PASS: [after](native-40ffbe1-after.json). Chrome99710 exits by SIGTERM with observed process exit, then new Chrome99767 opens the same isolated profile. Exact final account map bytes and actual re-rendered first two select values are restored. This is one committed map checkpoint, not durable unsaved drafts or all lifecycle interleavings.

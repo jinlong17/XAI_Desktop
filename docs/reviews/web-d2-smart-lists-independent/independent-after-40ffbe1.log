@@ -1,0 +1,11 @@
+revision=40ffbe1
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-NVtean
+
+ ✓ docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx (4 tests) 170ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  21:32:33
+   Duration  1.90s (transform 252ms, setup 0ms, collect 519ms, tests 170ms, environment 831ms, prepare 103ms)
