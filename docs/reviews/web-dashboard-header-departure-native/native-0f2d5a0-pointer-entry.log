@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"0f2d5a0","browser":"Chrome/152.0.7977.83"}
+{"name":"pointer-entry-observation","editor":true,"events":[{"name":"pointerdown","target":"dash-note__text","pointerId":1},{"name":"pointerup","target":"dash-note__text","pointerId":1},{"name":"click","target":"dash-note__text","pointerId":1}],"note":"Original note","offset":"0"}
+{"name":"departure","pass":true,"mode":"pointer-entry","runtimeErrors":0}

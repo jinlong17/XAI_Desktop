@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const sourceCommit=process.argv[2];const mode=process.argv[3]??'route';if(!['route','rail','signout','widget','unload','pointer-entry'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
+const sourceCommit=process.argv[2];const mode=process.argv[3]??'route';if(!['route','rail','signout','widget','unload','pointer-entry','visual','visual-zh','unsubmitted'].includes(mode))throw Error('mode');if(!sourceCommit)throw Error('Fixed revision required');
 const evidenceTag=sourceCommit+(process.argv[4]?'-'+process.argv[4]:'');
 if(existsSync(join(output,`native-${evidenceTag}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -24,7 +24,7 @@ for(const name of readdirSync(join(snapshot,'packages'))){
 const pinnedPackages={name:'pinned-workspace-packages',setup(build){build.onResolve({filter:/^@repo\//},args=>{const parts=args.path.split('/');const entry=aliases.get(parts.slice(0,2).join('/'));if(!entry)return;const sub=parts.length>2?'./'+parts.slice(2).join('/'):'.';let target=entry.pkg.exports?.[sub];if(typeof target==='object')target=target.import??target.default;if(typeof target!=='string')throw Error('Unresolved pinned export '+args.path);return {path:join(entry.folder,target)};});}};
 const downloads=join(directory,'downloads');mkdirSync(downloads);const delay=ms=>new Promise(r=>setTimeout(r,ms));let server,browser,socket;const records=[];const runtimeErrors=[];const record=(name,value)=>{records.push({name,...value});console.log(name,JSON.stringify(value));};
 try{
-const built=await build({stdin:{contents:readFileSync(join(output,'native.tsx'),'utf8'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
+const built=await build({stdin:{contents:readFileSync(join(output,'native.tsx'),'utf8').replaceAll('lang="en"',mode==='visual-zh'?'lang="zh"':'lang="en"'),resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
 browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
@@ -37,7 +37,7 @@ record('baseline',{commit:sourceCommit,browser:(await cdp('Browser.getVersion'))
 try{
  assert.equal(runtimeErrors.length,0,'Runtime mount error '+runtimeErrors.slice(0,3).join(' | '));
  const actualClick=async selector=>{const r=await ev(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});if(!e)throw Error('Missing '+${JSON.stringify(selector)});e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,hit:e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}})()`);assert(r.hit,'Covered actual control '+selector);await cdp('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});await cdp('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x,y:r.y,button:'left',clickCount:1});await delay(180)};
- await ev('verify.deny()');
+ if(mode!=='unsubmitted')await ev('verify.deny()');
  if(mode==='pointer-entry'){
  await ev(`(()=>{window.pointerEvidence=[];for(const name of ['pointerdown','pointerup','gotpointercapture','lostpointercapture','click'])document.addEventListener(name,e=>window.pointerEvidence.push({name,target:e.target.className,pointerId:e.pointerId}),true)})()`);
  await actualClick('.dash-note__display');const observation=await ev('({editor:!!document.querySelector(".dash-note input"),events:window.pointerEvidence,note:verify.readNote(),offset:localStorage.getItem("xai_pref_dashboard_header_note_x")})');record('pointer-entry-observation',observation);const shot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`header-${evidenceTag}-pointer-entry.png`),Buffer.from(shot.data,'base64'));assert(observation.editor,'Actual no-movement pointer click did not open Header editor');
@@ -46,16 +46,30 @@ try{
  }
  if(mode!=='pointer-entry')record('keyboard-entry-observation',await ev('({editor:!!document.querySelector(".dash-note input"),active:document.activeElement?.className,events:window.keyboardEvidence,text:document.querySelector(".dash-header")?.textContent})'));
  assert(await ev('!!document.querySelector(".dash-note input")'),'Keyboard activation did not open Header editor');
- await ev('document.querySelector(".dash-note input").select()');await cdp('Input.insertText',{text:'Latest native unsaved note'});await actualClick('[aria-label="Save dashboard note"]');
+ await ev('document.querySelector(".dash-note input").select()');await cdp('Input.insertText',{text:'Latest native unsaved note'});if(mode!=='unsubmitted')await actualClick(mode==='visual-zh'?'[aria-label="保存工作台备注"]':'[aria-label="Save dashboard note"]');
+ if(mode!=='unsubmitted'){for(let i=0;i<100;i++){if(await ev('!document.querySelector(".dash-note__saving")'))break;await delay(50)}assert(await ev('!document.querySelector(".dash-note__saving")'),'Quota scenario has not settled');}
  assert.equal(await ev('verify.readNote()'),'Original note');assert.equal(await ev('document.querySelector(".dash-note input").value'),'Latest native unsaved note');
- if(mode==='pointer-entry'){assert.equal(await ev('location.pathname'),'/app/dashboard');}
+ if(mode==='visual'||mode==='visual-zh'){
+ for(const width of [375,414,768,1024,1440]){
+ await cdp('Emulation.setDeviceMetricsOverride',{width,height:812,deviceScaleFactor:1,mobile:false});await delay(180);
+ const geometry=await ev(`(()=>{const rect=e=>{const r=e.getBoundingClientRect();return {text:e.textContent.trim(),x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,right:r.right,hit:e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}};return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,recovery:rect(document.querySelector('.dash-note-recovery')),buttons:[...document.querySelectorAll('.dash-note-recovery button')].map(rect)}})()`);
+ record('visual-'+width,geometry);const shot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`header-${evidenceTag}-${mode}-${width}.png`),Buffer.from(shot.data,'base64'));
+ assert(geometry.scroll<=width,'Horizontal document overflow');assert(geometry.recovery.y>=0&&geometry.recovery.bottom<=812,'Recovery not visible in first viewport');for(const b of geometry.buttons){assert(b.width>=44&&b.height>=44,'Undersized recovery target '+b.text);assert(b.x>=0&&b.right<=width,'Recovery target horizontal clipping '+b.text);assert(b.y>=geometry.recovery.y&&b.bottom<=geometry.recovery.bottom,'Recovery target outside its container '+b.text);assert(b.hit,'Recovery target covered '+b.text)}
+ }
+ await cdp('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:false});await delay(180);await ev('verify.router.navigate("/app/tasks")');await delay(180);
+ const dialogGeometry=await ev(`(()=>{const e=document.querySelector('[role=dialog]');const r=e.getBoundingClientRect();return {text:e.textContent,x:r.x,y:r.y,right:r.right,bottom:r.bottom,focus:e.contains(document.activeElement),buttons:[...e.querySelectorAll('button')].map(b=>{const q=b.getBoundingClientRect();return {text:b.textContent,width:q.width,height:q.height}})}})()`);
+ record('dialog-375',dialogGeometry);const shot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`header-${evidenceTag}-${mode}-375-dialog.png`),Buffer.from(shot.data,'base64'));
+ assert(dialogGeometry.x>=0&&dialogGeometry.right<=375&&dialogGeometry.y>=0&&dialogGeometry.bottom<=812,'Dialog outside viewport');assert(dialogGeometry.focus,'Focus not in actual dialog');assert(dialogGeometry.text.includes(mode==='visual-zh'?'工作台备注':'Dashboard header'),'Incorrect participant label');for(const b of dialogGeometry.buttons)assert(b.width>=44&&b.height>=44,'Small dialog target '+b.text);
+ record('full-shell-css-recovery',{pass:true});
+ }
+ else if(mode==='pointer-entry'){assert.equal(await ev('location.pathname'),'/app/dashboard');}
  else if(mode==='unload'){const warning=await ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()');record('unload-observation',{warning});assert(warning);}
  else if(mode==='signout'){await ev('verify.signout()');await delay(180);const observation=await ev('({outcome:verify.signoutResult,dialog:!!document.querySelector("[role=dialog]")})');record('signout-observation',observation);assert.equal(observation.outcome,'pending');assert(observation.dialog);}
  else{
- if(mode==='route')await ev('verify.router.navigate("/app/tasks")');
+ if(mode==='route'||mode==='unsubmitted')await ev('verify.router.navigate("/app/tasks")');
  if(mode==='rail')await actualClick('.app-rail [aria-label="Tasks"]');
- if(mode==='widget')await actualClick('.mc-jump');
- await delay(180);const observation=await ev('({path:location.pathname,dialog:!!document.querySelector("[role=dialog]"),note:verify.readNote()})');record(mode+'-observation',observation);assert.equal(observation.path,'/app/dashboard');assert(observation.dialog);
+ if(mode==='widget'){await ev('(()=>{window.widgetPointerEvidence=[];for(const name of ["pointerdown","pointerup","click"])document.addEventListener(name,e=>window.widgetPointerEvidence.push({name,target:e.target.className,text:e.target.textContent?.slice(0,70)}),true)})()');await actualClick('.mc-jump');}
+ await delay(180);const observation=await ev('({path:location.pathname,dialog:!!document.querySelector("[role=dialog]"),note:verify.readNote(),blockers:[...verify.router.state.blockers].map(([key,b])=>({key,state:b.state,path:b.location?.pathname})),widgetEvents:window.widgetPointerEvidence})');record(mode+'-observation',observation);assert.equal(observation.path,'/app/dashboard');assert(observation.dialog);
  }
  assert.equal(runtimeErrors.length,0,'Runtime interaction error '+runtimeErrors.slice(0,3).join(' | '));record('departure',{pass:true,mode,runtimeErrors:0});
 }catch(error){record('departure',{pass:false,error:String(error)});process.exitCode=1;}
