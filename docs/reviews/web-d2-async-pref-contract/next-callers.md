@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：当前进展：Pomodoro完整恢复合同已获Astra051212a接受，Collaborate6254cb4及共享协调器ba7f0da接受保持有效。Dashboard Header固定41fb4d1已修复真实host离页时blur隐式保存：父原5及advanced5全部通过，实际Chrome未提交备注/widget/route/rail/signout/unload六模式通过；英文和中文各五宽度及375弹窗通过。父首批证据17144da，Sol独立42/42为e6c52e1，作者包回归ddc1ff8。此前45渲染循环及0f/3e失败证据保留。Astra正补位置preflight冲突guard及同turn账号切换inline导出反例；这些当前是待证实风险，不能用现有通过结论覆盖。Sol继续native位置/pending/owner/export/source布局，完整Header尚未接受。正式完成13/312，未关闭299；REL-05/09/D2保持开放。
+当前增量：Pomodoro完整恢复合同已获Astra051212a接受，Collaborate6254cb4及共享协调器ba7f0da接受保持有效。Header当前产品9193353修复Astra4aecaa6三条正确FAIL；Astra原5边界新版本全部通过，尚有其余完整合同门禁。父actualHost原5/advanced5/新followon2及原account parent2全部通过，原native device5/savedreload4通过（9ba8655）；父八个native模式含中英文五宽度通过（fd0e740，启动端口诊断与重跑归属明确）。Sol扩展native证据b8cb6e4确认offset冲突、全存储拒绝导出、A→B→locked设备恢复和source-only中英文通过，但writable未提交备注在导航pointerdown停留后先blur保存：slow-rail/slow-widget两条正确FAIL，普通Tab保存正例PASS。Terra继续修复该真实交互时序，Astra补targeted-read/zero-write与导出setup边界，最终独立门禁仍开放。历史41/0f/3e失败和有界通过证据保留。正式完成13/312，未关闭299；REL-05/09/D2不因此关闭。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
