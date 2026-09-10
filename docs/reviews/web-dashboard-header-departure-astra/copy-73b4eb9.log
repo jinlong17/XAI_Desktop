@@ -1,0 +1,539 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-whTBfR
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx (6 tests | 2 failed) 129ms
+   ✓ en: frozen A-only recovery cannot falsely report a healthy position source unavailable 81ms
+   ✓ en: note-only read failure identifies note recovery without falsely blaming healthy position 10ms
+   ✓ en: actual position source failure retains the established localized message and read-only action 7ms
+   × zh: frozen A-only recovery cannot falsely report a healthy position source unavailable 19ms
+     → Unable to find an element with the text: /The previous account's note draft remains protected|此前账户的备注草稿保留在此会话中/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0m早上好[0m
+          [0m, [0m
+          [0m你好[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0m2026 年 9 月 10 日 · 周四[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"编辑工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__placeholder"[39m
+            [36m>[39m
+              [0m添加一句今日重点、提醒或短句[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"添加新的工作台组件"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0m添加组件[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"dash-note-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m此前账户的备注草稿仍受此会话保护，当前账户不能导出或放弃它。[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m重试备注保存[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m导出旧备注草稿[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ zh: note-only read failure identifies note recovery without falsely blaming healthy position 6ms
+   × zh: actual position source failure retains the established localized message and read-only action 4ms
+     → Unable to find an element with the text: /The saved note position source is unavailable|备注位置的已保存来源不可用/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0m早上好[0m
+          [0m, [0m
+          [0m你好[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0m2026 年 9 月 10 日 · 周四[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"编辑工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__text"[39m
+            [36m>[39m
+              [0mOriginal A[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"清空工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__clear"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"添加新的工作台组件"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0m添加组件[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"dash-note-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m已保存的备注位置来源不可用。请重新读取；这不是新的未保存草稿。[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m重新读取备注位置[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  00:57:05
+   Duration  903ms (transform 186ms, setup 244ms, collect 67ms, tests 129ms, environment 206ms, prepare 58ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > zh: frozen A-only recovery cannot falsely report a healthy position source unavailable
+TestingLibraryElementError: Unable to find an element with the text: /The previous account's note draft remains protected|此前账户的备注草稿保留在此会话中/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0m早上好[0m
+          [0m, [0m
+          [0m你好[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0m2026 年 9 月 10 日 · 周四[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"编辑工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__placeholder"[39m
+            [36m>[39m
+              [0m添加一句今日重点、提醒或短句[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"添加新的工作台组件"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0m添加组件[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"dash-note-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m此前账户的备注草稿仍受此会话保护，当前账户不能导出或放弃它。[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m重试备注保存[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m导出旧备注草稿[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx:17:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx > zh: actual position source failure retains the established localized message and read-only action
+TestingLibraryElementError: Unable to find an element with the text: /The saved note position source is unavailable|备注位置的已保存来源不可用/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0m早上好[0m
+          [0m, [0m
+          [0m你好[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0m2026 年 9 月 10 日 · 周四[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"编辑工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__text"[39m
+            [36m>[39m
+              [0mOriginal A[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"清空工作台备注"[39m
+            [33mclass[39m=[32m"dash-note__clear"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"添加新的工作台组件"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0m添加组件[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"dash-note-recovery"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m已保存的备注位置来源不可用。请重新读取；这不是新的未保存草稿。[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m重新读取备注位置[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-dashboard-header-departure-astra/source-copy.test.tsx:30:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

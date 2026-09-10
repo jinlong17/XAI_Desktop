@@ -4,7 +4,7 @@ import {act,cleanup,fireEvent,render} from '@testing-library/react';
 import {DashHeader} from '../../../packages/xai-web-dashboard-grid/src/DashHeader';
 import {activate,flush,nativeGet,nativeSet,noteKey,offsetKey,setup,unload} from '../web-dashboard-header-departure-sol/fixture';
 beforeEach(setup);afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
-const positionOnlyCopy=/The saved note position source is unavailable|备注位置的已保存来源不可用/;
+const positionOnlyCopy=/The saved note position source is unavailable|备注位置的已保存来源不可用|已保存的备注位置来源不可用/;
 for(const lang of ['en','zh'] as const){
   it(`${lang}: frozen A-only recovery cannot falsely report a healthy position source unavailable`,async()=>{
     const ui=render(<DashHeader lang={lang} now={new Date('2026-09-10T10:00:00Z')}/>);
@@ -14,7 +14,7 @@ for(const lang of ['en','zh'] as const){
     expect(ui.container.textContent).not.toContain('Private A draft');expect(unload()).toBe(true);
     expect(nativeGet.call(localStorage,offsetKey)).toBe('0');
     expect(ui.queryByRole('button',{name:lang==='en'?'Reload note position':'重新读取备注位置'})).toBeNull();
-    expect(ui.getByText(/The previous account's note draft remains protected|此前账户的备注草稿保留在此会话中/)).toBeTruthy();
+    expect(ui.getByText(/The previous account's note draft remains protected|此前账户的备注草稿保留在此会话中|此前账户的备注草稿仍受此会话保护/)).toBeTruthy();
     expect(ui.queryByText(positionOnlyCopy),'a frozen account note does not imply broken position storage').toBeNull();
   });
   it(`${lang}: note-only read failure identifies note recovery without falsely blaming healthy position`,async()=>{

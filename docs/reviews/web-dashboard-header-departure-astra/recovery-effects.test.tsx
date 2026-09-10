@@ -102,3 +102,34 @@ for(const retry of ['none','success','quota'] as const) it(`preflight-failed new
   expect.soft(ui.note.style.getPropertyValue('--dash-note-x'),'the failed newer70 is not the verified predecessor40').toBe('70px');
   expect.soft(guard()?.isBlocking()).toBe(retry!=='success');expect(unload()).toBe(retry!=='success');
 });
+
+
+it('unchanged uncertain Retry retains its original verification token across a transient Retry preflight read denial', async () => {
+  const ui = mount(); await flush();
+  let failReadback = false;
+  let failRetryPreflight = false;
+  let writes = 0;
+  let preflightDenials = 0;
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function(this: Storage, key: string, value: string) {
+    nativeSet.call(this, key, value);
+    if (key === offsetKey) { writes += 1; failReadback = true; }
+  });
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function(this: Storage, key: string) {
+    if (key === offsetKey && failReadback) { failReadback = false; throw Error('uncertain physical commit readback'); }
+    if (key === offsetKey && failRetryPreflight) { failRetryPreflight = false; preflightDenials += 1; throw Error('Retry preflight temporarily unavailable'); }
+    return nativeGet.call(this, key);
+  });
+  drag(ui, 40); await flush(30);
+  expect(nativeGet.call(localStorage, offsetKey)).toBe('40');
+  expect(writes).toBe(1); expect(guard()?.isBlocking()).toBe(true); expect(unload()).toBe(true);
+  failRetryPreflight = true;
+  fireEvent.click(ui.getByRole('button', {name: 'Retry note save'})); await flush(30);
+  expect(preflightDenials).toBe(1); expect(writes).toBe(1);
+  expect(guard()?.isBlocking()).toBe(true); expect(unload()).toBe(true);
+  fireEvent.click(ui.getByRole('button', {name: 'Retry note save'})); await flush(30);
+  expect(writes, 'retry verifies the already committed operation without writing its equal value again').toBe(1);
+  expect(nativeGet.call(localStorage, offsetKey)).toBe('40');
+  expect(nativeGet.call(localStorage, noteKey)).toBe('Original A');
+  expect(ui.note.style.getPropertyValue('--dash-note-x')).toBe('40px');
+  expect(guard()?.isBlocking()).toBe(false); expect(unload()).toBe(false);
+});

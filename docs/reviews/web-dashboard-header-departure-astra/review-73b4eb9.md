@@ -1,0 +1,19 @@
+# Astra independent final mechanism review at 73b4eb9
+
+Fixed product: `73b4eb9184c06764a3befd101961a3856988022f`. This review is generic, non-author execution against a Git archive, with no product or ledger edits. Complete Header acceptance is recorded separately after the full evidence matrix is reconciled.
+
+## Independent results and truthful oracle revisions
+
+All **27 Astra assertions pass**: boundaries5 (`boundaries-73b4eb9.log`), recovery12 (`recovery-73b4eb9.log`), blur4 (`blur-73b4eb9.log`), and source-copy6 (`copy-semantic-73b4eb9.log`). The prior boundary, successor, export and blur assertions are unchanged.
+
+The additional public token sequence is not duplicated by Sol's original42: move to40; the real setItem commits40 but verification read fails; click Retry while its caller preflight getItem fails once; restore the read path and click Retry again. Both intermediate states remain guarded with unload warning. The final state must have **exactly one total physical position write**, native40, visible40, original account note unchanged, and no guard/unload. No hook, token, private component state or value-only shortcut is mocked. The identical test atf64ad44 correctly fails with guard still true (`recovery-token-before-f64ad44.log`,11PASS/1FAIL);73 passes all12. This supplements, rather than replaces, Sol's normal quota and unchanged-token regression cases.
+
+The first73 copy run (`copy-73b4eb9.log`,4PASS/2FAIL) used exact old Chinese phrase fragments. The new phrases carry the same source/protection meaning, so those two failures are **oracle wording mismatches**, not product defects. The committed matcher now recognizes both old and new Chinese phrases, including both possible wrong-position claims in the negative cases. It retains A masking/unload, healthy native position0, targeted Reload actions, and position-only invalid-source positive controls. Identical expanded cases still correctly produce4FAIL/2PASS atf64 (`copy-semantic-before-f64ad44.log`) and6PASS at73. Historical logs are preserved; neither a changed phrase nor disappearance of an old substring alone proves semantic correctness.
+
+## Source review of settlement and protected boundaries
+
+The final correction explicitly transfers the failed operation identity to its newly dispatched active retry. Its completion can therefore clear its own failed identity. Success and failure of an older active attempt cannot clear or replace a newer caller-preflight failure. The latter remains actual work even though it never entered the hook. A same-value retry whose preflight temporarily fails retains its old retry eligibility and verification token; a genuinely new gesture creates new intent instead. Actual guard clearance is not decided by equal coordinates. The previous ordinary Retry failures atf64 remain valid history; the fact that our earlier20 tests passed did not certify that complete revision.
+
+This ownership change is confined to Header position submission/settlement. Comparison fromf64 to73 changes only `DashHeader.tsx` and its focused departure tests under product paths: source-copy selection and position retry/settlement. No hook/storage engine, shared coordinator, app adapter, pointer blur listener, note submission, old-account permission, schema or download boundary changed. Source-copy now distinguishes frozen account, note source, position source and combined source states. It keeps real source repair and actual-draft truth.
+
+The unchanged current field discard/read boundaries, no-storage export, same-turn owner cancellation, late-callback suppression, latest text/gesture preservation and stable blur lifecycle are rechecked by the27. Complete account/device and native navigation evidence must additionally agree; this report alone does not close Header, REL, D2 or the312-item audit.
