@@ -2,7 +2,7 @@
 import { build } from '../../../node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/lib/main.js';
 import { execFileSync, spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,6 +13,8 @@ const suffix = process.argv[3] || '';
 if (suffix && !/^[a-z0-9-]+$/.test(suffix)) throw new Error('Invalid evidence suffix');
 if (!requestedRef) throw new Error('Usage: node verify-native.mjs <fixed-git-revision>');
 const revision = execFileSync('git', ['rev-parse', `${requestedRef}^{commit}`], { cwd: root, encoding: 'utf8' }).trim();
+const evidenceURL=new URL(`./native-${revision.slice(0,7)}${suffix ? `-${suffix}` : ''}.json`,import.meta.url);
+if(existsSync(evidenceURL))throw Error('Evidence exists; use a new suffix');
 const temporary = mkdtempSync(join(tmpdir(), 'xai-tasks-ui-reopen-'));
 const snapshot = join(temporary, 'source');
 mkdirSync(snapshot);

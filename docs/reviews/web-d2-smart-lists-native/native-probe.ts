@@ -15,11 +15,19 @@ async function run(){
  const key=accountScope.physicalKey('xai_pref_smart_lists');
  if(!initial){const expected=(window as any).__checkpoint,ui=await mount();try{assert(localStorage.getItem(key)===expected.raw,'Saved map changed after process reopen');assert(ui.selects()[0].value==='hide'&&ui.selects()[1].value==='if-not-empty','Saved map not projected after process reopen');return{pass:true,cases:[{name:'saved-map-and-actual-selects-after-process-reopen',pass:true}],scope:'One saved final account map plus actual re-rendered selections; not durable unsaved drafts'};}finally{ui.root.unmount();ui.host.remove();}}
  const cases:any[]=[];
- for(const name of ['absent-map','held-account','held-key','quota-latest-retry']){
+ for(const name of ['absent-map','held-account','held-key','two-document-conflict','quota-latest-retry']){
   localStorage.removeItem(key);const before=JSON.stringify({all:'show',today:'show',extension:'future-value'});if(name!=='absent-map')localStorage.setItem(key,before);
   const ui=await mount();let release:(()=>void)|undefined,held:Promise<unknown>|undefined;const native=Storage.prototype.setItem;
   try{
    if(name==='absent-map'){assert(localStorage.getItem(key)===null,'Mount seeded map');assert(ui.selects().every(s=>s.value==='show'),'Sparse missing-row fallback changed');cases.push({name,pass:true});continue;}
+   if(name==='two-document-conflict'){
+    let entered!:()=>void;const ready=new Promise<void>(r=>entered=r),gate=new Promise<void>(r=>release=r);held=navigator.locks.request(prefMutationLockName(key),{mode:'exclusive'},async()=>{entered();await gate});await ready;
+    choose(ui.selects()[0],'hide');await delay(60);const peer=document.createElement('iframe');document.body.append(peer);
+    const external=JSON.stringify({all:'show',today:'hide',extension:'future-value'});peer.contentWindow!.localStorage.setItem(key,external);peer.remove();await delay(60);release!();await held;await delay(100);
+    assert(localStorage.getItem(key)===external,'External whole-map source overwritten');assert(ui.selects()[0].value==='hide','Dirty local map lost on other-document event');assert(ui.host.querySelector('[role=alert]'),'Conflict feedback missing');
+    const retry=[...ui.host.querySelectorAll('button')].find(b=>/retry/i.test(b.textContent??''));assert(retry,'Conflict Retry missing');retry.click();await delay(100);assert(localStorage.getItem(key)===external,'Retry silently rebased whole map');
+    const discard=[...ui.host.querySelectorAll('button')].find(b=>/discard|reload saved/i.test(b.textContent??''));assert(discard,'Explicit whole-map discard missing');discard.click();await delay(100);assert(localStorage.getItem(key)===external,'Discard wrote external map');assert(ui.selects()[0].value==='show'&&ui.selects()[1].value==='hide','Discard did not project external map');cases.push({name,pass:true});continue;
+   }
    if(name==='quota-latest-retry'){
     Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');native.call(this,k,v)};
     choose(ui.selects()[0],'hide');await delay(60);choose(ui.selects()[1],'if-not-empty');await delay(80);
@@ -33,6 +41,6 @@ async function run(){
    assert(JSON.parse(localStorage.getItem(key)!).all==='hide','Choice did not save after release');cases.push({name,pass:true});
   }catch(e){cases.push({name,pass:false,error:String(e)});}finally{Storage.prototype.setItem=native;release?.();await held;ui.root.unmount();ui.host.remove();}
  }
- return{pass:cases.every(c=>c.pass),cases,checkpoint:{raw:localStorage.getItem(key)},scope:'Actual Smart Lists pane handlers, native Web Locks, isolated complete synthetic account; CSS omitted; four representative controls not full12 producer acceptance'};
+ return{pass:cases.every(c=>c.pass),cases,checkpoint:{raw:localStorage.getItem(key)},scope:'Actual Smart Lists pane handlers, native Web Locks, isolated complete synthetic account; CSS omitted; five representative controls not full12 producer acceptance'};
 }
 run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));

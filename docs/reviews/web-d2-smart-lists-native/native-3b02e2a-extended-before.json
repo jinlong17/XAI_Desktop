@@ -1,0 +1,37 @@
+{
+  "requestedRef": "3b02e2a",
+  "revision": "3b02e2ae2f15b04498030301ded14f6c27c66725",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "absent-map",
+      "pass": true
+    },
+    {
+      "name": "held-account",
+      "pass": false,
+      "error": "Error: Actual choice wrote before held-account release"
+    },
+    {
+      "name": "held-key",
+      "pass": false,
+      "error": "Error: Actual choice wrote before held-key release"
+    },
+    {
+      "name": "two-document-conflict",
+      "pass": false,
+      "error": "Error: Dirty local map lost on other-document event"
+    },
+    {
+      "name": "quota-latest-retry",
+      "pass": false,
+      "error": "Error: Latest failed selections were lost"
+    }
+  ],
+  "checkpoint": {
+    "raw": "{\"all\":\"show\",\"today\":\"show\",\"extension\":\"future-value\"}"
+  },
+  "scope": "Actual Smart Lists pane handlers, native Web Locks, isolated complete synthetic account; CSS omitted; five representative controls not full12 producer acceptance"
+}
