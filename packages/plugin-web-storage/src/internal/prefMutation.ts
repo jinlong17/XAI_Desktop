@@ -10,7 +10,7 @@ export type PrefMutationReason = "lock-unavailable" | "account-changed" | "recov
 export type PrefSource = "absent" | "valid" | "invalid" | "unavailable";
 export type PrefMutationResult<T> =
   | Readonly<{ ok: true; value: T; raw: string | null; changed: boolean; source: "absent" | "valid" }>
-  | Readonly<{ ok: false; reason: PrefMutationReason; source?: PrefSource; raw?: string | null }>;
+  | Readonly<{ ok: false; reason: PrefMutationReason; source?: PrefSource; raw?: string | null; retryToken?: string }>;
 
 export interface PrefMutationOptions<T> {
   readonly key: string;
@@ -19,6 +19,8 @@ export interface PrefMutationOptions<T> {
   readonly validate: (value: unknown) => value is T;
   readonly scope?: AccountScope;
   readonly expectedRaw?: string | null;
+  /** Opaque engine-issued token for one uncertain own-commit reconciliation. */
+  readonly reconcileToken?: string;
   readonly next?: T | ((current: T) => T);
   readonly reset?: boolean;
   /** Only dynamic autosave removal may represent physical absence as undefined. */
@@ -41,7 +43,12 @@ export function validateRegisteredPrefValue(key: string, value: unknown): boolea
   const entry = PREF_REGISTRY[key as keyof typeof PREF_REGISTRY];
   if (!entry) return true;
   if (key === "xai_pref_collab_default_share") return value === "comment" || value === "edit" || value === "view";
-  switch (entry.codec) {
+  return validatePrefCodecValue(entry.codec, value);
+}
+
+/** Runtime codec boundary shared by registered and open-ended bindings. */
+export function validatePrefCodecValue(codec: PrefCodec, value: unknown): boolean {
+  switch (codec) {
     case "string": return typeof value === "string";
     case "number": return typeof value === "number" && Number.isFinite(value);
     case "boolean": return typeof value === "boolean";
@@ -52,22 +59,55 @@ export function validateRegisteredPrefValue(key: string, value: unknown): boolea
   }
 }
 
-type UncertainCommit = Readonly<{ raw: string | null; value: unknown }>;
+type UncertainCommit = Readonly<{
+  token: string;
+  physicalKey: string;
+  originalRaw: string | null;
+  intendedRaw: string | null;
+  reset: boolean;
+  value: unknown;
+}>;
 const uncertainCommits = new Map<string, UncertainCommit>();
+const uncertainByToken = new Map<string, UncertainCommit>();
+let nextUncertainToken = 0;
 
-function rememberUncertain(physicalKey: string, raw: string | null, value: unknown): void {
-  uncertainCommits.set(physicalKey, { raw, value });
+function forgetUncertain(physicalKey: string): void {
+  const previous = uncertainCommits.get(physicalKey);
+  if (previous) uncertainByToken.delete(previous.token);
+  uncertainCommits.delete(physicalKey);
+}
+
+function rememberUncertain(physicalKey: string, originalRaw: string | null, intendedRaw: string | null, reset: boolean, value: unknown): string {
+  forgetUncertain(physicalKey);
+  const token = `pref-uncertain-${++nextUncertainToken}-${Math.random().toString(36).slice(2)}`;
+  const uncertain = { token, physicalKey, originalRaw, intendedRaw, reset, value };
+  uncertainCommits.set(physicalKey, uncertain);
+  uncertainByToken.set(token, uncertain);
+  return token;
 }
 
 function reconcileUncertain(physicalKey: string, raw: string | null, intendedRaw: string | null, key: string, value: unknown, scope: AccountScope): boolean {
   const uncertain = uncertainCommits.get(physicalKey);
   if (!uncertain) return false;
-  if (uncertain.raw !== raw) {
-    uncertainCommits.delete(physicalKey);
+  if (uncertain.intendedRaw !== raw) {
+    forgetUncertain(physicalKey);
     return false;
   }
-  if (uncertain.raw !== intendedRaw) return false;
-  uncertainCommits.delete(physicalKey);
+  if (uncertain.intendedRaw !== intendedRaw) return false;
+  forgetUncertain(physicalKey);
+  publishSameTab(key, value, scope);
+  return true;
+}
+
+function reconcileToken(physicalKey: string, originalRaw: string | null, intendedRaw: string | null, reset: boolean, token: string | undefined, key: string, value: unknown, scope: AccountScope): boolean {
+  if (!token) return false;
+  const uncertain = uncertainByToken.get(token);
+  if (!uncertain
+    || uncertain.physicalKey !== physicalKey
+    || uncertain.originalRaw !== originalRaw
+    || uncertain.intendedRaw !== intendedRaw
+    || uncertain.reset !== reset) return false;
+  forgetUncertain(physicalKey);
   publishSameTab(key, value, scope);
   return true;
 }
@@ -108,8 +148,18 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
   try { owner = ownershipForKey(options.key); } catch { return { ok: false, reason: "invalid" }; }
   const registered = PREF_REGISTRY[options.key as keyof typeof PREF_REGISTRY];
   if (registered && registered.codec !== options.codec) return { ok: false, reason: "invalid" };
-  const validate = (value: unknown): value is T => options.validate(value) && validateRegisteredPrefValue(options.key, value);
-  if (!(options.reset && options.allowAbsentDefault) && !validate(options.defaultValue)) return { ok: false, reason: "invalid" };
+  const validate = (value: unknown): value is T => {
+    try {
+      return options.validate(value)
+        && validatePrefCodecValue(options.codec, value)
+        && validateRegisteredPrefValue(options.key, value);
+    } catch { return false; }
+  };
+  const permitsDynamicAbsence = options.reset === true
+    && options.allowAbsentDefault === true
+    && !registered
+    && options.defaultValue === undefined;
+  if (!permitsDynamicAbsence && !validate(options.defaultValue)) return { ok: false, reason: "invalid" };
   const run = async (): Promise<PrefMutationResult<T>> => {
     if (owner === "account") assertAccount(scope);
     const physicalKey = accountScope.physicalKey(options.key, scope);
@@ -117,10 +167,15 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
       if (owner === "account") assertAccount(scope);
       const current = read(physicalKey, options.codec, validate);
       const uncertain = uncertainCommits.get(physicalKey);
-      if (uncertain && current.source !== "unavailable" && uncertain.raw !== current.raw) uncertainCommits.delete(physicalKey);
+      if (uncertain && current.source !== "unavailable" && uncertain.intendedRaw !== current.raw) forgetUncertain(physicalKey);
       if (current.source === "invalid" || current.source === "unavailable") return { ok: false, reason: current.source === "invalid" ? "invalid" : "unavailable", source: current.source, raw: current.raw };
-      if (options.expectedRaw !== undefined && current.raw !== options.expectedRaw) return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
       if (options.reset) {
+        if (options.expectedRaw !== undefined && current.raw !== options.expectedRaw) {
+          if (current.raw === null && reconcileToken(physicalKey, options.expectedRaw, null, true, options.reconcileToken, options.key, options.defaultValue, scope)) {
+            return { ok: true, value: options.defaultValue, raw: null, changed: false, source: "absent" };
+          }
+          return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+        }
         if (current.source === "absent") {
           reconcileUncertain(physicalKey, null, null, options.key, options.defaultValue, scope);
           return { ok: true, value: options.defaultValue, raw: null, changed: false, source: "absent" };
@@ -128,10 +183,10 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
         try { localStorage.removeItem(physicalKey); } catch { return { ok: false, reason: "storage" }; }
         const checked = read(physicalKey, options.codec, validate);
         if (checked.source !== "absent") {
-          rememberUncertain(physicalKey, null, options.defaultValue);
-          return { ok: false, reason: "readback-uncertain", source: checked.source, raw: checked.raw };
+          const retryToken = rememberUncertain(physicalKey, current.raw, null, true, options.defaultValue);
+          return { ok: false, reason: "readback-uncertain", source: checked.source, raw: checked.raw, retryToken };
         }
-        uncertainCommits.delete(physicalKey);
+        forgetUncertain(physicalKey);
         publishSameTab(options.key, options.defaultValue, scope);
         return { ok: true, value: options.defaultValue, raw: null, changed: true, source: "absent" };
       }
@@ -143,6 +198,12 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
       if (!validate(next)) return { ok: false, reason: "invalid", source: current.source, raw: current.raw };
       const encoded = encode(options.codec, next);
       if (typeof encoded !== "string") return { ok: false, reason: "invalid", source: current.source, raw: current.raw };
+      if (options.expectedRaw !== undefined && current.raw !== options.expectedRaw) {
+        if (current.raw === encoded && reconcileToken(physicalKey, options.expectedRaw, encoded, false, options.reconcileToken, options.key, next, scope)) {
+          return { ok: true, value: next, raw: encoded, changed: false, source: current.source };
+        }
+        return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+      }
       if (encoded === current.raw) {
         const reconciled = reconcileUncertain(physicalKey, encoded, encoded, options.key, next, scope);
         return { ok: true, value: next, raw: encoded, changed: reconciled, source: current.source };
@@ -150,10 +211,10 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
       try { localStorage.setItem(physicalKey, encoded); } catch { return { ok: false, reason: "storage", source: current.source, raw: current.raw }; }
       const checked = read(physicalKey, options.codec, validate);
       if (checked.source !== "valid" || checked.raw !== encoded || checked.value === undefined) {
-        rememberUncertain(physicalKey, encoded, next);
-        return { ok: false, reason: "readback-uncertain", source: checked.source, raw: checked.raw };
+        const retryToken = rememberUncertain(physicalKey, current.raw, encoded, false, next);
+        return { ok: false, reason: "readback-uncertain", source: checked.source, raw: checked.raw, retryToken };
       }
-      uncertainCommits.delete(physicalKey);
+      forgetUncertain(physicalKey);
       publishSameTab(options.key, checked.value, scope);
       return { ok: true, value: checked.value, raw: checked.raw, changed: true, source: "valid" };
     });
