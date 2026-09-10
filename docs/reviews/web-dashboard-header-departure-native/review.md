@@ -1,0 +1,19 @@
+# Dashboard Header actual Chrome before and first integration rejection
+
+Parent uses immutable product archives, real production Dashboard registration/full Shell/widget catalog, isolated Chrome/profile, complete CSS, native mouse/keyboard inputs and physical synthetic account storage. Only mini-cal is selected in the isolated persisted Dashboard order; the complete registered catalog is supplied. Runtime exception and console-error capture begins before navigation. No auth/provider/deployed service is contacted.
+
+## Fixed2962b49 pointer entry defect and navigation gap
+
+`native-2962b49-pointer-entry.log` correctly FAILS: an actual no-movement mouse click hits the note text, pointer capture transfers to the outer note container, pointerup/click target that outer container, and the editor never opens. Event trace preserves pointerdown/gotcapture/pointerup/lostcapture/click; original note and offset0 remain unchanged. The screenshot shows the resulting unchanged display. This is a real input-entry defect not covered by earlier programmatic DOM.click tests.
+
+The initial `route`, `widget`, and `unload` logs stop later at selecting a nonexistent input after that pointer failure. They are retained diagnostic symptoms, not additional navigation failures. The initial `*-keyboard-*` runs omitted Chrome's Enter character text and failed editor activation; those are test-input setup limitations, not proven product keyboard failures. Adding `text` and `unmodifiedText` carriage return yields a genuine keydown/keypress/click/keyup event chain and opens the actual editor.
+
+`native-2962b49-keyboard-text-widget.log` then correctly FAILS the real widget departure oracle: native keyboard editing and actual Save under quota retain latest input/physical Original note, but the actual mouse-clicked mini-calendar Open control changes URL to `/app/calendar` without a decision. `native-2962b49-keyboard-text-unload.log` PASS confirms the already-existing failed-note unload warning. This distinguishes preserved warning capability from missing ordinary host protection.
+
+## Fixed45a1c15 integration rejected before interaction
+
+Both native `pointer-entry` and `widget` modes independently fail the zero-runtime-error mount gate with repeated **Maximum update depth exceeded** messages (6 and9 observed respectively). They do not reach the after-fix pointer/navigation assertions and cannot accept those fixes. The actual app coordinator plus Header is required to reproduce this; isolated Header author checks are insufficient.
+
+The parent's fixed original5 and advanced5 component executions also remained live without results during this integration. After observing the real Chrome render-loop error, parent inspected exact reviewer command/PID ancestry and terminated only their owned Vitest descendants. Reviewer wrappers preserved exit143 logs and removed their temporary archives. These are intentional interrupted diagnostics, not ten executed business-test failures or timeouts used as product evidence. No other Agent process was stopped.
+
+Source review points to the guard registration effect depending on `discardCurrentDraft`, whose dependencies include whole `noteSave` and `offsetSave` render objects. The observed full-host loop and candidate unstable callback were sent to Terra. All before logs and original assertions are preserved for the next fixed revision. The complete Header contract remains unaccepted.

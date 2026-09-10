@@ -1,0 +1,16 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {createBrowserRouter,RouterProvider} from 'react-router';
+import {accountScope,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {WebShellProvider,Shell} from './packages/xai-web-shell/src/index';
+import {webShellModuleRegistrations} from './apps/web/src/routes/modules/shellRegistrations';
+import {requestSettingsDeparture} from './apps/web/src/routes/modules/settingsDeparture';
+import './packages/plugin-web-tokens/src/tokens.css';
+import './packages/plugin-web-tokens/src/layout.css';
+const owner='header-native-A';localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));accountScope.activate(accountScope.lock(owner),'g1');
+const key=accountScope.physicalKey('xai_pref_dashboard_header_note');localStorage.setItem(key,'Original note');localStorage.setItem('xai_pref_dashboard_header_note_x','0');localStorage.setItem(accountScope.physicalKey('xai_dash_order'),JSON.stringify(['mini-cal']));
+const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
+const registration=webShellModuleRegistrations.find(r=>r.moduleId==='dashboard')!;const Module=registration.children.find(r=>r.path==='')!.render;
+history.replaceState(null,'','/app/dashboard');const router=createBrowserRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'dashboard',element:<Module/>},{path:'tasks',element:<div>Tasks destination</div>},{path:'calendar',element:<div>Calendar destination</div>}]}]);
+(window as any).verify={key,router,readNote:()=>nativeGet.call(localStorage,key),deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}},signoutResult:'pending',signout(){void requestSettingsDeparture('sign-out').then(x=>(window as any).verify.signoutResult=x)}};
+createRoot(document.getElementById('app')!).render(<WebShellProvider modules={webShellModuleRegistrations} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);
