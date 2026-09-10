@@ -4,7 +4,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 
-import { accountScope } from "@repo/plugin-web-storage";
+import { accountScope, generationMarkerKey } from "@repo/plugin-web-storage";
 import { DashHeader } from "../DashHeader.js";
 
 const TIME_MORNING = new Date(2026, 4, 23, 8, 0, 0);
@@ -16,6 +16,15 @@ const HEADER_NOTE_OFFSET_KEY = "xai_pref_dashboard_header_note_x";
 beforeEach(() => {
   localStorage.clear();
   accountScope.activate(accountScope.lock("fixture-A"), "A");
+  localStorage.setItem(generationMarkerKey("fixture-A"), JSON.stringify({ generation: "A", migrationId: "test", previous: null }));
+  vi.stubGlobal("navigator", {
+    locks: {
+      request: async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => {
+        const run = typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!;
+        return run();
+      },
+    },
+  });
   HEADER_NOTE_KEY = accountScope.physicalKey("xai_pref_dashboard_header_note");
 });
 
@@ -122,11 +131,11 @@ describe("DashHeader", () => {
     fireEvent.change(input, { target: { value: "  Review top three tasks  " } });
     fireEvent.keyDown(input, { key: "Enter" });
 
-    expect(getByRole("button", { name: /edit dashboard note/i }).textContent).toContain(
-      "Review top three tasks",
-    );
     await waitFor(() => {
       expect(localStorage.getItem(HEADER_NOTE_KEY)).toBe("Review top three tasks");
+      expect(getByRole("button", { name: /edit dashboard note/i }).textContent).toContain(
+        "Review top three tasks",
+      );
     });
   });
 
@@ -142,11 +151,11 @@ describe("DashHeader", () => {
     localStorage.setItem(HEADER_NOTE_KEY, "Clear me");
     const { getByRole } = render(<DashHeader lang="en" now={TIME_MORNING} />);
     fireEvent.click(getByRole("button", { name: /clear dashboard note/i }));
-    expect(getByRole("button", { name: /edit dashboard note/i }).textContent).toContain(
-      "Add a focus note",
-    );
     await waitFor(() => {
       expect(localStorage.getItem(HEADER_NOTE_KEY)).toBe("");
+      expect(getByRole("button", { name: /edit dashboard note/i }).textContent).toContain(
+        "Add a focus note",
+      );
     });
   });
 });

@@ -270,6 +270,12 @@
   color: var(--text-3);
 }
 
+.module-dashboard .dash-note__saving {
+  color: var(--text-tertiary, #7b8494);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .module-dashboard .dash-note__icon-btn,
 .module-dashboard .dash-note__clear {
   display: inline-flex;
