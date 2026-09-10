@@ -21,8 +21,8 @@ describe("Dashboard header persistence recovery", () => {
   const ui = mount(); ui.edit(); fireEvent.change(ui.input(), { target: { value: "Unsaved" } });
   const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function(this: Storage,k,v){if(k===key)throw new DOMException("quota","QuotaExceededError");nativeSet.call(this,k,v);});
   ui.save(); await waitFor(() => expect(ui.getByRole("alert")).toBeTruthy()); expect(ui.input().value).toBe("Unsaved"); expect(localStorage.getItem(key)).toBe("Original");
-  fireEvent.change(ui.input(), {target:{value:"Latest"}});const event = new Event("beforeunload",{cancelable:true}); window.dispatchEvent(event);expect(event.defaultPrevented).toBe(true);
-  spy.mockRestore();fireEvent.click(ui.getByText("Retry note save"));await waitFor(()=>{expect(localStorage.getItem(key)).toBe("Latest");expect(ui.queryByRole("textbox")).toBeNull();});
+  fireEvent.change(ui.input(), {target:{value:"  Latest    text  "}});const event = new Event("beforeunload",{cancelable:true}); window.dispatchEvent(event);expect(event.defaultPrevented).toBe(true);
+  spy.mockRestore();fireEvent.click(ui.getByText("Retry note save"));await waitFor(()=>{expect(localStorage.getItem(key)).toBe("Latest text");expect(ui.queryByRole("textbox")).toBeNull();});
   const clean = new Event("beforeunload",{cancelable:true});window.dispatchEvent(clean);expect(clean.defaultPrevented).toBe(false);
  });
  it("rejects newer raw data and old-account retry/export", () => {

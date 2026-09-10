@@ -210,6 +210,9 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const notePending = operationRef.current !== null && noteIssue === null;
   const noteUnresolved = notePending || noteIssue !== null || frozenSession;
   const unsaved = noteUnresolved || offsetConflict || offsetSave.saved === false;
+  // A frozen A session may retain recovery state, but it must never render A's
+  // committed text in B's active header.
+  const displayNote = frozenSession ? noteSave.value : committedNote;
   const canWriteOffset = useCallback((suffix: string, expected: string | null) => {
     try { if (readRaw(suffix) === expected) return true; } catch { /* Scope/read failure retains draft. */ }
     setOffsetConflict(true);
@@ -223,8 +226,8 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     } catch { /* Old component cannot accept another account's persistence. */ }
   }, [baseline, noteOffset, offsetSave.saved, readRaw]);
   useEffect(() => {
-    if (!editing && !sessionRef.current && noteSave.meta.status !== "pending") setCommittedNote(noteSave.value);
-  }, [editing, noteSave.meta.status, noteSave.value]);
+    if (!editing && (!sessionRef.current || frozenSession) && noteSave.meta.status !== "pending") setCommittedNote(noteSave.value);
+  }, [editing, frozenSession, noteSave.meta.status, noteSave.value]);
   useEffect(() => {
     const session = sessionRef.current;
     if (!session || session.scope === account) return;
@@ -232,8 +235,9 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     failedOperationRef.current = null;
     setFrozenSession(true);
     setNoteIssue("account-changed");
+    setCommittedNote(noteSave.value);
     setEditing(false);
-  }, [account]);
+  }, [account, noteSave.value]);
   useEffect(() => {
     if (!unsaved && !(editing && draft !== committedNote)) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
@@ -365,7 +369,11 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     const failed = failedOperationRef.current;
     const session = sessionRef.current;
     if (noteIssue && session && failed && !frozenSession) {
-      if (noteIssue !== "conflict" && noteIssue !== "account-changed") submit(draftRef.current, draftRef.current === failed.text);
+      if (noteIssue !== "conflict" && noteIssue !== "account-changed") {
+        const next = normalizeHeaderNote(draftRef.current);
+        setDraftText(next);
+        submit(next, next === failed.text);
+      }
     }
     if (offsetSave.saved === false && canWriteOffset(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) {
       if (offsetSave.retry()) baseline.offset = JSON.stringify(noteOffset);
@@ -426,7 +434,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       <div className="dash-note-lane" ref={laneRef}>
         <div
           ref={noteRef}
-          className={`dash-note${editing ? " is-editing" : ""}${committedNote ? " has-note" : ""}${
+          className={`dash-note${editing ? " is-editing" : ""}${displayNote ? " has-note" : ""}${
             movingNote ? " is-moving" : ""
           }`}
           style={noteStyle}
@@ -475,13 +483,13 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
               aria-label={HEADER_NOTE_STR.edit[lang]}
               onClick={beginEdit}
             >
-              <span className={committedNote ? "dash-note__text" : "dash-note__placeholder"}>
-                {committedNote || HEADER_NOTE_STR.placeholder[lang]}
+              <span className={displayNote ? "dash-note__text" : "dash-note__placeholder"}>
+                {displayNote || HEADER_NOTE_STR.placeholder[lang]}
               </span>
               <EditIcon />
             </button>
           )}
-          {!editing && committedNote && (
+          {!editing && displayNote && (
             <button
               type="button"
               className="dash-note__clear"
@@ -509,9 +517,15 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
           try {
             const session = sessionRef.current;
-            if (!session || frozenSession || session.scope !== accountScope.capture()) throw new Error("account-changed");
-            accountScope.assertCurrent(session.scope);
-            const blob = new Blob([JSON.stringify({ version: 1, kind: "dashboard-note-draft", note: editing ? draftRef.current : committedNote, noteOffset }, null, 2)], { type: "application/json" });
+            if (session) {
+              if (frozenSession || session.scope !== accountScope.capture()) throw new Error("account-changed");
+              accountScope.assertCurrent(session.scope);
+            } else {
+              // A device-only offset recovery has no note session to validate;
+              // validate the active account scope before exporting its committed note.
+              accountScope.physicalKey("xai_pref_dashboard_header_note", accountScope.capture());
+            }
+            const blob = new Blob([JSON.stringify({ version: 1, kind: "dashboard-note-draft", note: editing ? draftRef.current : displayNote, noteOffset }, null, 2)], { type: "application/json" });
             const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
             anchor.href = url; anchor.download = "dashboard-note-draft.json";
             document.body.appendChild(anchor); anchor.click(); anchor.remove();

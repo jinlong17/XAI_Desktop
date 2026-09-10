@@ -111,4 +111,17 @@ describe("DashHeader async note session", () => {
     release();
     await waitFor(() => expect(localStorage.getItem(key)).toBe("Pending"));
   });
+
+  it("masks an old account's committed text after an editor session freezes", async () => {
+    const ui = mount();
+    fireEvent.change(ui.input(), { target: { value: "Secret A draft" } });
+    let bKey = "";
+    accountScope.activate(accountScope.lock("dash-async-B"), "g2");
+    localStorage.setItem(generationMarkerKey("dash-async-B"), JSON.stringify({ generation: "g2", migrationId: "test", previous: null }));
+    bKey = accountScope.physicalKey("xai_pref_dashboard_header_note");
+    localStorage.setItem(bKey, "B note");
+    await waitFor(() => expect(ui.getByText("B note")).toBeTruthy());
+    expect(ui.container.textContent).not.toContain("Original");
+    expect(ui.queryByDisplayValue("Secret A draft")).toBeNull();
+  });
 });
