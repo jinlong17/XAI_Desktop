@@ -12,7 +12,7 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { getPrefAutosave, usePref, usePrefAutosave } from "@repo/plugin-web-storage";
+import { usePref, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import type { PomodoroSession, PomodoroMode } from "./types.js";
 import { isPomodoroSession } from "./internal/validate.js";
 import { nextMode } from "./internal/nextMode.js";
@@ -202,54 +202,27 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   }, [rawSessions]);
 
   // ---- User display preferences -------------------------------------------
-  const [activePresetId, setActivePresetId] = useState<PomodoroPresetId>(() => {
-    const saved = getPrefAutosave<PomodoroPresetId>("pomodoro_preset", {
-      defaultValue: "focus-25",
-    });
-    return isPresetId(saved) ? saved : "focus-25";
-  });
-  const [customMinutes, setCustomMinutes] = useState(() => {
-    const saved = getPrefAutosave<number>("pomodoro_custom_minutes", {
-      defaultValue: 45,
-    });
-    return clampCustomMinutes(saved ?? 45);
-  });
-  const [displayStyle, setDisplayStyle] = useState<PomodoroDisplayStyle>(() => {
-    const saved = getPrefAutosave<PomodoroDisplayStyle>("pomodoro_display_style", {
-      defaultValue: "apple",
-    });
-    return isDisplayStyle(saved) ? saved : "apple";
-  });
-  const [themeId, setThemeId] = useState<PomodoroThemeId>(() => {
-    const saved = getPrefAutosave<PomodoroThemeId>("pomodoro_theme", {
-      defaultValue: "coral",
-    });
-    return isThemeId(saved) ? saved : "coral";
-  });
-  const [soundId, setSoundId] = useState<PomodoroSoundId>(() => {
-    const saved = getPrefAutosave<PomodoroSoundId>("pomodoro_sound", {
-      defaultValue: "soft-chime",
-    });
-    return isSoundId(saved) ? saved : "soft-chime";
-  });
-  const [muted, setMuted] = useState(() => {
-    const saved = getPrefAutosave<boolean>("pomodoro_muted", {
-      defaultValue: false,
-    });
-    return typeof saved === "boolean" ? saved : false;
-  });
+  const presetSave = usePrefAutosaveAsync<PomodoroPresetId>("pomodoro_preset", { codec: "json", defaultValue: "focus-25", validate: isPresetId });
+  const minutesSave = usePrefAutosaveAsync<number>("pomodoro_custom_minutes", { codec: "json", defaultValue: 45, validate: (value): value is number => typeof value === "number" && Number.isFinite(value) });
+  const styleSave = usePrefAutosaveAsync<PomodoroDisplayStyle>("pomodoro_display_style", { codec: "json", defaultValue: "apple", validate: isDisplayStyle });
+  const themeSave = usePrefAutosaveAsync<PomodoroThemeId>("pomodoro_theme", { codec: "json", defaultValue: "coral", validate: isThemeId });
+  const soundSave = usePrefAutosaveAsync<PomodoroSoundId>("pomodoro_sound", { codec: "json", defaultValue: "soft-chime", validate: isSoundId });
+  const mutedSave = usePrefAutosaveAsync<boolean>("pomodoro_muted", { codec: "json", defaultValue: false, validate: (value): value is boolean => typeof value === "boolean" });
+  const activePresetId = presetSave.value;
+  const customMinutes = clampCustomMinutes(minutesSave.value);
+  const displayStyle = styleSave.value;
+  const themeId = themeSave.value;
+  const soundId = soundSave.value;
+  const muted = mutedSave.value;
   const [completionNotice, setCompletionNotice] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [focusControlsVisible, setFocusControlsVisible] = useState(false);
 
-  const presetSave = usePrefAutosave("pomodoro_preset", activePresetId);
-  const minutesSave = usePrefAutosave("pomodoro_custom_minutes", customMinutes);
-  const styleSave = usePrefAutosave("pomodoro_display_style", displayStyle);
-  const themeSave = usePrefAutosave("pomodoro_theme", themeId);
-  const soundSave = usePrefAutosave("pomodoro_sound", soundId);
-  const mutedSave = usePrefAutosave("pomodoro_muted", muted);
   const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
-  const preferencesUnsaved = preferenceSaves.some(result => result.saved === false);
+  const preferencesUnsaved = preferenceSaves.some(result => result.meta.pending || result.meta.status === "error" || result.meta.status === "conflict");
+  const preferenceSourceProblem = preferenceSaves.some(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
   const [preferenceExportFailed, setPreferenceExportFailed] = useState(false);
 
   // ---- Emit dedup guard (StrictMode double-mount safe) --------------------
@@ -300,7 +273,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       completedFocusCountRef.current;
     const nextModeValue = nextMode(mode, focusCountAfter);
     const nextPreset = defaultPresetForMode(nextModeValue);
-    setActivePresetId(nextPreset.id);
+    void presetSave.edit(nextPreset.id);
     setCompletionNotice(
       lang === "zh"
         ? `${modeLabelFor(mode)}完成，已切换到${modeLabelFor(nextModeValue)}。`
@@ -385,7 +358,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   }
 
   function handlePresetClick(presetId: PomodoroPresetId) {
-    setActivePresetId(presetId);
+    void presetSave.edit(presetId);
     setCompletionNotice(null);
     const preset = presetForId(presetId);
     const mode = preset?.mode ?? "focus";
@@ -397,8 +370,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
 
   function handleCustomMinutesChange(value: number) {
     const nextMinutesValue = clampCustomMinutes(value);
-    setCustomMinutes(nextMinutesValue);
-    setActivePresetId("custom");
+    void minutesSave.edit(nextMinutesValue);
+    void presetSave.edit("custom");
     setCompletionNotice(null);
     if (timerState.kind === "idle") {
       reset("focus", minutesToMs(nextMinutesValue));
@@ -508,7 +481,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
     >
       {preferencesUnsaved && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
-        <button type="button" onClick={() => { preferenceSaves.filter(result => result.saved === false).forEach(result => result.retry()); }}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
+        <button type="button" onClick={() => { preferenceSaves.filter(result => (result.meta.status === "error" || result.meta.status === "conflict") && result.meta.source !== "invalid" && result.meta.source !== "unavailable").forEach(result => { void result.retry(); }); }}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
+        {preferenceSourceProblem && <button type="button" onClick={() => { preferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>}
         <button type="button" onClick={() => {
           try {
             const values = { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted };
@@ -558,7 +532,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                 ? "静音"
                 : "Mute"
           }
-          onClick={() => setMuted((m) => !m)}
+          onClick={() => { const next = !mutedRef.current; mutedRef.current = next; void mutedSave.edit(next); }}
           data-testid="mute-btn"
         >
           {muted ? <IconSoundOff /> : <IconSound />}
@@ -779,7 +753,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     className={`pomo-style-btn${displayStyle === id ? " active" : ""}`}
                     aria-pressed={displayStyle === id}
                     data-testid={`style-${id}`}
-                    onClick={() => setDisplayStyle(id)}
+                    onClick={() => { void styleSave.edit(id); }}
                   >
                     {label(lang, DISPLAY_STYLE_LABELS[id])}
                   </button>
@@ -799,7 +773,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                     aria-label={label(lang, theme.label)}
                     aria-pressed={themeId === theme.id}
                     data-testid={`theme-${theme.id}`}
-                    onClick={() => setThemeId(theme.id)}
+                    onClick={() => { void themeSave.edit(theme.id); }}
                   />
                 ))}
               </div>
@@ -813,7 +787,7 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
                   value={soundId}
                   aria-label={lang === "zh" ? "选择提示音" : "Select alert sound"}
                   data-testid="sound-select"
-                  onChange={(event) => setSoundId(event.target.value as PomodoroSoundId)}
+                  onChange={(event) => { const next = event.target.value; if (isSoundId(next)) void soundSave.edit(next); }}
                 >
                   {SOUND_CHOICES.map((sound) => (
                     <option key={sound.id} value={sound.id}>

@@ -36,7 +36,8 @@ beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test
 beforeEach(() => {
   const queues = new Map<string, Promise<unknown>>();
   Object.defineProperty(navigator, "locks", { configurable: true, value: {
-    request: (name: string, run: () => unknown) => {
+    request: (name: string, optionsOrRun: LockOptions | (() => unknown), callback?: () => unknown) => {
+      const run = typeof optionsOrRun === "function" ? optionsOrRun : callback!;
       const previous = queues.get(name) ?? Promise.resolve();
       const result = previous.then(run);
       queues.set(name, result.catch(() => undefined));
