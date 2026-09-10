@@ -1,0 +1,29 @@
+{
+  "requestedRef": "9aac0ea",
+  "revision": "9aac0eaa6681364bd4b197ae1272c48610f3f213",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": false,
+      "error": "Error: Save wrote before lock release or despite fault"
+    },
+    {
+      "name": "absent-no-mount-write",
+      "pass": false,
+      "error": "Error: Mount wrote absent account note"
+    },
+    {
+      "name": "quota-latest-retry",
+      "pass": true
+    }
+  ],
+  "checkpoint": {
+    "quota-latest-retry": {
+      "raw": "Latest recovery note"
+    }
+  },
+  "scope": "Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance"
+}
