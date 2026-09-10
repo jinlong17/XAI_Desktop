@@ -221,6 +221,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
   const preferenceSaves = [presetSave, minutesSave, styleSave, themeSave, soundSave, mutedSave];
   const preferencesUnsaved = preferenceSaves.some(result => result.meta.pending || result.meta.status === "error" || result.meta.status === "conflict");
   const preferenceSourceProblem = preferenceSaves.some(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
+  const conflictingPreferenceSaves = preferenceSaves.filter(result => result.meta.status === "conflict");
+  const sourcePreferenceSaves = preferenceSaves.filter(result => result.meta.source === "invalid" || result.meta.source === "unavailable");
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
   const [preferenceExportFailed, setPreferenceExportFailed] = useState(false);
@@ -482,7 +484,8 @@ export function PomodoroModule({ lang }: PomodoroModuleProps) {
       {preferencesUnsaved && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
         <button type="button" onClick={() => { preferenceSaves.filter(result => (result.meta.status === "error" || result.meta.status === "conflict") && result.meta.source !== "invalid" && result.meta.source !== "unavailable").forEach(result => { void result.retry(); }); }}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
-        {preferenceSourceProblem && <button type="button" onClick={() => { preferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>}
+        {conflictingPreferenceSaves.length > 0 && <button type="button" onClick={() => { conflictingPreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>}
+        {preferenceSourceProblem && <button type="button" onClick={() => { sourcePreferenceSaves.forEach(result => result.meta.reload()); }}>{lang === "zh" ? "重新读取偏好" : "Reload preferences"}</button>}
         <button type="button" onClick={() => {
           try {
             const values = { preset: activePresetId, customMinutes, displayStyle, theme: themeId, sound: soundId, muted };
