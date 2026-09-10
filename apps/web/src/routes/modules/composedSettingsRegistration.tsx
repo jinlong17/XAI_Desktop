@@ -14,7 +14,7 @@
  */
 
 import * as React from "react";
-import { useBlocker, useNavigate, useParams, useLocation } from "react-router";
+import { UNSAFE_DataRouterContext, resolvePath, useBlocker, useNavigate, useParams, useLocation } from "react-router";
 import type { WebModuleSlotRegistration } from "@repo/xai-web-shell";
 import { useWebShell } from "@repo/xai-web-shell";
 import { SectionBlock } from "@repo/plugin-web-settings-shell";
@@ -53,6 +53,7 @@ function ComposedSettingsModule(): React.ReactElement {
   const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const dataRouterContext = React.useContext(UNSAFE_DataRouterContext);
   const urlSplat = params["*"];
 
   const active = resolveInitialPane(urlSplat, composed);
@@ -72,14 +73,11 @@ function ComposedSettingsModule(): React.ReactElement {
     const guard = guardRef.current;
     return Boolean(guard && guard.isCurrent() && guard.isBlocking());
   }, []);
-  const blocker = useBlocker(({ currentLocation, nextLocation }) =>
-    currentLocation.pathname !== nextLocation.pathname && canBlock(),
-  );
   type RouteIntent = {
     readonly kind: "route";
     readonly guard: PaneDepartureGuard;
-    readonly proceed: () => void;
-    readonly reset: () => void;
+    proceed: (() => void) | null;
+    reset: (() => void) | null;
   };
   type SignOutIntent = {
     readonly kind: "sign-out";
@@ -93,6 +91,20 @@ function ComposedSettingsModule(): React.ReactElement {
   const dialogRef = React.useRef<HTMLDivElement>(null);
   const priorFocusRef = React.useRef<HTMLElement | null>(null);
 
+  const reserveRouteIntent = React.useCallback((guard: PaneDepartureGuard): RouteIntent | null => {
+    if (intentRef.current) return null;
+    const intent: RouteIntent = { kind: "route", guard, proceed: null, reset: null };
+    intentRef.current = intent;
+    return intent;
+  }, []);
+
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    if (currentLocation.pathname === nextLocation.pathname || !canBlock()) return false;
+    const guard = guardRef.current;
+    if (guard && !intentRef.current) reserveRouteIntent(guard);
+    return true;
+  });
+
   const publishIntent = React.useCallback((next: DepartureIntent | null) => {
     intentRef.current = next;
     setIntentVersion(version => version + 1);
@@ -102,12 +114,42 @@ function ComposedSettingsModule(): React.ReactElement {
     intentRef.current = null;
     setIntentVersion(version => version + 1);
     if (intent.kind === "route") {
-      if (allow) intent.proceed();
-      else intent.reset();
+      if (allow) intent.proceed?.();
+      else intent.reset?.();
     } else {
       intent.resolve(allow);
     }
   }, []);
+
+  // A second same-turn navigate() replaces React Router's blocked transition.
+  // Reserve the first programmatic call before the blocker and replay that
+  // exact invocation after permission. Browser POP continues through blocker.
+  React.useLayoutEffect(() => {
+    const router = dataRouterContext?.router;
+    if (!router) return;
+    const originalNavigate = router.navigate;
+    const callOriginal = (to: Parameters<typeof router.navigate>[0], options?: Parameters<typeof router.navigate>[1]) =>
+      Reflect.apply(originalNavigate, router, options === undefined ? [to] : [to, options]) as Promise<void>;
+    const wrappedNavigate = ((to: Parameters<typeof router.navigate>[0], options?: Parameters<typeof router.navigate>[1]) => {
+      const guard = guardRef.current;
+      const targetLeavesPane = typeof to === "number"
+        || (to !== null && resolvePath(to, location.pathname).pathname !== location.pathname);
+      if (!targetLeavesPane || !guard || !guard.isCurrent() || !guard.isBlocking()) {
+        return callOriginal(to, options);
+      }
+      if (intentRef.current) return Promise.resolve();
+      const intent = reserveRouteIntent(guard);
+      if (!intent) return Promise.resolve();
+      intent.proceed = () => { void callOriginal(to, options); };
+      intent.reset = () => {};
+      setIntentVersion(version => version + 1);
+      return Promise.resolve();
+    }) as typeof router.navigate;
+    router.navigate = wrappedNavigate;
+    return () => {
+      if (router.navigate === wrappedNavigate) router.navigate = originalNavigate;
+    };
+  }, [dataRouterContext, location.pathname, reserveRouteIntent]);
 
   // State → URL sync (sidebar click). Default "account" maps to clean
   // `/app/settings` (no splat) so the landing URL stays shareable.
@@ -141,6 +183,11 @@ function ComposedSettingsModule(): React.ReactElement {
     const existing = intentRef.current;
     if (existing) {
       if (existing.kind === "sign-out") blocker.reset();
+      else if (!existing.proceed) {
+        existing.proceed = blocker.proceed;
+        existing.reset = blocker.reset;
+        setIntentVersion(version => version + 1);
+      }
       return;
     }
     if (!guard || !guard.isCurrent()) {
@@ -196,7 +243,7 @@ function ComposedSettingsModule(): React.ReactElement {
     const intent = intentRef.current;
     intentRef.current = null;
     if (intent?.kind === "sign-out") intent.resolve(false);
-    else intent?.reset();
+    else intent?.reset?.();
   }, []);
 
   const handleDialogKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
