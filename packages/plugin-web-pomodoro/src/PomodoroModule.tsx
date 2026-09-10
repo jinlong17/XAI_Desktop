@@ -526,7 +526,9 @@ export function PomodoroModule({ lang, registerDepartureGuard }: PomodoroModuleP
       {preferenceRecovery.hasDrafts && <section role="alert" className="pomo-notice pomo-recovery">
         <p>{lang === "zh" ? "部分偏好未保存。当前选择仍在此页面生效，重新打开前请重试或导出。" : "Some preferences were not saved. Current choices still apply on this page; retry or export before reopening."}</p>
         <button type="button" onClick={preferenceRecovery.retryDrafts}>{lang === "zh" ? "重试偏好保存" : "Retry preferences"}</button>
-        {conflictingPreferenceFields.length > 0 && <button type="button" onClick={() => preferenceRecovery.discardFields(conflictingPreferenceFields)}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>}
+        {conflictingPreferenceFields.length > 0
+          ? <button type="button" onClick={() => preferenceRecovery.discardFields(conflictingPreferenceFields)}>{lang === "zh" ? "丢弃冲突偏好" : "Discard conflicting preferences"}</button>
+          : <button type="button" onClick={preferenceRecovery.discardDrafts}>{lang === "zh" ? "丢弃当前偏好草稿" : "Discard current preference drafts"}</button>}
         <button type="button" onClick={() => preferenceRecovery.exportDraft()}>{lang === "zh" ? "导出当前偏好" : "Export current preferences"}</button>
         {preferenceRecovery.exportFailed && <p>{lang === "zh" ? "偏好导出失败，请重试。" : "Preference export failed. Please retry."}</p>}
       </section>}
