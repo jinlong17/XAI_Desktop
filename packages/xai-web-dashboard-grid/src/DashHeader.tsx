@@ -161,7 +161,7 @@ type OffsetGesture = {
   readonly pointerId: number;
   readonly startX: number;
   readonly startOffset: number;
-  readonly raw: string | null;
+  raw: string | null;
   moved: boolean;
 };
 
@@ -208,7 +208,8 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const notePending = operationRef.current !== null && noteIssue === null;
   const noteUnresolved = notePending || noteIssue !== null || frozenSession;
   const offsetPending = offsetOperationRef.current !== null && offsetIssue === null;
-  const offsetUnresolved = offsetPending || offsetIssue !== null;
+  const offsetGestureDirty = dragRef.current?.moved === true;
+  const offsetUnresolved = offsetPending || offsetIssue !== null || offsetGestureDirty;
   const unsaved = noteUnresolved || offsetUnresolved;
   // A frozen A session may retain recovery state, but it must never render A's
   // committed text in B's active header.
@@ -365,16 +366,25 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   }, [frozenSession, notePending, openSession, setDraftText, submit]);
 
   const settleOffset = useCallback((operation: OffsetOperation, result: PrefMutationResult<number>) => {
-    if (offsetOperationRef.current !== operation) return;
-    offsetOperationRef.current = null;
     if (!result.ok) {
+      if (offsetOperationRef.current !== operation) return;
+      offsetOperationRef.current = null;
       failedOffsetOperationRef.current = operation;
       setOffsetIssue(result.reason);
       return;
     }
+    const gesture = dragRef.current;
+    // A completed predecessor may update the baseline captured by a later drag
+    // only when that drag still names the same raw value. This preserves a real
+    // external conflict while allowing the hook's own verified 40 -> 70 chain.
+    if (gesture?.raw === operation.raw) gesture.raw = result.raw;
+    if (noteOffsetRef.current === operation.value) {
+      offsetDesiredRef.current = result.value;
+      setVisibleOffset(clampNoteOffset(result.value));
+    }
+    if (offsetOperationRef.current !== operation) return;
+    offsetOperationRef.current = null;
     failedOffsetOperationRef.current = null;
-    offsetDesiredRef.current = result.value;
-    if (noteOffsetRef.current === operation.value) setVisibleOffset(clampNoteOffset(result.value));
     setOffsetIssue(null);
   }, [clampNoteOffset, setVisibleOffset]);
 

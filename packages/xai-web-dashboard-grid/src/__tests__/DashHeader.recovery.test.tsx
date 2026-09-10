@@ -46,7 +46,7 @@ describe("Dashboard header persistence recovery", () => {
   const offset="xai_pref_dashboard_header_note_x";localStorage.setItem(offset,"0");const ui=mount();
   const lane=ui.container.querySelector(".dash-note-lane")!;const note=ui.container.querySelector(".dash-note")!;
   Object.defineProperty(lane,"clientWidth",{value:760,configurable:true});Object.defineProperty(note,"offsetWidth",{value:360,configurable:true});
-  fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:3});fireEvent.pointerMove(note,{clientX:300,pointerId:3});fireEvent.pointerCancel(note,{clientX:300,pointerId:3});
+  fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:3});fireEvent.pointerMove(note,{clientX:300,pointerId:3});const moving=new Event("beforeunload",{cancelable:true});window.dispatchEvent(moving);expect(moving.defaultPrevented).toBe(true);fireEvent.pointerCancel(note,{clientX:300,pointerId:3});
   await waitFor(()=>expect(localStorage.getItem(offset)).toBe("100"));
   const writes=vi.spyOn(Storage.prototype,"setItem");Object.defineProperty(lane,"clientWidth",{value:400,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("20px");expect(writes).not.toHaveBeenCalled();
   Object.defineProperty(lane,"clientWidth",{value:760,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("100px");expect(writes).not.toHaveBeenCalled();
