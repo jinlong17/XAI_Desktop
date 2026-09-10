@@ -1,0 +1,46 @@
+import { beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, act, cleanup, waitFor } from '@testing-library/react';
+import { accountScope, generationMarkerKey, setCanonicalCommandActivationForTests, setPref } from '@repo/plugin-web-storage';
+import { makeDefaultBoards, moveCardToList } from '@repo/plugin-web-board-core';
+import { loadTaskColsOrSeed } from '@repo/plugin-web-tasks';
+import { subscribeSameTab, _clearAllListeners } from '../../../packages/plugin-web-storage/src/internal/storage.js';
+import { ensureBoardTaskLink } from '../../../packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.js';
+import { BoardWorkspacesModule } from '../../../packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.js';
+const bk=()=>accountScope.physicalKey('xai_boards_v2'),tk=()=>accountScope.physicalKey('xai_task_cols');
+const boards=()=>JSON.parse(localStorage.getItem(bk())!);
+const card=(id='bc1')=>boards()[0].lists.flatMap((l:any)=>l.cards).find((c:any)=>c.id===id);
+const rows=()=>JSON.parse(localStorage.getItem(tk())!).data.flatMap((c:any)=>[...c.tasks,...(c.completed??[])]);
+function patchCard(patch:Record<string,unknown>){const b=boards();Object.assign(b[0].lists.flatMap((l:any)=>l.cards).find((c:any)=>c.id==='bc1'),patch);localStorage.setItem(bk(),JSON.stringify(b));}
+function deferredLock(){let release!:()=>void;const gate=new Promise<void>(r=>release=r);const request=vi.fn(async(_name:string,run:()=>unknown)=>{await gate;return run();});vi.stubGlobal('navigator',{locks:{request}});return {release,request};}
+beforeEach(()=>{localStorage.clear();_clearAllListeners();accountScope.activate(accountScope.lock('board-review'),'g1');localStorage.setItem(generationMarkerKey('board-review'),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));setCanonicalCommandActivationForTests(true);vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>unknown)=>run()}});localStorage.setItem(bk(),JSON.stringify(makeDefaultBoards()));HTMLDialogElement.prototype.showModal=function(){this.open=true};HTMLDialogElement.prototype.close=function(){this.open=false};});
+afterEach(()=>{cleanup();_clearAllListeners();setCanonicalCommandActivationForTests(false);vi.restoreAllMocks();vi.unstubAllGlobals();});
+it.each(['null','{bad'])('present corrupt Board source %s must refuse before initial intent',async raw=>{localStorage.setItem(bk(),raw);const result=await ensureBoardTaskLink('b-default','bc1',accountScope.capture());console.log('board-initial',JSON.stringify({raw,result,preserved:localStorage.getItem(bk())===raw}));expect.soft(result).toMatchObject({ok:false,phase:'intent'});expect.soft(localStorage.getItem(bk())).toBe(raw);expect(localStorage.getItem(tk())).toBeNull();});
+it.each(['null','{bad','collision','card-deleted','link-replaced','owner','marker'])('queued %s refuses without replacing source or losing pending intent',async kind=>{
+ const oldB=bk(),oldT=tk(),g=deferredLock();const pending=ensureBoardTaskLink('b-default','bc1',accountScope.capture());expect(card().taskLink.pending).toBeDefined();
+ if(kind==='null'||kind==='{bad')localStorage.setItem(tk(),kind);
+ if(kind==='collision'){const cols=loadTaskColsOrSeed(null);cols[0]={...cols[0]!,tasks:[{id:'bt-b-default-bc1',title:{en:'Unrelated',zh:'Unrelated'}}]};localStorage.setItem(tk(),JSON.stringify(cols));}
+ if(kind==='card-deleted'){const b=boards();for(const l of b[0].lists)l.cards=l.cards.filter((c:any)=>c.id!=='bc1');localStorage.setItem(bk(),JSON.stringify(b));}
+ if(kind==='link-replaced')patchCard({taskLink:{...card().taskLink,taskId:'replacement'}});
+ if(kind==='owner')accountScope.activate(accountScope.lock('B'),'g2');
+ if(kind==='marker')localStorage.setItem(generationMarkerKey('board-review'),JSON.stringify({generation:'g2',migrationId:'replaced',previous:'g1'}));
+ const beforeB=localStorage.getItem(oldB),beforeT=localStorage.getItem(oldT);g.release();expect(await pending).toMatchObject({ok:false,phase:'task'});expect(localStorage.getItem(oldB)).toBe(beforeB);expect(localStorage.getItem(oldT)).toBe(beforeT);if(kind==='owner'){expect(localStorage.getItem(bk())).toBeNull();expect(localStorage.getItem(tk())).toBeNull();}
+});
+it('queued legitimate move retains stable identity and links into latest list',async()=>{const g=deferredLock();const pending=ensureBoardTaskLink('b-default','bc1',accountScope.capture());const b=boards(),intent=card().taskLink,target=b[0].lists[1].id;b[0].lists=moveCardToList(b[0].lists,'bc1','b-backlog',target);localStorage.setItem(bk(),JSON.stringify(b));g.release();expect(await pending).toEqual({ok:true});const task=rows().find((t:any)=>t.id===intent.taskId);expect(task.source.listId).toBe(target);expect(card().taskLink.pending).toBeUndefined();});
+it('after task commit, changed same-ID pending must not be acknowledged or erased',async()=>{
+ let injected:any;subscribeSameTab('xai_task_cols',()=>{const b=boards(),c=b[0].lists.flatMap((l:any)=>l.cards).find((c:any)=>c.id==='bc1');c.taskLink.pending={title:{en:'Newer pending request',zh:'新的请求'},dueDate:'2026-10-20'};injected=c.taskLink;expect(setPref('xai_boards_v2',b)).toBe(true);});
+ const result=await ensureBoardTaskLink('b-default','bc1',accountScope.capture());console.log('changed-pending-after-task',JSON.stringify({result,stored:card().taskLink,task:rows().find((t:any)=>t.source?.cardId==='bc1')}));expect.soft(result).toMatchObject({ok:false,phase:'acknowledgement'});expect(card().taskLink).toEqual(injected);
+});
+it('after task commit, replacing source card with no link refuses acknowledgement',async()=>{let raw='';subscribeSameTab('xai_task_cols',()=>{const b=boards(),c=b[0].lists.flatMap((l:any)=>l.cards).find((c:any)=>c.id==='bc1');delete c.taskLink;raw=JSON.stringify(b);localStorage.setItem(bk(),raw);});expect(await ensureBoardTaskLink('b-default','bc1',accountScope.capture())).toMatchObject({ok:false,phase:'acknowledgement'});expect(localStorage.getItem(bk())).toBe(raw);expect(rows().filter((t:any)=>t.source?.cardId==='bc1')).toHaveLength(1);});
+it('actual modal waits, suppresses duplicate click, and resumes retained intent after quota',async()=>{
+ render(<BoardWorkspacesModule lang="en"/>);fireEvent.click(screen.getAllByTestId('board-card')[0]!);const g=deferredLock(),native=Storage.prototype.setItem,physical=tk();const fail=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(k,v){if(k===physical)throw new DOMException('quota','QuotaExceededError');native.call(this,k,v);});
+ fireEvent.click(screen.getByTestId('card-detail-create-task'));expect((screen.getByTestId('card-detail-retry-task') as HTMLButtonElement).disabled).toBe(true);fireEvent.click(screen.getByTestId('card-detail-retry-task'));expect(g.request).toHaveBeenCalledTimes(1);expect(localStorage.getItem(tk())).toBeNull();
+ await act(async()=>{g.release();});await screen.findByRole('alert');expect(card().taskLink.pending).toBeDefined();expect((screen.getByTestId('card-detail-retry-task') as HTMLButtonElement).disabled).toBe(false);fail.mockRestore();fireEvent.click(screen.getByTestId('card-detail-retry-task'));await waitFor(()=>expect(card().taskLink.pending).toBeUndefined());expect(rows().filter((t:any)=>t.source?.cardId==='bc1')).toHaveLength(1);
+});
+it('old delayed failure does not clear a new card pending operation or close its editor',async()=>{
+ render(<BoardWorkspacesModule lang="en"/>);fireEvent.click(screen.getAllByTestId('board-card')[0]!);const callbacks:Array<()=>Promise<unknown>>=[];vi.stubGlobal('navigator',{locks:{request:(_n:string,run:()=>unknown)=>new Promise(resolve=>{callbacks.push(async()=>resolve(await run()));})}});
+ fireEvent.click(screen.getByTestId('card-detail-create-task'));fireEvent.click(screen.getByTestId('card-detail-close'));fireEvent.click(screen.getAllByTestId('board-card')[1]!);fireEvent.click(screen.getByTestId('card-detail-create-task'));expect(callbacks).toHaveLength(2);
+ const native=Storage.prototype.setItem,physical=tk();const fail=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(k,v){if(k===physical)throw Error('old quota');native.call(this,k,v);});await act(async()=>{await callbacks[0]!();});expect(screen.queryByRole('alert')).toBeNull();expect((screen.getByTestId('card-detail-retry-task') as HTMLButtonElement).disabled).toBe(true);expect(screen.getByTestId('card-detail-close')).toBeTruthy();fail.mockRestore();await act(async()=>{await callbacks[1]!();});await waitFor(()=>expect(screen.queryByTestId('card-detail-retry-task')).toBeNull());expect(screen.getByTestId('card-detail-close')).toBeTruthy();
+});
+it('a settled link failure belongs to its card and must not appear on a newly opened card',async()=>{
+ render(<BoardWorkspacesModule lang="en"/>);fireEvent.click(screen.getAllByTestId('board-card')[0]!);vi.stubGlobal('navigator',{locks:{request:async()=>{throw Error('lock fail')}}});fireEvent.click(screen.getByTestId('card-detail-create-task'));await screen.findByRole('alert');fireEvent.click(screen.getByTestId('card-detail-close'));fireEvent.click(screen.getAllByTestId('board-card')[1]!);console.log('new-card-error',screen.queryByRole('alert')?.textContent);expect(screen.getByTestId('card-detail-create-task')).toBeTruthy();expect(screen.queryByRole('alert')).toBeNull();
+});

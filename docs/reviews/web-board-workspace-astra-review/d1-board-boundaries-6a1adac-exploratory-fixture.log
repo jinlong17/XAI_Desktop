@@ -1,0 +1,119 @@
+revision=6a1adac
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-tITvQs
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source null must refuse before initial intent
+board-initial {"raw":"null","result":{"ok":true},"preserved":false}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source {bad must refuse before initial intent
+board-initial {"raw":"{bad","result":{"ok":false,"phase":"intent","message":"Expected property name or '}' in JSON at position 1 (line 1 column 2)"},"preserved":true}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > after task commit, changed same-ID pending must not be acknowledged or erased
+changed-pending-after-task {"result":{"ok":false,"phase":"acknowledgement","message":"Task saved; Board acknowledgement is pending. Retry to finish. Board data needs recovery; original bytes were preserved."},"stored":{"source":"xai-web-tasks","taskId":"bt-b-default-bc1","createdAt":"2026-09-10T00:01:33.739Z","pending":{"title":"Newer pending request","dueDate":"2026-10-20"}},"task":{"id":"bt-b-default-bc1","title":{"en":"Onboarding flow concepts","zh":"新人引导流程概念"},"tag":"todo","inbox":true,"source":{"type":"board-card","boardId":"b-default","listId":"b-backlog","cardId":"bc1"}}}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > a settled link failure belongs to its card and must not appear on a newly opened card
+new-card-error Link intent saved; task creation failed. Retry to finish.
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx (15 tests | 3 failed) 431ms
+   × present corrupt Board source null must refuse before initial intent 12ms
+     → expected { ok: true } to match object { ok: false, phase: 'intent' }
+     → expected '[{"id":"b-default","workspaceId":"ws-…' to be 'null' // Object.is equality
+     → expected '{"format":"xai-command-state","versio…' to be null
+   ✓ present corrupt Board source {bad must refuse before initial intent 0ms
+   ✓ queued null refuses without replacing source or losing pending intent 2ms
+   ✓ queued {bad refuses without replacing source or losing pending intent 1ms
+   ✓ queued collision refuses without replacing source or losing pending intent 1ms
+   ✓ queued card-deleted refuses without replacing source or losing pending intent 1ms
+   ✓ queued link-replaced refuses without replacing source or losing pending intent 1ms
+   ✓ queued owner refuses without replacing source or losing pending intent 1ms
+   × queued marker refuses without replacing source or losing pending intent 2ms
+     → expected { ok: true } to match object { ok: false, phase: 'task' }
+   ✓ queued legitimate move retains stable identity and links into latest list 1ms
+   ✓ after task commit, changed same-ID pending must not be acknowledged or erased 1ms
+   ✓ after task commit, replacing source card with no link refuses acknowledgement 1ms
+   ✓ actual modal waits, suppresses duplicate click, and resumes retained intent after quota 167ms
+   ✓ old delayed failure does not clear a new card pending operation or close its editor 88ms
+   × a settled link failure belongs to its card and must not appear on a newly opened card 153ms
+     → expected <p role="alert"></p> to be null
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 12 passed (15)
+   Start at  17:01:32
+   Duration  1.72s (transform 519ms, setup 0ms, collect 795ms, tests 431ms, environment 209ms, prepare 73ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source null must refuse before initial intent
+AssertionError: expected { ok: true } to match object { ok: false, phase: 'intent' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "phase": "intent",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx:17:339
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source null must refuse before initial intent
+AssertionError: expected '[{"id":"b-default","workspaceId":"ws-…' to be 'null' // Object.is equality
+
+Expected: "null"
+Received: "[{"id":"b-default","workspaceId":"ws-personal","name":{"en":"My Project Board","zh":"我的项目板"},"cover":"linear-gradient(135deg, oklch(72% 0.12 295), oklch(78% 0.10 25))","template":"kanban","lists":[{"id":"b-backlog","key":"backlog","cards":[{"id":"bc1","title":{"en":"Onboarding flow concepts","zh":"新人引导流程概念"},"labels":["l1","l3"],"checklist":{"done":2,"total":5},"due":"5/24","attach":1,"cover":"linear-gradient(135deg, oklch(78% 0.10 295), oklch(62% 0.12 245))","members":["u1","u2"],"location":{"lat":37.7749,"lng":-122.4194,"label":"San Francisco"},"taskLink":{"source":"xai-web-tasks","taskId":"bt-b-default-bc1","createdAt":"2026-09-10T00:01:33.719Z"}},{"id":"bc2","title":{"en":"Pet animation rig","zh":"桌宠动画 rig"},"labels":["l1"],"checklist":{"done":0,"total":3}},{"id":"bc3","title":{"en":"Audit competitor pricing","zh":"竞品定价调研"},"labels":["l3"],"due":"5/30","members":["u3"]}]},{"id":"b-today","key":"today","cards":[{"id":"bc4","title":{"en":"Ship countdown widgets","zh":"上线倒计时组件"},"labels":["l2","l5"],"checklist":{"done":6,"total":8},"due":"今天","dueEn":"Today","attach":2,"members":["u1","u3"],"location":{"lat":40.7128,"lng":-74.006,"label":"New York"}},{"id":"bc5","title":{"en":"Review focus session bug","zh":"复查专注会话 bug"},"labels":["l4"],"checklist":{"done":1,"total":2},"members":["u2"],"dueLate":true,"due":"过期","dueEn":"Overdue"},{"id":"bc6","title":{"en":"Write release notes","zh":"撰写发版说明"},"labels":["l1"]}]},{"id":"b-week","key":"week","cards":[{"id":"bc7","title":{"en":"Dashboard widget API","zh":"工作台组件 API"},"labels":["l2"],"checklist":{"done":3,"total":9},"due":"5/26","members":["u2","u3"],"location":{"lat":51.5074,"lng":-0.1278,"label":"London"}},{"id":"bc8","title":{"en":"Sound library curation","zh":"音效库整理"},"labels":["l3","l5"],"attach":4},{"id":"bc9","title":{"en":"Habit grid hover states","zh":"习惯网格悬停态"},"labels":["l1"],"cover":"linear-gradient(135deg, oklch(80% 0.08 165), oklch(60% 0.10 165))"},{"id":"bc10","title":{"en":"Bilingual copy review","zh":"中英文文案复核"},"labels":["l1","l3"],"checklist":{"done":4,"total":4},"members":["u1"]}]},{"id":"b-later","key":"later","cards":[{"id":"bc11","title":{"en":"Multi-board switcher","zh":"多看板切换器"},"labels":["l1","l2"],"checklist":{"done":0,"total":6}},{"id":"bc12","title":{"en":"Cmd-K command palette","zh":"Cmd-K 命令面板"},"labels":["l2","l5"]}]},{"id":"b-done","key":"done","cards":[{"id":"bc13","title":{"en":"Set up design tokens","zh":"建立设计 tokens"},"labels":["l1","l2"],"checklist":{"done":7,"total":7},"members":["u1","u2"]},{"id":"bc14","title":{"en":"App rail interactions","zh":"侧栏交互"},"labels":["l1"],"checklist":{"done":3,"total":3}}]}]},{"id":"b-pm","workspaceId":"ws-team","name":{"en":"Project Management","zh":"项目管理"},"cover":"linear-gradient(135deg, oklch(58% 0.14 245), oklch(38% 0.10 250))","template":"pm","lists":[{"id":"pm-todo","key":null,"customName":{"en":"To Do","zh":"待办"},"color":"gray","cards":[{"id":"pmc1","title":{"en":"Quick booking for accommodations — website","zh":"住宿快速预订 — 网站"},"labels":["pm-forms"],"members":["u1"],"checklist":{"done":0,"total":3},"location":{"lat":48.8566,"lng":2.3522,"label":"Paris"}},{"id":"pmc2","title":{"en":"Adapt web app to new payments provider","zh":"适配新支付服务商"},"labels":["pm-forms"],"members":["u2"],"checklist":{"done":0,"total":2}},{"id":"pmc3","title":{"en":"Fluid booking on tablets","zh":"平板端流畅预订"},"labels":["pm-feedback"],"members":["u3"]},{"id":"pmc4","title":{"en":"Multi-dest search UI web","zh":"多目的地搜索 UI"},"labels":["pm-accounts"],"members":["u1"]}]},{"id":"pm-prog","key":null,"customName":{"en":"In Progress","zh":"进行中"},"color":"blue","cards":[{"id":"pmc5","title":{"en":"BugFix BG Web-store app crashing","zh":"修复 BG 网店应用崩溃"},"labels":["pm-forms"],"members":["u2"],"checklist":{"done":2,"total":5},"due":"5/26","location":{"lat":42.6977,"lng":23.3219,"label":"Sofia"}},{"id":"pmc6","title":{"en":"High outage: Software bug fix — BG store","zh":"高严重故障：修复 BG 商店"},"labels":["pm-billing"],"members":["u3"],"checklist":{"done":1,"total":4},"due":"Today","dueEn":"Today"},{"id":"pmc7","title":{"en":"Web-store purchasing performance issue","zh":"网店购买性能问题"},"labels":["pm-forms"],"members":["u1","u2"],"location":{"lat":35.6762,"lng":139.6503,"label":"Tokyo"}}]},{"id":"pm-review","key":null,"customName":{"en":"In Review","zh":"审核中"},"color":"yellow","cards":[{"id":"pmc8","title":{"en":"Customers reporting shopping cart issues","zh":"客户反馈购物车问题"},"labels":["pm-accounts"],"members":["u2"],"checklist":{"done":4,"total":6}},{"id":"pmc9","title":{"en":"Planet Taxi Device exploration & research","zh":"出租车设备探索与调研"},"labels":["pm-feedback"],"members":["u3"]}]},{"id":"pm-blocked","key":null,"customName":{"en":"Blocked","zh":"阻塞"},"color":"red","cards":[{"id":"pmc10","title":{"en":"Vendor approval pending","zh":"供应商审批待定"},"labels":["pm-billing"],"members":["u1"],"dueLate":true,"due":"5/19","dueEn":"Overdue"}]},{"id":"pm-done","key":null,"customName":{"en":"Done","zh":"已完成"},"color":"green","cards":[{"id":"pmc11","title":{"en":"Quick payment","zh":"快速支付"},"labels":["pm-feedback"],"members":["u3"],"checklist":{"done":3,"total":3}},{"id":"pmc12","title":{"en":"Fast trip search","zh":"快速行程搜索"},"labels":["pm-accounts"],"members":["u1"],"checklist":{"done":5,"total":5}}]}]},{"id":"b-marketing","workspaceId":"ws-team","name":{"en":"Q3 Marketing Launch","zh":"Q3 市场启动"},"cover":"linear-gradient(135deg, oklch(70% 0.15 60), oklch(62% 0.16 35))","template":"kanban","lists":[{"id":"ml-ideas","key":null,"customName":{"en":"Ideas","zh":"创意"},"color":"yellow","cards":[{"id":"mk1","title":{"en":"Influencer outreach plan","zh":"达人合作方案"},"labels":["pm-research"]}]},{"id":"ml-prog","key":null,"customName":{"en":"In Progress","zh":"进行中"},"color":"blue","cards":[{"id":"mk2","title":{"en":"Landing page hero refresh","zh":"落地页 hero 翻新"},"labels":["pm-forms"],"checklist":{"done":1,"total":3}}]},{"id":"ml-launch","key":null,"customName":{"en":"Launch","zh":"上线"},"color":"green","cards":[]}]}]"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx:17:420
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > present corrupt Board source null must refuse before initial intent
+AssertionError: expected '{"format":"xai-command-state","versio…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"{\"format\":\"xai-command-state\",\"version\":1,\"revision\":1,\"data\":[{\"id\":\"overdue\",\"key\":\"overdue\",\"count\":10,\"action\":\"postpone\",\"tasks\":[{\"id\":\"t1\",\"title\":{\"en\":\"Github: CVPR2024 dataset pipeline pull\",\"zh\":\"Github：CVPR2024 数据集 pipeline 拉取\"},\"tag\":\"study\",\"date\":\"7/31\",\"inbox\":true},{\"id\":\"t2\",\"title\":{\"en\":\"Tidy up Google Drive personal files\",\"zh\":\"整理 Google Drive 个人文件\"},\"tag\":\"todo\",\"date\":\"7/31\",\"inbox\":true},{\"id\":\"t3\",\"title\":{\"en\":\"Update TIV DA homepage & Github code\",\"zh\":\"更新 TIV DA 主页和 Github 代码\"},\"tag\":\"study\",\"date\":\"7/31\",\"inbox\":true},{\"id\":\"t4\",\"title\":{\"en\":\"Polish LinkedIn résumé\",\"zh\":\"优化 LinkedIn 简历\"},\"tag\":\"personal\",\"date\":\"7/31\",\"inbox\":true},{\"id\":\"t5\",\"title\":{\"en\":\"Sort ICRA 2024 CrossData GitHub\",\"zh\":\"整理 ICRA 2024 CrossData GitHub\"},\"tag\":\"study\",\"date\":\"7/31\",\"inbox\":true},{\"id\":\"t6\",\"title\":{\"en\":\"Find paper-sync reader, local + cloud\",\"zh\":\"找一款本地+云端的论文同步阅读软件\"},\"tag\":\"study\",\"date\":\"9/10\",\"inbox\":true},{\"id\":\"t7\",\"title\":{\"en\":\"Refresh personal homepage\",\"zh\":\"更新一下个人主页\"},\"tag\":\"personal\",\"date\":\"9/16\",\"inbox\":true},{\"id\":\"t8\",\"title\":{\"en\":\"Paper: source Grounding/Video QA set\",\"zh\":\"论文：找一些 Grounding 或 Video QA\"},\"tag\":\"study\",\"date\":\"9/17\",\"inbox\":true},{\"id\":\"t9\",\"title\":{\"en\":\"Cross-platform tab cleanup\",\"zh\":\"全平台浏览器标签断舍离\"},\"tag\":\"personal\",\"date\":\"10/24\",\"inbox\":true},{\"id\":\"t10\",\"title\":{\"en\":\"TaskLine_Overview_2025 declutter\",\"zh\":\"TaskLine_Overview_2025 断舍离\"},\"tag\":\"personal\",\"date\":\"10/24\",\"inbox\":true}]},{\"id\":\"next7\",\"key\":\"next_7_days\",\"count\":2,\"action\":\"add\",\"tasks\":[{\"id\":\"t11\",\"title\":{\"en\":\"Memorial Day\",\"zh\":\"阵亡将士纪念日\"},\"sub\":{\"en\":\"Next Mon\",\"zh\":\"下周一\"}},{\"id\":\"t12\",\"title\":{\"en\":\"Eid al-Adha\",\"zh\":\"古尔邦节\"},\"sub\":{\"en\":\"The exact date of this holiday is different…\",\"zh\":\"该节日的具体日期每年不同…\"},\"dateLabel\":{\"en\":\"Next Wed\",\"zh\":\"下周三\"}}]},{\"id\":\"later\",\"key\":\"later\",\"count\":13,\"action\":\"add\",\"tasks\":[{\"id\":\"t13\",\"title\":{\"en\":\"Flag Day\",\"zh\":\"国旗日\"},\"date\":\"Jun 14\",\"dateZh\":\"6 月 14 日\"},{\"id\":\"t14\",\"title\":{\"en\":\"Juneteenth\",\"zh\":\"六月节\"},\"date\":\"Jun 19\",\"dateZh\":\"6 月 19 日\"},{\"id\":\"t15\",\"title\":{\"en\":\"Father's Day\",\"zh\":\"父亲节\"},\"date\":\"Jun 21\",\"dateZh\":\"6 月 21 日\"},{\"id\":\"t16\",\"title\":{\"en\":\"Ashura\",\"zh\":\"阿舒拉节\"},\"date\":\"Jun 26\",\"dateZh\":\"6 月 26 日\",\"sub\":{\"en\":\"The exact date of this holiday is diff…\",\"zh\":\"该节日的具体日期不同…\"}},{\"id\":\"t17\",\"title\":{\"en\":\"Independence Day (observed)\",\"zh\":\"独立日（观察日）\"},\"date\":\"Jul 3\",\"dateZh\":\"7 月 3 日\"},{\"id\":\"t18\",\"title\":{\"en\":\"Independence Day\",\"zh\":\"独立日\"},\"date\":\"Jul 4\",\"dateZh\":\"7 月 4 日\"},{\"id\":\"t19\",\"title\":{\"en\":\"Labor Day\",\"zh\":\"劳动节\"},\"date\":\"Sep 7\",\"dateZh\":\"9 月 7 日\"},{\"id\":\"t20\",\"title\":{\"en\":\"Rosh Hashanah\",\"zh\":\"犹太新年\"},\"date\":\"Sep 12\",\"dateZh\":\"9 月 12 日\",\"sub\":{\"en\":\"Holiday starts at sundown on the d…\",\"zh\":\"节日从前一日日落开始…\"}},{\"id\":\"t21\",\"title\":{\"en\":\"Rosh Hashanah (day 2)\",\"zh\":\"犹太新年（第 2 天）\"},\"date\":\"Sep 13\",\"dateZh\":\"9 月 13 日\"},{\"id\":\"t22\",\"title\":{\"en\":\"Yom Kippur\",\"zh\":\"赎罪日\"},\"date\":\"Sep 21\",\"dateZh\":\"9 月 21 日\"},{\"id\":\"t23\",\"title\":{\"en\":\"Columbus Day\",\"zh\":\"哥伦布日\"},\"date\":\"Oct 12\",\"dateZh\":\"10 月 12 日\",\"sub\":{\"en\":\"This is not a nation-wide holiday; it…\",\"zh\":\"非全国性节日；…\"}},{\"id\":\"t24\",\"title\":{\"en\":\"Indigenous Peoples' Day\",\"zh\":\"原住民日\"},\"date\":\"Oct 12\",\"dateZh\":\"10 月 12 日\",\"sub\":{\"en\":\"This is not a nation-wide holiday; it…\",\"zh\":\"非全国性节日；…\"}},{\"id\":\"t25\",\"title\":{\"en\":\"Halloween\",\"zh\":\"万圣节\"},\"date\":\"Oct 31\",\"dateZh\":\"10 月 31 日\"}]},{\"id\":\"nodate\",\"key\":\"no_date\",\"count\":2,\"action\":\"add\",\"tasks\":[{\"id\":\"bt-b-default-bc1\",\"title\":{\"en\":\"Onboarding flow concepts\",\"zh\":\"新人引导流程概念\"},\"tag\":\"todo\",\"inbox\":true,\"source\":{\"type\":\"board-card\",\"boardId\":\"b-default\",\"listId\":\"b-backlog\",\"cardId\":\"bc1\"}},{\"id\":\"t26\",\"title\":{\"en\":\"Post about my own work on LinkedIn\",\"zh\":\"在 LinkedIn 上分享一下自己的工作\"},\"tag\":\"work\",\"inbox\":true}],\"completed\":[{\"id\":\"c1\",\"title\":{\"en\":\"EB1B preparation plan\",\"zh\":\"EB1B 准备计划\"},\"inbox\":true},{\"id\":\"c2\",\"title\":{\"en\":\"Review: IEEE ITS Transactions T-ITS-25-09-4493\",\"zh\":\"审稿：IEEE ITS Transactions T-ITS-25-09-4493\"},\"tag\":\"study\",\"inbox\":true},{\"id\":\"c3\",\"title\":{\"en\":\"Review: Artificial Intelligence Review\",\"zh\":\"审稿：Artificial Intelligence Review\"},\"tag\":\"study\",\"inbox\":true},{\"id\":\"c4\",\"title\":{\"en\":\"Review: Discover Artificial Intelligence\",\"zh\":\"审稿：Discover Artificial Intelligence\"},\"tag\":\"study\",\"inbox\":true},{\"id\":\"c5\",\"title\":{\"en\":\"Review: Multimedia Systems\",\"zh\":\"审稿：Multimedia Systems\"},\"tag\":\"study\",\"inbox\":true},{\"id\":\"c6\",\"title\":{\"en\":\"Plan one daily task for dingfu\",\"zh\":\"每天给 dingfu 安排一个 task\"},\"tag\":\"work\",\"inbox\":true}]}],\"receipts\":{}}"
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx:17:465
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > queued marker refuses without replacing source or losing pending intent
+AssertionError: expected { ok: true } to match object { ok: false, phase: 'task' }
+
+- Expected
++ Received
+
+  {
+-   "ok": false,
+-   "phase": "task",
++   "ok": true,
+  }
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx:26:112
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx > a settled link failure belongs to its card and must not appear on a newly opened card
+AssertionError: expected <p role="alert"></p> to be null
+
+- Expected: 
+null
+
++ Received: 
+<p
+  role="alert"
+>
+  Link intent saved; task creation failed. Retry to finish.
+</p>
+
+ ❯ docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx:45:567
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
