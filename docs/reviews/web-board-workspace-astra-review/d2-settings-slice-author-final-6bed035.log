@@ -1,0 +1,27 @@
+revision=HEAD
+test-fixture=review-owned only; package run unmodified
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-eYrWj6
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > local account deletion removes prior and candidate records before declaring local-data-cleared
+all-account-cleanup {"result":{"ok":true,"receipt":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"local-data-cleared","updatedAt":"2026-09-10T01:28:49.739Z","authGeneration":"auth-A"},"raw":"{\"version\":2,\"accountId\":\"slice-A\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"local-data-cleared\",\"updatedAt\":\"2026-09-10T01:28:49.739Z\",\"authGeneration\":\"auth-A\"}"},"remaining":[]}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > complete transition refuses a pending receipt whose local data has not been cleared
+premature-complete {"result":{"ok":false,"reason":"recovery-required"},"remaining":"not cleared"}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > same-page in-flight recovery cannot return success for a different requested auth identity
+samepage-identity [{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:28:49.801Z","authGeneration":"auth-A"}},{"status":"rejected","reason":{}}]
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > independent Settings module instances serialize recovery participants across their shared origin locks
+independent-coordinators {"concurrent":1,"authCalls":1,"settled":[{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:28:49.892Z","authGeneration":"auth-A"}},{"status":"fulfilled","value":{"version":2,"accountId":"slice-A","kind":"account","generation":"g1","phase":"complete","updatedAt":"2026-09-10T01:28:49.892Z","authGeneration":"auth-A"}}]}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts > current-owner delete cannot override a newer complete marker with an old valid structured receipt
+structured-receipt-marker {"outcome":{"ok":false,"reason":"recovery-required"},"bytes":"newer generation"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-settings-slice.test.ts (7 tests) 161ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  18:28:49
+   Duration  902ms (transform 131ms, setup 0ms, collect 164ms, tests 161ms, environment 311ms, prepare 80ms)
