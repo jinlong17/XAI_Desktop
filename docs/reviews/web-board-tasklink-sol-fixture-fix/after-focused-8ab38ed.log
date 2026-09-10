@@ -1,0 +1,120 @@
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-board-workspaces
+
+stderr | src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+stderr | src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once
+[plugin-web-storage] quota exceeded for xai_boards_v2.
+
+ ✓ src/__tests__/taskLinkCommand.test.ts > intent write failure is honest and retry resumes the retained intent exactly once 15ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > task write failure is honest and retry resumes the retained intent exactly once 3ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > acknowledgement write failure is honest and retry resumes the retained intent exactly once 2ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > pending link follows stable card through move and card/list archive restoration 5ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > old account callback cannot write B or erase A pending intent 1ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > legacy task ID collision never overwrites another source or publishes a false link 1ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > adds a Board task through the canonical envelope while retaining durable receipts 2ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > serializes concurrent same-owner attempts and retries acknowledgement without another Task commit 7ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > invalid non-absent task bytes null never save Board intent 1ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > invalid non-absent task bytes {"format":"xai-command-state","version":1,"revision":1,"data":null,"receipts":{}} never save Board intent 1ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > present JSON-null Board bytes refuse before publishing an intent or Task 0ms
+ ✓ src/__tests__/taskLinkCommand.test.ts > a newer same-ID pending intent is retained after the Task write 1ms
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM1: first render with empty localStorage seeds boards + renders header + bottom switcher
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM2: defensive seed persists makeDefaultBoards on mount with null prefs
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM3: clicking title opens BoardSwitcher modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM4: clicking '+ New board' in switcher closes switcher + opens creator
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM5: submitting creator adds + activates a board, closes both modals
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM6: clicking another board card in switcher sets active + closes modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM7: deleting a board via dialog confirm removes it (B-12 new confirmation flow)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM8: toggling Inbox panel persists to xai_board_panels (length-1 array)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM9: clicking 'Board' alone toggles board off → invariant forces it back on
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM10: Inbox + Planner both open → container has board-panels-multi class
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM11: only Board open → container has board-panels-single class
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM12: PM template board + overview toggle mounts StatusOverviewBanner
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM13: non-PM board → overview toggle is disabled
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM14: Inbox composer Enter prepends to xai_board_inbox in localStorage
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM15: malformed xai_board_panels → renders seed without crash
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM16: malformed xai_board_inbox → renders seed inbox when inbox opened
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM17: lang='zh' flips visible strings
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18: an empty persisted board array renders the fallback without crashing
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: schema-invalid board storage is preserved through mount, automatic automation, and manual automation
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: json-null board storage is preserved through mount, automatic automation, and manual automation
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: syntax-invalid board storage is preserved through mount, automatic automation, and manual automation
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18b: empty-array board storage is preserved through mount, automatic automation, and manual automation
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18c: a stable valid source corrects an unknown active board id
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18d: queued correction refuses same-account active-only writes before it runs
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18d: queued correction refuses same-account board-replaced writes before it runs
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM18d: queued correction refuses same-account board-removed writes before it runs
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM19: Inbox toggles on immediately while an alternate board view is active
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM20: Board bottom button controls the Board panel, not the active top view
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-1: Filter button is now enabled (no longer disabled)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-2: Click Filter button opens FilterPopover
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-4: Share button is now enabled (no longer disabled)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-5: Click Share button opens ShareModal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-PERM-1: visibility toggle defaults private and persists shared/private
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-6: changing filters persists the active board filter without mutating boards
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-1: remount restores the saved filter for the active board
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-2: board switch restores each board's own saved filter
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-SAVED-FILTER-3: Clear persists the active board reset
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-EXT-3: Selecting a label in the popover narrows the visible card count in BoardView
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-1: clicking a board card opens the card detail modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-2: title and description edits persist through xai_boards_v2
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-3: labels, members, checklist, attachments, and dates persist as detail fields
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-4: invalid attachment URL is rejected without mutating the card
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-INTEGRATIONS-1: provider link attachments persist integration metadata
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-COMMENTS-1: card detail adds comment entries with author metadata
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-COMMENTS-2: existing note entries remain valid timeline rows
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-5: Table view title opens the shared card detail modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-6: Calendar view card opens the shared card detail modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DETAIL-7: Timeline view bar opens the shared card detail modal
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DATE-1: detail modal preserves startDate > dueDate without auto-swap or clamp
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-DATE-2: ambiguous legacy due reload opens detail without fabricated dueDate
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CHECKLIST-1: toggling, editing, and removing checklist rows persists derived progress
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CHECKLIST-2: removing the last checklist item clears the legacy chip
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-TASK-1: creating a linked task writes xai_task_cols and card.taskLink 346ms
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-TASK-2: unlink clears only the board-side taskLink 401ms
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-1: first-run keyed kanban list rename persists customName without clearing key
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-1b: card detail uses renamed keyed kanban list customName
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-2: add-card targets listId after archived gaps, not visible index
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-3: archive manager restores and permanently deletes archived lists
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-LIST-4: archived lists are hidden from alternate table view
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-1: board-surface card rename persists and menu click does not open detail
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-2: move down reorders within the same active list
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-3: archive manager restores archived cards
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-4: archived-card manager permanently deletes with confirmation
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-CARD-5: archived cards are hidden from alternate table view
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-AUTO-1: daily automation persists urgent labels, due sort, and Done completion
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule (BWM1..BWM18) > BWM-AUTO-2: manual automation button reruns presets after a same-day due edit
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-1: click trash in BoardSwitcher → BoardDeleteConfirmDialog mounts with mode='board'
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-2: Cancel from dialog → dialog unmounts + board still present
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-3: Confirm from dialog → dialog unmounts + board removed
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Board-4: re-opening BoardSwitcher after confirm shows board absent
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Card-1: click × in InboxPanel → BoardDeleteConfirmDialog mounts with mode='card'
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Card-2: Cancel → dialog unmounts + inbox card still present
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Card-3: Confirm → dialog unmounts + inbox card removed
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Del delete confirmation (Audit B-12 + B-28) > BW-Del-Card-4: Cancel for card A, then open dialog for card B → state is per-pending-delete (no stale label)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-0: CardDetailDialog is not in DOM on initial render (conditional mount)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-2 (Table): clicking card in TableView triggers handleOpenCard
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-3 (Calendar): clicking card in CalendarView triggers handleOpenCard
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-4 (Timeline): clicking card in TimelineView triggers handleOpenCard
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-5 (Map): clicking pin in MapView triggers handleOpenCard via onSelectCard
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BoardWorkspacesModule — BW-Open wire-up (Audit Top-10 #5) > BW-Open-Close: closing dialog via onClose unmounts CardDetailDialog (conditional mount)
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-CAT — label/member catalogs + priority > BWM-CAT-1: priority selector patches and persists card.priority; re-click clears it
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-CAT — label/member catalogs + priority > BWM-CAT-2: creating a label materializes board.labels (defaults + new) and the label is assignable
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-CAT — label/member catalogs + priority > BWM-CAT-3: deleting a label removes it from the catalog AND strips it from cards
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-CAT — label/member catalogs + priority > BWM-CAT-4: creating a member persists to board.members and the member is assignable
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-CAT — label/member catalogs + priority > BWM-CAT-5: renaming a member persists the new name in the board directory
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-SET — board settings + priority filter > BWM-SET-1: settings modal renames the board and picks a cover preset, persisted
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-SET — board settings + priority filter > BWM-SET-2: icon + description persist; icon renders in the header title
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-SET — board settings + priority filter > BWM-FILTER-P: priority filter narrows the board to matching cards and persists
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-WS — workspace CRUD > BWM-WS-1: creating a workspace persists it (seed + new) and renders its group
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-WS — workspace CRUD > BWM-WS-2: renaming a workspace persists the new name
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-WS — workspace CRUD > BWM-WS-3: delete affordance only on empty workspaces; deleting removes it
+ ↓ src/__tests__/BoardWorkspacesModule.test.tsx > BWM-WS — workspace CRUD > BWM-WS-4: recolor cycles the workspace color
+ ✓ src/__tests__/BoardWorkspacesModule.test.tsx > TASK02 failed Task write retains pending Board intent across remount and actual Retry completes once 384ms
+
+ Test Files  2 passed (2)
+      Tests  15 passed | 90 skipped (105)
+   Start at  19:19:38
+   Duration  5.08s (transform 1.33s, setup 867ms, collect 2.37s, tests 1.17s, environment 2.30s, prepare 571ms)
+
