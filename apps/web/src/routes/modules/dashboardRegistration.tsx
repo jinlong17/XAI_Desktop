@@ -21,7 +21,9 @@ function DashboardModuleRoute(): React.ReactElement {
   const navigate = useNavigate();
   const isDepartureTarget = React.useCallback((target: EventTarget | null) => {
     if (!(target instanceof Element)) return false;
-    return Boolean(target.closest(".app-rail .rail-items .rail-btn, .mc-jump"));
+    return Boolean(target.closest(
+      ".app-rail .rail-items .rail-btn, .mc-jump, .topbar-pref-settings, .avatar-menu .avm-item:not(.danger)",
+    ));
   }, []);
   const goTo = React.useCallback((moduleId: string) => {
     if (!KNOWN_MODULE_IDS.has(moduleId as WebModuleId)) return;

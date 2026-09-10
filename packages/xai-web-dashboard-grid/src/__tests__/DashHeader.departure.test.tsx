@@ -78,6 +78,15 @@ describe("DashHeader departure capability", () => {
     expect(currentGuard.isBlocking()).toBe(true);
   });
 
+  it("persists an ordinary Tab-style blur after the current turn", async () => {
+    const ui = mount();
+    fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
+    const input = ui.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Ordinary blur saved note" } });
+    fireEvent.blur(input, { relatedTarget: ui.getByRole("button", { name: "Save dashboard note" }) });
+    await waitFor(() => expect(localStorage.getItem(noteKey)).toBe("Ordinary blur saved note"));
+  });
+
   it("keeps a moved position whose caller raw preflight rejects as a real draft", async () => {
     const ui = mount();
     const lane = ui.container.querySelector(".dash-note-lane")!;

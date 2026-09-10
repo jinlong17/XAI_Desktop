@@ -181,6 +181,16 @@ type OffsetOperation = {
   readonly retryable: boolean;
 };
 
+type BlurSaveSnapshot = {
+  readonly session: NoteSession;
+  readonly revision: number;
+};
+
+type NavigationPointer = {
+  readonly pointerId: number;
+  readonly target: EventTarget | null;
+};
+
 export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isDeparturePending, isDepartureTarget }: DashHeaderProps) {
   const { s } = useI18n(lang);
   const greetingKey = pickGreetingKey(now);
@@ -194,8 +204,8 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
   isDeparturePendingRef.current = isDeparturePending;
   const isDepartureTargetRef = useRef(isDepartureTarget);
   isDepartureTargetRef.current = isDepartureTarget;
-  const navigationPointerRef = useRef(false);
-  const deferredNavigationBlurRef = useRef(false);
+  const navigationPointerRef = useRef<NavigationPointer | null>(null);
+  const deferredNavigationBlurRef = useRef<BlurSaveSnapshot | null>(null);
   const blurTimerRef = useRef<number | null>(null);
   const laneRef = useRef<HTMLDivElement>(null);
   const noteRef = useRef<HTMLDivElement>(null);
@@ -425,43 +435,81 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     submit(next);
   }, [setDraftText, submit]);
 
+  // The async preference result object changes as its status changes. Keep the
+  // global blur listeners stable and resolve the current save callback only at
+  // the point an ordinary blur is allowed to persist.
+  const saveDraftRef = useRef(saveDraft);
+  saveDraftRef.current = saveDraft;
+
+  const canSaveBlurSnapshot = useCallback((snapshot: BlurSaveSnapshot) => {
+    if (disposedRef.current || isDeparturePendingRef.current?.()) return false;
+    if (sessionRef.current !== snapshot.session || draftRevisionRef.current !== snapshot.revision || frozenSessionRef.current) return false;
+    try {
+      accountScope.assertCurrent(snapshot.session.scope);
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const scheduleBlurSave = useCallback((snapshot: BlurSaveSnapshot) => {
+    if (blurTimerRef.current !== null) window.clearTimeout(blurTimerRef.current);
+    blurTimerRef.current = window.setTimeout(() => {
+      blurTimerRef.current = null;
+      if (canSaveBlurSnapshot(snapshot)) saveDraftRef.current();
+    }, 0);
+  }, [canSaveBlurSnapshot]);
+  const scheduleBlurSaveRef = useRef(scheduleBlurSave);
+  scheduleBlurSaveRef.current = scheduleBlurSave;
+
   const saveAfterBlur = useCallback(() => {
     // Pointerdown and the coordinator's dialog focus both blur the editor
     // before their click/navigation turn completes. Let that turn reserve its
     // first departure intent before deciding whether this was an ordinary blur.
-    if (navigationPointerRef.current) {
-      deferredNavigationBlurRef.current = true;
+    const session = sessionRef.current;
+    if (!session) return;
+    const snapshot = { session, revision: draftRevisionRef.current };
+    if (navigationPointerRef.current !== null) {
+      deferredNavigationBlurRef.current = snapshot;
       return;
     }
-    blurTimerRef.current = window.setTimeout(() => {
-      blurTimerRef.current = null;
-      if (!disposedRef.current && !isDeparturePendingRef.current?.()) saveDraft();
-    }, 0);
-  }, [saveDraft]);
+    scheduleBlurSave(snapshot);
+  }, [scheduleBlurSave]);
 
   useEffect(() => {
-    const settleNavigationPointer = () => {
-      navigationPointerRef.current = false;
-      if (!deferredNavigationBlurRef.current) return;
-      deferredNavigationBlurRef.current = false;
-      blurTimerRef.current = window.setTimeout(() => {
-        blurTimerRef.current = null;
-        if (!disposedRef.current && !isDeparturePendingRef.current?.()) saveDraft();
-      }, 0);
+    const settleNavigationPointer = (event: PointerEvent) => {
+      const candidate = navigationPointerRef.current;
+      if (!candidate || candidate.pointerId !== event.pointerId) return;
+      navigationPointerRef.current = null;
+      const deferred = deferredNavigationBlurRef.current;
+      deferredNavigationBlurRef.current = null;
+      if (deferred) scheduleBlurSaveRef.current(deferred);
+    };
+    const settleWindowBlur = () => {
+      navigationPointerRef.current = null;
+      const deferred = deferredNavigationBlurRef.current;
+      deferredNavigationBlurRef.current = null;
+      if (deferred) scheduleBlurSaveRef.current(deferred);
     };
     const capturePointerDown = (event: PointerEvent) => {
-      navigationPointerRef.current = Boolean(isDepartureTargetRef.current?.(event.target));
+      navigationPointerRef.current = isDepartureTargetRef.current?.(event.target)
+        ? { pointerId: event.pointerId, target: event.target }
+        : null;
     };
     document.addEventListener("pointerdown", capturePointerDown, true);
     window.addEventListener("pointerup", settleNavigationPointer, true);
     window.addEventListener("pointercancel", settleNavigationPointer, true);
+    window.addEventListener("blur", settleWindowBlur);
     return () => {
       document.removeEventListener("pointerdown", capturePointerDown, true);
       window.removeEventListener("pointerup", settleNavigationPointer, true);
       window.removeEventListener("pointercancel", settleNavigationPointer, true);
+      window.removeEventListener("blur", settleWindowBlur);
+      navigationPointerRef.current = null;
+      deferredNavigationBlurRef.current = null;
       if (blurTimerRef.current !== null) window.clearTimeout(blurTimerRef.current);
     };
-  }, [saveDraft]);
+  }, []);
 
   const clearNote = useCallback(() => {
     if (notePending || frozenSession) return;
