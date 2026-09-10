@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"73b4eb9","browser":"Chrome/152.0.7977.83"}
+{"name":"select-input","events":[{"name":"keydown","key":"s","value":"monday","trusted":true,"prevented":false},{"name":"input","value":"sunday","trusted":true,"prevented":false},{"name":"change","value":"sunday","trusted":true,"prevented":false},{"name":"keyup","key":"s","value":"sunday","trusted":true,"prevented":false}],"value":"sunday","raw":["sunday","true","true","true","true"]}
+{"name":"saved-reload","pass":true}
+{"name":"native","pass":true,"mode":"clean","runtimeErrors":0}

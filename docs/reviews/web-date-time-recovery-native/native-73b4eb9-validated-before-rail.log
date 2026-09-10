@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"73b4eb9","browser":"Chrome/152.0.7977.83"}
+{"name":"failed-choice-observation","state":{"week":"monday","toggles":["true","true","true","true"]},"raw":["monday","true","true","true","true"]}
+{"name":"rail-observation","path":"/app/tasks","dialog":false,"signout":"pending"}
+{"name":"native","pass":false,"mode":"rail","error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '/app/tasks'\n- '/app/settings/date_time'\n        ^\n","runtimeErrors":[]}
