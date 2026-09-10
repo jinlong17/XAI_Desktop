@@ -1,0 +1,79 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-5BdhaQ
+
+ ❯ docs/reviews/web-date-time-recovery-independent/host.test.tsx (8 tests | 7 failed) 404ms
+   × actual five-control pane preserves failed intent for 'xai_pref_dt_start_week' 97ms
+     → expected 'monday' to be 'sunday' // Object.is equality
+   × actual five-control pane preserves failed intent for 'xai_pref_dt_lunar' 42ms
+     → expected 'true' to be 'false' // Object.is equality
+   × actual five-control pane preserves failed intent for 'xai_pref_dt_week_numbers' 42ms
+     → expected 'true' to be 'false' // Object.is equality
+   × actual five-control pane preserves failed intent for 'xai_pref_dt_holidays' 38ms
+     → expected 'true' to be 'false' // Object.is equality
+   × actual five-control pane preserves failed intent for 'xai_pref_dt_timezone' 39ms
+     → expected 'true' to be 'false' // Object.is equality
+   × actual composed Settings route holds failed Date Time work 55ms
+     → expected '/app/settings/notifications' to be '/app/settings/date_time' // Object.is equality
+   × actual signout delegate waits for a Date Time decision 50ms
+     → expected true to be 'pending' // Object.is equality
+   ✓ clean Date Time pane permits route and signout without writing defaults 40ms
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  01:04:04
+   Duration  4.21s (transform 2.10s, setup 0ms, collect 3.10s, tests 404ms, environment 404ms, prepare 83ms)
+
+
+stderr | docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_start_week'
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_start_week'
+AssertionError: expected 'monday' to be 'sunday' // Object.is equality
+
+Expected: "sunday"
+Received: "monday"
+
+ ❯ docs/reviews/web-date-time-recovery-independent/host.test.tsx:21:367
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_lunar'
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_week_numbers'
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_holidays'
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual five-control pane preserves failed intent for 'xai_pref_dt_timezone'
+AssertionError: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-date-time-recovery-independent/host.test.tsx:21:458
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual composed Settings route holds failed Date Time work
+AssertionError: expected '/app/settings/notifications' to be '/app/settings/date_time' // Object.is equality
+
+Expected: "/app/settings/date_time"
+Received: "/app/settings/notifications"
+
+ ❯ docs/reviews/web-date-time-recovery-independent/host.test.tsx:22:302
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/host.test.tsx > actual signout delegate waits for a Date Time decision
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-date-time-recovery-independent/host.test.tsx:23:282
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯

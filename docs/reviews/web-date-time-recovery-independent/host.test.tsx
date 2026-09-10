@@ -1,0 +1,24 @@
+import React from 'react';
+import {it,expect,vi,beforeEach,afterEach} from 'vitest';
+import {act,cleanup,fireEvent,render,within} from '@testing-library/react';
+import {transferableAbortController} from 'node:util';
+import {createMemoryRouter,RouterProvider} from 'react-router';
+import {WebShellProvider,Shell} from '@repo/xai-web-shell';
+import {accountScope,generationMarkerKey} from '@repo/plugin-web-storage';
+import {webShellModuleRegistrations} from '../../../apps/web/src/routes/modules/shellRegistrations';
+import {composedSettingsRegistration} from '../../../apps/web/src/routes/modules/composedSettingsRegistration';
+import {requestSettingsDeparture} from '../../../apps/web/src/routes/modules/settingsDeparture';
+import {createTestLockManager} from '../web-board-workspace-astra-review/named-lock-fixture';
+const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
+const keys=['xai_pref_dt_start_week','xai_pref_dt_lunar','xai_pref_dt_week_numbers','xai_pref_dt_holidays','xai_pref_dt_timezone'];
+const pane='/app/settings/date_time',next='/app/settings/notifications';
+async function flush(){await act(async()=>{for(let i=0;i<8;i++)await new Promise(r=>setTimeout(r,0));});}
+beforeEach(()=>{localStorage.clear();const owner='date-time-parent-A';nativeSet.call(localStorage,generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));accountScope.activate(accountScope.lock(owner),'g1');keys.forEach((key,i)=>nativeSet.call(localStorage,key,i===0?'monday':'true'));vi.stubGlobal('AbortController',transferableAbortController().constructor);vi.stubGlobal('navigator',{locks:createTestLockManager()});vi.stubGlobal('ResizeObserver',class{observe(){}unobserve(){}disconnect(){}});vi.stubGlobal('requestAnimationFrame',(cb:FrameRequestCallback)=>setTimeout(()=>cb(performance.now()),0));vi.stubGlobal('cancelAnimationFrame',clearTimeout);});
+afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
+async function host(){const Composed=composedSettingsRegistration.children[0]!.render;const router=createMemoryRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'settings/*',element:<Composed/>},{path:'dashboard',element:<div>Dashboard destination</div>}]}],{initialEntries:[pane]});const ui=render(<WebShellProvider modules={webShellModuleRegistrations} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);await flush();const element=ui.container.querySelector('.dt-pane')!;expect(element).toBeTruthy();const q=within(element as HTMLElement);expect((q.getByRole('combobox') as HTMLSelectElement).value).toBe('monday');expect(q.getAllByRole('switch').map(e=>e.getAttribute('aria-checked'))).toEqual(['true','true','true','true']);return {ui,q,router};}
+function deny(index:number){vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,k,v){if(k===keys[index])throw Error('quota');nativeSet.call(this,k,v);});}
+function change(q:ReturnType<typeof within>,index:number){if(index===0)fireEvent.change(q.getByRole('combobox'),{target:{value:'sunday'}});else fireEvent.click(q.getAllByRole('switch')[index-1]);}
+it.each(keys.map((key,index)=>({key,index})))('actual five-control pane preserves failed intent for $key',async({index})=>{const {q}=await host();deny(index);change(q,index);await flush();expect(keys.map(key=>nativeGet.call(localStorage,key))).toEqual(['monday','true','true','true','true']);if(index===0)expect((q.getByRole('combobox') as HTMLSelectElement).value).toBe('sunday');else expect(q.getAllByRole('switch')[index-1].getAttribute('aria-checked')).toBe('false');});
+it('actual composed Settings route holds failed Date Time work',async()=>{const {ui,q,router}=await host();deny(1);change(q,1);await flush();expect(nativeGet.call(localStorage,keys[1])).toBe('true');await act(async()=>{void router.navigate(next)});await flush();expect(router.state.location.pathname).toBe(pane);expect(ui.getByRole('dialog')).toBeTruthy();});
+it('actual signout delegate waits for a Date Time decision',async()=>{const {ui,q}=await host();deny(1);change(q,1);await flush();let outcome:unknown='pending';await act(async()=>{void requestSettingsDeparture('sign-out').then(value=>outcome=value)});await flush();expect(outcome).toBe('pending');expect(ui.getByRole('dialog')).toBeTruthy();});
+it('clean Date Time pane permits route and signout without writing defaults',async()=>{const {ui,router}=await host();const writes=vi.spyOn(Storage.prototype,'setItem');expect(await requestSettingsDeparture('sign-out')).toBe(true);await act(async()=>{void router.navigate(next)});await flush();expect(router.state.location.pathname).toBe(next);expect(ui.queryByRole('dialog')).toBeNull();expect(writes.mock.calls.filter(([key])=>keys.includes(key))).toHaveLength(0);});
