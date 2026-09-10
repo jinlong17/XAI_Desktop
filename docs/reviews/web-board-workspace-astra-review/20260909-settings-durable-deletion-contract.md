@@ -38,6 +38,8 @@ Before each asynchronous participant, and after every await before the next part
 
 A completed matching receipt is an idempotent no-op on later retries. Partial secrets/auth or final metadata failure keeps the receipt recoverable and may repeat idempotent captured-owner cleanup after a crash; this is not exactly-once external side-effect delivery. The workflow lock prevents concurrent compatible live coordinators, not old arbitrary JavaScript or process-crash duplication. No new provider/network implementation is requested in this batch.
 
+Parent `c5a4347` already preserves the actual Settings replacement failure at fixed dbc2e69: same account/business generation, new authGeneration receipt written during secret await. The unchanged after-oracle requires refusal, exact replacement bytes retained and no subsequent old-auth callback. Its lock fixture checks the required account lock name/exclusive mode without demanding exactly one total lock request, so the approved recovery workflow lock is compatible.
+
 ## Fixed acceptance cases for this slice
 
 - Retain parent Settings original two lock/order/refusal failures and A→B marker-removal retry control. Lock pending means no local erasure, no phase advance, no secret/auth callback; unavailable lock refuses with unchanged bytes/receipt.
