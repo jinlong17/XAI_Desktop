@@ -1,0 +1,67 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-CvTNxs
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx (5 tests | 4 failed) 551ms
+   × actual Dashboard registration keeps a quota-failed note behind route decision 257ms
+     → expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+   × unsubmitted actual Header text is protected before programmatic departure 79ms
+     → expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+   × actual Shell AppRail preserves failed Header note 100ms
+     → expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+   × actual App signout preflight remains pending for current Header draft 85ms
+     → expected true to be 'pending' // Object.is equality
+   ✓ clean Header does not block current signout or normal navigation 29ms
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  00:06:49
+   Duration  4.88s (transform 2.37s, setup 0ms, collect 3.57s, tests 551ms, environment 412ms, prepare 105ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx > actual Dashboard registration keeps a quota-failed note behind route decision
+AssertionError: expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx:19:248
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx > unsubmitted actual Header text is protected before programmatic departure
+AssertionError: expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx:20:245
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx > actual Shell AppRail preserves failed Header note
+AssertionError: expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx:21:293
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx > actual App signout preflight remains pending for current Header draft
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx:22:281
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
