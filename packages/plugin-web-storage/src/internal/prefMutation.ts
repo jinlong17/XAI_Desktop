@@ -99,19 +99,6 @@ function reconcileUncertain(physicalKey: string, raw: string | null, intendedRaw
   return true;
 }
 
-function reconcileToken(physicalKey: string, originalRaw: string | null, intendedRaw: string | null, reset: boolean, token: string | undefined, key: string, value: unknown, scope: AccountScope): boolean {
-  if (!token) return false;
-  const uncertain = uncertainByToken.get(token);
-  if (!uncertain
-    || uncertain.physicalKey !== physicalKey
-    || uncertain.originalRaw !== originalRaw
-    || uncertain.intendedRaw !== intendedRaw
-    || uncertain.reset !== reset) return false;
-  forgetUncertain(physicalKey);
-  publishSameTab(key, value, scope);
-  return true;
-}
-
 function failure(error: unknown): PrefMutationResult<never> {
   if (error instanceof AccountScopeError) return { ok: false, reason: "account-changed" };
   const message = error instanceof Error ? error.message : "storage";
@@ -166,14 +153,51 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
     return (options.keyLock ?? browserAccountLock)(prefMutationLockName(physicalKey), "exclusive", async () => {
       if (owner === "account") assertAccount(scope);
       const current = read(physicalKey, options.codec, validate);
+      const suppliedToken = options.reconcileToken;
+
+      // An engine-issued token is a one-time verification grant for the exact
+      // uncertain commit it names. It is never fallback authority for an
+      // ordinary mutation, even if an external writer restored the old raw
+      // baseline. Keep it through temporary unreadable storage so a later
+      // Retry can still verify the same physical bytes under this key lock.
+      if (suppliedToken) {
+        const uncertain = uncertainByToken.get(suppliedToken);
+        const common = uncertain
+          && uncertain.physicalKey === physicalKey
+          && uncertain.originalRaw === options.expectedRaw;
+        if (!common) return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+        if (current.source === "unavailable") return { ok: false, reason: "unavailable", source: current.source, raw: current.raw };
+
+        if (options.reset) {
+          if (!uncertain.reset || uncertain.intendedRaw !== null || current.source !== "absent") {
+            if (current.raw !== uncertain.intendedRaw) forgetUncertain(physicalKey);
+            return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+          }
+          forgetUncertain(physicalKey);
+          publishSameTab(options.key, options.defaultValue, scope);
+          return { ok: true, value: options.defaultValue, raw: null, changed: false, source: "absent" };
+        }
+
+        // Functional updaters deliberately retry as new current-data attempts;
+        // they are not absolute commands eligible for token reconciliation.
+        if (typeof options.next === "function") return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+        const tokenNext = options.next as T;
+        if (!validate(tokenNext)) return { ok: false, reason: "invalid", source: current.source, raw: current.raw };
+        const intendedRaw = encode(options.codec, tokenNext);
+        if (typeof intendedRaw !== "string" || uncertain.reset || uncertain.intendedRaw !== intendedRaw || current.source !== "valid" || current.raw !== intendedRaw) {
+          if (current.raw !== uncertain.intendedRaw) forgetUncertain(physicalKey);
+          return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
+        }
+        forgetUncertain(physicalKey);
+        publishSameTab(options.key, tokenNext, scope);
+        return { ok: true, value: tokenNext, raw: intendedRaw, changed: false, source: "valid" };
+      }
+
       const uncertain = uncertainCommits.get(physicalKey);
       if (uncertain && current.source !== "unavailable" && uncertain.intendedRaw !== current.raw) forgetUncertain(physicalKey);
       if (current.source === "invalid" || current.source === "unavailable") return { ok: false, reason: current.source === "invalid" ? "invalid" : "unavailable", source: current.source, raw: current.raw };
       if (options.reset) {
         if (options.expectedRaw !== undefined && current.raw !== options.expectedRaw) {
-          if (current.raw === null && reconcileToken(physicalKey, options.expectedRaw, null, true, options.reconcileToken, options.key, options.defaultValue, scope)) {
-            return { ok: true, value: options.defaultValue, raw: null, changed: false, source: "absent" };
-          }
           return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
         }
         if (current.source === "absent") {
@@ -199,9 +223,6 @@ export async function mutatePref<T>(options: PrefMutationOptions<T>): Promise<Pr
       const encoded = encode(options.codec, next);
       if (typeof encoded !== "string") return { ok: false, reason: "invalid", source: current.source, raw: current.raw };
       if (options.expectedRaw !== undefined && current.raw !== options.expectedRaw) {
-        if (current.raw === encoded && reconcileToken(physicalKey, options.expectedRaw, encoded, false, options.reconcileToken, options.key, next, scope)) {
-          return { ok: true, value: next, raw: encoded, changed: false, source: current.source };
-        }
         return { ok: false, reason: "conflict", source: current.source, raw: current.raw };
       }
       if (encoded === current.raw) {

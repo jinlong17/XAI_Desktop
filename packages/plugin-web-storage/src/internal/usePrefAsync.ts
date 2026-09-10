@@ -193,7 +193,10 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
       if (controller.disposed || controllerRef.current !== controller) return;
 
       if (!result.ok) {
-        request.reconcileToken = result.retryToken;
+        // A transient failure must not downgrade an existing engine-issued
+        // uncertain-commit grant into an ordinary future write. New user work
+        // creates a new request without this token; reload disposes it.
+        if (result.retryToken) request.reconcileToken = result.retryToken;
         controller.failed = request;
         update(controller, { status: result.reason === "conflict" ? "conflict" : "error", error: result.reason });
         return;
@@ -263,7 +266,10 @@ export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: P
     const failed = controller.failed;
     if (failed) {
       controller.failed = null;
-      const retryRequest = { kind: failed.kind, next: failed.next, reconcileToken: failed.reconcileToken, sequence: ++controller.sequence } as Omit<Request<T>, "resolves">;
+      // Functional setters retain their existing new-attempt semantics. Only
+      // absolute set/reset requests can authenticate an uncertain commit.
+      const retryToken = typeof failed.next === "function" ? undefined : failed.reconcileToken;
+      const retryRequest = { kind: failed.kind, next: failed.next, reconcileToken: retryToken, sequence: ++controller.sequence } as Omit<Request<T>, "resolves">;
       update(controller, { status: "pending", error: null });
       controller.queue.unshift({ ...retryRequest, resolves: [] });
       run(controller);

@@ -70,6 +70,28 @@ it("consumes an opaque uncertain-write token only for the original baseline and 
   stop();
 });
 
+it("never turns a token Retry into an overwrite when external bytes restore its old baseline", async () => {
+  const scope = active();
+  const key = "xai_pref_async_token_restored";
+  const physical = generationKey("pref-engine", "one", key);
+  localStorage.setItem(physical, "comment");
+  const options = { key, codec: "string" as const, defaultValue: "comment", validate: (v: unknown): v is string => v === "comment" || v === "edit", scope, accountLock: lock, keyLock: lock };
+  const native = Storage.prototype.getItem;
+  let reads = 0;
+  vi.spyOn(Storage.prototype, "getItem").mockImplementation(function (this: Storage, storedKey: string) {
+    if (storedKey === physical && ++reads === 2) throw new Error("readback fault");
+    return native.call(this, storedKey);
+  });
+  const uncertain = await mutatePref({ ...options, expectedRaw: "comment", next: "edit" });
+  if (uncertain.ok || !uncertain.retryToken) throw new Error("expected opaque retry token");
+  vi.restoreAllMocks();
+  localStorage.setItem(physical, "comment");
+  const writes = vi.spyOn(Storage.prototype, "setItem");
+  expect(await mutatePref({ ...options, expectedRaw: "comment", reconcileToken: uncertain.retryToken, next: "edit" })).toMatchObject({ ok: false, reason: "conflict" });
+  expect(localStorage.getItem(physical)).toBe("comment");
+  expect(writes).not.toHaveBeenCalled();
+});
+
 it("never lets an uncertain token cross keys, change intent, or survive an external replacement", async () => {
   const scope = active();
   const key = "xai_pref_async_token_external";
