@@ -45,3 +45,9 @@ The widget case now explicitly starts after Saving has settled. Its actual event
 Native route, actual Tasks rail, signout preflight and dispatched beforeunload all PASS with zero runtime errors. Together with unsubmitted/widget, these exercise six host modes at the same product revision. The unload check proves the mounted warning handler, not background execution or survival after process termination.
 
 English and Chinese full CSS each PASS375/414/768/1024/1440 plus375 departure dialog: no horizontal overflow, recovery controls contained and hit-testable with44px targets, dialog within viewport with focus inside. Parent manually inspected English375 recovery and Chinese375 dialog screenshots; text and controls are readable without the earlier overlap. This layout evidence is note-failure only. Mixed position/source-only layouts remain delegated for independent native expansion.
+
+## Fixed9193353 bounded native regression
+
+The same eight parent modes PASS: route, actual rail, signout, dispatched unload, unsubmitted programmatic departure, widget after quota failure, and English/Chinese full CSS. Chinese375 dialog screenshot was manually inspected again. Each passing mode reports zero runtime errors. The separate Sol slow-pointer oracles exercise writable unsubmitted text and still fail; these eight passes do not contradict those failures.
+
+Initial rail and English visual attempts did not start product execution: Chrome's DevToolsActivePort file was read before a positive port was available, producing `assert(port)` with actual0. Their empty logs are retained as startup diagnostics, not product failures. Sol corrected the harness wait in ac32efe to continue until a positive port; both modes then PASS with `startup-retry` suffix. Tests were run with reduced Chrome concurrency.
