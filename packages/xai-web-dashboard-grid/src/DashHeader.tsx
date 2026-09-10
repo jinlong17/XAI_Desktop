@@ -18,7 +18,7 @@ import {
 } from "react";
 import type { Lang } from "@repo/plugin-web-tokens";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { accountScope, getPrefAutosave, usePrefAutosave, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
+import { accountScope, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
 import type { AccountScope, PrefMutationResult } from "@repo/plugin-web-storage";
 
 import { formatDashboardDate, pickGreetingKey } from "./internal/greeting.js";
@@ -116,6 +116,11 @@ const HEADER_NOTE_OPTIONS = {
   defaultValue: "",
   validate: (value: unknown): value is string => typeof value === "string",
 };
+const HEADER_NOTE_OFFSET_OPTIONS = {
+  codec: "json" as const,
+  defaultValue: 0,
+  validate: (value: unknown): value is number => typeof value === "number" && Number.isFinite(value),
+};
 
 const HEADER_NOTE_STR = {
   placeholder: { en: "Add a focus note, reminder, or short message", zh: "添加一句今日重点、提醒或短句" },
@@ -138,15 +143,6 @@ function normalizeHeaderNoteOffset(value: unknown): number {
   return Math.round(clampNumber(value, -HEADER_NOTE_FALLBACK_RANGE, HEADER_NOTE_FALLBACK_RANGE));
 }
 
-function readInitialHeaderNoteOffset(): number {
-  return normalizeHeaderNoteOffset(
-    getPrefAutosave<number>(HEADER_NOTE_OFFSET_SUFFIX, {
-      codec: "json",
-      defaultValue: 0,
-    }),
-  );
-}
-
 type NoteSession = {
   readonly id: number;
   readonly scope: AccountScope;
@@ -161,6 +157,19 @@ type NoteOperation = {
   readonly retry: boolean;
 };
 
+type OffsetGesture = {
+  readonly pointerId: number;
+  readonly startX: number;
+  readonly startOffset: number;
+  readonly raw: string | null;
+  moved: boolean;
+};
+
+type OffsetOperation = {
+  readonly value: number;
+  readonly raw: string | null;
+};
+
 export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const { s } = useI18n(lang);
   const greetingKey = pickGreetingKey(now);
@@ -172,30 +181,20 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const laneRef = useRef<HTMLDivElement>(null);
   const noteRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startOffset: number;
-    moved: boolean;
-  } | null>(null);
+  const dragRef = useRef<OffsetGesture | null>(null);
   const suppressNextEditRef = useRef(false);
   const account = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
   const noteSave = usePrefAutosaveAsync<string>(HEADER_NOTE_SUFFIX, HEADER_NOTE_OPTIONS);
   const [committedNote, setCommittedNote] = useState(noteSave.value);
   const [draft, setDraft] = useState(noteSave.value);
   const [editing, setEditing] = useState<boolean>(false);
-  const [noteOffset, setNoteOffset] = useState<number>(() => readInitialHeaderNoteOffset());
+  const offsetSave = usePrefAutosaveAsync<number>(HEADER_NOTE_OFFSET_SUFFIX, HEADER_NOTE_OFFSET_OPTIONS);
+  const [noteOffset, setNoteOffset] = useState<number>(() => normalizeHeaderNoteOffset(offsetSave.value));
+  const noteOffsetRef = useRef(noteOffset);
+  const offsetDesiredRef = useRef(offsetSave.value);
+  const offsetOperationRef = useRef<OffsetOperation | null>(null);
+  const failedOffsetOperationRef = useRef<OffsetOperation | null>(null);
   const [movingNote, setMovingNote] = useState<boolean>(false);
-
-  const scope = useRef(accountScope.capture()).current;
-  const readRaw = useCallback((suffix: string) => {
-    accountScope.assertCurrent(scope);
-    return localStorage.getItem(accountScope.physicalKey(`xai_pref_${suffix}`, scope));
-  }, [scope]);
-  const [baseline] = useState(() => {
-    try { return { note: readRaw(HEADER_NOTE_SUFFIX), offset: readRaw(HEADER_NOTE_OFFSET_SUFFIX) }; }
-    catch { return { note: null, offset: null }; }
-  });
   const sessionRef = useRef<NoteSession | null>(null);
   const operationRef = useRef<NoteOperation | null>(null);
   const failedOperationRef = useRef<NoteOperation | null>(null);
@@ -203,28 +202,17 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const nextSessionId = useRef(0);
   const nextOperationId = useRef(0);
   const [noteIssue, setNoteIssue] = useState<string | null>(null);
-  const [offsetConflict, setOffsetConflict] = useState(false);
+  const [offsetIssue, setOffsetIssue] = useState<string | null>(null);
   const [frozenSession, setFrozenSession] = useState(false);
   const [exportFailed, setExportFailed] = useState(false);
-  const offsetSave = usePrefAutosave(HEADER_NOTE_OFFSET_SUFFIX, noteOffset, { codec: "json" });
   const notePending = operationRef.current !== null && noteIssue === null;
   const noteUnresolved = notePending || noteIssue !== null || frozenSession;
-  const unsaved = noteUnresolved || offsetConflict || offsetSave.saved === false;
+  const offsetPending = offsetOperationRef.current !== null && offsetIssue === null;
+  const offsetUnresolved = offsetPending || offsetIssue !== null;
+  const unsaved = noteUnresolved || offsetUnresolved;
   // A frozen A session may retain recovery state, but it must never render A's
   // committed text in B's active header.
   const displayNote = frozenSession ? noteSave.value : committedNote;
-  const canWriteOffset = useCallback((suffix: string, expected: string | null) => {
-    try { if (readRaw(suffix) === expected) return true; } catch { /* Scope/read failure retains draft. */ }
-    setOffsetConflict(true);
-    return false;
-  }, [readRaw]);
-  useEffect(() => {
-    try {
-      if (offsetSave.saved && readRaw(HEADER_NOTE_OFFSET_SUFFIX) === JSON.stringify(noteOffset)) {
-        baseline.offset = JSON.stringify(noteOffset);
-      }
-    } catch { /* Old component cannot accept another account's persistence. */ }
-  }, [baseline, noteOffset, offsetSave.saved, readRaw]);
   useEffect(() => {
     if (!editing && (!sessionRef.current || frozenSession) && noteSave.meta.status !== "pending") setCommittedNote(noteSave.value);
   }, [editing, frozenSession, noteSave.meta.status, noteSave.value]);
@@ -253,6 +241,17 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     return Math.round(clampNumber(value, -range, range));
   }, []);
 
+  const setVisibleOffset = useCallback((value: number) => {
+    noteOffsetRef.current = value;
+    setNoteOffset(value);
+  }, []);
+
+  useEffect(() => {
+    if (dragRef.current || offsetOperationRef.current || offsetIssue) return;
+    offsetDesiredRef.current = offsetSave.value;
+    setVisibleOffset(clampNoteOffset(offsetSave.value));
+  }, [clampNoteOffset, offsetIssue, offsetSave.value, setVisibleOffset]);
+
   useEffect(() => {
     if (!editing) return;
     window.setTimeout(() => {
@@ -263,11 +262,11 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
 
   useEffect(() => {
     const onResize = () => {
-      if (canWriteOffset(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) setNoteOffset((current) => clampNoteOffset(current));
+      setVisibleOffset(clampNoteOffset(offsetDesiredRef.current));
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [baseline, canWriteOffset, clampNoteOffset]);
+  }, [clampNoteOffset, setVisibleOffset]);
 
   const setDraftText = useCallback((value: string) => {
     draftRef.current = value;
@@ -365,6 +364,38 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     submit("");
   }, [frozenSession, notePending, openSession, setDraftText, submit]);
 
+  const settleOffset = useCallback((operation: OffsetOperation, result: PrefMutationResult<number>) => {
+    if (offsetOperationRef.current !== operation) return;
+    offsetOperationRef.current = null;
+    if (!result.ok) {
+      failedOffsetOperationRef.current = operation;
+      setOffsetIssue(result.reason);
+      return;
+    }
+    failedOffsetOperationRef.current = null;
+    offsetDesiredRef.current = result.value;
+    if (noteOffsetRef.current === operation.value) setVisibleOffset(clampNoteOffset(result.value));
+    setOffsetIssue(null);
+  }, [clampNoteOffset, setVisibleOffset]);
+
+  const submitOffset = useCallback((value: number, raw: string | null, retry = false) => {
+    const active = offsetOperationRef.current;
+    if (active && active.value === value) return;
+    try {
+      const current = localStorage.getItem("xai_pref_dashboard_header_note_x");
+      if (offsetSave.meta.source === "unavailable" || (!retry && (current !== raw || offsetSave.meta.raw !== raw))) throw new Error("conflict");
+    } catch {
+      setOffsetIssue("conflict");
+      return;
+    }
+    const operation = { value, raw };
+    offsetOperationRef.current = operation;
+    if (!retry) failedOffsetOperationRef.current = null;
+    setOffsetIssue(null);
+    const attempt = retry ? offsetSave.retry() : offsetSave.edit(value);
+    void attempt.then((result) => settleOffset(operation, result), () => settleOffset(operation, { ok: false, reason: "storage" }));
+  }, [offsetSave, settleOffset]);
+
   const retrySave = () => {
     const failed = failedOperationRef.current;
     const session = sessionRef.current;
@@ -375,8 +406,10 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         submit(next, next === failed.text);
       }
     }
-    if (offsetSave.saved === false && canWriteOffset(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) {
-      if (offsetSave.retry()) baseline.offset = JSON.stringify(noteOffset);
+    const failedOffset = failedOffsetOperationRef.current;
+    if (offsetIssue && failedOffset) {
+      const latest = noteOffsetRef.current;
+      submitOffset(latest, failedOffset.raw, latest === failedOffset.value);
     }
   };
 
@@ -385,15 +418,24 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       if (editing || event.button !== 0) return;
       const target = event.target as HTMLElement | null;
       if (target?.closest(".dash-note__clear, .dash-note__icon-btn, input")) return;
+      let raw: string | null;
+      try {
+        raw = localStorage.getItem("xai_pref_dashboard_header_note_x");
+        if (offsetSave.meta.source === "unavailable" || offsetSave.meta.raw !== raw) throw new Error("conflict");
+      } catch {
+        setOffsetIssue("conflict");
+        return;
+      }
       dragRef.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
-        startOffset: noteOffset,
+        startOffset: noteOffsetRef.current,
+        raw,
         moved: false,
       };
       event.currentTarget.setPointerCapture?.(event.pointerId);
     },
-    [editing, noteOffset],
+    [editing, offsetSave.meta.raw, offsetSave.meta.source],
   );
 
   const moveNote = useCallback(
@@ -404,10 +446,12 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       if (Math.abs(deltaX) > 3) {
         drag.moved = true;
         setMovingNote(true);
-        if (canWriteOffset(HEADER_NOTE_OFFSET_SUFFIX, baseline.offset)) setNoteOffset(clampNoteOffset(drag.startOffset + deltaX));
+        const next = clampNoteOffset(drag.startOffset + deltaX);
+        offsetDesiredRef.current = next;
+        setVisibleOffset(next);
       }
     },
-    [baseline, canWriteOffset, clampNoteOffset],
+    [clampNoteOffset, setVisibleOffset],
   );
 
   const endNoteMove = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
@@ -417,7 +461,8 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     dragRef.current = null;
     setMovingNote(false);
     event.currentTarget.releasePointerCapture?.(event.pointerId);
-  }, []);
+    if (drag.moved) submitOffset(noteOffsetRef.current, drag.raw);
+  }, [submitOffset]);
 
   const noteStyle = {
     "--dash-note-x": `${noteOffset}px`,
@@ -512,7 +557,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
       </button>
       {unsaved && <section role="alert" className="dash-note-recovery">
         <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p>
-        {(noteIssue === "conflict" || noteIssue === "account-changed" || frozenSession || offsetConflict) && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
+        {(noteIssue === "conflict" || noteIssue === "account-changed" || frozenSession || offsetIssue === "conflict") && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
           try {

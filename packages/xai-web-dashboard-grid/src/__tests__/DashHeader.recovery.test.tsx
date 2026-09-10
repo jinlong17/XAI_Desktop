@@ -34,13 +34,22 @@ describe("Dashboard header persistence recovery", () => {
   fireEvent.click(ui.getByRole("button",{name:"Clear dashboard note"}));await waitFor(()=>expect(ui.getByRole("alert")).toBeTruthy());expect(ui.input().value).toBe("");expect(localStorage.getItem(key)).toBe("Original");spy.mockRestore();fireEvent.click(ui.getByText("Retry note save"));await waitFor(()=>expect(localStorage.getItem(key)).toBe(""));
  });
  it("retains latest position on quota and refuses newer device raw on retry", async () => {
-  const ui=mount();const offset="xai_pref_dashboard_header_note_x";
+  const offset="xai_pref_dashboard_header_note_x";localStorage.setItem(offset,"0");const ui=mount();
   const lane=ui.container.querySelector(".dash-note-lane")!;const note=ui.container.querySelector(".dash-note")!;
   Object.defineProperty(lane,"clientWidth",{value:760});Object.defineProperty(note,"offsetWidth",{value:360});
   const spy=vi.spyOn(Storage.prototype,"setItem").mockImplementation(function(this:Storage,k,v){if(k===offset)throw new DOMException("quota","QuotaExceededError");nativeSet.call(this,k,v);});
   fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:1});fireEvent.pointerMove(note,{clientX:260,pointerId:1});fireEvent.pointerMove(note,{clientX:290,pointerId:1});fireEvent.pointerUp(note,{clientX:290,pointerId:1});
   expect(localStorage.getItem(offset)).toBe("0");await waitFor(()=>expect(ui.getByRole("alert")).toBeTruthy());spy.mockRestore();fireEvent.click(ui.getByText("Retry note save"));await waitFor(()=>expect(localStorage.getItem(offset)).toBe("90"));
   localStorage.setItem(offset,"100");fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:2});fireEvent.pointerMove(note,{clientX:220,pointerId:2});fireEvent.pointerUp(note,{clientX:220,pointerId:2});fireEvent.click(ui.getByText("Retry note save"));expect(localStorage.getItem(offset)).toBe("100");
+ });
+ it("commits the latest cancelled drag but keeps resize-only clamps local", async () => {
+  const offset="xai_pref_dashboard_header_note_x";localStorage.setItem(offset,"0");const ui=mount();
+  const lane=ui.container.querySelector(".dash-note-lane")!;const note=ui.container.querySelector(".dash-note")!;
+  Object.defineProperty(lane,"clientWidth",{value:760,configurable:true});Object.defineProperty(note,"offsetWidth",{value:360,configurable:true});
+  fireEvent.pointerDown(note,{button:0,clientX:200,pointerId:3});fireEvent.pointerMove(note,{clientX:300,pointerId:3});fireEvent.pointerCancel(note,{clientX:300,pointerId:3});
+  await waitFor(()=>expect(localStorage.getItem(offset)).toBe("100"));
+  const writes=vi.spyOn(Storage.prototype,"setItem");Object.defineProperty(lane,"clientWidth",{value:400,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("20px");expect(writes).not.toHaveBeenCalled();
+  Object.defineProperty(lane,"clientWidth",{value:760,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("100px");expect(writes).not.toHaveBeenCalled();
  });
 
 });
