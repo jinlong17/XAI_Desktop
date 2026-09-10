@@ -16,3 +16,5 @@
 原证据入口：[Smart Lists合同](../web-smart-lists-recovery-contract/contract.md)、[存储接受](../web-d2-smart-lists-astra/review-40ffbe1.md)、[导出/卸载](../web-d2-smart-lists-draft-native/review.md)、[实际host](../web-d2-smart-lists-host-native/review.md)、[原生保存恢复](../web-d2-smart-lists-native/review.md)、[直接绑定库存](../web-d2-pref-binding-inventory/review.md)。其余调用方既有合同与报告索引保留于[当前台账](acceptance-status.md)及[接续](next-callers.md)。
 
 下一参与者的实际控件证据已补：[3667985 Collaborate原生基线](../web-collaborate-recovery-native/review.md)。两个device布尔控件在quota下均丢失用户false选择而回true，账号default_share不在此断言范围。需按Astra115efb2报告的mixed-scope建议制定完整三控件合同，再实现；Smart同turn entry仲裁优先修复。
+
+最新增量75aa0e8：Smart当前用户恢复逻辑已按8565有界接受，原entry/host/export/App/39/286/types及新增wrapper5通过；其原各FAIL历史保留。父5f4c4ff另有mobile Stay宽29.61px小于44px的UI缺口，下一Styles批次修复。Collaborate三控件完整实现合同已固定[75aa0e8](../web-collaborate-recovery-contract/contract.md)，Terra正在实施；上述其他调用方缺口不因此变绿。
