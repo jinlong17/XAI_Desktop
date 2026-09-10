@@ -5,3 +5,7 @@ Parent fixed archive40ffbe1, actual pane, complete synthetic account, actual fir
 Widths375/414/768/1024/1440 at1200px capture height show all twelve selects and the recovery Retry at44px height, without horizontal viewport overflow. Parent directly viewed [375](recovery-40ffbe1-375.png): labels and recovery text are readable.
 
 One visibility concern remains: changing the first row at y100 shows its failure section only after the entire list, starting y912. A viewport shorter than that will not show the visual error without scrolling; screen-reader announcement is a separate mechanism. Recommend placing current save status/recovery near the title, preserving all row semantics and avoiding a new Save footer. Geometry/readability evidence alone does not accept immediate error discoverability. Astra owns the final bounded UI assessment.
+
+## Fixed 6bf02de: first-screen recovery
+
+The extended runner at812px height checks the same five widths and refuses to overwrite existing evidence. [Geometry](visual-6bf02de-h812.log) passes: no horizontal overflow, failure feedback and Retry/Export visible within the viewport, each recovery action at least44px high. At375px the alert begins at y69.19 and ends at y221.59, correcting the previous y912 discoverability problem. Parent directly viewed [375×812](recovery-6bf02de-375-h812.png): message and both actions are readable above the choices. This remains the actual pane with complete styles in an isolated fixture, not the full host dialog or hardware mobile acceptance.

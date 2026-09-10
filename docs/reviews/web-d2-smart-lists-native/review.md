@@ -13,3 +13,7 @@ The expanded same-version probe adds a real second-document map replacement whil
 ## Fixed caller40ffbe1
 
 The unchanged expanded five PASS: [after](native-40ffbe1-after.json). Chrome99710 exits by SIGTERM with observed process exit, then new Chrome99767 opens the same isolated profile. Exact final account map bytes and actual re-rendered first two select values are restored. This is one committed map checkpoint, not durable unsaved drafts or all lifecycle interleavings.
+
+## Recovery successor 6bf02de regression
+
+[Fixed native recovery result](native-6bf02de-recovery.json) retains all original five representative scenarios: absent map, held account/key locks, two-document conflict, latest quota draft Retry. Chrome PID10817 exited via observed SIGTERM, and same-profile PID10832 restored the exact saved map and actual first-two select values. This verifies a saved checkpoint after a whole browser process restart; it does not establish durable recovery of an unsaved draft or all12 producer/owner/migration cases.

@@ -1,6 +1,6 @@
 /** Real Chrome, isolated profile/download directory. Synthetic fixtures only. No server auth. */
 import { build } from '../../../node_modules/.pnpm/esbuild@0.28.1/node_modules/esbuild/lib/main.js';
-import { mkdtempSync, mkdirSync, rmSync, readFileSync, readdirSync, writeFileSync, symlinkSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, rmSync, readFileSync, readdirSync, writeFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,6 +11,8 @@ const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
+const height=Number(process.argv[3]??1200);if(![812,1200].includes(height))throw Error('Supported viewport heights: 812 or 1200');const suffix=height===1200?'':'-h'+height;
+if(existsSync(join(output,`visual-${sourceCommit}${suffix}.log`)))throw Error('Evidence already exists');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
 execFileSync('tar',['-x','-C',snapshot],{input:execFileSync('git',['archive',sourceCommit],{cwd:root,maxBuffer:100*1024*1024})});
 symlinkSync(join(root,'node_modules'),join(snapshot,'node_modules'));
@@ -35,10 +37,11 @@ record('baseline',{commit:sourceCommit,browser:(await cdp('Browser.getVersion'))
 await ev('verify.deny()');await ev(`(()=>{const e=document.querySelector('.sl-select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'hide');e.dispatchEvent(new Event('change',{bubbles:true}))})()`);await delay(200);
 assert(await ev('!!document.querySelector("[role=alert]")'),'Actual failed save feedback missing');
 for(const width of [375,414,768,1024,1440]){
- await cdp('Emulation.setDeviceMetricsOverride',{width,height:1200,deviceScaleFactor:1,mobile:width<768});await delay(150);
+ await cdp('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<768});await delay(150);
  const geometry=await ev(`(()=>{const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}};return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,selects:[...document.querySelectorAll('.sl-select')].map(e=>({value:e.value,...rect(e)})),alert:rect(document.querySelector('[role=alert]')),buttons:[...document.querySelectorAll('[role=alert] button')].map(e=>({text:e.getAttribute('aria-label')||e.textContent.trim(),...rect(e)}))}})()`);
  record('layout-'+width,geometry);
- const screenshot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`recovery-${sourceCommit}-${width}.png`),Buffer.from(screenshot.data,'base64'));
+ if(height===812){assert(geometry.scroll<=geometry.viewport,'Horizontal overflow');assert(geometry.alert.bottom<=height,'First-row save failure outside viewport');assert(geometry.buttons.some(b=>/export/i.test(b.text)),'Export action missing');for(const button of geometry.buttons){assert(button.height>=44,'Recovery target below 44px');assert(button.bottom<=height,'Recovery action outside viewport');}}
+ const screenshot=await cdp('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`recovery-${sourceCommit}-${width}${suffix}.png`),Buffer.from(screenshot.data,'base64'));
 }
 record('completed',{scope:'Actual Smart Lists failed choice recovery with token/layout/settings-shell/settings-rest stylesheets; isolated pane, not full shell or hardware mobile test'});
-}finally{writeFileSync(join(output,`visual-${sourceCommit}.log`),records.map(r=>JSON.stringify(r)).join('\n')+'\n');socket?.close();browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();await delay(500);browser?.kill('SIGKILL');rmSync(directory,{recursive:true,force:true});}
+}finally{writeFileSync(join(output,`visual-${sourceCommit}${suffix}.log`),records.map(r=>JSON.stringify(r)).join('\n')+'\n');socket?.close();browser?.kill('SIGTERM');server?.closeAllConnections();server?.close();await delay(500);browser?.kill('SIGKILL');rmSync(directory,{recursive:true,force:true});}

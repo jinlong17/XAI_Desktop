@@ -21,3 +21,7 @@ Run `node docs/reviews/web-d2-smart-lists-host-native/verify-native.mjs <fixed-s
 ## Fixed 6bf02de: original three native failures corrected
 
 Unchanged `journey`, `intent`, and `focus` modes all pass on fixed `6bf02de`: [full sidebar decision journey](native-6bf02de-journey.log), [original sidebar destination](native-6bf02de-intent.log), [focus transfer/return](native-6bf02de-focus.log). Actual dialog export remains in place, Stay and real Escape preserve the map, explicit discard reaches Notifications without changing stored bytes. The original ef97c1f failures remain preserved. These three modes do not establish repeated **programmatic** destination safety, simultaneous sign-out/navigation, stale account decisions or the full8565ca6 contract. Astra is independently checking those remaining boundaries; this remains partial acceptance evidence.
+
+## Fixed 6bf02de: programmatic destination replacement remains reproducible
+
+A separate [programmatic mode](native-6bf02de-programmatic.log) uses the same real Notifications sidebar to start departure, then calls the actual data router's `navigate('/app/settings/appearance')` while blocked. Discard incorrectly goes to Appearance instead of the initial Notifications intent. This is a correct FAIL on6bf02de and shows why the sidebar-only intent pass does not prove route-level coalescing. The fixture exposes the real router method without mocking the blocker, guard, pane, or navigation implementation. Astra has this evidence for complete contract review.

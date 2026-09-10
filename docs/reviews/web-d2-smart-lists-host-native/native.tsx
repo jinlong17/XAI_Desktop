@@ -14,4 +14,5 @@ const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(
 history.replaceState(null,'','/app/settings/smart_lists');
 const Composed=composedSettingsRegistration.children[0].render;
 const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);
+(window as any).verify.navigate=(path:string)=>{void router.navigate(path)};
 createRoot(document.getElementById('app')!).render(<WebShellProvider modules={[composedSettingsRegistration]} lang="en" railPos="left" petOn={false} setPetOn={()=>{}}><RouterProvider router={router}/></WebShellProvider>);

@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=mode==='baseline'?'':'-'+mode;
+const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=mode==='baseline'?'':'-'+mode;
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}${evidenceSuffix}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -64,8 +64,8 @@ try{
   assert.equal(await bytes(),JSON.stringify({extension:'future-value'}),'Discard wrote draft/defaults');
   record('real-host-journey',{pass:true,scope:'Actual dialog disk export, Stay, keyboard Escape and explicit discard through composed data router'});
  }
- if(mode==='intent'){
-  await sidebar('Appearance');await text('Discard local changes and leave');
+ if(mode==='intent'||mode==='programmatic'){
+  if(mode==='programmatic'){await ev('verify.navigate("/app/settings/appearance")');await delay(180)}else await sidebar('Appearance');await text('Discard local changes and leave');
   assert.equal(await ev('location.pathname'),'/app/settings/notifications','Repeated departure replaced original Notifications intent');
   assert.equal(await bytes(),JSON.stringify({extension:'future-value'}));
   record('original-navigation-intent',{pass:true});
