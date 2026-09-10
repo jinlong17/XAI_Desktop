@@ -1,0 +1,21 @@
+revision=a1f73c9
+test-fixture=review-owned only; package run unmodified
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-tasks-d1-PNeeLj
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=false
+entry-snapshot {"replace":false,"outcome":{"status":"fulfilled","value":{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:35:30.359Z"}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:35:30.359Z\"}","record":null,"secret":1,"auth":1}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > queued recovery keeps the entry receipt authority; same-identity raw replacement=true
+entry-snapshot {"replace":true,"outcome":{"status":"rejected","reason":{}},"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"pending\",\"updatedAt\":\"2026-09-10T00:00:00.000Z\"}","record":"retained account bytes","secret":0,"auth":0}
+
+stdout | docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts > new raw identity while an old same-page recovery is active gets its own authorized outcome
+active-new-raw {"sharesOldPromise":false,"outcomes":[{"status":"rejected","reason":{}},{"status":"fulfilled","value":{"version":2,"kind":"account","accountId":"snapshot-A","generation":"g1","authGeneration":"auth-A","phase":"complete","updatedAt":"2026-09-10T01:35:30.412Z"}}],"oldAuth":0,"newAuth":1,"receipt":"{\"version\":2,\"kind\":\"account\",\"accountId\":\"snapshot-A\",\"generation\":\"g1\",\"authGeneration\":\"auth-A\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:35:30.412Z\"}"}
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d2-settings-entry-snapshot.test.ts (3 tests) 57ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  18:35:29
+   Duration  867ms (transform 138ms, setup 0ms, collect 168ms, tests 57ms, environment 362ms, prepare 77ms)
