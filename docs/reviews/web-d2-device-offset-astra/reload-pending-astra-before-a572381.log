@@ -1,0 +1,47 @@
+revision=a572381 fixed_commit=a57238107b83be71e8aca0cc5cb84b16f71ba42a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-GUSDzI
+
+ ❯ docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx (1 test | 1 failed) 86ms
+   × explicit read-only source reload cancels queued old attempt and its later completion cannot restore error or overwrite repaired source 86ms
+     → expected <section role="alert" …(1)>…(3)</section> to be null
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  20:59:53
+   Duration  1.59s (transform 212ms, setup 348ms, collect 69ms, tests 86ms, environment 581ms, prepare 115ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx > explicit read-only source reload cancels queued old attempt and its later completion cannot restore error or overwrite repaired source
+AssertionError: expected <section role="alert" …(1)>…(3)</section> to be null
+
+- Expected: 
+null
+
++ Received: 
+<section
+  class="dash-note-recovery"
+  role="alert"
+>
+  <p>
+    Note or position was not saved. Drafts stay on this page only; retry or export before leaving.
+  </p>
+  <button
+    type="button"
+  >
+    Retry note save
+  </button>
+  <button
+    type="button"
+  >
+    Export note draft
+  </button>
+</section>
+
+ ❯ docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx:17:139
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

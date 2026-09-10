@@ -28,9 +28,11 @@ try {
  const owned = join(dir, 'docs/reviews/web-d2-device-offset-astra'); mkdirSync(owned, {recursive:true});
  copyFileSync(join(evidence,'contracts.test.tsx'),join(owned,'contracts.test.tsx'));
  copyFileSync(join(evidence,'source-feedback.test.tsx'),join(owned,'source-feedback.test.tsx'));
+ copyFileSync(join(evidence,'reload-pending.test.tsx'),join(owned,'reload-pending.test.tsx'));
  for (const [name, include] of [
   ['independent', ['docs/reviews/web-d2-device-offset-astra/contracts.test.tsx']],
  ['source-feedback', ['docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx']],
+ ['reload-pending', ['docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx']],
  ['original-parent', ['docs/reviews/web-d2-device-offset-independent/contracts.test.tsx']],
  ['account-note', ['docs/reviews/web-d2-dashboard-note-astra/contracts.test.tsx']],
  ['package', ['packages/xai-web-dashboard-grid/src/**/*.test.tsx','packages/xai-web-dashboard-grid/src/**/*.test.ts']],

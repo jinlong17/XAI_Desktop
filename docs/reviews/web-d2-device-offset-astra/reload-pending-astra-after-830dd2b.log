@@ -1,0 +1,11 @@
+revision=830dd2b fixed_commit=830dd2b659cc053a566b3401b710c10441647bba
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-XSxNjI
+
+ ✓ docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx (1 test) 56ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:59:53
+   Duration  1.55s (transform 209ms, setup 348ms, collect 62ms, tests 56ms, environment 577ms, prepare 83ms)
