@@ -329,7 +329,10 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
     try {
       accountScope.assertCurrent(session.scope);
       const raw = localStorage.getItem(session.physicalKey);
-      if (raw !== session.raw || noteSave.meta.raw !== session.raw || noteSave.meta.source === "unavailable") throw new Error("conflict");
+      // An unchanged retry is the one case where a physical raw mismatch may be
+      // the engine's own uncertain write. Its opaque token, not this caller,
+      // decides whether that exact write can be reconciled.
+      if (noteSave.meta.source === "unavailable" || (!retry && (raw !== session.raw || noteSave.meta.raw !== session.raw))) throw new Error("conflict");
     } catch {
       setNoteIssue("conflict");
       return;

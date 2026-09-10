@@ -18,6 +18,7 @@ Fixed product revision: `c79330cd287d53e6b37eae6597497beb1dad1f7d`. Dependency A
 | Layer | Command | Result |
 | --- | --- | --- |
 | Focused header behavior | `pnpm --filter @repo/plugin-web-dashboard-grid test -- DashHeader.test.tsx DashHeader.recovery.test.tsx` | 20 passed; quota logging is expected in recovery injection. |
+| Operation ownership | `pnpm --filter @repo/plugin-web-dashboard-grid test -- DashHeader.async.test.tsx DashHeader.test.tsx DashHeader.recovery.test.tsx` | 24 passed: pending newer draft, uncertain-token retry, frozen external baseline and Escape-pending behavior. |
 | Dashboard types | `pnpm --filter @repo/plugin-web-dashboard-grid check-types` | passed |
 | Dashboard lint | `pnpm --filter @repo/plugin-web-dashboard-grid lint` | passed |
 | Unchanged parent component contract | `node docs/reviews/web-d2-dashboard-note-independent/verify-fixed.mjs c79330cd287d53e6b37eae6597497beb1dad1f7d` | 2 passed from an immutable archive: held account lock retains the draft/old bytes, and an absent note remains absent on mount. |
