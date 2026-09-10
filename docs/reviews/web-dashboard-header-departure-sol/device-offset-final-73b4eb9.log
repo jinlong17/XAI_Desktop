@@ -1,0 +1,11 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-tPPAc7
+
+ ✓ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (13 tests) 248ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  00:57:00
+   Duration  1.31s (transform 284ms, setup 397ms, collect 71ms, tests 248ms, environment 245ms, prepare 68ms)

@@ -42,3 +42,9 @@ The unchanged Sol component/legacy matrix exposes three mechanism regressions at
 ## Truthful source copy at e11968d
 
 The four new real-browser copy modes pass in EN/ZH at 375/414/768/1024/1440 with contained, hit-testable 44px controls and Runtime 0. A healthy-offset, note-source-only failure identifies the dashboard note source and leaves unload/host navigation clean. A frozen A note identifies the previous account note without claiming unsaved device position, preserves the legacy unload warning, and does not lend B a host dialog.
+
+## Fixed 73b4eb9 result
+
+The Retry/identity-affected native subset passes with Runtime 0: offset conflict, both mixed partial directions, A to B to locked device recovery/export, and full Storage-denial memory export. A new real Chrome uncertainty oracle performs one physical offset write, observes recovery and beforeunload after readback failure, clicks the actual Retry control, performs no second write, and verifies both recovery and beforeunload clear.
+
+The same fixed object passes the full independent component/dependency matrix 42/42 in `../web-dashboard-header-departure-sol/review-73b4eb9.md`. Native slow navigation, ordinary/non-navigation blur and visible Topbar/Add Widget paths remain covered at `f64ad44`; truthful note-source and frozen-account copy at five widths in both languages remains covered at `e11968d`. Those product areas are unchanged between the named commits and `73b4eb9`; their earlier exact logs remain the evidence rather than being relabeled as a new execution.

@@ -1,0 +1,11 @@
+revision=73b4eb9 fixed_commit=73b4eb9184c06764a3befd101961a3856988022f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-A7DbZZ
+
+ ✓ docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx (4 tests) 275ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  00:56:53
+   Duration  1.61s (transform 249ms, setup 451ms, collect 109ms, tests 275ms, environment 313ms, prepare 133ms)
