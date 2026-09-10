@@ -1,0 +1,112 @@
+revision=52a9207
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Hmhs7z
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx (2 tests | 2 failed) 61ms
+   × mount does not seed any of the six device preference keys 36ms
+     → pomodoro_preset: expected '"focus-25"' to be null
+     → pomodoro_custom_minutes: expected '45' to be null
+     → pomodoro_display_style: expected '"apple"' to be null
+     → pomodoro_theme: expected '"coral"' to be null
+     → pomodoro_sound: expected '"soft-chime"' to be null
+     → pomodoro_muted: expected 'false' to be null
+   × actual mute toggle waits on device physical-key lock and preserves account timer data 25ms
+     → mute must wait for its device key lock: expected 'true' to be 'false' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:38:45
+   Duration  1.24s (transform 241ms, setup 0ms, collect 449ms, tests 61ms, environment 413ms, prepare 87ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_preset: expected '"focus-25"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"focus-25\""
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_custom_minutes: expected '45' to be null
+
+- Expected: 
+null
+
++ Received: 
+"45"
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_display_style: expected '"apple"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"apple\""
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_theme: expected '"coral"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"coral\""
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_sound: expected '"soft-chime"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"soft-chime\""
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > mount does not seed any of the six device preference keys
+AssertionError: pomodoro_muted: expected 'false' to be null
+
+- Expected: 
+null
+
++ Received: 
+"false"
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:12:105
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx > actual mute toggle waits on device physical-key lock and preserves account timer data
+AssertionError: mute must wait for its device key lock: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-d2-pomo-device-independent/contracts.test.tsx:21:177
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
