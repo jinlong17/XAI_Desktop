@@ -1,0 +1,83 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-sol-4xv2Dx
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx (5 tests | 5 failed) 173ms
+   × clean, no-move and source-only states do not fabricate current host draft truth 72ms
+     → expected undefined to be false // Object.is equality
+   × unsubmitted note and moved unfinished gesture are independent current drafts 60ms
+     → expected undefined to be true // Object.is equality
+   × one sibling success cannot release the other failed field 21ms
+     → expected undefined to be true // Object.is equality
+   × discard detaches current work and late completion cannot resurrect it 15ms
+     → expected undefined to be false // Object.is equality
+   × owner change revokes old capability but fresh device recovery remains permitted 4ms
+     → Cannot read properties of null (reading 'isCurrent')
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  00:13:15
+   Duration  1.35s (transform 273ms, setup 0ms, collect 472ms, tests 173ms, environment 354ms, prepare 70ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/component.test.tsx > clean, no-move and source-only states do not fabricate current host draft truth
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx:11:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/component.test.tsx > unsubmitted note and moved unfinished gesture are independent current drafts
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx:26:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/component.test.tsx > one sibling success cannot release the other failed field
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx:47:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/component.test.tsx > discard detaches current work and late completion cannot resurrect it
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx:56:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-sol/component.test.tsx > owner change revokes old capability but fresh device recovery remains permitted
+TypeError: Cannot read properties of null (reading 'isCurrent')
+ ❯ docs/reviews/web-dashboard-header-departure-sol/component.test.tsx:68:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
