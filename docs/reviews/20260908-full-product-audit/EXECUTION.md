@@ -174,3 +174,10 @@ Astra 1660df9 independently accepts Calendar test adaptation at fixed 9a7e66b: 5
 Terra 6a1adac implements asynchronous Board intent -> canonical Tasks writer -> acknowledgement and actual modal pending behavior. Author Board 26 files / 316 tests, types/lint PASS. Parent fixed-archive original four Board assertions independently pass unchanged; Astra broader queued/source/owner/UI review is active. Do not infer full Board/D1 acceptance from these four paths.
 
 Parent b899396 adds actual TasksModule native Chrome verification at fixed 94f1183. Legitimate absent startup fails; quota conflict retry and latest composer draft retry controls pass. Restart stage is not reached until all initial cases pass. An initial wrong empty-board Add selector is archived as a harness attempt, not a product defect. Sol Tasks implementation is still uncommitted and awaits fixed-version after verification. No new item closure.
+
+
+## 2026-09-09: Tasks fixed native recovery and Board review repair
+
+Sol 3241529 completes the current Tasks author batch (19 files / 172 tests, types/lint PASS). Parent 2ca5b93 independently archived and passed the original eight TasksModule assertions, plus actual Chrome UI initial three / whole-process reopen three cases. The apparent startup raw-byte mismatch was isolated to missing UTF-8 in the harness-injected checkpoint; actual storage was correct. Original observations and diagnostic bytes are retained; correcting only harness encoding made the unchanged assertions pass. Astra full Tasks D1 review is now active; no broad closure from parent bounded native checks.
+
+Astra b4344a4 rejects Board D1 6a1adac pending three fixes despite original four PASS and package 316 PASS. Additional 15 independent checks are 12 PASS / 3 correct FAIL: Board physical JSON null is overwritten as seed (P1); after Tasks commit a same-ID new pending intent can be wrongly acknowledged/cleared by the old command (P1); a settled link error leaks to the next card (P2). Terra owns the narrow source/intent/session repairs. Full D1/AI-02/REL-05/Board remain open.

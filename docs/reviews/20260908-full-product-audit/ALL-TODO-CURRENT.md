@@ -14,7 +14,7 @@
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 
-Latest execution delta: Astra `1660df9` independently accepted Calendar fixture adaptation at `9a7e66b` (372 package tests and original 26 D1 assertions PASS). Tasks retains six independently passing queued-write/retry cases but has two new startup/normalization failures under Sol repair. Terra is implementing Board D1 against the two failing canonical-link entry cases. Six AI subscriber integration remains boundedly accepted at `8503b71` / `6efba71`. No additional numbered item is closed.
+Latest execution delta: Calendar adaptation is independently accepted (`1660df9`). Tasks `3241529` passes parent eight fixed assertions and native initial/reopen three cases (`2ca5b93`); Astra full Tasks D1 review is active. Board `6a1adac` is not accepted: Astra `b4344a4` retains three source/ack/error-session failures under Terra repair. The original failing evidence and harness-only encoding diagnosis are preserved. No additional numbered item is closed.
 
 ## 推荐先做的批次
 
