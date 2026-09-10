@@ -1,0 +1,16 @@
+INDEPENDENT ASTRA product=20a4591f1418e07e57208bbe4567d8f183c5ffd3 archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-90nqz2dt test_sha256=9b9794c0fb717803bcda350f4b831eaae08b2695e12b0b5d0db8ee81421d6a79
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-pref-hooks-90nqz2dt/packages/plugin-web-storage
+
+ ✓ src/__tests__/astraHooks.test.tsx > dynamic configuration rejects malformed suffix, inconsistent registered codec and invalid defaults before writing 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > dynamic string distinguishes absent, explicit empty and reset without mounting a default write 13ms
+ ✓ src/__tests__/astraHooks.test.tsx > dynamic JSON domain rejects physical null and bad output, while explicit reload adopts a valid empty domain 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > changing a pending dynamic suffix invalidates the old operation and preserves the new binding baseline 2ms
+ ✓ src/__tests__/astraHooks.test.tsx > dynamic device binding retains a queued operation across account switch and uses the device physical key 1ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  20:21:47
+   Duration  846ms (transform 81ms, setup 0ms, collect 122ms, tests 20ms, environment 396ms, prepare 60ms)
+
+EXIT_CODE=0

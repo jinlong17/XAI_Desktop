@@ -1,0 +1,28 @@
+Independent Astra execution; product=20a4591f1418e07e57208bbe4567d8f183c5ffd3; archive=/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-hooks-package-w3tdsjfk; original package source/tests, no overlay
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/astra-hooks-package-w3tdsjfk/packages/plugin-web-storage
+
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > serializes independent functional hooks against the latest persisted value 12ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > hides an A draft in B and old completion cannot affect the B session 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > invalidates queued work on unmount and a same-key remount stays independent 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > orders pending edit, reset, and newer edit and only the latest becomes Saved 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > does not revert a newer visible draft when its predecessor commits 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > shares an active retry attempt and performs one physical write 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > adopts a clean storage event but preserves a pending draft as a conflict 3ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > projects a verified same-tab save into a clean sibling hook 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > retries an engine-attributed uncertain commit without a second write or false conflict 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > persists an open-ended string binding under its generated account key without a mount write 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > round-trips and projects an open-ended JSON binding through the shared async core 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > rejects incomplete, malformed, and registry-inconsistent open-ended bindings 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > uses the registered domain validator when the caller does not repeat it 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > turns a throwing edit validator into a typed invalid result 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > keeps a device preference write alive across an account switch 1ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > keeps projected and reset values as the autosave draft baseline 2ms
+ ✓ src/__tests__/usePrefAsync.contract.test.tsx > adopts the latest committed value after concurrent functional saves 2ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  20:20:30
+   Duration  1.36s (transform 154ms, setup 0ms, collect 185ms, tests 36ms, environment 471ms, prepare 146ms)
+
+EXIT_CODE=0
