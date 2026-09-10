@@ -12,7 +12,7 @@
 
 当前执行检查点：正式完成 13/312，未关闭 299 项。Tasks 3241529 的原8条与原生浏览器初次/整进程重开3+3通过，但 Astra 0143952 完整审查新增18条中6条失败：详情原始编辑基线、目标消失后的可见草稿恢复、批量删除会话隔离、completed列表/标签级联；Sol已按该报告提交170c526，作者原8/18及包176通过，父a4f6369独立原18与两套native初次/整进程重开各3+3通过；Astra f3a519c 确认原四组已修复，但新增Complete后继续编辑会撤销完成状态的1条FAIL，Sol窄修0c4b6b4已提交，作者aa747d4在170c526加两文件的隔离快照31/178通过；D2原生adapter已由e9fb5e7修复，父40e4adb固定整合两套Tasks原生各3+重开3通过，Astra dbc2e69 已有界接受Tasks D1：原8/18/5、新pending编辑1及包178通过；产品固定e9fb5e7，测试overlay已明确。Board 728822d 修复与 Calendar 2fed984 清理已获 Astra 0b3a043 有界接受；父固定回归证据 ab3a150、7f19aec 保留。Astra 同时明确 D2 实施合同，Terra 已提交D2基础e9ff409；原生锁故障45b83b6与基础7条失败080f86b分别经e9fb5e7/c201a1d修复；父96aa7b1固定原14、迁移7以及native3+重开1均通过，Astra0203c56确认原14/C37/shared8通过，但新增删除授权例外2FAIL，基础仍待严格receipt修复；完整调用方转换仍待后续批次。父 bf2935b 在真实 Chrome 复现 Tasks 修复前3条详情失败，修复后固定170c526三条原native断言与重开检查通过，完整范围仍待Astra复核。Calendar测试适配1660df9与六subscriber修复6efba71此前已取得有界接受。D2账户生命周期共同锁、旧客户端激活门禁、Board详情三项丢稿及完整AI-02/REL-05仍开放；不新增编号关闭。
 
-当前并行接续：Astra9f1b20a已制定设备七caller合同，按Dv1 Dashboard位置→Dv2 POMO六项顺序。父9693b3e固定Dv1原3FAIL（mount seed/锁早写/A→B拒绝），47e625b固定Dv2原2FAIL（六默认mount seed/mute锁早写），原字节与控制保留。Terra已实施Dv1，保留已接受d129账号内容及56样式；共享a82/账号便签接受结论不重开。Dv2尚未实施，完整D2其他writer仍在清单。正式完成仍13/312，未关闭299项。
+当前并行接续：Astra9f1b20a已制定设备七caller合同，按Dv1 Dashboard位置→Dv2 POMO六项顺序。父9693b3e固定Dv1原3FAIL（mount seed/锁早写/A→B拒绝），47e625b固定Dv2原2FAIL（六默认mount seed/mute锁早写），原字节与控制保留。Terra正在实施Dv1，保留已接受d129账号内容及56样式；共享a82/账号便签接受结论不重开。Dv2尚未实施，完整D2其他writer仍在清单。正式完成仍13/312，未关闭299项。
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 
