@@ -1,0 +1,156 @@
+revision=e9213fb fixed_commit=e9213fb91530e4be718a81afbd82a8202b75581f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-PsyMcZ
+
+ ❯ docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx (21 tests | 1 failed) 2474ms
+   ✓ 'Start week on' public field recovery > retains a rejected write and Retry persists only that field 164ms
+   ✓ 'Show Lunar Calendar' public field recovery > retains a rejected write and Retry persists only that field 120ms
+   ✓ 'Show Week Numbers (W)' public field recovery > retains a rejected write and Retry persists only that field 89ms
+   ✓ 'Show Holidays' public field recovery > retains a rejected write and Retry persists only that field 128ms
+   ✓ 'Time Zone' public field recovery > retains a rejected write and Retry persists only that field 116ms
+   ✓ absent sources mount without writes and invalid DOM input never becomes a draft 31ms
+   ✓ all three select values and both boolean directions persist through public controls  599ms
+   ✓ named-lock request rejection retains the edit and a later Retry succeeds 78ms
+   ✓ all five unavailable sources are reload-only and malformed boolean bytes never seed drafts 22ms
+   ✓ a valid edit after an unavailable source is exportable work when its write is refused 196ms
+   × a Retry read denial preserves the uncertain token and a later Retry verifies with one write 139ms
+     → expected true to be false // Object.is equality
+   ✓ conflict discard rereads only the select and leaves a quota sibling retryable 214ms
+   ✓ blob export setup failure retains recovery and cleans created resources 42ms
+   ✓ url export setup failure retains recovery and cleans created resources 36ms
+   ✓ append export setup failure retains recovery and cleans created resources 37ms
+   ✓ click export setup failure retains recovery and cleans created resources 109ms
+   ✓ synchronous owner change during blob setup prevents stale download 40ms
+   ✓ synchronous owner change during append setup prevents stale download 105ms
+   ✓ device edits use only the registered device key and its physical lock 89ms
+   ✓ unmounted and old-owner capabilities independently refuse every operation 28ms
+   ✓ fresh locked permission can discard surviving device work with zero writes 92ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  01:31:19
+   Duration  5.97s (transform 1.13s, setup 1.29s, collect 749ms, tests 2.47s, environment 1.07s, prepare 116ms)
+
+
+stderr | docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx > a valid edit after an unavailable source is exportable work when its write is refused
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx > fresh locked permission can discard surviving device work with zero writes
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx > fresh locked permission can discard surviving device work with zero writes
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to DateTimePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx > a Retry read denial preserves the uncertain token and a later Retry verifies with one write
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-date-time-recovery-sol/boundaries.test.tsx:63:175
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
