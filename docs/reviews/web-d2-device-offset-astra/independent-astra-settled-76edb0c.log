@@ -1,0 +1,41 @@
+revision=76edb0c fixed_commit=76edb0c9b36ca7afee327e095840124ef208a94a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-1FW5ho
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (12 tests | 1 failed) 181ms
+   × gesture movement is local and dirty until pointerup commits exactly its final position 76ms
+     → expected false to be true // Object.is equality
+   ✓ pointercancel terminates a moved gesture with its final position; a plain click never writes 8ms
+   ✓ resize clamps only presentation and later expansion restores desired saved coordinate without writes 8ms
+   ✓ clean storage event adopts device coordinate while a gesture retains frozen raw and latest local position 10ms
+   ✓ raw replacement during gesture is preserved even without a storage event 9ms
+   ✓ external replacement while final position waits for key lock refuses without losing draft 7ms
+   ✓ two gestures while first save waits preserve final latest intent and correct predecessor baseline 9ms
+   ✓ quota preserves latest second gesture, exports its position and retries through actual save 22ms
+   ✓ unchanged uncertainty retry reconciles one physical write and clears only verified position recovery 9ms
+   ✓ uncertain retry does not overwrite a subsequent external position 9ms
+   ✓ pending device final position survives A to B to locked account without an account admission lock 8ms
+   ✓ holding an account lifecycle lock does not prevent an explicit device gesture commit 5ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  20:45:35
+   Duration  1.12s (transform 164ms, setup 261ms, collect 56ms, tests 181ms, environment 338ms, prepare 79ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > gesture movement is local and dirty until pointerup commits exactly its final position
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:23:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

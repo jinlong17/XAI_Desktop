@@ -1,0 +1,715 @@
+revision=cbbbd8a fixed_commit=cbbbd8af69d8579d2d944be2a9b514692f389957
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-jbX0X4
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx (13 tests | 10 failed) 1161ms
+   × gesture movement is local and dirty until pointerup commits exactly its final position 50ms
+     → expected '40' to be '0' // Object.is equality
+     → expected false to be true // Object.is equality
+     → expected [ [ …(2) ], [ …(2) ] ] to deeply equal [ [ …(2) ] ]
+   × pointercancel terminates a moved gesture with its final position; a plain click never writes 11ms
+     → expected '35' to be '0' // Object.is equality
+   × resize clamps only presentation and later expansion restores desired saved coordinate without writes 8ms
+     → expected '100' to be '300' // Object.is equality
+     → expected '100px' to be '300px' // Object.is equality
+     → expected [ [ …(2) ] ] to deeply equal []
+   × clean storage event adopts device coordinate while a gesture retains frozen raw and latest local position 1009ms
+     → expected '0px' to be '60px' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"dash-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-head__intro"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"dash-greeting"[39m
+          [36m>[39m
+            [0mGood morning[0m
+            [0m, [0m
+            [0mHello[0m
+            [0m.[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-date"[39m
+          [36m>[39m
+            [0mWednesday, September 9[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note-lane"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-note has-note"[39m
+            [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Edit dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__display"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dash-note__text"[39m
+              [36m>[39m
+                [0mCurrent note[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 20h9"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Clear dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__clear"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+          [33mclass[39m=[32m"btn ghost dash-add"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+          [36m>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"12"[39m
+              [33mx2[39m=[32m"12"[39m
+              [33my1[39m=[32m"5"[39m
+              [33my2[39m=[32m"19"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"5"[39m
+              [33mx2[39m=[32m"19"[39m
+              [33my1[39m=[32m"12"[39m
+              [33my2[39m=[32m"12"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAdd widget[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+   × raw replacement during gesture is preserved even without a storage event 9ms
+     → expected false to be true // Object.is equality
+   × external replacement while final position waits for key lock refuses without losing draft 6ms
+     → expected false to be true // Object.is equality
+   × two gestures while first save waits preserve final latest intent and correct predecessor baseline 8ms
+     → expected '70' to be '0' // Object.is equality
+     → expected false to be true // Object.is equality
+   ✓ quota preserves latest second gesture, exports its position and retries through actual save 23ms
+   × unchanged uncertainty retry reconciles one physical write and clears only verified position recovery 7ms
+     → expected false to be true // Object.is equality
+   × uncertain retry does not overwrite a subsequent external position 9ms
+     → Unable to find an element with the text: Retry note save. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0mGood morning[0m
+          [0m, [0m
+          [0mHello[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0mWednesday, September 9[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 40px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Edit dashboard note"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__text"[39m
+            [36m>[39m
+              [0mCurrent note[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Clear dashboard note"[39m
+            [33mclass[39m=[32m"dash-note__clear"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0mAdd widget[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ pending device final position survives A to B to locked account without an account admission lock 8ms
+   ✓ holding an account lifecycle lock does not prevent an explicit device gesture commit 7ms
+   × earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline 6ms
+     → expected '70' to be '40' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 3 passed (13)
+   Start at  20:46:35
+   Duration  2.13s (transform 180ms, setup 265ms, collect 54ms, tests 1.16s, environment 343ms, prepare 79ms)
+
+
+stderr | docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > quota preserves latest second gesture, exports its position and retries through actual save
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > gesture movement is local and dirty until pointerup commits exactly its final position
+AssertionError: expected '40' to be '0' // Object.is equality
+
+Expected: "0"
+Received: "40"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:23:296
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > gesture movement is local and dirty until pointerup commits exactly its final position
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:23:328
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > gesture movement is local and dirty until pointerup commits exactly its final position
+AssertionError: expected [ [ …(2) ], [ …(2) ] ] to deeply equal [ [ …(2) ] ]
+
+- Expected
++ Received
+
+  [
+    [
+      "xai_pref_dashboard_header_note_x",
++     "20",
++   ],
++   [
++     "xai_pref_dashboard_header_note_x",
+      "40",
+    ],
+  ]
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:23:481
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > pointercancel terminates a moved gesture with its final position; a plain click never writes
+AssertionError: expected '35' to be '0' // Object.is equality
+
+Expected: "0"
+Received: "35"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:24:349
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > resize clamps only presentation and later expansion restores desired saved coordinate without writes
+AssertionError: expected '100' to be '300' // Object.is equality
+
+Expected: "300"
+Received: "100"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:25:421
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > resize clamps only presentation and later expansion restores desired saved coordinate without writes
+AssertionError: expected '100px' to be '300px' // Object.is equality
+
+Expected: "300px"
+Received: "100px"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:25:588
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > resize clamps only presentation and later expansion restores desired saved coordinate without writes
+AssertionError: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "xai_pref_dashboard_header_note_x",
++     "100",
++   ],
++ ]
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:25:647
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > clean storage event adopts device coordinate while a gesture retains frozen raw and latest local position
+AssertionError: expected '0px' to be '60px' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"dash-head"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-head__intro"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"dash-greeting"[39m
+          [36m>[39m
+            [0mGood morning[0m
+            [0m, [0m
+            [0mHello[0m
+            [0m.[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-date"[39m
+          [36m>[39m
+            [0mWednesday, September 9[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note-lane"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dash-note has-note"[39m
+            [33mstyle[39m=[32m"--dash-note-x: 0px;"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Edit dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__display"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dash-note__text"[39m
+              [36m>[39m
+                [0mCurrent note[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 20h9"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Clear dashboard note"[39m
+              [33mclass[39m=[32m"dash-note__clear"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"13"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"13"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+          [33mclass[39m=[32m"btn ghost dash-add"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+          [36m>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"12"[39m
+              [33mx2[39m=[32m"12"[39m
+              [33my1[39m=[32m"5"[39m
+              [33my2[39m=[32m"19"[39m
+            [36m/>[39m
+            [36m<line[39m
+              [33mx1[39m=[32m"5"[39m
+              [33mx2[39m=[32m"19"[39m
+              [33my1[39m=[32m"12"[39m
+              [33my2[39m=[32m"12"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAdd widget[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "60px"
+Received: "0px"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:26:203
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > raw replacement during gesture is preserved even without a storage event
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:27:306
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > external replacement while final position waits for key lock refuses without losing draft
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:28:318
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > two gestures while first save waits preserve final latest intent and correct predecessor baseline
+AssertionError: expected '70' to be '0' // Object.is equality
+
+Expected: "0"
+Received: "70"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:29:275
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > two gestures while first save waits preserve final latest intent and correct predecessor baseline
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:29:302
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > unchanged uncertainty retry reconciles one physical write and clears only verified position recovery
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:31:262
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > uncertain retry does not overwrite a subsequent external position
+TestingLibraryElementError: Unable to find an element with the text: Retry note save. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"dash-head"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-head__intro"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"dash-greeting"[39m
+        [36m>[39m
+          [0mGood morning[0m
+          [0m, [0m
+          [0mHello[0m
+          [0m.[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-date"[39m
+        [36m>[39m
+          [0mWednesday, September 9[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"dash-note-lane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dash-note has-note"[39m
+          [33mstyle[39m=[32m"--dash-note-x: 40px;"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Edit dashboard note"[39m
+            [33mclass[39m=[32m"dash-note__display"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"dash-note__text"[39m
+            [36m>[39m
+              [0mCurrent note[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 20h9"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Clear dashboard note"[39m
+            [33mclass[39m=[32m"dash-note__clear"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"13"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"13"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M6 6l12 12M18 6L6 18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Add a new dashboard widget"[39m
+        [33mclass[39m=[32m"btn ghost dash-add"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"14"[39m
+          [33mstroke[39m=[32m"currentColor"[39m
+          [33mstroke-linecap[39m=[32m"round"[39m
+          [33mstroke-linejoin[39m=[32m"round"[39m
+          [33mstroke-width[39m=[32m"2"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"14"[39m
+        [36m>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"12"[39m
+            [33mx2[39m=[32m"12"[39m
+            [33my1[39m=[32m"5"[39m
+            [33my2[39m=[32m"19"[39m
+          [36m/>[39m
+          [36m<line[39m
+            [33mx1[39m=[32m"5"[39m
+            [33mx2[39m=[32m"19"[39m
+            [33my1[39m=[32m"12"[39m
+            [33my2[39m=[32m"12"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span>[39m
+          [0mAdd widget[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</header>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:32:221
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/contracts.test.tsx > earlier commit cannot erase a newer still-open gesture or strand its successful predecessor baseline
+AssertionError: expected '70' to be '40' // Object.is equality
+
+Expected: "40"
+Received: "70"
+
+ ❯ docs/reviews/web-d2-device-offset-astra/contracts.test.tsx:35:309
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
