@@ -45,6 +45,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
   const sequence = useRef(0);
   const last = useRef<WebPrefValue<K> | null>(null);
   const active = useRef(false);
+  const session = useRef(0);
   const queued = useRef<null | { next: WebPrefValue<K> | ((current: WebPrefValue<K>) => WebPrefValue<K>); resolve: (result: PrefMutationResult<WebPrefValue<K>>) => void }>(null);
 
   const reload = useCallback(() => {
@@ -57,6 +58,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
     // A new account/generation is a new binding. Old in-flight calls retain
     // their captured scope and are rejected by the engine rather than retargeted.
     scopeRef.current = scope;
+    session.current += 1;
     reload();
     return accountScope.subscribe(reload);
   }, [reload, scope]);
@@ -73,6 +75,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
       return new Promise(resolve => { queued.current = { next, resolve }; });
     }
     active.current = true;
+    const capturedSession = session.current;
     const op = ++sequence.current;
     // A functional updater is deliberately evaluated only by mutatePref while
     // holding the physical-key lock; evaluating it here would be stale and can
@@ -82,6 +85,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
     last.current = local; setValue(local); valueRef.current = local; setStatus("pending"); setError(null);
     const capturedScope = scopeRef.current;
     const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate, next: typeof next === "function" ? next : local, expectedRaw, scope: capturedScope });
+    if (capturedSession !== session.current) { active.current = false; return result; }
     if (result.ok) { setRaw(result.raw); baseRef.current = result.raw; setSource(result.source); }
     const nextQueued = queued.current;
     queued.current = null;
@@ -100,9 +104,11 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
 
   const retry = useCallback(() => perform(last.current ?? valueRef.current, baseRef.current), [perform]);
   const reset = useCallback(async () => {
+    const capturedSession = session.current;
     const op = ++sequence.current; setStatus("pending"); setError(null);
     const capturedScope = scopeRef.current;
     const result = await mutatePref({ key, codec: entry.codec, defaultValue: entry.default as WebPrefValue<K>, validate, reset: true, expectedRaw: baseRef.current, scope: capturedScope });
+    if (capturedSession !== session.current) return result;
     if (op === sequence.current && result.ok) { setValue(result.value); valueRef.current = result.value; setRaw(null); baseRef.current = null; setSource("absent"); setStatus("saved"); }
     else if (op === sequence.current && !result.ok) { setStatus(result.reason === "conflict" ? "conflict" : "error"); setError(result.reason); }
     return result;
