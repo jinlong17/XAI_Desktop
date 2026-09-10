@@ -46,7 +46,7 @@ describe("responsive board workspace styles", () => {
       /@media \(max-width: 900px\)[\s\S]*?\.cd-save-recovery-actions \.btn\s*\{[^}]*flex:\s*1 1 150px;/s,
     );
     expect(cssText).toMatch(
-      /@media \(max-width: 480px\)[\s\S]*?\.cd-save-recovery-actions\s*\{[^}]*flex-direction:\s*column;/s,
+      /@media \(max-width: 480px\)[\s\S]*?\.cd-save-recovery-actions\s*\{[^}]*flex-direction:\s*column;[\s\S]*?\.cd-save-recovery-actions \.btn\s*\{[^}]*flex:\s*0 0 auto;/s,
     );
     expect(cssText).toMatch(
       /\.cd-save-recovery-actions \.btn\s*\{[^}]*min-height:\s*44px;/s,

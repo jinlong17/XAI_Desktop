@@ -1511,6 +1511,7 @@
     flex-direction: column;
   }
   .cd-save-recovery-actions .btn {
+    flex: 0 0 auto;
     width: 100%;
   }
 }
