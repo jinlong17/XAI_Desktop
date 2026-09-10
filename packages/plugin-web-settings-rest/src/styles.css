@@ -224,6 +224,26 @@
   min-height: 44px;
   max-inline-size: 100%;
 }
+.settings-departure-dialog {
+  position: fixed;
+  inset: auto 1rem 1rem;
+  z-index: 20;
+  max-inline-size: min(100% - 2rem, 34rem);
+  padding: 1rem;
+  border: 1px solid var(--border, oklch(85% 0 0));
+  border-radius: 0.75rem;
+  background: var(--panel, #fff);
+  box-shadow: 0 12px 32px oklch(20% 0 0 / 0.2);
+}
+.settings-departure-dialog button {
+  min-height: 44px;
+  margin: 0.25rem;
+}
+.settings-departure-dialog:focus-visible,
+.settings-departure-dialog button:focus-visible {
+  outline: 2px solid var(--accent, oklch(60% 0.18 190));
+  outline-offset: 2px;
+}
 
 /* ---- Notifications pane ---------------------------------------------- */
 .notif-pane {

@@ -33,7 +33,7 @@ import {
   applyBgTone,
   applyRailPos,
 } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
+import { accountScope, usePref } from "@repo/plugin-web-storage";
 import { AccountStorageGate, invalidateAccountIdentity } from "./providers/AccountStorageGate.js";
 import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
 import {
@@ -45,6 +45,7 @@ import {
 import { DesktopPet } from "@repo/plugin-web-pet";
 import type { Lang, Theme, Density, BgTone } from "@repo/plugin-web-tokens";
 import { webShellModuleRegistrations } from "./routes/modules/shellRegistrations";
+import { requestSettingsDeparture } from "./routes/modules/settingsDeparture.js";
 // xai-web-settings-features-panel row #23 — rail filter driven by xai_pref_features_*
 import {
   useFeaturePrefs,
@@ -188,15 +189,21 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   const { client, clearSessionStorage, coordinator, reportSignOutFailure } = useWebAuthSession();
   const handleSignOut = useCallback(async () => {
     onSignOutError(false);
+    const capturedScope = accountScope.capture();
     if (coordinator) {
       const captured = coordinator.capture();
       if (!captured) { onSignOutError(true); return; }
+      if (!await requestSettingsDeparture("sign-out")) return;
+      const current = coordinator.capture();
+      if (accountScope.capture() !== capturedScope || !current || current.owner !== captured.owner || current.generation !== captured.generation) return;
       invalidateAccountIdentity(null);
       const result = await coordinator.signOut(captured);
       if (result.status === 'failed') { reportSignOutFailure?.(); onSignOutError(true); return; }
       if (result.status === 'applied') window.location.assign('/');
       return;
     }
+    if (!await requestSettingsDeparture("sign-out")) return;
+    if (accountScope.capture() !== capturedScope) return;
     invalidateAccountIdentity(null);
     try {
       if (client && typeof client.auth?.signOut === "function") {

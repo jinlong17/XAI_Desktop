@@ -148,6 +148,8 @@ const STR = {
   "smartLists.retry": { en: "Retry", zh: "重试" },
   "smartLists.reload": { en: "Reload saved choices", zh: "重新加载已保存的选择" },
   "smartLists.discardAndReload": { en: "Discard local Smart Lists changes and reload saved choices", zh: "放弃本地智能列表更改并重新加载已保存的选择" },
+  "smartLists.export": { en: "Export current draft", zh: "导出当前草稿" },
+  "smartLists.exportFailed": { en: "Draft export failed. Please try again.", zh: "草稿导出失败，请重试。" },
 
   // Notifications pane
   "notif.enable": { en: "Enable notifications", zh: "启用通知" },
