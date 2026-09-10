@@ -1,0 +1,11 @@
+revision=990ac52 fixed_commit=990ac52cac4aae9e72d1db84d52f6c9093294195
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-g6cS5M
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (14 tests) 760ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  23:55:30
+   Duration  1.61s (transform 226ms, setup 0ms, collect 362ms, tests 760ms, environment 212ms, prepare 55ms)

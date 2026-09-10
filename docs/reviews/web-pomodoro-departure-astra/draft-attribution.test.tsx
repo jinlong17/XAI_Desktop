@@ -3,7 +3,7 @@ import { act, fireEvent } from '@testing-library/react';
 import { accountScope } from '@repo/plugin-web-storage';
 import { onWebEvent } from '@repo/xai-web-event-bus';
 import { prefMutationLockName } from '../../../packages/plugin-web-storage/src/internal/prefMutation';
-import { fixture, cases, key, defaults, nativeGet, nativeSet, flush, hold, activate, timerBytes, withGuard, unload, deny, clickRetry, invoke, type Name } from './fixture';
+import { fixture, cases, key, defaults, nativeGet, nativeSet, flush, hold, activate, external, timerBytes, withGuard, unload, deny, clickRetry, invoke, type Name } from './fixture';
 fixture();
 
 for (const row of cases) it(`${row.name}: discard clears only its actual failed draft, preserving successful siblings and timer bytes`, async () => {
@@ -100,6 +100,37 @@ it('old epoch and disposed discard capabilities cannot clear surviving or succes
   expect(guard().isBlocking()).toBe(true); const disposed = guard(); ui.unmount();
   expect(disposed.isCurrent()).toBe(false); disposed.discardDraft(); expect(unload()).toBe(false);
   expect(nativeGet.call(localStorage, key('theme'))).toBe('"coral"');
+});
+
+it('revoked epoch capabilities cease blocking while the fresh capability still guards surviving device drafts', async () => {
+  const { ui, guard } = withGuard(); await flush(); deny(['theme']);
+  fireEvent.click(ui.getByTestId('theme-blue')); await flush(); const old = guard();
+  await invoke(() => activate('pomo-blocking-successor')); await flush();
+  expect(old.isCurrent()).toBe(false);
+  expect(old.isBlocking(), 'a revoked decision cannot claim current departure authority').toBe(false);
+  const current = guard(); expect(current.isCurrent()).toBe(true); expect(current.isBlocking()).toBe(true); expect(unload()).toBe(true);
+  await invoke(() => current.discardDraft()); await flush(); expect(unload()).toBe(false);
+});
+
+it('targeted conflict discard preserves another latest quota-failed choice and its Retry', async () => {
+  const { ui, guard } = withGuard(); await flush(); const release = await hold('theme');
+  try { fireEvent.click(ui.getByTestId('theme-blue')); act(() => external('theme', 'violet')); }
+  finally { await release(); }
+  const fault = deny(['sound']); fireEvent.change(ui.getByTestId('sound-select'), { target: { value: 'bell' } }); await flush();
+  expect(nativeGet.call(localStorage, key('theme'))).toBe('"violet"');
+  expect(ui.getByTestId('theme-blue').getAttribute('aria-pressed')).toBe('true');
+  expect(nativeGet.call(localStorage, key('sound'))).toBe('"soft-chime"');
+  const targeted = ui.queryByRole('button', { name: /(?:discard|reload) conflicting preferences/i });
+  expect(targeted, 'preserve the accepted explicit conflict-only recovery choice alongside other unsaved drafts').not.toBeNull();
+  const reads = vi.spyOn(Storage.prototype, 'getItem');
+  fireEvent.click(targeted!); await flush();
+  expect(ui.getByTestId('theme-violet').getAttribute('aria-pressed')).toBe('true');
+  expect((ui.getByTestId('sound-select') as HTMLSelectElement).value).toBe('bell');
+  expect(reads.mock.calls.filter(([k]) => k === key('sound'))).toHaveLength(0);
+  expect(guard().isBlocking()).toBe(true); expect(unload()).toBe(true);
+  fault.mockRestore(); clickRetry(ui); await flush();
+  expect(nativeGet.call(localStorage, key('sound'))).toBe('"bell"');
+  expect(nativeGet.call(localStorage, key('theme'))).toBe('"violet"'); expect(unload()).toBe(false);
 });
 
 it('running timer is not a preference draft and preference discard leaves its actual active record untouched', async () => {
