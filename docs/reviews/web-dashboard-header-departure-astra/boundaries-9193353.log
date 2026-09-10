@@ -1,0 +1,11 @@
+revision=9193353 fixed_commit=9193353c6990d72b87e47d37001e4a7432d07f6e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-3f6XaJ
+
+ ✓ docs/reviews/web-dashboard-header-departure-astra/boundaries.test.tsx (5 tests) 161ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  00:39:35
+   Duration  1.44s (transform 215ms, setup 286ms, collect 133ms, tests 161ms, environment 444ms, prepare 117ms)

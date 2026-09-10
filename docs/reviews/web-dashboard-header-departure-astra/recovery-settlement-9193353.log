@@ -1,0 +1,70 @@
+revision=9193353 fixed_commit=9193353c6990d72b87e47d37001e4a7432d07f6e
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-popJE7
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx (10 tests | 2 failed) 227ms
+   ✓ discard failed note neither reads nor writes its saved sibling 90ms
+   ✓ discard failed offset neither reads nor writes its saved sibling 23ms
+   ✓ source-only offset Reload cannot reread or discard a failed note and its original Retry 26ms
+   ✓ blob export failure cleans resources without changing draft or sources 14ms
+   ✓ url export failure cleans resources without changing draft or sources 17ms
+   ✓ append export failure cleans resources without changing draft or sources 14ms
+   ✓ inline append-time epoch change cancels download and preserves current device recovery 8ms
+   ✓ fresh locked device export reads no account or device storage and emits empty note 12ms
+   × preflight-failed newer gesture survives predecessor settlement with Retry=false 12ms
+     → the failed newer70 is not the verified predecessor40: expected '40px' to be '70px' // Object.is equality
+     → expected false to be true // Object.is equality
+     → expected false to be true // Object.is equality
+   × preflight-failed newer gesture survives predecessor settlement with Retry=true 10ms
+     → the failed newer70 is not the verified predecessor40: expected '40px' to be '70px' // Object.is equality
+     → expected false to be true // Object.is equality
+     → expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  00:43:12
+   Duration  1.22s (transform 180ms, setup 245ms, collect 57ms, tests 227ms, environment 348ms, prepare 81ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=false
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=true
+AssertionError: the failed newer70 is not the verified predecessor40: expected '40px' to be '70px' // Object.is equality
+
+Expected: "70px"
+Received: "40px"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:99:119
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=false
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=true
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:100:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=false
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=true
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:100:66
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯

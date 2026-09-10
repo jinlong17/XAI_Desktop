@@ -1,0 +1,35 @@
+revision=9193353 fixed_commit=9193353c6990d72b87e47d37001e4a7432d07f6e
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-6Kr4ET
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx (9 tests | 1 failed) 214ms
+   ✓ discard failed note neither reads nor writes its saved sibling 87ms
+   ✓ discard failed offset neither reads nor writes its saved sibling 23ms
+   ✓ source-only offset Reload cannot reread or discard a failed note and its original Retry 26ms
+   ✓ blob export failure cleans resources without changing draft or sources 13ms
+   ✓ url export failure cleans resources without changing draft or sources 13ms
+   ✓ append export failure cleans resources without changing draft or sources 16ms
+   ✓ inline append-time epoch change cancels download and preserves current device recovery 8ms
+   ✓ fresh locked device export reads no account or device storage and emits empty note 13ms
+   × Retry of a preflight-failed newer gesture cannot borrow the held predecessor Promise 14ms
+     → the failed newer70 is not the verified predecessor40: expected '40px' to be '70px' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  00:42:25
+   Duration  1.46s (transform 281ms, setup 458ms, collect 58ms, tests 214ms, environment 406ms, prepare 95ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > Retry of a preflight-failed newer gesture cannot borrow the held predecessor Promise
+AssertionError: the failed newer70 is not the verified predecessor40: expected '40px' to be '70px' // Object.is equality
+
+Expected: "70px"
+Received: "40px"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:99:114
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
