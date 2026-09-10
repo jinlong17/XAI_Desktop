@@ -72,4 +72,20 @@ describe("collaboratePane", () => {
     release();
     await held;
   });
+
+  it("keeps a pending device draft and reports a failed export setup", async () => {
+    const locks = createSmartListsLockManager();
+    vi.stubGlobal("navigator", { locks });
+    vi.stubGlobal("URL", { createObjectURL: () => { throw new Error("denied"); }, revokeObjectURL: vi.fn() });
+    let release!: () => void;
+    const held = locks.request("xai:pref:v1:xai_pref_collab_show_avatars", { mode: "exclusive" }, () => new Promise<void>(resolve => { release = resolve; }));
+    const ui = render(collaboratePane.render({ lang: "en" }));
+    fireEvent.click(ui.getByRole("switch", { name: "Show collaborator avatars" }));
+    const exportButton = await ui.findByRole("button", { name: "Export current draft" });
+    fireEvent.click(exportButton);
+    expect(await ui.findByText("Could not export the draft. Your local changes remain available.")).toBeInTheDocument();
+    expect(ui.getByRole("switch", { name: "Show collaborator avatars" })).toHaveAttribute("aria-checked", "false");
+    release();
+    await held;
+  });
 });

@@ -154,6 +154,7 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
     {!hasCurrentDraft() && anySaved && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saved")}</p>}
     {hasCurrentDraft() && needsRecovery.length === 0 && <div className="collab-recovery">
       <div className="collab-recovery-actions"><button type="button" onClick={exportDraft}>{t("collab.export")}</button></div>
+      {exportFailed && <p role="alert">{t("collab.exportFailed")}</p>}
     </div>}
     {needsRecovery.length > 0 && <div className="collab-recovery" role="alert">
       {needsRecovery.map(({ id, label, pref }) => <p key={id}><strong>{label}:</strong> {pref.meta.status === "conflict" ? t("collab.conflict") : pref.meta.source === "invalid" || pref.meta.source === "unavailable" ? t("collab.sourceUnavailable") : t("collab.notSaved")}</p>)}

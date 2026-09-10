@@ -54,6 +54,11 @@ recovery behavior was changed.
   then PASSed it on `2b02dd3` with actual disk JSON containing only
   `show_avatars:false`, followed by raw false persistence and unload release.
   Parent is rerunning the six baseline modes on `2b02dd3`.
+- Independent contract scenario 24 then found a separate UI-only gap: a pure
+  pending draft retained its Export action but did not render the localized
+  export-setup failure. The follow-up author test holds the same device key,
+  makes `URL.createObjectURL` throw, and verifies the error plus retained false
+  selection. Independent rerun remains required.
 
 ## Independent validation still required
 
