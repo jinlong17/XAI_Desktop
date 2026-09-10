@@ -1,0 +1,9 @@
+# Pomodoro recovery layout: fixed rendered review
+
+Parent fixed functional archive7785e92, actual Pomodoro with token/layout and explicitly imported Pomodoro `styles.css`, isolated Chrome viewport375/414/768/1024/1440. Responsive review uses the project's `.codex/skills/frontend-responsive-ui/SKILL.md`; no full shell, reference-product comparison or physical mobile device is claimed.
+
+[Geometry](visual-7785e92.log), [375 screenshot](recovery-7785e92-375.png), [414](recovery-7785e92-414.png), [768](recovery-7785e92-768.png), [1024](recovery-7785e92-1024.png), [1440](recovery-7785e92-1440.png). Parent viewed375 directly. Controls already have44px minimum height and all rectangles remain inside the viewport. However `.pomo-notice` flex layout puts the paragraph and three recovery actions on one row: at375 the paragraph is squeezed to a narrow column, words split across lines, and the notice becomes375.6px tall. At414 it remains219px tall. This is a concrete recovery readability problem under existing POMO-05, separate from Dv2 persistence correctness. Minimal repair should let the explanation occupy a full row and allow actions to wrap. No functional/timer redesign is needed.
+
+The first diagnostic omitted the module stylesheet because PomodoroModule is imported directly while styles.css is imported by the package index. Those incomplete screenshots/logs are preserved under `diagnostic-missing-module-css/`; their21px buttons and missing gap are fixture artifacts, not product defects. The current fixture explicitly loads all three stylesheets and supersedes that visual diagnosis. Native functional export/recovery fixtures previously loaded token/layout CSS only; their storage, actual-control and disk-download assertions remain bounded functional evidence, not layout acceptance.
+
+[Fixture](native.tsx), [runner](verify-native.mjs). CSS-only repair and fixed after rendering remain pending. This report closes no numbered product gate.

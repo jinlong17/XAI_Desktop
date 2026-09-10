@@ -7,3 +7,5 @@ Both fixed archives PASS: [legacy 6981111](native-6981111.log), [async caller 2b
 [Actual component fixture](native.tsx), [fixed runner](verify-native.mjs). Temporary synthetic browser profile and downloads are removed after recording assertions.
 
 The unchanged actual disk export and latest quota Retry remain PASS at the recovery successor [7785e92](native-7785e92.log).
+
+CSS scope clarification: this functional fixture imports token/layout CSS but directly imports PomodoroModule, bypassing the package-index import of Pomodoro styles.css. Its storage/control/download assertions do not constitute full-module layout evidence. The separate web-d2-pomo-recovery-visual fixture explicitly includes the module stylesheet. Original raw logs remain unchanged.
