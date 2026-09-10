@@ -1,54 +1,44 @@
 # Dashboard Header departure recovery — author evidence
 
-Product commits: `45a1c15`, `0f2d5a0`, `3e11013`, `41fb4d1`.
+Final product SHA for this author handoff: `73b4eb9`.
 
-Implemented the package-level current-user recovery capability and app-owned
-Dashboard route adapter. The Header now registers a token- and owner-bound
-guard with the existing Web `DepartureCoordinator`; current note work and
-device position work remain independent. Source-only failures remain visible
-and reloadable but do not become departure drafts or beforeunload warnings.
+The Dashboard Header registers an owner-bound, current-draft guard with the
+accepted app coordinator. Note and device position remain separate recovery
+fields. Source-only health failures remain visible and reloadable without
+becoming host drafts or unload warnings. The app-owned Dashboard adapter keeps
+the package standalone while routing AppRail, mini-calendar, Topbar Settings,
+and avatar Settings/Statistics pointer intents through the coordinator's
+existing route path.
 
-The app adapter emits the existing mini-calendar event and calls the data-router
-navigation path, so coordinator protection applies to widget navigation without
-the package importing app code. Ordinary clicks no longer capture a pointer;
-capture starts only once a gesture has crossed the existing movement threshold.
+The final fixes preserve a slow navigation pointer's draft until its matching
+pointer release, while ordinary Tab/blur saves after its own turn. Blur save
+callbacks are stable across preference-state rerenders and verify the captured
+session, revision, and account scope before writing. Position retry now moves
+the current failed identity to its active retry attempt: that completion clears
+only itself, while predecessor callbacks cannot erase a newer preflight
+failure. An unavailable note source, unavailable position source, both sources,
+and frozen-account recovery now use separate EN/ZH messages.
 
-The second commit stabilizes guard actions with refs to the latest preference
-results. This prevents coordinator registration from recursing through a new
-hook-result object on every render. Frozen A copy distinguishes its retained,
-intentionally refused legacy export from a current device-only export. The
-final two fixes retain the registered capability while an editor opens, then
-defer an input blur save by one turn so a real route/sign-out/widget departure
-can reserve its intent before the blur becomes an implicit persistence write.
+Author execution at `73b4eb9`:
 
-Author execution at `0f2d5a0`:
+- `pnpm --filter @repo/plugin-web-dashboard-grid test` — 25 files, 228 tests
+  passed. Raw output: `dashboard-package-73b4eb9.log`.
+- `pnpm --filter @repo/plugin-web-dashboard-grid lint` and `check-types` —
+  passed. Raw output: `dashboard-lint-73b4eb9.log` and
+  `dashboard-typecheck-73b4eb9.log`.
+- `pnpm --filter @repo/web lint` and `check-types` — passed. Raw output:
+  `web-lint-73b4eb9.log` and `web-typecheck-73b4eb9.log`.
+- `pnpm --filter @repo/web test -- shellRegistrations.integration.test.tsx` —
+  11 tests passed. Raw output: `web-shell-registration-73b4eb9.log`.
+- Focused Header departure, recovery, and async suites — 24 tests passed,
+  including ordinary Tab blur, source-only/frozen recovery copy, preflight
+  failure, and current-draft retry paths.
 
-- `pnpm --filter @repo/plugin-web-dashboard-grid test` — 25 files, 220 tests passed.
-- `pnpm --filter @repo/plugin-web-dashboard-grid lint` and `check-types` — passed.
-- `pnpm --filter @repo/web lint` and `check-types` — passed.
-- `pnpm --filter @repo/web test -- shellRegistrations.integration.test.tsx` — 11 passed.
+The Dashboard package prints expected quota and duplicate-widget diagnostics in
+its recovery fixtures; the run has no failed tests. Pomodoro, Settings, Smart,
+and Collaborate product sources were not modified after their parent-reported
+shared gate at `1bdc844`, so their author suites were not repeated for this
+Dashboard-only delta.
 
-Focused `DashHeader.departure.test.tsx` covers source-only unload truth,
-current guard/discard behavior, old-account capability refusal, and ordinary
-pointer click editing. It additionally checks that a pre-registered guard stays
-current through the edit turn and that dialog-focus blur leaves the physical
-note unchanged.
-
-Final author execution at `41fb4d1`:
-
-- `pnpm --filter @repo/plugin-web-dashboard-grid test` — 25 files, 222 tests passed;
-  package lint and typecheck passed.
-- `pnpm --filter @repo/web test -- shellRegistrations.integration.test.tsx` — 11
-  tests passed; Web lint and typecheck passed.
-- Shared caller regression: `@repo/plugin-web-pomodoro` — 18 files, 148 tests,
-  lint and typecheck passed.
-- Shared caller regression: `@repo/plugin-web-settings-rest` — 43 files, 293
-  tests, lint and typecheck passed. The test output retained existing React
-  `act(...)` warnings in MorePane tests; there were no test failures.
-
-Parent independently reported fixed `41fb4d1` actual Host departure 5/5 and
-advanced 5/5 passing, plus native unsubmitted and widget paths passing with
-the original physical note retained and no runtime error. Sol independently
-reported 42/42 passing at `e6c52e1`. These results are attribution records,
-not an Astra final acceptance. Parent-owned independent and native evidence
-remains unmodified.
+This is author evidence only. Astra, parent, and Sol retain independent host,
+native, source-copy, and historical failure records and determine acceptance.

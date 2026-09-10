@@ -30,6 +30,12 @@ note/device draft `isBlocking`, and explicit export/discard actions. The
 package remains standalone when it is omitted; the Web app supplies the shared
 departure coordinator and owns route replay and sign-out arbitration.
 
+`DashboardModuleProps.isDeparturePending` and
+`DashboardModuleProps.isDepartureTarget` are optional app-owned callbacks for
+the Header's blur boundary. The former reports that the host has already
+reserved a departure; the latter identifies a pointer target that will request
+one during its click turn. They are omitted by standalone callers.
+
 ---
 
 ## S2. `WidgetRegistration` — the slot contract
