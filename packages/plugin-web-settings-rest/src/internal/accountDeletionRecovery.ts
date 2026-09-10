@@ -88,12 +88,16 @@ export async function beginConfirmedAccountLocalDeletion(scope: AccountScope, au
   });
 }
 /** Retry confirmed local erasure; auth cleanup must target only the captured generation. */
-async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
+async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, entryRaw: string, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
   const key = receiptKey(receipt.accountId, receipt.kind === 'demo');
   const expectedRaw = localStorage.getItem(key);
   const saved = readAccountDeletionReceipt(receipt.accountId, receipt.kind === "demo");
   if (!saved || !expectedRaw || saved.generation !== receipt.generation || saved.version !== receipt.version
     || saved.authGeneration !== receipt.authGeneration) throw new Error("Account deletion receipt no longer matches");
+  if (expectedRaw !== entryRaw) {
+    if (saved.phase === 'complete') return saved;
+    throw new Error('Account deletion receipt changed before recovery');
+  }
   if (saved.phase === "complete") return saved;
   if (saved.authGeneration && !clearAuth) throw new Error('Authentication cleanup is unavailable; recovery remains pending');
   const local = await resumeAccountLocalDataDeletion(saved, expectedRaw);
@@ -115,10 +119,12 @@ async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, c
 /** Same-page recovery callers share one captured-owner workflow; storage still
  * supplies the short cross-tab account-exclusive sections. */
 export function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
+  const entryRaw = localStorage.getItem(receiptKey(receipt.accountId, receipt.kind === 'demo'));
+  if (entryRaw === null) return Promise.reject(new Error('Account deletion receipt no longer matches'));
   const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}:${receipt.version}:${receipt.authGeneration ?? ''}`;
   const active = recoveryFlights.get(key);
   if (active) return active;
-  const operation = runRecoveryWorkflow(receipt, () => resumeAccountLocalDeletionOnce(receipt, clearAuth));
+  const operation = runRecoveryWorkflow(receipt, () => resumeAccountLocalDeletionOnce(receipt, entryRaw, clearAuth));
   recoveryFlights.set(key, operation);
   void operation.then(
     () => { if (recoveryFlights.get(key) === operation) recoveryFlights.delete(key); },
