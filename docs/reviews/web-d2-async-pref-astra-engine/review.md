@@ -50,3 +50,14 @@ Terra may change `packages/plugin-web-storage/src/internal/prefMutation.ts`, the
 Re-run these exact 21 assertions against a fixed repair archive, retaining this before log. All ten refusal/reconciliation assertions must pass without weakening the eleven controls. Add only repair-specific tests for legitimate same-codec public calls, uncertain retry versus external replacement, and any new binding validator representation. Then run the affected storage regression suites/types and shared C/D1/D2 contract tests as required by the implementation changes. Integrate with the independently reviewed hooks and real pane only after each ownership slice is fixed.
 
 No product or parent test was changed; no push. Full async-pref batch, D2, AI-02 and REL-05 remain open. Already accepted Settings durable deletion and Board detail are not reopened by this review.
+
+## Terra repair verification — 2c5dc31
+
+The rejected `5ed9329` archive remains the subject of this review and its before
+log is unchanged. Terra repaired the four bounded groups in product commit
+`2c5dc319126541085e7620c4c9ae23413db2c816`. Re-running this review's unchanged
+archive runner against that fixed commit produced **21/21 PASS** (exit 0).
+The author-owned raw output and package regression evidence are recorded in
+[`../web-d2-async-pref-engine-terra-repair/`](../web-d2-async-pref-engine-terra-repair/).
+This verifies only the engine repair; it does not alter the open D2, AI-02, or
+REL-05 status or substitute for hook, pane, native, or release evidence.
