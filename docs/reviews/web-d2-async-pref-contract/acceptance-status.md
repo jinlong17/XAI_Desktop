@@ -17,4 +17,4 @@
 | 包、类型、旧sync签名与canonical/admission边界 | 固定Storage193/Settings282及types独立通过；engine source identity保留已有边界，无生产激活。 |
 | Dashboard便签、其他writer/scoped raw/global reset/provider/timer/旧客户端 | 不属于本次关闭范围。Dashboard按9aac合同独立实施验收；其余继续留在D2清单。 |
 
-当前下一调用方：Dashboard account note产品f532ad5待独立完整验收。设备位置仍保留legacy协议，后续单独处理。
+Dashboard account note后续切片已于d129950获Astra4a66e86完整有界接受。设备位置仍保留legacy协议，与POMO六个device直接autosave列为下一批。
