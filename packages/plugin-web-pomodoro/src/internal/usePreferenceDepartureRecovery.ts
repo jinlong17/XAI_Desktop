@@ -159,7 +159,9 @@ export function usePreferenceDepartureRecovery({
     return registerDepartureGuard({
       token: decisionToken,
       label: lang === "zh" ? "番茄钟偏好" : "Pomodoro preferences",
-      isBlocking: () => !disposedRef.current && draftsRef.current.size > 0,
+      isBlocking: () => !disposedRef.current
+        && accountScope.capture().epoch === decisionEpoch
+        && draftsRef.current.size > 0,
       isCurrent: () => !disposedRef.current && accountScope.capture().epoch === decisionEpoch,
       exportDraft: () => exportDraft(decisionEpoch),
       discardDraft: () => {
