@@ -10,6 +10,13 @@ export type { AccountDeletionReceipt } from "@repo/plugin-web-storage";
 export type AccountAuthCleanup = (captured: { generation: string; owner: string }) => Promise<void>;
 const RECEIPT_EVENT = "xai:account-deletion-receipt";
 const recoveryFlights = new Map<string, Promise<AccountDeletionReceipt>>();
+function recoveryWorkflowLockName(receipt: AccountDeletionReceipt): string {
+  return `${accountLifecycleLockName(receipt.accountId, receipt.kind === 'demo')}:deletion-recovery`;
+}
+async function runRecoveryWorkflow<T>(receipt: AccountDeletionReceipt, run: () => Promise<T>): Promise<T> {
+  if (typeof navigator === 'undefined' || !navigator.locks) throw new Error('Deletion recovery lock unavailable');
+  return navigator.locks.request(recoveryWorkflowLockName(receipt), { mode: 'exclusive' }, run);
+}
 function receiptKey(accountId: string, demo: boolean): string {
   // The tombstone itself is the durable receipt: one atomic metadata write
   // precedes every destructive operation. The storage eraser preserves it.
@@ -94,7 +101,7 @@ export function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clea
   const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}`;
   const active = recoveryFlights.get(key);
   if (active) return active;
-  const operation = resumeAccountLocalDeletionOnce(receipt, clearAuth);
+  const operation = runRecoveryWorkflow(receipt, () => resumeAccountLocalDeletionOnce(receipt, clearAuth));
   recoveryFlights.set(key, operation);
   void operation.then(
     () => { if (recoveryFlights.get(key) === operation) recoveryFlights.delete(key); },
