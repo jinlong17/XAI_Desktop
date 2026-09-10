@@ -1,6 +1,6 @@
 # 异步偏好保存：逐条验收状态
 
-父任务检查点：engine `6504589` 经 Astra `e75d5b3` 有界接受；hooks `d6184ee` 作者证据 `8c49657`，父独立原 hook 2 条、真实 Chrome 5 场景及整进程重开 5 组全部通过。Astra 固定 hooks 独立 9 例为 3 PASS / 6 FAIL，尚不接受；open-ended binding 仍在实现。原失败日志保留，不将局部通过合并为整批通过。
+父任务检查点：engine `6504589` 经 Astra `e75d5b3` 有界接受；hooks `d6184ee` 作者证据 `8c49657`，父独立原 hook 2 条、真实 Chrome 5 场景及整进程重开 5 组全部通过。Astra `2bd330a` 固定 hooks 独立 9 例为 3 PASS / 6 FAIL，尚不接受；open-ended binding 仍在实现。原失败日志保留，不将局部通过合并为整批通过。
 
 | 合同范围 | 已有证据 | 当前结论 / 剩余工作 |
 | --- | --- | --- |

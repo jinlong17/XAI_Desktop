@@ -275,7 +275,11 @@
         "commit:e75d5b3",
         "commit:d6184ee",
         "commit:8c49657",
-        "../web-d2-async-pref-native/parent-d6184ee-review.md"
+        "../web-d2-async-pref-native/parent-d6184ee-review.md",
+        "commit:2bd330a",
+        "../web-d2-async-pref-astra-hooks/review.md",
+        "commit:9557005",
+        "../web-d2-dashboard-note-independent/review.md"
       ]
     },
     {
