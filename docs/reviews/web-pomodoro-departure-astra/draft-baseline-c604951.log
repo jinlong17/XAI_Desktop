@@ -1,0 +1,138 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (13 tests | 13 failed) 685ms
+   × preset: discard clears only its actual failed draft, preserving successful siblings and timer bytes 54ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes 23ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × display_style: discard clears only its actual failed draft, preserving successful siblings and timer bytes 21ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × theme: discard clears only its actual failed draft, preserving successful siblings and timer bytes 25ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × sound: discard clears only its actual failed draft, preserving successful siblings and timer bytes 26ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × muted: discard clears only its actual failed draft, preserving successful siblings and timer bytes 26ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × same-value successor failure stays a real draft after an earlier matching value committed 31ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × readback uncertainty unchanged: departure tracks the actual token outcome without duplicate settlement 18ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × readback uncertainty changed: departure tracks the actual token outcome without duplicate settlement 17ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × source-only repair is clean while repairing one source leaves another actual failed draft guarded 10ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × old epoch and disposed discard capabilities cannot clear surviving or successor device choices 22ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × running timer is not a preference draft and preference discard leaves its actual active record untouched 17ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × completion-driven failed next preset is a draft; successful retry releases it without replaying history or event 393ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+
+ Test Files  1 failed (1)
+      Tests  13 failed (13)
+   Start at  23:49:24
+   Duration  2.26s (transform 290ms, setup 0ms, collect 494ms, tests 685ms, environment 738ms, prepare 79ms)
+
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > preset: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > display_style: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > theme: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > sound: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > muted: discard clears only its actual failed draft, preserving successful siblings and timer bytes
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:15:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > same-value successor failure stays a real draft after an earlier matching value committed
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:42:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > readback uncertainty unchanged: departure tracks the actual token outcome without duplicate settlement
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > readback uncertainty changed: departure tracks the actual token outcome without duplicate settlement
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:52:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > source-only repair is clean while repairing one source leaves another actual failed draft guarded
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:63:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > old epoch and disposed discard capabilities cannot clear surviving or successor device choices
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:76:77
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > running timer is not a preference draft and preference discard leaves its actual active record untouched
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:92:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx > completion-driven failed next preset is a draft; successful retry releases it without replaying history or event
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UXzOnr/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx:108:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯

@@ -1,0 +1,102 @@
+revision=c604951 fixed_commit=c604951acda9adb48c51e00dba6255757b1f2afc
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx (7 tests | 7 failed) 475ms
+   × all six latest choices export from memory under full storage denial, retaining the complete schema and draft guard 150ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × export url failure preserves current choices, original save failure and guard; cleans temporary resources 54ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × export append failure preserves current choices, original save failure and guard; cleans temporary resources 101ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × export click failure preserves current choices, original save failure and guard; cleans temporary resources 81ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × old export capability refuses after owner change while a fresh device-only capability exports the same six-value snapshot 18ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+   × owner change during actual URL setup revokes the export before click and leaves surviving device work guarded 36ms
+     → expected [ 'pomodoro-preferences.json' ] to have a length of +0 but got 1
+   × partial success exports complete current values without turning saved siblings into discard targets 34ms
+     → real component must publish its public preference departure capability: expected undefined to be defined
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  23:49:25
+   Duration  1.59s (transform 264ms, setup 0ms, collect 410ms, tests 475ms, environment 267ms, prepare 97ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > all six latest choices export from memory under full storage denial, retaining the complete schema and draft guard
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:18:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > export url failure preserves current choices, original save failure and guard; cleans temporary resources
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > export append failure preserves current choices, original save failure and guard; cleans temporary resources
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > export click failure preserves current choices, original save failure and guard; cleans temporary resources
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:36:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > old export capability refuses after owner change while a fresh device-only capability exports the same six-value snapshot
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:44:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > owner change during actual URL setup revokes the export before click and leaves surviving device work guarded
+AssertionError: expected [ 'pomodoro-preferences.json' ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:59:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx > partial success exports complete current values without turning saved siblings into discard targets
+AssertionError: real component must publish its public preference departure capability: expected undefined to be defined
+ ❯ guard ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:14:120
+     12|   const props = { lang: 'en' as const, registerDepartureGuard: (guard:…
+     13|   const ui = render(<PomodoroModule {...props}/>);
+     14|   return { ui, guard: () => { expect(latest, 'real component must publ…
+       |                                                                                                                        ^
+     15| }
+     16| export function unload() { const e = new Event('beforeunload', { cance…
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:75:22
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:27:74
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react/dist/act-compat.js:47:24
+ ❯ process.env.NODE_ENV.exports.act ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:814:22
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ invoke ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-UuLwVk/docs/reviews/web-pomodoro-departure-astra/fixture.tsx:27:56
+ ❯ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx:75:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
