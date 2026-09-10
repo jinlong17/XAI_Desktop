@@ -1,7 +1,7 @@
 import React from 'react';
 import {it,expect,vi} from 'vitest';
-import {render,fireEvent,screen} from '@testing-library/react';
-import {accountScope} from '@repo/plugin-web-storage';
+import {act,render,fireEvent,screen} from '@testing-library/react';
+import {accountScope,getPref} from '@repo/plugin-web-storage';
 import {TasksModule} from '../TasksModule.js';
 import {toggleComplete,updateCard,moveCard} from '../internal/tasksReducer.js';
 import {SEED_TASK_COLS} from '../internal/seed/tasksMock.js';
@@ -23,10 +23,11 @@ it('legacy completion remains undated on idempotent patch and link retry preserv
  expect(updateCard(cols,task.id,{done:true})[3]!.tasks[0]!.completedAt).toBeUndefined();
  expect(upsertBoardLinkedTask(cols,taskCardFromBoardLink({...source,title:{en:'old',zh:'old'}}),'nodate',true)[3]!.tasks[0]).toEqual(task);
 });
-it('legacy completed group checkbox truly restores the task without inventing completion time',()=>{
+it('legacy completed group checkbox truly restores the task without inventing completion time',async()=>{
  const cols=fixture(),task=cols[3]!.tasks[0]!;cols[3]={...cols[3]!,tasks:[],completed:[task]};
  localStorage.setItem(accountScope.physicalKey('xai_task_cols'),JSON.stringify(cols));render(<TasksModule lang="en"/>);
  fireEvent.click(screen.getByRole('checkbox',{checked:true}));
- const stored=JSON.parse(localStorage.getItem(accountScope.physicalKey('xai_task_cols'))!) as TaskCol[];const restored=stored[3]!.tasks.find(t=>t.id===task.id)!;
+ await act(async()=>{});
+ const stored=getPref('xai_task_cols') as unknown as TaskCol[];const restored=stored[3]!.tasks.find(t=>t.id===task.id)!;
  expect(restored).toMatchObject({done:false,source});expect(restored.completedAt).toBeUndefined();expect(stored[3]!.completed).toHaveLength(0);
 });

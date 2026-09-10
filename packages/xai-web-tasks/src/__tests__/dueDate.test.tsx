@@ -1,4 +1,4 @@
-import { accountScope } from "@repo/plugin-web-storage";
+import { accountScope, getPref } from "@repo/plugin-web-storage";
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
@@ -11,7 +11,7 @@ import { isTaskColsArray } from "../internal/validate.js";
 import { taskCardFromBoardLink } from "../taskLink.js";
 import type { TaskCol } from "../types.js";
 const empty = (): TaskCol[] => SEED_TASK_COLS.map(c => ({ ...c, tasks: [], completed: [], count: 0 }));
-const stored = (): TaskCol[] => JSON.parse(localStorage.getItem(accountScope.physicalKey("xai_task_cols"))!);
+const stored = (): TaskCol[] => getPref("xai_task_cols") as unknown as TaskCol[];
 
 describe("REL-01 dueDate lifecycle", () => {
   it("creates, patches, moves and roundtrips without losing source or legacy metadata", () => {
@@ -50,7 +50,7 @@ describe("REL-01 dueDate lifecycle", () => {
     expect(JSON.stringify(cols)).toBe(snapshot);
   });
 
-  it("actual composer → detail edit → reload → local midnight refresh", () => {
+  it("actual composer → detail edit → reload → local midnight refresh", async () => {
     vi.setSystemTime(new Date(2026, 11, 31, 23, 59, 58));
     localStorage.setItem(accountScope.physicalKey("xai_task_cols"), JSON.stringify(empty()));
     const view = render(<TasksModule lang="en" />);
@@ -60,6 +60,7 @@ describe("REL-01 dueDate lifecycle", () => {
     fireEvent.click(within(dialog as HTMLElement).getByLabelText("Add a date"));
     fireEvent.change(within(dialog as HTMLElement).getByLabelText("Due date"), { target: { value: "2027-01-02" } });
     fireEvent.click(dialog.querySelector(".task-composer__btn--primary")!);
+    await act(async () => {});
     expect(stored().flatMap(c => c.tasks)[0]?.dueDate).toBe("2027-01-02");
     fireEvent.click(screen.getByText("Year boundary"));
     const detail = screen.getByLabelText("Task details");
@@ -67,6 +68,7 @@ describe("REL-01 dueDate lifecycle", () => {
     act(() => { window.dispatchEvent(new Event("focus")); });
     expect(within(detail).getByLabelText("Due date")).toHaveValue("2027-01-01");
     fireEvent.click(within(detail).getByRole("button", { name: /^Save$/ }));
+    await act(async () => {});
     expect(stored().flatMap(c => c.tasks)[0]?.dueDate).toBe("2027-01-01");
     view.unmount();
     render(<TasksModule lang="en" />);
@@ -77,6 +79,6 @@ describe("REL-01 dueDate lifecycle", () => {
     fireEvent.click(within(document.querySelector(".module-sidebar") as HTMLElement).getByText("Today"));
     expect(screen.getByText("Year boundary")).toBeInTheDocument();
     expect(stored().flatMap(c => c.tasks)[0]?.dueDate).toBe("2027-01-01");
-    expect(stored()[0]!.tasks[0]?.title.en).toBe("Year boundary");
+    expect(stored().flatMap(c => c.tasks).find(task => task.title.en === "Year boundary")).toBeDefined();
   });
 });

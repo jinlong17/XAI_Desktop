@@ -1,4 +1,8 @@
-import { accountScope } from "@repo/plugin-web-storage";
+import {
+  accountScope,
+  generationMarkerKey,
+  setCanonicalCommandActivationForTests,
+} from "@repo/plugin-web-storage";
 import { beforeEach as beforeAccountTest } from "vitest";
 import { vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
@@ -28,10 +32,33 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  setCanonicalCommandActivationForTests(false);
+  vi.unstubAllGlobals();
   vi.useRealTimers();
   localStorage.clear();
   cleanup();
 });
 
-// Explicit authenticated context; raw Storage remains unmodified.
-beforeAccountTest(() => { accountScope.activate(accountScope.lock("consumer-test"), "fixture"); });
+// Explicit authenticated D1 context. Production activation remains closed;
+// package tests opt into the canonical writer with a real persisted marker and
+// deterministic serialized Web Lock callbacks.
+beforeAccountTest(() => {
+  const scope = accountScope.activate(accountScope.lock("consumer-test"), "fixture");
+  localStorage.setItem(generationMarkerKey("consumer-test"), JSON.stringify({
+    generation: "fixture",
+    migrationId: "tasks-package-test",
+    previous: null,
+  }));
+  setCanonicalCommandActivationForTests(true);
+  let tail = Promise.resolve();
+  vi.stubGlobal("navigator", {
+    locks: {
+      request: vi.fn(<T>(_name: string, callback: () => Promise<T>): Promise<T> => {
+        const result = tail.then(callback);
+        tail = result.then(() => undefined, () => undefined);
+        return result;
+      }),
+    },
+  });
+  void scope;
+});

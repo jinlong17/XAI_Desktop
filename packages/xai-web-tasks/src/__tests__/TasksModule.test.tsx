@@ -11,7 +11,7 @@ import { accountScope } from "@repo/plugin-web-storage";
  */
 
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { TasksModule } from "../TasksModule.js";
 
@@ -57,7 +57,7 @@ describe("TasksModule — T-MOD-2 ZH column headers", () => {
 // ---------------------------------------------------------------------------
 
 describe("TasksModule — T-MOD-3 checkbox toggle", () => {
-  it("T-MOD-3: clicking checkbox toggles is-completed class on card", () => {
+  it("T-MOD-3: clicking checkbox toggles is-completed class on card", async () => {
     render(<TasksModule lang="en" />);
     // Find the first checkbox (cbx span) in the overdue column
     const checkboxes = document.querySelectorAll(".cbx");
@@ -67,9 +67,11 @@ describe("TasksModule — T-MOD-3 checkbox toggle", () => {
     expect(cbx).not.toHaveClass("checked");
     // Toggle
     fireEvent.click(cbx);
+    await act(async () => {});
     expect(cbx).toHaveClass("checked");
     // Toggle back
     fireEvent.click(cbx);
+    await act(async () => {});
     expect(cbx).not.toHaveClass("checked");
   });
 });

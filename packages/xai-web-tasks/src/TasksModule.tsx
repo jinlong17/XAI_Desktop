@@ -71,7 +71,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [failedSave, setFailedSave] = useState<{ kind: "tasks" | "lists" | "tags"; value: TaskCol[] | TaskListMeta[] | TaskTagMeta[]; baseline?: TaskCol[] } | null>(null);
   const { now } = useLocalDayClock();
 
-  const [rawCols, setRawCols] = usePref("xai_task_cols");
+  const [rawCols] = usePref("xai_task_cols");
   const [lists, setLists] = useState<TaskListMeta[]>(() =>
     readTaskMeta("task_lists", DEFAULT_TASK_LISTS, isTaskListArray),
   );
@@ -112,19 +112,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
     }
     const result = await mutateCanonicalDataset({
       key: "xai_task_cols", scope: owner, validate: isTaskColsArray,
-      initialize: () => SEED_TASK_COLS as TaskCol[],
+      initialize: () => baseline,
       mutate: current => JSON.stringify(current) === JSON.stringify(baseline)
         ? ({ ok: true as const, data: next })
         : ({ ok: false as const, reason: "conflict" }),
     });
-    if (result.ok) { setRawCols(result.data as unknown as Parameters<typeof setRawCols>[0]); setFailedSave(null); return true; }
+    if (result.ok) { setFailedSave(null); return true; }
     setFailedSave({ kind: "tasks", value: next, baseline });
     return false;
-  }, [setRawCols, owner, taskCols]);
+  }, [owner, taskCols]);
 
   useEffect(() => {
     if (isTaskColsArray(rawCols) && JSON.stringify(rawCols) === JSON.stringify(taskCols)) return;
-    void persistCols(taskCols);
+    void persistCols(taskCols, isTaskColsArray(rawCols) ? rawCols as TaskCol[] : taskCols);
   }, [rawCols, taskCols, persistCols]);
 
   const completedIds = useMemo<ReadonlySet<string>>(() => {
@@ -379,13 +379,13 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   async function handleDetailDelete(id: string) {
-    if (!await persistCols(deleteCard(taskCols, id))) return;
-    setEditingTaskId(null);
+    if (!await persistCols(deleteCard(taskCols, id))) return false;
     setSelectedIds((prev) => {
       const next = new Set(prev);
       next.delete(id);
       return next;
     });
+    return true;
   }
 
   const mainTitle = titleForView(activeView, lists, tags, lang, s("tasks.all"));
@@ -557,7 +557,6 @@ export function TasksModule({ lang }: TasksModuleProps) {
       <TaskDetailPanel
         lang={lang}
         located={editingTask}
-        failed={failedSave?.kind === "tasks"}
         lists={lists}
         tags={tags}
         onSave={handleDetailSave}
@@ -1214,7 +1213,6 @@ function BulkToolbar({
 }
 
 function TaskDetailPanel({
-  failed,
   lang,
   located,
   lists,
@@ -1225,7 +1223,6 @@ function TaskDetailPanel({
 }: {
   lang: "en" | "zh";
   located: LocatedTask | null;
-  failed: boolean;
   lists: ReadonlyArray<TaskListMeta>;
   tags: ReadonlyArray<TaskTagMeta>;
   onSave: (id: string, patch: {
@@ -1238,11 +1235,14 @@ function TaskDetailPanel({
     dueDate?: string | null;
     done: boolean;
   }) => Promise<boolean>;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => Promise<boolean>;
   onClose: () => void;
 }) {
   const owner = useRef(accountScope.capture()).current;
   const [saveFailed, setSaveFailed] = useState(false);
+  const [pending, setPending] = useState(false);
+  const pendingRef = useRef(false);
+  const sessionRef = useRef(0);
   const task = located?.task;
   const [title, setTitle] = useState("");
   const [bucket, setBucket] = useState<BucketId>("next7");
@@ -1256,10 +1256,19 @@ function TaskDetailPanel({
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!located) { openedTask.current = null; return; }
+    if (!located) {
+      openedTask.current = null;
+      sessionRef.current += 1;
+      pendingRef.current = false;
+      setPending(false);
+      return;
+    }
     const identity = located.task.id;
     if (openedTask.current === identity) return;
     openedTask.current = identity;
+    sessionRef.current += 1;
+    pendingRef.current = false;
+    setPending(false);
     setSaveFailed(false);
     setTitle(lang === "zh" ? located.task.title.zh : located.task.title.en);
     setBucket(located.colId);
@@ -1273,6 +1282,50 @@ function TaskDetailPanel({
   }, [located, lang, lists]);
 
   if (!task || !located) return null;
+
+  const save = async (nextDone: boolean) => {
+    if (pendingRef.current) return;
+    const session = sessionRef.current;
+    pendingRef.current = true;
+    setPending(true);
+    let ok = false;
+    try {
+      ok = await onSave(task.id, {
+        title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en),
+        bucket,
+        listId,
+        tags: tagIds,
+        priority,
+        notes,
+        ...(dateEdited ? { dueDate: dueDate || null } : {}),
+        done: nextDone,
+      });
+    } catch {
+      ok = false;
+    }
+    if (session !== sessionRef.current) return;
+    pendingRef.current = false;
+    setPending(false);
+    setSaveFailed(!ok);
+  };
+
+  const remove = async () => {
+    if (pendingRef.current) return;
+    const session = sessionRef.current;
+    pendingRef.current = true;
+    setPending(true);
+    let ok = false;
+    try {
+      ok = await onDelete(task.id);
+    } catch {
+      ok = false;
+    }
+    if (session !== sessionRef.current) return;
+    pendingRef.current = false;
+    setPending(false);
+    setSaveFailed(!ok);
+    if (ok) onClose();
+  };
 
   return (
     <aside className="task-detail-panel" aria-label={lang === "zh" ? "任务详情" : "Task details"}>
@@ -1336,22 +1389,19 @@ function TaskDetailPanel({
         <span>{lang === "zh" ? "备注" : "Notes"}</span>
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} />
       </label>
-      {(saveFailed || failed) && <TaskSaveFailure lang={lang} owner={owner} draft={{ id: task.id, title, bucket, listId, tags: tagIds, priority, notes, dueDate, dateEdited, done }} />}
+      {saveFailed && <TaskSaveFailure lang={lang} owner={owner} draft={{ id: task.id, title, bucket, listId, tags: tagIds, priority, notes, dueDate, dateEdited, done }} />}
       <footer>
         <button
           className="task-composer__btn task-composer__btn--primary"
-          onClick={async () => {
-            if (title.trim()) {
-              setSaveFailed(!await onSave(task.id, { title: title.trim(), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done }));
-            }
-          }}
+          disabled={pending || !title.trim()}
+          onClick={() => { void save(done); }}
         >
           {lang === "zh" ? "保存" : "Save"}
         </button>
-        <button className="task-composer__btn" onClick={async () => setSaveFailed(!await onSave(task.id, { title: title.trim() || (lang === "zh" ? task.title.zh : task.title.en), bucket, listId, tags: tagIds, priority, notes, ...(dateEdited ? { dueDate: dueDate || null } : {}), done: true }))}>
+        <button className="task-composer__btn" disabled={pending} onClick={() => { void save(true); }}>
           {lang === "zh" ? "完成" : "Complete"}
         </button>
-        <button className="task-composer__btn task-danger-btn" onClick={() => onDelete(task.id)}>
+        <button className="task-composer__btn task-danger-btn" disabled={pending} onClick={() => { void remove(); }}>
           {lang === "zh" ? "删除" : "Delete"}
         </button>
       </footer>

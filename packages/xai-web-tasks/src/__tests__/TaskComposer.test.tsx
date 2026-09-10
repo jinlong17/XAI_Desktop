@@ -12,9 +12,10 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { TaskComposer } from "../TaskComposer.js";
+import type { TaskComposerProps } from "../TaskComposer.js";
 import type { NewTaskDraft, BucketId } from "../types.js";
 
 // ---------------------------------------------------------------------------
@@ -24,7 +25,7 @@ function renderComposer(overrides: Partial<{
   open: boolean;
   lang: "en" | "zh";
   defaultBucket: BucketId;
-  onSave: (d: NewTaskDraft, b: BucketId) => void;
+  onSave: TaskComposerProps["onSave"];
   onClose: () => void;
 }> = {}) {
   const defaults = {
@@ -211,6 +212,31 @@ describe("TaskComposer — T-TC-7 bilingual labels", () => {
     const saveBtn = screen.getByRole("button", { name: "添加" });
     fireEvent.click(saveBtn);
     expect(screen.getByText("标题不能为空")).toBeTruthy();
+  });
+});
+
+describe("TaskComposer — async save lifecycle", () => {
+  it("blocks duplicate saves and ignores an old result after a new composer session opens", async () => {
+    let resolve!: (value: boolean) => void;
+    const onSave = vi.fn(() => new Promise<boolean>(done => { resolve = done; }));
+    const onClose = vi.fn();
+    const view = render(<TaskComposer open lang="en" defaultBucket="later" onSave={onSave} onClose={onClose} />);
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "Old session" } });
+    const save = screen.getByRole("button", { name: /^add$/i });
+    fireEvent.click(save);
+    fireEvent.click(save);
+    expect(onSave).toHaveBeenCalledTimes(1);
+    expect(save).toBeDisabled();
+
+    view.rerender(<TaskComposer open={false} lang="en" defaultBucket="later" onSave={onSave} onClose={onClose} />);
+    view.rerender(<TaskComposer open lang="en" defaultBucket="nodate" onSave={onSave} onClose={onClose} />);
+    await act(async () => {});
+    resolve(false);
+    await act(async () => {});
+
+    expect(screen.getByRole("textbox")).toHaveValue("");
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.getByRole("button", { name: /^add$/i })).not.toBeDisabled();
   });
 });
 

@@ -74,6 +74,9 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
   } = props;
   const owner = useRef(accountScope.capture()).current;
   const [saveFailed, setSaveFailed] = useState(false);
+  const [pending, setPending] = useState(false);
+  const pendingRef = useRef(false);
+  const sessionRef = useRef(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,6 +91,9 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
   const [titleErr, setTitleErr] = useState(false);
 
   useEffect(() => {
+    sessionRef.current += 1;
+    pendingRef.current = false;
+    setPending(false);
     setTitle("");
     setTag("none");
     setBucket(defaultBucket);
@@ -136,6 +142,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
   const handleSave = useCallback(
     async (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
+      if (pendingRef.current) return;
       const trimmed = title.trim();
       if (trimmed.length === 0) {
         setTitleErr(true);
@@ -151,7 +158,19 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
         withDate,
         ...(withDate && bucket !== "nodate" && dueDate ? { dueDate } : {}),
       };
-      setSaveFailed((await onSave(draft, bucket)) === false);
+      const session = sessionRef.current;
+      pendingRef.current = true;
+      setPending(true);
+      let saved: boolean | void = false;
+      try {
+        saved = await onSave(draft, bucket);
+      } catch {
+        saved = false;
+      }
+      if (session !== sessionRef.current) return;
+      pendingRef.current = false;
+      setPending(false);
+      setSaveFailed(saved === false);
     },
     [title, tag, listId, priority, bucket, withDate, dueDate, onSave],
   );
@@ -327,6 +346,7 @@ export function TaskComposer(props: TaskComposerProps): ReactElement | null {
             type="button"
             className="task-composer__btn task-composer__btn--primary"
             onClick={handleSave}
+            disabled={pending}
           >
             {str("btn_save", lang)}
           </button>
