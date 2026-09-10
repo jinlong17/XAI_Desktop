@@ -673,7 +673,15 @@
     {
       "id": "BRD-06",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:5c6ed8e",
+        "commit:99c36b0",
+        "commit:14b044c",
+        "commit:c0cc12d",
+        "commit:97f89da",
+        "../web-board-detail-astra-final/review.md"
+      ],
+      "partial_scope": "Three append recovery operations accepted; full card field patch and per-character whole-board rewrite requirement remains open."
     },
     {
       "id": "BRD-07",
