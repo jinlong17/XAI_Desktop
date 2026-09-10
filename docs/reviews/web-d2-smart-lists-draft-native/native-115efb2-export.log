@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"115efb2","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-draft-download","pass":true,"data":{"version":1,"kind":"smart-lists-draft","values":{"extension":"future-value","all":"hide","today":"if-not-empty"}},"scope":"Actual disk JSON download retains save failure; not a saved preference or persistent browser draft"}

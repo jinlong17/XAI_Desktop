@@ -13,3 +13,7 @@ The separate `export-denied` mode first performs the same two real user edits un
 ## Fixed ef97c1f intermediate recovery
 
 The unchanged export and unload paths plus the full-denial extension pass on fixed `ef97c1f`: [quota export](native-ef97c1f-export.log), [all reads/writes denied export](native-ef97c1f-export-denied.log), [beforeunload then verified Retry](native-ef97c1f-unload.log). Both exports produced the exact actual disk file/map while retaining save failure and unload protection. This is intermediate native evidence only; the actual-host extended journey still fails and the complete8565ca6 contract remains unaccepted.
+
+## Fixed 115efb2 export and unload regression
+
+[Actual quota export](native-115efb2-export.log), [all Storage reads/writes denied export](native-115efb2-export-denied.log), and [beforeunload through verified Retry](native-115efb2-unload.log) pass using the unchanged business assertions. Real disk JSON contains the exact latest map; export retains save failure and departure protection. These do not substitute for stale-capability and complete-host independent acceptance.

@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"115efb2","browser":"Chrome/152.0.7977.83"}
+{"name":"native-original-pop","pass":true,"mode":"back","scope":"Actual browser Back and Forward, original transition history retained after explicit discard"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

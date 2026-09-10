@@ -51,6 +51,22 @@ let browser;
 let server;
 let timer;
 let checkpoint = null;
+let stage = 'setup';
+let firstOutcome = null;
+const terminateChild = async (child, timeoutMs) => {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return false;
+  return await new Promise(resolve => {
+    let forced = false;
+    const deadline = setTimeout(() => {
+      if (child.exitCode === null && child.signalCode === null) {
+        forced = true;
+        child.kill('SIGKILL');
+      }
+    }, timeoutMs);
+    child.once('exit', () => { clearTimeout(deadline); resolve(forced); });
+    child.kill('SIGTERM');
+  });
+};
 try {
   const probe = readFileSync(new URL('./native-probe.ts', import.meta.url), 'utf8');
   const bundle = await build({
@@ -92,17 +108,16 @@ try {
     '--disable-background-networking', `--user-data-dir=${join(temporary, 'profile')}`, url+'/?phase=initial',
   ], { stdio: 'ignore' });
   browser.on('error', rejectResult);
+  stage = 'initial-browser-result';
   let outcome = await result;
+  firstOutcome = outcome;
   if (outcome.pass) {
     const firstPid = browser.pid;
     const before = outcome;
     checkpoint = outcome.checkpoint;
-    let forced = false;
-    await new Promise(resolve => {
-      browser.once('exit', resolve);
-      browser.kill('SIGTERM');
-      setTimeout(() => { if (browser.exitCode === null && browser.signalCode === null) { forced = true; browser.kill('SIGKILL'); } }, 3000).unref();
-    });
+    if (browser.exitCode !== null || browser.signalCode !== null) throw new Error('Initial browser exited before controlled termination');
+    stage = 'initial-browser-termination';
+    const forced = await terminateChild(browser, 3000);
     if (forced) throw new Error('Chrome needed forced termination; refuse normal-close claim');
     clearTimeout(timer);
     const resumed = new Promise((resolve,reject) => {
@@ -114,6 +129,7 @@ try {
       `--user-data-dir=${join(temporary,'profile')}`, url+'/?phase=reopen',
     ], {stdio:'ignore'});
     browser.on('error',rejectResult);
+    stage = 'reopened-browser-result';
     const after = await resumed;
     outcome = {pass:before.pass && after.pass,firstPid,reopenedPid:browser.pid,termination:'SIGTERM with observed process exit; no SIGKILL fallback',before,after};
   }
@@ -121,16 +137,15 @@ try {
   writeFileSync(new URL(`./native-${revision.slice(0,7)}${suffix ? `-${suffix}` : ''}.json`, import.meta.url), JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify(report, null, 2));
   if (!outcome.pass) process.exitCode = 1;
+} catch (error) {
+  const diagnostic = {requestedRef,revision,pass:false,stage,error:String(error),firstOutcome,scope:'Driver/process diagnostic; do not infer product persistence failure without completed browser assertions'};
+  writeFileSync(evidenceURL,JSON.stringify(diagnostic,null,2)+'\n');
+  console.error(JSON.stringify(diagnostic,null,2));
+  process.exitCode=1;
 } finally {
   clearTimeout(timer);
   server?.closeAllConnections();
   server?.close();
-  if (browser && browser.exitCode === null) {
-    await new Promise(resolve => {
-      browser.once('exit', resolve);
-      browser.kill('SIGTERM');
-      setTimeout(() => { if (browser.exitCode === null) browser.kill('SIGKILL'); }, 1500).unref();
-    });
-  }
+  if (browser && browser.exitCode === null && browser.signalCode === null) await terminateChild(browser, 1500);
   rmSync(temporary, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
 }
