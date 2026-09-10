@@ -1,6 +1,6 @@
 # 全部 To-do：312 项逐项状态清单
 
-核对日期：2026-09-09；产品检查点：`4202c79`；原语独立验收 `782f7b7`，六subscriber原生补充 `646a539`。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
+核对日期：2026-09-09；最新审查检查点：`0143952`；各批次固定产品版本与证据见下文及执行台账。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
 
 **正式完成 13 项；待完成验收 3 项；进行中 3 项；待处理／尚未核销 293 项。合计未关闭 299 项。** 当前 Web／项目流程范围 194 项，跨模块、新能力及门禁约束项 118 项。待处理不代表完全没有实现，完成状态只按现有关闭证据统计。
 
@@ -10,11 +10,10 @@
 
 进行中：REL-05/06、AI-02。TT-03 当前独立复验通过，证据见 web-time-hour-independent/20260909-review.md。REL-05 的多个 consumer 已独立验收，不自动关闭整个公共合同。
 
-最新补充（不改变完整编号状态）：A1日历输入校验、Board workspace保存恢复/启动保护/queued选择修复已分别取得有界独立与主审接受。B1/B2兼容层已取得Astra有界接受；Sol的C持久回执原语已提交37252bc，Astra37项独立断言与父真实Chrome七组原语检查通过，原语有界接受；Sol已提交4202c79复杂异步回执及六subscriber接入；Terra依据Astra7b95133合同实现D1共享普通writer和Tasks/Calendar/Board UI。Calendar D1原20断言在f764731独立全PASS，但Astra e407967新增边界仍2FAIL；Terra db1eddc原24独立通过，adc1202新reset读故障由d8412d3修复，Astra c58a647原26/26独立通过并有界接受；六subscriber接入4202c79已通过父646a539固定版本整Chrome重开和实际AiChat UI回执检查；Astra接入主审进行中，Calendar全包20FAIL尚待处理；旧客户端迁移门槛仍需验证。完整AI-02/REL-05/Board未关闭；详情清单项/附件/评论3条丢稿FAIL仍待接续。证据与限制见EXECUTION.md/EXECUTION.json。
+当前执行检查点：正式完成 13/312，未关闭 299 项。Tasks 3241529 的原8条与原生浏览器初次/整进程重开3+3通过，但 Astra 0143952 完整审查新增18条中6条失败：详情原始编辑基线、目标消失后的可见草稿恢复、批量删除会话隔离、completed列表/标签级联；Sol正在按该报告修复。Board 728822d 三项修复经父独立原4+新增15以及原包318通过（ab3a150、7f19aec），Astra复核中。Calendar 2fed984 移除成功后的冗余legacy写入，父原26独立通过（7f19aec），Astra复核中。Calendar测试适配1660df9与六subscriber修复6efba71此前已取得有界接受。D2账户生命周期共同锁、旧客户端激活门禁、Board详情三项丢稿及完整AI-02/REL-05仍开放；不新增编号关闭。
 
 任务说明来自[原始完整清单](TODO.md)，状态来自[执行台账](EXECUTION.json)。原始审查基线与当前代码不同；执行前仍应复核。跨模块发布、同步及路线图门禁继续有效。
 
-Latest execution delta: Calendar adaptation is independently accepted (`1660df9`). Tasks `3241529` passes parent eight fixed assertions and native initial/reopen three cases (`2ca5b93`); Astra full Tasks D1 review is active. Board `6a1adac` is not accepted: Astra `b4344a4` retains three source/ack/error-session failures under Terra repair. The original failing evidence and harness-only encoding diagnosis are preserved. No additional numbered item is closed.
 
 ## 推荐先做的批次
 
