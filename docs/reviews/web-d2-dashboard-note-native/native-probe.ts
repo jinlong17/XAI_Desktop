@@ -60,6 +60,6 @@ async function run(){
    cases.push({name,pass:true});
   }catch(error){cases.push({name,pass:false,error:String(error)});}finally{Storage.prototype.setItem=nativeSet;Storage.prototype.getItem=nativeGet;release?.();await held;root.unmount();host.remove();}
  }
- return {pass:cases.every(c=>c.pass),cases,...(initial?{checkpoint}:{}),scope:'Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset protocol unchanged; CSS omitted, not visual acceptance'};
+ return {pass:cases.every(c=>c.pass),cases,...(initial?{checkpoint}:{}),scope:'Actual DashHeader, native account WebLocks and synthetic physical account notes; device offset behavior outside these account-note assertions; CSS omitted, not visual acceptance'};
 }
 run().then(result=>fetch('/result',{method:'POST',body:JSON.stringify(result)})).catch(error=>fetch('/result',{method:'POST',body:JSON.stringify({pass:false,error:String(error)})}));
