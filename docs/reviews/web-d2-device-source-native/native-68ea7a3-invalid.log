@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"68ea7a3","sourceMode":"invalid","browser":"Chrome/152.0.7977.83"}
+{"name":"source-recovery","pass":false,"error":"AssertionError [ERR_ASSERTION]: Invalid/unavailable device source has no visible recovery"}
