@@ -13,3 +13,9 @@ Keep [the probe](native-probe.ts) assertions unchanged when verifying Terra's fi
 Parent executed the unchanged probe against `c79330cd287d53e6b37eae6597497beb1dad1f7d`: **3/3 PASS**. Both original failures are repaired and the quota/latest-draft control remains passing. Chrome PID 55311 exited normally under observed SIGTERM; PID 55411 reopened the isolated profile and all three persisted checkpoints passed, including continued physical absence for the never-submitted account note. [Raw after result](native-c79330c-after.json).
 
 The original component assertions also pass 2/2 in a separate immutable archive: [log](../web-d2-dashboard-note-independent/independent-parent-after-c79330c.log). Author coverage of the complete caller contract and Astra independent review remain pending. No full Dashboard, UI aesthetics, device offset conversion, or numbered-item closure is claimed.
+
+## Uncertain write integration and final fixed caller
+
+The expanded fourth case injects one getItem fault immediately after actual setItem. Fixed c79330c retains the already-written draft but cannot finish unchanged Retry: 3 controls PASS / 1 uncertainty FAIL, preserved in [before](native-c79330c-uncertain-before.json). The unchanged four assertions at f532ad5 all PASS; Retry closes the editor with exactly one physical write. Chrome PID 57507 exits and PID 57598 reopens; all four physical checkpoints pass. [Final raw result](native-f532ad5-final.json). The original three-case logs remain unchanged.
+
+This supports the caller's token-preserving unchanged retry fix; genuine stale external writes remain subject to independent caller acceptance. No claim is made that a process-local token survives restart.

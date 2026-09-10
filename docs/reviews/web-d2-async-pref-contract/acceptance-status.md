@@ -1,23 +1,20 @@
 # 异步偏好保存：逐条验收状态
 
-父任务检查点：engine650经Astra e75d5b3接受；hooks与dynamic整合修复20a4591，作者2c375a0原9/diagnostic通过，父41950a7原hook2/dynamic3/native5及整进程重开5通过。Astra最终独立完整复核中。下表保留原始失败与范围区别，作者PASS不等于独立接受。
+**限定 a82 切片已接受：固定产品 `20a4591`，Astra 独立结论 `a25423c`。** 完整逐项证据见[最终报告](../web-d2-async-pref-astra-hooks/review-20a4591.md)。原始拒绝报告及 FAIL 日志保留；本结论不关闭全部 D2、REL-05、AI-02 或尚未转换的调用方。
 
-| 合同范围 | 已有证据 | 当前结论 / 剩余工作 |
-| --- | --- | --- |
-| 注册键绑定、codec 一致与运行时 schema | Astra e75d5b3 固定650原21、repair7、token13通过 | 引擎有界接受；动态hook绑定单列。 |
-| source/default/未知键的类型化失败 | 同一固定独立审查，原始失败及残余修复断言通过 | 引擎有界接受。 |
-| 不确定 set/remove 的重试与一次通知 | Astra token13及原21；父固定d618实际pane不确定写入重试通过 | 引擎有界接受；实际重试Saved且只写一次。 |
-| 四公开接口同物理键锁、functional 最新值、owner/marker/tombstone、device 锁与迁移 | 同一审查的 11 条通过控制覆盖这些明确边界；完整原始断言见其报告 | 保留有界通过，修引擎后需固定回归；不证明未转换的同步调用方。 |
-| 两个 hook 的 functional 更新、等待中的后续编辑 | 父 `1becb16` 固定 5ed 两条通过，`082ba01` 固定 282 再通过 | 原物理增量通过；原d618独立确认误报conflict；20a作者原诊断通过，待Astra最终复核投影。 |
-| 实际 Collaborate 选择、Saving、quota、Not saved/Retry、正确 string 落盘 | 原 a82 两条失败，5ed 实际页面仍丢选择；修复 04 后父 `838396c` 两条通过 | 该真实流程通过；已保留修复前证据与仅 hook 通过的范围区别。 |
-| 两个真实 document 同键 native lock、各一次 functional 增量 | 父 `825a926` 固定 04：iframe 与主页面排队后持久值为 2 | 有界通过；不是所有浏览器/旧客户端的协调证明。 |
-| A 保存等待时切换 B，B 的值与 device 开关、旧完成隔离 | 父 `2673d56` 固定 282：该具体 native control 通过 | 保留通过；同 key 卸载重挂、新 generation 与复杂会话队列仍须独立测试。 |
-| 整个 Chrome 退出后重开 | 父固定d618，进程45710退出后45819重开，五组已保存状态通过 | 覆盖已保存值与账号分离；不证明未保存草稿或后台任务持续执行。 |
-| ordered reset、reset→new edit、duplicate retry、失效队列 | Sol d618作者9条聚焦合同；Astra固定hooks复核中 | 原d618失败保留；20a作者原断言已通过，Astra最终独立复核中。 |
-| 同 tab / storage event 投影，clean 更新、dirty 保留冲突、explicit reload | Sol d618作者合同已覆盖，Astra复核中 | 原d618失败保留；20a作者原断言已通过，Astra最终独立复核中。 |
-| readback uncertainty 与 hook 的原基线重试衔接 | 父固定d618 native readback-uncertain通过，原2c失败保留 | 该真实流程有界通过；不能将普通冲突当覆盖许可。 |
-| open-ended autosave hook 绑定（suffix/codec/default/validator） | Sol 69c8318；父725d719固定3条：account string/no mount/reset、JSON schema及reload、suffix变更queued失效通过 | 已实现并有界验证，需与原六失败修复一起固定整合复验。 |
-| 完整包与回归 | Astra固定650 storage176、C37/shared8/foundation14/admission2/types通过；Sol固定d618作者storage185/Settings282/types通过 | 分层记录；完整hooks独立复核仍待。 |
-| 其他 writer / scoped raw / global reset / provider / timer / export-import / 旧客户端 | 不属于本切片可关闭范围，仍在 D2 调用方清单 | 保持开放；production admission 不改变。 |
+| 合同范围 | 结论与证据 |
+| --- | --- |
+| 注册键、codec、运行时schema、source/default拒绝 | 接受。engine650原21/repair7；当前hooks domain与异常原断言通过。 |
+| 四个公开async接口共用锁、functional、noop/reset、owner/marker/tombstone、迁移 | engine e75d5b3接受；关键source blob在20a相同，保留有界控制，不声称全writer已转换。 |
+| 两个hook functional、pending后续编辑、active retry | 接受。独立原9、原作者17重跑及父原2；物理167/UI滞后原失败已修复。 |
+| reset失败、reset后pending、reset→new edit、disposal/session/key改变 | 接受。原9/17与dynamic5；不再从旧wrapper草稿恢复过时值。 |
+| same-tab/storage事件、clean投影、dirty冲突、explicit reload | 接受。原functional诊断与dirty/reload不变断言通过。 |
+| 不确定写入/删除、原基线token重试、一次通知 | 接受。engine token13、当前reset/duplicate Retry与原17；父实际pane一次写入重试Saved。 |
+| dynamic suffix/codec/default/validator | 接受。Astra dynamic5、父dynamic3及原17；配置拒绝、账号字符串/JSON、key变更与device跨账号控制通过。 |
+| 真实Collaborate选择、Saving/Not saved/Retry、EN/ZH与device开关 | 接受当前consumer。固定Settings282与父native5；没有扩大到所有设置。 |
+| 两个真实document native锁与functional增量 | 父固定20a native5中的独立页面增量通过。 |
+| 整Chrome退出重开 | 父固定20a五组已保存物理状态通过，PID52702→52777；不证明未保存草稿持久化或后台任务持续运行。 |
+| 包、类型、旧sync签名与canonical/admission边界 | 固定Storage193/Settings282及types独立通过；engine source identity保留已有边界，无生产激活。 |
+| Dashboard便签、其他writer/scoped raw/global reset/provider/timer/旧客户端 | 不属于本次关闭范围。Dashboard按9aac合同独立实施验收；其余继续留在D2清单。 |
 
-最终关闭本切片须证明上述合同范围全部满足，并接入真实 Collaborate 控件；不能只关闭当前已通过的测试集合。接受本切片也不自动关闭 REL-05、AI-02 或 D2 全范围。
+当前下一调用方：Dashboard account note产品f532ad5待独立完整验收。设备位置仍保留legacy协议，后续单独处理。
