@@ -116,7 +116,7 @@ function SmartListsPaneContent({ lang, registerDepartureGuard }: PaneRenderProps
     setHasDraft(true);
     setExportFailed(false);
     void editSmartLists(next);
-  }, [editable, editSmartLists, scope]);
+  }, [editable, editSmartLists]);
   const needsRecovery = smartListsSave.meta.status === "error" || smartListsSave.meta.status === "conflict";
   const binding = bindingRef.current;
   const isCurrentBinding = React.useCallback(() => (
