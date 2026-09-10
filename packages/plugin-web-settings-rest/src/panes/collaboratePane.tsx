@@ -164,7 +164,7 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   return <div className="collab-pane">
     <h3 className="pane-title">{s("settings.collaborate")}</h3>
     {anyPending && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saving")}</p>}
-    {!hasCurrentDraft() && anySaved && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saved")}</p>}
+    {!hasCurrentDraft() && needsRecovery.length === 0 && anySaved && <p className="collab-save-status" role="status" aria-live="polite">{t("collab.saved")}</p>}
     {hasCurrentDraft() && needsRecovery.length === 0 && <div className="collab-recovery">
       <div className="collab-recovery-actions"><button type="button" onClick={exportDraft}>{t("collab.export")}</button></div>
       {exportFailed && <p role="alert">{t("collab.exportFailed")}</p>}
