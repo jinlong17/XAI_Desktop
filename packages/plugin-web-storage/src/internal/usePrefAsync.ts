@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { decode, encode } from "./codec.js";
 import { accountScope, type AccountScope } from "./accountScope.js";
-import { PREF_REGISTRY, type WebPrefKey, type WebPrefValue } from "./registry.js";
+import { PREF_REGISTRY, type PrefCodec, type WebPrefKey, type WebPrefValue } from "./registry.js";
 import { mutatePref, type PrefMutationReason, type PrefMutationResult, type PrefSource } from "./prefMutation.js";
 import { subscribeSameTab } from "./sameTabBus.js";
 
@@ -18,6 +18,12 @@ export interface PrefAsyncMeta<T> {
 }
 
 export interface UsePrefAsyncOptions<T> { readonly validate?: (value: unknown) => value is T; }
+export interface PrefAsyncBinding<T> {
+  readonly key: string;
+  readonly codec: PrefCodec;
+  readonly defaultValue: T;
+  readonly validate: (value: unknown) => value is T;
+}
 
 type Setter<T> = T | ((current: T) => T);
 type Request<T> = {
@@ -65,7 +71,7 @@ function controllerFrom<T>(view: View<T>, scope: AccountScope): Controller<T> {
   return { ...view, scope, disposed: false, running: false, sequence: 0, visualSequence: 0, queue: [], failed: null, activePromise: null, observedRaw: undefined };
 }
 
-function codecValidator<T>(codec: Parameters<typeof decode>[0]): (value: unknown) => value is T {
+export function prefCodecValidator<T>(codec: Parameters<typeof decode>[0]): (value: unknown) => value is T {
   return (value: unknown): value is T => {
     if (codec === "string") return typeof value === "string";
     try {
@@ -79,19 +85,16 @@ function refusal<T>(reason: PrefMutationReason): PrefMutationResult<T> {
   return { ok: false, reason };
 }
 
-/** Explicit async hook: old usePref keeps its synchronous tuple contract. */
-export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyncOptions<WebPrefValue<K>>): readonly [WebPrefValue<K>, (next: Setter<WebPrefValue<K>>) => Promise<PrefMutationResult<WebPrefValue<K>>>, PrefAsyncMeta<WebPrefValue<K>>] {
-  type T = WebPrefValue<K>;
-  const entry = PREF_REGISTRY[key];
-  const defaultValidate = useMemo(() => codecValidator<T>(entry.codec), [entry.codec]);
-  const validate = options?.validate ?? defaultValidate;
+/** Shared registered/open-ended implementation. Callers must resolve the binding first. */
+export function usePrefAsyncBinding<T>({ key, codec, defaultValue, validate }: PrefAsyncBinding<T>): readonly [T, (next: Setter<T>) => Promise<PrefMutationResult<T>>, PrefAsyncMeta<T>] {
   const validateRef = useRef(validate);
   validateRef.current = validate;
   const scope = useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
-  const binding = `${String(key)}:${scope.epoch}`;
+  const encodedDefault = encode(codec, defaultValue);
+  const binding = JSON.stringify([key, codec, encodedDefault, scope.epoch]);
   const fresh = useMemo(
-    () => initialView(binding, readSnapshot(key, entry.codec, entry.default as T, validateRef.current, scope)),
-    [binding, entry.codec, entry.default, key, scope],
+    () => initialView(binding, readSnapshot(key, codec, defaultValue, validateRef.current, scope)),
+    [binding, codec, key, scope],
   );
   const controllerRef = useRef<Controller<T> | null>(null);
   if (controllerRef.current === null) controllerRef.current = controllerFrom(fresh, scope);
@@ -131,7 +134,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
 
   const project = useCallback((controller: Controller<T>) => {
     if (controller.disposed || controllerRef.current !== controller) return;
-    const next = readSnapshot(key, entry.codec, entry.default as T, validateRef.current, controller.scope);
+    const next = readSnapshot(key, codec, defaultValue, validateRef.current, controller.scope);
     if (controller.running || controller.queue.length > 0) {
       controller.observedRaw = next.raw;
       return;
@@ -141,7 +144,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
       return;
     }
     update(controller, { ...next, status: next.source === "valid" || next.source === "absent" ? "idle" : "error", error: next.source === "valid" || next.source === "absent" ? null : next.source });
-  }, [entry.codec, entry.default, key, update]);
+  }, [codec, defaultValue, key, update]);
 
   useEffect(() => {
     const controller = controllerRef.current;
@@ -167,8 +170,8 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
     const expectedRaw = request.kind === "reset" || typeof request.next !== "function" ? controller.raw : undefined;
     const attempt = mutatePref<T>({
       key,
-      codec: entry.codec,
-      defaultValue: entry.default as T,
+      codec,
+      defaultValue,
       validate: liveValidate,
       ...(request.kind === "reset" ? { reset: true } : { next: request.next }),
       ...(expectedRaw !== undefined ? { expectedRaw } : {}),
@@ -207,7 +210,7 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
       if (request.sequence >= controller.visualSequence) controller.visualSequence = request.sequence;
       update(controller, { value: result.value, raw: result.raw, source: result.source, status: "saved", error: null });
     });
-  }, [entry.codec, entry.default, key, update]);
+  }, [codec, defaultValue, key, update]);
 
   const enqueue = useCallback((controller: Controller<T>, request: Omit<Request<T>, "resolves">): Promise<PrefMutationResult<T>> => {
     if (controller.disposed || controllerRef.current !== controller || accountScope.capture() !== controller.scope) return Promise.resolve(refusal("account-changed"));
@@ -272,12 +275,25 @@ export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyn
     const current = controllerRef.current;
     if (!current || current.binding !== binding) return;
     dispose(current);
-    const nextView = initialView(binding, readSnapshot(key, entry.codec, entry.default as T, validateRef.current, scope));
+    const nextView = initialView(binding, readSnapshot(key, codec, defaultValue, validateRef.current, scope));
     const next = controllerFrom(nextView, scope);
     controllerRef.current = next;
     setView(nextView);
     setSubscriptionVersion(version => version + 1);
-  }, [binding, dispose, entry.codec, entry.default, key, scope]);
+  }, [binding, codec, defaultValue, dispose, key, scope]);
 
   return [visible.value, perform, { status: visible.status, source: visible.source, raw: visible.raw, error: visible.error, pending: visible.status === "pending", retry, reset, reload }] as const;
+}
+
+/** Explicit registered async hook: old usePref keeps its synchronous tuple contract. */
+export function usePrefAsync<K extends WebPrefKey>(key: K, options?: UsePrefAsyncOptions<WebPrefValue<K>>): readonly [WebPrefValue<K>, (next: Setter<WebPrefValue<K>>) => Promise<PrefMutationResult<WebPrefValue<K>>>, PrefAsyncMeta<WebPrefValue<K>>] {
+  type T = WebPrefValue<K>;
+  const entry = PREF_REGISTRY[key];
+  const defaultValidate = useMemo(() => prefCodecValidator<T>(entry.codec), [entry.codec]);
+  return usePrefAsyncBinding({
+    key,
+    codec: entry.codec,
+    defaultValue: entry.default as T,
+    validate: options?.validate ?? defaultValidate,
+  });
 }

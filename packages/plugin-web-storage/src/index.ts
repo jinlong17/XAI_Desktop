@@ -96,6 +96,7 @@ export type { UsePrefAutosaveOptions, PrefAutosaveResult } from "./internal/useP
 export { usePrefAsync } from "./internal/usePrefAsync.js";
 export type { PrefAsyncMeta, PrefAsyncStatus, UsePrefAsyncOptions } from "./internal/usePrefAsync.js";
 export { usePrefAutosaveAsync } from "./internal/usePrefAutosaveAsync.js";
+export type { PrefAutosaveAsyncResult, UsePrefAutosaveAsyncDynamicOptions } from "./internal/usePrefAutosaveAsync.js";
 
 // ---- migrate stub (v1 — no registered migrations) -------------------------
 export { migrate } from "./internal/migrate.js";

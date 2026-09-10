@@ -6,7 +6,7 @@ import { accountScope, generationKey, generationMarkerKey, type AccountScope } f
 import { prefMutationLockName } from "../internal/prefMutation.js";
 import { subscribeSameTab } from "../internal/sameTabBus.js";
 import { usePrefAsync } from "../internal/usePrefAsync.js";
-import { usePrefAutosaveAsync } from "../internal/usePrefAutosaveAsync.js";
+import { resolvePrefAutosaveAsyncBinding, usePrefAutosaveAsync } from "../internal/usePrefAutosaveAsync.js";
 
 type Run<T = unknown> = () => T | Promise<T>;
 function createNamedLockManager() {
@@ -56,6 +56,10 @@ function activate(id: string, generation = "g1"): AccountScope {
 function physical(scope = accountScope.capture()): string {
   if (!scope.accountId || !scope.generation) throw new Error("active account required");
   return generationKey(scope.accountId, scope.generation, prefKey, scope.kind === "demo");
+}
+function physicalFor(logicalKey: string, scope = accountScope.capture()): string {
+  if (!scope.accountId || !scope.generation) throw new Error("active account required");
+  return generationKey(scope.accountId, scope.generation, logicalKey, scope.kind === "demo");
 }
 function holdLifecycle(id: string) {
   let release!: () => void;
@@ -289,4 +293,63 @@ it("retries an engine-attributed uncertain commit without a second write or fals
   expect(writes.mock.calls.filter(([target]) => target === key)).toHaveLength(1);
   expect(hook.result.current.meta.status).toBe("saved");
   expect(sibling.result.current.value).toBe("view");
+});
+
+it("persists an open-ended string binding under its generated account key without a mount write", async () => {
+  const logicalKey = "xai_pref_sol_dynamic_note";
+  const key = physicalFor(logicalKey);
+  const writes = vi.spyOn(Storage.prototype, "setItem");
+  const hook = renderPrefHook(() => usePrefAutosaveAsync("sol_dynamic_note", {
+    codec: "string",
+    defaultValue: "",
+    validate: (value): value is string => typeof value === "string" && value.length <= 32,
+  }));
+
+  expect(hook.result.current.value).toBe("");
+  expect(localStorage.getItem(key)).toBeNull();
+  expect(writes.mock.calls.filter(([target]) => target === key)).toHaveLength(0);
+
+  let invalid!: Awaited<ReturnType<typeof hook.result.current.edit>>;
+  await act(async () => { invalid = await hook.result.current.edit(42 as never); });
+  expect(invalid).toMatchObject({ ok: false, reason: "invalid" });
+  expect(localStorage.getItem(key)).toBeNull();
+  expect(writes.mock.calls.filter(([target]) => target === key)).toHaveLength(0);
+
+  await act(async () => { await hook.result.current.edit("hello"); });
+  expect(localStorage.getItem(logicalKey)).toBeNull();
+  expect(localStorage.getItem(key)).toBe("hello");
+  expect(hook.result.current.value).toBe("hello");
+  expect(hook.result.current.meta.status).toBe("saved");
+});
+
+it("round-trips and projects an open-ended JSON binding through the shared async core", async () => {
+  type Note = { text: string; pinned: boolean };
+  const options = {
+    codec: "json" as const,
+    defaultValue: { text: "", pinned: false },
+    validate: (value: unknown): value is Note => {
+      if (!value || typeof value !== "object") return false;
+      const candidate = value as Partial<Note>;
+      return typeof candidate.text === "string" && typeof candidate.pinned === "boolean";
+    },
+  };
+  const key = physicalFor("xai_pref_sol_dynamic_json");
+  const first = renderPrefHook(() => usePrefAutosaveAsync("sol_dynamic_json", options));
+  const sibling = renderPrefHook(() => usePrefAutosaveAsync("sol_dynamic_json", options));
+
+  await act(async () => { await first.result.current.edit({ text: "durable", pinned: true }); });
+  await act(async () => { await Promise.resolve(); });
+  expect(localStorage.getItem(key)).toBe(JSON.stringify({ text: "durable", pinned: true }));
+  expect(first.result.current.value).toEqual({ text: "durable", pinned: true });
+  expect(sibling.result.current.value).toEqual({ text: "durable", pinned: true });
+});
+
+it("rejects incomplete, malformed, and registry-inconsistent open-ended bindings", () => {
+  const validString = { codec: "string" as const, defaultValue: "", validate: (value: unknown): value is string => typeof value === "string" };
+  expect(() => resolvePrefAutosaveAsyncBinding("", validString)).toThrow(TypeError);
+  expect(() => resolvePrefAutosaveAsyncBinding("bad/name", validString)).toThrow(TypeError);
+  expect(() => resolvePrefAutosaveAsyncBinding("xai_pref_already_prefixed", validString)).toThrow(TypeError);
+  expect(() => resolvePrefAutosaveAsyncBinding("missing_options", undefined)).toThrow(TypeError);
+  expect(() => resolvePrefAutosaveAsyncBinding("bad_default", { codec: "number", defaultValue: Number.POSITIVE_INFINITY, validate: validNumber })).toThrow(TypeError);
+  expect(() => resolvePrefAutosaveAsyncBinding("collab_default_share", { codec: "json", defaultValue: {}, validate: (value): value is object => typeof value === "object" && value !== null })).toThrow(TypeError);
 });
