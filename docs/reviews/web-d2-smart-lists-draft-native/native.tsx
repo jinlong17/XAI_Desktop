@@ -7,6 +7,6 @@ import './packages/plugin-web-tokens/src/layout.css';
 import './packages/plugin-web-settings-shell/src/styles.css';
 import './packages/plugin-web-settings-rest/src/styles.css';
 const owner='smart-visual';accountScope.activate(accountScope.lock(owner),'g1');localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
-const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;
-(window as any).verify={key,restore(){Storage.prototype.setItem=nativeSet},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}}};
+const key=accountScope.physicalKey('xai_pref_smart_lists');localStorage.setItem(key,JSON.stringify({extension:'future-value'}));const nativeSet=Storage.prototype.setItem;const nativeGet=Storage.prototype.getItem;
+(window as any).verify={key,read(){return nativeGet.call(localStorage,key)},denyAll(){Storage.prototype.getItem=function(){throw new DOMException('denied','SecurityError')};Storage.prototype.setItem=function(){throw new DOMException('denied','SecurityError')}},restore(){Storage.prototype.setItem=nativeSet;Storage.prototype.getItem=nativeGet},deny(){Storage.prototype.setItem=function(k,v){if(k===key)throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v)}}};
 createRoot(document.getElementById('app')!).render(smartListsPane.render({lang:'en'}));

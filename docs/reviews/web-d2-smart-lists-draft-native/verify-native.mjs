@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3];if(!['export','unload'].includes(mode))throw Error('export or unload required');
+const mode=process.argv[3];if(!['export','export-denied','unload'].includes(mode))throw Error('export, export-denied or unload required');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}-${mode}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -39,12 +39,14 @@ try{
  await ev('verify.deny()');await choose(0,'hide');await choose(1,'if-not-empty');
  assert.equal(await ev('localStorage.getItem(verify.key)'),JSON.stringify({extension:'future-value'}));
  assert(await ev('!!document.querySelector("[role=alert]")'),'Actual unsaved feedback missing');
- if(mode==='export'){
+ if(mode.startsWith('export')){
+  if(mode==='export-denied')await ev('verify.denyAll()');
   const label=await ev('[...document.querySelectorAll("button")].find(e=>/export/i.test(e.textContent))?.textContent.trim()');assert(label,'Actual draft export control missing');await text(label);
   let filename;for(let i=0;i<60;i++){filename=readdirSync(downloads).find(f=>f.endsWith('.json'));if(filename)break;await delay(50)}
   assert.equal(filename,'smart-lists-draft.json');const data=JSON.parse(readFileSync(join(downloads,filename),'utf8'));
   assert.deepEqual(data,{version:1,kind:'smart-lists-draft',values:{extension:'future-value',all:'hide',today:'if-not-empty'}});
-  assert(await ev('!!document.querySelector("[role=alert]")'),'Export cleared unsaved recovery');assert.equal(await ev('localStorage.getItem(verify.key)'),JSON.stringify({extension:'future-value'}));
+  assert(await ev('!!document.querySelector("[role=alert]")'),'Export cleared unsaved recovery');assert.equal(await ev('verify.read()'),JSON.stringify({extension:'future-value'}));
+  assert.equal(await ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()'),true,'Export cleared draft departure guard');
   record('actual-draft-download',{pass:true,data,scope:'Actual disk JSON download retains save failure; not a saved preference or persistent browser draft'});
  }else{
   const guard=()=>ev('(()=>{const e=new Event("beforeunload",{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented})()');
