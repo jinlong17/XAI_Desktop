@@ -25,7 +25,7 @@ try {
  aliases.sort((a, b) => b.find.length - a.find.length);
  aliases.push({find:'react-dom',replacement:join(root,'packages/plugin-web-storage/node_modules/react-dom')},{find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-board-workspace-astra-review'); mkdirSync(owned, {recursive:true});
- for (const file of ['d1-board-parent-baseline.test.ts','d1-board-link-boundaries.test.tsx','d1-board-repair-boundaries.test.ts']) copyFileSync(join(evidence,file),join(owned,file));
+ for (const file of ['d1-web-locks-fixture.ts','d1-board-parent-baseline.test.ts','d1-board-link-boundaries.test.tsx','d1-board-repair-boundaries.test.ts']) copyFileSync(join(evidence,file),join(owned,file));
  for (const [name, include] of [['d1-board-parent-baseline', ['docs/reviews/web-board-workspace-astra-review/d1-board-parent-baseline.test.ts']], ['d1-board-boundaries', ['docs/reviews/web-board-workspace-astra-review/d1-board-link-boundaries.test.tsx']], ['d1-board-repair', ['docs/reviews/web-board-workspace-astra-review/d1-board-repair-boundaries.test.ts']], ['d1-board-package', ['packages/plugin-web-board-workspaces/src/__tests__/*.{test,spec}.{ts,tsx}']]]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');
@@ -35,7 +35,7 @@ try {
   const result = spawnSync(join(root,'packages/plugin-web-board-workspaces/node_modules/.bin/vitest'), ['run','--config',config], {cwd:suiteRoot,encoding:'utf8',maxBuffer:20*1024*1024});
   if (result.error) throw result.error;
   if (result.status !== 0) process.exitCode = result.status ?? 1;
-  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
+  writeFileSync(join(evidence,name+(process.argv[4] ? '-'+process.argv[4] : '')+'-'+revision+'.log'), `revision=${revision}\noverlay=review tests plus d1-web-locks-fixture.ts; product and named scheduler from archive\nexit=${result.status}\n${result.stdout}\n${result.stderr}`.trimEnd() + '\n');
   console.log(name, 'exit='+result.status, result.stdout.slice(-1600));
  }
 } finally { rmSync(dir, {recursive:true,force:true}); }

@@ -1,3 +1,4 @@
+import {createTestLockManager} from './d1-web-locks-fixture.js';
 import {beforeEach,afterEach,it,expect,vi} from 'vitest';
 import {accountScope,generationMarkerKey,setCanonicalCommandActivationForTests} from '@repo/plugin-web-storage';
 import {makeDefaultBoards} from '@repo/plugin-web-board-core';
@@ -7,7 +8,7 @@ const boardKey=()=>accountScope.physicalKey('xai_boards_v2');
 const receipt={operationVersion:1,signature:'preserve',result:{ok:true,targetId:'prior'},committedAt:'2026-09-09T00:00:00Z'};
 const empty=()=>[{id:'overdue',key:'overdue',count:0,tasks:[]},{id:'next7',key:'next_7_days',count:0,tasks:[]},{id:'later',key:'later',count:0,tasks:[]},{id:'nodate',key:'no_date',count:0,tasks:[]}];
 const boardCard=()=>JSON.parse(localStorage.getItem(boardKey())!)[0].lists.flatMap((list:any)=>list.cards).find((card:any)=>card.id==='bc1');
-beforeEach(()=>{localStorage.clear();accountScope.activate(accountScope.lock('board-canonical'),'g1');localStorage.setItem(generationMarkerKey('board-canonical'),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));setCanonicalCommandActivationForTests(true);vi.stubGlobal('navigator',{locks:{request:async(_name:string,run:()=>Promise<unknown>)=>run()}});localStorage.setItem(boardKey(),JSON.stringify(makeDefaultBoards()));});
+beforeEach(()=>{localStorage.clear();accountScope.activate(accountScope.lock('board-canonical'),'g1');localStorage.setItem(generationMarkerKey('board-canonical'),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));setCanonicalCommandActivationForTests(true);vi.stubGlobal('navigator',{locks:createTestLockManager()});localStorage.setItem(boardKey(),JSON.stringify(makeDefaultBoards()));});
 afterEach(()=>{vi.restoreAllMocks();vi.unstubAllGlobals();setCanonicalCommandActivationForTests(false);});
 it.each(['absent','envelope'])('Board link completes through the canonical Tasks writer with %s source and remains idempotent',async source=>{
  if(source==='envelope')localStorage.setItem(taskKey(),JSON.stringify({format:'xai-command-state',version:1,revision:3,data:empty(),receipts:{prior:receipt}}));

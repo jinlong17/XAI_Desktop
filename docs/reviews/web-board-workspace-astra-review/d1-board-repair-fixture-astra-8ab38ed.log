@@ -1,0 +1,12 @@
+revision=8ab38ed
+overlay=review tests plus d1-web-locks-fixture.ts; product and named scheduler from archive
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-astra-board-d1-ONWQlg
+
+ ✓ docs/reviews/web-board-workspace-astra-review/d1-board-repair-boundaries.test.ts (4 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  19:26:45
+   Duration  2.02s (transform 998ms, setup 0ms, collect 1.34s, tests 9ms, environment 258ms, prepare 84ms)
