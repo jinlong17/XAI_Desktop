@@ -60,4 +60,17 @@ describe("dateTimePane", () => {
     fireEvent.click(toggle!);
     await waitFor(() => expect(getPref("xai_pref_dt_lunar")).toBe(false));
   });
+
+  it("DT7: an actual draft never exposes source Reload for that same field", async () => {
+    localStorage.setItem("xai_pref_dt_start_week", "invalid-week");
+    try {
+      const { container } = render(dateTimePane.render({ lang: "en" }));
+      const select = container.querySelector<HTMLSelectElement>('select[aria-label="Start week on"]');
+      fireEvent.change(select!, { target: { value: "sunday" } });
+      await waitFor(() => expect(screen.getByRole("button", { name: "Retry Start week on" })).toBeInTheDocument());
+      expect(screen.queryByRole("button", { name: "Reload Start week on" })).toBeNull();
+    } finally {
+      localStorage.removeItem("xai_pref_dt_start_week");
+    }
+  });
 });

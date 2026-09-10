@@ -10,7 +10,7 @@ import { localI18n } from "../internal/localI18n.js";
 type StartWeek = "monday" | "sunday" | "saturday";
 type FieldId = "start_week" | "lunar" | "week_numbers" | "holidays" | "timezone";
 type FieldValue = StartWeek | boolean;
-type Draft = Readonly<{ value: FieldValue; session: object; operation: object }>;
+type Draft = { value: FieldValue; session: object; operation: object; settledFailure: boolean; retryActive: boolean };
 type Drafts = Record<FieldId, Draft | null>;
 type Prefs = Record<FieldId, PrefAutosaveAsyncResult<FieldValue>>;
 
@@ -50,33 +50,46 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
   const hasCurrentDraft = React.useCallback(() => fields.some(field => isCurrentDraft(field, draftsRef.current[field])), [isCurrentDraft]);
 
   const putDraft = React.useCallback((field: FieldId, value: FieldValue) => {
-    const draft = { value, session: deviceSessionRef.current, operation: {} };
+    const draft = { value, session: deviceSessionRef.current, operation: {}, settledFailure: false, retryActive: false };
     draftsRef.current[field] = draft;
     setExportFailed(false);
     setSaved(false);
     changed();
     return draft;
   }, [changed]);
-  const clearIfMatching = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => {
-    if (ok && draftsRef.current[field] === draft) { draftsRef.current[field] = null; setSaved(true); changed(); }
+  const settleDraft = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => {
+    if (draftsRef.current[field] !== draft) return;
+    if (ok) { draftsRef.current[field] = null; setSaved(true); changed(); return; }
+    draft.retryActive = false;
+    draft.settledFailure = true;
+    changed();
   }, [changed]);
   const edit = React.useCallback((field: FieldId, value: FieldValue) => {
     if (!currentScope() || !isValueFor(field, value)) return;
     const draft = putDraft(field, value);
-    void prefsRef.current[field].edit(value).then(result => clearIfMatching(field, draft, result.ok), () => clearIfMatching(field, draft, false));
-  }, [clearIfMatching, currentScope, putDraft]);
+    void prefsRef.current[field].edit(value).then(result => settleDraft(field, draft, result.ok), () => settleDraft(field, draft, false));
+  }, [currentScope, putDraft, settleDraft]);
   const retry = React.useCallback((field: FieldId) => {
     const draft = draftsRef.current[field];
-    if (!isCurrentDraft(field, draft)) return;
-    void prefsRef.current[field].retry().then(result => clearIfMatching(field, draft!, result.ok), () => clearIfMatching(field, draft!, false));
-  }, [clearIfMatching, isCurrentDraft]);
+    // The hook returns a predecessor's active Promise while a newer intent is
+    // still queued. Only a failure settled by this exact latest draft may own a
+    // recovery Retry, so predecessor success cannot clear later user work.
+    if (!isCurrentDraft(field, draft) || !draft!.settledFailure || draft!.retryActive) return;
+    draft!.settledFailure = false;
+    draft!.retryActive = true;
+    changed();
+    void prefsRef.current[field].retry().then(result => settleDraft(field, draft!, result.ok), () => settleDraft(field, draft!, false));
+  }, [changed, isCurrentDraft, settleDraft]);
   const discard = React.useCallback((field: FieldId) => {
     const draft = draftsRef.current[field];
     if (draft && !isCurrentDraft(field, draft)) return;
     if (draft) { draftsRef.current[field] = null; changed(); }
     prefsRef.current[field].meta.reload();
   }, [changed, isCurrentDraft]);
-  const reloadSource = React.useCallback((field: FieldId) => prefsRef.current[field].meta.reload(), []);
+  const reloadSource = React.useCallback((field: FieldId) => {
+    if (isCurrentDraft(field, draftsRef.current[field])) return;
+    prefsRef.current[field].meta.reload();
+  }, [isCurrentDraft]);
   const discardAll = React.useCallback(() => {
     if (!hasCurrentDraft()) return;
     for (const field of fields) if (isCurrentDraft(field, draftsRef.current[field])) discard(field);
@@ -148,7 +161,7 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
     return <div className="dt-recovery-field" role="alert" key={field}>
       <span>{activeDraft ? draftMessage : sourceMessage}</span>
       {activeDraft && <><button type="button" onClick={() => retry(field)} aria-label={`${lang === "zh" ? "重试" : "Retry"} ${label}`}>{lang === "zh" ? "重试" : "Retry"}</button><button type="button" onClick={() => discard(field)} aria-label={`${lang === "zh" ? "放弃" : "Discard"} ${label}`}>{lang === "zh" ? "放弃" : "Discard"}</button></>}
-      {sourceOnly && <button type="button" onClick={() => reloadSource(field)} aria-label={`${lang === "zh" ? "重新读取" : "Reload"} ${label}`}>{lang === "zh" ? "重新读取" : "Reload"}</button>}
+      {!activeDraft && sourceOnly && <button type="button" onClick={() => reloadSource(field)} aria-label={`${lang === "zh" ? "重新读取" : "Reload"} ${label}`}>{lang === "zh" ? "重新读取" : "Reload"}</button>}
     </div>;
   };
 
