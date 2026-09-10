@@ -8,3 +8,7 @@ Fixed product `a82efa0`, actual Collaborate select in isolated Chrome with real 
 The second assertion now explicitly checks the injected rejected-write counter before testing draft retention; the earlier `native-a82efa0-parent-before.json` is preserved separately. Subsequent Not saved/Retry/Saving and restart assertions are not claimed reached in failing runs. On a repaired product the unchanged probe requires visible pending/failure feedback, actual Retry persistence to raw string edit, then exact persisted value after whole-browser exit/reopen. This covers the first concrete user flow only; the contract's two-document functional updater/other boundaries remain separate acceptance work.
 
 Harness initialization initially lacked a ReactDOM resolver and stopped before product execution; the runner now uses the installed apps/web dependency path while all workspace packages remain pinned to the git archive. No product code was changed to obtain the failures.
+
+## First fixed implementation
+
+At `5ed9329` both original native cases remain correct FAIL: the held lock now preserves old physical bytes, but the actual pane loses latest selection during pending; the quota case also loses latest selection after a confirmed rejected write. `native-5ed9329-parent-initial.json` preserves this transition rather than calling the original failure wholly fixed. Parent stable-validator hook two-case suite passes at this same revision; the rendered consumer boundary needs further repair. No process-reopen claim is made after initial failure.
