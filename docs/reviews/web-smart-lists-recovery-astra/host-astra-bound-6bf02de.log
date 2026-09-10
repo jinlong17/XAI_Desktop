@@ -1,0 +1,263 @@
+revision=6bf02de fixed_commit=6bf02dee63d25a9fa16050aa252e5ae61428830a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx (10 tests | 7 failed) 597ms
+   × programmatic second destination cannot replace first blocked intent 134ms
+     → expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+   × Back keeps original pane, Stay retains map; later discard permits Back once 92ms
+     → expected '/app/settings/smart_lists' to be '/app/dashboard' // Object.is equality
+   × dialog traps Tab within controls and Escape returns prior focus 47ms
+     → expected <button type="button"></button> to be <button type="button"></button> // Object.is equality
+     → expected false to be true // Object.is equality
+   ✓ sign-out first rejects concurrent route departure instead of allowing both 44ms
+   × route first rejects competing sign-out and permits only original route 51ms
+     → expected true to be false // Object.is equality
+   ✓ same sign-out request is single-flight; Stay resolves all false 40ms
+   × owner change cancels queued sign-out without requiring user action 33ms
+     → expected undefined to be false // Object.is equality
+     → expected <div …(5)><p></p>
+…(3)</div> to be null
+   × old sign-out intent cannot discard B newly edited draft 76ms
+     → expected true to be false // Object.is equality
+     → expected 'show' to be 'hide' // Object.is equality
+   ✓ unmount cancels sign-out Promise and unregisters delegate 30ms
+   × pending current map can export in dialog; successful latest save releases original requested navigation 48ms
+     → expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 3 passed (10)
+     Errors  4 errors
+   Start at  22:01:22
+   Duration  2.63s (transform 649ms, setup 0ms, collect 1.09s, tests 597ms, environment 585ms, prepare 62ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > programmatic second destination cannot replace first blocked intent
+AssertionError: expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/smart_lists"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:14:348
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > Back keeps original pane, Stay retains map; later discard permits Back once
+AssertionError: expected '/app/settings/smart_lists' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/settings/smart_lists"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:15:445
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > dialog traps Tab within controls and Escape returns prior focus
+AssertionError: expected <button type="button"></button> to be <button type="button"></button> // Object.is equality
+
+- Expected
++ Received
+
+  <button
+    type="button"
+  >
+-   Stay
++   Discard local changes and leave
+  </button>
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:16:514
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > dialog traps Tab within controls and Escape returns prior focus
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:16:563
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > route first rejects competing sign-out and permits only original route
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:18:333
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > owner change cancels queued sign-out without requiring user action
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected: 
+false
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:20:285
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > owner change cancels queued sign-out without requiring user action
+AssertionError: expected <div …(5)><p></p>
+…(3)</div> to be null
+
+- Expected: 
+null
+
++ Received: 
+<div
+  aria-label="Unsaved Smart Lists draft"
+  aria-modal="true"
+  class="settings-departure-dialog"
+  role="dialog"
+  tabindex="-1"
+>
+  <p>
+    Smart Lists has unsaved changes.
+  </p>
+  <button
+    type="button"
+  >
+    Stay
+  </button>
+  <button
+    type="button"
+  >
+    Export current draft
+  </button>
+  <button
+    type="button"
+  >
+    Discard local changes and leave
+  </button>
+</div>
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:20:332
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > old sign-out intent cannot discard B newly edited draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:21:574
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > old sign-out intent cannot discard B newly edited draft
+AssertionError: expected 'show' to be 'hide' // Object.is equality
+
+Expected: "hide"
+Received: "show"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:21:613
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/host.test.tsx > pending current map can export in dialog; successful latest save releases original requested navigation
+AssertionError: expected '/app/settings/smart_lists' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/smart_lists"
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/host.test.tsx:23:781
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 4 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: RequestInit: Expected signal ("AbortSignal {}") to be an instance of AbortSignal.
+ ❯ Object.webidl.errors.exception ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:4802:14
+ ❯ Object.AbortSignal ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5061:31
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:12484:41
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5113:16
+ ❯ Object.RequestInit ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5095:21
+ ❯ new Request ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:11846:34
+ ❯ createClientSideRequest ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:5244:10
+ ❯ startNavigation ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1961:19
+ ❯ navigate ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1871:11
+ ❯ Object.proceed ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1861:11
+
+This error originated in "docs/reviews/web-smart-lists-recovery-astra/host.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "programmatic second destination cannot replace first blocked intent". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: RequestInit: Expected signal ("AbortSignal {}") to be an instance of AbortSignal.
+ ❯ Object.webidl.errors.exception ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:4802:14
+ ❯ Object.AbortSignal ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5061:31
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:12484:41
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5113:16
+ ❯ Object.RequestInit ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5095:21
+ ❯ new Request ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:11846:34
+ ❯ createClientSideRequest ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:5244:10
+ ❯ startNavigation ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1961:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1603:16
+ ❯ Object.go ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:116:9
+
+This error originated in "docs/reviews/web-smart-lists-recovery-astra/host.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "Back keeps original pane, Stay retains map; later discard permits Back once". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: RequestInit: Expected signal ("AbortSignal {}") to be an instance of AbortSignal.
+ ❯ Object.webidl.errors.exception ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:4802:14
+ ❯ Object.AbortSignal ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5061:31
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:12484:41
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5113:16
+ ❯ Object.RequestInit ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5095:21
+ ❯ new Request ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:11846:34
+ ❯ createClientSideRequest ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:5244:10
+ ❯ startNavigation ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1961:19
+ ❯ navigate ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1871:11
+ ❯ Object.proceed ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1861:11
+
+This error originated in "docs/reviews/web-smart-lists-recovery-astra/host.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "sign-out first rejects concurrent route departure instead of allowing both". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: RequestInit: Expected signal ("AbortSignal {}") to be an instance of AbortSignal.
+ ❯ Object.webidl.errors.exception ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:4802:14
+ ❯ Object.AbortSignal ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5061:31
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:12484:41
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5113:16
+ ❯ Object.RequestInit ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:5095:21
+ ❯ new Request ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BJuOPZ/node:internal/deps/undici/undici:11846:34
+ ❯ createClientSideRequest ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:5244:10
+ ❯ startNavigation ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1961:19
+ ❯ navigate ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1871:11
+ ❯ Object.proceed ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router/dist/development/chunk-D6LUOGOQ.js:1861:11
+
+This error originated in "docs/reviews/web-smart-lists-recovery-astra/host.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "route first rejects competing sign-out and permits only original route". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯

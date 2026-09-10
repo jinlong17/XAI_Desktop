@@ -1,0 +1,65 @@
+revision=6bf02de fixed_commit=6bf02dee63d25a9fa16050aa252e5ae61428830a
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-fQfrsN
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx (8 tests | 1 failed) 356ms
+   ✓ actual latest complete Blob retains own prototype fields under total storage denial and does not clear recovery 110ms
+   ✓ export Blob exception retains draft, original recovery, and departure guard 40ms
+   ✓ export URL exception retains draft, original recovery, and departure guard 31ms
+   ✓ export click exception retains draft, original recovery, and departure guard 30ms
+   ✓ beforeunload clean/invalid mount false, pending true, explicit conflict discard false 38ms
+   ✓ uncertain own commit exports actual intention and verified Retry clears unload 31ms
+   ✓ owner changes inside object URL creation revoke without clicking 29ms
+   × retained A guard capability cannot export or discard a later B draft 47ms
+     → expected true to be false // Object.is equality
+     → expected [ 'smart-lists-draft.json' ] to have a length of +0 but got 1
+     → expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  22:00:50
+   Duration  2.30s (transform 369ms, setup 0ms, collect 720ms, tests 356ms, environment 557ms, prepare 159ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/export.test.tsx > retained A guard capability cannot export or discard a later B draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx:15:613
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/export.test.tsx > retained A guard capability cannot export or discard a later B draft
+AssertionError: expected [ 'smart-lists-draft.json' ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx:15:707
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  docs/reviews/web-smart-lists-recovery-astra/export.test.tsx > retained A guard capability cannot export or discard a later B draft
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx:15:780
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
