@@ -76,6 +76,10 @@ function ComposedSettingsModule(): React.ReactElement {
     currentLocation.pathname !== nextLocation.pathname && canBlock(),
   );
   const [signOutDecision, setSignOutDecision] = React.useState<((allow: boolean) => void) | null>(null);
+  const signOutIntentRef = React.useRef<{ readonly token: number; readonly resolve: (allow: boolean) => void; readonly promise: Promise<boolean> } | null>(null);
+  const nextIntentRef = React.useRef(0);
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const priorFocusRef = React.useRef<HTMLElement | null>(null);
 
   // State → URL sync (sidebar click). Default "account" maps to clean
   // `/app/settings` (no splat) so the landing URL stays shareable.
@@ -93,15 +97,24 @@ function ComposedSettingsModule(): React.ReactElement {
   React.useEffect(() => registerSettingsDepartureDelegate({
     requestDeparture: () => {
       if (!canBlock()) return Promise.resolve(true);
-      return new Promise(resolve => setSignOutDecision(() => resolve));
+      if (signOutIntentRef.current) return signOutIntentRef.current.promise;
+      let resolve!: (allow: boolean) => void;
+      const promise = new Promise<boolean>(next => { resolve = next; });
+      signOutIntentRef.current = { token: ++nextIntentRef.current, resolve, promise };
+      setSignOutDecision(() => resolve);
+      return promise;
     },
   }), [canBlock]);
   React.useEffect(() => {
-    if (blocker.state === "blocked" && !canBlock()) blocker.proceed();
+    if (blocker.state !== "blocked") return;
+    const guard = guardRef.current;
+    if (guard?.isCurrent() && !guard.isBlocking()) blocker.proceed();
+    else if (!guard || !guard.isCurrent()) blocker.reset();
   }, [blocker, canBlock, guardVersion]);
   const stay = React.useCallback(() => {
     if (blocker.state === "blocked") blocker.reset();
     if (signOutDecision) signOutDecision(false);
+    signOutIntentRef.current = null;
     setSignOutDecision(null);
   }, [blocker, signOutDecision]);
   const exportCurrentDraft = React.useCallback(() => guardRef.current?.exportDraft(), []);
@@ -111,11 +124,26 @@ function ComposedSettingsModule(): React.ReactElement {
     guard.discardDraft();
     if (blocker.state === "blocked") blocker.proceed();
     if (signOutDecision) signOutDecision(true);
+    signOutIntentRef.current = null;
     setSignOutDecision(null);
   }, [blocker, signOutDecision, stay]);
 
   const activePane = composed.find((p) => p.id === active) ?? composed[0]!;
   const { s } = useI18n(lang);
+  const promptOpen = blocker.state === "blocked" || signOutDecision !== null;
+  React.useEffect(() => {
+    if (promptOpen) {
+      priorFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      dialogRef.current?.focus();
+    } else {
+      priorFocusRef.current?.focus();
+      priorFocusRef.current = null;
+    }
+  }, [promptOpen]);
+  React.useEffect(() => () => {
+    signOutIntentRef.current?.resolve(false);
+    signOutIntentRef.current = null;
+  }, []);
 
   return (
     <div className="module module-settings">
@@ -130,11 +158,11 @@ function ComposedSettingsModule(): React.ReactElement {
                 data-active={active === p.id ? "true" : "false"}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleSelect(p.id)}
+                onClick={() => { if (blocker.state !== "blocked") handleSelect(p.id); }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    handleSelect(p.id);
+                    if (blocker.state !== "blocked") handleSelect(p.id);
                   }
                 }}
               >
@@ -146,12 +174,12 @@ function ComposedSettingsModule(): React.ReactElement {
         <section className="settings-detail" data-pane={activePane.id}>
           {activePane.render({ lang, registerDepartureGuard })}
         </section>
-        {(blocker.state === "blocked" || signOutDecision) && (
-          <div className="settings-departure-dialog" role="dialog" aria-modal="true" aria-label="Unsaved Smart Lists draft" onKeyDown={event => { if (event.key === "Escape") stay(); }} tabIndex={-1}>
-            <p>Smart Lists has unsaved changes.</p>
-            <button type="button" onClick={stay}>Stay</button>
-            <button type="button" onClick={exportCurrentDraft}>Export current draft</button>
-            <button type="button" onClick={discardAndLeave}>Discard local changes and leave</button>
+        {promptOpen && (
+          <div ref={dialogRef} className="settings-departure-dialog" role="dialog" aria-modal="true" aria-label={lang === "zh" ? "未保存的智能列表草稿" : "Unsaved Smart Lists draft"} onKeyDown={event => { if (event.key === "Escape") stay(); }} tabIndex={-1}>
+            <p>{lang === "zh" ? "智能列表有未保存的更改。" : "Smart Lists has unsaved changes."}</p>
+            <button type="button" onClick={stay}>{lang === "zh" ? "留下" : "Stay"}</button>
+            <button type="button" onClick={exportCurrentDraft}>{lang === "zh" ? "导出当前草稿" : "Export current draft"}</button>
+            <button type="button" onClick={discardAndLeave}>{lang === "zh" ? "放弃本地更改并离开" : "Discard local changes and leave"}</button>
           </div>
         )}
       </div>
