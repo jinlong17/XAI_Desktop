@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Pomodoro完整当前用户六偏好恢复合同已获Astra051212a独立接受，固定2962b49：原16及mixedfollowon18、export7、既有Dv224/完成2通过；父原9/扩展8和同SHA真实Chrome十模式全部通过（711ddbd），Sol最终作者门禁2ae8272归属单列。历史源恢复/视觉/权限/Retry/冲突FAIL保留。Collaborate6254cb4和共享协调器ba7f0da接受保持有效。下一Dashboard Header完整合同a62d8a2/e4a32a1已提交，保留d129950/830dd2b已有接受；父实际注册+Shell五条baseline在ef722d8为4正确FAIL/1cleanPASS。Terra实施，Sol独立physical/owner/export，父host/native，Astra最终复核。正式完成13/312、未关闭299项；REL-05/09/D2继续开放。
+当前增量：Pomodoro完整当前用户六偏好恢复合同已获Astra051212a独立接受，固定2962b49：原16及mixedfollowon18、export7、既有Dv224/完成2通过；父原9/扩展8和同SHA真实Chrome十模式全部通过（711ddbd），Sol最终作者门禁2ae8272归属单列。历史源恢复/视觉/权限/Retry/冲突FAIL保留。Collaborate6254cb4和共享协调器ba7f0da接受保持有效。下一Dashboard Header完整合同a62d8a2/e4a32a1已提交，保留d129950/830dd2b已有接受；父实际注册+Shell五条baseline在ef722d8为4正确FAIL/1cleanPASS。Terra实施，Sol独立physical/owner/export，父host/native，Astra最终复核。Header首批45a1c15在真实host出现注册渲染循环；0f2d5a0修复后原5为4PASS/1FAIL、advanced5全PASS，native鼠标编辑入口及英文五宽度通过。3e11013仍未修复未提交文字在host离页时隐式保存并离开，native widget还捕获pointerdown按钮/最终click父容器的失败；证据d6ac266/772b702与最新原日志保留。Terra继续修复，Sol独立矩阵推进；整个Header尚未接受。正式完成13/312、未关闭299项；REL-05/09/D2继续开放。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 
