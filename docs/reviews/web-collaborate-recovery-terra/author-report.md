@@ -78,6 +78,12 @@ recovery behavior was changed.
   retains full per-field accessible names, and uses a mobile-first grid that
   expands only from 768px. The parent must verify the required five viewport
   widths and the first-viewport Export placement.
+- The next independent ABA lock case found that a prior successful `edit`
+  completion could clear a later same-value `edit` draft whose own key
+  admission had failed. Each user edit now creates a distinct draft identity;
+  success and Retry clear only that exact draft. The focused producer test
+  performs `edit → view → edit`, admits the first key request, rejects the
+  second, and verifies Not saved plus Export remain for the final `edit`.
 
 ## Independent validation still required
 

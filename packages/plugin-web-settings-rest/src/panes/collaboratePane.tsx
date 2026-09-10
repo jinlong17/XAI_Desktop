@@ -10,7 +10,7 @@ import type { DefaultShare } from "../types.js";
 
 type FieldId = "default_share" | "show_avatars" | "mention_notify";
 type FieldValue = DefaultShare | boolean;
-type FieldDraft = Readonly<{ value: FieldValue; session: object }>;
+type FieldDraft = Readonly<{ value: FieldValue; session: object; operation: object }>;
 type Drafts = Record<FieldId, FieldDraft | null>;
 const fields: readonly FieldId[] = ["default_share", "show_avatars", "mention_notify"];
 const emptyDrafts = (): Drafts => ({ default_share: null, show_avatars: null, mention_notify: null });
@@ -56,30 +56,30 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   }, [currentComposite]);
   const hasCurrentDraft = React.useCallback(() => fields.some(field => isCurrentDraft(field, draftsRef.current[field])), [isCurrentDraft]);
   const changed = React.useCallback(() => setDraftVersion(version => version + 1), []);
-  const clearIfMatching = React.useCallback((field: FieldId, value: FieldValue, session: object, ok: boolean) => {
-    const draft = draftsRef.current[field];
-    if (ok && draft?.session === session && draft.value === value) {
+  const clearIfMatching = React.useCallback((field: FieldId, draft: FieldDraft, ok: boolean) => {
+    if (ok && draftsRef.current[field] === draft) {
       draftsRef.current[field] = null;
       changed();
     }
   }, [changed]);
   const putDraft = React.useCallback((field: FieldId, value: FieldValue) => {
     const session = field === "default_share" ? accountSessionRef.current : deviceSessionRef.current;
-    draftsRef.current[field] = { value, session };
+    const draft = { value, session, operation: {} };
+    draftsRef.current[field] = draft;
     setExportFailed(false);
     changed();
-    return session;
+    return draft;
   }, [changed]);
   const edit = React.useCallback((field: FieldId, value: FieldValue, pref: PrefAutosaveAsyncResult<FieldValue>) => {
     if (!currentComposite() || (field === "default_share" ? !isDefaultShare(value) : !isBoolean(value))) return;
-    const session = putDraft(field, value);
-    void pref.edit(value).then(result => clearIfMatching(field, value, session, result.ok));
+    const draft = putDraft(field, value);
+    void pref.edit(value).then(result => clearIfMatching(field, draft, result.ok));
   }, [clearIfMatching, currentComposite, putDraft]);
   const retry = React.useCallback((field: FieldId, pref: PrefAutosaveAsyncResult<FieldValue>) => {
     const draft = draftsRef.current[field];
     if (!isCurrentDraft(field, draft)) return;
     const currentDraft = draft!;
-    void pref.retry().then(result => clearIfMatching(field, currentDraft.value, currentDraft.session, result.ok));
+    void pref.retry().then(result => clearIfMatching(field, currentDraft, result.ok));
   }, [clearIfMatching, isCurrentDraft]);
   const discard = React.useCallback((field: FieldId, pref: PrefAutosaveAsyncResult<FieldValue>) => {
     const draft = draftsRef.current[field];

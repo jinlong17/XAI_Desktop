@@ -133,4 +133,29 @@ describe("collaboratePane", () => {
     release();
     await held;
   });
+
+  it("keeps a same-value successor draft when its second write is rejected", async () => {
+    let keyAttempts = 0;
+    let admitFirst: (() => void) | null = null;
+    vi.stubGlobal("navigator", { locks: {
+      request(name: string, _options: unknown, run: () => unknown) {
+        if (!name.startsWith("xai:pref:v1:")) return Promise.resolve(run());
+        keyAttempts += 1;
+        if (keyAttempts === 1) return new Promise((resolve, reject) => {
+          admitFirst = () => { Promise.resolve(run()).then(resolve, reject); };
+        });
+        return Promise.reject(new Error("lock unavailable"));
+      },
+    }});
+    const ui = render(collaboratePane.render({ lang: "en" }));
+    const select = ui.getByRole("combobox", { name: "Default share permission" });
+    fireEvent.change(select, { target: { value: "edit" } });
+    await waitFor(() => expect(admitFirst).not.toBeNull());
+    fireEvent.change(select, { target: { value: "view" } });
+    fireEvent.change(select, { target: { value: "edit" } });
+    admitFirst!();
+    await waitFor(() => expect(ui.getByRole("alert")).toHaveTextContent("Not saved"));
+    expect(select).toHaveValue("edit");
+    expect(ui.getByRole("button", { name: "Export current draft" })).toBeInTheDocument();
+  });
 });
