@@ -1,5 +1,11 @@
 # Dashboard Header actual Chrome before and first integration rejection
 
+## Current checkpoint: fixed41fb4d1
+
+The unchanged parent actual-host departure5 and advanced5 now both PASS. Native unsubmitted and widget checks also PASS: both retain `/app/dashboard`, show the decision dialog, and preserve physical `Original note`. The actual mini-calendar pointerdown/up/click all land on `.mc-jump`. Both native executions report zero runtime errors. This directly resolves the exercised3e failures while preserving the before evidence below.
+
+This is a bounded checkpoint, not full Header acceptance: additional native offset/pending/owner/export and bilingual source/mixed layouts remain subject to verification and Astra final review. Sol's separate fixed41fb4d1 report records42 passing independent checks; its component evidence is not substituted for native evidence.
+
 Parent uses immutable product archives, real production Dashboard registration/full Shell/widget catalog, isolated Chrome/profile, complete CSS, native mouse/keyboard inputs and physical synthetic account storage. Only mini-cal is selected in the isolated persisted Dashboard order; the complete registered catalog is supplied. Runtime exception and console-error capture begins before navigation. No auth/provider/deployed service is contacted.
 
 ## Fixed2962b49 pointer entry defect and navigation gap
