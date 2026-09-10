@@ -115,7 +115,7 @@ async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, c
 /** Same-page recovery callers share one captured-owner workflow; storage still
  * supplies the short cross-tab account-exclusive sections. */
 export function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
-  const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}`;
+  const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}:${receipt.version}:${receipt.authGeneration ?? ''}`;
   const active = recoveryFlights.get(key);
   if (active) return active;
   const operation = runRecoveryWorkflow(receipt, () => resumeAccountLocalDeletionOnce(receipt, clearAuth));
