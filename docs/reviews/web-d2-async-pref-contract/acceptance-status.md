@@ -4,9 +4,9 @@
 
 | 合同范围 | 已有证据 | 当前结论 / 剩余工作 |
 | --- | --- | --- |
-| 注册键绑定、codec 一致与运行时 schema | Astra `20da766` engine 21 例中的 5 条失败 | 未通过；Terra 修注册绑定及公开四接口一致校验。 |
-| source/default/未知键的类型化失败 | 同一审查 3 条失败；invalid source、throwing updater/read 等控制通过 | 未通过；不能以默认值或 Promise rejection 冒充合法结果。 |
-| 不确定 set/remove 的重试与一次通知 | 同一审查 2 条失败，物理写入已发生但重试无通知 | 未通过；Terra 修窄范围归属与 reconciliation。 |
+| 注册键绑定、codec 一致与运行时 schema | Astra `20da766` engine 21 例中的 5 条失败 | 原5ed未通过；2c作者复跑通过，待Astra独立接受。 |
+| source/default/未知键的类型化失败 | 同一审查 3 条失败；invalid source、throwing updater/read 等控制通过 | 原5ed未通过；2c作者复跑通过，待独立复核类型化结果。 |
+| 不确定 set/remove 的重试与一次通知 | 同一审查 2 条失败，物理写入已发生但重试无通知 | 原5ed未通过；2c作者复跑通过，待独立复核归属与 reconciliation。 |
 | 四公开接口同物理键锁、functional 最新值、owner/marker/tombstone、device 锁与迁移 | 同一审查的 11 条通过控制覆盖这些明确边界；完整原始断言见其报告 | 保留有界通过，修引擎后需固定回归；不证明未转换的同步调用方。 |
 | 两个 hook 的 functional 更新、等待中的后续编辑 | 父 `1becb16` 固定 5ed 两条通过，`082ba01` 固定 282 再通过 | 有界通过；不代替 reset/disposal/singleflight 的验收。 |
 | 实际 Collaborate 选择、Saving、quota、Not saved/Retry、正确 string 落盘 | 原 a82 两条失败，5ed 实际页面仍丢选择；修复 04 后父 `838396c` 两条通过 | 该真实流程通过；已保留修复前证据与仅 hook 通过的范围区别。 |
