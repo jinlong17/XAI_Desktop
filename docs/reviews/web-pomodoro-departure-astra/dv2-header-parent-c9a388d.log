@@ -1,0 +1,11 @@
+revision=c9a388d fixed_commit=c9a388dfb965648496f62e486bae30555d56662c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-6vOvx3
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests) 1213ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  00:46:24
+   Duration  2.31s (transform 276ms, setup 0ms, collect 430ms, tests 1.21s, environment 254ms, prepare 89ms)

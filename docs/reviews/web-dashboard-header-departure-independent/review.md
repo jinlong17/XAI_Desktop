@@ -19,3 +19,9 @@ Parent fixed9193353 original departure5 and advanced5 PASS. New followon2 PASS a
 The initial `followon-before-41fb4d1.log` records a passing exploratory version that programmatically invoked background Retry/Save while a dialog existed. It is not used to certify a physically reachable modal interaction. The committed followon fixture and `followon-reachable-before-41fb4d1.log` replace those actions with already-pending lock completion and visible dialog discard. No product failure is inferred from this fixture refinement.
 
 The original accepted account parent2 also PASS at9193353 (`../web-d2-dashboard-note-astra/original-parent-header-parent-9193353.log`). Original device native5 and four saved-position reload controls PASS (`../web-d2-device-offset-native/native-9193353-header-parent.log`). Unsaved process-crash durability is not inferred. Full Header acceptance remains open, including separately reproduced slow-pointer blur failures.
+
+## Fixedc9a388d host and shared regression checkpoint
+
+The original Header departure5, advanced5 and reachable followon2 all PASS. Parent independently reran unchanged shared contracts at the same fixed product: Smart Lists host10, entry3, wrapper5, export8, App5; Collaborate host8; Pomodoro complete draft18, export7, Dv224, completion2, actual host9 and advanced8. All PASS. Logs remain in their original reviewer directories with `header-parent-c9a388d` attribution; this is a parent execution of unchanged assertions, not a new acceptance by their original reviewer.
+
+These checks do not close Header: Sol's new real ordinary-Tab blur control fails atc9 despite slow navigation now passing. Further caller fixes and final independent reconciliation remain required. No shared coordinator/engine source was changed by this product batch.
