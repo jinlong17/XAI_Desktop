@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"e9213fb","browser":"Chrome/152.0.7977.83"}
+{"name":"external-document-write","targetId":"7E529EA424DB87F3B4F03E6F28B1F87E","key":"xai_pref_dt_timezone","value":"true"}
+{"name":"crossdoc-conflict-observation","raw":["monday","true","true","true","false"],"writes":[{"key":"xai_pref_dt_timezone","value":"false"},{"key":"xai_pref_dt_timezone","value":"false"}],"warning":true}
+{"name":"native","pass":false,"mode":"crossdoc-conflict","error":"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'false' !== 'true'\n","runtimeErrors":[]}
