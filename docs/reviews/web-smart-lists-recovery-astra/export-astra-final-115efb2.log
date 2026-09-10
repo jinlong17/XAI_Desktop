@@ -1,0 +1,11 @@
+revision=115efb2 fixed_commit=115efb2337ac45f9cf6ba3113f9ea34d10ab985e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-AnhVAm
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx (8 tests) 434ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  22:17:45
+   Duration  2.04s (transform 353ms, setup 0ms, collect 611ms, tests 434ms, environment 556ms, prepare 77ms)

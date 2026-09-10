@@ -27,12 +27,13 @@ try {
  aliases.push({find:'react-router',replacement:join(root,'apps/web/node_modules/react-router')});
  aliases.push({find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-smart-lists-recovery-astra'); mkdirSync(owned, {recursive:true});
- for(const file of ['export.test.tsx','host.test.tsx','app.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
+ for(const file of ['export.test.tsx','host.test.tsx','app.test.tsx','host-entry.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
 
  symlinkSync(join(root,'apps/web/node_modules'),join(dir,'apps/web/node_modules'));
  for (const [name, include] of [
   ['export', ['docs/reviews/web-smart-lists-recovery-astra/export.test.tsx']],
  ['host',['docs/reviews/web-smart-lists-recovery-astra/host.test.tsx']],
+ ['host-entry',['docs/reviews/web-smart-lists-recovery-astra/host-entry.test.tsx']],
  ['app',['docs/reviews/web-smart-lists-recovery-astra/app.test.tsx']],
  ['original39',['docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx']],
 
