@@ -41,6 +41,25 @@ describe("DashHeader departure capability", () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
+  it("names an unavailable note source without calling it a position failure", async () => {
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(function(this: Storage, key: string) {
+      if (key === noteKey) throw new Error("denied");
+      return nativeGet.call(this, key);
+    });
+    const ui = mount();
+    await waitFor(() => expect(ui.getByText("The saved dashboard note source is unavailable. Reload it; this is not a new unsaved draft.")).toBeTruthy());
+    expect(ui.getByText("Reload dashboard note")).toBeTruthy();
+  });
+
+  it("names frozen account recovery without inventing a position source failure", async () => {
+    const ui = mount();
+    fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
+    fireEvent.change(ui.getByRole("textbox"), { target: { value: "A retained draft" } });
+    act(() => { const key = activate("header-B", "two"); nativeSet.call(localStorage, key, "Saved B"); });
+    await waitFor(() => expect(ui.getByText("The previous account's note draft remains protected in this session and is not available to the current account.")).toBeTruthy());
+    expect(ui.queryByText("The saved note position source is unavailable. Reload it; this is not a new unsaved draft.")).toBeNull();
+  });
+
   it("keeps a real editor draft guarded, discards only that field, and rereads it", async () => {
     const ui = mount();
     fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));

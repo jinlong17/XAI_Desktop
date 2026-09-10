@@ -758,6 +758,19 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
   }, [hasLiveCurrentDraft]);
 
   const guardToken = guardTokenRef.current;
+  const recoverySummary = hasCurrentDraft
+    ? frozenSession
+      ? (lang === "zh" ? "当前设备位置尚未保存，可以导出或重试；此前账户的备注不会包含在此恢复操作中。" : "The current device position is unsaved and can be retried or exported. This recovery does not include the previous account's note.")
+      : (lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving.")
+    : frozenSession
+      ? (lang === "zh" ? "此前账户的备注草稿仍受此会话保护，当前账户不能导出或放弃它。" : "The previous account's note draft remains protected in this session and is not available to the current account.")
+      : noteSourceIssue && offsetSourceIssue
+        ? (lang === "zh" ? "已保存的备注和备注位置来源不可用。请分别重新读取；这不是新的未保存草稿。" : "The saved dashboard note and note position sources are unavailable. Reload each one; this is not a new unsaved draft.")
+        : noteSourceIssue
+          ? (lang === "zh" ? "已保存的备注来源不可用。请重新读取备注；这不是新的未保存草稿。" : "The saved dashboard note source is unavailable. Reload it; this is not a new unsaved draft.")
+          : offsetSourceIssue
+            ? (lang === "zh" ? "已保存的备注位置来源不可用。请重新读取；这不是新的未保存草稿。" : "The saved note position source is unavailable. Reload it; this is not a new unsaved draft.")
+            : (lang === "zh" ? "已保存的备注位置需要处理；这不是新的未保存草稿。" : "The saved note position needs attention; this is not a new unsaved draft.");
   useEffect(() => {
     if (!registerDepartureGuard) return undefined;
     const decisionScope = account;
@@ -866,9 +879,8 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
         <span>{addWidget}</span>
       </button>
       {hasRecoveryNotice && <section role="alert" className="dash-note-recovery">
-        {hasCurrentDraft ? <p>{frozenSession ? (lang === "zh" ? "当前设备位置尚未保存，可以导出或重试；此前账户的备注不会包含在此恢复操作中。" : "The current device position is unsaved and can be retried or exported. This recovery does not include the previous account's note.") : (lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving.")}</p> : <p>{lang === "zh" ? "备注位置的已保存来源不可用。请重新读取；这不是新的未保存草稿。" : "The saved note position source is unavailable. Reload it; this is not a new unsaved draft."}</p>}
+        <p>{recoverySummary}</p>
         {(noteIssue === "conflict" || noteIssue === "account-changed" || offsetIssue === "conflict" || offsetSourceConflict) && !frozenSession && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
-        {frozenSession && <p>{lang === "zh" ? "此前账户的备注草稿保留在此会话中，但当前账户不能导出或放弃它。" : "The previous account's note draft remains protected in this session, but the current account cannot export or discard it."}</p>}
         {(hasCurrentDraft || frozenSession || offsetSourceConflict) && <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>}
         {noteSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => noteSave.meta.reload()}>{lang === "zh" ? "重新读取备注" : "Reload dashboard note"}</button>}
         {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={reloadOffsetSource}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
