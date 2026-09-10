@@ -27,3 +27,11 @@ Parent independently executed original departure9 and advanced8 against the fixe
 The strengthened `visual` probe requires actions to remain inside their recovery container and checks `elementFromPoint` at their centers. `native-0d7f885-containment-visual.log` correctly FAILS; Discard and Export report `hit:false`. Both original and strengthened probes use the actual Shell, app registration inventory and full CSS. The screenshot rejection and failure have been sent to the author. The optional fourth argument labels repeated evidence without overwriting earlier results; `visual-zh` applies Chinese to both Shell and provider.
 
 Sol separately identified three original Dv2 source-recovery regressions at0d7f885 and committed b01b67c. Author results are not parent/Astra acceptance. No complete Pomodoro contract or numbered audit item is closed by these partial passes.
+
+## Fixed e1a69fb visual repair verified
+
+Both English and Chinese full-Shell visual modes pass at375/414/768/1024/1440 using the strengthened containment and actual hit-testing assertions. The recovery section now contains all three 44px actions; every action is hittable, there is no horizontal document overflow, and the complete recovery group remains in the first viewport. Actual375px dialogs preserve focus, fit the viewport and identify Pomodoro preferences correctly in both languages. Parent inspected the375px English page and Chinese dialog screenshots; the earlier overlap is gone. Both browser runs captured zero runtime errors.
+
+The original unload warning oracle also passes at fixed e1a69fb. At fixed b01b67c, the separate owner-change and native-lock-pending disk-export scenarios pass: device drafts survive owner change while the old dialog closes, and releasing the held latest write permits the original captured route only after persistence succeeds. These are mounted-session checks, not crash durability or production service acceptance.
+
+Astra independently found old-capability discard and synchronous owner-change-at-download failures in the initial integration; those remain separate blockers pending a subsequent fixed product revision and independent recheck. Visual repair does not close that contract.

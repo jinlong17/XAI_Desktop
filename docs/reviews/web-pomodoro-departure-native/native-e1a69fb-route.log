@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"e1a69fb","browser":"Chrome/152.0.7977.83"}
+{"name":"route-observation","path":"/app/pomodoro","dialog":true}
+{"name":"departure","pass":true,"mode":"route","runtimeErrors":0}
