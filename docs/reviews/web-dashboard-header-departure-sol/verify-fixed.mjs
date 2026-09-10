@@ -33,6 +33,10 @@ try {
     ["component", ["docs/reviews/web-dashboard-header-departure-sol/component.test.tsx"]],
     ["export-owner", ["docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx"]],
     ["operations", ["docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx"]],
+    ["account-note", ["docs/reviews/web-d2-dashboard-note-astra/contracts.test.tsx"]],
+    ["device-offset", ["docs/reviews/web-d2-device-offset-astra/contracts.test.tsx"]],
+    ["source-feedback", ["docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx"]],
+    ["reload-pending", ["docs/reviews/web-d2-device-offset-astra/reload-pending.test.tsx"]],
   ]) {
     if (process.argv[3] && process.argv[3] !== name) continue;
     const config = join(dir, "sol.config.mjs");

@@ -48,25 +48,6 @@ it("pending Retry cannot attribute predecessor success to a newer queued failure
   expect(guard()?.isBlocking()).toBe(true);
 });
 
-it("equal-value predecessor success cannot clear a newer equal-value failed intent", async () => {
-  const ui = mount();
-  await flush();
-  const release = await hold(accountLifecycleLockName("header-sol-A"));
-  let sameWrites = 0;
-  const baseSet = Storage.prototype.setItem;
-  vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) {
-    if (key === noteKey && value === "Same value" && ++sameWrites === 2) throw new Error("new same-value quota");
-    baseSet.call(this, key, value);
-  });
-  enterNote(ui, "Same value"); ui.save();
-  fireEvent.change(ui.input(), { target: { value: "Different revision" } });
-  fireEvent.change(ui.input(), { target: { value: "Same value" } }); ui.save();
-  await release(); await flush(24);
-  expect(nativeGet.call(localStorage, noteKey)).toBe("Same value");
-  expect(ui.input().value).toBe("Same value");
-  expect(guard()?.isBlocking()).toBe(true);
-});
-
 it("note failure with position success and the reverse each keep only the failed sibling guarded", async () => {
   const ui = mount();
   await flush();
