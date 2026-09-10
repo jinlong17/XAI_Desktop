@@ -1,0 +1,11 @@
+revision=f64ad44 fixed_commit=f64ad44e9e13f56db243471c206cea7a63271b2a
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-4ygjb1
+
+ ✓ docs/reviews/web-dashboard-header-departure-astra/blur-lifecycle.test.tsx (4 tests) 137ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  00:50:36
+   Duration  847ms (transform 159ms, setup 208ms, collect 56ms, tests 137ms, environment 212ms, prepare 42ms)
