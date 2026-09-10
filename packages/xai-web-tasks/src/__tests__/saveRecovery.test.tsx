@@ -87,4 +87,14 @@ describe('Tasks recoverable writes',()=>{
   fireEvent.click(screen.getAllByRole('button',{name:kind==='list'?'Delete list':'Delete tag'})[0]!);await waitFor(()=>expect(JSON.parse(localStorage.getItem(key(kind==='list'?'xai_pref_task_lists':'xai_pref_task_tags'))!).some((item:{id:string})=>item.id===(kind==='list'?'inbox':'study'))).toBe(false));
   const completed=storedRows().find(task=>task.id==='completed')!;expect(completed.done).toBe(true);if(kind==='list')expect(completed.listId).not.toBe('inbox');else expect(completed.tags).not.toContain('study');
  });
+ it('keeps a successful detail completion through a later title-only save',async()=>{
+  localStorage.setItem(key('xai_task_cols'),envelope());render(<TasksModule lang="en"/>);fireEvent.click(document.querySelector('.task-card')!);const panel=screen.getByLabelText('Task details');
+  fireEvent.click(within(panel).getByRole('button',{name:'Complete'}));await waitFor(()=>expect(storedRows().find(task=>task.id==='t1')?.done).toBe(true));const completedAt=storedRows().find(task=>task.id==='t1')?.completedAt;
+  expect(within(panel).getByLabelText('Mark complete')).toBeChecked();fireEvent.change(within(panel).getByLabelText('Title'),{target:{value:'Edited after completion'}});fireEvent.click(within(panel).getByRole('button',{name:'Save'}));
+  await waitFor(()=>expect(storedRows().find(task=>task.id==='t1')?.title.en).toBe('Edited after completion'));const stored=storedRows().find(task=>task.id==='t1')!;expect(stored.done).toBe(true);expect(stored.completedAt).toBe(completedAt);
+ });
+ it('does not overwrite a newer explicit completion edit when an older save resolves',async()=>{
+  const completed={...row('t1','Completed'),done:true,completedAt:'2026-09-09T19:00:00.000Z'};localStorage.setItem(key('xai_task_cols'),envelope([completed]));render(<TasksModule lang="en"/>);fireEvent.click(document.querySelector('.task-card')!);const panel=screen.getByLabelText('Task details');const checkbox=within(panel).getByLabelText('Mark complete');
+  let release!:()=>void;vi.stubGlobal('navigator',{locks:{request:vi.fn(<T,>(_name:string,callback:()=>Promise<T>)=>new Promise<T>(resolve=>{release=()=>{void callback().then(resolve);};}))}});fireEvent.click(within(panel).getByRole('button',{name:'Save'}));fireEvent.click(checkbox);expect(checkbox).not.toBeChecked();release();await waitFor(()=>expect(within(panel).getByRole('button',{name:'Save'})).not.toBeDisabled());expect(checkbox).not.toBeChecked();
+ });
 });

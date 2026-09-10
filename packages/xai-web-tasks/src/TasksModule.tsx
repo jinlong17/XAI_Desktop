@@ -1311,6 +1311,7 @@ function TaskDetailPanel({
   const [dateEdited, setDateEdited] = useState(false);
   const openedTask = useRef<string | null>(null);
   const [done, setDone] = useState(false);
+  const doneEditVersion = useRef(0);
 
   useEffect(() => {
     if (!located) {
@@ -1336,6 +1337,7 @@ function TaskDetailPanel({
     setDueDate(located.task.dueDate ?? "");
     setDateEdited(false);
     setDone(located.task.done === true);
+    doneEditVersion.current = 0;
   }, [located, lang, lists]);
 
   if (!task || !located) return null;
@@ -1343,6 +1345,7 @@ function TaskDetailPanel({
   const save = async (nextDone: boolean) => {
     if (pendingRef.current) return;
     const session = sessionRef.current;
+    const submittedDoneVersion = doneEditVersion.current;
     pendingRef.current = true;
     setPending(true);
     let ok = false;
@@ -1364,6 +1367,7 @@ function TaskDetailPanel({
     pendingRef.current = false;
     setPending(false);
     setSaveFailed(!ok);
+    if (ok && submittedDoneVersion === doneEditVersion.current) setDone(nextDone);
   };
 
   const remove = async () => {
@@ -1395,7 +1399,10 @@ function TaskDetailPanel({
         <input value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
       <label className="task-detail-check">
-        <input type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
+        <input type="checkbox" checked={done} onChange={(e) => {
+          doneEditVersion.current += 1;
+          setDone(e.target.checked);
+        }} />
         <span>{lang === "zh" ? "标记完成" : "Mark complete"}</span>
       </label>
       <label>
