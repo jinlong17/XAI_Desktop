@@ -14,3 +14,9 @@ On a repaired implementation the unchanged cases additionally verify exact A cle
 ```sh
 node docs/reviews/web-d2-settings-deletion-native/verify-native.mjs ea5ba0b
 ```
+
+## Independent repaired run
+
+The unchanged native cases pass at `a6ad06d` (two initial PASS), followed by both exact receipt/account/IndexedDB checks after observed Chrome SIGTERM exit and reopen, PID 1391 → 1415. `native-a6ad06d.json` is parent-produced. Both repair-phase author observations are retained separately as `author-native-051d7fa.json` and `author-native-a6ad06d.json`; they are not independent evidence.
+
+Parent also reran the four original Settings consumer assertions at this fixed revision, all PASS in `../web-d2-settings-deletion-independent/independent-a6ad06d.log`. The prior unpinned author log is preserved as `author-unpinned-HEAD.log` and not used to establish a fixed product result. Astra's complete implementation-contract review remains pending, including server-confirmed A→B orchestrator admission and phase/receipt validation beyond these bounded cases.

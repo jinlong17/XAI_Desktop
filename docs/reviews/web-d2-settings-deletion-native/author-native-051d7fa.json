@@ -1,0 +1,24 @@
+{
+  "requestedRef": "051d7fa",
+  "revision": "051d7fa3a1b109f54ab5a22b553f5a02d74e738b",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": false,
+  "cases": [
+    {
+      "name": "held-account-lock",
+      "pass": true
+    },
+    {
+      "name": "concurrent-cross-account-recovery",
+      "pass": false,
+      "error": "Error: Local account cleanup refused: receipt-changed"
+    }
+  ],
+  "checkpoint": {
+    "held-account-lock": {
+      "receipt": "{\"version\":2,\"accountId\":\"native-delete-held-account-lock\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:09:04.601Z\",\"authGeneration\":\"auth-native-delete-held-account-lock\"}"
+    }
+  },
+  "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+}

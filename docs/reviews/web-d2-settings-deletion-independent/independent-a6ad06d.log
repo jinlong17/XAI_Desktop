@@ -1,0 +1,11 @@
+revision=a6ad06d
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-canonical-migration-usAXvN
+
+ ✓ docs/reviews/web-d2-settings-deletion-independent/deletion-coordination.test.ts (4 tests) 5ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  18:10:19
+   Duration  851ms (transform 118ms, setup 0ms, collect 153ms, tests 5ms, environment 362ms, prepare 86ms)
