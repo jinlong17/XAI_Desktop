@@ -524,8 +524,10 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     if (!result.ok) {
       if (offsetOperationRef.current !== operation) return;
       offsetOperationRef.current = null;
-      failedOffsetOperationRef.current = operation;
-      setOffsetIssue(result.reason);
+      if (failedOffsetOperationRef.current === null || failedOffsetOperationRef.current === operation) {
+        failedOffsetOperationRef.current = operation;
+        setOffsetIssue(result.reason);
+      }
       setDraftVersion(version => version + 1);
       return;
     }
@@ -551,7 +553,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
     setDraftVersion(version => version + 1);
   }, [clampNoteOffset, setVisibleOffset]);
 
-  const submitOffset = useCallback((value: number, raw: string | null, retry = false) => {
+  const submitOffset = useCallback((value: number, raw: string | null, retry = false, retryOf: OffsetOperation | null = null) => {
     const operation = { id: ++nextOffsetOperationId.current, value, raw, retryable: false };
     try {
       const current = localStorage.getItem("xai_pref_dashboard_header_note_x");
@@ -561,14 +563,22 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       // raw preflight rejects it before the async hook can enqueue. Retain that
       // operation so guard/export/discard have the same truth as the visible
       // coordinate, rather than treating it as a source-only problem.
-      failedOffsetOperationRef.current = operation;
+      // A read failure before the hook receives an unchanged uncertainty retry
+      // must retain that retry token. A fresh gesture is still a new operation.
+      if (!retry || !retryOf || failedOffsetOperationRef.current !== retryOf) failedOffsetOperationRef.current = operation;
       setOffsetIssue("conflict");
       setDraftVersion(version => version + 1);
       return;
     }
     const hookOperation = { ...operation, retryable: !retry || offsetOperationRef.current === null };
     offsetOperationRef.current = hookOperation;
-    if (!retry) failedOffsetOperationRef.current = null;
+    if (!retry) {
+      failedOffsetOperationRef.current = null;
+    } else if (retryOf && failedOffsetOperationRef.current === retryOf) {
+      // The active retry now owns this recovery identity. Its own completion
+      // may clear it; a predecessor cannot clear a later failed operation.
+      failedOffsetOperationRef.current = hookOperation;
+    }
     setOffsetIssue(null);
     setOffsetSourceConflict(false);
     setDraftVersion(version => version + 1);
@@ -592,7 +602,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isD
       const canUseRetryToken = latest === failedOffset.value
         && failedOffset.retryable
         && offsetOperationRef.current === null;
-      submitOffset(latest, failedOffset.raw, canUseRetryToken);
+      submitOffset(latest, failedOffset.raw, canUseRetryToken, canUseRetryToken ? failedOffset : null);
     }
   };
 
