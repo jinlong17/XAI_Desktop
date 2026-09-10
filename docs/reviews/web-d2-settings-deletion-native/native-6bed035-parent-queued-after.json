@@ -1,0 +1,69 @@
+{
+  "requestedRef": "6bed035",
+  "revision": "6bed035ea3fff1f82d5b533cf2fddff03511bacb",
+  "source": "git archive with pinned @repo package imports",
+  "profile": "isolated temporary Chrome profile",
+  "pass": true,
+  "firstPid": 15247,
+  "reopenedPid": 15295,
+  "termination": "SIGTERM with observed process exit; no SIGKILL fallback",
+  "before": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "concurrent-cross-account-recovery",
+        "pass": true
+      },
+      {
+        "name": "cross-context-recovery",
+        "pass": true
+      },
+      {
+        "name": "queued-receipt-replacement",
+        "pass": true
+      }
+    ],
+    "checkpoint": {
+      "held-account-lock": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-held-account-lock\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:30:24.577Z\",\"authGeneration\":\"auth-native-delete-held-account-lock\"}"
+      },
+      "concurrent-cross-account-recovery": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-concurrent-cross-account-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:30:24.623Z\",\"authGeneration\":\"auth-native-delete-concurrent-cross-account-recovery\"}"
+      },
+      "cross-context-recovery": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-cross-context-recovery\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"complete\",\"updatedAt\":\"2026-09-10T01:30:24.800Z\",\"authGeneration\":\"auth-native-delete-cross-context-recovery\"}"
+      },
+      "queued-receipt-replacement": {
+        "receipt": "{\"version\":2,\"accountId\":\"native-delete-queued-receipt-replacement\",\"kind\":\"account\",\"generation\":\"g1\",\"phase\":\"pending\",\"updatedAt\":\"2026-01-01T00:00:00.000Z\",\"authGeneration\":\"auth-native-delete-queued-receipt-replacement\"}",
+        "retained": true
+      }
+    },
+    "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+  },
+  "after": {
+    "pass": true,
+    "cases": [
+      {
+        "name": "held-account-lock",
+        "pass": true
+      },
+      {
+        "name": "concurrent-cross-account-recovery",
+        "pass": true
+      },
+      {
+        "name": "cross-context-recovery",
+        "pass": true
+      },
+      {
+        "name": "queued-receipt-replacement",
+        "pass": true
+      }
+    ],
+    "scope": "Actual Settings recovery, native WebLocks and IndexedDB secrets in isolated profile; synthetic auth cleanup callback, no real provider/server deletion, no full UI or old-client claim"
+  }
+}
