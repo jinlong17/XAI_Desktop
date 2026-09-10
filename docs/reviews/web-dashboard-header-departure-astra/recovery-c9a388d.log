@@ -1,0 +1,36 @@
+revision=c9a388d fixed_commit=c9a388dfb965648496f62e486bae30555d56662c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-a5LSVp
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx (10 tests | 1 failed) 222ms
+   ✓ discard failed note neither reads nor writes its saved sibling 88ms
+   ✓ discard failed offset neither reads nor writes its saved sibling 23ms
+   ✓ source-only offset Reload cannot reread or discard a failed note and its original Retry 24ms
+   ✓ blob export failure cleans resources without changing draft or sources 15ms
+   ✓ url export failure cleans resources without changing draft or sources 13ms
+   ✓ append export failure cleans resources without changing draft or sources 17ms
+   ✓ inline append-time epoch change cancels download and preserves current device recovery 8ms
+   ✓ fresh locked device export reads no account or device storage and emits empty note 11ms
+   ✓ preflight-failed newer gesture survives predecessor settlement with Retry=false 8ms
+   × preflight-failed newer gesture survives predecessor settlement with Retry=true 14ms
+     → expected '70' to be '40' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  00:45:35
+   Duration  921ms (transform 168ms, setup 207ms, collect 62ms, tests 222ms, environment 202ms, prepare 46ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx > preflight-failed newer gesture survives predecessor settlement with Retry=true
+AssertionError: expected '70' to be '40' // Object.is equality
+
+Expected: "40"
+Received: "70"
+
+ ❯ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx:98:50
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

@@ -1,0 +1,11 @@
+revision=c9a388d fixed_commit=c9a388dfb965648496f62e486bae30555d56662c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-header-astra-9n3veW
+
+ ✓ docs/reviews/web-dashboard-header-departure-astra/recovery-effects.test.tsx (11 tests) 318ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  00:46:40
+   Duration  2.01s (transform 345ms, setup 391ms, collect 170ms, tests 318ms, environment 384ms, prepare 186ms)

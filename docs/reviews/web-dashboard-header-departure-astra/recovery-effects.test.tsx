@@ -83,7 +83,7 @@ it('fresh locked device export reads no account or device storage and emits empt
   expect(reads).not.toHaveBeenCalled();expect(writes).not.toHaveBeenCalled();expect(removes).not.toHaveBeenCalled();expect(guard()?.isBlocking()).toBe(true);
 });
 
-for(const retry of [false,true]) it(`preflight-failed newer gesture survives predecessor settlement with Retry=${retry}`,async()=>{
+for(const retry of ['none','success','quota'] as const) it(`preflight-failed newer gesture settles according to its own Retry=${retry} outcome`,async()=>{
   const ui=mount();await flush();let release!:()=>void;let entered!:()=>void;
   const ready=new Promise<void>(resolve=>{entered=resolve;});const gate=new Promise<void>(resolve=>{release=resolve;});
   const held=navigator.locks.request(prefMutationLockName(offsetKey),{mode:'exclusive'},()=>{entered();return gate;});await ready;
@@ -92,10 +92,13 @@ for(const retry of [false,true]) it(`preflight-failed newer gesture survives pre
     let armed=true;const read=vi.spyOn(Storage.prototype,'getItem').mockImplementation(function(this:Storage,key:string){if(key===offsetKey&&armed){armed=false;throw Error('transient newer preflight read failure');}return nativeGet.call(this,key);});
     finishMove(ui.note,30,8);await flush();read.mockRestore();
     expect(ui.note.style.getPropertyValue('--dash-note-x')).toBe('70px');expect(guard()?.isBlocking()).toBe(true);
-    if(retry){fireEvent.click(ui.getByRole('button',{name:'Retry note save'}));await flush();}
+    if(retry==='quota')vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key:string,value:string){if(key===offsetKey&&value==='70')throw Error('actual new70 retry quota');nativeSet.call(this,key,value);});
+    if(retry!=='none'){fireEvent.click(ui.getByRole('button',{name:'Retry note save'}));await flush();}
   }finally{await act(async()=>{release();await held;});}
   await flush(30);
-  expect(nativeGet.call(localStorage,offsetKey)).toBe('40');
+  // An explicit Retry may legitimately save the newer value after the transient
+  // read error clears. Only its own physical success can release that draft.
+  expect.soft(nativeGet.call(localStorage,offsetKey)).toBe(retry==='success'?'70':'40');
   expect.soft(ui.note.style.getPropertyValue('--dash-note-x'),'the failed newer70 is not the verified predecessor40').toBe('70px');
-  expect.soft(guard()?.isBlocking()).toBe(true);expect(unload()).toBe(true);
+  expect.soft(guard()?.isBlocking()).toBe(retry!=='success');expect(unload()).toBe(retry!=='success');
 });
