@@ -19,3 +19,9 @@ The original component assertions also pass 2/2 in a separate immutable archive:
 The expanded fourth case injects one getItem fault immediately after actual setItem. Fixed c79330c retains the already-written draft but cannot finish unchanged Retry: 3 controls PASS / 1 uncertainty FAIL, preserved in [before](native-c79330c-uncertain-before.json). The unchanged four assertions at f532ad5 all PASS; Retry closes the editor with exactly one physical write. Chrome PID 57507 exits and PID 57598 reopens; all four physical checkpoints pass. [Final raw result](native-f532ad5-final.json). The original three-case logs remain unchanged.
 
 This supports the caller's token-preserving unchanged retry fix; genuine stale external writes remain subject to independent caller acceptance. No claim is made that a process-local token survives restart.
+
+## Caller repair d129950
+
+Parent fixed `d129950` executes the same four native scenarios successfully, then observes Chrome PID 62907 exit and PID 63004 reopen with all four saved checkpoints intact. [Raw result](native-d129950-repair.json). The original component two assertions pass separately in an immutable archive: [log](../web-d2-dashboard-note-independent/independent-repair-d129950.log). Actual device-only recovery download has separate before/after evidence in [its report](../web-d2-dashboard-device-export-native/review.md).
+
+Astra's unchanged eleven assertions still require final independent acceptance at this repaired revision; author re-execution is not substituted for that verdict.
