@@ -3,8 +3,19 @@ import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { accountScope, generationKey, generationMarkerKey, getPref } from '@repo/plugin-web-storage';
 import { TasksModule } from '../TasksModule.js';
-import { DEFAULT_TASK_LISTS } from '../internal/taskMeta.js';
+import { DEFAULT_TASK_LISTS, DEFAULT_TASK_TAGS } from '../internal/taskMeta.js';
+import type { TaskCard, TaskCol } from '../types.js';
 const key=(logical:string)=>generationKey('consumer-test','fixture',logical);
+const receipt={operationVersion:1,signature:'retained',result:{ok:true,targetId:'t1'},committedAt:'2026-09-09T00:00:00Z'};
+const row=(id:string,title:string):TaskCard=>({id,title:{en:title,zh:title},tag:'study',tags:['study'],priority:'normal',listId:'inbox'});
+const cols=(tasks:ReadonlyArray<TaskCard>=[row('t1','Original'),row('t2','Second')]):TaskCol[]=>[
+ {id:'overdue',key:'overdue',count:0,tasks:[]},
+ {id:'next7',key:'next_7_days',count:0,tasks:[]},
+ {id:'later',key:'later',count:0,tasks:[]},
+ {id:'nodate',key:'no_date',count:tasks.length,tasks:[...tasks]},
+];
+const envelope=(tasks=cols()[3]!.tasks,revision=1)=>JSON.stringify({format:'xai-command-state',version:1,revision,data:cols(tasks),receipts:{prior:receipt}});
+const storedRows=()=>((getPref('xai_task_cols') as unknown as TaskCol[]).flatMap(col=>[...col.tasks,...(col.completed??[])]));
 function fail(keyName:string) {const original=Storage.prototype.setItem;return vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this: Storage,k,v){if(this===localStorage&&k===keyName)throw new DOMException('Full','QuotaExceededError');return original.call(this,k,v);});}
 function saveIn(selector:string){fireEvent.click(document.querySelector(`${selector} .task-composer__btn--primary`)!);}
 beforeEach(()=>{vi.useRealTimers();localStorage.clear();localStorage.setItem(generationMarkerKey('consumer-test'),JSON.stringify({generation:'fixture',migrationId:'save-recovery-test',previous:null}));});
@@ -53,5 +64,27 @@ describe('Tasks recoverable writes',()=>{
   const newerPanel=screen.getByLabelText('Task details');const newerTitle=(within(newerPanel).getByLabelText('Title') as HTMLInputElement).value;expect(newerTitle).not.toBe(firstTitle);
   release();await act(async()=>{});
   expect(screen.getByLabelText('Task details')).toBe(newerPanel);expect(within(newerPanel).getByLabelText('Title')).toHaveValue(newerTitle);
+ });
+ it('keeps a detail draft on its opened baseline when the stored target changes or disappears',async()=>{
+  localStorage.setItem(key('xai_task_cols'),envelope());render(<TasksModule lang="en"/>);fireEvent.click(document.querySelector('.task-card')!);
+  const panel=screen.getByLabelText('Task details');const title=within(panel).getByLabelText('Title');fireEvent.change(title,{target:{value:'Local draft'}});
+  const changed=envelope([row('t1','External title'),row('t2','Second')],7);await act(async()=>{localStorage.setItem(key('xai_task_cols'),changed);window.dispatchEvent(new StorageEvent('storage',{key:key('xai_task_cols'),newValue:changed,storageArea:localStorage}));});
+  fireEvent.click(within(panel).getByRole('button',{name:'Save'}));await within(panel).findByRole('alert');expect(localStorage.getItem(key('xai_task_cols'))).toBe(changed);expect(title).toHaveValue('Local draft');
+  const missing=envelope([row('t2','Second')],8);await act(async()=>{localStorage.setItem(key('xai_task_cols'),missing);window.dispatchEvent(new StorageEvent('storage',{key:key('xai_task_cols'),newValue:missing,storageArea:localStorage}));});
+  expect(screen.getByLabelText('Task details')).toBe(panel);expect(title).toHaveValue('Local draft');expect(within(panel).getByRole('alert')).toBeTruthy();
+ });
+ it('keeps a newer selection and detail session when an older bulk delete completes',async()=>{
+  localStorage.setItem(key('xai_task_cols'),envelope());render(<TasksModule lang="en"/>);
+  fireEvent.click(screen.getAllByRole('checkbox',{name:'Select task'})[0]!);fireEvent.click(document.querySelectorAll('.task-card')[0]!);
+  let release!:()=>void;vi.stubGlobal('navigator',{locks:{request:vi.fn(<T,>(_name:string,callback:()=>Promise<T>)=>new Promise<T>(resolve=>{release=()=>{void callback().then(resolve);};}))}});
+  fireEvent.click(within(screen.getByRole('region',{name:'Bulk actions'})).getByRole('button',{name:'Delete'}));fireEvent.click(within(screen.getByLabelText('Task details')).getByRole('button',{name:'Close'}));fireEvent.click(within(screen.getByRole('region',{name:'Bulk actions'})).getByRole('button',{name:'Clear'}));
+  fireEvent.click(screen.getAllByRole('checkbox',{name:'Select task'})[1]!);fireEvent.click(document.querySelectorAll('.task-card')[1]!);release();await act(async()=>{});
+  expect(storedRows().map(task=>task.id)).toEqual(['t2']);expect(screen.getByLabelText('Task details')).toBeTruthy();expect(screen.getByRole('region',{name:'Bulk actions'})).toBeTruthy();
+ });
+ it.each(['list','tag'] as const)('reassigns completed task references before deleting %s metadata',async kind=>{
+  localStorage.setItem(key('xai_pref_task_lists'),JSON.stringify(DEFAULT_TASK_LISTS));localStorage.setItem(key('xai_pref_task_tags'),JSON.stringify(DEFAULT_TASK_TAGS));
+  const parsed=JSON.parse(envelope([]));parsed.data[3].completed=[{...row('completed','Completed'),done:true}];localStorage.setItem(key('xai_task_cols'),JSON.stringify(parsed));render(<TasksModule lang="en"/>);
+  fireEvent.click(screen.getAllByRole('button',{name:kind==='list'?'Delete list':'Delete tag'})[0]!);await waitFor(()=>expect(JSON.parse(localStorage.getItem(key(kind==='list'?'xai_pref_task_lists':'xai_pref_task_tags'))!).some((item:{id:string})=>item.id===(kind==='list'?'inbox':'study'))).toBe(false));
+  const completed=storedRows().find(task=>task.id==='completed')!;expect(completed.done).toBe(true);if(kind==='list')expect(completed.listId).not.toBe('inbox');else expect(completed.tags).not.toContain('study');
  });
 });

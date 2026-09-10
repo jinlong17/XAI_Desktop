@@ -61,6 +61,12 @@ interface LocatedTask {
   colId: BucketId;
 }
 
+interface TaskDetailSession {
+  token: number;
+  baseline: TaskCol[];
+  located: LocatedTask;
+}
+
 const SMART_FILTERS: readonly SmartListId[] = ["all", "today", "tomorrow", "next7", "inbox", "summary"];
 const PRIORITIES: readonly TaskPriority[] = ["low", "normal", "high", "urgent"];
 type CollectionBoardMode = "grouped" | "time";
@@ -140,7 +146,8 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [activeView, setActiveView] = useState<TaskViewSelection>({ kind: "smart", id: "all" });
   const [collectionBoardMode, setCollectionBoardMode] = useState<CollectionBoardMode>("grouped");
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(new Set());
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const detailSessionSequence = useRef(0);
+  const [detailSession, setDetailSession] = useState<TaskDetailSession | null>(null);
   const [metaEditor, setMetaEditor] = useState<MetaEditorState | null>(null);
 
   const activeTasks = useMemo(() => taskCols.flatMap((col) => col.tasks), [taskCols]);
@@ -174,7 +181,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
   const [dragging, setDragging] = useState<{ taskId: string; fromColId: BucketId } | null>(null);
   const [overColId, setOverColId] = useState<BucketId | null>(null);
 
-  const editingTask = editingTaskId ? findTask(taskCols, editingTaskId) : null;
+  const editingTask = detailSession
+    ? findTask(taskCols, detailSession.located.task.id) ?? detailSession.located
+    : null;
+
+  const handleOpenTask = useCallback((taskId: string) => {
+    const located = findTask(taskCols, taskId);
+    if (!located) return;
+    setDetailSession({
+      token: ++detailSessionSequence.current,
+      baseline: taskCols,
+      located,
+    });
+  }, [taskCols]);
 
   function selectSmartView(id: SmartListId) {
     setActiveView({ kind: "smart", id });
@@ -308,7 +327,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
   async function handleDeleteList(listId: string) {
     if (lists.length <= 1) return;
     const fallback = lists.find((list) => list.id !== listId)?.id ?? "inbox";
-    if (!await persistCols(updateCards(taskCols, new Set(activeTasks.filter((task) => task.listId === listId).map((task) => task.id)), { listId: fallback }))) return;
+    if (!await persistCols(reassignTaskList(taskCols, listId, fallback))) return;
     if (!persistLists(lists.filter((list) => list.id !== listId))) return;
     if (activeView.kind === "list" && activeView.id === listId) selectListView("all");
   }
@@ -324,9 +343,19 @@ export function TasksModule({ lang }: TasksModuleProps) {
   }
 
   async function handleBulkDelete() {
-    if (!await persistCols(deleteCards(taskCols, selectedIds))) return;
-    setSelectedIds(new Set());
-    if (editingTaskId && selectedIds.has(editingTaskId)) setEditingTaskId(null);
+    const operationIds = new Set(selectedIds);
+    const operationDetailToken = detailSession?.token;
+    if (!await persistCols(deleteCards(taskCols, operationIds))) return;
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      for (const id of operationIds) next.delete(id);
+      return next;
+    });
+    setDetailSession((current) => current
+      && current.token === operationDetailToken
+      && operationIds.has(current.located.task.id)
+      ? null
+      : current);
   }
 
   async function handleBulkList(listId: string) {
@@ -359,9 +388,11 @@ export function TasksModule({ lang }: TasksModuleProps) {
     dueDate?: string | null;
     done: boolean;
   }) {
-    const located = findTask(taskCols, id);
+    const session = detailSession;
+    if (!session || session.located.task.id !== id) return false;
+    const located = findTask(session.baseline, id);
     if (!located) return false;
-    let next = taskCols;
+    let next = session.baseline;
     if (located.colId !== patch.bucket) {
       next = moveCard(next, id, located.colId, patch.bucket);
     }
@@ -375,11 +406,21 @@ export function TasksModule({ lang }: TasksModuleProps) {
       ...(patch.dueDate !== undefined ? { dueDate: patch.dueDate } : {}),
       done: patch.done,
     });
-    return persistCols(next);
+    const ok = await persistCols(next, session.baseline);
+    if (ok) {
+      setDetailSession((current) => {
+        if (!current || current.token !== session.token) return current;
+        const updated = findTask(next, id);
+        return updated ? { ...current, baseline: next, located: updated } : current;
+      });
+    }
+    return ok;
   }
 
   async function handleDetailDelete(id: string) {
-    if (!await persistCols(deleteCard(taskCols, id))) return false;
+    const session = detailSession;
+    if (!session || session.located.task.id !== id) return false;
+    if (!await persistCols(deleteCard(session.baseline, id), session.baseline)) return false;
     setSelectedIds((prev) => {
       const next = new Set(prev);
       next.delete(id);
@@ -392,7 +433,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
 
   return (
     <div className="module module-tasks">
-      {failedSave && !composer.open && !editingTaskId && !metaEditor && <div>
+      {failedSave && !composer.open && !detailSession && !metaEditor && <div>
         <TaskSaveFailure lang={lang} owner={owner} draft={failedSave} />
         <button onClick={() => {
           if (failedSave.kind === "tasks") void persistCols(failedSave.value as TaskCol[], failedSave.baseline ?? taskCols);
@@ -505,7 +546,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
             completedIds={completedIds}
             selectedIds={selectedIds}
             onToggle={handleToggle}
-            onOpenTask={setEditingTaskId}
+            onOpenTask={handleOpenTask}
             onSelectTask={handleSelectTask}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -529,7 +570,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
                 tags={tags}
                 filterActive={!overviewActive}
                 onToggle={handleToggle}
-                onOpenTask={setEditingTaskId}
+                onOpenTask={handleOpenTask}
                 onSelectTask={handleSelectTask}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
@@ -561,7 +602,7 @@ export function TasksModule({ lang }: TasksModuleProps) {
         tags={tags}
         onSave={handleDetailSave}
         onDelete={handleDetailDelete}
-        onClose={() => setEditingTaskId(null)}
+        onClose={() => setDetailSession(null)}
       />
 
       <MetaEditorDialog
@@ -736,7 +777,7 @@ function addTagToTasks(cols: TaskCol[], ids: ReadonlySet<string>, tagId: string)
 function removeTagFromTasks(cols: TaskCol[], tagId: string): TaskCol[] {
   return cols.map((col) => {
     let changed = false;
-    const tasks = col.tasks.map((task) => {
+    const removeTag = (task: TaskCard) => {
       const current = task.tags ?? (task.tag ? [task.tag] : []);
       if (!current.includes(tagId) && task.tag !== tagId) return task;
       const nextTags = current.filter((id) => id !== tagId);
@@ -746,8 +787,24 @@ function removeTagFromTasks(cols: TaskCol[], tagId: string): TaskCol[] {
         tags: nextTags,
         ...(nextTags[0] ? { tag: nextTags[0] as TaskTagId } : { tag: undefined }),
       };
-    });
-    return changed ? { ...col, tasks } : col;
+    };
+    const tasks = col.tasks.map(removeTag);
+    const completed = col.completed?.map(removeTag);
+    return changed ? { ...col, tasks, ...(completed ? { completed } : {}) } : col;
+  });
+}
+
+function reassignTaskList(cols: TaskCol[], fromListId: string, toListId: string): TaskCol[] {
+  return cols.map((col) => {
+    let changed = false;
+    const reassign = (task: TaskCard) => {
+      if (task.listId !== fromListId) return task;
+      changed = true;
+      return { ...task, listId: toListId };
+    };
+    const tasks = col.tasks.map(reassign);
+    const completed = col.completed?.map(reassign);
+    return changed ? { ...col, tasks, ...(completed ? { completed } : {}) } : col;
   });
 }
 
