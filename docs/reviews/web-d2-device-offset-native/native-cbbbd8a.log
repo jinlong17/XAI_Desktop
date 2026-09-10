@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"cbbbd8a","browser":"Chrome/152.0.7977.83"}
+{"name":"absent-mount","pass":false,"error":"AssertionError [ERR_ASSERTION]: Mount must not seed absent device offset\n\n'0' !== null\n"}
+{"name":"held-device-lock","pass":false,"error":"AssertionError [ERR_ASSERTION]: Native device lock did not hold drag persistence\n\n'40' !== '0'\n"}
+{"name":"account-switch","pass":false,"error":"AssertionError [ERR_ASSERTION]: Final device position was not saved\n\n'0' !== '40'\n"}
