@@ -1,10 +1,19 @@
 /**
  * CL1..CL4 — collaboratePane tests (test.md §3 P1)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { collaboratePane } from "../panes/collaboratePane.js";
-import { getPref } from "@repo/plugin-web-storage";
+import { accountScope, generationMarkerKey, getPref } from "@repo/plugin-web-storage";
+import { createSmartListsLockManager } from "./smartListsLockFixture.js";
+
+beforeEach(() => {
+  localStorage.clear();
+  accountScope.activate(accountScope.lock("collaborate-test"), "g1");
+  localStorage.setItem(generationMarkerKey("collaborate-test"), JSON.stringify({ generation: "g1", migrationId: "fixture", previous: null }));
+  vi.stubGlobal("navigator", { locks: createSmartListsLockManager() });
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("collaboratePane", () => {
   it("CL1: renders without error", () => {
@@ -26,7 +35,7 @@ describe("collaboratePane", () => {
     expect(screen.getByText("接收 @ 提及通知")).toBeInTheDocument();
   });
 
-  it("CL4: toggling avatars toggle persists pref", () => {
+  it("CL4: toggling avatars toggle persists its independent async pref", async () => {
     const { container } = render(collaboratePane.render({ lang: "en" }));
     // Default is true; find the toggle button for "show collaborator avatars"
     const toggleBtn = container.querySelector<HTMLButtonElement>(
@@ -35,6 +44,20 @@ describe("collaboratePane", () => {
     expect(toggleBtn).not.toBeNull();
     expect(getPref("xai_pref_collab_show_avatars")).toBe(true);
     fireEvent.click(toggleBtn!);
-    expect(getPref("xai_pref_collab_show_avatars")).toBe(false);
+    await waitFor(() => expect(getPref("xai_pref_collab_show_avatars")).toBe(false));
+  });
+
+  it("persists all three actual controls independently without seeding absent siblings", async () => {
+    const ui = render(collaboratePane.render({ lang: "en" }));
+    expect(localStorage.getItem("xai_pref_collab_show_avatars")).toBeNull();
+    expect(localStorage.getItem("xai_pref_collab_mention_notify")).toBeNull();
+    fireEvent.click(ui.getByRole("switch", { name: "Show collaborator avatars" }));
+    fireEvent.change(ui.getByRole("combobox", { name: "Default share permission" }), { target: { value: "edit" } });
+    fireEvent.click(ui.getByRole("switch", { name: "Notify on @ mentions" }));
+    await waitFor(() => {
+      expect(getPref("xai_pref_collab_show_avatars")).toBe(false);
+      expect(getPref("xai_pref_collab_default_share")).toBe("edit");
+      expect(getPref("xai_pref_collab_mention_notify")).toBe(false);
+    });
   });
 });

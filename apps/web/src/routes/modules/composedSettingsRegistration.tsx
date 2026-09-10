@@ -229,6 +229,7 @@ function ComposedSettingsModule(): React.ReactElement {
 
   const activePane = composed.find((p) => p.id === active) ?? composed[0]!;
   const { s } = useI18n(lang);
+  const departureLabel = guardRef.current?.label ?? (lang === "zh" ? "智能列表" : "Smart Lists");
   const promptOpen = intentRef.current !== null;
   React.useEffect(() => {
     if (promptOpen) {
@@ -302,8 +303,8 @@ function ComposedSettingsModule(): React.ReactElement {
           {activePane.render({ lang, registerDepartureGuard })}
         </section>
         {promptOpen && (
-          <div ref={dialogRef} className="settings-departure-dialog" role="dialog" aria-modal="true" aria-label={lang === "zh" ? "未保存的智能列表草稿" : "Unsaved Smart Lists draft"} onKeyDown={handleDialogKeyDown} tabIndex={-1}>
-            <p>{lang === "zh" ? "智能列表有未保存的更改。" : "Smart Lists has unsaved changes."}</p>
+          <div ref={dialogRef} className="settings-departure-dialog" role="dialog" aria-modal="true" aria-label={lang === "zh" ? `未保存的${departureLabel}草稿` : `Unsaved ${departureLabel} draft`} onKeyDown={handleDialogKeyDown} tabIndex={-1}>
+            <p>{lang === "zh" ? `${departureLabel}有未保存的更改。` : `${departureLabel} has unsaved changes.`}</p>
             <button type="button" onClick={stay}>{lang === "zh" ? "留下" : "Stay"}</button>
             <button type="button" onClick={exportCurrentDraft}>{lang === "zh" ? "导出当前草稿" : "Export current draft"}</button>
             <button type="button" onClick={discardAndLeave}>{lang === "zh" ? "放弃本地更改并离开" : "Discard local changes and leave"}</button>

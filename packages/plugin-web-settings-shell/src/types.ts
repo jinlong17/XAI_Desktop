@@ -43,6 +43,8 @@ export interface PaneRenderProps {
 
 export interface PaneDepartureGuard {
   readonly token: object;
+  /** Localized, non-sensitive pane label for the host departure prompt. */
+  readonly label?: string;
   readonly isBlocking: () => boolean;
   readonly isCurrent: () => boolean;
   readonly exportDraft: () => void;
