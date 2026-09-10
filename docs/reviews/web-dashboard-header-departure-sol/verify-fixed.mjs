@@ -28,10 +28,11 @@ try {
   aliases.push({ find: "@testing-library/react", replacement: join(root, "packages/plugin-web-board-workspaces/node_modules/@testing-library/react") });
   const owned = join(dir, "docs/reviews/web-dashboard-header-departure-sol");
   mkdirSync(owned, { recursive: true });
-  for (const file of ["fixture.tsx", "component.test.tsx", "export-owner.test.tsx"]) copyFileSync(join(evidence, file), join(owned, file));
+  for (const file of ["fixture.tsx", "component.test.tsx", "export-owner.test.tsx", "operations.test.tsx"]) copyFileSync(join(evidence, file), join(owned, file));
   for (const [name, include] of [
     ["component", ["docs/reviews/web-dashboard-header-departure-sol/component.test.tsx"]],
     ["export-owner", ["docs/reviews/web-dashboard-header-departure-sol/export-owner.test.tsx"]],
+    ["operations", ["docs/reviews/web-dashboard-header-departure-sol/operations.test.tsx"]],
   ]) {
     if (process.argv[3] && process.argv[3] !== name) continue;
     const config = join(dir, "sol.config.mjs");
