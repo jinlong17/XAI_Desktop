@@ -1,0 +1,32 @@
+revision=68ea7a3 fixed_commit=68ea7a35b8d0755c18f9d65c1c1bfcea43ae41c8
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-1gyzAU
+
+ ❯ docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx (3 tests | 2 failed) 45ms
+   × JSON null remains untouched and exposes existing source recovery instead of silently showing a healthy default 35ms
+     → 9f invalid source must show recovery: expected null not to be null
+   × unavailable position source stays untouched and exposes recovery 4ms
+     → 9f read failure must show recovery: expected null not to be null
+   ✓ truly absent position displays a healthy default with no alert or seed 4ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  20:52:07
+   Duration  1.03s (transform 186ms, setup 312ms, collect 48ms, tests 45ms, environment 347ms, prepare 59ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx > JSON null remains untouched and exposes existing source recovery instead of silently showing a healthy default
+AssertionError: 9f invalid source must show recovery: expected null not to be null
+ ❯ docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx:10:416
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx > unavailable position source stays untouched and exposes recovery
+AssertionError: 9f read failure must show recovery: expected null not to be null
+ ❯ docs/reviews/web-d2-device-offset-astra/source-feedback.test.tsx:11:524
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
