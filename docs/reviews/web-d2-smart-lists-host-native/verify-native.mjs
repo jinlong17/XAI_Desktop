@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../../',import.meta.url));
 const output=fileURLToPath(new URL('./',import.meta.url));
 const directory=mkdtempSync(join(tmpdir(),'xai-metrics-save-'));
-const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=mode==='baseline'?'':'-'+mode;
+const mode=process.argv[3]??'baseline';if(!['baseline','journey','intent','programmatic','owner-signout','route-signout','focus-trap','back','back-programmatic','focus'].includes(mode))throw Error('Invalid mode');const evidenceSuffix=(mode==='baseline'?'':'-'+mode)+(process.argv[4]?'-'+process.argv[4]:'');
 const sourceCommit=process.argv[2];if(!sourceCommit)throw Error('Fixed revision required');
 if(existsSync(join(output,`native-${sourceCommit}${evidenceSuffix}.log`)))throw Error('Evidence exists; use a distinct fixed revision');
 const snapshot=join(directory,'source');mkdirSync(snapshot);
@@ -29,6 +29,7 @@ let fixtureSource=readFileSync(join(output,'native.tsx'),'utf8');
 if(['owner-signout','route-signout'].includes(mode))fixtureSource=fixtureSource.replace('// HOST_DEPARTURE_DELEGATE_PROBE',`import {requestSettingsDeparture} from './apps/web/src/routes/modules/settingsDeparture';
 (window as any).verify.signoutResult='not-requested';
 (window as any).verify.requestSignOut=()=>{(window as any).verify.signoutResult='pending';void requestSettingsDeparture('sign-out').then(result=>{(window as any).verify.signoutResult=result})};`);
+if(mode.startsWith('back'))fixtureSource=fixtureSource.replace("const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);","const router=createBrowserRouter([{path:'/app/settings/*',element:<Composed/>}]);await router.navigate('/app/settings/notifications',{replace:true});await router.navigate('/app/settings/smart_lists');");
 const built=await build({stdin:{contents:fixtureSource,resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
 const js=built.outputFiles.find(f=>f.path.endsWith('.js')).text,css=built.outputFiles.find(f=>f.path.endsWith('.css')).text;
 server=createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>')});await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -45,13 +46,19 @@ try{
  assert.equal(await ev('localStorage.getItem(verify.key)'),JSON.stringify({extension:'future-value'}));
  assert(await ev('!!document.querySelector("[role=alert]")'),'Actual unsaved feedback missing');
  const sidebar=async label=>{await ev(`(()=>{const e=[...document.querySelectorAll('.settings-sidebar [role=button]')].find(e=>e.textContent.trim()===${JSON.stringify(label)});if(!e)throw Error('missing actual sidebar '+${JSON.stringify(label)});e.focus();e.click()})()`);await delay(180)};
- if(mode==='owner-signout'){await ev('verify.requestSignOut()');await delay(180)}else await sidebar('Notifications');
+ if(mode==='owner-signout'){await ev('verify.requestSignOut()');await delay(180)}else if(mode.startsWith('back')){await ev('history.back()');await delay(200)}else await sidebar('Notifications');
  const pane=await ev('document.querySelector(".settings-detail").dataset.pane');
  if(pane!=='smart_lists'){
   await sidebar('Smart Lists');const restored=await ev('document.querySelectorAll(".sl-select")[0].value');
   throw Error('Actual host sidebar unmounted dirty pane without a guard; return selection='+restored);
  }
  assert(await ev('!!document.querySelector("dialog[open], [role=dialog], [role=alertdialog]")'),'Blocked departure dialog missing');
+ if(mode.startsWith('back')){
+  if(mode==='back'){await text('Stay');assert.equal(await ev('location.pathname'),'/app/settings/smart_lists');await ev('history.back()');await delay(200)}else{await ev('verify.navigate("/app/settings/appearance")');await delay(180)}
+  await text('Discard local changes and leave');assert.equal(await ev('location.pathname'),'/app/settings/notifications','Original Back target was replaced');
+  await ev('history.forward()');await delay(200);assert.equal(await ev('location.pathname'),'/app/settings/smart_lists','Back was replayed as push and lost Forward history');
+  record('native-original-pop',{pass:true,mode,scope:'Actual browser Back and Forward, original transition history retained after explicit discard'});
+ }
  if(mode==='owner-signout'){
   await ev('verify.switchOwner()');await delay(200);
   assert.equal(await ev('verify.signoutResult'),false,'Account replacement did not cancel original sign-out');
