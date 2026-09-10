@@ -20,3 +20,9 @@ Fixed `04d036b` passes both unchanged initial browser cases: held native lifecyc
 ## Native two-document functional serialization
 
 At fixed `04d036b`, the expanded suite adds an independent same-origin iframe with its own module/account scope. The parent holds the actual physical-key exclusive Web Lock, queues one increment from each document, confirms no early physical mutation, then releases. Both public mutatePref operations succeed, each updater runs once, and raw counter equals 2. All three initial cases and all three process-reopen checks PASS, Chrome PID 31421 → 31477 (`native-04d036b-parent-two-document.json`). This supplies the contract's native two-document update preservation layer; it does not prove every hook session, reset, uncertain commit or old synchronous writer is coordinated.
+
+## Native account-switch control
+
+At fixed partial session source `2820917`, a fourth real-pane case queues A's edit behind its native lifecycle lock, switches to seeded B, and verifies B's view selection, usable device toggle, unchanged A/comment and B/view bytes after releasing the old operation, and no late UI overwrite. All four initial and four whole-browser reopen checks PASS (Chrome PID 35032 → 35049), `native-2820917-parent-session-calibrated.json`. This establishes this concrete account-switch control, not all reset/remount/session semantics.
+
+The earlier `native-2820917-parent-session-before.json` is fixture calibration: it tried to resolve B's physical key through an invalid copied A scope and correctly hit the account scope guard before the intended switch. The fixture now seeds B with the public `generationKey` helper; no guard is bypassed and no product change was made. That earlier result is not a product regression.

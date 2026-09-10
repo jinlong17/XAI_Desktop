@@ -1,6 +1,6 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {accountScope,generationMarkerKey,mutatePref} from './packages/plugin-web-storage/src/index.ts';
+import {accountScope,generationMarkerKey,generationKey,mutatePref} from './packages/plugin-web-storage/src/index.ts';
 import {prefMutationLockName} from './packages/plugin-web-storage/src/internal/prefMutation.ts';
 import {accountLifecycleLockName} from './packages/plugin-web-storage/src/internal/accountCoordination.ts';
 import {collaboratePane} from './packages/plugin-web-settings-rest/src/panes/collaboratePane.tsx';
@@ -9,9 +9,9 @@ function assert(v:unknown,message:string):asserts v{if(!v)throw Error(message);}
 async function run(){
  const cases:any[]=[];const checkpoint:Record<string,any>={};const initial=new URLSearchParams(location.search).get('phase')==='initial';
  if(initial)localStorage.clear();
- for(const name of ['held-account-lock','quota-retains-latest-draft','two-document-functional']){
+ for(const name of ['held-account-lock','quota-retains-latest-draft','two-document-functional','account-switch-pending']){
   const owner='async-pref-native-'+name,key=accountScope.physicalKey(name==='two-document-functional'?'xai_pref_native_counter':'xai_pref_collab_default_share',accountScope.activate(accountScope.lock(owner),'g1'));
-  if(!initial){try{assert(localStorage.getItem(key)===(window as any).__checkpoint[name].raw,'Reopened preference changed');cases.push({name,pass:true});}catch(e){cases.push({name,pass:false,error:String(e)});}continue;}
+  if(!initial){try{assert(localStorage.getItem(key)===(window as any).__checkpoint[name].raw,'Reopened preference changed');const extra=(window as any).__checkpoint[name];if(extra.extraKey)assert(localStorage.getItem(extra.extraKey)===extra.extraRaw,'Other account changed after reopen');cases.push({name,pass:true});}catch(e){cases.push({name,pass:false,error:String(e)});}continue;}
   localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));localStorage.setItem(key,'comment');
   if(name==='two-document-functional'){
    localStorage.setItem(key,'0');let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(r=>release=r),started=new Promise<void>(r=>entered=r);
@@ -28,12 +28,21 @@ async function run(){
   try{
    root.render(collaboratePane.render({lang:'en'} as any));for(let i=0;i<100&&!host.querySelector('select');i++)await delay(20);
    const select=host.querySelector('select')!;assert(select,'Actual Collaborate select missing');
-   if(name==='held-account-lock'){let entered!:()=>void;const started=new Promise<void>(r=>entered=r),gate=new Promise<void>(r=>release=r);held=navigator.locks.request(accountLifecycleLockName(owner),{mode:'exclusive'},async()=>{entered();await gate;});await started;}
+   if(name==='held-account-lock'||name==='account-switch-pending'){let entered!:()=>void;const started=new Promise<void>(r=>entered=r),gate=new Promise<void>(r=>release=r);held=navigator.locks.request(accountLifecycleLockName(owner),{mode:'exclusive'},async()=>{entered();await gate;});await started;}
    else Storage.prototype.setItem=function(k,v){if(k===key){rejected++;throw new DOMException('native quota','QuotaExceededError');}native.call(this,k,v);};
    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value')!.set!.call(select,'edit');select.dispatchEvent(new Event('change',{bubbles:true}));await delay(100);
    assert(localStorage.getItem(key)==='comment','UI write bypassed an actually held account lifecycle lock or fault');
    if(name==='quota-retains-latest-draft')assert(rejected>0,'Quota probe did not reach actual preference write');
    assert(select.value==='edit','Latest selection was lost instead of retained for recovery');
+   if(name==='account-switch-pending'){
+    const b=owner+'-B';localStorage.setItem(generationMarkerKey(b),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));
+    const actualBKey=generationKey(b,'g1','xai_pref_collab_default_share');localStorage.setItem(actualBKey,'view');
+    accountScope.activate(accountScope.lock(b),'g1');await delay(100);
+    assert(select.value==='view','Pending A draft remained visible after switching to B');
+    const device=host.querySelector('button[role="switch"]') as HTMLButtonElement|null;assert(device,'Device toggle unavailable');const old=device.getAttribute('aria-checked');device.click();await delay(50);assert(device.getAttribute('aria-checked')!==old,'Device toggle blocked by A account lock');
+    release!();await held;await delay(100);
+    assert(localStorage.getItem(key)==='comment'&&localStorage.getItem(actualBKey)==='view','Old save crossed account boundary');assert(select.value==='view','Old completion changed B selection');checkpoint[name]={raw:'comment',extraKey:actualBKey,extraRaw:'view'};cases.push({name,pass:true});continue;
+   }
    if(name==='held-account-lock'){
     assert(/saving/i.test(host.textContent||''),'Pending save has no visible Saving state');release!();await held;
     for(let i=0;i<100&&localStorage.getItem(key)!=='edit';i++)await delay(20);
