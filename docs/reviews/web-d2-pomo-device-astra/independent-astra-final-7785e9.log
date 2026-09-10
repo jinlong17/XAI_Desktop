@@ -1,0 +1,12 @@
+revision=7785e9 fixed_commit=7785e9227a7888d2db02fc3db457d55ce0727bc8
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-eG9gHW
+
+ ✓ docs/reviews/web-d2-pomo-device-astra/contracts.test.tsx (24 tests) 2947ms
+   ✓ sound: actual control waits for its physical key lock; UI stays current and timer bytes remain separate  306ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  21:13:05
+   Duration  4.51s (transform 301ms, setup 0ms, collect 580ms, tests 2.95s, environment 454ms, prepare 108ms)
