@@ -51,5 +51,10 @@ describe("Dashboard header persistence recovery", () => {
   const writes=vi.spyOn(Storage.prototype,"setItem");Object.defineProperty(lane,"clientWidth",{value:400,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("20px");expect(writes).not.toHaveBeenCalled();
   Object.defineProperty(lane,"clientWidth",{value:760,configurable:true});fireEvent(window,new Event("resize"));expect(note.getAttribute("style")).toContain("100px");expect(writes).not.toHaveBeenCalled();
  });
+ it("keeps an invalid device source byte-for-byte until explicit reload", async () => {
+  const offset="xai_pref_dashboard_header_note_x";localStorage.setItem(offset,"null");const writes=vi.spyOn(Storage.prototype,"setItem");const ui=mount();
+  await waitFor(()=>expect(ui.getByRole("alert")).toBeTruthy());expect(localStorage.getItem(offset)).toBe("null");expect(writes.mock.calls.filter(call=>call[0]===offset)).toEqual([]);
+  nativeSet.call(localStorage,offset,"80");fireEvent.click(ui.getByText("Reload note position"));await waitFor(()=>expect(ui.queryByRole("alert")).toBeNull());expect(writes.mock.calls.filter(call=>call[0]===offset)).toEqual([]);
+ });
 
 });

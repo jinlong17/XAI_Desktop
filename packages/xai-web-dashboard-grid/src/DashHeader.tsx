@@ -209,7 +209,11 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
   const noteUnresolved = notePending || noteIssue !== null || frozenSession;
   const offsetPending = offsetOperationRef.current !== null && offsetIssue === null;
   const offsetGestureDirty = dragRef.current?.moved === true;
-  const offsetUnresolved = offsetPending || offsetIssue !== null || offsetGestureDirty;
+  const offsetSourceIssue = offsetSave.meta.source === "invalid" || offsetSave.meta.source === "unavailable"
+    ? offsetSave.meta.source
+    : null;
+  const offsetHookIssue = offsetSave.meta.status === "error" ? (offsetSave.meta.error ?? "storage") : null;
+  const offsetUnresolved = offsetPending || offsetIssue !== null || offsetGestureDirty || offsetSourceIssue !== null || offsetHookIssue !== null;
   const unsaved = noteUnresolved || offsetUnresolved;
   // A frozen A session may retain recovery state, but it must never render A's
   // committed text in B's active header.
@@ -569,6 +573,7 @@ export function DashHeader({ lang, now, onAddWidget }: DashHeaderProps) {
         <p>{lang === "zh" ? "备注或位置未保存。草稿仅保留在此页面；离开前请重试或导出。" : "Note or position was not saved. Drafts stay on this page only; retry or export before leaving."}</p>
         {(noteIssue === "conflict" || noteIssue === "account-changed" || frozenSession || offsetIssue === "conflict") && <p>{lang === "zh" ? "账户或已保存内容已变化，无法覆盖。请导出草稿后重新打开。" : "The account or saved content changed. Export your draft and reopen to avoid overwriting newer data."}</p>}
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={retrySave}>{lang === "zh" ? "重试备注保存" : "Retry note save"}</button>
+        {offsetSourceIssue && <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => offsetSave.meta.reload()}>{lang === "zh" ? "重新读取备注位置" : "Reload note position"}</button>}
         <button type="button" onMouseDown={event => event.preventDefault()} onClick={() => {
           try {
             const session = sessionRef.current;
