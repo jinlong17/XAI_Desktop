@@ -7,3 +7,7 @@ Parent fixed functional archive7785e92, actual Pomodoro with token/layout and ex
 The first diagnostic omitted the module stylesheet because PomodoroModule is imported directly while styles.css is imported by the package index. Those incomplete screenshots/logs are preserved under `diagnostic-missing-module-css/`; their21px buttons and missing gap are fixture artifacts, not product defects. The current fixture explicitly loads all three stylesheets and supersedes that visual diagnosis. Native functional export/recovery fixtures previously loaded token/layout CSS only; their storage, actual-control and disk-download assertions remain bounded functional evidence, not layout acceptance.
 
 [Fixture](native.tsx), [runner](verify-native.mjs). CSS-only repair and fixed after rendering remain pending. This report closes no numbered product gate.
+
+## CSS-only repair 40079c7
+
+Fixed [after geometry](visual-40079c7.log) at all five viewports retains44px button heights and in-viewport recovery rectangles. At375 the paragraph spans the notice and normal words remain intact; action rows wrap with8px gap. Notice height reduces375.6→230.7px;414 reduces219.1→178.7px. Wider views use two action rows, an intentional readable-layout tradeoff. Parent viewed375 and414 after screenshots directly. This accepts the narrow rendered layout behavior only, not full POMO-05 prioritization or full-shell/mobile hardware acceptance. Astra CSS review is separate; functional7785e92 acceptance remains ba9affc.
