@@ -1,6 +1,6 @@
 # 真实 autosave 调用方接续
 
-当前增量：Collaborate当前用户完整三控件恢复由父主审在c604951有界接受：独立37/host8、七模式native与最终departure、英中五宽度/375弹窗、Settings293及Smart完整受影响回归通过；Settings lint及双types通过。该接受不关闭REL-05/09/D2或崩溃/强制失效恢复。下一批为Pomodoro六项device偏好的完整普通离开恢复，保留已接受Dv2存储/重试/完整六值导出及timer合同。固定c604951真实注册路由基线9项：6项卸载、route、signout失败，clean对照通过；完整合同见web-pomodoro-departure-contract。父主审、Terra实现、Luna只读库存；正式完成13/312，未关闭299项。
+当前增量：Astra6254cb4独立接受Collaborate完整当前用户恢复合同，固定ad689dd：原37/host8、新增5（原2FAIL+3正例）和真实Chromeafter通过。c604951原拒绝/正确FAIL保存在f46b4b8，父历史接受归属保留。Sol af32234完成host coordinator机械提取，父固定Smart10/3/5/App5与Collaborate8全部通过，Astra正独立复核抽取；Sol继续接入Pomodoro六项偏好完整离开保护。Pomo原9、完整Shell扩展8及native三场景的正确FAIL均保留，不改变已接受Dv2/timer边界。正式完成13/312，未关闭299项；REL-05/09/D2继续开放。
 
 父任务于 2026-09-09 只读核对 `packages/**/*.tsx`（排除 `__tests__`）中的直接 `usePrefAutosave(...)` 调用；这是后续排程输入，不是当前异步合同已完成的证据。
 

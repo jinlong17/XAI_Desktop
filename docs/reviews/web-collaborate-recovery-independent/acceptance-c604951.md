@@ -1,6 +1,6 @@
 # Collaborate complete current-user recovery acceptance
 
-**Current status: historical parent acceptance reopened by subsequent independent Astra review.** Astra reproduced global Saved coexisting with invalid/unavailable source recovery on c604951. Terra ad689dd fixes the aggregate condition; final Astra after-verification is pending. The requirement reconciliation below records the parent checkpoint, not a claim that the newly discovered gap was already covered.
+**Current status: historical parent acceptance reopened by subsequent independent Astra review.** Astra reproduced global Saved coexisting with invalid/unavailable source recovery on c604951. Terra ad689dd fixes the aggregate condition; independent Astra successor acceptance is now recorded in ../web-collaborate-recovery-astra-final/acceptance-ad689dd.md at6254cb4. The requirement reconciliation below records the parent checkpoint, not a claim that the newly discovered gap was already covered.
 
 Web, parent non-author review at product **c604951**. This accepts the bounded complete three-control contract in `../web-collaborate-recovery-contract/contract.md`. Terra authored product changes; parent independently authored and executed the oracles below. The runtime could not initialize a new Astra reviewer Agent, so this is explicitly the parent main-review acceptance, not a fabricated external Agent execution. No numbered audit item is closed: Collaborate is one caller inside REL-05/D2, with REL-09 crash/forced-auth durability still open.
 
