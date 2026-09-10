@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { accountScope } from "@repo/plugin-web-storage";
 import { PomodoroModule } from "../PomodoroModule.js";
 import type { PomodoroDepartureGuard } from "../types.js";
 
@@ -29,6 +30,28 @@ it("reports failed preferences and exports/retries the latest choice", async () 
   await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Retry preferences" })); });
   expect(localStorage.getItem("xai_pref_pomodoro_theme")).toBe('"violet"');
   expect(screen.queryByRole("alert")).toBeNull();
+});
+
+it("old epoch capability refuses synchronous export and discard while the device draft survives", async () => {
+  const guards: PomodoroDepartureGuard[] = [];
+  render(<PomodoroModule lang="en" registerDepartureGuard={(guard) => { guards.push(guard); return () => {}; }} />);
+  const original = Storage.prototype.setItem;
+  vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key, value) {
+    if (key === "xai_pref_pomodoro_theme") throw new DOMException("quota", "QuotaExceededError");
+    original.call(this, key, value);
+  });
+  await act(async () => { fireEvent.click(screen.getByTestId("theme-blue")); });
+  const oldGuard = guards.at(-1)!;
+  const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+  vi.stubGlobal("URL", {
+    createObjectURL: () => { accountScope.lock("next-account"); return "blob:stale"; },
+    revokeObjectURL: vi.fn(),
+  });
+  await act(async () => { oldGuard.exportDraft(); });
+  expect(click).not.toHaveBeenCalled();
+  await act(async () => { oldGuard.discardDraft(); });
+  expect(screen.getByTestId("theme-blue").getAttribute("aria-pressed")).toBe("true");
+  expect(screen.getByRole("alert").textContent).toContain("preferences were not saved");
 });
 
 it("registers an actual-draft guard and exports all six memory values under storage denial", async () => {

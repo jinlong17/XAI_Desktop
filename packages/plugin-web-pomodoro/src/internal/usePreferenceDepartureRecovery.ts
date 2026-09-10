@@ -15,6 +15,7 @@ type Draft = {
   readonly id: number;
   readonly retry: () => Promise<PrefMutationResult<unknown>>;
   readonly discard: () => void;
+  settledFailure: boolean;
 };
 
 type Snapshot = Readonly<{
@@ -69,6 +70,7 @@ export function usePreferenceDepartureRecovery({
       id,
       retry: retry as () => Promise<PrefMutationResult<unknown>>,
       discard,
+      settledFailure: false,
     });
     changed();
     const promise = operation(value);
@@ -76,6 +78,9 @@ export function usePreferenceDepartureRecovery({
       if (result.ok && draftsRef.current.get(field)?.id === id) {
         draftsRef.current.delete(field);
         changed();
+      } else if (!result.ok && draftsRef.current.get(field)?.id === id) {
+        const current = draftsRef.current.get(field);
+        if (current) current.settledFailure = true;
       }
     });
     return promise;
@@ -83,10 +88,14 @@ export function usePreferenceDepartureRecovery({
 
   const retryDrafts = useCallback(() => {
     for (const [field, draft] of draftsRef.current) {
+      if (!draft.settledFailure) continue;
+      draft.settledFailure = false;
       void draft.retry().then(result => {
         if (result.ok && draftsRef.current.get(field)?.id === draft.id) {
           draftsRef.current.delete(field);
           changed();
+        } else if (!result.ok && draftsRef.current.get(field)?.id === draft.id) {
+          draft.settledFailure = true;
         }
       });
     }
@@ -103,8 +112,10 @@ export function usePreferenceDepartureRecovery({
   const exportDraft = useCallback((decisionEpoch = epochRef.current) => {
     let anchor: HTMLAnchorElement | null = null;
     let url: string | null = null;
+    const isDecisionCurrent = () => !disposedRef.current
+      && decisionEpoch === accountScope.capture().epoch;
     try {
-      if (disposedRef.current || decisionEpoch !== epochRef.current || draftsRef.current.size === 0) return;
+      if (!isDecisionCurrent() || draftsRef.current.size === 0) return;
       const values = snapshotRef.current;
       if (!validateSnapshotRef.current(values)) throw new Error("invalid-preference-snapshot");
       const blob = new Blob([
@@ -115,11 +126,11 @@ export function usePreferenceDepartureRecovery({
       anchor.href = url;
       anchor.download = "pomodoro-preferences.json";
       document.body.appendChild(anchor);
-      if (disposedRef.current || decisionEpoch !== epochRef.current || draftsRef.current.size === 0) return;
+      if (!isDecisionCurrent() || draftsRef.current.size === 0) return;
       anchor.click();
       setExportFailed(false);
     } catch {
-      if (!disposedRef.current && decisionEpoch === epochRef.current) setExportFailed(true);
+      if (isDecisionCurrent()) setExportFailed(true);
     } finally {
       try { anchor?.remove(); } catch { /* best-effort cleanup */ }
       try { if (url) URL.revokeObjectURL(url); } catch { /* best-effort cleanup */ }
@@ -134,9 +145,11 @@ export function usePreferenceDepartureRecovery({
       token: decisionToken,
       label: lang === "zh" ? "番茄钟偏好" : "Pomodoro preferences",
       isBlocking: () => !disposedRef.current && draftsRef.current.size > 0,
-      isCurrent: () => !disposedRef.current && epochRef.current === decisionEpoch,
+      isCurrent: () => !disposedRef.current && accountScope.capture().epoch === decisionEpoch,
       exportDraft: () => exportDraft(decisionEpoch),
-      discardDraft: discardDrafts,
+      discardDraft: () => {
+        if (!disposedRef.current && accountScope.capture().epoch === decisionEpoch) discardDrafts();
+      },
     });
   }, [decisionToken, discardDrafts, draftVersion, epoch, exportDraft, lang, registerDepartureGuard]);
 
