@@ -30,3 +30,8 @@ Visual-only18f4e82 results remain specifically attributed to that version: both 
 ## Remaining acceptance
 
 Astra is checking explicit empty-string token handling as a separate malformed-grant boundary, after the existing shared matrices passed. If repaired, final acceptance must confirm the exact diff and rerun affected malformed-token/shared tests; any permitted reuse of96 valid-token/no-token caller results must state that attribution. Web/settings type/lint verification and complete DateTime final source/contract review remain required. No whole REL/D2 or312-item closure is inferred.
+
+
+## Independent type/lint gate
+
+`verify-types.mjs` archives the fixed product and redirects every @repo dependency link to that archive, while reusing installed third-party dependencies. `types-lint-96c4915-resolved-cli.log`: Web types/lint, Settings types/lint, storage types all exit0. Storage has no lint script; none is claimed. The initial `types-lint-96c4915.log` contains only the first three passing gates: the runner then hit missing package-local eslint ENOENT. Resolving the existing installed CLI through the Web dependency path corrected the runner without changing product/source. It is not a product lint failure or a complete initial gate.

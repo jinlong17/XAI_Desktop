@@ -52,3 +52,8 @@ All sixteen current native modes pass; detailed executor/version/limitations are
 ## Latest queued choice followed by Retry: new native counterexample
 
 `native-96c4915-before-fix-latest-pending-retry.log` reproduces Astra d38fdd1 through actual keyboard and mouse: hold start-week's real key lock; trusted s selectsSunday while physicalMonday; trusted second s selectsSaturday while physicalMonday; actual Retry twice; release; first write succeedsSunday, second physical attempt throws quota. Final visibleSaturday remains, but beforeunload warning and export/recovery actions disappear. This is a correct P1 caller attribution failure, not invalid input or a setup exception (Runtime0). The earlier passing pending tests used a different order and remain valid for that sequence. Terra owns the caller retry eligibility repair; the shared API promise contract is protected.
+
+
+## Same-field source reload must not rebase actual work
+
+`native-96c4915-before-fix-source-reload.log` confirms Astra4561549 with trusted keyboard and a second real Chrome document: invalid-week→Sunday edit is refused but retained; external writer repairs physicalMonday; current UI still offers Reload for that draft; actual Reload then Retry returns UI toMonday and removes warning/export. This is a correct native P1 with Runtime0. Native after must retain the actualSunday draft, physicalMonday and recovery; the corrected UI may refuse/hide source-only Reload while actual work exists. The distinct explicit Discard operation remains the supported way to abandon it.

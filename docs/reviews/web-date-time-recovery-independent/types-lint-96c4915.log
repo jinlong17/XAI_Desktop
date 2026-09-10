@@ -1,0 +1,25 @@
+{
+  "revision": "96c4915",
+  "sha": "96c491542e1a47847fcce0bd431491773dbabbf4",
+  "workspaceLinks": "archive",
+  "results": [
+    {
+      "name": "web-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "web-lint",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "settings-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

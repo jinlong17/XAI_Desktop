@@ -12,7 +12,7 @@ const nativeSet=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;
 const keys=['xai_pref_dt_start_week','xai_pref_dt_lunar','xai_pref_dt_week_numbers','xai_pref_dt_holidays','xai_pref_dt_timezone'];
 const activate=(owner:string)=>{nativeSet.call(localStorage,generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));accountScope.activate(accountScope.lock(owner),'g1')};activate('date-time-native-A');
 if(nativeGet.call(localStorage,'dt-native-seeded')===null){keys.forEach((k,i)=>nativeSet.call(localStorage,k,i===0?'monday':'true'));nativeSet.call(localStorage,'dt-native-seeded','yes');}
-if('__NATIVE_MODE__'==='source')nativeSet.call(localStorage,keys[0],'invalid-week');
+if(['source','source-reload'].includes('__NATIVE_MODE__'))nativeSet.call(localStorage,keys[0],'invalid-week');
 const attempts=new Map<string,number>(),failNth=new Map<string,number>();
 const writes:Array<{key:string,value:string}>=[],reads:string[]=[];let denied=new Set<string>(),readsDenied=new Set<string>(),denyEverything=false,uncertain:string|null=null,readbackArmed=false;
 Storage.prototype.setItem=function(k,v){if(keys.includes(k))attempts.set(k,(attempts.get(k)??0)+1);if(failNth.get(k)===attempts.get(k)&&failNth.has(k))throw new DOMException('quota nth','QuotaExceededError');if(denyEverything||denied.has(k))throw new DOMException('quota','QuotaExceededError');nativeSet.call(this,k,v);if(keys.includes(k))writes.push({key:k,value:v});if(k===uncertain)readbackArmed=true};
