@@ -121,7 +121,7 @@ async function resumeAccountLocalDeletionOnce(receipt: AccountDeletionReceipt, e
 export function resumeAccountLocalDeletion(receipt: AccountDeletionReceipt, clearAuth?: AccountAuthCleanup): Promise<AccountDeletionReceipt> {
   const entryRaw = localStorage.getItem(receiptKey(receipt.accountId, receipt.kind === 'demo'));
   if (entryRaw === null) return Promise.reject(new Error('Account deletion receipt no longer matches'));
-  const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}:${receipt.version}:${receipt.authGeneration ?? ''}`;
+  const key = `${receipt.kind}:${receipt.accountId}:${receipt.generation}:${receipt.version}:${receipt.authGeneration ?? ''}:${entryRaw}`;
   const active = recoveryFlights.get(key);
   if (active) return active;
   const operation = runRecoveryWorkflow(receipt, () => resumeAccountLocalDeletionOnce(receipt, entryRaw, clearAuth));
