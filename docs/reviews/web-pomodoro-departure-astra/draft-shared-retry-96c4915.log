@@ -1,0 +1,14 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-TweZOL
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (18 tests) 4597ms
+   ✓ custom_minutes: discard clears only its actual failed draft, preserving successful siblings and timer bytes  356ms
+   ✓ after conflict-only recovery, remaining failure still exports and supports explicit departure discard  567ms
+   ✓ completion-driven failed next preset is a draft; successful retry releases it without replaying history or event  1992ms
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  01:31:00
+   Duration  7.98s (transform 911ms, setup 0ms, collect 1.49s, tests 4.60s, environment 1.41s, prepare 206ms)

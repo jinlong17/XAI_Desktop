@@ -1,0 +1,14 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-zR0Tlz
+
+ ✓ docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx (5 tests) 1965ms
+   ✓ actual Dashboard registration keeps a quota-failed note behind route decision  586ms
+   ✓ actual Shell AppRail preserves failed Header note  578ms
+   ✓ actual App signout preflight remains pending for current Header draft  445ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  01:30:58
+   Duration  18.33s (transform 9.09s, setup 0ms, collect 14.89s, tests 1.97s, environment 843ms, prepare 140ms)

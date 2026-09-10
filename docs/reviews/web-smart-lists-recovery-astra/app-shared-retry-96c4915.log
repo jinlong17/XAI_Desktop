@@ -1,0 +1,14 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-yrqarV
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/app.test.tsx (5 tests) 1275ms
+   ✓ actual App captured signout boundary: stay  370ms
+   ✓ actual App captured signout boundary: permit  447ms
+   ✓ actual App captured signout boundary: scope  305ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  01:31:39
+   Duration  31.38s (transform 16.23s, setup 0ms, collect 27.40s, tests 1.28s, environment 1.35s, prepare 195ms)

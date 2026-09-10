@@ -42,3 +42,8 @@ Both EN and ZH recovery layouts pass all five widths375/414/768/1024/1440 plus37
 `native-e9213fb-before-fix-crossdoc-conflict.log` repeats the uncertainty defect using a separate real Chrome same-origin document, writing directly via that document's localStorage and delivering a native cross-document storage event. Main-tab Retry still makes a second write of false over externaltrue. The separate target id and main-tab write list are recorded. This strengthens the earlier injected-event counterexample without replacing it.
 
 At fixed visual-only18f4e82, both visual and visual-zh modes pass all five widths plus375dialog; clean all-five saved reload and native focus pass again. The new toggle-states mode verifies all four controls on→off→on through actual clicks and exact physical values:44x44 hitbox, centered16x16 knob,36x20 visible track. All modes Runtime0. Parent manually inspected the EN375/1440 and ZH375 recovery screenshots and normal on/off1440 screenshots: switches now have clear horizontal tracks and on/off position/color, and mobile Retry/Discard sit together below their own field explanation. This accepts the observed local visual correction; it does not close shared uncertainty or the full DateTime contract. New PNGs/logs are versioned18f4e82 and do not relabel earlier screenshots.
+
+
+## Shared repair fixed96c4915
+
+All sixteen current native modes pass; detailed executor/version/limitations are in `../web-date-time-recovery-independent/shared-96c4915.md`. This includes the preserved uncertainty-read-retry beforee921 failure and actual cross-document no-overwrite after. Full shared and caller acceptance remain with Astra.

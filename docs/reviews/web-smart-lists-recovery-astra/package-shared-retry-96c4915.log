@@ -1,0 +1,383 @@
+revision=96c4915 fixed_commit=96c491542e1a47847fcce0bd431491773dbabbf4
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-yrqarV
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx (5 tests) 670ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx (12 tests) 589ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx (18 tests) 974ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx (13 tests) 715ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx (11 tests) 786ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx (4 tests) 1582ms
+   ✓ Smart Lists async map recovery > persists all twelve DOM producers as one valid sparse map and retains an unknown extension  589ms
+   ✓ Smart Lists async map recovery > refuses an invalid source without writing, then reloads an externally repaired map  362ms
+   ✓ Smart Lists async map recovery > keeps a dirty map through an external replacement until explicit full-map discard  356ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx (12 tests) 1225ms
+   ✓ REL-03 a stale reset callback cannot reset B or device settings  345ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx (9 tests) 422ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx (3 tests) 367ms
+   ✓ IntegrationDisconnectButton > DB1: renders with EN label 'Disconnect'  342ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx (4 tests) 437ms
+   ✓ device recovery download > defaults to device settings and never attaches A/B content or legacy data  370ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx (10 tests) 112ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/DeleteAccountConfirmModal.test.tsx (19 tests) 487ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx (10 tests) 463ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx (15 tests) 125ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx (10 tests) 394ms
+   ✓ recovery notice outside authenticated routes > survives unmount/remount, shows no identity/content, and completes local cleanup while signed out  318ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx (6 tests) 425ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx (9 tests) 307ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumUpgradeButton.test.tsx (5 tests) 167ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx (9 tests) 112ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx (7 tests) 246ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx (7 tests) 142ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx (2 tests) 41ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/hotkeysPane.test.tsx (3 tests) 142ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx (6 tests) 17ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumDisclosureBanner.test.tsx (3 tests) 49ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts (2 tests) 39ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx (5 tests) 117ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx (6 tests) 107ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-hex-literals.test.ts (1 test) 6ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationStubBanner.test.tsx (2 tests) 125ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/pkce.test.ts (8 tests) 44ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts (2 tests) 17ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx (6 tests) 230ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts (2 tests) 19ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/oauthState.test.ts (12 tests) 10ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts (7 tests) 8ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/buildAuthorizeUrl.test.ts (6 tests) 31ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts (4 tests) 15ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/restPanesById.test.ts (3 tests) 3ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/applyRestPanesToRegistry.test.ts (5 tests) 4ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/premiumTier.test.ts (4 tests) 3ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/usePremiumConfig.test.tsx (3 tests) 14ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/index-barrel.test.ts (3 tests) 3ms
+
+ Test Files  43 passed (43)
+      Tests  293 passed (293)
+   Start at  01:32:23
+   Duration  18.69s (transform 5.96s, setup 18.55s, collect 19.14s, tests 11.79s, environment 46.47s, prepare 7.22s)
+
+
+stderr | packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx > REL-03 a stale reset callback cannot reset B or device settings
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
