@@ -1,0 +1,87 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-lk9BkG
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx (5 tests | 5 failed) 515ms
+   × actual Back remains on Header and replays the first POP only after explicit discard 193ms
+     → expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+   × first signout holds a competing route until Stay cancels the original intent 108ms
+     → expected true to be 'pending' // Object.is equality
+   × source-only invalid device position retains source recovery but creates no unload or host draft 42ms
+     → expected true to be false // Object.is equality
+   × epoch change cancels pending Header intent without exposing frozen A note 87ms
+     → expected true to be 'pending' // Object.is equality
+   × unmount cancels pending Header signout and restores actual router method 83ms
+     → expected true to be 'pending' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  00:14:17
+   Duration  4.14s (transform 1.99s, setup 0ms, collect 3.02s, tests 515ms, environment 325ms, prepare 85ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx > actual Back remains on Header and replays the first POP only after explicit discard
+AssertionError: expected '/app/tasks' to be '/app/dashboard' // Object.is equality
+
+Expected: "/app/dashboard"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx:21:263
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx > first signout holds a competing route until Stay cancels the original intent
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx:22:314
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx > source-only invalid device position retains source recovery but creates no unload or host draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx:23:305
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx > epoch change cancels pending Header intent without exposing frozen A note
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx:24:277
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx > unmount cancels pending Header signout and restores actual router method
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx:25:283
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
