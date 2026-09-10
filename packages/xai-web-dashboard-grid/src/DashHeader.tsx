@@ -33,6 +33,8 @@ export interface DashHeaderProps {
   onAddWidget?: () => void;
   /** Optional app-owned host departure registration. */
   registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
+  /** True while the app host holds a guarded departure intent. */
+  isDeparturePending?: () => boolean;
 }
 
 /** PlusIcon — minimal inline SVG matching the prototype's <Icon name="plus" size={14}/>. */
@@ -175,7 +177,7 @@ type OffsetOperation = {
   readonly raw: string | null;
 };
 
-export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: DashHeaderProps) {
+export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard, isDeparturePending }: DashHeaderProps) {
   const { s } = useI18n(lang);
   const greetingKey = pickGreetingKey(now);
   const greeting = s(greetingKey);
@@ -184,6 +186,8 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: D
   const addWidget = s("dashboard.add_widget");
   const ariaLabel = s("dashboard.add_widget_aria");
   const inputRef = useRef<HTMLInputElement>(null);
+  const isDeparturePendingRef = useRef(isDeparturePending);
+  isDeparturePendingRef.current = isDeparturePending;
   const laneRef = useRef<HTMLDivElement>(null);
   const noteRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<OffsetGesture | null>(null);
@@ -411,6 +415,15 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: D
     if (next !== draftRef.current) setDraftText(next);
     submit(next);
   }, [setDraftText, submit]);
+
+  const saveAfterBlur = useCallback(() => {
+    // Pointerdown and the coordinator's dialog focus both blur the editor
+    // before their click/navigation turn completes. Let that turn reserve its
+    // first departure intent before deciding whether this was an ordinary blur.
+    window.setTimeout(() => {
+      if (!isDeparturePendingRef.current?.()) saveDraft();
+    }, 0);
+  }, [saveDraft]);
 
   const clearNote = useCallback(() => {
     if (notePending || frozenSession) return;
@@ -695,7 +708,7 @@ export function DashHeader({ lang, now, onAddWidget, registerDepartureGuard }: D
                     setEditing(false);
                   }
                 }}
-                onBlur={saveDraft}
+                onBlur={saveAfterBlur}
               />
               <button
                 type="button"

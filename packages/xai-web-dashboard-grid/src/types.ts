@@ -94,6 +94,8 @@ export interface DashboardModuleProps {
   goTo?: (moduleId: string) => void;
   /** App-owned departure coordinator registration. Optional for standalone use. */
   registerDepartureGuard?: DashboardHeaderDepartureGuardRegistration;
+  /** Whether the app host has reserved a guarded departure intent. */
+  isDeparturePending?: () => boolean;
 }
 
 /**

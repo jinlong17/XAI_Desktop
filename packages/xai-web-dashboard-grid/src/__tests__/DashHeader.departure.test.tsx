@@ -61,6 +61,22 @@ describe("DashHeader departure capability", () => {
     expect(registeredBeforeEdit.isBlocking()).toBe(true);
   });
 
+  it("does not turn a guarded departure dialog focus into an implicit blur save", async () => {
+    let pending = false;
+    const holder: { current: DashboardHeaderDepartureGuard | null } = { current: null };
+    const ui = render(<DashHeader lang="en" now={new Date()} isDeparturePending={() => pending} registerDepartureGuard={next => { holder.current = next; return () => undefined; }} />);
+    fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));
+    const input = ui.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Held for departure" } });
+    pending = true;
+    fireEvent.blur(input);
+    await new Promise(resolve => window.setTimeout(resolve, 0));
+    expect(localStorage.getItem(noteKey)).toBe("Saved A");
+    const currentGuard = holder.current;
+    if (!currentGuard) throw new Error("Header guard was not registered");
+    expect(currentGuard.isBlocking()).toBe(true);
+  });
+
   it("rejects a captured A capability after account B becomes current", async () => {
     const ui = mount();
     fireEvent.click(ui.getByRole("button", { name: "Edit dashboard note" }));

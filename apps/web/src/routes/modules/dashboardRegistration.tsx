@@ -26,12 +26,13 @@ function DashboardModuleRoute(): React.ReactElement {
   }, [navigate]);
   return (
     <DepartureCoordinator lang={lang} registerSignOutDelegate={registerDepartureDelegate}>
-      {({ registerDepartureGuard }) => (
+      {({ registerDepartureGuard, isDeparturePending }) => (
         <DashboardModule
           lang={lang}
           widgets={dashboardWidgetRegistrations}
           goTo={goTo}
           registerDepartureGuard={registerDepartureGuard}
+          isDeparturePending={isDeparturePending}
         />
       )}
     </DepartureCoordinator>
