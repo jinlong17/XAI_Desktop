@@ -1,0 +1,9 @@
+revision=2962b49
+executor=Sol author verification
+exit=0
+pnpm --filter @repo/plugin-web-pomodoro typecheck: PASS
+pnpm --filter @repo/plugin-web-pomodoro lint: PASS
+pnpm --filter @repo/plugin-web-settings-rest typecheck: PASS
+pnpm --filter @repo/plugin-web-settings-rest lint: PASS
+pnpm --filter @repo/web check-types: PASS
+pnpm --filter @repo/web lint: PASS

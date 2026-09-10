@@ -1,0 +1,12 @@
+revision=2962b49 fixed_commit=2962b49bd63fa351a2c17b406456ea1b987eca8f
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-ccgc7O
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/draft-attribution.test.tsx (16 tests) 1356ms
+   ✓ completion-driven failed next preset is a draft; successful retry releases it without replaying history or event  395ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  23:57:45
+   Duration  2.82s (transform 328ms, setup 0ms, collect 565ms, tests 1.36s, environment 478ms, prepare 115ms)
