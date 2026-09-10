@@ -2,6 +2,7 @@
  * CL1..CL4 — collaboratePane tests (test.md §3 P1)
  */
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import * as React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { collaboratePane } from "../panes/collaboratePane.js";
 import { accountScope, generationMarkerKey, getPref } from "@repo/plugin-web-storage";
@@ -19,6 +20,22 @@ describe("collaboratePane", () => {
   it("CL1: renders without error", () => {
     const { container } = render(collaboratePane.render({ lang: "en" }));
     expect(container.querySelector(".collab-pane")).toBeTruthy();
+  });
+
+  it("registers a stable guard with a stateful host callback", async () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    function StatefulHost(): React.ReactElement {
+      const [, setVersion] = React.useState(0);
+      const register = React.useCallback(() => {
+        setVersion(version => version + 1);
+        return () => undefined;
+      }, []);
+      return collaboratePane.render({ lang: "en", registerDepartureGuard: register });
+    }
+    const ui = render(<StatefulHost />);
+    await waitFor(() => expect(ui.getByText("Collaborate")).toBeInTheDocument());
+    expect(errors.mock.calls.join(" ")).not.toContain("Maximum update depth");
+    errors.mockRestore();
   });
 
   it("CL2: bilingual — EN labels are present", () => {

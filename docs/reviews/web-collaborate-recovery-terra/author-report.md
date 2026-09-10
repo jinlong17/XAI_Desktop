@@ -59,6 +59,13 @@ recovery behavior was changed.
   export-setup failure. The follow-up author test holds the same device key,
   makes `URL.createObjectURL` throw, and verifies the error plus retained false
   selection. Independent rerun remains required.
+- Independent real-composed-host mounting then exposed one bounded defect, not
+  seven business failures: a newly allocated guard on each pane render caused
+  `registerDepartureGuard` to loop through host state updates. The pane now
+  keeps its guard operations stable through current-value refs while retaining
+  epoch-token changes and draft-version host notification. A focused stateful
+  registration callback test passes; the independent router-host suite must
+  rerun this exact commit.
 
 ## Independent validation still required
 

@@ -24,6 +24,10 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   const defaultShare = usePrefAutosaveAsync("xai_pref_collab_default_share" as WebPrefKey, { validate: isDefaultShare });
   const showAvatars = usePrefAutosaveAsync("xai_pref_collab_show_avatars" as WebPrefKey, { validate: isBoolean });
   const mentionNotify = usePrefAutosaveAsync("xai_pref_collab_mention_notify" as WebPrefKey, { validate: isBoolean });
+  const scopeRef = React.useRef(scope);
+  scopeRef.current = scope;
+  const prefsRef = React.useRef({ defaultShare, showAvatars, mentionNotify });
+  prefsRef.current = { defaultShare, showAvatars, mentionNotify };
   const accountEpochRef = React.useRef(scope.epoch);
   const compositeTokenRef = React.useRef<object>({});
   const accountSessionRef = React.useRef<object>({});
@@ -45,7 +49,7 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
     draftsRef.current = emptyDrafts();
   }, []);
 
-  const currentComposite = React.useCallback(() => accountEpochRef.current === scope.epoch && accountScope.capture() === scope, [scope]);
+  const currentComposite = React.useCallback(() => accountEpochRef.current === scopeRef.current.epoch && accountScope.capture() === scopeRef.current, []);
   const isCurrentDraft = React.useCallback((field: FieldId, draft: FieldDraft | null) => {
     if (!draft || !currentComposite()) return false;
     return draft.session === (field === "default_share" ? accountSessionRef.current : deviceSessionRef.current);
@@ -119,19 +123,20 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   }, [currentComposite, hasCurrentDraft, isCurrentDraft]);
   const discardAll = React.useCallback(() => {
     if (!currentComposite()) return;
-    discard("default_share", defaultShare as PrefAutosaveAsyncResult<FieldValue>);
-    discard("show_avatars", showAvatars as PrefAutosaveAsyncResult<FieldValue>);
-    discard("mention_notify", mentionNotify as PrefAutosaveAsyncResult<FieldValue>);
-  }, [currentComposite, defaultShare, discard, mentionNotify, showAvatars]);
+    discard("default_share", prefsRef.current.defaultShare as PrefAutosaveAsyncResult<FieldValue>);
+    discard("show_avatars", prefsRef.current.showAvatars as PrefAutosaveAsyncResult<FieldValue>);
+    discard("mention_notify", prefsRef.current.mentionNotify as PrefAutosaveAsyncResult<FieldValue>);
+  }, [currentComposite, discard]);
   const guardToken = compositeTokenRef.current;
+  const departureLabel = s("settings.collaborate");
   const guard = React.useMemo<PaneDepartureGuard>(() => ({
     token: guardToken,
-    label: s("settings.collaborate"),
+    label: departureLabel,
     isCurrent: () => currentComposite() && compositeTokenRef.current === guardToken,
     isBlocking: hasCurrentDraft,
     exportDraft,
     discardDraft: discardAll,
-  }), [currentComposite, discardAll, exportDraft, guardToken, hasCurrentDraft, s]);
+  }), [currentComposite, departureLabel, discardAll, exportDraft, guardToken, hasCurrentDraft]);
   React.useEffect(() => registerDepartureGuard?.(guard), [draftVersion, guard, registerDepartureGuard]);
   React.useEffect(() => {
     if (!hasCurrentDraft()) return;
