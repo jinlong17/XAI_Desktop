@@ -39,3 +39,9 @@ English full-Shell CSS at375/414/768/1024/1440 and375 dialog PASS: recovery is i
 The unchanged original5 parent host matrix still has the same unsubmitted-navigation failure (4 controls pass). Real native unsubmitted input likewise changes the physical note to Latest native unsaved note and reaches Tasks without a decision. Therefore the author's guard-token-only repair and focused guard tests do not prove actual-host preservation. The parent reported the input blur/host focus submission boundary for continued repair.
 
 The widget case now explicitly starts after Saving has settled. Its actual event trace shows pointerdown on `.mc-jump` followed by pointerup/click on `.mc-foot`; no dialog or navigation occurs. Unlike the first0f observation, this captures that the actual final click did not land on the intended button. A blur-triggered submission/render or layout shift is a candidate cause, not yet a proven exact source line. Stable real pointer interaction remains a required gate; the passing separate0f trace is preserved and does not erase this later correctly observed failure.
+
+## Fixed41fb4d1 native host and bilingual layout checkpoint
+
+Native route, actual Tasks rail, signout preflight and dispatched beforeunload all PASS with zero runtime errors. Together with unsubmitted/widget, these exercise six host modes at the same product revision. The unload check proves the mounted warning handler, not background execution or survival after process termination.
+
+English and Chinese full CSS each PASS375/414/768/1024/1440 plus375 departure dialog: no horizontal overflow, recovery controls contained and hit-testable with44px targets, dialog within viewport with focus inside. Parent manually inspected English375 recovery and Chinese375 dialog screenshots; text and controls are readable without the earlier overlap. This layout evidence is note-failure only. Mixed position/source-only layouts remain delegated for independent native expansion.
