@@ -123,10 +123,15 @@ function CollaboratePaneContent({ lang, registerDepartureGuard }: PaneRenderProp
   }, [currentComposite, hasCurrentDraft, isCurrentDraft]);
   const discardAll = React.useCallback(() => {
     if (!currentComposite()) return;
-    discard("default_share", prefsRef.current.defaultShare as PrefAutosaveAsyncResult<FieldValue>);
-    discard("show_avatars", prefsRef.current.showAvatars as PrefAutosaveAsyncResult<FieldValue>);
-    discard("mention_notify", prefsRef.current.mentionNotify as PrefAutosaveAsyncResult<FieldValue>);
-  }, [currentComposite, discard]);
+    const candidates = [
+      ["default_share", prefsRef.current.defaultShare],
+      ["show_avatars", prefsRef.current.showAvatars],
+      ["mention_notify", prefsRef.current.mentionNotify],
+    ] as const;
+    for (const [field, pref] of candidates) {
+      if (isCurrentDraft(field, draftsRef.current[field])) discard(field, pref as PrefAutosaveAsyncResult<FieldValue>);
+    }
+  }, [currentComposite, discard, isCurrentDraft]);
   const guardToken = compositeTokenRef.current;
   const departureLabel = s("settings.collaborate");
   const guard = React.useMemo<PaneDepartureGuard>(() => {

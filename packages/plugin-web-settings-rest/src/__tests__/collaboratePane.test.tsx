@@ -158,4 +158,26 @@ describe("collaboratePane", () => {
     expect(select).toHaveValue("edit");
     expect(ui.getByRole("button", { name: "Export current draft" })).toBeInTheDocument();
   });
+
+  it("discard guard reloads only actual draft fields", async () => {
+    let captured: PaneDepartureGuard | null = null;
+    const ui = render(collaboratePane.render({ lang: "en", registerDepartureGuard: guard => { captured = guard; return () => undefined; } }));
+    fireEvent.change(ui.getByRole("combobox", { name: "Default share permission" }), { target: { value: "edit" } });
+    await waitFor(() => expect(getPref("xai_pref_collab_default_share")).toBe("edit"));
+    const avatarKey = "xai_pref_collab_show_avatars";
+    const nativeSet = Storage.prototype.setItem;
+    const failure = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key: string, value: string) {
+      if (key === avatarKey) throw new Error("quota");
+      nativeSet.call(this, key, value);
+    });
+    fireEvent.click(ui.getByRole("switch", { name: "Show collaborator avatars" }));
+    await waitFor(() => expect(ui.getByRole("alert")).toHaveTextContent("Not saved"));
+    failure.mockRestore();
+    const reads = vi.spyOn(Storage.prototype, "getItem");
+    await act(async () => { captured!.discardDraft(); });
+    expect(reads.mock.calls.map(([key]) => key)).toContain(avatarKey);
+    expect(reads).not.toHaveBeenCalledWith(accountScope.physicalKey("xai_pref_collab_default_share"));
+    expect(reads).not.toHaveBeenCalledWith("xai_pref_collab_mention_notify");
+    reads.mockRestore();
+  });
 });

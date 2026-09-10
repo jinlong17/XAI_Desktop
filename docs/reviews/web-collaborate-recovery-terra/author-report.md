@@ -84,6 +84,12 @@ recovery behavior was changed.
   success and Retry clear only that exact draft. The focused producer test
   performs `edit → view → edit`, admits the first key request, rejects the
   second, and verifies Not saved plus Export remain for the final `edit`.
+- Completion-edge coverage then found that leave-time discard reloaded all
+  three bindings even when only one device field was an actual draft. The
+  guard now reloads only fields that pass `isCurrentDraft`; saved account and
+  untouched device fields receive no read. The focused guard regression saves
+  `default_share`, fails `show_avatars`, invokes discard, and verifies reads
+  occur only for the avatar key.
 
 ## Independent validation still required
 
