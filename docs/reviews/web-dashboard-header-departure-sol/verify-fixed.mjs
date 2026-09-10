@@ -36,7 +36,7 @@ try {
   ]) {
     if (process.argv[3] && process.argv[3] !== name) continue;
     const config = join(dir, "sol.config.mjs");
-    writeFileSync(config, "export default " + JSON.stringify({ root: dir, resolve: { alias: aliases }, esbuild: { jsx: "automatic" }, test: { globals: true, environment: "jsdom", include } }));
+    writeFileSync(config, "export default " + JSON.stringify({ root: dir, resolve: { alias: aliases }, esbuild: { jsx: "automatic" }, test: { globals: true, environment: "jsdom", setupFiles: [join(dir, "packages/xai-web-dashboard-grid/src/__tests__/setup.ts")], include } }));
     const result = spawnSync(join(root, "packages/plugin-web-board-workspaces/node_modules/.bin/vitest"), ["run", "--config", config], { cwd: dir, encoding: "utf8", maxBuffer: 20 * 1024 * 1024 });
     if (result.error) throw result.error;
     if (result.status !== 0) process.exitCode = result.status ?? 1;
