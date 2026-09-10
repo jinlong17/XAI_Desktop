@@ -341,7 +341,18 @@
         "commit:aadf2a7",
         "commit:c30c938",
         "commit:1267f50",
-        "../web-d2-smart-lists-contract/contract.md"
+        "../web-d2-smart-lists-contract/contract.md",
+        "commit:a663891",
+        "commit:07bf394",
+        "commit:8565ca6",
+        "commit:26f8156",
+        "commit:ef97c1f",
+        "commit:6bf02de",
+        "commit:78bb812",
+        "../web-smart-lists-recovery-contract/contract.md",
+        "../web-d2-smart-lists-astra/review-40ffbe1.md",
+        "../web-d2-smart-lists-draft-native/review.md",
+        "../web-d2-smart-lists-host-native/review.md"
       ]
     },
     {
