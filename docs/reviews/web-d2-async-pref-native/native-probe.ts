@@ -9,7 +9,7 @@ function assert(v:unknown,message:string):asserts v{if(!v)throw Error(message);}
 async function run(){
  const cases:any[]=[];const checkpoint:Record<string,any>={};const initial=new URLSearchParams(location.search).get('phase')==='initial';
  if(initial)localStorage.clear();
- for(const name of ['held-account-lock','quota-retains-latest-draft','two-document-functional','account-switch-pending']){
+ for(const name of ['held-account-lock','quota-retains-latest-draft','two-document-functional','account-switch-pending','readback-uncertain']){
   const owner='async-pref-native-'+name,key=accountScope.physicalKey(name==='two-document-functional'?'xai_pref_native_counter':'xai_pref_collab_default_share',accountScope.activate(accountScope.lock(owner),'g1'));
   if(!initial){try{assert(localStorage.getItem(key)===(window as any).__checkpoint[name].raw,'Reopened preference changed');const extra=(window as any).__checkpoint[name];if(extra.extraKey)assert(localStorage.getItem(extra.extraKey)===extra.extraRaw,'Other account changed after reopen');cases.push({name,pass:true});}catch(e){cases.push({name,pass:false,error:String(e)});}continue;}
   localStorage.setItem(generationMarkerKey(owner),JSON.stringify({generation:'g1',migrationId:'fixture',previous:null}));localStorage.setItem(key,'comment');
@@ -24,13 +24,20 @@ async function run(){
    }catch(e){cases.push({name,pass:false,error:String(e)});}finally{release();await held;window.removeEventListener('message',listener);frame.remove();}continue;
   }
   const host=document.createElement('div');document.body.append(host);const root=createRoot(host);let release:(()=>void)|undefined,held:Promise<unknown>|undefined;
-  const native=Storage.prototype.setItem;let rejected=0;
+  const native=Storage.prototype.setItem,nativeGet=Storage.prototype.getItem;let rejected=0,writes=0;
   try{
    root.render(collaboratePane.render({lang:'en'} as any));for(let i=0;i<100&&!host.querySelector('select');i++)await delay(20);
    const select=host.querySelector('select')!;assert(select,'Actual Collaborate select missing');
    if(name==='held-account-lock'||name==='account-switch-pending'){let entered!:()=>void;const started=new Promise<void>(r=>entered=r),gate=new Promise<void>(r=>release=r);held=navigator.locks.request(accountLifecycleLockName(owner),{mode:'exclusive'},async()=>{entered();await gate;});await started;}
+   else if(name==='readback-uncertain'){let armed=false;Storage.prototype.setItem=function(k,v){native.call(this,k,v);if(k===key){writes++;armed=true;}};Storage.prototype.getItem=function(k){if(k===key&&armed){armed=false;rejected++;throw new DOMException('native readback unavailable','SecurityError');}return nativeGet.call(this,k);};}
    else Storage.prototype.setItem=function(k,v){if(k===key){rejected++;throw new DOMException('native quota','QuotaExceededError');}native.call(this,k,v);};
    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value')!.set!.call(select,'edit');select.dispatchEvent(new Event('change',{bubbles:true}));await delay(100);
+   if(name==='readback-uncertain'){
+    assert(rejected>0&&nativeGet.call(localStorage,key)==='edit','Uncertain probe did not fail after a physical write');assert(select.value==='edit','Uncertain write lost latest draft');assert(/not saved/i.test(host.textContent||''),'Uncertain write claimed success');
+    Storage.prototype.getItem=nativeGet;const retry=[...host.querySelectorAll('button')].find(b=>/retry/i.test(b.textContent||''));assert(retry,'Uncertain write has no Retry');retry.click();
+    for(let i=0;i<100&&host.querySelector('[role=status]')?.textContent?.trim()!=='Saved';i++)await delay(20);
+    assert(host.querySelector('[role=status]')?.textContent?.trim()==='Saved','Retry did not reconcile already-written value into Saved');assert(writes===1,'Uncertain retry duplicated the physical write');assert(nativeGet.call(localStorage,key)==='edit','Retry altered intended persisted value');checkpoint[name]={raw:'edit'};cases.push({name,pass:true});continue;
+   }
    assert(localStorage.getItem(key)==='comment','UI write bypassed an actually held account lifecycle lock or fault');
    if(name==='quota-retains-latest-draft')assert(rejected>0,'Quota probe did not reach actual preference write');
    assert(select.value==='edit','Latest selection was lost instead of retained for recovery');
@@ -52,7 +59,7 @@ async function run(){
     for(let i=0;i<100&&localStorage.getItem(key)!=='edit';i++)await delay(20);
    }
    assert(localStorage.getItem(key)==='edit'&&select.value==='edit','Save/retry did not commit latest physical string');checkpoint[name]={raw:'edit'};cases.push({name,pass:true});
-  }catch(e){cases.push({name,pass:false,error:String(e)});}finally{Storage.prototype.setItem=native;release?.();await held;root.unmount();host.remove();}
+  }catch(e){cases.push({name,pass:false,error:String(e)});}finally{Storage.prototype.setItem=native;Storage.prototype.getItem=nativeGet;release?.();await held;root.unmount();host.remove();}
  }
  return {pass:cases.every(c=>c.pass),cases,...(initial?{checkpoint}:{}),scope:'Actual Collaborate select, native account WebLocks and physical preference string in isolated synthetic profile; no other settings or full writer activation claim'};
 }

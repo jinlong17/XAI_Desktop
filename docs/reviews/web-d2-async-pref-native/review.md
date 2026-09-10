@@ -28,3 +28,9 @@ At fixed partial session source `2820917`, a fourth real-pane case queues A's ed
 The earlier `native-2820917-parent-session-before.json` is fixture calibration: it tried to resolve B's physical key through an invalid copied A scope and correctly hit the account scope guard before the intended switch. The fixture now seeds B with the public `generationKey` helper; no guard is bypassed and no product change was made. That earlier result is not a product regression.
 
 Parent integrated engine repair fixed `2c5dc31`: unchanged four native cases and all four whole-process reopen checks PASS (Chrome PID 36097 → 36147), `native-2c5dc31-parent-engine-after.json`. Original two independent hook assertions also PASS in `../web-d2-async-pref-independent/independent-parent-engine-after-2c5dc31.log`. These preserve the demonstrated flows after engine changes; Astra separately reviews the corrected 21-case engine boundary and full async hook contract is still open.
+
+## Real-pane uncertain-readback retry gap
+
+Parent extended the fixed `2c5dc31` run with an actual post-set getItem fault. The fifth case confirms raw edit was written, the readback failed, and the actual select retains edit with Not saved and Retry. After the get fault is removed, clicking Retry fails to reach Saved; it cannot reconcile its already-written value through the original hook baseline. `native-2c5dc31-parent-uncertain-before.json` records four original PASS controls plus this correct FAIL. No browser reopen is claimed after the initial failure, and the later no-second-write assertion is not claimed reached.
+
+This is the existing contract's hook/engine uncertain-commit integration gap, separate from public absolute setter no-baseline reconciliation. Repair must preserve the original raw ownership fence and cannot assume any matching external value is its own commit. On success the probe also requires no second physical write and exact persisted intended value after retry/reopen.
