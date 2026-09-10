@@ -27,11 +27,12 @@ try {
  aliases.push({find:'react-router',replacement:join(root,'apps/web/node_modules/react-router')});
  aliases.push({find:'react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/react')},{find:'@testing-library/react',replacement:join(root,'packages/plugin-web-board-workspaces/node_modules/@testing-library/react')});
  const owned = join(dir, 'docs/reviews/web-date-time-recovery-independent'); mkdirSync(owned, {recursive:true});
- for(const file of ['host.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
+ for(const file of ['host.test.tsx','advanced-host.test.tsx']) copyFileSync(join(evidence,file),join(owned,file));
 
  symlinkSync(join(root,'apps/web/node_modules'),join(dir,'apps/web/node_modules'));
  for (const [name, include] of [
  ['host',['docs/reviews/web-date-time-recovery-independent/host.test.tsx']],
+ ['advanced',['docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx']],
  ]) {
   if (process.argv[3] && name !== process.argv[3]) continue;
   const config = join(dir, 'astra.config.mjs');

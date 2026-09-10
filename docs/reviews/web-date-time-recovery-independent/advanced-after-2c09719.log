@@ -1,0 +1,49 @@
+revision=2c09719 fixed_commit=2c097197cc5cff869b875b5e1baa8b7656b5de76
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-uYPQWL
+
+ ❯ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx (12 tests | 2 failed) 1287ms
+   ✓ actual sidebar producer holds and current discard leaves without writes 179ms
+   ✓ actual rail producer holds and current discard leaves without writes 89ms
+   ✓ first route beats same-turn route and signout; Stay retains work 123ms
+   ✓ first signout beats same-turn route; Escape declines without losing work 78ms
+   ✓ numeric history -1 stays held then replays exact destination 116ms
+   ✓ numeric history 1 stays held then replays exact destination 117ms
+   ✓ path-relative navigation preserves the actual relative destination 132ms
+   × partial Retry cannot release intent; all latest verified clean releases once 110ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × a real held save protects navigation and releases after verified completion 63ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   ✓ epoch cancels old route decision while fresh device draft still guards 111ms
+   ✓ epoch cancels old signout decision while fresh device draft still guards 99ms
+   ✓ unmount cancels pending signout and removes unload warning 68ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  01:20:59
+   Duration  6.16s (transform 2.77s, setup 0ms, collect 4.22s, tests 1.29s, environment 280ms, prepare 90ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx > partial Retry cannot release intent; all latest verified clean releases once
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx:31:870
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx > a real held save protects navigation and releases after verified completion
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx:32:510
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
