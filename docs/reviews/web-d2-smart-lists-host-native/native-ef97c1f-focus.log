@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"ef97c1f","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-host-departure","pass":false,"error":"AssertionError [ERR_ASSERTION]: Dialog did not receive focus"}

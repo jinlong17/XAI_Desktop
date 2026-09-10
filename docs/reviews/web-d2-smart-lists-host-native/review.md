@@ -7,3 +7,13 @@ Parent fixed40ffbe1 imports the actual host `composedSettingsRegistration.childr
 [Fixture](native.tsx), [runner](verify-native.mjs). The after entry assertion requires the dirty pane to remain mounted with a departure dialog. Detailed Stay/Export/Discard, Back, generic route exit, sign-out and stale-owner behavior require the forthcoming complete host contract, not just this first blocked transition. Browser beforeunload does not cover these router navigations.
 
 The first build warned that the isolated app snapshot lacked its node_modules link for tsconfig extends; bundling and actual host execution completed, and the recorded failure is the observed navigation/selection result. Future runs link app dependencies explicitly; pinned @repo source imports still resolve into the archive.
+
+## Fixed ef97c1f: initial guard passes, complete journey fails
+
+The original [initial departure case](native-ef97c1f.log) now passes on fixed `ef97c1f`: actual Notifications sidebar navigation retains the Smart Lists pane and opens a dialog. Three separate expanded native modes expose remaining failures:
+
+- [journey](native-ef97c1f-journey.log): actual dialog Export downloads the latest exact map and Stay preserves it, but a later real Chrome Escape key does not dismiss the decision. The remaining final-discard assertions are not reached.
+- [intent](native-ef97c1f-intent.log): Notifications starts a blocked departure; a subsequent Appearance attempt replaces the captured destination. Explicit discard reaches Appearance instead of the original Notifications target.
+- [focus](native-ef97c1f-focus.log): the dialog never receives focus. The fixture explicitly focuses the sidebar trigger before invoking its actual click handler, so this does not assume a programmatic click intrinsically focuses it. Focus-return assertion is not reached.
+
+Run `node docs/reviews/web-d2-smart-lists-host-native/verify-native.mjs <fixed-sha> journey|intent|focus`. Separate filenames preserve the original initial-guard oracle and all before logs. These checks use the actual composed registration/data router and full module styles. They do not cover complete sign-out, owner-generation races, Back or AppRail yet. Terra is correcting the full contract; no acceptance or numbered closure follows from the four narrower native recovery passes.

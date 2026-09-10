@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"ef97c1f","browser":"Chrome/152.0.7977.83"}
+{"name":"actual-host-departure","pass":true,"scope":"Actual composedSettingsRegistration with data router and WebShellProvider, real sidebar; initial departure blocked. Full Stay/Export/Discard flows require their separate final contract checks"}

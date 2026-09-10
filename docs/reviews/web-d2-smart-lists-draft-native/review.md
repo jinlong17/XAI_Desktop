@@ -9,3 +9,7 @@ Two expected failures: [export](native-40ffbe1-export.log) has no actual draft d
 ## Full storage-denial extension
 
 The separate `export-denied` mode first performs the same two real user edits under quota, then denies **all** `Storage.prototype.getItem` and `setItem` calls before clicking Export. Its fixed40ffbe1 [before log](native-40ffbe1-export-denied.log) correctly fails because the export control is absent. The after oracle requires the same actual disk payload, unchanged physical bytes read only through the fixture's captured native getter, and an unsaved beforeunload guard after export. Application export cannot use that fixture getter. This adds a recovery-fault case; it does not prove stale-owner, prototype-field, or sign-out boundaries, which still require the full contract suite. Original export/unload logs remain unchanged.
+
+## Fixed ef97c1f intermediate recovery
+
+The unchanged export and unload paths plus the full-denial extension pass on fixed `ef97c1f`: [quota export](native-ef97c1f-export.log), [all reads/writes denied export](native-ef97c1f-export-denied.log), [beforeunload then verified Retry](native-ef97c1f-unload.log). Both exports produced the exact actual disk file/map while retaining save failure and unload protection. This is intermediate native evidence only; the actual-host extended journey still fails and the complete8565ca6 contract remains unaccepted.
