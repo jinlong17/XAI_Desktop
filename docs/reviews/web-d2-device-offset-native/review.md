@@ -25,3 +25,7 @@ The five-case probe at 68ea7a3 passes: original mount/lock/account controls, unf
 An attempted expanded76 before run produced original3 PASS and gesture-unload FAIL in tool stdout, then did not complete the overlapping-gestures check. The owned Node71387/Chrome71446 handles remained live; a second CDP connection returned “No dialog is showing”, while Runtime.evaluate timed out. The parent terminated only these owned processes after confirming the unfinished diagnostic and cleaned their isolated temporary directory. Root cause is undetermined; this is not an overlap PASS or an additional product defect. No final expanded-before file was emitted, and the original committed three-case native-76edb0c.log remains unchanged. The original Astra component overlap failure retains its separate valid evidence.
 
 The runner now requires a new suffix if an evidence filename already exists, preventing accidental replacement. Source-feedback contract checks remain under Astra review; five native passes do not close the fullDv1 slice.
+
+## Final functional revision 830dd2b
+
+All five unchanged native scenarios PASS: absence, held device lock, account switch, unfinished gesture unload protection, and overlapping gestures. Four saved positions survive Page.reload. [Final log](native-830dd2b.log). This final integration retains the page-reload boundary and makes no claim of durable unsaved drafts after whole-process termination.

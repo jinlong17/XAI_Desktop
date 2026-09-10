@@ -8,3 +8,7 @@ Parent fixed git archives, actual DashHeader with project CSS in isolated Chrome
 [Runner](verify-native.mjs), [fixture](native.tsx). This confirms the real user recovery action is a reread, not default seeding, reset, or overwrite. It does not claim to repair corrupted data automatically. The original five native drag/account/lock cases also PASS at a572381, including four saved-position Page.reload checks: [log](../web-d2-device-offset-native/native-a572381.log). No whole-process survival of an unsaved drag is claimed.
 
 Astra's unchanged source3/device13/account-note11 and full contract acceptance remain separate. No numbered item is closed by these native results alone.
+
+## Final functional revision 830dd2b
+
+Both unchanged native source scenarios PASS at the final functional revision: [invalid](native-830dd2b-invalid.log), [unavailable](native-830dd2b-unavailable.log). Each preserves the source until external fixture repair, then explicit reload renders80px with physical80 and zero application writes. These assertions exercise source recovery, not pending-operation settlement; Astra's separate independent pending-reload before/after provides that evidence.
