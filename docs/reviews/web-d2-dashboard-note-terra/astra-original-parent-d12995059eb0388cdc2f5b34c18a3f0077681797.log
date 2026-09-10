@@ -1,0 +1,11 @@
+revision=d12995059eb0388cdc2f5b34c18a3f0077681797 fixed_commit=d12995059eb0388cdc2f5b34c18a3f0077681797
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Jgl6QP
+
+ ✓ docs/reviews/web-d2-dashboard-note-independent/contracts.test.tsx (2 tests) 85ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  20:32:19
+   Duration  1.47s (transform 258ms, setup 338ms, collect 57ms, tests 85ms, environment 495ms, prepare 86ms)

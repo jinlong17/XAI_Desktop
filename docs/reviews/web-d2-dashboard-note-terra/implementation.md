@@ -25,3 +25,13 @@ Fixed product revision: `f532ad5923fb459bce73c0471d31a43aa62dc73d`. Dependency A
 | Unchanged parent component contract | `node docs/reviews/web-d2-dashboard-note-independent/verify-fixed.mjs f532ad5923fb459bce73c0471d31a43aa62dc73d` | 2 passed from an immutable archive: held account lock retains the draft/old bytes, and an absent note remains absent on mount. Raw log: `parent-contract-f532ad5923fb459bce73c0471d31a43aa62dc73d.log`. |
 
 The unchanged parent account-lock/no-mount-write runner and the parent native runner must execute against the fixed commit. This author evidence is not independent acceptance and does not claim the shared-hook dependency accepted.
+
+## Caller repair evidence
+
+Fixed caller repair: `d12995059eb0388cdc2f5b34c18a3f0077681797`.
+
+- Astra's unchanged independent caller suite passed 11/11, including frozen A-to-B masking, device-only recovery export and changed-draft retry normalization. Raw log: `astra-independent-d12995059eb0388cdc2f5b34c18a3f0077681797.log`.
+- The unchanged parent two-case contract passed 2/2. Raw log: `astra-original-parent-d12995059eb0388cdc2f5b34c18a3f0077681797.log`.
+- The full Dashboard package passed 213/213. Raw log: `astra-package-d12995059eb0388cdc2f5b34c18a3f0077681797.log`.
+
+These are archive-based component checks. Native and final independent acceptance remain separate parent/Astra decisions.
