@@ -1,0 +1,16 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-bT5fY5
+
+ ✓ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx (12 tests) 3280ms
+   ✓ actual sidebar producer holds and current discard leaves without writes  398ms
+   ✓ numeric history 1 stays held then replays exact destination  335ms
+   ✓ path-relative navigation preserves the actual relative destination  335ms
+   ✓ epoch cancels old route decision while fresh device draft still guards  523ms
+   ✓ epoch cancels old signout decision while fresh device draft still guards  356ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  05:07:40
+   Duration  16.29s (transform 6.75s, setup 0ms, collect 11.62s, tests 3.28s, environment 817ms, prepare 105ms)
