@@ -251,6 +251,37 @@
 .notif-pane {
   padding: 16px;
 }
+/* Keep the visible Notifications switch track centered inside the global
+   44px touch target. This scope deliberately mirrors Date & Time without
+   changing either that pane or the shared Toggle. */
+.module-settings .notif-pane .toggle {
+  inline-size: 44px;
+  block-size: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  background: transparent;
+}
+.module-settings .notif-pane .toggle.on { background: transparent; }
+.module-settings .notif-pane .toggle::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 4px;
+  inline-size: 36px;
+  block-size: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.module-settings .notif-pane .toggle.on::before { background: var(--accent); }
+.module-settings .notif-pane .toggle-knob {
+  inset-block-start: 14px;
+  inset-inline-start: 6px;
+  inline-size: 16px;
+  block-size: 16px;
+  z-index: 1;
+}
+.module-settings .notif-pane .toggle.on .toggle-knob { transform: translateX(16px); }
 .time-range {
   display: flex;
   align-items: center;
