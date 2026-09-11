@@ -80,6 +80,20 @@ When delegation is authorized and supported by the current session:
   races, timer recovery, migrations, deletion/recovery, security, payments, deployment,
   architecture, screenshot-based visual judgment, or final acceptance.
 - Report model/launch failures explicitly; never label a fallback model as Spark.
+- If the runtime reports Spark quota exhaustion or a usage-window limit, the parent
+  is authorized to continue the same bounded task with `gpt-5.5` without asking again.
+  Use the reported reset time when available; do not infer exhaustion from elapsed
+  session time, a generic network failure, or an unsupported-tool error.
+- Preserve the original role's instructions, sandbox, allowed files, acceptance
+  conditions, and independent Terra/Sol/Astra review when falling back. Use a fresh
+  generic worker explicitly configured for `gpt-5.5`; do not reuse a Spark-pinned
+  custom role and assume a spawn model override supersedes its TOML.
+- Before retrying interrupted implementation, inspect git status/diff and completed
+  work so the fallback does not overwrite changes or repeat completed actions.
+  Record the quota reason and actual model as `gpt-5.5 (Spark quota fallback)`.
+  If GPT-5.5 also fails, report it; do not silently cascade or retry indefinitely.
+- These are parent dispatch rules, not a claim that Codex automatically changes
+  models or that a quota-exhaustion fallback has already been tested.
 
 The project-owned `.codex/agents/spark-explorer.toml` and
 `.codex/agents/spark-ui-fixer.toml` are standalone custom agents, maintained separately

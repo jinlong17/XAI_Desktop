@@ -15,6 +15,9 @@ Run directly relevant checks and report changed files, results, and remaining ri
 Test success alone is not business acceptance. Hand off for independent review by an uninvolved
 Terra, Sol, or Astra. Do not claim final acceptance, commit, push, or publish.
 Report runtime or model failures honestly; do not claim another model's work as Spark execution.
+On Spark quota/usage-window exhaustion, report completed work and remaining scope to the parent.
+The parent may continue with gpt-5.5 under the same boundaries and independent review;
+do not switch models yourself, recursively delegate, or label the fallback as Spark.
 """
 
 # Spark is text-only; inherited image generation makes requests fail.
