@@ -258,6 +258,8 @@
   font-size: 0.85rem;
 }
 .time-range input[type="time"] {
+  min-inline-size: 7rem;
+  min-block-size: 44px;
   padding: 3px 6px;
   border: 1px solid var(--border, oklch(85% 0 0));
   border-radius: 6px;
@@ -266,6 +268,28 @@
 }
 .muted {
   color: var(--text-3, oklch(60% 0 0));
+}
+.notif-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.notif-recovery-field > span { grid-column: 1 / -1; min-inline-size: 0; overflow-wrap: anywhere; }
+.notif-recovery-field button,
+.notif-recovery-actions button { min-inline-size: 44px; min-block-size: 44px; padding-inline: 0.5rem; }
+.notif-recovery-field button { inline-size: 100%; }
+.notif-recovery-field button:only-of-type { grid-column: 1 / -1; }
+.notif-recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.notif-recovery-actions p { flex-basis: 100%; margin: 0; }
+.notif-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .notif-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .notif-recovery-field > span { grid-column: auto; }
+  .notif-recovery-field button { inline-size: auto; }
+  .notif-recovery-field button:only-of-type { grid-column: auto; }
 }
 
 /* ---- Date & Time pane ------------------------------------------------ */

@@ -121,6 +121,12 @@ Persists to `xai_pref_smart_lists` (JSON codec, object keyed by SmartListId).
 - `xai_pref_notif_quiet` — quiet hours master toggle
 - `xai_pref_notif_quiet_start` / `_quiet_end` — time inputs (visible only when quiet=true)
 
+Each device-owned field uses the asynchronous preference binding and keeps its
+own draft until its matching verified persistence result succeeds. Recovery is
+available even when quiet-time controls are hidden. The optional departure
+guard exports or discards only current work; its sparse `notifications-draft.json`
+contains unresolved device fields under `values.device`.
+
 ### §4.5 dateTimePane — id: "date_time"
 
 5 controls:

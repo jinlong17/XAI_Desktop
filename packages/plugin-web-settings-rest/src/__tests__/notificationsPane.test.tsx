@@ -1,10 +1,15 @@
 /**
  * NF1..NF9 — notificationsPane tests (test.md §3 P2)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { notificationsPane } from "../panes/notificationsPane.js";
 import { getPref } from "@repo/plugin-web-storage";
+
+beforeEach(() => {
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!)() } });
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("notificationsPane", () => {
   it("NF1: renders without error", () => {
@@ -41,14 +46,14 @@ describe("notificationsPane", () => {
     expect(timeInputs.length).toBe(2);
   });
 
-  it("NF6: toggling enabled toggle flips xai_pref_notif_enabled pref", () => {
+  it("NF6: toggling enabled toggle flips xai_pref_notif_enabled pref", async () => {
     const { container } = render(notificationsPane.render({ lang: "en" }));
     expect(getPref("xai_pref_notif_enabled")).toBe(true);
     const toggle = container.querySelector<HTMLButtonElement>(
       'button[aria-label="Enable notifications"]',
     );
     fireEvent.click(toggle!);
-    expect(getPref("xai_pref_notif_enabled")).toBe(false);
+    await waitFor(() => expect(getPref("xai_pref_notif_enabled")).toBe(false));
   });
 
   it("NF7: sound select has 5 options (none/subtle/chime/bell/pop)", () => {
@@ -60,13 +65,13 @@ describe("notificationsPane", () => {
     expect(sel!.options.length).toBe(5);
   });
 
-  it("NF8: changing sound select persists xai_pref_notif_done_sound", () => {
+  it("NF8: changing sound select persists xai_pref_notif_done_sound", async () => {
     const { container } = render(notificationsPane.render({ lang: "en" }));
     const sel = container.querySelector<HTMLSelectElement>(
       'select[aria-label="Sound"]',
     );
     fireEvent.change(sel!, { target: { value: "chime" } });
-    expect(getPref("xai_pref_notif_done_sound")).toBe("chime");
+    await waitFor(() => expect(getPref("xai_pref_notif_done_sound")).toBe("chime"));
   });
 
   it("NF9: pane id, icon, i18nKey are correct", () => {

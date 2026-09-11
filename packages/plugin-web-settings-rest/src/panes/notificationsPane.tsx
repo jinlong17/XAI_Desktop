@@ -1,156 +1,72 @@
-/**
- * notificationsPane — Settings → Notifications pane.
- *
- * 8 controls + DND time-range visibility gating.
- * Port of web design/module-settings.jsx lines 376-442.
- * API contract: packages/xai-web-settings-rest/docs/api.md §4.4
- */
-
+/** Settings → Notifications: eight independently recoverable device preferences. */
 import * as React from "react";
-import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
+import type { Pane, PaneDepartureGuard, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { Toggle, SettingRow, SectionBlock } from "@repo/plugin-web-settings-shell";
+import { accountScope, usePrefAutosaveAsync } from "@repo/plugin-web-storage";
+import type { PrefAutosaveAsyncResult, WebPrefKey } from "@repo/plugin-web-storage";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
-import type { WebPrefKey } from "@repo/plugin-web-storage";
 import { localI18n } from "../internal/localI18n.js";
 
-function NotificationsPaneContent({ lang }: PaneRenderProps): React.ReactElement {
-  const { s } = useI18n(lang);
-  const t = localI18n(lang);
+type Sound = "none" | "subtle" | "chime" | "bell" | "pop";
+type FieldId = "enabled" | "done_sound" | "push_task" | "push_pomo" | "push_habit" | "quiet" | "quiet_start" | "quiet_end";
+type FieldValue = Sound | boolean | string;
+type Draft = { value: FieldValue; session: object; operation: object; settledFailure: boolean; retryActive: boolean };
+type Drafts = Record<FieldId, Draft | null>;
+type Prefs = Record<FieldId, PrefAutosaveAsyncResult<FieldValue>>;
+const fields: readonly FieldId[] = ["enabled", "done_sound", "push_task", "push_pomo", "push_habit", "quiet", "quiet_start", "quiet_end"];
+const emptyDrafts = (): Drafts => ({ enabled: null, done_sound: null, push_task: null, push_pomo: null, push_habit: null, quiet: null, quiet_start: null, quiet_end: null });
+const isSound = (value: unknown): value is Sound => value === "none" || value === "subtle" || value === "chime" || value === "bell" || value === "pop";
+const isTime = (value: unknown): value is string => typeof value === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+const isBoolean = (value: unknown): value is boolean => typeof value === "boolean";
+const isValueFor = (field: FieldId, value: unknown): value is FieldValue => field === "done_sound" ? isSound(value) : field === "quiet_start" || field === "quiet_end" ? isTime(value) : isBoolean(value);
 
-  const [enabled, setEnabled] = usePref(
-    "xai_pref_notif_enabled" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
-
-  const [doneSound, setDoneSound] = usePref(
-    "xai_pref_notif_done_sound" as WebPrefKey,
-  ) as readonly [string, (v: string) => void, unknown];
-
-  const [pushTask, setPushTask] = usePref(
-    "xai_pref_notif_push_task" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
-
-  const [pushPomo, setPushPomo] = usePref(
-    "xai_pref_notif_push_pomo" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
-
-  const [pushHabit, setPushHabit] = usePref(
-    "xai_pref_notif_push_habit" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
-
-  const [quiet, setQuiet] = usePref(
-    "xai_pref_notif_quiet" as WebPrefKey,
-  ) as readonly [boolean, (v: boolean) => void, unknown];
-
-  const [quietStart, setQuietStart] = usePref(
-    "xai_pref_notif_quiet_start" as WebPrefKey,
-  ) as readonly [string, (v: string) => void, unknown];
-
-  const [quietEnd, setQuietEnd] = usePref(
-    "xai_pref_notif_quiet_end" as WebPrefKey,
-  ) as readonly [string, (v: string) => void, unknown];
-
-  return (
-    <div className="notif-pane">
-      <h3 className="pane-title">{s("settings.notifications")}</h3>
-
-      <SectionBlock>
-        <SettingRow label={t("notif.enable")}>
-          <Toggle
-            on={enabled}
-            onChange={() => setEnabled(!enabled)}
-            ariaLabel={t("notif.enable")}
-          />
-        </SettingRow>
-      </SectionBlock>
-
-      <div className="sl-group" style={{ marginTop: 18 }}>
-        {t("notif.types")}
-      </div>
-      <SectionBlock>
-        <SettingRow label={t("notif.taskDue")}>
-          <Toggle
-            on={pushTask}
-            onChange={() => setPushTask(!pushTask)}
-            ariaLabel={t("notif.taskDue")}
-          />
-        </SettingRow>
-        <SettingRow label={t("notif.pomoDone")}>
-          <Toggle
-            on={pushPomo}
-            onChange={() => setPushPomo(!pushPomo)}
-            ariaLabel={t("notif.pomoDone")}
-          />
-        </SettingRow>
-        <SettingRow label={t("notif.habitRemind")}>
-          <Toggle
-            on={pushHabit}
-            onChange={() => setPushHabit(!pushHabit)}
-            ariaLabel={t("notif.habitRemind")}
-          />
-        </SettingRow>
-      </SectionBlock>
-
-      <div className="sl-group" style={{ marginTop: 18 }}>
-        {t("notif.soundSection")}
-      </div>
-      <SectionBlock>
-        <SettingRow label={t("notif.sound")} desc={t("notif.soundDesc")}>
-          <select
-            className="sl-select"
-            value={doneSound}
-            onChange={(e) => setDoneSound(e.target.value)}
-            aria-label={t("notif.sound")}
-          >
-            <option value="none">{t("notif.soundNone")}</option>
-            <option value="subtle">{t("notif.soundSubtle")}</option>
-            <option value="chime">{t("notif.soundChime")}</option>
-            <option value="bell">{t("notif.soundBell")}</option>
-            <option value="pop">{t("notif.soundPop")}</option>
-          </select>
-        </SettingRow>
-      </SectionBlock>
-
-      <div className="sl-group" style={{ marginTop: 18 }}>
-        {t("notif.dndSection")}
-      </div>
-      <SectionBlock>
-        <SettingRow label={t("notif.quietEnable")}>
-          <Toggle
-            on={quiet}
-            onChange={() => setQuiet(!quiet)}
-            ariaLabel={t("notif.quietEnable")}
-          />
-        </SettingRow>
-        {quiet && (
-          <SettingRow label={t("notif.quietHours")}>
-            <div className="time-range">
-              <input
-                type="time"
-                value={quietStart}
-                onChange={(e) => setQuietStart(e.target.value)}
-                aria-label={lang === "zh" ? "勿扰开始时间" : "Quiet hours start"}
-              />
-              <span className="muted">{"→"}</span>
-              <input
-                type="time"
-                value={quietEnd}
-                onChange={(e) => setQuietEnd(e.target.value)}
-                aria-label={lang === "zh" ? "勿扰结束时间" : "Quiet hours end"}
-              />
-            </div>
-          </SettingRow>
-        )}
-      </SectionBlock>
-    </div>
-  );
+function NotificationsPaneContent({ lang, registerDepartureGuard }: PaneRenderProps): React.ReactElement {
+  const { s } = useI18n(lang); const t = localI18n(lang);
+  const scope = React.useSyncExternalStore(accountScope.subscribe, accountScope.capture, accountScope.capture);
+  const enabled = usePrefAutosaveAsync("xai_pref_notif_enabled" as WebPrefKey, { validate: isBoolean });
+  const doneSound = usePrefAutosaveAsync("xai_pref_notif_done_sound" as WebPrefKey, { validate: isSound });
+  const pushTask = usePrefAutosaveAsync("xai_pref_notif_push_task" as WebPrefKey, { validate: isBoolean });
+  const pushPomo = usePrefAutosaveAsync("xai_pref_notif_push_pomo" as WebPrefKey, { validate: isBoolean });
+  const pushHabit = usePrefAutosaveAsync("xai_pref_notif_push_habit" as WebPrefKey, { validate: isBoolean });
+  const quiet = usePrefAutosaveAsync("xai_pref_notif_quiet" as WebPrefKey, { validate: isBoolean });
+  const quietStart = usePrefAutosaveAsync("xai_pref_notif_quiet_start" as WebPrefKey, { validate: isTime });
+  const quietEnd = usePrefAutosaveAsync("xai_pref_notif_quiet_end" as WebPrefKey, { validate: isTime });
+  const prefs = { enabled, done_sound: doneSound, push_task: pushTask, push_pomo: pushPomo, push_habit: pushHabit, quiet, quiet_start: quietStart, quiet_end: quietEnd } as unknown as Prefs;
+  const prefsRef = React.useRef(prefs); prefsRef.current = prefs;
+  const scopeRef = React.useRef(scope); scopeRef.current = scope;
+  const epochRef = React.useRef(scope.epoch), decisionTokenRef = React.useRef<object>({}), deviceSessionRef = React.useRef<object>({}), draftsRef = React.useRef<Drafts>(emptyDrafts());
+  const [draftVersion, setDraftVersion] = React.useState(0), [inputError, setInputError] = React.useState<FieldId | null>(null), [exportFailed, setExportFailed] = React.useState(false), [saved, setSaved] = React.useState(false);
+  if (epochRef.current !== scope.epoch) { epochRef.current = scope.epoch; decisionTokenRef.current = {}; }
+  React.useEffect(() => () => { decisionTokenRef.current = {}; draftsRef.current = emptyDrafts(); }, []);
+  const changed = React.useCallback(() => setDraftVersion(version => version + 1), []);
+  const currentScope = React.useCallback(() => accountScope.capture() === scopeRef.current && epochRef.current === scopeRef.current.epoch, []);
+  const isCurrentDraft = React.useCallback((field: FieldId, draft: Draft | null) => Boolean(draft && currentScope() && draft.session === deviceSessionRef.current && isValueFor(field, draft.value)), [currentScope]);
+  const hasCurrentDraft = React.useCallback(() => fields.some(field => isCurrentDraft(field, draftsRef.current[field])), [isCurrentDraft]);
+  const putDraft = React.useCallback((field: FieldId, value: FieldValue) => { const draft = { value, session: deviceSessionRef.current, operation: {}, settledFailure: false, retryActive: false }; draftsRef.current[field] = draft; setInputError(null); setExportFailed(false); setSaved(false); changed(); return draft; }, [changed]);
+  const settleDraft = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => { if (draftsRef.current[field] !== draft) return; if (ok) { draftsRef.current[field] = null; setSaved(true); changed(); return; } draft.retryActive = false; draft.settledFailure = true; changed(); }, [changed]);
+  const settlePredecessor = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => { if (ok || draftsRef.current[field] !== draft) return; draft.retryActive = false; changed(); }, [changed]);
+  const edit = React.useCallback((field: FieldId, value: unknown) => { if (!currentScope()) return; if (!isValueFor(field, value)) { setInputError(field); return; } const draft = putDraft(field, value); void prefsRef.current[field].edit(value).then(result => settleDraft(field, draft, result.ok), () => settleDraft(field, draft, false)); }, [currentScope, putDraft, settleDraft]);
+  const retry = React.useCallback((field: FieldId) => { const draft = draftsRef.current[field]; if (!isCurrentDraft(field, draft) || draft!.retryActive) return; const ownFailure = draft!.settledFailure; const failedPredecessor = !ownFailure && (prefsRef.current[field].meta.status === "error" || prefsRef.current[field].meta.status === "conflict"); if (!ownFailure && !failedPredecessor) return; draft!.retryActive = true; if (ownFailure) draft!.settledFailure = false; changed(); const attempt = prefsRef.current[field].retry(); if (ownFailure) void attempt.then(result => settleDraft(field, draft!, result.ok), () => settleDraft(field, draft!, false)); else void attempt.then(result => settlePredecessor(field, draft!, result.ok), () => settlePredecessor(field, draft!, false)); }, [changed, isCurrentDraft, settleDraft, settlePredecessor]);
+  const discard = React.useCallback((field: FieldId) => { const draft = draftsRef.current[field]; if (draft && !isCurrentDraft(field, draft)) return; if (draft) { draftsRef.current[field] = null; changed(); } setInputError(error => error === field ? null : error); prefsRef.current[field].meta.reload(); }, [changed, isCurrentDraft]);
+  const reloadSource = React.useCallback((field: FieldId) => { if (isCurrentDraft(field, draftsRef.current[field])) return; setInputError(error => error === field ? null : error); prefsRef.current[field].meta.reload(); }, [isCurrentDraft]);
+  const discardAll = React.useCallback(() => { if (!hasCurrentDraft()) return; for (const field of fields) if (isCurrentDraft(field, draftsRef.current[field])) discard(field); }, [discard, hasCurrentDraft, isCurrentDraft]);
+  const exportDraft = React.useCallback(() => { const token = decisionTokenRef.current; if (!currentScope() || !hasCurrentDraft()) return; const values: Partial<Record<FieldId, FieldValue>> = {}; for (const field of fields) { const draft = draftsRef.current[field]; if (isCurrentDraft(field, draft) && draft && isValueFor(field, draft.value)) values[field] = draft.value; } if (!Object.keys(values).length) return; let anchor: HTMLAnchorElement | null = null, url: string | null = null; const stillCurrent = () => currentScope() && decisionTokenRef.current === token && hasCurrentDraft(); try { if (!stillCurrent()) return; const blob = new Blob([JSON.stringify({ version: 1, kind: "notifications-draft", values: { device: values } })], { type: "application/json" }); url = URL.createObjectURL(blob); if (!stillCurrent()) return; anchor = document.createElement("a"); anchor.href = url; anchor.download = "notifications-draft.json"; anchor.style.display = "none"; document.body.appendChild(anchor); if (!stillCurrent()) return; anchor.click(); if (stillCurrent()) setExportFailed(false); } catch { if (stillCurrent()) setExportFailed(true); } finally { try { anchor?.remove(); } catch { /* recovery stays */ } try { if (url) URL.revokeObjectURL(url); } catch { /* recovery stays */ } } }, [currentScope, hasCurrentDraft, isCurrentDraft]);
+  const guardToken = decisionTokenRef.current;
+  React.useEffect(() => { if (!registerDepartureGuard) return undefined; const capturedScope = scope; const isCurrent = () => decisionTokenRef.current === guardToken && currentScope() && accountScope.capture() === capturedScope; const guard: PaneDepartureGuard = { token: guardToken, label: lang === "zh" ? "通知" : "Notifications", isCurrent, isBlocking: () => isCurrent() && hasCurrentDraft(), exportDraft: () => { if (isCurrent()) exportDraft(); }, discardDraft: () => { if (isCurrent()) discardAll(); } }; return registerDepartureGuard(guard); }, [currentScope, discardAll, draftVersion, exportDraft, guardToken, hasCurrentDraft, lang, registerDepartureGuard, scope]);
+  const hasActualDraft = hasCurrentDraft(), hasSourceIssue = fields.some(field => prefs[field].meta.source === "invalid" || prefs[field].meta.source === "unavailable" || prefs[field].meta.status === "error");
+  React.useEffect(() => { if (!hasActualDraft) return; const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; }; window.addEventListener("beforeunload", warn); return () => window.removeEventListener("beforeunload", warn); }, [hasActualDraft]);
+  const labelFor = (field: FieldId) => ({ enabled: t("notif.enable"), done_sound: t("notif.sound"), push_task: t("notif.taskDue"), push_pomo: t("notif.pomoDone"), push_habit: t("notif.habitRemind"), quiet: t("notif.quietEnable"), quiet_start: lang === "zh" ? "勿扰开始时间" : "Quiet hours start", quiet_end: lang === "zh" ? "勿扰结束时间" : "Quiet hours end" })[field];
+  const recovery = (field: FieldId) => { const pref = prefs[field], draft = draftsRef.current[field], label = labelFor(field), active = isCurrentDraft(field, draft), sourceOnly = pref.meta.source === "invalid" || pref.meta.source === "unavailable"; if (!active && !sourceOnly && inputError !== field) return null; const message = inputError === field ? lang === "zh" ? `${label}格式无效。` : `${label} has an invalid format.` : active ? pref.meta.status === "pending" ? lang === "zh" ? `${label}正在保存。` : `${label} is saving.` : lang === "zh" ? `${label}未保存。` : `${label} was not saved.` : lang === "zh" ? `已保存的${label}不可用。请重新读取；这不是新的未保存更改。` : `Saved ${label} is unavailable. Reload it; this is not a new unsaved change.`; return <div className="notif-recovery-field" role="alert"><span>{message}</span>{active && <><button type="button" onClick={() => retry(field)} aria-label={`${lang === "zh" ? "重试" : "Retry"} ${label}`}>{lang === "zh" ? "重试" : "Retry"}</button><button type="button" onClick={() => discard(field)} aria-label={`${lang === "zh" ? "放弃" : "Discard"} ${label}`}>{lang === "zh" ? "放弃" : "Discard"}</button></>}{!active && sourceOnly && <button type="button" onClick={() => reloadSource(field)} aria-label={`${lang === "zh" ? "重新读取" : "Reload"} ${label}`}>{lang === "zh" ? "重新读取" : "Reload"}</button>}</div>; };
+  const current = (field: FieldId): FieldValue => { const draft = draftsRef.current[field]; return isCurrentDraft(field, draft) && draft ? draft.value : prefs[field].value; };
+  const toggle = (field: Exclude<FieldId, "done_sound" | "quiet_start" | "quiet_end">) => edit(field, current(field) !== true);
+  const quietOn = current("quiet") === true;
+  return <div className="notif-pane"><h3 className="pane-title">{s("settings.notifications")}</h3>
+    <SectionBlock><SettingRow label={t("notif.enable")}><Toggle on={Boolean(current("enabled"))} onChange={() => toggle("enabled")} ariaLabel={t("notif.enable")} /></SettingRow>{recovery("enabled")}</SectionBlock>
+    <div className="sl-group" style={{ marginTop: 18 }}>{t("notif.types")}</div><SectionBlock><SettingRow label={t("notif.taskDue")}><Toggle on={Boolean(current("push_task"))} onChange={() => toggle("push_task")} ariaLabel={t("notif.taskDue")} /></SettingRow>{recovery("push_task")}<SettingRow label={t("notif.pomoDone")}><Toggle on={Boolean(current("push_pomo"))} onChange={() => toggle("push_pomo")} ariaLabel={t("notif.pomoDone")} /></SettingRow>{recovery("push_pomo")}<SettingRow label={t("notif.habitRemind")}><Toggle on={Boolean(current("push_habit"))} onChange={() => toggle("push_habit")} ariaLabel={t("notif.habitRemind")} /></SettingRow>{recovery("push_habit")}</SectionBlock>
+    <div className="sl-group" style={{ marginTop: 18 }}>{t("notif.soundSection")}</div><SectionBlock><SettingRow label={t("notif.sound")} desc={t("notif.soundDesc")}><select className="sl-select" value={current("done_sound") as Sound} onChange={event => edit("done_sound", event.target.value)} aria-label={t("notif.sound")}><option value="none">{t("notif.soundNone")}</option><option value="subtle">{t("notif.soundSubtle")}</option><option value="chime">{t("notif.soundChime")}</option><option value="bell">{t("notif.soundBell")}</option><option value="pop">{t("notif.soundPop")}</option></select></SettingRow>{recovery("done_sound")}</SectionBlock>
+    <div className="sl-group" style={{ marginTop: 18 }}>{t("notif.dndSection")}</div><SectionBlock><SettingRow label={t("notif.quietEnable")}><Toggle on={quietOn} onChange={() => toggle("quiet")} ariaLabel={t("notif.quietEnable")} /></SettingRow>{recovery("quiet")}{quietOn && <SettingRow label={t("notif.quietHours")}><div className="time-range"><input type="time" value={current("quiet_start") as string} onChange={event => edit("quiet_start", event.target.value)} aria-label={labelFor("quiet_start")} /><span className="muted">→</span><input type="time" value={current("quiet_end") as string} onChange={event => edit("quiet_end", event.target.value)} aria-label={labelFor("quiet_end")} /></div></SettingRow>}{recovery("quiet_start")}{recovery("quiet_end")}</SectionBlock>
+    {(hasActualDraft || exportFailed) && <section className="notif-recovery-actions" role="status">{hasActualDraft && <><button type="button" onClick={exportDraft}>{lang === "zh" ? "导出通知草稿" : "Export Notifications draft"}</button><button type="button" onClick={discardAll}>{lang === "zh" ? "放弃全部更改" : "Discard all changes"}</button></>}{exportFailed && <p role="alert">{lang === "zh" ? "导出失败，请重试。" : "Export failed. Please retry."}</p>}</section>}
+    {!hasActualDraft && !hasSourceIssue && !inputError && saved && <p className="notif-recovery-saved" role="status">{lang === "zh" ? "通知设置已保存。" : "Notification settings saved."}</p>}
+  </div>;
 }
-
-export const notificationsPane: Pane = {
-  id: "notifications",
-  icon: "bell",
-  i18nKey: "settings.notifications",
-  render: (props: PaneRenderProps): React.ReactElement => (
-    <NotificationsPaneContent {...props} />
-  ),
-};
+export const notificationsPane: Pane = { id: "notifications", icon: "bell", i18nKey: "settings.notifications", render: (props: PaneRenderProps) => <NotificationsPaneContent {...props} /> };
