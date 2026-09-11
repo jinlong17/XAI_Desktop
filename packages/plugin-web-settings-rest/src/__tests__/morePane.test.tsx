@@ -105,6 +105,7 @@ describe("morePane", () => {
     render(morePane.render({ lang: "en" }));
     fireEvent.click(screen.getByTestId("more-reset-default"));
     await waitFor(() => expect(screen.getByRole("button", { name: "Retry Choose window type when launching" })).toBeInTheDocument());
+    expect(screen.getByRole<HTMLSelectElement>("combobox", { name: "Choose window type when launching" }).value).toBe("window");
     expect(screen.getByRole("button", { name: "Export More draft" })).toBeInTheDocument();
     expect(screen.queryByText("More settings restored to defaults.")).toBeNull();
   });
