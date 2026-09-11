@@ -8,3 +8,12 @@
 max_depth = 2
 max_threads = 4
 job_max_runtime_seconds = 1800
+
+# Explicit role registration for CLI versions predating standalone agent discovery.
+[agents.spark-explorer]
+description = "Bounded read-only Spark code exploration."
+config_file = "agents/spark-explorer.toml"
+
+[agents.spark-ui-fixer]
+description = "Scoped Spark UI fixes requiring independent review."
+config_file = "agents/spark-ui-fixer.toml"

@@ -16,3 +16,7 @@ Test success alone is not business acceptance. Hand off for independent review b
 Terra, Sol, or Astra. Do not claim final acceptance, commit, push, or publish.
 Report runtime or model failures honestly; do not claim another model's work as Spark execution.
 """
+
+# Spark is text-only; inherited image generation makes requests fail.
+[features]
+image_generation = false

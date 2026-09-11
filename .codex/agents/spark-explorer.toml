@@ -9,3 +9,7 @@ Prefer rg and targeted file reads. Return paths, line numbers, call paths, and u
 Do not modify files, make architecture decisions, claim final acceptance, or delegate further.
 Report runtime or model failures honestly; do not claim another model's work as Spark execution.
 """
+
+# Spark is text-only; inherited image generation makes requests fail.
+[features]
+image_generation = false

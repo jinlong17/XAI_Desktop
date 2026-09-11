@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a09063-8956-7640-97de-7cfc68a625f4"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"SPARK_MODEL_SMOKE_OK"}}
+{"type":"turn.completed","usage":{"input_tokens":22922,"cached_input_tokens":2560,"output_tokens":344,"reasoning_output_tokens":332}}

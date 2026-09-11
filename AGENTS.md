@@ -88,6 +88,18 @@ set the generator's shared `CODEX_FAST_MODEL` to Spark to enable these specialis
 File configuration does not establish successful runtime model access; verify actual
 agent/model selection in an authorized parent session before claiming Spark execution.
 
+CLI 0.135 compatibility: `.codex/config.toml` explicitly registers these two role
+names without changing concurrency/depth defaults. For CLI delegation smoke checks,
+use a persisted session with `--enable multi_agent_v2`; `--ephemeral` cannot resolve
+the parent thread in this version. Spawn with the exact `agent_type` and
+`fork_turns = "none"`. Both role files disable inherited `image_generation`, which
+Spark rejects. These CLI checks do not add Spark to an already-running app's tool schema.
+On this installation project-only discovery still returned `unknown agent_type`;
+use the explicit per-invocation role registration in the runtime receipt below.
+Do not run the agent generator with `--force` unless custom `[agents.*]` registrations
+are preserved/restored: its default config template overwrites this file.
+Runtime evidence and reproducible invocation: `docs/reviews/spark-agent-runtime-20260911/README.md`.
+
 ### 2.3 Sandbox mode
 
 Each `.toml` agent includes `sandbox_mode` sourced from the template's
