@@ -1,6 +1,6 @@
 # 全部 To-do：312 项逐项状态清单
 
-最新验证检查点（2026-09-11）：固定611062e父20host、18native和Web/Settings/types-lint通过（6b0694b）；Sol现46项通过（含产品新增DT7，da6950a），此前96的45项保持原版本归属。Astra3df3199完整复核新增前驱失败/最新选择排队时Retry卡住的正确P1，父Chrome153独立复现；Terra按caller-only合同修复中，DateTime尚未完整接受。共享b9令牌presence修复有界证据保留，正式13/312完成、299未关闭。
+最新检查点（2026-09-11）：Date & Time完整五字段当前会话恢复已由Astra d0d934d接受，产品固定d9d9fdd；Astra独立caller7/Settings295，Sol47，父actualHost20/native19及类型/lint通过，见acceptance-d9d9fdd.md。下一完整单元为Notifications八字段（含隐藏quiet_start/end），合同next-notifications-contract.md；Terra实施、Sol独立验证、父actualHost/native。父固定d9d9fdd已复现11正确FAIL/1cleanPASS：八字段失败最新值丢失、route/signout无阻拦、隐藏时间重显丢失。正式13/312完成、299未关闭，不核销REL/D2整体。
 
 核对日期：2026-09-09；最新审查检查点：`0143952`；各批次固定产品版本与证据见下文及执行台账。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
 
