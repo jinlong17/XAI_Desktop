@@ -42,3 +42,21 @@ it('latest queued choice remains recoverable when its predecessor fails before i
   fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
   expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(ui.select().value).toBe('saturday');expect(guard()?.isBlocking()).toBe(false);expect(unload()).toBe(false);
 });
+it('repeated failed predecessor recovery stays retryable without acknowledging its queued successor',async()=>{
+  const ui=mount();await flush();const release=await hold(keys[0]);let deny=true;const attempts:string[]=[];
+  vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key:string,value:string){if(key===keys[0]){attempts.push(value);if(value==='sunday'&&deny)throw Error('predecessor Sunday quota');}nativeSet.call(this,key,value);});
+  fireEvent.change(ui.select(),{target:{value:'sunday'}});fireEvent.change(ui.select(),{target:{value:'saturday'}});await release();await flush(24);
+  fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
+  expect(attempts).toEqual(['sunday','sunday']);expect(nativeGet.call(localStorage,keys[0])).toBe('monday');expect(ui.select().value).toBe('saturday');expect(guard()?.isBlocking()).toBe(true);
+  deny=false;fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
+  expect(attempts).toEqual(['sunday','sunday','sunday','saturday']);expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(guard()?.isBlocking()).toBe(false);
+});
+it('successful predecessor recovery cannot clear a queued successor that then fails',async()=>{
+  const ui=mount();await flush();const release=await hold(keys[0]);let denySunday=true,denySaturday=true;
+  vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key:string,value:string){if(key===keys[0]&&((value==='sunday'&&denySunday)||(value==='saturday'&&denySaturday)))throw Error('field quota');nativeSet.call(this,key,value);});
+  fireEvent.change(ui.select(),{target:{value:'sunday'}});fireEvent.change(ui.select(),{target:{value:'saturday'}});await release();await flush(24);
+  denySunday=false;fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
+  expect(nativeGet.call(localStorage,keys[0])).toBe('sunday');expect(ui.select().value).toBe('saturday');expect(guard()?.isBlocking()).toBe(true);expect(unload()).toBe(true);expect(ui.getByRole('button',{name:'Export Date & Time draft'})).toBeTruthy();
+  denySaturday=false;fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
+  expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(guard()?.isBlocking()).toBe(false);expect(unload()).toBe(false);
+});

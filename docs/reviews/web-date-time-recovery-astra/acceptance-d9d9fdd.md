@@ -1,0 +1,57 @@
+# Astra acceptance: complete Settings Date & Time recovery
+
+Generic independent final review, Web module, product fixed at `d9d9fdde211e19fc258f97e7184a8ee77338d80c`. **ACCEPT the complete five-field mounted-session Date & Time caller and its accepted Settings departure seam under `../web-date-time-recovery-contract/contract.md`.** All known correct shared and caller failures are reconciled with their fixed source and independent evidence. This supersedes the DateTime withholding decision at611062e; historical failures remain intact. It does not close broad Settings/D2/REL/AI or the full312 objective.
+
+## Current executions and honest reuse
+
+| Executor and product | Evidence / result |
+| --- | --- |
+| This Astra executor, d9d9fdd | `caller-queued-final-d9d9fdd.log`: unchanged five independent assertions PASS, including the previously failing inverse queue ordering. |
+| This Astra executor, d9d9fdd | `caller-expanded-final-d9d9fdd.log`: seven PASS, adding repeated failed predecessor recovery with duplicate-click/write-count checks and predecessor recovery success followed by latest failure then successful own Retry. The five are a subset of seven, not12distinct tests. |
+| This Astra executor, d9d9fdd | `package-complete-final-d9d9fdd.log`: full Settings-rest43files/295tests PASS. The owned immutable-archive runner adds a package include mode; no assertion/product overlay. This is independent of Terra's reported295 and includes the current product DT1–DT8. |
+| Sol executor, d9d9fdd | e05ca16, `../web-date-time-recovery-sol/review-d9d9fdd.md` and five `*-final3-d9d9fdd.log` files: unchanged39Sol assertions +8product assertions =47PASS. I inspected the raw fixed-SHA/exit/count logs. These overlap package/product coverage and are not added as independent295+47unique tests. |
+| Parent executor, d9d9fdd | c7f64e5, `../web-date-time-recovery-independent/current-d9d9fdd.md`: actual composed Settings/full Shell host8+12PASS,19native modes PASS with runtimeErrors0, Web types/lint + Settings types/lint + storage types all exit0. I inspected raw host/type logs, all native terminal JSON and the physical predecessor/disk export observations. |
+| Previous Astra executor, b9ae2d9 | Preserved in3df3199: uncertainty19, engine21, token13 and storage22files/195tests PASS. They were inspected and retained with previous executor/version attribution, not relabelled as current reruns. |
+| Earlier current-shared regression,96c4915 | `review-96c4915.md` and `../web-date-time-recovery-independent/shared-96c4915.md`: shared hooks/dynamic/functional/repair/admission/D2/C/D1 and full affected Header/Pomodoro/Collaborate/Smart matrices remain exactly96-attributed. Reuse rationale below. |
+| Parent visual execution,18f4e82 | EN/ZH375/414/768/1024/1440,375dialogs, toggle on/off/on targets and manual screenshot evidence retain18f4e82 attribution. This reviewer also inspected preserved EN375 recovery and ZH375dialog screenshots; controls/readable text remain contained with scrolling. This is not a fresh screenshot execution atd9. |
+
+Sol and package logs preserve React act/expected storage diagnostics; PASS does not mean warning-free output. Native modes have runtimeErrors0. Native browser153 synthetic fixture storage/auth is not production deployment, real-account login or crash-recovery acceptance.
+
+## Source reconciliation and resolved counterexamples
+
+The complete source still binds exactly start_week/lunar/week_numbers/holidays/timezone through `usePrefAutosaveAsync`, with closed select/strict boolean validators, original device keys/codecs/defaults and no new raw/effect writer. Immediate displayed values come from current caller drafts; toggles use latest draft intent. Each edit owns a draft object/session/operation and its own Promise; only matching current completion can clear it. Scope change renews host decision permission while device drafts survive. Unmount detaches by clearing drafts/token and unregistering the accepted host effect. Source-only recovery remains separate from actual work.
+
+The finald9 diff is caller-only: a latest settled own failure retries with its own completion; a not-yet-settled latest request behind a **settled failed predecessor** may advance that predecessor via the existing hook, but predecessor completion cannot acknowledge the latest. Another predecessor failure reopens Retry. A successful predecessor recovery leaves ownership with the original latest edit Promise. A latest failure resets its own recovery eligibility; a latest success clears its own object. The prior pending-success misattribution and source-reload guards remain. No shared activePromise/queue semantics or accepted caller was rewritten.
+
+| Correct failure retained | Fixed disposition |
+| --- | --- |
+| Original73 five quota controls lose latest choices; real host/native escapes/unload missing | Sol five-field and parent host/native current matrices retain exact UI/disk choices and protection; normal saved/new-document reload remains a positive control. |
+| Shared2c/e921 uncertain commit then external original bytes gets overwritten; reset/invented token; temporary failed Retry loses grant | Shared96 fix treats token as exact verification authority under lock and retains grant after temporary failure; current native unchanged one-write/read-denied Retry and actual second-document external-preservation modes PASS. |
+| Explicit empty token at96 falls into ordinary set/reset | b9 presence checks reject supplied empty strings. New independent19 include both before failures; original engine21/token13/storage195 preserve ordinary no-token and valid generated-token positives. |
+|96 latest queued choice then pending Retry wrongly cleared by predecessor success | caller7 and native latest-pending-retry keep failed Saturday visible, exportable, guarded while physicalSunday remains. |
+|96 same-field source Reload followed by Retry acknowledges repaired Monday as actual Sunday | caller7 and native source-reload preserve Sunday work; source-only Reload is hidden/refused when actual field draft exists, separate read-only repaired-source positive remains. |
+|611 predecessor Sunday quota leaves queued Saturday Retry inert forever | d9 caller7 and native predecessor-failure advance existing queue and verify Saturday; native physicalSaturday/warningfalse and three attempts (failedSunday, recoveredSunday, Saturday) confirm real completion. Repeated failed recovery and subsequently failed latest operation also pass. |
+
+## Complete requirement decision
+
+| Contract area | Acceptance basis and retained limits |
+| --- | --- |
+| Five fields and original behavior | Sol core/boundaries and product DT1–DT8 cover exact defaults/codecs/keys, all three select options, both boolean directions, no mount writes, invalid DOM/source/unavailable source and all five failures/Retry. Original controls/EN-ZH/registration remain. Calendar's distinct week-start and timezone product wiring are not inferred. |
+| Latest operation and failure truth | Current caller7 adds legal same-key orderings to Sol's same-value predecessor/successor tests; real locks show immediate latest UI before old disk changes. Own operation matching preserves newer errors and ignores old completion/discard/unmount. |
+| Lock/baseline/token semantics | Shared strict read/validation/locked write/readback and token-only verification remain. Quota/denied/lock rejection/conflict/uncertainty retain work. Temporary read refusal keeps token; no read preflight/raw workaround, no overwrite of changed external bytes, one-write unchanged Retry. |
+| Independent partial and source recovery | Both select-fails/boolean-succeeds and inverse, all-five pending, conflict with unrelated quota, targeted discard zero mutations/no sibling reads, source-only repair preserving unrelated work, all-discard/late completion. Global Saved is conditional on no actual drafts/source errors; clean positive retained. |
+| File export | Sparse/all-five validated device-only exact filename/envelope, no empty/default/account fields, pending and full Storage denial; parent native disk JSON proves actual bytes. Sol Blob/URL/append/click failure/cleanup plus synchronous owner changes, old/fresh scope and guarded export remain current. Export is not save/navigation. |
+| Device owner and permission lifetime | Source preserves device session and uses live scope/token for host guard, old capabilities refuse, new locked capabilities protect/export/discard surviving work, held key writes survive A→B→locked without account-key/lock admission. No account sync or forced-auth persistence claim. |
+| Host producers and lifecycle | Actual production pane registration through existing composed seam; parent20 covers sidebar/AppRail/module routes, first competing route/signout, numeric Back/Forward/relative navigation, Stay/Escape, partial/all-clean release, epoch cancellation and unmount. Native route/rail/signout/unload/pending/owner gives physical/browser corroboration. Existing exposed host paths use that accepted seam; no new route/coordinator state machine. |
+| Accessible responsive UI | Versioned18f4e82 bilingual five-width/dialog/hit/44px/toggle evidence and screenshot inspection are reusable because later source did not change layout/CSS. Current native focus test passes. Scrollable lower fields remain reachable; no claim all content fits a single mobile screenshot. |
+| Regression and protected foundations | Current independent Settings295, Sol47, host20/native19/type gates plus exact shared branch reuse below cover the final changed surface. No incidental Header/Pomodoro/Collaborate/Smart refactor or coordinator/auth/lifecycle/registry changes. |
+
+## Shared acceptance remains bounded and correctly versioned
+
+`96c4915..d9d9fdd` shared production diff is exactly the two truthiness→undefined presence checks in prefMutation/usePrefAsync. Engine-issued tokens remain nonempty and omitted tokens stay undefined. No-token, valid generated-token, lock/owner/marker/tombstone, functional updater and codec/notification paths are unchanged. `b9ae2d9..d9d9fdd` has **no storage diff**. The subsequent caller source fixes cannot change Header/Pomodoro/Collaborate/Smart imports or behavior. Thus96 foundation/accepted caller tests plus b9 explicit-malformed/shared gates are valid bounded reuse; they are not newd9 executions or a universal storage acceptance. Any future material shared delta invalidates that reuse argument and requires the corresponding affected regression.
+
+## Next complete unit and unchanged audit obligations
+
+The next full caller is Notifications, **all eight settings including conditional quiet_start/quiet_end**, specified in `next-notifications-contract.md`. The contract is source-derived atd9 with exact key/owner/domain/defaults, hidden-draft retention, strict time input, complete failure/Retry/export/host/native and independent-before requirements. It does not add actual notification delivery/permissions/audio/scheduler capability. Parent may now dispatch that complete unit in order.
+
+Current acceptance closes this mounted-session DateTime unit only. The refreshed80direct-hook subset is not all writers; raw/indirect/wrapped/timer/secret/lifecycle/reset/old-client obligations remain in the existing full-writer contract. REL-09 crash/forced-auth recovery, broad D2/REL/AI and full312 ledger stay open/parent-owned. No deployment, release, branch promotion or account/data decision is authorized by this report.
