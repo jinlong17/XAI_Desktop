@@ -166,6 +166,15 @@
 
 **F-19 文档超链接**：提案 §11 的 Codex 链接（`learn.chatgpt.com/docs/codex-sdk`、`/docs/app-server`）有效（`developers.openai.com/codex/*` 已 308 重定向到该站）；DeepSeek 链接必须用 `master`（`main` 404）；Pi 仓库 `earendil-works/pi` 正确（2026-05-07 自 `badlogic/pi-mono` 迁移，npm scope 自 0.74.0 起为 `@earendil-works/*`）；OpenCode 仓库现为 `anomalyco/opencode`（`sst/opencode` 重定向）。
 
+### 决策记录（2026-09-11 追加）
+
+**F-20 源码采用层级：用户决定 L3.5 与 L4 并行，四套一开始全部 fork。**
+- 背景：姊妹项目 `AI_Sheet/Any2Knowledge_Agent_System` 的分析（commit `be61e726`，§8.5，未 push、位于 Codex 拥有的 dirty worktree，本仓库未改动）给出"默认 L3 + L3.5、不默认 fork、fork 按引擎经 ADR 单独决定"。用户于 2026-09-11 否定该默认值：L3.5 与 L4 都是必要的；四套全部 fork 并安装好、各自独立跑通；后续多人并行独立深度定制，需要独立开发文件夹与开关。
+- 本审查的判断：该决策**不与本文任何 P0/P1 finding 冲突**，且与用户目标 1、4、7 一致。上游扩展点足够覆盖首批定制（那份分析的表格本身仍然成立），因此 fork 的价值主要在"深度定制的自由度与并行度"，代价是四条上游追踪线的维护成本。可控的做法是**两个构建变体并存**：`upstream-pinned`（L3.5）作为回归基线与上游追踪线，`fork`（L4）作为定制线，同一契约与 smoke 验收。fork 必须是独立仓库并以 submodule/SHA 钉入 monorepo，不能 subtree（Codex Rust 日均数十提交，OpenCode 体量大，多人并行改动会互相干扰）。
+- 已写入 PROPOSAL §13.4（布局、开关、多人分支规则、许可证义务）、§12 P2 与 §12.1 S1、§15 O15。
+- 新增阻塞澄清 Q-11（§8.1）：fork 托管 org/账号、可见性、每套 owner。创建与推送 fork 属外部账号动作，需用户确认。
+- 影响阶段：S1/P2（每套多一个变体与一份 vendor card）；P3 契约增加 `buildVariant`/`sourceSha`。
+
 ## 3. 四套逐项部署与能力矩阵（UPSTREAM，2026-09-09）
 
 ### 3.1 Codex（OpenAI）
@@ -398,6 +407,8 @@ L1 前置：当前 Run 已终态；无 `awaiting_approval`/`awaiting_client`；�
 
 ### 6.1 切片 S1："harness-smoke-kit + 一套真实 Harness"
 
+（2026-09-11 追加：按 PROPOSAL §13.4，S1 同时为 `<first>` 建立 fork、`vendor/harness/<first>` 钉引用、`build.env` 与 `patches/`、vendor card，并对 `upstream-pinned` 与 `fork` 两个变体各跑三个场景。fork 创建与推送先经用户确认。）
+
 **产出文件（新增，全部不触碰现有运行时）**：
 
 ```text
@@ -447,6 +458,7 @@ Agent HTTP API、Postgres schema、四套全部、业务六工具接入、前端
 | Q-2 | **宿主**：后台跑在哪（供应商/OS/arch），能否运行容器、是否允许非特权 user namespace、能否挂持久卷？ | Linux x86_64 单机 + Docker/Podman + 持久卷；userns 视宿主而定，不可用则 `externalSandbox` |
 | Q-3 | **凭据**：四套各用哪把 API key？是否接受 Codex 只能 API key/企业 token（不能个人套餐）？ | 接受；缺 key 的那套标 BLOCKED_EXTERNAL，不阻塞其他三套 |
 | Q-4 | **模块归属（O12）**：后台服务继续挂 `web` 规划并记例外，还是重释 `sync` 的 server 面？ | 挂 `web`，记例外 |
+| Q-11（2026-09-11） | **fork 托管（O15）**：四套 fork 放哪个 GitHub org/账号、私有还是公开、每套 owner 是谁、用 submodule 还是 SHA 文件钉引用？ | 用户账号下四个私有 fork；submodule；一人一套；创建/推送前再确认 |
 
 ### 8.2 不阻塞（可先用默认值推进，P3/P4 前决定）
 
@@ -480,11 +492,13 @@ Agent HTTP API、Postgres schema、四套全部、业务六工具接入、前端
 | §12 | P4 前置条件加 REL-03/activation/F-02；§12.1 首切片按 §6 重写 |
 | §15 | O1/O3/O12 具体化；新增 O13 非零知识执行域、O14 REL-03/activation |
 | §18 | 勾选"Claude Code 独立审查与优化" |
+| §13.4 / §12 P2 / §12.1 / §15 O15 / §19（2026-09-11） | 按用户决策新增 L3.5 + L4 并行、四套全部 fork、双构建变体、独立开发文件夹与开关、多人并行分支规则（F-20） |
 
-未改动：用户动机（§2）、USER-CONFIRMED 目标、HISTORICAL 证据、§13 扩展清单、§14 验证格式、§16 治理。文档状态保持 DRAFT。
+未改动：用户动机（§2）、USER-CONFIRMED 目标、HISTORICAL 证据、§13.1–13.3、§14 验证格式、§16 治理。文档状态保持 DRAFT。
 
 ## 10. 最小下一步
 
-1. 用户回答 §8.1 Q-1～Q-4（可直接接受默认假设）。
+0. （2026-09-11）用户指定后续由 GPT 执行：先让 Astra 依据 [GPT_KICKOFF_PROMPT.md](GPT_KICKOFF_PROMPT.md) 对全部方案做统筹与全面分析，再组织实施；姊妹项目 A2K 的 `be61e726` §8.5 需在该仓库同步为 L3.5 + L4。
+1. 用户回答 §8.1 Q-1～Q-4 与 Q-11（可直接接受默认假设）。
 2. 若接受：以 §6 的 S1 范围过 `xai-feature-brief`，再进入 feature-plan；不直接 feature-build。
 3. 与本审查无关但被发现的债务（另开任务，不在本分支处理）：REL-03 bug-verify；`plugin-web-ai-chat` 包内测试计数文档更新；`plugin-web-storage` 补 PLUGIN_MAP 行。

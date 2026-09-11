@@ -613,7 +613,7 @@ ADR-0013 D4 的账号同步、浏览器/桌面数据持久化、向模型发送�
 | --- | --- | --- | --- |
 | P0 设计审查 | 本提案、Claude findings、修订方案、OPEN 决策表、最小契约 | 目标不遗漏；实现与推测区分；评审后再决定正式 ADR | DRAFT |
 | P1 后台实验宿主 | 真实环境清单、隔离 workspace、secret 注入、运行回执模板、进程监督 | 无 UI 可驱动一个最小 runtime；失败可见、可停止、日志无 secret | NOT_STARTED |
-| P2 四套独立跑通 | 每套自己的部署清单、启动/任务/工具/取消/产物脚本及证据 | §6 矩阵逐项填证据；四套基础独立任务全部通过或逐项明确外部阻塞 | NOT_STARTED |
+| P2 四套独立跑通 | 每套自己的部署清单、启动/任务/工具/取消/产物脚本及证据。【Claude 修订 2026-09-11】每套增加：fork 仓库 + `vendor/harness/<engine>` 钉引用 + vendor card + `upstream-pinned`/`fork` 两个构建变体（§13.4） | §6 矩阵按"引擎 × 变体"逐项填证据；四套基础独立任务在两个变体上全部通过或逐项明确外部阻塞 | NOT_STARTED |
 | P3 统一 Adapter 与切换 | Agent API、Harness Catalog、Run/Event Store、四套适配、契约测试 | 同一调用方可在四套间选择；新 Run 切换不改 UI/业务调用代码；不支持能力明确拒绝 | NOT_STARTED |
 | P4 首个真实业务闭环 | Builtin 兼容 Adapter、现有六工具与账号回执复用、一个窄业务入口。【Claude 修订 2026-09-09】前置条件：REL-03 bug-verify 通过并确定生产 activation 策略（§4.2）；O13 非零知识执行域条款获用户确认；Builtin Adapter 只复用 `llmProvider` wire 层，transcript/system prompt 由 Agent Service 构造；服务端幂等键落地（§8.1） | 保留确认/恢复/账号行为；业务结果真实；后台与客户端桥接区别可观察；重复请求与异参数冲突有回执 | NOT_STARTED |
 | P5 多平台与生产资格 | Web/App 客户端、用量、隔离、故障恢复、控制面、产物策略 | 按场景和引擎批准生产范围；App 经过 D3，Admin 遵循 roadmap | NOT_STARTED |
@@ -637,7 +637,9 @@ packages/agent-toolbroker-mcp/                   # 最小 MCP server：xai.fixtu
 packages/agent-contract/src/{evidence,events}.ts # 仅类型/schema
 ```
 
-依赖：一台可跑容器的 Linux 宿主（O1）、一把与 `<first>` 匹配的 API key、`@modelcontextprotocol/sdk`。不依赖 apps/web、Supabase、Admin、任务/日历数据。`<first>` 按 §11.5 的凭据规则选择。验证：三个场景各一份 evidence；取消后无遗留子进程；容器出网只命中白名单；evidence 中无 secret。回退：删除新增目录与两个 package，无现有模块引用。治理：归 `web` 规划下的共享基础设施；进入 Workflow V2 前先过 `xai-feature-brief`；不触发 D3/D4。S1 明确不做：Agent HTTP API、Postgres schema、四套全部、业务六工具接入、任何前端或 Admin 改动。
+【Claude 修订 2026-09-11】按 §13.4，S1 增加：`<first>` 的 fork 仓库建立并推送 `xai/main`（外部账号动作，先经用户确认）、`vendor/harness/<first>` submodule 钉住、`deploy/agent-harnesses/<first>/build.env` 与 `patches/`、`docs/vendor-cards/harness-<first>.md`；三个 smoke 场景对 `upstream-pinned` 与 `fork` 两个变体各跑一遍，evidence 记录 `buildVariant` 与 `sourceSha`。
+
+依赖：一台可跑容器的 Linux 宿主（O1）、一把与 `<first>` 匹配的 API key、`@modelcontextprotocol/sdk`、fork 托管 org（O15）。不依赖 apps/web、Supabase、Admin、任务/日历数据。`<first>` 按 §11.5 的凭据规则选择。验证：三个场景各一份 evidence；取消后无遗留子进程；容器出网只命中白名单；evidence 中无 secret。回退：删除新增目录与两个 package，无现有模块引用。治理：归 `web` 规划下的共享基础设施；进入 Workflow V2 前先过 `xai-feature-brief`；不触发 D3/D4。S1 明确不做：Agent HTTP API、Postgres schema、四套全部、业务六工具接入、任何前端或 Admin 改动。
 
 ### 12.2 回退方式
 
@@ -679,6 +681,32 @@ Run 至少记录：contractVersion、engineId、runtimeVersion、adapterVersion�
 路由时检查 `requestedCapabilities ⊆ verifiedEffectiveCapabilities`。权限不足与运行时不支持使用不同错误；不能靠提示词告诉模型“不要调用”来替代能力关闭。
 
 升级先在测试部署跑兼容 suite，再开放新 Run；老实例 drain。原生状态格式不兼容时创建新绑定，通过平台 transcript/摘要续接，或标记无法恢复，不能强制解释旧文件。
+
+### 13.4 源码采用层级：L3.5 与 L4 并行，四套全部 fork（USER-CONFIRMED 2026-09-11）
+
+【Claude 修订 2026-09-11】用户于 2026-09-11 明确：**L3.5 与 L4 都是必要的，一开始就都要做。** 四套 Harness 全部 fork 并安装好，每套都能独立运行、独立跑通；后续由多人**并行、独立**地对各套做深度优化定制。本节记录该决策及其对布局、开关与多人协作的要求。它**否定**了 A2K 姊妹项目分析中"默认不 fork、L3 + L3.5、fork 按引擎经 ADR 单独决定"的默认值（该结论位于 `Any2Knowledge_Agent_System` 的 `docs/reviews/data-agent-harness/…foundation-design.md` §8.5，commit `be61e726`，本仓库未改动它，需在该仓库另行同步）。
+
+层级定义（沿用姊妹项目术语）：
+
+| 层级 | 含义 | 本仓库地位 |
+| --- | --- | --- |
+| L1/L2 协议 / 服务 | 通过 app-server / ACP / HTTP 驱动官方产物 | 每套的运行接口（§11、§3.5 矩阵） |
+| L3 库 / 插件 | 宿主程序 import 上游库或组合上游插件 | Pi、DeepSeek 的接入方式 |
+| **L3.5 钉源码自建 + 补丁集** | 以 pinned SHA 的上游源码在 worker Dockerfile 内构建，本地小修改以 `patches/*.patch` 叠加 | **必做**：所有 upstream-pinned 构建变体的制品策略 |
+| **L4 fork** | 拥有每套的 fork 仓库，在 fork 内做深度定制，从 fork 构建 | **必做**：四套一开始就 fork，作为深度定制主线 |
+
+规则：
+
+1. **两个构建变体并存，同一契约验收。** 每套维护 `upstream-pinned`（L3.5：上游 SHA + 补丁）与 `fork`（L4：fork 分支 SHA）两个变体；两者都必须通过同一份 contract suite 与 §6.2 smoke。`upstream-pinned` 是回归基线与上游追踪线，`fork` 是定制线。§6.3 验证矩阵按"引擎 × 变体"填写。
+2. **fork 仓库独立托管，monorepo 只钉引用。** 四套 fork 各自是独立 Git 仓库（候选：`<org>/codex`、`<org>/deepseek-harness`、`<org>/opencode`、`<org>/pi`，org 待用户确认，见 §15 O15）。本仓库通过 `vendor/harness/<engine>` 的 git submodule（或仅 SHA 文件）钉住 fork 的提交，**不**把四套源码 subtree 进 monorepo（Codex 为 Rust 且日均数十提交，OpenCode 体量大，subtree 会撑爆仓库并让多人并行改动互相干扰）。每套一张 vendor card：`docs/vendor-cards/harness-<engine>.md`，沿用现有 R-1/R-2/R-3 格式（声称对应 / 引入方式与许可证 / sync 记录）。
+3. **每套一个独立开发文件夹，构建与部署互不依赖。** `deploy/agent-harnesses/<engine>/` 只含该引擎的 Dockerfile、`build.env`、config、patches、smoke 脚本与 EVIDENCE；任何一套的 fork 构建失败不影响其余三套。
+4. **开关。** 每套 `build.env`：`HARNESS_SOURCE=upstream-pinned|fork`、`HARNESS_REF=<sha>`、`HARNESS_PATCHES=on|off`。Catalog descriptor 增加 `buildVariant` 与 `sourceSha`；每个 Run 记录二者（§13.3 快照字段扩展）。路由可按引擎选择变体；默认变体由 operator 配置，不静默切换。
+5. **多人并行定制的分工与分支。** 每套 fork 有一位 owner；fork 内 `xai/main` 为集成分支，`xai/<person>/<topic>` 为短分支；`upstream/main` 为追踪 remote。上游同步节奏按引擎单独决定（Codex/OpenCode 高频，建议每周；DeepSeek prerelease，按 rc；Pi 按 release）。合并到 `xai/main` 的门槛是：contract suite 绿、该引擎 §6.2 smoke 绿、evidence 已提交。跨引擎的共享改动（契约、broker、evidence 格式）只在本仓库改，不在 fork 内复制。
+6. **补丁与 fork 的分工。** 能以补丁表达的小改动放 `patches/`（同时叠加到两个变体，保持 rebase 成本可见）；触及 agent loop、wire API、沙箱实现、存储模型的深度改动放 fork。补丁数与 fork 偏离量作为每套的可度量健康信号写入 vendor card R-3。
+7. **fork 不改变接入接口。** §11 每套的推荐接口（Codex app-server、DeepSeek ACP、OpenCode serve、Pi RPC/SDK）在两个变体上一致；fork 内新增能力通过 Adapter 的 `describe()` 以 verified capability 暴露，不改通用 UI 或业务调用代码（§13.1）。
+8. **许可证义务。** Codex Apache-2.0（保留 NOTICE、标注修改），其余 MIT（保留版权与许可声明）。每套 vendor card R-2 记录义务与 fork 首个提交。
+
+对阶段计划的影响：P2 的每套交付物增加"fork 仓库建立 + submodule 钉住 + `fork` 变体 smoke"；S1（§12.1）的 `<first>` 一并建立 fork 与两个变体。fork 仓库的创建、org 选择与推送属**外部账号动作**，需用户确认后执行（§15 O15）。
 
 ## 14. 验证策略与证据格式
 
@@ -735,6 +763,7 @@ limitations: <specific-limitations>
 | O12 | 新后台服务在六模块中的长期治理 | 本次归 web 规划；正式实现前确认基础设施 ownership 与模块联动。【Claude 修订 2026-09-09】不新增第七模块。默认假设：继续挂 `web`，分支 `codex/web/agent-harness-*`，首个代码落地时在 `PRODUCT_MODULE_MAP.md` 记一条"共享基础设施例外"；备选是重释 `sync` 的 server 面（但 sync 目前 paused）；不归 `admin`（那是控制面 UI） | P0 / P1 代码前 |
 | 【Claude 修订 2026-09-09】O13 | **非零知识执行域**：是否接受服务端 Agent 执行域会看到经显式授权出站的业务上下文、工具参数与产物明文，并与 D4 加密 blob 分离（§5.0、§10.3） | 接受为设计前提，但 P1–P3 只用非敏感 fixture；P4 前签资源级授权设计 | P1 前确认原则；P4 前确认细则 |
 | 【Claude 修订 2026-09-09】O14 | 浏览器侧 `commitCanonicalCommand` 生产 activation 与 REL-03 verify 状态（§4.2） | 不作为后台幂等依赖；P4 前完成 bug-verify 并决定 activation 策略 | P4 前 |
+| 【Claude 修订 2026-09-11】O15 | 四套 fork 的托管 org/账号、可见性（私有/公开）、每套 owner、上游同步节奏；submodule 还是 SHA 文件钉引用（§13.4） | 默认：用户 GitHub 账号下四个私有 fork；submodule 钉引用；owner 按人分配一套；创建与推送 fork 属外部账号动作，先经用户确认 | S1 前 |
 
 ## 16. 范围控制与治理
 
@@ -778,4 +807,5 @@ limitations: <specific-limitations>
 | 日期 | 修订者 | 范围 | 依据 |
 | --- | --- | --- | --- |
 | 2026-09-09 | Codex | 初稿：动机、现状评估、目标架构、契约、阶段计划、审查 prompt | 源码复核 `c604951`；上游资料 2026-09-08 |
+| 2026-09-11 | Claude Code（按用户 2026-09-11 决策） | 新增 §13.4 源码采用层级：L3.5 与 L4 并行、四套全部 fork、独立开发文件夹、构建变体开关、多人并行定制分支规则、许可证义务；§12.1 S1 增加 fork/变体交付；§15 新增 O15；新增 [GPT_KICKOFF_PROMPT.md](GPT_KICKOFF_PROMPT.md)（Astra 先统筹与全面分析，含默认模型协作分工） | 用户 USER-CONFIRMED：“L3.5 和 L4 都做…一开始这些都要做…考虑后面多人分别做深度优化定制”。否定 A2K 姊妹项目 `be61e726` §8.5 的“默认不 fork”默认值（该仓库未改动） |
 | 2026-09-09 | Claude Code | 全文审查后修订（标记【Claude 修订 2026-09-09】）：§1 审查 HEAD 与测试记录；§4.2 持久幂等生产关闭、无 system prompt/附件不发/preamble 当 user、secret AAD 不含 epoch；新增 §5.0 Supabase 零知识现状与非零知识执行域；§5.3 容器为安全边界、物理形态按阶段收缩；§6.1 交付物 11–14；§7.1 ToolBroker = MCP server + Pi shim、`nativeBridge` 字段；§7.4 补四个事件与 delta 不持久化；§8.1 服务端幂等与出站授权行、存储默认落点；§8.3 L0/L1/L2 每套机制；§9.3 ACP 覆盖面；§10.3 非零知识条款；§11.1–11.4 每套确认版本/接口更正/审批取消工具事实/凭据资格/首个 smoke/资格；§11.5 顺序按凭据；§12 P4 前置与 S1 精确范围；§15 O1/O3/O12 具体化 + O13/O14；§18 勾选审查完成 | 源码 OBSERVED at `43798a6`（= `c604951`）；`@repo/plugin-web-ai-chat` 32/280 通过；上游资料 2026-09-09 读取（版本与链接见 §11 与 CLAUDE_REVIEW §3）。**未改动**：§2 用户动机与 USER-CONFIRMED 目标、HISTORICAL 证据、§13 扩展清单、§14 验证格式、§16 治理；状态保持 DRAFT |
