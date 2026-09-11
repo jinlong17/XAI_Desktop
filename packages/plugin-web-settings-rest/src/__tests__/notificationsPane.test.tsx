@@ -79,4 +79,26 @@ describe("notificationsPane", () => {
     expect(notificationsPane.icon).toBe("bell");
     expect(notificationsPane.i18nKey).toBe("settings.notifications");
   });
+
+  it("NF10: a failed hidden quiet-start draft stays recoverable until its own Retry succeeds", async () => {
+    const guardRef: { current: { isBlocking: () => boolean } | null } = { current: null };
+    const nativeSet = Storage.prototype.setItem;
+    const failure = vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key: string, value: string) {
+      if (key === "xai_pref_notif_quiet_start") throw new Error("quota");
+      nativeSet.call(this, key, value);
+    });
+    const { container } = render(notificationsPane.render({ lang: "en", registerDepartureGuard: next => { guardRef.current = next; return () => {}; } }));
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(2));
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "23:15" } });
+    await waitFor(() => expect(screen.getByRole("button", { name: "Retry Quiet hours start" })).toBeInTheDocument());
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(0));
+    expect(guardRef.current?.isBlocking()).toBe(true);
+    expect(screen.getByRole("button", { name: "Export Notifications draft" })).toBeInTheDocument();
+    failure.mockRestore();
+    fireEvent.click(screen.getByRole("button", { name: "Retry Quiet hours start" }));
+    await waitFor(() => expect(getPref("xai_pref_notif_quiet_start")).toBe("23:15"));
+    await waitFor(() => expect(guardRef.current?.isBlocking()).toBe(false));
+  });
 });
