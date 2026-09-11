@@ -60,7 +60,7 @@ function MorePaneContent({ lang, registerDepartureGuard }: PaneRenderProps): Rea
   const prefsRef = React.useRef(prefs); prefsRef.current = prefs;
   const scopeRef = React.useRef(scope); scopeRef.current = scope;
   const epochRef = React.useRef(scope.epoch), decisionTokenRef = React.useRef<object>({}), sessionRef = React.useRef<object>({}), resetBatchRef = React.useRef<object | null>(null), draftsRef = React.useRef<Drafts>(emptyDrafts());
-  const [draftVersion, setDraftVersion] = React.useState(0), [inputErrors, setInputErrors] = React.useState<Partial<Record<FieldId, true>>>({}), [exportFailed, setExportFailed] = React.useState(false), [saved, setSaved] = React.useState(false), [defaultsRestored, setDefaultsRestored] = React.useState(false), [resetFailed, setResetFailed] = React.useState(false);
+  const [draftVersion, setDraftVersion] = React.useState(0), [inputErrors, setInputErrors] = React.useState<Partial<Record<FieldId, true>>>({}), [exportFailed, setExportFailed] = React.useState(false), [saved, setSaved] = React.useState(false), [defaultsRestoredScope, setDefaultsRestoredScope] = React.useState<AccountScope | null>(null), [resetFailed, setResetFailed] = React.useState(false);
   if (epochRef.current !== scope.epoch) { epochRef.current = scope.epoch; decisionTokenRef.current = {}; resetBatchRef.current = null; }
   React.useEffect(() => () => { decisionTokenRef.current = {}; draftsRef.current = emptyDrafts(); }, []);
   const changed = React.useCallback(() => setDraftVersion(version => version + 1), []);
@@ -71,14 +71,14 @@ function MorePaneContent({ lang, registerDepartureGuard }: PaneRenderProps): Rea
   const putDraft = React.useCallback((field: FieldId, operation: Operation, value?: FieldValue, batch: object | null = null) => {
     if (operation === "set") resetBatchRef.current = null;
     const draft: Draft = { operation, value, scope: accountScope.capture(), session: sessionRef.current, token: {}, batch, settledFailure: false, retryActive: false };
-    draftsRef.current[field] = draft; clearInputError(field); setExportFailed(false); setSaved(false); setDefaultsRestored(false); changed(); return draft;
+    draftsRef.current[field] = draft; clearInputError(field); setExportFailed(false); setSaved(false); setDefaultsRestoredScope(null); changed(); return draft;
   }, [changed, clearInputError]);
   const settle = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => {
     if (draftsRef.current[field] !== draft) return;
     if (!ok) { draft.retryActive = false; draft.settledFailure = true; changed(); return; }
     draftsRef.current[field] = null;
     const noWorkLeft = fields.every(id => !isCurrentDraft(id, draftsRef.current[id]));
-    if (noWorkLeft && draft.operation === "reset" && draft.batch !== null && resetBatchRef.current === draft.batch) { setDefaultsRestored(true); resetBatchRef.current = null; } else setSaved(true);
+    if (noWorkLeft && draft.operation === "reset" && draft.batch !== null && resetBatchRef.current === draft.batch) { setDefaultsRestoredScope(draft.scope); resetBatchRef.current = null; } else setSaved(true);
     changed();
   }, [changed, isCurrentDraft]);
   const settlePredecessor = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => { if (ok || draftsRef.current[field] !== draft) return; draft.retryActive = false; changed(); }, [changed]);
@@ -107,7 +107,7 @@ function MorePaneContent({ lang, registerDepartureGuard }: PaneRenderProps): Rea
   const resetAll = React.useCallback(() => {
     if (accountScope.capture() !== resetScope || resetScope.kind === "locked" || !resetScope.accountId || !resetScope.generation) { setResetFailed(true); return; }
     if (resetBatchRef.current !== null && fields.some(field => { const draft = draftsRef.current[field]; return isCurrentDraft(field, draft) && draft?.batch === resetBatchRef.current; })) return;
-    setResetFailed(false); setDefaultsRestored(false); const batch = {}; resetBatchRef.current = batch;
+    setResetFailed(false); setDefaultsRestoredScope(null); const batch = {}; resetBatchRef.current = batch;
     const admitted = fields.map(field => [field, putDraft(field, "reset", undefined, batch)] as const);
     for (const [field, draft] of admitted) submit(field, draft);
   }, [isCurrentDraft, putDraft, resetScope, submit]);
@@ -141,8 +141,8 @@ function MorePaneContent({ lang, registerDepartureGuard }: PaneRenderProps): Rea
     <SectionBlock style={{ marginTop: 14 }}><SettingRow label={t("more.defaultAddTo")}><select className="sl-select" value={current("add_to") as AddTo} onChange={event => edit("add_to", event.target.value)} aria-label={t("more.defaultAddTo")}><option value="top">{t("more.addTop")}</option><option value="bottom">{t("more.addBottom")}</option></select></SettingRow>{recovery("add_to")}<SettingRow label={t("more.overdueAt")}><select className="sl-select" value={current("overdue_at") as OverdueAt} onChange={event => edit("overdue_at", event.target.value)} aria-label={t("more.overdueAt")}><option value="top">{t("more.overdueTop")}</option><option value="bottom">{t("more.overdueBottom")}</option></select></SettingRow>{recovery("overdue_at")}</SectionBlock>
     <button type="button" className="reset-link" onClick={resetAll} data-testid="more-reset-default">{t("more.resetDefault")}</button>
     {(hasActualDraft || exportFailed) && <section className="more-recovery-actions" role="status">{hasActualDraft && <><button type="button" onClick={exportDraft}>{lang === "zh" ? "导出更多草稿" : "Export More draft"}</button><button type="button" onClick={discardAll}>{lang === "zh" ? "放弃全部更改" : "Discard all changes"}</button></>}{exportFailed && <p role="alert">{lang === "zh" ? "导出失败，请重试。" : "Export failed. Please retry."}</p>}</section>}
-    {!hasActualDraft && !hasSourceIssue && Object.keys(inputErrors).length === 0 && defaultsRestored && <p className="more-recovery-saved" role="status">{lang === "zh" ? "更多设置已恢复默认值。" : "More settings restored to defaults."}</p>}
-    {!hasActualDraft && !hasSourceIssue && Object.keys(inputErrors).length === 0 && !defaultsRestored && saved && <p className="more-recovery-saved" role="status">{lang === "zh" ? "更多设置已保存。" : "More settings saved."}</p>}
+    {!hasActualDraft && !hasSourceIssue && Object.keys(inputErrors).length === 0 && defaultsRestoredScope === scope && <p className="more-recovery-saved" role="status">{lang === "zh" ? "更多设置已恢复默认值。" : "More settings restored to defaults."}</p>}
+    {!hasActualDraft && !hasSourceIssue && Object.keys(inputErrors).length === 0 && defaultsRestoredScope !== scope && saved && <p className="more-recovery-saved" role="status">{lang === "zh" ? "更多设置已保存。" : "More settings saved."}</p>}
     <h4 className="pane-h-block">{t("more.taskTemplate")}</h4><div className="template-grid">{templates.map(template => <div className="template-card" key={template.en}><h5>{lang === "zh" ? template.zh : template.en}</h5><ul>{(lang === "zh" ? template.zhItems : template.enItems).map(item => <li key={item}><span className="cbx" aria-hidden="true" /><span>{item}</span></li>)}</ul></div>)}</div>
     {s("settings.more") && null}
   </div>;
