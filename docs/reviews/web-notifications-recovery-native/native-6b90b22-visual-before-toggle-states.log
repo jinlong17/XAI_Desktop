@@ -1,0 +1,2 @@
+{"name":"baseline","commit":"6b90b22","browser":"Chrome/153.0.8010.36"}
+{"name":"native","pass":false,"mode":"toggle-states","error":"AssertionError [ERR_ASSERTION]: Knob not vertically centered","runtimeErrors":[]}
