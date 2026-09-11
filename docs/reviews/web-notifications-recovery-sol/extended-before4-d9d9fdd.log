@@ -1,0 +1,76 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-15dHJj
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx (4 tests | 4 failed) 243ms
+   × missing and rejected Web Locks retain their exact fields and recover through current Retry 92ms
+     → expected 'false' to be 'true' // Object.is equality
+   × mixed boolean, select and time failures settle independently in both directions 57ms
+     → No Notifications Blob
+   × external restoration after uncertain commit is preserved until distinct new input supplies authority 45ms
+     → expected undefined to be true // Object.is equality
+   × an unrelated held account lifecycle lock never blocks a device preference write 48ms
+     → expected undefined to be false // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  05:37:19
+   Duration  1.41s (transform 249ms, setup 251ms, collect 235ms, tests 243ms, environment 414ms, prepare 73ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/extended.test.tsx > missing and rejected Web Locks retain their exact fields and recover through current Retry
+AssertionError: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx:12:102
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+Error: No Notifications Blob
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-15dHJj/docs/reviews/web-notifications-recovery-sol/fixture.tsx:78:24
+     76|     revoke,
+     77|     read: async () => JSON.parse(await new Promise<string>((resolve, r…
+     78|       if (!blob) throw new Error("No Notifications Blob");
+       |                        ^
+     79|       const reader = new FileReader(); reader.onload = () => resolve(S…
+     80|     })),
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-15dHJj/docs/reviews/web-notifications-recovery-sol/fixture.tsx:77:40
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx:28:68
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/extended.test.tsx > external restoration after uncertain commit is preserved until distinct new input supplies authority
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected: 
+true
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx:43:106
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/extended.test.tsx > an unrelated held account lifecycle lock never blocks a device preference write
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected: 
+false
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx:56:147
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯

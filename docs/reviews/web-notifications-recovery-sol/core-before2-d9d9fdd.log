@@ -1,0 +1,815 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-viEzNm
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx (11 tests | 10 failed) 883ms
+   ✓ healthy native controls persist all sound values and strict boundary, overnight and equal times 266ms
+   × 'Enable notifications' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 67ms
+     → expected false to be true // Object.is equality
+   × 'Sound' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 48ms
+     → expected 'chime' to be 'bell' // Object.is equality
+   × 'Task due' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 66ms
+     → expected false to be true // Object.is equality
+   × 'Pomodoro complete' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 53ms
+     → expected false to be true // Object.is equality
+   × 'Habit reminder' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 50ms
+     → expected true to be false // Object.is equality
+   × 'Enable quiet hours' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 49ms
+     → expected true to be false // Object.is equality
+   × 'Quiet hours start' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 65ms
+     → expected '23:15' to be '21:45' // Object.is equality
+   × 'Quiet hours end' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field 80ms
+     → expected '06:30' to be '08:45' // Object.is equality
+   × strict invalid native values never persist or become exportable drafts 60ms
+     → expected '' to be '22:00' // Object.is equality
+   × hidden invalid and unavailable time sources stay labelled Reload-only and repair with zero writes 79ms
+     → Unable to find an accessible element with the role "button" and name "Reload Quiet hours start"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Notifications":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Enable notifications":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enable notifications"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Task due":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Task due"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro complete":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Pomodoro complete"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habit reminder":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Habit reminder"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enable quiet hours":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Enable quiet hours"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Sound"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Subtle":
+  [36m<option[39m
+    [33mvalue[39m=[32m"subtle"[39m
+  [36m/>[39m
+
+  Name "Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Pop":
+  [36m<option[39m
+    [33mvalue[39m=[32m"pop"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"notif-pane"[39m
+    [36m>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"pane-title"[39m
+      [36m>[39m
+        [0mNotifications[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mEnable notifications[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Enable notifications"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mNotification types[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTask due[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Task due"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mPomodoro complete[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Pomodoro complete"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mHabit reminder[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Habit reminder"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mCompletion sound[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mSound[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mPlays when a task is completed[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Sound"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"subtle"[39m
+              [36m>[39m
+                [0mSubtle[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"chime"[39m
+              [36m>[39m
+                [0mChime[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bell"[39m
+              [36m>[39m
+                [0mBell[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"pop"[39m
+              [36m>[39m
+                [0mPop[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mDo not disturb[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mEnable quiet hours[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Enable quiet hours"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 1 passed (11)
+   Start at  05:28:31
+   Duration  4.08s (transform 1.05s, setup 556ms, collect 1.12s, tests 883ms, environment 648ms, prepare 98ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable notifications' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_enabled.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Sound' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_done_sound.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Task due' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_push_task.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Pomodoro complete' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_push_pomo.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Habit reminder' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_push_habit.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable quiet hours' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_quiet.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours start' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_quiet_start.
+
+stderr | docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours end' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+[plugin-web-storage] quota exceeded for xai_pref_notif_quiet_end.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable notifications' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Task due' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Pomodoro complete' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:33:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Sound' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+AssertionError: expected 'chime' to be 'bell' // Object.is equality
+
+Expected: "bell"
+Received: "chime"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:33:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Habit reminder' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Enable quiet hours' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:33:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours start' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+AssertionError: expected '23:15' to be '21:45' // Object.is equality
+
+Expected: "21:45"
+Received: "23:15"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:33:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > 'Quiet hours end' latest-choice failure > retains the latest public value, old physical bytes and field Retry, then recovers only that field
+AssertionError: expected '06:30' to be '08:45' // Object.is equality
+
+Expected: "08:45"
+Received: "06:30"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:33:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > strict invalid native values never persist or become exportable drafts
+AssertionError: expected '' to be '22:00' // Object.is equality
+
+- Expected
++ Received
+
+- 22:00
+
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:51:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/core.test.tsx > hidden invalid and unavailable time sources stay labelled Reload-only and repair with zero writes
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Reload Quiet hours start"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Notifications":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Enable notifications":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enable notifications"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Task due":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Task due"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro complete":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Pomodoro complete"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habit reminder":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Habit reminder"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enable quiet hours":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Enable quiet hours"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Sound"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Subtle":
+  [36m<option[39m
+    [33mvalue[39m=[32m"subtle"[39m
+  [36m/>[39m
+
+  Name "Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Pop":
+  [36m<option[39m
+    [33mvalue[39m=[32m"pop"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"notif-pane"[39m
+    [36m>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"pane-title"[39m
+      [36m>[39m
+        [0mNotifications[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mEnable notifications[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Enable notifications"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mNotification types[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mTask due[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Task due"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mPomodoro complete[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"true"[39m
+              [33maria-label[39m=[32m"Pomodoro complete"[39m
+              [33mclass[39m=[32m"toggle on"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mHabit reminder[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Habit reminder"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mCompletion sound[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mSound[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-desc"[39m
+            [36m>[39m
+              [0mPlays when a task is completed[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Sound"[39m
+              [33mclass[39m=[32m"sl-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"none"[39m
+              [36m>[39m
+                [0mNone[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"subtle"[39m
+              [36m>[39m
+                [0mSubtle[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"chime"[39m
+              [36m>[39m
+                [0mChime[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"bell"[39m
+              [36m>[39m
+                [0mBell[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"pop"[39m
+              [36m>[39m
+                [0mPop[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"sl-group"[39m
+        [33mstyle[39m=[32m"margin-top: 18px;"[39m
+      [36m>[39m
+        [0mDo not disturb[0m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"setting-block"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-text"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-label"[39m
+            [36m>[39m
+              [0mEnable quiet hours[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-ctrl"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-checked[39m=[32m"false"[39m
+              [33maria-label[39m=[32m"Enable quiet hours"[39m
+              [33mclass[39m=[32m"toggle"[39m
+              [33mrole[39m=[32m"switch"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toggle-knob"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-notifications-recovery-sol/core.test.tsx:61:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯

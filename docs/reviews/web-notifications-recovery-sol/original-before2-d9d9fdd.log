@@ -1,0 +1,11 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-viEzNm
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx (9 tests) 79ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  05:28:40
+   Duration  1.98s (transform 460ms, setup 429ms, collect 362ms, tests 79ms, environment 472ms, prepare 182ms)

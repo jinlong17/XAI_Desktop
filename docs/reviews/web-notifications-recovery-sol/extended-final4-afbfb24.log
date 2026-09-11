@@ -1,0 +1,150 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-aU6nzy
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx (10 tests | 1 failed) 1170ms
+   ✓ missing and rejected Web Locks retain their exact fields and recover through current Retry 181ms
+   ✓ mixed boolean, select and time failures settle independently in both directions 194ms
+   ✓ external restoration after uncertain commit is preserved until distinct new input supplies authority 106ms
+   ✓ an unrelated held account lifecycle lock never blocks a device preference write 47ms
+   ✓ all eight absent bindings mount at registry defaults without seeding storage 57ms
+   ✓ boolean, sound and time invalid or unavailable sources stay defaulted and Reload-only 61ms
+   ✓ a failed quiet toggle does not retain successful time writes 86ms
+   ✓ a successful global disable does not clear failed subordinate choices 118ms
+   ✓ a sound conflict and an unrelated quota failure remain independently recoverable 235ms
+   × Discard all cannot let an older completion erase a same-field new draft 85ms
+     → expected 'subtle' to be 'chime' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  05:43:03
+   Duration  2.27s (transform 241ms, setup 212ms, collect 216ms, tests 1.17s, environment 391ms, prepare 79ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a failed quiet toggle does not retain successful time writes
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a successful global disable does not clear failed subordinate choices
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+AssertionError: expected 'subtle' to be 'chime' // Object.is equality
+
+Expected: "chime"
+Received: "subtle"
+
+ ❯ docs/reviews/web-notifications-recovery-sol/extended.test.tsx:120:88
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
