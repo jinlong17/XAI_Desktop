@@ -38,3 +38,17 @@ Sol owns the immutable caller matrix. Parent owns the actual composed
 Settings/Shell and native browser checks. Astra decides whether the full
 contract, including all source, queue, uncertainty, owner, export and layout
 requirements, is accepted.
+
+## Per-field invalid time feedback repair
+
+Sol's independent boundaries oracle found that a single input-error slot let a
+second malformed quiet-time value erase the first field's feedback, and let an
+unrelated valid sound change erase both. Input feedback is now a sparse field
+set. Only a valid edit, Discard, or source Reload of the same field removes its
+entry. Invalid DOM text remains neither a draft nor export/guard work, while a
+Saved status requires both clean drafts and an empty invalid-feedback set.
+
+NF11 verifies malformed start and end feedback coexist, a valid Sound write
+leaves both intact, and a valid start edit clears only start. Targeted pane
+tests, typecheck and lint pass after this repair; Sol reruns its immutable
+boundaries oracle independently.

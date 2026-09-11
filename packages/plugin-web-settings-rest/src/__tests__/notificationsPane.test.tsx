@@ -101,4 +101,21 @@ describe("notificationsPane", () => {
     await waitFor(() => expect(getPref("xai_pref_notif_quiet_start")).toBe("23:15"));
     await waitFor(() => expect(guardRef.current?.isBlocking()).toBe(false));
   });
+
+  it("NF11: invalid quiet-time feedback belongs to each field until that field is corrected", async () => {
+    const { container } = render(notificationsPane.render({ lang: "en" }));
+    fireEvent.click(container.querySelector<HTMLButtonElement>('button[aria-label="Enable quiet hours"]')!);
+    await waitFor(() => expect(container.querySelectorAll('input[type="time"]')).toHaveLength(2));
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "7:00" } });
+    fireEvent.change(screen.getByLabelText("Quiet hours end"), { target: { value: "24:00" } });
+    expect(screen.getByText("Quiet hours start has an invalid format.")).toBeInTheDocument();
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Sound"), { target: { value: "chime" } });
+    await waitFor(() => expect(getPref("xai_pref_notif_done_sound")).toBe("chime"));
+    expect(screen.getByText("Quiet hours start has an invalid format.")).toBeInTheDocument();
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Quiet hours start"), { target: { value: "23:15" } });
+    await waitFor(() => expect(screen.queryByText("Quiet hours start has an invalid format.")).toBeNull());
+    expect(screen.getByText("Quiet hours end has an invalid format.")).toBeInTheDocument();
+  });
 });
