@@ -1,0 +1,37 @@
+{
+  "revision": "afbfb24",
+  "sha": "afbfb24d6f7311366b77852eda927d08467478c2",
+  "workspaceLinks": "archive",
+  "results": [
+    {
+      "name": "web-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "web-lint",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "settings-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "settings-lint",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "storage-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
