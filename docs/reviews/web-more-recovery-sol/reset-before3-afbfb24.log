@@ -1,0 +1,838 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-b2KN5u
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx (20 tests | 18 failed) 1659ms
+   × Reset Default removes all15 physical values, renders defaults and preserves B, legacy and unrelated bytes 163ms
+     → expected undefined to be false // Object.is equality
+   × all15 already-absent reset is a verified no-op without seeding defaults 80ms
+     → expected "removeItem" to not be called at all, but actually been called 15 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_more_win_type",
+    ]
+
+  2nd removeItem call:
+
+    Array [
+      "xai_pref_more_launch_at_login",
+    ]
+
+  3rd removeItem call:
+
+    Array [
+      "xai_pref_more_minimize_on_launch",
+    ]
+
+  4th removeItem call:
+
+    Array [
+      "xai_pref_more_date_recognition",
+    ]
+
+  5th removeItem call:
+
+    Array [
+      "xai_pref_more_remove_date_text",
+    ]
+
+  6th removeItem call:
+
+    Array [
+      "xai_pref_more_remove_tags",
+    ]
+
+  7th removeItem call:
+
+    Array [
+      "xai_pref_more_url_parse",
+    ]
+
+  8th removeItem call:
+
+    Array [
+      "xai_pref_more_default_date",
+    ]
+
+  9th removeItem call:
+
+    Array [
+      "xai_pref_more_default_rem_due",
+    ]
+
+  10th removeItem call:
+
+    Array [
+      "xai_pref_more_default_rem_all",
+    ]
+
+  11th removeItem call:
+
+    Array [
+      "xai_pref_more_default_pri",
+    ]
+
+  12th removeItem call:
+
+    Array [
+      "xai:account:v1:more-sol-A:g1:xai_pref_more_default_tag",
+    ]
+
+  13th removeItem call:
+
+    Array [
+      "xai:account:v1:more-sol-A:g1:xai_pref_more_default_list",
+    ]
+
+  14th removeItem call:
+
+    Array [
+      "xai_pref_more_add_to",
+    ]
+
+  15th removeItem call:
+
+    Array [
+      "xai_pref_more_overdue_at",
+    ]
+
+
+Number of calls: 15
+
+   × 'win_type' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 93ms
+     → expected 'tray' to be 'window' // Object.is equality
+   × 'launch_at_login' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 69ms
+     → expected true to be false // Object.is equality
+   × 'minimize_on_launch' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 70ms
+     → expected true to be false // Object.is equality
+   × 'date_recognition' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 66ms
+     → expected false to be true // Object.is equality
+   × 'remove_date_text' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 66ms
+     → expected true to be false // Object.is equality
+   × 'remove_tags' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 68ms
+     → expected false to be true // Object.is equality
+   × 'url_parse' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 93ms
+     → expected false to be true // Object.is equality
+   × 'default_date' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 72ms
+     → expected 'today' to be 'none' // Object.is equality
+   × 'default_rem_due' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 73ms
+     → expected '5min' to be 'on_time' // Object.is equality
+   × 'default_rem_all' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 64ms
+     → expected '9am' to be 'none' // Object.is equality
+   × 'default_pri' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 92ms
+     → expected 'low' to be 'none' // Object.is equality
+   × 'default_tag' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 90ms
+     → expected 'study' to be 'none' // Object.is equality
+   × 'default_list' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 79ms
+     → expected 'today' to be 'inbox' // Object.is equality
+   × 'add_to' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 86ms
+     → expected 'bottom' to be 'top' // Object.is equality
+   × 'overdue_at' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field 89ms
+     → expected 'bottom' to be 'top' // Object.is equality
+   ✓ locked or absent account refuses the full15 reset before every mutation, while a reopened active pane succeeds 124ms
+   ✓ an A-mounted reset first clicked under B makes zero mutations to all15, B, device and legacy bytes 52ms
+   × partial reset settles successful siblings and preserves independent device and account failures 68ms
+     → No More Blob
+
+ Test Files  1 failed (1)
+      Tests  18 failed | 2 passed (20)
+   Start at  06:16:04
+   Duration  4.62s (transform 611ms, setup 566ms, collect 450ms, tests 1.66s, environment 693ms, prepare 331ms)
+
+
+stderr | docs/reviews/web-more-recovery-sol/reset.test.tsx > locked or absent account refuses the full15 reset before every mutation, while a reopened active pane succeeds
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-more-recovery-sol/reset.test.tsx > an A-mounted reset first clicked under B makes zero mutations to all15, B, device and legacy bytes
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MorePaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > Reset Default removes all15 physical values, renders defaults and preserves B, legacy and unrelated bytes
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected: 
+false
+
++ Received: 
+undefined
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:17:270
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > all15 already-absent reset is a verified no-op without seeding defaults
+AssertionError: expected "removeItem" to not be called at all, but actually been called 15 times
+
+Received: 
+
+  1st removeItem call:
+
+    Array [
+      "xai_pref_more_win_type",
+    ]
+
+  2nd removeItem call:
+
+    Array [
+      "xai_pref_more_launch_at_login",
+    ]
+
+  3rd removeItem call:
+
+    Array [
+      "xai_pref_more_minimize_on_launch",
+    ]
+
+  4th removeItem call:
+
+    Array [
+      "xai_pref_more_date_recognition",
+    ]
+
+  5th removeItem call:
+
+    Array [
+      "xai_pref_more_remove_date_text",
+    ]
+
+  6th removeItem call:
+
+    Array [
+      "xai_pref_more_remove_tags",
+    ]
+
+  7th removeItem call:
+
+    Array [
+      "xai_pref_more_url_parse",
+    ]
+
+  8th removeItem call:
+
+    Array [
+      "xai_pref_more_default_date",
+    ]
+
+  9th removeItem call:
+
+    Array [
+      "xai_pref_more_default_rem_due",
+    ]
+
+  10th removeItem call:
+
+    Array [
+      "xai_pref_more_default_rem_all",
+    ]
+
+  11th removeItem call:
+
+    Array [
+      "xai_pref_more_default_pri",
+    ]
+
+  12th removeItem call:
+
+    Array [
+      "xai:account:v1:more-sol-A:g1:xai_pref_more_default_tag",
+    ]
+
+  13th removeItem call:
+
+    Array [
+      "xai:account:v1:more-sol-A:g1:xai_pref_more_default_list",
+    ]
+
+  14th removeItem call:
+
+    Array [
+      "xai_pref_more_add_to",
+    ]
+
+  15th removeItem call:
+
+    Array [
+      "xai_pref_more_overdue_at",
+    ]
+
+
+Number of calls: 15
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:22:210
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'win_type' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'tray' to be 'window' // Object.is equality
+
+Expected: "window"
+Received: "tray"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'launch_at_login' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'minimize_on_launch' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'remove_date_text' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'date_recognition' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'remove_tags' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'url_parse' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_date' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'today' to be 'none' // Object.is equality
+
+Expected: "none"
+Received: "today"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_rem_due' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected '5min' to be 'on_time' // Object.is equality
+
+Expected: "on_time"
+Received: "5min"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_rem_all' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected '9am' to be 'none' // Object.is equality
+
+Expected: "none"
+Received: "9am"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_pri' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'low' to be 'none' // Object.is equality
+
+Expected: "none"
+Received: "low"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_tag' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'study' to be 'none' // Object.is equality
+
+Expected: "none"
+Received: "study"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'default_list' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'today' to be 'inbox' // Object.is equality
+
+Expected: "inbox"
+Received: "today"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'add_to' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > 'overdue_at' reset refusal > keeps only its failed reset recoverable and Retry removes exactly that field
+AssertionError: expected 'bottom' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "bottom"
+
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:31:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/18]⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/reset.test.tsx > partial reset settles successful siblings and preserves independent device and account failures
+Error: No More Blob
+ ❯ ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-b2KN5u/docs/reviews/web-more-recovery-sol/fixture.tsx:81:122
+
+ ❯ Object.read ../../../../../../private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-b2KN5u/docs/reviews/web-more-recovery-sol/fixture.tsx:81:62
+ ❯ docs/reviews/web-more-recovery-sol/reset.test.tsx:51:218
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/18]⎯
