@@ -1,0 +1,12 @@
+revision=611062e fixed_commit=611062ee2eb80727440c731c62a09626ca87d8eb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-BhCmBJ
+
+ ✓ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx (12 tests) 1659ms
+   ✓ actual sidebar producer holds and current discard leaves without writes  330ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  04:59:32
+   Duration  9.31s (transform 3.40s, setup 0ms, collect 5.77s, tests 1.66s, environment 1.07s, prepare 169ms)

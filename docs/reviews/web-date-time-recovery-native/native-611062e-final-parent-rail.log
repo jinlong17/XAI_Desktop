@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"611062e","browser":"Chrome/153.0.8010.36"}
+{"name":"failed-choice-observation","state":{"week":"monday","toggles":["false","true","true","true"]},"raw":["monday","true","true","true","true"]}
+{"name":"rail-observation","path":"/app/settings/date_time","dialog":true,"signout":"pending"}
+{"name":"native","pass":true,"mode":"rail","runtimeErrors":0}

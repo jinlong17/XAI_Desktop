@@ -1,0 +1,37 @@
+{
+  "revision": "611062e",
+  "sha": "611062ee2eb80727440c731c62a09626ca87d8eb",
+  "workspaceLinks": "archive",
+  "results": [
+    {
+      "name": "web-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "web-lint",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "settings-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "settings-lint",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "storage-types",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

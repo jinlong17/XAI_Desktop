@@ -1,0 +1,4 @@
+{"name":"baseline","commit":"611062e","browser":"Chrome/153.0.8010.36"}
+{"name":"external-document-write","targetId":"A85C4764AF1CD32E216D80215F588FD5","key":"xai_pref_dt_timezone","value":"true"}
+{"name":"crossdoc-conflict-observation","raw":["monday","true","true","true","true"],"writes":[{"key":"xai_pref_dt_timezone","value":"false"}],"warning":true}
+{"name":"native","pass":true,"mode":"crossdoc-conflict","runtimeErrors":0}
