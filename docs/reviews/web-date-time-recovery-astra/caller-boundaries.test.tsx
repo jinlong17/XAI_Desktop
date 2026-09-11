@@ -31,3 +31,14 @@ it('source-only repaired Reload remains a clean read-only positive control',asyn
   nativeSet.call(localStorage,keys[0],'invalid-week');const ui=mount();await flush();nativeSet.call(localStorage,keys[0],'saturday');const writes=vi.spyOn(Storage.prototype,'setItem');
   fireEvent.click(ui.getByRole('button',{name:/Reload.*Start week on/i}));await flush(16);expect(ui.select().value).toBe('saturday');expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(writes).not.toHaveBeenCalled();expect(guard()?.isBlocking()).toBe(false);expect(unload()).toBe(false);
 });
+it('latest queued choice remains recoverable when its predecessor fails before it runs',async()=>{
+  const ui=mount();await flush();const release=await hold(keys[0]);let deny=true;
+  vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key:string,value:string){if(key===keys[0]&&value==='sunday'&&deny)throw Error('predecessor Sunday quota');nativeSet.call(this,key,value);});
+  fireEvent.change(ui.select(),{target:{value:'sunday'}});
+  fireEvent.change(ui.select(),{target:{value:'saturday'}});
+  await release();await flush(24);
+  expect(nativeGet.call(localStorage,keys[0])).toBe('monday');expect(ui.select().value).toBe('saturday');expect(guard()?.isBlocking()).toBe(true);
+  deny=false;
+  fireEvent.click(ui.getByRole('button',{name:/Retry.*Start week on/i}));await flush(24);
+  expect(nativeGet.call(localStorage,keys[0])).toBe('saturday');expect(ui.select().value).toBe('saturday');expect(guard()?.isBlocking()).toBe(false);expect(unload()).toBe(false);
+});

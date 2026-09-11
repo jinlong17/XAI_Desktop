@@ -1,0 +1,11 @@
+revision=b9ae2d9 fixed_commit=b9ae2d9dab8888f0058c27e5472915c93415e2fd original_assertions=web-d2-async-pref-astra-engine/retry-token.test.ts
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-7KMede
+
+ ✓ packages/plugin-web-storage/src/__tests__/astraIndependent.test.ts (13 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  01:38:58
+   Duration  938ms (transform 86ms, setup 0ms, collect 106ms, tests 9ms, environment 312ms, prepare 145ms)

@@ -1,0 +1,11 @@
+revision=b9ae2d9 fixed_commit=b9ae2d9dab8888f0058c27e5472915c93415e2fd
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-TUYRO5
+
+ ✓ docs/reviews/web-date-time-recovery-astra/uncertain-boundary.test.tsx (19 tests) 39ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  01:38:56
+   Duration  1.68s (transform 322ms, setup 553ms, collect 80ms, tests 39ms, environment 655ms, prepare 96ms)

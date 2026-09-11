@@ -1,0 +1,31 @@
+revision=611062e fixed_commit=611062ee2eb80727440c731c62a09626ca87d8eb
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-lmDxSH
+
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx (5 tests | 1 failed) 413ms
+   ✓ Retry after a newer queued choice observes only that choice's own success=true 146ms
+   ✓ Retry after a newer queued choice observes only that choice's own success=false 72ms
+   ✓ same-field source Reload cannot later acknowledge a different value as the retained draft Retry 64ms
+   ✓ source-only repaired Reload remains a clean read-only positive control 42ms
+   × latest queued choice remains recoverable when its predecessor fails before it runs 88ms
+     → expected 'monday' to be 'saturday' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  05:00:15
+   Duration  1.86s (transform 291ms, setup 255ms, collect 256ms, tests 413ms, environment 520ms, prepare 121ms)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx > latest queued choice remains recoverable when its predecessor fails before it runs
+AssertionError: expected 'monday' to be 'saturday' // Object.is equality
+
+Expected: "saturday"
+Received: "monday"
+
+ ❯ docs/reviews/web-date-time-recovery-astra/caller-boundaries.test.tsx:43:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

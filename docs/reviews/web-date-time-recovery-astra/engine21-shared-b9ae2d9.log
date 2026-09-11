@@ -1,0 +1,11 @@
+revision=b9ae2d9 fixed_commit=b9ae2d9dab8888f0058c27e5472915c93415e2fd original_assertions=web-d2-async-pref-astra-engine/engine.test.ts
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-dt-sol-9YCZQ4
+
+ ✓ packages/plugin-web-storage/src/__tests__/astraIndependent.test.ts (21 tests) 12ms
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  01:38:56
+   Duration  1.05s (transform 216ms, setup 0ms, collect 336ms, tests 12ms, environment 356ms, prepare 83ms)
