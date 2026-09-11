@@ -1,6 +1,6 @@
 # 全部 To-do：312 项逐项状态清单
 
-最新检查点（2026-09-11）：Date & Time完整调用方已接受（d0d934d）。Notifications八字段已实施6b90b22，父固定host12/native六组通过（d384671），Astra补充24通过（94fcd47）；真实截图发现开关拉伸，Terra72c9a60修复后父三态及中英五宽度通过（403cf1f）。Sol当前29项中28PASS/1正确P1：多个时间格式错误被兄弟编辑清除；Terra afbfb24已修复，父固定host12回归通过，待Sol原断言独立复验。Notifications完整host/native/独立终验仍开放，正式13/312完成、299未关闭。
+最新检查点（2026-09-11）：Date & Time完整调用方已接受（d0d934d）。Notifications产品固定afbfb24，Sol完整41/41通过（f130cb0），Astra当前真实host15/恢复边界24/Settings297/DateTime7通过（7ce03a5），父当前native20和types/lint5通过（a41cd1d），待Astra最终逐项合同接受。旧8字段丢失、隐藏时间离开、格式错误串扰和开关轨道反例均有固定修复证据；旧usePref库存已更新为27files/72bindings/52setters（3705558），仅排程子集。正式13/312完成、299未关闭。Spark启动器2184dfa已实测两个named roles且无嵌套派生，未测试额度耗尽回退。
 
 核对日期：2026-09-09；最新审查检查点：`0143952`；各批次固定产品版本与证据见下文及执行台账。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
 
