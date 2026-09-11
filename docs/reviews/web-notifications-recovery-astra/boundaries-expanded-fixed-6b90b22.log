@@ -1,0 +1,46 @@
+revision=6b90b22 fixed_commit=6b90b220459facdc80a42e4de6c4073c2b57f1eb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-astra-wNU9jy
+
+ ✓ docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx (24 tests) 1442ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  05:29:47
+   Duration  2.52s (transform 254ms, setup 238ms, collect 224ms, tests 1.44s, environment 316ms, prepare 80ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx > hidden same-field source repair never acknowledges repaired bytes as an actual time draft
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-astra/boundaries.test.tsx > old host capabilities refuse in the owner-change turn and fresh locked permission retains hidden work
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
