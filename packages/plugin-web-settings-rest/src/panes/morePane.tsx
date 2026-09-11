@@ -61,7 +61,7 @@ function MorePaneContent({ lang, registerDepartureGuard }: PaneRenderProps): Rea
   const scopeRef = React.useRef(scope); scopeRef.current = scope;
   const epochRef = React.useRef(scope.epoch), decisionTokenRef = React.useRef<object>({}), sessionRef = React.useRef<object>({}), resetBatchRef = React.useRef<object | null>(null), draftsRef = React.useRef<Drafts>(emptyDrafts());
   const [draftVersion, setDraftVersion] = React.useState(0), [inputErrors, setInputErrors] = React.useState<Partial<Record<FieldId, true>>>({}), [exportFailed, setExportFailed] = React.useState(false), [saved, setSaved] = React.useState(false), [defaultsRestored, setDefaultsRestored] = React.useState(false), [resetFailed, setResetFailed] = React.useState(false);
-  if (epochRef.current !== scope.epoch) { epochRef.current = scope.epoch; decisionTokenRef.current = {}; }
+  if (epochRef.current !== scope.epoch) { epochRef.current = scope.epoch; decisionTokenRef.current = {}; resetBatchRef.current = null; }
   React.useEffect(() => () => { decisionTokenRef.current = {}; draftsRef.current = emptyDrafts(); }, []);
   const changed = React.useCallback(() => setDraftVersion(version => version + 1), []);
   const currentScope = React.useCallback(() => accountScope.capture() === scopeRef.current && epochRef.current === scopeRef.current.epoch, []);
