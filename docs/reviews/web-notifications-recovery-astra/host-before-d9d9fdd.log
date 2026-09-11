@@ -1,0 +1,2475 @@
+revision=d9d9fdd fixed_commit=d9d9fdde211e19fc258f97e7184a8ee77338d80c
+exit=1
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-astra-4At3yJ
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx (15 tests | 15 failed) 1363ms
+   × actual sidebar producer holds hidden time and discard leaves without writes 164ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × actual rail producer holds hidden time and discard leaves without writes 84ms
+     → expected '/app/tasks' to be '/app/settings/notifications' // Object.is equality
+   × first route beats same-turn route and signout; Stay preserves hidden work and new intent remains guarded 79ms
+     → expected '/app/dashboard' to be '/app/settings/notifications' // Object.is equality
+   × first signout beats same-turn route; Escape declines without losing hidden recovery 82ms
+     → expected true to be 'pending' // Object.is equality
+   × numeric history -1 holds URL and location key then replays exact destination 77ms
+     → expected '/app/dashboard' to be '/app/settings/notifications' // Object.is equality
+   × numeric history 1 holds URL and location key then replays exact destination 76ms
+     → expected '/app/dashboard' to be '/app/settings/notifications' // Object.is equality
+   × relative Settings navigation preserves destination and options after explicit discard 79ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × partial hidden Retry cannot release intent; every latest verified clean releases exactly once 80ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × held hidden save protects navigation and auto releases only after physical verification 62ms
+     → expected '23:15' to be '22:00' // Object.is equality
+   × epoch cancels old route while fresh locked hidden work protects new decisions 170ms
+     → Unable to find an accessible element with the role "dialog"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"app-rail"[39m
+    [33mdata-pos[39m=[32m"left"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"settings-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Open account menu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Open account menu"[39m
+    [33mclass[39m=[32m"rail-avatar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tasks":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tasks"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Tasks"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Boards":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Boards"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Boards"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Dashboard"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Dashboard"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Calendar"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Calendar"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Matrix":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Matrix"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Matrix"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pomodoro"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pomodoro"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Tracker":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Time Tracker"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Time Tracker"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habits":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Habits"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Habits"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Meditation":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Meditation"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Meditation"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Countdown":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Countdown"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Countdown"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "XAI Chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"XAI Chat"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"XAI Chat"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Statistics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Statistics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Statistics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bookkeeping":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Bookkeeping"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Bookkeeping"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Metrics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Metrics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Metrics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pet"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pet"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "EN · Light · Comfortable":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"topbar-pref-panel"[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"dialog"[39m
+    [33mclass[39m=[32m"topbar-pref-trigger"[39m
+    [33mtitle[39m=[32m"Appearance"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Account":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Premium":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Features":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Smart Lists":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Appearance":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "AI":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Integrations & Import":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Collaborate":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Sticky Note":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Hotkeys":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "About":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"topbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mplaceholder[39m=[32m"Search tasks, habits, notes…"[39m
+    [33mreadonly[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"app-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Settings":
+  [36m<h2[39m
+    [33mclass[39m=[32m"settings-h"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Start week on":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Start week on"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Monday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"monday"[39m
+  [36m/>[39m
+
+  Name "Sunday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"sunday"[39m
+  [36m/>[39m
+
+  Name "Saturday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"saturday"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Show Lunar Calendar":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Week Numbers (W)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Holidays":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Holidays"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Zone":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Time Zone"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+      [33mdata-rail-pos[39m=[32m"left"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"app-rail"[39m
+        [33mdata-pos[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-avatar-wrap"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Open account menu"[39m
+            [33mclass[39m=[32m"rail-avatar"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"avatar-img"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mheight[39m=[32m"36"[39m
+                [33mviewBox[39m=[32m"0 0 40 40"[39m
+                [33mwidth[39m=[32m"36"[39m
+              [36m>[39m
+                [36m<defs>[39m
+                  [36m<lineargradient[39m
+                    [33mid[39m=[32m"avg"[39m
+                    [33mx1[39m=[32m"0"[39m
+                    [33mx2[39m=[32m"1"[39m
+                    [33my1[39m=[32m"0"[39m
+                    [33my2[39m=[32m"1"[39m
+                  [36m>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"0"[39m
+                      [33mstop-color[39m=[32m"#d8c8b7"[39m
+                    [36m/>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"1"[39m
+                      [33mstop-color[39m=[32m"#a08877"[39m
+                    [36m/>[39m
+                  [36m</lineargradient>[39m
+                [36m</defs>[39m
+                [36m<rect[39m
+                  [33mfill[39m=[32m"url(#avg)"[39m
+                  [33mheight[39m=[32m"40"[39m
+                  [33mwidth[39m=[32m"40"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"16"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".7"[39m
+                  [33mr[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<ellipse[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"32"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".55"[39m
+                  [33mrx[39m=[32m"11"[39m
+                  [33mry[39m=[32m"7"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-items"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tasks"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Tasks"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 11.5l2 2 4-4.5"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"4.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Boards"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Boards"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 7v6M12 7v10M16 7v4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Dashboard"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Dashboard"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3.5 9.5h17M10 9.5V20"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Calendar"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Calendar"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"roun...
+   × epoch cancels old signout while fresh locked hidden work protects new decisions 164ms
+     → Unable to find an accessible element with the role "dialog"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"app-rail"[39m
+    [33mdata-pos[39m=[32m"left"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"settings-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Open account menu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Open account menu"[39m
+    [33mclass[39m=[32m"rail-avatar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tasks":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tasks"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Tasks"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Boards":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Boards"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Boards"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Dashboard"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Dashboard"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Calendar"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Calendar"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Matrix":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Matrix"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Matrix"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pomodoro"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pomodoro"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Tracker":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Time Tracker"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Time Tracker"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habits":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Habits"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Habits"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Meditation":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Meditation"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Meditation"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Countdown":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Countdown"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Countdown"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "XAI Chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"XAI Chat"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"XAI Chat"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Statistics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Statistics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Statistics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bookkeeping":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Bookkeeping"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Bookkeeping"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Metrics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Metrics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Metrics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pet"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pet"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "EN · Light · Comfortable":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"topbar-pref-panel"[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"dialog"[39m
+    [33mclass[39m=[32m"topbar-pref-trigger"[39m
+    [33mtitle[39m=[32m"Appearance"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Account":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Premium":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Features":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Smart Lists":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Appearance":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "AI":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Integrations & Import":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Collaborate":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Sticky Note":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Hotkeys":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "About":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"topbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mplaceholder[39m=[32m"Search tasks, habits, notes…"[39m
+    [33mreadonly[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"app-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Settings":
+  [36m<h2[39m
+    [33mclass[39m=[32m"settings-h"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Enable notifications":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enable notifications"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Task due":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Task due"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro complete":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Pomodoro complete"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habit reminder":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Habit reminder"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enable quiet hours":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Enable quiet hours"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Sound"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Subtle":
+  [36m<option[39m
+    [33mvalue[39m=[32m"subtle"[39m
+  [36m/>[39m
+
+  Name "Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Pop":
+  [36m<option[39m
+    [33mvalue[39m=[32m"pop"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+      [33mdata-rail-pos[39m=[32m"left"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"app-rail"[39m
+        [33mdata-pos[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-avatar-wrap"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Open account menu"[39m
+            [33mclass[39m=[32m"rail-avatar"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"avatar-img"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mheight[39m=[32m"36"[39m
+                [33mviewBox[39m=[32m"0 0 40 40"[39m
+                [33mwidth[39m=[32m"36"[39m
+              [36m>[39m
+                [36m<defs>[39m
+                  [36m<lineargradient[39m
+                    [33mid[39m=[32m"avg"[39m
+                    [33mx1[39m=[32m"0"[39m
+                    [33mx2[39m=[32m"1"[39m
+                    [33my1[39m=[32m"0"[39m
+                    [33my2[39m=[32m"1"[39m
+                  [36m>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"0"[39m
+                      [33mstop-color[39m=[32m"#d8c8b7"[39m
+                    [36m/>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"1"[39m
+                      [33mstop-color[39m=[32m"#a08877"[39m
+                    [36m/>[39m
+                  [36m</lineargradient>[39m
+                [36m</defs>[39m
+                [36m<rect[39m
+                  [33mfill[39m=[32m"url(#avg)"[39m
+                  [33mheight[39m=[32m"40"[39m
+                  [33mwidth[39m=[32m"40"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"16"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".7"[39m
+                  [33mr[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<ellipse[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"32"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".55"[39m
+                  [33mrx[39m=[32m"11"[39m
+                  [33mry[39m=[32m"7"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-items"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tasks"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Tasks"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 11.5l2 2 4-4.5"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"4.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Boards"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Boards"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 7v6M12 7v10M16 7v4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Dashboard"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Dashboard"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3.5 9.5h17M10 9.5V20"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Calendar"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Calendar"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"roun...
+   × unmount cancels pending signout and removes hidden-work unload warning 68ms
+     → expected true to be 'pending' // Object.is equality
+   × host export remains pending and memory-only; Stay returns all hidden work 71ms
+     → expected true to be 'pending' // Object.is equality
+   × older successful time cannot release held route when latest queued choice fails 79ms
+     → expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+   × source-only hidden invalid time stays nonblocking and normal route still works 28ms
+     → expected '' to be '22:00' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  15 failed (15)
+   Start at  05:38:15
+   Duration  4.68s (transform 1.82s, setup 0ms, collect 2.67s, tests 1.36s, environment 354ms, prepare 53ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-astra/host.test.tsx > actual sidebar producer holds hidden time and discard leaves without writes
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > actual sidebar producer holds hidden time and discard leaves without writes
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:28:542
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > actual rail producer holds hidden time and discard leaves without writes
+AssertionError: expected '/app/tasks' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/tasks"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:28:542
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > first route beats same-turn route and signout; Stay preserves hidden work and new intent remains guarded
+AssertionError: expected '/app/dashboard' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/dashboard"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:29:370
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > first signout beats same-turn route; Escape declines without losing hidden recovery
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:30:283
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > numeric history -1 holds URL and location key then replays exact destination
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > numeric history 1 holds URL and location key then replays exact destination
+AssertionError: expected '/app/dashboard' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/dashboard"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:31:421
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > relative Settings navigation preserves destination and options after explicit discard
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:32:285
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > partial hidden Retry cannot release intent; every latest verified clean releases exactly once
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:33:689
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > held hidden save protects navigation and auto releases only after physical verification
+AssertionError: expected '23:15' to be '22:00' // Object.is equality
+
+Expected: "22:00"
+Received: "23:15"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:34:245
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > epoch cancels old route while fresh locked hidden work protects new decisions
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"app-rail"[39m
+    [33mdata-pos[39m=[32m"left"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"settings-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Open account menu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Open account menu"[39m
+    [33mclass[39m=[32m"rail-avatar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tasks":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tasks"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Tasks"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Boards":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Boards"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Boards"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Dashboard"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Dashboard"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Calendar"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Calendar"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Matrix":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Matrix"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Matrix"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pomodoro"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pomodoro"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Tracker":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Time Tracker"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Time Tracker"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habits":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Habits"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Habits"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Meditation":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Meditation"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Meditation"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Countdown":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Countdown"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Countdown"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "XAI Chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"XAI Chat"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"XAI Chat"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Statistics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Statistics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Statistics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bookkeeping":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Bookkeeping"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Bookkeeping"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Metrics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Metrics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Metrics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pet"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pet"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "EN · Light · Comfortable":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"topbar-pref-panel"[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"dialog"[39m
+    [33mclass[39m=[32m"topbar-pref-trigger"[39m
+    [33mtitle[39m=[32m"Appearance"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Account":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Premium":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Features":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Smart Lists":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Appearance":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "AI":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Integrations & Import":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Collaborate":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Sticky Note":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Hotkeys":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "About":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"topbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mplaceholder[39m=[32m"Search tasks, habits, notes…"[39m
+    [33mreadonly[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"app-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Settings":
+  [36m<h2[39m
+    [33mclass[39m=[32m"settings-h"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Start week on":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Start week on"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Monday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"monday"[39m
+  [36m/>[39m
+
+  Name "Sunday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"sunday"[39m
+  [36m/>[39m
+
+  Name "Saturday":
+  [36m<option[39m
+    [33mvalue[39m=[32m"saturday"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Show Lunar Calendar":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Lunar Calendar"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Week Numbers (W)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Week Numbers (W)"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Show Holidays":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Show Holidays"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Zone":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Time Zone"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+      [33mdata-rail-pos[39m=[32m"left"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"app-rail"[39m
+        [33mdata-pos[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-avatar-wrap"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Open account menu"[39m
+            [33mclass[39m=[32m"rail-avatar"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"avatar-img"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mheight[39m=[32m"36"[39m
+                [33mviewBox[39m=[32m"0 0 40 40"[39m
+                [33mwidth[39m=[32m"36"[39m
+              [36m>[39m
+                [36m<defs>[39m
+                  [36m<lineargradient[39m
+                    [33mid[39m=[32m"avg"[39m
+                    [33mx1[39m=[32m"0"[39m
+                    [33mx2[39m=[32m"1"[39m
+                    [33my1[39m=[32m"0"[39m
+                    [33my2[39m=[32m"1"[39m
+                  [36m>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"0"[39m
+                      [33mstop-color[39m=[32m"#d8c8b7"[39m
+                    [36m/>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"1"[39m
+                      [33mstop-color[39m=[32m"#a08877"[39m
+                    [36m/>[39m
+                  [36m</lineargradient>[39m
+                [36m</defs>[39m
+                [36m<rect[39m
+                  [33mfill[39m=[32m"url(#avg)"[39m
+                  [33mheight[39m=[32m"40"[39m
+                  [33mwidth[39m=[32m"40"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"16"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".7"[39m
+                  [33mr[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<ellipse[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"32"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".55"[39m
+                  [33mrx[39m=[32m"11"[39m
+                  [33mry[39m=[32m"7"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-items"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tasks"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Tasks"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 11.5l2 2 4-4.5"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"4.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Boards"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Boards"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 7v6M12 7v10M16 7v4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Dashboard"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Dashboard"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3.5 9.5h17M10 9.5V20"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Calendar"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Calendar"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"roun...
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:35:331
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > epoch cancels old signout while fresh locked hidden work protects new decisions
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog"
+
+Here are the accessible roles:
+
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"app-rail"[39m
+    [33mdata-pos[39m=[32m"left"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"settings-sidebar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Open account menu":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Open account menu"[39m
+    [33mclass[39m=[32m"rail-avatar"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tasks":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tasks"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Tasks"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Boards":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Boards"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Boards"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Dashboard":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Dashboard"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Dashboard"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Calendar":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Calendar"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Calendar"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Matrix":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Matrix"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Matrix"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pomodoro"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pomodoro"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Time Tracker":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Time Tracker"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Time Tracker"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habits":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Habits"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Habits"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Meditation":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Meditation"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Meditation"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Countdown":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Countdown"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Countdown"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "XAI Chat":
+  [36m<button[39m
+    [33maria-label[39m=[32m"XAI Chat"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"XAI Chat"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Statistics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Statistics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Statistics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bookkeeping":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Bookkeeping"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Bookkeeping"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Metrics":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Metrics"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Metrics"[39m
+    [33mdraggable[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pet":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pet"[39m
+    [33mclass[39m=[32m"rail-btn has-tip"[39m
+    [33mdata-tip[39m=[32m"Pet"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "EN · Light · Comfortable":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"topbar-pref-panel"[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"dialog"[39m
+    [33mclass[39m=[32m"topbar-pref-trigger"[39m
+    [33mtitle[39m=[32m"Appearance"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Account":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Premium":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Features":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Smart Lists":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"true"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Date & Time":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Appearance":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "AI":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "More":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Integrations & Import":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Collaborate":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Sticky Note":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "Hotkeys":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  Name "About":
+  [36m<div[39m
+    [33mclass[39m=[32m"list-row"[39m
+    [33mdata-active[39m=[32m"false"[39m
+    [33mrole[39m=[32m"button"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"topbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mplaceholder[39m=[32m"Search tasks, habits, notes…"[39m
+    [33mreadonly[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"app-main"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Settings":
+  [36m<h2[39m
+    [33mclass[39m=[32m"settings-h"[39m
+  [36m/>[39m
+
+  Name "Notifications":
+  [36m<h3[39m
+    [33mclass[39m=[32m"pane-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Enable notifications":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Enable notifications"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Task due":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Task due"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pomodoro complete":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Pomodoro complete"[39m
+    [33mclass[39m=[32m"toggle on"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Habit reminder":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Habit reminder"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Enable quiet hours":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Enable quiet hours"[39m
+    [33mclass[39m=[32m"toggle"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Sound":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Sound"[39m
+    [33mclass[39m=[32m"sl-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "None":
+  [36m<option[39m
+    [33mvalue[39m=[32m"none"[39m
+  [36m/>[39m
+
+  Name "Subtle":
+  [36m<option[39m
+    [33mvalue[39m=[32m"subtle"[39m
+  [36m/>[39m
+
+  Name "Chime":
+  [36m<option[39m
+    [33mvalue[39m=[32m"chime"[39m
+  [36m/>[39m
+
+  Name "Bell":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bell"[39m
+  [36m/>[39m
+
+  Name "Pop":
+  [36m<option[39m
+    [33mvalue[39m=[32m"pop"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+      [33mdata-rail-pos[39m=[32m"left"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"app-rail"[39m
+        [33mdata-pos[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-avatar-wrap"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Open account menu"[39m
+            [33mclass[39m=[32m"rail-avatar"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"avatar-img"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mheight[39m=[32m"36"[39m
+                [33mviewBox[39m=[32m"0 0 40 40"[39m
+                [33mwidth[39m=[32m"36"[39m
+              [36m>[39m
+                [36m<defs>[39m
+                  [36m<lineargradient[39m
+                    [33mid[39m=[32m"avg"[39m
+                    [33mx1[39m=[32m"0"[39m
+                    [33mx2[39m=[32m"1"[39m
+                    [33my1[39m=[32m"0"[39m
+                    [33my2[39m=[32m"1"[39m
+                  [36m>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"0"[39m
+                      [33mstop-color[39m=[32m"#d8c8b7"[39m
+                    [36m/>[39m
+                    [36m<stop[39m
+                      [33moffset[39m=[32m"1"[39m
+                      [33mstop-color[39m=[32m"#a08877"[39m
+                    [36m/>[39m
+                  [36m</lineargradient>[39m
+                [36m</defs>[39m
+                [36m<rect[39m
+                  [33mfill[39m=[32m"url(#avg)"[39m
+                  [33mheight[39m=[32m"40"[39m
+                  [33mwidth[39m=[32m"40"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"16"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".7"[39m
+                  [33mr[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<ellipse[39m
+                  [33mcx[39m=[32m"20"[39m
+                  [33mcy[39m=[32m"32"[39m
+                  [33mfill[39m=[32m"#fff"[39m
+                  [33mopacity[39m=[32m".55"[39m
+                  [33mrx[39m=[32m"11"[39m
+                  [33mry[39m=[32m"7"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rail-items"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tasks"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Tasks"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 11.5l2 2 4-4.5"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"4.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Boards"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Boards"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 7v6M12 7v10M16 7v4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Dashboard"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Dashboard"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.6"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"17"[39m
+                [33mrx[39m=[32m"2.5"[39m
+                [33mwidth[39m=[32m"17"[39m
+                [33mx[39m=[32m"3.5"[39m
+                [33my[39m=[32m"3.5"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3.5 9.5h17M10 9.5V20"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Calendar"[39m
+            [33mclass[39m=[32m"rail-btn has-tip"[39m
+            [33mdata-tip[39m=[32m"Calendar"[39m
+            [33mdraggable[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"roun...
+ ❯ Object.getElementError ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:35:331
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > unmount cancels pending signout and removes hidden-work unload warning
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:36:233
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > host export remains pending and memory-only; Stay returns all hidden work
+AssertionError: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:37:472
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > older successful time cannot release held route when latest queued choice fails
+AssertionError: expected '/app/settings/date_time' to be '/app/settings/notifications' // Object.is equality
+
+Expected: "/app/settings/notifications"
+Received: "/app/settings/date_time"
+
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:38:507
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  docs/reviews/web-notifications-recovery-astra/host.test.tsx > source-only hidden invalid time stays nonblocking and normal route still works
+AssertionError: expected '' to be '22:00' // Object.is equality
+
+- Expected
++ Received
+
+- 22:00
+
+ ❯ host docs/reviews/web-notifications-recovery-astra/host.test.tsx:20:1096
+ ❯ docs/reviews/web-notifications-recovery-astra/host.test.tsx:39:160
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
