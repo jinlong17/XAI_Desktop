@@ -65,6 +65,29 @@ Templates use abstract tiers. Codex mappings are set in the generation script:
 | `opus` | `CODEX_STRONG_MODEL` (currently `gpt-5.4`) | plan, review, verify, diagnose, loop |
 | `sonnet` | `CODEX_FAST_MODEL` (currently `gpt-5.3-codex`) | build, fix, ship |
 
+#### Spark specialist routing
+
+When delegation is authorized and supported by the current session:
+
+- Use `spark-explorer` for bounded code searches, symbol location, and checklist evidence.
+- Use `spark-ui-fixer` for local UI or fixture changes only after the parent defines
+  allowed files, acceptance conditions, risk, and protected boundaries.
+- Keep Terra as the default for medium implementation, Sol for complex races and
+  cross-module work, and Astra for architecture, risk, acceptance, and final review.
+- Spark implementations require independent review by an uninvolved Terra, Sol,
+  or Astra. Passing tests alone does not close the business contract.
+- Do not assign Spark sole ownership of persistence, account lifecycle, asynchronous
+  races, timer recovery, migrations, deletion/recovery, security, payments, deployment,
+  architecture, screenshot-based visual judgment, or final acceptance.
+- Report model/launch failures explicitly; never label a fallback model as Spark.
+
+The project-owned `.codex/agents/spark-explorer.toml` and
+`.codex/agents/spark-ui-fixer.toml` are standalone custom agents, maintained separately
+from generated Workflow V2 templates. Preserve them when regenerating agents; do not
+set the generator's shared `CODEX_FAST_MODEL` to Spark to enable these specialists.
+File configuration does not establish successful runtime model access; verify actual
+agent/model selection in an authorized parent session before claiming Spark execution.
+
 ### 2.3 Sandbox mode
 
 Each `.toml` agent includes `sandbox_mode` sourced from the template's
