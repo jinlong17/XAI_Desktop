@@ -64,6 +64,13 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
     draft.settledFailure = true;
     changed();
   }, [changed]);
+  const settlePredecessorRecovery = React.useCallback((field: FieldId, draft: Draft, ok: boolean) => {
+    if (ok || draftsRef.current[field] !== draft) return;
+    // A predecessor recovery failed again. It did not settle this newer draft,
+    // but it may be retried again to let the existing queue continue.
+    draft.retryActive = false;
+    changed();
+  }, [changed]);
   const edit = React.useCallback((field: FieldId, value: FieldValue) => {
     if (!currentScope() || !isValueFor(field, value)) return;
     const draft = putDraft(field, value);
@@ -71,15 +78,21 @@ function DateTimePaneContent({ lang, registerDepartureGuard }: PaneRenderProps):
   }, [currentScope, putDraft, settleDraft]);
   const retry = React.useCallback((field: FieldId) => {
     const draft = draftsRef.current[field];
-    // The hook returns a predecessor's active Promise while a newer intent is
-    // still queued. Only a failure settled by this exact latest draft may own a
-    // recovery Retry, so predecessor success cannot clear later user work.
-    if (!isCurrentDraft(field, draft) || !draft!.settledFailure || draft!.retryActive) return;
-    draft!.settledFailure = false;
+    if (!isCurrentDraft(field, draft) || draft!.retryActive) return;
+    const ownFailure = draft!.settledFailure;
+    const failedPredecessor = !ownFailure
+      && (prefsRef.current[field].meta.status === "error" || prefsRef.current[field].meta.status === "conflict");
+    if (!ownFailure && !failedPredecessor) return;
     draft!.retryActive = true;
+    if (ownFailure) draft!.settledFailure = false;
     changed();
-    void prefsRef.current[field].retry().then(result => settleDraft(field, draft!, result.ok), () => settleDraft(field, draft!, false));
-  }, [changed, isCurrentDraft, settleDraft]);
+    const attempt = prefsRef.current[field].retry();
+    // A queued latest edit keeps its original Promise. Retrying a failed
+    // predecessor only advances that queue; its result must never acknowledge
+    // the newer draft.
+    if (ownFailure) void attempt.then(result => settleDraft(field, draft!, result.ok), () => settleDraft(field, draft!, false));
+    else void attempt.then(result => settlePredecessorRecovery(field, draft!, result.ok), () => settlePredecessorRecovery(field, draft!, false));
+  }, [changed, isCurrentDraft, settleDraft, settlePredecessorRecovery]);
   const discard = React.useCallback((field: FieldId) => {
     const draft = draftsRef.current[field];
     if (draft && !isCurrentDraft(field, draft)) return;

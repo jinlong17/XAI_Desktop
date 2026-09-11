@@ -42,3 +42,28 @@ Sol must run its immutable core, recovery and advanced suites. Parent must run
 the composed Settings/full Shell and native browser matrix. Astra retains final
 contract acceptance, including sparse disk export, source/error, lifecycle,
 owner-epoch and responsive interaction evidence.
+
+## Queued predecessor recovery repair
+
+The `611062e` caller gate correctly stopped a predecessor Promise from clearing
+a newer queued draft, but it also rejected Retry before that newer draft could
+settle. The shared hook intentionally leaves its queue stopped on a failed
+predecessor. The caller now admits Retry only when the latest draft either
+failed itself or is queued behind a public hook `error`/`conflict` state.
+
+When it is the latter, the caller uses the public hook Retry only to advance the
+predecessor. Its result can clear neither the latest draft nor its recovery UI;
+the latest edit's original Promise still has sole settlement authority. A
+failed predecessor recovery releases the local duplicate-Retry guard so the
+user can try again. The shared hook/engine queue and Promise API are unchanged.
+
+| Command | Result |
+| --- | --- |
+| `pnpm --filter @repo/plugin-web-settings-rest exec vitest run src/__tests__/dateTimePane.test.tsx` | PASS — 8 tests, including DT8 predecessor failure → queued latest failure → own Retry recovery |
+| `pnpm --filter @repo/plugin-web-settings-rest typecheck` | PASS |
+| `pnpm --filter @repo/plugin-web-settings-rest lint` | PASS |
+
+DT8 holds the real `start_week` physical-key lock, queues Sunday then Saturday,
+denies Sunday, advances it through Retry, then denies Saturday. It verifies the
+physical Sunday predecessor result does not clear the visible Saturday draft;
+only Saturday's own later Retry writes Saturday and removes recovery.
