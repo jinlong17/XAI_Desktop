@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"d9d9fdd","browser":"Chrome/153.0.8010.36"}
+{"name":"departure","path":"/app/settings/notifications","dialog":false,"signout":"pending","warning":false}
+{"name":"native","pass":false,"mode":"unload","error":"AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(state.warning)\n","runtimeErrors":[]}
