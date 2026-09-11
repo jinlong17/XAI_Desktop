@@ -1,6 +1,6 @@
 # 全部 To-do：312 项逐项状态清单
 
-最新验证检查点（2026-09-10）：Date & Time当前实现2c09719，caller通知修复e9213fb。父34cff59原host8通过/新增host12曾有2个all-clean不放行失败，e921现12全部通过；父8407ab8原native六模式、expanded pending/uncertainty正控/磁盘全量与稀疏导出/owner/source/focus及中英五宽度几何通过。手工截图发现开关轨道变圆和移动恢复按钮布局问题，Terra局部CSS修复中。Sol b64d499/36e5507与父native均确认uncertain写入后外部恢复原值，Retry仍覆盖外部值；Astra正在确定共享prefMutation/token修复与影响回归，不以DateTime raw预检绕过。完整DateTime及REL/D2仍未验收，13/312正式完成、299未关闭。
+最新验证检查点（2026-09-11）：固定611062e父20host、18native和Web/Settings/types-lint通过（6b0694b）；Sol现46项通过（含产品新增DT7，da6950a），此前96的45项保持原版本归属。Astra3df3199完整复核新增前驱失败/最新选择排队时Retry卡住的正确P1，父Chrome153独立复现；Terra按caller-only合同修复中，DateTime尚未完整接受。共享b9令牌presence修复有界证据保留，正式13/312完成、299未关闭。
 
 核对日期：2026-09-09；最新审查检查点：`0143952`；各批次固定产品版本与证据见下文及执行台账。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
 

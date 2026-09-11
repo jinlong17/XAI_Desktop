@@ -200,3 +200,10 @@ Parent native Settings baseline `8679232`, fixed ea5ba0b: actual Chrome/native W
 Date & Time当前实现2c09719，caller通知修复e9213fb。父34cff59原host8通过/新增host12曾有2个all-clean不放行失败，e921现12全部通过；父8407ab8原native六模式、expanded pending/uncertainty正控/磁盘全量与稀疏导出/owner/source/focus及中英五宽度几何通过。手工截图发现开关轨道变圆和移动恢复按钮布局问题，Terra局部CSS修复中。Sol b64d499/36e5507与父native均确认uncertain写入后外部恢复原值，Retry仍覆盖外部值；Astra正在确定共享prefMutation/token修复与影响回归，不以DateTime raw预检绕过。完整DateTime及REL/D2仍未验收，13/312正式完成、299未关闭。
 
 证据：`../web-date-time-recovery-independent/review.md`、`../web-date-time-recovery-native/review.md`。新反例要求共享层裁决；本轮不新增编号关闭。
+
+
+## 2026-09-11 接续与模型分工
+
+最新验证检查点（2026-09-11）：固定611062e父20host、18native和Web/Settings/types-lint通过（6b0694b）；Sol现46项通过（含产品新增DT7，da6950a），此前96的45项保持原版本归属。Astra3df3199完整复核新增前驱失败/最新选择排队时Retry卡住的正确P1，父Chrome153独立复现；Terra按caller-only合同修复中，DateTime尚未完整接受。共享b9令牌presence修复有界证据保留，正式13/312完成、299未关闭。
+
+按用户最新规则：Astra负责合同/最终复核，Terra默认实施，Sol负责复杂调试和独立验证；Spark仅用于明确局部且可直接验证的低风险工作并由他人复核，Luna用于搜索、清单和日志。当前子Agent接口没有Spark型号，因此本批不冒用其它模型作Spark；新的Astra/Sol/Terra接手现有证据，Luna只刷新固定版本writer库存。此记录为当前审查执行分工，不改全局模型配置。
