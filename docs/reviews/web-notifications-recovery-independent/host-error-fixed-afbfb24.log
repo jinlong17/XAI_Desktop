@@ -1,0 +1,11 @@
+revision=afbfb24 fixed_commit=afbfb24d6f7311366b77852eda927d08467478c2
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-1fb72f
+
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx (12 tests) 707ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  05:34:24
+   Duration  4.16s (transform 1.88s, setup 0ms, collect 2.77s, tests 707ms, environment 377ms, prepare 71ms)

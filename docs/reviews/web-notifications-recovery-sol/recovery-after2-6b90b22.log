@@ -1,0 +1,36 @@
+revision=6b90b22 fixed_commit=6b90b220459facdc80a42e4de6c4073c2b57f1eb
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-notif-sol-XWV3Hc
+
+ ✓ docs/reviews/web-notifications-recovery-sol/recovery.test.tsx (3 tests) 353ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  05:31:23
+   Duration  1.36s (transform 266ms, setup 225ms, collect 210ms, tests 353ms, environment 244ms, prepare 106ms)
+
+
+stderr | docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > quiet=false keeps failed hidden time drafts exportable and independently recoverable when re-enabled
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/recovery.test.tsx > all eight held drafts export exact device-only memory including hidden times
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
