@@ -60,8 +60,9 @@ the Settings integrations caller surface.
 
 Date & Time is no longer in the remaining direct-hook rows (0 old direct
 setter bindings after conversion). The remaining Settings rows above total 39
-setter bindings, all directly invoked under this scanner, plus four read-only
-hook rows and one dynamic setter row shown in the JSON. The pane-level counts do
+setter bindings, all directly invoked under this scanner; these 39 already
+include the one dynamic setter row shown in the JSON. Four additional bindings
+are read-only. The pane-level counts do
 not select an implementation batch or determine caller acceptance.
 
 ## Boundary and limits
