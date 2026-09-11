@@ -21,6 +21,7 @@ def main():
         parser.error("Role file and working directory must exist")
     config = {
         "model_reasoning_effort": "medium",
+        "agents.max_depth": 1,
         "features.image_generation": False,
         "features.multi_agent_v2.enabled": True,
         "features.multi_agent_v2.max_concurrent_threads_per_session": 4,
@@ -43,12 +44,15 @@ def main():
     contract = args.prompt_file.read_text()
     if not contract.strip():
         parser.error("The parent-approved contract must not be empty")
+    spawn_args = {"agent_type": args.role, "fork_turns": "none", "message": contract}
     prompt = (
-        "Spawn exactly one agent_type " + args.role + " with fork_turns none. "
-        "Forward the contract below unchanged and wait for its result. "
-        "Do not implement directly or use a fallback if launch fails. "
-        "Report actual child identity/model and failures honestly. "
-        "No commits, push, publishing, or additional delegation.\n\n" + contract
+        "You are the dispatcher only. Call spawn_agent exactly once with the JSON "
+        "arguments below. Its message must contain ONLY the supplied contract string, "
+        "not this dispatcher prompt, the JSON wrapper, or any instruction to spawn. "
+        "Then wait for that child and report its identity, result and any failure. "
+        "Do not implement the contract, delegate again, retry a failed launch, commit, "
+        "push or publish. The child must execute the contract directly without delegation.\n"
+        + json.dumps(spawn_args, ensure_ascii=False)
     )
     sandbox = "read-only" if args.role == "spark-explorer" else "workspace-write"
     # Persist sessions: --ephemeral breaks named-child parent lookup on CLI 0.135.0.
