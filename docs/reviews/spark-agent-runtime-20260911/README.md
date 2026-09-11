@@ -4,7 +4,7 @@ Scope: web audit tooling. Product code and global model mapping unchanged.
 
 ## Result
 
-- Both specialist TOMLs parse with Python 3.11 tomllib; exact model is gpt-5.3-codex-spark, medium. Explorer read-only; UI workspace-write. Existing limits remain 2/4/1800.
+- Both specialist TOMLs parse with Python 3.11 tomllib; exact model is gpt-5.3-codex-spark, medium. Explorer read-only; UI workspace-write. The original smoke used limits 2/4/1800; the subsequent V2 configuration correction below supersedes the old concurrency key.
 - Independent Astra reviewed role boundaries and registration. Parent independently checked exact UI fixture bytes: only 32px became 44px; color and newline preserved.
 - Actual **named** explorer and UI subagents completed using Spark medium. `role-model-evidence.json` extracts exact spawn agent_type and child turn_context from local runtime records. Success logs contain child IDs/results. Neither the fallback fixture run nor direct-model smoke is counted as named-role success.
 - Explorer smoke reads one configuration field; it does not establish broad code-search quality. UI smoke is an isolated CSS fixture, not a visual product review.
@@ -21,18 +21,43 @@ Astra CLI probe was rejected as requiring a newer client. Parent reviewer here i
 
 ## Reproducible invocation
 
-From repository root (use a bounded prompt; the prompt must specify exact agent_type and fork_turns none):
+Use the project-owned launcher from repository root. Configuration checks do not
+start a model or child and can be used before authorized delegation:
 
 ```sh
-codex exec --json -m gpt-5.3-codex-spark -s read-only \
-  --disable image_generation --enable multi_agent_v2 \
-  -c 'model_reasoning_effort="medium"' \
-  -c 'agents.spark-explorer.description="Read-only Spark explorer"' \
-  -c "agents.spark-explorer.config_file=\"$PWD/.codex/agents/spark-explorer.toml\"" \
-  'Spawn exactly once agent_type spark-explorer with fork_turns none. Read its TOML model value only. Wait. No edits, fallback, or direct execution if spawn fails.'
+python3 scripts/cowork/run_spark.py spark-explorer --check
+python3 scripts/cowork/run_spark.py spark-ui-fixer --check
+
+# Only in a session where delegation is authorized:
+python3 scripts/cowork/run_spark.py spark-explorer --prompt-file /absolute/path/contract.txt
 ```
 
-For UI, use an isolated fixture directory with `-C`, `-s workspace-write`, and the equivalent absolute `agents.spark-ui-fixer.config_file` registration. Define allowed file, exact change and acceptance in the parent first. Never apply the fixture contract to product code implicitly.
+For UI, select `spark-ui-fixer` and pass `--cwd /absolute/path/to/fixture` plus
+`--prompt-file /absolute/path/contract.txt`. The launcher supplies the role's
+sandbox and absolute registration. Define allowed files, exact change, acceptance,
+and protected boundaries in the parent first. Never apply a fixture contract to
+product code implicitly. The launcher does not select a fallback model.
+
+## Subsequent CLI configuration correction
+
+The notification CSS attempt failed before model execution with
+`agents.max_threads cannot be set when multi_agent_v2 is enabled`.
+This was reproduced on CLI 0.135.0 using `features list` with medium reasoning
+and V2 enabled, without launching a model or agent.
+
+The project config and project generator now omit `agents.max_threads` and set
+`features.multi_agent_v2.max_concurrent_threads_per_session = 4` instead.
+Depth 2 and job runtime 1800 remain unchanged. The four-child cap applies to V2;
+legacy mode now uses its runtime default. The launcher enables V2 via its nested
+`enabled` field so it preserves the structured feature settings. It overrides
+inherited reasoning to medium (this CLI rejects max), disables image generation,
+explicitly registers the selected role, and avoids ephemeral sessions.
+
+Both launcher `--check` paths passed after this correction. These checks establish
+CLI configuration acceptance only, not model access or successful delegation.
+No new model/child was launched during this side-conversation fix; the earlier
+named-role smoke evidence remains historical. No global configuration, CLI
+installation, authentication, or trust settings were changed.
 
 The generator's --force overwrites project config from a default template; preserve/restore custom registrations. Standalone role files are outside its template names. CODEX_FAST_MODEL remains unchanged.
 

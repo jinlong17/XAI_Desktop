@@ -6,8 +6,12 @@
 # feature-auto-build / bug-auto-fix are direct writable workers and do not require nested spawn.
 # Without this, orchestrator subagents cannot spawn feature-auto-build / bug-auto-fix.
 max_depth = 2
-max_threads = 4
 job_max_runtime_seconds = 1800
+
+# CLI 0.135.0 rejects agents.max_threads when multi_agent_v2 is enabled.
+# The Spark launcher enables V2 per invocation; keep its cap in the V2 namespace.
+[features.multi_agent_v2]
+max_concurrent_threads_per_session = 4
 
 # Explicit role registration for CLI versions predating standalone agent discovery.
 [agents.spark-explorer]
