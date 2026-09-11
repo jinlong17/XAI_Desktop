@@ -60,6 +60,7 @@ user can try again. The shared hook/engine queue and Promise API are unchanged.
 | Command | Result |
 | --- | --- |
 | `pnpm --filter @repo/plugin-web-settings-rest exec vitest run src/__tests__/dateTimePane.test.tsx` | PASS — 8 tests, including DT8 predecessor failure → queued latest failure → own Retry recovery |
+| `pnpm --filter @repo/plugin-web-settings-rest test` | PASS — 43 files, 295 tests |
 | `pnpm --filter @repo/plugin-web-settings-rest typecheck` | PASS |
 | `pnpm --filter @repo/plugin-web-settings-rest lint` | PASS |
 
