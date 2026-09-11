@@ -1,6 +1,6 @@
 # 全清单执行台账
 
-最新检查点（2026-09-11）：Date & Time完整五字段当前会话恢复已由Astra d0d934d接受，产品固定d9d9fdd；Astra独立caller7/Settings295，Sol47，父actualHost20/native19及类型/lint通过，见acceptance-d9d9fdd.md。下一完整单元为Notifications八字段（含隐藏quiet_start/end），合同next-notifications-contract.md；Terra实施、Sol独立验证、父actualHost/native。父固定d9d9fdd已复现11正确FAIL/1cleanPASS：八字段失败最新值丢失、route/signout无阻拦、隐藏时间重显丢失。正式13/312完成、299未关闭，不核销REL/D2整体。
+最新检查点（2026-09-11）：Date & Time完整调用方已接受（d0d934d）。Notifications八字段已实施6b90b22，父固定host12/native六组通过（d384671），Astra补充24通过（94fcd47）；真实截图发现开关拉伸，Terra72c9a60修复后父三态及中英五宽度通过（403cf1f）。Sol当前29项中28PASS/1正确P1：多个时间格式错误被兄弟编辑清除，Terra继续修复。Notifications完整host/native/独立终验仍开放，正式13/312完成、299未关闭。
 
 最新复核增量：Dashboard Header完整当前会话恢复合同已获Astra106f1d8接受，固定73b4eb9：Astra boundaries5/recovery12/blur4/copy6共27、Sol原42、父actualHost5/5/2及nativeDv1五/已保存重开四、Sol受影响native六全部通过。正常uncertainty Retry实际单次写入且正确清除guard/unload；f64旧39/42失败和所有历史正确反例保留。作者3595cbd全包228/shell11及lint/type通过，父4600368的f64八native/中英五宽度、Solccf72e3的交互及e119 source-copy、c9共享门禁1bdc844按无变源码明确归属复用。接受文档web-dashboard-header-departure-astra/acceptance-73b4eb9.md逐层对齐，不宣称未保存崩溃恢复。Pomodoro051212a、Collaborate6254cb4、共享协调器ba7f0da接受保持有效。后续按完整writer合同继续；库存2ea710f固定c9为29files/85bindings/65setters，仅直接旧hook排程输入不是全部writer覆盖率。正式完成13/312，未关闭299；REL-05/09/D2不因此核销。 当前接续为完整Date & Time五控件合同3638e21：父fixed73 actualSettings+FullShell原8已在8c05c85确认7正确FAIL/1cleanPASS，五个quota选择丢失、普通路由/退出无拦截；Sol冻结完整字段/recovery before，Terra按合同实施，父继续host/native，Astra最终接受。
 

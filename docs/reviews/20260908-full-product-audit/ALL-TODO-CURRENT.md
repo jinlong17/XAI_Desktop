@@ -1,6 +1,6 @@
 # 全部 To-do：312 项逐项状态清单
 
-最新检查点（2026-09-11）：Date & Time完整五字段当前会话恢复已由Astra d0d934d接受，产品固定d9d9fdd；Astra独立caller7/Settings295，Sol47，父actualHost20/native19及类型/lint通过，见acceptance-d9d9fdd.md。下一完整单元为Notifications八字段（含隐藏quiet_start/end），合同next-notifications-contract.md；Terra实施、Sol独立验证、父actualHost/native。父固定d9d9fdd已复现11正确FAIL/1cleanPASS：八字段失败最新值丢失、route/signout无阻拦、隐藏时间重显丢失。正式13/312完成、299未关闭，不核销REL/D2整体。
+最新检查点（2026-09-11）：Date & Time完整调用方已接受（d0d934d）。Notifications八字段已实施6b90b22，父固定host12/native六组通过（d384671），Astra补充24通过（94fcd47）；真实截图发现开关拉伸，Terra72c9a60修复后父三态及中英五宽度通过（403cf1f）。Sol当前29项中28PASS/1正确P1：多个时间格式错误被兄弟编辑清除，Terra继续修复。Notifications完整host/native/独立终验仍开放，正式13/312完成、299未关闭。
 
 核对日期：2026-09-09；最新审查检查点：`0143952`；各批次固定产品版本与证据见下文及执行台账。本文件保留每项具体工作、优先级与验收要求，并合并执行台账状态。
 
