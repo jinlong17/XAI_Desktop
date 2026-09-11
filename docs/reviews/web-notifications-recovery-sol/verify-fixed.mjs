@@ -26,8 +26,8 @@ try {
   aliases.sort((left, right) => right.find.length - left.find.length);
   aliases.push({ find: "react", replacement: join(root, "packages/plugin-web-settings-rest/node_modules/react") }, { find: "@testing-library/react", replacement: join(root, "packages/plugin-web-settings-rest/node_modules/@testing-library/react") });
   const owned = join(dir, "docs/reviews/web-notifications-recovery-sol"); mkdirSync(owned, { recursive: true });
-  for (const file of ["fixture.tsx", "core.test.tsx", "recovery.test.tsx", "operations.test.tsx", "boundaries.test.tsx"]) copyFileSync(join(evidence, file), join(owned, file));
-  const modes = [["core", ["docs/reviews/web-notifications-recovery-sol/core.test.tsx"]], ["recovery", ["docs/reviews/web-notifications-recovery-sol/recovery.test.tsx"]], ["operations", ["docs/reviews/web-notifications-recovery-sol/operations.test.tsx"]], ["boundaries", ["docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx"]], ["original", ["packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx"]]];
+  for (const file of ["fixture.tsx", "core.test.tsx", "recovery.test.tsx", "operations.test.tsx", "boundaries.test.tsx", "extended.test.tsx"]) copyFileSync(join(evidence, file), join(owned, file));
+  const modes = [["core", ["docs/reviews/web-notifications-recovery-sol/core.test.tsx"]], ["recovery", ["docs/reviews/web-notifications-recovery-sol/recovery.test.tsx"]], ["operations", ["docs/reviews/web-notifications-recovery-sol/operations.test.tsx"]], ["boundaries", ["docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx"]], ["extended", ["docs/reviews/web-notifications-recovery-sol/extended.test.tsx"]], ["original", ["packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx"]]];
   for (const [mode, include] of modes) {
     if (process.argv[3] && process.argv[3] !== mode) continue;
     const config = join(dir, "sol.config.mjs");
