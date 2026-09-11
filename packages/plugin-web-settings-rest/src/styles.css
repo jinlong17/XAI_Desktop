@@ -723,6 +723,40 @@
   .dt-recovery-field button:only-of-type { grid-column: auto; }
 }
 
+/* ---- More recovery --------------------------------------------------- */
+.more-pane .check-inline {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.more-pane .reset-link {
+  display: block;
+  min-block-size: 44px;
+  margin-inline-start: auto;
+  border: 0;
+  background: transparent;
+}
+.more-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.more-recovery-field > span { grid-column: 1 / -1; overflow-wrap: anywhere; }
+.more-recovery-field button,
+.more-recovery-actions button { min-inline-size: 44px; min-block-size: 44px; }
+.more-recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.more-recovery-actions p { flex-basis: 100%; margin: 0; }
+.more-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .more-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
+  .more-recovery-field > span { grid-column: auto; }
+}
+
 /* ---- Sticky Note pane ------------------------------------------------ */
 .sticky-pane {
   padding: 16px;

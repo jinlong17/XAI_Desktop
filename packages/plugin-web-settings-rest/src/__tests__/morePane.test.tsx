@@ -1,11 +1,17 @@
-import { accountScope, generationKey } from "@repo/plugin-web-storage";
+import { accountScope, generationKey, generationMarkerKey } from "@repo/plugin-web-storage";
 /**
  * MP1..MP10 — morePane tests (test.md §3 P2)
  */
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { morePane } from "../panes/morePane.js";
 import { getPref, setPref } from "@repo/plugin-web-storage";
+
+beforeEach(() => {
+  vi.stubGlobal("navigator", { locks: { request: async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!)() } });
+  localStorage.setItem(generationMarkerKey("settings-fixture", true), JSON.stringify({ generation: "fixture-generation", migrationId: "fixture", previous: null }));
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("morePane", () => {
   it("MP1: renders without error", () => {
@@ -48,11 +54,11 @@ describe("morePane", () => {
     expect(sel!.options[0]!.value).toBe("follow");
   });
 
-  it("MP6: window type select persists xai_pref_more_win_type", () => {
+  it("MP6: window type select persists xai_pref_more_win_type", async () => {
     const { container } = render(morePane.render({ lang: "en" }));
     const sel = container.querySelector<HTMLSelectElement>('select[aria-label="Choose window type when launching"]');
     fireEvent.change(sel!, { target: { value: "tray" } });
-    expect(getPref("xai_pref_more_win_type")).toBe("tray");
+    await waitFor(() => expect(getPref("xai_pref_more_win_type")).toBe("tray"));
   });
 
   it("MP7: 3 template cards rendered", () => {
@@ -61,7 +67,7 @@ describe("morePane", () => {
     expect(cards.length).toBe(3);
   });
 
-  it("MP8: Reset Default clears More-owned keys and leaves other keys untouched", () => {
+  it("MP8: Reset Default clears More-owned keys and leaves other keys untouched", async () => {
     // Pre-set some More keys and a non-More key
     setPref("xai_pref_more_win_type", "tray");
     setPref("xai_pref_more_launch_at_login", true);
@@ -72,10 +78,35 @@ describe("morePane", () => {
     fireEvent.click(resetLink);
 
     // More keys should return to defaults
-    expect(getPref("xai_pref_more_win_type")).toBe("window");
+    await waitFor(() => expect(getPref("xai_pref_more_win_type")).toBe("window"));
     expect(getPref("xai_pref_more_launch_at_login")).toBe(false);
     // Non-More key must be untouched
     expect(getPref("xai_pref_notif_enabled")).toBe(false);
+  });
+
+  it("MP8b: Reset Default uses physical removals for both device and account More keys", async () => {
+    setPref("xai_pref_more_win_type", "tray");
+    setPref("xai_pref_more_default_tag", "work");
+    const accountKey = accountScope.physicalKey("xai_pref_more_default_tag");
+    render(morePane.render({ lang: "en" }));
+    fireEvent.click(screen.getByTestId("more-reset-default"));
+    await waitFor(() => expect(localStorage.getItem("xai_pref_more_win_type")).toBeNull());
+    expect(localStorage.getItem(accountKey)).toBeNull();
+    expect(screen.getByRole("status")).toHaveTextContent("restored to defaults");
+  });
+
+  it("MP8c: a failed physical reset remains an actual More draft even while the UI shows its default", async () => {
+    setPref("xai_pref_more_win_type", "tray");
+    const nativeRemove = Storage.prototype.removeItem;
+    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(function (this: Storage, key: string) {
+      if (key === "xai_pref_more_win_type") throw new Error("quota");
+      nativeRemove.call(this, key);
+    });
+    render(morePane.render({ lang: "en" }));
+    fireEvent.click(screen.getByTestId("more-reset-default"));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Retry Choose window type when launching" })).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: "Export More draft" })).toBeInTheDocument();
+    expect(screen.queryByText("More settings restored to defaults.")).toBeNull();
   });
 
   it("MP9: bilingual template names (ZH)", () => {
@@ -90,10 +121,16 @@ describe("morePane", () => {
     expect(morePane.icon).toBe("help");
     expect(morePane.i18nKey).toBe("settings.more");
   });
+
+  it("MP11: custom checkbox controls are real keyboard-operable buttons", () => {
+    render(morePane.render({ lang: "en" }));
+    expect(screen.getByRole("button", { name: "Remove text in tasks" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Remove tags from task name" }).tagName).toBe("BUTTON");
+  });
 });
 
 
-it("REL-03 More reset preserves B and unowned defaults while resetting the selected account", () => {
+it("REL-03 More reset preserves B and unowned defaults while resetting the selected account", async () => {
   const current = accountScope.capture();
   setPref("xai_pref_more_default_list", "today");
   const keyB = generationKey("B", "g-b", "xai_pref_more_default_list");
@@ -101,7 +138,7 @@ it("REL-03 More reset preserves B and unowned defaults while resetting the selec
   localStorage.setItem("xai_pref_more_default_list", "unowned-list");
   render(morePane.render({ lang: "en" }));
   fireEvent.click(screen.getByTestId("more-reset-default"));
-  expect(getPref("xai_pref_more_default_list")).toBe("inbox");
+  await waitFor(() => expect(getPref("xai_pref_more_default_list")).toBe("inbox"));
   expect(localStorage.getItem(keyB)).toBe("today");
   expect(localStorage.getItem("xai_pref_more_default_list")).toBe("unowned-list");
   expect(accountScope.capture()).toBe(current);
@@ -109,9 +146,11 @@ it("REL-03 More reset preserves B and unowned defaults while resetting the selec
 
 it("REL-03 a stale reset callback cannot reset B or device settings", () => {
   render(morePane.render({ lang: "en" }));
-  accountScope.activate(accountScope.lock("B"), "g-b");
-  setPref("xai_pref_more_default_list", "today");
-  setPref("xai_pref_more_win_type", "tray");
+  act(() => { accountScope.activate(accountScope.lock("B"), "g-b"); });
+  act(() => {
+    setPref("xai_pref_more_default_list", "today");
+    setPref("xai_pref_more_win_type", "tray");
+  });
   fireEvent.click(screen.getByTestId("more-reset-default"));
   expect(getPref("xai_pref_more_default_list")).toBe("today");
   expect(getPref("xai_pref_more_win_type")).toBe("tray");
