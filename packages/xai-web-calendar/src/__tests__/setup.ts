@@ -36,7 +36,10 @@ beforeEach(() => {
   localStorage.clear();
   vi.clearAllMocks();
   setCanonicalCommandActivationForTests(true);
-  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, callback: () => Promise<unknown>) => callback()) } });
+  // Native Web Locks accepts both `request(name, run)` and `request(name, options, run)`.
+  // Account-scoped canonical writes use the three-argument form (browserAccountLock),
+  // so the shim must resolve the callback from either position.
+  vi.stubGlobal("navigator", { locks: { request: vi.fn(async (_name: string, optionsOrRun: unknown, maybeRun?: () => Promise<unknown>) => (typeof optionsOrRun === "function" ? optionsOrRun as () => Promise<unknown> : maybeRun!)()) } });
 });
 
 // Explicit authenticated context; raw Storage remains unmodified.
