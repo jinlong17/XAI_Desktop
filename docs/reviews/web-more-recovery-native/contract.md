@@ -35,7 +35,7 @@ node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 host contro
 
 ## N2 result
 
-`host` passed at `7b216a3`; see `review-host-7b216a3.md`. N3 is recorded below; N4, final regressions, and final contract reconciliation remain pending.
+`host` passed at `7b216a3`; see `review-host-7b216a3.md`. N3-N4 are recorded below; final regressions and final contract reconciliation remain pending.
 
 ## N3 command
 
@@ -45,4 +45,15 @@ node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 recovery-ow
 
 ## N3 result
 
-`recovery-owner` passed at `7b216a3`; see `review-recovery-owner-7b216a3.md`. N4, final regressions, and final contract reconciliation remain pending.
+`recovery-owner` passed at `7b216a3`; see `review-recovery-owner-7b216a3.md`. N4 is recorded below; final regressions and final contract reconciliation remain pending.
+
+## N4 commands
+
+```sh
+node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 visual control-plane-20260917-n4-v1
+node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 visual-zh control-plane-20260917-n4-v1
+```
+
+## N4 result
+
+`visual` and `visual-zh` passed at `7b216a3`; see `review-visual-7b216a3.md` and the ten accepted screenshots. Final regressions and final contract reconciliation remain pending.

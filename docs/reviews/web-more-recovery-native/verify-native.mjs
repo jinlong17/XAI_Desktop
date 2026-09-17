@@ -14,7 +14,7 @@ const sourceCommit=process.argv[2];
 const mode=process.argv[3]??'controls-reset';
 const suffix=process.argv[4]??'run';
 if(!sourceCommit)throw Error('Fixed revision required');
-if(!['controls-reset','host','recovery-owner'].includes(mode))throw Error('Unsupported mode '+mode);
+if(!['controls-reset','host','recovery-owner','visual','visual-zh'].includes(mode))throw Error('Unsupported mode '+mode);
 const evidenceTag=`${sourceCommit}-${suffix}-${mode}`;
 const evidencePath=join(output,`native-${evidenceTag}.log`);
 if(existsSync(evidencePath))throw Error('Evidence exists; use a distinct suffix');
@@ -53,7 +53,8 @@ try{
     if(typeof target!=='string')throw Error('Unresolved pinned export '+args.path);
     return {path:join(entry.folder,target)};
   });}};
-  const source=readFileSync(join(output,'native.tsx'),'utf8');
+  let source=readFileSync(join(output,'native.tsx'),'utf8');
+  if(mode==='visual-zh')source=source.replaceAll('lang="en"','lang="zh"');
   const built=await build({stdin:{contents:source,resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
   const js=built.outputFiles.find(file=>file.path.endsWith('.js')).text;
   const css=built.outputFiles.find(file=>file.path.endsWith('.css')).text;
@@ -82,6 +83,7 @@ try{
   const waitFor=async(expression,message)=>{for(let attempt=0;attempt<160;attempt++){if(await evaluate(expression))return;await delay(40);}throw Error(message);};
   await cdp('Runtime.enable');
   await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
+  if(mode.startsWith('visual'))await cdp('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await cdp('Page.navigate',{url:'http://127.0.0.1:'+server.address().port});
   await waitFor("!!window.verify&&!!document.querySelector('.more-pane')",'More pane did not mount');
   await cdp('Page.bringToFront');
@@ -272,7 +274,7 @@ try{
     await waitFor('verify.signoutResult===false','Unmount did not settle sign-out false');
     assert.equal(await warning(),false,'Unmount left beforeunload handler installed');
     record('unmount-cleanup',{rootChildren:await evaluate('document.getElementById("app").childElementCount'),signoutResult:await evaluate('verify.signoutResult'),warning:await warning()});
-  }else{
+  }else if(mode==='recovery-owner'){
     const baseUrl='http://127.0.0.1:'+server.address().port;
     const warning=()=>evaluate('(()=>{const event=new Event("beforeunload",{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})()');
     const action=async(text,scope='.more-pane')=>{
@@ -448,6 +450,51 @@ try{
     assert.equal((await evaluate('verify.readB()'))[11],null,'Locked/B private key was written');
     assert.equal(await warning(),false,'Owner cleanup left beforeunload installed');
     record('owner-locked-device-continuity',{bUi,rawA:await evaluate('verify.read()'),rawB:await evaluate('verify.readB()'),writes:await evaluate('verify.writes()'),warning:await warning()});
+  }else{
+    const language=mode==='visual-zh'?'zh':'en';
+    const widths=[375,414,768,1024,1440];
+    const warning=()=>evaluate('(()=>{const event=new Event("beforeunload",{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})()');
+    const metricsFor=async selector=>evaluate(`(()=>[...document.querySelectorAll(${JSON.stringify(selector)})].map(element=>{element.scrollIntoView({block:'center'});const rect=element.getBoundingClientRect();return {text:(element.getAttribute('aria-label')??element.textContent).trim(),left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height,hit:element.contains(document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2))};}))()`);
+    await evaluate(`(()=>{window.moreVisualTrace=[];for(const type of ['keydown','keyup','click'])document.addEventListener(type,event=>{if(event.target?.closest?.('.more-pane'))window.moreVisualTrace.push({type,key:event.key,trusted:event.isTrusted,pressed:event.target.getAttribute?.('aria-pressed')});},true);})()`);
+    await evaluate('verify.deny([4]);document.querySelectorAll(".more-pane .check-inline")[0].focus()');
+    await key(' ','Space',32,' ');
+    await waitFor('!!document.querySelector(".more-recovery-field")','Trusted checkbox failure did not render recovery');
+    assert.equal(await evaluate('document.querySelectorAll(".more-pane .check-inline")[0].getAttribute("aria-pressed")'),'true','Trusted Space did not update checkbox draft');
+    assert.equal((await evaluate('verify.read()'))[4],'false','Denied checkbox write changed physical bytes');
+    assert.equal(await warning(),true,'Failed checkbox draft did not install beforeunload');
+    const trustedTrace=await evaluate('window.moreVisualTrace');
+    assert(trustedTrace.some(event=>event.type==='keydown'&&event.key===' '&&event.trusted),'Native Space key was not trusted');
+    assert(trustedTrace.some(event=>event.type==='click'&&event.trusted),'Native Space did not produce trusted checkbox click');
+    const recoveryTargets=await metricsFor('.more-recovery-field button, .more-recovery-actions button');
+    assert.equal(recoveryTargets.length,4,'Expected four More recovery targets');
+    for(const target of recoveryTargets){assert(target.width>=44&&target.height>=44,'Recovery target below 44px: '+target.text);assert(target.hit,'Recovery target failed real hit test: '+target.text);}
+    await evaluate('document.querySelector(".more-recovery-field").scrollIntoView({block:"center"});verify.router.navigate("/app/settings/date_time")');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Visual departure dialog did not open');
+    assert.equal(await evaluate('document.querySelector(".settings-departure-dialog").contains(document.activeElement)'),true,'Dialog did not receive focus');
+    await cdp('Input.dispatchKeyEvent',{type:'rawKeyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});
+    await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});
+    assert.equal(await evaluate('document.activeElement===document.querySelector(".settings-departure-dialog button:last-child")'),true,'Shift+Tab did not wrap to last dialog action');
+    await cdp('Input.dispatchKeyEvent',{type:'rawKeyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+    await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+    assert.equal(await evaluate('document.activeElement===document.querySelector(".settings-departure-dialog button")'),true,'Tab did not wrap to first dialog action');
+    for(const width of widths){
+      const height=width<=414?812:900;
+      await cdp('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<=414});
+      await delay(180);
+      await evaluate('document.querySelector(".more-recovery-field").scrollIntoView({block:"center"});document.querySelector(".settings-departure-dialog button").focus()');
+      const layout=await evaluate(`(()=>{const rectOf=element=>{const rect=element.getBoundingClientRect();return {left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height};};const dialog=document.querySelector('.settings-departure-dialog');const buttons=[...dialog.querySelectorAll('button')].map(element=>{const rect=element.getBoundingClientRect();return {text:element.textContent.trim(),left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height,hit:element.contains(document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2))};});const recovery=[...document.querySelectorAll('.more-recovery-field button, .more-recovery-actions button')].map(element=>{const rect=element.getBoundingClientRect();return {text:(element.getAttribute('aria-label')??element.textContent).trim(),width:rect.width,height:rect.height};});const focus=getComputedStyle(document.activeElement);return {viewport:{width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth},dialog:{label:dialog.getAttribute('aria-label'),...rectOf(dialog),scrollWidth:dialog.scrollWidth,clientWidth:dialog.clientWidth},buttons,recovery,focus:{tag:document.activeElement.tagName,text:document.activeElement.textContent.trim(),outlineStyle:focus.outlineStyle,outlineWidth:focus.outlineWidth}};})()`);
+      assert(layout.viewport.scrollWidth<=layout.viewport.width,'Horizontal document overflow at '+width);
+      assert(layout.dialog.left>=0&&layout.dialog.right<=layout.viewport.width&&layout.dialog.top>=0&&layout.dialog.bottom<=layout.viewport.height,'Dialog outside viewport at '+width);
+      assert(layout.dialog.scrollWidth<=layout.dialog.clientWidth+1,'Dialog content overflows at '+width);
+      for(const target of [...layout.buttons,...layout.recovery])assert(target.width>=44&&target.height>=44,'Target below 44px at '+width+': '+target.text);
+      for(const target of layout.buttons){assert(target.left>=0&&target.right<=layout.viewport.width&&target.top>=0&&target.bottom<=layout.viewport.height,'Dialog action clipped at '+width+': '+target.text);assert(target.hit,'Dialog action failed hit test at '+width+': '+target.text);}
+      assert.notEqual(layout.focus.outlineStyle,'none','Focused dialog action lacks visible outline at '+width);
+      const screenshotName=`native-${evidenceTag}-${width}.png`;
+      const screenshot=await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+      writeFileSync(join(output,screenshotName),Buffer.from(screenshot.data,'base64'));
+      record('visual-width',{language,width,height,screenshot:screenshotName,layout});
+    }
+    record('visual-contract',{language,trustedCheckbox:true,recoveryHitTargets:recoveryTargets.length,focusTrap:true,screenshots:widths.length});
   }
   assert.equal(runtimeErrors.length,0,'Runtime errors: '+runtimeErrors.slice(0,3).join(' | '));
   record('native',{pass:true,mode,runtimeErrors:0});
