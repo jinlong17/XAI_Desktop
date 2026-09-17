@@ -25,4 +25,14 @@ N1 does not accept the complete caller and closes no 312 item. N2-N4, final Sett
 
 ## N1 result
 
-`controls-reset` passed at `7b216a3`; see `review-controls-reset-7b216a3.md`. N2-N4 remain pending.
+`controls-reset` passed at `7b216a3`; see `review-controls-reset-7b216a3.md`.
+
+## N2 command
+
+```sh
+node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 host control-plane-20260917-n2-v1
+```
+
+## N2 result
+
+`host` passed at `7b216a3`; see `review-host-7b216a3.md`. N3-N4, final regressions, and final contract reconciliation remain pending.

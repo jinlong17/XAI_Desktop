@@ -14,7 +14,7 @@ const sourceCommit=process.argv[2];
 const mode=process.argv[3]??'controls-reset';
 const suffix=process.argv[4]??'run';
 if(!sourceCommit)throw Error('Fixed revision required');
-if(mode!=='controls-reset')throw Error('Unsupported mode '+mode);
+if(!['controls-reset','host'].includes(mode))throw Error('Unsupported mode '+mode);
 const evidenceTag=`${sourceCommit}-${suffix}-${mode}`;
 const evidencePath=join(output,`native-${evidenceTag}.log`);
 if(existsSync(evidencePath))throw Error('Evidence exists; use a distinct suffix');
@@ -109,6 +109,7 @@ try{
     await observeControl(index,label);
   };
   const labels=['Choose window type when launching','Launch at Login','Minimize app when auto launching','Date Recognition','Remove text in tasks','Remove tags from task name','URL Parsing','Default Date','Default Reminders (Due time task)','Default Reminders (All day task)','Default Priority','Default Tag','Default List','Default Add to','Overdue Section shows at'];
+  if(mode==='controls-reset'){
   await evaluate(`(()=>{window.moreNativeTrace=[];for(const type of ['keydown','keyup','input','change','click'])document.addEventListener(type,event=>{const target=event.target;if(target?.closest?.('.more-pane'))window.moreNativeTrace.push({type,key:event.key,value:target.value,pressed:target.getAttribute?.('aria-pressed'),checked:target.getAttribute?.('aria-checked'),label:target.getAttribute?.('aria-label'),trusted:event.isTrusted});},true);})()`);
   assert.deepEqual(await evaluate('verify.read()'),await evaluate('verify.initial'));
   assert.equal((await evaluate('verify.writes()')).length,0,'Mount wrote More data');
@@ -155,6 +156,120 @@ try{
   assert.equal(await evaluate('verify.unrelated()'),'preserve-me','Reset touched unrelated data');
   const displayed=await evaluate(`(()=>[...document.querySelectorAll('.more-pane select:not([aria-label="Language"])')].map(element=>element.value).concat([...document.querySelectorAll('.more-pane [role=switch]')].map(element=>element.getAttribute('aria-checked')),[...document.querySelectorAll('.more-pane .check-inline')].map(element=>element.getAttribute('aria-pressed'))))()`);
   record('physical-reset',{raw:await evaluate('verify.read()'),removals,unrelated:await evaluate('verify.unrelated()'),displayed});
+  }else{
+    const warning=()=>evaluate('(()=>{const event=new Event("beforeunload",{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})()');
+    const dialogOpen=()=>evaluate('!!document.querySelector(".settings-departure-dialog[role=dialog]")');
+    const button=async text=>{
+      const selector=await evaluate(`(()=>{const element=[...document.querySelectorAll('.settings-departure-dialog button')].find(candidate=>candidate.textContent.trim()===${JSON.stringify(text)});if(!element)throw Error('Missing dialog action '+${JSON.stringify(text)});element.dataset.nativeTarget='yes';return '[data-native-target="yes"]';})()`);
+      await actualClick(selector);
+      await evaluate('document.querySelector("[data-native-target]")?.removeAttribute("data-native-target")');
+    };
+    const waitMore=()=>waitFor("location.pathname==='/app/settings/more'&&!!document.querySelector('.more-pane')",'More pane did not remount');
+
+    assert.deepEqual(await evaluate('verify.read()'),await evaluate('verify.initial'));
+    assert.equal(await warning(),false,'Clean More unexpectedly warned before unload');
+    await evaluate('verify.deny([0])');
+    await selectByTypeahead(0,labels[0],'t','KeyT',84);
+    assert.equal((await evaluate('verify.read()'))[0],'window','Denied write changed physical bytes');
+    assert.equal(await warning(),true,'Failed actual edit did not install beforeunload');
+    await evaluate('verify.router.navigate("/app/settings/date_time");verify.signout()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Programmatic route did not open decision dialog');
+    await waitFor('verify.signoutResult===false','Later same-turn sign-out claimed first route intent');
+    assert.equal(await evaluate('location.pathname'),'/app/settings/more');
+    assert.equal(await evaluate('document.querySelector(".settings-departure-dialog").contains(document.activeElement)'),true,'Dialog did not receive focus');
+    await evaluate('(()=>{const buttons=document.querySelectorAll(".settings-departure-dialog button");buttons[buttons.length-1].focus();})()');
+    await cdp('Input.dispatchKeyEvent',{type:'rawKeyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+    await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+    assert.equal(await evaluate('document.activeElement===document.querySelector(".settings-departure-dialog button")'),true,'Native Tab escaped dialog');
+    await cdp('Input.dispatchKeyEvent',{type:'rawKeyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});
+    await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9,modifiers:8});
+    assert.equal(await evaluate('(()=>{const buttons=document.querySelectorAll(".settings-departure-dialog button");return document.activeElement===buttons[buttons.length-1];})()'),true,'Native Shift+Tab escaped dialog');
+    await key('Escape','Escape',27);
+    await waitFor('!document.querySelector(".settings-departure-dialog")','Escape did not choose Stay');
+    assert.equal(await evaluate(`document.activeElement===document.querySelector('[aria-label=${JSON.stringify(labels[0])}]')`),true,'Escape did not return focus to programmatic departure origin');
+    record('programmatic-first-intent-focus',{path:await evaluate('location.pathname'),signoutResult:await evaluate('verify.signoutResult'),warning:await warning(),focus:await evaluate('document.activeElement?.getAttribute("aria-label")')});
+
+    await actualClick('.app-rail [aria-label="Tasks"]');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','AppRail departure was not blocked');
+    await button('Stay');
+    assert.equal(await evaluate('location.pathname'),'/app/settings/more');
+    assert.equal(await evaluate('document.activeElement?.getAttribute("aria-label")'),'Tasks','Stay did not restore AppRail trigger focus');
+    record('app-rail-stay',{path:await evaluate('location.pathname'),focus:await evaluate('document.activeElement?.getAttribute("aria-label")')});
+
+    await evaluate('verify.router.navigate("../date_time",{relative:"path",state:{token:"more-n2-relative"}})');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Relative departure was not blocked');
+    const writesBeforeDiscard=(await evaluate('verify.writes()')).length;
+    await button('Discard local changes and leave');
+    await waitFor('location.pathname==="/app/settings/date_time"','Relative target was not preserved');
+    assert.equal(await evaluate('verify.router.state.location.state?.token'),'more-n2-relative','Relative navigation state was lost');
+    assert.equal((await evaluate('verify.writes()')).length,writesBeforeDiscard,'Discard wrote More data');
+    assert.equal((await evaluate('verify.read()'))[0],'window','Discard changed physical bytes');
+    assert.equal(await warning(),false,'Discard left beforeunload installed');
+    record('relative-discard',{path:await evaluate('location.pathname'),state:await evaluate('verify.router.state.location.state'),raw:await evaluate('verify.read()'),writes:writesBeforeDiscard});
+
+    await evaluate('verify.router.navigate("/app/settings/more")');
+    await waitMore();
+    await evaluate('verify.deny([0])');
+    await selectByTypeahead(0,labels[0],'t','KeyT',84);
+    await evaluate('history.back()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Browser Back was not blocked');
+    await button('Stay');
+    assert.equal(await evaluate('location.pathname'),'/app/settings/more');
+    await evaluate('history.back()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Second browser Back was not blocked');
+    await button('Discard local changes and leave');
+    await waitFor('location.pathname==="/app/settings/date_time"','Original Back target was not retained');
+    await evaluate('history.forward()');
+    await waitMore();
+    record('history-back-forward',{path:await evaluate('location.pathname'),warning:await warning(),raw:await evaluate('verify.read()')});
+
+    await evaluate('verify.restore();verify.hold(0)');
+    await selectByTypeahead(0,labels[0],'t','KeyT',84);
+    await evaluate('verify.hold(11)');
+    await selectByTypeahead(11,labels[11],'w','KeyW',87);
+    assert.equal(await warning(),true,'Pending edits did not install beforeunload');
+    await evaluate('verify.router.navigate("/app/settings/notifications")');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Pending route did not open dialog');
+    await evaluate('verify.release(0)');
+    await waitFor('verify.read()[0]==="tray"','First held write did not finish');
+    assert.equal(await evaluate('location.pathname'),'/app/settings/more','Partial release incorrectly released route');
+    assert.equal(await dialogOpen(),true,'Partial release closed decision dialog');
+    await evaluate('verify.release(11)');
+    await waitFor('location.pathname==="/app/settings/notifications"','Latest release did not complete original route');
+    assert.equal((await evaluate('verify.read()'))[11],'work','Latest held write did not persist');
+    assert.equal(await warning(),false,'Successful latest release left beforeunload installed');
+    record('partial-latest-release',{path:await evaluate('location.pathname'),raw:await evaluate('verify.read()'),dialog:await dialogOpen(),warning:await warning()});
+
+    await evaluate('verify.router.navigate("/app/settings/more")');
+    await waitMore();
+    await evaluate('verify.hold(0)');
+    await selectByTypeahead(0,labels[0],'w','KeyW',87);
+    await evaluate('verify.hold(11)');
+    await selectByTypeahead(11,labels[11],'n','KeyN',78);
+    await evaluate('verify.signout()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Sign-out did not open decision dialog');
+    await evaluate('verify.activateB()');
+    await waitFor('verify.signoutResult===false&&!document.querySelector(".settings-departure-dialog")','Epoch change did not cancel old sign-out decision');
+    const epochUi=await evaluate(`({windowType:document.querySelector('[aria-label=${JSON.stringify(labels[0])}]')?.value,defaultTag:document.querySelector('[aria-label=${JSON.stringify(labels[11])}]')?.value})`);
+    await evaluate('verify.release(11)');
+    await evaluate('verify.release(0)');
+    await waitFor('verify.read()[0]==="window"','Device draft did not finish after account epoch change');
+    await waitFor('!document.querySelector(".more-recovery-actions")','Stale account work remained recoverable for replacement owner');
+    assert.equal((await evaluate('verify.read()'))[11],'work','Stale account draft wrote A bytes after epoch change');
+    assert.deepEqual(epochUi,{windowType:'window',defaultTag:'none'},'Replacement owner saw private A account draft');
+    assert.equal(await warning(),false,'Epoch cleanup left beforeunload installed');
+    record('epoch-cancellation',{signoutResult:await evaluate('verify.signoutResult'),ui:epochUi,rawA:await evaluate('verify.read()'),warning:await warning()});
+
+    await evaluate('verify.deny([0])');
+    await selectByTypeahead(0,labels[0],'t','KeyT',84);
+    await evaluate('verify.signout()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Unmount setup did not open decision dialog');
+    await evaluate('verify.unmount()');
+    await waitFor('document.getElementById("app").childElementCount===0','Composed host did not unmount');
+    await waitFor('verify.signoutResult===false','Unmount did not settle sign-out false');
+    assert.equal(await warning(),false,'Unmount left beforeunload handler installed');
+    record('unmount-cleanup',{rootChildren:await evaluate('document.getElementById("app").childElementCount'),signoutResult:await evaluate('verify.signoutResult'),warning:await warning()});
+  }
   assert.equal(runtimeErrors.length,0,'Runtime errors: '+runtimeErrors.slice(0,3).join(' | '));
   record('native',{pass:true,mode,runtimeErrors:0});
 }catch(error){

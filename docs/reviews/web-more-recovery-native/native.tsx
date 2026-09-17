@@ -1,7 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {createBrowserRouter,RouterProvider} from 'react-router';
-import {accountScope,generationKey,generationMarkerKey} from './packages/plugin-web-storage/src/index';
+import {accountScope,generationKey,generationMarkerKey,prefMutationLockName} from './packages/plugin-web-storage/src/index';
 import {WebShellProvider,Shell} from './packages/xai-web-shell/src/index';
 import {webShellModuleRegistrations} from './apps/web/src/routes/modules/shellRegistrations';
 import {composedSettingsRegistration} from './apps/web/src/routes/modules/composedSettingsRegistration';
@@ -28,19 +28,31 @@ if(nativeGet.call(localStorage,'more-native-seeded')===null){
 }
 
 const writes:Array<{key:string,value:string}>=[],removes:string[]=[],reads:string[]=[];
-Storage.prototype.setItem=function(key,value){nativeSet.call(this,key,value);if(keys.includes(key))writes.push({key,value});};
+let denied=new Set<string>();
+Storage.prototype.setItem=function(key,value){if(denied.has(key))throw new DOMException('denied','SecurityError');nativeSet.call(this,key,value);if(keys.includes(key))writes.push({key,value});};
 Storage.prototype.removeItem=function(key){nativeRemove.call(this,key);if(keys.includes(key))removes.push(key);};
 Storage.prototype.getItem=function(key){reads.push(key);return nativeGet.call(this,key);};
 
 history.replaceState(null,'','/app/settings/more');
 const Composed=composedSettingsRegistration.children[0]!.render;
 const router=createBrowserRouter([{path:'/app',element:<Shell lang="en" setLang={()=>{}} theme="light" setTheme={()=>{}} density="comfortable" setDensity={()=>{}}/>,children:[{path:'settings/*',element:<Composed/>},{path:'dashboard',element:<div>Dashboard destination</div>},{path:'tasks',element:<div>Tasks destination</div>}]}]);
+const held=new Map<number,{release:()=>void,done:Promise<unknown>}>();
+const activate=(nextOwner:string)=>{
+  nativeSet.call(localStorage,generationMarkerKey(nextOwner),JSON.stringify({generation,migrationId:'fixture',previous:null}));
+  accountScope.activate(accountScope.lock(nextOwner),generation);
+};
 const app=createRoot(document.getElementById('app')!);
 (window as any).verify={
   instance:crypto.randomUUID(),names,keys,defaults,initial,expected,router,
   read:()=>keys.map(key=>nativeGet.call(localStorage,key)),
   writes:()=>writes.slice(),removes:()=>removes.slice(),reads:()=>reads.slice(),
   unrelated:()=>nativeGet.call(localStorage,'more-native-unrelated'),
+  deny:(indices:number[])=>{denied=new Set(indices.map(index=>keys[index]!));},
+  restore:()=>{denied.clear();},
+  activateB:()=>activate('more-native-B'),
+  lock:()=>accountScope.lock('more-native-locked'),
+  async hold(index:number){let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(resolve=>release=resolve),ready=new Promise<void>(resolve=>entered=resolve);const done=navigator.locks.request(prefMutationLockName(keys[index]!),{mode:'exclusive'},()=>{entered();return gate;});held.set(index,{release,done});await ready;},
+  async release(index:number){const lock=held.get(index);lock?.release();await lock?.done;held.delete(index);},
   signoutResult:'pending',
   signout(){void requestSettingsDeparture('sign-out').then(value=>(window as any).verify.signoutResult=value);},
   unmount:()=>app.unmount(),
