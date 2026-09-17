@@ -13,7 +13,8 @@ const owner='more-native-A',generation='g1';
 const names=['win_type','launch_at_login','minimize_on_launch','date_recognition','remove_date_text','remove_tags','url_parse','default_date','default_rem_due','default_rem_all','default_pri','default_tag','default_list','add_to','overdue_at'];
 const accountIndices=new Set([11,12]);
 const logicalKeys=names.map(name=>'xai_pref_more_'+name);
-const keys=logicalKeys.map((key,index)=>accountIndices.has(index)?generationKey(owner,generation,key):key);
+const keysForOwner=(targetOwner:string)=>logicalKeys.map((key,index)=>accountIndices.has(index)?generationKey(targetOwner,generation,key):key);
+const keys=keysForOwner(owner),bKeys=keysForOwner('more-native-B');
 const defaults=['window','false','false','true','false','true','true','none','on_time','none','none','none','inbox','top','top'];
 const initial=defaults.slice();
 const expected=['tray','true','true','false','true','false','false','today','5min','day_before','high','work','today','bottom','bottom'];
@@ -28,10 +29,11 @@ if(nativeGet.call(localStorage,'more-native-seeded')===null){
 }
 
 const writes:Array<{key:string,value:string}>=[],removes:string[]=[],reads:string[]=[];
-let denied=new Set<string>();
-Storage.prototype.setItem=function(key,value){if(denied.has(key))throw new DOMException('denied','SecurityError');nativeSet.call(this,key,value);if(keys.includes(key))writes.push({key,value});};
-Storage.prototype.removeItem=function(key){nativeRemove.call(this,key);if(keys.includes(key))removes.push(key);};
-Storage.prototype.getItem=function(key){reads.push(key);return nativeGet.call(this,key);};
+const attempts=new Map<string,number>(),removeAttempts=new Map<string,number>();
+let denied=new Set<string>(),deniedRemoves=new Set<string>(),readsDenied=new Set<string>(),denyEverything=false,uncertain:string|null=null,readbackArmed=false;
+Storage.prototype.setItem=function(key,value){attempts.set(key,(attempts.get(key)??0)+1);if(denyEverything||denied.has(key))throw new DOMException('denied','SecurityError');nativeSet.call(this,key,value);if(keys.includes(key)||bKeys.includes(key))writes.push({key,value});if(key===uncertain)readbackArmed=true;};
+Storage.prototype.removeItem=function(key){removeAttempts.set(key,(removeAttempts.get(key)??0)+1);if(denyEverything||deniedRemoves.has(key))throw new DOMException('denied','SecurityError');nativeRemove.call(this,key);if(keys.includes(key)||bKeys.includes(key))removes.push(key);};
+Storage.prototype.getItem=function(key){reads.push(key);if(denyEverything||readsDenied.has(key))throw new DOMException('denied','SecurityError');if(key===uncertain&&readbackArmed){readbackArmed=false;throw new DOMException('readback denied','SecurityError');}return nativeGet.call(this,key);};
 
 history.replaceState(null,'','/app/settings/more');
 const Composed=composedSettingsRegistration.children[0]!.render;
@@ -45,10 +47,17 @@ const app=createRoot(document.getElementById('app')!);
 (window as any).verify={
   instance:crypto.randomUUID(),names,keys,defaults,initial,expected,router,
   read:()=>keys.map(key=>nativeGet.call(localStorage,key)),
+  readB:()=>bKeys.map(key=>nativeGet.call(localStorage,key)),
   writes:()=>writes.slice(),removes:()=>removes.slice(),reads:()=>reads.slice(),
+  attempts:()=>Object.fromEntries(attempts),removeAttempts:()=>Object.fromEntries(removeAttempts),
   unrelated:()=>nativeGet.call(localStorage,'more-native-unrelated'),
   deny:(indices:number[])=>{denied=new Set(indices.map(index=>keys[index]!));},
-  restore:()=>{denied.clear();},
+  denyRemove:(indices:number[])=>{deniedRemoves=new Set(indices.map(index=>keys[index]!));},
+  denyAll:()=>{denyEverything=true;},
+  denyRead:(index:number)=>{readsDenied.add(keys[index]!);},
+  uncertain:(index:number)=>{uncertain=keys[index]!;},
+  restore:()=>{denied.clear();deniedRemoves.clear();readsDenied.clear();denyEverything=false;uncertain=null;readbackArmed=false;},
+  resetFixture:()=>{activate(owner);keys.forEach((key,index)=>nativeSet.call(localStorage,key,initial[index]!));for(const index of accountIndices)nativeRemove.call(localStorage,bKeys[index]!);nativeSet.call(localStorage,'more-native-unrelated','preserve-me');},
   activateB:()=>activate('more-native-B'),
   lock:()=>accountScope.lock('more-native-locked'),
   async hold(index:number){let release!:()=>void,entered!:()=>void;const gate=new Promise<void>(resolve=>release=resolve),ready=new Promise<void>(resolve=>entered=resolve);const done=navigator.locks.request(prefMutationLockName(keys[index]!),{mode:'exclusive'},()=>{entered();return gate;});held.set(index,{release,done});await ready;},

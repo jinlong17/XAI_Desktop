@@ -14,13 +14,14 @@ const sourceCommit=process.argv[2];
 const mode=process.argv[3]??'controls-reset';
 const suffix=process.argv[4]??'run';
 if(!sourceCommit)throw Error('Fixed revision required');
-if(!['controls-reset','host'].includes(mode))throw Error('Unsupported mode '+mode);
+if(!['controls-reset','host','recovery-owner'].includes(mode))throw Error('Unsupported mode '+mode);
 const evidenceTag=`${sourceCommit}-${suffix}-${mode}`;
 const evidencePath=join(output,`native-${evidenceTag}.log`);
 if(existsSync(evidencePath))throw Error('Evidence exists; use a distinct suffix');
 
 const directory=mkdtempSync(join(tmpdir(),'xai-more-native-'));
 const snapshot=join(directory,'source');
+const downloads=join(directory,'downloads');
 const records=[];
 const runtimeErrors=[];
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
@@ -29,6 +30,7 @@ let server,browser,socket;
 
 try{
   mkdirSync(snapshot);
+  mkdirSync(downloads);
   execFileSync('tar',['-x','-C',snapshot],{input:execFileSync('git',['archive',sourceCommit],{cwd:root,maxBuffer:100*1024*1024})});
   symlinkSync(join(root,'node_modules'),join(snapshot,'node_modules'));
   symlinkSync(join(root,'apps/web/node_modules'),join(snapshot,'apps/web/node_modules'));
@@ -55,7 +57,7 @@ try{
   const built=await build({stdin:{contents:source,resolveDir:snapshot,loader:'tsx'},plugins:[pinnedPackages],nodePaths:[join(root,'apps/web/node_modules')],loader:{'.png':'dataurl','.svg':'dataurl','.woff2':'dataurl','.woff':'dataurl'},bundle:true,format:'esm',platform:'browser',write:false,outfile:join(directory,'bundle.js'),define:{'import.meta.env':'{}'}});
   const js=built.outputFiles.find(file=>file.path.endsWith('.js')).text;
   const css=built.outputFiles.find(file=>file.path.endsWith('.css')).text;
-  server=createServer((_request,response)=>{response.setHeader('Content-Type','text/html');response.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>');});
+  server=createServer((request,response)=>{response.setHeader('Content-Type','text/html');if(request.url==='/external'){response.end('<!doctype html><title>Independent same-origin writer</title>');return;}response.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style><div id="app"></div><script type="module">'+js+'</script>');});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   browser=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--disable-gpu','--no-first-run','--disable-background-networking','--remote-debugging-port=0','--user-data-dir='+join(directory,'profile'),'about:blank'],{stdio:'ignore'});
   let port;
@@ -79,6 +81,7 @@ try{
   const evaluate=async expression=>{const result=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
   const waitFor=async(expression,message)=>{for(let attempt=0;attempt<160;attempt++){if(await evaluate(expression))return;await delay(40);}throw Error(message);};
   await cdp('Runtime.enable');
+  await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
   await cdp('Page.navigate',{url:'http://127.0.0.1:'+server.address().port});
   await waitFor("!!window.verify&&!!document.querySelector('.more-pane')",'More pane did not mount');
   await cdp('Page.bringToFront');
@@ -156,7 +159,7 @@ try{
   assert.equal(await evaluate('verify.unrelated()'),'preserve-me','Reset touched unrelated data');
   const displayed=await evaluate(`(()=>[...document.querySelectorAll('.more-pane select:not([aria-label="Language"])')].map(element=>element.value).concat([...document.querySelectorAll('.more-pane [role=switch]')].map(element=>element.getAttribute('aria-checked')),[...document.querySelectorAll('.more-pane .check-inline')].map(element=>element.getAttribute('aria-pressed'))))()`);
   record('physical-reset',{raw:await evaluate('verify.read()'),removals,unrelated:await evaluate('verify.unrelated()'),displayed});
-  }else{
+  }else if(mode==='host'){
     const warning=()=>evaluate('(()=>{const event=new Event("beforeunload",{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})()');
     const dialogOpen=()=>evaluate('!!document.querySelector(".settings-departure-dialog[role=dialog]")');
     const button=async text=>{
@@ -269,6 +272,182 @@ try{
     await waitFor('verify.signoutResult===false','Unmount did not settle sign-out false');
     assert.equal(await warning(),false,'Unmount left beforeunload handler installed');
     record('unmount-cleanup',{rootChildren:await evaluate('document.getElementById("app").childElementCount'),signoutResult:await evaluate('verify.signoutResult'),warning:await warning()});
+  }else{
+    const baseUrl='http://127.0.0.1:'+server.address().port;
+    const warning=()=>evaluate('(()=>{const event=new Event("beforeunload",{cancelable:true});window.dispatchEvent(event);return event.defaultPrevented;})()');
+    const action=async(text,scope='.more-pane')=>{
+      const selector=await evaluate(`(()=>{const element=[...document.querySelectorAll(${JSON.stringify(scope+' button')})].find(candidate=>(candidate.getAttribute('aria-label')??candidate.textContent).trim()===${JSON.stringify(text)});if(!element)throw Error('Missing action '+${JSON.stringify(text)});element.dataset.nativeTarget='yes';return '[data-native-target="yes"]';})()`);
+      await actualClick(selector);
+      await evaluate('document.querySelector("[data-native-target]")?.removeAttribute("data-native-target")');
+    };
+    const fresh=async()=>{
+      if(await warning()){
+        await evaluate('verify.restore()');
+        if(await evaluate('!![...document.querySelectorAll(".more-pane button")].find(element=>element.textContent.trim()==="Discard all changes")'))await action('Discard all changes');
+        await waitFor('!document.querySelector(".more-recovery-actions")','Fixture cleanup did not discard active drafts');
+      }
+      const previous=await evaluate('verify.instance');
+      await evaluate('verify.restore();verify.resetFixture()');
+      await cdp('Page.reload');
+      await waitFor(`window.verify?.instance&&verify.instance!==${JSON.stringify(previous)}&&location.pathname==='/app/settings/more'&&!!document.querySelector('.more-pane')`,'Fresh More fixture did not mount');
+      assert.deepEqual(await evaluate('verify.read()'),await evaluate('verify.initial'));
+      assert.equal((await evaluate('verify.writes()')).length,0,'Fresh mount wrote More data');
+      assert.equal((await evaluate('verify.removes()')).length,0,'Fresh mount removed More data');
+    };
+    const externalDocumentWrite=async(index,value)=>{
+      const {targetId}=await cdp('Target.createTarget',{url:baseUrl+'/external'});
+      const targetList=await(await fetch('http://127.0.0.1:'+port+'/json/list')).json();
+      const target=targetList.find(candidate=>candidate.id===targetId);
+      assert(target,'Missing independent same-origin target');
+      const other=new WebSocket(target.webSocketDebuggerUrl);
+      await new Promise(resolve=>other.addEventListener('open',resolve,{once:true}));
+      let sequence=0;
+      const callbacks=new Map();
+      other.addEventListener('message',event=>{const message=JSON.parse(event.data);if(message.id){const job=callbacks.get(message.id);callbacks.delete(message.id);message.error?job.reject(Error(JSON.stringify(message.error))):job.resolve(message.result);}});
+      const call=(method,params={})=>new Promise((resolve,reject)=>{const id=++sequence;callbacks.set(id,{resolve,reject});other.send(JSON.stringify({id,method,params}));});
+      try{
+        const physicalKey=await evaluate(`verify.keys[${index}]`);
+        const result=await call('Runtime.evaluate',{expression:`localStorage.setItem(${JSON.stringify(physicalKey)},${JSON.stringify(value)});localStorage.getItem(${JSON.stringify(physicalKey)})`,returnByValue:true});
+        assert(!result.exceptionDetails,'Independent writer failed');
+        assert.equal(result.result.value,value);
+        record('external-document-write',{index,key:physicalKey,value,targetId});
+      }finally{
+        other.close();
+        await cdp('Target.closeTarget',{targetId});
+        await cdp('Page.bringToFront');
+      }
+      await delay(120);
+    };
+    const draftDownload=async(expected,{text='Export More draft',scope='.more-pane'}={})=>{
+      const before=await evaluate('({reads:verify.reads().length,writes:verify.writes().length,removes:verify.removes().length})');
+      await action(text,scope);
+      const file=join(downloads,'more-draft.json');
+      for(let attempt=0;attempt<100&&!existsSync(file);attempt++)await delay(40);
+      assert(existsSync(file),'Actual More JSON download missing');
+      const payload=JSON.parse(readFileSync(file,'utf8'));
+      assert.deepEqual(payload,{version:1,kind:'more-draft',changes:expected});
+      assert.deepEqual(await evaluate('({reads:verify.reads().length,writes:verify.writes().length,removes:verify.removes().length})'),before,'Export accessed persistence');
+      record('disk-export',{text,payload,storageUnchanged:true});
+      rmSync(file);
+      assert.equal(await warning(),true,'Export cleared recovery warning');
+    };
+    const editExpected=async index=>{
+      if(index===0)return selectByTypeahead(0,labels[0],'t','KeyT',84);
+      if(index>=1&&index<=3){await actualClick(`[aria-label=${JSON.stringify(labels[index])}]`);return observeControl(index,labels[index]);}
+      if(index===4){await evaluate(`document.querySelector('[aria-label=${JSON.stringify(labels[4])}]').focus()`);await key(' ','Space',32,' ');return observeControl(4,labels[4]);}
+      if(index===5){await evaluate(`document.querySelector('[aria-label=${JSON.stringify(labels[5])}]').focus()`);await key('Enter','Enter',13,'\r');return observeControl(5,labels[5]);}
+      if(index===6){await actualClick(`[aria-label=${JSON.stringify(labels[6])}]`);return observeControl(6,labels[6]);}
+      const input={7:['t','KeyT',84],8:['5','Digit5',53],9:['d','KeyD',68],10:['h','KeyH',72],11:['w','KeyW',87],12:['t','KeyT',84],13:['b','KeyB',66],14:['b','KeyB',66]}[index];
+      return selectByTypeahead(index,labels[index],...input);
+    };
+
+    await evaluate('verify.deny([0])');
+    await editExpected(0);
+    assert.equal((await evaluate('verify.read()'))[0],'window');
+    assert.equal(await evaluate('document.body.textContent.includes("Choose window type when launching was not saved.")'),true,'Set refusal was not attributed');
+    await evaluate('verify.restore()');
+    await action('Retry Choose window type when launching');
+    await waitFor('verify.read()[0]==="tray"&&!document.querySelector("[aria-label=\\"Retry Choose window type when launching\\"]")','Set Retry did not persist exact draft');
+    assert.equal(await warning(),false);
+    record('set-refusal-retry',{raw:await evaluate('verify.read()'),writes:await evaluate('verify.writes()'),attempts:await evaluate('verify.attempts()')});
+
+    await fresh();
+    await evaluate('verify.hold(1)');
+    await actualClick(`[aria-label=${JSON.stringify(labels[1])}]`);
+    await waitFor('!!document.querySelector("[aria-label=\\"Retry Launch at Login\\"]")','Pending recovery did not render');
+    await action('Retry Launch at Login');
+    await action('Retry Launch at Login');
+    assert.equal((await evaluate('verify.writes()')).length,0,'Retry duplicated pending write');
+    await evaluate('verify.release(1)');
+    await waitFor('verify.read()[1]==="true"&&!document.querySelector(".more-recovery-actions")','Pending write did not settle');
+    assert.equal((await evaluate('verify.writes()')).length,1);
+    assert.equal(await warning(),false);
+    record('pending-lock',{raw:await evaluate('verify.read()'),writes:await evaluate('verify.writes()'),attempts:await evaluate('verify.attempts()')});
+
+    await fresh();
+    await evaluate('verify.uncertain(1)');
+    await actualClick(`[aria-label=${JSON.stringify(labels[1])}]`);
+    await waitFor('!!document.querySelector("[aria-label=\\"Retry Launch at Login\\"]")','Uncertainty recovery did not render');
+    assert.equal((await evaluate('verify.read()'))[1],'true');
+    assert.equal((await evaluate('verify.writes()')).length,1);
+    await action('Retry Launch at Login');
+    await waitFor('!document.querySelector(".more-recovery-actions")','Uncertainty Retry did not reconcile');
+    assert.equal((await evaluate('verify.writes()')).length,1,'Uncertainty Retry duplicated physical write');
+    assert.equal(await warning(),false);
+    record('uncertainty-retry',{raw:await evaluate('verify.read()'),writes:await evaluate('verify.writes()'),attempts:await evaluate('verify.attempts()')});
+
+    await fresh();
+    await evaluate('verify.uncertain(1)');
+    await actualClick(`[aria-label=${JSON.stringify(labels[1])}]`);
+    await waitFor('!!document.querySelector("[aria-label=\\"Retry Launch at Login\\"]")','Conflict setup did not expose Retry');
+    await externalDocumentWrite(1,'false');
+    await action('Retry Launch at Login');
+    await delay(160);
+    assert.equal((await evaluate('verify.read()'))[1],'false','Retry overwrote second-document bytes');
+    assert.equal((await evaluate('verify.writes()')).length,1,'Conflict caused a second main-document write');
+    assert.equal(await warning(),true,'Conflict cleared actual draft');
+    await action('Discard Launch at Login');
+    await waitFor('!document.querySelector(".more-recovery-actions")','Conflict discard did not clear draft');
+    record('second-document-conflict',{raw:await evaluate('verify.read()'),writes:await evaluate('verify.writes()'),warning:await warning()});
+
+    await fresh();
+    await evaluate('verify.deny(Array.from({length:15},(_,index)=>index))');
+    await editExpected(0);
+    await draftDownload({device:{win_type:{operation:'set',value:'tray'}}});
+    await editExpected(11);
+    await evaluate('verify.router.navigate("/app/settings/date_time")');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Mixed export dialog did not open');
+    await draftDownload({device:{win_type:{operation:'set',value:'tray'}},account:{default_tag:{operation:'set',value:'work'}}},{text:'Export current draft',scope:'.settings-departure-dialog'});
+    assert.equal(await evaluate('location.pathname'),'/app/settings/more','Dialog export changed route');
+    assert.equal(await evaluate('!!document.querySelector(".settings-departure-dialog")'),true,'Dialog export closed decision');
+    await action('Stay','.settings-departure-dialog');
+    for(const index of [1,2,3,4,5,6,7,8,9,10,12,13,14])await editExpected(index);
+    await evaluate('verify.denyAll()');
+    const allDevice={win_type:{operation:'set',value:'tray'},launch_at_login:{operation:'set',value:true},minimize_on_launch:{operation:'set',value:true},date_recognition:{operation:'set',value:false},remove_date_text:{operation:'set',value:true},remove_tags:{operation:'set',value:false},url_parse:{operation:'set',value:false},default_date:{operation:'set',value:'today'},default_rem_due:{operation:'set',value:'5min'},default_rem_all:{operation:'set',value:'day_before'},default_pri:{operation:'set',value:'high'},add_to:{operation:'set',value:'bottom'},overdue_at:{operation:'set',value:'bottom'}};
+    const allAccount={default_tag:{operation:'set',value:'work'},default_list:{operation:'set',value:'today'}};
+    await draftDownload({device:allDevice,account:allAccount});
+    record('export-matrix',{sparse:true,mixedDialog:true,all15:true});
+
+    await fresh();
+    await editExpected(0);
+    await waitFor('verify.read()[0]==="tray"','Reset refusal setup did not persist');
+    await evaluate('verify.denyRemove([0])');
+    await actualClick('[data-testid="more-reset-default"]');
+    await waitFor('document.body.textContent.includes("Choose window type when launching reset to default was not completed.")','Reset refusal was not attributed');
+    await waitFor('verify.removes().length===14','Reset refusal did not settle sibling removals');
+    assert.equal((await evaluate('verify.read()'))[0],'tray','Failed reset hid physical retained value');
+    assert.equal(await evaluate(`document.querySelector('[aria-label=${JSON.stringify(labels[0])}]').value`),'window','Reset draft did not display intended default');
+    await evaluate('verify.restore()');
+    await action('Retry Choose window type when launching');
+    await waitFor('verify.read()[0]===null&&!document.querySelector(".more-recovery-actions")','Reset Retry did not remove failed physical key');
+    assert.equal(await evaluate('document.body.textContent.includes("More settings restored to defaults.")'),true,'Reset completion truth missing after Retry');
+    record('reset-refusal-retry',{raw:await evaluate('verify.read()'),removes:await evaluate('verify.removes()'),removeAttempts:await evaluate('verify.removeAttempts()')});
+
+    await fresh();
+    await evaluate('verify.hold(0)');
+    await editExpected(0);
+    await evaluate('verify.hold(11)');
+    await editExpected(11);
+    await evaluate('verify.signout()');
+    await waitFor('!!document.querySelector(".settings-departure-dialog")','Owner sign-out decision did not open');
+    await evaluate('verify.activateB()');
+    await waitFor('verify.signoutResult===false&&!document.querySelector(".settings-departure-dialog")','A to B did not cancel old sign-out');
+    const bUi=await evaluate(`({windowType:document.querySelector('[aria-label=${JSON.stringify(labels[0])}]')?.value,defaultTag:document.querySelector('[aria-label=${JSON.stringify(labels[11])}]')?.value})`);
+    assert.deepEqual(bUi,{windowType:'tray',defaultTag:'none'},'B saw A private draft or lost device draft');
+    assert.equal((await evaluate('verify.readB()'))[11],null,'B private physical key was populated');
+    await evaluate('verify.lock()');
+    await delay(120);
+    await draftDownload({device:{win_type:{operation:'set',value:'tray'}}});
+    const beforeLockedAccount=await evaluate('({writes:verify.writes().length,attempts:verify.attempts()})');
+    await selectByTypeahead(11,labels[11],'w','KeyW',87);
+    assert.deepEqual(await evaluate('({writes:verify.writes().length,attempts:verify.attempts()})'),beforeLockedAccount,'Locked account admitted private edit');
+    await evaluate('verify.release(11)');
+    await evaluate('verify.release(0)');
+    await waitFor('verify.read()[0]==="tray"&&!document.querySelector(".more-recovery-actions")','Device work did not survive A to B to locked');
+    assert.equal((await evaluate('verify.read()'))[11],'none','Stale A private work wrote after owner change');
+    assert.equal((await evaluate('verify.readB()'))[11],null,'Locked/B private key was written');
+    assert.equal(await warning(),false,'Owner cleanup left beforeunload installed');
+    record('owner-locked-device-continuity',{bUi,rawA:await evaluate('verify.read()'),rawB:await evaluate('verify.readB()'),writes:await evaluate('verify.writes()'),warning:await warning()});
   }
   assert.equal(runtimeErrors.length,0,'Runtime errors: '+runtimeErrors.slice(0,3).join(' | '));
   record('native',{pass:true,mode,runtimeErrors:0});

@@ -1,0 +1,34 @@
+{"name":"baseline","commit":"7b216a3","browser":"Chrome/153.0.8010.48"}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"set-refusal-retry","raw":["tray","false","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"writes":[{"key":"xai_pref_more_win_type","value":"tray"}],"attempts":{"xai_pref_more_win_type":2}}
+{"name":"pending-lock","raw":["window","true","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"writes":[{"key":"xai_pref_more_launch_at_login","value":"true"}],"attempts":{"xai_pref_more_launch_at_login":1}}
+{"name":"uncertainty-retry","raw":["window","true","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"writes":[{"key":"xai_pref_more_launch_at_login","value":"true"}],"attempts":{"xai_pref_more_launch_at_login":1}}
+{"name":"external-document-write","index":1,"key":"xai_pref_more_launch_at_login","value":"false","targetId":"477B8FF9179F79F22B3072D17C7ACB6C"}
+{"name":"second-document-conflict","raw":["window","false","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"writes":[{"key":"xai_pref_more_launch_at_login","value":"true"}],"warning":false}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"disk-export","text":"Export More draft","payload":{"version":1,"kind":"more-draft","changes":{"device":{"win_type":{"operation":"set","value":"tray"}}}},"storageUnchanged":true}
+{"name":"control-11","index":11,"label":"Default Tag","raw":"none","value":"work","checked":null,"pressed":null}
+{"name":"disk-export","text":"Export current draft","payload":{"version":1,"kind":"more-draft","changes":{"device":{"win_type":{"operation":"set","value":"tray"}},"account":{"default_tag":{"operation":"set","value":"work"}}}},"storageUnchanged":true}
+{"name":"control-1","index":1,"label":"Launch at Login","raw":"false","value":"","checked":"true","pressed":null}
+{"name":"control-2","index":2,"label":"Minimize app when auto launching","raw":"false","value":"","checked":"true","pressed":null}
+{"name":"control-3","index":3,"label":"Date Recognition","raw":"true","value":"","checked":"false","pressed":null}
+{"name":"control-4","index":4,"label":"Remove text in tasks","raw":"false","value":"","checked":null,"pressed":"true"}
+{"name":"control-5","index":5,"label":"Remove tags from task name","raw":"true","value":"","checked":null,"pressed":"false"}
+{"name":"control-6","index":6,"label":"URL Parsing","raw":"true","value":"","checked":"false","pressed":null}
+{"name":"control-7","index":7,"label":"Default Date","raw":"none","value":"today","checked":null,"pressed":null}
+{"name":"control-8","index":8,"label":"Default Reminders (Due time task)","raw":"on_time","value":"5min","checked":null,"pressed":null}
+{"name":"control-9","index":9,"label":"Default Reminders (All day task)","raw":"none","value":"day_before","checked":null,"pressed":null}
+{"name":"control-10","index":10,"label":"Default Priority","raw":"none","value":"high","checked":null,"pressed":null}
+{"name":"control-12","index":12,"label":"Default List","raw":"inbox","value":"today","checked":null,"pressed":null}
+{"name":"control-13","index":13,"label":"Default Add to","raw":"top","value":"bottom","checked":null,"pressed":null}
+{"name":"control-14","index":14,"label":"Overdue Section shows at","raw":"top","value":"bottom","checked":null,"pressed":null}
+{"name":"disk-export","text":"Export More draft","payload":{"version":1,"kind":"more-draft","changes":{"device":{"win_type":{"operation":"set","value":"tray"},"launch_at_login":{"operation":"set","value":true},"minimize_on_launch":{"operation":"set","value":true},"date_recognition":{"operation":"set","value":false},"remove_date_text":{"operation":"set","value":true},"remove_tags":{"operation":"set","value":false},"url_parse":{"operation":"set","value":false},"default_date":{"operation":"set","value":"today"},"default_rem_due":{"operation":"set","value":"5min"},"default_rem_all":{"operation":"set","value":"day_before"},"default_pri":{"operation":"set","value":"high"},"add_to":{"operation":"set","value":"bottom"},"overdue_at":{"operation":"set","value":"bottom"}},"account":{"default_tag":{"operation":"set","value":"work"},"default_list":{"operation":"set","value":"today"}}}},"storageUnchanged":true}
+{"name":"export-matrix","sparse":true,"mixedDialog":true,"all15":true}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"tray","value":"tray","checked":null,"pressed":null}
+{"name":"reset-refusal-retry","raw":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],"removes":["xai_pref_more_launch_at_login","xai_pref_more_minimize_on_launch","xai_pref_more_date_recognition","xai_pref_more_remove_date_text","xai_pref_more_remove_tags","xai_pref_more_url_parse","xai_pref_more_default_date","xai_pref_more_default_rem_due","xai_pref_more_default_rem_all","xai_pref_more_default_pri","xai_pref_more_add_to","xai_pref_more_overdue_at","xai:account:v1:more-native-A:g1:xai_pref_more_default_tag","xai:account:v1:more-native-A:g1:xai_pref_more_default_list","xai_pref_more_win_type"],"removeAttempts":{"xai_pref_more_win_type":2,"xai_pref_more_launch_at_login":1,"xai_pref_more_minimize_on_launch":1,"xai_pref_more_date_recognition":1,"xai_pref_more_remove_date_text":1,"xai_pref_more_remove_tags":1,"xai_pref_more_url_parse":1,"xai_pref_more_default_date":1,"xai_pref_more_default_rem_due":1,"xai_pref_more_default_rem_all":1,"xai_pref_more_default_pri":1,"xai_pref_more_add_to":1,"xai_pref_more_overdue_at":1,"xai:account:v1:more-native-A:g1:xai_pref_more_default_tag":1,"xai:account:v1:more-native-A:g1:xai_pref_more_default_list":1}}
+{"name":"control-0","index":0,"label":"Choose window type when launching","raw":"window","value":"tray","checked":null,"pressed":null}
+{"name":"control-11","index":11,"label":"Default Tag","raw":"none","value":"work","checked":null,"pressed":null}
+{"name":"disk-export","text":"Export More draft","payload":{"version":1,"kind":"more-draft","changes":{"device":{"win_type":{"operation":"set","value":"tray"}}}},"storageUnchanged":true}
+{"name":"control-11","index":11,"label":"Default Tag","raw":"none","value":"none","checked":null,"pressed":null}
+{"name":"owner-locked-device-continuity","bUi":{"windowType":"tray","defaultTag":"none"},"rawA":["tray","false","false","true","false","true","true","none","on_time","none","none","none","inbox","top","top"],"rawB":["tray","false","false","true","false","true","true","none","on_time","none","none",null,null,"top","top"],"writes":[{"key":"xai_pref_more_win_type","value":"tray"}],"warning":false}
+{"name":"native","pass":true,"mode":"recovery-owner","runtimeErrors":0}

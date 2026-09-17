@@ -35,4 +35,14 @@ node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 host contro
 
 ## N2 result
 
-`host` passed at `7b216a3`; see `review-host-7b216a3.md`. N3-N4, final regressions, and final contract reconciliation remain pending.
+`host` passed at `7b216a3`; see `review-host-7b216a3.md`. N3 is recorded below; N4, final regressions, and final contract reconciliation remain pending.
+
+## N3 command
+
+```sh
+node docs/reviews/web-more-recovery-native/verify-native.mjs 7b216a3 recovery-owner control-plane-20260917-n3-v2
+```
+
+## N3 result
+
+`recovery-owner` passed at `7b216a3`; see `review-recovery-owner-7b216a3.md`. N4, final regressions, and final contract reconciliation remain pending.
