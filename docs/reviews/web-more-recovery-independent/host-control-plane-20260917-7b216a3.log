@@ -1,0 +1,11 @@
+revision=7b216a3 fixed_commit=7b216a3d5a4947d0f66da042fb275302737fb762
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-CwFtty
+
+ ✓ docs/reviews/web-more-recovery-independent/host.test.tsx (11 tests) 759ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  15:07:56
+   Duration  5.18s (transform 2.40s, setup 0ms, collect 3.64s, tests 759ms, environment 443ms, prepare 85ms)
