@@ -1,0 +1,7 @@
+revision=7b216a3
+fixed_commit=7b216a3d5a4947d0f66da042fb275302737fb762
+command=pnpm --filter @repo/plugin-web-settings-rest typecheck
+exit=0
+
+> @repo/plugin-web-settings-rest@0.0.0 typecheck /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-final-5cOaS3/packages/plugin-web-settings-rest
+> tsc --noEmit
