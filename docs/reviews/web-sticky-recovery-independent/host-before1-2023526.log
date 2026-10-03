@@ -1,0 +1,406 @@
+requested_revision=2023526
+resolved_commit=20235269749dad514833d76c27b958f694d0e4e9
+mode=host
+suffix=before1
+include=docs/reviews/web-sticky-recovery-independent/host.test.tsx
+runner_checkout_head=a6781f0edef707a355e877d9c9ddf27b145d7bd6
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host.test.tsx=7a4d3ff0cb8c4b6087307c9c7369340a7acea4c00589e6375fa236fbb7f9e8f3 verify-fixed.mjs=5a8ea1ddf40f47e5650e82656a174ef786403d418b1dd9f5a0553e0213da7260
+node=v24.16.0
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-host-z2RibX
+
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > FIXTURE storage injector fires before delegation and the Web Lock fixture is exclusive 50ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > FIXTURE jsdom browser history reaches the production router factory as a blockable POP 75ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC1 clean Sticky: zero Sticky writes at mount, no unload warning, sign-out and sidebar departure proceed 130ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC2 unfaulted edits of all five fields write exact unscoped bytes and departure then proceeds 180ms
+ ✓ docs/reviews/web-sticky-recovery-independent/host.test.tsx > PC3 clean Sticky: programmatic module navigation, browser Back and the AppRail leave or return freely 110ms
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'color': a denied physical write keeps the latest choice displayed [H1 host] 59ms
+   → H1(host) color: the latest choice mint stays displayed after its physical write failed: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'font': a denied physical write keeps the latest choice displayed [H1 host] 55ms
+   → H1(host) font: the latest choice xl stays displayed after its physical write failed: expected 'normal' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'pin_default': a denied physical write keeps the latest choice displayed [H1 host] 52ms
+   → H1(host) pin_default: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'restore_size': a denied physical write keeps the latest choice displayed [H1 host] 54ms
+   → H1(host) restore_size: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'grid_spacing': a denied physical write keeps the latest choice displayed [H1 host] 51ms
+   → H1(host) grid_spacing: the latest choice xl stays displayed after its physical write failed: expected 'large' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'color': a Settings sidebar departure is held after a denied write [H7 route] 76ms
+   → H7(host) Settings sidebar row: the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'font': a Settings sidebar departure is held after a denied write [H7 route] 73ms
+   → H7(host) Settings sidebar row: the router stays on Sticky while the failed font choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'pin_default': a Settings sidebar departure is held after a denied write [H7 route] 78ms
+   → H7(host) Settings sidebar row: the router stays on Sticky while the failed pin_default choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'restore_size': a Settings sidebar departure is held after a denied write [H7 route] 78ms
+   → H7(host) Settings sidebar row: the router stays on Sticky while the failed restore_size choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'grid_spacing': a Settings sidebar departure is held after a denied write [H7 route] 73ms
+   → H7(host) Settings sidebar row: the router stays on Sticky while the failed grid_spacing choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'color': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 70ms
+   → H7(host) sign-out color: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'font': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 68ms
+   → H7(host) sign-out font: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'pin_default': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 68ms
+   → H7(host) sign-out pin_default: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'restore_size': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 66ms
+   → H7(host) sign-out restore_size: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'grid_spacing': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out] 67ms
+   → H7(host) sign-out grid_spacing: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-rail color: an AppRail module button departure is held [H7 AppRail] 71ms
+   → H7(host) AppRail Tasks button: the router stays on Sticky while the failed color choice is unsaved: expected '/app/tasks' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-programmatic color: programmatic module navigation is held [H7 programmatic] 67ms
+   → H7(host) router.navigate("/app/dashboard"): the router stays on Sticky while the failed color choice is unsaved: expected '/app/dashboard' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-pop color: a browser Back traversal (POP through the blocker) is held [H7 Back] 91ms
+   → H7(host) browser Back (history POP): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-pop color: a browser Forward traversal (POP through the blocker) is held [H7 Forward] 105ms
+   → H7(host) browser Forward (history POP): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-delta color: programmatic history Back router.navigate(-1) is held [H7 Back] 87ms
+   → H7(host) router.navigate(-1): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-delta color: programmatic history Forward router.navigate(1) is held [H7 Forward] 118ms
+   → H7(host) router.navigate(1): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-relative color: path-relative navigation with state is held [H7 relative] 81ms
+   → H7(host) router.navigate("../hotkeys", { relative: "path", state }): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-beforeunload color: a cancelable beforeunload warns synchronously with zero storage attempts [H7 beforeunload] 52ms
+   → H7(host) beforeunload: the failed color choice makes a cancelable beforeunload warn (event canceled): expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  23 failed | 5 passed (28)
+   Start at  16:14:01
+   Duration  6.01s (transform 1.95s, setup 0ms, collect 2.99s, tests 2.21s, environment 504ms, prepare 76ms)
+
+
+---- stderr ----
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'color': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'font': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'pin_default': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'restore_size': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'grid_spacing': a denied physical write keeps the latest choice displayed [H1 host]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'color': a Settings sidebar departure is held after a denied write [H7 route]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'font': a Settings sidebar departure is held after a denied write [H7 route]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'pin_default': a Settings sidebar departure is held after a denied write [H7 route]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'restore_size': a Settings sidebar departure is held after a denied write [H7 route]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'grid_spacing': a Settings sidebar departure is held after a denied write [H7 route]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'color': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'font': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'pin_default': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'restore_size': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'grid_spacing': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-rail color: an AppRail module button departure is held [H7 AppRail]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-programmatic color: programmatic module navigation is held [H7 programmatic]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-pop color: a browser Back traversal (POP through the blocker) is held [H7 Back]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-pop color: a browser Forward traversal (POP through the blocker) is held [H7 Forward]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-delta color: programmatic history Back router.navigate(-1) is held [H7 Back]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-delta color: programmatic history Forward router.navigate(1) is held [H7 Forward]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-relative color: path-relative navigation with state is held [H7 relative]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-beforeunload color: a cancelable beforeunload warns synchronously with zero storage attempts [H7 beforeunload]
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'color': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) color: the latest choice mint stays displayed after its physical write failed: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:544:136
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'font': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) font: the latest choice xl stays displayed after its physical write failed: expected 'normal' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "normal"
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:544:136
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'pin_default': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) pin_default: the latest choice true stays displayed after its physical write failed: expected 'false' to be 'true' // Object.is equality
+
+Expected: "true"
+Received: "false"
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:544:136
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'restore_size': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) restore_size: the latest choice false stays displayed after its physical write failed: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:544:136
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-a 'grid_spacing': a denied physical write keeps the latest choice displayed [H1 host]
+AssertionError: H1(host) grid_spacing: the latest choice xl stays displayed after its physical write failed: expected 'large' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "large"
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:544:136
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'color': a Settings sidebar departure is held after a denied write [H7 route]
+AssertionError: H7(host) Settings sidebar row: the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:553:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'font': a Settings sidebar departure is held after a denied write [H7 route]
+AssertionError: H7(host) Settings sidebar row: the router stays on Sticky while the failed font choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:553:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'pin_default': a Settings sidebar departure is held after a denied write [H7 route]
+AssertionError: H7(host) Settings sidebar row: the router stays on Sticky while the failed pin_default choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:553:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'restore_size': a Settings sidebar departure is held after a denied write [H7 route]
+AssertionError: H7(host) Settings sidebar row: the router stays on Sticky while the failed restore_size choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:553:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-b 'grid_spacing': a Settings sidebar departure is held after a denied write [H7 route]
+AssertionError: H7(host) Settings sidebar row: the router stays on Sticky while the failed grid_spacing choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:553:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'color': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+AssertionError: H7(host) sign-out color: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:561:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'font': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+AssertionError: H7(host) sign-out font: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:561:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'pin_default': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+AssertionError: H7(host) sign-out pin_default: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:561:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'restore_size': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+AssertionError: H7(host) sign-out restore_size: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:561:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > F-c 'grid_spacing': voluntary sign-out is held and resolves false on Stay after a denied write [H7 sign-out]
+AssertionError: H7(host) sign-out grid_spacing: voluntary sign-out stays pending behind the departure decision while the failed choice is unsaved: expected true to be 'pending' // Object.is equality
+
+- Expected: 
+"pending"
+
++ Received: 
+true
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:561:162
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-rail color: an AppRail module button departure is held [H7 AppRail]
+AssertionError: H7(host) AppRail Tasks button: the router stays on Sticky while the failed color choice is unsaved: expected '/app/tasks' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/tasks"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:582:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-programmatic color: programmatic module navigation is held [H7 programmatic]
+AssertionError: H7(host) router.navigate("/app/dashboard"): the router stays on Sticky while the failed color choice is unsaved: expected '/app/dashboard' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/dashboard"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:591:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-pop color: a browser Back traversal (POP through the blocker) is held [H7 Back]
+AssertionError: H7(host) browser Back (history POP): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:603:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-pop color: a browser Forward traversal (POP through the blocker) is held [H7 Forward]
+AssertionError: H7(host) browser Forward (history POP): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:618:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-back-delta color: programmatic history Back router.navigate(-1) is held [H7 Back]
+AssertionError: H7(host) router.navigate(-1): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:630:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-forward-delta color: programmatic history Forward router.navigate(1) is held [H7 Forward]
+AssertionError: H7(host) router.navigate(1): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:645:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-relative color: path-relative navigation with state is held [H7 relative]
+AssertionError: H7(host) router.navigate("../hotkeys", { relative: "path", state }): the router stays on Sticky while the failed color choice is unsaved: expected '/app/settings/hotkeys' to be '/app/settings/sticky' // Object.is equality
+
+Expected: "/app/settings/sticky"
+Received: "/app/settings/hotkeys"
+
+ ❯ expectHeldThenStay docs/reviews/web-sticky-recovery-independent/host.test.tsx:350:145
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:654:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/23]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-independent/host.test.tsx > N-beforeunload color: a cancelable beforeunload warns synchronously with zero storage attempts [H7 beforeunload]
+AssertionError: H7(host) beforeunload: the failed color choice makes a cancelable beforeunload warn (event canceled): expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-sticky-recovery-independent/host.test.tsx:662:132
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/23]⎯
