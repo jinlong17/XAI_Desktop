@@ -103,11 +103,25 @@
 | ST3 | stickyPane.test.tsx | 12 non-random swatches use var(--sticky-note-color-id) |
 | ST4 | stickyPane.test.tsx | Random swatch uses conic-gradient |
 | ST5 | stickyPane.test.tsx | No hex literals in swatch inline styles |
-| ST6 | stickyPane.test.tsx | Clicking swatch persists xai_pref_sticky_color |
+| ST6 | stickyPane.test.tsx | Clicking swatch persists xai_pref_sticky_color (awaits the async write) |
 | ST7 | stickyPane.test.tsx | 4 spacing buttons rendered |
-| ST8 | stickyPane.test.tsx | Clicking spacing button persists pref |
+| ST8 | stickyPane.test.tsx | Clicking spacing button persists pref (awaits the async write) |
 | ST9 | stickyPane.test.tsx | ZH font size options |
 | ST10 | stickyPane.test.tsx | id + icon + i18nKey correct |
+| SR1 | stickyPaneRecovery.test.tsx | Absent/valid sources (incl. `random`) mount with zero writes; no recovery or Saved |
+| SR2 | stickyPaneRecovery.test.tsx | Failed write keeps latest choice, Retry/Discard/export/guard/warning; Retry saves exact bytes |
+| SR3 | stickyPaneRecovery.test.tsx | Invalid string/boolean bytes: default + Reload-only alert; never normalized |
+| SR4 | stickyPaneRecovery.test.tsx | Throwing read is Reload-only; a valid edit over it is a failed draft with no write |
+| SR5 | stickyPaneRecovery.test.tsx | Malformed font DOM value: prior value, input error, zero writes; valid choice clears it |
+| SR6 | stickyPaneRecovery.test.tsx | Two same-turn switch activations: two operations back to the original |
+| SR7 | stickyPaneRecovery.test.tsx | Held per-key lock: immediate display and pending text; coalesced A→B→C writes only A, C |
+| SR8 | stickyPaneRecovery.test.tsx | Failed predecessor: Retry advances it without acknowledging the queued latest |
+| SR9 | stickyPaneRecovery.test.tsx | Discard / Discard all: zero writes, reread only the drafted fields |
+| SR10 | stickyPaneRecovery.test.tsx | Sparse memory-only `sticky-draft.json` under total storage denial |
+| SR11 | stickyPaneRecovery.test.tsx | Export setup failure: localized error, drafts/guard/warning kept |
+| SR12 | stickyPaneRecovery.test.tsx | Epoch change: old capabilities refuse before rerender; fresh guard keeps device draft |
+| SR13 | stickyPaneRecovery.test.tsx | Unmount removes guard and beforeunload listener; detached callbacks inert |
+| SR14 | stickyPaneRecovery.test.tsx | ZH wording for pending, source, input error, actions, Saved and guard label |
 | RP1 | restPanesById.test.ts | Contains exactly 11 entries |
 | RP2 | restPanesById.test.ts | Each entry has correct id, icon, i18nKey |
 | RP3 | restPanesById.test.ts | Each pane render is a function |
@@ -116,6 +130,13 @@
 | AP3 | applyRestPanesToRegistry.test.ts | Does not substitute appearance/features |
 | AP4 | applyRestPanesToRegistry.test.ts | Idempotent |
 | AP5 | applyRestPanesToRegistry.test.ts | Preserves original order |
+
+Sticky acceptance is not limited to ST/SR: the frozen Sol jsdom oracles
+(`docs/reviews/web-sticky-recovery-sol/`, modes bytes/fields/queues/continuity-export
+plus `original` = ST1–ST10) and the actual-host oracle
+(`docs/reviews/web-sticky-recovery-independent/`) are rerun unchanged against the
+fixed archive through their `verify-fixed.mjs` runners. ST6/ST8 and SR tests
+install a Web Locks fixture because jsdom has none.
 
 ## §4 Acceptance Criteria
 

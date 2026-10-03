@@ -15,7 +15,8 @@ import * as React from "react";
 import type { StickyColorId } from "../types.js";
 
 // The 13 ids in source order (matches web design/module-settings.jsx lines 902-905).
-const STICKY_COLOR_IDS: readonly StickyColorId[] = [
+// Also the Sticky pane's strict color domain (the stored `random` sentinel included).
+export const STICKY_COLOR_IDS: readonly StickyColorId[] = [
   "sun", "peach", "coral", "sky", "indigo", "lilac",
   "mint", "white", "silver", "graphite", "navy", "midnight",
   "random",

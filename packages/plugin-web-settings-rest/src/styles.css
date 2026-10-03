@@ -832,6 +832,48 @@
   align-items: center;
 }
 
+/* ---- Sticky Note recovery -------------------------------------------- */
+.sticky-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+  color: var(--text-2, oklch(50% 0 0));
+  font-size: 0.82rem;
+}
+.sticky-recovery-text {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 0;
+}
+.sticky-recovery-text > span { min-inline-size: 0; overflow-wrap: anywhere; }
+.sticky-recovery-field button,
+.sticky-recovery-actions button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding-inline: 0.5rem;
+  overflow-wrap: anywhere;
+}
+.sticky-recovery-field button { inline-size: 100%; }
+.sticky-recovery-field button:only-of-type { grid-column: 1 / -1; }
+.sticky-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.sticky-recovery-actions p { flex-basis: 100%; margin: 0; }
+.sticky-recovery-saved { margin: 10px 0 0; color: var(--text-2, oklch(50% 0 0)); font-size: 0.82rem; }
+@media (min-width: 768px) {
+  .sticky-recovery-field { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .sticky-recovery-text { grid-column: auto; }
+  .sticky-recovery-field button { inline-size: auto; }
+  .sticky-recovery-field button:only-of-type { grid-column: auto; }
+}
+
 /* ---- Hotkeys pane ---------------------------------------------------- */
 .hotkeys-pane {
   padding: 16px;

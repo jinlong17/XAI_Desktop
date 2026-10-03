@@ -314,6 +314,21 @@ const STR = {
     en: 'Pin tasks as Sticky Notes on your desktop for quick idea capture. (Right-click tasks and choose "Open as Sticky Note")',
     zh: "将任务以便签形式钉在桌面快速捕获想法。（右键任务，选择「打开为便签」）",
   },
+  // Sticky recovery wording (contract §5 item 8). `{label}` is the field label.
+  "sticky.retry": { en: "Retry", zh: "重试" },
+  "sticky.discard": { en: "Discard", zh: "放弃" },
+  "sticky.reload": { en: "Reload", zh: "重新读取" },
+  "sticky.exportDraft": { en: "Export Sticky Note draft", zh: "导出便签草稿" },
+  "sticky.discardAll": { en: "Discard all changes", zh: "放弃全部更改" },
+  "sticky.saving": { en: "{label} is saving.", zh: "{label}正在保存。" },
+  "sticky.notSaved": { en: "{label} was not saved.", zh: "{label}未保存。" },
+  "sticky.unavailable": {
+    en: "Saved {label} is unavailable. Reload it; this is not a new unsaved change.",
+    zh: "已保存的{label}不可用。请重新读取；这不是新的未保存更改。",
+  },
+  "sticky.invalid": { en: "{label} has an invalid value.", zh: "{label}格式无效。" },
+  "sticky.saved": { en: "Sticky Note settings saved.", zh: "便签设置已保存。" },
+  "sticky.exportFailed": { en: "Export failed. Please retry.", zh: "导出失败，请重试。" },
 
   // Hotkeys pane
   "hk.quickAdd": { en: "Quick add", zh: "快速添加" },

@@ -168,6 +168,38 @@ No SettingsFooter (source uses live onChange).
 StickyColorPalette (13 swatches) + font size select (4 options) +
 pin-default toggle + restore-size toggle + 4 spacing buttons.
 Keys: `xai_pref_sticky_color`, `_font`, `_pin_default`, `_restore_size`, `_grid_spacing`.
+All five are unscoped device keys (registry defaults `sun` / `large` / `true` /
+`false` / `normal`); the pane never touches an account key, lock or marker.
+
+Recovery caller (contract `docs/reviews/web-sticky-recovery-contract/contract.md`):
+- Each field binds `usePrefAutosaveAsync` with a strict caller domain: the 13
+  palette ids (the stored `random` sentinel included), `small|normal|large|xl`,
+  booleans, and `none|normal|large|xl`. Mounts and rerenders write nothing;
+  absent keys display the registry default.
+- A valid edit creates a field-local draft (identity before enqueue) that
+  displays at once, even behind a held per-key lock. Only that exact draft's
+  verified success clears the field; switches invert the latest intent. A
+  failure (quota, read or lock fault, conflict, readback uncertainty) keeps the
+  choice with `<Label> was not saved.`, `Retry <Label>` and `Discard <Label>`;
+  pending work reads `<Label> is saving.`. Retry while pending is inert.
+- Invalid or unreadable stored bytes show `Saved <Label> is unavailable. Reload
+  it; this is not a new unsaved change.` with `Reload <Label>` only, display the
+  default and are never rewritten; Reload refuses while the field holds a draft.
+- A malformed font select value keeps the prior value with `<Label> has an
+  invalid value.` and makes no write; a valid choice clears only that error.
+- Discard and `Discard all changes` detach the drafts first, then reread only
+  those fields with zero writes. There is no reset and no Save footer.
+- `Sticky Note settings saved.` appears only after a genuine latest success with
+  no draft, pending operation, source error or input error.
+- While a draft exists the pane registers the optional `registerDepartureGuard`
+  bridge (label Sticky Note / 便签) and a `beforeunload` warning. An account
+  epoch change renews the decision token: old guards and inline callbacks refuse
+  at once, and the fresh guard protects the surviving device drafts.
+- `Export Sticky Note draft` downloads a memory-only `sticky-draft.json`:
+  `{"version":1,"kind":"sticky-draft","values":{"device":{…}}}` with exactly the
+  current unresolved drafts. Permission is rechecked before setup, after URL
+  creation and after append (just before the click); a failure shows
+  `Export failed. Please retry.` and keeps drafts and guard.
 
 ### §4.10 hotkeysPane — id: "hotkeys"
 
