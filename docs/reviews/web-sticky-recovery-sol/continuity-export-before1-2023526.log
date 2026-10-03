@@ -1,0 +1,293 @@
+requested_revision=2023526
+resolved_commit=20235269749dad514833d76c27b958f694d0e4e9
+mode=continuity-export
+suffix=before1
+include=docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw
+
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh guards export 67ms
+   → H6: the held per-key lock serializes the write: expected 'mint' to be 'sky' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all and Export callbacks refuse before rerender; device work survives under fresh permission 38ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes 38ms
+   → H6: the held per-key lock serializes the write: expected 'xl' to be 'large' // Object.is equality
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §7 edits across A→B→locked→A never touch account keys, markers or lifecycle locks 186ms
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §7 an unrelated held account lifecycle lock never delays a device edit 50ms
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a sparse one-field export is memory-only under total storage denial 37ms
+   → H1: the failed spacing keeps the latest choice: expected 'normal' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the all-five export (three strings, two booleans) equals the contract envelope under total storage denial 43ms
+   → H1: all five latest choices stay displayed: expected { color: 'sun', font: 'large', …(3) } to strictly equal { color: 'mint', font: 'xl', …(3) }
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a dialog export through the registered guard is memory-only and changes nothing 37ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an export while one operation is held behind a real lock includes it and releases, saves or retries nothing 36ms
+   → H1: the failed font keeps the latest choice: expected 'small' to be 'xl' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default, source-only and input-error-only fields 74ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ ✓ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export control and no empty download 64ms
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up 36ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up 35ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up 33ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up 33ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports 33ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports 35ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports 33ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up 35ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up 33ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up 40ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+ × docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7/§9 unmount removes the guard and the beforeunload listener and detaches old callbacks 61ms
+   → H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  19 failed | 3 passed (22)
+   Start at  15:44:08
+   Duration  2.17s (transform 264ms, setup 227ms, collect 243ms, tests 1.08s, environment 325ms, prepare 86ms)
+
+
+---- stderr ----
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all and Export callbacks refuse before rerender; device work survives under fresh permission
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a sparse one-field export is memory-only under total storage denial
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the all-five export (three strings, two booleans) equals the contract envelope under total storage denial
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_pin_default.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_restore_size.
+[plugin-web-storage] quota exceeded for xai_pref_sticky_grid_spacing.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a dialog export through the registered guard is memory-only and changes nothing
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an export while one operation is held behind a real lock includes it and releases, saves or retries nothing
+[plugin-web-storage] quota exceeded for xai_pref_sticky_font.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default, source-only and input-error-only fields
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default, source-only and input-error-only fields
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export control and no empty download
+[plugin-web-storage] decode failed for xai_pref_sticky_pin_default: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at StickyPaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-T7mElw/packages/plugin-web-settings-rest/src/panes/stickyPane.tsx:47:25)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+stderr | docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7/§9 unmount removes the guard and the beforeunload listener and detaches old callbacks
+[plugin-web-storage] quota exceeded for xai_pref_sticky_color.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 A→B→locked→A: a held device operation survives; old guards refuse before and after rerender; fresh guards export
+AssertionError: H6: the held per-key lock serializes the write: expected 'mint' to be 'sky' // Object.is equality
+
+Expected: "sky"
+Received: "mint"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:38:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 old inline Retry, Discard, Discard all and Export callbacks refuse before rerender; device work survives under fresh permission
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:91:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7 same-account epoch change with a held device lock: old guard refuses; fresh guard exports and discards with zero writes
+AssertionError: H6: the held per-key lock serializes the write: expected 'xl' to be 'large' // Object.is equality
+
+Expected: "large"
+Received: "xl"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:130:76
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a sparse one-field export is memory-only under total storage denial
+AssertionError: H1: the failed spacing keeps the latest choice: expected 'normal' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "normal"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:200:80
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the all-five export (three strings, two booleans) equals the contract envelope under total storage denial
+AssertionError: H1: all five latest choices stay displayed: expected { color: 'sun', font: 'large', …(3) } to strictly equal { color: 'mint', font: 'xl', …(3) }
+
+- Expected
++ Received
+
+  {
+-   "color": "mint",
+-   "font": "xl",
+-   "grid_spacing": "xl",
+-   "pin_default": false,
+-   "restore_size": true,
++   "color": "sun",
++   "font": "large",
++   "grid_spacing": "normal",
++   "pin_default": true,
++   "restore_size": false,
+  }
+
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:228:70
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a dialog export through the registered guard is memory-only and changes nothing
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:249:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an export while one operation is held behind a real lock includes it and releases, saves or retries nothing
+AssertionError: H1: the failed font keeps the latest choice: expected 'small' to be 'xl' // Object.is equality
+
+Expected: "xl"
+Received: "small"
+
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:279:74
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 the export excludes saved, default, source-only and input-error-only fields
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:315:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a blob setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a url setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a append setup failure shows the localized export error, keeps drafts and guard, and cleans up
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 a click setup failure shows the localized export error, keeps drafts and guard, and cleans up
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:346:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during blob cancels the click and cleans up; fresh permission exports
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during url cancels the click and cleans up; fresh permission exports
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an epoch change during append cancels the click and cleans up; fresh permission exports
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:376:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during blob cancels the click and cleans up
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during url cancels the click and cleans up
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §8 an unmount during append cancels the click and cleans up
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:405:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx > §7/§9 unmount removes the guard and the beforeunload listener and detaches old callbacks
+AssertionError: H1: the failed color keeps the latest choice: expected 'sky' to be 'mint' // Object.is equality
+
+Expected: "mint"
+Received: "sky"
+
+ ❯ failedColorDraft docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:27:76
+ ❯ docs/reviews/web-sticky-recovery-sol/continuity-export.test.tsx:430:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
