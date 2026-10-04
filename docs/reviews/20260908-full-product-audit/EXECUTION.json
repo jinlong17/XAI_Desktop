@@ -546,7 +546,34 @@
         "commit:3debd91",
         "../web-sticky-recovery-final/widgets-f359be6.md",
         "commit:699f6e6",
-        "../web-sticky-recovery-acceptance/acceptance-f359be6.md"
+        "../web-sticky-recovery-acceptance/acceptance-f359be6.md",
+        "commit:6ded3dc",
+        "../web-next-caller-selection/selection-f359be6.md",
+        "../web-features-recovery-contract/contract.md",
+        "commit:11e0afb",
+        "../web-features-recovery-sol/README.md",
+        "commit:b732c27",
+        "../web-features-recovery-independent/before-f359be6.md",
+        "commit:4c5323f",
+        "../web-features-recovery-native/before-f359be6.md",
+        "../web-features-recovery-f1/before-f359be6.md",
+        "commit:5cd63ff",
+        "commit:eb37a59",
+        "../web-features-recovery-sol/fixed-5cd63ff.md",
+        "../web-features-recovery-independent/fixed-5cd63ff.md",
+        "../web-features-recovery-f1/fixed-5cd63ff.md",
+        "commit:58a93ef",
+        "../web-features-recovery-native/review-controls-reset-export-5cd63ff.md",
+        "commit:312b27c",
+        "../web-features-recovery-native/review-host-downstream-5cd63ff.md",
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:0056299",
+        "../web-features-recovery-final/review-final-regressions-5cd63ff.md",
+        "commit:05b21f4",
+        "../web-more-recovery-fb002/review-fb002.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
       ]
     },
     {
@@ -1538,7 +1565,12 @@
     {
       "id": "SHELL-05",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+      ]
     },
     {
       "id": "SHELL-06",
@@ -1563,7 +1595,12 @@
     {
       "id": "UX-03",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:5905e37",
+        "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+        "commit:ec55f9e",
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+      ]
     },
     {
       "id": "UX-04",
