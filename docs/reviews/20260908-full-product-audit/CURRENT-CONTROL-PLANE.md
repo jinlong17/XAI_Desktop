@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：Features 的 EN/ZH 五宽度视觉（E14）与键盘（E15）在 Chrome 中全部 PASS（`5905e37`）；DesktopPet 在 768×1024 默认位置的遮挡由总控裁定 R-PET（非阻断，待最终 acceptance 确认或推翻）。本批登记批次 30：最终回归 E18–E24 与 E25 回执。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：Features 最终回归 E18–E24 与 E25 回执 PASS（`0056299`）。回执冻结了 F-B002：More Sol `boundaries` case 002 的 oracle 缺陷，不是产品失败，也与 Features 无关。本批登记批次 31：由独立 Sol 窗口产出纠正后的 oracle 证据；Features 最终 acceptance 顺延为批次 32。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `5905e37` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `0056299` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -35,6 +35,10 @@
 - **More（CP-MORE-01）：** `accepted`，最终独立 acceptance `27adb10`（`web-more-recovery-acceptance/acceptance-7b216a3.md`），固定产品 `7b216a3`。
   - 完整 15 字段 + Reset Default recovery caller，不关闭 SET-09。
   - 证据链：合同 `fc56d5e`；基线 `f73b85f`；实现到 `7b216a3`；Sol `8e12334`；native N1–N4；最终回归 `7b9ef87`；Astra BLOCKED `5ac1244` 由 B1/B2 证据 `c0c9ec5` 补齐。
+  - **条件 C-FB002（2026-10-04）：**
+    - **问题：** 权威 before 日志 `web-more-recovery-sol/boundaries-before4-afbfb24.log` 中，case 002 失败于 oracle 递归造成的 `RangeError`，不是业务断言（见 CP-FEATURES-01 的 F-B002）。
+    - **保持 `accepted` 的前提：** 批次 31 的纠正 oracle 须在 `afbfb24` 上让 case 002 以业务断言失败，并在 `7b216a3` 上稳定 PASS。
+    - **否则：** 按 F1 先例进入 Astra 角色影响评审。
 - **Sticky（CP-STICKY-01）：** `accepted`，固定产品 `f359be6`。
   - **最终接受：** 窄范围独立复审 `699f6e6`（`web-sticky-recovery-acceptance/acceptance-f359be6.md`），六行 gate 全部 PASS。首次独立最终复审 `47bbd58` 仅因证据缺口 G1（合同 §10 第 4 点）判为 BLOCKED，G1 由 `3debd91` 补齐（dashboard-widgets 五个测试在 `f359be6` 与 `2023526` 上均为 53/53）。
   - **证据链：**
@@ -81,7 +85,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：E7、E8、E16、E17（`eb37a59`）、E9–E11（`58a93ef`）、E12–E13（`312b27c`）与 E14–E15（`5905e37`）PASS；待 E18–E25 与最终 acceptance |
+| 状态 | `verification_pending`：E7、E8、E16、E17（`eb37a59`）、E9–E11（`58a93ef`）、E12–E13（`312b27c`）、E14–E15（`5905e37`）与 E18–E25（`0056299`，含冻结发现 F-B002）PASS；待批次 31 的 F-B002 纠正 oracle 证据与批次 32 最终 acceptance |
 | 选择与合同 | 选择备忘录 `docs/reviews/web-next-caller-selection/selection-f359be6.md` 与合同 `docs/reviews/web-features-recovery-contract/contract.md`，提交 `6ded3dc`，作者为独立 Claude Opus 5.5（Astra 角色映射）。比较了 7 个候选：Features 被推荐；Appearance、Integrations、AI、Dashboard、Calendar、Board 均有前置决策或依赖 |
 | 312 清单编号 | 支撑 `REL-05`；关联 `REL-07`、`REL-10`、`UX-04`、`UX-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09`。`SET-03`（目录决策）被明确排除。本任务不关闭任何编号 |
 | feature / 产品模块 | Settings Features recovery caller / `web`（单一包 `xai-web-settings-features-panel`） |
@@ -101,10 +105,12 @@
 | E12–E13 native host 矩阵与 downstream | `312b27c`（独立父级 native 验证者；native 目录 9 个新增文件；Chrome 154；`@repo` 全部来自 archive，0 个 checkout 模块；固定 delta 以外的打包模块与 `f359be6` 逐字节相同；各模式迭代 1/3）。<ul><li>**E12**（Settings host composition，含完整 Shell 与 App rail 过滤）：750 项，产品检查 341 项，46 个逐行 runtime gate，a–n 全部 PASS，0 失败，0 runtime error。<ul><li>history 计数（push/replace/popstate/commit）：行 c 中被阻止的 traversal 为 0/0/2/0；锁完成与 Retry 释放各为 0/0/1/1。行 i 的 Retry 释放为 0/0/1/1（Back）或 1/0/0/1（sidebar）。行 m 第一次 Retry 后仍保持持有，第二次释放。</li><li>行 n 恰好一次释放到 `/app/board`，随后显示 `DisabledFeatureFallback`。</li><li>beforeunload 只在有 draft 时警告，handler 内零存储尝试，unmount 后移除监听。</li></ul></li><li>**E13**（生产 `App`，只有 auth session 为合成）：343 项，产品检查 140 项，全部 PASS。§10 第 2–7 点逐项通过：在 12 次操作与 499 个采样帧中，`key:null`、重锁、门屏与节点替换均为 0；外观、AppRail 顺序、pet 位置与字节不变；reset 后拖拽 AppRail 正确持久化；无关键不变；第二 document 跟随 toggle 与 reset，其失败 draft 成为被保留的冲突。</li><li>日志、runner、harness、fixture 与 prelude 的 hash 均写入回执 `review-host-downstream-5cd63ff.md`。</li><li>**须由最终 reviewer 确认：** E12 在 Settings host 中进行，因为行 k 的 epoch 变化在生产 `App` 中会被 `AccountDataGate` 重挂掉；因此模块路由使用真实 `withDisabledFallback` 后的占位内容，pet 关闭。</li></ul> |
 | E14–E15 视觉与键盘 | `5905e37`（独立父级视觉与键盘验证者；native 目录 55 个新增文件：runner、fixture、4 个日志、48 张截图与回执 `review-visual-keyboard-5cd63ff.md`；Chrome 154；`@repo` 全部来自 archive；诊断迭代 2/3）。<ul><li>**E14：** EN 1040 项、ZH 1039 项，产品检查各 669 项，0 失败，0 runtime error。5 个宽度上逐控件做中心 hit-test、44×44、水平包含、无横向滚动；375px 溢出已修复（pane 289/289、grid 280/280），几何不小于 `f359be6`；选择器审计新增 84 行、删除 0 行，选择器全部以 `.features-pane` 开头，唯一 at-rule 为 `@media (max-width: 640px)`，因此不触发受影响 caller 的视觉重跑；执行者逐张人工审查了 24 张 v2 截图。</li><li>**E15：** 可信 Tab 顺序与可见焦点正确；Space 与 Enter 各只触发一次；reset confirm 的键盘路径、对话框焦点陷阱、Escape 等同 Stay、焦点归还均 PASS；Retry、Discard、Reload 后焦点落在该字段的开关上，Discard all 后落在 Reset 上（总控决定第 4 项）。EN 在 1024、ZH 在 375 各跑一个宽度。</li><li>**v1 已取代：** 拉高视口会去掉 `.module-settings` 的 10px 经典滚动条，截图内容因此比实际宽 10px，768 与 1024 越过两列阈值。v2 只增加截图期间的 gutter 固定与 3 个保真前置条件；v1 的日志与截图保留并标注为非证据。</li><li>**总控核对：** 只新增 55 个文件，均在 native 目录；worktree clean；两份 v2 日志 `pass`、`harnessValid` 为真；runner、fixture、4 个日志与 24 张 v1 截图的全 hash 均与回执一致；48/48 张截图的 hash 与日志中的 screenshot 记录一致。总控亲自查看了 ZH 768 宠物开启（#24）与 EN 768 全部未解决（#5）两张截图，与回执描述一致。</li><li>**回执笔误（非阻断）：** §8 #19 ZH 1440 all8 的截断 hash 写作 `8dc88e96…e72e`，实际为 `8dc88e96…1d72e`；以 ZH v2 日志 screenshot 记录中的全 hash 为准，E25 须引用全 hash。总控不改执行者的回执。</li><li>**留给最终 acceptance 的非门控观察（回执 §12）：** Toggle 形状、缩略图裁切、冥想图稿与离页对话框无 backdrop，均为既有问题；ZH 开关可访问名称中含英文 on/off（UX-05，合同保留）；键盘 Discard all 后状态行显示 "Features settings saved."，执行者认为符合 §5 第 7 项（同一 mount 内有真实的最新成功，且当前无草稿），由 acceptance 复核。</li></ul> |
 | 总控裁定 R-PET（2026-10-04） | **非阻断 CP-FEATURES-01；最终 acceptance 须明确确认或推翻。**<ul><li>**事实（回执 §10）：** 生产 `App` 每次加载都显示 DesktopPet（`App.tsx` 中 `useState(true)`），默认位置为视口右下角内缩 24px；768×1024 时宠物盒为 660–732 × 916–988。pane 滚到底时，最后一个控件落在这条带内。<ul><li>`f359be6`：被盖住的是惰性的 "Save & apply"/"保存生效"，中心在宠物上；Reset 不受影响。</li><li>`5cd63ff`：已确认的 D3 去掉 footer 并把 Reset 右对齐。EN "Reset to defaults" 右侧 2/5 个点被盖，中心仍可点；ZH "恢复默认" 的中心被盖（3/5 个点）。</li><li>375、414、1024、1440 两种语言均无遮挡。</li></ul></li><li>**裁定：** 合同 §9 的 "It is not covered" 按 caller 自身的组合判定，包括 caller 所属的宿主覆盖层（如离页对话框），但不包括 App 级、可由用户开关的全局浮层 DesktopPet。E14 PASS 维持。依据：<ol><li>合同 §11 "Protected" 把 pet 和挂载它的 `App.tsx` 列为受保护面，§10 第 8 项也要求 `xai-web-pet` 与 `apps` 的 diff 为空，本 caller 不得修改；</li><li>已接受的 Sticky E14 与 Features E12 先例同样在宠物关闭时判定；</li><li>全局浮层避让由台账 UX-03（"宠物避让…不被浮层盖住"）与 SHELL-05（"位置不越安全区"）负责。在单个 pane 里躲避，不能满足这一 oracle。</li></ol></li><li>**不淡化：** 这是真实的用户可见缺陷，而且 D3 布局让一个有功能的控件进入了遮挡带：ZH 在中心点击会落在宠物上。替代路径如下：<ul><li>键盘可达（E15）；</li><li>768 宽时 rail 上的宠物开关可见，宠物也可以拖动；</li><li>EN 中心可点；</li><li>按回执坐标，ZH 按钮左侧约 27px 不在宠物盒内。</li></ul></li><li>**冻结复现：** 回执 §10；截图 #11、#12、#23、#24；EN 日志 L29–L98 与 L142–L309，ZH 日志 L29–L97 与 L141–L308。</li><li>**影响范围：** 已证实的只有 768×1024 两种语言。其他 pane、其他宽高与宠物的其他位置均未调查，归 UX-03 做影响调查。</li><li>**建议 oracle（供 UX-03 合同使用）：** 默认位置的 DesktopPet 不得覆盖任何可交互控件的中心点，或页面滚动范围须为宠物留出安全区。</li><li>**后续：** 不在 CP-FEATURES-01 内修复。该复现在 Features 台账对账时作为 UX-03 与 SHELL-05 的证据一并追加，不改状态。修复在 UX-03 排程时另开独立窗口。若最终 acceptance 推翻本裁定，总控另开 Features 本地修复窗口（限合同 §11 文件），之后重跑 768 宠物开启的复现与受影响的 E 项。</li></ul> |
-| 允许修改文件 | 批次 30（最终回归 E18–E25）：<ul><li>`docs/reviews/web-features-recovery-final/` 下的任意新文件；</li><li>被调用的既有 runner 在其所在目录写出的新日志，文件名须含后缀 `features-final-v1`（或同一前缀的后续迭代后缀）。</li></ul>不得修改或删除任何已有文件 |
+| E18–E25 最终回归 | `0056299`（独立 Sol 最终回归验证者；97 个新增文件，均来自不可变 archive，lockfile gate，`@repo` 固定并带守卫）。<ul><li>**新增文件分布：**<ul><li>`web-features-recovery-final/` 下：3 个新 runner、对照与 hash 脚本、日志、`diagnostics/` 和回执 `review-final-regressions-5cd63ff.md`；</li><li>既有 runner 目录下：7 个带 `features-final-v1` 后缀的日志。</li></ul></li><li>**E18：** 10 个模式，9 个变化行全部落在 §11 文件。Features 产品源中 `new StorageEvent`、`dispatchEvent(` 为 0；pane 与两个 helper 中 `usePref(`、`setPref(`、`removePref(`、`localStorage` 为 0。</li><li>**E19：** 13 个受保护路径 diff 为空；`--name-only` 恰好是 11 个 §11 文件（+1590/−72）。</li><li>**E20：** storage check-types 通过；Sol `bytes` 以新后缀重跑 17/17，生命周期断言（case 004）PASS。</li><li>**E21：** features 包 7 个文件、45 项（含 5 个读者测试），typecheck 与 lint 通过；读者测试在两个 SHA 上均为 17/17。</li><li>**E22：** Web 包 28 个文件、156 项，逐文件计数与已接受回执一致；check-types 与 lint 通过。</li><li>**E23：** settings-shell 11 个文件、54 项。没有已接受的独立回执可对照。</li><li>**E24：**<ul><li>settings-rest 44/314；</li><li>More：fields 22、reset 20、queues 14、owner-export 13、original 15、host 11；boundaries 见 F-B002；</li><li>Sticky：Sol 109、original 10、host 28；</li><li>Notifications：41/24/15/12；</li><li>Date & Time：7。</li><li>对照日志 62 MATCH、2 DIFF，两个 DIFF 都是 F-B002。</li></ul></li><li>**E25：** 24 个 ID 全部列出，每项的产出提交都经执行者核实。执行者重算了全部 216 条 hash（213 个文件）和 26 个已取代的 E14 v1 文件，来源失败为 0。E6 照实标注为提交信息记录；E14 #19 引用全 hash；R-PET 只引用。</li><li>**总控核对：**<ul><li>97 个文件全部为新增，且在允许路径内；worktree clean，只有 git 忽略的 `state.generated.js`；</li><li>回执 hash `eab9c343…` 一致；</li><li>总控自行抽算 E3、E5、E12、E16、E20（E7 日志）、E22 共 6 个 hash，全部一致；</li><li>Web 测试日志 exit 0、28/156。</li></ul></li><li>**未验证：**<ul><li>native、Chrome、视觉项（E4、E9–E15）与 F1 套件（E16、E17）只引用，不重跑；</li><li>除 boundaries 外，各 gate 只跑一次；</li><li>替换后的 runner 不是旧环境的逐字节复现。</li></ul></li></ul> |
+| 冻结发现 F-B002 与总控裁定（2026-10-04） | <ul><li>**机制：** More Sol `boundaries.test.tsx` case 002（L17–24）的 `getItem` spy 每次调用都会求值 `physical(unavailable)`。`unavailable` 是账户键，而 `accountScope.physicalKey()`（`accountScope.ts:66–71`）对账户键会经 `localStorage.getItem` 读取 `<prefix>deleted`，于是 spy 递归调用自身，结果取决于栈深度。<ul><li>单独运行时，case 002 每次都失败。</li><li>整文件运行时，会有一个随机字段在挂载读取时收到 `RangeError`；产品把它正确标为 unavailable 并拒绝 reset，oracle 因此失败。</li><li>总控已在源码层面核实这条路径。</li></ul></li><li>**批次 30 的复现：**<ul><li>官方运行：`5cd63ff` 先 10/10、后 9/10；`f359be6` 先 9/10、后 10/10。</li><li>未修改的 runner 重复 10 次：`f359be6` 失败 8 次，`5cd63ff` 失败 7 次。</li><li>More、settings-rest 与 storage 在两个 SHA 上逐字节相同（E19），所以与 Features 无关。</li><li>候选纠正 oracle（在安装 spy 前先计算 key）整文件 16/16、单独运行 4/4，全部 PASS。</li></ul></li><li>**总控追加发现：**<ul><li>More 接受时采用的权威 before 日志是 `web-more-recovery-sol/boundaries-before4-afbfb24.log`（README 列为权威，0/10）。其中 case 002 的失败原因正是 `RangeError: Maximum call stack size exceeded`，即 oracle 假象。</li><li>被取代的 before2、before3 中，case 002 失败于业务断言 `expected null to be 'invalid-bool'`，即 before 产品清除了无效的原始字节。</li><li>结论：before 产品很可能确有这个缺陷，但权威证据记录的不是业务失败。</li><li>其他 boundaries 日志都没有 RangeError：`7b216a3` 的 final1、`982ab68` 的 fixed3 和 Sticky 最终回归均为 10/10；`982ab68` 早期的 fixed1、fixed2 有失败，属于当时的实现迭代。</li></ul></li><li>**裁定：**<ul><li>F-B002 是既有的 oracle 缺陷，不是产品失败，也不归属 Features。</li><li>冻结的原 oracle 不改；纠正须在独立窗口里以新文件完成（批次 31）。</li><li>批次 30 对 E24 More 的结论暂记为"已解释的不确定性"，以批次 31 的纠正 oracle 证据为准。</li><li>More 保持 `accepted`，附条件 C-FB002。</li></ul></li><li>**批次 30 的 runner 替换（总控认可，最终 acceptance 复核）：**<ul><li>旧的 More、Notifications、Date & Time runner 和 `verify-final.mjs` 从检出目录链接 `node_modules`，没有 lockfile gate，也没有守卫。</li><li>批次 30 改用新 runner `verify-callers.mjs`，以相同的 Vitest 语义承载这些 oracle；在 `f359be6` 上，计数与 console 块数都和已接受日志一致。</li><li>总控核实：这些 oracle、fixture 和 runner 自 `d7358b9` 以来未改动。</li></ul></li></ul> |
+| 允许修改文件 | 批次 31（F-B002 纠正 oracle 证据）：只新增 `docs/reviews/web-more-recovery-fb002/` 下的文件；不得修改或删除任何已有文件 |
 | 允许修改文件（已执行） | 批次 25（Terra）：只限合同 §11 列出的文件，均位于 `packages/xai-web-settings-features-panel/` 下：<ul><li>`src/FeaturesPane.tsx`</li><li>`src/internal/featuresPane.tsx`（仅转发 render props）</li><li>`src/types.ts`（仅新增可选的 `registerDepartureGuard`）</li><li>最多两个 Features 本地 helper</li><li>scoped CSS</li><li>Features 测试（含本地 Web Lock fixture）</li><li>`docs/api.md` 与 `docs/test.md` 的 Features 段落</li></ul>所有读者、storage、shell（含 `SettingsFooter`）、host（含 `AccountDataGate`）、已接受 caller 与全部证据都受保护 |
 | 禁止修改文件 | 全部产品源与测试；合同与选择备忘录；已有证据；台账；本控制面 |
-| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ ~~批次 24 native before 与 Features F1（E4–E5）~~（`4c5323f`）→ ~~批次 25 Terra~~（`5cd63ff`）→ ~~批次 26 重跑（E7、E8、E16、E17）~~（`eb37a59`）→ ~~批次 27 native E9–E11~~（`58a93ef`）→ ~~批次 28 native E12–E13~~（`312b27c`）→ ~~批次 29 视觉/键盘 E14–E15~~（`5905e37`）→ 批次 30 最终回归 E18–E25 → 批次 31 独立最终 acceptance → 之后按合同 §14 的 E6–E25 |
+| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ ~~批次 24 native before 与 Features F1（E4–E5）~~（`4c5323f`）→ ~~批次 25 Terra~~（`5cd63ff`）→ ~~批次 26 重跑（E7、E8、E16、E17）~~（`eb37a59`）→ ~~批次 27 native E9–E11~~（`58a93ef`）→ ~~批次 28 native E12–E13~~（`312b27c`）→ ~~批次 29 视觉/键盘 E14–E15~~（`5905e37`）→ ~~批次 30 最终回归 E18–E25~~（`0056299`）→ 批次 31 F-B002 纠正 oracle 证据 → 批次 32 独立最终 acceptance → 之后按合同 §14 的 E6–E25 |
 
 **最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`）。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
 - 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
@@ -173,7 +179,8 @@
 | Features（续 5） | `9d64192` 登记批次 27 · `58a93ef` E9–E11 |
 | Features（续 6） | `557ea3b` 登记批次 28 · `312b27c` E12–E13 |
 | Features（续 7） | `4c4e901` 登记批次 29 · `5905e37` E14–E15 |
-| 本提交 | 记录 E14–E15 与裁定 R-PET，登记批次 30 |
+| Features（续 8） | `cde9138` 登记批次 30 · `0056299` E18–E25 |
+| 本提交 | 记录 E18–E25 与 F-B002 裁定，登记批次 31 |
 
 ## 台账变化
 
@@ -193,68 +200,64 @@
 | 7 | 24–26 | native before 与 Features F1、Terra 实施、fixed 重跑；各一次完成 |
 | 8 | 27–29 | native controls 与导出、host 矩阵与 downstream、视觉与键盘；前两批一次完成，批次 29 因截图保真用了 2/3 轮诊断迭代 |
 
-- **主要额外成本：** F1（必要的共享缺陷修复与受影响 caller 重跑）；G1（总控排程遗漏导致的一次补证与复审）。
+- **主要额外成本：**
+  - F1：必要的共享缺陷修复，以及受影响 caller 的重跑；
+  - G1：总控排程遗漏，导致一次补证与复审；
+  - F-B002：已接受的 More oracle 不确定，增加一个证据批次（批次 31）。
 - **改进：** 登记最终回归时须核对合同中全部 Required evidence 条目，不只 Final regression 行。
 
 ## 本轮唯一任务
 
-批次 30：独立最终回归验证者（Sol 角色）从不可变 archive 运行合同 §14 的 E18–E24，并写出 E25 回执，逐项列出 E1–E24。
+批次 31：由独立 Sol 窗口为 F-B002 产出纠正后的 More `boundaries` oracle 证据。只新增文件，冻结的原 oracle 保持不动。
 
 - **固定点：**
-  - fixed `5cd63ff`：不可变 `git archive`；lockfile gate `df05f2dd…`；`@repo` 固定到 archive 并带守卫；记录 requested 与 resolved SHA；保留非零退出码；
-  - before `f359be6`；
+  - 4 个 SHA：More before `afbfb24`、More fixed `7b216a3`、`f359be6`、Features fixed `5cd63ff`；
+  - 运行条件：不可变 archive；lockfile gate；`@repo` 固定到 archive 并带守卫；记录 requested 与 resolved SHA；保留非零退出码；
   - 控制分支基点为本提交。
-- **E18（§10 第 9 项）：**
-  - 在 fixed 重复合同 §2 的读者与 writer 搜索，与 `f359be6` 逐文件比较计数；新命中只允许出现在 §11 文件中；
-  - features 包产品源中 `new StorageEvent` 与 `dispatchEvent(` 均为 0；
-  - `FeaturesPane.tsx` 与两个新 helper 中 `usePref(`、`setPref(`、`removePref(`、`localStorage` 均为 0。
-- **E19（§10 第 8 项）：** `git diff f359be6 5cd63ff` 对合同列出的全部受保护路径为空：8 个包、`xai-web-dashboard-grid`、`xai-web-dashboard-widgets`、`apps`、`package.json`、`pnpm-lock.yaml`。
-- **E20（§10 第 11 项）：**
-  - storage check-types；
-  - 在 fixed 重跑 Sol 的生命周期断言（`web-features-recovery-sol/bytes.test.tsx` 第 186–187 行）并 PASS；
-  - 同时引用 E7 的 `bytes-fixed1-5cd63ff.log` 及其 hash。
-- **E21：**
-  - 从 fixed archive 跑 features 包全量测试（含 §10 第 10 项的 5 个读者测试）、typecheck 与 lint；
-  - 在 `f359be6` archive 跑同一组读者测试，作为 before 对照。
-- **E22：** Web 包测试、check-types 与 lint。测试须包含 `railFeatureFilter`、三个 composition 测试、`cmdkIntegration` 与 `departureCoordinator.blocker`。
-- **E23：** settings-shell 包测试（`SettingsFooter` 不变）。
-- **E24（§13 第 8 行）：**
-  - 要跑的套件：
-    - Settings-rest 包测试；
-    - More：Sol 79、original 15、host 11；
-    - Sticky：Sol 109（bytes 13、fields 47、queues 27、continuity-export 22）、original 10、host 28；
-    - Notifications：Sol 41、Astra boundaries 24、Astra host 15、父级 host 12；
-    - Date & Time 7。
-  - 命令沿用 `web-sticky-recovery-final/review-final-regressions-f359be6.md`，并加上 Sticky 的 runner（见 Sticky acceptance 与最终回归回执）。
-  - 逐项与已接受回执的计数比较；任何差异都须逐条说明来源。
-- **E25 回执** `docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md`：
-  - 逐项列出 E1–E24 的产出提交、文件路径、SHA-256 与结论；每项至少重新计算一个 hash。
-  - **E6：** Terra 的包测试只记录在 `5cd63ff` 的提交信息中（features 包 45/45），没有单独日志。回执列出提交 SHA、tree、§11 文件清单与各文件的 SHA-256，并照实标注这一形式。
-  - **E14：** 回执 §8 #19 的截断 hash 有笔误，以 ZH v2 日志 screenshot 记录中的全 hash 为准。
-  - **R-PET：** 只引用 E14 §10 的宠物遮挡观察与总控裁定 R-PET，不作判定。
-- **输出：** 只新增"允许修改文件"一行列出的文件。
+- **纠正 oracle：**
+  - 新增 `docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx`。它复制冻结的 `web-more-recovery-sol/boundaries.test.tsx`，只改 L18–19：安装 spy 前先计算一次 `physical(unavailable)`，spy 内只与这个常量比较；
+  - fixture 只读复用；
+  - 附逐字 diff，证明只有这一处语句变化。
+- **运行矩阵：**
+  1. **纠正 oracle 的完整文件：** 在 4 个 SHA 上各重复 10 次，记录每次各 case 的结果与 `RangeError` 出现次数。
+  2. **原 oracle 的完整文件：** 在 `afbfb24` 与 `7b216a3` 上各重复 10 次，量化缺陷（`f359be6`、`5cd63ff` 的比率已由批次 30 的 D1 给出，引用即可）。
+  3. **纠正 oracle 只跑 case 002：** 在 4 个 SHA 上各 3 次。
+- **before 有效性（`afbfb24`）：**
+  - 纠正 oracle 下，case 002 须以业务断言失败（对照被取代的 before2、before3 中的 `expected null to be 'invalid-bool'`）；
+  - 10 个 case 须与权威 `boundaries-before4-afbfb24.log`（0/10）逐 case 对照失败断言，列出相同与不同之处。
+- **fixed 确定性：** 在 `7b216a3`、`f359be6`、`5cd63ff` 上，纠正 oracle 须每次 10/10。
+- **影响扫描：**
+  - 检索 `docs/reviews/**` 下所有 oracle 与 fixture 中针对 storage 的 spy 或 mock：`Storage.prototype` 或 `localStorage` 上的 `getItem`、`setItem`、`removeItem`；
+  - 逐个判定：spy 体内会不会直接、或经 `physical()`、`physicalKey()`、scoped storage，再次读写 storage；
+  - 只报告，不修复。
+- **对 More 接受的证据影响：**
+  - 对照 `web-more-recovery-sol/README.md` 的权威基线，以及 More acceptance（`27adb10`）引用的计数；
+  - 给出纠正 oracle 下 case 002 的 before→fixed 转换结论；
+  - 只陈述事实与建议，不作接受决定。
+- **输出：** 只新增上述目录下的文件：纠正 oracle、diff、runner（如需要）、日志、回执 `review-fb002.md`。
 - **禁止：**
-  - 修改产品、合同、已有证据、台账或控制面；
-  - 修复；
+  - 修改任何已有文件，包括冻结的原 oracle、fixture、runner 与日志；
+  - 修改产品、台账或控制面；
   - push；
   - 派生子 agent。
-- **成本上限：** 每个 runner 模式的诊断迭代不超过 3 轮；用新后缀，保留旧日志。
+- **成本上限：** 每个矩阵单元的诊断迭代不超过 3 轮；用新后缀，保留旧日志。
 - **停止条件：**
-  - 任一 gate 出现真实产品失败，或计数与已接受回执不符且无法解释：冻结复现（命令、日志、hash），提交后停止；修复由总控另开窗口。
-  - 依赖、archive 或权限不可复现：停止并报告。
+  - 纠正 oracle 在任一 fixed SHA 上失败：冻结（命令、日志、hash、断言），提交并停止。这可能是真实产品失败，由总控另开窗口。
+  - 纠正 oracle 在 `afbfb24` 上让 case 002 通过：照实记录，在回执中显著标注；其余部分照常完成。
+  - 依赖、archive 或权限不可复现：停止并报告 BLOCKED。
 
 ## 下一步
 
-1. 等待批次 30 回执，总控核对：
-   - 只新增允许的文件；
-   - 每个 gate 的退出码与计数，以及与已接受回执的比较；
-   - E25 是否列全 E1–E24 的路径与 hash（总控至少抽算 3 项）；
-   - 有无真实失败。
-2. 通过后登记批次 31：独立最终 acceptance（Astra 角色，新 reviewer），须做到：
-   - 逐 gate 对账四类事实：源码、正确的 before 失败、fixed 独立行为、实际用户界面；
-   - 明确确认或推翻 R-PET；
-   - 复核 E14 回执 §12 第 3 项是否符合 §5 第 7 项。
-3. 若接受：
-   - CP-FEATURES-01 改为 `accepted`；
-   - 另行做台账对账：追加 REL-05 证据，并在 UX-03 与 SHELL-05 下追加宠物遮挡复现；不改状态，保留"caller accepted ≠ 业务/发布完成"；
-   - 然后选择下一项。
+1. 等待批次 31 回执，总控核对：
+   - 只新增文件；
+   - 纠正 oracle 的 diff 只有 L18–19；
+   - 矩阵逐单元的结果；
+   - before 有效性结论；
+   - 影响扫描。
+2. 若纠正 oracle 在 fixed 上稳定 PASS，且 case 002 的 before 失败是业务失败：
+   - More 的条件 C-FB002 记为满足，台账对账时另行追加证据；
+   - 登记批次 32：Features 独立最终 acceptance（Astra 角色，新 reviewer）。它须做到：
+     - 逐 gate 对账四类事实；
+     - 明确确认或推翻 R-PET、runner 替换与 F-B002 下的 E24 处理；
+     - 复核 E14 回执 §12 第 3 项。
+3. 若 before 失败不存在，或 fixed 上失败：先按 F1 先例做 Astra 角色影响评审，再决定 More 接受与 Features E24 的处理。
