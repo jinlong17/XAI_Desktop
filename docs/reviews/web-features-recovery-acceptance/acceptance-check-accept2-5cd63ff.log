@@ -1,0 +1,398 @@
+acceptance_check=accept2
+runner_sha256=7b3665f00fd7372c3849025b89a51eec1e60ebd25e0860bd811e8ee6b7a64e64
+root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a3f57a152c58f1e1b
+head=78e8de27cdcb72921674bfd25b41c98f19459334
+node=v24.16.0
+
+## 1. Fixed points
+PASS fixed-resolves | 5cd63ff652f02a2c726187fe12cbc796218d31c0
+PASS before-resolves | f359be6d838393e0f9e93efd80b88b5b09f6144e
+PASS fixed-tree | 404bf819a42e20b3e4d372c18a981832ccd54954
+PASS before-tree | 2280bc7617d52dc6c4356da257d57940ecb174ec
+PASS ancestry before->fixed->head
+PASS docs-head-carries-fixed-product-unchanged
+PASS worktree-clean-outside-acceptance-dir | none
+PASS lockfile-gate-committed | fixed=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 before=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+PASS lockfile-gate-dependency-checkout(read-only) | df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+PASS contract-single-commit-6ded3dc
+INFO contract_sha256=84b0a9cf035b21a9779567fcfe7d0c22b069bf0209656fbf1b98613bbc32d0f4
+INFO selection_sha256=ea05a5e4b5741188795bde95b3aadb90594c9c34e79326133f9b5798a3c764d1
+
+## 2. Section 14 rule: E1-E5 committed before Terra (5cd63ff)
+PASS before-evidence-E1/E2-is-ancestor-of-terra | 11e0afb6d9c6932314f5434dc5d53e5a51c8cdca
+PASS before-evidence-E3-is-ancestor-of-terra | b732c27f330eb3368901d38f4423722f651c112f
+PASS before-evidence-E4/E5-is-ancestor-of-terra | 4c5323f70d55e66d3627ee79d4fd84ef9d19dd2c
+
+## 3. E6: Terra fixed SHA, section 11 file boundary, file hashes, commit-message record
+PASS e6-product-diff-is-exactly-the-11-section-11-files | 11 entries
+PASS e6-full-diff-outside-docs-is-the-same-11-files | 11
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx | 5365f404d612cf25b4c1fb32487e41c052140274f359a53de1cdadc2e0bf8ee6 e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts | b190596f0ebc7272c8caf7362d7f9146788c296dd612e881973ddc465a04510e e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts | 0e73fadd1cb941ca8f26e86a38c493fe9da94a278c335798a92accbff5f74e6f e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts | d4409bd70b7df1227cbeabaf6c00bb0f2abb14c1f81f488905c2e76354b822bc e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/docs/api.md | 46f6d7ff532ed8b6f8e6bd63bbb0dd753674ab5bf44a848cc0a498c1851e079f e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/docs/api.md
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/docs/test.md | 1c13c59dd21bb71e13aada054191450998b6473955ba34c5efd2a3e3a68f0740 e25_full=true e7_prefix8=false
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/docs/test.md
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 54a3f10c90fdc415a9c1bb89801fe4cdc1870022235752229e9180a2a683d701 e25_full=true e7_prefix8=true
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/FeaturesPane.tsx
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx | 993f0d069b9dc23de53d910d5dda4967eca2e436596ec3fbc2b33fad16ed1d64 e25_full=true e7_prefix8=true
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx | 572bdd478954059f02dde83c8ec7383f992ca0f6f33f8b5e2c96ba85e7f935a7 e25_full=true e7_prefix8=true
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/styles.css | 65fdf6f08b299c242bf79397a5e731fa0b605cc2f5a7476e2778a4caa350b5c3 e25_full=true e7_prefix8=true
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/styles.css
+PASS e6-file-sha256 packages/xai-web-settings-features-panel/src/types.ts | f97c4e6212d99723d9baeb1133866f05860db7b97ce274ba2be0b27128cd8406 e25_full=true e7_prefix8=true
+PASS e6-file-unchanged-since-fixed packages/xai-web-settings-features-panel/src/types.ts
+PASS styles-additions-only | [84,0]
+PASS types-only-adds-optional-registerDepartureGuard-and-its-type-import | 7 changed lines, all additions
+PASS pane-registration-only-forwards-render-props | -import type { Pane } from "@repo/plugin-web-settings-shell"; ⏎ +import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell"; ⏎ -  render: ({ lang }) => <FeaturesPane lang={lang} />, ⏎ +  // Forwards every render prop, including the optional host departure guard. ⏎ +  render: (props: PaneRenderProps) => <FeaturesPane {...props} />,
+PASS styles-fixed-file-begins-with-before-file-byte-for-byte
+INFO added_at_rules=["@media (max-width: 640px)"]
+INFO added_selectors=[".features-pane > div.setting-block",".features-pane > div.setting-block",".features-pane .features-grid",".features-pane .features-recovery-field",".features-pane .features-recovery-text",".features-pane .features-recovery-field > button:only-of-type",".features-pane .features-recovery-field > button",".features-pane .features-recovery-actions > button",".features-pane .features-recovery-reset",".features-pane .features-recovery-actions",".features-pane .features-recovery-error",".features-pane .features-recovery-footer",".features-pane .features-recovery-status"]
+PASS every-added-selector-scoped-under-.features-pane | 13 selector occurrences
+PASS only-at-rule-is-@media
+INFO e6-commit-object-sha256=4f3df9954b0de2833fe1e07dbf28a0252450f7873f4eae28dac9899fe9cee1a3 (git cat-file commit 5cd63ff652f02a2c726187fe12cbc796218d31c0)
+PASS e6-terra-package-run-recorded-in-commit-message | features 45/45; @repo/web 156/156
+PASS e6-terra-parent-8d53038
+
+## 4. E19 independently: protected paths have identical object ids at f359be6 and 5cd63ff
+PASS protected packages/plugin-web-storage | 782c79de33a1da6851b5a235950408eb7ae89f99
+PASS protected packages/plugin-web-settings-shell | 8fe33026603bdbf50676b25ce99ba78a444ead34
+PASS protected packages/xai-web-shell | 0f0fed40fe94a9de5c79eb273d1103757a807a9c
+PASS protected packages/xai-web-pet | 6594df5e7009a47018b217f171c7895c11105b5a
+PASS protected packages/xai-web-cmdk | a8c733f2d0fdf269bb4f0131bca7a8de342469a2
+PASS protected packages/plugin-web-tokens | 3ea903458975b90129f563ddbf4b31224e9b4b52
+PASS protected packages/xai-web-settings-appearance | ce183d17e8606067c3bc97d7e3b6645ee656fe9e
+PASS protected packages/plugin-web-settings-rest | 21f0bbb61dae92948ebddfc82946a3ff6b36e2a6
+PASS protected packages/xai-web-dashboard-grid | 8e96464cae57ba35a7f1a4c39c9b0a8f9df64509
+PASS protected packages/xai-web-dashboard-widgets | 4d65ad167b0d3712166e96569b1d9f44ed66a500
+PASS protected apps | 9d9e85e4e60146716e23521da0967b11998a1603
+PASS protected package.json | 548cfbbe3a66e90058ea8fe8d2e3fb94a61efbec
+PASS protected pnpm-lock.yaml | b8685855ef4d58601b45835b27853b3f01186ca2
+PASS features-package-files-outside-section-11-unchanged | 21/21 (includes src/index.ts, featureIds.ts, the 4 reader files, FeatureThumb.tsx, package.json, configs, docs/design.md, docs/dev_log.md, docs/verify-report.md)
+PASS named-protected-file-present-and-covered src/index.ts
+PASS named-protected-file-present-and-covered src/featureIds.ts
+PASS named-protected-file-present-and-covered src/useFeaturePrefs.ts
+PASS named-protected-file-present-and-covered src/filterModulesByFeaturePrefs.ts
+PASS named-protected-file-present-and-covered src/withDisabledFallback.tsx
+PASS named-protected-file-present-and-covered src/DisabledFeatureFallback.tsx
+PASS named-protected-file-present-and-covered src/internal/FeatureThumb.tsx
+PASS named-protected-file-present-and-covered package.json
+PASS named-protected-file-present-and-covered docs/design.md
+PASS named-protected-file-present-and-covered docs/dev_log.md
+PASS named-protected-file-present-and-covered docs/verify-report.md
+
+## 5. E18 independently: section 10 item 9 search (outside docs/ and *.md)
+PASS search-delta-in-section-11-file xai_pref_features_ packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 2->1
+PASS search-delta-in-section-11-file xai_pref_features_ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx | 0->2
+PASS search-delta-in-section-11-file xai_pref_features_ packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts | 0->1
+PASS search-delta-in-section-11-file xai_pref_features_ packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts | 0->9
+PASS search-delta-in-section-11-file featurePrefKey( packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 2->0
+PASS search-delta-in-section-11-file featurePrefKey packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 3->0
+PASS search-delta-in-section-11-file resetAllFeaturePrefs packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 2->0
+PASS search-delta-in-section-11-file resetAllPrefs packages/xai-web-settings-features-panel/src/FeaturesPane.tsx | 1->0
+PASS search-delta-in-section-11-file useFeaturePrefs packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx | 0->2
+PASS search-delta-row-count-equals-E18-receipt(9) | 9
+PASS features-product-source-zero-StorageEvent-and-dispatchEvent | 12 files
+PASS features-product-source-zero BroadcastChannel (additional, D2/D3)
+PASS features-product-source-zero postMessage (additional, D2/D3)
+PASS features-product-source-zero CustomEvent (additional, D2/D3)
+PASS features-product-source-zero new Event( (additional, D2/D3)
+PASS features-product-source-zero sessionStorage (additional, D2/D3)
+PASS features-product-source-zero SettingsFooter (additional, D2/D3)
+PASS features-product-source-zero confirmAction (additional, D2/D3)
+PASS features-product-source-zero resetAllPrefs (additional, D2/D3)
+PASS pane-and-helpers-zero usePref(
+PASS pane-and-helpers-zero setPref(
+PASS pane-and-helpers-zero removePref(
+PASS pane-and-helpers-zero localStorage
+PASS pane-and-helpers-zero getPref(
+
+## 6. Evidence hashes: every artifact enumerated by E25 recomputed from the committed blob, provenance, primary receipts
+INFO e25_hash_log_entries=242 distinct_paths=239
+PASS E1 all enumerated artifacts recomputed and in their producing commit | files=9 sha_ok=9 provenance_ok=9 primary_receipt_full=8 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E2 all enumerated artifacts recomputed and in their producing commit | files=15 sha_ok=15 provenance_ok=15 primary_receipt_full=15 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E3 all enumerated artifacts recomputed and in their producing commit | files=4 sha_ok=4 provenance_ok=4 primary_receipt_full=3 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E4 all enumerated artifacts recomputed and in their producing commit | files=18 sha_ok=18 provenance_ok=18 primary_receipt_full=17 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E5 all enumerated artifacts recomputed and in their producing commit | files=5 sha_ok=5 provenance_ok=5 primary_receipt_full=4 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E6 all enumerated artifacts recomputed and in their producing commit | files=11 sha_ok=11 provenance_ok=11 primary_receipt_full=11 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E7 all enumerated artifacts recomputed and in their producing commit | files=10 sha_ok=10 provenance_ok=10 primary_receipt_full=9 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E8 all enumerated artifacts recomputed and in their producing commit | files=2 sha_ok=2 provenance_ok=2 primary_receipt_full=1 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E9 all enumerated artifacts recomputed and in their producing commit | files=6 sha_ok=6 provenance_ok=6 primary_receipt_full=5 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E10 all enumerated artifacts recomputed and in their producing commit | files=1 sha_ok=1 provenance_ok=1 primary_receipt_full=1 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E11 all enumerated artifacts recomputed and in their producing commit | files=11 sha_ok=11 provenance_ok=11 primary_receipt_full=11 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E12 all enumerated artifacts recomputed and in their producing commit | files=6 sha_ok=6 provenance_ok=6 primary_receipt_full=5 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E13 all enumerated artifacts recomputed and in their producing commit | files=3 sha_ok=3 provenance_ok=3 primary_receipt_full=3 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E14 all enumerated artifacts recomputed and in their producing commit | files=55 sha_ok=55 provenance_ok=55 primary_receipt_full=50 primary_receipt_prefix8=0 receipt_itself=5 not_in_primary_receipt=0
+PASS E15 all enumerated artifacts recomputed and in their producing commit | files=2 sha_ok=2 provenance_ok=2 primary_receipt_full=2 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E16 all enumerated artifacts recomputed and in their producing commit | files=10 sha_ok=10 provenance_ok=10 primary_receipt_full=10 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E17 all enumerated artifacts recomputed and in their producing commit | files=3 sha_ok=3 provenance_ok=3 primary_receipt_full=2 primary_receipt_prefix8=0 receipt_itself=1 not_in_primary_receipt=0
+PASS E18 all enumerated artifacts recomputed and in their producing commit | files=2 sha_ok=2 provenance_ok=2 primary_receipt_full=2 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E19 all enumerated artifacts recomputed and in their producing commit | files=1 sha_ok=1 provenance_ok=1 primary_receipt_full=1 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E20 all enumerated artifacts recomputed and in their producing commit | files=4 sha_ok=4 provenance_ok=4 primary_receipt_full=4 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E21 all enumerated artifacts recomputed and in their producing commit | files=9 sha_ok=9 provenance_ok=9 primary_receipt_full=9 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E22 all enumerated artifacts recomputed and in their producing commit | files=6 sha_ok=6 provenance_ok=6 primary_receipt_full=6 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E23 all enumerated artifacts recomputed and in their producing commit | files=2 sha_ok=2 provenance_ok=2 primary_receipt_full=2 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E24 all enumerated artifacts recomputed and in their producing commit | files=47 sha_ok=47 provenance_ok=47 primary_receipt_full=47 primary_receipt_prefix8=0 receipt_itself=0 not_in_primary_receipt=0
+PASS E1 present in the E25 enumeration
+PASS E2 present in the E25 enumeration
+PASS E3 present in the E25 enumeration
+PASS E4 present in the E25 enumeration
+PASS E5 present in the E25 enumeration
+PASS E6 present in the E25 enumeration
+PASS E7 present in the E25 enumeration
+PASS E8 present in the E25 enumeration
+PASS E9 present in the E25 enumeration
+PASS E10 present in the E25 enumeration
+PASS E11 present in the E25 enumeration
+PASS E12 present in the E25 enumeration
+PASS E13 present in the E25 enumeration
+PASS E14 present in the E25 enumeration
+PASS E15 present in the E25 enumeration
+PASS E16 present in the E25 enumeration
+PASS E17 present in the E25 enumeration
+PASS E18 present in the E25 enumeration
+PASS E19 present in the E25 enumeration
+PASS E20 present in the E25 enumeration
+PASS E21 present in the E25 enumeration
+PASS E22 present in the E25 enumeration
+PASS E23 present in the E25 enumeration
+PASS E24 present in the E25 enumeration
+
+## 7. One principal artifact per item: recomputed here and found in full in its primary receipt
+PASS E1 principal docs/reviews/web-features-recovery-sol/verify-fixed.mjs | sha256=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16 found_in=docs/reviews/web-features-recovery-sol/README.md
+PASS E1 principal docs/reviews/web-features-recovery-sol/fixture.tsx | sha256=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 found_in=docs/reviews/web-features-recovery-sol/README.md
+PASS E2 principal docs/reviews/web-features-recovery-sol/fields-before2-f359be6.log | sha256=fe4b248b7d4499ea6128c23d86fef2b4c2bee1f38cd74338508e7ec10815214c found_in=docs/reviews/web-features-recovery-sol/README.md
+PASS E2 principal docs/reviews/web-features-recovery-sol/downstream-before2-f359be6.log | sha256=9edea2867023e070049dc9de2c704868f2791a5250bbf2051a2e619abad55589 found_in=docs/reviews/web-features-recovery-sol/README.md
+PASS E3 principal docs/reviews/web-features-recovery-independent/host-before1-f359be6.log | sha256=977fc6565d5a18973473d3cd551d78eeb0213676732645fde2af5afa7dd098c0 found_in=docs/reviews/web-features-recovery-independent/before-f359be6.md
+PASS E4 principal docs/reviews/web-features-recovery-native/native-f359be6-before1-h6.log | sha256=579bf9811810b4b2163db39346e637dec59811a257aa31467976f38e53dd4efc found_in=docs/reviews/web-features-recovery-native/before-f359be6.md
+PASS E4 principal docs/reviews/web-features-recovery-native/native-f359be6-before1-h10-375-zh.png | sha256=6b59000f2421ad076fea878cc4be0e9e86c99f70b15d505f7ee70a34e0b94c15 found_in=docs/reviews/web-features-recovery-native/before-f359be6.md
+PASS E5 principal docs/reviews/web-features-recovery-f1/f1-f359be6-features-before1.log | sha256=59f9761abbaccc18c44464779034aa9d6ff0d6ce89bc89d4457a825f127db98e found_in=docs/reviews/web-features-recovery-f1/before-f359be6.md
+PASS E6 principal packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts | sha256=0e73fadd1cb941ca8f26e86a38c493fe9da94a278c335798a92accbff5f74e6f found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E7 principal docs/reviews/web-features-recovery-sol/reset-fixed1-5cd63ff.log | sha256=921b37e892573b23f34ffd5680b9d0e3a8371f1d66880bb7ae94098c23526b39 found_in=docs/reviews/web-features-recovery-sol/fixed-5cd63ff.md
+PASS E8 principal docs/reviews/web-features-recovery-independent/host-fixed1-5cd63ff.log | sha256=244f7dd7498ba49c6f466d030380581ae0db903876c7be02ef03a77294117f80 found_in=docs/reviews/web-features-recovery-independent/fixed-5cd63ff.md
+PASS E9 principal docs/reviews/web-features-recovery-native/native-5cd63ff-fixed1-controls.log | sha256=8330678fb3b657762a63a3039dcdba428a0d58c3e61996fae88c9fba66247848 found_in=docs/reviews/web-features-recovery-native/review-controls-reset-export-5cd63ff.md
+PASS E10 principal docs/reviews/web-features-recovery-native/native-5cd63ff-fixed1-reset.log | sha256=1fd92c92022cf520cc38f2ee04b8925801ae65a2115701645d41c0feaf334eba found_in=docs/reviews/web-features-recovery-native/review-controls-reset-export-5cd63ff.md
+PASS E11 principal docs/reviews/web-features-recovery-native/native-5cd63ff-fixed1-export-x5-all-eight-pending-resets-features-draft.json | sha256=ad6554f8d0dd15b83e8f4a32ae5f5cedfef757aee3d7d4995366ab48997679fd found_in=docs/reviews/web-features-recovery-native/review-controls-reset-export-5cd63ff.md
+PASS E12 principal docs/reviews/web-features-recovery-native/native-5cd63ff-fixed1-host.log | sha256=f025b831b432df2c31a6c295560d25923705f30e21332eb8e792e023f5c9cb0d found_in=docs/reviews/web-features-recovery-native/review-host-downstream-5cd63ff.md
+PASS E13 principal docs/reviews/web-features-recovery-native/native-5cd63ff-fixed1-downstream.log | sha256=fefe8af14dfec7bb906404a329de3c0ec4bea806c20f9e34eaabe53f9f748fd6 found_in=docs/reviews/web-features-recovery-native/review-host-downstream-5cd63ff.md
+PASS E14 principal docs/reviews/web-features-recovery-native/native-5cd63ff-v2-visual-zh.log | sha256=663d8916ea41fe13b5dde42d6c49822c01ae4f2508f7139e1b86ad5740b38ee9 found_in=docs/reviews/web-features-recovery-native/review-visual-keyboard-5cd63ff.md
+PASS E14 principal docs/reviews/web-features-recovery-native/native-5cd63ff-v2-visual-zh-768-pet-on-clean.png | sha256=bc54641a97ca69886db868724bf4f458caa6913bf331658259ef17e855843340 found_in=docs/reviews/web-features-recovery-native/native-5cd63ff-v2-visual-zh.log
+PASS E15 principal docs/reviews/web-features-recovery-native/native-5cd63ff-v2-visual.log | sha256=b7b7e7c9b9494ce982fc4670ebe1cd41e8e9b60ec8501949e11fe772c5d6df43 found_in=docs/reviews/web-features-recovery-native/review-visual-keyboard-5cd63ff.md
+PASS E16 principal docs/reviews/web-sticky-recovery-f1/f1-5cd63ff-race-fixed1.log | sha256=dfed2d12257a4d7473766778c01f8cb9beb3b44e80620e5e0308d1adf036e0d5 found_in=docs/reviews/web-features-recovery-f1/fixed-5cd63ff.md
+PASS E16 principal docs/reviews/web-sticky-recovery-f1/f1-5cd63ff-sticky-fixed1.log | sha256=433e56ae89d7994ce5c686f3f88c1c59ed37b9e2bd8396db222658bdece1862b found_in=docs/reviews/web-features-recovery-f1/fixed-5cd63ff.md
+PASS E17 principal docs/reviews/web-features-recovery-f1/f1-5cd63ff-features-fixed1.log | sha256=5bdbb3d9a2ebf45337dd3cc2eec38e1f6895116b078b4d848359ca38d5b21215 found_in=docs/reviews/web-features-recovery-f1/fixed-5cd63ff.md
+PASS E18 principal docs/reviews/web-features-recovery-final/search-features-final-v1-5cd63ff.log | sha256=57dc6adba1565d837f39c789920c13228a148e94f0b2d792cb83890d02f1fd9c found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E19 principal docs/reviews/web-features-recovery-final/protected-diff-features-final-v1-5cd63ff.log | sha256=0175c76f6446c5abde699a02bfcab7c5c754c03ce3785a73f3438e5341d3f388 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E20 principal docs/reviews/web-features-recovery-final/storage-check-types-features-final-v1-5cd63ff.log | sha256=df76f1e83868c79cccf3e9f0fb1fd5d0c7790466d9037d5cd89747ab3e13baf2 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E20 principal docs/reviews/web-features-recovery-sol/bytes-features-final-v1-5cd63ff.log | sha256=0d2f23da630919de1c167434c356b1b5d6fbb2c9ec9f31efbf9c2b0171099012 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E21 principal docs/reviews/web-features-recovery-final/features-test-features-final-v1-5cd63ff.log | sha256=9064c0690e9147c3e694043feb19294379c420c93bda641a045820364b7cb398 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E21 principal docs/reviews/web-features-recovery-final/features-readers-features-final-v1-f359be6.log | sha256=1d44db6b9b928e96b682aa1d9432d7d260278060522fbb7e68d66cd319135e8b found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E22 principal docs/reviews/web-features-recovery-final/web-test-features-final-v1-5cd63ff.log | sha256=c70646978dad479295ed334c0269c5b2d0b42828966a68ccd34b803ab4cc716c found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E23 principal docs/reviews/web-features-recovery-final/settings-shell-test-features-final-v1-5cd63ff.log | sha256=c684b28662db1e7478f8eac01c432888effe087eaec1342beed09526066e179f found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E24 principal docs/reviews/web-features-recovery-final/settings-rest-test-features-final-v1-5cd63ff.log | sha256=cf265ad048948e13b2e5cab9fccbcedf3a680cbbb35996c19ee9d60cf9bc4288 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E24 principal docs/reviews/web-features-recovery-final/compare-accepted-features-final-v1.log | sha256=2a451804edab8d6e6ca4e835103eab6d2f33450e9bf187632dafb5d8b00e557c found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E25 principal docs/reviews/web-features-recovery-final/hashes-features-final-v1.log | sha256=9b5b6230db8580595d29a85154dec5aba4b4a966cb4a91c50167daebecdfee15 found_in=docs/reviews/web-features-recovery-final/review-final-regressions-5cd63ff.md
+PASS E25 receipt recomputed (control plane records eab9c343...) and produced only by 0056299 | eab9c343f4ab0198c506d0d77bc956cbe905898324a6494fd603a4840b3a9f40
+PASS E25 enumerates E1-E24 in its section 7 table | 24/24
+
+## 8. E14 screenshots: every v2 PNG hash equals its v2 log screenshot record
+PASS e14-png-hashes native-5cd63ff-v2-visual.log | 12/12
+PASS e14-png-hashes native-5cd63ff-v2-visual-zh.log | 12/12
+
+## 9. E11 disk JSON: envelope shape (parsed from the committed artifacts)
+PASS e11-envelope native-5cd63ff-fixed1-export-x1-sparse-set-one-field-features-draft.json | tasks:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x10b-recovered-after-click-failure-features-draft.json | tasks:set=false,dashboard:set=false,pomodoro:set=false,meditation:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x2-sparse-reset-one-field-after-partial-reset-features-draft.json | habits:reset
+PASS e11-envelope native-5cd63ff-fixed1-export-x3-mixed-set-and-reset-features-draft.json | board:set=false,habits:reset
+PASS e11-envelope native-5cd63ff-fixed1-export-x4-all-eight-sets-features-draft.json | tasks:set=false,board:set=true,dashboard:set=false,calendar:set=false,matrix:set=true,pomodoro:set=false,habits:set=true,meditation:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x5-all-eight-pending-resets-features-draft.json | tasks:reset,board:reset,dashboard:reset,calendar:reset,matrix:reset,pomodoro:reset,habits:reset,meditation:reset
+PASS e11-envelope native-5cd63ff-fixed1-export-x6-departure-dialog-features-draft.json | dashboard:set=false,pomodoro:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x7-fresh-locked-after-a-to-locked-features-draft.json | dashboard:set=false,pomodoro:set=false,meditation:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x8-fresh-b-after-a-to-b-features-draft.json | tasks:set=false,dashboard:set=false,pomodoro:set=false,meditation:set=false
+PASS e11-envelope native-5cd63ff-fixed1-export-x9-held-real-lock-features-draft.json | tasks:set=false,dashboard:set=false,calendar:set=false,pomodoro:set=false,meditation:set=false
+PASS e11-x5-all-eight-pending-resets-are-8-reset-entries
+PASS e11-ten-disk-artifacts(9 shapes + recovered x10b) | 10
+
+## 10. Log content assertions (before failures correct, fixed results PASS)
+PASS E2 bytes before2 | totals cases=17 passed=17 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 bytes fixed1 | totals cases=17 passed=17 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 fields before2 | totals cases=49 passed=0 failed=49 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 fields fixed1 | totals cases=49 passed=49 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 reset before2 | totals cases=31 passed=2 failed=29 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 reset fixed1 | totals cases=31 passed=31 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 queues before2 | totals cases=40 passed=0 failed=40 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 queues fixed1 | totals cases=40 passed=40 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 continuity-export before2 | totals cases=26 passed=3 failed=23 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 continuity-export fixed1 | totals cases=26 passed=26 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 downstream before2 | totals cases=15 passed=9 failed=6 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 downstream fixed1 | totals cases=15 passed=15 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 original before2 | totals cases=6 passed=6 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 original fixed1 | totals cases=6 passed=6 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 readers-features before2 | totals cases=17 passed=17 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 readers-features fixed1 | totals cases=17 passed=17 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 readers-web before2 | totals cases=18 passed=18 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E7 readers-web fixed1 | totals cases=18 passed=18 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+PASS E2 bytes zero PRECONDITION lines
+PASS E2 fields zero PRECONDITION lines
+PASS E2 reset zero PRECONDITION lines
+PASS E2 queues zero PRECONDITION lines
+PASS E2 continuity-export zero PRECONDITION lines
+PASS E2 downstream zero PRECONDITION lines
+PASS E2 original zero PRECONDITION lines
+PASS E2 readers-features zero PRECONDITION lines
+PASS E2 readers-web zero PRECONDITION lines
+PASS E3 host before1 7/33, precondition 0
+PASS E8 host fixed1 40/40, runtime errors 0
+PASS E4 h5 correct before FAILs (H5-a, H5-d) | ["H5-a:event-dispatched-despite-fault","H5-d:no-failure-feedback-or-retry"]
+PASS E4 h6 correct before FAIL (section 10.5 during) | ["§10.5-during:no-relock-gate-or-remount"]
+PASS E4 h10 correct before FAILs (EN, ZH) | ["H10-en-b:375-grid-minimum-overflows-pane","H10-zh-b:375-grid-minimum-overflows-pane"]
+PASS E5 F1 features before-not-held (8 deferred) and selfcheck harness-valid (105)
+PASS E9 native-5cd63ff-fixed1-controls.log | pass=true checks=524 product=285 pass_false_records=0
+PASS E10 native-5cd63ff-fixed1-reset.log | pass=true checks=219 product=99 pass_false_records=0
+PASS E11 native-5cd63ff-fixed1-export.log | pass=true checks=442 product=217 pass_false_records=0
+PASS E12 native-5cd63ff-fixed1-host.log | pass=true checks=750 product=341 pass_false_records=0
+PASS E13 native-5cd63ff-fixed1-downstream.log | pass=true checks=343 product=140 pass_false_records=0
+PASS E14/E15 native-5cd63ff-v2-visual.log | pass=true checks=1040 product=669 pass_false_records=0
+PASS E14/E15 native-5cd63ff-v2-visual-zh.log | pass=true checks=1039 product=669 pass_false_records=0
+PASS E16 sticky | verdict=pass checks=62
+PASS E16 more | verdict=pass checks=62
+PASS E16 collaborate | verdict=pass checks=62
+PASS E16 selfcheck | verdict=harness-valid checks=31
+PASS E16 notifications | verdict=refuted checks=72
+PASS E16 date-time | verdict=refuted checks=72
+PASS E16 smart-lists | verdict=refuted checks=90
+PASS E16 header | verdict=refuted checks=98
+PASS E16 pomodoro | verdict=refuted checks=78
+PASS E16 race | verdict=pass checks=183
+PASS E17 F1 features fixed-pass | checks=102
+PASS E17 cases r1 d1 r2 rb present in the result record
+PASS E18-E22 search-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 protected-diff-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 storage-check-types-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 features-typecheck-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 features-lint-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 web-check-types-features-final-v1-5cd63ff.log exit=0
+PASS E18-E22 web-lint-features-final-v1-5cd63ff.log exit=0
+PASS E21-E24 features-test-features-final-v1-5cd63ff.log | files=7 tests=45 passed=45 failed=0
+PASS E21-E24 features-readers-features-final-v1-5cd63ff.log | files=5 tests=17 passed=17 failed=0
+PASS E21-E24 features-readers-features-final-v1-f359be6.log | files=5 tests=17 passed=17 failed=0
+PASS E21-E24 web-test-features-final-v1-5cd63ff.log | files=28 tests=156 passed=156 failed=0
+PASS E21-E24 settings-shell-test-features-final-v1-5cd63ff.log | files=11 tests=54 passed=54 failed=0
+PASS E21-E24 settings-rest-test-features-final-v1-5cd63ff.log | files=44 tests=314 passed=314 failed=0
+PASS E20 Sol bytes 17/17 with lifecycle case 004 PASSED
+PASS E24 more-fields @5cd63ff | totals cases=22 passed=22 failed=0 other=0 suite_errors=0 un
+PASS E24 more-reset @5cd63ff | totals cases=20 passed=20 failed=0 other=0 suite_errors=0 un
+PASS E24 more-queues @5cd63ff | totals cases=14 passed=14 failed=0 other=0 suite_errors=0 un
+PASS E24 more-owner-export @5cd63ff | totals cases=13 passed=13 failed=0 other=0 suite_errors=0 un
+PASS E24 more-original @5cd63ff | totals cases=15 passed=15 failed=0 other=0 suite_errors=0 un
+PASS E24 more-host @5cd63ff | totals cases=11 passed=11 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-core @5cd63ff | totals cases=11 passed=11 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-recovery @5cd63ff | totals cases=3 passed=3 failed=0 other=0 suite_errors=0 unha
+PASS E24 notifications-operations @5cd63ff | totals cases=2 passed=2 failed=0 other=0 suite_errors=0 unha
+PASS E24 notifications-boundaries @5cd63ff | totals cases=4 passed=4 failed=0 other=0 suite_errors=0 unha
+PASS E24 notifications-extended @5cd63ff | totals cases=10 passed=10 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-original @5cd63ff | totals cases=11 passed=11 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-astra-boundaries @5cd63ff | totals cases=24 passed=24 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-astra-host @5cd63ff | totals cases=15 passed=15 failed=0 other=0 suite_errors=0 un
+PASS E24 notifications-parent-host @5cd63ff | totals cases=12 passed=12 failed=0 other=0 suite_errors=0 un
+PASS E24 datetime @5cd63ff | totals cases=7 passed=7 failed=0 other=0 suite_errors=0 unha
+PASS E24 sticky bytes 13
+PASS E24 sticky fields 47
+PASS E24 sticky queues 27
+PASS E24 sticky continuity-export 22
+PASS E24 sticky original 10
+PASS E24 sticky host 28
+INFO E24 more-boundaries (frozen oracle): v1@5cd63ff totals cases=10 passed=10 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=8 act_warning_lines=18 | v1@f359be6 totals cases=10 passed=9 failed=1 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=7 act_warning_lines=17 | v2@5cd63ff totals cases=10 passed=9 failed=1 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=7 act_warning_lines=17 | v2@f359be6 totals cases=10 passed=10 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=8 act_warning_lines=18
+
+## 11. F-B002 (batch 31, 05b21f4): corrected oracle, hashes, matrix recomputed from the 72 run logs
+PASS fb002 receipt hash (control plane records d1fa0e42...) | d1fa0e42ea7e0cf01954b1c3445df0ea879d15193c7aa9320f79dae43df0b7c8
+PASS fb002 all 83 listed files recomputed = receipt, each added only in 05b21f4 | 83/83
+PASS fb002 corrected oracle differs from the frozen oracle only on L18-19 | lines=71 differing=[18,19]
+PASS fb002 frozen More oracle and fixture unchanged (dcbaf57e..., b117d204...)
+PASS fb002 frozen oracle has one commit (8e12334)
+INFO fb002 cell corrected/case002/5cd63ff: runs=3 all_pass_runs=3 case002_pass=3 runs_with_rangeerror=0
+INFO fb002 cell corrected/case002/7b216a3: runs=3 all_pass_runs=3 case002_pass=3 runs_with_rangeerror=0
+INFO fb002 cell corrected/case002/afbfb24: runs=3 all_pass_runs=0 case002_pass=0 runs_with_rangeerror=0
+INFO fb002 cell corrected/case002/f359be6: runs=3 all_pass_runs=3 case002_pass=3 runs_with_rangeerror=0
+INFO fb002 cell corrected/full/5cd63ff: runs=10 all_pass_runs=10 case002_pass=10 runs_with_rangeerror=0
+INFO fb002 cell corrected/full/7b216a3: runs=10 all_pass_runs=10 case002_pass=10 runs_with_rangeerror=0
+INFO fb002 cell corrected/full/afbfb24: runs=10 all_pass_runs=0 case002_pass=0 runs_with_rangeerror=0
+INFO fb002 cell corrected/full/f359be6: runs=10 all_pass_runs=10 case002_pass=10 runs_with_rangeerror=0
+INFO fb002 cell original/full/7b216a3: runs=10 all_pass_runs=9 case002_pass=9 runs_with_rangeerror=0
+INFO fb002 cell original/full/afbfb24: runs=10 all_pass_runs=0 case002_pass=0 runs_with_rangeerror=10
+PASS fb002 corrected full @7b216a3 10/10 runs all-pass, 0 RangeError
+PASS fb002 corrected case002 alone @7b216a3 3/3
+PASS fb002 corrected full @f359be6 10/10 runs all-pass, 0 RangeError
+PASS fb002 corrected case002 alone @f359be6 3/3
+PASS fb002 corrected full @5cd63ff 10/10 runs all-pass, 0 RangeError
+PASS fb002 corrected case002 alone @5cd63ff 3/3
+PASS fb002 corrected full @afbfb24: case 002 fails 10/10 with 0 RangeError (business before failure)
+PASS fb002 corrected oracle @afbfb24: 13/13 runs carry the business assertion expected null to be 'invalid-bool' | 13
+
+## 12. Ruling facts read from the committed evidence
+INFO R-PET EN before 375: pet={"left":267,"top":704,"right":323,"bottom":760,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET EN before 375 no pet coverage
+INFO R-PET EN before 414: pet={"left":306,"top":788,"right":362,"bottom":844,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET EN before 414 no pet coverage
+INFO R-PET EN before 768: pet={"left":660,"top":916,"right":732,"bottom":988,"width":72,"height":72} covered=["footer:save"] notFullyHit=footer:save(center=pet:svg,petHits=3)
+INFO R-PET EN before 1024: pet={"left":916,"top":660,"right":988,"bottom":732,"width":72,"height":72} covered=[] notFullyHit=none
+PASS R-PET EN before 1024 no pet coverage
+INFO R-PET EN before 1440: pet={"left":1332,"top":792,"right":1416,"bottom":876,"width":84,"height":84} covered=[] notFullyHit=none
+PASS R-PET EN before 1440 no pet coverage
+INFO R-PET EN fixed 375: pet={"left":267,"top":704,"right":323,"bottom":760,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET EN fixed 375 no pet coverage
+INFO R-PET EN fixed 414: pet={"left":306,"top":788,"right":362,"bottom":844,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET EN fixed 414 no pet coverage
+INFO R-PET EN fixed 768: pet={"left":660,"top":916,"right":732,"bottom":988,"width":72,"height":72} covered=["reset"] notFullyHit=reset(center=reset,petHits=2)
+INFO R-PET EN fixed 1024: pet={"left":916,"top":660,"right":988,"bottom":732,"width":72,"height":72} covered=[] notFullyHit=none
+PASS R-PET EN fixed 1024 no pet coverage
+INFO R-PET EN fixed 1440: pet={"left":1332,"top":792,"right":1416,"bottom":876,"width":84,"height":84} covered=[] notFullyHit=none
+PASS R-PET EN fixed 1440 no pet coverage
+INFO R-PET ZH before 375: pet={"left":267,"top":704,"right":323,"bottom":760,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET ZH before 375 no pet coverage
+INFO R-PET ZH before 414: pet={"left":306,"top":788,"right":362,"bottom":844,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET ZH before 414 no pet coverage
+INFO R-PET ZH before 768: pet={"left":660,"top":916,"right":732,"bottom":988,"width":72,"height":72} covered=["footer:save"] notFullyHit=footer:save(center=pet:svg,petHits=3)
+INFO R-PET ZH before 1024: pet={"left":916,"top":660,"right":988,"bottom":732,"width":72,"height":72} covered=[] notFullyHit=none
+PASS R-PET ZH before 1024 no pet coverage
+INFO R-PET ZH before 1440: pet={"left":1332,"top":792,"right":1416,"bottom":876,"width":84,"height":84} covered=[] notFullyHit=none
+PASS R-PET ZH before 1440 no pet coverage
+INFO R-PET ZH fixed 375: pet={"left":267,"top":704,"right":323,"bottom":760,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET ZH fixed 375 no pet coverage
+INFO R-PET ZH fixed 414: pet={"left":306,"top":788,"right":362,"bottom":844,"width":56,"height":56} covered=[] notFullyHit=none
+PASS R-PET ZH fixed 414 no pet coverage
+INFO R-PET ZH fixed 768: pet={"left":660,"top":916,"right":732,"bottom":988,"width":72,"height":72} covered=["reset"] notFullyHit=reset(center=pet:ellipse,petHits=3)
+INFO R-PET ZH fixed 1024: pet={"left":916,"top":660,"right":988,"bottom":732,"width":72,"height":72} covered=[] notFullyHit=none
+PASS R-PET ZH fixed 1024 no pet coverage
+INFO R-PET ZH fixed 1440: pet={"left":1332,"top":792,"right":1416,"bottom":876,"width":84,"height":84} covered=[] notFullyHit=none
+PASS R-PET ZH fixed 1440 no pet coverage
+INFO ruling-6 EN keyboard Discard all: status="Features settings saved." mutations=0 recovery_blocks=0 focus=reset inPane=true featureReads=6 displayed_equals_stored=true physical={"tasks":null,"board":"false","dashboard":null,"calendar":null,"matrix":null,"pomodoro":null,"habits":null,"meditation":null}
+PASS ruling-6 EN after Discard all: zero mutations, no drafts, every displayed value equals stored bytes, focus in pane
+INFO ruling-6 ZH keyboard Discard all: status="功能设置已保存。" mutations=0 recovery_blocks=0 focus=reset inPane=true featureReads=6 displayed_equals_stored=true physical={"tasks":null,"board":"false","dashboard":null,"calendar":null,"matrix":null,"pomodoro":null,"habits":null,"meditation":null}
+PASS ruling-6 ZH after Discard all: zero mutations, no drafts, every displayed value equals stored bytes, focus in pane
+
+## 13. Evidence directories only ever received additions
+PASS only-additions web-features-recovery-sol | 35 entries
+PASS only-additions web-features-recovery-independent | 6 entries
+PASS only-additions web-features-recovery-native | 100 entries
+PASS only-additions web-features-recovery-f1 | 8 entries
+PASS only-additions web-features-recovery-final | 90 entries
+PASS only-additions web-more-recovery-fb002 | 84 entries
+PASS only-additions web-features-recovery-contract | 1 entries
+
+## 14. This review's single bounded rerun (corrected More boundaries oracle at 5cd63ff, runner verify-fb002.mjs)
+INFO rerun_log_sha256=09dbc1ccfb23fac71d7a1c801f0a95e6952d4457fbef7441a8be504f25d3b4bf
+PASS rerun identity (5cd63ff, corrected, full)
+PASS rerun lockfile gate (4 equal values)
+PASS rerun used the committed runner, corrected oracle and frozen fixture
+PASS rerun @repo pin guard and harness
+PASS rerun result 10/10, case 002 PASSED, 0 RangeError
+
+summary checks=322 failures=0
+exit=0
