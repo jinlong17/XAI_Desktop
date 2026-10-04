@@ -1,0 +1,26 @@
+driver=docs/reviews/web-more-recovery-fb002/run-matrix.mjs sha256=5768e8ce57da30d65e2d884db9a010301fc4465fe4ef1232d12a414475f8885b
+runner=docs/reviews/web-more-recovery-fb002/verify-fb002.mjs sha256=d2150cd4794f7a51a5b72d9a7260dd8b7996a5c35adaa655da85719bfaf936a4
+group=corrected-case002 oracle=corrected scope=case002 repetitions=3 revisions=afbfb24,7b216a3,f359be6,5cd63ff iteration=v1 order=repetition-major
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-more-recovery-fb002/run-matrix.mjs corrected-case002 v1
+started_at=2026-10-04T16:52:56.777Z
+v1r01 afbfb24 exit=1 4.7s harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=FAILED log_sha256=9796450cbc5649bb2fdf438f117e926fa30c6e017c5ae953e479059dacbe6718
+    failed: c002: AssertionError: expected null to be 'invalid-bool' // Object.is equality @ boundaries.corrected.test.tsx:21:59
+v1r01 7b216a3 exit=0 3.5s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=8c48c2c532d914a6f05d25b61afb56d1b551cb858a3972a14980118f6bd8feca
+v1r01 f359be6 exit=0 3.6s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=b84ca4c680dd56f81a2aae9e981e4477e7669862b3215b5a9af22edea700ea4c
+v1r01 5cd63ff exit=0 3.6s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=95007c050dbcb5def5fe14866fa724d3825b272a5680522b5a6a611dc1dc0fd5
+v1r02 afbfb24 exit=1 3.3s harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=FAILED log_sha256=46bb8e5fb55989046c69ee7ffb0fe4b776ffefd43fbf1a8fef5c8a1c1112e895
+    failed: c002: AssertionError: expected null to be 'invalid-bool' // Object.is equality @ boundaries.corrected.test.tsx:21:59
+v1r02 7b216a3 exit=0 3.4s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=b485761d98c41209f9776fb726ec2d1ac808890b0256f99a9e7af309ea340a75
+v1r02 f359be6 exit=0 3.4s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=8630070aa2475df900d5f2925d96d3017b37bf612acfe8d906e6cf8efe9ef73c
+v1r02 5cd63ff exit=0 3.6s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=71a4f5ddbc5a5a9edd4f2f533748360bb62f3d6f45f26e740bc8e5afa731c54e
+v1r03 afbfb24 exit=1 3.5s harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=FAILED log_sha256=ddd59ed2e13abd561b21e00c10a97a83ad920f9ac3a39b4c609d7c73094b5156
+    failed: c002: AssertionError: expected null to be 'invalid-bool' // Object.is equality @ boundaries.corrected.test.tsx:21:59
+v1r03 7b216a3 exit=0 3.4s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=734af6c08194b2cab7aab3714fe8306ec220812b10bb9929da73a70624c41e7b
+v1r03 f359be6 exit=0 3.6s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=462a2b2e0edea9f05447f4de243df357eb2d6dba3de44312df61210258c787e0
+v1r03 5cd63ff exit=0 3.6s harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror(cases=0 output_lines=0) case002=PASSED log_sha256=70934bd50932258b3705095245262921ad574b7f872000a663323bee4168df49
+summary afbfb24 runs=3 exit0=0 case002_passed=0 rangeerror_cases_total=0
+summary 7b216a3 runs=3 exit0=3 case002_passed=3 rangeerror_cases_total=0
+summary f359be6 runs=3 exit0=3 case002_passed=3 rangeerror_cases_total=0
+summary 5cd63ff runs=3 exit0=3 case002_passed=3 rangeerror_cases_total=0
+finished_at=2026-10-04T16:53:40.022Z
+driver_exit=1

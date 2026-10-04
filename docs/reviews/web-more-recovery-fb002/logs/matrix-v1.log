@@ -1,0 +1,190 @@
+F-B002 matrix summary, iteration v1
+summarizer_sha256=030a3803369e6df0b533094567fa0199b7cc081d2bfd7e1be01287b83a9e1063
+run_logs=72
+
+## 1. Inventory (one line per run log)
+corrected-case002-v1r01-5cd63ff.log sha256=95007c050dbcb5def5fe14866fa724d3825b272a5680522b5a6a611dc1dc0fd5 exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.19 5.77 4.76
+corrected-case002-v1r01-7b216a3.log sha256=8c48c2c532d914a6f05d25b61afb56d1b551cb858a3972a14980118f6bd8feca exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.47 5.82 4.76
+corrected-case002-v1r01-afbfb24.log sha256=9796450cbc5649bb2fdf438f117e926fa30c6e017c5ae953e479059dacbe6718 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.95 5.90 4.78
+corrected-case002-v1r01-f359be6.log sha256=b84ca4c680dd56f81a2aae9e981e4477e7669862b3215b5a9af22edea700ea4c exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.12 5.75 4.74
+corrected-case002-v1r02-5cd63ff.log sha256=71a4f5ddbc5a5a9edd4f2f533748360bb62f3d6f45f26e740bc8e5afa731c54e exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.46 5.63 4.72
+corrected-case002-v1r02-7b216a3.log sha256=b485761d98c41209f9776fb726ec2d1ac808890b0256f99a9e7af309ea340a75 exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.93 5.73 4.75
+corrected-case002-v1r02-afbfb24.log sha256=46bb8e5fb55989046c69ee7ffb0fe4b776ffefd43fbf1a8fef5c8a1c1112e895 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.19 5.77 4.76
+corrected-case002-v1r02-f359be6.log sha256=8630070aa2475df900d5f2925d96d3017b37bf612acfe8d906e6cf8efe9ef73c exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.46 5.63 4.72
+corrected-case002-v1r03-5cd63ff.log sha256=70934bd50932258b3705095245262921ad574b7f872000a663323bee4168df49 exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.21 5.57 4.71
+corrected-case002-v1r03-7b216a3.log sha256=734af6c08194b2cab7aab3714fe8306ec220812b10bb9929da73a70624c41e7b exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.40 5.61 4.72
+corrected-case002-v1r03-afbfb24.log sha256=ddd59ed2e13abd561b21e00c10a97a83ad920f9ac3a39b4c609d7c73094b5156 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=1 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.26 5.59 4.71
+corrected-case002-v1r03-f359be6.log sha256=462a2b2e0edea9f05447f4de243df357eb2d6dba3de44312df61210258c787e0 exit=0 harness=PASS (19/19) cases=10 passed=1 failed=0 skipped=9 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.40 5.61 4.72
+corrected-full-v1r01-5cd63ff.log sha256=859cbf7e44c9bf14ca07b2c7131608c40c549306a549192598fc16f05cc56b7d exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.94 4.90 4.25
+corrected-full-v1r01-7b216a3.log sha256=af8c2c8dccada7f79e5e55503594220d5196553b8c524146312807fb0b714d2c exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.49 4.71 4.18
+corrected-full-v1r01-afbfb24.log sha256=21781bb0afd8f5d9b0b974df9c099f89916103ae57f7f41d95c2db1fcedc14f4 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=3.44 3.87 3.88
+corrected-full-v1r01-f359be6.log sha256=9cbc95b8e271f648796f18a2177273061118e15e6dc6bc8f9aa010930c8a8dd3 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.85 4.83 4.22
+corrected-full-v1r02-5cd63ff.log sha256=b54861a90d8ffdba0812cb93bec05932797a5b91abd12a4f542f713008d6b21c exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.98 4.86 4.25
+corrected-full-v1r02-7b216a3.log sha256=ac633d3e30e6b402f01d48427f5fe973db55d1dde58fe4c413aa79fb876c75e5 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.72 4.73 4.20
+corrected-full-v1r02-afbfb24.log sha256=2cebf26bea1d4594bb34d11f5f698ec12d3e3817f3da4fcfdf32fc2d5a8e3272 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.31 4.81 4.22
+corrected-full-v1r02-f359be6.log sha256=adbba80f610f497aa23a3a84b0a1fc65ee05c9aae8de8a144d614508421d4f7f exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.06 4.84 4.24
+corrected-full-v1r03-5cd63ff.log sha256=7b56c9e9226122b6e1876de022cb3e54609d3206743d9bcc4cf8fa1981f48955 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.90 4.93 4.29
+corrected-full-v1r03-7b216a3.log sha256=5823b2951eaf6b866bdf56f2376464d459cdc8d9c47b8ffb976053d537518481 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.66 4.83 4.24
+corrected-full-v1r03-afbfb24.log sha256=8a01e176be977b12e93240560eba202718191c291b56eda658f3330f0c6aeac2 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.98 4.86 4.25
+corrected-full-v1r03-f359be6.log sha256=d95af49aacfc79daaa722d56d3e264c22cb4ff619a147eec58206d275ab87193 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.37 4.79 4.23
+corrected-full-v1r04-5cd63ff.log sha256=f711165b1579616b0b5f81572218425573b2d9d83c590f677cae91c41912593b exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.80 4.81 4.25
+corrected-full-v1r04-7b216a3.log sha256=b4fd9befd8cd40a5c72b9f238787fa5fc40acebcda71136fd456aa0cc0375cb2 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.22 4.85 4.26
+corrected-full-v1r04-afbfb24.log sha256=24d01a1e48b4a996d6960d807e49f92f7f01e83e027b543fdf9212a3f7d002c5 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.50 4.88 4.27
+corrected-full-v1r04-f359be6.log sha256=c4914165806d94fec75cc9b2e905d445474c3a626a9dc9cbb9e3f9dd72a4160e exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.04 4.84 4.26
+corrected-full-v1r05-5cd63ff.log sha256=f327392fa02d4a340135c35b59dd9c79ce012859af754d625246817640ce2e26 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.90 4.65 4.21
+corrected-full-v1r05-7b216a3.log sha256=247ee3a3ca7ffd23280f42f0cf3a91692655e1e681f7d2cd5505d3f09f52d8ba exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.15 4.70 4.22
+corrected-full-v1r05-afbfb24.log sha256=af3ee0368a6a3cb95dd56b3135c8058f30fa0d221525a083197056a9e2ed2288 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.34 4.73 4.23
+corrected-full-v1r05-f359be6.log sha256=6de83bea8a74f91417d73dab6ea55e4ac95d8f53e6b0f00bdf674b21f33a5b05 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=5.15 4.70 4.22
+corrected-full-v1r06-5cd63ff.log sha256=3f556ccce1699ee754e4e962f7d439c773184c870e2eb42cf911df3c1912b683 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.50 4.58 4.19
+corrected-full-v1r06-7b216a3.log sha256=cda09322859834fd3925e4596d064bc88324c9ffcca7358824dee144504f87b6 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.60 4.60 4.19
+corrected-full-v1r06-afbfb24.log sha256=ce94533265f63859501838df27450447c4ea9040f9a63e156520851fc9162c15 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.74 4.62 4.20
+corrected-full-v1r06-f359be6.log sha256=4f52556ccdce13c802302044143ef84ceecf5f5cf40d05d9509a542fcff7ea07 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.64 4.60 4.20
+corrected-full-v1r07-5cd63ff.log sha256=a68bf058fd46320e55b481b4a9caa890a32553b8da58cfa085f2e78e976314c2 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.24 5.26 4.45
+corrected-full-v1r07-7b216a3.log sha256=7d4528bc5dfe34dca03c2be39e6428924c0562702dae22a9cb1c946c9e4d37b1 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.80 5.31 4.46
+corrected-full-v1r07-afbfb24.log sha256=e5460925fffe8e9904e94f87368039838d725fefc441f60e6b82efae8b4e6a21 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=8.31 5.36 4.47
+corrected-full-v1r07-f359be6.log sha256=1cb2de0ae7eea5f33a6b330de2595607db8c088278c846bb930d419c757ac96c exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.26 5.23 4.44
+corrected-full-v1r08-5cd63ff.log sha256=83eb57c2e282f1b96d57c58612ca3314cec5e0b3e0a59e6cc8e0910e03e7e418 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.85 5.28 4.47
+corrected-full-v1r08-7b216a3.log sha256=72668df50001b48227322852babd0b585603806c104ce7b434c0b97247967a46 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.46 5.34 4.48
+corrected-full-v1r08-afbfb24.log sha256=6dcb87b543358786a9831a8cd5959fec4dea082a65d2b4e1ab976dd7edd66bab exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.46 5.34 4.48
+corrected-full-v1r08-f359be6.log sha256=00053e26b92764844ffb54b377d8ee21e5013adf7272625f67f3f3365ba22003 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.18 5.32 4.48
+corrected-full-v1r09-5cd63ff.log sha256=290406e85f66d66fde75a4cb66d4ba4c71117311f1706750e857f74c35904322 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=10.52 6.18 4.81
+corrected-full-v1r09-7b216a3.log sha256=1791bf06a1bd3bb34332647b72e4ec1c43f6595fa1b627010b8c5ac7628b9e05 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=8.48 5.67 4.62
+corrected-full-v1r09-afbfb24.log sha256=cb61354478e922c3c420dbe6d6aacbd5b8d9c995c0cf49b4214e8ec7ed4e3300 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=6.78 5.29 4.48
+corrected-full-v1r09-f359be6.log sha256=fb3228d19a249c507211ae21f9b733d2538bdb3c9d280d0765a89561f0b32852 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=7.96 5.61 4.60
+corrected-full-v1r10-5cd63ff.log sha256=7eb5eba3e3484cf34ea0137b4e0a5d427f8e06ae09e208cfebef811a0cc546f3 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=9.09 6.13 4.82
+corrected-full-v1r10-7b216a3.log sha256=a346b5c6af854867fd5d4743c207a8ff181d401b9a909b3642b49acd5157b852 exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=9.90 6.19 4.83
+corrected-full-v1r10-afbfb24.log sha256=a3d69ae4d44a2df6054be24c78c62f5fce34c6ed12db4f3528e47fca3d3a1e16 exit=1 harness=PASS (19/19) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=10.24 6.19 4.82
+corrected-full-v1r10-f359be6.log sha256=e8a6880140d85f75062bdd922a3e1a61c9763f0319172fa05cd76288cfd1220d exit=0 harness=PASS (19/19) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=9.19 6.10 4.81
+original-full-v1r01-7b216a3.log sha256=742afeb10c3517e55feffed4eef3f5ebf47f413859660c9cb4887c0e9b1b75e2 exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.37 5.33 4.66
+original-full-v1r01-afbfb24.log sha256=5d279fced85ae8b2a946a5d3d275ef9bdf12ece71f9f52315dbcb89138b29660 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.41 5.36 4.66
+original-full-v1r02-7b216a3.log sha256=58cbd8121cc9fee6dbaf6a3c5c08e327d655c453128f9a888561e4de21fc1b9c exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.70 5.37 4.68
+original-full-v1r02-afbfb24.log sha256=e1be9e45cd06524076fa231ed6ef3683cccecb97a616543368eab85223641d09 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.50 5.35 4.66
+original-full-v1r03-7b216a3.log sha256=f865cc74aae440c824ee8f1a9eaafd170464eedd67a4db2d1891a23db2d574cc exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.21 5.25 4.64
+original-full-v1r03-afbfb24.log sha256=a568b254621f7d8701bab912277ad1ed93d4a37e41fb7c08c21ac0bf048fc442 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.49 5.32 4.66
+original-full-v1r04-7b216a3.log sha256=07860245a405f65903abeca515e123da05bc7d4626e350aaedd3249151f6c4a2 exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.25 5.22 4.64
+original-full-v1r04-afbfb24.log sha256=a4a3351bef0f09f2252a31e814453dde6de2a8bd37473e8988a92d490dd617f1 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.27 5.24 4.64
+original-full-v1r05-7b216a3.log sha256=51a2b2e3c836dec9130da184b2ff4af44d1559c7ca76642ea74c78fa76187822 exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.34 5.21 4.64
+original-full-v1r05-afbfb24.log sha256=050bef8a634ffd0b935fc84758750634fcaa6e56114bcc6519c021df7961b2b6 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.63 5.28 4.66
+original-full-v1r06-7b216a3.log sha256=aae2461d26a5b39a0ddeca2ca1b5d0bc63e84ea9bf107a9af85f05cd787a5d7f exit=1 harness=PASS (17/17) cases=10 passed=9 failed=1 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=4.13 5.14 4.62
+original-full-v1r06-afbfb24.log sha256=a1e97fb60a64a83a280ecc28653528996b20af938455d2a47f95b62e9063c769 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=4.23 5.17 4.63
+original-full-v1r07-7b216a3.log sha256=a1b8e0db8aaab0af131e533e972e7fdc17c67d6f1bac86a5d1c6b884949a8ec9 exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=3.72 5.02 4.59
+original-full-v1r07-afbfb24.log sha256=787da60015ed8d313c76ea1abc560742bf5b26b8f7feb6bd70f931528e2600f7 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=3.96 5.09 4.61
+original-full-v1r08-7b216a3.log sha256=ef6abbec36d632320aa7c62faf5ab59c740062530214e93f8f98a78458dbd23d exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=3.78 4.98 4.58
+original-full-v1r08-afbfb24.log sha256=21b6c95a775a561e847f97a983766ee3bb1516f9d57a1c2faee8c17f84555ae7 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=3.50 4.95 4.56
+original-full-v1r09-7b216a3.log sha256=01a08d12f05691a17d341c5b2e1910741621e12b5e69f984951caef49a9362ec exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=3.98 4.98 4.58
+original-full-v1r09-afbfb24.log sha256=cf7957da3eec2044ab9bf9952190ac52cc82229ca1187269d23240ce418938a2 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=3.80 4.97 4.58
+original-full-v1r10-7b216a3.log sha256=e38972e59af4619d6bc3e23b6b21433aee61d0840a1d706dc11b5587fc3bc3aa exit=0 harness=PASS (17/17) cases=10 passed=10 failed=0 skipped=0 other=0 rangeerror_cases=0 rangeerror_lines=0 loadavg=3.91 4.94 4.57
+original-full-v1r10-afbfb24.log sha256=4ba184ab2a730e959024d9ed4e5da2808b2c04122a501ede9e2ec56d231114d9 exit=1 harness=PASS (17/17) cases=10 passed=0 failed=10 skipped=0 other=0 rangeerror_cases=1 rangeerror_lines=2 loadavg=3.90 4.95 4.57
+
+## 2. Invariants
+PASS requested revision resolves to the expected full commit
+PASS one runner hash across all logs (d2150cd4794f7a51a5b72d9a7260dd8b7996a5c35adaa655da85719bfaf936a4)
+PASS lockfile gate: expected, dependency, archive (git show) and extracted lockfile = df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+PASS fixture beside the oracle = frozen fixture b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928
+PASS oracle run copy = the requested oracle (corrected 2e88c1db…, original dcbaf57e…)
+PASS harness checks PASS
+PASS pin: 0 unaliased @repo imports and no missing required provenance
+PASS exit 0 exactly when every executed case passed, else exit 1
+PASS 10 cases reported per log
+
+## 3. Matrix cells
+cell corrected case002 5cd63ff: runs=3 runs_all_executed_passed=3 runs_exit0=3 executed_cases_per_run=1 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c002=3/3
+  per_run r01:-P-------- r02:-P-------- r03:-P--------
+cell corrected case002 7b216a3: runs=3 runs_all_executed_passed=3 runs_exit0=3 executed_cases_per_run=1 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c002=3/3
+  per_run r01:-P-------- r02:-P-------- r03:-P--------
+cell corrected case002 afbfb24: runs=3 runs_all_executed_passed=0 runs_exit0=0 executed_cases_per_run=1 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c002=0/3
+  per_run r01:-F-------- r02:-F-------- r03:-F--------
+  failure x3: c002 AssertionError: expected null to be 'invalid-bool' // Object.is equality @L21:59
+cell corrected case002 f359be6: runs=3 runs_all_executed_passed=3 runs_exit0=3 executed_cases_per_run=1 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c002=3/3
+  per_run r01:-P-------- r02:-P-------- r03:-P--------
+cell corrected full 5cd63ff: runs=10 runs_all_executed_passed=10 runs_exit0=10 executed_cases_per_run=10 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c001=10/10 c002=10/10 c003=10/10 c004=10/10 c005=10/10 c006=10/10 c007=10/10 c008=10/10 c009=10/10 c010=10/10
+  per_run r01:PPPPPPPPPP r02:PPPPPPPPPP r03:PPPPPPPPPP r04:PPPPPPPPPP r05:PPPPPPPPPP r06:PPPPPPPPPP r07:PPPPPPPPPP r08:PPPPPPPPPP r09:PPPPPPPPPP r10:PPPPPPPPPP
+cell corrected full 7b216a3: runs=10 runs_all_executed_passed=10 runs_exit0=10 executed_cases_per_run=10 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c001=10/10 c002=10/10 c003=10/10 c004=10/10 c005=10/10 c006=10/10 c007=10/10 c008=10/10 c009=10/10 c010=10/10
+  per_run r01:PPPPPPPPPP r02:PPPPPPPPPP r03:PPPPPPPPPP r04:PPPPPPPPPP r05:PPPPPPPPPP r06:PPPPPPPPPP r07:PPPPPPPPPP r08:PPPPPPPPPP r09:PPPPPPPPPP r10:PPPPPPPPPP
+cell corrected full afbfb24: runs=10 runs_all_executed_passed=0 runs_exit0=0 executed_cases_per_run=10 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c001=0/10 c002=0/10 c003=0/10 c004=0/10 c005=0/10 c006=0/10 c007=0/10 c008=0/10 c009=0/10 c010=0/10
+  per_run r01:FFFFFFFFFF r02:FFFFFFFFFF r03:FFFFFFFFFF r04:FFFFFFFFFF r05:FFFFFFFFFF r06:FFFFFFFFFF r07:FFFFFFFFFF r08:FFFFFFFFFF r09:FFFFFFFFFF r10:FFFFFFFFFF
+  failure x10: c001 AssertionError: expected 'window' to be 'tray' // Object.is equality @L11:145
+  failure x10: c002 AssertionError: expected null to be 'invalid-bool' // Object.is equality @L21:59
+  failure x10: c003 AssertionError: expected null to be 'study' // Object.is equality @L31:114
+  failure x10: c004 Error: No More Blob @L32:70
+  failure x10: c005 AssertionError: expected null to be 'study' // Object.is equality @L41:213
+  failure x10: c006 AssertionError: expected undefined to be false // Object.is equality @L46:230
+  failure x10: c007 AssertionError: expected 'tray' to be 'window' // Object.is equality @L51:272
+  failure x10: c008 TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching" @L57:178
+  failure x10: c009 Error: No More Blob @L64:240
+  failure x10: c010 AssertionError: expected undefined to be false // Object.is equality @L69:304
+cell corrected full f359be6: runs=10 runs_all_executed_passed=10 runs_exit0=10 executed_cases_per_run=10 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c001=10/10 c002=10/10 c003=10/10 c004=10/10 c005=10/10 c006=10/10 c007=10/10 c008=10/10 c009=10/10 c010=10/10
+  per_run r01:PPPPPPPPPP r02:PPPPPPPPPP r03:PPPPPPPPPP r04:PPPPPPPPPP r05:PPPPPPPPPP r06:PPPPPPPPPP r07:PPPPPPPPPP r08:PPPPPPPPPP r09:PPPPPPPPPP r10:PPPPPPPPPP
+cell original full 7b216a3: runs=10 runs_all_executed_passed=9 runs_exit0=9 executed_cases_per_run=10 rangeerror_cases_total=0 rangeerror_lines_total=0 runs_with_rangeerror=0
+  per_case_passed c001=10/10 c002=9/10 c003=10/10 c004=10/10 c005=10/10 c006=10/10 c007=10/10 c008=10/10 c009=10/10 c010=10/10
+  per_run r01:PPPPPPPPPP r02:PPPPPPPPPP r03:PPPPPPPPPP r04:PPPPPPPPPP r05:PPPPPPPPPP r06:PFPPPPPPPP r07:PPPPPPPPPP r08:PPPPPPPPPP r09:PPPPPPPPPP r10:PPPPPPPPPP
+  failure x1: c002 AssertionError: remove_date_text: expected 'true' to be null @L20:167
+cell original full afbfb24: runs=10 runs_all_executed_passed=0 runs_exit0=0 executed_cases_per_run=10 rangeerror_cases_total=10 rangeerror_lines_total=20 runs_with_rangeerror=10
+  per_case_passed c001=0/10 c002=0/10 c003=0/10 c004=0/10 c005=0/10 c006=0/10 c007=0/10 c008=0/10 c009=0/10 c010=0/10
+  per_run r01:FFFFFFFFFF r02:FFFFFFFFFF r03:FFFFFFFFFF r04:FFFFFFFFFF r05:FFFFFFFFFF r06:FFFFFFFFFF r07:FFFFFFFFFF r08:FFFFFFFFFF r09:FFFFFFFFFF r10:FFFFFFFFFF
+  failure x10: c001 AssertionError: expected 'window' to be 'tray' // Object.is equality @L11:145
+  failure x10: c002 RangeError: Maximum call stack size exceeded @L19:113
+  failure x10: c003 AssertionError: expected null to be 'study' // Object.is equality @L31:114
+  failure x10: c004 Error: No More Blob @L32:70
+  failure x10: c005 AssertionError: expected null to be 'study' // Object.is equality @L41:213
+  failure x10: c006 AssertionError: expected undefined to be false // Object.is equality @L46:230
+  failure x10: c007 AssertionError: expected 'tray' to be 'window' // Object.is equality @L51:272
+  failure x10: c008 TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching" @L57:178
+  failure x10: c009 Error: No More Blob @L64:240
+  failure x10: c010 AssertionError: expected undefined to be false // Object.is equality @L69:304
+
+## 4. Before validity at afbfb24: case by case against the authoritative before4 log
+before4 ../web-more-recovery-sol/boundaries-before4-afbfb24.log sha256=fafc1182a585812b83462fc44bc7ecf1557984832fbff5e269e9a091f960c036 failed_cases=10
+before3 ../web-more-recovery-sol/boundaries-before3-afbfb24.log sha256=058a066dd959c3d27145019a64f43d3da405ffb1d966985d32ad7ea93a1cda9a failed_cases=10 (superseded)
+before2 ../web-more-recovery-sol/boundaries-before2-afbfb24.log sha256=e75503ea640367db775d7070d1a950bbcb437ce1d316a650f84cb9083e661b43 failed_cases=7 (superseded)
+c001 missing and rejected Web Locks retain exact device/account edit and reset intents
+  before4: AssertionError: expected 'window' to be 'tray' // Object.is equality @L11:145
+  corrected full x10: AssertionError: expected 'window' to be 'tray' // Object.is equality @L11:145  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected 'window' to be 'tray' // Object.is equality @L11:145  => vs before4: error MATCH, location MATCH
+c002 invalid and unavailable sources retain requested reset intents without purging raw bytes
+  before4: RangeError: Maximum call stack size exceeded @L19:180
+  corrected full x10: AssertionError: expected null to be 'invalid-bool' // Object.is equality @L21:59  => vs before4: error DIFF, location DIFF
+  original full x10: RangeError: Maximum call stack size exceeded @L19:113  => vs before4: error MATCH, location DIFF
+  corrected case002 x3: AssertionError: expected null to be 'invalid-bool' // Object.is equality @L21:59  => vs before4: error DIFF, location DIFF
+  before3 (superseded): AssertionError: expected null to be 'invalid-bool' // Object.is equality @L20:59
+  before2 (superseded): AssertionError: expected null to be 'invalid-bool' // Object.is equality @L19:59
+c003 missing committed marker lets device resets settle but retains both private reset intents
+  before4: AssertionError: expected null to be 'study' // Object.is equality @L31:114
+  corrected full x10: AssertionError: expected null to be 'study' // Object.is equality @L31:114  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected null to be 'study' // Object.is equality @L31:114  => vs before4: error MATCH, location MATCH
+c004 deleted tombstone lets device resets settle but retains both private reset intents
+  before4: Error: No More Blob @L32:70
+  corrected full x10: Error: No More Blob @L32:70  => vs before4: error MATCH, location MATCH
+  original full x10: Error: No More Blob @L32:70  => vs before4: error MATCH, location MATCH
+c005 a held account lifecycle lock leaves device reset independent and private reset pending
+  before4: AssertionError: expected null to be 'study' // Object.is equality @L41:213
+  corrected full x10: AssertionError: expected null to be 'study' // Object.is equality @L41:213  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected null to be 'study' // Object.is equality @L41:213  => vs before4: error MATCH, location MATCH
+c006 setting an exact registry default stores bytes while Reset Default removes them
+  before4: AssertionError: expected undefined to be false // Object.is equality @L46:230
+  corrected full x10: AssertionError: expected undefined to be false // Object.is equality @L46:230  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected undefined to be false // Object.is equality @L46:230  => vs before4: error MATCH, location MATCH
+c007 a same-field source Reload cannot erase an actual failed edit draft
+  before4: AssertionError: expected 'tray' to be 'window' // Object.is equality @L51:272
+  corrected full x10: AssertionError: expected 'tray' to be 'window' // Object.is equality @L51:272  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected 'tray' to be 'window' // Object.is equality @L51:272  => vs before4: error MATCH, location MATCH
+c008 targeted discard rereads only its field with zero mutations and preserves a failed sibling
+  before4: TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching" @L57:178
+  corrected full x10: TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching" @L57:178  => vs before4: error MATCH, location MATCH
+  original full x10: TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Discard Choose window type when launching" @L57:178  => vs before4: error MATCH, location MATCH
+c009 an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+  before4: Error: No More Blob @L64:240
+  corrected full x10: Error: No More Blob @L64:240  => vs before4: error MATCH, location MATCH
+  original full x10: Error: No More Blob @L64:240  => vs before4: error MATCH, location MATCH
+c010 all-discard visits only current drafts and a later same-field reset survives old completion
+  before4: AssertionError: expected undefined to be false // Object.is equality @L69:304
+  corrected full x10: AssertionError: expected undefined to be false // Object.is equality @L69:304  => vs before4: error MATCH, location MATCH
+  original full x10: AssertionError: expected undefined to be false // Object.is equality @L69:304  => vs before4: error MATCH, location MATCH

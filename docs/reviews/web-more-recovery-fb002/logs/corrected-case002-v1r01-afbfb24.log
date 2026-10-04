@@ -1,0 +1,141 @@
+requested_revision=afbfb24
+resolved_commit=afbfb24d6f7311366b77852eda927d08467478c2
+resolved_tree=bac3ca1660692085de126d4b5c86fd774b15557f
+oracle=corrected
+scope=case002
+suffix=v1r01
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-more-recovery-fb002/verify-fb002.mjs afbfb24 corrected case002 v1r01
+output_dir=docs/reviews/web-more-recovery-fb002/logs
+runner_checkout_head=75207754078be2dbe5152af1be886ede15e227cc
+runner_sha256=d2150cd4794f7a51a5b72d9a7260dd8b7996a5c35adaa655da85719bfaf936a4
+started_at=2026-10-04T16:52:56.875Z finished_at=2026-10-04T16:53:00.865Z duration_ms=3990 loadavg_at_start=6.95 5.90 4.78
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+include=docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx
+test_name_pattern=invalid and unavailable sources retain requested reset intents without purging raw bytes$
+setup_files=packages/plugin-web-settings-rest/vitest.setup.ts
+oracle_expected_sha256=2e88c1db3e4045ef44c856b86b23f61322ca5002a45062f80a494cb3ac5e50f8 oracle_run_sha256=2e88c1db3e4045ef44c856b86b23f61322ca5002a45062f80a494cb3ac5e50f8
+frozen_fixture=docs/reviews/web-more-recovery-sol/fixture.tsx frozen_fixture_sha256=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 fixture_run_path=docs/reviews/web-more-recovery-fb002/fixture.tsx fixture_run_sha256=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928
+staged docs/reviews/web-more-recovery-sol/fixture.tsx from=docs/reviews/web-more-recovery-sol/fixture.tsx run_sha256=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-sol/fields.test.tsx from=docs/reviews/web-more-recovery-sol/fields.test.tsx run_sha256=36aa19c20fb97ed3da9f902cc513ef6ae293d15b8649e79a3a85ff3fd041fb9a archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-sol/reset.test.tsx from=docs/reviews/web-more-recovery-sol/reset.test.tsx run_sha256=05f3cbc748dcf5fa7d91e4dfa3ddd1d54b774aadd617009435667591d00c0441 archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-sol/queues.test.tsx from=docs/reviews/web-more-recovery-sol/queues.test.tsx run_sha256=3bdce398a08908f580139d805947ceb16db7126bf3ba07bd0024eb5acdcfff7c archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-sol/boundaries.test.tsx from=docs/reviews/web-more-recovery-sol/boundaries.test.tsx run_sha256=dcbaf57e55f7e907660abacaf233de83dcf769da97b878a9036e358a3dd8ef3e archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-sol/owner-export.test.tsx from=docs/reviews/web-more-recovery-sol/owner-export.test.tsx run_sha256=5a9cfa177f61ddd4feb6278dd5ac7c49cc0c1b972725be2068e902f18f7ebfcf archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx from=docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx run_sha256=2e88c1db3e4045ef44c856b86b23f61322ca5002a45062f80a494cb3ac5e50f8 archive_committed=absent (not in this revision's tree)
+staged docs/reviews/web-more-recovery-fb002/fixture.tsx from=docs/reviews/web-more-recovery-sol/fixture.tsx run_sha256=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 archive_committed=absent (not in this revision's tree)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run_sha256=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/morePane.tsx=c2753288a2ccc839a1754ccc20521975802dcfc6ce2c4903e6e39cac4b8072ec packages/plugin-web-storage/src/internal/accountScope.ts=ca9d79b2188e1a2b011a4c41038019659b43e03127bc8bd876cffafe2e489e36 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/fb002.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/.fb002-guard/report.json --testNamePattern invalid and unavailable sources retain requested reset intents without purging raw bytes$
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a198f122236ba0973/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a198f122236ba0973/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a198f122236ba0973/docs
+vitest_exit=1
+harness_checks=PASS (19/19)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8
+
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+ × docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes 100ms
+   → expected null to be 'invalid-bool' // Object.is equality
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > a held account lifecycle lock leaves device reset independent and private reset pending
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > setting an exact registry default stores bytes while Reset Default removes them
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > a same-field source Reload cannot erase an actual failed edit draft
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+ ↓ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  09:52:59
+   Duration  1.11s (transform 241ms, setup 218ms, collect 224ms, tests 101ms, environment 322ms, prepare 61ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/.fb002-guard/report.json
+
+---- stderr ----
+stderr | docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+[plugin-web-storage] decode failed for xai_pref_more_launch_at_login: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at MorePaneContent (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-settings-rest/src/panes/morePane.tsx:133:31)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+AssertionError: expected null to be 'invalid-bool' // Object.is equality
+
+- Expected: 
+"invalid-bool"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx:21:59
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+---- runner summary ----
+harness PASS staged docs/reviews/web-more-recovery-sol/fixture.tsx equals this checkout's docs/reviews/web-more-recovery-sol/fixture.tsx
+harness PASS staged docs/reviews/web-more-recovery-sol/fields.test.tsx equals this checkout's docs/reviews/web-more-recovery-sol/fields.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-sol/reset.test.tsx equals this checkout's docs/reviews/web-more-recovery-sol/reset.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-sol/queues.test.tsx equals this checkout's docs/reviews/web-more-recovery-sol/queues.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-sol/boundaries.test.tsx equals this checkout's docs/reviews/web-more-recovery-sol/boundaries.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-sol/owner-export.test.tsx equals this checkout's docs/reviews/web-more-recovery-sol/owner-export.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx equals this checkout's docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx
+harness PASS staged docs/reviews/web-more-recovery-fb002/fixture.tsx equals this checkout's docs/reviews/web-more-recovery-sol/fixture.tsx
+harness PASS oracle run copy docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx is the corrected oracle (2e88c1db3e4045ef44c856b86b23f61322ca5002a45062f80a494cb3ac5e50f8)
+harness PASS fixture beside the oracle (docs/reviews/web-more-recovery-fb002/fixture.tsx) is byte-identical to the frozen docs/reviews/web-more-recovery-sol/fixture.tsx (b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928)
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [packages/plugin-web-settings-rest/vitest.setup.ts], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product, helper, fixture and oracle modules loaded from the archive (6 of 6)
+harness PASS no test-file suite error
+harness PASS all 10 oracle cases reported
+harness PASS case 002 alone executed (executed=1, skipped=9)
+json_report=success=false numTotalTestSuites=1 numTotalTests=10 numPassedTests=0 numFailedTests=1 numPendingTests=9 numTodoTests=0
+totals cases=10 passed=0 failed=1 skipped=9 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=1 act_warning_lines=0
+rangeerror cases=0 output_lines=0
+executed_all_passed=false
+file docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx status=failed tests=10 passed=0 failed=1
+case 001 SKIPPED | missing and rejected Web Locks retain exact device/account edit and reset intents
+case 002 FAILED | invalid and unavailable sources retain requested reset intents without purging raw bytes
+    first: AssertionError: expected null to be 'invalid-bool' // Object.is equality
+    at: docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx:21:59
+case 003 SKIPPED | missing committed marker lets device resets settle but retains both private reset intents
+case 004 SKIPPED | deleted tombstone lets device resets settle but retains both private reset intents
+case 005 SKIPPED | a held account lifecycle lock leaves device reset independent and private reset pending
+case 006 SKIPPED | setting an exact registry default stores bytes while Reset Default removes them
+case 007 SKIPPED | a same-field source Reload cannot erase an actual failed edit draft
+case 008 SKIPPED | targeted discard rereads only its field with zero mutations and preserves a failed sibling
+case 009 SKIPPED | an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+case 010 SKIPPED | all-discard visits only current drafts and a later same-field reset survives old completion
+console_block stderr | docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/.fb002-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-fb002-yRykZ8/packages/plugin-web-settings-rest/vitest.setup.ts"],"include":["docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/morePane.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/prefMutation.ts docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts docs/reviews/web-more-recovery-fb002/fixture.tsx docs/reviews/web-more-recovery-fb002/boundaries.corrected.test.tsx
+pin_required_provenance_missing=none
+pin_modules=63 by package: docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-more-recovery-fb002=2 packages/plugin-web-settings-rest=3 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9
