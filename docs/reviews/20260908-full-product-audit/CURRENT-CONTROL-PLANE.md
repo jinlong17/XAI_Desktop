@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-FEATURES-01 的 E1–E2（Sol，`11e0afb`）与 E3（父级 jsdom host，`b732c27`）已冻结并通过核对。本批登记批次 24：E4 native 跨模块 before 与 E5 Features F1 before。E1–E5 全部冻结前不得实施。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：CP-FEATURES-01 的 E1–E5 已全部冻结并通过核对：Sol `11e0afb`、host `b732c27`、native 与 F1 `4c5323f`。本批登记并授权批次 25：由 Terra 在合同 §11 范围内实施。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `b732c27` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `4c5323f` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -81,7 +81,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `diagnosis_needed`：合同已通过总控核对；before 基线 E1–E5 未冻结；未授权实施 |
+| 状态 | `diagnosis_needed`：诊断完成，E1–E5 全部冻结；批次 25 Terra 实施已授权、进行中。Terra 回交并经总控核对后改为 `implementation_ready_for_review` |
 | 选择与合同 | 选择备忘录 `docs/reviews/web-next-caller-selection/selection-f359be6.md` 与合同 `docs/reviews/web-features-recovery-contract/contract.md`，提交 `6ded3dc`，作者为独立 Claude Opus 5.5（Astra 角色映射）。比较了 7 个候选：Features 被推荐；Appearance、Integrations、AI、Dashboard、Calendar、Board 均有前置决策或依赖 |
 | 312 清单编号 | 支撑 `REL-05`；关联 `REL-07`、`REL-10`、`UX-04`、`UX-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09`。`SET-03`（目录决策）被明确排除。本任务不关闭任何编号 |
 | feature / 产品模块 | Settings Features recovery caller / `web`（单一包 `xai-web-settings-features-panel`） |
@@ -94,9 +94,10 @@
 | E1–E2 Sol before oracle | `11e0afb`（独立 Sol；`web-features-recovery-sol/` 下 24 个新增文件；不可变 `f359be6` archive；lockfile gate；`@repo` 以 75 个精确 alias 固定到 archive，并带守卫）。<ul><li>以 `before2` 为准（诊断迭代 2/3；`before1` 保留并标注为已取代）。</li><li>结果：bytes 17/17 PASS；fields 0/49；reset 2/31；queues 0/40；continuity-export 3/26；downstream 9/15；original（AC-PANE-1–6）6/6；另跑 §10 第 10 点的读者测试：features 17/17、web 18/18。</li><li>`PRECONDITION:` 为 0；失败全部是业务 AssertionError，无 TypeError；所有日志 hash 均写入 README。</li><li>**假设结论：** H1、H2、H3、H4、H5（pane 与读者层）、H7、H9 均确认；H6 在 hook 层确认（六个 legacy 读者重绘为默认值）；H6 在生产 `App` 中被推翻（PASS，但要求仍约束 fixed 产品），因为 Reset 使整个 App 重挂、读者重新读取存储值。这次重挂本身是 §10.5 "during" 的正确 FAIL。H8 属 E3；H10 与 H5/H6 的 native 部分属 E4。</li><li>正向对照在 `f359be6` PASS：零写挂载、缺省默认值、16 个精确值、拒绝 confirm 零尝试、接受后 8 键全部删除、生命周期分类、rail 过滤、干净导航、AC-PANE-1–6、35 个读者测试。</li></ul> |
 | 合同 §3 遗漏的源码事实（已核实） | `packages/plugin-web-storage/src/AccountDataGate.tsx` 收到 `event.key === null` 的 storage 事件时执行 `accountScope.lock(accountId)` 并递增 retry，使账户门屏出现、rail、pet 与 Features pane 全部重挂。当前 Reset 的合成 `key:null` 事件因此会重锁账户并重挂整个 App。合同 D2 已要求移除该事件，因此无需修改合同；Terra 与后续 reviewer 须知晓。`AccountDataGate` 属受保护的共享 storage，不得修改 |
 | E3 父级 jsdom host 基线 | `b732c27`（独立父级 host 验证者；`web-features-recovery-independent/` 下 4 个新增文件；诊断迭代 1/3）。<ul><li>40 个 case：7 个 PASS（3 个 fixture 检查加 4 个正向对照），33 个业务 FAIL（24 个逐字段、8 种导航形式、1 个 reset）；`PRECONDITION:` 与 TypeError 均为 0；hash 吻合。</li><li>8 个字段在 setItem 被拒后都回弹旧值（H1，host 层）；sidebar 离开未被持有；登出立即为 `true`。</li><li>以 Boards 为代表，H8 的各种导航形式全部直接离开且无对话框，beforeunload 未被阻止（handler 内零存储尝试）。</li><li>失败的 Reset：Calendar 的 removeItem 被拒，其余 7 键已删除，之后离开未被持有。</li><li>每次被接受的 reset 恰好派发一个 `key:null` 事件。随后 `AccountDataGate` 重锁账户 A、显示账户门屏、重新激活 g1，并重挂整个 host（Features、sidebar、AppRail 全部替换），因此 H5 的"开关显示 on 而字节为 off"在该 host 中被重挂掩盖。重挂还会替换离页协调器，此时被持有的离页会被取消（源码阅读结论，未实际触发）。</li><li>正向对照全部 PASS：干净挂载零写入；8 个精确字节；干净导航；干净 reset 删除 8 键。</li></ul> |
-| 允许修改文件 | 批次 24：仅新目录 `docs/reviews/web-features-recovery-native/**`（E4）与 `docs/reviews/web-features-recovery-f1/**`（E5） |
+| E4 native 跨模块 before 与 E5 Features F1 before | `4c5323f`（独立父级 native 验证者；`web-features-recovery-native/` 与 `web-features-recovery-f1/` 下共 23 个新增文件；Chrome 154；生产 `App` composition 中只有 auth session 为合成；冻结的 Sticky F1 文件未改，prelude `67bbfaa7…` 只读复用且 hash 一致；各诊断迭代 1/3）。<ul><li>**H5：** a 确认，故障下 `key:null` 事件仍派发；b、c 被推翻，重挂后 pane 与 rail 均未显示 Calendar 为 on；d 确认，无反馈也无 Retry。</li><li>**`AccountDataGate` 原生实证：** 账户重锁（epoch 3）后重新激活 g1（epoch 4），rail、pet、pane、sidebar 与 `.app` 全部替换；用户可见的影响是焦点落到 `<body>`、Settings 滚动位置由 527 跳到 0。</li><li>**H6：** 显示值、字节、渲染帧与拖拽后的自定义顺序均未被破坏（假设被推翻，要求 PASS）；重挂本身是 §10.5 "during" 的正确 FAIL。</li><li>**H10：** 375px 下 `.settings-detail` 本身不溢出（字面陈述被推翻），但 280px 网格最小宽度使 pane 溢出 4px（确认），EN 与 ZH 一致；1440px 对照无溢出。</li><li>**provenance：** 外来输入为 0，守卫违规为 0，34 个读者模块均来自 archive，网络尝试为 0。</li><li>**E5：** `selfcheck` 105 项有效，Sticky 对照 sr、sd、s2 均被持有，且各恰好一次 live `proceed()`；`features` 的 before 结论为未持有（r1、d1、r2、rb），无 F1 特征。fixed 阶段须报告 `fixed-pass`。</li><li>所有文件 hash 均写入两份回执。</li></ul> |
+| 允许修改文件 | 批次 25（Terra）：只限合同 §11 列出的文件，均位于 `packages/xai-web-settings-features-panel/` 下：<ul><li>`src/FeaturesPane.tsx`</li><li>`src/internal/featuresPane.tsx`（仅转发 render props）</li><li>`src/types.ts`（仅新增可选的 `registerDepartureGuard`）</li><li>最多两个 Features 本地 helper</li><li>scoped CSS</li><li>Features 测试（含本地 Web Lock fixture）</li><li>`docs/api.md` 与 `docs/test.md` 的 Features 段落</li></ul>所有读者、storage、shell（含 `SettingsFooter`）、host（含 `AccountDataGate`）、已接受 caller 与全部证据都受保护 |
 | 禁止修改文件 | 全部产品源与测试；合同与选择备忘录；已有证据；台账；本控制面 |
-| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ 批次 24 native before 与 Features F1（E4–E5）→ 批次 25 Terra → 之后按合同 §14 的 E6–E25 |
+| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ ~~批次 24 native before 与 Features F1（E4–E5）~~（`4c5323f`）→ 批次 25 Terra → 之后按合同 §14 的 E6–E25 |
 
 **最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`）。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
 - 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
@@ -159,7 +160,8 @@
 | 下一项选择（续） | `51d65aa` 登记批次 21 · `6ded3dc` 选择与 Features 合同 |
 | Features | `4a54f76` 登记 CP-FEATURES-01 · `11e0afb` Sol before oracle（E1–E2） |
 | Features（续） | `c49dd50` 登记批次 23 · `b732c27` 父级 host 基线（E3） |
-| 本提交 | 记录 E3 核对结果，登记批次 24 |
+| Features（续 2） | `0d61d61` 登记批次 24 · `4c5323f` E4–E5 |
+| 本提交 | 记录 E4–E5 核对结果，授权批次 25（Terra） |
 
 ## 台账变化
 
@@ -181,31 +183,29 @@
 
 ## 本轮唯一任务
 
-批次 24：独立父级 native 验证者在真实 Chrome 中冻结 Features 合同 §12 的 "Native before"（E4）与 "Features F1 before"（E5）。
+批次 25：Terra 在独立窗口中实施 Features 完整 caller。
 
-- **固定点：** 产品 `f359be6`（不可变 archive、lockfile gate、`@repo` 固定到 archive 并带守卫）；控制分支基点为本提交。
-- **E4（`docs/reviews/web-features-recovery-native/`），在生产 `App` composition 中进行，只允许 auth session 为合成：**
-  - H5：单键 removeItem 故障下的 Reset，记录 pane 与 rail 的显示、字节与反馈；
-  - H6：Reset 前后 App 强调色、背景色调、rail 位置（computed styles）、AppRail DOM 顺序、pet id 与位置，以及字节；
-  - Reset 之后一次 AppRail 拖拽是否覆盖已存的自定义顺序；
-  - H10：375px 下 Features pane 是否横向溢出 `.settings-detail`，EN 与 ZH 各一次；
-  - provenance：bundle 证明每个读者模块都来自 archive；
-  - 如实记录 `AccountDataGate` 的 `key:null` 重锁与重挂。
-- **E5（`docs/reviews/web-features-recovery-f1/`）：**
-  - 新的 Features F1 runner 与 host fixture；只读复用冻结的 `web-sticky-recovery-f1/f1-prelude.js` 并校验其 hash；
-  - `selfcheck` 模式必须 harness-valid；
-  - `features` 模式记录 before 状态：失败的开关之后离页不会被持有，这是 H8 的正确 before 状态，不是 F1 特征；
-  - 为 fixed 阶段的 r1、d1、r2、rb 预留 case。
-- **输出：** 两个目录各自的 runner、fixture、日志、截图（如有）与回执（`before-f359be6.md`），写明命令、hash、逐项结论、日志行与 provenance。
-- **禁止：** 修改产品、合同、已有证据（包括冻结的 Sticky F1 文件）、台账、控制面；不修复；不 push。
-- **成本上限：** 每个 harness 的诊断迭代不超过 3 轮（新后缀，保留旧日志）。
-- **停止条件：** harness 3 轮内无法有效、合同与源码矛盾、或需要越权文件时，提交 blocked 回执并停止。
+- **固定点：** 产品基线 `f359be6`；控制分支基点为本提交。
+- **允许范围：** 只限上表"允许修改文件"所列的合同 §11 文件。fixed 产品的 diff 只能出现这些文件。
+- **实现要求（合同 §4–§9）：**
+  - 8 个开关复用已接受的 `usePrefAutosaveAsync` 与严格校验器，采用一个连贯的本地操作模型，完成判定按精确 draft 对象。
+  - Reset 改为逐键经引擎的可恢复 remove 批次（D2），移除 `key:null` 合成事件，且不得引入其他广播。
+  - **D3：** Features 不再渲染共享 `SettingsFooter`，"Reset to defaults" 改为本地控件，配真实的 confirm 文案与逐字段结果。
+  - 注册离页 guard，提供 beforeunload、内存导出、键盘支持与焦点落点（合同 §9 与 E15）。
+  - 修复 375px 下 pane 溢出 4px 的问题，CSS 只限合同规定的 scope。
+- **保护：** AC-PANE-1–6 保留业务断言（AC-PANE-3、AC-PANE-6 只可安装 Web Lock fixture 并等待真实异步完成）；`featuresPaneEntry` 与其他读者测试、两个 `apps/web` composition 测试、`railFeatureFilter`、`cmdkIntegration` 不改且须通过。
+- **自检：**
+  - 在 worktree 内执行 `pnpm install --frozen-lockfile --offline`，再跑 features 包的测试、typecheck 与 lint，以及 `@repo/web` 的相关测试；
+  - 可在自己的提交上临时运行冻结 runner 做预检：Sol 七个模式、host、Features F1 的 `features` 模式；日志回交前删除，不得提交，也不得改动冻结文件。
+- **禁止：** 修改合同、冻结 oracle、其他证据、台账、控制面；push、merge、建分支；兼任后续验证或验收。
+- **停止条件：**
+  - 合规实现需要改 §11 之外的共享代码：按合同 §11 共享缺陷规则冻结证据并停止。
+  - 冻结 oracle 与合同矛盾：不改 oracle、不迁就实现，回报总控。
 
 ## 下一步
 
-1. 等待批次 24 回执，总控核对：
-   - 只新增两个目录；
-   - H5、H6、拖拽覆盖、H10 与 provenance 都有日志支撑；
-   - F1 `selfcheck` 有效、`features` 的 before 状态正确、冻结 prelude 的 hash 不变；
-   - hash 与回执吻合。
-2. E1–E5 全部冻结后登记批次 25：Terra 实施，仅限合同 §11 文件。实施前再次提示 D3（去掉共享 footer）可被否决。
+1. 等待批次 25 回交，总控核对：
+   - diff 只含 §11 文件；受保护路径 diff 为空；
+   - 实现结构符合合同（D2 无广播、D3、guard、导出、焦点）；
+   - 自检与预检可复核，临时日志已删除。
+2. 通过后接收产品提交，CP-FEATURES-01 改为 `implementation_ready_for_review`，再按合同 §14 依次登记 E7 起的独立验证批次。
