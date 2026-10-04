@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-STICKY-01 已接受（`699f6e6`），正式台账已核对（`4da6e71`）。开始选择下一项：本批登记并启动批次 20，即首个 Luna 低风险检索任务，刷新直接 `usePref` 库存。之后由独立 Astra 角色实例选择下一个完整 caller 并起草合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：CP-STICKY-01 已接受（`699f6e6`），正式台账已核对（`4da6e71`）。库存已刷新：CP-LUNA-01 `2c69957`，`f359be6` 上剩余 25 个文件、52 个直接绑定。本批登记批次 21：由独立 Astra 角色实例选择下一个完整 caller 并起草合同。选择结论须经总控核对并在控制面登记后才生效，不得提前实施。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `4da6e71` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `2c69957` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -77,7 +77,14 @@
 
 ## 当前进行中的调用方
 
-无。按 [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md)，Sticky5 是排程中最后一个"剩余普通 Settings 控件"caller。后续 caller 属于该文件"Follow-on caller grouping"中尚待分别规定的组，依次为：
+无已选定 caller。批次 21 正在做选择与合同起草。
+
+**最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`）。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
+- 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
+- 按包分布：dashboard-widgets 11、settings-rest 10、board-workspaces 8、statistics 4，board-views、calendar、settings-appearance 各 3，board-core、pet、features-panel 各 2，pomodoro、dashboard-grid、shell、tasks 各 1。
+- 这些是排程输入，不是完整 writer 数，也不是缺陷数。
+
+按 [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md)，Sticky5 是排程中最后一个"剩余普通 Settings 控件"caller。后续 caller 属于该文件"Follow-on caller grouping"中尚待分别规定的组，依次为：
 
 1. Appearance 与 feature toggles；
 2. AI settings 与 integrations；
@@ -109,7 +116,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `assigned_to_luna` |
+| 状态 | `accepted`（总控核对通过，作为库存证据，不涉及产品范围）：`2c69957`。新增 `bindings-f359be6.json` 与 `refresh-f359be6.md`；按 file+key+setter 对账，移除 20 行、新增 0 行；边界声明沿用；无越界判断 |
 | 执行者 | 新的独立 Claude Sonnet 5.5（Luna 角色映射），隔离 worktree |
 | 风险 | 低：只读 git 中的固定修订并运行既有扫描器；不触及产品、持久化、宿主或验收 |
 | 固定点 | 产品 `f359be6`；对照 `afbfb24` 的 `bindings-afbfb24.json` / `refresh-afbfb24.md` |
@@ -129,7 +136,8 @@
 | F1 | `d113c6a` · `0ba68d7` 评审 · `41774ab` · `e3db4e0` · `c3b9883` · `f359be6` 修复 · `518fa42` · `3ea0310` · `2bdb020` · `f3a3c82` · `1c58841` · `a0df253` 台账 |
 | Sticky 收尾 | `98125c5` 视觉 · `463c2ab` · `d7358b9` 最终回归 · `b2a21d0` · `47bbd58` BLOCKED(G1) · `89d4302` · `3debd91` G1 · `57f396c` · `699f6e6` Sticky acceptance |
 | Sticky 关闭 | `b63aad6` CP-STICKY-01 改为 `accepted` · `4da6e71` 台账 |
-| 本提交 | 登记 CP-LUNA-01（批次 20） |
+| 下一项选择 | `40f7004` 登记 CP-LUNA-01 · `2c69957` 库存刷新 |
+| 本提交 | 记录库存结果，登记批次 21（选择与合同） |
 
 ## 台账变化
 
@@ -151,5 +159,28 @@
 
 ## 下一步
 
-1. 等待 CP-LUNA-01 回执，总控核对：只新增两个文件；计数与逐行 delta 对账；边界声明沿用；没有越界判断。
-2. 通过后登记批次 21：由独立 Astra 角色实例按 `remaining-writers.md` 的后续分组、最新库存、产品风险与实际源码，选择下一个完整 caller 并起草合同。须先在控制面登记，不得提前实施。
+### 批次 21：下一 caller 的选择与合同（独立 Astra 角色）
+
+- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
+- **输入：**
+  - `remaining-writers.md` 的后续分组与选择规则（按产品风险、已接受证据与实际源码；真正共享的 producer 应合并为一个合同）；
+  - 最新库存 `refresh-f359be6.md`；
+  - D2 实施入口合同 `web-board-workspace-astra-review/20260909-d2-implementation-entry-contract.md`；
+  - 已接受 caller 的合同与 acceptance（More、Sticky、Date & Time、Notifications、Smart Lists）；
+  - `ALL-TODO-CURRENT.md` 中相关条目；
+  - F1 经验（协调器回归 oracle）与 G1 经验（Required evidence 清单化）。
+- **输出（只新增两个文件）：**
+  - `docs/reviews/web-next-caller-selection/selection-f359be6.md`：至少比较 3 个候选完整 caller 的产品风险、用户影响、规模、共享面、依赖与证据复用，推荐其一并说明其余为何靠后；
+  - `docs/reviews/web-<slug>-recovery-contract/contract.md`：选中 caller 的完整合同，沿用 Sticky 合同结构，并在合同中集中列出全部 Required evidence 清单。
+  - 若最佳候选需要跨模块或改共享层，只交选择备忘录、不交合同，并写明需要总控决定的事项。
+- **禁止：** 修改任何已有文件、产品、台账、控制面；push；派生子 agent。
+- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
+
+## 下一步
+
+1. 等待批次 21 回执，总控核对：
+   - 选择依据可复核；
+   - 合同基于固定 SHA 源码，关键事实抽查属实；
+   - Required evidence 清单完整；
+   - 范围不越模块。
+2. 通过后在控制面登记新的 CP 项与首个执行批次（冻结 before oracle），不得提前实施。
