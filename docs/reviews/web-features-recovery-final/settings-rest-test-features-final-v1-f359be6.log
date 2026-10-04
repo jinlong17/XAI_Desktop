@@ -1,0 +1,747 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+mode=settings-rest-test
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-packages.mjs f359be6 all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-rest (packages/plugin-web-settings-rest) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/plugin-web-settings-rest/package.json=6b38e7e7c685244b1bb7a4e507f8d9dc9c4dcc641602e0b5f6dd56e9aa622de9 packages/plugin-web-settings-rest/tsconfig.json=dc44bafd8ed2584702b7634a6c2e47ef01d89104adcd6c02f69b000a8f255d4a packages/plugin-web-settings-rest/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/plugin-web-settings-rest/vitest.setup.ts=b74659f349bea6faef7d1690153a4e4f020ea7a010377e83eff600c067f0d215 packages/plugin-web-settings-rest/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=21f0bbb61dae92948ebddfc82946a3ff6b36e2a6 features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-ai-chat->packages/plugin-web-ai-chat @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/web-auth-device-session->packages/web-auth-device-session @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-rest:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/packages/plugin-web-settings-rest/final-settings-rest-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/.final-guard/report-settings-rest-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (12/12)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/packages/plugin-web-settings-rest
+
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-STEP-1: open=true → Step 1 panel visible (step1_title + continue button) 20ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-STEP-2: Step 1 → click Continue → Step 2 panel visible (step2_title; input present) 8ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-STEP-3: Step 2 → type DELETE → submit enabled → click submit → calls orchestrator.submit() 6ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-1: input value "DELETE" → submit button enabled (NOT disabled) 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-2: input value "delete" (lowercase) → submit button disabled 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-3: input value "Delete" (mixed case) → submit button disabled 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-4: input value "" (empty) → submit button disabled 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-5: input value "DELETEX" (extra char) → submit button disabled 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-TYPEMATCH-6: input value "DELETE " (trailing space) → submit button disabled (no trim) 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-CANCEL-1: Cancel on Step 1 → onCancel called 1ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-CANCEL-2: Cancel on Step 2 → onCancel called 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-BILINGUAL-1: EN labels — Step 1 title + Continue + Step 2 title + type_prompt 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) > DEL-BILINGUAL-2: ZH labels — Step 1 title + Continue + Step 2 title + type_prompt 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-WIRE-1: Step 2 → submit (mock-auth) → orchestrator.submit() called once 8ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-WIRE-2: failure state → error banner rendered with bilingual copy (network error) 3ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-WIRE-3: Failure → click Retry → input available (step2 restored) 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-MOCK-BANNER-1: mock-auth mode + Step 2 → banner EN text visible 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-MOCK-BANNER-2: mock-auth mode + Step 2 + ZH lang → banner ZH text visible 2ms
+ ✓ src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) > DEL-MOCK-BANNER-3: mock banner has no close button (non-dismissible) 2ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > keeps captured authentication cleanup pending after failure and retries that generation after reload 5ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > never silently completes an auth-bound receipt when cleanup is unavailable 1ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > commits metadata as the tombstone before destructive work 0ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > finishes only captured A after scope and in-memory state changed to B 2ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > retains a retryable receipt after secret cleanup fails and marks complete only on success 0ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > does not mark a successful receipt if the final metadata write fails 1ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery > does not authorize cleanup from mismatched-owner, incomplete or legacy metadata 0ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes > survives unmount/remount, shows no identity/content, and completes local cleanup while signed out 55ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes > keeps the failure visible and allows explicit retry without touching B 14ms
+ ✓ src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes > appears when an already-mounted sign-in page receives a new pending receipt 3ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > modern successful cleanup completes the receipt then redirects without a second shared clear 17ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > modern cleanup after B replaces A still revokes only captured A and does not navigate B 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > does not finish its durable receipt before captured auth cleanup succeeds 5ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > pins the server token, removes only A content/secrets, and preserves device, B and archive 8ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > mock-auth deletes only the demo scope and never invokes the real server 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > does not allow mock mode to delete a real account namespace 7ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > server failure preserves all local content and exposes the failure 14ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > already-deleted server outcome still performs scoped local cleanup 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > secret cleanup failure is not reported as successful deletion 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > suppresses duplicate submit while the server request is pending 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > A server completion after switching to B deletes only A and leaves B session/navigation alone 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > switching during asynchronous secret cleanup does not clear B authentication 1ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > switching during auth storage clearing does not navigate away from B 3ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > a callback captured before account switch cannot start deletion as B 2ms
+ ✓ src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner > locked scope rejects deletion before any backend or local action 4ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN1: renders 17 integration cards in the placeholder grids (all 3 providers disconnected) 35ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN2: renders 3 placeholder section headers 11ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN3: bilingual — EN section headers 11ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN4: bilingual — ZH section headers 10ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN5: clicking a placeholder card is a no-op — does not throw and does not call console.warn 12ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) > IN6: clicking placeholder cards does NOT emit any event via emitWebEvent 10ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-1: 'Connected providers' section renders above the existing 3 groups 4ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — shape (AP1..AP2) > AP1: pane metadata — id, icon, i18nKey are correct 1ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — shape (AP1..AP2) > AP2: render function returns a React element without throwing 31ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — bilingual (AP3..AP4) > AP3: EN labels — Provider, API Key, Default model, Streaming 22ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — bilingual (AP3..AP4) > AP4: ZH labels — AI 服务商, API 密钥, 默认模型, 流式输出 7ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — provider picker (AP5) > AP5: provider picker has Anthropic, Gemini, and DeepSeek options 16ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > CL1: renders without error 20ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > registers a stable guard with a stateful host callback 27ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > CL2: bilingual — EN labels are present 4ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > CL3: bilingual — ZH labels are present 3ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > CL4: toggling avatars toggle persists its independent async pref 15ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-2: 3 Connect buttons render when all 3 prefs are false 80ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-3: flipping a pref to true renders Disconnect button + 'Connected (stub)' badge 12ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-4: stub disclosure banner renders at top of pane (EN) 5ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-5: stub disclosure banner renders at top of pane (ZH) 25ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-6: banner is not dismissible — no close button inside the banner 4ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-7: provider labels bilingual (EN) 35ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — base URL field (AP6) > AP6: base URL field is hidden for managed Gemini and DeepSeek presets 42ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) > AP7: Save button is disabled when key input is empty 12ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) > AP8: typing a key enables Save; clicking Save calls aiKeyStorage.saveKey 16ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) > AP8b: Gemini and DeepSeek save to independent key slots 28ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — Test Connection (AP9..AP10) > AP9: Test Connection button is disabled when no key is saved 8ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — Test Connection (AP9..AP10) > AP10: Test Connection ok shows 'Connection OK' 25ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-8: clicking Disconnect flips pref back to false 21ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-9: clicking Disconnect emits web:settings:integration-disconnected exactly once 11ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-10: Disconnect tooltip mentions provider's account settings 16ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-11: per-provider state independent — flipping Notion does not change GCal pref 3ms
+ ✓ src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) > IN-EXT-12: no-hex-literals guard — badge + banner styles are in CSS only (OKLCH), not inline TSX styles 3ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > persists all three actual controls independently without seeding absent siblings 50ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > offers a memory export while a current device edit is pending 16ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > keeps a pending device draft and reports a failed export setup 13ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > makes an old guard inert after an account epoch while keeping a device draft 15ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — model picker (AP11) > AP11: model picker follows the selected provider preset 21ms
+ ✓ src/__tests__/aiPane.test.tsx > aiPane — key input type (AP12 — HC1 guard) > AP12: API key input has type=password (never plaintext) 7ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > keeps a same-value successor draft when its second write is rejected 53ms
+ ✓ src/__tests__/collaboratePane.test.tsx > collaboratePane > discard guard reloads only actual draft fields 16ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR1: absent and valid sources (including the random sentinel) mount with zero writes and no recovery or Saved 191ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR2: a failed write keeps the latest choice with Retry, Discard, export and guard; Retry saves exact bytes and Saved 170ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR3: invalid string and boolean bytes show the default with a Reload-only alert and are never normalized 88ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR4: a throwing read is a Reload-only source issue; a valid edit over it stays a failed draft that never writes 109ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR5: a malformed font DOM value keeps the prior value with an input error and zero writes; a valid choice clears it 68ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC1: render renders without error 22ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC2: bilingual — lang=zh shows Chinese name 6ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC3: bilingual — lang=en shows English name 4ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC4: Delete Account button is present 4ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC5: clicking Delete Account opens the dialog — shows Step 1 title 11ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC6: Cancel on Step 1 does NOT emit event 6ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC7: Step 1 → Continue emits web:settings:rest:account-delete-confirmed exactly once 11ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > AC8: pane id + icon + i18nKey match registry expectations 0ms
+ ✓ src/__tests__/accountPane.test.tsx > accountPane > DEL-EVENT-DEP-1: Step 1 Continue emits deprecated event with confirmedAt ISO timestamp 6ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP1: renders without error 32ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP2: bilingual — EN labels 18ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP3: bilingual — ZH labels 19ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP4: SettingRow label for Remove text is a plain string (not ReactNode — chassis contract) 8ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP5: language select is read-only (only one option: Follow System) 6ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR6: two same-turn switch activations invert the latest intent through two operations 48ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR7: a held per-key lock shows pending work immediately; coalesced choices settle only the latest 60ms
+ ✓ src/__tests__/accountPane.test.tsx > account-local data management > exports only the captured current account generation and gives download-request feedback 56ms
+ ✓ src/__tests__/accountPane.test.tsx > account-local data management > shows a visible error instead of exporting after the account changes 11ms
+ ✓ src/__tests__/accountPane.test.tsx > account-local data management > opens the account data gate from settings 8ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP6: window type select persists xai_pref_more_win_type 20ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP7: 3 template cards rendered 7ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP8: Reset Default clears More-owned keys and leaves other keys untouched 27ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP8b: Reset Default uses physical removals for both device and account More keys 41ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF1: renders without error 22ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF2: bilingual — EN labels 10ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF3: bilingual — ZH labels 5ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF4: time-range inputs are hidden when quiet=false (default) 3ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF5: enabling quiet hours shows time inputs 14ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF6: toggling enabled toggle flips xai_pref_notif_enabled pref 10ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF7: sound select has 5 options (none/subtle/chime/bell/pop) 3ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF8: changing sound select persists xai_pref_notif_done_sound 7ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF9: pane id, icon, i18nKey are correct 0ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR8: a failed predecessor keeps the queued latest; Retry advances it without acknowledging the latest 132ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP8c: a failed physical reset remains an actual More draft even while the UI shows its default 53ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP9: bilingual template names (ZH) 28ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP10: pane id, icon, i18nKey are correct 0ms
+ ✓ src/__tests__/morePane.test.tsx > morePane > MP11: custom checkbox controls are real keyboard-operable buttons 14ms
+ ✓ src/__tests__/morePane.test.tsx > REL-03 More reset preserves B and unowned defaults while resetting the selected account 19ms
+ ✓ src/__tests__/morePane.test.tsx > REL-03 a stale reset callback cannot reset B or device settings 46ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF10: a failed hidden quiet-start draft stays recoverable until its own Retry succeeds 94ms
+ ✓ src/__tests__/notificationsPane.test.tsx > notificationsPane > NF11: invalid quiet-time feedback belongs to each field until that field is corrected 68ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT1: renders without error 37ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT2: bilingual — EN labels 7ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT3: bilingual — ZH labels 4ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT4: start-week select has 3 options (monday/sunday/saturday) 4ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT5: changing start-week persists xai_pref_dt_start_week 22ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT6: toggling lunar flips xai_pref_dt_lunar 16ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR9: Discard is zero-write and rereads only its field; Discard all visits only actual drafts 149ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT7: an actual draft never exposes source Reload for that same field 40ms
+ ✓ src/__tests__/dateTimePane.test.tsx > dateTimePane > DT8: retry advances a failed predecessor without acknowledging the queued latest choice 30ms
+ ✓ src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery > persists all twelve DOM producers as one valid sparse map and retains an unknown extension 179ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR10: the export is a sparse memory-only sticky-draft.json under total storage denial 83ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR11: an export setup failure shows the localized error and keeps drafts, guard and warning 59ms
+ ✓ src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery > refuses an invalid source without writing, then reloads an externally repaired map 46ms
+ ✓ src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery > keeps the combined latest draft after a failed write and retries it as one map 30ms
+ ✓ src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery > keeps a dirty map through an external replacement until explicit full-map discard 77ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR12: an epoch change refuses old capabilities before rerender; a fresh guard protects the surviving device draft 106ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 401 cannot authorize local erasure or a completion receipt 15ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 403 cannot authorize local erasure or a completion receipt 2ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 404 cannot authorize local erasure or a completion receipt 2ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 500 cannot authorize local erasure or a completion receipt 2ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > refuses to call the server if the durable intent cannot be written 2ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > retains an uncertain request after a lost response and remount without enabling cleanup 50ms
+ ✓ src/__tests__/accountDeleteHttpFailure.test.tsx > keeps the intent if recording server success fails before local cleanup 3ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR13: unmount removes the guard and the beforeunload listener and detaches old callbacks 113ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP1: valid state path — flips pref to true 15ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP2: valid state path — emits web:settings:integration-connected exactly once 3ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP3: valid state path — clears sessionStorage entry 4ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP4: valid state path — displays success banner (oauth.cb.success) 24ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP5: valid state path — navigates back after 2000ms (fake timers) 8ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP6: invalid state — no sessionStorage entry: does NOT flip pref + does NOT emit + shows invalid banner 6ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP7: error param (?error=access_denied) — shows oauth.cb.cancelled banner 3ms
+ ✓ src/__tests__/CallbackPage.test.tsx > CallbackPage > CP8: ZH banner text rendered when lang=zh — test via localI18n directly 0ms
+ ✓ src/__tests__/CallbackPage.test.tsx > rejects an otherwise valid owner-bound callback when the authorization code is missing 37ms
+ ✓ src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller > SR14: ZH wording for pending, source, input-error, actions, Saved and the guard label 167ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS1: startOAuth writes sessionStorage key xai_oauth_pending_<id> with parseable JSON 2ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS2: startOAuth returns state with <providerId>. prefix 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS3: startOAuth sets expiresAt ≈ now + 10min 2ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS4: validateAndConsumeState returns the state on valid roundtrip 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS5: validateAndConsumeState returns null on TTL expiry 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS6: validateAndConsumeState returns null on providerId-prefix mismatch 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth state machine > OS7: validateAndConsumeState clears sessionStorage entry even on failure 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth account binding > cancels A pending state synchronously on an account switch 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth account binding > rejects a retained A callback mounted under B, even if old sessionStorage is restored 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth account binding > does not revive a retired attempt after switching A→B→A 0ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth account binding > does not permit an old handler to start an attempt for a new account 1ms
+ ✓ src/__tests__/oauthState.test.ts > OAuth account binding > rejects pre-isolation attempts without a verifiable owner 0ms
+ ✓ src/__tests__/no-localstorage-clear.test.ts > DEL-WILDCARD-GUARD: no localStorage.clear() in source files > DEL-WILDCARD-GUARD-1: zero localStorage.clear() occurrences in plugin-web-settings-rest/src/** 9ms
+ ✓ src/__tests__/no-localstorage-clear.test.ts > DEL-WILDCARD-GUARD: no localStorage.clear() in source files > DEL-WILDCARD-GUARD-2: zero localStorage.clear() occurrences in web-auth-device-session/src/** 2ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS1: renders without error (pending state initially) 27ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS2: valid session_id — shows success banner 6ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS3: missing session_id — shows invalid banner 8ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS-INVALID-1: empty session_id — shows invalid banner (tier not flipped) 6ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS4: valid session_id — flips premium tier pref to premium_stub 7ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS5: valid session_id — sets started_at to a recent timestamp 12ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS6: shows success banner text in English 4ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS7: navigates after 2000ms on success 3ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS8: navigates after 3000ms on invalid session_id 4ms
+ ✓ src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage > CS-NO-FETCH-1: no fetch is called during success callback processing 8ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST1: renders without error 30ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST2: 13 color swatch buttons rendered 6ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST3: 12 non-random swatches use var(--sticky-note-color-<id>) background 7ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST4: random swatch uses conic-gradient 5ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST5: no hex literals in swatch inline styles 18ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST6: clicking a swatch persists xai_pref_sticky_color 22ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST7: 4 spacing buttons rendered 5ms
+ ✓ src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download > defaults to device settings and never attaches A/B content or legacy data 54ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST8: clicking a spacing button persists xai_pref_sticky_grid_spacing 13ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST9: bilingual — ZH font size options 6ms
+ ✓ src/__tests__/stickyPane.test.tsx > stickyPane > ST10: pane id, icon, i18nKey are correct 0ms
+ ✓ src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download > includes explicitly selected old business bytes without altering originals 56ms
+ ✓ src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download > does not download using a stale account pane 4ms
+ ✓ src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download > reports excluded history without revealing its contents 6ms
+ ✓ src/__tests__/no-stripe-js-bundle.test.ts > TT-NO-STRIPE-JS: no Stripe.js bundle in source > TT-NO-STRIPE-JS-1: zero actual @stripe/stripe-js import statements in all .ts/.tsx source files 5ms
+ ✓ src/__tests__/no-stripe-js-bundle.test.ts > TT-NO-STRIPE-JS: no Stripe.js bundle in source > TT-NO-STRIPE-JS-2: zero occurrences of https://js.stripe.com/ CDN script in all .ts/.tsx source files 3ms
+ ✓ src/__tests__/no-stripe-secret-key.test.ts > TT-NO-SK: no Stripe Secret Key in source > TT-NO-SK: zero actual sk_test_<value> keys in all .ts/.tsx source files 5ms
+ ✓ src/__tests__/no-stripe-secret-key.test.ts > TT-NO-SK: no Stripe Secret Key in source > TT-NO-SK: zero actual sk_live_<value> keys in all .ts/.tsx source files 9ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton > CB1: renders with EN label 'Connect' 55ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton > CB2: renders with ZH label '连接' 3ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK1: returns 'free' when no pref is stored (default) 9ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK2: returns 'premium_stub' within 30-day window 1ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK3: returns 'free' when 30-day window has expired 1ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK4: returns 'pending' when tier is pending (transitional state) 1ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK5: setTier updates the stored tier value 6ms
+ ✓ src/__tests__/usePremiumTier.test.tsx > usePremiumTier > PHK6: setTier to 'free' resets from premium_stub 3ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton > CB3: click writes sessionStorage entry + calls window.location.assign once 75ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton > CB4: does not write localStorage (assert localStorage.length === 0 after click) 68ms
+ ✓ src/__tests__/integrationConnectButton.test.tsx > cancels navigation if the account changes while the authorization URL is being prepared 75ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC1: renders without error 18ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC2: shows cancelled banner text 4ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC3: navigates after 3000ms 4ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC4: tier is NOT changed (idempotent — no pref mutation) 7ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC-DIRECT-1: visiting cancel route directly without prior Upgrade is idempotent 5ms
+ ✓ src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage > CC-NO-FETCH-1: no fetch is called during cancel page rendering 4ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU1: output URL starts with provider.authorizeUrl 3ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU2: URL includes code_challenge_method=S256 3ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU3: URL includes URL-encoded redirect_uri 1ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU4: URL includes the state from pendingState 0ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU5: URL includes the code_challenge derived from codeVerifier 0ms
+ ✓ src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl > BU6: URL encodes provider.scopes as space-separated scope= param 1ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton > PCANCEL-1: renders null when effective tier is 'free' 11ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton > PCANCEL-2: renders button when effective tier is 'premium_stub' 4ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton > PCANCEL-3: clicking Cancel flips tier back to 'free' 4ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton > PCANCEL-NO-FETCH-1: no fetch is called when Cancel is clicked 4ms
+ ✓ src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton > PCANCEL-TOOLTIP-1: Cancel button has a tooltip describing local-only behavior 2ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PR1: renders without error (EN) 23ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PR2: bilingual — EN shows English headline 5ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PR3: bilingual — ZH shows Chinese headline 3ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-1: Upgrade button is visible when tier is free 2ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-2: Cancel Subscription button is NOT visible when tier is free 2ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-3: Cancel Subscription button IS visible when tier is premium_stub 22ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-4: disclosure banner is always present (in all 3 tier states) 1ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-5: disclosure banner is present when tier is premium_stub 2ms
+ ✓ src/__tests__/premiumPane.test.tsx > premiumPane > PT-EXT-6: tier label shows current tier 2ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton > PUB-1: renders enabled button and calls window.location.assign when env var is set 18ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton > PUB-2: renders disabled button with tooltip when env var is not set 2ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton > PUB-3: bilingual — EN shows 'Upgrade Now' 3ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton > PUB-4: bilingual — ZH shows '立即升级' 1ms
+ ✓ src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton > PUB-NO-FETCH-1: no fetch is called during Upgrade click 2ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB1: renders without error 15ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB2: shows version string 7ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB3: bilingual — EN shows English description 5ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB4: bilingual — ZH shows Chinese description 2ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB5: all 4 about-links carry aria-disabled='true' 2ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB6: all 4 about-links carry title='Coming soon' (EN) 1ms
+ ✓ src/__tests__/aboutPane.test.tsx > aboutPane > AB7: clicking about-links does not trigger navigation or side-effects 3ms
+ ✓ src/__tests__/no-hex-literals.test.ts > NH1: no hex literals in src/**/*.{ts,tsx} > all TypeScript files are free of hex color literals 4ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK1: generateCodeVerifier returns a string 2ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK2: code_verifier is 43 chars (32 bytes → base64url, no padding) 0ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK3: code_verifier charset matches [A-Za-z0-9_-] 0ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK4: two consecutive calls produce different verifiers (entropy smoke) 0ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK5: computeCodeChallenge produces correct base64url(SHA-256(verifier)) — RFC 7636 §B.1 vector 7ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK6: code_challenge is 43 chars 2ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK7: base64UrlEncode produces no = padding 0ms
+ ✓ src/__tests__/pkce.test.ts > PKCE helpers > PK8: base64UrlEncode replaces + with - and / with _ 0ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > pkce.ts contains zero occurrences of Math.random 1ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > oauthState.ts contains zero occurrences of Math.random 0ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > buildAuthorizeUrl.ts contains zero occurrences of Math.random 0ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > integrationConnectButton.tsx contains zero occurrences of Math.random 0ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > integrationDisconnectButton.tsx contains zero occurrences of Math.random 0ms
+ ✓ src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules > integrationStubBanner.tsx contains zero occurrences of Math.random 0ms
+ ✓ src/__tests__/no-math-random.test.ts > No-localStorage guard for code_verifier > oauthState.ts does NOT contain localStorage. (code_verifier must be in sessionStorage only) 0ms
+ ✓ src/__tests__/integrationProviders.test.ts > PROVIDERS config > IP1: PROVIDERS has exactly 3 entries (Notion, GCal, Linear) 1ms
+ ✓ src/__tests__/integrationProviders.test.ts > PROVIDERS config > IP2: every authorizeUrl and tokenUrl starts with https:// 0ms
+ ✓ src/__tests__/integrationProviders.test.ts > PROVIDERS config > IP3: every prefKey matches a registered key in PREF_REGISTRY 0ms
+ ✓ src/__tests__/integrationProviders.test.ts > PROVIDERS config > IP4: every IntegrationProviderId is in the type union (runtime check) 0ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry > AP1: returns same length as input registry 1ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry > AP2: substitutes all 11 owned pane ids 0ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry > AP3: does NOT substitute panes not owned by this row (e.g. appearance, features) 0ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry > AP4: idempotent — calling twice produces equivalent output 0ms
+ ✓ src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry > AP5: preserves original order of pane ids 0ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL1: renders 3 sections 23ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL2: renders 12 list rows total 6ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL3: each row has a visibility select with 3 options 5ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL4: bilingual — EN section headers are in English 13ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL5: bilingual — ZH section headers are in Chinese 7ms
+ ✓ src/__tests__/smartListsPane.test.tsx > smartListsPane > SL6: pref key xai_pref_smart_lists is a JSON entry (default is {}) 5ms
+ ✓ src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton > DB1: renders with EN label 'Disconnect' 94ms
+ ✓ src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton > DB2: renders with ZH label '断开连接' 6ms
+ ✓ src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton > DB3: click calls onDisconnect + emits web:settings:integration-disconnected 6ms
+ ✓ src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig > PC-CONFIG-1: returns configured=true and paymentLinkUrl when env var is set 1ms
+ ✓ src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig > PC-CONFIG-2: returns configured=false and paymentLinkUrl=null when env var is empty 0ms
+ ✓ src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig > PC-CONFIG-3: returns configured=false when env var is whitespace only 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel > B1: exports all 12 pane objects with correct ids (11 original + ai) 1ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel > B2: exports restPanesById with 12 entries (11 original + ai) 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel > B3: exports applyRestPanesToRegistry as a function 0ms
+ ✓ src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner > PB-BANNER-1: renders EN text 14ms
+ ✓ src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner > PB-BANNER-2: renders ZH text 1ms
+ ✓ src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner > PB-BANNER-3: no close/dismiss button — non-dismissible 1ms
+ ✓ src/__tests__/PremiumTierBadge.test.tsx > PremiumTierBadge > PCB-1: renders 'Premium (stub)' badge when effective tier is premium_stub 15ms
+ ✓ src/__tests__/PremiumTierBadge.test.tsx > PremiumTierBadge > PCB-2: returns null (no rendering) when effective tier is 'free' 2ms
+ ✓ src/__tests__/premiumTier.test.ts > premiumTier > PT1: PREMIUM_TIER_TTL_MS is 30 days in milliseconds 1ms
+ ✓ src/__tests__/premiumTier.test.ts > premiumTier > PT2: PremiumTier type accepts 'free' 0ms
+ ✓ src/__tests__/premiumTier.test.ts > premiumTier > PT3: PremiumTier type accepts 'pending' 0ms
+ ✓ src/__tests__/premiumTier.test.ts > premiumTier > PT4: PremiumTier type accepts 'premium_stub' 0ms
+ ✓ src/__tests__/hotkeysPane.test.tsx > hotkeysPane > HK1: renders 10 rows in the hotkeys list 20ms
+ ✓ src/__tests__/hotkeysPane.test.tsx > hotkeysPane > HK2: no input or edit affordance (read-only) 5ms
+ ✓ src/__tests__/hotkeysPane.test.tsx > hotkeysPane > HK3: bilingual — ZH shows Chinese action labels 7ms
+ ✓ src/__tests__/restPanesById.test.ts > restPanesById > RP1: contains exactly 12 entries (11 original + ai from gap-closure row #2) 1ms
+ ✓ src/__tests__/restPanesById.test.ts > restPanesById > RP2: each entry has the correct id, icon, and i18nKey 1ms
+ ✓ src/__tests__/restPanesById.test.ts > restPanesById > RP3: each pane render is a function that returns a React element 0ms
+ ✓ src/__tests__/integrationStubBanner.test.tsx > IntegrationStubBanner > SB1: renders with EN copy 15ms
+ ✓ src/__tests__/integrationStubBanner.test.tsx > IntegrationStubBanner > SB2: renders with ZH copy 2ms
+
+ Test Files  44 passed (44)
+      Tests  314 passed (314)
+   Start at  08:45:14
+   Duration  5.77s (transform 1.57s, setup 5.98s, collect 5.79s, tests 5.10s, environment 13.37s, prepare 2.36s)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/.final-guard/report-settings-rest-test.json
+
+---- stderr ----
+stderr | src/__tests__/notificationsPane.test.tsx > notificationsPane > NF5: enabling quiet hours shows time inputs
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (44 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/morePane.test.tsx
+harness PASS required test file ran: src/__tests__/stickyPane.test.tsx
+harness PASS required test file ran: src/__tests__/stickyPaneRecovery.test.tsx
+harness PASS required test file ran: src/__tests__/notificationsPane.test.tsx
+harness PASS required test file ran: src/__tests__/dateTimePane.test.tsx
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/**/*.{test,spec}.{ts,tsx}"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (4 present of 4 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=100 numTotalTests=314 numPassedTests=314 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=44 tests=314 passed=314 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/aboutPane.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/accountDeleteHttpFailure.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/accountDeletionRecovery.test.tsx status=passed tests=10 passed=10 failed=0
+file src/__tests__/accountPane.test.tsx status=passed tests=12 passed=12 failed=0
+file src/__tests__/aiPane.test.tsx status=passed tests=13 passed=13 failed=0
+file src/__tests__/applyRestPanesToRegistry.test.ts status=passed tests=5 passed=5 failed=0
+file src/__tests__/buildAuthorizeUrl.test.ts status=passed tests=6 passed=6 failed=0
+file src/__tests__/CallbackPage.test.tsx status=passed tests=9 passed=9 failed=0
+file src/__tests__/CheckoutCancelPage.test.tsx status=passed tests=6 passed=6 failed=0
+file src/__tests__/CheckoutSuccessPage.test.tsx status=passed tests=10 passed=10 failed=0
+file src/__tests__/collaboratePane.test.tsx status=passed tests=11 passed=11 failed=0
+file src/__tests__/dateTimePane.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/DeleteAccountConfirmModal.test.tsx status=passed tests=19 passed=19 failed=0
+file src/__tests__/DeviceRecoveryExport.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/hotkeysPane.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/index-barrel.test.ts status=passed tests=3 passed=3 failed=0
+file src/__tests__/integrationConnectButton.test.tsx status=passed tests=5 passed=5 failed=0
+file src/__tests__/integrationDisconnectButton.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/integrationProviders.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/integrationsPane.test.tsx status=passed tests=18 passed=18 failed=0
+file src/__tests__/integrationStubBanner.test.tsx status=passed tests=2 passed=2 failed=0
+file src/__tests__/morePane.test.tsx status=passed tests=15 passed=15 failed=0
+file src/__tests__/no-hex-literals.test.ts status=passed tests=1 passed=1 failed=0
+file src/__tests__/no-localstorage-clear.test.ts status=passed tests=2 passed=2 failed=0
+file src/__tests__/no-math-random.test.ts status=passed tests=7 passed=7 failed=0
+file src/__tests__/no-stripe-js-bundle.test.ts status=passed tests=2 passed=2 failed=0
+file src/__tests__/no-stripe-secret-key.test.ts status=passed tests=2 passed=2 failed=0
+file src/__tests__/notificationsPane.test.tsx status=passed tests=11 passed=11 failed=0
+file src/__tests__/oauthState.test.ts status=passed tests=12 passed=12 failed=0
+file src/__tests__/pkce.test.ts status=passed tests=8 passed=8 failed=0
+file src/__tests__/premiumCancelButton.test.tsx status=passed tests=5 passed=5 failed=0
+file src/__tests__/premiumDisclosureBanner.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/premiumPane.test.tsx status=passed tests=9 passed=9 failed=0
+file src/__tests__/premiumTier.test.ts status=passed tests=4 passed=4 failed=0
+file src/__tests__/PremiumTierBadge.test.tsx status=passed tests=2 passed=2 failed=0
+file src/__tests__/premiumUpgradeButton.test.tsx status=passed tests=5 passed=5 failed=0
+file src/__tests__/restPanesById.test.ts status=passed tests=3 passed=3 failed=0
+file src/__tests__/smartListsPane.test.tsx status=passed tests=6 passed=6 failed=0
+file src/__tests__/smartListsRecovery.test.tsx status=passed tests=4 passed=4 failed=0
+file src/__tests__/stickyPane.test.tsx status=passed tests=10 passed=10 failed=0
+file src/__tests__/stickyPaneRecovery.test.tsx status=passed tests=14 passed=14 failed=0
+file src/__tests__/useAccountDeleteOrchestrator.test.tsx status=passed tests=15 passed=15 failed=0
+file src/__tests__/usePremiumConfig.test.tsx status=passed tests=3 passed=3 failed=0
+file src/__tests__/usePremiumTier.test.tsx status=passed tests=6 passed=6 failed=0
+case 001 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP1: valid state path — flips pref to true
+case 002 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP2: valid state path — emits web:settings:integration-connected exactly once
+case 003 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP3: valid state path — clears sessionStorage entry
+case 004 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP4: valid state path — displays success banner (oauth.cb.success)
+case 005 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP5: valid state path — navigates back after 2000ms (fake timers)
+case 006 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP6: invalid state — no sessionStorage entry: does NOT flip pref + does NOT emit + shows invalid banner
+case 007 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP7: error param (?error=access_denied) — shows oauth.cb.cancelled banner
+case 008 PASSED | src/__tests__/CallbackPage.test.tsx > CallbackPage CP8: ZH banner text rendered when lang=zh — test via localI18n directly
+case 009 PASSED | src/__tests__/CallbackPage.test.tsx > rejects an otherwise valid owner-bound callback when the authorization code is missing
+case 010 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC1: renders without error
+case 011 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC2: shows cancelled banner text
+case 012 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC3: navigates after 3000ms
+case 013 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC4: tier is NOT changed (idempotent — no pref mutation)
+case 014 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC-DIRECT-1: visiting cancel route directly without prior Upgrade is idempotent
+case 015 PASSED | src/__tests__/CheckoutCancelPage.test.tsx > CheckoutCancelPage CC-NO-FETCH-1: no fetch is called during cancel page rendering
+case 016 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS1: renders without error (pending state initially)
+case 017 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS2: valid session_id — shows success banner
+case 018 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS3: missing session_id — shows invalid banner
+case 019 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS-INVALID-1: empty session_id — shows invalid banner (tier not flipped)
+case 020 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS4: valid session_id — flips premium tier pref to premium_stub
+case 021 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS5: valid session_id — sets started_at to a recent timestamp
+case 022 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS6: shows success banner text in English
+case 023 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS7: navigates after 2000ms on success
+case 024 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS8: navigates after 3000ms on invalid session_id
+case 025 PASSED | src/__tests__/CheckoutSuccessPage.test.tsx > CheckoutSuccessPage CS-NO-FETCH-1: no fetch is called during success callback processing
+case 026 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-STEP-1: open=true → Step 1 panel visible (step1_title + continue button)
+case 027 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-STEP-2: Step 1 → click Continue → Step 2 panel visible (step2_title; input present)
+case 028 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-STEP-3: Step 2 → type DELETE → submit enabled → click submit → calls orchestrator.submit()
+case 029 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-1: input value "DELETE" → submit button enabled (NOT disabled)
+case 030 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-2: input value "delete" (lowercase) → submit button disabled
+case 031 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-3: input value "Delete" (mixed case) → submit button disabled
+case 032 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-4: input value "" (empty) → submit button disabled
+case 033 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-5: input value "DELETEX" (extra char) → submit button disabled
+case 034 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-TYPEMATCH-6: input value "DELETE " (trailing space) → submit button disabled (no trim)
+case 035 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-CANCEL-1: Cancel on Step 1 → onCancel called
+case 036 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-CANCEL-2: Cancel on Step 2 → onCancel called
+case 037 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-BILINGUAL-1: EN labels — Step 1 title + Continue + Step 2 title + type_prompt
+case 038 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P1 (step navigation + type-match) DEL-BILINGUAL-2: ZH labels — Step 1 title + Continue + Step 2 title + type_prompt
+case 039 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-WIRE-1: Step 2 → submit (mock-auth) → orchestrator.submit() called once
+case 040 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-WIRE-2: failure state → error banner rendered with bilingual copy (network error)
+case 041 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-WIRE-3: Failure → click Retry → input available (step2 restored)
+case 042 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-MOCK-BANNER-1: mock-auth mode + Step 2 → banner EN text visible
+case 043 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-MOCK-BANNER-2: mock-auth mode + Step 2 + ZH lang → banner ZH text visible
+case 044 PASSED | src/__tests__/DeleteAccountConfirmModal.test.tsx > DeleteAccountConfirmModal — P3 (orchestrator wiring + mock-auth banner) DEL-MOCK-BANNER-3: mock banner has no close button (non-dismissible)
+case 045 PASSED | src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download defaults to device settings and never attaches A/B content or legacy data
+case 046 PASSED | src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download includes explicitly selected old business bytes without altering originals
+case 047 PASSED | src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download does not download using a stale account pane
+case 048 PASSED | src/__tests__/DeviceRecoveryExport.test.tsx > device recovery download reports excluded history without revealing its contents
+case 049 PASSED | src/__tests__/PremiumTierBadge.test.tsx > PremiumTierBadge PCB-1: renders 'Premium (stub)' badge when effective tier is premium_stub
+case 050 PASSED | src/__tests__/PremiumTierBadge.test.tsx > PremiumTierBadge PCB-2: returns null (no rendering) when effective tier is 'free'
+case 051 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB1: renders without error
+case 052 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB2: shows version string
+case 053 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB3: bilingual — EN shows English description
+case 054 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB4: bilingual — ZH shows Chinese description
+case 055 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB5: all 4 about-links carry aria-disabled='true'
+case 056 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB6: all 4 about-links carry title='Coming soon' (EN)
+case 057 PASSED | src/__tests__/aboutPane.test.tsx > aboutPane AB7: clicking about-links does not trigger navigation or side-effects
+case 058 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 401 cannot authorize local erasure or a completion receipt
+case 059 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 403 cannot authorize local erasure or a completion receipt
+case 060 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 404 cannot authorize local erasure or a completion receipt
+case 061 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > HTTP 500 cannot authorize local erasure or a completion receipt
+case 062 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > refuses to call the server if the durable intent cannot be written
+case 063 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > retains an uncertain request after a lost response and remount without enabling cleanup
+case 064 PASSED | src/__tests__/accountDeleteHttpFailure.test.tsx > keeps the intent if recording server success fails before local cleanup
+case 065 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery keeps captured authentication cleanup pending after failure and retries that generation after reload
+case 066 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery never silently completes an auth-bound receipt when cleanup is unavailable
+case 067 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery commits metadata as the tombstone before destructive work
+case 068 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery finishes only captured A after scope and in-memory state changed to B
+case 069 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery retains a retryable receipt after secret cleanup fails and marks complete only on success
+case 070 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery does not mark a successful receipt if the final metadata write fails
+case 071 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > durable local deletion recovery does not authorize cleanup from mismatched-owner, incomplete or legacy metadata
+case 072 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes survives unmount/remount, shows no identity/content, and completes local cleanup while signed out
+case 073 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes keeps the failure visible and allows explicit retry without touching B
+case 074 PASSED | src/__tests__/accountDeletionRecovery.test.tsx > recovery notice outside authenticated routes appears when an already-mounted sign-in page receives a new pending receipt
+case 075 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC1: render renders without error
+case 076 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC2: bilingual — lang=zh shows Chinese name
+case 077 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC3: bilingual — lang=en shows English name
+case 078 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC4: Delete Account button is present
+case 079 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC5: clicking Delete Account opens the dialog — shows Step 1 title
+case 080 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC6: Cancel on Step 1 does NOT emit event
+case 081 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC7: Step 1 → Continue emits web:settings:rest:account-delete-confirmed exactly once
+case 082 PASSED | src/__tests__/accountPane.test.tsx > accountPane AC8: pane id + icon + i18nKey match registry expectations
+case 083 PASSED | src/__tests__/accountPane.test.tsx > accountPane DEL-EVENT-DEP-1: Step 1 Continue emits deprecated event with confirmedAt ISO timestamp
+case 084 PASSED | src/__tests__/accountPane.test.tsx > account-local data management exports only the captured current account generation and gives download-request feedback
+case 085 PASSED | src/__tests__/accountPane.test.tsx > account-local data management shows a visible error instead of exporting after the account changes
+case 086 PASSED | src/__tests__/accountPane.test.tsx > account-local data management opens the account data gate from settings
+case 087 PASSED | src/__tests__/aiPane.test.tsx > aiPane — shape (AP1..AP2) AP1: pane metadata — id, icon, i18nKey are correct
+case 088 PASSED | src/__tests__/aiPane.test.tsx > aiPane — shape (AP1..AP2) AP2: render function returns a React element without throwing
+case 089 PASSED | src/__tests__/aiPane.test.tsx > aiPane — bilingual (AP3..AP4) AP3: EN labels — Provider, API Key, Default model, Streaming
+case 090 PASSED | src/__tests__/aiPane.test.tsx > aiPane — bilingual (AP3..AP4) AP4: ZH labels — AI 服务商, API 密钥, 默认模型, 流式输出
+case 091 PASSED | src/__tests__/aiPane.test.tsx > aiPane — provider picker (AP5) AP5: provider picker has Anthropic, Gemini, and DeepSeek options
+case 092 PASSED | src/__tests__/aiPane.test.tsx > aiPane — base URL field (AP6) AP6: base URL field is hidden for managed Gemini and DeepSeek presets
+case 093 PASSED | src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) AP7: Save button is disabled when key input is empty
+case 094 PASSED | src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) AP8: typing a key enables Save; clicking Save calls aiKeyStorage.saveKey
+case 095 PASSED | src/__tests__/aiPane.test.tsx > aiPane — API key input + Save (AP7..AP8) AP8b: Gemini and DeepSeek save to independent key slots
+case 096 PASSED | src/__tests__/aiPane.test.tsx > aiPane — Test Connection (AP9..AP10) AP9: Test Connection button is disabled when no key is saved
+case 097 PASSED | src/__tests__/aiPane.test.tsx > aiPane — Test Connection (AP9..AP10) AP10: Test Connection ok shows 'Connection OK'
+case 098 PASSED | src/__tests__/aiPane.test.tsx > aiPane — model picker (AP11) AP11: model picker follows the selected provider preset
+case 099 PASSED | src/__tests__/aiPane.test.tsx > aiPane — key input type (AP12 — HC1 guard) AP12: API key input has type=password (never plaintext)
+case 100 PASSED | src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry AP1: returns same length as input registry
+case 101 PASSED | src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry AP2: substitutes all 11 owned pane ids
+case 102 PASSED | src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry AP3: does NOT substitute panes not owned by this row (e.g. appearance, features)
+case 103 PASSED | src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry AP4: idempotent — calling twice produces equivalent output
+case 104 PASSED | src/__tests__/applyRestPanesToRegistry.test.ts > applyRestPanesToRegistry AP5: preserves original order of pane ids
+case 105 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU1: output URL starts with provider.authorizeUrl
+case 106 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU2: URL includes code_challenge_method=S256
+case 107 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU3: URL includes URL-encoded redirect_uri
+case 108 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU4: URL includes the state from pendingState
+case 109 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU5: URL includes the code_challenge derived from codeVerifier
+case 110 PASSED | src/__tests__/buildAuthorizeUrl.test.ts > buildAuthorizeUrl BU6: URL encodes provider.scopes as space-separated scope= param
+case 111 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane CL1: renders without error
+case 112 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane registers a stable guard with a stateful host callback
+case 113 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane CL2: bilingual — EN labels are present
+case 114 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane CL3: bilingual — ZH labels are present
+case 115 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane CL4: toggling avatars toggle persists its independent async pref
+case 116 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane persists all three actual controls independently without seeding absent siblings
+case 117 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane offers a memory export while a current device edit is pending
+case 118 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane keeps a pending device draft and reports a failed export setup
+case 119 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane makes an old guard inert after an account epoch while keeping a device draft
+case 120 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane keeps a same-value successor draft when its second write is rejected
+case 121 PASSED | src/__tests__/collaboratePane.test.tsx > collaboratePane discard guard reloads only actual draft fields
+case 122 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT1: renders without error
+case 123 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT2: bilingual — EN labels
+case 124 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT3: bilingual — ZH labels
+case 125 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT4: start-week select has 3 options (monday/sunday/saturday)
+case 126 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT5: changing start-week persists xai_pref_dt_start_week
+case 127 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT6: toggling lunar flips xai_pref_dt_lunar
+case 128 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT7: an actual draft never exposes source Reload for that same field
+case 129 PASSED | src/__tests__/dateTimePane.test.tsx > dateTimePane DT8: retry advances a failed predecessor without acknowledging the queued latest choice
+case 130 PASSED | src/__tests__/hotkeysPane.test.tsx > hotkeysPane HK1: renders 10 rows in the hotkeys list
+case 131 PASSED | src/__tests__/hotkeysPane.test.tsx > hotkeysPane HK2: no input or edit affordance (read-only)
+case 132 PASSED | src/__tests__/hotkeysPane.test.tsx > hotkeysPane HK3: bilingual — ZH shows Chinese action labels
+case 133 PASSED | src/__tests__/index-barrel.test.ts > index barrel B1: exports all 12 pane objects with correct ids (11 original + ai)
+case 134 PASSED | src/__tests__/index-barrel.test.ts > index barrel B2: exports restPanesById with 12 entries (11 original + ai)
+case 135 PASSED | src/__tests__/index-barrel.test.ts > index barrel B3: exports applyRestPanesToRegistry as a function
+case 136 PASSED | src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton CB1: renders with EN label 'Connect'
+case 137 PASSED | src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton CB2: renders with ZH label '连接'
+case 138 PASSED | src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton CB3: click writes sessionStorage entry + calls window.location.assign once
+case 139 PASSED | src/__tests__/integrationConnectButton.test.tsx > IntegrationConnectButton CB4: does not write localStorage (assert localStorage.length === 0 after click)
+case 140 PASSED | src/__tests__/integrationConnectButton.test.tsx > cancels navigation if the account changes while the authorization URL is being prepared
+case 141 PASSED | src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton DB1: renders with EN label 'Disconnect'
+case 142 PASSED | src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton DB2: renders with ZH label '断开连接'
+case 143 PASSED | src/__tests__/integrationDisconnectButton.test.tsx > IntegrationDisconnectButton DB3: click calls onDisconnect + emits web:settings:integration-disconnected
+case 144 PASSED | src/__tests__/integrationProviders.test.ts > PROVIDERS config IP1: PROVIDERS has exactly 3 entries (Notion, GCal, Linear)
+case 145 PASSED | src/__tests__/integrationProviders.test.ts > PROVIDERS config IP2: every authorizeUrl and tokenUrl starts with https://
+case 146 PASSED | src/__tests__/integrationProviders.test.ts > PROVIDERS config IP3: every prefKey matches a registered key in PREF_REGISTRY
+case 147 PASSED | src/__tests__/integrationProviders.test.ts > PROVIDERS config IP4: every IntegrationProviderId is in the type union (runtime check)
+case 148 PASSED | src/__tests__/integrationStubBanner.test.tsx > IntegrationStubBanner SB1: renders with EN copy
+case 149 PASSED | src/__tests__/integrationStubBanner.test.tsx > IntegrationStubBanner SB2: renders with ZH copy
+case 150 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN1: renders 17 integration cards in the placeholder grids (all 3 providers disconnected)
+case 151 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN2: renders 3 placeholder section headers
+case 152 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN3: bilingual — EN section headers
+case 153 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN4: bilingual — ZH section headers
+case 154 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN5: clicking a placeholder card is a no-op — does not throw and does not call console.warn
+case 155 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — SHIPPED baseline (IN1..IN6) IN6: clicking placeholder cards does NOT emit any event via emitWebEvent
+case 156 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-1: 'Connected providers' section renders above the existing 3 groups
+case 157 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-2: 3 Connect buttons render when all 3 prefs are false
+case 158 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-3: flipping a pref to true renders Disconnect button + 'Connected (stub)' badge
+case 159 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-4: stub disclosure banner renders at top of pane (EN)
+case 160 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-5: stub disclosure banner renders at top of pane (ZH)
+case 161 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-6: banner is not dismissible — no close button inside the banner
+case 162 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-7: provider labels bilingual (EN)
+case 163 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-8: clicking Disconnect flips pref back to false
+case 164 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-9: clicking Disconnect emits web:settings:integration-disconnected exactly once
+case 165 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-10: Disconnect tooltip mentions provider's account settings
+case 166 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-11: per-provider state independent — flipping Notion does not change GCal pref
+case 167 PASSED | src/__tests__/integrationsPane.test.tsx > integrationsPane — Extension tests (IN-EXT-1..IN-EXT-12) IN-EXT-12: no-hex-literals guard — badge + banner styles are in CSS only (OKLCH), not inline TSX styles
+case 168 PASSED | src/__tests__/morePane.test.tsx > morePane MP1: renders without error
+case 169 PASSED | src/__tests__/morePane.test.tsx > morePane MP2: bilingual — EN labels
+case 170 PASSED | src/__tests__/morePane.test.tsx > morePane MP3: bilingual — ZH labels
+case 171 PASSED | src/__tests__/morePane.test.tsx > morePane MP4: SettingRow label for Remove text is a plain string (not ReactNode — chassis contract)
+case 172 PASSED | src/__tests__/morePane.test.tsx > morePane MP5: language select is read-only (only one option: Follow System)
+case 173 PASSED | src/__tests__/morePane.test.tsx > morePane MP6: window type select persists xai_pref_more_win_type
+case 174 PASSED | src/__tests__/morePane.test.tsx > morePane MP7: 3 template cards rendered
+case 175 PASSED | src/__tests__/morePane.test.tsx > morePane MP8: Reset Default clears More-owned keys and leaves other keys untouched
+case 176 PASSED | src/__tests__/morePane.test.tsx > morePane MP8b: Reset Default uses physical removals for both device and account More keys
+case 177 PASSED | src/__tests__/morePane.test.tsx > morePane MP8c: a failed physical reset remains an actual More draft even while the UI shows its default
+case 178 PASSED | src/__tests__/morePane.test.tsx > morePane MP9: bilingual template names (ZH)
+case 179 PASSED | src/__tests__/morePane.test.tsx > morePane MP10: pane id, icon, i18nKey are correct
+case 180 PASSED | src/__tests__/morePane.test.tsx > morePane MP11: custom checkbox controls are real keyboard-operable buttons
+case 181 PASSED | src/__tests__/morePane.test.tsx > REL-03 More reset preserves B and unowned defaults while resetting the selected account
+case 182 PASSED | src/__tests__/morePane.test.tsx > REL-03 a stale reset callback cannot reset B or device settings
+case 183 PASSED | src/__tests__/no-hex-literals.test.ts > NH1: no hex literals in src/**/*.{ts,tsx} all TypeScript files are free of hex color literals
+case 184 PASSED | src/__tests__/no-localstorage-clear.test.ts > DEL-WILDCARD-GUARD: no localStorage.clear() in source files DEL-WILDCARD-GUARD-1: zero localStorage.clear() occurrences in plugin-web-settings-rest/src/**
+case 185 PASSED | src/__tests__/no-localstorage-clear.test.ts > DEL-WILDCARD-GUARD: no localStorage.clear() in source files DEL-WILDCARD-GUARD-2: zero localStorage.clear() occurrences in web-auth-device-session/src/**
+case 186 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules pkce.ts contains zero occurrences of Math.random
+case 187 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules oauthState.ts contains zero occurrences of Math.random
+case 188 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules buildAuthorizeUrl.ts contains zero occurrences of Math.random
+case 189 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules integrationConnectButton.tsx contains zero occurrences of Math.random
+case 190 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules integrationDisconnectButton.tsx contains zero occurrences of Math.random
+case 191 PASSED | src/__tests__/no-math-random.test.ts > TT-PKCE-NO-MATH-RANDOM: no Math.random in OAuth modules integrationStubBanner.tsx contains zero occurrences of Math.random
+case 192 PASSED | src/__tests__/no-math-random.test.ts > No-localStorage guard for code_verifier oauthState.ts does NOT contain localStorage. (code_verifier must be in sessionStorage only)
+case 193 PASSED | src/__tests__/no-stripe-js-bundle.test.ts > TT-NO-STRIPE-JS: no Stripe.js bundle in source TT-NO-STRIPE-JS-1: zero actual @stripe/stripe-js import statements in all .ts/.tsx source files
+case 194 PASSED | src/__tests__/no-stripe-js-bundle.test.ts > TT-NO-STRIPE-JS: no Stripe.js bundle in source TT-NO-STRIPE-JS-2: zero occurrences of https://js.stripe.com/ CDN script in all .ts/.tsx source files
+case 195 PASSED | src/__tests__/no-stripe-secret-key.test.ts > TT-NO-SK: no Stripe Secret Key in source TT-NO-SK: zero actual sk_test_<value> keys in all .ts/.tsx source files
+case 196 PASSED | src/__tests__/no-stripe-secret-key.test.ts > TT-NO-SK: no Stripe Secret Key in source TT-NO-SK: zero actual sk_live_<value> keys in all .ts/.tsx source files
+case 197 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF1: renders without error
+case 198 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF2: bilingual — EN labels
+case 199 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF3: bilingual — ZH labels
+case 200 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF4: time-range inputs are hidden when quiet=false (default)
+case 201 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF5: enabling quiet hours shows time inputs
+case 202 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF6: toggling enabled toggle flips xai_pref_notif_enabled pref
+case 203 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF7: sound select has 5 options (none/subtle/chime/bell/pop)
+case 204 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF8: changing sound select persists xai_pref_notif_done_sound
+case 205 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF9: pane id, icon, i18nKey are correct
+case 206 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF10: a failed hidden quiet-start draft stays recoverable until its own Retry succeeds
+case 207 PASSED | src/__tests__/notificationsPane.test.tsx > notificationsPane NF11: invalid quiet-time feedback belongs to each field until that field is corrected
+case 208 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS1: startOAuth writes sessionStorage key xai_oauth_pending_<id> with parseable JSON
+case 209 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS2: startOAuth returns state with <providerId>. prefix
+case 210 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS3: startOAuth sets expiresAt ≈ now + 10min
+case 211 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS4: validateAndConsumeState returns the state on valid roundtrip
+case 212 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS5: validateAndConsumeState returns null on TTL expiry
+case 213 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS6: validateAndConsumeState returns null on providerId-prefix mismatch
+case 214 PASSED | src/__tests__/oauthState.test.ts > OAuth state machine OS7: validateAndConsumeState clears sessionStorage entry even on failure
+case 215 PASSED | src/__tests__/oauthState.test.ts > OAuth account binding cancels A pending state synchronously on an account switch
+case 216 PASSED | src/__tests__/oauthState.test.ts > OAuth account binding rejects a retained A callback mounted under B, even if old sessionStorage is restored
+case 217 PASSED | src/__tests__/oauthState.test.ts > OAuth account binding does not revive a retired attempt after switching A→B→A
+case 218 PASSED | src/__tests__/oauthState.test.ts > OAuth account binding does not permit an old handler to start an attempt for a new account
+case 219 PASSED | src/__tests__/oauthState.test.ts > OAuth account binding rejects pre-isolation attempts without a verifiable owner
+case 220 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK1: generateCodeVerifier returns a string
+case 221 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK2: code_verifier is 43 chars (32 bytes → base64url, no padding)
+case 222 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK3: code_verifier charset matches [A-Za-z0-9_-]
+case 223 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK4: two consecutive calls produce different verifiers (entropy smoke)
+case 224 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK5: computeCodeChallenge produces correct base64url(SHA-256(verifier)) — RFC 7636 §B.1 vector
+case 225 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK6: code_challenge is 43 chars
+case 226 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK7: base64UrlEncode produces no = padding
+case 227 PASSED | src/__tests__/pkce.test.ts > PKCE helpers PK8: base64UrlEncode replaces + with - and / with _
+case 228 PASSED | src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton PCANCEL-1: renders null when effective tier is 'free'
+case 229 PASSED | src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton PCANCEL-2: renders button when effective tier is 'premium_stub'
+case 230 PASSED | src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton PCANCEL-3: clicking Cancel flips tier back to 'free'
+case 231 PASSED | src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton PCANCEL-NO-FETCH-1: no fetch is called when Cancel is clicked
+case 232 PASSED | src/__tests__/premiumCancelButton.test.tsx > PremiumCancelButton PCANCEL-TOOLTIP-1: Cancel button has a tooltip describing local-only behavior
+case 233 PASSED | src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner PB-BANNER-1: renders EN text
+case 234 PASSED | src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner PB-BANNER-2: renders ZH text
+case 235 PASSED | src/__tests__/premiumDisclosureBanner.test.tsx > PremiumDisclosureBanner PB-BANNER-3: no close/dismiss button — non-dismissible
+case 236 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PR1: renders without error (EN)
+case 237 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PR2: bilingual — EN shows English headline
+case 238 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PR3: bilingual — ZH shows Chinese headline
+case 239 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-1: Upgrade button is visible when tier is free
+case 240 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-2: Cancel Subscription button is NOT visible when tier is free
+case 241 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-3: Cancel Subscription button IS visible when tier is premium_stub
+case 242 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-4: disclosure banner is always present (in all 3 tier states)
+case 243 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-5: disclosure banner is present when tier is premium_stub
+case 244 PASSED | src/__tests__/premiumPane.test.tsx > premiumPane PT-EXT-6: tier label shows current tier
+case 245 PASSED | src/__tests__/premiumTier.test.ts > premiumTier PT1: PREMIUM_TIER_TTL_MS is 30 days in milliseconds
+case 246 PASSED | src/__tests__/premiumTier.test.ts > premiumTier PT2: PremiumTier type accepts 'free'
+case 247 PASSED | src/__tests__/premiumTier.test.ts > premiumTier PT3: PremiumTier type accepts 'pending'
+case 248 PASSED | src/__tests__/premiumTier.test.ts > premiumTier PT4: PremiumTier type accepts 'premium_stub'
+case 249 PASSED | src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton PUB-1: renders enabled button and calls window.location.assign when env var is set
+case 250 PASSED | src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton PUB-2: renders disabled button with tooltip when env var is not set
+case 251 PASSED | src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton PUB-3: bilingual — EN shows 'Upgrade Now'
+case 252 PASSED | src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton PUB-4: bilingual — ZH shows '立即升级'
+case 253 PASSED | src/__tests__/premiumUpgradeButton.test.tsx > PremiumUpgradeButton PUB-NO-FETCH-1: no fetch is called during Upgrade click
+case 254 PASSED | src/__tests__/restPanesById.test.ts > restPanesById RP1: contains exactly 12 entries (11 original + ai from gap-closure row #2)
+case 255 PASSED | src/__tests__/restPanesById.test.ts > restPanesById RP2: each entry has the correct id, icon, and i18nKey
+case 256 PASSED | src/__tests__/restPanesById.test.ts > restPanesById RP3: each pane render is a function that returns a React element
+case 257 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL1: renders 3 sections
+case 258 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL2: renders 12 list rows total
+case 259 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL3: each row has a visibility select with 3 options
+case 260 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL4: bilingual — EN section headers are in English
+case 261 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL5: bilingual — ZH section headers are in Chinese
+case 262 PASSED | src/__tests__/smartListsPane.test.tsx > smartListsPane SL6: pref key xai_pref_smart_lists is a JSON entry (default is {})
+case 263 PASSED | src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery persists all twelve DOM producers as one valid sparse map and retains an unknown extension
+case 264 PASSED | src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery refuses an invalid source without writing, then reloads an externally repaired map
+case 265 PASSED | src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery keeps the combined latest draft after a failed write and retries it as one map
+case 266 PASSED | src/__tests__/smartListsRecovery.test.tsx > Smart Lists async map recovery keeps a dirty map through an external replacement until explicit full-map discard
+case 267 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST1: renders without error
+case 268 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST2: 13 color swatch buttons rendered
+case 269 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST3: 12 non-random swatches use var(--sticky-note-color-<id>) background
+case 270 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST4: random swatch uses conic-gradient
+case 271 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST5: no hex literals in swatch inline styles
+case 272 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST6: clicking a swatch persists xai_pref_sticky_color
+case 273 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST7: 4 spacing buttons rendered
+case 274 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST8: clicking a spacing button persists xai_pref_sticky_grid_spacing
+case 275 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST9: bilingual — ZH font size options
+case 276 PASSED | src/__tests__/stickyPane.test.tsx > stickyPane ST10: pane id, icon, i18nKey are correct
+case 277 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR1: absent and valid sources (including the random sentinel) mount with zero writes and no recovery or Saved
+case 278 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR2: a failed write keeps the latest choice with Retry, Discard, export and guard; Retry saves exact bytes and Saved
+case 279 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR3: invalid string and boolean bytes show the default with a Reload-only alert and are never normalized
+case 280 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR4: a throwing read is a Reload-only source issue; a valid edit over it stays a failed draft that never writes
+case 281 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR5: a malformed font DOM value keeps the prior value with an input error and zero writes; a valid choice clears it
+case 282 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR6: two same-turn switch activations invert the latest intent through two operations
+case 283 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR7: a held per-key lock shows pending work immediately; coalesced choices settle only the latest
+case 284 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR8: a failed predecessor keeps the queued latest; Retry advances it without acknowledging the latest
+case 285 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR9: Discard is zero-write and rereads only its field; Discard all visits only actual drafts
+case 286 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR10: the export is a sparse memory-only sticky-draft.json under total storage denial
+case 287 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR11: an export setup failure shows the localized error and keeps drafts, guard and warning
+case 288 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR12: an epoch change refuses old capabilities before rerender; a fresh guard protects the surviving device draft
+case 289 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR13: unmount removes the guard and the beforeunload listener and detaches old callbacks
+case 290 PASSED | src/__tests__/stickyPaneRecovery.test.tsx > Sticky Note recovery caller SR14: ZH wording for pending, source, input-error, actions, Saved and the guard label
+case 291 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner modern successful cleanup completes the receipt then redirects without a second shared clear
+case 292 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner modern cleanup after B replaces A still revokes only captured A and does not navigate B
+case 293 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner does not finish its durable receipt before captured auth cleanup succeeds
+case 294 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner pins the server token, removes only A content/secrets, and preserves device, B and archive
+case 295 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner mock-auth deletes only the demo scope and never invokes the real server
+case 296 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner does not allow mock mode to delete a real account namespace
+case 297 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner server failure preserves all local content and exposes the failure
+case 298 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner already-deleted server outcome still performs scoped local cleanup
+case 299 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner secret cleanup failure is not reported as successful deletion
+case 300 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner suppresses duplicate submit while the server request is pending
+case 301 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner A server completion after switching to B deletes only A and leaves B session/navigation alone
+case 302 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner switching during asynchronous secret cleanup does not clear B authentication
+case 303 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner switching during auth storage clearing does not navigate away from B
+case 304 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner a callback captured before account switch cannot start deletion as B
+case 305 PASSED | src/__tests__/useAccountDeleteOrchestrator.test.tsx > account deletion captures the initiating owner locked scope rejects deletion before any backend or local action
+case 306 PASSED | src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig PC-CONFIG-1: returns configured=true and paymentLinkUrl when env var is set
+case 307 PASSED | src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig PC-CONFIG-2: returns configured=false and paymentLinkUrl=null when env var is empty
+case 308 PASSED | src/__tests__/usePremiumConfig.test.tsx > usePremiumConfig PC-CONFIG-3: returns configured=false when env var is whitespace only
+case 309 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK1: returns 'free' when no pref is stored (default)
+case 310 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK2: returns 'premium_stub' within 30-day window
+case 311 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK3: returns 'free' when 30-day window has expired
+case 312 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK4: returns 'pending' when tier is pending (transitional state)
+case 313 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK5: setTier updates the stored tier value
+case 314 PASSED | src/__tests__/usePremiumTier.test.tsx > usePremiumTier PHK6: setTier to 'free' resets from premium_stub
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/packages/plugin-web-settings-rest","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-ZfOlhG/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/morePane.tsx packages/plugin-web-settings-rest/src/panes/stickyPane.tsx packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx packages/plugin-web-settings-rest/src/panes/dateTimePane.tsx
+pin_required_provenance_missing=none
+pin_modules=194 by package: packages/plugin-web-ai-chat=29 packages/plugin-web-settings-rest=88 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-event-bus=4 packages/xai-web-shell=9

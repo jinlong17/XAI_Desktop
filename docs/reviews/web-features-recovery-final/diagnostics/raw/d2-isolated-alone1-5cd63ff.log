@@ -1,0 +1,2258 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=more-boundaries
+suffix=alone1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-callers.mjs 5cd63ff more-boundaries alone1
+output_dir=/private/tmp/claude-501/-Users-lijinlong-Desktop-Jinlong-Project-Coding-project-AI-Desktop-XAI-Desktop/f4c2b0c6-3946-4852-bc74-bc31d9af858b/scratchpad/diag-isolation (redirected; not evidence)
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=9c31137a630b84df440cc3eb327b2b08dedbe5be37fb4f1ddd3f8e3ef5cb0537
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-more-recovery-sol/verify-fixed.mjs mode boundaries
+include=docs/reviews/web-more-recovery-sol/boundaries.test.tsx
+setup_files=packages/plugin-web-settings-rest/vitest.setup.ts
+copied docs/reviews/web-more-recovery-sol/fixture.tsx run=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 archive_committed=b117d2044850cbea822367a0f2bbe9a326e27e4c9b5e5537427b5e0b37b87928 (same)
+copied docs/reviews/web-more-recovery-sol/fields.test.tsx run=36aa19c20fb97ed3da9f902cc513ef6ae293d15b8649e79a3a85ff3fd041fb9a archive_committed=36aa19c20fb97ed3da9f902cc513ef6ae293d15b8649e79a3a85ff3fd041fb9a (same)
+copied docs/reviews/web-more-recovery-sol/reset.test.tsx run=05f3cbc748dcf5fa7d91e4dfa3ddd1d54b774aadd617009435667591d00c0441 archive_committed=05f3cbc748dcf5fa7d91e4dfa3ddd1d54b774aadd617009435667591d00c0441 (same)
+copied docs/reviews/web-more-recovery-sol/queues.test.tsx run=3bdce398a08908f580139d805947ceb16db7126bf3ba07bd0024eb5acdcfff7c archive_committed=3bdce398a08908f580139d805947ceb16db7126bf3ba07bd0024eb5acdcfff7c (same)
+copied docs/reviews/web-more-recovery-sol/boundaries.test.tsx run=dcbaf57e55f7e907660abacaf233de83dcf769da97b878a9036e358a3dd8ef3e archive_committed=dcbaf57e55f7e907660abacaf233de83dcf769da97b878a9036e358a3dd8ef3e (same)
+copied docs/reviews/web-more-recovery-sol/owner-export.test.tsx run=5a9cfa177f61ddd4feb6278dd5ac7c49cc0c1b972725be2068e902f18f7ebfcf archive_committed=5a9cfa177f61ddd4feb6278dd5ac7c49cc0c1b972725be2068e902f18f7ebfcf (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/morePane.tsx=96c8694df00b7e81e9466b874749dd4b54faab04b1078ecbd29d586acb3dde7f packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu/final-more-boundaries.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu/.final-guard/report-more-boundaries.json -t invalid and unavailable sources
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-settings-rest; react-router linked for completeness, not aliased by the older runner)
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+accepted_count=10
+vitest_exit=1
+harness_checks=PASS (13/13)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu
+
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing and rejected Web Locks retain exact device/account edit and reset intents
+ × docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes 1231ms
+   → win_type: expected 'tray' to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"more-pane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLanguage[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Language"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"follow"[39m
+                [36m>[39m
+                  [0mFollow System[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mChoose window type when launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Choose window type when launching"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"window"[39m
+                [36m>[39m
+                  [0mWindow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tray"[39m
+                [36m>[39m
+                  [0mTray[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"full"[39m
+                [36m>[39m
+                  [0mFullscreen[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mChoose window type when launching reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Choose window type when launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Choose window type when launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLaunch at Login[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Launch at Login"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mLaunch at Login reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mMinimize app when auto launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mMinimize app when auto launching reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Minimize app when auto launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Minimize app when auto launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mSmart Recognition[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDate Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"Date Recognition"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDate Recognition reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Date Recognition"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Date Recognition"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mRemove text in tasks[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Remove text in tasks"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"check-inline"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mRemove text in tasks reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Remove text in tasks"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Remove text in tasks"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mTag Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mYou can select to keep or remove tags from task name.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Remove tags from task name"[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"check-inline"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx checked"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mRemove tags from task name[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mRemove tags from task name reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Remove tags from task name"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Remove tags from task name"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mURL Parsing[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen the task name is a URL, it will be parsed as the URL title.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"URL Parsing"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mURL Parsing reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry URL Parsing"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard URL Parsing"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mTask Default[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Date[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Date"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"today"[39m
+                [36m>[39m
+                  [0mToday[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tomorrow"[39m
+                [36m>[39m
+                  [0mTomorrow[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Date reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Date"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Date"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Reminders (Due time task)[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"on_time"[39m
+                [36m>[39m
+                  [0mOn time[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"5min"[39m
+                [36m>[39m
+                  [0m5 min before[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"15min"[39m
+                [36m>[39m
+                  [0m15 min before[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Reminders (Due time task) reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Reminders (Due time task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Reminders (Due time task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Reminders (All day task)[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"9am"[39m
+                [36m>[39m
+                  [0mAt 9:00 AM[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"day_before"[39m
+                [36m>[39m
+                  [0mDay before[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Reminders (All day task) reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Reminders (All day task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Reminders (All day task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Priority[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Priority"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNo Priority[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"low"[39m
+                [36m>[39m
+                  [0mLow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"med"[39m
+                [36m>[39m
+                  [0mMedium[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"high"[39m
+                [36m>[39m
+                  [0mHigh[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Priority reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Priority"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Priority"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Tag[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Tag"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"study"[39m
+                [36m>[39m
+                  [0mStudy[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"work"[39m
+                [36m>[39m
+                  [0mWork[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"personal"[39m
+                [36m>[39m
+                  [0mPersonal[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Tag reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Tag"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Tag"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault List[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default List"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"inbox"[39m
+                [36m>[39m
+                  [0mInbox[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"today"[39m
+                [36m>[39m
+                  [0mToday[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault List reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default List"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default List"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Add to[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Add to"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"top"[39m
+                [36m>[39m
+                  [0mTop of List[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bottom"[39m
+                [36m>[39m
+                  [0mBottom of List[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Add to reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Add to"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Add to"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mOverdue Section shows at[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Overdue Section shows at"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"top"[39m
+                [36m>[39m
+                  [0mTop of List[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bottom"[39m
+                [36m>[39m
+                  [0mBottom of List[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mOverdue Section shows at reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Overdue Section shows at"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Overdue Section shows at"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"reset-link"[39m
+          [33mdata-testid[39m=[32m"more-reset-default"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mReset Default[0m
+        [36m</button>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"more-recovery-actions"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mExport More draft[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mDiscard all changes[0m
+          [36m</button>[39m
+        [36m</section>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mTask Template[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mDaily prep[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mQuick recap of yesterday[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mSpend time on email[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mReview smart list 'Tod…'[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mPick the most important…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mPick the hardest task…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mDaily journal[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat did I finish today?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat was noteworthy?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat surprises came up?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mTravel checklist[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mID / Passport / Visa…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mChargers / cables[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mUmbrella[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mLight backpack[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mClothes: tops / bottoms[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > missing committed marker lets device resets settle but retains both private reset intents
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > deleted tombstone lets device resets settle but retains both private reset intents
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a held account lifecycle lock leaves device reset independent and private reset pending
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > setting an exact registry default stores bytes while Reset Default removes them
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > a same-field source Reload cannot erase an actual failed edit draft
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > targeted discard rereads only its field with zero mutations and preserves a failed sibling
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+ ↓ docs/reviews/web-more-recovery-sol/boundaries.test.tsx > all-discard visits only current drafts and a later same-field reset survives old completion
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  08:55:37
+   Duration  2.30s (transform 243ms, setup 217ms, collect 225ms, tests 1.23s, environment 359ms, prepare 68ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu/.final-guard/report-more-boundaries.json
+
+---- stderr ----
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-more-recovery-sol/boundaries.test.tsx > invalid and unavailable sources retain requested reset intents without purging raw bytes
+AssertionError: win_type: expected 'tray' to be null
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"more-pane"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLanguage[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Language"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"follow"[39m
+                [36m>[39m
+                  [0mFollow System[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mChoose window type when launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Choose window type when launching"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"window"[39m
+                [36m>[39m
+                  [0mWindow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tray"[39m
+                [36m>[39m
+                  [0mTray[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"full"[39m
+                [36m>[39m
+                  [0mFullscreen[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mChoose window type when launching reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Choose window type when launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Choose window type when launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mLaunch at Login[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Launch at Login"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mLaunch at Login reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Launch at Login"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mMinimize app when auto launching[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Minimize app when auto launching"[39m
+                [33mclass[39m=[32m"toggle"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mMinimize app when auto launching reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Minimize app when auto launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Minimize app when auto launching"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mSmart Recognition[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDate Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen adding tasks, recognize date and time information and automatically set reminders.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"Date Recognition"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDate Recognition reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Date Recognition"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Date Recognition"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mRemove text in tasks[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Remove text in tasks"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"check-inline"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mRemove text in tasks reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Remove text in tasks"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Remove text in tasks"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mTag Recognition[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mYou can select to keep or remove tags from task name.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Remove tags from task name"[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"check-inline"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx checked"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mRemove tags from task name[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mRemove tags from task name reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Remove tags from task name"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Remove tags from task name"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mURL Parsing[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-desc"[39m
+              [36m>[39m
+                [0mWhen the task name is a URL, it will be parsed as the URL title.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"URL Parsing"[39m
+                [33mclass[39m=[32m"toggle on"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"toggle-knob"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mURL Parsing reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry URL Parsing"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard URL Parsing"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mTask Default[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Date[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Date"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"today"[39m
+                [36m>[39m
+                  [0mToday[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"tomorrow"[39m
+                [36m>[39m
+                  [0mTomorrow[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Date reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Date"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Date"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Reminders (Due time task)[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Reminders (Due time task)"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"on_time"[39m
+                [36m>[39m
+                  [0mOn time[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"5min"[39m
+                [36m>[39m
+                  [0m5 min before[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"15min"[39m
+                [36m>[39m
+                  [0m15 min before[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Reminders (Due time task) reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Reminders (Due time task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Reminders (Due time task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Reminders (All day task)[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Reminders (All day task)"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"9am"[39m
+                [36m>[39m
+                  [0mAt 9:00 AM[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"day_before"[39m
+                [36m>[39m
+                  [0mDay before[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Reminders (All day task) reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Reminders (All day task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Reminders (All day task)"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Priority[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Priority"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNo Priority[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"low"[39m
+                [36m>[39m
+                  [0mLow[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"med"[39m
+                [36m>[39m
+                  [0mMedium[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"high"[39m
+                [36m>[39m
+                  [0mHigh[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Priority reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Priority"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Priority"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Tag[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Tag"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"none"[39m
+                [36m>[39m
+                  [0mNone[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"study"[39m
+                [36m>[39m
+                  [0mStudy[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"work"[39m
+                [36m>[39m
+                  [0mWork[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"personal"[39m
+                [36m>[39m
+                  [0mPersonal[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Tag reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Tag"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Tag"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault List[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default List"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"inbox"[39m
+                [36m>[39m
+                  [0mInbox[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"today"[39m
+                [36m>[39m
+                  [0mToday[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault List reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default List"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default List"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"setting-block"[39m
+          [33mstyle[39m=[32m"margin-top: 14px;"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mDefault Add to[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Default Add to"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"top"[39m
+                [36m>[39m
+                  [0mTop of List[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bottom"[39m
+                [36m>[39m
+                  [0mBottom of List[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mDefault Add to reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Default Add to"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Default Add to"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"setting-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-text"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"sr-label"[39m
+              [36m>[39m
+                [0mOverdue Section shows at[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"sr-ctrl"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Overdue Section shows at"[39m
+                [33mclass[39m=[32m"sl-select"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"top"[39m
+                [36m>[39m
+                  [0mTop of List[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bottom"[39m
+                [36m>[39m
+                  [0mBottom of List[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"more-recovery-field"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mOverdue Section shows at reset to default was not completed.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Retry Overdue Section shows at"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mRetry[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Discard Overdue Section shows at"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mDiscard[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"reset-link"[39m
+          [33mdata-testid[39m=[32m"more-reset-default"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mReset Default[0m
+        [36m</button>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"more-recovery-actions"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mExport More draft[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mDiscard all changes[0m
+          [36m</button>[39m
+        [36m</section>[39m
+        [36m<h4[39m
+          [33mclass[39m=[32m"pane-h-block"[39m
+        [36m>[39m
+          [0mTask Template[0m
+        [36m</h4>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"template-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mDaily prep[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mQuick recap of yesterday[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mSpend time on email[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mReview smart list 'Tod…'[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mPick the most important…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mPick the hardest task…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mDaily journal[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat did I finish today?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat was noteworthy?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mWhat surprises came up?[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"template-card"[39m
+          [36m>[39m
+            [36m<h5>[39m
+              [0mTravel checklist[0m
+            [36m</h5>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mID / Passport / Visa…[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mChargers / cables[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mUmbrella[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mLight backpack[0m
+                [36m</span>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"cbx"[39m
+                [36m/>[39m
+                [36m<span>[39m
+                  [0mClothes: tops / bottoms[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected: 
+null
+
++ Received: 
+"tray"
+
+ ❯ docs/reviews/web-more-recovery-sol/boundaries.test.tsx:20:167
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../../../Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/fixture.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/fields.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/reset.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/queues.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/boundaries.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-more-recovery-sol/owner-export.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [packages/plugin-web-settings-rest/vitest.setup.ts], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (3 of 3)
+harness PASS no test-file suite error
+json_report=success=false numTotalTestSuites=1 numTotalTests=10 numPassedTests=0 numFailedTests=1 numPendingTests=9 numTodoTests=0
+totals cases=10 passed=0 failed=1 other=9 suite_errors=0 unhandled_error_lines=0 console_blocks=0 act_warning_lines=0
+accepted_count=10 count_matches_accepted=false
+file docs/reviews/web-more-recovery-sol/boundaries.test.tsx status=failed tests=10 passed=0 failed=1
+case 001 SKIPPED | missing and rejected Web Locks retain exact device/account edit and reset intents
+case 002 FAILED | invalid and unavailable sources retain requested reset intents without purging raw bytes
+    first: AssertionError: win_type: expected 'tray' to be null
+case 003 SKIPPED | missing committed marker lets device resets settle but retains both private reset intents
+case 004 SKIPPED | deleted tombstone lets device resets settle but retains both private reset intents
+case 005 SKIPPED | a held account lifecycle lock leaves device reset independent and private reset pending
+case 006 SKIPPED | setting an exact registry default stores bytes while Reset Default removes them
+case 007 SKIPPED | a same-field source Reload cannot erase an actual failed edit draft
+case 008 SKIPPED | targeted discard rereads only its field with zero mutations and preserves a failed sibling
+case 009 SKIPPED | an external conflict coexists with an unrelated quota failure and Retry preserves external bytes
+case 010 SKIPPED | all-discard visits only current drafts and a later same-field reset survives old completion
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-QSyVSu/packages/plugin-web-settings-rest/vitest.setup.ts"],"include":["docs/reviews/web-more-recovery-sol/boundaries.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/morePane.tsx packages/plugin-web-storage/src/internal/prefMutation.ts docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=63 by package: docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-more-recovery-sol=2 packages/plugin-web-settings-rest=3 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9

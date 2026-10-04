@@ -1,0 +1,73 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+mode=features-lint
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-packages.mjs 5cd63ff all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-features-panel (packages/xai-web-settings-features-panel) kind=eslint script=lint: "eslint --max-warnings 0 ."
+archive_file_sha256 packages/xai-web-settings-features-panel/package.json=20d5e894139071d92457aa68e76890c104583abc8df89bef81aecb0b122bae83 packages/xai-web-settings-features-panel/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1 features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-features-panel:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.bin/eslint
+args=--max-warnings 0 . --format json --output-file /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-klp3OE/.final-guard/eslint-features-lint.json
+eslint=node_modules/.pnpm/eslint@9.39.1/node_modules/eslint@9.39.1
+node_options=--import=file:///private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-klp3OE/.final-guard/eslint-guard.mjs
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "lint" is "eslint --max-warnings 0 ." (found "eslint --max-warnings 0 .")
+harness PASS JSON results parsed
+harness PASS module-resolution guard active in the ESLint process (1 registration)
+harness PASS no module resolved from a checkout's packages/, apps/ or docs/ and no @repo resolution outside the archive
+harness PASS required configuration modules loaded from the archive (3)
+harness PASS every linted file is a lintable file of the archive package (23 linted of 23 on disk; the rest are listed as configured ignores)
+eslint_exit=0 files=23 errors=0 warnings=0 fatal=0
+file eslint.config.js errors=0 warnings=0
+file src/__tests__/DisabledFeatureFallback.test.tsx errors=0 warnings=0
+file src/__tests__/featuresLockFixture.ts errors=0 warnings=0
+file src/__tests__/FeaturesPane.test.tsx errors=0 warnings=0
+file src/__tests__/featuresPaneEntry.test.tsx errors=0 warnings=0
+file src/__tests__/FeaturesPaneRecovery.test.tsx errors=0 warnings=0
+file src/__tests__/filterModulesByFeaturePrefs.test.ts errors=0 warnings=0
+file src/__tests__/useFeaturePrefs.test.tsx errors=0 warnings=0
+file src/__tests__/withDisabledFallback.test.tsx errors=0 warnings=0
+file src/DisabledFeatureFallback.tsx errors=0 warnings=0
+file src/featureIds.ts errors=0 warnings=0
+file src/FeaturesPane.tsx errors=0 warnings=0
+file src/filterModulesByFeaturePrefs.ts errors=0 warnings=0
+file src/index.ts errors=0 warnings=0
+file src/internal/featuresPane.tsx errors=0 warnings=0
+file src/internal/featuresRecovery.ts errors=0 warnings=0
+file src/internal/featuresRecoveryCopy.ts errors=0 warnings=0
+file src/internal/FeatureThumb.tsx errors=0 warnings=0
+file src/types.ts errors=0 warnings=0
+file src/useFeaturePrefs.ts errors=0 warnings=0
+file src/withDisabledFallback.tsx errors=0 warnings=0
+file vitest.config.ts errors=0 warnings=0
+file vitest.setup.ts errors=0 warnings=0
+pin_hooks hook-registered pid=65043 argv=["/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/eslint/bin/eslint.js","--max-warnings","0",".","--format","json","--output-file","/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-klp3OE/.final-guard/eslint-features-lint.json"]
+pin_repo_resolutions=1 repo @repo/eslint-config/react-internal -> /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-pkg-klp3OE/packages/eslint-config/react-internal.js
+pin_violations=0
+pin_required_provenance packages/xai-web-settings-features-panel/eslint.config.js packages/eslint-config/react-internal.js packages/eslint-config/base.js
+pin_required_provenance_missing=none
+pin_modules=3
+  module packages/eslint-config/base.js
+  module packages/eslint-config/react-internal.js
+  module packages/xai-web-settings-features-panel/eslint.config.js

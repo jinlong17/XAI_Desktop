@@ -1,0 +1,214 @@
+requested_fixed=5cd63ff
+resolved_fixed_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_fixed_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+requested_before=f359be6
+resolved_before_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_before_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-static.mjs 5cd63ff f359be6 features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=ddbf44bfa648a9b99e8cae86a041eaf4330eec119a3fa0bc3d2c72fd887bea5c
+node=v24.16.0 platform=darwin-arm64 git=git version 2.54.0 (Apple Git-157)
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+before_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=not applicable (no product code is executed; text scan and git object comparison only)
+archives fixed_files=6503 (symlinks 22) before_files=6259 (symlinks 22) scanned_text_files fixed=2116 before=2112 binary_skipped fixed=23 before=23
+log=E18 (contract §10 item 9) reader/writer search
+## Per-pattern, per-file matching-line counts (scope: every committed file outside docs/ and *.md; text files only)
+pattern W1 key literal "xai_pref_features_": f359be6 files=16 lines=76; 5cd63ff files=19 lines=87
+  same apps/web/src/App.tsx f359be6=2 5cd63ff=2
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx f359be6=2 5cd63ff=2
+  same apps/web/src/routes/modules/shellRegistrations.tsx f359be6=2 5cd63ff=2
+  same packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts f359be6=8 5cd63ff=8
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts f359be6=8 5cd63ff=8
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts f359be6=8 5cd63ff=8
+  same packages/plugin-web-storage/src/internal/registry.ts f359be6=16 5cd63ff=16
+  same packages/xai-web-cmdk/src/CommandPalette.tsx f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx f359be6=1 5cd63ff=1
+  DOWN packages/xai-web-settings-features-panel/src/FeaturesPane.tsx f359be6=2 5cd63ff=1 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx f359be6=9 5cd63ff=9 [§11]
+  UP   packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx f359be6=0 5cd63ff=2 [§11]
+  UP   packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts f359be6=0 5cd63ff=1 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx f359be6=2 5cd63ff=2
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx f359be6=2 5cd63ff=2
+  same packages/xai-web-settings-features-panel/src/featureIds.ts f359be6=3 5cd63ff=3
+  UP   packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts f359be6=0 5cd63ff=9 [§11]
+  same packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts f359be6=9 5cd63ff=9
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx f359be6=1 5cd63ff=1
+pattern W2 key builder call "featurePrefKey(": f359be6 files=3 lines=4; 5cd63ff files=2 lines=2
+  DOWN packages/xai-web-settings-features-panel/src/FeaturesPane.tsx f359be6=2 5cd63ff=0 [§11]
+  same packages/xai-web-settings-features-panel/src/featureIds.ts f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx f359be6=1 5cd63ff=1
+pattern W3 key builder any mention "featurePrefKey": f359be6 files=4 lines=7; 5cd63ff files=3 lines=4
+  DOWN packages/xai-web-settings-features-panel/src/FeaturesPane.tsx f359be6=3 5cd63ff=0 [§11]
+  same packages/xai-web-settings-features-panel/src/featureIds.ts f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/index.ts f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx f359be6=2 5cd63ff=2
+pattern W4 old pane reset "resetAllFeaturePrefs": f359be6 files=1 lines=2; 5cd63ff files=0 lines=0
+  DOWN packages/xai-web-settings-features-panel/src/FeaturesPane.tsx f359be6=2 5cd63ff=0 [§11]
+pattern W5 global reset "resetAllPrefs": f359be6 files=12 lines=43; 5cd63ff files=11 lines=42
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx f359be6=3 5cd63ff=3
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx f359be6=8 5cd63ff=8
+  same packages/plugin-web-settings-shell/src/__tests__/index-barrel.test.ts f359be6=1 5cd63ff=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts f359be6=14 5cd63ff=14
+  same packages/plugin-web-settings-shell/src/index.ts f359be6=2 5cd63ff=2
+  same packages/plugin-web-settings-shell/src/internal/defaults.ts f359be6=1 5cd63ff=1
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts f359be6=3 5cd63ff=3
+  same packages/plugin-web-settings-shell/src/types.ts f359be6=1 5cd63ff=1
+  same packages/plugin-web-storage/src/internal/registry.ts f359be6=3 5cd63ff=3
+  same packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts f359be6=5 5cd63ff=5
+  same packages/xai-web-settings-appearance/src/appearanceDefaults.ts f359be6=1 5cd63ff=1
+  DOWN packages/xai-web-settings-features-panel/src/FeaturesPane.tsx f359be6=1 5cd63ff=0 [§11]
+pattern R1 rail reader hook "useFeaturePrefs": f359be6 files=5 lines=15; 5cd63ff files=6 lines=17
+  same apps/web/src/App.tsx f359be6=2 5cd63ff=2
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx f359be6=4 5cd63ff=4
+  UP   packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx f359be6=0 5cd63ff=2 [§11]
+  same packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx f359be6=5 5cd63ff=5
+  same packages/xai-web-settings-features-panel/src/index.ts f359be6=2 5cd63ff=2
+  same packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts f359be6=2 5cd63ff=2
+pattern R2 route reader "withDisabledFallback": f359be6 files=4 lines=23; 5cd63ff files=4 lines=23
+  same apps/web/src/routes/modules/shellRegistrations.tsx f359be6=10 5cd63ff=10
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx f359be6=7 5cd63ff=7
+  same packages/xai-web-settings-features-panel/src/index.ts f359be6=2 5cd63ff=2
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx f359be6=4 5cd63ff=4
+pattern R3 rail filter "filterModulesByFeaturePrefs": f359be6 files=6 lines=18; 5cd63ff files=6 lines=18
+  same apps/web/src/App.tsx f359be6=2 5cd63ff=2
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx f359be6=4 5cd63ff=4
+  same packages/xai-web-settings-features-panel/src/__tests__/filterModulesByFeaturePrefs.test.ts f359be6=7 5cd63ff=7
+  same packages/xai-web-settings-features-panel/src/featureIds.ts f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts f359be6=2 5cd63ff=2
+  same packages/xai-web-settings-features-panel/src/index.ts f359be6=2 5cd63ff=2
+pattern R4 fallback component "DisabledFeatureFallback": f359be6 files=9 lines=22; 5cd63ff files=9 lines=22
+  same apps/web/src/routes/modules/shellRegistrations.tsx f359be6=2 5cd63ff=2
+  same packages/plugin-web-storage/src/internal/registry.ts f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx f359be6=5 5cd63ff=5
+  same packages/xai-web-settings-features-panel/src/__tests__/DisabledFeatureFallback.test.tsx f359be6=5 5cd63ff=5
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx f359be6=1 5cd63ff=1
+  same packages/xai-web-settings-features-panel/src/index.ts f359be6=3 5cd63ff=3
+  same packages/xai-web-settings-features-panel/src/styles.css f359be6=1 5cd63ff=1 [§11]
+  same packages/xai-web-settings-features-panel/src/types.ts f359be6=1 5cd63ff=1 [§11]
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx f359be6=3 5cd63ff=3
+pattern R5 CmdK reader "readEnabledSearchModules": f359be6 files=1 lines=2; 5cd63ff files=1 lines=2
+  same packages/xai-web-cmdk/src/CommandPalette.tsx f359be6=2 5cd63ff=2
+## Delta rows (files whose count differs between f359be6 and 5cd63ff): 9
+  W1 key literal packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 2->1 §11
+  W1 key literal packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 0->2 §11
+  W1 key literal packages/xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts 0->1 §11
+  W1 key literal packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts 0->9 §11
+  W2 key builder call packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 2->0 §11
+  W3 key builder any mention packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 3->0 §11
+  W4 old pane reset packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 2->0 §11
+  W5 global reset packages/xai-web-settings-features-panel/src/FeaturesPane.tsx 1->0 §11
+  R1 rail reader hook packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 0->2 §11
+## Features product source
+5cd63ff: Features product source files (non-test, under src/): 13
+  packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx sha256=d4ea7bc875274651f5f9e036752f3e4190cb13ee87c085b89a46314e9924cf4b
+  packages/xai-web-settings-features-panel/src/FeaturesPane.tsx sha256=54a3f10c90fdc415a9c1bb89801fe4cdc1870022235752229e9180a2a683d701
+  packages/xai-web-settings-features-panel/src/featureIds.ts sha256=c2a56cc27e58da5fe0198014d0a17dd81f2a0ca66253002a25a88a69416a3e4a
+  packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts sha256=f1a0f1a65158d1a64533f3185344543a285f2844353afb64becf65e25eb7998f
+  packages/xai-web-settings-features-panel/src/index.ts sha256=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68
+  packages/xai-web-settings-features-panel/src/internal/FeatureThumb.tsx sha256=b92d02b2bfa03c72ccfc935a2607494a17b58035cae325a5ad934389031eb2e2
+  packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx sha256=572bdd478954059f02dde83c8ec7383f992ca0f6f33f8b5e2c96ba85e7f935a7
+  packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts sha256=0e73fadd1cb941ca8f26e86a38c493fe9da94a278c335798a92accbff5f74e6f
+  packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts sha256=d4409bd70b7df1227cbeabaf6c00bb0f2abb14c1f81f488905c2e76354b822bc
+  packages/xai-web-settings-features-panel/src/styles.css sha256=65fdf6f08b299c242bf79397a5e731fa0b605cc2f5a7476e2778a4caa350b5c3
+  packages/xai-web-settings-features-panel/src/types.ts sha256=f97c4e6212d99723d9baeb1133866f05860db7b97ce274ba2be0b27128cd8406
+  packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts sha256=c4e3fd719f3b2f2cbdf039ced355beb4b06168a42104cbd527bb65a8a560eb52
+  packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx sha256=92551e48490317dc5af7b6034f244ec26e12118d6f86750d2a4562b274d006b9
+  gated "new StorageEvent": 0 lines
+  gated "dispatchEvent(": 0 lines
+  info  "StorageEvent": 0 lines
+  info  "localStorage": 0 lines
+  info  "SettingsFooter": 0 lines
+  info  "usePref(": 9 lines (src/useFeaturePrefs.ts:8, src/withDisabledFallback.tsx:1)
+  info  "setPref(": 0 lines
+  info  "removePref(": 0 lines
+  info  "getPref(": 0 lines
+f359be6: Features product source files (non-test, under src/): 11
+  packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx sha256=d4ea7bc875274651f5f9e036752f3e4190cb13ee87c085b89a46314e9924cf4b
+  packages/xai-web-settings-features-panel/src/FeaturesPane.tsx sha256=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea
+  packages/xai-web-settings-features-panel/src/featureIds.ts sha256=c2a56cc27e58da5fe0198014d0a17dd81f2a0ca66253002a25a88a69416a3e4a
+  packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts sha256=f1a0f1a65158d1a64533f3185344543a285f2844353afb64becf65e25eb7998f
+  packages/xai-web-settings-features-panel/src/index.ts sha256=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68
+  packages/xai-web-settings-features-panel/src/internal/FeatureThumb.tsx sha256=b92d02b2bfa03c72ccfc935a2607494a17b58035cae325a5ad934389031eb2e2
+  packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx sha256=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993
+  packages/xai-web-settings-features-panel/src/styles.css sha256=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e
+  packages/xai-web-settings-features-panel/src/types.ts sha256=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53
+  packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts sha256=c4e3fd719f3b2f2cbdf039ced355beb4b06168a42104cbd527bb65a8a560eb52
+  packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx sha256=92551e48490317dc5af7b6034f244ec26e12118d6f86750d2a4562b274d006b9
+  gated "new StorageEvent": 1 lines (src/FeaturesPane.tsx:1)
+  gated "dispatchEvent(": 1 lines (src/FeaturesPane.tsx:1)
+  info  "StorageEvent": 1 lines (src/FeaturesPane.tsx:1)
+  info  "localStorage": 4 lines (src/FeaturesPane.tsx:4)
+  info  "SettingsFooter": 3 lines (src/FeaturesPane.tsx:3)
+  info  "usePref(": 10 lines (src/FeaturesPane.tsx:1, src/useFeaturePrefs.ts:8, src/withDisabledFallback.tsx:1)
+  info  "setPref(": 0 lines
+  info  "removePref(": 0 lines
+  info  "getPref(": 0 lines
+## FeaturesPane.tsx and the two new helpers
+  5cd63ff packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "usePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "setPref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "removePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "localStorage"=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts "usePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts "setPref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts "removePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts "localStorage"=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts "usePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts "setPref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts "removePref("=0
+  5cd63ff packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts "localStorage"=0
+  f359be6 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "usePref("=1 (before control, not gated)
+  f359be6 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "setPref("=0 (before control, not gated)
+  f359be6 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "removePref("=0 (before control, not gated)
+  f359be6 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx "localStorage"=4 (before control, not gated)
+## Checks
+PASS [harness] 5cd63ff: every committed path exists in the extracted archive (6503 paths, .gitattributes absent)
+PASS [harness] 5cd63ff: extracted file count equals the committed tree (6503)
+PASS [harness] f359be6: every committed path exists in the extracted archive (6259 paths, .gitattributes absent)
+PASS [harness] f359be6: extracted file count equals the committed tree (6259)
+PASS [harness] 5cd63ff W1 key literal: archive scan equals git grep -I -c -F (19 files)
+PASS [harness] f359be6 W1 key literal: archive scan equals git grep -I -c -F (16 files)
+PASS [harness] 5cd63ff W2 key builder call: archive scan equals git grep -I -c -F (2 files)
+PASS [harness] f359be6 W2 key builder call: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 5cd63ff W3 key builder any mention: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] f359be6 W3 key builder any mention: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 5cd63ff W4 old pane reset: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] f359be6 W4 old pane reset: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] 5cd63ff W5 global reset: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] f359be6 W5 global reset: archive scan equals git grep -I -c -F (12 files)
+PASS [harness] 5cd63ff R1 rail reader hook: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f359be6 R1 rail reader hook: archive scan equals git grep -I -c -F (5 files)
+PASS [harness] 5cd63ff R2 route reader: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] f359be6 R2 route reader: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 5cd63ff R3 rail filter: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f359be6 R3 rail filter: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 5cd63ff R4 fallback component: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] f359be6 R4 fallback component: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 5cd63ff R5 CmdK reader: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] f359be6 R5 CmdK reader: archive scan equals git grep -I -c -F (1 files)
+PASS [assert] E18: every file whose reader/writer count changed is a contract §11 file
+PASS [assert] E18: every new or increased hit is in a contract §11 file
+PASS [assert] E18: Features product source at 5cd63ff has zero "new StorageEvent"
+PASS [assert] E18: Features product source at 5cd63ff has zero "dispatchEvent("
+PASS [assert] E18: packages/xai-web-settings-features-panel/src/FeaturesPane.tsx exists at 5cd63ff
+PASS [assert] E18: src/FeaturesPane.tsx at 5cd63ff has zero "usePref(" :: count=0
+PASS [assert] E18: src/FeaturesPane.tsx at 5cd63ff has zero "setPref(" :: count=0
+PASS [assert] E18: src/FeaturesPane.tsx at 5cd63ff has zero "removePref(" :: count=0
+PASS [assert] E18: src/FeaturesPane.tsx at 5cd63ff has zero "localStorage" :: count=0
+PASS [assert] E18: packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts exists at 5cd63ff
+PASS [assert] E18: src/internal/featuresRecovery.ts at 5cd63ff has zero "usePref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecovery.ts at 5cd63ff has zero "setPref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecovery.ts at 5cd63ff has zero "removePref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecovery.ts at 5cd63ff has zero "localStorage" :: count=0
+PASS [assert] E18: packages/xai-web-settings-features-panel/src/internal/featuresRecoveryCopy.ts exists at 5cd63ff
+PASS [assert] E18: src/internal/featuresRecoveryCopy.ts at 5cd63ff has zero "usePref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecoveryCopy.ts at 5cd63ff has zero "setPref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecoveryCopy.ts at 5cd63ff has zero "removePref(" :: count=0
+PASS [assert] E18: src/internal/featuresRecoveryCopy.ts at 5cd63ff has zero "localStorage" :: count=0
+assertions=75/75 harness=24/24
+exit=0

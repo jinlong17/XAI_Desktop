@@ -1,0 +1,2 @@
+positive (nothing forbidden): exit=0 stdout="v9.39.1" stderr_first="" hook_lines=1 violations=0
+negative (eslint's own store folder forbidden): exit=1 stdout="" stderr_first="          throw new Error(\"Pin violation: module resolved from a checkout: \" + file);" hook_lines=1 violations=1

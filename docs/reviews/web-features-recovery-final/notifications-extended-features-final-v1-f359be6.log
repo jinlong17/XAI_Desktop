@@ -1,0 +1,228 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+mode=notifications-extended
+suffix=features-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-final/verify-callers.mjs f359be6 all features-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=cde91389f0a0baca69d266f5b6a6c5ff8098ac1f
+runner_sha256=7e1aa8b244ed9f63568fa78de79052f980df21a0bad2245a3bbccb2f6ca3454c
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+reproduces=docs/reviews/web-notifications-recovery-sol/verify-fixed.mjs mode extended
+include=docs/reviews/web-notifications-recovery-sol/extended.test.tsx
+setup_files=packages/plugin-web-settings-rest/vitest.setup.ts
+copied docs/reviews/web-notifications-recovery-sol/fixture.tsx run=5e8eb80442d1571a8296e88a8c58c66971dbaec28096ad2cc29a839103fa2961 archive_committed=5e8eb80442d1571a8296e88a8c58c66971dbaec28096ad2cc29a839103fa2961 (same)
+copied docs/reviews/web-notifications-recovery-sol/core.test.tsx run=596a269c3a5c8d84dba7007e251da8339af40552f302c7caef393673cb9482de archive_committed=596a269c3a5c8d84dba7007e251da8339af40552f302c7caef393673cb9482de (same)
+copied docs/reviews/web-notifications-recovery-sol/recovery.test.tsx run=d32f97976863a3e45be09429e2f1b89649f97cc8e95493169cec49c5134b91cf archive_committed=d32f97976863a3e45be09429e2f1b89649f97cc8e95493169cec49c5134b91cf (same)
+copied docs/reviews/web-notifications-recovery-sol/operations.test.tsx run=416e441e8661ea522ad82bb831751f9bc1427a6e855392dfc276cf0207c6cc8c archive_committed=416e441e8661ea522ad82bb831751f9bc1427a6e855392dfc276cf0207c6cc8c (same)
+copied docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx run=a61c15d28bd0f5e312076ffa8218566a39e45c72600d84b734e1a789f3c7bae4 archive_committed=a61c15d28bd0f5e312076ffa8218566a39e45c72600d84b734e1a789f3c7bae4 (same)
+copied docs/reviews/web-notifications-recovery-sol/extended.test.tsx run=f78c558b22bf9fc5903cb27b5254d612c2aa81ab49eb89c61bf3585a93f71ec9 archive_committed=f78c558b22bf9fc5903cb27b5254d612c2aa81ab49eb89c61bf3585a93f71ec9 (same)
+archive docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts run=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 checkout=a02552d3915a063ccf25ce5ec4addc608ca439f038ebe01021a16582f7985370 (same)
+product_file_sha256 packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx=04930bd98b4ba05346f1472cc70f849238db14ce6cb5b4d1165132719ffbc87f packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/plugin-web-settings-rest/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA/final-notifications-extended.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA/.final-guard/report-notifications-extended.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 (react/@testing-library/react from packages/plugin-web-settings-rest; react-router linked for completeness, not aliased by the older runner)
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_checked=46 unresolved=none
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a63e67901aebc16c4/docs
+accepted_count=10
+vitest_exit=0
+harness_checks=PASS (13/13)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA
+
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > missing and rejected Web Locks retain their exact fields and recover through current Retry 182ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions 185ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > external restoration after uncertain commit is preserved until distinct new input supplies authority 109ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > an unrelated held account lifecycle lock never blocks a device preference write 48ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > all eight absent bindings mount at registry defaults without seeding storage 62ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > boolean, sound and time invalid or unavailable sources stay defaulted and Reload-only 65ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a failed quiet toggle leaves successful time writes settled independently 84ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a successful global disable does not clear failed subordinate choices 98ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable 122ms
+ ✓ docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft 73ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  08:47:45
+   Duration  1.86s (transform 224ms, setup 184ms, collect 184ms, tests 1.03s, environment 215ms, prepare 51ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA/.final-guard/report-notifications-extended.json
+
+---- stderr ----
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a failed quiet toggle leaves successful time writes settled independently
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a successful global disable does not clear failed subordinate choices
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+An update to NotificationsPaneContent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+---- runner summary ----
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/fixture.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/core.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/recovery.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/operations.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/boundaries.test.tsx
+harness PASS copied oracle equals this checkout's file: docs/reviews/web-notifications-recovery-sol/extended.test.tsx
+harness PASS single react, react-router and @testing-library/react instance across the archive and the oracle links (react=1 react-router=1 @testing-library/react=1)
+harness PASS JSON report parsed
+harness PASS reported test files equal the requested include
+harness PASS older runner's config in effect (environment jsdom, globals true, setupFiles [packages/plugin-web-settings-rest/vitest.setup.ts], include, root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product and helper modules loaded from the archive (3 of 3)
+harness PASS no test-file suite error
+json_report=success=true numTotalTestSuites=1 numTotalTests=10 numPassedTests=10 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=10 passed=10 failed=0 other=0 suite_errors=0 unhandled_error_lines=0 console_blocks=8 act_warning_lines=11
+accepted_count=10 count_matches_accepted=true
+file docs/reviews/web-notifications-recovery-sol/extended.test.tsx status=passed tests=10 passed=10 failed=0
+case 001 PASSED | missing and rejected Web Locks retain their exact fields and recover through current Retry
+case 002 PASSED | mixed boolean, select and time failures settle independently in both directions
+case 003 PASSED | external restoration after uncertain commit is preserved until distinct new input supplies authority
+case 004 PASSED | an unrelated held account lifecycle lock never blocks a device preference write
+case 005 PASSED | all eight absent bindings mount at registry defaults without seeding storage
+case 006 PASSED | boolean, sound and time invalid or unavailable sources stay defaulted and Reload-only
+case 007 PASSED | a failed quiet toggle leaves successful time writes settled independently
+case 008 PASSED | a successful global disable does not clear failed subordinate choices
+case 009 PASSED | a sound conflict and an unrelated quota failure remain independently recoverable
+case 010 PASSED | Discard all cannot let an older completion erase a same-field new draft
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > mixed boolean, select and time failures settle independently in both directions
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a failed quiet toggle leaves successful time writes settled independently
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a successful global disable does not clear failed subordinate choices
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > a sound conflict and an unrelated quota failure remain independently recoverable
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+console_block stderr | docs/reviews/web-notifications-recovery-sol/extended.test.tsx > Discard all cannot let an older completion erase a same-field new draft
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-final-caller-eu8cLA/packages/plugin-web-settings-rest/vitest.setup.ts"],"include":["docs/reviews/web-notifications-recovery-sol/extended.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx packages/plugin-web-storage/src/internal/prefMutation.ts docs/reviews/web-board-workspace-astra-review/named-lock-fixture.ts
+pin_required_provenance_missing=none
+pin_modules=63 by package: docs/reviews/web-board-workspace-astra-review=1 docs/reviews/web-notifications-recovery-sol=2 packages/plugin-web-settings-rest=3 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=9
