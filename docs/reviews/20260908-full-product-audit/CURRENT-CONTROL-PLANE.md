@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：Terra 实施提交 `210abdf` 已通过总控 diff 核对并快进接收，CP-STICKY-01 进入 `implementation_ready_for_review`。本批登记批次 7：由新的独立实例在 fixed 产品上原样重跑冻结的 Sol 与 host oracle。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
+本轮模式：冻结 oracle 在 fixed 候选 `210abdf` 上的独立原样重跑已全部 PASS（`7ee8de6`），CP-STICKY-01 进入 `verification_pending`。本批登记批次 8：由独立窗口在真实 Chrome 中做 native controls 与磁盘导出验证。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `210abdf` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。合同作者、Sol、host 基线与 Terra 的隔离 worktree 和临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `7ee8de6` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。此前各批次的隔离 worktree 和临时本地分支均已在快进接收后清理。
 - 产品基线由 `2023526` 前进到 `210abdf`。`git diff --name-only 2023526 210abdf -- apps packages package.json pnpm-lock.yaml` 恰为合同 §11 的 8 个文件：`stickyPane.tsx`、`StickyColorPalette.tsx`、`localI18n.ts`、`styles.css`、`stickyPane.test.tsx`、新增的 `stickyPaneRecovery.test.tsx`、`docs/api.md`、`docs/test.md`。共享层、shell、widgets、`apps`、lockfile 无变化。
 - More 生产文件从 `7b216a3` 到 `210abdf` 无差异。
 - 最终 reviewer 的隔离 worktree 和临时本地分支已在快进接收 `27adb10` 后清理。
@@ -47,7 +47,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `implementation_ready_for_review`：Terra `210abdf` 已通过总控 diff 核对；待独立 fixed 重跑、host/native、最终回归与最终 acceptance |
+| 状态 | `verification_pending`：Terra `210abdf` 已通过总控 diff 核对；冻结 Sol 与 host oracle 的独立 fixed 重跑全部 PASS（`7ee8de6`）。待 Chrome host/native、最终回归与最终 acceptance |
 | 实施 | Terra 提交 `210abdf`（父 `37a4d33`，单提交，8 文件 +955/−48）。执行者为独立 Claude Opus 5.5（Terra 角色映射），不兼任后续验证或验收。Terra 自检与预检为作者自查，不作为独立证据 |
 | 合同 | `docs/reviews/web-sticky-recovery-contract/contract.md`，提交 `70ff46a`（父 `1ddae30`，单文件，快进接收）。作者为独立 Claude Opus 5.5（Astra 设计角色映射）|
 | 312 清单编号 | `SET-12` 的支撑 caller；关联 `REL-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09` 与 D2 writer 库存。本任务不得关闭这些编号 |
@@ -57,13 +57,14 @@
 | 已有库存 | `refresh-afbfb24.md` / `bindings-afbfb24.json`：`stickyPane.tsx` 第 39–57 行有 5 个直接 `usePref` 绑定。库存中 `StickyComposer.tsx` 的"相关"绑定实为 `usePref("xai_task_cols")`（account Tasks 键，无 setter），不是 Sticky 五键的 reader 或 writer（合同 D1）。`accountOwnership.ts` 第 99–103 行：五键均为 device。registry `registry.ts` 第 863–906 行：默认值 `sun` / `large` / `true` / `false` / `normal` |
 | 当前真实问题 | 在 `2023526` 上，H1–H8 已全部确认为正确 FAIL：Sol `4e21e6d` 覆盖 pane 层，host `07784c4` 覆盖 host 层的最新选择、导航、登出与 beforeunload。这些正是本 caller 要由 Terra 修复的范围，不另开修复窗口 |
 | 风险等级 | `high`（合同确认）：同字段异步队列、uncertainty/conflict、最新选择丢失、离页仲裁、全拒绝下的内存导出与 native 证据。device-only 移除了 More 的账户键与私有处置面，但仍需证明 A→B→locked→A 与 epoch 下的 device 连续性 |
-| 允许修改文件 | 批次 7（fixed 重跑）：只能新增文件，不得修改或删除任何已有文件。<ul><li>`docs/reviews/web-sticky-recovery-sol/`：`<mode>-fixed1-210abdf.log` 与 `fixed-210abdf.md`</li><li>`docs/reviews/web-sticky-recovery-independent/`：`host-fixed1-210abdf.log` 与 `fixed-210abdf.md`</li></ul>冻结的 oracle、runner 与 before 日志不得改动 |
+| 独立 fixed 重跑 | `7ee8de6`（新的独立 Sol 角色实例，8 个新增文件）。<ul><li>冻结文件 14 个 SHA-256 全部吻合。</li><li>diff 边界恰为 §11 的 8 个文件；D1 搜索无新读写方。</li><li>fixed1 结果：bytes 13/13、fields 47/47、queues 27/27、continuity-export 22/22、original 10/10、host 28/28。</li><li>116 个 before FAIL（Sol 93、host 23）全部转为 PASS；31 个 fixture/正向对照/不变量保持 PASS；无新失败。</li><li>`PRECONDITION:` 为 0；每个日志 hash 都写入回执。</li></ul> |
+| 允许修改文件 | 批次 8（Chrome native controls 与导出）：仅新目录 `docs/reviews/web-sticky-recovery-native/**`，内容为 native fixture、runner、日志、磁盘 JSON 产物与回执。已有证据文件不得改动 |
 | 禁止修改文件 | 全部产品源与测试；合同文件（如需修订，必须另开 Astra 角色修订）；已有 review/evidence；三份正式台账；本控制面；已接受的 DateTime/Notifications/More/Header/Smart/Collaborate/Pomodoro；共享 storage hook/engine/registry/ownership；Settings host/coordinator/auth；部署、同步、发布、长期分支文件 |
 | 原始失败复现 | **Sol `4e21e6d`**（`docs/reviews/web-sticky-recovery-sol/`，requested `2023526` → resolved `20235269…`，lockfile `df05f2dd…`，诊断迭代 1/3）：bytes 13/13 PASS；fields 0/47；queues 0/27；continuity-export 3/22；original ST1–ST10 10/10。109 个 Sol case 中 16 PASS、93 正确 FAIL；`PRECONDITION:` 为 0，无未处理错误。<br>**host `07784c4`**（`docs/reviews/web-sticky-recovery-independent/`，实际 Shell + ComposedSettings + DepartureCoordinator，生产 `createBrowserRouter`，真实 `requestSettingsDeparture`，诊断迭代 1/3）：28 个 case 中 5 PASS（2 个 fixture 自检 + PC1–PC3 正向对照）、23 正确 FAIL。<ul><li>五个字段各自的最新选择丢失、sidebar 离开、登出直接 `true`：全部确认。</li><li>`color` 上的 sidebar、AppRail、编程导航、Back、Forward、`navigate(-1)`、`navigate(1)`、带 state 的相对导航与登出：全部确认；beforeunload 未被阻止。</li><li>`PRECONDITION:` 为 0；产品 quota 警告恰好 23 次，证明故障逐例触发。</li></ul> |
 | 验收命令与业务断言 | 合同 §5–§13：All5 字段、同字段队列归因、device 连续性与导出、production host/native、下游格式不漂移、最终回归，共六行 gate |
 | 是否允许 Luna 执行 | 否；属于持久化恢复、异步与最终验收禁区 |
-| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 7 执行者为新的独立 Claude Opus 5.5（Sol 角色映射），与 Terra 及此前各实例都不同，只运行冻结 runner 并写回执 |
-| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ Sol 与 host oracle 原样重跑（批次 7）→ Chrome host/native 验证 → 最终回归 → 独立最终 acceptance |
+| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 8 执行者为新的独立 Claude Opus 5.5（父级 native 验证角色），不是 Terra |
+| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ ~~fixed 原样重跑~~（`7ee8de6`）→ Chrome native controls 与导出（批次 8）→ Chrome host 矩阵与 EN/ZH 视觉/键盘（批次 9）→ 最终回归（批次 10）→ 独立最终 acceptance（批次 11） |
 | 不应被本任务关闭 | `SET-12`、`REL-05`、QA 项、完整 D2/REL/AI、其余 312 项、部署与发布门禁 |
 
 #### 总控合同核对（`70ff46a`）
@@ -157,26 +158,31 @@
 
 ## 本轮唯一任务
 
-批次 7：新的独立实例在 fixed 候选 `210abdf` 上原样重跑冻结 oracle。
+批次 8：独立窗口在真实 Chrome 中验证 Sticky 的 native controls 与磁盘导出。
 
-- **固定点：** fixed 候选 `210abdf`；before 对照 `2023526`；控制分支基点为本提交。
-- **执行内容：**
-  - 运行 `docs/reviews/web-sticky-recovery-sol/verify-fixed.mjs 210abdf <mode> fixed1`，覆盖 bytes、fields、queues、continuity-export、original 五个模式；
-  - 运行 `docs/reviews/web-sticky-recovery-independent/verify-fixed.mjs 210abdf host fixed1`；
-  - 两者均使用 `XAI_DEPS_ROOT` 指向 lockfile 相同的依赖树。
-- **独立复核：**
-  - 运行前确认冻结 oracle/runner 的 SHA-256 与 before 回执一致；
-  - 独立确认 `git diff --name-only 2023526 210abdf -- apps packages package.json pnpm-lock.yaml` 只含合同 §11 文件；
-  - 在 `210abdf` 上重复合同 D1 搜索，确认五键没有新的读者或写者。
-- **回执：**
-  - 分别写 `fixed-210abdf.md`，内容为命令、hash、逐模式计数，以及 before → fixed 的逐例对照（每个 before FAIL 是否变为 PASS，正向对照是否保持 PASS）；
-  - 任何仍失败的 case 都要附原因：产品失败、oracle 缺陷或环境问题。
-- **允许范围：** 只新增上表列出的 fixed 日志与回执，不修改任何已有文件。
-- **禁止：** 修改产品、oracle、runner、before 日志、合同、台账、控制面；不修复；不 push。
-- **成本上限：** 每个模式只跑一次 `fixed1`。若因环境失败需要重跑，使用新后缀且保留原日志；不跑其他矩阵。
+- **固定点：** fixed 候选 `210abdf`；控制分支基点为本提交。
+- **框架要求：**
+  - 不可变 `git archive 210abdf` 与 `XAI_DEPS_ROOT` lockfile SHA-256 gate，模式参照 `web-more-recovery-evidence/verify-gaps.mjs` 与 `web-more-recovery-native/`；
+  - esbuild 打包 archive 中的实际 Shell + ComposedSettings + 生产 router fixture，以 headless Chrome、隔离 profile 与下载目录运行；
+  - 用 CDP 可信输入；Storage 计数器必须在委托前记录每次尝试；
+  - 拒绝覆盖日志，记录 commit、浏览器版本与各文件 hash；runtime error 必须为 0。
+- **controls 模式（合同 §13 production host/native 行的持久化部分，以及 §10 第 1 点的 native 层）：**
+  - 用可信输入覆盖全部 25 个域值，在磁盘上逐一核对无作用域键的精确字节；
+  - 新 document 重载后控件显示存储值，挂载期零写入；
+  - 真实 `prefMutationLockName("xai_pref_sticky_<field>")` 锁被持有时，编辑处于 pending、物理字节不变，释放后持久化；
+  - native readback uncertainty 下，Retry 恰好一次总写入完成和解；
+  - 第二个 document 的外部替换被保留为冲突，不被覆盖。
+- **export 模式（合同 §8 native disk evidence）：**
+  - 覆盖 6 种形状：单字段稀疏、全部五字段（3 个字符串 + 2 个布尔）、离页对话框导出、A→locked 后的 fresh locked 导出、A→B 后的 fresh B 导出、真实锁持有一个操作时的导出；
+  - 每次导出都在全部 Storage 拒绝下进行，并断言：attempt 级读/写/删计数为零；恰好创建并回收同一个 object URL；anchor 已移除；之后 beforeunload 仍警告、guard 仍阻止；对话框导出还要求对话框保持打开、location key 不变；
+  - 另含一次 native setup 失败（`createObjectURL` 或 click 抛错），同样断言并显示本地化错误；
+  - 磁盘 JSON 从下载目录读取，并对完整 envelope 做 deepEqual。
+- **允许范围：** 仅新目录 `docs/reviews/web-sticky-recovery-native/**`，内容为 fixture、runner、日志、磁盘 JSON 与 `review-controls-export-210abdf.md` 回执。
+- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push。
+- **成本上限：** 每个模式的诊断迭代不超过 3 轮（新后缀，保留旧日志）；不跑 host 矩阵、五宽度视觉或其他 caller 的矩阵。
 - **停止条件：**
-  - 出现真实产品失败：冻结复现、影响范围与正确 oracle，提交回执后停止；修复必须由总控另开窗口。
-  - 怀疑 oracle 缺陷：不得修改 oracle，记录后停止，交 Astra/Sol 角色裁决。
+  - 出现真实产品失败：冻结复现、影响范围与正确 oracle，提交证据后停止；修复由总控另开 Terra 窗口。
+  - 框架 3 轮内无法有效：提交 blocked 回执。
 
 ## Luna 任务卡
 
@@ -197,7 +203,9 @@
 - `07784c4`：父级角色 host before 基线冻结（独立 host 验证者，快进接收）。
 - `37a4d33`：记录批次 5 核对结论，授权批次 6（Terra）。
 - `210abdf`：Terra 产品实施 `fix(settings): recover Sticky edits and departures`（快进接收）。
-- 本提交：记录批次 6 核对结论，产品 SHA 前进到 `210abdf`，登记批次 7。
+- `8db7d30`：记录批次 6 核对结论，产品 SHA 前进到 `210abdf`，登记批次 7。
+- `7ee8de6`：冻结 Sol 与 host oracle 的独立 fixed 重跑（快进接收）。
+- 本提交：记录批次 7 核对结论，CP-STICKY-01 进入 `verification_pending`，登记批次 8。
 
 ## 台账变化
 
@@ -219,14 +227,14 @@
   - 临时 worktree（含 Terra 离线安装的 `node_modules`）全部清理；
   - 每次 push 后 sync-check 均为 failures=0；
   - 无已复现的共享缺陷。
-- 新周期从批次 7 开始：fixed 重跑、Chrome host/native 验证、最终回归。
+- 新周期从批次 7 开始：fixed 重跑、Chrome native controls 与导出、Chrome host 矩阵与视觉。批次 7 已完成，一个子任务，每模式各跑一次，无环境重跑。
 
 ## 下一步
 
-1. 等待批次 7 回执，总控核对：
-   - 只新增 fixed 日志与回执；
-   - 冻结文件 hash 未变；
-   - 逐模式计数与 before → fixed 对照可复核；
-   - diff 边界与 D1 搜索结果。
-2. 若全部通过：接收、推送，再登记批次 8，由独立窗口做 Chrome host/native 验证。批次 8 覆盖合同 §8 的原生磁盘导出形状与 §9 的可信输入、hit-tested sidebar、guarded Forward key 身份、同字段 exactly-once、跨 document 冲突、EN/ZH 五宽度、键盘与截图。必要时拆分为多个批次。
-3. 若批次 7 出现真实产品失败：冻结后另开 Terra 修复窗口；若怀疑 oracle 缺陷：交 Astra/Sol 角色裁决，不扩大授权。
+1. 等待批次 8 回执，总控核对：
+   - 只新增 `web-sticky-recovery-native/**`；
+   - archive 与 lockfile gate、attempt 级计数和 runtime error 0；
+   - 25 个值的磁盘字节、重载零写入、锁与 uncertainty、跨 document 冲突；
+   - 6 种导出形状与 setup 失败的磁盘 JSON、hash 与逐项断言。
+2. 若通过：接收、推送，再登记批次 9：Chrome host 矩阵（合同 §9 a–l，含 hit-tested sidebar、guarded Forward key 身份、同字段 exactly-once 与 history 计数）与 EN/ZH 五宽度视觉/键盘/截图。
+3. 若出现真实产品失败：冻结后另开 Terra 修复窗口，修复后需重跑受影响的 oracle 与 native 模式。
