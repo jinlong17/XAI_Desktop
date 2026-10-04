@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：F1 已闭环（修复 `f359be6`，独立重跑 `3ea0310` 与 `f3a3c82`，正式台账 `a0df253`）。Sticky 的 EN/ZH 五宽度视觉与键盘验证 PASS（`98125c5`）。本批登记批次 16：按合同 §13 的 Final regression 清单，在 `f359be6` 上独立重跑。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
+本轮模式：Sticky 的全部验证证据已齐备，最终回归 PASS（`d7358b9`）。本批登记批次 17：由新的独立最终 reviewer（Astra 角色映射）对合同 §13 六行 gate 做只读最终复审，并就共享协调器改动 `f359be6` 给出新鲜接受结论。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `98125c5` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。此前各批次的隔离 worktree 和临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `d7358b9` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。此前各批次的隔离 worktree 和临时本地分支均已在快进接收后清理。
 - 产品基线已从 `2023526` 前进到 `210abdf`，再到 `f359be6`：
   - `2023526..210abdf` 恰为合同 §11 的 8 个 Sticky 文件；
   - `210abdf..f359be6` 只有 `apps/web/src/routes/modules/departureCoordinator.tsx` 与新增的 `__tests__/departureCoordinator.blocker.test.tsx`；
@@ -76,7 +76,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：F1 已由共享协调器修复 `f359be6` 解决；修复后 Sticky 全部既有证据独立重跑 PASS（`3ea0310`）；EN/ZH 五宽度视觉/键盘 PASS（`98125c5`）。待最终回归（批次 16）与独立最终 acceptance（批次 17） |
+| 状态 | `verification_pending`：以下证据均 PASS，待独立最终 acceptance（批次 17）。<ul><li>F1 已由共享协调器修复 `f359be6` 解决；</li><li>修复后 Sticky 全部既有证据独立重跑（`3ea0310`）；</li><li>EN/ZH 五宽度视觉/键盘（`98125c5`）；</li><li>最终回归（`d7358b9`）。</li></ul> |
 | 实施 | Terra 提交 `210abdf`（父 `37a4d33`，单提交，8 文件 +955/−48）。执行者为独立 Claude Opus 5.5（Terra 角色映射），不兼任后续验证或验收。Terra 自检与预检为作者自查，不作为独立证据 |
 | 合同 | `docs/reviews/web-sticky-recovery-contract/contract.md`，提交 `70ff46a`（父 `1ddae30`，单文件，快进接收）。作者为独立 Claude Opus 5.5（Astra 设计角色映射）|
 | 312 清单编号 | `SET-12` 的支撑 caller；关联 `REL-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09` 与 D2 writer 库存。本任务不得关闭这些编号 |
@@ -97,13 +97,14 @@
 | 受影响已接受 caller 重跑 | `f3a3c82`（独立父级回归验证者；99 个新增文件，全部位于 `docs/reviews/`）。<ul><li>69 次 runner 调用与 6 个包级门禁全部 exit 0；38 个 runner/fixture 运行前后逐字节不变。</li><li>所有新日志中 F1 特征为 0，`pass:false` 为 0；每个日志 hash 均写入回执 `affected-callers-f359be6.md`。</li><li>逐 caller 结果见上方"已接受的调用方"中的 F1 闭环注记。</li></ul> |
 | EN/ZH 视觉与键盘 | `98125c5`（独立父级视觉/键盘验证者；native 目录 23 个新增文件，含 18 张截图；Chrome 154）。<ul><li>EN 与 ZH 各 577 项检查全部 PASS，0 runtime error。</li><li>五宽度 × 四种状态（clean 20 个控件、五字段全部未解决 32 个、对话框 3 个、source-only Reload 21 个）逐控件做中心加四内点 hit-test，水平包含，page、`.settings-detail`、pane 与 `.module-settings` 均无横向滚动。</li><li>全部恢复与对话框目标 ≥44×44，最小恰为 44。</li><li>与 `2023526` 的几何对照：色块 30×30，卡片、开关轨道、knob 与行对齐一致；375 clean 截图两种语言与 `2023526` 逐字节相同；样式只新增 14 个 `.sticky-recovery-*` 选择器、删除 0 行。</li><li>18 张截图均有逐张人工审查记录，无重叠、裁切、截断或错位。总控亲自抽看了 ZH 375 五字段未解决截图与 EN 375 对话框截图，结论一致；对话框标题为 "Sticky Note has unsaved changes."，未回退为 Smart Lists。</li><li>键盘（EN 1024、ZH 375，各 105 项）：Tab 按 DOM 顺序到达每个控件并有 2px 焦点框；Space/Enter 只激活一次且 Space 不滚动；select 每次选择只变更一次；`aria-pressed`/`aria-checked` 跟随 draft；对话框焦点循环、Escape 等同 Stay 且焦点归还。</li></ul> |
 | 视觉批次的解释与后续（非阻断） | <ul><li>**待最终 reviewer 确认的解释：** 离页对话框由受保护的宿主协调器固定在视口，不在 `.settings-detail` 内。其按钮的包含性按对话框盒子与视口判定，与已接受 More 的审查方式一致。按字面在 768 及以上宽度部分按钮位于 `.settings-detail` 之外。</li><li>**可访问性后续：** 用键盘按下 Discard 或 Discard all 后按钮消失，焦点落到 body。合同 §9 未规定此行为，记为 a11y 后续，不作为本 caller 的失败。</li><li>**非本 caller 引入的既有视觉问题**（`2023526` 与 More 截图相同），归入后续视觉/QA：开关渲染为 46×44 圆形且 knob 在上方；白色色块在白色面板上几乎不可见；恢复按钮看起来像纯文本；对话框无遮罩。</li></ul> |
-| 允许修改文件 | 批次 16（最终回归）：只能在 `docs/reviews/` 下新增文件，包括各既有 runner 在自身目录写出的新后缀日志，以及回执 `docs/reviews/web-sticky-recovery-final/review-final-regressions-f359be6.md`。不得修改任何已有文件或产品 |
+| 最终回归 | `d7358b9`（独立父级最终回归验证者；25 个新增文件：24 个 runner 日志加回执 `web-sticky-recovery-final/review-final-regressions-f359be6.md`）。14 次 runner 调用全部首跑 exit 0，所有日志 hash 均写入回执，F1 特征为 0。<ul><li>**包级：** Settings-rest 44 files / 314 tests（相对 `7b216a3` 新增 `stickyPaneRecovery` 14 项）；Settings typecheck/lint；Web 28 / 156（新增协调器测试 10 项）；Web check-types/lint；Storage check-types。</li><li>**More：** Sol 79（22+20+14+10+13）、original 15、冻结 host 11。</li><li>**Notifications：** Sol 41、Astra boundaries 24、Astra host 15、parent host 12。</li><li>**Date & Time：** 7。</li><li>**一致性：** 其余逐文件计数与 `7b216a3` 相同；runner 与 oracle 自历史证据提交以来未变；已接受 caller 的生产源、storage、shell、manifest 与 lockfile 自 `7b216a3` 以来未变。</li><li>**未触发 §13 附加要求：** 样式只新增 `.sticky-recovery-*`，协调器改动为纯逻辑，因此不需要其他 caller 的视觉重跑。</li></ul> |
+| 允许修改文件 | 批次 17（最终 acceptance）：仅新建 `docs/reviews/web-sticky-recovery-acceptance/acceptance-f359be6.md` 或 `blocked-f359be6.md` 之一。不得修改任何已有文件或产品 |
 | 禁止修改文件 | 全部产品源与测试；合同文件（如需修订，必须另开 Astra 角色修订）；已有 review/evidence；三份正式台账；本控制面；已接受的 DateTime/Notifications/More/Header/Smart/Collaborate/Pomodoro；共享 storage hook/engine/registry/ownership；Settings host/coordinator/auth；部署、同步、发布、长期分支文件 |
 | 原始失败复现 | **Sol `4e21e6d`**（`docs/reviews/web-sticky-recovery-sol/`，requested `2023526` → resolved `20235269…`，lockfile `df05f2dd…`，诊断迭代 1/3）：bytes 13/13 PASS；fields 0/47；queues 0/27；continuity-export 3/22；original ST1–ST10 10/10。109 个 Sol case 中 16 PASS、93 正确 FAIL；`PRECONDITION:` 为 0，无未处理错误。<br>**host `07784c4`**（`docs/reviews/web-sticky-recovery-independent/`，实际 Shell + ComposedSettings + DepartureCoordinator，生产 `createBrowserRouter`，真实 `requestSettingsDeparture`，诊断迭代 1/3）：28 个 case 中 5 PASS（2 个 fixture 自检 + PC1–PC3 正向对照）、23 正确 FAIL。<ul><li>五个字段各自的最新选择丢失、sidebar 离开、登出直接 `true`：全部确认。</li><li>`color` 上的 sidebar、AppRail、编程导航、Back、Forward、`navigate(-1)`、`navigate(1)`、带 state 的相对导航与登出：全部确认；beforeunload 未被阻止。</li><li>`PRECONDITION:` 为 0；产品 quota 警告恰好 23 次，证明故障逐例触发。</li></ul> |
 | 验收命令与业务断言 | 合同 §5–§13：All5 字段、同字段队列归因、device 连续性与导出、production host/native、下游格式不漂移、最终回归，共六行 gate |
 | 是否允许 Luna 执行 | 否；属于持久化恢复、异步与最终验收禁区 |
-| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 16 执行者为新的独立 Claude Opus 5.5（父级最终回归角色），不是 Terra 或修复作者 |
-| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ ~~fixed 原样重跑~~（`7ee8de6`）→ ~~Chrome native controls 与导出~~（`bc92561`）→ ~~Chrome host 矩阵~~（`019f451`，F1）→ ~~F1 影响评审~~（`0ba68d7`）→ ~~其余 caller 的 f1 before 复现~~（`e3db4e0`）→ ~~协调器修复~~（`f359be6`）→ ~~F1 与 Sticky 证据重跑~~（`3ea0310`）→ ~~受影响已接受 caller 与包级门禁重跑~~（`f3a3c82`）→ ~~Sticky 的 EN/ZH 五宽度视觉/键盘~~（`98125c5`）→ 最终回归（批次 16）→ 独立最终 acceptance（批次 17） |
+| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 17 执行者为新的独立 Claude Opus 5.5（Astra 角色映射的最终 reviewer），与合同作者、Terra、修复作者、F1 评审者及所有验证者都不同 |
+| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ ~~fixed 原样重跑~~（`7ee8de6`）→ ~~Chrome native controls 与导出~~（`bc92561`）→ ~~Chrome host 矩阵~~（`019f451`，F1）→ ~~F1 影响评审~~（`0ba68d7`）→ ~~其余 caller 的 f1 before 复现~~（`e3db4e0`）→ ~~协调器修复~~（`f359be6`）→ ~~F1 与 Sticky 证据重跑~~（`3ea0310`）→ ~~受影响已接受 caller 与包级门禁重跑~~（`f3a3c82`）→ ~~Sticky 的 EN/ZH 五宽度视觉/键盘~~（`98125c5`）→ ~~最终回归~~（`d7358b9`）→ 独立最终 acceptance（批次 17） |
 | 不应被本任务关闭 | `SET-12`、`REL-05`、QA 项、完整 D2/REL/AI、其余 312 项、部署与发布门禁 |
 
 #### 总控合同核对（`70ff46a`）
@@ -197,19 +198,19 @@
 
 ## 本轮唯一任务
 
-批次 16：新的独立实例在 `f359be6` 上执行合同 §13 的 Final regression。
+批次 17：新的独立最终 reviewer 只读复审 Sticky caller，并给出共享改动的新鲜接受结论。
 
-- **固定点：** 产品 `f359be6`（各 runner 使用不可变 archive）；控制分支基点为本提交。
-- **清单（既有 runner 原样使用，每个只跑一次，新后缀；命令模式参照 `web-more-recovery-final/review-final-regressions-7b216a3.md`）：**
-  - **包级（`web-more-recovery-final/verify-final.mjs f359be6 <suffix>` 或等价的 archive 方式）：** Settings-rest 包测试、typecheck、lint；Web 包测试、check-types、lint；Storage check-types。
-  - **已接受 More：** `web-more-recovery-sol/verify-fixed.mjs` 的 Sol 79（fields、reset、queues、boundaries、owner-export）与 original 15；`web-more-recovery-independent/verify-fixed.mjs f359be6 host` 的冻结 host 11。
-  - **Notifications：** `web-notifications-recovery-sol/verify-fixed.mjs f359be6 ''` 的 Sol 41；`web-notifications-recovery-astra/verify-fixed.mjs` 的 boundaries 24 与 host 15；`web-notifications-recovery-independent/verify-fixed.mjs` 的 parent host 12。
-  - **Date & Time：** `web-notifications-recovery-astra/verify-fixed.mjs f359be6 datetime` 的 7 项。
-- **环境：** 先在 worktree 内执行 `pnpm install --frozen-lockfile --offline`；旧 runner 从 `root` 链接依赖，新 runner 用 `XAI_DEPS_ROOT`。
-- **输出：** 各 runner 在自身目录写出的新日志（只新增），以及回执 `docs/reviews/web-sticky-recovery-final/review-final-regressions-f359be6.md`：命令、计数、退出码、日志 hash，并与历史 final regression 对照。
-- **禁止：** 修改产品、任何已有文件或 runner、合同、台账、控制面；不修复；不 push。
-- **成本上限：** 每个 runner 只跑一次；仅环境失败可用新后缀重跑一次。
-- **停止条件：** 出现真实产品失败或回归时冻结复现、写入回执并提交后停止；修复由总控另开窗口。
+- **固定点：** 产品 `f359be6`；控制分支基点为本提交。
+- **必须完成：**
+  1. 逐行对齐合同 §13 的六行 gate，每行都要串起：源码 → 正确的 before 失败 → fixed 后的独立行为 → 实际用户界面。证据来自上表各行，以及 `web-sticky-recovery-{contract,sol,independent,native,f1,final}/`。
+  2. 确认视觉批次对离页对话框包含性的解释（按对话框盒子与视口判定）是否可接受。
+  3. 就 Terra 开放问题做出裁定：ST6/ST8 测试文件新增的锁 fixture 是否属于"仅等待真实异步完成"的允许范围；Reload/Discard 清除输入错误是否可接受。
+  4. 就共享协调器改动 `f359be6` 给出新鲜接受结论（合同 §13："Any shared delta needs … fresh acceptance"）：结合 `0ba68d7`、`e3db4e0`、`3ea0310`、`f3a3c82`、`d7358b9`，判断受影响已接受 caller 的接受记录是否继续有效。
+  5. 说明保留限制与非阻断后续：键盘 Discard 后的焦点落点、既有视觉问题、未重跑的视觉与清单外模式、F1 的时序性。
+- **可选复现：** 最多两个冻结 runner 的单次复现，输出视为临时文件，提交前删除，hash 写入报告。
+- **输出：** 仅一份 `docs/reviews/web-sticky-recovery-acceptance/acceptance-f359be6.md` 或 `blocked-f359be6.md`。报告必须写明：接受不关闭 SET-12、REL-05、QA 项、D2/REL/AI 或任何 312 编号。
+- **禁止：** 修改产品、任何已有文件、合同、台账、控制面；不修复；不 push；不派生子 agent。
+- **停止条件：** 若发现真实产品失败，只冻结复现、影响范围与正确 oracle，提交 blocked 报告后停止。
 
 ## Luna 任务卡
 
@@ -249,7 +250,9 @@
 - `1c58841`：F1 闭环，解除已接受 caller 的 F1 门禁，CP-STICKY-01 回到 `verification_pending`，登记批次 15。
 - `a0df253`：正式台账 F1 核对。
 - `98125c5`：Sticky EN/ZH 五宽度视觉与键盘验证（快进接收）。
-- 本提交：记录批次 15 结果与非阻断后续，登记批次 16（最终回归）。
+- `463c2ab`：记录批次 15 结果与非阻断后续，登记批次 16。
+- `d7358b9`：合同 §13 最终回归（快进接收）。
+- 本提交：记录最终回归结果，登记批次 17（独立最终 acceptance）。
 
 ## 台账变化
 
@@ -270,11 +273,13 @@
 
 ## 下一步
 
-1. 等待批次 16 回执，总控核对：
-   - 只新增文件；
-   - 每个 runner 的计数、退出码与 hash；
-   - 与历史 final regression 的对照。
-2. 通过后登记批次 17：新的独立最终 reviewer（Astra 角色映射，与此前所有作者和验证者都不同）只读复审合同 §13 的六行 gate，只提交一份 acceptance 或 blocked 报告。复审还须：
-   - 确认视觉批次关于对话框包含性的解释；
-   - 就共享协调器改动 `f359be6` 给出"共享改动的新鲜接受"结论：受影响已接受 caller 的接受记录是否继续有效。
-3. 若出现真实产品失败：冻结后另开修复窗口，不扩大授权。
+1. 等待批次 17 报告，总控核对：
+   - 只新增一个文件；
+   - 引用的证据与行号真实；
+   - 结论与证据一致。
+2. 若 ACCEPT：
+   - 精确接收报告；
+   - 只把 CP-STICKY-01 改为 `accepted`，并按 reviewer 结论更新受影响 caller 的状态；
+   - 单独核对正式台账：追加 Sticky 证据链，保留"caller accepted ≠ 业务/发布完成"，不关闭 SET-12 或任何 312 编号；
+   - 完成 commit、push、sync-check 后，再按合同/库存选择下一项。
+3. 若 BLOCKED：冻结证据，另开修复窗口；总控不修。
