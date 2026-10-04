@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：在 `5cd63ff` 上，Features 冻结证据与 F1 回归的独立重跑全部 PASS（`eb37a59`，覆盖 E7、E8、E16、E17），CP-FEATURES-01 进入 `verification_pending`。本批登记批次 27：native E9–E11。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：Features 的 native controls、reset 与导出（E9–E11）在 Chrome 中全部 PASS（`58a93ef`）。本批登记批次 28：native host 矩阵 a–n（E12）与生产 `App` downstream（E13）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `eb37a59` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `58a93ef` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -81,7 +81,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：E7、E8、E16、E17 独立重跑全部 PASS（`eb37a59`）；待 E9–E15、E18–E25 与最终 acceptance |
+| 状态 | `verification_pending`：E7、E8、E16、E17（`eb37a59`）与 E9–E11（`58a93ef`）PASS；待 E12–E15、E18–E25 与最终 acceptance |
 | 选择与合同 | 选择备忘录 `docs/reviews/web-next-caller-selection/selection-f359be6.md` 与合同 `docs/reviews/web-features-recovery-contract/contract.md`，提交 `6ded3dc`，作者为独立 Claude Opus 5.5（Astra 角色映射）。比较了 7 个候选：Features 被推荐；Appearance、Integrations、AI、Dashboard、Calendar、Board 均有前置决策或依赖 |
 | 312 清单编号 | 支撑 `REL-05`；关联 `REL-07`、`REL-10`、`UX-04`、`UX-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09`。`SET-03`（目录决策）被明确排除。本任务不关闭任何编号 |
 | feature / 产品模块 | Settings Features recovery caller / `web`（单一包 `xai-web-settings-features-panel`） |
@@ -97,10 +97,11 @@
 | E4 native 跨模块 before 与 E5 Features F1 before | `4c5323f`（独立父级 native 验证者；`web-features-recovery-native/` 与 `web-features-recovery-f1/` 下共 23 个新增文件；Chrome 154；生产 `App` composition 中只有 auth session 为合成；冻结的 Sticky F1 文件未改，prelude `67bbfaa7…` 只读复用且 hash 一致；各诊断迭代 1/3）。<ul><li>**H5：** a 确认，故障下 `key:null` 事件仍派发；b、c 被推翻，重挂后 pane 与 rail 均未显示 Calendar 为 on；d 确认，无反馈也无 Retry。</li><li>**`AccountDataGate` 原生实证：** 账户重锁（epoch 3）后重新激活 g1（epoch 4），rail、pet、pane、sidebar 与 `.app` 全部替换；用户可见的影响是焦点落到 `<body>`、Settings 滚动位置由 527 跳到 0。</li><li>**H6：** 显示值、字节、渲染帧与拖拽后的自定义顺序均未被破坏（假设被推翻，要求 PASS）；重挂本身是 §10.5 "during" 的正确 FAIL。</li><li>**H10：** 375px 下 `.settings-detail` 本身不溢出（字面陈述被推翻），但 280px 网格最小宽度使 pane 溢出 4px（确认），EN 与 ZH 一致；1440px 对照无溢出。</li><li>**provenance：** 外来输入为 0，守卫违规为 0，34 个读者模块均来自 archive，网络尝试为 0。</li><li>**E5：** `selfcheck` 105 项有效，Sticky 对照 sr、sd、s2 均被持有，且各恰好一次 live `proceed()`；`features` 的 before 结论为未持有（r1、d1、r2、rb），无 F1 特征。fixed 阶段须报告 `fixed-pass`。</li><li>所有文件 hash 均写入两份回执。</li></ul> |
 | Terra 实施（E6） | `5cd63ff` `fix(settings): recover Features toggles and resets`（父 `8d53038`，单提交，11 个文件 +1590/−72，全部位于 features 包）。<ul><li>**总控核对：**<ul><li>文件全部在合同 §11 范围内：pane、只做转发的 `featuresPane.tsx`、只新增 `registerDepartureGuard` 的 `types.ts`、恰好两个 internal helper（`featuresRecovery.ts`、`featuresRecoveryCopy.ts`）、`styles.css`（删除 0 行，选择器全部以 `.features-pane` 开头）、`src/__tests__/` 下的测试与锁 fixture、`api.md` 与 `test.md`。</li><li>受保护路径 diff 为空，包括 features 包内的受保护文件、storage、settings-shell 与 `apps`。</li><li>产品源码中无 `StorageEvent`、`dispatchEvent(`、`localStorage` 或 `SettingsFooter`。</li><li>AC-PANE-3 与 AC-PANE-6 只加 `async`、安装 fixture 并等待，业务断言未变。</li></ul></li><li>**作者自查（非独立证据）：** features 包 45/45、typecheck 与 lint 通过；`@repo/web` 156/156、check-types 与 lint 通过。预检中 Sol 全部模式转绿（bytes 17、fields 49、reset 31、queues 40、continuity-export 26、downstream 15、original 6、读者 17+18），host 40/40，F1 `features` 为 `fixed-pass`。临时日志已删除。</li><li>**作者披露：**<ul><li>重复 Reset 与接管未解决 batch 的处理比 More 先例更进一步（FR13b 覆盖）；</li><li>AC-PANE-6 的测试标题仍写 `SettingsFooter`，未改，以保持 diff 最小；</li><li>开放问题：Reset 已受理后，若一个待处理的 set 失败，Retry 先推进被取代的 set（More 先例），最终字节仍由 reset 决定。</li></ul></li></ul> |
 | E7、E8、E16、E17 独立重跑 | `eb37a59`（独立 Sol；25 个新增文件；19 个 runner、fixture、prelude 与 oracle 文件及 22 个基线日志的 hash 全部吻合；四个证据目录的既有文件均未改动）。<ul><li>**E7 Sol：** before2 → fixed1，共 147 个 FAIL→PASS，72 个对照保持 PASS，0 个 PASS→FAIL，`PRECONDITION:` 为 0。fixed 结果：bytes 17、fields 49、reset 31、queues 40、continuity-export 26、downstream 15、original 6、读者 17+18，全部 PASS。</li><li>**E8 host：** 40/40；33 个 before FAIL 转为 PASS。Reset 派发的 `key:null` 事件由 1 变为 0，不再重锁账户、显示账户门屏或重挂；beforeunload 被阻止。</li><li>**E16：** 10 个冻结的 F1 调用全部 PASS，check id 序列与 `f359be6` 上的 post1 逐一相同。只有 bundle hash 变化：archive 输入由 559 增至 561，即两个新 Features helper，属预期的实现 delta。</li><li>**E17：** `fixed-pass`，102 项；r1、d1、r2、rb 各被持有后恰好一次 live `proceed()`，0 次非 live 调用，0 次 `reset()`；rb 中 Retry Calendar 仍保持持有，Retry Habits 后才释放一次。</li><li>总控复核：所有新日志中 F1 特征、`PRECONDITION:` 与 `pass:false` 均为 0，日志 hash 均写入回执。</li></ul> |
-| 允许修改文件 | 批次 27（native E9–E11）：仅在 `docs/reviews/web-features-recovery-native/` 中新增文件；不得修改该目录已有的 before 文件 |
+| E9–E11 native controls、reset 与导出 | `58a93ef`（独立父级 native 验证者；native 目录 18 个新增文件；Chrome 154；`5cd63ff` archive，`@repo` 全部来自 archive，0 个 checkout 模块；features 包以外的 bundle 模块与 `f359be6` 逐字节相同；各模式迭代 1/3）。<ul><li>**E9：** 524 项，其中产品检查 285 项，全部 PASS。16 个值经可信点击写入，同 profile 重启后复核精确字节，每次一写，且取得真实 per-key 锁；重载零写入；锁被持有时 pending、释放后一写；uncertainty 恰好一次写入；第二 document 的字节被保留；source-only 状态只提供 Reload。6 条 console 警告为坏字节场景下预期的 decode 警告。</li><li>**E10：** 219 项，其中产品检查 99 项，全部 PASS。拒绝 confirm 时零尝试；接受后 7 键删除、缺省键按 no-op 处理、从不写入；单键与双键故障经定向 Retry 恢复；uncertainty 一次 remove；冲突被保留；"Defaults restored." 只在全部成功时出现；无关键 ×6 不变。6 个场景中 `key:null`、重锁、scope 转换、门屏与重挂均为 0。</li><li>**E11：** 442 项，其中产品检查 217 项，全部 PASS。9 种磁盘形状都在全拒绝下完成：零尝试、同一 URL 创建并回收、anchor 移除、envelope deepEqual，之后 warning 与 guard 仍生效。anchor click 抛错与 `createObjectURL` 抛错均显示本地化错误，之后恢复导出成功。</li><li>所有文件 hash 均写入回执 `review-controls-reset-export-5cd63ff.md`。</li><li>**须由最终 reviewer 确认：** E11 在 Settings host composition 中进行，而非生产 `App`。原因是生产 `App` 的 `AccountDataGate` 会在 scope 变化时卸载 pane，形状 7、8（fresh locked 与 fresh B）在其中不可能出现。这与合同"挂载期间连续"的范围一致；强制认证下的持久性属合同排除的 REL-09。</li></ul> |
+| 允许修改文件 | 批次 28（native E12–E13）：仅在 `docs/reviews/web-features-recovery-native/` 中新增文件；不得修改已有文件 |
 | 允许修改文件（已执行） | 批次 25（Terra）：只限合同 §11 列出的文件，均位于 `packages/xai-web-settings-features-panel/` 下：<ul><li>`src/FeaturesPane.tsx`</li><li>`src/internal/featuresPane.tsx`（仅转发 render props）</li><li>`src/types.ts`（仅新增可选的 `registerDepartureGuard`）</li><li>最多两个 Features 本地 helper</li><li>scoped CSS</li><li>Features 测试（含本地 Web Lock fixture）</li><li>`docs/api.md` 与 `docs/test.md` 的 Features 段落</li></ul>所有读者、storage、shell（含 `SettingsFooter`）、host（含 `AccountDataGate`）、已接受 caller 与全部证据都受保护 |
 | 禁止修改文件 | 全部产品源与测试；合同与选择备忘录；已有证据；台账；本控制面 |
-| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ ~~批次 24 native before 与 Features F1（E4–E5）~~（`4c5323f`）→ ~~批次 25 Terra~~（`5cd63ff`）→ ~~批次 26 重跑（E7、E8、E16、E17）~~（`eb37a59`）→ 批次 27 native E9–E11 → 批次 28 native E12–E13 → 批次 29 视觉/键盘 E14–E15 → 批次 30 最终回归 E18–E25 → 批次 31 独立最终 acceptance → 之后按合同 §14 的 E6–E25 |
+| 后续顺序 | ~~批次 22 Sol（E1–E2）~~（`11e0afb`）→ ~~批次 23 父级 jsdom host（E3）~~（`b732c27`）→ ~~批次 24 native before 与 Features F1（E4–E5）~~（`4c5323f`）→ ~~批次 25 Terra~~（`5cd63ff`）→ ~~批次 26 重跑（E7、E8、E16、E17）~~（`eb37a59`）→ ~~批次 27 native E9–E11~~（`58a93ef`）→ 批次 28 native E12–E13 → 批次 29 视觉/键盘 E14–E15 → 批次 30 最终回归 E18–E25 → 批次 31 独立最终 acceptance → 之后按合同 §14 的 E6–E25 |
 
 **最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`）。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
 - 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
@@ -166,7 +167,8 @@
 | Features（续 2） | `0d61d61` 登记批次 24 · `4c5323f` E4–E5 |
 | Features（续 3） | `8d53038` 授权批次 25 · `5cd63ff` Terra 实施 |
 | Features（续 4） | `c516fce` 登记批次 26 · `eb37a59` E7、E8、E16、E17 |
-| 本提交 | 记录批次 26 结果，登记批次 27 |
+| Features（续 5） | `9d64192` 登记批次 27 · `58a93ef` E9–E11 |
+| 本提交 | 记录 E9–E11，登记批次 28 |
 
 ## 台账变化
 
@@ -188,37 +190,30 @@
 
 ## 本轮唯一任务
 
-批次 27：独立父级 native 验证者在真实 Chrome 中验证 fixed Features 的 controls、reset 与导出（合同 §14 的 E9、E10、E11）。
+批次 28：独立父级 native 验证者在真实 Chrome 中验证 fixed Features 的 host 矩阵（E12）与生产 `App` 中的 downstream（E13）。
 
 - **固定点：** fixed `5cd63ff`（不可变 archive、lockfile gate、`@repo` 固定到 archive 并带守卫）；控制分支基点为本提交。
-- **E9 controls：**
-  - 16 个值（8 个开关的开与关）由可信输入设置，并核对精确磁盘字节；
-  - 新 document 重载时挂载期零写入；
-  - source-only 状态；
-  - 真实 per-key 锁被持有时为 pending、字节不变，释放后写入一次；
-  - uncertainty 下 Retry 恰好一次写入；
-  - 第二个 document 的冲突被保留。
-- **E10 reset：**
-  - 拒绝 confirm 时零尝试；
-  - 接受后 8 键全部不存在；
-  - 单键与双键故障时逐字段恢复；
-  - uncertainty 下恰好一次 remove；
-  - 冲突被保留；
-  - "Defaults restored." 只在全部成功时出现；
-  - 无关键的快照不变；
-  - 全程零 `key:null` 派发，无重锁、无重挂。
-- **E11 导出：**
-  - 合同 §8 规定的 9 种磁盘形状，全部在 Storage 全拒绝下进行：attempt 级计数为零、同一 URL 创建并回收、anchor 已移除，之后 warning 与 guard 仍生效；
-  - 另做一次 setup 失败。
-- **输出：** 只在 `web-features-recovery-native/` 中新增 runner、fixture、日志、磁盘 JSON 与回执 `review-controls-reset-export-5cd63ff.md`。
-- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push。
+- **E12：** 合同 §9 host 矩阵 a–n，每行都带 history 计数与 runtime-error gate，在实际 Settings composition 加完整 Shell 中进行。
+  - 行 c 须对 Back 与 guarded Forward 做 `{pathname,key,state}` 的 deepEqual；
+  - 行 i 的同字段顺序与恰好一次释放；
+  - 行 m 的 reset batch 释放；
+  - 行 n 的"被持有目标被关闭"。
+  - beforeunload 只在有 draft 时警告，handler 内零存储尝试。
+- **E13：** 在生产 `App` composition 中（只有 auth session 为合成）验证合同 §10 第 2–7 点。必须包含：
+  - 零 `key:null` 派发；
+  - 无重锁或重挂；
+  - rail、CmdK、pet、外观等读者在 toggle 与 reset 期间及之后保持正确；
+  - 两个 document 之间的传播。
+- **输出：** 只在 `web-features-recovery-native/` 中新增 runner、fixture、日志与回执 `review-host-downstream-5cd63ff.md`。
+- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push；不跑视觉与键盘（批次 29）。
 - **成本上限：** 每个模式的诊断迭代不超过 3 轮（新后缀，保留旧日志）。
 - **停止条件：** 出现真实产品失败时冻结复现、提交并停止；修复由总控另开窗口。
 
 ## 下一步
 
-1. 等待批次 27 回执，总控核对：
+1. 等待批次 28 回执，总控核对：
    - 只新增文件；
-   - 每个模式的计数、零运行错误、磁盘 JSON 的 deepEqual 与 hash；
-   - attempt 级计数为零，且零 `key:null`。
-2. 通过后登记批次 28：host 矩阵 a–n（E12）与生产 `App` downstream（E13）。
+   - a–n 每行都有日志与 history 计数，runtime error 为 0；
+   - §10 第 2–7 点逐项有证据，`key:null` 为 0；
+   - hash 吻合。
+2. 通过后登记批次 29：EN/ZH 五宽度视觉（E14）与键盘（E15）。
