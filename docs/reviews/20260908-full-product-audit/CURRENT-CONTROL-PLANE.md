@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：库存已在 `5cd63ff` 上刷新（CP-LUNA-02，`a83d53a`），只移除 `FeaturesPane.tsx:69` 一行。本批登记批次 34：由独立 Astra 角色写下一个 caller 的选择备忘录与合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：批次 34（`e9fbdb7`）推荐 Appearance 并起草合同（CP-APPEARANCE-01）。B-2（SET-02 保存语义）属产品负责人决定，已提交用户；用户决定前不登记执行批次。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `a83d53a` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `e9fbdb7` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -111,7 +111,20 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller，批次 34 正在做选择与合同起草。CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
+### CP-APPEARANCE-01 · Settings Appearance 完整 caller（含 App 根偏好 writer 与 Topbar 快速切换）
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | `blocked_by_gate`：等待用户就 B-2（SET-02 保存语义）作出决定；决定前不登记执行批次 |
+| 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`（884 行）：假设 A1–A9、H1–H14、九个 gate、E1–E26 清单。</li></ul> |
+| 范围 | 7 个 device 键：语言、主题、密度、字号、强调色、背景、rail 位置。<ul><li>三个写入面：Settings pane、`App.tsx` 根偏好 writer、Topbar 快速切换。</li><li>Terra 可改的文件见合同 §11：Appearance 包；shell 的 `Topbar.tsx`、`Shell.tsx`、`types.ts` 与 Topbar 测试；`apps/web` 的 `App.tsx` 与新的 App 测试；运行记录目录 `web-appearance-recovery-terra/`。</li><li>全部在 `web` 模块内，不改 D2 共享层。</li></ul> |
+| 312 清单编号 | 关联 SET-02、SHELL-04、REL-05、REL-07、REL-09 等；本任务不关闭任何编号 |
+| 风险等级 | `high`：改动宿主 `App.tsx` 与 shell，影响所有 `/app` 路由。<ul><li>H6：一个畸形根值会让整个 `/app` 落入错误页。</li><li>是开放式 async 路径的第一个 device 生产使用方：在这里发现的缺陷按共享缺陷处理。</li></ul> |
+| 总控核对 | <ul><li>提交只新增 2 个文件，worktree clean。</li><li>总控在 `5cd63ff` 上逐条核实关键源码事实：<ul><li>`plugin-web-tokens/src/i18n.ts:727–733` 遇不支持的语言抛 `TypeError`；</li><li>`apply.ts:64–69、83–88` 遇非法字号或色相抛 `RangeError`；</li><li>`router.tsx:41–43` 的 `/app` 挂 `RouteErrorBoundary`；</li><li>`App.tsx:98–105` 与 `Topbar.tsx:26–39` 吞掉写入失败；</li><li>`SettingsFooter.tsx:75` 无条件 `setSaved(true)`；</li><li>7 个键在 `accountOwnership.ts` 中均为 device。</li></ul></li><li>Terra 文件清单逐个列出；E1–E26 连续，无缺号。</li></ul> |
+| 前置决定 | <ul><li>**B-2 / A2（提交用户）：** SET-02 原文为"Appearance统一自动保存或编辑后保存语义"，两种方式都写在条目里，属产品负责人的选择。<ul><li>合同按选项 (i) 写成：保留自动保存，去掉 "Save & apply"（Features D3 先例）。</li><li>选 (ii) 或 (iii) 时，须由 Astra 修订合同。</li></ul></li><li>**A1、A3–A9（总控可定）：** 宿主与 shell 范围、App 级单一 controller、开放式 async 路径、保护模型（不加 Settings 路由 guard；Topbar 状态位；App 级 `beforeunload`；登出前确认）、严格值域且只拒绝不修复、Reset 删除 6 个键并保留语言、测试处置、R-PET 判定口径。总控倾向确认，待 B-2 结果后一并确认。</li><li>**其他候选的用户决定（暂不提问，排到对应候选时再提）：** C-1（SET-10）、D-2、E-1（DASH-03）、E-2（SHELL-05）、E-3（SET-03）、F-2（SET-08）。</li></ul> |
+| 后续顺序 | 用户决定 B-2 → 总控确认 A1–A9 并登记 → 冻结 before 基线 E1–E5（Sol oracle、父级 production-App host 基线、native before、Appearance F1 形态 before 日志）→ Terra → fixed 重跑与 native → 最终回归 E26 → 独立最终 acceptance |
+
+CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
 
 **最新库存：** `refresh-5cd63ff.md` / `bindings-5cd63ff.json`（CP-LUNA-02，`a83d53a`）。相对 `f359be6` 只移除 `FeaturesPane.tsx:69` 一行（`prefKey`，动态，setter `setOn`）；余下 51 行逐字段不变。
@@ -207,7 +220,8 @@
 | Features（续 10） | `78e8de2` 登记批次 32 · `ec55f9e` Features acceptance |
 | Features 关闭 | `6ec0bec` 台账 |
 | Features 关闭（续） | `e348b79` CP-FEATURES-01 改为 `accepted`，登记批次 33 · `a83d53a` 库存刷新（CP-LUNA-02） |
-| 本提交 | 记录库存结果，登记批次 34（选择与合同） |
+| 下一项选择（续 2） | `ead985d` 登记批次 34 · `e9fbdb7` 选择备忘录与 Appearance 合同 |
+| 本提交 | 登记 CP-APPEARANCE-01（等待用户决定 B-2） |
 
 ## 台账变化
 
@@ -245,41 +259,10 @@
 
 ## 本轮唯一任务
 
-### 批次 34：下一 caller 的选择与合同（独立 Astra 角色）
-
-- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
-- **固定点：** 产品 `5cd63ff`；控制分支基点为本提交。
-- **输入：**
-  - **上一份选择备忘录** `web-next-caller-selection/selection-f359be6.md`：含候选 B–G 的比较与 §6 第 5 项列出的前置决定，须在 `5cd63ff` 上复核其事实是否仍成立。
-  - **后续分组与选择规则：** `remaining-writers.md`。
-  - **最新库存** `refresh-5cd63ff.md`：其扫描边界见上，`.ts` 文件与 `apps/` 须自行补查。
-  - **D2 实施入口合同：** `web-board-workspace-astra-review/20260909-d2-implementation-entry-contract.md`。
-  - **已接受 caller 的合同与 acceptance：** More、Sticky、Features、Date & Time、Notifications、Smart Lists。
-  - **台账条目：** `ALL-TODO-CURRENT.md` 中的相关条目（SET-*、SHELL-*、UX-03/04/05、REL-*）。
-  - **本轮经验：**
-    - F1：协调器回归 oracle；
-    - G1：Required evidence 清单化；
-    - F-B002：spy 内不得重入 storage，回归须同时运行 More 纠正 oracle；
-    - R-PET：合同须写明全局浮层（如 DesktopPet）的判定口径；
-    - E6：为实施者预留测试运行的记录位置。
-- **输出（只新增文件）：**
-  - **选择备忘录** `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：
-    - 至少比较 3 个候选完整 caller，维度为产品风险、用户影响、规模、共享面、依赖、证据复用与所需前置决定；
-    - 推荐其一，并说明其余为何靠后；
-    - 把每个前置决定归入两类之一：总控可定的范围或技术决定，或需要产品负责人（用户）定的产品决定；并给出选项与建议。
-  - **合同（视前置决定而定）：**
-    - 推荐候选只需要总控可定的决定时，同时提交 `docs/reviews/web-<slug>-recovery-contract/contract.md`：沿用 Features 合同结构，集中列出全部 Required evidence 清单，并把这些决定写成待总控确认的假设。
-    - 推荐候选需要产品负责人决定、须改动 D2 共享层，或会跨产品模块时，只交选择备忘录，不交合同，并写明需要的决定。
-- **禁止：** 修改任何已有文件、产品、台账或控制面；push；派生子 agent。
-- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
+等待用户就 B-2（SET-02 保存语义）作出决定。在此之前，不登记 CP-APPEARANCE-01 的执行批次，也不冻结 before oracle：oracle 的 fixed 期望取决于这个决定。
 
 ## 下一步
 
-1. 等待批次 34 回执，总控核对：
-   - 选择依据可复核；
-   - 合同基于固定 SHA 的源码，关键事实抽查属实；
-   - Required evidence 清单完整；
-   - 范围不越模块；
-   - 前置决定的归类正确。
-2. 若有需要用户定的产品决定：带选项与建议向用户提出，不自行假设。
-3. 否则在控制面登记新的 CP 项与首个执行批次（冻结 before oracle）；不得提前实施。
+1. 用户选 (i)：保留自动保存，去掉 "Save & apply"。总控一并确认 A1–A9，登记批次 35，冻结 before 基线 E1–E5（Sol oracle 由独立 Sol 窗口完成，其余按合同 §1 的角色分工）。
+2. 用户选 (ii) 或 (iii)：先登记 Astra 合同修订批次，修订后再确认与登记。
+3. 用户另有要求：按其要求调整选择或合同，仍由独立窗口执行。
