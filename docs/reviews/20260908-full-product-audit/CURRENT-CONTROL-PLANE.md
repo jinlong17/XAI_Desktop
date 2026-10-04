@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-FEATURES-01 已由独立最终 acceptance `ec55f9e` 接受，台账已对账（`6ec0bec`）。本批登记批次 33：CP-LUNA-02 在 `5cd63ff` 上刷新直接 `usePref` 库存，之后选择下一个 caller。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：库存已在 `5cd63ff` 上刷新（CP-LUNA-02，`a83d53a`），只移除 `FeaturesPane.tsx:69` 一行。本批登记批次 34：由独立 Astra 角色写下一个 caller 的选择备忘录与合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `6ec0bec` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `a83d53a` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -111,12 +111,17 @@
 
 ## 当前进行中的调用方
 
-无。CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
+无已选定 caller，批次 34 正在做选择与合同起草。CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
 
-**最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`），将由批次 33（CP-LUNA-02）在 `5cd63ff` 上刷新。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
-- 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
-- 按包分布：dashboard-widgets 11、settings-rest 10、board-workspaces 8、statistics 4，board-views、calendar、settings-appearance 各 3，board-core、pet、features-panel 各 2，pomodoro、dashboard-grid、shell、tasks 各 1。
+**最新库存：** `refresh-5cd63ff.md` / `bindings-5cd63ff.json`（CP-LUNA-02，`a83d53a`）。相对 `f359be6` 只移除 `FeaturesPane.tsx:69` 一行（`prefKey`，动态，setter `setOn`）；余下 51 行逐字段不变。
+- **剩余规模：** 24 个文件、51 个直接绑定、30 个字面量键、1 个动态位点、31 个 setter 绑定（28 个直接、3 个仅下游）、20 个只读绑定。
+- **按包分布：**
+  - dashboard-widgets 11、settings-rest 10、board-workspaces 8、statistics 4；
+  - board-views、calendar、settings-appearance 各 3；
+  - board-core、pet 各 2；
+  - features-panel、pomodoro、dashboard-grid、shell、tasks 各 1。
+- **扫描边界：** 只扫描 `packages/**/*.tsx`（不含 `__tests__`）中直接以 `usePref` 为标识符的调用。`.ts` 文件（如 `useFeaturePrefs.ts`）、`apps/` 与 CmdK 的 `getPref` 读取都不可见。
 - 这些是排程输入，不是完整 writer 数，也不是缺陷数。
 
 按 [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md)，Sticky5 是排程中最后一个"剩余普通 Settings 控件"caller。后续 caller 属于该文件"Follow-on caller grouping"中尚待分别规定的组，依次为：
@@ -167,7 +172,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `assigned_to_luna` |
+| 状态 | `accepted`（总控核对通过，作为库存证据，不涉及产品范围）：`a83d53a`。<ul><li>新增 `bindings-5cd63ff.json`（`694a9396…`）与 `refresh-5cd63ff.md`（`896c2143…`）。</li><li>按 file+key+setter 对账：移除 1 行、新增 0 行、变化 0 行；8 项计数与总控预测完全一致。</li><li>总控另行比对两份 JSON，结果相同。</li><li>`typescript` 经祖先目录从主检出的 `node_modules` 只读解析，版本 5.9.2 与 lockfile 一致；主检出未写入。总控认可这种只读依赖使用。</li></ul> |
 | 执行者 | 新的独立 Claude Sonnet 5.5（Luna 角色映射），隔离 worktree |
 | 风险 | 低：只读 git 中的固定修订并运行既有扫描器；不触及产品、持久化、宿主或验收 |
 | 固定点 | 产品 `5cd63ff`；对照 `f359be6` 的 `bindings-f359be6.json` 与 `refresh-f359be6.md` |
@@ -201,7 +206,8 @@
 | Features（续 9） | `7520775` 登记批次 31 · `05b21f4` F-B002 纠正 oracle 证据 |
 | Features（续 10） | `78e8de2` 登记批次 32 · `ec55f9e` Features acceptance |
 | Features 关闭 | `6ec0bec` 台账 |
-| 本提交 | CP-FEATURES-01 改为 `accepted`，记录成本周期 9，登记批次 33（CP-LUNA-02） |
+| Features 关闭（续） | `e348b79` CP-FEATURES-01 改为 `accepted`，登记批次 33 · `a83d53a` 库存刷新（CP-LUNA-02） |
+| 本提交 | 记录库存结果，登记批次 34（选择与合同） |
 
 ## 台账变化
 
@@ -239,29 +245,41 @@
 
 ## 本轮唯一任务
 
-批次 33：CP-LUNA-02，在 `5cd63ff` 上刷新直接 `usePref` 库存。固定点、命令、允许文件、验收条件、禁止事项与停止条件见上方 Luna 任务卡。
+### 批次 34：下一 caller 的选择与合同（独立 Astra 角色）
 
-- **成本上限：** 扫描器只运行一次；若需诊断，最多 3 轮。
-- **输出：** 一个提交，只新增两个允许的文件；不 push。
+- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
+- **固定点：** 产品 `5cd63ff`；控制分支基点为本提交。
+- **输入：**
+  - **上一份选择备忘录** `web-next-caller-selection/selection-f359be6.md`：含候选 B–G 的比较与 §6 第 5 项列出的前置决定，须在 `5cd63ff` 上复核其事实是否仍成立。
+  - **后续分组与选择规则：** `remaining-writers.md`。
+  - **最新库存** `refresh-5cd63ff.md`：其扫描边界见上，`.ts` 文件与 `apps/` 须自行补查。
+  - **D2 实施入口合同：** `web-board-workspace-astra-review/20260909-d2-implementation-entry-contract.md`。
+  - **已接受 caller 的合同与 acceptance：** More、Sticky、Features、Date & Time、Notifications、Smart Lists。
+  - **台账条目：** `ALL-TODO-CURRENT.md` 中的相关条目（SET-*、SHELL-*、UX-03/04/05、REL-*）。
+  - **本轮经验：**
+    - F1：协调器回归 oracle；
+    - G1：Required evidence 清单化；
+    - F-B002：spy 内不得重入 storage，回归须同时运行 More 纠正 oracle；
+    - R-PET：合同须写明全局浮层（如 DesktopPet）的判定口径；
+    - E6：为实施者预留测试运行的记录位置。
+- **输出（只新增文件）：**
+  - **选择备忘录** `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：
+    - 至少比较 3 个候选完整 caller，维度为产品风险、用户影响、规模、共享面、依赖、证据复用与所需前置决定；
+    - 推荐其一，并说明其余为何靠后；
+    - 把每个前置决定归入两类之一：总控可定的范围或技术决定，或需要产品负责人（用户）定的产品决定；并给出选项与建议。
+  - **合同（视前置决定而定）：**
+    - 推荐候选只需要总控可定的决定时，同时提交 `docs/reviews/web-<slug>-recovery-contract/contract.md`：沿用 Features 合同结构，集中列出全部 Required evidence 清单，并把这些决定写成待总控确认的假设。
+    - 推荐候选需要产品负责人决定、须改动 D2 共享层，或会跨产品模块时，只交选择备忘录，不交合同，并写明需要的决定。
+- **禁止：** 修改任何已有文件、产品、台账或控制面；push；派生子 agent。
+- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
 
 ## 下一步
 
-1. 等待批次 33 回执，总控核对：
-   - 只新增两个文件；
-   - delta 是否只有 `FeaturesPane.tsx:69` 一行；
-   - 各项计数与解释。
-2. 通过后登记批次 34：由独立 Astra 角色写下一个 caller 的选择备忘录与合同。
-   - **比较的剩余组：**
-     - Appearance；
-     - AI settings 与 integrations；
-     - Dashboard widgets 与 shell preferences；
-     - Board 变体与 workspace；
-     - Calendar 与 Tasks 附属项；
-     - 业务存储 wrapper；
-     - 计时器与控制器结算；
-     - 生命周期、secret 与公共 API。
-   - **待定的前置决策：** Appearance 宿主范围、Dashboard 多 guard、AI D2 secret、Integrations SET-10、Calendar 离页接缝与 SET-08。
-   - **合同须吸取的教训：**
-     - 为实施者预留测试运行的记录位置；
-     - 最终回归同时运行 More 纠正 oracle；
-     - 全局浮层（如 DesktopPet）的判定口径须在合同中写明。
+1. 等待批次 34 回执，总控核对：
+   - 选择依据可复核；
+   - 合同基于固定 SHA 的源码，关键事实抽查属实；
+   - Required evidence 清单完整；
+   - 范围不越模块；
+   - 前置决定的归类正确。
+2. 若有需要用户定的产品决定：带选项与建议向用户提出，不自行假设。
+3. 否则在控制面登记新的 CP 项与首个执行批次（冻结 before oracle）；不得提前实施。
