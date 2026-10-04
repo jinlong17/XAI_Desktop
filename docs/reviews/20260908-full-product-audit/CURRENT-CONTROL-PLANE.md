@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-STICKY-01 已接受（`699f6e6`），正式台账已核对（`4da6e71`）。库存已刷新：CP-LUNA-01 `2c69957`，`f359be6` 上剩余 25 个文件、52 个直接绑定。本批登记批次 21：由独立 Astra 角色实例选择下一个完整 caller 并起草合同。选择结论须经总控核对并在控制面登记后才生效，不得提前实施。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：批次 21 的选择备忘录与合同（`6ded3dc`）已通过总控核对，下一个完整 caller 选定为 Settings → Features（CP-FEATURES-01）。本批登记该 CP 项与总控决定，并启动批次 22：由 Sol 冻结 E1–E2。E1–E5 全部冻结前不得实施。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `2c69957` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `6ded3dc` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -77,7 +77,23 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller。批次 21 正在做选择与合同起草。
+### CP-FEATURES-01 · Settings Features 8 个模块开关与 Reset to defaults
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | `diagnosis_needed`：合同已通过总控核对；before 基线 E1–E5 未冻结；未授权实施 |
+| 选择与合同 | 选择备忘录 `docs/reviews/web-next-caller-selection/selection-f359be6.md` 与合同 `docs/reviews/web-features-recovery-contract/contract.md`，提交 `6ded3dc`，作者为独立 Claude Opus 5.5（Astra 角色映射）。比较了 7 个候选：Features 被推荐；Appearance、Integrations、AI、Dashboard、Calendar、Board 均有前置决策或依赖 |
+| 312 清单编号 | 支撑 `REL-05`；关联 `REL-07`、`REL-10`、`UX-04`、`UX-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09`。`SET-03`（目录决策）被明确排除。本任务不关闭任何编号 |
+| feature / 产品模块 | Settings Features recovery caller / `web`（单一包 `xai-web-settings-features-panel`） |
+| 固定产品 SHA | `f359be6d838393e0f9e93efd80b88b5b09f6144e` |
+| 归属 | 8 个 `xai_pref_features_*` 键均为 device（`accountOwnership.ts:54–61`），无账户机制 |
+| 总控核对 | <ul><li>`FeaturesPane.tsx` 的 Reset 先吞掉 raw remove 错误，再派发 `key: null` 的合成 `StorageEvent`。</li><li>features 包内没有 `registerDepartureGuard`。</li><li>`SettingsFooter` 的 Save 固定闪现 1800ms "Saved"。</li><li>8 个键均为 device。</li><li>合同 §11 的 Terra 文件边界清楚：只限 features 包内 pane、一个 props 字段、两个本地 helper、scoped CSS、测试与文档；所有读者、storage、shell、host 与已接受 caller 受保护。</li><li>§14 列出 E1–E25 统一证据清单，吸取了 G1 的教训。</li></ul> |
+| 风险等级 | `high`：Reset 的 `key: null` 合成事件会让所有挂载中的 legacy `usePref` 显示默认值（H6，待证），涉及跨模块读者（rail、CmdK、pet、App 外观），以及异步队列、离页与 native 证据 |
+| 总控决定（2026-10-04） | <ol><li>登记 CP-FEATURES-01，首批冻结 E1–E5。</li><li>**确认 D3：** Features 停止渲染共享 `SettingsFooter`，"Save & apply" 消失，"Reset to defaults" 改为 Features 本地控件，配真实的 confirm 文案与逐字段结果；Appearance 保留 footer，共享组件不改。理由：pane 本是自动保存，footer 的 "Saved" 无条件显示，属虚假成功提示，与 More/Sticky 已接受的无 Save footer 模式一致。这是可见 UI 变化，用户可在批次 25（Terra 实施）前否决。</li><li>**确认 harness：** native downstream 证据挂载生产 `App`，只替换 auth session。</li><li>**确认：** 键盘 Discard、Reload、Discard all 之后的焦点落点作为 gate（E15）。</li><li>**后续分组的前置决策**须由 operator 或总控另行决定，本项不处理：Appearance 的 host 范围、Dashboard 的多 guard 设计、AI 的 D2 secret、Integrations 的 SET-10、Calendar 的离页接缝与 SET-08。</li></ol> |
+| 开放问题的处置 | 保留 `window.confirm`；Reset 不再清除畸形字节，记为有意的限制，与 More 先例一致，并关联 REL-07；H10（375px 溢出）由 E4 判定；扫描器看不到 `useFeaturePrefs.ts` 与 CmdK 的 `getPref` 读取，库存不代表读者覆盖 |
+| 允许修改文件 | 批次 22：仅新目录 `docs/reviews/web-features-recovery-sol/**` |
+| 禁止修改文件 | 全部产品源与测试；合同与选择备忘录；已有证据；台账；本控制面 |
+| 后续顺序 | 批次 22 Sol（E1–E2）→ 批次 23 父级 jsdom host（E3）→ 批次 24 native before 与 Features F1（E4–E5）→ 批次 25 Terra → 之后按合同 §14 的 E6–E25 |
 
 **最新库存：** `refresh-f359be6.md` / `bindings-f359be6.json`（CP-LUNA-01，`2c69957`）。相对 `afbfb24` 只移除 More 15 行与 Sticky 5 行，余下 52 行逐字段不变。
 - 剩余规模：25 个文件、52 个直接绑定、30 个字面量键、2 个动态位点、32 个 setter 绑定（29 个直接、3 个仅下游）、20 个只读绑定。
@@ -137,7 +153,8 @@
 | Sticky 收尾 | `98125c5` 视觉 · `463c2ab` · `d7358b9` 最终回归 · `b2a21d0` · `47bbd58` BLOCKED(G1) · `89d4302` · `3debd91` G1 · `57f396c` · `699f6e6` Sticky acceptance |
 | Sticky 关闭 | `b63aad6` CP-STICKY-01 改为 `accepted` · `4da6e71` 台账 |
 | 下一项选择 | `40f7004` 登记 CP-LUNA-01 · `2c69957` 库存刷新 |
-| 本提交 | 记录库存结果，登记批次 21（选择与合同） |
+| 下一项选择（续） | `51d65aa` 登记批次 21 · `6ded3dc` 选择与 Features 合同 |
+| 本提交 | 登记 CP-FEATURES-01、总控决定与批次 22 |
 
 ## 台账变化
 
@@ -157,30 +174,29 @@
 - **主要额外成本：** F1（必要的共享缺陷修复与受影响 caller 重跑）；G1（总控排程遗漏导致的一次补证与复审）。
 - **改进：** 登记最终回归时须核对合同中全部 Required evidence 条目，不只 Final regression 行。
 
-## 下一步
+## 本轮唯一任务
 
-### 批次 21：下一 caller 的选择与合同（独立 Astra 角色）
+批次 22：独立 Sol 窗口在不可变 `git archive f359be6` 上冻结 Features 合同 §12 的 jsdom oracle，对应 §14 的 E1 与 E2。
 
-- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
-- **输入：**
-  - `remaining-writers.md` 的后续分组与选择规则（按产品风险、已接受证据与实际源码；真正共享的 producer 应合并为一个合同）；
-  - 最新库存 `refresh-f359be6.md`；
-  - D2 实施入口合同 `web-board-workspace-astra-review/20260909-d2-implementation-entry-contract.md`；
-  - 已接受 caller 的合同与 acceptance（More、Sticky、Date & Time、Notifications、Smart Lists）；
-  - `ALL-TODO-CURRENT.md` 中相关条目；
-  - F1 经验（协调器回归 oracle）与 G1 经验（Required evidence 清单化）。
-- **输出（只新增两个文件）：**
-  - `docs/reviews/web-next-caller-selection/selection-f359be6.md`：至少比较 3 个候选完整 caller 的产品风险、用户影响、规模、共享面、依赖与证据复用，推荐其一并说明其余为何靠后；
-  - `docs/reviews/web-<slug>-recovery-contract/contract.md`：选中 caller 的完整合同，沿用 Sticky 合同结构，并在合同中集中列出全部 Required evidence 清单。
-  - 若最佳候选需要跨模块或改共享层，只交选择备忘录、不交合同，并写明需要总控决定的事项。
-- **禁止：** 修改任何已有文件、产品、台账、控制面；push；派生子 agent。
-- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
+- **固定点：** 产品 `f359be6`；控制分支基点为本提交。
+- **范围：** 七个模式 `bytes`、`fields`、`reset`、`queues`、`continuity-export`、`downstream`、`original`。
+  - `downstream` 在生产 `App` 挂载中运行，只替换 auth session hook，不接网络；event bus、storage、shell、pet、CmdK 与 features 模块均为真实实现。
+  - 使用独占语义的 Web Lock fixture、记录每次尝试且可证明已触发的 Storage 注入器、`window.confirm` 记录器，以及真实的 `accountScope` 转换。
+  - 只用稳定选择器：`[data-feature-id] [role="switch"]`；Reset 按钮按 role 与 name 定位；恢复 UI 按合同 §5 的 role 与 name 定位。
+- **输出：** 只新增 `docs/reviews/web-features-recovery-sol/**`，内容为：
+  - fixture、oracle、runner，带 lockfile gate、requested/resolved SHA 与拒绝覆盖；
+  - 七个模式的 before 日志；
+  - README：SHA-256、逐模式计数、H1–H7 与 H9 逐项 confirmed/refuted 并附日志行（H5、H6 的 native 部分、H8、H10 分别属 E4、E3、E4），以及正向对照在 `f359be6` 上 PASS 的证明。
+- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push。
+- **成本上限：** 诊断迭代不超过 3 轮（新后缀，保留旧日志）；`original` 只跑一次；不跑全包。
+- **停止条件：** fixture 有效性 3 轮内无法建立、合同与源码矛盾、或需要越权文件时，提交 blocked 回执并停止。
 
 ## 下一步
 
-1. 等待批次 21 回执，总控核对：
-   - 选择依据可复核；
-   - 合同基于固定 SHA 源码，关键事实抽查属实；
-   - Required evidence 清单完整；
-   - 范围不越模块。
-2. 通过后在控制面登记新的 CP 项与首个执行批次（冻结 before oracle），不得提前实施。
+1. 等待批次 22 回执，总控核对：
+   - 只新增 `web-features-recovery-sol/**`；
+   - runner 的 archive、gate 与拒绝覆盖；
+   - 正向对照 PASS；
+   - 假设结论有日志行支撑，无 fixture 冒充产品失败；
+   - hash 与回执吻合。
+2. 依次登记批次 23（E3）与批次 24（E4–E5），E1–E5 全部冻结后才授权批次 25 Terra。
