@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-Xpxu3B
+
+ ✓ docs/reviews/web-notifications-recovery-independent/host.test.tsx (12 tests) 725ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  23:30:10
+   Duration  4.44s (transform 2.10s, setup 0ms, collect 3.12s, tests 725ms, environment 262ms, prepare 48ms)

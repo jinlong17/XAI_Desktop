@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-more-sol-j27tJV
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx (15 tests) 286ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:27:45
+   Duration  1.37s (transform 269ms, setup 234ms, collect 232ms, tests 286ms, environment 275ms, prepare 70ms)
