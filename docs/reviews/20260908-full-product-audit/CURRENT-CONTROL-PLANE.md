@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：fixed 候选 `210abdf` 的冻结 oracle 重跑（`7ee8de6`）与 Chrome native controls/磁盘导出（`bc92561`）均已 PASS。本批登记批次 9：由独立窗口在真实 Chrome 中验证合同 §9 的 host 矩阵 a–l。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
+本轮模式：Chrome host 矩阵（`019f451`）冻结了真实产品失败 **F1**：持有中的浏览器 Back/Forward（POP）离页被成功的 Retry 释放后，共享 `DepartureCoordinator` 从过时的 blocked 状态再次调用 `blocker.proceed()`，React Router 抛出 `Invalid blocker state transition: unblocked -> proceeding`。CP-STICKY-01 回到 `diagnosis_needed`。本批按合同 §11 共享缺陷规则登记批次 10：由独立 Astra 角色实例做 F1 影响评审，不修改产品。当前 Claude 总控窗口不实施产品或 verifier 修复、不创建 Luna task、不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `bc92561` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。此前各批次的隔离 worktree 和临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `019f451` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。此前各批次的隔离 worktree 和临时本地分支均已在快进接收后清理。
 - 产品基线由 `2023526` 前进到 `210abdf`。`git diff --name-only 2023526 210abdf -- apps packages package.json pnpm-lock.yaml` 恰为合同 §11 的 8 个文件：`stickyPane.tsx`、`StickyColorPalette.tsx`、`localI18n.ts`、`styles.css`、`stickyPane.test.tsx`、新增的 `stickyPaneRecovery.test.tsx`、`docs/api.md`、`docs/test.md`。共享层、shell、widgets、`apps`、lockfile 无变化。
 - More 生产文件从 `7b216a3` 到 `210abdf` 无差异。
 - 最终 reviewer 的隔离 worktree 和临时本地分支已在快进接收 `27adb10` 后清理。
@@ -47,7 +47,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：Terra `210abdf` 已通过总控 diff 核对；独立 fixed 重跑（`7ee8de6`）与 Chrome native controls/导出（`bc92561`）均 PASS。待 Chrome host 矩阵、EN/ZH 视觉/键盘、最终回归与最终 acceptance |
+| 状态 | `diagnosis_needed`：Chrome host 矩阵冻结了真实产品失败 F1，需先完成 Astra 角色影响评审并确定修复归属。已 PASS 的证据保留：独立 fixed 重跑（`7ee8de6`）、Chrome native controls/导出（`bc92561`），以及 host 矩阵中除 F1 以外的全部行为检查 |
 | 实施 | Terra 提交 `210abdf`（父 `37a4d33`，单提交，8 文件 +955/−48）。执行者为独立 Claude Opus 5.5（Terra 角色映射），不兼任后续验证或验收。Terra 自检与预检为作者自查，不作为独立证据 |
 | 合同 | `docs/reviews/web-sticky-recovery-contract/contract.md`，提交 `70ff46a`（父 `1ddae30`，单文件，快进接收）。作者为独立 Claude Opus 5.5（Astra 设计角色映射）|
 | 312 清单编号 | `SET-12` 的支撑 caller；关联 `REL-05`、`QA-01`、`QA-03`、`QA-04`、`QA-09` 与 D2 writer 库存。本任务不得关闭这些编号 |
@@ -59,13 +59,15 @@
 | 风险等级 | `high`（合同确认）：同字段异步队列、uncertainty/conflict、最新选择丢失、离页仲裁、全拒绝下的内存导出与 native 证据。device-only 移除了 More 的账户键与私有处置面，但仍需证明 A→B→locked→A 与 epoch 下的 device 连续性 |
 | 独立 fixed 重跑 | `7ee8de6`（新的独立 Sol 角色实例，8 个新增文件）。<ul><li>冻结文件 14 个 SHA-256 全部吻合。</li><li>diff 边界恰为 §11 的 8 个文件；D1 搜索无新读写方。</li><li>fixed1 结果：bytes 13/13、fields 47/47、queues 27/27、continuity-export 22/22、original 10/10、host 28/28。</li><li>116 个 before FAIL（Sol 93、host 23）全部转为 PASS；31 个 fixture/正向对照/不变量保持 PASS；无新失败。</li><li>`PRECONDITION:` 为 0；每个日志 hash 都写入回执。</li></ul> |
 | Chrome native controls 与导出 | `bc92561`（独立父级 native 验证者；`docs/reviews/web-sticky-recovery-native/` 下 12 个新增文件；Chrome 154 headless；不可变 `210abdf` archive；lockfile gate 通过；runtime error 与 console warning 均为 0）。<ul><li>**controls：** 482 项全部 PASS。25 个值的可信输入与磁盘字节；同 profile 重启后复核；重载零写入；真实锁 pending 后一次写入；uncertainty Retry 恰好一次写入；第二 document 的 `coral` 被保留，再次 Retry 零写入，Discard 零写入。</li><li>**export：** 295 项全部 PASS。x1–x6 六种形状均在全部 Storage 拒绝下进行：attempt 级零读写删、同一 URL 创建并回收、anchor 移除、磁盘 JSON deepEqual，之后 warning 与 guard 仍生效；x3 对话框保持打开、location key 不变；x7 click 抛错后显示本地化错误，恢复后导出成功；另加 x8 `createObjectURL` 抛错。</li><li>7 个 JSON 产物与 fixture、runner、日志的 hash 均与回执吻合；all-five 产物与合同 §8 envelope 逐字相同。</li><li>**保留：** 仅 EN、单一 1280×813 视口；beforeunload 为合成事件；font select 由脚本聚焦后再发真实按键。</li></ul> |
-| 允许修改文件 | 批次 9（Chrome host 矩阵）：只能在 `docs/reviews/web-sticky-recovery-native/` 中新增文件，例如 `verify-host.mjs`、按需的新 fixture、host 日志与 `review-host-210abdf.md`。不得修改该目录已有文件或其他证据 |
+| Chrome host 矩阵与 F1 | `019f451`（独立父级 host 验证者；`web-sticky-recovery-native/` 下 4 个新增文件；Chrome 154；批次 8 文件未改）。<ul><li>a–l 与 beforeunload 的全部行为检查通过：前置条件 335/335，host 检查 257/257。其中 c 行的 key deepEqual、history 栈完整与 CDP/Navigation API entry id 一致；i 行的 PUSH 释放恰好 1 次 commit、1 次 `pushState`、0 次 `replaceState`。</li><li>**F1（真实产品失败，已冻结）：** 由成功的 Retry 释放 POP 离页的 4 个场景（c9 Back、c10 Forward、c11 脚本 `history.back()`、i-pop），在正确的单次 POP commit 之后，`departureCoordinator.tsx:170` 再次 `blocker.proceed()`，React Router 抛出 `Invalid blocker state transition: unblocked -> proceeding`，错误边界重建 `<DepartureCoordinator>` 组件树。日志 `native-210abdf-h1-host.log` 第 214–215、236–237、256–257、294–295 行；runtime error 8 次；4 个延迟 gate 失败导致总 gate 失败。</li><li>**未受影响：** 由锁完成、discard、Stay 释放的场景，以及由 Retry 释放的 PUSH 场景。</li><li>**疑似机制（未定论）：** Sticky 在 Retry 路径上两次重新注册 guard（`stickyPane.tsx:156`、`:192`），导致 `guardVersion` 变化，叠加 React Router 在 transition 中应用的 router 状态，使协调器第一个 effect 读到过时的 blocker 快照。</li><li>hash 与回执吻合。</li></ul> |
+| F1 影响面（待评审） | 共享协调器同时服务其他 guard 注册方：已接受的 More、Notifications、Date & Time、Collaborate，以及 Pomodoro 与 Dashboard Header 的 registration。More B2 只覆盖由 Retry 释放的 PUSH，没有覆盖 POP。已接受 caller 是否同样暴露尚未证实；在评审结论前不改其 `accepted` 状态，也不得假定其未受影响 |
+| 允许修改文件 | 批次 10（F1 影响评审）：仅新目录 `docs/reviews/web-sticky-recovery-f1/**`，内容为评审报告，以及可选的最小复现 harness/日志。不得修改产品或任何已有证据 |
 | 禁止修改文件 | 全部产品源与测试；合同文件（如需修订，必须另开 Astra 角色修订）；已有 review/evidence；三份正式台账；本控制面；已接受的 DateTime/Notifications/More/Header/Smart/Collaborate/Pomodoro；共享 storage hook/engine/registry/ownership；Settings host/coordinator/auth；部署、同步、发布、长期分支文件 |
 | 原始失败复现 | **Sol `4e21e6d`**（`docs/reviews/web-sticky-recovery-sol/`，requested `2023526` → resolved `20235269…`，lockfile `df05f2dd…`，诊断迭代 1/3）：bytes 13/13 PASS；fields 0/47；queues 0/27；continuity-export 3/22；original ST1–ST10 10/10。109 个 Sol case 中 16 PASS、93 正确 FAIL；`PRECONDITION:` 为 0，无未处理错误。<br>**host `07784c4`**（`docs/reviews/web-sticky-recovery-independent/`，实际 Shell + ComposedSettings + DepartureCoordinator，生产 `createBrowserRouter`，真实 `requestSettingsDeparture`，诊断迭代 1/3）：28 个 case 中 5 PASS（2 个 fixture 自检 + PC1–PC3 正向对照）、23 正确 FAIL。<ul><li>五个字段各自的最新选择丢失、sidebar 离开、登出直接 `true`：全部确认。</li><li>`color` 上的 sidebar、AppRail、编程导航、Back、Forward、`navigate(-1)`、`navigate(1)`、带 state 的相对导航与登出：全部确认；beforeunload 未被阻止。</li><li>`PRECONDITION:` 为 0；产品 quota 警告恰好 23 次，证明故障逐例触发。</li></ul> |
 | 验收命令与业务断言 | 合同 §5–§13：All5 字段、同字段队列归因、device 连续性与导出、production host/native、下游格式不漂移、最终回归，共六行 gate |
 | 是否允许 Luna 执行 | 否；属于持久化恢复、异步与最终验收禁区 |
-| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 9 执行者为新的独立 Claude Opus 5.5（父级 host 验证角色），不是 Terra |
-| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ ~~fixed 原样重跑~~（`7ee8de6`）→ ~~Chrome native controls 与导出~~（`bc92561`）→ Chrome host 矩阵（批次 9）→ Chrome EN/ZH 五宽度视觉、键盘与截图（批次 10）→ 最终回归（批次 11）→ 独立最终 acceptance（批次 12） |
+| 当前唯一负责人 | Claude 总控负责调度、核对、接收。批次 10 执行者为新的独立 Claude Opus 5.5（Astra 角色映射，负责影响评审与修复归属建议），与 Terra 和此前各验证者都不同 |
+| 后续顺序 | ~~Sol 冻结 jsdom oracle~~（`4e21e6d`）→ ~~父级角色 host 基线~~（`07784c4`）→ ~~Terra 实施~~（`210abdf`）→ ~~fixed 原样重跑~~（`7ee8de6`）→ ~~Chrome native controls 与导出~~（`bc92561`）→ ~~Chrome host 矩阵~~（`019f451`，F1）→ F1 影响评审（批次 10）→ 按评审确定归属的 F1 修复窗口（批次 11）→ 受影响 oracle、native host 与受影响已接受 caller 的重跑 → Chrome EN/ZH 五宽度视觉、键盘与截图 → 最终回归 → 独立最终 acceptance |
 | 不应被本任务关闭 | `SET-12`、`REL-05`、QA 项、完整 D2/REL/AI、其余 312 项、部署与发布门禁 |
 
 #### 总控合同核对（`70ff46a`）
@@ -159,32 +161,22 @@
 
 ## 本轮唯一任务
 
-批次 9：独立窗口在真实 Chrome 中验证合同 §9 的 host 矩阵。
+批次 10：独立 Astra 角色实例对 F1 做影响评审（合同 §11 共享缺陷规则的第二步），不修改产品。
 
-- **固定点：** fixed 候选 `210abdf`；控制分支基点为本提交。
-- **框架：**
-  - 可复用 `bc92561` 的 `native.tsx` / `verify-native.mjs` 模式，但不得修改这两个文件；需要变更时新增文件（例如 `verify-host.mjs`、`native-host.tsx`）；
-  - 不可变 archive、lockfile gate、可信 CDP 输入与 hit-test、拒绝覆盖、runtime error 0 的要求与批次 8 相同。
-- **host 模式（合同 §9 a–l，实际 composition + 完整 Shell）：**
-  - a：hit-test 后的可信 sidebar 行激活；
-  - b：AppRail 或编程导航；
-  - c：Back 与 guarded Forward，在 Stay、discard-and-leave、最新完成释放三种情况下对 `{pathname,key,state}` 做 deepEqual，history 栈保持完整；
-  - d：相对导航原样回放 state 与 options；
-  - e：Stay 时登出返回 `false`；
-  - f：同一 turn 内的首个意图胜出，含路由对路由、路由对登出；
-  - g：Stay、Escape、导出保持 URL/history/pane/对话框，Stay 后的新意图再次提示；
-  - h：两个失败字段中修复一个仍保持阻止，新的编辑或隐藏/屏外恢复也保持阻止；
-  - i：同字段顺序——前驱完成时最新操作被真实锁持有，断言 location、对话框与零 history 变更；最新操作经 `setItem` 故障失败后 Retry，恰好释放一次：一次 router commit，无多余 push/replace，POP 释放无 push/replace，对话框关闭；
-  - j：Discard all and leave 以零写入释放一次；
-  - k：epoch 变化取消旧意图，新的 device 保护仍在；
-  - l：unmount 移除 guard 与 unload 监听。
-- **beforeunload：** 仅在存在 draft 时警告，且 handler 内零存储尝试；干净、source-only、仅输入错误三种状态不警告。
-- **允许范围：** 只在 `docs/reviews/web-sticky-recovery-native/` 中新增文件，包括 host 日志与 `review-host-210abdf.md` 回执。
-- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push；不跑五宽度视觉或其他 caller 的矩阵。
-- **成本上限：** 诊断迭代不超过 3 轮（新后缀，保留旧日志）。
-- **停止条件：**
-  - 出现真实产品失败：冻结复现、影响范围与正确 oracle，提交证据后停止；修复由总控另开 Terra 窗口。
-  - 框架 3 轮内无法有效：提交 blocked 回执。
+- **固定点：** fixed 候选 `210abdf`；F1 证据 `019f451`；控制分支基点为本提交。
+- **必须回答：**
+  1. **根因**（带 file:line）：为什么 `blocker.proceed()` 会被调用两次。分清三种可能并给出依据：协调器 effect 对过时 blocker 快照不幂等（共享缺陷）；Sticky 的 guard 重注册违反了协调器契约（caller 缺陷）；两者兼有。
+  2. **影响面：** 哪些 guard 注册方会走到同一序列（POP 离页被持有 → Retry 成功释放 → guard 重注册）。范围包括 Sticky、已接受的 More、Notifications、Date & Time、Collaborate，以及 Pomodoro 与 Dashboard Header 的 registration。以代码分析为主；可在 `210abdf` 上用 Chrome 对最多两个已接受 caller 做有界复现，优先 More 与另一个 Settings pane。
+  3. **正确 oracle：** 修复必须满足的业务断言（例如由 Retry 释放的 POP：恰好一次 commit、零 runtime error、无错误边界、intent 只完成一次），以及修复前必须冻结的最小 before 复现。
+  4. **归属与文件边界建议：**
+     - 方案 A：共享协调器修复。列出需修订的受保护面、修复文件，以及按 `shared-96c4915.md` 先例需要重跑的已接受 caller 清单。
+     - 方案 B：Sticky 本地修复。仅在根因确属 caller 时适用，并说明其他 caller 是否仍暴露。
+     - 推荐其一并给出理由。
+  5. **对已接受 caller 状态的建议：** 若暴露成立，说明控制面应如何记录。不得在无证据时撤销接受。
+- **允许范围：** 仅新目录 `docs/reviews/web-sticky-recovery-f1/**`，内容为 `impact-review.md`，以及可选的复现 harness/日志（不可变 archive、lockfile gate、拒绝覆盖）。
+- **禁止：** 修改产品、合同、已有证据、台账、控制面；不修复；不 push。
+- **成本上限：** 已接受 caller 的 Chrome 复现最多两个，每个诊断迭代不超过 3 轮；不跑全矩阵。
+- **停止条件：** 根因无法在上限内确立时，写明各假设与所需的最小补充证据后提交并停止。
 
 ## Luna 任务卡
 
@@ -209,7 +201,9 @@
 - `7ee8de6`：冻结 Sol 与 host oracle 的独立 fixed 重跑（快进接收）。
 - `c18db81`：记录批次 7 核对结论，CP-STICKY-01 进入 `verification_pending`，登记批次 8。
 - `bc92561`：Chrome native controls 与磁盘导出验证（快进接收）。
-- 本提交：记录批次 8 核对结论，登记批次 9。
+- `0772569`：记录批次 8 核对结论，登记批次 9。
+- `019f451`：Chrome host 矩阵验证，冻结 F1（快进接收）。
+- 本提交：记录 F1 与核对结论，CP-STICKY-01 回到 `diagnosis_needed`，登记批次 10（F1 影响评审）。
 
 ## 台账变化
 
@@ -234,13 +228,16 @@
 - 周期 3（批次 7–9）：fixed 重跑、Chrome native controls 与导出、Chrome host 矩阵。
   - 批次 7：一个子任务，每模式各跑一次，无环境重跑。
   - 批次 8：一个子任务，每模式各跑一次（n1），用过两个已删除的探针，无返工。
-  - 批次 9 完成后做本周期的非阻断成本检查。
+  - 批次 9：一个子任务，证据迭代 1 次（h1），另有 3 个已删除的开发探针。发现并冻结 F1，这是本 caller 首个真实产品失败。
+  - **周期 3 成本检查（非阻断）：** 无重复全矩阵；F1 将带来一次修复与若干重跑，包括受影响已接受 caller 的重跑，属必要成本。
 
 ## 下一步
 
-1. 等待批次 9 回执，总控核对：
-   - 只新增文件，未改 `bc92561` 已有文件；
-   - a–l 每行与 beforeunload 都有日志行支撑，含 guarded Forward 的 key deepEqual 与同字段 exactly-once 的 history 计数；
-   - runtime error 0，各 hash 与回执吻合。
-2. 若通过：接收、推送，再登记批次 10，做 Chrome EN/ZH 五宽度的每控件 hit-test、44px、截图人工审查与键盘/焦点检查。
-3. 若出现真实产品失败：冻结后另开 Terra 修复窗口，修复后需重跑受影响的 oracle 与 native 模式。
+1. 等待批次 10 的 F1 影响评审，总控核对：
+   - 只新增 `web-sticky-recovery-f1/**`；
+   - 根因有 file:line 依据；影响面结论有代码或复现支撑；
+   - 正确 oracle 与 before 复现可执行；归属建议清楚。
+2. 按评审结论登记批次 11（F1 修复）：
+   - 若为共享缺陷：在控制面明确修订受保护面的归属，冻结 before 复现，由独立修复窗口修改指定文件；修复后重跑受影响的已接受 caller 与 Sticky 证据。
+   - 若为 Sticky 本地缺陷：由新的 Terra 窗口只改合同 §11 文件。
+3. 修复与重跑通过前，不做五宽度视觉、最终回归或最终 acceptance。
