@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-STICKY-01 已由独立最终 reviewer 接受（`699f6e6`）。本提交只把 Sticky caller 状态改为 `accepted`。正式台账核对另作单独提交；下一项尚未选择或启动。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：CP-STICKY-01 已接受（`699f6e6`），正式台账已核对（`4da6e71`）。开始选择下一项：本批登记并启动批次 20，即首个 Luna 低风险检索任务，刷新直接 `usePref` 库存。之后由独立 Astra 角色实例选择下一个完整 caller 并起草合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `699f6e6` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `4da6e71` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -22,7 +22,7 @@
 
 ## 台账与 Git 的差异
 
-- 正式台账已在 `d91b5e5`（More 与 Notifications 接受链）与 `a0df253`（F1）核对。Sticky acceptance 将在紧随本提交的单独提交中写入。
+- 正式台账已在 `d91b5e5`（More 与 Notifications 接受链）、`a0df253`（F1）与 `4da6e71`（Sticky 接受链，REL-05 证据追加 25 条）核对，均未改条目状态。
 - 正式统计保持 13 `completed`、3 `verification_pending`、3 `in_progress`、293 `pending`，合计 299 未关闭。caller 接受不改变这些数字。
 - 新状态词的保守迁移视图：旧 13 `completed` 视为 `accepted`；REL-02/03/04 保持 `verification_pending`；REL-05/06、AI-02 在完成逐项账实复核前视为 `diagnosis_needed`；其余 293 项保持 `not_started`。这只是控制面映射，不改写或关闭旧台账项目。
 
@@ -105,7 +105,19 @@
 
 ## Luna 任务卡
 
-`独立 Luna task 未创建`。本会话至今的任务均属持久化、异步、宿主或验收禁区。下一项选择前的库存刷新是低风险检索，可作为首个 Luna 任务（见下一步）。
+### CP-LUNA-01 · 直接 usePref 库存刷新（批次 20）
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | `assigned_to_luna` |
+| 执行者 | 新的独立 Claude Sonnet 5.5（Luna 角色映射），隔离 worktree |
+| 风险 | 低：只读 git 中的固定修订并运行既有扫描器；不触及产品、持久化、宿主或验收 |
+| 固定点 | 产品 `f359be6`；对照 `afbfb24` 的 `bindings-afbfb24.json` / `refresh-afbfb24.md` |
+| 命令 | `node docs/reviews/web-d2-pref-binding-inventory/scan.mjs f359be6`（扫描器从 git 读源码，需要可解析 `typescript`；worktree 内可先执行 `pnpm install --frozen-lockfile --offline`） |
+| 允许新增文件 | `docs/reviews/web-d2-pref-binding-inventory/bindings-f359be6.json`（扫描器输出）与 `refresh-f359be6.md` |
+| 验收条件 | <ul><li>计数与相对 `afbfb24` 的逐行 delta 精确对账。预期只移除 More（`morePane.tsx`）与 Sticky（`stickyPane.tsx`）的直接绑定行，任何其他增减都须逐行列出并说明来源提交。</li><li>沿用 `refresh-afbfb24.md` 的边界声明：只统计直接 legacy `usePref` 绑定，不是完整 writer 数，也不是缺陷数。</li><li>不作排程、风险或缺陷判断。</li></ul> |
+| 禁止 | 修改任何已有文件、产品、台账、控制面；push、merge、建分支；派生子 agent |
+| 停止条件 | 扫描器无法运行或 delta 无法解释时，提交说明后停止 |
 
 ## 本会话提交
 
@@ -116,12 +128,13 @@
 | Sticky 实施与验证 | `210abdf` Terra · `8db7d30` · `7ee8de6` · `c18db81` · `bc92561` · `0772569` · `019f451`（F1 冻结） |
 | F1 | `d113c6a` · `0ba68d7` 评审 · `41774ab` · `e3db4e0` · `c3b9883` · `f359be6` 修复 · `518fa42` · `3ea0310` · `2bdb020` · `f3a3c82` · `1c58841` · `a0df253` 台账 |
 | Sticky 收尾 | `98125c5` 视觉 · `463c2ab` · `d7358b9` 最终回归 · `b2a21d0` · `47bbd58` BLOCKED(G1) · `89d4302` · `3debd91` G1 · `57f396c` · `699f6e6` Sticky acceptance |
-| 本提交 | CP-STICKY-01 改为 `accepted` |
+| Sticky 关闭 | `b63aad6` CP-STICKY-01 改为 `accepted` · `4da6e71` 台账 |
+| 本提交 | 登记 CP-LUNA-01（批次 20） |
 
 ## 台账变化
 
 - 无编号状态变化；13/312 完成、299 未关闭保持不变。
-- 紧接本提交：正式台账写入 Sticky 接受链，只追加 REL-05 证据与检查点文字。SET-12 保持待处理，并保留"caller accepted ≠ 业务/发布完成"。
+- Sticky 接受链已在 `4da6e71` 写入：只追加 REL-05 证据与检查点文字，SET-12 保持待处理，并保留"caller accepted ≠ 业务/发布完成"。
 
 ## 成本检查（非阻断）
 
@@ -138,8 +151,5 @@
 
 ## 下一步
 
-1. 单独提交正式台账的 Sticky 核对（docs-only，push 后运行 sync-check）。
-2. 选择下一项：
-   - 先由一个 Luna 低风险检索任务在 `f359be6` 上用既有扫描器 `docs/reviews/web-d2-pref-binding-inventory/scan.mjs` 刷新直接 `usePref` 库存，产出 `bindings-f359be6.json` 与 `refresh-f359be6.md`（相对 `afbfb24` 的 delta，预期移除 More15 与 Sticky5 行）；
-   - 再由独立 Astra 角色实例按 `remaining-writers.md` 的后续分组、产品风险与实际源码，选择下一个完整 caller 并起草合同。
-   - 两步都须先在控制面登记，不得提前实施。
+1. 等待 CP-LUNA-01 回执，总控核对：只新增两个文件；计数与逐行 delta 对账；边界声明沿用；没有越界判断。
+2. 通过后登记批次 21：由独立 Astra 角色实例按 `remaining-writers.md` 的后续分组、最新库存、产品风险与实际源码，选择下一个完整 caller 并起草合同。须先在控制面登记，不得提前实施。
