@@ -1,0 +1,32 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+mode=original
+suffix=post1
+include=packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=8cc5993a08b4ccee7ff557601d2fe9085cd7f6e041940d5eeba64b3b62e390ca bytes.test.tsx=3774dfa9703578ae22fed8d862441481226b0bf28c704cab0cc20672dfdf5da9 fields.test.tsx=2bf42fb6ddbe83bf54c574926fc8a7272bb6cdf073c746efea93012bbbd401bb queues.test.tsx=258aec9e5247f7c75c8a5b997683c7b5aa58c8a8b98117dc86df9ffa975c4983 continuity-export.test.tsx=78f140f50306b91ff22eb116bc587ce30b2cac57390dcefc948e1f3e44ce828d verify-fixed.mjs=3fba4b3b181d13431db9fe632fd68b70a4e51c6357168ec29aa89dd7977864c3
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-sol-B2KwJI
+
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST1: renders without error 29ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST2: 13 color swatch buttons rendered 6ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST3: 12 non-random swatches use var(--sticky-note-color-<id>) background 6ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST4: random swatch uses conic-gradient 5ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST5: no hex literals in swatch inline styles 5ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST6: clicking a swatch persists xai_pref_sticky_color 16ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST7: 4 spacing buttons rendered 5ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST8: clicking a spacing button persists xai_pref_sticky_grid_spacing 14ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST9: bilingual — ZH font size options 8ms
+ ✓ packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx > stickyPane > ST10: pane id, icon, i18nKey are correct 0ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  21:20:39
+   Duration  1.57s (transform 284ms, setup 269ms, collect 236ms, tests 94ms, environment 477ms, prepare 91ms)
+
+
+---- stderr ----
