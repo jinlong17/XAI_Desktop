@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-FXshMQ
+
+ ✓ docs/reviews/web-date-time-recovery-independent/advanced-host.test.tsx (12 tests) 1056ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  22:04:21
+   Duration  4.25s (transform 1.88s, setup 0ms, collect 2.75s, tests 1.06s, environment 201ms, prepare 55ms)

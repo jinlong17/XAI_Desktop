@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"departure","path":"/app/settings/notifications","dialog":true,"signout":"pending","warning":true}
+{"name":"native","pass":true,"mode":"signout","runtimeErrors":0}

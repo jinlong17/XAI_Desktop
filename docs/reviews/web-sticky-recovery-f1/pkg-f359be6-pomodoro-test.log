@@ -1,0 +1,40 @@
+product=f359be6d838393e0f9e93efd80b88b5b09f6144e
+checkout_head=2bdb02089231acae99386091f6450c669b0f61f4
+product_delta_vs_checkout=""
+command=pnpm --filter @repo/plugin-web-pomodoro test
+cwd=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a7c736b67a78cecf7
+stdio=piped (non-TTY), inherited environment, no overrides
+started=2026-10-04T05:10:27.075Z
+finished=2026-10-04T05:10:32.230Z
+exit=0
+
+
+> @repo/plugin-web-pomodoro@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a7c736b67a78cecf7/packages/plugin-web-pomodoro
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a7c736b67a78cecf7/packages/plugin-web-pomodoro
+
+ ✓ src/__tests__/derivedCounters.test.ts (16 tests) 7ms
+ ✓ src/__tests__/durableSession.test.ts (14 tests) 16ms
+ ✓ src/__tests__/useTimerTick.test.tsx (8 tests) 28ms
+ ✓ src/__tests__/FocusRecordList.test.tsx (8 tests) 45ms
+ ✓ src/__tests__/preferenceRecovery.test.tsx (3 tests) 409ms
+ ✓ src/__tests__/eventEmit.integration.test.tsx (6 tests) 459ms
+ ✓ src/__tests__/PomodoroOverview.test.tsx (7 tests) 71ms
+ ✓ src/__tests__/computeRemainingMs.test.ts (8 tests) 3ms
+ ✓ src/__tests__/index-barrel.test.ts (5 tests) 3ms
+ ✓ src/__tests__/TimerRing.test.tsx (4 tests) 36ms
+ ✓ src/__tests__/sessionsReducer.test.ts (7 tests) 7ms
+ ✓ src/__tests__/validate.test.ts (11 tests) 4ms
+ ✓ src/__tests__/PomodoroModule.test.tsx (22 tests) 1477ms
+ ✓ src/__tests__/nextMode.test.ts (10 tests) 4ms
+ ✓ src/__tests__/formatLocalTime.test.ts (3 tests) 3ms
+ ✓ src/__tests__/formatRecordDate.test.ts (8 tests) 4ms
+ ✓ src/__tests__/registration.test.tsx (3 tests) 4ms
+ ✓ src/__tests__/formatDuration.test.ts (5 tests) 3ms
+
+ Test Files  18 passed (18)
+      Tests  148 passed (148)
+   Start at  22:10:28
+   Duration  3.59s (transform 742ms, setup 3.68s, collect 2.25s, tests 2.58s, environment 8.92s, prepare 1.36s)

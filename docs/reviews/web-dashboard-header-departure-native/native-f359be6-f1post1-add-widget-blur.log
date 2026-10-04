@@ -1,0 +1,3 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"non-navigation-blur-observation","path":"/app/dashboard","dialog":false,"picker":true,"note":"Non-navigation blur note"}
+{"name":"supplemental","pass":true,"mode":"add-widget-blur","runtimeErrors":0}

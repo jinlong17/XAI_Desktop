@@ -1,0 +1,15 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-tWRFJQ
+
+ ✓ docs/reviews/web-pomodoro-departure-astra/export-boundary.test.tsx (7 tests) 4780ms
+   ✓ export url failure preserves current choices, original save failure and guard; cleans temporary resources  1161ms
+   ✓ export append failure preserves current choices, original save failure and guard; cleans temporary resources  1145ms
+   ✓ export click failure preserves current choices, original save failure and guard; cleans temporary resources  1144ms
+   ✓ owner change during actual URL setup revokes the export before click and leaves surviving device work guarded  1150ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  22:05:46
+   Duration  5.56s (transform 222ms, setup 0ms, collect 352ms, tests 4.78s, environment 214ms, prepare 59ms)

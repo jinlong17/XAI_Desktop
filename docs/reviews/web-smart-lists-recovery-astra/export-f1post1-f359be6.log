@@ -1,0 +1,11 @@
+revision=f359be6 fixed_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-KfNBL5
+
+ ✓ docs/reviews/web-smart-lists-recovery-astra/export.test.tsx (8 tests) 302ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  22:04:58
+   Duration  1.32s (transform 187ms, setup 0ms, collect 334ms, tests 302ms, environment 319ms, prepare 80ms)

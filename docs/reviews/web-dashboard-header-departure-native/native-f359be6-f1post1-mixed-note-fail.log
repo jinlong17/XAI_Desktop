@@ -1,0 +1,6 @@
+{"name":"baseline","commit":"f359be6","browser":"Chrome/154.0.8037.97"}
+{"name":"mixed-both-pending","path":"/app/dashboard","dialog":true,"note":"Original note","offset":"0"}
+{"name":"mixed-offset-only-complete","path":"/app/dashboard","dialog":true,"note":"Original note","offset":"40"}
+{"name":"mixed-partial-failure","path":"/app/dashboard","dialog":true,"note":"Original note","offset":"40"}
+{"name":"mixed-partial-export","version":1,"kind":"dashboard-note-draft","note":"Latest mixed native note","noteOffset":40}
+{"name":"supplemental","pass":true,"mode":"mixed-note-fail","runtimeErrors":0}
