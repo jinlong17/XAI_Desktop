@@ -510,7 +510,18 @@
         "commit:c0c9ec5",
         "../web-more-recovery-evidence/completion-7b216a3.md",
         "commit:27adb10",
-        "../web-more-recovery-acceptance/acceptance-7b216a3.md"
+        "../web-more-recovery-acceptance/acceptance-7b216a3.md",
+        "commit:019f451",
+        "../web-sticky-recovery-native/review-host-210abdf.md",
+        "commit:0ba68d7",
+        "../web-sticky-recovery-f1/impact-review.md",
+        "commit:e3db4e0",
+        "../web-sticky-recovery-f1/before-callers-210abdf.md",
+        "commit:f359be6",
+        "commit:3ea0310",
+        "../web-sticky-recovery-f1/post-f359be6.md",
+        "commit:f3a3c82",
+        "../web-sticky-recovery-f1/affected-callers-f359be6.md"
       ]
     },
     {
