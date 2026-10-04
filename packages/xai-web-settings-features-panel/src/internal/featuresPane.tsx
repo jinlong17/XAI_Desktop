@@ -9,12 +9,13 @@
  */
 
 import * as React from "react";
-import type { Pane } from "@repo/plugin-web-settings-shell";
+import type { Pane, PaneRenderProps } from "@repo/plugin-web-settings-shell";
 import { FeaturesPane } from "../FeaturesPane.js";
 
 export const featuresPane: Pane = {
   id: "features",
   icon: "sliders",
   i18nKey: "settings.features",
-  render: ({ lang }) => <FeaturesPane lang={lang} />,
+  // Forwards every render prop, including the optional host departure guard.
+  render: (props: PaneRenderProps) => <FeaturesPane {...props} />,
 };

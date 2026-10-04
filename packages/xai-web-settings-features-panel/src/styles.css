@@ -134,3 +134,87 @@
 .disabled-feature-fallback__title {
   font-size: var(--fs-md);
 }
+
+/* ---- Features recovery caller (CP-FEATURES-01) -------------------------- */
+/* Additive only: every selector below is scoped under .features-pane, and the
+   rules above (.features-grid, .feat-*, .disabled-feature-fallback*) and the
+   shell's .toggle / .pane-footer stay unchanged. */
+
+/* Containment at narrow widths. The section block gives back only the inline
+   padding the 280px grid minimum needs (about 3.5px at a 375px viewport; the
+   shell's own 16px / 12px from roughly 392px up), so cards keep their 280px
+   minimum inside the pane; below that, a track may shrink to the grid. */
+.features-pane > div.setting-block {
+  padding-inline: clamp(0px, calc((100% - 282px) / 2), 16px);
+}
+@media (max-width: 640px) {
+  .features-pane > div.setting-block {
+    padding-inline: clamp(0px, calc((100% - 282px) / 2), 12px);
+  }
+}
+.features-pane .features-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
+/* Field-local recovery inside a card: message, then Retry/Discard or Reload. */
+.features-pane .features-recovery-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+}
+.features-pane .features-recovery-text {
+  grid-column: 1 / -1;
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text-2);
+}
+.features-pane .features-recovery-field > button:only-of-type {
+  grid-column: 1 / -1;
+}
+
+/* Every recovery, export, discard and reset target is at least 44x44. */
+.features-pane .features-recovery-field > button,
+.features-pane .features-recovery-actions > button,
+.features-pane .features-recovery-reset {
+  min-width: 44px;
+  min-height: 44px;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.features-pane .features-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.features-pane .features-recovery-error {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+}
+
+/* Features-local Reset to defaults row with the truthful status line. */
+.features-pane .features-recovery-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-1);
+}
+.features-pane .features-recovery-status {
+  flex: 1 1 12rem;
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
