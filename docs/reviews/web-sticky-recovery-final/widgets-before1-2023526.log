@@ -1,0 +1,153 @@
+requested_revision=2023526
+resolved_commit=20235269749dad514833d76c27b958f694d0e4e9
+resolved_tree=16f49e9388d66391e9855b4e79b2e53f4b9683f2
+suffix=before1
+package=@repo/plugin-web-dashboard-widgets (packages/xai-web-dashboard-widgets)
+include=src/__tests__/StickyComposer.test.tsx,src/__tests__/StickiesWidget.test.tsx,src/__tests__/useStickies.test.tsx,src/internal/stickiesStore/__tests__/stickiesStore.test.ts,src/internal/stickiesStore/__tests__/ids.test.ts
+command=node docs/reviews/web-sticky-recovery-final/verify-widgets.mjs 2023526 before1
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/packages/xai-web-dashboard-widgets/g1-widgets.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/.g1-report.json
+vitest_version=3.2.7 vite_version=7.3.6 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+runner_sha256=45e9d9aa793f5ef0fc834f12d78e698b948898a1f26d06eec3c36c9da5090279
+archive_file_sha256 package.json=75366f91db2f3ec637ef414fe53ba7f01421a07ac578f470aa96a032ce306759 tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a vitest.config.ts=4ce52c49da38a9e12b08433dcfbff33e192e53d9d73d37430d6a5e47d7766a0c src/__tests__/setup.ts=2d9dc4ddca815a8deca6816778f33551bf93a1225e32386f13281b2a934ebe02 src/__tests__/StickyComposer.test.tsx=d5c8e56a1b427fe885a6526d754a5490ba87d8b803d21a47ba63b0b850c4e5e1 src/__tests__/StickiesWidget.test.tsx=9543ac983ee7f7e15c2ba103531342c2a10f916bff3b937fd0003d51b5cc3355 src/__tests__/useStickies.test.tsx=23d4c8210548f854ea2e8172dbe268bd51ff29ceb7a960e9271250ad2244ceac src/internal/stickiesStore/__tests__/stickiesStore.test.ts=31bf67871332f0a8229e7335673567745ba3b67ca8cf59b183da6a1427c547d0 src/internal/stickiesStore/__tests__/ids.test.ts=f54c1197d13c7de8df39f3150245104de9e225ff2e13f09ab134dd3c9de81309
+closure_trees @repo/core=packages/core@6bfdb0eac1ff1a597128e5c8c9b9feba52d11051 @repo/eslint-config=packages/eslint-config@9e14caf85dd45965f263318f34577cea75045b72 @repo/plugin-web-dashboard-widgets=packages/xai-web-dashboard-widgets@4d65ad167b0d3712166e96569b1d9f44ed66a500 @repo/plugin-web-storage=packages/plugin-web-storage@782c79de33a1da6851b5a235950408eb7ae89f99 @repo/plugin-web-time-tracker=packages/plugin-web-time-tracker@a71c455ef8eb207894ebb62dcf8cefe65f2903dc @repo/plugin-web-tokens=packages/plugin-web-tokens@3ea903458975b90129f563ddbf4b31224e9b4b52 @repo/typescript-config=packages/typescript-config@4ac12dadfb98442d2f96b2dee2ae25b3405d13fe @repo/xai-web-event-bus=packages/xai-web-event-bus@c68c77fae4984e8b60aaf9684c61bbe21224a38d @repo/xai-web-shell=packages/xai-web-shell@0f0fed40fe94a9de5c79eb273d1103757a807a9c
+closure_contains_changed_packages=none
+package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-time-tracker->packages/plugin-web-time-tracker @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus
+tsconfig_extends @repo/core:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/plugin-web-dashboard-widgets:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/plugin-web-storage:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/plugin-web-time-tracker:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/plugin-web-tokens:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/xai-web-event-bus:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json @repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match (@repo/core,@repo/core/events,@repo/core/hooks,@repo/core/registry,@repo/core/store,@repo/core/types,@repo/eslint-config/base,@repo/eslint-config/next-js,@repo/eslint-config/react-internal,@repo/plugin-web-dashboard-widgets,@repo/plugin-web-storage,@repo/plugin-web-time-tracker,@repo/plugin-web-tokens,@repo/xai-web-event-bus,@repo/xai-web-shell within the closure)
+vitest_exit=0
+harness_checks=PASS (5/5)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/packages/xai-web-dashboard-widgets
+
+ ✓ src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-1: createStickyId returns a non-empty string > returns a non-empty string 1ms
+ ✓ src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-2: createStickyId returns unique ids on successive calls > two calls produce different ids 0ms
+ ✓ src/internal/stickiesStore/__tests__/ids.test.ts > AC-IDS-3: createStickyId fallback format when crypto.randomUUID unavailable > fallback string includes sticky- prefix and timestamp components 1ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-1: createSticky returns new store + created entity > creates a new sticky with trimmed text and given color 2ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-2: createSticky does not mutate original store > original store is unchanged after create 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-3: createSticky appends to existing store > pre-existing entries are preserved 1ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-4: deleteSticky removes the entry > key is gone after delete 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-5: deleteSticky is a no-op when id missing > returns same reference when id not found 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-6: deleteSticky does not mutate original store > original store still has the key after delete 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > sorts by createdAt ASC then id ASC 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > sorts by saved display order when present 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-7: listStickies returns sorted array > returns empty array for empty store 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-8: updateSticky edits an existing note without changing identity > updates text/color/source and preserves id + createdAt 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-8: updateSticky edits an existing note without changing identity > returns the same reference when id is missing 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-9: resizeSticky updates only dimensions > persists clamped width/height without changing note content 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-9: resizeSticky updates only dimensions > returns the same reference when id is missing 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-10: reorderStickies persists display order > rewrites order values without changing sticky content or size 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-10: reorderStickies persists display order > ignores missing ids and appends omitted stickies 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-11: moveSticky updates only free-form canvas position > persists clamped x/y without changing content or size 0ms
+ ✓ src/internal/stickiesStore/__tests__/stickiesStore.test.ts > AC-STORE-11: moveSticky updates only free-form canvas position > returns the same reference when id is missing 0ms
+ ✓ src/__tests__/useStickies.test.tsx > AC-HOOK-1: initial list is empty when localStorage is clear > list starts as [] 9ms
+ ✓ src/__tests__/useStickies.test.tsx > AC-HOOK-2: create adds a sticky and updates list > after create, list has 1 sticky with correct text and color 3ms
+ ✓ src/__tests__/useStickies.test.tsx > AC-HOOK-3: create persists to localStorage > after create, xai_dashboard_stickies key exists in localStorage 1ms
+ ✓ src/__tests__/useStickies.test.tsx > AC-HOOK-4: remove deletes a sticky > after remove, list is empty and key reverts to {} 1ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-1: dialog renders when open=true > dialog element has open attribute when open=true 35ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-2: dialog closes when open=false > dialog does not have open attribute when open=false 4ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-3: Cancel button calls onClose > clicking Cancel fires onClose 8ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-4: Save with empty text shows error, does not call onSave > empty textarea → error shown, onSave not called 6ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-5: Save with valid text calls onSave with trimmed draft > filled textarea → onSave called with trimmed text and selected color 32ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-6: color radiogroup defaults to sun, switches on click > sun chip is aria-checked=true initially; clicking mint switches selection 40ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-7: a11y — aria-modal + aria-labelledby > dialog has aria-modal=true and correct labelledby 3ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-8: form resets when open changes to true again > closing and reopening clears the text field 36ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh > every key in STR_STICKY_COMPOSER has en and zh strings 1ms
+ ✓ src/__tests__/StickyComposer.test.tsx > AC-COMPOSER-9: bilingual STR parity — all keys present in both en and zh > zh labels render correctly 4ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-1: renders 3 fixture sticky notes (samples) when store is empty 42ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-2: each sample note has its fixture color and en text 8ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-3: zh renders zh fixture text 6ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-CREATE-2: fixture samples carry data-sample=true and no .sticky-del 5ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > AC-STICKIES-CREATE-5: + button is present and wired (opens composer) 11ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > empty-state add action opens composer 8ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — empty-store fixture-sample branch > composer shows an expanded 10-color palette 13ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-1: creating a sticky switches from fixture-sample to user branch 28ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-3: user sticky has delete button; fixture samples do not 13ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-4: user sticky text is rendered as single string (not bilingual) 10ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-6: deleting the only sticky reverts to fixture-sample branch 12ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-7: create→persist→rerender shows user sticky 11ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > AC-STICKIES-CREATE-8: composer stays closed across a re-render with new lang prop 6ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > selecting an existing task fills the note and persists source metadata 12ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > existing-task filters can preview completed task sources 23ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > does not paste or render meaningless no-date metadata from task sources 13ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > double-clicking a user sticky opens edit composer and updates the same note 13ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > resizing a user sticky preserves the sticky's own saved width and height 12ms
+ ✓ src/__tests__/StickiesWidget.test.tsx > StickiesWidget — user sticky create + delete > dragging a user sticky moves it freely inside the sticky canvas and persists position 12ms
+
+ Test Files  5 passed (5)
+      Tests  53 passed (53)
+   Start at  00:30:38
+   Duration  1.60s (transform 338ms, setup 1.97s, collect 273ms, tests 451ms, environment 2.51s, prepare 436ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/.g1-report.json
+
+---- stderr ----
+
+---- runner summary ----
+json_report=success=true numTotalTestSuites=34 numTotalTests=53 numPassedTests=53 numFailedTests=0 numPendingTests=0 numTodoTests=0
+file src/__tests__/StickyComposer.test.tsx status=passed tests=10 passed=10 failed=0 skipped=0
+file src/__tests__/StickiesWidget.test.tsx status=passed tests=19 passed=19 failed=0 skipped=0
+file src/__tests__/useStickies.test.tsx status=passed tests=4 passed=4 failed=0 skipped=0
+file src/internal/stickiesStore/__tests__/stickiesStore.test.ts status=passed tests=17 passed=17 failed=0 skipped=0
+file src/internal/stickiesStore/__tests__/ids.test.ts status=passed tests=3 passed=3 failed=0 skipped=0
+total files=5 tests=53 passed=53 failed=0 skipped=0
+harness PASS JSON report parsed
+harness PASS reported files equal the five requested files
+harness PASS archive package config in effect (environment jsdom, globals false, setupFiles [src/__tests__/setup.ts])
+harness PASS Vite root is the archive package
+harness PASS guard plugin active (archive modules recorded)
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/packages/xai-web-dashboard-widgets","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-sticky-widgets-XX8Fq0/.g1-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["./src/__tests__/setup.ts"],"include":["src/__tests__/StickyComposer.test.tsx","src/__tests__/StickiesWidget.test.tsx","src/__tests__/useStickies.test.tsx","src/internal/stickiesStore/__tests__/stickiesStore.test.ts","src/internal/stickiesStore/__tests__/ids.test.ts"]}
+pin_unaliased_repo_imports=0
+pin_modules_by_package packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-dashboard-widgets=15
+pin_changed_package_modules_loaded=none
+pin_modules (45):
+  packages/plugin-web-storage/src/AccountDataGate.css
+  packages/plugin-web-storage/src/AccountDataGate.tsx
+  packages/plugin-web-storage/src/index.ts
+  packages/plugin-web-storage/src/internal/accountCoordination.ts
+  packages/plugin-web-storage/src/internal/accountDataLifecycle.ts
+  packages/plugin-web-storage/src/internal/accountDeletionReceipt.ts
+  packages/plugin-web-storage/src/internal/accountMigration.ts
+  packages/plugin-web-storage/src/internal/accountMigrationValidation.ts
+  packages/plugin-web-storage/src/internal/accountOwnership.ts
+  packages/plugin-web-storage/src/internal/accountScope.ts
+  packages/plugin-web-storage/src/internal/canonicalCommandState.ts
+  packages/plugin-web-storage/src/internal/codec.ts
+  packages/plugin-web-storage/src/internal/dataExport.ts
+  packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts
+  packages/plugin-web-storage/src/internal/migrate.ts
+  packages/plugin-web-storage/src/internal/prefMutation.ts
+  packages/plugin-web-storage/src/internal/registry.ts
+  packages/plugin-web-storage/src/internal/sameTabBus.ts
+  packages/plugin-web-storage/src/internal/storage.ts
+  packages/plugin-web-storage/src/internal/usePref.ts
+  packages/plugin-web-storage/src/internal/usePrefAsync.ts
+  packages/plugin-web-storage/src/internal/usePrefAutosave.ts
+  packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts
+  packages/plugin-web-tokens/src/apply.ts
+  packages/plugin-web-tokens/src/i18n.ts
+  packages/plugin-web-tokens/src/index.ts
+  packages/plugin-web-tokens/src/layout.css
+  packages/plugin-web-tokens/src/localDate.ts
+  packages/plugin-web-tokens/src/tokens.css
+  packages/plugin-web-tokens/src/useLocalDayClock.ts
+  packages/xai-web-dashboard-widgets/src/StickyComposer.tsx
+  packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx
+  packages/xai-web-dashboard-widgets/src/__tests__/StickyComposer.test.tsx
+  packages/xai-web-dashboard-widgets/src/__tests__/setup.ts
+  packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx
+  packages/xai-web-dashboard-widgets/src/internal/Icon.tsx
+  packages/xai-web-dashboard-widgets/src/internal/fixtures.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/ids.test.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/__tests__/stickiesStore.test.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/ids.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/stickiesStore.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/types.ts
+  packages/xai-web-dashboard-widgets/src/internal/stickiesStore/useStickies.ts
+  packages/xai-web-dashboard-widgets/src/internal/strings.ts
+  packages/xai-web-dashboard-widgets/src/widgets/StickiesWidget.tsx
