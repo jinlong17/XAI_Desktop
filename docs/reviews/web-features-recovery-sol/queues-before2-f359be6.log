@@ -1,0 +1,656 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=queues
+suffix=before2
+include=docs/reviews/web-features-recovery-sol/queues.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 all before2
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/features-sol-queues.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-queues.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS
+
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest 72ms
+   → H3: both choices wait behind the held per-key lock: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 87ms
+   → H9: Retry Boards: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q3 Boards: a Retry while the field is pending is inert 44ms
+   → H1: the failed choice stays displayed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q4 Boards: an equal-value successor after intervening input stays its own operation 74ms
+   → H1: the returning choice stays displayed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q5 Boards: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 45ms
+   → H9: an uncertain write keeps Retry Boards: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q6 Boards: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 45ms
+   → H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q7 Boards: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 41ms
+   → H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q8 Boards: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 42ms
+   → H9: an uncertain write keeps Retry Boards: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > Q9 Boards: new work after a discard survives; the discarded held operation never writes 41ms
+   → H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'tasks' > H3 tasks: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 43ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'board' > H3 board: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 43ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'dashboard' > H3 dashboard: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 43ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'calendar' > H3 calendar: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 45ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'matrix' > H3 matrix: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 45ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'pomodoro' > H3 pomodoro: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 42ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'habits' > H3 habits: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 43ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'meditation' > H3 meditation: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled 41ms
+   → H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'tasks' > H4 tasks: two same-turn activations invert the latest intent and return to the original through two operations 44ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'board' > H4 board: two same-turn activations invert the latest intent and return to the original through two operations 48ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'dashboard' > H4 dashboard: two same-turn activations invert the latest intent and return to the original through two operations 42ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'calendar' > H4 calendar: two same-turn activations invert the latest intent and return to the original through two operations 41ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'matrix' > H4 matrix: two same-turn activations invert the latest intent and return to the original through two operations 41ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'pomodoro' > H4 pomodoro: two same-turn activations invert the latest intent and return to the original through two operations 40ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'habits' > H4 habits: two same-turn activations invert the latest intent and return to the original through two operations 43ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'meditation' > H4 meditation: two same-turn activations invert the latest intent and return to the original through two operations 46ms
+   → H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 H4 two Boards activations during a held lock return to the original through two operations 39ms
+   → H3: the held per-key lock keeps the first write pending: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O1 habits: pending set → Reset to defaults; the reset is the latest intent and its completion governs 40ms
+   → H3: the held per-key lock keeps the pending set from writing: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O2 habits: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 45ms
+   → H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O3 habits: reset → set → reset; the queued set is superseded silently and the final reset governs 43ms
+   → H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 42ms
+   → H1: the failed set keeps the latest choice: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O5 habits: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 56ms
+   → H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents 40ms
+   → H1: the failed set displays on: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O7 habits: discard of a reset draft, then new same-field work survives 41ms
+   → H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O1 matrix: pending set → Reset to defaults; the reset is the latest intent and its completion governs 39ms
+   → H3: the held per-key lock keeps the pending set from writing: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O2 matrix: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 42ms
+   → H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O3 matrix: reset → set → reset; the queued set is superseded silently and the final reset governs 43ms
+   → H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 48ms
+   → H1: the failed set keeps the latest choice: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O5 matrix: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 43ms
+   → H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents 40ms
+   → H1: the failed set displays on: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O7 matrix: discard of a reset draft, then new same-field work survives 42ms
+   → H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  40 failed (40)
+   Start at  02:39:17
+   Duration  2.60s (transform 233ms, setup 35ms, collect 343ms, tests 1.83s, environment 199ms, prepare 51ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-queues.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > Q3 Boards: a Retry while the field is pending is inert
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > Q4 Boards: an equal-value successor after intervening input stays its own operation
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+stderr | docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 40 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest
+AssertionError: H3: both choices wait behind the held per-key lock: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:32:74
+     30|   toggle(ui, B);
+     31|   await flush();
+     32|   expect(bytes(B), "H3: both choices wait behind the held per-key lock…
+       |                                                                          ^
+     33|   await lock.release();
+     34|   fired(failLatest, "latest write");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+AssertionError: H9: Retry Boards: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:69:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q3 Boards: a Retry while the field is pending is inert
+AssertionError: H1: the failed choice stays displayed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:104:65
+    102|   await flush();
+    103|   fired(quota, "first write");
+    104|   expect(shown(ui, B), "H1: the failed choice stays displayed").toBe(t…
+       |                                                                 ^
+    105|   const retry = need(retryOf(ui, B), "H9: Retry Boards");
+    106|   const lock = await hold(keyLock(B));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q4 Boards: an equal-value successor after intervening input stays its own operation
+AssertionError: H1: the returning choice stays displayed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:137:68
+    135|   await flush();
+    136|   fired(quota, "returning write");
+    137|   expect(shown(ui, B), "H1: the returning choice stays displayed").toB…
+       |                                                                    ^
+    138|   expect(bytes(B)).toBe("false");
+    139|   expect(says(msg.notSaved(B)), "an earlier equal-value success is not…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q5 Boards: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+AssertionError: H9: an uncertain write keeps Retry Boards: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:162:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q6 Boards: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:196:70
+    194|   toggle(ui, B);
+    195|   await flush();
+    196|   expect(bytes(B), "H3: the held per-key lock serializes the write").t…
+       |                                                                      ^
+    197|   nativeSet.call(localStorage, B.key, "true");
+    198|   pre(bytes(B) === "true", "external replacement present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q7 Boards: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:231:70
+    229|   toggle(ui, B);
+    230|   await flush();
+    231|   expect(bytes(B), "H3: the held per-key lock serializes the write").t…
+       |                                                                      ^
+    232|   nativeRemove.call(localStorage, B.key);
+    233|   pre(bytes(B) === null, "external removal present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q8 Boards: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+AssertionError: H9: an uncertain write keeps Retry Boards: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:266:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > Q9 Boards: new work after a discard survives; the discarded held operation never writes
+AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:295:70
+    293|   toggle(ui, B);
+    294|   await flush();
+    295|   expect(bytes(B), "H3: the held per-key lock serializes the write").t…
+       |                                                                      ^
+    296|   const current = need(guard(), "§9: departure guard registered");
+    297|   expect(blocking(), "pending held work is protected").toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'tasks' > H3 tasks: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'dashboard' > H3 dashboard: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'matrix' > H3 matrix: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'habits' > H3 habits: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+
+- Expected: 
+null
+
++ Received: 
+"false"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:329:90
+    327|     await flush();
+    328|     expect(shown(ui, field), "the latest choice displays immediately")…
+    329|     expect(bytes(field), "H3: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    330|     expect(locks().waiting(keyLock(field), "product"), "H3: the write …
+    331|     expect(says(msg.saving(field)), `pending feedback "${msg.saving(fi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'board' > H3 board: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'calendar' > H3 calendar: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'pomodoro' > H3 pomodoro: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 'meditation' > H3 meditation: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:329:90
+    327|     await flush();
+    328|     expect(shown(ui, field), "the latest choice displays immediately")…
+    329|     expect(bytes(field), "H3: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    330|     expect(locks().waiting(keyLock(field), "product"), "H3: the write …
+    331|     expect(says(msg.saving(field)), `pending feedback "${msg.saving(fi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'tasks' > H4 tasks: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'dashboard' > H4 dashboard: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'matrix' > H4 matrix: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'habits' > H4 habits: two same-turn activations invert the latest intent and return to the original through two operations
+AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:355:111
+    353|     act(() => { control.click(); control.click(); });
+    354|     await flush();
+    355|     expect(shown(ui, field), "H4: the second activation inverts the la…
+       |                                                                                                               ^
+    356|     expect(bytes(field), "the stored value returns to the original val…
+    357|     expect(writesOn(from, field), "two operations: the inversion and t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'board' > H4 board: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'calendar' > H4 calendar: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'pomodoro' > H4 pomodoro: two same-turn activations invert the latest intent and return to the original through two operations
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H4 'meditation' > H4 meditation: two same-turn activations invert the latest intent and return to the original through two operations
+AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:355:111
+    353|     act(() => { control.click(); control.click(); });
+    354|     await flush();
+    355|     expect(shown(ui, field), "H4: the second activation inverts the la…
+       |                                                                                                               ^
+    356|     expect(bytes(field), "the stored value returns to the original val…
+    357|     expect(writesOn(from, field), "two operations: the inversion and t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > H3 H4 two Boards activations during a held lock return to the original through two operations
+AssertionError: H3: the held per-key lock keeps the first write pending: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:372:79
+    370|   await flush();
+    371|   expect(shown(ui, B), "the first activation displays immediately").to…
+    372|   expect(bytes(B), "H3: the held per-key lock keeps the first write pe…
+       |                                                                               ^
+    373|   toggle(ui, B);
+    374|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O1 habits: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O1 matrix: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+AssertionError: H3: the held per-key lock keeps the pending set from writing: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:399:86
+    397|     toggle(ui, X);
+    398|     await flush();
+    399|     expect(bytes(X), "H3: the held per-key lock keeps the pending set …
+       |                                                                                      ^
+    400|     clickReset(ui, true);
+    401|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O2 habits: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O2 matrix: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:424:89
+    422|     clickReset(ui, true);
+    423|     await flush();
+    424|     expect(bytes(X), "H3: the held per-key lock keeps the pending rese…
+       |                                                                                         ^
+    425|     expect(shown(ui, X), "the pending reset displays the default").toB…
+    426|     toggle(ui, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O3 habits: reset → set → reset; the queued set is superseded silently and the final reset governs
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O3 matrix: reset → set → reset; the queued set is superseded silently and the final reset governs
+AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:447:89
+    445|     clickReset(ui, true);
+    446|     await flush();
+    447|     expect(bytes(X), "H3: the held per-key lock keeps the pending rese…
+       |                                                                                         ^
+    448|     toggle(ui, X);
+    449|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+AssertionError: H1: the failed set keeps the latest choice: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:472:72
+    470|     await flush();
+    471|     fired(quota, `${X.id} write`);
+    472|     expect(shown(ui, X), "H1: the failed set keeps the latest choice")…
+       |                                                                        ^
+    473|     need(retryOf(ui, X), `H9: Retry ${X.label}`);
+    474|     const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O5 habits: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:495:80
+    493|     fired(refusal, `${X.id} remove`);
+    494|     expect(bytes(X), "the refused removal left the bytes").toBe("false…
+    495|     expect(says(msg.notReset(X)), `H5: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    496|     expect(shown(ui, X), "the reset draft displays the intended defaul…
+    497|     toggle(ui, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents
+AssertionError: H1: the failed set displays on: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:516:60
+    514|     await flush();
+    515|     fired(quota, `${X.id} write`);
+    516|     expect(shown(ui, X), "H1: the failed set displays on").toBe(true);
+       |                                                            ^
+    517|     const first = download();
+    518|     fireEvent.click(need(exportButton(ui), "H9: Export Features draft"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'habits' > O7 habits: discard of a reset draft, then new same-field work survives
+AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:552:80
+    550|     await flush();
+    551|     fired(refusal, `${X.id} remove`);
+    552|     expect(says(msg.notReset(X)), `H5: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    553|     const from = mark();
+    554|     fireEvent.click(need(discardOf(ui, X), `H9: Discard ${X.label}`));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O5 matrix: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:495:80
+    493|     fired(refusal, `${X.id} remove`);
+    494|     expect(bytes(X), "the refused removal left the bytes").toBe("false…
+    495|     expect(says(msg.notReset(X)), `H5: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    496|     expect(shown(ui, X), "the reset draft displays the intended defaul…
+    497|     toggle(ui, X);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/40]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/queues.test.tsx > §6 orderings 'matrix' > O7 matrix: discard of a reset draft, then new same-field work survives
+AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/queues.test.tsx:552:80
+    550|     await flush();
+    551|     fired(refusal, `${X.id} remove`);
+    552|     expect(says(msg.notReset(X)), `H5: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    553|     const from = mark();
+    554|     fireEvent.click(need(discardOf(ui, X), `H9: Discard ${X.label}`));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/40]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=40 numPassedTests=0 numFailedTests=40 numPendingTests=0 numTodoTests=0
+totals cases=40 passed=0 failed=40 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (6)
+harness PASS no test-file suite error
+case 001 FAILED | Q1 Boards: the predecessor succeeds while the latest fails; Retry settles only the latest
+    first: AssertionError: H3: both choices wait behind the held per-key lock: expected 'true' to be 'false' // Object.is equality
+case 002 FAILED | Q2 Boards: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+    first: AssertionError: H9: Retry Boards: expected null not to be null
+case 003 FAILED | Q3 Boards: a Retry while the field is pending is inert
+    first: AssertionError: H1: the failed choice stays displayed: expected false to be true // Object.is equality
+case 004 FAILED | Q4 Boards: an equal-value successor after intervening input stays its own operation
+    first: AssertionError: H1: the returning choice stays displayed: expected false to be true // Object.is equality
+case 005 FAILED | Q5 Boards: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+    first: AssertionError: H9: an uncertain write keeps Retry Boards: expected null not to be null
+case 006 FAILED | Q6 Boards: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+    first: AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+case 007 FAILED | Q7 Boards: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+    first: AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+case 008 FAILED | Q8 Boards: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+    first: AssertionError: H9: an uncertain write keeps Retry Boards: expected null not to be null
+case 009 FAILED | Q9 Boards: new work after a discard survives; the discarded held operation never writes
+    first: AssertionError: H3: the held per-key lock serializes the write: expected 'true' to be 'false' // Object.is equality
+case 010 FAILED | H3 'tasks' H3 tasks: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+case 011 FAILED | H3 'board' H3 board: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+case 012 FAILED | H3 'dashboard' H3 dashboard: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+case 013 FAILED | H3 'calendar' H3 calendar: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+case 014 FAILED | H3 'matrix' H3 matrix: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+case 015 FAILED | H3 'pomodoro' H3 pomodoro: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+case 016 FAILED | H3 'habits' H3 habits: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'false' to be null // Object.is equality
+case 017 FAILED | H3 'meditation' H3 meditation: a held per-key lock serializes the write while the latest choice shows immediately and the switch stays enabled
+    first: AssertionError: H3: the held per-key lock keeps the physical bytes unchanged: expected 'true' to be 'false' // Object.is equality
+case 018 FAILED | H4 'tasks' H4 tasks: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+case 019 FAILED | H4 'board' H4 board: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+case 020 FAILED | H4 'dashboard' H4 dashboard: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+case 021 FAILED | H4 'calendar' H4 calendar: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+case 022 FAILED | H4 'matrix' H4 matrix: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+case 023 FAILED | H4 'pomodoro' H4 pomodoro: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+case 024 FAILED | H4 'habits' H4 habits: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected false to be true // Object.is equality
+case 025 FAILED | H4 'meditation' H4 meditation: two same-turn activations invert the latest intent and return to the original through two operations
+    first: AssertionError: H4: the second activation inverts the latest intent, not the rendered closure: expected true to be false // Object.is equality
+case 026 FAILED | H3 H4 two Boards activations during a held lock return to the original through two operations
+    first: AssertionError: H3: the held per-key lock keeps the first write pending: expected 'true' to be 'false' // Object.is equality
+case 027 FAILED | §6 orderings 'habits' O1 habits: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+    first: AssertionError: H3: the held per-key lock keeps the pending set from writing: expected 'true' to be 'false' // Object.is equality
+case 028 FAILED | §6 orderings 'habits' O2 habits: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+    first: AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+case 029 FAILED | §6 orderings 'habits' O3 habits: reset → set → reset; the queued set is superseded silently and the final reset governs
+    first: AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+case 030 FAILED | §6 orderings 'habits' O4 habits: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+    first: AssertionError: H1: the failed set keeps the latest choice: expected false to be true // Object.is equality
+case 031 FAILED | §6 orderings 'habits' O5 habits: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+    first: AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 032 FAILED | §6 orderings 'habits' O6 habits: a failed set and a failed reset with equal displayed values stay distinct intents
+    first: AssertionError: H1: the failed set displays on: expected false to be true // Object.is equality
+case 033 FAILED | §6 orderings 'habits' O7 habits: discard of a reset draft, then new same-field work survives
+    first: AssertionError: H5: "Habits was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 034 FAILED | §6 orderings 'matrix' O1 matrix: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+    first: AssertionError: H3: the held per-key lock keeps the pending set from writing: expected 'true' to be 'false' // Object.is equality
+case 035 FAILED | §6 orderings 'matrix' O2 matrix: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+    first: AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+case 036 FAILED | §6 orderings 'matrix' O3 matrix: reset → set → reset; the queued set is superseded silently and the final reset governs
+    first: AssertionError: H3: the held per-key lock keeps the pending reset from removing: expected null to be 'false' // Object.is equality
+case 037 FAILED | §6 orderings 'matrix' O4 matrix: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+    first: AssertionError: H1: the failed set keeps the latest choice: expected false to be true // Object.is equality
+case 038 FAILED | §6 orderings 'matrix' O5 matrix: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+    first: AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 039 FAILED | §6 orderings 'matrix' O6 matrix: a failed set and a failed reset with equal displayed values stay distinct intents
+    first: AssertionError: H1: the failed set displays on: expected false to be true // Object.is equality
+case 040 FAILED | §6 orderings 'matrix' O7 matrix: discard of a reset draft, then new same-field work survives
+    first: AssertionError: H5: "Matrix was not reset to its default." failure feedback: expected false to be true // Object.is equality
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/queues.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts
+pin_modules=70 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=11 packages/xai-web-shell=9

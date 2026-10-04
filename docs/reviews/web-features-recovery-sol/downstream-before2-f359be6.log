@@ -1,0 +1,385 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=downstream
+suffix=before2
+include=docs/reviews/web-features-recovery-sol/downstream.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 all before2
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/features-sol-downstream.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-downstream.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS
+
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > FIXTURE the production App composition mounts at /app/settings/features with only the auth-session hook substituted, real modules and no network 132ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §5.1 App readers and route guards make zero set/remove attempts on the 8 keys at mount, absent and stored 303ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches 377ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.3 a deep link to an off module renders DisabledFeatureFallback; after an on commit the original module renders 139ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.4 at palette open CmdK excludes an off module and includes it after an on commit 85ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.2 a full reset restores all 8 rail entries 139ms
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.2 a toggle held behind the real per-key lock leaves the rail unchanged until it commits 90ms
+   → H3: the held per-key lock keeps the Boards bytes unchanged: expected 'false' to be null
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > H1 §10.2 a failed toggle leaves the rail unchanged; a successful Retry updates it 85ms
+   → H1: the pane keeps the latest choice: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.4 CmdK reflects committed bytes only: a held toggle and a failed toggle leave search membership unchanged 112ms
+   → H3: the held per-key lock keeps the Matrix bytes unchanged: expected 'false' to be null
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > H5 §10.2 a partial reset restores only the modules whose removal succeeded; the pane reports the failure and Retry restores the rest 208ms
+   → H5: the pane reports "Calendar was not reset to its default.": expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > D2 §10.5 zero key:null StorageEvents, and unchanged appearance, rail and pet, through toggle, full reset, Discard, Reload, Retry, Discard all and partial reset 134ms
+   → D2: a full Reset to defaults dispatches no key:null StorageEvent: expected 1 to be +0 // Object.is equality
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged 103ms
+ × docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.5 §7 a Features reset never interrupts the App: no account-scope relock, no account-gate screen, no remount of the rail, pet or Features pane 110ms
+   → §10.5/§7: displayed values are never interrupted during a Features reset (no relock, gate screen or remount): expected { accountScopeChanged: true, …(4) } to strictly equal { accountScopeChanged: false, …(4) }
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > H6 §10.5 an AppRail drag-reorder after a reset persists an order derived from the stored custom order 140ms
+ ✓ docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.6 in the production App a full reset leaves every key other than the 8 byte-identical 120ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 9 passed (15)
+   Start at  02:39:22
+   Duration  5.70s (transform 1.98s, setup 35ms, collect 2.98s, tests 2.28s, environment 186ms, prepare 44ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-downstream.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §5.1 App readers and route guards make zero set/remove attempts on the 8 keys at mount, absent and stored
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §5.1 App readers and route guards make zero set/remove attempts on the 8 keys at mount, absent and stored
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §5.1 App readers and route guards make zero set/remove attempts on the 8 keys at mount, absent and stored
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.3 a deep link to an off module renders DisabledFeatureFallback; after an on commit the original module renders
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.3 a deep link to an off module renders DisabledFeatureFallback; after an on commit the original module renders
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.3 a deep link to an off module renders DisabledFeatureFallback; after an on commit the original module renders
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.4 at palette open CmdK excludes an off module and includes it after an on commit
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > PC §10.4 at palette open CmdK excludes an off module and includes it after an on commit
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.2 a full reset restores all 8 rail entries
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.2 a toggle held behind the real per-key lock leaves the rail unchanged until it commits
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H1 §10.2 a failed toggle leaves the rail unchanged; a successful Retry updates it
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H1 §10.2 a failed toggle leaves the rail unchanged; a successful Retry updates it
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.4 CmdK reflects committed bytes only: a held toggle and a failed toggle leave search membership unchanged
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H5 §10.2 a partial reset restores only the modules whose removal succeeded; the pane reports the failure and Retry restores the rest
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H5 §10.2 a partial reset restores only the modules whose removal succeeded; the pane reports the failure and Retry restores the rest
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > D2 §10.5 zero key:null StorageEvents, and unchanged appearance, rail and pet, through toggle, full reset, Discard, Reload, Retry, Discard all and partial reset
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at useFeaturePrefs (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts:25:24)
+    at AppInner (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/apps/web/src/App.tsx:179:24)
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at useFeaturePrefs (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts:25:24)
+    at AppInner (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/apps/web/src/App.tsx:179:24)
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > D2 §10.5 zero key:null StorageEvents, and unchanged appearance, rail and pet, through toggle, full reset, Discard, Reload, Retry, Discard all and partial reset
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.5 §7 a Features reset never interrupts the App: no account-scope relock, no account-gate screen, no remount of the rail, pet or Features pane
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > H6 §10.5 an AppRail drag-reorder after a reset persists an order derived from the stored custom order
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.6 in the production App a full reset leaves every key other than the 8 byte-identical
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.2 a toggle held behind the real per-key lock leaves the rail unchanged until it commits
+AssertionError: H3: the held per-key lock keeps the Boards bytes unchanged: expected 'false' to be null
+
+- Expected: 
+null
+
++ Received: 
+"false"
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:312:86
+    310|   await flush();
+    311|   expect(appShown(board), "the pane shows the latest choice immediatel…
+    312|   expect(bytes(board), "H3: the held per-key lock keeps the Boards byt…
+       |                                                                                      ^
+    313|   expect(inRail(board), "§10.2: a pending toggle leaves the rail uncha…
+    314|   await lock.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > H1 §10.2 a failed toggle leaves the rail unchanged; a successful Retry updates it
+AssertionError: H1: the pane keeps the latest choice: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:329:70
+    327|   expect(inRail(calendar), "§10.2: a failed toggle leaves the rail unc…
+    328|   expect(bytes(calendar)).toBe("false");
+    329|   expect(appShown(calendar), "H1: the pane keeps the latest choice").t…
+       |                                                                      ^
+    330|   const retry = need(appButton("Retry Calendar"), "H9: Retry Calendar"…
+    331|   quota.off();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > H3 §10.4 CmdK reflects committed bytes only: a held toggle and a failed toggle leave search membership unchanged
+AssertionError: H3: the held per-key lock keeps the Matrix bytes unchanged: expected 'false' to be null
+
+- Expected: 
+null
+
++ Received: 
+"false"
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:343:87
+    341|   fireEvent.click(appSwitch(matrix));
+    342|   await flush();
+    343|   expect(bytes(matrix), "H3: the held per-key lock keeps the Matrix by…
+       |                                                                                       ^
+    344|   const quota = fault({ op: "set", key: calendar.key, label: "calendar…
+    345|   fireEvent.click(appSwitch(calendar));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > H5 §10.2 a partial reset restores only the modules whose removal succeeded; the pane reports the failure and Retry restores the rest
+AssertionError: H5: the pane reports "Calendar was not reset to its default.": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:373:92
+    371|   expect(inRail(board), "§10.2: the succeeded reset restores Boards in…
+    372|   expect(inRail(calendar), "§10.2: the refused reset leaves Calendar o…
+    373|   expect(says(msg.notReset(calendar)), `H5: the pane reports "${msg.no…
+       |                                                                                            ^
+    374|   const retry = need(appButton("Retry Calendar"), "H5/H9: Retry Calend…
+    375|   refusal.off();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > D2 §10.5 zero key:null StorageEvents, and unchanged appearance, rail and pet, through toggle, full reset, Discard, Reload, Retry, Discard all and partial reset
+AssertionError: D2: a full Reset to defaults dispatches no key:null StorageEvent: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ stable docs/reviews/web-features-recovery-sol/downstream.test.tsx:399:94
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:408:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/downstream.test.tsx > §10.5 §7 a Features reset never interrupts the App: no account-scope relock, no account-gate screen, no remount of the rail, pet or Features pane
+AssertionError: §10.5/§7: displayed values are never interrupted during a Features reset (no relock, gate screen or remount): expected { accountScopeChanged: true, …(4) } to strictly equal { accountScopeChanged: false, …(4) }
+
+- Expected
++ Received
+
+  {
+-   "accountGateShown": false,
+-   "accountScopeChanged": false,
+-   "paneRemounted": false,
+-   "petRemounted": false,
+-   "railRemounted": false,
++   "accountGateShown": true,
++   "accountScopeChanged": true,
++   "paneRemounted": true,
++   "petRemounted": true,
++   "railRemounted": true,
+  }
+
+ ❯ docs/reviews/web-features-recovery-sol/downstream.test.tsx:490:118
+    488|     petRemounted: !pet.isConnected,
+    489|     paneRemounted: !paneElement.isConnected,
+    490|   }, "§10.5/§7: displayed values are never interrupted during a Featur…
+       |                                                                                                                      ^
+    491|     accountScopeChanged: false,
+    492|     accountGateShown: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=15 numPassedTests=9 numFailedTests=6 numPendingTests=0 numTodoTests=0
+totals cases=15 passed=9 failed=6 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (25)
+harness PASS no test-file suite error
+case 001 PASSED | FIXTURE the production App composition mounts at /app/settings/features with only the auth-session hook substituted, real modules and no network
+case 002 PASSED | PC §5.1 App readers and route guards make zero set/remove attempts on the 8 keys at mount, absent and stored
+case 003 PASSED | PC §10.2 a committed off removes the rail entry and a committed on restores it, for all 8, with zero key:null dispatches
+case 004 PASSED | PC §10.3 a deep link to an off module renders DisabledFeatureFallback; after an on commit the original module renders
+case 005 PASSED | PC §10.4 at palette open CmdK excludes an off module and includes it after an on commit
+case 006 PASSED | §10.2 a full reset restores all 8 rail entries
+case 007 FAILED | H3 §10.2 a toggle held behind the real per-key lock leaves the rail unchanged until it commits
+    first: AssertionError: H3: the held per-key lock keeps the Boards bytes unchanged: expected 'false' to be null
+case 008 FAILED | H1 §10.2 a failed toggle leaves the rail unchanged; a successful Retry updates it
+    first: AssertionError: H1: the pane keeps the latest choice: expected false to be true // Object.is equality
+case 009 FAILED | H3 §10.4 CmdK reflects committed bytes only: a held toggle and a failed toggle leave search membership unchanged
+    first: AssertionError: H3: the held per-key lock keeps the Matrix bytes unchanged: expected 'false' to be null
+case 010 FAILED | H5 §10.2 a partial reset restores only the modules whose removal succeeded; the pane reports the failure and Retry restores the rest
+    first: AssertionError: H5: the pane reports "Calendar was not reset to its default.": expected false to be true // Object.is equality
+case 011 FAILED | D2 §10.5 zero key:null StorageEvents, and unchanged appearance, rail and pet, through toggle, full reset, Discard, Reload, Retry, Discard all and partial reset
+    first: AssertionError: D2: a full Reset to defaults dispatches no key:null StorageEvent: expected 1 to be +0 // Object.is equality
+case 012 PASSED | H6 §10.5 after a full reset the App's accent hue, background tone, rail position, AppRail order and DesktopPet id and position, and their bytes, are unchanged
+case 013 FAILED | §10.5 §7 a Features reset never interrupts the App: no account-scope relock, no account-gate screen, no remount of the rail, pet or Features pane
+    first: AssertionError: §10.5/§7: displayed values are never interrupted during a Features reset (no relock, gate screen or remount): expected { accountScopeChanged: true, …(4) } to strictly equal { accountScopeChanged: false, …(4) }
+case 014 PASSED | H6 §10.5 an AppRail drag-reorder after a reset persists an order derived from the stored custom order
+case 015 PASSED | §10.6 in the production App a full reset leaves every key other than the 8 byte-identical
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/downstream.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-features-panel/src/DisabledFeatureFallback.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=619 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=11 packages/xai-web-shell=9 packages/xai-web-tasks=23

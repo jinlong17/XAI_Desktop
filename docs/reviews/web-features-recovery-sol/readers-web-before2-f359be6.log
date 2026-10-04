@@ -1,0 +1,89 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=readers-web
+suffix=before2
+include=apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx,apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx,apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts,apps/web/src/__tests__/settingsPaneComposition.rest.test.ts,apps/web/src/__tests__/cmdkIntegration.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 all before2
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/features-sol-readers-web.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-readers-web.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS
+
+ ✓ apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-1: returns the same length as upstream paneRegistry (14 after ai pane extension) 1ms
+ ✓ apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-2: the 'features' entry is featuresPane (row #23 substitution) 0ms
+ ✓ apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx > composeSettingsPaneRegistry > AC-COMP-3: all other entries pass through unchanged (id parity) 0ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-1: composed pane list has same length as chassis (14 after ai pane extension) 1ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-2: entry with id==='appearance' is appearancePane (NOT the placeholder) 0ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-3: entry with id==='features' is still featuresPane (row #23 not broken) 0ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts > composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) > AC-COMP-4: all non-substituted entries are reference-equal to their paneRegistry source 0ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP1: composed pane list length equals 14 (full chassis after ai pane extension) 1ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP2: each of the 12 row #24 owned ids resolves to its exported Pane object 0ms
+ ✓ apps/web/src/__tests__/settingsPaneComposition.rest.test.ts > composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) > CP3: non-owned ids in the chassis registry have identity preserved 0ms
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-1: default prefs (all true) → all real registrations pass through 8ms
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-2: flipping board off removes it from the filtered list 2ms
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-3: localStorage persistence — pref set survives a fresh hook mount 1ms
+ ✓ apps/web/src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI1 — CommandPalette is a sibling of the .app div (overlay pattern) 40ms
+ ✓ apps/web/src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI2 — Ctrl+K opens the command palette modal (jsdom: non-Mac platform) 52ms
+ ✓ apps/web/src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI3 — Esc closes the command palette after it was opened 28ms
+ ✓ apps/web/src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI4 — topbar search button click opens the command palette 36ms
+ ✓ apps/web/src/__tests__/cmdkIntegration.test.tsx > xai-web-cmdk integration (CI1..CI5) > CI5 — App does not throw (CommandPaletteProvider is mounted) 11ms
+
+ Test Files  5 passed (5)
+      Tests  18 passed (18)
+   Start at  02:39:31
+   Duration  3.05s (transform 2.26s, setup 0ms, collect 7.22s, tests 187ms, environment 1.44s, prepare 301ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-readers-web.json
+
+---- stderr ----
+
+---- runner summary ----
+json_report=success=true numTotalTests=18 numPassedTests=18 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=18 passed=18 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals false, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (5)
+harness PASS no test-file suite error
+case 001 PASSED | xai-web-cmdk integration (CI1..CI5) CI1 — CommandPalette is a sibling of the .app div (overlay pattern)
+case 002 PASSED | xai-web-cmdk integration (CI1..CI5) CI2 — Ctrl+K opens the command palette modal (jsdom: non-Mac platform)
+case 003 PASSED | xai-web-cmdk integration (CI1..CI5) CI3 — Esc closes the command palette after it was opened
+case 004 PASSED | xai-web-cmdk integration (CI1..CI5) CI4 — topbar search button click opens the command palette
+case 005 PASSED | xai-web-cmdk integration (CI1..CI5) CI5 — App does not throw (CommandPaletteProvider is mounted)
+case 006 PASSED | composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-1: composed pane list has same length as chassis (14 after ai pane extension)
+case 007 PASSED | composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-2: entry with id==='appearance' is appearancePane (NOT the placeholder)
+case 008 PASSED | composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-3: entry with id==='features' is still featuresPane (row #23 not broken)
+case 009 PASSED | composeSettingsPaneRegistry — row #22 appearance (AC-COMP-1..4) AC-COMP-4: all non-substituted entries are reference-equal to their paneRegistry source
+case 010 PASSED | composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP1: composed pane list length equals 14 (full chassis after ai pane extension)
+case 011 PASSED | composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP2: each of the 12 row #24 owned ids resolves to its exported Pane object
+case 012 PASSED | composeSettingsPaneRegistry — row #24 rest panes (CP1..CP3) CP3: non-owned ids in the chassis registry have identity preserved
+case 013 PASSED | rail feature filter against real webShellModuleRegistrations AC-APP-1: default prefs (all true) → all real registrations pass through
+case 014 PASSED | rail feature filter against real webShellModuleRegistrations AC-APP-2: flipping board off removes it from the filtered list
+case 015 PASSED | rail feature filter against real webShellModuleRegistrations AC-APP-3: localStorage persistence — pref set survives a fresh hook mount
+case 016 PASSED | composeSettingsPaneRegistry AC-COMP-1: returns the same length as upstream paneRegistry (14 after ai pane extension)
+case 017 PASSED | composeSettingsPaneRegistry AC-COMP-2: the 'features' entry is featuresPane (row #23 substitution)
+case 018 PASSED | composeSettingsPaneRegistry AC-COMP-3: all other entries pass through unchanged (id parity)
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":[],"include":["apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx","apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx","apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts","apps/web/src/__tests__/settingsPaneComposition.rest.test.ts","apps/web/src/__tests__/cmdkIntegration.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/App.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts
+pin_modules=605 by package: apps/web=16 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=10 packages/xai-web-shell=9 packages/xai-web-tasks=23

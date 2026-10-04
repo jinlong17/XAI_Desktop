@@ -1,0 +1,1357 @@
+requested_revision=f359be6
+resolved_commit=f359be6d838393e0f9e93efd80b88b5b09f6144e
+resolved_tree=2280bc7617d52dc6c4356da257d57940ecb174ec
+features_package_tree=074659c050fadd11ed3ff99274e441b48771b490
+mode=fields
+suffix=before2
+include=docs/reviews/web-features-recovery-sol/fields.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f359be6 all before2
+runner_checkout_head=4a54f7648cbed30d884f9e6976ece93a42ac92f6
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/features-sol-fields.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-fields.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=987c38250554f05eee185073f92fdfafc504b5e3f9c183658fc5aeb583ce50ea packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=14053daaffeee27f151221a197756ae043a2de3a8823d15342722eea5855e993 packages/xai-web-settings-features-panel/src/types.ts=bd6b35990e4f9de9719303ff528630b17a1c6ed02bbb06dfd96c5878cf727c53 packages/xai-web-settings-features-panel/src/styles.css=db4a5f24bfbb922571a5528b4d863be79bda2c8586eb4f2427f281803b13027e packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=2d42bdc3ef69ab9bcdc2d1770a34aba45463e44550f0c6ece4a9ecd31f18a4c6 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS
+
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'tasks' > H1 tasks: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 73ms
+   → H1: tasks keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'tasks' > H2 tasks: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 31ms
+   → H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'board' > H1 board: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 46ms
+   → H1: board keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'board' > H2 board: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 23ms
+   → H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'dashboard' > H1 dashboard: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 40ms
+   → H1: dashboard keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'dashboard' > H2 dashboard: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 36ms
+   → H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'calendar' > H1 calendar: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 39ms
+   → H1: calendar keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'calendar' > H2 calendar: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 24ms
+   → H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'matrix' > H1 matrix: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 40ms
+   → H1: matrix keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'matrix' > H2 matrix: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 25ms
+   → H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'pomodoro' > H1 pomodoro: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 42ms
+   → H1: pomodoro keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'pomodoro' > H2 pomodoro: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 26ms
+   → H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'habits' > H1 habits: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 42ms
+   → H1: habits keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'habits' > H2 habits: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 29ms
+   → H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'meditation' > H1 meditation: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes 41ms
+   → H1: meditation keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > 'meditation' > H2 meditation: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved 26ms
+   → H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 30ms
+   → H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 25ms
+   → H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 30ms
+   → H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 23ms
+   → H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 30ms
+   → H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 24ms
+   → H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 25ms
+   → H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them 31ms
+   → H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over invalid bytes is a failed draft that never overwrites them; Retry never gains authority; Discard is zero-write and returns to Reload-only 43ms
+   → H2/§5.2: a valid edit never silently overwrites an invalid source: expected 'false' to be 'yes' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H1 H2 §5.2 a valid toggle over an unavailable source is a failed draft; bytes untouched; Discard returns to Reload-only 44ms
+   → H1/H2: the toggle keeps displaying the latest intent: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft 62ms
+   → H2/H9: Reload Habits: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 all 8 unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts 50ms
+   → H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 a Boards conflict coexists with an unrelated Matrix quota failure; each settles independently and Retry never overwrites the conflict 38ms
+   → H3: the held per-key lock serializes the Boards write: expected 'true' to be 'false' // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable 43ms
+   → H1: the failed Tasks keeps the latest choice: expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H9 §5.7 Saved appears only after a genuine latest success with no pending work 38ms
+   → H9: a genuine latest success shows the truthful Saved status: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H7 D3 after a failed toggle nothing claims Saved, and Features renders no shared Save & apply footer 51ms
+   → H7: no 'Saved' claim anywhere after a failed toggle (Save & apply exercised when present): expected true to be false // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H3 §5.5 a missing Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves 41ms
+   → H3: the write consults the Web Lock capability: expected 0 to be greater than 0
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H3 §5.5 a rejected Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves 42ms
+   → H3: the write requests the per-key Web Lock: expected 0 to be greater than 0
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §9 the Features guard registers whenever the host provides the hook and blocks only while drafts exist; a failed toggle blocks and warns; source-only states never block or warn 26ms
+   → §9: FeaturesPane registers its departure guard whenever the host provides the hook (clean mount): expected null not to be null
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H9 §5.6 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success 51ms
+   → H9: Retry Habits: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit 42ms
+   → H2: the Pomodoro source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 §5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work 43ms
+   → H2/H9: Reload Pomodoro: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: a source-only sibling is untouched 41ms
+   → H9: Discard all changes: expected null not to be null
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, Saved, pending and guard label 25ms
+   → ZH source alert: expected false to be true // Object.is equality
+ × docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH export failure status 38ms
+   → H1: the failed Calendar keeps the latest choice: expected true to be false // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  49 failed (49)
+   Start at  02:39:11
+   Duration  2.49s (transform 240ms, setup 34ms, collect 356ms, tests 1.71s, environment 186ms, prepare 54ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.report-fields.json
+
+---- stderr ----
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'tasks' > H1 tasks: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'board' > H1 board: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'dashboard' > H1 dashboard: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'calendar' > H1 calendar: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'matrix' > H1 matrix: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'pomodoro' > H1 pomodoro: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'habits' > H1 habits: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > 'meditation' > H1 meditation: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_tasks: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_tasks: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_board: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_board: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_dashboard: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_dashboard: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_calendar: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_calendar: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_matrix: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_matrix: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_habits: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_habits: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+[plugin-web-storage] decode failed for xai_pref_features_meditation: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over invalid bytes is a failed draft that never overwrites them; Retry never gains authority; Discard is zero-write and returns to Reload-only
+[plugin-web-storage] decode failed for xai_pref_features_board: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H1 H2 §5.2 a valid toggle over an unavailable source is a failed draft; bytes untouched; Discard returns to Reload-only
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft
+[plugin-web-storage] decode failed for xai_pref_features_habits: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 all 8 unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+[plugin-web-storage] quota exceeded for xai_pref_features_dashboard.
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+[plugin-web-storage] quota exceeded for xai_pref_features_matrix.
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+[plugin-web-storage] quota exceeded for xai_pref_features_habits.
+[plugin-web-storage] quota exceeded for xai_pref_features_meditation.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+[plugin-web-storage] quota exceeded for xai_pref_features_pomodoro.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H7 D3 after a failed toggle nothing claims Saved, and Features renders no shared Save & apply footer
+[plugin-web-storage] quota exceeded for xai_pref_features_tasks.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §9 the Features guard registers whenever the host provides the hook and blocks only while drafts exist; a failed toggle blocks and warns; source-only states never block or warn
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 §5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 §5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: a source-only sibling is untouched
+[plugin-web-storage] decode failed for xai_pref_features_pomodoro: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: a source-only sibling is untouched
+[plugin-web-storage] quota exceeded for xai_pref_features_board.
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, Saved, pending and guard label
+[plugin-web-storage] decode failed for xai_pref_features_matrix: Error: Cannot decode stored value with codec "boolean"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at FeatureCard (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:69:23)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH export failure status
+[plugin-web-storage] quota exceeded for xai_pref_features_calendar.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 49 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'tasks' > H1 tasks: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: tasks keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'tasks' > H2 tasks: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'board' > H1 board: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: board keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'board' > H2 board: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'dashboard' > H1 dashboard: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: dashboard keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'dashboard' > H2 dashboard: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'calendar' > H1 calendar: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: calendar keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'calendar' > H2 calendar: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'matrix' > H1 matrix: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: matrix keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'matrix' > H2 matrix: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'pomodoro' > H1 pomodoro: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: pomodoro keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'pomodoro' > H2 pomodoro: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'habits' > H1 habits: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: habits keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'habits' > H2 habits: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'meditation' > H1 meditation: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+AssertionError: H1: meditation keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:36:107
+     34|     await flush();
+     35|     fired(quota, `${field.id} write`);
+     36|     expect(shown(ui, field), `H1: ${field.id} keeps displaying the lat…
+       |                                                                                                           ^
+     37|     expect(bytes(field), "the previous bytes remain after the failed w…
+     38|     expect(says(msg.notSaved(field)), `H1/H9: "${msg.notSaved(field)}"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > 'meditation' > H2 meditation: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+AssertionError: H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:68:90
+     66|     fired(denied, `${field.id} mount read`);
+     67|     expect(shown(ui, field), "an unavailable source displays the regis…
+     68|     expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field…
+       |                                                                                          ^
+     69|     const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.la…
+     70|     expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 tasks="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 board="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 dashboard="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 calendar="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 matrix=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 pomodoro="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 habits="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 meditation="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+AssertionError: H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:103:88
+    101|   await flush();
+    102|   expect(shown(ui, field), "an invalid source displays the registry de…
+    103|   expect(says(msg.unavailable(field)), `H2: "${msg.unavailable(field)}…
+       |                                                                                        ^
+    104|   const reload = need(reloadOf(ui, field), `H2/H9: Reload ${field.labe…
+    105|   expect(retryOf(ui, field), "source-only: no Retry").toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.2 a valid toggle over invalid bytes is a failed draft that never overwrites them; Retry never gains authority; Discard is zero-write and returns to Reload-only
+AssertionError: H2/§5.2: a valid edit never silently overwrites an invalid source: expected 'false' to be 'yes' // Object.is equality
+
+Expected: "yes"
+Received: "false"
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:125:93
+    123|   await flush();
+    124|   expect(shown(ui, board), "the valid choice is displayed as the lates…
+    125|   expect(bytes(board), "H2/§5.2: a valid edit never silently overwrite…
+       |                                                                                             ^
+    126|   expect(says(msg.notSaved(board)), "failed feedback").toBe(true);
+    127|   const retry = need(retryOf(ui, board), "H9: Retry Boards");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H1 H2 §5.2 a valid toggle over an unavailable source is a failed draft; bytes untouched; Discard returns to Reload-only
+AssertionError: H1/H2: the toggle keeps displaying the latest intent: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:162:87
+    160|   toggle(ui, calendar);
+    161|   await flush();
+    162|   expect(shown(ui, calendar), "H1/H2: the toggle keeps displaying the …
+       |                                                                                       ^
+    163|   expect(bytes(calendar), "the unreadable source is never overwritten"…
+    164|   expect(says(msg.notSaved(calendar)), "failed feedback").toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Reload refuses at invocation time to erase the same field's actual draft
+AssertionError: H2/H9: Reload Habits: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:182:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 all 8 unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts
+AssertionError: H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+
+- Expected
++ Received
+
+  {
+-   "board": false,
+-   "calendar": false,
+-   "dashboard": false,
+-   "habits": false,
+-   "matrix": false,
+-   "meditation": false,
+-   "pomodoro": false,
+-   "tasks": false,
++   "board": true,
++   "calendar": true,
++   "dashboard": true,
++   "habits": true,
++   "matrix": true,
++   "meditation": true,
++   "pomodoro": true,
++   "tasks": true,
+  }
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:210:67
+    208|   await flush();
+    209|   FIELDS.forEach((field, index) => fired(quotas[index]!, `${field.id} …
+    210|   expect(shownAll(ui), "H1: all 8 latest choices stay displayed").toSt…
+       |                                                                   ^
+    211|   for (const field of FIELDS) {
+    212|     expect(says(msg.notSaved(field)), `${field.id} failed feedback`).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 a Boards conflict coexists with an unrelated Matrix quota failure; each settles independently and Retry never overwrites the conflict
+AssertionError: H3: the held per-key lock serializes the Boards write: expected 'true' to be 'false' // Object.is equality
+
+Expected: "false"
+Received: "true"
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:250:81
+    248|   toggle(ui, board);
+    249|   await flush();
+    250|   expect(bytes(board), "H3: the held per-key lock serializes the Board…
+       |                                                                                 ^
+    251|   nativeSet.call(localStorage, board.key, "true");
+    252|   const quota = fault({ op: "set", key: matrix.key, label: "matrix quo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable
+AssertionError: H1: the failed Tasks keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:295:76
+    293|   fired(tasksQuota, "tasks write");
+    294|   fired(pomodoroQuota, "pomodoro write");
+    295|   expect(shown(ui, tasks), "H1: the failed Tasks keeps the latest choi…
+       |                                                                            ^
+    296|   expect(shown(ui, pomodoro), "H1: the failed Pomodoro keeps the lates…
+    297|   const discard = need(discardOf(ui, tasks), "H9: Discard Tasks");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H9 §5.7 Saved appears only after a genuine latest success with no pending work
+AssertionError: H9: a genuine latest success shows the truthful Saved status: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:321:92
+    319|   await flush();
+    320|   expect(bytes(dashboard)).toBe("false");
+    321|   expect(says(W.en.saved), "H9: a genuine latest success shows the tru…
+       |                                                                                            ^
+    322|   const lock = await hold(keyLock(dashboard));
+    323|   toggle(ui, dashboard);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H7 D3 after a failed toggle nothing claims Saved, and Features renders no shared Save & apply footer
+AssertionError: H7: no 'Saved' claim anywhere after a failed toggle (Save & apply exercised when present): expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:344:118
+    342|     await flush(2);
+    343|   }
+    344|   expect(says("Saved"), "H7: no 'Saved' claim anywhere after a failed …
+       |                                                                                                                      ^
+    345|   expect(save, "H7/D3: Features renders no shared 'Save & apply' contr…
+    346|   expect(ui.container.querySelector('[data-testid="settings-footer-sav…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H3 §5.5 a missing Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves
+AssertionError: H3: the write consults the Web Lock capability: expected 0 to be greater than 0
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:360:124
+    358|   toggle(ui, matrix);
+    359|   await flush();
+    360|   if (variant === "missing") expect(lockState.accesses - accessesBefor…
+       |                                                                                                                            ^
+    361|   else expect(manager.rejectedFor(keyLock(matrix), requestsBefore), "H…
+    362|   expect(shown(ui, matrix), "the latest choice stays displayed").toBe(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H3 §5.5 a rejected Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves
+AssertionError: H3: the write requests the per-key Web Lock: expected 0 to be greater than 0
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:361:116
+    359|   await flush();
+    360|   if (variant === "missing") expect(lockState.accesses - accessesBefor…
+    361|   else expect(manager.rejectedFor(keyLock(matrix), requestsBefore), "H…
+       |                                                                                                                    ^
+    362|   expect(shown(ui, matrix), "the latest choice stays displayed").toBe(…
+    363|   expect(bytes(matrix), "no write without the per-key lock").toBe("fal…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §9 the Features guard registers whenever the host provides the hook and blocks only while drafts exist; a failed toggle blocks and warns; source-only states never block or warn
+AssertionError: §9: FeaturesPane registers its departure guard whenever the host provides the hook (clean mount): expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:383:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H9 §5.6 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success
+AssertionError: H9: Retry Habits: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:413:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > H2 §5.7 a sibling source error suppresses Saved even after a successful edit
+AssertionError: H2: the Pomodoro source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:434:76
+    432|   await flush();
+    433|   expect(bytes(tasks)).toBe("false");
+    434|   expect(says(msg.unavailable(pomodoro)), "H2: the Pomodoro source ale…
+       |                                                                            ^
+    435|   expect(says(W.en.saved), "no general Saved while a sibling source er…
+    436|   expect(retryOf(ui, tasks), "the successful Tasks has no recovery").t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.7 §5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+AssertionError: H2/H9: Reload Pomodoro: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:448:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5.8 Discard all visits only actual drafts: a source-only sibling is untouched
+AssertionError: H9: Discard all changes: expected null not to be null
+ ❯ need docs/reviews/web-features-recovery-sol/fixture.tsx:38:38
+     36| /** Business presence assertion: fails as a product failure (not a pre…
+     37| export function need<T>(value: T | null | undefined, message: string):…
+     38|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     39|   return value as T;
+     40| }
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:471:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH wording: source alert, failed feedback, per-field and pane actions, Saved, pending and guard label
+AssertionError: ZH source alert: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:489:66
+    487|   const ui = mount("zh");
+    488|   await flush();
+    489|   expect(says(msg.unavailable(matrix, "zh")), "ZH source alert").toBe(…
+       |                                                                  ^
+    490|   const reload = need(button(ui, "重新读取 四象限"), "ZH Reload action");
+    491|   const quota = fault({ op: "set", key: tasks.key, label: "tasks quota…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/49]⎯
+
+ FAIL  docs/reviews/web-features-recovery-sol/fields.test.tsx > §5 ZH export failure status
+AssertionError: H1: the failed Calendar keeps the latest choice: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ docs/reviews/web-features-recovery-sol/fields.test.tsx:522:82
+    520|   await flush();
+    521|   fired(quota, "calendar write");
+    522|   expect(shown(ui, calendar), "H1: the failed Calendar keeps the lates…
+       |                                                                                  ^
+    523|   const exportZh = need(button(ui, "导出功能草稿"), "ZH Export action");
+    524|   const harness = download();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/49]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=49 numPassedTests=0 numFailedTests=49 numPendingTests=0 numTodoTests=0
+totals cases=49 passed=0 failed=49 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (6)
+harness PASS no test-file suite error
+case 001 FAILED | 'tasks' H1 tasks: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: tasks keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+case 002 FAILED | 'tasks' H2 tasks: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 003 FAILED | 'board' H1 board: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: board keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+case 004 FAILED | 'board' H2 board: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 005 FAILED | 'dashboard' H1 dashboard: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: dashboard keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+case 006 FAILED | 'dashboard' H2 dashboard: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 007 FAILED | 'calendar' H1 calendar: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: calendar keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+case 008 FAILED | 'calendar' H2 calendar: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 009 FAILED | 'matrix' H1 matrix: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: matrix keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+case 010 FAILED | 'matrix' H2 matrix: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 011 FAILED | 'pomodoro' H1 pomodoro: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: pomodoro keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+case 012 FAILED | 'pomodoro' H2 pomodoro: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 013 FAILED | 'habits' H1 habits: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: habits keeps displaying the latest choice after its write failed: expected true to be false // Object.is equality
+case 014 FAILED | 'habits' H2 habits: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 015 FAILED | 'meditation' H1 meditation: a failed write keeps the latest choice with failed feedback, Retry, Discard, Export, guard and warning; Retry saves exact bytes
+    first: AssertionError: H1: meditation keeps displaying the latest choice after its write failed: expected false to be true // Object.is equality
+case 016 FAILED | 'meditation' H2 meditation: a throwing read shows the default with a Reload-only source alert; Reload repairs with zero writes and no Saved
+    first: AssertionError: H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 017 FAILED | H2 tasks="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 018 FAILED | H2 tasks="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Tasks is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 019 FAILED | H2 board="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 020 FAILED | H2 board="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Boards is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 021 FAILED | H2 dashboard="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 022 FAILED | H2 dashboard="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Dashboard is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 023 FAILED | H2 calendar="True": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 024 FAILED | H2 calendar="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Calendar is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 025 FAILED | H2 matrix="yes": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 026 FAILED | H2 matrix=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Matrix is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 027 FAILED | H2 pomodoro="": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 028 FAILED | H2 pomodoro="1": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Pomodoro is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 029 FAILED | H2 habits="\"true\"": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 030 FAILED | H2 habits="0": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Habits is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 031 FAILED | H2 meditation=" true": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 032 FAILED | H2 meditation="TRUE": malformed bytes display the default with a Reload-only alert; mount and Reload never normalize them
+    first: AssertionError: H2: "Saved Meditation is unavailable. Reload it; this is not a new unsaved change." source alert: expected false to be true // Object.is equality
+case 033 FAILED | H2 §5.2 a valid toggle over invalid bytes is a failed draft that never overwrites them; Retry never gains authority; Discard is zero-write and returns to Reload-only
+    first: AssertionError: H2/§5.2: a valid edit never silently overwrites an invalid source: expected 'false' to be 'yes' // Object.is equality
+case 034 FAILED | H1 H2 §5.2 a valid toggle over an unavailable source is a failed draft; bytes untouched; Discard returns to Reload-only
+    first: AssertionError: H1/H2: the toggle keeps displaying the latest intent: expected true to be false // Object.is equality
+case 035 FAILED | §5.8 Reload refuses at invocation time to erase the same field's actual draft
+    first: AssertionError: H2/H9: Reload Habits: expected null not to be null
+case 036 FAILED | §5.7 all 8 unresolved at once; a targeted Retry never touches siblings; Discard all is zero-write and visits only drafts
+    first: AssertionError: H1: all 8 latest choices stay displayed: expected { tasks: true, board: true, …(6) } to strictly equal { tasks: false, board: false, …(6) }
+case 037 FAILED | §5.7 a Boards conflict coexists with an unrelated Matrix quota failure; each settles independently and Retry never overwrites the conflict
+    first: AssertionError: H3: the held per-key lock serializes the Boards write: expected 'true' to be 'false' // Object.is equality
+case 038 FAILED | §5.8 a targeted Discard is zero-write, rereads only its field and leaves sibling work exportable
+    first: AssertionError: H1: the failed Tasks keeps the latest choice: expected true to be false // Object.is equality
+case 039 FAILED | H9 §5.7 Saved appears only after a genuine latest success with no pending work
+    first: AssertionError: H9: a genuine latest success shows the truthful Saved status: expected false to be true // Object.is equality
+case 040 FAILED | H7 D3 after a failed toggle nothing claims Saved, and Features renders no shared Save & apply footer
+    first: AssertionError: H7: no 'Saved' claim anywhere after a failed toggle (Save & apply exercised when present): expected true to be false // Object.is equality
+case 041 FAILED | H3 §5.5 a missing Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves
+    first: AssertionError: H3: the write consults the Web Lock capability: expected 0 to be greater than 0
+case 042 FAILED | H3 §5.5 a rejected Web Lock capability keeps the latest Matrix choice with failed feedback and no write; Retry after restoration saves
+    first: AssertionError: H3: the write requests the per-key Web Lock: expected 0 to be greater than 0
+case 043 FAILED | §9 the Features guard registers whenever the host provides the hook and blocks only while drafts exist; a failed toggle blocks and warns; source-only states never block or warn
+    first: AssertionError: §9: FeaturesPane registers its departure guard whenever the host provides the hook (clean mount): expected null not to be null
+case 044 FAILED | H9 §5.6 an uncertain write exposes Retry, Discard, Export and Discard all instead of a silent success
+    first: AssertionError: H9: Retry Habits: expected null not to be null
+case 045 FAILED | H2 §5.7 a sibling source error suppresses Saved even after a successful edit
+    first: AssertionError: H2: the Pomodoro source alert: expected false to be true // Object.is equality
+case 046 FAILED | §5.7 §5.8 a sibling source-only Reload repair clears its alert without claiming Saved or acknowledging failed work
+    first: AssertionError: H2/H9: Reload Pomodoro: expected null not to be null
+case 047 FAILED | §5.8 Discard all visits only actual drafts: a source-only sibling is untouched
+    first: AssertionError: H9: Discard all changes: expected null not to be null
+case 048 FAILED | §5 ZH wording: source alert, failed feedback, per-field and pane actions, Saved, pending and guard label
+    first: AssertionError: ZH source alert: expected false to be true // Object.is equality
+case 049 FAILED | §5 ZH export failure status
+    first: AssertionError: H1: the failed Calendar keeps the latest choice: expected true to be false // Object.is equality
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-grw2OS/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["docs/reviews/web-features-recovery-sol/fields.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts
+pin_modules=70 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=11 packages/xai-web-shell=9
