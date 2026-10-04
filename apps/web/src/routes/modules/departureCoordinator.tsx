@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UNSAFE_DataRouterContext, resolvePath, useBlocker, useLocation } from "react-router";
+import type { Blocker, DataRouter } from "react-router";
 
 /** Structurally typed feature capability consumed by the Web host. */
 export interface DepartureGuard {
@@ -29,6 +30,8 @@ export type DepartureCoordinatorProps = {
 type RouteIntent = {
   readonly kind: "route";
   readonly guard: DepartureGuard;
+  /** The POP blocker this intent settles; null while unbound and for a held programmatic navigation. */
+  blocker: Blocker | null;
   proceed: (() => void) | null;
   reset: (() => void) | null;
 };
@@ -43,6 +46,20 @@ type SignOutIntent = {
 type DepartureIntent = RouteIntent | SignOutIntent;
 
 /**
+ * Whether `blocker` is the router's live "blocked" blocker. React Router 7
+ * hands blocker updates to React inside a transition and replaces the blocker
+ * object on every state change, so a render can still hold a "blocked"
+ * snapshot that the router has already proceeded, reset or replaced.
+ */
+function isLiveBlocked(router: DataRouter | null, blocker: Blocker): blocker is Extract<Blocker, { state: "blocked" }> {
+  if (router === null || blocker.state !== "blocked") return false;
+  for (const live of router.state.blockers.values()) {
+    if (live === blocker) return true;
+  }
+  return false;
+}
+
+/**
  * Owns the Web host's single first-intent arbitration for guarded route and
  * sign-out departures. Feature modules only register a guard; router replay,
  * focus handling, and sign-out mutual exclusion remain host responsibilities.
@@ -54,6 +71,8 @@ export function DepartureCoordinator({
 }: DepartureCoordinatorProps): React.ReactElement {
   const location = useLocation();
   const dataRouterContext = React.useContext(UNSAFE_DataRouterContext);
+  const routerRef = React.useRef<DataRouter | null>(dataRouterContext?.router ?? null);
+  const settledBlockersRef = React.useRef(new WeakSet<Blocker>());
   const guardRef = React.useRef<DepartureGuard | null>(null);
   const [guardVersion, setGuardVersion] = React.useState(0);
   const intentRef = React.useRef<DepartureIntent | null>(null);
@@ -78,7 +97,7 @@ export function DepartureCoordinator({
   const isDeparturePending = React.useCallback(() => intentRef.current !== null, []);
   const reserveRouteIntent = React.useCallback((guard: DepartureGuard): RouteIntent | null => {
     if (intentRef.current) return null;
-    const intent: RouteIntent = { kind: "route", guard, proceed: null, reset: null };
+    const intent: RouteIntent = { kind: "route", guard, blocker: null, proceed: null, reset: null };
     intentRef.current = intent;
     return intent;
   }, []);
@@ -149,28 +168,48 @@ export function DepartureCoordinator({
       return promise;
     },
   }), [canBlock, publishIntent, registerSignOutDelegate]);
+  React.useLayoutEffect(() => {
+    routerRef.current = dataRouterContext?.router ?? null;
+  }, [dataRouterContext]);
+  // Guard registrations render at default priority while blocker updates
+  // arrive in a router transition, so this effect can run with a fresh
+  // guardVersion and a stale "blocked" snapshot. Bind, publish, proceed or
+  // reset a blocker only while it is the router's live blocked blocker, and
+  // settle each blocker at most once.
   React.useEffect(() => {
-    if (blocker.state !== "blocked") return;
+    const router = routerRef.current;
+    const settledBlockers = settledBlockersRef.current;
+    if (settledBlockers.has(blocker) || !isLiveBlocked(router, blocker)) return;
+    const settle = (action: "proceed" | "reset") => () => {
+      if (settledBlockers.has(blocker) || !isLiveBlocked(router, blocker)) return;
+      settledBlockers.add(blocker);
+      if (action === "proceed") blocker.proceed();
+      else blocker.reset();
+    };
+    const proceed = settle("proceed");
+    const reset = settle("reset");
     const guard = guardRef.current;
     const existing = intentRef.current;
     if (existing) {
-      if (existing.kind === "sign-out") blocker.reset();
-      else if (!existing.proceed) {
-        existing.proceed = blocker.proceed;
-        existing.reset = blocker.reset;
+      if (existing.kind === "sign-out") reset();
+      else if (!existing.proceed || (existing.blocker && existing.blocker !== blocker)) {
+        // Bind a reserved POP intent, or rebind one whose blocker a newer POP replaced.
+        existing.blocker = blocker;
+        existing.proceed = proceed;
+        existing.reset = reset;
         setIntentVersion(version => version + 1);
       }
       return;
     }
     if (!guard || !guard.isCurrent()) {
-      blocker.reset();
+      reset();
       return;
     }
     if (!guard.isBlocking()) {
-      blocker.proceed();
+      proceed();
       return;
     }
-    publishIntent({ kind: "route", guard, proceed: blocker.proceed, reset: blocker.reset });
+    publishIntent({ kind: "route", guard, blocker, proceed, reset });
   }, [blocker, guardVersion, publishIntent]);
   React.useEffect(() => {
     const intent = intentRef.current;
