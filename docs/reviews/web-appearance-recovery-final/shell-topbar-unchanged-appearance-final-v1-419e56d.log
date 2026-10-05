@@ -1,0 +1,109 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=shell-topbar-unchanged
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 419e56d shell-topbar-unchanged appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/xai-web-shell (packages/xai-web-shell) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-shell/package.json=af4bcd1decf7542296ee89b648ec714efec94cdb3591b91bdb18cf85a0111376 packages/xai-web-shell/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/xai-web-shell/vitest.config.ts=4ce52c49da38a9e12b08433dcfbff33e192e53d9d73d37430d6a5e47d7766a0c packages/xai-web-shell/eslint.config.js=79fded991853b3cfcad93ce8fe1312d993926017697438ddc2bb5ea770a6f55f
+package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus
+tsconfig_extends_checked=46 unresolved=none own=@repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/packages/xai-web-shell/final-shell-topbar-unchanged.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/.final-guard/report-shell-topbar-unchanged.json --testNamePattern ^Topbar (TP[0-7][a-c]? —|TB-PREMIUM-1 —)
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (8/8)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/packages/xai-web-shell
+
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP0 — preferences trigger opens the appearance popover 46ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1 — appearance popover: clicking 中文 calls setLang('zh') 13ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1b — clicking EN calls setLang('en') 8ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1c — active lang option has aria-checked=true 7ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2 — Dark button calls setTheme('dark') 10ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2b — System button calls setTheme('system') 7ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2c — active theme option has aria-checked=true 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3 — Compact button calls setDensity('compact') 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3b — active density option has aria-checked=true 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP4 — Settings row click calls onOpenSettings 10ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat) 1ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP5b — onOpenSearch prop provided → renders <button class='search-box'> 3ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP6 — ⌘K kbd hint is rendered 1ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP7 — button click calls onOpenSearch() 3ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided 1ms
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover
+ ↓ src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged
+
+ Test Files  1 passed (1)
+      Tests  15 passed | 9 skipped (24)
+   Start at  13:28:38
+   Duration  646ms (transform 74ms, setup 57ms, collect 78ms, tests 129ms, environment 190ms, prepare 50ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/.final-guard/report-shell-topbar-unchanged.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (1 files, explicit include)
+harness PASS package config in effect (environment jsdom, globals false, setupFiles [src/__tests__/setup.ts], include ["src/__tests__/Topbar.test.tsx"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (1 present of 1 listed)
+harness PASS no test-file suite error
+harness PASS name filter "^Topbar (TP[0-7][a-c]? —|TB-PREMIUM-1 —)" executed exactly the 15 listed §11 "Unchanged" cases, each once (15 executed, 9 filtered out)
+required_tests_absent_from_archive=none
+name_filter="^Topbar (TP[0-7][a-c]? —|TB-PREMIUM-1 —)" executed=15 filtered_out=9 expected=15 missing=none stray=none
+json_report=success=true numTotalTestSuites=2 numTotalTests=24 numPassedTests=15 numFailedTests=0 numPendingTests=9 numTodoTests=0
+totals files=1 tests=24 passed=15 failed=0 other=9 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/Topbar.test.tsx status=passed tests=24 passed=15 failed=0
+case 001 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP0 — preferences trigger opens the appearance popover
+case 002 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1 — appearance popover: clicking 中文 calls setLang('zh')
+case 003 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1b — clicking EN calls setLang('en')
+case 004 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1c — active lang option has aria-checked=true
+case 005 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2 — Dark button calls setTheme('dark')
+case 006 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2b — System button calls setTheme('system')
+case 007 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2c — active theme option has aria-checked=true
+case 008 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3 — Compact button calls setDensity('compact')
+case 009 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3b — active density option has aria-checked=true
+case 010 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP4 — Settings row click calls onOpenSettings
+case 011 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)
+case 012 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP5b — onOpenSearch prop provided → renders <button class='search-box'>
+case 013 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP6 — ⌘K kbd hint is rendered
+case 014 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP7 — button click calls onOpenSearch()
+case 015 PASSED | src/__tests__/Topbar.test.tsx > Topbar TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided
+case 016 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts
+case 017 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts
+case 018 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts
+case 019 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts
+case 020 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts
+case 021 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts
+case 022 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts
+case 023 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover
+case 024 SKIPPED | src/__tests__/Topbar.test.tsx > Topbar TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/packages/xai-web-shell","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-9yVHZ5/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["./src/__tests__/setup.ts"],"include":["src/__tests__/Topbar.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-shell/src/Topbar.tsx
+pin_required_provenance_missing=none
+pin_modules=11 by package: packages/plugin-web-tokens=7 packages/xai-web-shell=4

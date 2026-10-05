@@ -1,0 +1,75 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=appearance-lint
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 419e56d appearance-lint appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-appearance (packages/xai-web-settings-appearance) kind=eslint script=lint: "eslint --max-warnings 0 ."
+archive_file_sha256 packages/xai-web-settings-appearance/package.json=41cdc7c0ba6af12b4a0c267a68a70f0e82e78f4053f25c7ba835e3a6e1523e39 packages/xai-web-settings-appearance/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.bin/eslint
+args=--max-warnings 0 . --format json --output-file /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-GNmi9b/.final-guard/eslint-appearance-lint.json
+eslint=node_modules/.pnpm/eslint@9.39.1/node_modules/eslint@9.39.1
+node_options=--import=file:///private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-GNmi9b/.final-guard/eslint-guard.mjs
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "lint" is "eslint --max-warnings 0 ." (found "eslint --max-warnings 0 .")
+harness PASS JSON results parsed
+harness PASS module-resolution guard active in the ESLint process (1 registration)
+harness PASS no module resolved from a checkout's packages/, apps/ or docs/ and no @repo resolution outside the archive
+harness PASS required configuration modules loaded from the archive (3)
+harness PASS every linted file is a lintable file of the archive package (25 linted of 25 on disk; the rest are listed as configured ignores)
+eslint_exit=0 files=25 errors=0 warnings=0 fatal=0
+file eslint.config.js errors=0 warnings=0
+file src/__tests__/AppearanceController.test.tsx errors=0 warnings=0
+file src/__tests__/appearanceDefaults.test.ts errors=0 warnings=0
+file src/__tests__/appearanceLockFixture.ts errors=0 warnings=0
+file src/__tests__/AppearancePane.bilingual.test.tsx errors=0 warnings=0
+file src/__tests__/AppearancePane.focus-ring.test.tsx errors=0 warnings=0
+file src/__tests__/AppearancePane.live-binding.test.tsx errors=0 warnings=0
+file src/__tests__/appearancePane.registry.test.ts errors=0 warnings=0
+file src/__tests__/AppearancePane.rendering.test.tsx errors=0 warnings=0
+file src/__tests__/AppearancePane.save-reset.test.tsx errors=0 warnings=0
+file src/__tests__/AppearancePane.selected-focus.test.tsx errors=0 warnings=0
+file src/__tests__/AppearanceRetryAll.test.tsx errors=0 warnings=0
+file src/__tests__/constants.test.ts errors=0 warnings=0
+file src/appearanceDefaults.ts errors=0 warnings=0
+file src/AppearancePane.tsx errors=0 warnings=0
+file src/constants.ts errors=0 warnings=0
+file src/index.ts errors=0 warnings=0
+file src/internal/AppearanceActions.tsx errors=0 warnings=0
+file src/internal/appearanceController.tsx errors=0 warnings=0
+file src/internal/appearancePane.tsx errors=0 warnings=0
+file src/internal/appearanceRecoveryCopy.ts errors=0 warnings=0
+file src/internal/AppearanceStatus.tsx errors=0 warnings=0
+file src/types.ts errors=0 warnings=0
+file vitest.config.ts errors=0 warnings=0
+file vitest.setup.ts errors=0 warnings=0
+pin_hooks hook-registered pid=61637 argv=["/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/eslint/bin/eslint.js","--max-warnings","0",".","--format","json","--output-file","/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-GNmi9b/.final-guard/eslint-appearance-lint.json"]
+pin_repo_resolutions=1 repo @repo/eslint-config/react-internal -> /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-GNmi9b/packages/eslint-config/react-internal.js
+pin_violations=0
+pin_required_provenance packages/xai-web-settings-appearance/eslint.config.js packages/eslint-config/react-internal.js packages/eslint-config/base.js
+pin_required_provenance_missing=none
+pin_modules=3
+  module packages/eslint-config/base.js
+  module packages/eslint-config/react-internal.js
+  module packages/xai-web-settings-appearance/eslint.config.js

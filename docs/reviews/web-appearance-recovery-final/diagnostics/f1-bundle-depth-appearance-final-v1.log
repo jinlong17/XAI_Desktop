@@ -1,0 +1,47 @@
+diagnostic=f1-bundle-depth suffix=appearance-final-v1 esbuild=0.28.1 node=v24.16.0 temporary_base=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+## verify-f1.mjs (sticky, more, collaborate) (fixture docs/reviews/web-sticky-recovery-f1/f1-host.tsx sha256=af969a73dc25a88fd8399883a5cb8321b6613ec3729c2164a92d8c1d4518f734)
+  logged 24073b5: js=5afac0334edf26403731363eed917fa916326ae10be095200fcfe4364edbd283 css=aac59bc1240d304c40a09009249efabbdad8fe72c4e9601d01586321cfabdce2 (docs/reviews/web-sticky-recovery-f1/f1-24073b5-sticky-fixed1.log)
+  logged 419e56d: js=e877b2b8ff4a95353784a2d7efcf0d59cf1ce6f7ad34cb870c575fa8397afd0a css=0064b896296046589fd1fa1cb7a71eec0fdfde070e0ee74309287ded2b4bc445 (docs/reviews/web-sticky-recovery-f1/f1-419e56d-sticky-appearance-final-v1.log)
+  depth 8: 24073b5 js=3c19a7885e1d8c96 css=78a3c67aef9caeda | 419e56d js=3c19a7885e1d8c96 css=5330c9df497a46b4 | JS equal=true CSS equal=false
+  depth 9: 24073b5 js=e877b2b8ff4a9535 css=fd05dbc19fd411bf | 419e56d js=e877b2b8ff4a9535 css=0064b89629604658 =logged | JS equal=true CSS equal=false
+  depth 10: 24073b5 js=5afac0334edf2640 css=aac59bc1240d304c =logged | 419e56d js=5afac0334edf2640 css=c248eebc1b2a6f60 | JS equal=true CSS equal=false
+  depth 11: 24073b5 js=f5d491eb6eccea01 css=1db394567dfe375d | 419e56d js=f5d491eb6eccea01 css=d2f963e334a14e50 | JS equal=true CSS equal=false
+  depth 12: 24073b5 js=259550acb9f9ed85 css=fa8b82fc853d4357 | 419e56d js=259550acb9f9ed85 css=022c13d91a0cae04 | JS equal=true CSS equal=false
+  => EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+## verify-f1-callers.mjs (selfcheck … pomodoro) (fixture docs/reviews/web-sticky-recovery-f1/f1-callers-host.tsx sha256=e636ffdb1eb0caa04e6c40507fb0dedefaf3c12a440be4db27067f9f196c0458)
+  logged 24073b5: js=67e86caddda9e99ab2d3513ab9f29916c78a594a96bceab975788492f61a4b63 css=aac59bc1240d304c40a09009249efabbdad8fe72c4e9601d01586321cfabdce2 (docs/reviews/web-sticky-recovery-f1/f1-24073b5-selfcheck-fixed1.log)
+  logged 419e56d: js=03ad822e74f7137800b2a28a0d9fc1f3c1cf492715272d3ad7be799882585cb8 css=0064b896296046589fd1fa1cb7a71eec0fdfde070e0ee74309287ded2b4bc445 (docs/reviews/web-sticky-recovery-f1/f1-419e56d-selfcheck-appearance-final-v1.log)
+  depth 8: 24073b5 js=1b31871ec5abf53f css=78a3c67aef9caeda | 419e56d js=1b31871ec5abf53f css=5330c9df497a46b4 | JS equal=true CSS equal=false
+  depth 9: 24073b5 js=03ad822e74f71378 css=fd05dbc19fd411bf | 419e56d js=03ad822e74f71378 css=0064b89629604658 =logged | JS equal=true CSS equal=false
+  depth 10: 24073b5 js=67e86caddda9e99a css=aac59bc1240d304c =logged | 419e56d js=67e86caddda9e99a css=c248eebc1b2a6f60 | JS equal=true CSS equal=false
+  depth 11: 24073b5 js=67f1028b71c3f576 css=1db394567dfe375d | 419e56d js=67f1028b71c3f576 css=d2f963e334a14e50 | JS equal=true CSS equal=false
+  depth 12: 24073b5 js=e65f1167309b791b css=fa8b82fc853d4357 | 419e56d js=e65f1167309b791b css=022c13d91a0cae04 | JS equal=true CSS equal=false
+  => EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+## verify-f1-race.mjs (race) (fixture docs/reviews/web-sticky-recovery-f1/f1-race-host.tsx sha256=3937baecba2810e0e22dfc11a0c3f7a1f288202d59ca95a8032f3430440d5382)
+  logged 24073b5: js=cda97c99cd880b7cf0a616774777fd8012a1b3a19dd3e05a615d9ee5643123f0 css=aac59bc1240d304c40a09009249efabbdad8fe72c4e9601d01586321cfabdce2 (docs/reviews/web-sticky-recovery-f1/f1-24073b5-race-fixed1.log)
+  logged 419e56d: js=80803dd93779bb85cd0706979cdf8a7da86b502e72a84bc23727cfae8fb6d7c0 css=0064b896296046589fd1fa1cb7a71eec0fdfde070e0ee74309287ded2b4bc445 (docs/reviews/web-sticky-recovery-f1/f1-419e56d-race-appearance-final-v1.log)
+  depth 8: 24073b5 js=4815d012d384c3fe css=78a3c67aef9caeda | 419e56d js=4815d012d384c3fe css=5330c9df497a46b4 | JS equal=true CSS equal=false
+  depth 9: 24073b5 js=80803dd93779bb85 css=fd05dbc19fd411bf | 419e56d js=80803dd93779bb85 css=0064b89629604658 =logged | JS equal=true CSS equal=false
+  depth 10: 24073b5 js=cda97c99cd880b7c css=aac59bc1240d304c =logged | 419e56d js=cda97c99cd880b7c css=c248eebc1b2a6f60 | JS equal=true CSS equal=false
+  depth 11: 24073b5 js=9ead021109353002 css=1db394567dfe375d | 419e56d js=9ead021109353002 css=d2f963e334a14e50 | JS equal=true CSS equal=false
+  depth 12: 24073b5 js=0f82a5fad9138ec2 css=fa8b82fc853d4357 | 419e56d js=0f82a5fad9138ec2 css=022c13d91a0cae04 | JS equal=true CSS equal=false
+  => EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+## verify-f1-features.mjs (selfcheck, features) (fixture docs/reviews/web-features-recovery-f1/f1-features-host.tsx sha256=18272ac012ca878009b9311d6888d388e455b5250e5cd90a2904c55b5c17747b)
+  logged 24073b5: js=a98383f37dc03c3cae9d62e365af6103023d0d970e745c2c05a549c4f46076a7 css=5c938cd6e6add62c6437783f6106f27161f1d8f3c147ffed120426ef0583e63e (docs/reviews/web-features-recovery-f1/f1-24073b5-features-fixed1.log)
+  logged 419e56d: js=a492a5b02c6eeef48153c578bbb24734e05e1fb0f25c1c787e9b86025a3ff7e0 css=f5ab0aab8a7e3fa9ba6042b828c2c6a4c2179fca442ff784959080056f73477d (docs/reviews/web-features-recovery-f1/f1-419e56d-features-appearance-final-v1.log)
+  depth 8: 24073b5 js=f0f490aff39d99fb css=b042cff923628af7 | 419e56d js=f0f490aff39d99fb css=dba9cb500a39ce5d | JS equal=true CSS equal=false
+  depth 9: 24073b5 js=a492a5b02c6eeef4 css=008f477235ac036f | 419e56d js=a492a5b02c6eeef4 css=f5ab0aab8a7e3fa9 =logged | JS equal=true CSS equal=false
+  depth 10: 24073b5 js=a98383f37dc03c3c css=5c938cd6e6add62c =logged | 419e56d js=a98383f37dc03c3c css=a42a75daae4d4fea | JS equal=true CSS equal=false
+  depth 11: 24073b5 js=a532cef1c7deee83 css=27bd4e1edbb249ef | 419e56d js=a532cef1c7deee83 css=fcf0da80a60b9de5 | JS equal=true CSS equal=false
+  depth 12: 24073b5 js=6a2066caa04797cb css=6a1f4729d836cfe4 | 419e56d js=6a2066caa04797cb css=c74792116a659962 | JS equal=true CSS equal=false
+  => EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+## verify-f1-appearance(-k1).mjs (selfcheck, appearance) (fixture docs/reviews/web-native-keyinput-k1/f1-appearance-host.tsx sha256=19b4601f971c8892e674651244541f7e9635027dc5fe2cb56187a9a71a3dadef)
+  logged 24073b5: js=0f9e44db065f00e99404e2766dcb31d3c2c1dae1bcc0376b27c1625e99cc263d css=d58dfc44acd68008145cf09c17d90334164b2c6edc2b05a7a95c66bd8d259d24 (docs/reviews/web-appearance-recovery-f1/f1-24073b5-appearance-fixed1.log)
+  logged 419e56d: js=a4214950fa065f825778a1b631d6a76d9eb821ce7953b286fdfd9c5791524bbd css=f31c566420b660981b6263028756582c3440e4899c7ffd3246bd692bdee37307 (docs/reviews/web-native-keyinput-k1/f1-419e56d-appearance-appearance-final-v1.log)
+  depth 8: 24073b5 js=b2d2d92428fa3a0b css=018673749f0084ca | 419e56d js=b2d2d92428fa3a0b css=1255b5f94169b0f4 | JS equal=true CSS equal=false
+  depth 9: 24073b5 js=a4214950fa065f82 css=560080dbad3a288c | 419e56d js=a4214950fa065f82 css=f31c566420b66098 =logged | JS equal=true CSS equal=false
+  depth 10: 24073b5 js=0f9e44db065f00e9 css=d58dfc44acd68008 =logged | 419e56d js=0f9e44db065f00e9 css=60ce850af515c4af | JS equal=true CSS equal=false
+  depth 11: 24073b5 js=02cd4e0d67b0b7d5 css=323d666bb755510f | 419e56d js=02cd4e0d67b0b7d5 css=57b797b139050f0a | JS equal=true CSS equal=false
+  depth 12: 24073b5 js=daa4027ba4f1b0a6 css=f3cbc039e5599ecb | 419e56d js=daa4027ba4f1b0a6 css=23ef5e85e090bfa0 | JS equal=true CSS equal=false
+  => EXPLAINED: JS identical across revisions at every depth=true; logged 24073b5 reproduced at depth 10; logged 419e56d reproduced at depth 9
+exit=0

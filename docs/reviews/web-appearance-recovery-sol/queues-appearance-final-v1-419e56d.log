@@ -1,0 +1,168 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=queues
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 419e56d queues appearance-final-v1
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=3ff72da5b1a037b0bbd93fbb910cb0772c6306d495871d8a5fb14c3305acc794 reset.test.tsx=3f9f3f86570c1c8f9350532fb0a5fbc03c2a4f92ac74e9fa959956811a2e6595 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3 packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef packages/xai-web-settings-appearance/src/styles.css=cd95e4a921e334d7ac47fc7e808ffa3e79b664c45fbf754049be33f649f250ce packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] queues.test.tsx: include=docs/reviews/web-appearance-recovery-sol/queues.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg/appearance-sol-queues-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg/.report-queues-0.json vitest_exit=0 cases=56 passed=56 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=56 numPassedTests=56 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] queues.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg
+
+stdout | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q1 theme: the predecessor succeeds while the latest fails; Retry settles only the latest 287ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q2 theme: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 309ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q3 theme: a Retry while the field is pending is inert 188ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q4 theme: an equal-value successor after intervening input stays its own operation 208ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q5 theme: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 319ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q6 theme: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 274ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q7 theme: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 261ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q8 theme: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 216ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q9 theme: new work after a discard survives; the discarded held operation never writes 202ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest 183ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 289ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q3 railPos: a Retry while the field is pending is inert 166ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q4 railPos: an equal-value successor after intervening input stays its own operation 209ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q5 railPos: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 246ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q6 railPos: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 254ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q7 railPos: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 240ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q8 railPos: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 203ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q9 railPos: new work after a discard survives; the discarded held operation never writes 200ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'lang' > H8 lang: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 145ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'theme' > H8 theme: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 120ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'density' > H8 density: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 141ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'accentHue' > H8 accentHue: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 129ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'bgTone' > H8 bgTone: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 119ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'railPos' > H8 railPos: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 112ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'fontScale' > H8 fontScale: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 93ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'lang' > H8 lang: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 110ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'theme' > H8 theme: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 106ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'density' > H8 density: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 106ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 pane theme edit then Topbar theme edit with the first held: the latest wins, both surfaces agree in every sampled frame, one lock request per edit 174ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 Topbar theme edit then pane theme edit with the first held: the latest wins and both surfaces agree 125ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': with the pane mounted a Topbar choice is reflected in the pane in the same frame 52ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': with the pane mounted a Topbar choice is reflected in the pane in the same frame 76ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': after a Topbar choice no bottom action reverts it (the bottom action is activated when present) 121ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': after a Topbar choice no bottom action reverts it (the bottom action is activated when present) 113ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'fontScale' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved 145ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'accentHue' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved 154ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O1 theme: pending set → Reset to defaults; the reset is the latest intent and its completion governs 166ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O2 theme: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 160ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O3 theme: reset → set → reset; the queued set is superseded silently and the final reset governs 165ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O4 theme: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 139ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O5 theme: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 131ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O6 theme: a failed set and a failed reset with equal displayed values stay distinct intents 226ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O7 theme: discard of a reset draft, then new same-field work survives 187ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O1 railPos: pending set → Reset to defaults; the reset is the latest intent and its completion governs 163ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O2 railPos: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 153ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O3 railPos: reset → set → reset; the queued set is superseded silently and the final reset governs 164ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 145ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O5 railPos: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 147ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents 221ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O7 railPos: discard of a reset draft, then new same-field work survives 184ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'theme' edit during a pending reset batch supersedes that field's reset intent 119ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'density' edit during a pending reset batch supersedes that field's reset intent 142ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently 198ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-theme: in-flight set + Reset + set failure, recovered by Retry Theme: the failed set, one re-write of the superseded value, then one removal; final verified absence 211ms
+ ✓ docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-railPos: in-flight set + Reset + set failure, recovered by Retry Sidebar position: the failed set, one re-write of the superseded value, then one removal; final verified absence 205ms
+
+ Test Files  1 passed (1)
+      Tests  56 passed (56)
+   Start at  13:25:31
+   Duration  12.80s (transform 1.81s, setup 35ms, collect 2.73s, tests 9.63s, environment 188ms, prepare 49ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg/.report-queues-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-1j2afg/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/queues.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=11 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=56 passed=56 failed=0 skipped=0 precondition_failures=0
+harness PASS [queues.test.tsx] JSON report parsed
+harness PASS [queues.test.tsx] reported files equal the requested include
+harness PASS [queues.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [queues.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [queues.test.tsx] required product modules loaded from the archive (22)
+harness PASS [queues.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | §5 'theme' Q1 theme: the predecessor succeeds while the latest fails; Retry settles only the latest
+case 003 PASSED | §5 'theme' Q2 theme: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+case 004 PASSED | §5 'theme' Q3 theme: a Retry while the field is pending is inert
+case 005 PASSED | §5 'theme' Q4 theme: an equal-value successor after intervening input stays its own operation
+case 006 PASSED | §5 'theme' Q5 theme: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+case 007 PASSED | §5 'theme' Q6 theme: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+case 008 PASSED | §5 'theme' Q7 theme: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+case 009 PASSED | §5 'theme' Q8 theme: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+case 010 PASSED | §5 'theme' Q9 theme: new work after a discard survives; the discarded held operation never writes
+case 011 PASSED | §5 'railPos' Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest
+case 012 PASSED | §5 'railPos' Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+case 013 PASSED | §5 'railPos' Q3 railPos: a Retry while the field is pending is inert
+case 014 PASSED | §5 'railPos' Q4 railPos: an equal-value successor after intervening input stays its own operation
+case 015 PASSED | §5 'railPos' Q5 railPos: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+case 016 PASSED | §5 'railPos' Q6 railPos: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+case 017 PASSED | §5 'railPos' Q7 railPos: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+case 018 PASSED | §5 'railPos' Q8 railPos: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+case 019 PASSED | §5 'railPos' Q9 railPos: new work after a discard survives; the discarded held operation never writes
+case 020 PASSED | H8 pane 'lang' H8 lang: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 021 PASSED | H8 pane 'theme' H8 theme: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 022 PASSED | H8 pane 'density' H8 density: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 023 PASSED | H8 pane 'accentHue' H8 accentHue: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 024 PASSED | H8 pane 'bgTone' H8 bgTone: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 025 PASSED | H8 pane 'railPos' H8 railPos: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 026 PASSED | H8 pane 'fontScale' H8 fontScale: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+case 027 PASSED | H8 Topbar 'lang' H8 lang: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+case 028 PASSED | H8 Topbar 'theme' H8 theme: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+case 029 PASSED | H8 Topbar 'density' H8 density: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+case 030 PASSED | H5 H8 §5.4 pane theme edit then Topbar theme edit with the first held: the latest wins, both surfaces agree in every sampled frame, one lock request per edit
+case 031 PASSED | H5 H8 §5.4 Topbar theme edit then pane theme edit with the first held: the latest wins and both surfaces agree
+case 032 PASSED | H5 'theme': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+case 033 PASSED | H5 'density': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+case 034 PASSED | H5 'theme': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+case 035 PASSED | H5 'density': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+case 036 PASSED | H8 §5.4 'fontScale' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+case 037 PASSED | H8 §5.4 'accentHue' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+case 038 PASSED | §6 orderings 'theme' O1 theme: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+case 039 PASSED | §6 orderings 'theme' O2 theme: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+case 040 PASSED | §6 orderings 'theme' O3 theme: reset → set → reset; the queued set is superseded silently and the final reset governs
+case 041 PASSED | §6 orderings 'theme' O4 theme: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+case 042 PASSED | §6 orderings 'theme' O5 theme: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+case 043 PASSED | §6 orderings 'theme' O6 theme: a failed set and a failed reset with equal displayed values stay distinct intents
+case 044 PASSED | §6 orderings 'theme' O7 theme: discard of a reset draft, then new same-field work survives
+case 045 PASSED | §6 orderings 'railPos' O1 railPos: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+case 046 PASSED | §6 orderings 'railPos' O2 railPos: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+case 047 PASSED | §6 orderings 'railPos' O3 railPos: reset → set → reset; the queued set is superseded silently and the final reset governs
+case 048 PASSED | §6 orderings 'railPos' O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+case 049 PASSED | §6 orderings 'railPos' O5 railPos: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+case 050 PASSED | §6 orderings 'railPos' O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents
+case 051 PASSED | §6 orderings 'railPos' O7 railPos: discard of a reset draft, then new same-field work survives
+case 052 PASSED | H8 §6 a Topbar 'theme' edit during a pending reset batch supersedes that field's reset intent
+case 053 PASSED | H8 §6 a Topbar 'density' edit during a pending reset batch supersedes that field's reset intent
+case 054 PASSED | H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently
+case 055 PASSED | R5 fu2-retry-theme: in-flight set + Reset + set failure, recovered by Retry Theme: the failed set, one re-write of the superseded value, then one removal; final verified absence
+case 056 PASSED | R5 fu2-retry-railPos: in-flight set + Reset + set failure, recovered by Retry Sidebar position: the failed set, one re-write of the superseded value, then one removal; final verified absence

@@ -1,0 +1,79 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=appearance-typecheck
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 419e56d appearance-typecheck appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-appearance (packages/xai-web-settings-appearance) kind=tsc script=typecheck: "tsc --noEmit"
+archive_file_sha256 packages/xai-web-settings-appearance/package.json=41cdc7c0ba6af12b4a0c267a68a70f0e82e78f4053f25c7ba835e3a6e1523e39 packages/xai-web-settings-appearance/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/tsc
+args=--noEmit --listFiles
+typescript=node_modules/.pnpm/typescript@5.9.2/node_modules/typescript@5.9.2
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+[--listFiles output: 384 paths, summarised in the runner summary]
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "typecheck" is "tsc --noEmit" (found "tsc --noEmit")
+harness PASS program file list parsed (--listFiles)
+harness PASS no program file from a checkout's packages/, apps/ or docs/
+harness PASS every program file is inside the archive or the dependency store node_modules/.pnpm
+harness PASS required product files in the type program (13 present of 13 listed)
+harness PASS own tsconfig extends resolves inside the archive (@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json)
+tsc_exit=0 diagnostics_lines=0
+program_files=384 archive=85 store=299 elsewhere=0 forbidden=0
+archive_files_by_package packages/core=5 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=22 packages/plugin-web-tokens=6 packages/xai-web-event-bus=5 packages/xai-web-settings-appearance=23 packages/xai-web-shell=10
+archive_file_list_sha256=4813fab732be6804cf314033c3a8bee1304d0e23d06bb9e4e05c5b1c8d5d1b16
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearanceController.tsx packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts packages/xai-web-settings-appearance/src/types.ts packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx packages/plugin-web-storage/src/index.ts
+pin_required_provenance_missing=none
+program packages/xai-web-settings-appearance/src/AppearancePane.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx
+program packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts
+program packages/xai-web-settings-appearance/src/__tests__/appearanceLockFixture.ts
+program packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts
+program packages/xai-web-settings-appearance/src/__tests__/constants.test.ts
+program packages/xai-web-settings-appearance/src/appearanceDefaults.ts
+program packages/xai-web-settings-appearance/src/constants.ts
+program packages/xai-web-settings-appearance/src/index.ts
+program packages/xai-web-settings-appearance/src/internal/AppearanceActions.tsx
+program packages/xai-web-settings-appearance/src/internal/AppearanceStatus.tsx
+program packages/xai-web-settings-appearance/src/internal/appearanceController.tsx
+program packages/xai-web-settings-appearance/src/internal/appearancePane.tsx
+program packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts
+program packages/xai-web-settings-appearance/src/types.ts
+program packages/xai-web-settings-appearance/vitest.setup.ts
+program packages/xai-web-shell/src/AppRail.tsx
+program packages/xai-web-shell/src/AvatarMenu.tsx
+program packages/xai-web-shell/src/Shell.tsx
+program packages/xai-web-shell/src/SignOutConfirmDialog.tsx
+program packages/xai-web-shell/src/Topbar.tsx
+program packages/xai-web-shell/src/icons.tsx
+program packages/xai-web-shell/src/index.ts
+program packages/xai-web-shell/src/internal/dnd.ts
+program packages/xai-web-shell/src/registry.tsx
+program packages/xai-web-shell/src/types.ts

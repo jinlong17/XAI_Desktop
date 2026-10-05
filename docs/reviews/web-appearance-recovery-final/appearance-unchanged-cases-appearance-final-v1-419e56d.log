@@ -1,0 +1,86 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+mode=appearance-unchanged-cases
+suffix=appearance-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-final/verify-packages.mjs 419e56d appearance-unchanged-cases appearance-final-v1
+output_dir=docs/reviews/web-appearance-recovery-final
+runner_checkout_head=68686c562da3cd4885577178ca03d8ecf4be3094
+runner_sha256=8f9fb90f38717515c9ba9606b4f99c643d61c0523a07adbbe071982adb864e80
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-settings-appearance (packages/xai-web-settings-appearance) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-settings-appearance/package.json=41cdc7c0ba6af12b4a0c267a68a70f0e82e78f4053f25c7ba835e3a6e1523e39 packages/xai-web-settings-appearance/tsconfig.json=8264895f6ff844446cf042a6ea81db1464d3187dd69095537b215e6634a6c9c7 packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/eslint.config.js=e5fd80cab496575b6978b55d18244da722c48ad0e917a1a1149337612ae14bb3
+package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+node_modules_links third_party=448 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-settings-shell->packages/plugin-web-settings-shell @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus @repo/xai-web-shell->packages/xai-web-shell
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-settings-appearance:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a0dc0b66ab01c83fd/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/packages/xai-web-settings-appearance/final-appearance-unchanged-cases.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/.final-guard/report-appearance-unchanged-cases.json --testNamePattern AC-(RENDER-[124567]|I18N-[123]):
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (8/8)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/packages/xai-web-settings-appearance
+
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-1: renders 7 SettingRow elements 38ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible 10ms
+ ↓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-3: theme card matching current data-theme has .active class
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class 9ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class 10ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class 7ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees 7ms
+ ↓ src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls 108ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar) 9ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names 13ms
+ ↓ src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)
+
+ Test Files  2 passed (2)
+      Tests  9 passed | 3 skipped (12)
+   Start at  13:28:10
+   Duration  844ms (transform 272ms, setup 78ms, collect 563ms, tests 211ms, environment 416ms, prepare 96ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/.final-guard/report-appearance-unchanged-cases.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (2 files, explicit include)
+harness PASS package config in effect (environment jsdom, globals true, setupFiles [vitest.setup.ts], include ["src/__tests__/AppearancePane.rendering.test.tsx","src/__tests__/AppearancePane.bilingual.test.tsx"], root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (2 present of 2 listed)
+harness PASS no test-file suite error
+harness PASS name filter "AC-(RENDER-[124567]|I18N-[123]):" executed exactly the 9 listed §11 "Unchanged" cases, each once (9 executed, 3 filtered out)
+required_tests_absent_from_archive=none
+name_filter="AC-(RENDER-[124567]|I18N-[123]):" executed=9 filtered_out=3 expected=9 missing=none stray=none
+json_report=success=true numTotalTestSuites=4 numTotalTests=12 numPassedTests=9 numFailedTests=0 numPendingTests=3 numTodoTests=0
+totals files=2 tests=12 passed=9 failed=0 other=3 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/AppearancePane.bilingual.test.tsx status=passed tests=4 passed=3 failed=0
+file src/__tests__/AppearancePane.rendering.test.tsx status=passed tests=8 passed=6 failed=0
+case 001 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-1: lang='zh' shows Chinese strings in segmented controls
+case 002 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar)
+case 003 PASSED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names
+case 004 SKIPPED | src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)
+case 005 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-1: renders 7 SettingRow elements
+case 006 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible
+case 007 SKIPPED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-3: theme card matching current data-theme has .active class
+case 008 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class
+case 009 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class
+case 010 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class
+case 011 PASSED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees
+case 012 SKIPPED | src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/packages/xai-web-settings-appearance","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-final-pkg-UR5ki5/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["./vitest.setup.ts"],"include":["src/__tests__/AppearancePane.rendering.test.tsx","src/__tests__/AppearancePane.bilingual.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/constants.ts
+pin_required_provenance_missing=none
+pin_modules=66 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-appearance=9 packages/xai-web-shell=9
