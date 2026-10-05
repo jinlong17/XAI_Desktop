@@ -573,7 +573,48 @@
         "commit:05b21f4",
         "../web-more-recovery-fb002/review-fb002.md",
         "commit:ec55f9e",
-        "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+        "../web-features-recovery-acceptance/acceptance-5cd63ff.md",
+        "commit:e9fbdb7",
+        "../web-next-caller-selection/selection-5cd63ff.md",
+        "../web-appearance-recovery-contract/contract.md",
+        "commit:b2e5eb2",
+        "commit:706c9a3",
+        "commit:bd09456",
+        "../web-appearance-recovery-sol/README.md",
+        "commit:b997235",
+        "../web-appearance-recovery-independent/README.md",
+        "commit:72538d1",
+        "../web-appearance-recovery-native/before-5cd63ff.md",
+        "../web-appearance-recovery-f1/before-5cd63ff.md",
+        "commit:24073b5",
+        "commit:4874170",
+        "../web-appearance-recovery-terra/implementation.md",
+        "commit:26cfce8",
+        "../web-appearance-recovery-oracle-erratum/review-oe.md",
+        "commit:31d6335",
+        "../web-appearance-recovery-sol/fixed-24073b5.md",
+        "commit:3419542",
+        "../web-appearance-recovery-native/review-controls-reset-export-24073b5.md",
+        "commit:6b9f0ee",
+        "../web-native-keyinput-k1/review-k1.md",
+        "commit:32e6753",
+        "../web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md",
+        "commit:5307b6f",
+        "../web-appearance-recovery-native/review-visual-keyboard-24073b5.md",
+        "commit:5bbf473",
+        "commit:0d34bf2",
+        "../web-appearance-recovery-terra/implementation-r2.md",
+        "commit:bacdbbc",
+        "../web-appearance-recovery-native/review-visual-keyboard-5bbf473.md",
+        "commit:419e56d",
+        "commit:5766c1e",
+        "../web-appearance-recovery-terra/implementation-r3.md",
+        "commit:2696855",
+        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md",
+        "commit:c6d1ed4",
+        "../web-appearance-recovery-final/review-final-regressions-419e56d.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
       ]
     },
     {
@@ -1475,7 +1516,13 @@
     {
       "id": "SET-02",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:2f728f1",
+        "commit:51db323",
+        "../web-appearance-recovery-contract/contract.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
+      ]
     },
     {
       "id": "SET-03",
@@ -1560,7 +1607,14 @@
     {
       "id": "SHELL-04",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:72538d1",
+        "../web-appearance-recovery-native/before-5cd63ff.md",
+        "commit:32e6753",
+        "../web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md",
+        "commit:a560863",
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
+      ]
     },
     {
       "id": "SHELL-05",
@@ -1610,7 +1664,14 @@
     {
       "id": "UX-05",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:bacdbbc",
+        "../web-appearance-recovery-native/review-visual-keyboard-5bbf473.md",
+        "commit:5766c1e",
+        "../web-appearance-recovery-terra/implementation-r3.md",
+        "commit:2696855",
+        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md"
+      ]
     },
     {
       "id": "UX-06",
