@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：Terra 已交付 Appearance 实施（产品 `24073b5`，运行记录 `4874170`），已接收。预检中有两个冻结的 Sol `continuity-export` case 与合同矛盾，记为争议 OE-1 与 OE-2，总控初步判断为 oracle 缺陷。本批登记批次 41：由独立 Sol 复核这两项，并产出纠正 oracle 证据。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：批次 41（`26cfce8`）独立判定 OE-1、OE-2 均为 oracle 缺陷，fixed 实现两项都正确；纠正副本只改 3 行，在 `24073b5` 上 26/26。本批裁定 E7 的用法，并登记批次 42：独立重跑 E7、E8、E16、E17。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `4874170` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `26cfce8` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -115,7 +115,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `implementation_ready_for_review`：Terra 实施 `24073b5`（运行记录 `4874170`）已接收；冻结 oracle 争议 OE-1 与 OE-2 待批次 41；之后按合同 §14 从 E7 起依次登记独立验证 |
+| 状态 | `implementation_ready_for_review`：Terra 实施 `24073b5`（运行记录 `4874170`）已接收；OE-1 与 OE-2 已判定为 oracle 缺陷（`26cfce8`）；E7、E8、E16、E17 待批次 42 |
 | 用户决定（2026-10-04） | **B-2：保留按钮，改为全部重试。** 用户在三个选项中选了 (ii)：<ul><li>(i) 自动保存并去掉按钮，未选；</li><li>(ii) 保留按钮并改为全部重试，**选中**；</li><li>(iii) 编辑后保存，未选。</li></ul>含义：继续自动保存，每次改动立即生效并保存；底部按钮保留，从无条件显示 "Saved" 的空操作，改为真实的"重试全部失败项"。这是产品负责人对 SET-02 开放选择的决定，记入控制面；台账在 Appearance 接受时一并对账 |
 | 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`：r1 有 884 行，含假设 A1–A9、H1–H14、九个 gate、E1–E26；r2 见下方一行。</li></ul> |
 | 合同 r2（批次 35） | `b2e5eb2`（独立 Astra；只原地修订 `contract.md`，1159 行，SHA-256 `e4210cff…`）。<ul><li>A2 改为记录产品负责人的决定：继续自动保存；"Save & apply" 与无条件的 "Saved" 闪现去掉；改为 pane 本地底部区域中的真实"全部重试"。</li><li>重试范围：所有已结算的失败草稿，每项只试一次，按精确草稿归属。</li><li>EN/ZH 文案：`Retry all`/`全部重试`。</li><li>位置：底部区域不吸底、左对齐，全部重试在最左。它只对全部重试设硬 gate：5 个宽度上与宠物盒至少相隔 8px，中心加四个内缩点均无遮挡。</li><li>`SettingsFooter`、`confirmAction`、`resetAllPrefs` 不变。</li><li>计数：H1–H16，gate 1–10，证据 E1–E27 连续（Sol 增加 `retry-all` 模式，新增 E26 native 全部重试，最终回归回执改为 E27）。</li><li>**总控核对：** 只改合同一个文件，worktree clean；A1、A3–A9 与 r1 逐字相同；E1–E27 连续；修订记录位于合同开头。</li></ul> |
@@ -129,12 +129,13 @@
 | 总控裁定（批次 39，2026-10-04） | <ol><li>**开发探测：** 正式运行前的探测属于 harness 开发，不计入"诊断迭代不超过 3 轮"。该上限针对冻结的证据运行，与 Features E4/E5 先例一致。前提是探测必须在回执中如实披露，本批已披露；探测日志未提交，可以接受。</li><li>**H14(a)：** 按语言分别记录，EN 成立、ZH 被推翻。</li><li>**pane 镜像观察：** native 新加载后 pane 镜像显示默认值，`<html>` 却应用了已存储的值，与 Sol jsdom 的观察 7 相反。这加强了 H5/H17：clean 状态的 "Save & apply" 会把已存储的 dark/compact/1.1 改回默认。fixed 产品须在 jsdom 与 native 两层都显示已存储的真实值。Terra 与最终 acceptance 须知晓。</li><li>**host 行 m 的解读：** 接受 a1 oracle 的读法。"一次 live `proceed()`" 理解为恰好一次释放：POP 时为一次 live `proceed()`，程序化导航时为一次 `router.navigate` 重放（`departureCoordinator.tsx:131–156`），且非 live 调用为 0、提交恰好一次。这与 F1 关注的重复释放一致，最终 acceptance 复核。</li><li>**非阻断观察：** 两项都不属本 caller 的修复范围，后续另行诊断。<ul><li>登出确认后 AvatarMenu 仍打开，其 scrim 拦截指针输入。这是既有问题，AvatarMenu 受保护。</li><li>native composition 中 `/app/tasks` 显示一个与本 caller 无关的 Tasks 保存失败横幅，因此 H3 改在 `/app/calendar` 上运行。</li></ul></li></ol> |
 | Terra 实施（E6） | `24073b5` `fix(settings): recover Appearance preferences with Retry all`（父 `94f8cf8`）+ `4874170` 运行记录（`web-appearance-recovery-terra/` 下 10 个新增文件：`implementation.md` 与 9 份自检原始日志）。<ul><li>**diff：** 相对 `5cd63ff` 恰好 24 个产品文件，全部在合同 r3 §11 内（+3589/−666）：<ul><li>Appearance 包：pane、增量的 types 与 index、4 个新 internal 模块、只做追加的 styles.css、测试、文档；</li><li>shell：Topbar、Shell、types、Topbar 测试、api.md；</li><li>`App.tsx`，以及新的 `App.appearance.test.tsx`。</li></ul>无 `package.json` 或 lockfile 变化。</li><li>**自检：** 三个包的测试、typecheck、lint 全部 exit 0：Appearance 126/126，shell 115/115，web 178/178。</li><li>**冻结 runner 预检（日志未提交，已披露）：**<ul><li>Sol 的 bytes、fields、reset、queues、host、retry-all、original 全部 PASS；</li><li>continuity-export 为 24/26：case 006、007 失败，即争议 OE-1、OE-2；</li><li>父级 host 33/33；</li><li>F1 selfcheck 有效；F1 appearance 为 fixed-pass，a1–a4 的 F1 签名为 0。</li></ul></li><li>**总控核对：**<ul><li>产品提交只改 `apps`、`packages`；记录提交只在 terra 目录新增文件；</li><li>受保护路径 diff 为空（storage、settings-shell、tokens、pet、CmdK、core、routes、`main.tsx`、`apps/desktop`、AvatarMenu、AppRail、`package.json`、lockfile）；</li><li>worktree clean。</li></ul></li><li>**过程违规（已披露，影响已评估）：** 执行者早期用 `preview_start` 在**主检出**里启动了 dev server，Vite 改写了主检出中被 git 忽略的 `apps/web/node_modules/.vite` 缓存（修改时间 2026-10-05 00:23）。<ul><li>主检出的跟踪文件没有变化。</li><li>证据 runner 从 archive 运行，不使用该 dev-server 缓存。</li><li>总控不删除这个缓存。</li><li>今后的实施批次须明确：禁止在主检出启动 dev server，只能用 worktree 内的 server。</li></ul></li><li>**总控裁定（Topbar 状态断点）：** 合同第 606 行的规则是"在 Topbar 摘要可见处显示文字"。括号里的"above 760 px"漏了 `layout.css:2061–2063`：摘要在 641–767px 也隐藏。实现按摘要实际可见性，从 768px 起显示文字，与规则一致，接受。括号中的数字记为合同勘误，E14 视觉须按实际断点检查 761–767px。</li></ul> |
 | 冻结 oracle 争议 OE-1、OE-2（2026-10-05） | Terra 按停止条件上报：不改 oracle，也不迁就实现。<ul><li>**OE-1：** `continuity-export.test.tsx` case 006，即 L180–193 的 INV"无关的账户锁不拖延 device 编辑或 reset"。<ul><li>oracle 在挂载**之后**用原生 setter 写入 rail=`top`、bg=`peach`，没有 StorageEvent，然后期望 Reset 删除它们。</li><li>fixed 版本把这两个未被观察到的外部字节当作冲突保留，合同 §6 写明"A conflict preserves the external bytes"。</li><li>该 INV 在 before 上 PASS：before 版本的 reset 不检测冲突。</li><li>总控初步判断：oracle 的准备步骤无意中制造了冲突，属 oracle 缺陷。</li></ul></li><li>**OE-2：** case 007，即 L195–221。<ul><li>先提交强调色 295，再选 Mist 且只有 bg 写入失败；oracle 期望强调色仍为 `"295"`。</li><li>合同 §2（`:110–117`）与 §5 第 4 项规定，背景选择会同步建立 `bgTone` 与 `accentHue`（该色调的色相）两个意图，它们各自结算，所以强调色合法地变为 `"230"`。</li><li>before 版本在更早的业务断言（§7.3 beforeunload）上正确失败，从未执行到这条期望。</li><li>总控初步判断：最后的期望与合同矛盾，属 oracle 缺陷。</li></ul></li><li>**处理：** 按 F-B002 先例，交独立 Sol 复核并取证（批次 41），可以推翻总控的初步判断；冻结的原 oracle 不改。</li></ul> |
+| OE-1、OE-2 判定（批次 41） | `26cfce8`（独立 Sol；`web-appearance-recovery-oracle-erratum/` 下 15 个新增文件，回执 `review-oe.md` `63e7eed0…`）。<ul><li>**OE-1 为 oracle 缺陷。** 挂载后的原生写入没有被绑定观察到，按合同必须作为冲突保留。依据：<ul><li>合同：§5 第 6 项（`:536–537`）；§5 接口规则，即精确 baseline、无 storage 预检、不强制 rebase（`:481`、`:483–484`）；§6（`:661`）；A2.3（`:334`）。</li><li>源码：引擎在两个版本上逐字节相同。reset 以最后观察到的字节为 baseline（`usePrefAsync.ts:177`）；当前字节不同时，`prefMutation.ts:199–202` 以冲突拒绝。</li><li>before 能 PASS，只是因为旧的 `removePref` 无条件删除（`storage.ts:257–258`）。</li></ul></li><li>**OE-2 为 oracle 缺陷。** 背景选择会同时写入色调的色相，Mist 的色相为 230（`constants.ts:25`）。两个版本都提交了 `xai_accent_hue=230`，"295" 在任一版本上都从未出现。</li><li>**冻结套件内部本就矛盾：** `reset.test.tsx:330–346` 断言外部替换是被保留的冲突；`fields.test.tsx:415–425` 对同一序列断言 `"230"`。</li><li>**纠正副本：**<ul><li>case 006：两行 `seedValue` 原样移到挂载之前，账户锁仍全程持有；</li><li>case 007：期望值由 `"295"` 改为 `"230"`，消息不变。</li><li>其余逐字相同。</li></ul></li><li>**运行：**<ul><li>纠正副本在 `5cd63ff` 上 4/22：case 006 PASS；case 007 仍失败于原来的 §7.3 beforeunload 行。</li><li>纠正副本在 `24073b5` 上 26/26。</li><li>冻结原件在 `24073b5` 上 24/26，复现了 Terra 的预检。</li><li>其余 24 个 case 在两份文件、两个版本上结果一致，并经脚本机械比对；precondition 为 0。</li></ul></li><li>**扫描：** 7 个 Sol oracle、Sol fixture 与父级 host oracle 中，同类问题只有这两处。</li><li>**总控核对：**<ul><li>15 个文件均为新增，且在允许目录内；回执列全了 hash。</li><li>总控自行对比了 diff，确认恰好只有上述三处变化。</li><li>总控复核了三份权威日志的计数与 precondition，并确认上面引用的两处冻结断言确实存在。</li></ul></li><li>**总控裁定（E7 的用法，与 C-FB002 先例一致）：**<ul><li>E7 的 `continuity-export` 以冻结原件为主。冻结原件在 fixed 上的失败只能是 OE-1、OE-2 两个签名。</li><li>这两个 case 以纠正副本 `continuity-export.corrected.test.tsx` 为准，须 26/26。</li><li>其余 7 个模式按冻结原件全部 PASS，oracle hash 不变。</li><li>冻结 oracle 不改；今后凡含这个模式的回归，都须同时运行纠正副本。最终 acceptance 复核。</li></ul></li></ul> |
 | 范围 | 7 个 device 键：语言、主题、密度、字号、强调色、背景、rail 位置。<ul><li>三个写入面：Settings pane、`App.tsx` 根偏好 writer、Topbar 快速切换。</li><li>Terra 可改的文件见合同 §11：Appearance 包；shell 的 `Topbar.tsx`、`Shell.tsx`、`types.ts` 与 Topbar 测试；`apps/web` 的 `App.tsx` 与新的 App 测试；运行记录目录 `web-appearance-recovery-terra/`。</li><li>全部在 `web` 模块内，不改 D2 共享层。</li></ul> |
 | 312 清单编号 | 关联 SET-02、SHELL-04、REL-05、REL-07、REL-09 等；本任务不关闭任何编号 |
 | 风险等级 | `high`：改动宿主 `App.tsx` 与 shell，影响所有 `/app` 路由。<ul><li>H6：一个畸形根值会让整个 `/app` 落入错误页。</li><li>是开放式 async 路径的第一个 device 生产使用方：在这里发现的缺陷按共享缺陷处理。</li></ul> |
 | 总控核对 | <ul><li>提交只新增 2 个文件，worktree clean。</li><li>总控在 `5cd63ff` 上逐条核实关键源码事实：<ul><li>`plugin-web-tokens/src/i18n.ts:727–733` 遇不支持的语言抛 `TypeError`；</li><li>`apply.ts:64–69、83–88` 遇非法字号或色相抛 `RangeError`；</li><li>`router.tsx:41–43` 的 `/app` 挂 `RouteErrorBoundary`；</li><li>`App.tsx:98–105` 与 `Topbar.tsx:26–39` 吞掉写入失败；</li><li>`SettingsFooter.tsx:75` 无条件 `setSaved(true)`；</li><li>7 个键在 `accountOwnership.ts` 中均为 device。</li></ul></li><li>Terra 文件清单逐个列出；E1–E26 连续，无缺号。</li></ul> |
 | 前置决定 | <ul><li>**B-2 / A2（用户已决定为 (ii)，见上）：** SET-02 原文为"Appearance统一自动保存或编辑后保存语义"，两种方式都写在条目里，属产品负责人的选择。<ul><li>合同按选项 (i) 写成：保留自动保存，去掉 "Save & apply"（Features D3 先例）。</li><li>选 (ii) 或 (iii) 时，须由 Astra 修订合同。</li></ul></li><li>**A1、A3–A9（总控可定）：** 宿主与 shell 范围、App 级单一 controller、开放式 async 路径、保护模型（不加 Settings 路由 guard；Topbar 状态位；App 级 `beforeunload`；登出前确认）、严格值域且只拒绝不修复、Reset 删除 6 个键并保留语言、测试处置、R-PET 判定口径。总控倾向确认，待 B-2 结果后一并确认。</li><li>**其他候选的用户决定（暂不提问，排到对应候选时再提）：** C-1（SET-10）、D-2、E-1（DASH-03）、E-2（SHELL-05）、E-3（SET-03）、F-2（SET-08）。</li></ul> |
-| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ 批次 41 OE-1/OE-2 复核 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
+| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ ~~批次 41 OE-1/OE-2 复核~~（`26cfce8`）→ 批次 42 重跑 E7、E8、E16、E17 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
 
 CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
@@ -240,7 +241,8 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 | Appearance（续） | `95d6234` 登记批次 38 · `b997235` 父级 host before 基线（E3） |
 | Appearance（续 2） | `963036b` 登记批次 39 · `72538d1` native 与 F1 before（E4–E5） |
 | Appearance（续 3） | `94f8cf8` 授权批次 40 · `24073b5` Terra 实施 · `4874170` Terra 运行记录 |
-| 本提交 | 记录 Terra 实施、断点裁定与 OE-1/OE-2，登记批次 41 |
+| Appearance（续 4） | `3552631` 登记批次 41 · `26cfce8` OE-1/OE-2 判定与纠正副本 |
+| 本提交 | 记录 OE 判定与 E7 用法裁定，登记批次 42 |
 
 ## 台账变化
 
@@ -280,42 +282,43 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 
 ## 本轮唯一任务
 
-批次 41：由独立 Sol 复核冻结 oracle 争议 OE-1（`continuity-export` case 006）与 OE-2（case 007），并产出纠正 oracle 证据。
+批次 42：独立 Sol 在 fixed `24073b5` 上重跑合同 r3 §14 的 E7、E8、E16、E17。
 
-- **执行者：** 新的独立 Claude Opus 5.5（Sol 角色）。它与批次 37 的 oracle 作者、批次 40 的 Terra 都不是同一实例。
+- **执行者：** 新的独立 Claude Opus 5.5（Sol 角色）。它不是批次 37、38、39、41 的作者，也不是 Terra。
 - **固定点：**
-  - before `5cd63ff`，fixed `24073b5`；合同 r3（`706c9a3`）；
-  - 冻结 oracle `web-appearance-recovery-sol/continuity-export.test.tsx`（`bd09456`），连同其 runner 与 fixture，只读；
+  - fixed `24073b5`（不可变 archive，lockfile gate，`@repo` 固定并带守卫，记录 requested 与 resolved SHA，拒绝覆盖，保留非零退出码）；
+  - 合同 r3（`706c9a3`）；
   - 控制分支基点为本提交。
-- **任务：**
-  1. **独立判定。** 对照合同 r3 原文与两个版本的源码，逐项判断冻结 oracle 的期望是否与合同一致。可以推翻总控的初步判断。若判定是实现错误，冻结复现，以 FAIL 停止，由总控另开修复窗口。
-  2. **最小纠正。** 若判定为 oracle 缺陷，新增纠正副本 `docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx`，只做最小修改，并提交逐字 diff：
-     - case 006：改为在挂载前写入，或用 StorageEvent 模拟另一个 document 的、已被观察到的写入；
-     - case 007：期望值改为最后一次已提交的强调色，即 Mist 的色相。
-
-     fixture 与 runner 只读复用；必要时在新目录写一个 runner，沿用冻结 runner 的约定（不可变 archive、lockfile gate、`@repo` 固定并带守卫、拒绝覆盖、保留非零退出码）。
-  3. **运行。**
-     - 纠正副本整模式在 `5cd63ff` 与 `24073b5` 上各跑一次；
-     - 冻结原件在 `24073b5` 上跑一次，复现 24/26；
-     - 须给出：纠正后的 case 006 在两个版本上的结果（预期都是 PASS，作为不变量）；纠正后的 case 007 在 before 上仍失败于原来那条早期业务断言，在 fixed 上 PASS；其余 24 个 case 在两份文件中结果一致。
-  4. **扫描。** 在 Appearance 的 Sol 与 host oracle 中查找同类构造问题，只报告：
-     - 挂载后不带事件的原生写入，之后却期望删除或覆盖；
-     - 背景选择之后，期望强调色不变。
-- **输出：** 只新增 `docs/reviews/web-appearance-recovery-oracle-erratum/**`：纠正副本、diff、runner（如需要）、日志、回执 `review-oe.md`。
-- **禁止：** 修改任何已有文件，包括冻结的 oracle、fixture、runner 与日志；修改产品、合同、台账或控制面；push；派生子 agent。
-- **成本上限：** 每个运行单元的诊断迭代不超过 3 轮。
-- **停止条件：**
-  - 判定为实现错误：冻结复现，以 FAIL 停止；
-  - harness 不可复现：BLOCKED。
+- **E7（Sol fixed 重跑）：** 用冻结的 `web-appearance-recovery-sol/verify-fixed.mjs` 与 oracle（hash 不变，先逐个复算），跑 8 个模式：
+  - 预期：bytes、fields、reset、queues、host、retry-all、original 全部 PASS；四个裁定 5 的 case PASS；precondition 为 0。
+  - `continuity-export`：冻结原件的失败只能是 OE-1、OE-2 两个签名；同时运行纠正副本（`web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx` 及其 runner），须 26/26。
+  - 与 before3 逐 case 对照：每个 before FAIL 在 fixed 上转为 PASS，对照 case 保持 PASS；任何 PASS→FAIL 都须解释。
+- **E8（父级 host fixed 重跑）：**
+  - 用冻结的 `web-appearance-recovery-independent/` runner 与 `host.test.tsx`（同一冻结 harness），须 33/33；
+  - 须包括全部重试，以及 clean 状态下禁用的全部重试；
+  - 与 before3 逐 case 对照。
+- **E16（12 个冻结 F1 运行）：** runner hash 不变，全部 PASS：
+  - `verify-f1.mjs` 的 sticky、more、collaborate；
+  - `verify-f1-callers.mjs` 的 selfcheck、notifications、date-time、smart-lists、header、pomodoro；
+  - `verify-f1-race.mjs` 的 race；
+  - `verify-f1-features.mjs` 的 selfcheck、features。
+- **E17（Appearance F1 fixed）：** `web-appearance-recovery-f1/verify-f1-appearance.mjs` 的 selfcheck 与 `appearance` 均须为 fixed-pass。
+  - a1 恰好一次释放，按总控裁定 4 的读法：POP 时一次 live `proceed()`，程序化导航时一次 `navigate` 重放；非 live 调用为 0。
+  - a2 不被持有，且保留草稿。
+  - a3 在 OK 后由协调器持有，Stay resolve `false`。
+  - a4 Cancel resolve `false`，身份不变。
+  - runtime error 为 0，没有 `Invalid blocker state transition`。
+- **输出：** 各 runner 在其所在目录写出带新后缀 `fixed1` 的新日志，只新增、不覆盖；另新增回执 `docs/reviews/web-appearance-recovery-sol/fixed-24073b5.md`，汇总 E7、E8、E16、E17，列出每份日志的 SHA-256。
+- **禁止：** 修改任何已有文件；修改产品、合同、台账或控制面；修复；push；派生子 agent。
+- **成本上限：** 每个运行单元的诊断迭代不超过 3 轮；用新后缀，保留旧日志。
+- **停止条件：** 出现真实产品失败时，冻结复现、影响范围与正确 oracle，提交后停止，由总控另开修复窗口；harness 不可复现时 BLOCKED。
 
 ## 下一步
 
-1. 等待批次 41 回执，总控核对：
+1. 等待批次 42 回执，总控核对：
    - 只新增文件；
-   - 纠正副本的 diff 是最小修改；
-   - before 与 fixed 两个版本的结果；
-   - 判定依据。
-2. 若两项均为 oracle 缺陷，且纠正证据成立：
-   - 总控裁定：E7 的 `continuity-export` 以冻结原件为主，OE-1 与 OE-2 两个 case 以纠正副本为准（与 C-FB002 先例一致）；
-   - 登记批次 42：独立重跑 E7（Sol fixed）、E8（父级 host fixed）、E16（12 个冻结 F1 运行）、E17（Appearance F1 fixed）。
-3. 若任一项是实现错误：登记 Terra 修复窗口，修复后重新预检。
+   - 各模式计数与 before3 的逐 case 转换；
+   - `continuity-export` 的失败只限 OE 签名，纠正副本 26/26；
+   - E16 的 12 个运行全部 PASS，runner hash 不变；
+   - E17 为 fixed-pass。
+2. 通过后，依次登记 native 批次：E9–E11（controls、reset、导出）、E12–E13（host 矩阵与 downstream）、E14–E15（视觉与键盘），以及 E26（native 全部重试）。之后是最终回归 E18–E25 与回执 E27，最后是独立最终 acceptance。
