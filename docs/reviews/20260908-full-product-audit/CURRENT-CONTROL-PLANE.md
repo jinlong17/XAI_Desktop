@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：用户已就 B-2（SET-02）选择"保留按钮，改为全部重试"。本批登记批次 35：由独立 Astra 按该决定修订 Appearance 合同。修订通过后，总控确认 A1–A9，再登记 before 基线。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：合同 r2（`b2e5eb2`）已把底部按钮定义为真实的"全部重试"。用户又决定该按钮"始终显示，无失败时禁用"。本批登记批次 36：由独立 Astra 做窄范围 r3 修订。修订通过后，总控确认 A1、A3–A9，再登记 before 基线。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `a4aff57` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `b2e5eb2` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -115,15 +115,18 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `diagnosis_needed`：合同按用户的 B-2 决定修订中（批次 35）；修订通过前不登记执行批次 |
+| 状态 | `diagnosis_needed`：r2（`b2e5eb2`）已实现 B-2 (ii)；按用户的第二个决定做 r3 修订（批次 36）；修订通过前不登记执行批次 |
 | 用户决定（2026-10-04） | **B-2：保留按钮，改为全部重试。** 用户在三个选项中选了 (ii)：<ul><li>(i) 自动保存并去掉按钮，未选；</li><li>(ii) 保留按钮并改为全部重试，**选中**；</li><li>(iii) 编辑后保存，未选。</li></ul>含义：继续自动保存，每次改动立即生效并保存；底部按钮保留，从无条件显示 "Saved" 的空操作，改为真实的"重试全部失败项"。这是产品负责人对 SET-02 开放选择的决定，记入控制面；台账在 Appearance 接受时一并对账 |
-| 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`（884 行）：假设 A1–A9、H1–H14、九个 gate、E1–E26 清单。</li></ul> |
+| 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`：r1 有 884 行，含假设 A1–A9、H1–H14、九个 gate、E1–E26；r2 见下方一行。</li></ul> |
+| 合同 r2（批次 35） | `b2e5eb2`（独立 Astra；只原地修订 `contract.md`，1159 行，SHA-256 `e4210cff…`）。<ul><li>A2 改为记录产品负责人的决定：继续自动保存；"Save & apply" 与无条件的 "Saved" 闪现去掉；改为 pane 本地底部区域中的真实"全部重试"。</li><li>重试范围：所有已结算的失败草稿，每项只试一次，按精确草稿归属。</li><li>EN/ZH 文案：`Retry all`/`全部重试`。</li><li>位置：底部区域不吸底、左对齐，全部重试在最左。它只对全部重试设硬 gate：5 个宽度上与宠物盒至少相隔 8px，中心加四个内缩点均无遮挡。</li><li>`SettingsFooter`、`confirmAction`、`resetAllPrefs` 不变。</li><li>计数：H1–H16，gate 1–10，证据 E1–E27 连续（Sol 增加 `retry-all` 模式，新增 E26 native 全部重试，最终回归回执改为 E27）。</li><li>**总控核对：** 只改合同一个文件，worktree clean；A1、A3–A9 与 r1 逐字相同；E1–E27 连续；修订记录位于合同开头。</li></ul> |
+| 用户决定二（2026-10-04） | **全部重试按钮始终显示，没有失败时禁用。** 用户在"仅在有失败时显示"（r2 的写法）与"始终显示，无失败时禁用"之间选了后者。两种方式下，底部区域都不吸底、左对齐 |
+| 总控裁定（r2 开放问题 2–6，2026-10-04） | <ol><li>**文案：** 接受 `Retry all`/`全部重试` 与 r2 的状态行文案，沿用现有 pane 的文案风格；用户可另行修改。</li><li>**不吸底：** 接受底部区域改为不吸底。理由是避开默认位置的宠物；失败状态另有 Topbar 提示，滚动时也可见。</li><li>**左对齐：** 接受整个底部区域左对齐（全部重试 → 导出 → 放弃全部，Reset 单独一行）。除全部重试外，其他控件仍按 A9 只要求中心不被遮挡。</li><li>**计数：** 控制面按 E1–E27、gate 1–10、H1–H16 更新（本提交）。批次 37 的 before 基线须包含 Sol `retry-all` 模式、host 的全部重试用例，以及 native 的 H14(b)/H15。</li><li>**继承行为：** 接受 r2 照实记录的继承行为，即 Reset 接受时仍在写入的 set 随后失败，经 Retry 或全部重试先重写被取代的值，再删除，最终字节为 reset 结果。但要求 r3 在 §12 写明，由 Sol oracle 覆盖这一顺序：断言瞬时写入序列与最终字节。这同时补上 Features acceptance 后续第 2 项指出的 oracle 缺口。</li></ol> |
 | 范围 | 7 个 device 键：语言、主题、密度、字号、强调色、背景、rail 位置。<ul><li>三个写入面：Settings pane、`App.tsx` 根偏好 writer、Topbar 快速切换。</li><li>Terra 可改的文件见合同 §11：Appearance 包；shell 的 `Topbar.tsx`、`Shell.tsx`、`types.ts` 与 Topbar 测试；`apps/web` 的 `App.tsx` 与新的 App 测试；运行记录目录 `web-appearance-recovery-terra/`。</li><li>全部在 `web` 模块内，不改 D2 共享层。</li></ul> |
 | 312 清单编号 | 关联 SET-02、SHELL-04、REL-05、REL-07、REL-09 等；本任务不关闭任何编号 |
 | 风险等级 | `high`：改动宿主 `App.tsx` 与 shell，影响所有 `/app` 路由。<ul><li>H6：一个畸形根值会让整个 `/app` 落入错误页。</li><li>是开放式 async 路径的第一个 device 生产使用方：在这里发现的缺陷按共享缺陷处理。</li></ul> |
 | 总控核对 | <ul><li>提交只新增 2 个文件，worktree clean。</li><li>总控在 `5cd63ff` 上逐条核实关键源码事实：<ul><li>`plugin-web-tokens/src/i18n.ts:727–733` 遇不支持的语言抛 `TypeError`；</li><li>`apply.ts:64–69、83–88` 遇非法字号或色相抛 `RangeError`；</li><li>`router.tsx:41–43` 的 `/app` 挂 `RouteErrorBoundary`；</li><li>`App.tsx:98–105` 与 `Topbar.tsx:26–39` 吞掉写入失败；</li><li>`SettingsFooter.tsx:75` 无条件 `setSaved(true)`；</li><li>7 个键在 `accountOwnership.ts` 中均为 device。</li></ul></li><li>Terra 文件清单逐个列出；E1–E26 连续，无缺号。</li></ul> |
 | 前置决定 | <ul><li>**B-2 / A2（用户已决定为 (ii)，见上）：** SET-02 原文为"Appearance统一自动保存或编辑后保存语义"，两种方式都写在条目里，属产品负责人的选择。<ul><li>合同按选项 (i) 写成：保留自动保存，去掉 "Save & apply"（Features D3 先例）。</li><li>选 (ii) 或 (iii) 时，须由 Astra 修订合同。</li></ul></li><li>**A1、A3–A9（总控可定）：** 宿主与 shell 范围、App 级单一 controller、开放式 async 路径、保护模型（不加 Settings 路由 guard；Topbar 状态位；App 级 `beforeunload`；登出前确认）、严格值域且只拒绝不修复、Reset 删除 6 个键并保留语言、测试处置、R-PET 判定口径。总控倾向确认，待 B-2 结果后一并确认。</li><li>**其他候选的用户决定（暂不提问，排到对应候选时再提）：** C-1（SET-10）、D-2、E-1（DASH-03）、E-2（SHELL-05）、E-3（SET-03）、F-2（SET-08）。</li></ul> |
-| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ 批次 35 Astra 修订合同 → 总控确认 A1–A9 并登记 → 冻结 before 基线 E1–E5（Sol oracle、父级 production-App host 基线、native before、Appearance F1 形态 before 日志）→ Terra → fixed 重跑与 native → 最终回归 E26 → 独立最终 acceptance |
+| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ 批次 36 r3 修订 → 总控确认 A1、A3–A9 并登记 → 冻结 before 基线 E1–E5（Sol oracle 含 `retry-all` 模式、父级 production-App host 基线、native before 含 H14(b)/H15、Appearance F1 形态 before 日志）→ Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
 
 CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
@@ -223,7 +226,8 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 | Features 关闭（续） | `e348b79` CP-FEATURES-01 改为 `accepted`，登记批次 33 · `a83d53a` 库存刷新（CP-LUNA-02） |
 | 下一项选择（续 2） | `ead985d` 登记批次 34 · `e9fbdb7` 选择备忘录与 Appearance 合同 |
 | 下一项选择（续 3） | `a4aff57` 登记 CP-APPEARANCE-01（等待用户决定 B-2） |
-| 本提交 | 记录用户的 B-2 决定 (ii)，登记批次 35（合同修订） |
+| 下一项选择（续 4） | `2f728f1` 记录 B-2 决定，登记批次 35 · `b2e5eb2` 合同 r2 |
+| 本提交 | 记录用户决定二与总控裁定，登记批次 36（r3 修订） |
 
 ## 台账变化
 
@@ -261,35 +265,32 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 
 ## 本轮唯一任务
 
-### 批次 35：按用户的 B-2 决定修订 Appearance 合同（独立 Astra 角色）
+### 批次 36：按用户决定二做 Appearance 合同 r3 窄范围修订（独立 Astra 角色）
 
 - **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
-- **固定点：** 产品 `5cd63ff`；修订对象为 `docs/reviews/web-appearance-recovery-contract/contract.md`（`e9fbdb7` 版本，尚未确认，没有证据依赖它）；控制分支基点为本提交。
-- **用户决定：** 继续自动保存；Appearance 保留一个底部按钮，改为真实的"全部重试"。
+- **固定点：** 产品 `5cd63ff`；修订对象为 `contract.md` 的 r2（`b2e5eb2`，SHA-256 `e4210cff…`）；控制分支基点为本提交。
+- **用户决定二：** 全部重试按钮始终显示；没有可重试的失败时为禁用状态。
 - **修订要求：**
-  - 重写 A2，并逐项定义：
-    - **标签：** EN/ZH 文案；
-    - **何时可见或可用：** 不能出现虚假成功；
-    - **重试范围：** 7 个字段中所有已结算的失败 set/reset 草稿，包括 reset 批次中的失败项。待定中的写入与只能 Reload 的 source-only 字段除外。每个失败草稿只尝试一次；待定期间不重复；按精确草稿归属；遵守最新选择规则；忽略迟到的完成；
-    - **反馈：** 逐字段结果，以及真实的状态行；
-    - **焦点：** 全部成功与部分成功后的焦点落点；
-    - **交互：** 与逐字段 Retry/Discard、Discard all、Reset、Topbar 状态、`beforeunload`、登出确认之间的关系；
-    - **可用性：** 键盘操作、44×44 目标、EN/ZH 文案；
-    - **位置：** 按 R-PET 教训与 A9 规则，这个新增或移动的控件在显示宠物时，5 个宽度都不得被遮挡；768×1024 时默认位置的宠物会盖住右下角；
-    - **实现载体：** 优先 pane 本地组件，保持 `SettingsFooter`、`confirmAction`、`resetAllPrefs` 不变；若必须改共享组件，写明理由，纳入 A1 文件清单与受影响 caller 的重跑。
-  - 同步更新所有受影响的章节：§3、§5–§7、§9–§16。须补上"全部重试"的 before 假设与 oracle、gate，以及 Sol、host、native、视觉、键盘各层的证据项；保持 Required evidence 清单唯一且连续。
-  - A1、A3–A9 原则上保留；若 (ii) 迫使它们变化，逐项写明。
-  - 在合同开头加修订记录（r2，2026-10-04，依据用户的 B-2 决定），列出每个改动的章节。
-- **允许修改的文件：** 只有 `docs/reviews/web-appearance-recovery-contract/contract.md`，原地修订。选择备忘录与其他文件不改。
+  - **A2 第 2 点：** 改为始终渲染，并定义禁用的语义：
+    - 用原生 `disabled` 还是 `aria-disabled`，以及对 Tab 顺序与可聚焦性的影响；
+    - 禁用状态不得暗示出了故障：文案、`aria-describedby` 指向的状态行内容、视觉对比度；
+    - 何时从禁用变为可用；重试进行中的状态。
+  - **焦点（A2.5）：** 一次重试全部结算成功后，按钮仍在但变为禁用。须定义焦点落点，不得落到 `<body>`。若使用原生 `disabled`，须说明焦点如何转移。
+  - **同步更新依赖章节：** §5 文案与状态行、§9（host 行、presentation、keyboard、位置 gate 覆盖禁用态）、§12（before 假设与 oracle 覆盖禁用态）、§13、§14（保持唯一且连续）、§15–§16。
+  - **继承行为（总控裁定 5）：** 在 §12 写明，由 Sol oracle 覆盖以下顺序：Reset 接受时仍在写入的 set 随后失败，经 Retry 或全部重试先重写被取代的值，再删除。须断言瞬时写入序列与最终字节。
+  - **文案、不吸底与左对齐：** 按总控裁定 1–3 保持 r2 写法。
+  - **修订记录：** 增加 r3 条目（2026-10-04，依据用户决定二与总控裁定 5），列出每个改动的章节。
+  - **其他假设：** A1、A3–A9 保持逐字不变。
+- **允许修改的文件：** 只有 `docs/reviews/web-appearance-recovery-contract/contract.md`，原地修订。
 - **禁止：** 修改其他任何文件、产品、台账或控制面；push；派生子 agent。
-- **停止条件：** 若 (ii) 无法在不改 D2 共享层、不跨产品模块的前提下实现，停止并报告。
+- **停止条件：** 若始终显示的禁用按钮无法满足无障碍要求、焦点规则或宠物避让 gate，停止并报告，不提交半成品修订。
 
 ## 下一步
 
-1. 等待批次 35 回执，总控核对：
+1. 等待批次 36 回执，总控核对：
    - 只改合同一个文件；
-   - 修订记录完整；
-   - "全部重试"的定义满足上面每一项要求；
-   - 证据清单唯一、连续，并覆盖新按钮；
-   - 范围不越模块。
-2. 通过后，总控确认 A1–A9，登记批次 36：冻结 before 基线 E1–E5（Sol oracle 由独立 Sol 窗口完成，其余按合同 §1 的角色分工）。
+   - r3 修订记录完整；
+   - 禁用态语义、焦点落点、继承行为 oracle 均已写入；
+   - 证据清单唯一且连续；
+   - A1、A3–A9 逐字不变。
+2. 通过后，总控确认 A1、A3–A9，登记批次 37：冻结 before 基线 E1–E5。Sol oracle 由独立 Sol 窗口完成；其余按合同 §1 的角色分工。
