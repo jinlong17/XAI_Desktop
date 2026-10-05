@@ -1,0 +1,27 @@
+--- a/docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx
++++ b/docs/reviews/web-appearance-recovery-oracle-erratum/continuity-export.corrected.test.tsx
+@@ -179,13 +179,13 @@
+ 
+ it("INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset", async () => {
+   const accountLock = await hold(accountLifecycleLockName(OWNER_A));
++  seedValue(RAIL, "top");
++  seedValue(BG, "peach");
+   standalone();
+   await flush();
+   choose(ACCENT, 295);
+   await flush();
+   expect(bytes(ACCENT), "§7: a device edit is not serialized behind an unrelated account lock").toBe("295");
+-  seedValue(RAIL, "top");
+-  seedValue(BG, "peach");
+   clickReset(true, "en");
+   await flush(24);
+   expect({ accent: bytes(ACCENT), rail: bytes(RAIL), bg: bytes(BG) }, "§7: a device reset is not serialized behind an unrelated account lock").toStrictEqual({ accent: null, rail: null, bg: null });
+@@ -216,7 +216,7 @@
+   await flush();
+   expect(attempts(from), "§7.6: detached callbacks make zero storage attempts").toEqual([]);
+   expect(harness.created.length + harness.clicks.length, "a detached export never downloads").toBe(0);
+-  expect(bytes(ACCENT), "unmount never undoes committed writes").toBe("295");
++  expect(bytes(ACCENT), "unmount never undoes committed writes").toBe("230");
+   expect(bytes(RAIL), "unmount never undoes committed removals").toBeNull();
+ });
+ 

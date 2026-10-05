@@ -1,0 +1,280 @@
+== Part A: per-case comparison of the four continuity-export runs
+run frozen@5cd63ff: docs/reviews/web-appearance-recovery-sol/continuity-export-before3-5cd63ff.log sha256=2582df8f5cacf0939b5ca39f04269eb7e2d4f5ced54967e6b1b5aa832d22178a resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0 exit=1 cases=26 passed=4 failed=22 precondition=0
+run corrected@5cd63ff: docs/reviews/web-appearance-recovery-oracle-erratum/corrected-oe2-5cd63ff.log sha256=2deda71954de56b640fed2846ef9d74a4870cda206a63c98b8e49122e22babf7 resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0 exit=1 cases=26 passed=4 failed=22 precondition=0
+run frozen@24073b5: docs/reviews/web-appearance-recovery-oracle-erratum/frozen-oe2-24073b5.log sha256=aa689afb7021e36f9bd6888d2802ed4aca14e6f9a4af2940ca67d24d2122095f resolved_commit=24073b522262d8b4bec0abfa29347db28adbdd9e exit=1 cases=26 passed=24 failed=2 precondition=0
+run corrected@24073b5: docs/reviews/web-appearance-recovery-oracle-erratum/corrected-oe2-24073b5.log sha256=f573263793f1bef6e5c418533a7afbf0b97dc207f3f58755c1cbbe7ccab52935 resolved_commit=24073b522262d8b4bec0abfa29347db28adbdd9e exit=0 cases=26 passed=26 failed=0 precondition=0
+PASS every run reports 26 cases
+PASS the 26 case titles are identical and in the same order in all four runs
+PASS zero PRECONDITION failures in all four runs
+PASS 5cd63ff: the 24 non-disputed cases have the same outcome and first failure line in the frozen and corrected files
+PASS 24073b5: the 24 non-disputed cases have the same outcome and first failure line in the frozen and corrected files
+PASS 24073b5: the 24 non-disputed cases all PASS
+PASS OE-1: corrected case 006 PASSES at both SHAs (invariant)
+PASS OE-1: frozen case 006 PASSED at 5cd63ff and FAILS at 24073b5
+PASS OE-2: corrected case 007 still FAILS at 5cd63ff on the same early business assertion (§7.3 beforeunload)
+PASS OE-2: corrected case 007 PASSES at 24073b5; frozen case 007 FAILS there
+
+case | frozen@5cd63ff | corrected@5cd63ff | frozen@24073b5 | corrected@24073b5 | title
+001 | PASSED | PASSED | PASSED | PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+002 | FAILED | FAILED | PASSED | PASSED | H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves
+003 | FAILED | FAILED | PASSED | PASSED | H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release
+004 | FAILED | FAILED | PASSED | PASSED | H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B
+005 | PASSED | PASSED | PASSED | PASSED | INV §7 edits and a reset across A→B never touch account keys, markers or account lifecycle locks
+006 | PASSED | PASSED | FAILED | PASSED | INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset
+007 | FAILED | FAILED | FAILED | PASSED | §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+008 | FAILED | FAILED | PASSED | PASSED | H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme)
+009 | FAILED | FAILED | PASSED | PASSED | H1 H12 §8 shape 2: a sparse registered set (accent)
+010 | FAILED | FAILED | PASSED | PASSED | H1 H12 §8 shape 3: a background choice with both writes failing exports both entries
+011 | FAILED | FAILED | PASSED | PASSED | H9 H12 §8 shape 4: mixed set and reset entries
+012 | FAILED | FAILED | PASSED | PASSED | H8 H12 §8 shape 5: all six pending resets behind held locks
+013 | FAILED | FAILED | PASSED | PASSED | H1 H2 H12 §8 shape 6: all seven sets including language
+014 | FAILED | FAILED | PASSED | PASSED | H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing
+015 | FAILED | FAILED | PASSED | PASSED | H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts)
+016 | FAILED | FAILED | PASSED | PASSED | H12 §8 the export excludes saved, default and source-only fields
+017 | PASSED | PASSED | PASSED | PASSED | INV §8 without an actual draft there is no Export and no Discard all control
+018 | FAILED | FAILED | PASSED | PASSED | H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+019 | FAILED | FAILED | PASSED | PASSED | H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+020 | FAILED | FAILED | PASSED | PASSED | H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+021 | FAILED | FAILED | PASSED | PASSED | H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+022 | FAILED | FAILED | PASSED | PASSED | H12 §8 a setup failure in Chinese shows 导出失败，请重试。
+023 | FAILED | FAILED | PASSED | PASSED | H12 §8 an unmount during blob cancels the click and cleans up (standalone controller)
+024 | FAILED | FAILED | PASSED | PASSED | H12 §8 an unmount during url cancels the click and cleans up (standalone controller)
+025 | FAILED | FAILED | PASSED | PASSED | H12 §8 an unmount during append cancels the click and cleans up (standalone controller)
+026 | FAILED | FAILED | PASSED | PASSED | H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft
+
+first failure lines (as printed by each run):
+002 frozen@5cd63ff: AssertionError: H1: the failed accent choice stays displayed: expected 165 to be 295 // Object.is equality
+002 corrected@5cd63ff: AssertionError: H1: the failed accent choice stays displayed: expected 165 to be 295 // Object.is equality
+003 frozen@5cd63ff: AssertionError: H12: "Theme is saving.": expected false to be true // Object.is equality
+003 corrected@5cd63ff: AssertionError: H12: "Theme is saving.": expected false to be true // Object.is equality
+004 frozen@5cd63ff: AssertionError: H8: the held per-key lock keeps the accent removal pending: expected null to be '230' // Object.is equality
+004 corrected@5cd63ff: AssertionError: H8: the held per-key lock keeps the accent removal pending: expected null to be '230' // Object.is equality
+006 frozen@24073b5: AssertionError: §7: a device reset is not serialized behind an unrelated account lock: expected { accent: null, rail: 'top', …(1) } to strictly equal { accent: null, rail: null, bg: null }
+007 frozen@5cd63ff: AssertionError: §7.3: beforeunload warns while a draft exists: expected false to be true // Object.is equality
+007 corrected@5cd63ff: AssertionError: §7.3: beforeunload warns while a draft exists: expected false to be true // Object.is equality
+007 frozen@24073b5: AssertionError: unmount never undoes committed writes: expected '230' to be '295' // Object.is equality
+008 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+008 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+009 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+009 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+010 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+010 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+011 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+011 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+012 frozen@5cd63ff: AssertionError: H8: every removal waits behind its held per-key lock: expected [ '"light"', '"comfortable"', …(4) ] to deeply equal [ '"dark"', '"compact"', '1.1', …(3) ]
+012 corrected@5cd63ff: AssertionError: H8: every removal waits behind its held per-key lock: expected [ '"light"', '"comfortable"', …(4) ] to deeply equal [ '"dark"', '"compact"', '1.1', …(3) ]
+013 frozen@5cd63ff: AssertionError: H12: 导出外观草稿: expected null not to be null
+013 corrected@5cd63ff: AssertionError: H12: 导出外观草稿: expected null not to be null
+014 frozen@5cd63ff: AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+014 corrected@5cd63ff: AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+015 frozen@5cd63ff: AssertionError: §7: the App-lifetime draft survives navigation: expected 165 to be 295 // Object.is equality
+015 corrected@5cd63ff: AssertionError: §7: the App-lifetime draft survives navigation: expected 165 to be 295 // Object.is equality
+016 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+016 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+018 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+018 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+019 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+019 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+020 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+020 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+021 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+021 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+022 frozen@5cd63ff: AssertionError: H12: 导出外观草稿: expected null not to be null
+022 corrected@5cd63ff: AssertionError: H12: 导出外观草稿: expected null not to be null
+023 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+023 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+024 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+024 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+025 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+025 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+026 frozen@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+026 corrected@5cd63ff: AssertionError: H12: Export Appearance draft: expected null not to be null
+
+== Part B: construction scan (report only)
+file docs/reviews/web-appearance-recovery-sol/bytes.test.tsx sha256=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 tests=18
+P2 candidate docs/reviews/web-appearance-recovery-sol/bytes.test.tsx:368 (test docs/reviews/web-appearance-recovery-sol/bytes.test.tsx:358-375) [generic choice in a test parameterized over a set with the background field]
+   test: it.each(paneValues)("PC §10.1 pane $field=$value ($via) persists exact bytes and displays and applies the choice", async ({ field: id, value
+   background choice: else choose(field, value);
+   accent assertion :371 if (field === BG) expect(bytes(ACCENT), `§10.1 ${String(value)} pairs its accent bytes`).toBe(enc(ACCENT, TONE_HUE[String(value)]!));
+P2 candidate docs/reviews/web-appearance-recovery-sol/bytes.test.tsx:407 (test docs/reviews/web-appearance-recovery-sol/bytes.test.tsx:399-412) [generic choice in a test parameterized over a set with the background field]
+   test: it.each(FIELDS.map(field => ({ id: field.id })))("PC §5.4 $id: choosing the default from absent stores its bytes", async ({ id }) => {
+   background choice: choose(field, field.defaultValue);
+   accent assertion :411 if (field === BG) expect(bytes(ACCENT), "the Sage tone pairs its accent bytes").toBe("165");
+file docs/reviews/web-appearance-recovery-sol/fields.test.tsx sha256=3ff72da5b1a037b0bbd93fbb910cb0772c6306d495871d8a5fb14c3305acc794 tests=19
+P1 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:160 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:152-170) after mount at :154
+   test: it(`${field.kind === "registered" ? "H7" : "§5.2"} H12 §5.8 ${id}: a source-only issue shows Reload; Reload of repaired bytes makes zero wri
+   write: nativeSet.call(localStorage, field.key, enc(field, repaired));
+   assert :164 expect(writes(from), "§5.8 Reload makes zero set/remove attempts").toEqual([]);
+   assert :165 expect(touches(from, others(field)), "§5.8 Reload rereads only its own field").toEqual([]);
+   assert :167 expect(shown(field, after), "Reload displays the repaired stored value").toBe(repaired);
+   assert :168 expect(says(msg.unavailable(field, after)), "Reload clears the source alert").toBe(false);
+   assert :169 expect(successShown(), "§5.7 a source-only Reload repair does not by itself claim a save").toBe(false);
+P2 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:352 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:349-371) [all-fields loop]
+   test: it("H1 H2 H12 §5.7 all seven fields unresolved at once: each keeps its choice and message, the count line reads 7, Discard all visits only d
+   background choice: for (const field of FIELDS) { await pick(field, CHOICE[field.id]); await flush(); }
+   accent assertion :356 expect(shown(field, lang), `${tagOf(field)}: ${field.id} keeps its latest choice`).toBe(CHOICE[field.id]);
+   accent assertion :357 expect(says(msg.notSaved(field, lang)), `${tagOf(field)}/H12: "${msg.notSaved(field, lang)}"`).toBe(true);
+   accent assertion :367 for (const field of FIELDS) expect(shown(field, after), `${field.id} returns to its committed default`).toBe(field.defaultValue);
+P2 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:376 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:373-388) [all-fields loop]
+   test: it("H12 §5.7 with all seven unresolved, a targeted Retry saves only its field and the count drops to 6", async () => {
+   background choice: for (const field of FIELDS) { await pick(field, CHOICE[field.id]); await flush(); }
+   accent assertion :384 expect(writes(from).filter(entry => !entry.startsWith(`set:${THEME.key}=`)), "§5.7 a field's success never retries, rewrites or discards a sibling").toEqual([]);
+P2 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:394 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:390-413) [direct]
+   test: it("H1 §5.4 background choice with both writes failing keeps both intents; each Retry writes only its own field", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :399 expect(shown(ACCENT), "H1: the accent shows the tone's hue").toBe(230);
+   accent assertion :400 expect({ tone: applied(BG), hue: applied(ACCENT) }, "both are applied").toStrictEqual({ tone: "mist", hue: 230 });
+   accent assertion :401 expect({ tone: says(msg.notSaved(BG)), hue: says(msg.notSaved(ACCENT)) }, "H12: both fields report the failure").toStrictEqual({ tone: true, hue: true });
+   accent assertion :411 expect(writes(second), "Retry Accent color writes only the hue").toEqual([`set:${ACCENT.key}=230`]);
+   accent assertion :412 expect({ tone: bytes(BG), hue: bytes(ACCENT) }).toStrictEqual({ tone: "mist", hue: "230" });
+P2 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:418 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:415-425) [direct]
+   test: it("H1 §5.7 background choice whose tone write fails while the accent write succeeds: only the tone is unresolved", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :422 expect(bytes(ACCENT), "the accent write committed").toBe("230");
+   accent assertion :424 expect(says(msg.notSaved(ACCENT)), "the committed accent has no failure").toBe(false);
+P2 candidate docs/reviews/web-appearance-recovery-sol/fields.test.tsx:430 (test docs/reviews/web-appearance-recovery-sol/fields.test.tsx:427-439) [direct]
+   test: it("H13 a background choice whose accent write fails while the tone commits keeps the hue displayed with feedback", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :435 expect(shown(ACCENT), "H13: the accent keeps displaying the tone's hue after its write failed").toBe(230);
+   accent assertion :436 expect(applied(ACCENT), "H13: the accent keeps applying the tone's hue").toBe(230);
+   accent assertion :437 expect(says(msg.notSaved(ACCENT)), "H13/H12: \"Accent color was not saved.\"").toBe(true);
+file docs/reviews/web-appearance-recovery-sol/reset.test.tsx sha256=3f9f3f86570c1c8f9350532fb0a5fbc03c2a4f92ac74e9fa959956811a2e6595 tests=29
+file docs/reviews/web-appearance-recovery-sol/queues.test.tsx sha256=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 tests=28
+P1 candidate docs/reviews/web-appearance-recovery-sol/queues.test.tsx:243 (test docs/reviews/web-appearance-recovery-sol/queues.test.tsx:236-267) after mount at :238
+   test: it(`Q6 ${id}: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes`, async 
+   write: nativeSet.call(localStorage, X.key, enc_(b));
+   then retry :248 const retry = need(retryOf(X), `H12: Retry ${X.label.en}`);
+   then retry :255 fireEvent.click(retryOf(X) ?? retry);
+   then retry :259 need(retryOf(X), "the conflict stays preserved");
+   then retry :265 expect(retryOf(X)).toBeNull();
+   assert :244 pre(bytes(X) === enc_(b), "external replacement present");
+   assert :246 expect(bytes(X), "§5.6: the external replacement is preserved").toBe(enc_(b));
+   assert :247 expect(shown(X), "the latest choice stays displayed").toBe(a);
+   assert :250 expect(warns()).toBe(true);
+   assert :251 expect(successShown()).toBe(false);
+   assert :257 expect(writesOn(from, X), "§5.6: repeated Retry never gains authority to overwrite").toEqual([]);
+   assert :258 expect(bytes(X)).toBe(enc_(b));
+   assert :263 expect(writes(discarded), "Discard makes zero set/remove attempts").toEqual([]);
+   assert :264 expect(shown(X), "Discard rereads the external value").toBe(b);
+   assert :265 expect(retryOf(X)).toBeNull();
+   assert :266 expect(warns()).toBe(false);
+P1 candidate docs/reviews/web-appearance-recovery-sol/queues.test.tsx:276 (test docs/reviews/web-appearance-recovery-sol/queues.test.tsx:269-294) after mount at :271
+   test: it(`Q7 ${id}: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default`, async () => {
+   write: nativeRemove.call(localStorage, X.key);
+   then retry :281 const retry = need(retryOf(X), `H12: Retry ${X.label.en}`);
+   then retry :285 fireEvent.click(retryOf(X) ?? retry);
+   then retry :289 need(retryOf(X), "the removal conflict stays preserved");
+   then retry :293 expect(retryOf(X)).toBeNull();
+   assert :277 pre(bytes(X) === null, "external removal present");
+   assert :279 expect(bytes(X), "§5.6: the external removal is preserved").toBeNull();
+   assert :280 expect(shown(X)).toBe(a);
+   assert :287 expect(writesOn(from, X), "§5.6: repeated Retry never recreates the removed key").toEqual([]);
+   assert :288 expect(bytes(X)).toBeNull();
+   assert :292 expect(shown(X), "Discard shows the default for the absent key").toBe(X.defaultValue);
+   assert :293 expect(retryOf(X)).toBeNull();
+P1 candidate docs/reviews/web-appearance-recovery-sol/queues.test.tsx:306 (test docs/reviews/web-appearance-recovery-sol/queues.test.tsx:296-322) after mount at :298
+   test: it(`Q8 ${id}: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation`, a
+   write: nativeSet.call(localStorage, X.key, enc_(stored));
+   then retry :312 need(retryOf(X), "the external restoration stays a conflict");
+   then retry :314 fireEvent.click(retryOf(X) ?? retry);
+   then choice :317 choose(X, b);
+   then retry :321 expect(retryOf(X)).toBeNull();
+   assert :307 pre(bytes(X) === enc_(stored), "original baseline bytes restored externally");
+   assert :311 expect(bytes(X), "§5.6: the restored original bytes are preserved").toBe(enc_(stored));
+   assert :313 expect(successShown()).toBe(false);
+   assert :316 expect(writesOn(from, X), "§5.6: repeated Retry never gains authority to overwrite").toEqual([]);
+   assert :319 expect(shown(X), "the distinct new choice is displayed").toBe(b);
+   assert :320 expect(bytes(X), "the distinct new choice settles as its own operation").toBe(enc_(b));
+   assert :321 expect(retryOf(X)).toBeNull();
+P1 candidate docs/reviews/web-appearance-recovery-sol/queues.test.tsx:707 (test docs/reviews/web-appearance-recovery-sol/queues.test.tsx:700-723) after mount at :702
+   test: it("H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently", async () => {
+   write: nativeSet.call(localStorage, RAIL.key, "bottom");
+   then choice :709 choose(THEME, "dark");
+   then retry :714 expect({ rail: Boolean(retryOf(RAIL)), theme: says(msg.notSaved(THEME)) }, "§5.7 both fields are unresolved").toStrictEqual({ rail: true, theme: true });
+   then retry :717 fireEvent.click(need(retryOf(THEME), "H12: Retry Theme"));
+   then retry :721 need(retryOf(RAIL), "the rail conflict stays recoverable");
+   assert :713 expect(bytes(RAIL), "§5.6 the external rail bytes are preserved").toBe("bottom");
+   assert :714 expect({ rail: Boolean(retryOf(RAIL)), theme: says(msg.notSaved(THEME)) }, "§5.7 both fields are unresolved").toStrictEqual({ rail: true, theme: true });
+   assert :715 expect(statusText(), "two unresolved").toBe(W.en.count(2));
+   assert :719 expect(bytes(THEME), "the theme Retry succeeds independently").toBe(enc(THEME, "dark"));
+   assert :720 expect(bytes(RAIL), "the rail conflict is untouched").toBe("bottom");
+   assert :722 expect(statusText(), "one unresolved").toBe(W.en.count(1));
+file docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx sha256=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce tests=21
+P1 candidate docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:187 (test docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:180-193) after mount at :182
+   test: it("INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset", async () => {
+   write: seedValue(RAIL, "top");
+   then reset :189 clickReset(true, "en");
+   assert :191 expect({ accent: bytes(ACCENT), rail: bytes(RAIL), bg: bytes(BG) }, "§7: a device reset is not serialized behind an unrelated account lock").toStrictEqual({ accent: null, rail: null, bg: null });
+P1 candidate docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:188 (test docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:180-193) after mount at :182
+   test: it("INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset", async () => {
+   write: seedValue(BG, "peach");
+   then reset :189 clickReset(true, "en");
+   assert :191 expect({ accent: bytes(ACCENT), rail: bytes(RAIL), bg: bytes(BG) }, "§7: a device reset is not serialized behind an unrelated account lock").toStrictEqual({ accent: null, rail: null, bg: null });
+P2 candidate docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:206 (test docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:195-221) [direct]
+   test: it("§7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :219 expect(bytes(ACCENT), "unmount never undoes committed writes").toBe("295");
+P2 candidate docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:264 (test docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:260-269) [direct]
+   test: it("H1 H12 §8 shape 3: a background choice with both writes failing exports both entries", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :268 await exportUnderDenial("shape 3", envelope({ bgTone: SET("mist"), accentHue: SET(230) }));
+P2 candidate docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:302 (test docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:299-305) [all-fields loop]
+   test: it("H1 H2 H12 §8 shape 6: all seven sets including language", async () => {
+   background choice: for (const field of FIELDS) { await pick(field, CHOICE[field.id]); await flush(); }
+   accent assertion :304 await exportUnderDenial("shape 6", envelope({ lang: SET("zh"), theme: SET("dark"), density: SET("compact"), accentHue: SET(230), bgTone: SET("mist"), railPos: SET("right"), fontScale: SET(1.1) }));
+file docs/reviews/web-appearance-recovery-sol/host.test.tsx sha256=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab tests=24
+P1 candidate docs/reviews/web-appearance-recovery-sol/host.test.tsx:466 (test docs/reviews/web-appearance-recovery-sol/host.test.tsx:430-503) after mount at :433
+   test: it("H12 §10.7 during and after every Appearance operation the product dispatches zero StorageEvents and zero preference-changed events, and 
+   write: nativeSet.call(localStorage, RAIL.key, "top");
+   then reload :467 fireEvent.click(need(reloadOf(RAIL), "H12: Reload Sidebar position"));
+   then choice :472 choose(FONT, 1.1);
+   then retry :480 fireEvent.click(need(retryAll(), "H16: Retry all"));
+   then reset :483 clickReset(true);
+   then choice :486 choose(RAIL, "right");
+   then reset :489 clickReset(true);
+   then choice :495 choose(THEME, "dark");
+   assert :477 pre(harness.clicks.length === 1, "the export downloaded once");
+file docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx sha256=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c tests=44
+P2 candidate docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:241 (test docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:237-253) [all-fields loop]
+   test: it("H16 A2.2 A2.4 all seven failed fields enable Retry all with the count 7; one activation attempts each once in display order", async () =
+   background choice: for (const field of FIELDS) quotas.push(await failPane(field, choices[field.id]));
+   accent assertion :250 expect(attempts(from, undefined, ["set", "remove"]).map(item => item.key), "A2.3: exactly one write per member, in display order").toEqual(FIELDS.map(field => field.key));
+P2 candidate docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:280 (test docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:276-299) [direct]
+   test: it("H13 H16 A2.3 a background choice with both writes failing is two members; with only the tone failing it is one", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :289 expect(setRemove(from), "A2.3: each field of the background choice independently, one write each").toEqual([`set:${ACCENT.key}=230`, `set:${BG.key}=mist`]);
+P1 candidate docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:353 (test docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:345-365) after mount at :348
+   test: it("H16 A2.3 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten", async () => {
+   write: nativeSet.call(localStorage, THEME.key, JSON.stringify("light"));
+   then retry :356 const button = RA();
+   assert :355 pre(bytes(THEME) === JSON.stringify("light"), "the external replacement is present");
+   assert :357 expect(isEnabledState(button), "A2.3: the refused edit and the conflict are eligible").toBe(true);
+   assert :361 expect(setRemove(from), "A2.3: the invalid source is refused again and the conflict is never overwritten").toEqual([]);
+   assert :362 expect({ rail: bytes(RAIL), theme: bytes(THEME) }).toStrictEqual({ rail: "diagonal", theme: JSON.stringify("light") });
+   assert :363 expect(isEnabledState(button), "both stay unresolved").toBe(true);
+   assert :364 expect(statusText()).toBe(W.en.count(2));
+P2 candidate docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:538 (test docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:532-543) [direct]
+   test: it("H16 A2.3 a background choice supersedes a held accent member", async () => {
+   background choice: choose(BG, "mist");
+   accent assertion :541 expect({ accent: bytes(ACCENT), tone: bytes(BG) }, "A2.3: the background choice is the latest accent intent").toStrictEqual({ accent: "230", tone: "mist" });
+   accent assertion :542 expect(shown(ACCENT)).toBe(230);
+file docs/reviews/web-appearance-recovery-sol/fixture.tsx sha256=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 tests=0
+file docs/reviews/web-appearance-recovery-independent/host.test.tsx sha256=27589cb660b55105c289f916edd6bfe14283897245115ef58c7a587346cb38cf tests=17
+fixture runRuling5 (the only fixture helper that mounts): seeds before mountApp = true; it makes no later native write and no background choice
+
+native writes on non-Appearance keys after a mount (not P1; listed for completeness): 1
+   docs/reviews/web-appearance-recovery-sol/host.test.tsx:307 (after mount :303) nativeSet.call(localStorage, "xai:auth:identity-change", JSON.stringify({ accountId: "appearance-sol-other", nonce: "1" }));
+background-choice sites with no later accent assertion in their test (not P2): 10
+   docs/reviews/web-appearance-recovery-sol/fields.test.tsx:98 (generic choice in a test parameterized over a set with the background field) await pick(field, CHOICE[id]);
+   docs/reviews/web-appearance-recovery-sol/fields.test.tsx:131 (generic choice in a test parameterized over a set with the background field) await pick(field, OVER[id].choice);
+   docs/reviews/web-appearance-recovery-sol/fields.test.tsx:176 (generic choice in a test parameterized over a set with the background field) await pick(field, CHOICE[id]);
+   docs/reviews/web-appearance-recovery-sol/fields.test.tsx:212 (generic choice in a test parameterized over a set with the background field) await pick(field, OVER[id].choice);
+   docs/reviews/web-appearance-recovery-sol/queues.test.tsx:359 (generic choice in a test parameterized over a set with the background field) await pick(field, CHOICE[id]);
+   docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:172 (direct) choose(BG, "peach");
+   docs/reviews/web-appearance-recovery-sol/host.test.tsx:460 (direct) choose(BG, "peach");
+   docs/reviews/web-appearance-recovery-sol/retry-all.test.tsx:291 (direct) choose(BG, "peach");
+   docs/reviews/web-appearance-recovery-independent/host.test.tsx:279 (generic choice in a test parameterized over a set with the background field) await failPaneEdit(entry);
+   docs/reviews/web-appearance-recovery-independent/host.test.tsx:295 (generic choice in a test parameterized over a set with the background field) await failPaneEdit(entry);
+
+P1 candidates=9 P2 candidates=13 (classification is manual; see review-oe.md)
+Part A checks failed=0
