@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-APPEARANCE-01 已由独立最终 acceptance `a560863` 接受，台账已对账（`0a46577`）。本批登记批次 53：CP-LUNA-03 在 `419e56d` 上刷新直接 `usePref` 库存，之后选择下一个 caller。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：库存已在 `419e56d` 上刷新（CP-LUNA-03，`832f6ab`），只移除 `AppearancePane.tsx` 的 3 行，8 项计数与总控预测一致。本批登记批次 54：由独立 Astra 角色写下一个 caller 的选择备忘录与合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `0a46577` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `832f6ab` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -149,19 +149,22 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller。批次 53 刷新库存，之后由批次 54 选择下一项。
+无已选定 caller。库存已刷新（批次 53），批次 54 正在做选择与合同起草。
 
 - CP-APPEARANCE-01 已于 `a560863` 接受（见上）。进行中阶段的完整记录保留在本文件的 `8c88dd2` 版本：`git show 8c88dd2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
 - CP-FEATURES-01 已于 `ec55f9e` 接受。进行中记录见本文件的 `78e8de2` 版本。
 
-**最新库存：** `refresh-5cd63ff.md` / `bindings-5cd63ff.json`（CP-LUNA-02，`a83d53a`），将由批次 53（CP-LUNA-03）在 `419e56d` 上刷新。相对 `f359be6` 只移除 `FeaturesPane.tsx:69` 一行（`prefKey`，动态，setter `setOn`）；余下 51 行逐字段不变。
-- **剩余规模：** 24 个文件、51 个直接绑定、30 个字面量键、1 个动态位点、31 个 setter 绑定（28 个直接、3 个仅下游）、20 个只读绑定。
+**最新库存：** `refresh-419e56d.md` / `bindings-419e56d.json`（CP-LUNA-03，`832f6ab`）。相对 `5cd63ff` 只移除 `AppearancePane.tsx` 第 52、53、55 行（`xai_accent_hue`、`xai_rail_pos`、`xai_bg_tone`，只读）；余下 48 行逐字段不变。
+- **剩余规模：** 23 个文件、48 个直接绑定、27 个字面量键、1 个动态位点、31 个 setter 绑定（28 个直接、3 个仅下游）、17 个只读绑定。
 - **按包分布：**
   - dashboard-widgets 11、settings-rest 10、board-workspaces 8、statistics 4；
-  - board-views、calendar、settings-appearance 各 3；
+  - board-views、calendar 各 3；
   - board-core、pet 各 2；
-  - features-panel、pomodoro、dashboard-grid、shell、tasks 各 1。
-- **扫描边界：** 只扫描 `packages/**/*.tsx`（不含 `__tests__`）中直接以 `usePref` 为标识符的调用。`.ts` 文件（如 `useFeaturePrefs.ts`）、`apps/` 与 CmdK 的 `getPref` 读取都不可见。
+  - pomodoro、dashboard-grid、features-panel、shell、tasks 各 1。
+- **扫描边界：**
+  - 只扫描 `packages/**/*.tsx`（不含 `__tests__`）中直接以 `usePref` 为标识符的调用；
+  - `.ts` 文件（如 `useFeaturePrefs.ts`）、`apps/`、CmdK 的 `getPref` 读取，以及 `usePrefAutosaveAsync` 都不可见；
+  - 例如 `App.tsx` 在 `5cd63ff` 有三处 `usePref`，在 `419e56d` 已没有，但两份库存都看不到。
 - 这些是排程输入，不是完整 writer 数，也不是缺陷数。
 
 按 [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md)，Sticky5 是排程中最后一个"剩余普通 Settings 控件"caller。后续 caller 属于该文件"Follow-on caller grouping"中尚待分别规定的组，依次为：
@@ -226,7 +229,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `assigned_to_luna` |
+| 状态 | `accepted`（总控核对通过，作为库存证据，不涉及产品范围）：`832f6ab`。<ul><li>新增 `bindings-419e56d.json`（`cd5c3490…`）与 `refresh-419e56d.md`（`c97ccbfd…`）。</li><li>按 file+key+setter 对账：移除 3 行，新增 0 行，变化 0 行；8 项计数与总控预测完全一致。总控另行比对两份 JSON，结果相同。</li><li>新增的 3 个 Appearance internal `.tsx` 与 shell 的改动没有产生新行；controller 经 `usePrefAutosaveAsync` 绑定，扫描器不计入。</li><li>任务卡中"4 个新增 internal `.tsx`"有误：第 4 个是 `appearanceRecoveryCopy.ts`，不在扫描范围内。执行者已在回执中如实记录。</li></ul> |
 | 执行者 | 新的独立 Claude Sonnet 5.5（Luna 角色映射），隔离 worktree |
 | 风险 | 低：只读 git 中的固定修订，并运行既有扫描器 |
 | 固定点 | 产品 `419e56d`；对照 `5cd63ff` 的 `bindings-5cd63ff.json` 与 `refresh-5cd63ff.md` |
@@ -281,7 +284,8 @@
 | Appearance（续 13） | `2302b47` 登记批次 50 · `2696855` E14–E15 PASS |
 | Appearance（续 14） | `68686c5` 登记批次 51 · `c6d1ed4` 最终回归 |
 | Appearance 关闭 | `8c88dd2` 登记批次 52 · `a560863` Appearance acceptance · `0a46577` 台账 |
-| 本提交 | CP-APPEARANCE-01 改为 `accepted`，记录成本周期 16，登记批次 53（CP-LUNA-03） |
+| 下一项选择（续 6） | `0daab01` CP-APPEARANCE-01 改为 `accepted`，登记批次 53 · `832f6ab` 库存刷新（CP-LUNA-03） |
+| 本提交 | 记录库存结果，登记批次 54（选择与合同） |
 
 ## 台账变化
 
@@ -333,28 +337,44 @@
 
 ## 本轮唯一任务
 
-批次 53：CP-LUNA-03，在 `419e56d` 上刷新直接 `usePref` 库存。固定点、命令、允许文件、验收条件、禁止事项与停止条件见上方 Luna 任务卡。
+### 批次 54：下一 caller 的选择与合同（独立 Astra 角色）
 
-- **成本上限：** 扫描器只运行一次；若需诊断，最多 3 轮。
-- **输出：** 一个提交，只新增两个允许的文件；不 push。
+- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
+- **固定点：** 产品 `419e56d`；控制分支基点为本提交。
+- **输入：**
+  - 上一份选择备忘录 `web-next-caller-selection/selection-5cd63ff.md`：含候选 C–G 与 E1 的比较，以及各前置决定的分类。须在 `419e56d` 上复核其事实；`5cd63ff` 之后只有 Appearance 的 26 个文件变化。
+  - 后续分组与选择规则：`remaining-writers.md`。
+  - 最新库存：`refresh-419e56d.md`。其边界见上，`.ts` 文件、`apps/` 与间接读者须自行补查。
+  - D2 实施入口合同。
+  - 已接受 caller 的合同与 acceptance：Appearance、Features、More、Sticky、Date & Time、Notifications、Smart Lists。
+  - `ALL-TODO-CURRENT.md` 中的相关条目。
+- **本轮新增的经验：**
+  - **焦点可见：** 按每个停靠点自身的像素比较，并覆盖所有选中状态（F-APP-1、F-APP-2）；共享 CSS 中的选中环与 `outline: none` 可能遮盖焦点。
+  - **oracle 的种子值：** 不得依赖值域外的值（F-FD1）。
+  - **跨 caller 的值域：** 一个 caller 合法收紧值域后，已接受 caller 的 oracle 可能需要纠正副本。
+  - **native runner：** 不带 `nativeVirtualKeyCode`，并做按键审计（K-1）。
+  - **回归：** 须同时运行各纠正副本（C-FB002、C-FD1、OE）。
+  - **oracle 与合同：** oracle 须与合同的每条规则一致，否则会出现 OE-1、OE-2 那样的自相矛盾。
+  - **实施者记录：** 为实施者预留测试运行的记录位置。
+  - **全局浮层：** 合同须写明全局浮层的判定口径（R-PET）。
+- **输出（只新增文件）：**
+  - 选择备忘录 `docs/reviews/web-next-caller-selection/selection-419e56d.md`：
+    - 至少比较 3 个候选；
+    - 推荐其一，并说明其余为何靠后；
+    - 把每个前置决定归类为 (a) 总控可定，或 (b) 需要产品负责人（用户）定，并给出选项与建议。
+  - 合同（视前置决定而定）：
+    - 推荐候选只需要 (a) 类决定时，同时提交 `docs/reviews/web-<slug>-recovery-contract/contract.md`，沿用 Appearance 合同 r3 的结构，集中列出全部 Required evidence，并把这些决定写成待总控确认的假设；
+    - 推荐候选需要 (b) 类决定、须改 D2 共享层，或会跨产品模块时，只交备忘录，并写明需要的决定。
+- **禁止：** 修改任何已有文件、产品、台账或控制面；push；派生子 agent。
+- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
 
 ## 下一步
 
-1. 等待批次 53 回执，总控核对：
-   - 只新增两个文件；
-   - delta 是否只有 `AppearancePane.tsx` 的三行；
-   - 各项计数及其解释。
-2. 通过后登记批次 54：由独立 Astra 角色写下一个 caller 的选择备忘录与合同，沿用批次 34 的规格，并吸取 Appearance 的教训。
-   - **待比较的剩余候选：**
-     - E1 Clock widget：只有总控可定的决定；
-     - C Integrations：需用户决定 SET-10；
-     - D AI：需改 D2 共享层，另有用户决定；
-     - E World Clocks、Pet、AppRail：需用户决定 DASH-03、SHELL-05、SET-03；
-     - F Calendar：需用户决定 SET-08；
-     - G Board：需改 D2 共享层。
-   - **合同须吸取的教训：**
-     - 焦点可见须按逐停靠点像素比较，覆盖所有选中状态；
-     - oracle 不得依赖值域外的种子值；
-     - native runner 不带 `nativeVirtualKeyCode`；
-     - 回归须同时运行各纠正副本。
-3. 需要用户决定的事项，在对应候选被推荐时，带选项向用户提出。
+1. 等待批次 54 回执，总控核对：
+   - 选择依据可复核；
+   - 合同基于固定 SHA 的源码，关键事实抽查属实；
+   - Required evidence 清单完整；
+   - 范围不越模块；
+   - 前置决定的归类正确。
+2. 若有 (b) 类决定，带选项与建议向用户提出。
+3. 否则登记新的 CP 项，以及首个执行批次（冻结 before oracle）。
