@@ -1,0 +1,339 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=original
+suffix=before2
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff original before2
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=b70ed9707f72d55bb4ad7e14472646edd22a0fa334b4b332924c53fc4cddf339 reset.test.tsx=354f5bdae302edd0733fd45dfcf748d0843926e1feead8ca4a18eaec3fc89c41 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] appearance-package: include=packages/xai-web-settings-appearance/src/__tests__/**/*.{test,spec}.{ts,tsx} vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/appearance-sol-original-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-0.json vitest_exit=0 cases=50 passed=50 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=50 numPassedTests=50 numFailedTests=0
+run[1] shell-topbar: include=packages/xai-web-shell/src/__tests__/Topbar.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/appearance-sol-original-1.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-1.json vitest_exit=0 cases=23 passed=23 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=23 numPassedTests=23 numFailedTests=0
+run[2] web-host: include=apps/web/src/__tests__/App.lazy-init.test.tsx,apps/web/src/__tests__/App.signout.test.tsx,apps/web/src/__tests__/shell.theme.test.tsx,apps/web/src/__tests__/shell.smoke.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/appearance-sol-original-2.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-2.json vitest_exit=0 cases=24 passed=24 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=24 numPassedTests=24 numFailedTests=0
+exit=0
+harness_checks=PASS (18/18)
+==== run[0] appearance-package ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB
+
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-1: length=6 and correct id order 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-4: hues match source lines 498-503 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-7: array is frozen and first element is frozen 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-2: length=6 and correct id order 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-3: hues match source (verbatim) 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-5: length=4 and correct id order 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-6: every entry has non-empty en and zh label 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-1: id === 'appearance' 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-2: i18nKey === 'settings.appearance' 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder) 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' /> 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches 3ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs() 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-1: renders 7 SettingRow elements 55ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible 9ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-3: theme card matching current data-theme has .active class 9ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class 18ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Save > AC-SAVE-1: clicking Save → 7 emitWebEvent calls + .is-saved appears on button 57ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Save > AC-SAVE-2: after 1800ms the .is-saved class is removed 10ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-1: confirm=true → removePref called for 3 keys + applyX defaults for 3 dims 13ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class 17ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class 8ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees 6ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded % 6ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-2: Reset → 6 emits with default values; NO lang emit 32ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-3: confirm=false → chassis aborts; NO removePref, NO emit 7ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable' 8ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-5: calling Reset twice yields the same end state (idempotent) 6ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-6: confirm called EXACTLY ONCE (no pane-level double-prompt) 9ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls 134ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar) 10ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names 16ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-4: SettingsFooter is rendered with correct lang prop (chassis handles bilingual prompt) 7ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-1: clicking Dark theme card sets data-theme='dark' + emits 124ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-2: clicking Compact density sets data-density='compact' + emits 48ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-3: dragging hue slider to 220 writes localStorage + emits 22ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230 + emits 26ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295 + TWO emits 28ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right' + emits 28ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-7: setting font slider to 0.85 applies font-size + emits 11ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-8: clicking 简体中文 segment emits lang event, no DOM apply 23ms
+
+ Test Files  7 passed (7)
+      Tests  50 passed (50)
+   Start at  20:35:42
+   Duration  1.58s (transform 514ms, setup 698ms, collect 1.91s, tests 764ms, environment 3.87s, prepare 742ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-0.json
+
+---- stderr ----
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["packages/xai-web-settings-appearance/src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-settings-shell/src/SettingsFooter.tsx
+pin_modules=69 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-appearance=12 packages/xai-web-shell=9
+==== run[1] shell-topbar ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB
+
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP0 — preferences trigger opens the appearance popover 43ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1 — appearance popover: clicking 中文 calls setLang('zh') 12ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b — clicking EN calls setLang('en') 8ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1c — active lang option has aria-checked=true 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2 — Dark button calls setTheme('dark') 10ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b — System button calls setTheme('system') 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c — active theme option has aria-checked=true 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3 — Compact button calls setDensity('compact') 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b — active density option has aria-checked=true 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP4 — Settings row click calls onOpenSettings 10ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat) 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5b — onOpenSearch prop provided → renders <button class='search-box'> 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP6 — ⌘K kbd hint is rendered 2ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP7 — button click calls onOpenSearch() 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1-Persist — clicking 中文 writes xai_pref_lang='zh' to localStorage 11ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b-Persist — clicking EN writes xai_pref_lang='en' to localStorage 9ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2-Persist — clicking Dark writes xai_pref_theme='dark' to localStorage 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b-Persist — clicking System writes xai_pref_theme='system' to localStorage 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c-Persist — clicking Light writes xai_pref_theme='light' to localStorage 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3-Persist — clicking Compact writes xai_pref_density='compact' to localStorage 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b-Persist — clicking Comfortable writes xai_pref_density='comfortable' to localStorage 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-Persist-Quota-Safe — localStorage.setItem throwing QuotaExceededError still calls setter and does not throw 7ms
+
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  20:35:44
+   Duration  735ms (transform 70ms, setup 61ms, collect 69ms, tests 185ms, environment 206ms, prepare 55ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-1.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.appearance-sol-vite-cache-1/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["packages/xai-web-shell/src/__tests__/Topbar.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/Topbar.tsx
+pin_modules=11 by package: packages/plugin-web-tokens=7 packages/xai-web-shell=4
+==== run[2] web-host ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB
+
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T1 — default theme=light sets <html data-theme='light'> 45ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T2 — theme=system resolves via matchMedia (dark preference) 17ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3 — default density=comfortable sets <html data-density='comfortable'> 17ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3b — default railPos=left sets <html data-rail-pos='left'> 13ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4) 90ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live cleanup failure is visible and does not redirect or call shared cleanup 63ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > superseded A cleanup cannot navigate away from a new B login 27ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount 64ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1b — App renders AppRail (aside.app-rail present) 18ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A2 — StrictMode double-mount does not throw 21ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A3 — App applies default theme on mount (data-theme is set) 13ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A4 — App renders without crash when no child route matches 16ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected 59ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount 16ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable) 36ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw) 11ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when key absent 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns parsed value when key present with valid JSON 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when value is corrupt JSON 0ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live confirmed cleanup redirects through the coordinator only 28ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called 19ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO2 — order: signOut before clearSessionStorage before assign 17ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort) 18ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign 16ms
+
+ Test Files  4 passed (4)
+      Tests  24 passed (24)
+   Start at  20:35:45
+   Duration  3.83s (transform 2.17s, setup 0ms, collect 12.42s, tests 629ms, environment 1.17s, prepare 253ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.report-original-2.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-XhoGCB/.appearance-sol-vite-cache-2/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":[],"include":["apps/web/src/__tests__/App.lazy-init.test.tsx","apps/web/src/__tests__/App.signout.test.tsx","apps/web/src/__tests__/shell.theme.test.tsx","apps/web/src/__tests__/shell.smoke.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance apps/web/src/App.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx
+pin_modules=601 by package: apps/web=15 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=19 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=97 passed=97 failed=0 skipped=0 precondition_failures=0
+harness PASS [appearance-package] JSON report parsed
+harness PASS [appearance-package] reported files match the requested pattern (7 files)
+harness PASS [appearance-package] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [appearance-package] guard plugin active (archive modules recorded)
+harness PASS [appearance-package] required product modules loaded from the archive (3)
+harness PASS [appearance-package] no test-file suite error
+harness PASS [shell-topbar] JSON report parsed
+harness PASS [shell-topbar] reported files equal the requested include
+harness PASS [shell-topbar] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [shell-topbar] guard plugin active (archive modules recorded)
+harness PASS [shell-topbar] required product modules loaded from the archive (1)
+harness PASS [shell-topbar] no test-file suite error
+harness PASS [web-host] JSON report parsed
+harness PASS [web-host] reported files equal the requested include
+harness PASS [web-host] config in effect (environment jsdom, globals false, setupFiles [], root = archive)
+harness PASS [web-host] guard plugin active (archive modules recorded)
+harness PASS [web-host] required product modules loaded from the archive (3)
+harness PASS [web-host] no test-file suite error
+case 001 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-1: lang='zh' shows Chinese strings in segmented controls
+case 002 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar)
+case 003 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names
+case 004 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-4: SettingsFooter is rendered with correct lang prop (chassis handles bilingual prompt)
+case 005 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-1: clicking Dark theme card sets data-theme='dark' + emits
+case 006 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-2: clicking Compact density sets data-density='compact' + emits
+case 007 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-3: dragging hue slider to 220 writes localStorage + emits
+case 008 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230 + emits
+case 009 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295 + TWO emits
+case 010 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right' + emits
+case 011 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-7: setting font slider to 0.85 applies font-size + emits
+case 012 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-8: clicking 简体中文 segment emits lang event, no DOM apply
+case 013 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-1: renders 7 SettingRow elements
+case 014 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible
+case 015 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-3: theme card matching current data-theme has .active class
+case 016 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class
+case 017 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class
+case 018 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class
+case 019 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees
+case 020 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %
+case 021 PASSED | [appearance-package] AppearancePane Save AC-SAVE-1: clicking Save → 7 emitWebEvent calls + .is-saved appears on button
+case 022 PASSED | [appearance-package] AppearancePane Save AC-SAVE-2: after 1800ms the .is-saved class is removed
+case 023 PASSED | [appearance-package] AppearancePane Reset AC-RESET-1: confirm=true → removePref called for 3 keys + applyX defaults for 3 dims
+case 024 PASSED | [appearance-package] AppearancePane Reset AC-RESET-2: Reset → 6 emits with default values; NO lang emit
+case 025 PASSED | [appearance-package] AppearancePane Reset AC-RESET-3: confirm=false → chassis aborts; NO removePref, NO emit
+case 026 PASSED | [appearance-package] AppearancePane Reset AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable'
+case 027 PASSED | [appearance-package] AppearancePane Reset AC-RESET-5: calling Reset twice yields the same end state (idempotent)
+case 028 PASSED | [appearance-package] AppearancePane Reset AC-RESET-6: confirm called EXACTLY ONCE (no pane-level double-prompt)
+case 029 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+case 030 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+case 031 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+case 032 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+case 033 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+case 034 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+case 035 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-7: appearanceDefaults does NOT contain a lang key
+case 036 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-8: appearanceDefaults is frozen
+case 037 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+case 038 PASSED | [appearance-package] appearancePane registry entry AC-REG-1: id === 'appearance'
+case 039 PASSED | [appearance-package] appearancePane registry entry AC-REG-2: i18nKey === 'settings.appearance'
+case 040 PASSED | [appearance-package] appearancePane registry entry AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder)
+case 041 PASSED | [appearance-package] appearancePane registry entry AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' />
+case 042 PASSED | [appearance-package] BG_TONES AC-CONST-1: length=6 and correct id order
+case 043 PASSED | [appearance-package] BG_TONES AC-CONST-4: hues match source lines 498-503
+case 044 PASSED | [appearance-package] BG_TONES AC-CONST-6: every entry has non-empty en and zh name
+case 045 PASSED | [appearance-package] BG_TONES AC-CONST-7: array is frozen and first element is frozen
+case 046 PASSED | [appearance-package] HUE_PRESETS AC-CONST-2: length=6 and correct id order
+case 047 PASSED | [appearance-package] HUE_PRESETS AC-CONST-3: hues match source (verbatim)
+case 048 PASSED | [appearance-package] HUE_PRESETS AC-CONST-6: every entry has non-empty en and zh name
+case 049 PASSED | [appearance-package] RAIL_POSITIONS AC-CONST-5: length=4 and correct id order
+case 050 PASSED | [appearance-package] RAIL_POSITIONS AC-CONST-6: every entry has non-empty en and zh label
+case 051 PASSED | [shell-topbar] Topbar TP0 — preferences trigger opens the appearance popover
+case 052 PASSED | [shell-topbar] Topbar TP1 — appearance popover: clicking 中文 calls setLang('zh')
+case 053 PASSED | [shell-topbar] Topbar TP1b — clicking EN calls setLang('en')
+case 054 PASSED | [shell-topbar] Topbar TP1c — active lang option has aria-checked=true
+case 055 PASSED | [shell-topbar] Topbar TP2 — Dark button calls setTheme('dark')
+case 056 PASSED | [shell-topbar] Topbar TP2b — System button calls setTheme('system')
+case 057 PASSED | [shell-topbar] Topbar TP2c — active theme option has aria-checked=true
+case 058 PASSED | [shell-topbar] Topbar TP3 — Compact button calls setDensity('compact')
+case 059 PASSED | [shell-topbar] Topbar TP3b — active density option has aria-checked=true
+case 060 PASSED | [shell-topbar] Topbar TP4 — Settings row click calls onOpenSettings
+case 061 PASSED | [shell-topbar] Topbar TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)
+case 062 PASSED | [shell-topbar] Topbar TP5b — onOpenSearch prop provided → renders <button class='search-box'>
+case 063 PASSED | [shell-topbar] Topbar TP6 — ⌘K kbd hint is rendered
+case 064 PASSED | [shell-topbar] Topbar TP7 — button click calls onOpenSearch()
+case 065 PASSED | [shell-topbar] Topbar TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided
+case 066 PASSED | [shell-topbar] Topbar TP1-Persist — clicking 中文 writes xai_pref_lang='zh' to localStorage
+case 067 PASSED | [shell-topbar] Topbar TP1b-Persist — clicking EN writes xai_pref_lang='en' to localStorage
+case 068 PASSED | [shell-topbar] Topbar TP2-Persist — clicking Dark writes xai_pref_theme='dark' to localStorage
+case 069 PASSED | [shell-topbar] Topbar TP2b-Persist — clicking System writes xai_pref_theme='system' to localStorage
+case 070 PASSED | [shell-topbar] Topbar TP2c-Persist — clicking Light writes xai_pref_theme='light' to localStorage
+case 071 PASSED | [shell-topbar] Topbar TP3-Persist — clicking Compact writes xai_pref_density='compact' to localStorage
+case 072 PASSED | [shell-topbar] Topbar TP3b-Persist — clicking Comfortable writes xai_pref_density='comfortable' to localStorage
+case 073 PASSED | [shell-topbar] Topbar TP-Persist-Quota-Safe — localStorage.setItem throwing QuotaExceededError still calls setter and does not throw
+case 074 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount
+case 075 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected
+case 076 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount
+case 077 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable)
+case 078 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw)
+case 079 PASSED | [web-host] readLocalPref unit tests returns fallback when key absent
+case 080 PASSED | [web-host] readLocalPref unit tests returns parsed value when key present with valid JSON
+case 081 PASSED | [web-host] readLocalPref unit tests returns fallback when value is corrupt JSON
+case 082 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live cleanup failure is visible and does not redirect or call shared cleanup
+case 083 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) superseded A cleanup cannot navigate away from a new B login
+case 084 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live confirmed cleanup redirects through the coordinator only
+case 085 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called
+case 086 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO2 — order: signOut before clearSessionStorage before assign
+case 087 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort)
+case 088 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign
+case 089 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)
+case 090 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1b — App renders AppRail (aside.app-rail present)
+case 091 PASSED | [web-host] Shell cross-package smoke (A1..A4) A2 — StrictMode double-mount does not throw
+case 092 PASSED | [web-host] Shell cross-package smoke (A1..A4) A3 — App applies default theme on mount (data-theme is set)
+case 093 PASSED | [web-host] Shell cross-package smoke (A1..A4) A4 — App renders without crash when no child route matches
+case 094 PASSED | [web-host] Theme + density effects (T1..T3) T1 — default theme=light sets <html data-theme='light'>
+case 095 PASSED | [web-host] Theme + density effects (T1..T3) T2 — theme=system resolves via matchMedia (dark preference)
+case 096 PASSED | [web-host] Theme + density effects (T1..T3) T3 — default density=comfortable sets <html data-density='comfortable'>
+case 097 PASSED | [web-host] Theme + density effects (T1..T3) T3b — default railPos=left sets <html data-rail-pos='left'>

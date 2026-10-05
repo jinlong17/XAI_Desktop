@@ -1,0 +1,39 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=typecheck
+suffix=static3
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff typecheck static3
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+tsc_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/tsc
+tsconfig=docs/reviews/web-appearance-recovery-sol/tsconfig.appearance-sol-typecheck.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=b70ed9707f72d55bb4ad7e14472646edd22a0fa334b4b332924c53fc4cddf339 reset.test.tsx=354f5bdae302edd0733fd45dfcf748d0843926e1feead8ca4a18eaec3fc89c41 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+tsc_exit=2
+oracle_diagnostics=0 product_or_dependency_diagnostics_ignored=10
+exit=0
+harness_checks=PASS
+---- oracle diagnostics ----
+
+---- all tsc output ----
+../../../apps/web/src/dev/seedAiConfigFromEnv.ts(44,22): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/dev/seedAiConfigFromEnv.ts(44,45): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/dev/seedAiConfigFromEnv.ts(46,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/observability/runtime.ts(24,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/observability/runtime.ts(35,27): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/observability/runtime.ts(67,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/pages/TokensSmokePage.tsx(75,20): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../apps/web/src/providers/AccountStorageGate.tsx(60,130): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../packages/plugin-web-settings-rest/src/internal/useAccountDeleteOrchestrator.ts(25,22): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+../../../packages/plugin-web-settings-rest/src/internal/usePremiumConfig.ts(50,47): error TS2339: Property 'env' does not exist on type 'ImportMeta'.

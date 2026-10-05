@@ -1,0 +1,1216 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=queues
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff queues before1
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=bfce8935659d9bd2ab1f5e41fa5b29a6e29180d596619ebb050b4be481f1bac7 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=d49e8e7c16e8d5b8102e67c30e3251186ae62bf877131a8afff8aed4e0d0867e reset.test.tsx=87e6b0cb4b1a5a15bb54b5b78929a51143132c39ed997f3fc201ad872f5e0043 queues.test.tsx=cd01974248506ecf87901c84490f76e7c343c452f502f311a299819f5a1bb07f continuity-export.test.tsx=d665b9328ad829639cbb76a9641beb8f5bbc929fbe35da137b07d267332317b9 host.test.tsx=a0016a17ac06faf77485fc36ed2021eb606e4eb964bd93eab2c434dd3952124e retry-all.test.tsx=e59645c5499cf2b18210113a7d041bb61528cb0e6b39fa392b634b0de923e908 verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] queues.test.tsx: include=docs/reviews/web-appearance-recovery-sol/queues.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8/appearance-sol-queues-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8/.report-queues-0.json vitest_exit=1 cases=55 passed=0 failed=55 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=55 numPassedTests=0 numFailedTests=55
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] queues.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8
+
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q1 theme: the predecessor succeeds while the latest fails; Retry settles only the latest 215ms
+   → H8: both choices wait behind the held per-key lock: expected '"system"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q2 theme: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 154ms
+   → H12: Retry Theme: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q3 theme: a Retry while the field is pending is inert 119ms
+   → H12: Retry Theme: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q4 theme: an equal-value successor after intervening input stays its own operation 169ms
+   → an earlier equal-value success is not evidence for the newer attempt: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q5 theme: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 90ms
+   → §5.6: an unverified (readback-uncertain) write is reported as not saved: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q6 theme: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 92ms
+   → H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q7 theme: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 86ms
+   → H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q8 theme: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 85ms
+   → §5.6: the unverified write is reported as not saved: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q9 theme: new work after a discard survives; the discarded held operation never writes 89ms
+   → H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest 113ms
+   → H8: both choices wait behind the held per-key lock: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest 110ms
+   → §5.5: the latest choice stays displayed: expected 'top' to be 'bottom' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q3 railPos: a Retry while the field is pending is inert 87ms
+   → §5.5: the failed choice stays displayed: expected 'top' to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q4 railPos: an equal-value successor after intervening input stays its own operation 158ms
+   → §5.5: the returning choice stays displayed: expected 'bottom' to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q5 railPos: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 88ms
+   → §5.6: an unverified (readback-uncertain) write is reported as not saved: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q6 railPos: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes 97ms
+   → H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q7 railPos: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default 85ms
+   → H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q8 railPos: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation 78ms
+   → §5.6: the unverified write is reported as not saved: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q9 railPos: new work after a discard survives; the discarded held operation never writes 75ms
+   → H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'lang' > H8 lang: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 84ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected '"zh"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'theme' > H8 theme: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 84ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected '"dark"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'density' > H8 density: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 89ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected '"compact"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'accentHue' > H8 accentHue: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 87ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected '230' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'bgTone' > H8 bgTone: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 88ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected 'mist' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'railPos' > H8 railPos: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 95ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected 'right' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'fontScale' > H8 fontScale: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled 78ms
+   → H8: the held per-key lock keeps the physical bytes unchanged: expected '1.1' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'lang' > H8 lang: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 86ms
+   → H8: the held per-key lock keeps the Topbar write pending: expected '"zh"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'theme' > H8 theme: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 69ms
+   → H8: the held per-key lock keeps the Topbar write pending: expected '"dark"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'density' > H8 density: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release 68ms
+   → H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 pane theme edit then Topbar theme edit with the first held: the latest wins, both surfaces agree in every sampled frame, one lock request per edit 81ms
+   → H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { Object (pane, topbar, ...) } to strictly equal { pane: 'system', …(2) }
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 Topbar theme edit then pane theme edit with the first held: the latest wins and both surfaces agree 51ms
+   → H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { pane: 'light', topbar: 'dark', …(1) } to strictly equal { pane: 'dark', topbar: 'dark', …(1) }
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': with the pane mounted a Topbar choice is reflected in the pane in the same frame 54ms
+   → H5: the pane reflects the Topbar choice: expected 'light' to be 'dark' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': with the pane mounted a Topbar choice is reflected in the pane in the same frame 75ms
+   → H5: the pane reflects the Topbar choice: expected 'comfortable' to be 'compact' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': after a Topbar choice no bottom action reverts it (the bottom action is activated when present) 112ms
+   → H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"light"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': after a Topbar choice no bottom action reverts it (the bottom action is activated when present) 110ms
+   → H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"comfortable"' to be '"compact"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'fontScale' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved 89ms
+   → H8: the held per-key lock keeps the stream pending: expected '1.05' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'accentHue' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved 84ms
+   → H8: the held per-key lock keeps the stream pending: expected '30' to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O1 theme: pending set → Reset to defaults; the reset is the latest intent and its completion governs 89ms
+   → H8: the held per-key lock keeps the pending set from writing: expected '"system"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O2 theme: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 89ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O3 theme: reset → set → reset; the queued set is superseded silently and the final reset governs 81ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O4 theme: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 94ms
+   → H12: Retry Theme: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O5 theme: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 74ms
+   → H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O6 theme: a failed set and a failed reset with equal displayed values stay distinct intents 93ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O7 theme: discard of a reset draft, then new same-field work survives 81ms
+   → H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O1 railPos: pending set → Reset to defaults; the reset is the latest intent and its completion governs 86ms
+   → H8: the held per-key lock keeps the pending set from writing: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O2 railPos: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed 90ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O3 railPos: reset → set → reset; the queued set is superseded silently and the final reset governs 86ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces 86ms
+   → §5.5: the failed set keeps the latest choice: expected 'top' to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O5 railPos: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces 86ms
+   → H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents 86ms
+   → §5.5: the failed set of the default value displays the default: expected 'top' to be 'left' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O7 railPos: discard of a reset draft, then new same-field work survives 82ms
+   → H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'theme' edit during a pending reset batch supersedes that field's reset intent 86ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'density' edit during a pending reset batch supersedes that field's reset intent 79ms
+   → H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"comfortable"' to be '"compact"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently 81ms
+   → H8: the held per-key lock serializes the rail write: expected 'right' to be 'top' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-theme: in-flight set + Reset + set failure, recovered by Retry Theme: the failed set, one re-write of the superseded value, then one removal; final verified absence 78ms
+   → R5 fu2-retry-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-railPos: in-flight set + Reset + set failure, recovered by Retry Sidebar position: the failed set, one re-write of the superseded value, then one removal; final verified absence 82ms
+   → R5 fu2-retry-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  55 failed (55)
+   Start at  20:25:50
+   Duration  8.54s (transform 1.89s, setup 57ms, collect 2.86s, tests 5.08s, environment 292ms, prepare 61ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8/.report-queues-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q3 railPos: a Retry while the field is pending is inert
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q4 railPos: an equal-value successor after intervening input stays its own operation
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 55 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q1 theme: the predecessor succeeds while the latest fails; Retry settles only the latest
+AssertionError: H8: both choices wait behind the held per-key lock: expected '"system"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""system""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:86:76
+     84|     choose(X, b);
+     85|     await flush();
+     86|     expect(bytes(X), "H8: both choices wait behind the held per-key lo…
+       |                                                                            ^
+     87|     await lock.release();
+     88|     fired(failLatest, "latest write");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q2 theme: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+AssertionError: H12: Retry Theme: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:122:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q3 theme: a Retry while the field is pending is inert
+AssertionError: H12: Retry Theme: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:153:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q4 theme: an equal-value successor after intervening input stays its own operation
+AssertionError: an earlier equal-value success is not evidence for the newer attempt: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:185:107
+    183|     expect(shown(X), "§5.5: the returning choice stays displayed").toB…
+    184|     expect(bytes(X)).toBe(enc_(b));
+    185|     expect(says(msg.notSaved(X)), "an earlier equal-value success is n…
+       |                                                                                                           ^
+    186|     const retry = need(retryOf(X), `H12: Retry ${X.label.en}`);
+    187|     expect(successShown()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q5 theme: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q5 railPos: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+AssertionError: §5.6: an unverified (readback-uncertain) write is reported as not saved: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:203:110
+    201|     await flush();
+    202|     expect(shown(X), "the latest choice stays displayed").toBe(a);
+    203|     expect(says(msg.notSaved(X)), "§5.6: an unverified (readback-uncer…
+       |                                                                                                              ^
+    204|     fired(readback, "post-write read");
+    205|     pre(bytes(X) === enc_(a), "the uncertain write physically reached …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q6 theme: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""system""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:235:72
+    233|     choose(X, a);
+    234|     await flush();
+    235|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    236|     nativeSet.call(localStorage, X.key, enc_(b));
+    237|     pre(bytes(X) === enc_(b), "external replacement present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q7 theme: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""system""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:268:72
+    266|     choose(X, a);
+    267|     await flush();
+    268|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    269|     nativeRemove.call(localStorage, X.key);
+    270|     pre(bytes(X) === null, "external removal present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q8 theme: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q8 railPos: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+AssertionError: §5.6: the unverified write is reported as not saved: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:295:90
+    293|     choose(X, a);
+    294|     await flush();
+    295|     expect(says(msg.notSaved(X)), "§5.6: the unverified write is repor…
+       |                                                                                          ^
+    296|     fired(readback, "post-write read");
+    297|     pre(bytes(X) === enc_(a), "the uncertain write physically reached …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'theme' > Q9 theme: new work after a discard survives; the discarded held operation never writes
+AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""system""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:323:72
+    321|     choose(X, a);
+    322|     await flush();
+    323|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    324|     expect(warns(), "pending held work warns on unload").toBe(true);
+    325|     const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest
+AssertionError: H8: both choices wait behind the held per-key lock: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:86:76
+     84|     choose(X, b);
+     85|     await flush();
+     86|     expect(bytes(X), "H8: both choices wait behind the held per-key lo…
+       |                                                                            ^
+     87|     await lock.release();
+     88|     fired(failLatest, "latest write");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+AssertionError: §5.5: the latest choice stays displayed: expected 'top' to be 'bottom' // Object.is equality
+
+Expected: "bottom"
+Received: "top"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:120:65
+    118|     await lock.release();
+    119|     fired(failFirst, "predecessor write");
+    120|     expect(shown(X), "§5.5: the latest choice stays displayed").toBe(b…
+       |                                                                 ^
+    121|     expect(bytes(X), "nothing committed").toBe(enc_(stored));
+    122|     const retry = need(retryOf(X), `H12: Retry ${X.label.en}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q3 railPos: a Retry while the field is pending is inert
+AssertionError: §5.5: the failed choice stays displayed: expected 'top' to be 'right' // Object.is equality
+
+Expected: "right"
+Received: "top"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:152:65
+    150|     await flush();
+    151|     fired(quota, "first write");
+    152|     expect(shown(X), "§5.5: the failed choice stays displayed").toBe(a…
+       |                                                                 ^
+    153|     const retry = need(retryOf(X), `H12: Retry ${X.label.en}`);
+    154|     const lock = await hold(keyLock(X));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q4 railPos: an equal-value successor after intervening input stays its own operation
+AssertionError: §5.5: the returning choice stays displayed: expected 'bottom' to be 'right' // Object.is equality
+
+Expected: "right"
+Received: "bottom"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:183:68
+    181|     await flush();
+    182|     fired(quota, "returning write");
+    183|     expect(shown(X), "§5.5: the returning choice stays displayed").toB…
+       |                                                                    ^
+    184|     expect(bytes(X)).toBe(enc_(b));
+    185|     expect(says(msg.notSaved(X)), "an earlier equal-value success is n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q6 railPos: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:235:72
+    233|     choose(X, a);
+    234|     await flush();
+    235|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    236|     nativeSet.call(localStorage, X.key, enc_(b));
+    237|     pre(bytes(X) === enc_(b), "external replacement present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q7 railPos: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:268:72
+    266|     choose(X, a);
+    267|     await flush();
+    268|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    269|     nativeRemove.call(localStorage, X.key);
+    270|     pre(bytes(X) === null, "external removal present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §5 'railPos' > Q9 railPos: new work after a discard survives; the discarded held operation never writes
+AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:323:72
+    321|     choose(X, a);
+    322|     await flush();
+    323|     expect(bytes(X), "H8: the held per-key lock serializes the write")…
+       |                                                                        ^
+    324|     expect(warns(), "pending held work warns on unload").toBe(true);
+    325|     const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'lang' > H8 lang: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"zh"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"zh\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'theme' > H8 theme: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"dark"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"dark\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'density' > H8 density: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"compact"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"compact\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'accentHue' > H8 accentHue: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '230' to be null
+
+- Expected: 
+null
+
++ Received: 
+"230"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'bgTone' > H8 bgTone: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected 'mist' to be null
+
+- Expected: 
+null
+
++ Received: 
+"mist"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'railPos' > H8 railPos: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected 'right' to be null
+
+- Expected: 
+null
+
++ Received: 
+"right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 pane 'fontScale' > H8 fontScale: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '1.1' to be null
+
+- Expected: 
+null
+
++ Received: 
+"1.1"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:355:90
+    353|     await flush();
+    354|     const lang = uiLang();
+    355|     expect(bytes(field), "H8: the held per-key lock keeps the physical…
+       |                                                                                          ^
+    356|     expect(locks().waiting(keyLock(field), "product"), "H8: the write …
+    357|     expect(shown(field, lang), "§5.4 the latest choice displays immedi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'lang' > H8 lang: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"zh"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"zh\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:381:86
+    379|     await flush();
+    380|     const lang = uiLang();
+    381|     expect(bytes(field), "H8: the held per-key lock keeps the Topbar w…
+       |                                                                                      ^
+    382|     expect(topbarChecked(field, lang), "the Topbar shows the choice").…
+    383|     expect(applied(field), "the document applies the choice").toBe(app…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'theme' > H8 theme: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"dark"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"dark\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:381:86
+    379|     await flush();
+    380|     const lang = uiLang();
+    381|     expect(bytes(field), "H8: the held per-key lock keeps the Topbar w…
+       |                                                                                      ^
+    382|     expect(topbarChecked(field, lang), "the Topbar shows the choice").…
+    383|     expect(applied(field), "the document applies the choice").toBe(app…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 Topbar 'density' > H8 density: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"compact\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:381:86
+    379|     await flush();
+    380|     const lang = uiLang();
+    381|     expect(bytes(field), "H8: the held per-key lock keeps the Topbar w…
+       |                                                                                      ^
+    382|     expect(topbarChecked(field, lang), "the Topbar shows the choice").…
+    383|     expect(applied(field), "the document applies the choice").toBe(app…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 pane theme edit then Topbar theme edit with the first held: the latest wins, both surfaces agree in every sampled frame, one lock request per edit
+AssertionError: H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { Object (pane, topbar, ...) } to strictly equal { pane: 'system', …(2) }
+
+- Expected
++ Received
+
+  {
+    "doc": "light",
+-   "pane": "system",
++   "pane": "dark",
+    "topbar": "system",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:409:90
+    407|   chooseTopbar(THEME, "system");
+    408|   await sameFrame();
+    409|   expect(sameState(), "H5 §5.4: a Topbar edit is visible in the pane i…
+       |                                                                                          ^
+    410|   await flush();
+    411|   expect(bytes(THEME), "H8: both edits wait behind the held per-key lo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 H8 §5.4 Topbar theme edit then pane theme edit with the first held: the latest wins and both surfaces agree
+AssertionError: H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { pane: 'light', topbar: 'dark', …(1) } to strictly equal { pane: 'dark', topbar: 'dark', …(1) }
+
+- Expected
++ Received
+
+  {
+    "doc": "dark",
+-   "pane": "dark",
++   "pane": "light",
+    "topbar": "dark",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:431:90
+    429|   chooseTopbar(THEME, "dark");
+    430|   await sameFrame();
+    431|   expect(sameState(), "H5 §5.4: a Topbar edit is visible in the pane i…
+       |                                                                                          ^
+    432|   choose(THEME, "system");
+    433|   await sameFrame();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+AssertionError: H5: the pane reflects the Topbar choice: expected 'light' to be 'dark' // Object.is equality
+
+Expected: "dark"
+Received: "light"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:449:67
+    447|   chooseTopbar(field, value);
+    448|   await sameFrame();
+    449|   expect(shown(field), "H5: the pane reflects the Topbar choice").toBe…
+       |                                                                   ^
+    450|   expect(applied(field)).toBe(appliedFor(field, value));
+    451| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+AssertionError: H5: the pane reflects the Topbar choice: expected 'comfortable' to be 'compact' // Object.is equality
+
+Expected: "compact"
+Received: "comfortable"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:449:67
+    447|   chooseTopbar(field, value);
+    448|   await sameFrame();
+    449|   expect(shown(field), "H5: the pane reflects the Topbar choice").toBe…
+       |                                                                   ^
+    450|   expect(applied(field)).toBe(appliedFor(field, value));
+    451| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'theme': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+AssertionError: H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"light"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""light""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:463:108
+    461|   if (bottom) fireEvent.click(bottom);
+    462|   await flush();
+    463|   expect(bytes(field), "H5: the bottom action never writes the pane's …
+       |                                                                                                            ^
+    464|   expect(applied(field), "H5: the Topbar choice stays applied").toBe(a…
+    465|   expect(topbarChecked(field), "H5: the Topbar keeps the choice").toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H5 'density': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+AssertionError: H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"comfortable"' to be '"compact"' // Object.is equality
+
+Expected: ""compact""
+Received: ""comfortable""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:463:108
+    461|   if (bottom) fireEvent.click(bottom);
+    462|   await flush();
+    463|   expect(bytes(field), "H5: the bottom action never writes the pane's …
+       |                                                                                                            ^
+    464|   expect(applied(field), "H5: the Topbar choice stays applied").toBe(a…
+    465|   expect(topbarChecked(field), "H5: the Topbar keeps the choice").toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'fontScale' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+AssertionError: H8: the held per-key lock keeps the stream pending: expected '1.05' to be null
+
+- Expected: 
+null
+
++ Received: 
+"1.05"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:483:78
+    481|   await flush();
+    482|   const last = stream.at(-1)!;
+    483|   expect(bytes(field), "H8: the held per-key lock keeps the stream pen…
+       |                                                                              ^
+    484|   expect(shown(field), "§5.4 the last value is displayed").toBe(last);
+    485|   expect(applied(field), "§5.4 the last value is applied").toBe(last);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.4 'accentHue' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+AssertionError: H8: the held per-key lock keeps the stream pending: expected '30' to be null
+
+- Expected: 
+null
+
++ Received: 
+"30"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:483:78
+    481|   await flush();
+    482|   const last = stream.at(-1)!;
+    483|   expect(bytes(field), "H8: the held per-key lock keeps the stream pen…
+       |                                                                              ^
+    484|   expect(shown(field), "§5.4 the last value is displayed").toBe(last);
+    485|   expect(applied(field), "§5.4 the last value is applied").toBe(last);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O1 theme: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+AssertionError: H8: the held per-key lock keeps the pending set from writing: expected '"system"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""system""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:512:86
+    510|     choose(X, a);
+    511|     await flush();
+    512|     expect(bytes(X), "H8: the held per-key lock keeps the pending set …
+       |                                                                                      ^
+    513|     clickReset(true);
+    514|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O2 theme: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""light""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:535:99
+    533|     clickReset(true);
+    534|     await flush();
+    535|     expect(bytes(X), "H8: the held per-key lock keeps the pending rese…
+       |                                                                                                   ^
+    536|     expect(shown(X), "the pending reset displays the default").toBe(X.…
+    537|     choose(X, a);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O3 theme: reset → set → reset; the queued set is superseded silently and the final reset governs
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""light""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:556:99
+    554|     clickReset(true);
+    555|     await flush();
+    556|     expect(bytes(X), "H8: the held per-key lock keeps the pending rese…
+       |                                                                                                   ^
+    557|     choose(X, a);
+    558|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O4 theme: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+AssertionError: H12: Retry Theme: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:579:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O5 theme: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+AssertionError: H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+
+- Expected
++ Received
+
+  [
+-   "<remove>!",
++   "\"light\"",
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:597:84
+    595|     clickReset(true);
+    596|     await flush();
+    597|     expect(writesOn(from, X), `H9 §6: the reset attempts one removal o…
+       |                                                                                    ^
+    598|     fired(refusal, `${id} remove`);
+    599|     expect(bytes(X), "the refused removal left the bytes").toBe(enc_(s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O6 theme: a failed set and a failed reset with equal displayed values stay distinct intents
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:621:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'theme' > O7 theme: discard of a reset draft, then new same-field work survives
+AssertionError: H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+
+- Expected
++ Received
+
+  [
+-   "<remove>!",
++   "\"light\"",
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:653:89
+    651|     clickReset(true);
+    652|     await flush();
+    653|     expect(writesOn(resetFrom, X), `H9 §6: the reset attempts one remo…
+       |                                                                                         ^
+    654|     fired(refusal, `${id} remove`);
+    655|     expect(says(msg.notReset(X)), `H9: "${msg.notReset(X)}" failure fe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O1 railPos: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+AssertionError: H8: the held per-key lock keeps the pending set from writing: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:512:86
+    510|     choose(X, a);
+    511|     await flush();
+    512|     expect(bytes(X), "H8: the held per-key lock keeps the pending set …
+       |                                                                                      ^
+    513|     clickReset(true);
+    514|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O2 railPos: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+
+- Expected: 
+"top"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:535:99
+    533|     clickReset(true);
+    534|     await flush();
+    535|     expect(bytes(X), "H8: the held per-key lock keeps the pending rese…
+       |                                                                                                   ^
+    536|     expect(shown(X), "the pending reset displays the default").toBe(X.…
+    537|     choose(X, a);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O3 railPos: reset → set → reset; the queued set is superseded silently and the final reset governs
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+
+- Expected: 
+"top"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:556:99
+    554|     clickReset(true);
+    555|     await flush();
+    556|     expect(bytes(X), "H8: the held per-key lock keeps the pending rese…
+       |                                                                                                   ^
+    557|     choose(X, a);
+    558|     await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+AssertionError: §5.5: the failed set keeps the latest choice: expected 'top' to be 'right' // Object.is equality
+
+Expected: "right"
+Received: "top"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:578:70
+    576|     await flush();
+    577|     fired(quota, `${id} write`);
+    578|     expect(shown(X), "§5.5: the failed set keeps the latest choice").t…
+       |                                                                      ^
+    579|     need(retryOf(X), `H12: Retry ${X.label.en}`);
+    580|     const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O5 railPos: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+AssertionError: H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:600:80
+    598|     fired(refusal, `${id} remove`);
+    599|     expect(bytes(X), "the refused removal left the bytes").toBe(enc_(s…
+    600|     expect(says(msg.notReset(X)), `H9: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    601|     expect(shown(X), "the reset draft displays the intended default").…
+    602|     choose(X, a);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents
+AssertionError: §5.5: the failed set of the default value displays the default: expected 'top' to be 'left' // Object.is equality
+
+Expected: "left"
+Received: "top"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:619:88
+    617|     await flush();
+    618|     fired(quota, `${id} write`);
+    619|     expect(shown(X), "§5.5: the failed set of the default value displa…
+       |                                                                                        ^
+    620|     const first = download();
+    621|     fireEvent.click(need(exportButton(), "H12: Export Appearance draft…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > §6 orderings 'railPos' > O7 railPos: discard of a reset draft, then new same-field work survives
+AssertionError: H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:655:80
+    653|     expect(writesOn(resetFrom, X), `H9 §6: the reset attempts one remo…
+    654|     fired(refusal, `${id} remove`);
+    655|     expect(says(msg.notReset(X)), `H9: "${msg.notReset(X)}" failure fe…
+       |                                                                                ^
+    656|     const from = mark();
+    657|     fireEvent.click(need(discardOf(X), `H12: Discard ${X.label.en}`));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'theme' edit during a pending reset batch supersedes that field's reset intent
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+
+Expected: ""dark""
+Received: ""light""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:679:101
+    677|   clickReset(true);
+    678|   await flush();
+    679|   expect(bytes(field), "H8: the held per-key lock keeps the pending re…
+       |                                                                                                     ^
+    680|   chooseTopbar(field, value);
+    681|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §6 a Topbar 'density' edit during a pending reset batch supersedes that field's reset intent
+AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"comfortable"' to be '"compact"' // Object.is equality
+
+Expected: ""compact""
+Received: ""comfortable""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:679:101
+    677|   clickReset(true);
+    678|   await flush();
+    679|   expect(bytes(field), "H8: the held per-key lock keeps the pending re…
+       |                                                                                                     ^
+    680|   chooseTopbar(field, value);
+    681|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently
+AssertionError: H8: the held per-key lock serializes the rail write: expected 'right' to be 'top' // Object.is equality
+
+Expected: "top"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:699:78
+    697|   choose(RAIL, "right");
+    698|   await flush();
+    699|   expect(bytes(RAIL), "H8: the held per-key lock serializes the rail w…
+       |                                                                              ^
+    700|   nativeSet.call(localStorage, RAIL.key, "bottom");
+    701|   const quota = fault({ op: "set", key: THEME.key, label: "theme quota…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-theme: in-flight set + Reset + set failure, recovered by Retry Theme: the failed set, one re-write of the superseded value, then one removal; final verified absence
+AssertionError: R5 fu2-retry-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+
+Expected: ""system""
+Received: ""dark""
+
+ ❯ Module.runRuling5 docs/reviews/web-appearance-recovery-sol/fixture.tsx:1293:120
+    1291|   fireEvent.click(control);
+    1292|   await flush();
+    1293|   expect(bytes(field), `R5 ${spec.name} step 1 (H8): while the per-key…
+       |                                                                                                                        ^
+    1294|   expect(writesOn(start, field), `R5 ${spec.name} step 1: zero set or …
+    1295|   expect(says(msg.saving(field)), `R5 ${spec.name} step 1 (H12): "${ms…
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:723:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/55]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/queues.test.tsx > R5 fu2-retry-railPos: in-flight set + Reset + set failure, recovered by Retry Sidebar position: the failed set, one re-write of the superseded value, then one removal; final verified absence
+AssertionError: R5 fu2-retry-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality
+
+Expected: "bottom"
+Received: "right"
+
+ ❯ Module.runRuling5 docs/reviews/web-appearance-recovery-sol/fixture.tsx:1293:120
+    1291|   fireEvent.click(control);
+    1292|   await flush();
+    1293|   expect(bytes(field), `R5 ${spec.name} step 1 (H8): while the per-key…
+       |                                                                                                                        ^
+    1294|   expect(writesOn(start, field), `R5 ${spec.name} step 1: zero set or …
+    1295|   expect(says(msg.saving(field)), `R5 ${spec.name} step 1 (H12): "${ms…
+ ❯ docs/reviews/web-appearance-recovery-sol/queues.test.tsx:727:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/55]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-bju2m8/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/queues.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=55 passed=0 failed=55 skipped=0 precondition_failures=0
+harness PASS [queues.test.tsx] JSON report parsed
+harness PASS [queues.test.tsx] reported files equal the requested include
+harness PASS [queues.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [queues.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [queues.test.tsx] required product modules loaded from the archive (22)
+harness PASS [queues.test.tsx] no test-file suite error
+case 001 FAILED | §5 'theme' Q1 theme: the predecessor succeeds while the latest fails; Retry settles only the latest
+    first: AssertionError: H8: both choices wait behind the held per-key lock: expected '"system"' to be '"dark"' // Object.is equality
+case 002 FAILED | §5 'theme' Q2 theme: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+    first: AssertionError: H12: Retry Theme: expected null not to be null
+case 003 FAILED | §5 'theme' Q3 theme: a Retry while the field is pending is inert
+    first: AssertionError: H12: Retry Theme: expected null not to be null
+case 004 FAILED | §5 'theme' Q4 theme: an equal-value successor after intervening input stays its own operation
+    first: AssertionError: an earlier equal-value success is not evidence for the newer attempt: expected false to be true // Object.is equality
+case 005 FAILED | §5 'theme' Q5 theme: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+    first: AssertionError: §5.6: an unverified (readback-uncertain) write is reported as not saved: expected false to be true // Object.is equality
+case 006 FAILED | §5 'theme' Q6 theme: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+    first: AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+case 007 FAILED | §5 'theme' Q7 theme: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+    first: AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+case 008 FAILED | §5 'theme' Q8 theme: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+    first: AssertionError: §5.6: the unverified write is reported as not saved: expected false to be true // Object.is equality
+case 009 FAILED | §5 'theme' Q9 theme: new work after a discard survives; the discarded held operation never writes
+    first: AssertionError: H8: the held per-key lock serializes the write: expected '"system"' to be '"dark"' // Object.is equality
+case 010 FAILED | §5 'railPos' Q1 railPos: the predecessor succeeds while the latest fails; Retry settles only the latest
+    first: AssertionError: H8: both choices wait behind the held per-key lock: expected 'right' to be 'top' // Object.is equality
+case 011 FAILED | §5 'railPos' Q2 railPos: a failed predecessor blocks the queued latest; repeated predecessor failure; Retry advances the predecessor without acknowledging the latest
+    first: AssertionError: §5.5: the latest choice stays displayed: expected 'top' to be 'bottom' // Object.is equality
+case 012 FAILED | §5 'railPos' Q3 railPos: a Retry while the field is pending is inert
+    first: AssertionError: §5.5: the failed choice stays displayed: expected 'top' to be 'right' // Object.is equality
+case 013 FAILED | §5 'railPos' Q4 railPos: an equal-value successor after intervening input stays its own operation
+    first: AssertionError: §5.5: the returning choice stays displayed: expected 'bottom' to be 'right' // Object.is equality
+case 014 FAILED | §5 'railPos' Q5 railPos: uncertainty keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+    first: AssertionError: §5.6: an unverified (readback-uncertain) write is reported as not saved: expected false to be true // Object.is equality
+case 015 FAILED | §5 'railPos' Q6 railPos: an external replacement stays a preserved conflict; repeated Retry never overwrites; Discard rereads with zero writes
+    first: AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+case 016 FAILED | §5 'railPos' Q7 railPos: an external removal stays a preserved conflict; Retry never recreates the key; Discard shows the default
+    first: AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+case 017 FAILED | §5 'railPos' Q8 railPos: an uncertain write whose original bytes are externally restored stays a conflict; a distinct new choice is a new operation
+    first: AssertionError: §5.6: the unverified write is reported as not saved: expected false to be true // Object.is equality
+case 018 FAILED | §5 'railPos' Q9 railPos: new work after a discard survives; the discarded held operation never writes
+    first: AssertionError: H8: the held per-key lock serializes the write: expected 'right' to be 'top' // Object.is equality
+case 019 FAILED | H8 pane 'lang' H8 lang: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"zh"' to be null
+case 020 FAILED | H8 pane 'theme' H8 theme: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"dark"' to be null
+case 021 FAILED | H8 pane 'density' H8 density: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '"compact"' to be null
+case 022 FAILED | H8 pane 'accentHue' H8 accentHue: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '230' to be null
+case 023 FAILED | H8 pane 'bgTone' H8 bgTone: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected 'mist' to be null
+case 024 FAILED | H8 pane 'railPos' H8 railPos: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected 'right' to be null
+case 025 FAILED | H8 pane 'fontScale' H8 fontScale: a held per-key lock serializes the write while the latest choice displays and applies immediately and the controls stay enabled
+    first: AssertionError: H8: the held per-key lock keeps the physical bytes unchanged: expected '1.1' to be null
+case 026 FAILED | H8 Topbar 'lang' H8 lang: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+    first: AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"zh"' to be null
+case 027 FAILED | H8 Topbar 'theme' H8 theme: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+    first: AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"dark"' to be null
+case 028 FAILED | H8 Topbar 'density' H8 density: a Topbar choice held behind the real per-key lock shows no status, keeps the options enabled and writes exactly once after release
+    first: AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+case 029 FAILED | H5 H8 §5.4 pane theme edit then Topbar theme edit with the first held: the latest wins, both surfaces agree in every sampled frame, one lock request per edit
+    first: AssertionError: H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { Object (pane, topbar, ...) } to strictly equal { pane: 'system', …(2) }
+case 030 FAILED | H5 H8 §5.4 Topbar theme edit then pane theme edit with the first held: the latest wins and both surfaces agree
+    first: AssertionError: H5 §5.4: a Topbar edit is visible in the pane in the same frame: expected { pane: 'light', topbar: 'dark', …(1) } to strictly equal { pane: 'dark', topbar: 'dark', …(1) }
+case 031 FAILED | H5 'theme': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+    first: AssertionError: H5: the pane reflects the Topbar choice: expected 'light' to be 'dark' // Object.is equality
+case 032 FAILED | H5 'density': with the pane mounted a Topbar choice is reflected in the pane in the same frame
+    first: AssertionError: H5: the pane reflects the Topbar choice: expected 'comfortable' to be 'compact' // Object.is equality
+case 033 FAILED | H5 'theme': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+    first: AssertionError: H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"light"' to be '"dark"' // Object.is equality
+case 034 FAILED | H5 'density': after a Topbar choice no bottom action reverts it (the bottom action is activated when present)
+    first: AssertionError: H5: the bottom action never writes the pane's stale value over the Topbar choice: expected '"comfortable"' to be '"compact"' // Object.is equality
+case 035 FAILED | H8 §5.4 'fontScale' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+    first: AssertionError: H8: the held per-key lock keeps the stream pending: expected '1.05' to be null
+case 036 FAILED | H8 §5.4 'accentHue' slider stream: every input is a new latest intent; the final bytes equal the last value; an earlier completion never makes a later value look saved
+    first: AssertionError: H8: the held per-key lock keeps the stream pending: expected '30' to be null
+case 037 FAILED | §6 orderings 'theme' O1 theme: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+    first: AssertionError: H8: the held per-key lock keeps the pending set from writing: expected '"system"' to be '"dark"' // Object.is equality
+case 038 FAILED | §6 orderings 'theme' O2 theme: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+case 039 FAILED | §6 orderings 'theme' O3 theme: reset → set → reset; the queued set is superseded silently and the final reset governs
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+case 040 FAILED | §6 orderings 'theme' O4 theme: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+    first: AssertionError: H12: Retry Theme: expected null not to be null
+case 041 FAILED | §6 orderings 'theme' O5 theme: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+    first: AssertionError: H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+case 042 FAILED | §6 orderings 'theme' O6 theme: a failed set and a failed reset with equal displayed values stay distinct intents
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 043 FAILED | §6 orderings 'theme' O7 theme: discard of a reset draft, then new same-field work survives
+    first: AssertionError: H9 §6: the reset attempts one removal of xai_pref_theme: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+case 044 FAILED | §6 orderings 'railPos' O1 railPos: pending set → Reset to defaults; the reset is the latest intent and its completion governs
+    first: AssertionError: H8: the held per-key lock keeps the pending set from writing: expected 'right' to be 'top' // Object.is equality
+case 045 FAILED | §6 orderings 'railPos' O2 railPos: pending Reset to defaults → set; the newer set governs and Defaults restored is not claimed
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+case 046 FAILED | §6 orderings 'railPos' O3 railPos: reset → set → reset; the queued set is superseded silently and the final reset governs
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected null to be 'top' // Object.is equality
+case 047 FAILED | §6 orderings 'railPos' O4 railPos: a failed predecessor set → Reset to defaults; the reset succeeds and the failed set never surfaces
+    first: AssertionError: §5.5: the failed set keeps the latest choice: expected 'top' to be 'right' // Object.is equality
+case 048 FAILED | §6 orderings 'railPos' O5 railPos: a failed predecessor reset → set; the latest set governs and the failed reset never surfaces
+    first: AssertionError: H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 049 FAILED | §6 orderings 'railPos' O6 railPos: a failed set and a failed reset with equal displayed values stay distinct intents
+    first: AssertionError: §5.5: the failed set of the default value displays the default: expected 'top' to be 'left' // Object.is equality
+case 050 FAILED | §6 orderings 'railPos' O7 railPos: discard of a reset draft, then new same-field work survives
+    first: AssertionError: H9: "Sidebar position was not reset to its default." failure feedback: expected false to be true // Object.is equality
+case 051 FAILED | H8 §6 a Topbar 'theme' edit during a pending reset batch supersedes that field's reset intent
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"light"' to be '"dark"' // Object.is equality
+case 052 FAILED | H8 §6 a Topbar 'density' edit during a pending reset batch supersedes that field's reset intent
+    first: AssertionError: H8: the held per-key lock keeps the pending reset from changing the bytes: expected '"comfortable"' to be '"compact"' // Object.is equality
+case 053 FAILED | H8 §5.7 a conflict on railPos coexists with an unrelated theme quota failure; each settles independently
+    first: AssertionError: H8: the held per-key lock serializes the rail write: expected 'right' to be 'top' // Object.is equality
+case 054 FAILED | R5 fu2-retry-theme: in-flight set + Reset + set failure, recovered by Retry Theme: the failed set, one re-write of the superseded value, then one removal; final verified absence
+    first: AssertionError: R5 fu2-retry-theme step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected '"dark"' to be '"system"' // Object.is equality
+case 055 FAILED | R5 fu2-retry-railPos: in-flight set + Reset + set failure, recovered by Retry Sidebar position: the failed set, one re-write of the superseded value, then one removal; final verified absence
+    first: AssertionError: R5 fu2-retry-railPos step 1 (H8): while the per-key lock is held the bytes are still the baseline: expected 'right' to be 'bottom' // Object.is equality

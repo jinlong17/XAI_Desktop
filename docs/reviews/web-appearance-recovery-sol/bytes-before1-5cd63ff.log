@@ -1,0 +1,192 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=bytes
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff bytes before1
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=bfce8935659d9bd2ab1f5e41fa5b29a6e29180d596619ebb050b4be481f1bac7 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=d49e8e7c16e8d5b8102e67c30e3251186ae62bf877131a8afff8aed4e0d0867e reset.test.tsx=87e6b0cb4b1a5a15bb54b5b78929a51143132c39ed997f3fc201ad872f5e0043 queues.test.tsx=cd01974248506ecf87901c84490f76e7c343c452f502f311a299819f5a1bb07f continuity-export.test.tsx=d665b9328ad829639cbb76a9641beb8f5bbc929fbe35da137b07d267332317b9 host.test.tsx=a0016a17ac06faf77485fc36ed2021eb606e4eb964bd93eab2c434dd3952124e retry-all.test.tsx=e59645c5499cf2b18210113a7d041bb61528cb0e6b39fa392b634b0de923e908 verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] bytes.test.tsx: include=docs/reviews/web-appearance-recovery-sol/bytes.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm/appearance-sol-bytes-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm/.report-bytes-0.json vitest_exit=0 cases=65 passed=65 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=65 numPassedTests=65 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] bytes.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm
+
+stdout | docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing 1ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability 68ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe, download harness and media query are observable 22ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > FIXTURE the production App mounts at /app/settings/appearance with only the auth-session hook substituted, real modules and no network 120ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §2 §10.11 lifecycle: the seven keys are device preferences with device-recovery export, retain and retain-on-device; physical key = logical key 1ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 absence displays and applies every default on the pane, the document and the Topbar 146ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 loading the App on the Appearance route, opening and closing the Topbar popover, unmounting and reloading make zero set/remove attempts on every key (absent) 150ms
+stdout | docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 with valid stored bytes for all seven keys the App mount, popover and reload make zero set/remove attempts on every key
+SOL-OBS stored-valid display {"pane":{"lang":"zh","theme":"dark","density":"compact","accentHue":230,"bgTone":"mist","railPos":"right","fontScale":1.1},"document":{"lang":"zh","theme":"dark","density":"compact","accentHue":230,"bgTone":"mist","railPos":"right","fontScale":1.1},"topbar":"中文 · 深色 · 紧凑"}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 with valid stored bytes for all seven keys the App mount, popover and reload make zero set/remove attempts on every key 190ms
+stdout | docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 loading the App on /app/tasks, navigating to the pane and back makes zero set/remove attempts on the seven keys
+SOL-OBS other-key writes on /app/tasks (outside the unit) []
+
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §5.1 loading the App on /app/tasks, navigating to the pane and back makes zero set/remove attempts on the seven keys 197ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > covers exactly 33 pane values 0ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'lang'='en' ('control') persists exact bytes and displays and applies the choice 118ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'lang'='zh' ('control') persists exact bytes and displays and applies the choice 104ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'theme'='light' ('control') persists exact bytes and displays and applies the choice 92ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'theme'='dark' ('control') persists exact bytes and displays and applies the choice 91ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'theme'='system' ('control') persists exact bytes and displays and applies the choice 88ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'density'='comfortable' ('control') persists exact bytes and displays and applies the choice 111ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'density'='compact' ('control') persists exact bytes and displays and applies the choice 123ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=0.85 ('slider') persists exact bytes and displays and applies the choice 78ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=0.9 ('slider') persists exact bytes and displays and applies the choice 80ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=0.95 ('slider') persists exact bytes and displays and applies the choice 76ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=1 ('slider') persists exact bytes and displays and applies the choice 87ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=1.05 ('slider') persists exact bytes and displays and applies the choice 70ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=1.1 ('slider') persists exact bytes and displays and applies the choice 68ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'fontScale'=1.15 ('slider') persists exact bytes and displays and applies the choice 71ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=165 ('control') persists exact bytes and displays and applies the choice 97ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=230 ('control') persists exact bytes and displays and applies the choice 91ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=35 ('control') persists exact bytes and displays and applies the choice 90ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=355 ('control') persists exact bytes and displays and applies the choice 89ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=295 ('control') persists exact bytes and displays and applies the choice 91ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=75 ('control') persists exact bytes and displays and applies the choice 92ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=+0 ('slider') persists exact bytes and displays and applies the choice 86ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=220 ('slider') persists exact bytes and displays and applies the choice 72ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'accentHue'=360 ('slider') persists exact bytes and displays and applies the choice 69ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'railPos'='left' ('control') persists exact bytes and displays and applies the choice 82ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'railPos'='right' ('control') persists exact bytes and displays and applies the choice 76ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'railPos'='top' ('control') persists exact bytes and displays and applies the choice 82ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'railPos'='bottom' ('control') persists exact bytes and displays and applies the choice 88ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='default' ('control') persists exact bytes and displays and applies the choice 89ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='cream' ('control') persists exact bytes and displays and applies the choice 87ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='mist' ('control') persists exact bytes and displays and applies the choice 93ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='lavender' ('control') persists exact bytes and displays and applies the choice 88ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='peach' ('control') persists exact bytes and displays and applies the choice 90ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 pane values (33) > PC §10.1 pane 'bgTone'='graphite' ('control') persists exact bytes and displays and applies the choice 88ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > covers exactly 7 Topbar values 0ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'lang'='en' persists exact bytes and the Topbar and document show it 74ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'lang'='zh' persists exact bytes and the Topbar and document show it 73ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'theme'='light' persists exact bytes and the Topbar and document show it 70ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'theme'='dark' persists exact bytes and the Topbar and document show it 72ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'theme'='system' persists exact bytes and the Topbar and document show it 70ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'density'='comfortable' persists exact bytes and the Topbar and document show it 81ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.1 Topbar values (7) > PC §10.1 Topbar 'density'='compact' persists exact bytes and the Topbar and document show it 82ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'lang': choosing the default from absent stores its bytes 83ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'theme': choosing the default from absent stores its bytes 87ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'density': choosing the default from absent stores its bytes 83ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'accentHue': choosing the default from absent stores its bytes 91ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'bgTone': choosing the default from absent stores its bytes 90ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'railPos': choosing the default from absent stores its bytes 89ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §5.4 a value equal to the default is stored, never converted to removal > PC §5.4 'fontScale': choosing the default from absent stores its bytes 88ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.2 root values written through the App are read identically by the unchanged readers in a new document > PC §10.2 'lang': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value 202ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.2 root values written through the App are read identically by the unchanged readers in a new document > PC §10.2 'theme': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value 318ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.2 root values written through the App are read identically by the unchanged readers in a new document > PC §10.2 'density': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value 210ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.2 root values written through the App are read identically by the unchanged readers in a new document > PC §10.2 'fontScale': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value 610ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > PC §10.5 the registered keys still follow a committed change from another document (accent, rail, background) 116ms
+ ✓ docs/reviews/web-appearance-recovery-sol/bytes.test.tsx > §10.3 valid stored bytes are displayed by the pane and the Topbar and applied to the document at mount 120ms
+
+ Test Files  1 passed (1)
+      Tests  65 passed (65)
+   Start at  20:24:11
+   Duration  10.47s (transform 1.96s, setup 83ms, collect 3.07s, tests 6.51s, environment 413ms, prepare 135ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm/.report-bytes-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-nw0AWm/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/bytes.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx apps/web/src/pages/NotFoundPage.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=65 passed=65 failed=0 skipped=0 precondition_failures=0
+harness PASS [bytes.test.tsx] JSON report parsed
+harness PASS [bytes.test.tsx] reported files equal the requested include
+harness PASS [bytes.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [bytes.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [bytes.test.tsx] required product modules loaded from the archive (23)
+harness PASS [bytes.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing
+case 003 PASSED | FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability
+case 004 PASSED | FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe, download harness and media query are observable
+case 005 PASSED | FIXTURE the production App mounts at /app/settings/appearance with only the auth-session hook substituted, real modules and no network
+case 006 PASSED | PC §2 §10.11 lifecycle: the seven keys are device preferences with device-recovery export, retain and retain-on-device; physical key = logical key
+case 007 PASSED | PC §5.1 absence displays and applies every default on the pane, the document and the Topbar
+case 008 PASSED | PC §5.1 loading the App on the Appearance route, opening and closing the Topbar popover, unmounting and reloading make zero set/remove attempts on every key (absent)
+case 009 PASSED | PC §5.1 with valid stored bytes for all seven keys the App mount, popover and reload make zero set/remove attempts on every key
+case 010 PASSED | PC §5.1 loading the App on /app/tasks, navigating to the pane and back makes zero set/remove attempts on the seven keys
+case 011 PASSED | §10.1 pane values (33) covers exactly 33 pane values
+case 012 PASSED | §10.1 pane values (33) PC §10.1 pane 'lang'='en' ('control') persists exact bytes and displays and applies the choice
+case 013 PASSED | §10.1 pane values (33) PC §10.1 pane 'lang'='zh' ('control') persists exact bytes and displays and applies the choice
+case 014 PASSED | §10.1 pane values (33) PC §10.1 pane 'theme'='light' ('control') persists exact bytes and displays and applies the choice
+case 015 PASSED | §10.1 pane values (33) PC §10.1 pane 'theme'='dark' ('control') persists exact bytes and displays and applies the choice
+case 016 PASSED | §10.1 pane values (33) PC §10.1 pane 'theme'='system' ('control') persists exact bytes and displays and applies the choice
+case 017 PASSED | §10.1 pane values (33) PC §10.1 pane 'density'='comfortable' ('control') persists exact bytes and displays and applies the choice
+case 018 PASSED | §10.1 pane values (33) PC §10.1 pane 'density'='compact' ('control') persists exact bytes and displays and applies the choice
+case 019 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=0.85 ('slider') persists exact bytes and displays and applies the choice
+case 020 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=0.9 ('slider') persists exact bytes and displays and applies the choice
+case 021 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=0.95 ('slider') persists exact bytes and displays and applies the choice
+case 022 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=1 ('slider') persists exact bytes and displays and applies the choice
+case 023 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=1.05 ('slider') persists exact bytes and displays and applies the choice
+case 024 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=1.1 ('slider') persists exact bytes and displays and applies the choice
+case 025 PASSED | §10.1 pane values (33) PC §10.1 pane 'fontScale'=1.15 ('slider') persists exact bytes and displays and applies the choice
+case 026 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=165 ('control') persists exact bytes and displays and applies the choice
+case 027 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=230 ('control') persists exact bytes and displays and applies the choice
+case 028 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=35 ('control') persists exact bytes and displays and applies the choice
+case 029 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=355 ('control') persists exact bytes and displays and applies the choice
+case 030 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=295 ('control') persists exact bytes and displays and applies the choice
+case 031 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=75 ('control') persists exact bytes and displays and applies the choice
+case 032 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=+0 ('slider') persists exact bytes and displays and applies the choice
+case 033 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=220 ('slider') persists exact bytes and displays and applies the choice
+case 034 PASSED | §10.1 pane values (33) PC §10.1 pane 'accentHue'=360 ('slider') persists exact bytes and displays and applies the choice
+case 035 PASSED | §10.1 pane values (33) PC §10.1 pane 'railPos'='left' ('control') persists exact bytes and displays and applies the choice
+case 036 PASSED | §10.1 pane values (33) PC §10.1 pane 'railPos'='right' ('control') persists exact bytes and displays and applies the choice
+case 037 PASSED | §10.1 pane values (33) PC §10.1 pane 'railPos'='top' ('control') persists exact bytes and displays and applies the choice
+case 038 PASSED | §10.1 pane values (33) PC §10.1 pane 'railPos'='bottom' ('control') persists exact bytes and displays and applies the choice
+case 039 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='default' ('control') persists exact bytes and displays and applies the choice
+case 040 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='cream' ('control') persists exact bytes and displays and applies the choice
+case 041 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='mist' ('control') persists exact bytes and displays and applies the choice
+case 042 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='lavender' ('control') persists exact bytes and displays and applies the choice
+case 043 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='peach' ('control') persists exact bytes and displays and applies the choice
+case 044 PASSED | §10.1 pane values (33) PC §10.1 pane 'bgTone'='graphite' ('control') persists exact bytes and displays and applies the choice
+case 045 PASSED | §10.1 Topbar values (7) covers exactly 7 Topbar values
+case 046 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'lang'='en' persists exact bytes and the Topbar and document show it
+case 047 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'lang'='zh' persists exact bytes and the Topbar and document show it
+case 048 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'theme'='light' persists exact bytes and the Topbar and document show it
+case 049 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'theme'='dark' persists exact bytes and the Topbar and document show it
+case 050 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'theme'='system' persists exact bytes and the Topbar and document show it
+case 051 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'density'='comfortable' persists exact bytes and the Topbar and document show it
+case 052 PASSED | §10.1 Topbar values (7) PC §10.1 Topbar 'density'='compact' persists exact bytes and the Topbar and document show it
+case 053 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'lang': choosing the default from absent stores its bytes
+case 054 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'theme': choosing the default from absent stores its bytes
+case 055 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'density': choosing the default from absent stores its bytes
+case 056 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'accentHue': choosing the default from absent stores its bytes
+case 057 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'bgTone': choosing the default from absent stores its bytes
+case 058 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'railPos': choosing the default from absent stores its bytes
+case 059 PASSED | §5.4 a value equal to the default is stored, never converted to removal PC §5.4 'fontScale': choosing the default from absent stores its bytes
+case 060 PASSED | §10.2 root values written through the App are read identically by the unchanged readers in a new document PC §10.2 'lang': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value
+case 061 PASSED | §10.2 root values written through the App are read identically by the unchanged readers in a new document PC §10.2 'theme': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value
+case 062 PASSED | §10.2 root values written through the App are read identically by the unchanged readers in a new document PC §10.2 'density': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value
+case 063 PASSED | §10.2 root values written through the App are read identically by the unchanged readers in a new document PC §10.2 'fontScale': readLocalPref, NotFoundPage (theme) and AccountStorageGate (language) read every written value
+case 064 PASSED | PC §10.5 the registered keys still follow a committed change from another document (accent, rail, background)
+case 065 PASSED | §10.3 valid stored bytes are displayed by the pane and the Topbar and applied to the document at mount

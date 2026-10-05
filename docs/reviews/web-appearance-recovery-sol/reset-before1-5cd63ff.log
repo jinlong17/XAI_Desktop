@@ -1,0 +1,775 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=reset
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff reset before1
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=bfce8935659d9bd2ab1f5e41fa5b29a6e29180d596619ebb050b4be481f1bac7 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=d49e8e7c16e8d5b8102e67c30e3251186ae62bf877131a8afff8aed4e0d0867e reset.test.tsx=87e6b0cb4b1a5a15bb54b5b78929a51143132c39ed997f3fc201ad872f5e0043 queues.test.tsx=cd01974248506ecf87901c84490f76e7c343c452f502f311a299819f5a1bb07f continuity-export.test.tsx=d665b9328ad829639cbb76a9641beb8f5bbc929fbe35da137b07d267332317b9 host.test.tsx=a0016a17ac06faf77485fc36ed2021eb606e4eb964bd93eab2c434dd3952124e retry-all.test.tsx=e59645c5499cf2b18210113a7d041bb61528cb0e6b39fa392b634b0de923e908 verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] reset.test.tsx: include=docs/reviews/web-appearance-recovery-sol/reset.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O/appearance-sol-reset-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O/.report-reset-0.json vitest_exit=1 cases=32 passed=3 failed=29 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=32 numPassedTests=3 numFailedTests=29
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] reset.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O
+
+stdout | docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (EN)
+SOL-OBS reset confirmation EN ["Reset every preference to defaults? This clears saved theme, layout, and module toggles."]
+
+stdout | docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (ZH)
+SOL-OBS reset confirmation ZH ["确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。"]
+
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (EN) 170ms
+   → H9 §5: the normative EN confirmation text: expected 'Reset every preference to defaults? T…' to be 'Reset theme, density, font scale, acc…' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (ZH) 85ms
+   → H9 §5: the normative ZH confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将主题、密度、字体大小、主题色、背景调子和侧栏位置恢复为默认值？语言保持不…' // Object.is equality
+ ✓ docs/reviews/web-appearance-recovery-sol/reset.test.tsx > PC §6 a declined confirmation makes zero get, set or remove attempts on every key and changes nothing 168ms
+stdout | docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 an accepted reset removes exactly the six keys by verified absence, never writes, keeps language and applies the defaults
+SOL-OBS reset writes ["remove:xai_accent_hue","remove:xai_rail_pos","remove:xai_bg_tone","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"]
+
+ ✓ docs/reviews/web-appearance-recovery-sol/reset.test.tsx > PC §6 an accepted reset removes the three registered keys 94ms
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 an accepted reset removes exactly the six keys by verified absence, never writes, keeps language and applies the defaults 113ms
+   → H9 §6: the six keys are absent and language is unchanged: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 an already-absent key completes as a verified no-op: no removeItem and no seeded default bytes 103ms
+   → §6: absent keys complete without a removeItem call: expected [ 'xai_accent_hue', …(2) ] to deeply equal []
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 H9 §6 'Defaults restored.' appears only after all six complete; a held removal shows its pending message and the default meanwhile 96ms
+   → H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'theme': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 106ms
+   → H9 §6: the reset attempts exactly one removal of xai_pref_theme and never writes it: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'density': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 116ms
+   → H9 §6: the reset attempts exactly one removal of xai_pref_density and never writes it: expected [ '"comfortable"' ] to deeply equal [ '<remove>!' ]
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'fontScale': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 106ms
+   → H9 §6: the reset attempts exactly one removal of xai_pref_font_scale and never writes it: expected [ '1' ] to deeply equal [ '<remove>!' ]
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'accentHue': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 113ms
+   → H9 §6: the reset draft displays the default: expected 230 to be 165 // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'railPos': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 104ms
+   → H9 §6: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'bgTone': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only 107ms
+   → H9 §6: the reset draft displays the default: expected 'mist' to be 'default' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 partial reset with two refused removals: Retry targets only the unresolved fields, one removal each 104ms
+   → H9 §6: each refused key had exactly one removal attempt: expected { theme: [ '"light"' ], …(1) } to strictly equal { theme: [ '<remove>!' ], …(1) }
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 a duplicate Reset while the batch is pending enqueues no duplicate removal 98ms
+   → H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 REL-07 an invalid registered source refuses the reset: the bytes are never purged and the intent is kept until Discard 104ms
+   → §6: Reset is never authority to purge malformed bytes: expected null to be 'diagonal' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 REL-07 an invalid root source refuses the reset without writing or purging 99ms
+   → §6: an invalid root source is neither rewritten nor removed: expected [ '"light"' ] to deeply equal []
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 an unavailable source (throwing getItem) refuses the reset and keeps the intent; nothing is removed 95ms
+   → §6: an unreadable source is never removed: expected [ '<remove>' ] to deeply equal []
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 a removal whose readback is denied is uncertain; Retry verifies absence with exactly one total removal 100ms
+   → §6 H12: the uncertain removal reports "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 an external replacement during a held reset is a preserved conflict; Retry never overwrites it 94ms
+   → H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 §5.7 an unrelated field still saves while reset recovery is blocked 113ms
+   → H9 H12: "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §5.7 one field's set failing while another field's reset succeeds (language set, theme reset) 101ms
+   → H9: the theme reset removes the key: expected '"light"' to be null
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §5.7 one field's reset failing while another field's set succeeds (rail reset, language set) 138ms
+   → H9 H12: "侧栏位置未恢复默认。": expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 repeating an unchanged failed reset keeps its refusal and never rebases 105ms
+   → H9 H12: "Accent color was not reset to its default.": expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 a clean completed batch may receive a fresh reset; an intervening edit is a new intent 102ms
+   → H9: the first batch removes the theme: expected '"light"' to be null
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 an admitted batch continues while the pane is unmounted; no success claim on remount 90ms
+   → H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 A2.8 the Reset control is pane-local (data-testid appearance-reset-defaults) and the shared footer is gone 62ms
+   → §6 A2.8: pane-local Reset, no SettingsFooter, no .pane-footer/.pane-save: expected { …(2) } to strictly equal { …(2) }
+ ✓ docs/reviews/web-appearance-recovery-sol/reset.test.tsx > PC §6 §10.7 an accepted reset leaves every key other than the seven byte-identical 94ms
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 §10.7 an accepted reset dispatches zero StorageEvents and zero web:settings:preference-changed events 94ms
+   → §10.7: Reset broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 while the account scope is locked the batch still removes the six keys (standalone pane, no account gate) 72ms
+   → H9 §6: six verified absences while locked; language kept: expected { lang: '"en"', theme: '"dark"', …(5) } to strictly equal { lang: '"en"', theme: null, …(5) }
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 under a demo scope the production App batch removes the six keys by verified absence and restores defaults 107ms
+   → H9 §6: six verified absences under a demo scope; language kept: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+ × docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 H12 §5 wording in Chinese: a refused rail removal shows 侧栏位置未恢复默认。 with 重试 侧栏位置 106ms
+   → H9: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  29 failed | 3 passed (32)
+   Start at  20:25:41
+   Duration  6.76s (transform 1.87s, setup 35ms, collect 2.87s, tests 3.36s, environment 255ms, prepare 55ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O/.report-reset-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-sol/reset.test.tsx > PC §6 §10.7 an accepted reset leaves every key other than the seven byte-identical
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-appearance-recovery-sol/reset.test.tsx > PC §6 §10.7 an accepted reset leaves every key other than the seven byte-identical
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (EN)
+AssertionError: H9 §5: the normative EN confirmation text: expected 'Reset every preference to defaults? T…' to be 'Reset theme, density, font scale, acc…' // Object.is equality
+
+Expected: "Reset theme, density, font scale, accent color, background palette and sidebar position to their defaults? Language is kept."
+Received: "Reset every preference to defaults? This clears saved theme, layout, and module toggles."
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:74:68
+     72|   const produced = clickReset(false);
+     73|   observe("reset confirmation EN", produced);
+     74|   expect(produced[0], "H9 §5: the normative EN confirmation text").toB…
+       |                                                                    ^
+     75| });
+     76| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 the reset confirmation names the six fields and keeps language (ZH)
+AssertionError: H9 §5: the normative ZH confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将主题、密度、字体大小、主题色、背景调子和侧栏位置恢复为默认值？语言保持不…' // Object.is equality
+
+Expected: "将主题、密度、字体大小、主题色、背景调子和侧栏位置恢复为默认值？语言保持不变。"
+Received: "确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:83:68
+     81|   const produced = clickReset(false, "zh");
+     82|   observe("reset confirmation ZH", produced);
+     83|   expect(produced[0], "H9 §5: the normative ZH confirmation text").toB…
+       |                                                                    ^
+     84|   expect(produced[0], "the 5cd63ff text is gone").not.toBe(OLD_RESET_C…
+     85| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 an accepted reset removes exactly the six keys by verified absence, never writes, keeps language and applies the defaults
+AssertionError: H9 §6: the six keys are absent and language is unchanged: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+
+- Expected
++ Received
+
+  {
+    "accentHue": null,
+    "bgTone": null,
+-   "density": null,
+-   "fontScale": null,
++   "density": "\"comfortable\"",
++   "fontScale": "1",
+    "lang": "\"en\"",
+    "railPos": null,
+-   "theme": null,
++   "theme": "\"light\"",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:120:82
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 an already-absent key completes as a verified no-op: no removeItem and no seeded default bytes
+AssertionError: §6: absent keys complete without a removeItem call: expected [ 'xai_accent_hue', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "xai_accent_hue",
++   "xai_rail_pos",
++   "xai_bg_tone",
++ ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:135:126
+    133|   clickReset(true);
+    134|   await flush(24);
+    135|   expect(attempts(from, RESET_KEYS, ["remove"]).map(item => item.key),…
+       |                                                                                                                              ^
+    136|   expect(attempts(from, KEYS, ["set"]).map(item => `${item.key}=${item…
+    137|   expect(bytesAll(), "everything stays absent").toStrictEqual({ lang: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 H9 §6 'Defaults restored.' appears only after all six complete; a held removal shows its pending message and the default meanwhile
+AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+
+- Expected: 
+"right"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:147:73
+    145|   clickReset(true);
+    146|   await flush();
+    147|   expect(bytes(RAIL), "H8: the held per-key lock keeps the rail bytes"…
+       |                                                                         ^
+    148|   expect(successShown(), "§6: no success line while a removal is pendi…
+    149|   expect(shown(RAIL), "§6: the pending reset displays the default").to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'theme': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_theme and never writes it: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+
+- Expected
++ Received
+
+  [
+-   "<remove>!",
++   "\"light\"",
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:172:118
+    170|   clickReset(true);
+    171|   await flush(24);
+    172|   expect(writesOn(from, field), `H9 §6: the reset attempts exactly one…
+       |                                                                                                                      ^
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'density': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_density and never writes it: expected [ '"comfortable"' ] to deeply equal [ '<remove>!' ]
+
+- Expected
++ Received
+
+  [
+-   "<remove>!",
++   "\"comfortable\"",
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:172:118
+    170|   clickReset(true);
+    171|   await flush(24);
+    172|   expect(writesOn(from, field), `H9 §6: the reset attempts exactly one…
+       |                                                                                                                      ^
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'fontScale': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_font_scale and never writes it: expected [ '1' ] to deeply equal [ '<remove>!' ]
+
+- Expected
++ Received
+
+  [
+-   "<remove>!",
++   "1",
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:172:118
+    170|   clickReset(true);
+    171|   await flush(24);
+    172|   expect(writesOn(from, field), `H9 §6: the reset attempts exactly one…
+       |                                                                                                                      ^
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'accentHue': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset draft displays the default: expected 230 to be 165 // Object.is equality
+
+- Expected
++ Received
+
+- 165
++ 230
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:175:71
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+    175|   expect(shown(field), "H9 §6: the reset draft displays the default").…
+       |                                                                       ^
+    176|   expect(applied(field), "H9 §6: the reset draft applies the default")…
+    177|   expect(says(msg.notReset(field)), `H9 H12: "${msg.notReset(field)}"`…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'railPos': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality
+
+Expected: "left"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:175:71
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+    175|   expect(shown(field), "H9 §6: the reset draft displays the default").…
+       |                                                                       ^
+    176|   expect(applied(field), "H9 §6: the reset draft applies the default")…
+    177|   expect(says(msg.notReset(field)), `H9 H12: "${msg.notReset(field)}"`…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 'bgTone': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+AssertionError: H9 §6: the reset draft displays the default: expected 'mist' to be 'default' // Object.is equality
+
+Expected: "default"
+Received: "mist"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:175:71
+    173|   fired(refusal, `${id} removal`);
+    174|   expect(bytes(field), "the refused removal kept the bytes").toBe(enc(…
+    175|   expect(shown(field), "H9 §6: the reset draft displays the default").…
+       |                                                                       ^
+    176|   expect(applied(field), "H9 §6: the reset draft applies the default")…
+    177|   expect(says(msg.notReset(field)), `H9 H12: "${msg.notReset(field)}"`…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 partial reset with two refused removals: Retry targets only the unresolved fields, one removal each
+AssertionError: H9 §6: each refused key had exactly one removal attempt: expected { theme: [ '"light"' ], …(1) } to strictly equal { theme: [ '<remove>!' ], …(1) }
+
+- Expected
++ Received
+
+  {
+    "accent": [
+      "<remove>!",
+    ],
+    "theme": [
+-     "<remove>!",
++     "\"light\"",
+    ],
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:203:135
+    201|   clickReset(true);
+    202|   await flush(24);
+    203|   expect({ theme: writesOn(from, THEME), accent: writesOn(from, ACCENT…
+       |                                                                                                                                       ^
+    204|   fired(accent, "accent removal");
+    205|   fired(theme, "theme removal");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 a duplicate Reset while the batch is pending enqueues no duplicate removal
+AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+
+- Expected: 
+"right"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:229:73
+    227|   clickReset(true);
+    228|   await flush();
+    229|   expect(bytes(RAIL), "H8: the held per-key lock keeps the rail bytes"…
+       |                                                                         ^
+    230|   const again = resetButtons()[0];
+    231|   if (again && enabled(again)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 REL-07 an invalid registered source refuses the reset: the bytes are never purged and the intent is kept until Discard
+AssertionError: §6: Reset is never authority to purge malformed bytes: expected null to be 'diagonal' // Object.is equality
+
+- Expected: 
+"diagonal"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:252:80
+    250|   clickReset(true);
+    251|   await flush(24);
+    252|   expect(bytes(RAIL), "§6: Reset is never authority to purge malformed…
+       |                                                                                ^
+    253|   expect(says(msg.notReset(RAIL)), `§6 H12: "${msg.notReset(RAIL)}"`).…
+    254|   const retried = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 REL-07 an invalid root source refuses the reset without writing or purging
+AssertionError: §6: an invalid root source is neither rewritten nor removed: expected [ '"light"' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "\"light\"",
++ ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:273:96
+    271|   clickReset(true);
+    272|   await flush(24);
+    273|   expect(writesOn(from, THEME), "§6: an invalid root source is neither…
+       |                                                                                                ^
+    274|   expect(bytes(THEME)).toBe('"neon"');
+    275|   expect(says(msg.notReset(THEME)), `§6 H12: "${msg.notReset(THEME)}"`…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 an unavailable source (throwing getItem) refuses the reset and keeps the intent; nothing is removed
+AssertionError: §6: an unreadable source is never removed: expected [ '<remove>' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "<remove>",
++ ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:286:77
+    284|   clickReset(true);
+    285|   await flush(24);
+    286|   expect(writesOn(from, RAIL), "§6: an unreadable source is never remo…
+       |                                                                             ^
+    287|   expect(bytes(RAIL)).toBe("right");
+    288|   expect(says(msg.notReset(RAIL)), `§6 H12: "${msg.notReset(RAIL)}"`).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 a removal whose readback is denied is uncertain; Retry verifies absence with exactly one total removal
+AssertionError: §6 H12: the uncertain removal reports "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:300:101
+    298|   await flush(24);
+    299|   fired(readback, "rail readback");
+    300|   expect(says(msg.notReset(RAIL)), `§6 H12: the uncertain removal repo…
+       |                                                                                                     ^
+    301|   expect(successShown(), "no success line while the removal is uncerta…
+    302|   fireEvent.click(need(retryOf(RAIL), "H12: Retry Sidebar position"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 an external replacement during a held reset is a preserved conflict; Retry never overwrites it
+AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+
+- Expected: 
+"right"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:316:73
+    314|   clickReset(true);
+    315|   await flush();
+    316|   expect(bytes(RAIL), "H8: the held per-key lock keeps the rail bytes"…
+       |                                                                         ^
+    317|   await external(RAIL.key, "top");
+    318|   await lock.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 §5.7 an unrelated field still saves while reset recovery is blocked
+AssertionError: H9 H12: "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:335:71
+    333|   await flush(24);
+    334|   fired(refusal, "rail removal");
+    335|   expect(says(msg.notReset(RAIL)), `H9 H12: "${msg.notReset(RAIL)}"`).…
+       |                                                                       ^
+    336|   choose(ACCENT, 295);
+    337|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §5.7 one field's set failing while another field's reset succeeds (language set, theme reset)
+AssertionError: H9: the theme reset removes the key: expected '"light"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"light\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:347:63
+    345|   clickReset(true);
+    346|   await flush(24);
+    347|   expect(bytes(THEME), "H9: the theme reset removes the key").toBeNull…
+       |                                                               ^
+    348|   const quota = fault({ op: "set", key: LANG.key, label: "lang quota" …
+    349|   choose(LANG, "zh");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §5.7 one field's reset failing while another field's set succeeds (rail reset, language set)
+AssertionError: H9 H12: "侧栏位置未恢复默认。": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:366:83
+    364|   await flush();
+    365|   expect(bytes(LANG), "the language set succeeds").toBe(enc(LANG, "zh"…
+    366|   expect(says(msg.notReset(RAIL, "zh")), `H9 H12: "${msg.notReset(RAIL…
+       |                                                                                   ^
+    367|   need(retryOf(RAIL, "zh"), "H12: 重试 侧栏位置");
+    368| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 repeating an unchanged failed reset keeps its refusal and never rebases
+AssertionError: H9 H12: "Accent color was not reset to its default.": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:377:75
+    375|   await flush(24);
+    376|   fired(refusal, "accent removal");
+    377|   expect(says(msg.notReset(ACCENT)), `H9 H12: "${msg.notReset(ACCENT)}…
+       |                                                                           ^
+    378|   const from = mark();
+    379|   fireEvent.click(need(retryOf(ACCENT), "H12: Retry Accent color"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 a clean completed batch may receive a fresh reset; an intervening edit is a new intent
+AssertionError: H9: the first batch removes the theme: expected '"light"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"light\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:393:65
+    391|   clickReset(true);
+    392|   await flush(24);
+    393|   expect(bytes(THEME), "H9: the first batch removes the theme").toBeNu…
+       |                                                                 ^
+    394|   choose(THEME, "dark");
+    395|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H8 §6 an admitted batch continues while the pane is unmounted; no success claim on remount
+AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+
+- Expected: 
+"right"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:411:73
+    409|   clickReset(true);
+    410|   await flush();
+    411|   expect(bytes(RAIL), "H8: the held per-key lock keeps the rail bytes"…
+       |                                                                         ^
+    412|   fireEvent.click(sidebarRow("About"));
+    413|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 A2.8 the Reset control is pane-local (data-testid appearance-reset-defaults) and the shared footer is gone
+AssertionError: §6 A2.8: pane-local Reset, no SettingsFooter, no .pane-footer/.pane-save: expected { …(2) } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "footer": 0,
+-   "testid": "appearance-reset-defaults",
++   "footer": 3,
++   "testid": "settings-footer-reset",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:435:82
+    433|     testid: control.getAttribute("data-testid"),
+    434|     footer: root.querySelectorAll(".pane-footer, .pane-save, [data-tes…
+    435|   }, "§6 A2.8: pane-local Reset, no SettingsFooter, no .pane-footer/.p…
+       |                                                                                  ^
+    436| });
+    437| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > §6 §10.7 an accepted reset dispatches zero StorageEvents and zero web:settings:preference-changed events
+AssertionError: §10.7: Reset broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "preferenceChanged": [],
++   "preferenceChanged": [
++     "accentHue",
++     "railPos",
++     "bgTone",
++     "theme",
++     "density",
++     "fontScale",
++   ],
+    "storageEvents": 0,
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:460:163
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 while the account scope is locked the batch still removes the six keys (standalone pane, no account gate)
+AssertionError: H9 §6: six verified absences while locked; language kept: expected { lang: '"en"', theme: '"dark"', …(5) } to strictly equal { lang: '"en"', theme: null, …(5) }
+
+- Expected
++ Received
+
+  {
+    "accentHue": null,
+    "bgTone": null,
+-   "density": null,
+-   "fontScale": null,
++   "density": "\"compact\"",
++   "fontScale": "1.1",
+    "lang": "\"en\"",
+    "railPos": null,
+-   "theme": null,
++   "theme": "\"dark\"",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:472:82
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 §6 under a demo scope the production App batch removes the six keys by verified absence and restores defaults
+AssertionError: H9 §6: six verified absences under a demo scope; language kept: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+
+- Expected
++ Received
+
+  {
+    "accentHue": null,
+    "bgTone": null,
+-   "density": null,
+-   "fontScale": null,
++   "density": "\"comfortable\"",
++   "fontScale": "1",
+    "lang": "\"en\"",
+    "railPos": null,
+-   "theme": null,
++   "theme": "\"light\"",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:486:88
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/reset.test.tsx > H9 H12 §5 wording in Chinese: a refused rail removal shows 侧栏位置未恢复默认。 with 重试 侧栏位置
+AssertionError: H9: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality
+
+Expected: "left"
+Received: "right"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/reset.test.tsx:499:73
+    497|   await flush(24);
+    498|   fired(refusal, "rail removal");
+    499|   expect(shown(RAIL, "zh"), "H9: the reset draft displays the default"…
+       |                                                                         ^
+    500|   expect(says(W.zh.notReset("侧栏位置")), "H9 H12: 侧栏位置未恢复默认。").toBe(true);
+    501|   need(retryOf(RAIL, "zh"), "H12: 重试 侧栏位置");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/29]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-vYw40O/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/reset.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=32 passed=3 failed=29 skipped=0 precondition_failures=0
+harness PASS [reset.test.tsx] JSON report parsed
+harness PASS [reset.test.tsx] reported files equal the requested include
+harness PASS [reset.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [reset.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [reset.test.tsx] required product modules loaded from the archive (22)
+harness PASS [reset.test.tsx] no test-file suite error
+case 001 FAILED | H9 §6 the reset confirmation names the six fields and keeps language (EN)
+    first: AssertionError: H9 §5: the normative EN confirmation text: expected 'Reset every preference to defaults? T…' to be 'Reset theme, density, font scale, acc…' // Object.is equality
+case 002 FAILED | H9 §6 the reset confirmation names the six fields and keeps language (ZH)
+    first: AssertionError: H9 §5: the normative ZH confirmation text: expected '确定恢复所有设置为默认值？这会清除保存的主题、布局和模块开关。' to be '将主题、密度、字体大小、主题色、背景调子和侧栏位置恢复为默认值？语言保持不…' // Object.is equality
+case 003 PASSED | PC §6 a declined confirmation makes zero get, set or remove attempts on every key and changes nothing
+case 004 PASSED | PC §6 an accepted reset removes the three registered keys
+case 005 FAILED | H9 §6 an accepted reset removes exactly the six keys by verified absence, never writes, keeps language and applies the defaults
+    first: AssertionError: H9 §6: the six keys are absent and language is unchanged: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+case 006 FAILED | H9 §6 an already-absent key completes as a verified no-op: no removeItem and no seeded default bytes
+    first: AssertionError: §6: absent keys complete without a removeItem call: expected [ 'xai_accent_hue', …(2) ] to deeply equal []
+case 007 FAILED | H8 H9 §6 'Defaults restored.' appears only after all six complete; a held removal shows its pending message and the default meanwhile
+    first: AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+case 008 FAILED | H9 §6 'theme': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_theme and never writes it: expected [ '"light"' ] to deeply equal [ '<remove>!' ]
+case 009 FAILED | H9 §6 'density': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_density and never writes it: expected [ '"comfortable"' ] to deeply equal [ '<remove>!' ]
+case 010 FAILED | H9 §6 'fontScale': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset attempts exactly one removal of xai_pref_font_scale and never writes it: expected [ '1' ] to deeply equal [ '<remove>!' ]
+case 011 FAILED | H9 §6 'accentHue': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset draft displays the default: expected 230 to be 165 // Object.is equality
+case 012 FAILED | H9 §6 'railPos': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality
+case 013 FAILED | H9 §6 'bgTone': a refused removal keeps a reset draft that displays the default with feedback and recovery; Retry re-attempts removal only
+    first: AssertionError: H9 §6: the reset draft displays the default: expected 'mist' to be 'default' // Object.is equality
+case 014 FAILED | H9 §6 partial reset with two refused removals: Retry targets only the unresolved fields, one removal each
+    first: AssertionError: H9 §6: each refused key had exactly one removal attempt: expected { theme: [ '"light"' ], …(1) } to strictly equal { theme: [ '<remove>!' ], …(1) }
+case 015 FAILED | H8 §6 a duplicate Reset while the batch is pending enqueues no duplicate removal
+    first: AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+case 016 FAILED | §6 REL-07 an invalid registered source refuses the reset: the bytes are never purged and the intent is kept until Discard
+    first: AssertionError: §6: Reset is never authority to purge malformed bytes: expected null to be 'diagonal' // Object.is equality
+case 017 FAILED | §6 REL-07 an invalid root source refuses the reset without writing or purging
+    first: AssertionError: §6: an invalid root source is neither rewritten nor removed: expected [ '"light"' ] to deeply equal []
+case 018 FAILED | §6 an unavailable source (throwing getItem) refuses the reset and keeps the intent; nothing is removed
+    first: AssertionError: §6: an unreadable source is never removed: expected [ '<remove>' ] to deeply equal []
+case 019 FAILED | §6 a removal whose readback is denied is uncertain; Retry verifies absence with exactly one total removal
+    first: AssertionError: §6 H12: the uncertain removal reports "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+case 020 FAILED | H8 §6 an external replacement during a held reset is a preserved conflict; Retry never overwrites it
+    first: AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+case 021 FAILED | H9 §6 §5.7 an unrelated field still saves while reset recovery is blocked
+    first: AssertionError: H9 H12: "Sidebar position was not reset to its default.": expected false to be true // Object.is equality
+case 022 FAILED | H9 §5.7 one field's set failing while another field's reset succeeds (language set, theme reset)
+    first: AssertionError: H9: the theme reset removes the key: expected '"light"' to be null
+case 023 FAILED | H9 §5.7 one field's reset failing while another field's set succeeds (rail reset, language set)
+    first: AssertionError: H9 H12: "侧栏位置未恢复默认。": expected false to be true // Object.is equality
+case 024 FAILED | H9 §6 repeating an unchanged failed reset keeps its refusal and never rebases
+    first: AssertionError: H9 H12: "Accent color was not reset to its default.": expected false to be true // Object.is equality
+case 025 FAILED | H9 §6 a clean completed batch may receive a fresh reset; an intervening edit is a new intent
+    first: AssertionError: H9: the first batch removes the theme: expected '"light"' to be null
+case 026 FAILED | H8 §6 an admitted batch continues while the pane is unmounted; no success claim on remount
+    first: AssertionError: H8: the held per-key lock keeps the rail bytes: expected null to be 'right' // Object.is equality
+case 027 FAILED | H9 §6 A2.8 the Reset control is pane-local (data-testid appearance-reset-defaults) and the shared footer is gone
+    first: AssertionError: §6 A2.8: pane-local Reset, no SettingsFooter, no .pane-footer/.pane-save: expected { …(2) } to strictly equal { …(2) }
+case 028 PASSED | PC §6 §10.7 an accepted reset leaves every key other than the seven byte-identical
+case 029 FAILED | §6 §10.7 an accepted reset dispatches zero StorageEvents and zero web:settings:preference-changed events
+    first: AssertionError: §10.7: Reset broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
+case 030 FAILED | H9 §6 while the account scope is locked the batch still removes the six keys (standalone pane, no account gate)
+    first: AssertionError: H9 §6: six verified absences while locked; language kept: expected { lang: '"en"', theme: '"dark"', …(5) } to strictly equal { lang: '"en"', theme: null, …(5) }
+case 031 FAILED | H9 §6 under a demo scope the production App batch removes the six keys by verified absence and restores defaults
+    first: AssertionError: H9 §6: six verified absences under a demo scope; language kept: expected { Object (lang, theme, ...) } to strictly equal { lang: '"en"', theme: null, …(5) }
+case 032 FAILED | H9 H12 §5 wording in Chinese: a refused rail removal shows 侧栏位置未恢复默认。 with 重试 侧栏位置
+    first: AssertionError: H9: the reset draft displays the default: expected 'right' to be 'left' // Object.is equality

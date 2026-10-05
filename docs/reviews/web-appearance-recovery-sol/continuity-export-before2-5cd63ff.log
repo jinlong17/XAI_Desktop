@@ -1,0 +1,494 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=continuity-export
+suffix=before2
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff continuity-export before2
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=b70ed9707f72d55bb4ad7e14472646edd22a0fa334b4b332924c53fc4cddf339 reset.test.tsx=354f5bdae302edd0733fd45dfcf748d0843926e1feead8ca4a18eaec3fc89c41 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] continuity-export.test.tsx: include=docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1/appearance-sol-continuity-export-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1/.report-continuity-export-0.json vitest_exit=1 cases=26 passed=4 failed=22 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=26 numPassedTests=4 numFailedTests=22
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] continuity-export.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1
+
+stdout | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves 151ms
+   → H1: the failed accent choice stays displayed: expected 165 to be 295 // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release 59ms
+   → H12: "Theme is saving.": expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B 73ms
+   → H8: the held per-key lock keeps the accent removal pending: expected null to be '230' // Object.is equality
+ ✓ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > INV §7 edits and a reset across A→B never touch account keys, markers or account lifecycle locks 178ms
+ ✓ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset 120ms
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone 136ms
+   → §7.3: beforeunload warns while a draft exists: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme) 115ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 2: a sparse registered set (accent) 98ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 3: a background choice with both writes failing exports both entries 99ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H9 H12 §8 shape 4: mixed set and reset entries 159ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §8 shape 5: all six pending resets behind held locks 96ms
+   → H8: every removal waits behind its held per-key lock: expected [ '"light"', '"comfortable"', …(4) ] to deeply equal [ '"dark"', '"compact"', '1.1', …(3) ]
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language 295ms
+   → H12: 导出外观草稿: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing 96ms
+   → H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts) 206ms
+   → §7: the App-lifetime draft survives navigation: expected 165 to be 295 // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 the export excludes saved, default and source-only fields 134ms
+   → H12: Export Appearance draft: expected null not to be null
+ ✓ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > INV §8 without an actual draft there is no Export and no Discard all control 108ms
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 91ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 91ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 92ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up 93ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a setup failure in Chinese shows 导出失败，请重试。 92ms
+   → H12: 导出外观草稿: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during blob cancels the click and cleans up (standalone controller) 57ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during url cancels the click and cleans up (standalone controller) 58ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during append cancels the click and cleans up (standalone controller) 55ms
+   → H12: Export Appearance draft: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft 82ms
+   → H12: Export Appearance draft: expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  22 failed | 4 passed (26)
+   Start at  20:34:12
+   Duration  6.11s (transform 1.87s, setup 36ms, collect 2.84s, tests 2.84s, environment 187ms, prepare 49ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1/.report-continuity-export-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 2: a sparse registered set (accent)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 3: a background choice with both writes failing exports both entries
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a setup failure in Chinese shows 导出失败，请重试。
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during blob cancels the click and cleans up (standalone controller)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during url cancels the click and cleans up (standalone controller)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during append cancels the click and cleans up (standalone controller)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves
+AssertionError: H1: the failed accent choice stays displayed: expected 165 to be 295 // Object.is equality
+
+- Expected
++ Received
+
+- 295
++ 165
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:91:73
+     89|   choose(RAIL, "right");
+     90|   await flush();
+     91|   expect(shown(ACCENT), "H1: the failed accent choice stays displayed"…
+       |                                                                         ^
+     92|   expect(says(msg.notSaved(ACCENT)), "H12: the failed accent draft").t…
+     93|   expect(bytes(RAIL), "H8: the held per-key lock keeps the rail write …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release
+AssertionError: H12: "Theme is saving.": expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:127:66
+    125|   await flush();
+    126|   expect(bytes(THEME), "H8: the held per-key lock keeps the theme writ…
+    127|   expect(says(msg.saving(THEME)), `H12: "${msg.saving(THEME)}"`).toBe(…
+       |                                                                  ^
+    128|   act(() => { activate(OWNER_A, "g2"); });
+    129|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B
+AssertionError: H8: the held per-key lock keeps the accent removal pending: expected null to be '230' // Object.is equality
+
+- Expected: 
+"230"
+
++ Received: 
+null
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:145:87
+    143|   clickReset(true, "en");
+    144|   await flush(24);
+    145|   expect(bytes(ACCENT), "H8: the held per-key lock keeps the accent re…
+       |                                                                                       ^
+    146|   expect(says(msg.resetting(ACCENT)), `H12: "${msg.resetting(ACCENT)}"…
+    147|   fired(refusal, "rail removal");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+AssertionError: §7.3: beforeunload warns while a draft exists: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:209:68
+    207|   await flush();
+    208|   fired(quota, "bg write");
+    209|   expect(warns(), "§7.3: beforeunload warns while a draft exists").toB…
+       |                                                                    ^
+    210|   const retry = need(retryOf(BG), "H12: Retry Background palette");
+    211|   view.unmount();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme)
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:248:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 2: a sparse registered set (accent)
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:257:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 3: a background choice with both writes failing exports both entries
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:268:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H9 H12 §8 shape 4: mixed set and reset entries
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:284:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §8 shape 5: all six pending resets behind held locks
+AssertionError: H8: every removal waits behind its held per-key lock: expected [ '"light"', '"comfortable"', …(4) ] to deeply equal [ '"dark"', '"compact"', '1.1', …(3) ]
+
+- Expected
++ Received
+
+  [
+-   "\"dark\"",
+-   "\"compact\"",
+-   "1.1",
+-   "230",
+-   "right",
+-   "mist",
++   "\"light\"",
++   "\"comfortable\"",
++   "1",
++   null,
++   null,
++   null,
+  ]
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:294:107
+    292|   clickReset(true);
+    293|   await flush();
+    294|   expect(RESET_FIELDS.map(field => bytes(field)), "H8: every removal w…
+       |                                                                                                           ^
+    295|   await exportUnderDenial("shape 5", envelope({ theme: RESET, density:…
+    296|   for (const held of holds) await held.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H2 H12 §8 shape 6: all seven sets including language
+AssertionError: H12: 导出外观草稿: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:304:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing
+AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"dark\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:313:83
+    311|   choose(THEME, "dark");
+    312|   await flush();
+    313|   expect(bytes(THEME), "H8: the held per-key lock keeps the theme writ…
+       |                                                                                   ^
+    314|   await exportUnderDenial("shape 7", envelope({ theme: SET("dark") }));
+    315|   await lock.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts)
+AssertionError: §7: the App-lifetime draft survives navigation: expected 165 to be 295 // Object.is equality
+
+- Expected
++ Received
+
+- 295
++ 165
+
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:329:75
+    327|   await go(app, "/app/tasks");
+    328|   await go(app, "/app/settings/appearance");
+    329|   expect(shown(ACCENT), "§7: the App-lifetime draft survives navigatio…
+       |                                                                           ^
+    330|   await exportUnderDenial("shape 8", envelope({ accentHue: SET(295) })…
+    331| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 the export excludes saved, default and source-only fields
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ exportUnderDenial docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:228:19
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:343:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:361:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 a setup failure in Chinese shows 导出失败，请重试。
+AssertionError: H12: 导出外观草稿: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:394:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during blob cancels the click and cleans up (standalone controller)
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during url cancels the click and cleans up (standalone controller)
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an unmount during append cancels the click and cleans up (standalone controller)
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:410:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx > H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft
+AssertionError: H12: Export Appearance draft: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx:435:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/22]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-AKAzS1/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/continuity-export.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=26 passed=4 failed=22 skipped=0 precondition_failures=0
+harness PASS [continuity-export.test.tsx] JSON report parsed
+harness PASS [continuity-export.test.tsx] reported files equal the requested include
+harness PASS [continuity-export.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [continuity-export.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [continuity-export.test.tsx] required product modules loaded from the archive (22)
+harness PASS [continuity-export.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H1 H8 §7 A→B→locked→A: a failed registered draft and a held device operation survive every transition; the held write completes exactly once; Retry still saves
+    first: AssertionError: H1: the failed accent choice stays displayed: expected 165 to be 295 // Object.is equality
+case 003 FAILED | H8 H12 §7 a same-account epoch change keeps a held root-field operation; it writes exactly once after release
+    first: AssertionError: H12: "Theme is saving.": expected false to be true // Object.is equality
+case 004 FAILED | H8 H9 §7 an admitted reset batch with a held removal and a refused removal continues across A→B
+    first: AssertionError: H8: the held per-key lock keeps the accent removal pending: expected null to be '230' // Object.is equality
+case 005 PASSED | INV §7 edits and a reset across A→B never touch account keys, markers or account lifecycle locks
+case 006 PASSED | INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset
+case 007 FAILED | §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+    first: AssertionError: §7.3: beforeunload warns while a draft exists: expected false to be true // Object.is equality
+case 008 FAILED | H3 H12 §8 shape 1: a sparse set left by a Topbar failure (theme)
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 009 FAILED | H1 H12 §8 shape 2: a sparse registered set (accent)
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 010 FAILED | H1 H12 §8 shape 3: a background choice with both writes failing exports both entries
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 011 FAILED | H9 H12 §8 shape 4: mixed set and reset entries
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 012 FAILED | H8 H12 §8 shape 5: all six pending resets behind held locks
+    first: AssertionError: H8: every removal waits behind its held per-key lock: expected [ '"light"', '"comfortable"', …(4) ] to deeply equal [ '"dark"', '"compact"', '1.1', …(3) ]
+case 013 FAILED | H1 H2 H12 §8 shape 6: all seven sets including language
+    first: AssertionError: H12: 导出外观草稿: expected null not to be null
+case 014 FAILED | H8 H12 §8 shape 7: an export while one operation is held behind a real lock includes it and saves, retries or discards nothing
+    first: AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+case 015 FAILED | H1 H12 §8 shape 8: an export after navigating away from the pane and back (App-lifetime drafts)
+    first: AssertionError: §7: the App-lifetime draft survives navigation: expected 165 to be 295 // Object.is equality
+case 016 FAILED | H12 §8 the export excludes saved, default and source-only fields
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 017 PASSED | INV §8 without an actual draft there is no Export and no Discard all control
+case 018 FAILED | H12 §8 a blob setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 019 FAILED | H12 §8 a url setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 020 FAILED | H12 §8 a append setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 021 FAILED | H12 §8 a click setup failure shows the localized export error, keeps drafts, warning and Topbar status, and cleans up
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 022 FAILED | H12 §8 a setup failure in Chinese shows 导出失败，请重试。
+    first: AssertionError: H12: 导出外观草稿: expected null not to be null
+case 023 FAILED | H12 §8 an unmount during blob cancels the click and cleans up (standalone controller)
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 024 FAILED | H12 §8 an unmount during url cancels the click and cleans up (standalone controller)
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 025 FAILED | H12 §8 an unmount during append cancels the click and cleans up (standalone controller)
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null
+case 026 FAILED | H12 §8 an export after an A→B transition (standalone controller) still exports the surviving device draft
+    first: AssertionError: H12: Export Appearance draft: expected null not to be null

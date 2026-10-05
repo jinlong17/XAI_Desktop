@@ -1,0 +1,664 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=host
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 5cd63ff host before1
+runner_checkout_head=2b9f81d8017e78fa9ff86fe96fc3a5e313ad24ac
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=bfce8935659d9bd2ab1f5e41fa5b29a6e29180d596619ebb050b4be481f1bac7 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=d49e8e7c16e8d5b8102e67c30e3251186ae62bf877131a8afff8aed4e0d0867e reset.test.tsx=87e6b0cb4b1a5a15bb54b5b78929a51143132c39ed997f3fc201ad872f5e0043 queues.test.tsx=cd01974248506ecf87901c84490f76e7c343c452f502f311a299819f5a1bb07f continuity-export.test.tsx=d665b9328ad829639cbb76a9641beb8f5bbc929fbe35da137b07d267332317b9 host.test.tsx=a0016a17ac06faf77485fc36ed2021eb606e4eb964bd93eab2c434dd3952124e retry-all.test.tsx=e59645c5499cf2b18210113a7d041bb61528cb0e6b39fa392b634b0de923e908 verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3 packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6 packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776 packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59 packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297 packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0 packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] host.test.tsx: include=docs/reviews/web-appearance-recovery-sol/host.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/appearance-sol-host-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/.report-host-0.json vitest_exit=1 cases=32 passed=5 failed=27 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=32 numPassedTests=5 numFailedTests=27
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] host.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX
+
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the sidebar to another pane: not held, no dialog, the Topbar status shown; on return the draft is intact 205ms
+   → §7.2: the Topbar status is shown off the pane: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the AppRail and a programmatic navigation: not held, the Topbar status shown, the draft intact 181ms
+   → §7.2: the Topbar status is shown on /app/tasks: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 Back and Forward with a draft are not held and land on the same history entries as an ordinary navigation 254ms
+   → §7: the draft is intact after Back and Forward: expected 165 to be 295 // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 a failed Topbar choice on /app/tasks shows the Topbar status; Review navigates exactly once to the pane through the shortcut event 117ms
+   → H3 §7.2: the Topbar status for a settled Topbar failure: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 the Topbar status is rendered immediately after the premium badge slot in .topbar-controls and never touches storage 111ms
+   → H3 §7.2: [data-testid=appearance-status]: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H8 §7.2 a pending-only (held) Topbar write renders no status; a settled failure does; a successful Retry removes it 109ms
+   → H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 the Topbar status in Chinese has the accessible name 外观更改未保存，前往设置查看。 132ms
+   → H3 §7.2: the Chinese Topbar status: expected null not to be null
+ ✓ docs/reviews/web-appearance-recovery-sol/host.test.tsx > PC §7.3 no beforeunload warning in a clean state 52ms
+ ✓ docs/reviews/web-appearance-recovery-sol/host.test.tsx > §7.3 no beforeunload warning in a source-only state 58ms
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.3 beforeunload warns while a failed draft exists, with zero storage attempts in the handler; the listener is removed after the success 88ms
+   → §7.3: a failed draft warns and the handler makes zero storage attempts: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H8 §7.3 beforeunload warns while a pending (held) operation exists 91ms
+   → H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+ ✓ docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > PC §7.4 fallback: without drafts sign-out makes zero confirm calls and completes exactly as at 5cd63ff 153ms
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > H12 §7.4 fallback: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept 119ms
+   → §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > H12 §7.4 fallback: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues 149ms
+   → §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+ ✓ docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > PC §7.4 coordinator: without drafts sign-out makes zero confirm calls and completes exactly as at 5cd63ff 132ms
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > H12 §7.4 coordinator: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept 124ms
+   → §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > H12 §7.4 coordinator: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues 182ms
+   → §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7 REL-09 a forced scope change from another document remounts the App: committed values displayed, no saved claim, zero runtime errors 88ms
+   → H12: the failed accent draft exists before the forced transition: expected false to be true // Object.is equality
+ ✓ docs/reviews/web-appearance-recovery-sol/host.test.tsx > PC §10.3 the system theme resolves through the media query and follows its change listener 102ms
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H5 §10.3 exactly one controller: a pane edit is visible in the Topbar and a Topbar edit in the pane, in the same frame 86ms
+   → H5 §10.3: the Topbar edit is visible in the pane in the same frame: expected 'light' to be 'dark' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H1 §10.3 .app[data-rail-pos] and <html> follow the displayed value of a failed rail draft and return to the committed bytes after Discard 84ms
+   → H1 §10.3: the displayed draft is applied: expected { html: 'top', app: 'top' } to strictly equal { html: 'right', app: 'right' }
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §10.3 a language draft re-renders the whole application; Discard returns every string to the committed language 98ms
+   → H12: 放弃 语言: expected null not to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_accent_hue' written by another document leaves the idle field in its source state without a throw 76ms
+   → §10.4: no route error boundary: expected 'Route Error (app)' to be null
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_rail_pos' written by another document leaves the idle field in its source state without a throw 62ms
+   → §10.4: "Saved Sidebar position is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_pref_lang' written by another document leaves the idle field in its source state without a throw 64ms
+   → §10.4: "Saved Language is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_pref_font_scale' written by another document leaves the idle field in its source state without a throw 62ms
+   → §10.4: "Saved Font scale is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'theme' change in another document is reflected live in <html>, the Topbar and the pane 62ms
+   → H10: the document follows the other document's commit: expected 'light' to be 'dark' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'density' change in another document is reflected live in <html>, the Topbar and the pane 71ms
+   → H10: the document follows the other document's commit: expected 'comfortable' to be 'compact' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'fontScale' change in another document is reflected live in <html>, the Topbar and the pane 74ms
+   → H10: the document follows the other document's commit: expected 1 to be 1.1 // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'lang' change in another document is reflected live in <html>, the Topbar and the pane 71ms
+   → H10: the document follows the other document's commit: expected 'en' to be 'zh' // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a drafted root field receiving another document's commit becomes a preserved conflict; Retry never overwrites 92ms
+   → H12: the failed theme draft: expected false to be true // Object.is equality
+ × docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §10.7 during and after every Appearance operation the product dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes 86ms
+   → §10.7: an edit broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
+
+ Test Files  1 failed (1)
+      Tests  27 failed | 5 passed (32)
+   Start at  20:26:11
+   Duration  6.78s (transform 1.94s, setup 35ms, collect 2.91s, tests 3.44s, environment 188ms, prepare 46ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/.report-host-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the sidebar to another pane: not held, no dialog, the Topbar status shown; on return the draft is intact
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the AppRail and a programmatic navigation: not held, the Topbar status shown, the draft intact
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 Back and Forward with a draft are not held and land on the same history entries as an ordinary navigation
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.3 beforeunload warns while a failed draft exists, with zero storage attempts in the handler; the listener is removed after the success
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > H12 §7.4 fallback: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > H12 §7.4 coordinator: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7 REL-09 a forced scope change from another document remounts the App: committed values displayed, no saved claim, zero runtime errors
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H1 §10.3 .app[data-rail-pos] and <html> follow the displayed value of a failed rail draft and return to the committed bytes after Discard
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_accent_hue' written by another document leaves the idle field in its source state without a throw
+RangeError: [applyAccentHue] hue must be a finite number, got: Infinity
+    at applyAccentHue (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/packages/plugin-web-tokens/src/apply.ts:85:11)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/apps/web/src/App.tsx:163:21
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+    at recursivelyTraversePassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11) {
+  [stack]: [Getter/Setter],
+  [message]: '[applyAccentHue] hue must be a finite number, got: Infinity'
+}
+
+The above error occurred in the <AppInner> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render RangeError: [applyAccentHue] hue must be a finite number, got: Infinity
+    at applyAccentHue (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/packages/plugin-web-tokens/src/apply.ts:85:11)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/apps/web/src/App.tsx:163:21
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+    at recursivelyTraversePassiveMountEffects (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the sidebar to another pane: not held, no dialog, the Topbar status shown; on return the draft is intact
+AssertionError: §7.2: the Topbar status is shown off the pane: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:84:84
+     82|   expect(app.router.state.location.pathname, "§7.1: the sidebar is nev…
+     83|   expect(departureDialog(), "§7.1: no departure dialog").toBeNull();
+     84|   expect(topbarStatusNamed(), "§7.2: the Topbar status is shown off th…
+       |                                                                                    ^
+     85|   await go(app, "/app/settings/appearance");
+     86|   expect(shown(ACCENT), "§7: the App-lifetime draft is intact on retur…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 a pane failure, then the AppRail and a programmatic navigation: not held, the Topbar status shown, the draft intact
+AssertionError: §7.2: the Topbar status is shown on /app/tasks: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:98:85
+     96|   expect(app.router.state.location.pathname, "§7.1: the AppRail is nev…
+     97|   expect(departureDialog(), "no departure dialog").toBeNull();
+     98|   expect(topbarStatusNamed(), "§7.2: the Topbar status is shown on /ap…
+       |                                                                                     ^
+     99|   await go(app, "/app/calendar");
+    100|   expect(app.router.state.location.pathname, "§7.1: programmatic navig…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.1 Back and Forward with a draft are not held and land on the same history entries as an ordinary navigation
+AssertionError: §7: the draft is intact after Back and Forward: expected 165 to be 295 // Object.is equality
+
+- Expected
++ Received
+
+- 295
++ 165
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:115:75
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 a failed Topbar choice on /app/tasks shows the Topbar status; Review navigates exactly once to the pane through the shortcut event
+AssertionError: H3 §7.2: the Topbar status for a settled Topbar failure: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:126:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 the Topbar status is rendered immediately after the premium badge slot in .topbar-controls and never touches storage
+AssertionError: H3 §7.2: [data-testid=appearance-status]: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:144:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H8 §7.2 a pending-only (held) Topbar write renders no status; a settled failure does; a successful Retry removes it
+AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"compact\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:158:86
+    156|   chooseTopbar(DENSITY, "compact");
+    157|   await flush();
+    158|   expect(bytes(DENSITY), "H8: the held per-key lock keeps the Topbar w…
+       |                                                                                      ^
+    159|   expect(topbarStatus(), "§7.2: no status while only pending").toBeNul…
+    160|   const quota = fault({ op: "set", key: DENSITY.key, times: 1, label: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H3 §7.2 the Topbar status in Chinese has the accessible name 外观更改未保存，前往设置查看。
+AssertionError: H3 §7.2: the Chinese Topbar status: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:171:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7.3 beforeunload warns while a failed draft exists, with zero storage attempts in the handler; the listener is removed after the success
+AssertionError: §7.3: a failed draft warns and the handler makes zero storage attempts: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+
+- Expected
++ Received
+
+  {
+    "attempts": 0,
+-   "warned": true,
++   "warned": false,
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:196:94
+    194|   await flush();
+    195|   fired(quota, "accent write");
+    196|   expect(unload(), "§7.3: a failed draft warns and the handler makes z…
+       |                                                                                              ^
+    197|   fireEvent.click(need(retryOf(ACCENT), "H12: Retry Accent color"));
+    198|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H8 §7.3 beforeunload warns while a pending (held) operation exists
+AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+
+- Expected: 
+null
+
++ Received: 
+"\"dark\""
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:207:83
+    205|   choose(THEME, "dark");
+    206|   await flush();
+    207|   expect(bytes(THEME), "H8: the held per-key lock keeps the theme writ…
+       |                                                                                   ^
+    208|   expect(unload(), "§7.3: a pending draft warns").toStrictEqual({ warn…
+    209|   await lock.release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > H12 §7.4 fallback: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > H12 §7.4 coordinator: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Some appearance changes are not saved. Sign out and discard them?",
+- ]
++ []
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:256:82
+    254|     confirmer.answer = false;
+    255|     await signOut();
+    256|     expect(confirmer.calls, "§7.4: exactly one confirm with the normat…
+       |                                                                                  ^
+    257|     expect(signedOut(branch), "§7.4 Cancel: nothing is invalidated or …
+    258|     expect(accountScope.capture(), "identity intact").toBe(scope);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out fallback branch > H12 §7.4 fallback: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > sign-out coordinator branch > H12 §7.4 coordinator: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues
+AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Some appearance changes are not saved. Sign out and discard them?",
+- ]
++ []
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:272:82
+    270|     confirmer.answer = true;
+    271|     await signOut();
+    272|     expect(confirmer.calls, "§7.4: exactly one confirm with the normat…
+       |                                                                                  ^
+    273|     expect(writes(from).filter(entry => /xai_(pref_(lang|theme|density…
+    274|     expect(signedOut(branch), "§7.4 OK: the existing sequence continue…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §7 REL-09 a forced scope change from another document remounts the App: committed values displayed, no saved claim, zero runtime errors
+AssertionError: H12: the failed accent draft exists before the forced transition: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:288:106
+    286|   await mountApp();
+    287|   await failedAccent(295);
+    288|   expect(says(msg.notSaved(ACCENT)), "H12: the failed accent draft exi…
+       |                                                                                                          ^
+    289|   await act(async () => {
+    290|     nativeSet.call(localStorage, "xai:auth:identity-change", JSON.stri…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H5 §10.3 exactly one controller: a pane edit is visible in the Topbar and a Topbar edit in the pane, in the same frame
+AssertionError: H5 §10.3: the Topbar edit is visible in the pane in the same frame: expected 'light' to be 'dark' // Object.is equality
+
+Expected: "dark"
+Received: "light"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:327:94
+    325|   chooseTopbar(THEME, "dark");
+    326|   await sameFrame();
+    327|   expect(shown(THEME), "H5 §10.3: the Topbar edit is visible in the pa…
+       |                                                                                              ^
+    328| });
+    329| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H1 §10.3 .app[data-rail-pos] and <html> follow the displayed value of a failed rail draft and return to the committed bytes after Discard
+AssertionError: H1 §10.3: the displayed draft is applied: expected { html: 'top', app: 'top' } to strictly equal { html: 'right', app: 'right' }
+
+- Expected
++ Received
+
+  {
+-   "app": "right",
+-   "html": "right",
++   "app": "top",
++   "html": "top",
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:337:98
+    335|   await flush();
+    336|   fired(quota, "rail write");
+    337|   expect({ html: applied(RAIL), app: appRailPos() }, "H1 §10.3: the di…
+       |                                                                                                  ^
+    338|   fireEvent.click(need(discardOf(RAIL), "H12: Discard Sidebar position…
+    339|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §10.3 a language draft re-renders the whole application; Discard returns every string to the committed language
+AssertionError: H12: 放弃 语言: expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-sol/fixture.tsx:48:38
+     46| /** Business presence assertion: fails as a product failure (not a pre…
+     47| export function need<T>(value: T | null | undefined, message: string):…
+     48|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     49|   return value as T;
+     50| }
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:350:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_accent_hue' written by another document leaves the idle field in its source state without a throw
+AssertionError: §10.4: no route error boundary: expected 'Route Error (app)' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app)"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:367:58
+    365|   await mountApp();
+    366|   await external(key, raw);
+    367|   expect(routeError(), "§10.4: no route error boundary").toBeNull();
+       |                                                          ^
+    368|   const field = [ACCENT, RAIL, LANG, FONT].find(entry => entry.id === …
+    369|   expect(says(msg.unavailable(field, uiLang())), `§10.4: "${msg.unavai…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_rail_pos' written by another document leaves the idle field in its source state without a throw
+AssertionError: §10.4: "Saved Sidebar position is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:369:111
+    367|   expect(routeError(), "§10.4: no route error boundary").toBeNull();
+    368|   const field = [ACCENT, RAIL, LANG, FONT].find(entry => entry.id === …
+    369|   expect(says(msg.unavailable(field, uiLang())), `§10.4: "${msg.unavai…
+       |                                                                                                               ^
+    370|   expect(applied(field), "§10.4: the default is applied").toBe(applied…
+    371|   expect(nativeGet.call(localStorage, key), "never rewritten").toBe(ra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_pref_lang' written by another document leaves the idle field in its source state without a throw
+AssertionError: §10.4: "Saved Language is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:369:111
+    367|   expect(routeError(), "§10.4: no route error boundary").toBeNull();
+    368|   const field = [ACCENT, RAIL, LANG, FONT].find(entry => entry.id === …
+    369|   expect(says(msg.unavailable(field, uiLang())), `§10.4: "${msg.unavai…
+       |                                                                                                               ^
+    370|   expect(applied(field), "§10.4: the default is applied").toBe(applied…
+    371|   expect(nativeGet.call(localStorage, key), "never rewritten").toBe(ra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H6 H10 §10.4 a malformed 'xai_pref_font_scale' written by another document leaves the idle field in its source state without a throw
+AssertionError: §10.4: "Saved Font scale is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:369:111
+    367|   expect(routeError(), "§10.4: no route error boundary").toBeNull();
+    368|   const field = [ACCENT, RAIL, LANG, FONT].find(entry => entry.id === …
+    369|   expect(says(msg.unavailable(field, uiLang())), `§10.4: "${msg.unavai…
+       |                                                                                                               ^
+    370|   expect(applied(field), "§10.4: the default is applied").toBe(applied…
+    371|   expect(nativeGet.call(localStorage, key), "never rewritten").toBe(ra…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'theme' change in another document is reflected live in <html>, the Topbar and the pane
+AssertionError: H10: the document follows the other document's commit: expected 'light' to be 'dark' // Object.is equality
+
+Expected: "dark"
+Received: "light"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:387:83
+    385|   await mountApp();
+    386|   await external(field.key, raw);
+    387|   expect(applied(field), "H10: the document follows the other document…
+       |                                                                                   ^
+    388|   expect(shown(field, uiLang()), "H10: the pane follows").toBe(value);
+    389|   if (field !== FONT) expect(topbarChecked(field, uiLang()), "H10: the…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'density' change in another document is reflected live in <html>, the Topbar and the pane
+AssertionError: H10: the document follows the other document's commit: expected 'comfortable' to be 'compact' // Object.is equality
+
+Expected: "compact"
+Received: "comfortable"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:387:83
+    385|   await mountApp();
+    386|   await external(field.key, raw);
+    387|   expect(applied(field), "H10: the document follows the other document…
+       |                                                                                   ^
+    388|   expect(shown(field, uiLang()), "H10: the pane follows").toBe(value);
+    389|   if (field !== FONT) expect(topbarChecked(field, uiLang()), "H10: the…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'fontScale' change in another document is reflected live in <html>, the Topbar and the pane
+AssertionError: H10: the document follows the other document's commit: expected 1 to be 1.1 // Object.is equality
+
+- Expected
++ Received
+
+- 1.1
++ 1
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:387:83
+    385|   await mountApp();
+    386|   await external(field.key, raw);
+    387|   expect(applied(field), "H10: the document follows the other document…
+       |                                                                                   ^
+    388|   expect(shown(field, uiLang()), "H10: the pane follows").toBe(value);
+    389|   if (field !== FONT) expect(topbarChecked(field, uiLang()), "H10: the…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a committed 'lang' change in another document is reflected live in <html>, the Topbar and the pane
+AssertionError: H10: the document follows the other document's commit: expected 'en' to be 'zh' // Object.is equality
+
+Expected: "zh"
+Received: "en"
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:387:83
+    385|   await mountApp();
+    386|   await external(field.key, raw);
+    387|   expect(applied(field), "H10: the document follows the other document…
+       |                                                                                   ^
+    388|   expect(shown(field, uiLang()), "H10: the pane follows").toBe(value);
+    389|   if (field !== FONT) expect(topbarChecked(field, uiLang()), "H10: the…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H10 §10.5 a drafted root field receiving another document's commit becomes a preserved conflict; Retry never overwrites
+AssertionError: H12: the failed theme draft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:398:68
+    396|   await flush();
+    397|   fired(quota, "theme write");
+    398|   expect(says(msg.notSaved(THEME)), "H12: the failed theme draft").toB…
+       |                                                                    ^
+    399|   quota.off();
+    400|   await external(THEME.key, '"system"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/27]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-sol/host.test.tsx > H12 §10.7 during and after every Appearance operation the product dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes
+AssertionError: §10.7: an edit broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "preferenceChanged": [],
++   "preferenceChanged": [
++     "theme",
++   ],
+    "storageEvents": 0,
+  }
+
+ ❯ stable docs/reviews/web-appearance-recovery-sol/host.test.tsx:420:177
+
+ ❯ docs/reviews/web-appearance-recovery-sol/host.test.tsx:426:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/27]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-6iqanX/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["docs/reviews/web-appearance-recovery-sol/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=621 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=7 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=32 passed=5 failed=27 skipped=0 precondition_failures=0
+harness PASS [host.test.tsx] JSON report parsed
+harness PASS [host.test.tsx] reported files equal the requested include
+harness PASS [host.test.tsx] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [host.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [host.test.tsx] required product modules loaded from the archive (22)
+harness PASS [host.test.tsx] no test-file suite error
+case 001 FAILED | H12 §7.1 a pane failure, then the sidebar to another pane: not held, no dialog, the Topbar status shown; on return the draft is intact
+    first: AssertionError: §7.2: the Topbar status is shown off the pane: expected null not to be null
+case 002 FAILED | H12 §7.1 a pane failure, then the AppRail and a programmatic navigation: not held, the Topbar status shown, the draft intact
+    first: AssertionError: §7.2: the Topbar status is shown on /app/tasks: expected null not to be null
+case 003 FAILED | H12 §7.1 Back and Forward with a draft are not held and land on the same history entries as an ordinary navigation
+    first: AssertionError: §7: the draft is intact after Back and Forward: expected 165 to be 295 // Object.is equality
+case 004 FAILED | H3 §7.2 a failed Topbar choice on /app/tasks shows the Topbar status; Review navigates exactly once to the pane through the shortcut event
+    first: AssertionError: H3 §7.2: the Topbar status for a settled Topbar failure: expected null not to be null
+case 005 FAILED | H3 §7.2 the Topbar status is rendered immediately after the premium badge slot in .topbar-controls and never touches storage
+    first: AssertionError: H3 §7.2: [data-testid=appearance-status]: expected null not to be null
+case 006 FAILED | H8 §7.2 a pending-only (held) Topbar write renders no status; a settled failure does; a successful Retry removes it
+    first: AssertionError: H8: the held per-key lock keeps the Topbar write pending: expected '"compact"' to be null
+case 007 FAILED | H3 §7.2 the Topbar status in Chinese has the accessible name 外观更改未保存，前往设置查看。
+    first: AssertionError: H3 §7.2: the Chinese Topbar status: expected null not to be null
+case 008 PASSED | PC §7.3 no beforeunload warning in a clean state
+case 009 PASSED | §7.3 no beforeunload warning in a source-only state
+case 010 FAILED | H12 §7.3 beforeunload warns while a failed draft exists, with zero storage attempts in the handler; the listener is removed after the success
+    first: AssertionError: §7.3: a failed draft warns and the handler makes zero storage attempts: expected { warned: false, attempts: +0 } to strictly equal { warned: true, attempts: +0 }
+case 011 FAILED | H8 §7.3 beforeunload warns while a pending (held) operation exists
+    first: AssertionError: H8: the held per-key lock keeps the theme write pending: expected '"dark"' to be null
+case 012 PASSED | sign-out fallback branch PC §7.4 fallback: without drafts sign-out makes zero confirm calls and completes exactly as at 5cd63ff
+case 013 FAILED | sign-out fallback branch H12 §7.4 fallback: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+    first: AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+case 014 FAILED | sign-out fallback branch H12 §7.4 fallback: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues
+    first: AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+case 015 PASSED | sign-out coordinator branch PC §7.4 coordinator: without drafts sign-out makes zero confirm calls and completes exactly as at 5cd63ff
+case 016 FAILED | sign-out coordinator branch H12 §7.4 coordinator: with a failed draft, one confirm; Cancel resolves false with identity intact, zero history mutations and the draft, status and warning kept
+    first: AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+case 017 FAILED | sign-out coordinator branch H12 §7.4 coordinator: with a failed draft, one confirm; OK discards with zero Appearance writes and the existing sequence continues
+    first: AssertionError: §7.4: exactly one confirm with the normative text: expected [] to deeply equal [ Array(1) ]
+case 018 FAILED | H12 §7 REL-09 a forced scope change from another document remounts the App: committed values displayed, no saved claim, zero runtime errors
+    first: AssertionError: H12: the failed accent draft exists before the forced transition: expected false to be true // Object.is equality
+case 019 PASSED | PC §10.3 the system theme resolves through the media query and follows its change listener
+case 020 FAILED | H5 §10.3 exactly one controller: a pane edit is visible in the Topbar and a Topbar edit in the pane, in the same frame
+    first: AssertionError: H5 §10.3: the Topbar edit is visible in the pane in the same frame: expected 'light' to be 'dark' // Object.is equality
+case 021 FAILED | H1 §10.3 .app[data-rail-pos] and <html> follow the displayed value of a failed rail draft and return to the committed bytes after Discard
+    first: AssertionError: H1 §10.3: the displayed draft is applied: expected { html: 'top', app: 'top' } to strictly equal { html: 'right', app: 'right' }
+case 022 FAILED | H12 §10.3 a language draft re-renders the whole application; Discard returns every string to the committed language
+    first: AssertionError: H12: 放弃 语言: expected null not to be null
+case 023 FAILED | H6 H10 §10.4 a malformed 'xai_accent_hue' written by another document leaves the idle field in its source state without a throw
+    first: AssertionError: §10.4: no route error boundary: expected 'Route Error (app)' to be null
+case 024 FAILED | H6 H10 §10.4 a malformed 'xai_rail_pos' written by another document leaves the idle field in its source state without a throw
+    first: AssertionError: §10.4: "Saved Sidebar position is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+case 025 FAILED | H6 H10 §10.4 a malformed 'xai_pref_lang' written by another document leaves the idle field in its source state without a throw
+    first: AssertionError: §10.4: "Saved Language is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+case 026 FAILED | H6 H10 §10.4 a malformed 'xai_pref_font_scale' written by another document leaves the idle field in its source state without a throw
+    first: AssertionError: §10.4: "Saved Font scale is unavailable. Reload it; this is not a new unsaved change." source state: expected false to be true // Object.is equality
+case 027 FAILED | H10 §10.5 a committed 'theme' change in another document is reflected live in <html>, the Topbar and the pane
+    first: AssertionError: H10: the document follows the other document's commit: expected 'light' to be 'dark' // Object.is equality
+case 028 FAILED | H10 §10.5 a committed 'density' change in another document is reflected live in <html>, the Topbar and the pane
+    first: AssertionError: H10: the document follows the other document's commit: expected 'comfortable' to be 'compact' // Object.is equality
+case 029 FAILED | H10 §10.5 a committed 'fontScale' change in another document is reflected live in <html>, the Topbar and the pane
+    first: AssertionError: H10: the document follows the other document's commit: expected 1 to be 1.1 // Object.is equality
+case 030 FAILED | H10 §10.5 a committed 'lang' change in another document is reflected live in <html>, the Topbar and the pane
+    first: AssertionError: H10: the document follows the other document's commit: expected 'en' to be 'zh' // Object.is equality
+case 031 FAILED | H10 §10.5 a drafted root field receiving another document's commit becomes a preserved conflict; Retry never overwrites
+    first: AssertionError: H12: the failed theme draft: expected false to be true // Object.is equality
+case 032 FAILED | H12 §10.7 during and after every Appearance operation the product dispatches zero StorageEvents and zero preference-changed events, and every other key keeps its bytes
+    first: AssertionError: §10.7: an edit broadcasts nothing: expected { storageEvents: +0, …(1) } to strictly equal { storageEvents: +0, …(1) }
