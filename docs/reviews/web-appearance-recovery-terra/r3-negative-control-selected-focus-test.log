@@ -1,0 +1,119 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance exec vitest run src/__tests__/AppearancePane.selected-focus.test.tsx
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0
+# HEAD: 6fedfd1d92908c6beaa82e7c0e5dcb2dda876a30 (working tree: styles.css replaced by the 5bbf473 file, sha256 2a417677e2160ccc57cde0079dd1bcf41c6b59e3375eb200b23958b00ade081a; new test file present)
+# started: 2026-10-05T18:09:50Z
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/packages/xai-web-settings-appearance
+
+ ❯ src/__tests__/AppearancePane.selected-focus.test.tsx (7 tests | 4 failed) 309ms
+   × F-APP-2 selected accent swatch focus ring > styles.css has one top-level rule for the focused selected swatch: the global ring further out, the selection ring as a box-shadow 7ms
+     → expected [] to have a length of 1 but got +0
+   ✓ F-APP-2 selected accent swatch focus ring > its outline is the global button:focus-visible ring, and its box-shadow repeats the selection ring inside it 1ms
+   ✓ F-APP-2 selected accent swatch focus ring > its selector outranks every rule that sets a swatch's outline or box-shadow; none of those uses !important or sets a box-shadow 47ms
+   ✓ F-APP-2 selected accent swatch focus ring > without :focus-visible the selector reaches exactly the selected swatch, whichever is selected 101ms
+   × batch 49 same-class audit: pane controls and the Topbar status > clean pane: the only outline rules at or above the global ring are the two known roots, each outranked by its pane fix 26ms
+     → expected [ …(2) ] to deeply equal []
+   × batch 49 same-class audit: pane controls and the Topbar status > after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring 96ms
+     → expected [ …(2) ] to deeply equal []
+   × batch 49 same-class audit: pane controls and the Topbar status > with an unreadable stored value (Reload only) nothing else masks the ring 31ms
+     → expected [ …(2) ] to deeply equal []
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/AppearancePane.selected-focus.test.tsx > F-APP-2 selected accent swatch focus ring > styles.css has one top-level rule for the focused selected swatch: the global ring further out, the selection ring as a box-shadow
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/__tests__/AppearancePane.selected-focus.test.tsx:216:19
+    214|   it("styles.css has one top-level rule for the focused selected swatc…
+    215|     const rules = paneRules.filter((rule) => rule.selectors.includes(F…
+    216|     expect(rules).toHaveLength(1);
+       |                   ^
+    217|     expect(rules[0]?.selectors).toEqual([FOCUS_SELECTOR]);
+    218|     expect(rules[0]?.atRules).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > clean pane: the only outline rules at or above the global ring are the two known roots, each outranked by its pane fix
+AssertionError: expected [ …(2) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "plugin-web-tokens/src/layout.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+   "xai-web-settings-appearance/src/styles.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/AppearancePane.selected-focus.test.tsx:297:24
+    295|     expect(screen.getByTestId("appearance-retry-all").getAttribute("ar…
+    296|     expect([...masking].sort()).toEqual(KNOWN_ROOTS);
+    297|     expect(unrepaired).toEqual([]);
+       |                        ^
+    298|   });
+    299| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > after a failed write (recovery Retry/Discard, Retry all enabled, Export, Discard all, Topbar status) nothing else masks the ring
+AssertionError: expected [ …(2) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "plugin-web-tokens/src/layout.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+   "xai-web-settings-appearance/src/styles.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/AppearancePane.selected-focus.test.tsx:318:24
+    316|     expect(controls).toBe(32);
+    317|     expect([...masking].sort()).toEqual(KNOWN_ROOTS);
+    318|     expect(unrepaired).toEqual([]);
+       |                        ^
+    319|   });
+    320| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/__tests__/AppearancePane.selected-focus.test.tsx > batch 49 same-class audit: pane controls and the Topbar status > with an unreadable stored value (Reload only) nothing else masks the ring
+AssertionError: expected [ …(2) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "plugin-web-tokens/src/layout.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+   "xai-web-settings-appearance/src/styles.css | .accent-sw.active on <button type=\"button\" class=\"accent-sw active\" style=\"background: oklch(0.6 0.1 ",[39m
+[31m+ ][39m
+
+ ❯ src/__tests__/AppearancePane.selected-focus.test.tsx:329:24
+    327|     expect(controls).toBe(28);
+    328|     expect([...masking].sort()).toEqual(KNOWN_ROOTS);
+    329|     expect(unrepaired).toEqual([]);
+       |                        ^
+    330|   });
+    331| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  11:09:50
+   Duration  1.67s (transform 303ms, setup 85ms, collect 496ms, tests 309ms, environment 427ms, prepare 91ms)
+
+undefined
+/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a4249842bc08beeb0/packages/xai-web-settings-appearance:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/AppearancePane.selected-focus.test.tsx
+
+# exit: 1
