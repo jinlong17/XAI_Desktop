@@ -1,0 +1,11 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance run lint
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c
+# HEAD: 5bbf473872073472188957f430057412e8798131
+# started: 2026-10-05T15:11:36Z
+
+
+> @repo/plugin-web-settings-appearance@0.0.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c/packages/xai-web-settings-appearance
+> eslint --max-warnings 0 .
+
+
+# exit: 0

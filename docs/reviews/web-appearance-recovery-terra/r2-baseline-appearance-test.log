@@ -1,0 +1,67 @@
+$ pnpm --filter @repo/plugin-web-settings-appearance run test
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c
+# HEAD: 9b76076a5c6f22e81a09f4ddbdf3115d0e637fa7
+# started: 2026-10-05T15:04:11Z
+
+
+> @repo/plugin-web-settings-appearance@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c/packages/xai-web-settings-appearance
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a44fa37ea5fea831c/packages/xai-web-settings-appearance
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+ ✓ src/__tests__/appearanceDefaults.test.ts (9 tests) 9ms
+ ✓ src/__tests__/AppearancePane.rendering.test.tsx (8 tests) 305ms
+ ✓ src/__tests__/AppearancePane.bilingual.test.tsx (4 tests) 494ms
+   ✓ AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls  330ms
+ ✓ src/__tests__/AppearancePane.live-binding.test.tsx (8 tests) 987ms
+ ✓ src/__tests__/constants.test.ts (9 tests) 3ms
+ ✓ src/__tests__/AppearancePane.save-reset.test.tsx (8 tests) 1224ms
+ ✓ src/__tests__/appearancePane.registry.test.ts (4 tests) 3ms
+ ✓ src/__tests__/AppearanceRetryAll.test.tsx (27 tests) 3965ms
+ ✓ src/__tests__/AppearanceController.test.tsx (49 tests) 4872ms
+   ✓ A3 the controller and its views > AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3)  349ms
+
+ Test Files  9 passed (9)
+      Tests  126 passed (126)
+   Start at  08:04:13
+   Duration  6.80s (transform 804ms, setup 1.27s, collect 3.82s, tests 11.86s, environment 6.58s, prepare 1.19s)
+
+
+# exit: 0
