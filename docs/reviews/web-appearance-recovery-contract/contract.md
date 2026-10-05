@@ -1,9 +1,34 @@
 # Complete caller: Settings Appearance, its seven dimensions, the Topbar quick switcher and the App root-preference writer
 
-Contract designer: Astra role (risk, design and final decision), executed by an independent Claude Opus 5.5 instance in an isolated detached worktree. Module `web`, 2026-10-04, control-plane batch 34. Control-plane item: proposed `CP-APPEARANCE-01`, which takes effect only once the controller registers it.
+**Revision log.**
+- **r1 (2026-10-04, batch 34, `e9fbdb7`).** First draft, written for B-2 option (i): autosave, with the bottom button removed.
+- **r2 (2026-10-04, batch 35): B-2 resolved by the product owner as option (ii).** Autosave stays. The bottom button stays, but it changes from the no-op "Save & apply", which always flashes "Saved", into a real "Retry all" (control plane `2f728f1`, CP-APPEARANCE-01 user-decision row). No evidence depended on r1. Changed sections:
+
+  | Section | Change | Reason |
+  | --- | --- | --- |
+  | Header | r2 docs head with an empty product diff; source rows for the protected files that A2 cites; A2 recorded as the product owner's decision; the decision added to Authority | B-2 is no longer an assumption, and the new citations need fixed hashes |
+  | §1 | Order step 2 and the parent role confirm A1 and A3–A9 only. One risk bullet for Retry all. The final regression runs §13 row 10 and writes E27 | A2 needs no controller confirmation; one gate and one evidence item were added |
+  | §3 items 4, 9, 12 | Exact facts of today's bottom button (what it emits, what App writes, the unconditional flash, its sticky inline-end placement) and of the pet's geometry | Option (ii) repurposes that button, so its before behaviour and placement must be ready for oracles |
+  | §4 heading and A2 | The heading now separates A2 from the assumptions. A2 is rewritten: autosave is kept, and "Save & apply" becomes a real Retry all, defined in A2.1–A2.9 | The product owner chose option (ii) |
+  | §5 | Interface and item 7 notes; new item 9 (Retry all coverage); two selectors; new wording | Testable requirements and frozen copy for Retry all |
+  | §6 | Reset sits in the A2.8 bottom action area; the "Retry of a reset draft … never writes" sentence is scoped to failed removals, with the inherited follow-up 2 exception named; new paragraph on Retry all over reset drafts | Failed reset items are in Retry all's scope, Reset shares the bottom area, and the scoping removes a contradiction with the inherited ordering |
+  | §7 | Lifetime and protection items 2, 3, 4 and 6 cover an open Retry all pass | Retry all meets the Topbar status, unload, sign-out and unmount |
+  | §8 | Export during an open pass | Pending members are unresolved intents |
+  | §9 | Host rows o–r; Retry all states, placement gate, sizing, screenshots and keyboard | The host, native, visual and keyboard layers of Retry all |
+  | §10 items 7, 9 | Retry all joins the isolation list; the package must contain no `SettingsFooter` and no `pane-footer` or `pane-save` class | Retry all must not broadcast, the shared footer must be gone, and its sticky classes must not return |
+  | §11 | A fourth internal module; the docs requirement; the AC-SAVE-1/2 dispositions; required Retry all tests | A pane-local vehicle; the Save tests are replaced by Retry all tests |
+  | §12 | New Sol mode `retry-all`; host and native before cases; H14 revised; H15 and H16 added; a validity note | Before-failure evidence for today's button and for Retry all |
+  | §13 | Gate 1 wording; gate 5 covers rows a–r; new gate 9 (Retry all); the final regression becomes gate 10; acceptance conditions | One gate collects every Retry all item |
+  | §14 | E2, E3, E4, E7, E12, E14 and E15 extended; new E26 (native Retry all); the receipt becomes E27; gate columns updated | One contiguous checklist that covers Retry all at every layer |
+  | §15 | Rows for R-PET, Features follow-ups 2 and 3, focus and the D3 contrast | Lessons converted for Retry all |
+  | §16 | Retry all exclusions | Bounds the decision |
+
+  §2 and the texts of A1 and A3–A9 are unchanged. A8 follows §11 and A9 follows §9, as before; §9's R-PET block gains one Retry-all-only clause that A2.8 introduces, and the rule for every other control is unchanged.
+
+Contract designer: Astra role (risk, design and final decision), executed by an independent Claude Opus 5.5 instance in an isolated detached worktree. Module `web`, 2026-10-04, control-plane batch 34. Revised as r2 in batch 35 by a different independent Claude Opus 5.5 instance (Astra role). Control-plane item: `CP-APPEARANCE-01`, registered at `a4aff57` in state `diagnosis_needed`; it takes effect as an execution item only once the controller confirms this revision.
 
 **Fixed product and source equality.**
-- Fixed product: `5cd63ff652f02a2c726187fe12cbc796218d31c0` (`5cd63ff`, tree `404bf819a42e20b3e4d372c18a981832ccd54954`). The contract was authored at docs HEAD `ead985d`; `git diff --name-only 5cd63ff ead985d -- apps packages package.json pnpm-lock.yaml` is empty.
+- Fixed product: `5cd63ff652f02a2c726187fe12cbc796218d31c0` (`5cd63ff`, tree `404bf819a42e20b3e4d372c18a981832ccd54954`). The contract was authored at docs HEAD `ead985d` and revised (r2) at docs HEAD `2f728f1`. For both heads, `git diff --name-only 5cd63ff <head> -- apps packages package.json pnpm-lock.yaml` is empty.
 - Lockfile SHA-256: `df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9`.
 - From `f359be6` to `5cd63ff` only 11 files under `packages/xai-web-settings-features-panel/` changed. The Appearance package, `xai-web-shell`, `apps/web`, `plugin-web-storage`, `plugin-web-tokens`, `plugin-web-settings-shell`, `core`, `xai-web-event-bus`, `xai-web-pet` and `xai-web-cmdk` are byte-identical between the two products.
 - The unit's source at `5cd63ff`:
@@ -20,16 +45,24 @@ Contract designer: Astra role (risk, design and final decision), executed by an 
 | `packages/xai-web-shell/src/Shell.tsx` | `7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0` | |
 | `packages/xai-web-shell/src/types.ts` | `92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de` | `ce391ea` (2026-06-09) |
 | `apps/web/src/routes/modules/departureCoordinator.tsx` (protected) | `0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075` | F1 repair `f359be6` |
+| `packages/plugin-web-settings-shell/src/SettingsFooter.tsx` (protected; cited by A2) | `afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce` | `f637a3d` (2026-05-23) |
+| `packages/plugin-web-settings-shell/src/types.ts` (protected; cited by A2) | `513f90fd05ef66f6f8fb1aaa230e9a6844407ae44cf3d7a1d8508c4eabfb4522` | `2bbc696` (2026-09-09) |
+| `packages/plugin-web-settings-shell/src/styles.css` (protected; cited by A2) | `e5369cc7ed3a20650465e001537c7714a3715834d678ea17ff3960fbd3992166` | `8df4813` (2026-06-09) |
+| `packages/xai-web-pet/src/DesktopPet.tsx` (protected; cited by A2) | `35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f` | `7a3d712` (2026-06-03) |
+| `packages/xai-web-pet/src/pet.css` (protected; cited by A2) | `6326d822b654a22bcad361e57d02413d4569eadf8058f89d90fc3dd43249dcfe` | `8df4813` (2026-06-09) |
+| `packages/plugin-web-storage/src/internal/usePrefAsync.ts` (protected; cited by A2) | `541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491` | `b9ae2d9` (2026-09-10) |
 
   Package trees: Appearance `ce183d17e8606067c3bc97d7e3b6645ee656fe9e`, `xai-web-shell` `0f0fed40fe94a9de5c79eb273d1103757a807a9c`, `apps/web` `2fbf99f3ebea93b2ac136727267639790ecf3f4a`.
 
 **Status.**
 - This contract specifies the next ordered implementation unit after the accepted Features caller (`ec55f9e`).
 - It does not authorize implementation. It accepts nothing, changes no formal count and closes no 312 item.
-- Its scoping decisions A1–A9 (§4) are **assumptions awaiting controller confirmation**. They correspond to the (a) pre-decisions B-1 … B-9 of the selection memo.
+- Its scoping decisions A1 and A3–A9 (§4) are **assumptions awaiting controller confirmation**. They correspond to the (a) pre-decisions B-1 and B-3 … B-9 of the selection memo.
+- A2 records a **product-owner decision**: B-2 (SET-02's "统一自动保存或编辑后保存语义") was resolved as option (ii) on 2026-10-04. The controller checks that this revision implements it; it does not re-decide it.
 
 **Authority.**
-- **Selection:** [selection-5cd63ff.md](../web-next-caller-selection/selection-5cd63ff.md), candidate B.
+- **Product-owner decision:** control plane `2f728f1`, CP-APPEARANCE-01 table, user-decision row (B-2, option (ii): keep autosave, keep a bottom button, make it a real "全部重试").
+- **Selection:** [selection-5cd63ff.md](../web-next-caller-selection/selection-5cd63ff.md), candidate B; §7.2 B-2 lists the three options.
 - **Scheduling:** [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md). Line 16 requires Appearance's "read-only hook bindings … explicit `setPref`/`removePref`, local shell application and reset across dimensions" to be audited across normal, reset and application flows. Line 25 requires genuinely shared producers in one contract.
 - **Inventory:** [refresh-5cd63ff.md](../web-d2-pref-binding-inventory/refresh-5cd63ff.md) and `bindings-5cd63ff.json`: the pane's three read-only rows (`AppearancePane.tsx:52, 53, 55`). Every other writer and reader in §2 lies outside the scanner's boundary.
 - **Precedents:**
@@ -39,23 +72,23 @@ Contract designer: Astra role (risk, design and final decision), executed by an 
   - The [F1 impact review](../web-sticky-recovery-f1/impact-review.md) supplies the coordinator regression oracle.
   - [`blocked-f359be6.md`](../web-sticky-recovery-acceptance/blocked-f359be6.md) §4 is the G1 lesson (§14 here).
   - [`review-fb002.md`](../web-more-recovery-fb002/review-fb002.md) is the F-B002 lesson (§12, E24).
-  - [Features acceptance](../web-features-recovery-acceptance/acceptance-5cd63ff.md) §5.1 is the R-PET ruling (§9), §5.5 the E6 lesson (§11), and §8 the follow-ups converted in §15.
+  - [Features acceptance](../web-features-recovery-acceptance/acceptance-5cd63ff.md) §5.1 is the R-PET ruling (§9, A2.8), §5.4 the D3 ruling that A2 departs from by the product owner's decision (§15), §5.5 the E6 lesson (§11), and §8 the follow-ups converted in §15. The R-PET reproduction is [review-visual-keyboard-5cd63ff.md](../web-features-recovery-native/review-visual-keyboard-5cd63ff.md) §10.
 
 ## 1. Roles, order and risk
 
 | Role | Executor | Boundary |
 | --- | --- | --- |
-| Parent / controller | Claude controller | Scheduling and the contract check, including confirming A1–A9. Also runs the production-App jsdom host baseline, native/browser verification, the Appearance F1-shape runner, the frozen F1 runners, the affected-caller native rerun and the ledgers. |
+| Parent / controller | Claude controller | Scheduling and the contract check, including confirming A1 and A3–A9 and checking A2 against the product owner's decision. Also runs the production-App jsdom host baseline, native/browser verification, the Appearance F1-shape runner, the frozen F1 runners, the affected-caller native rerun and the ledgers. |
 | Sol | New independent Opus-class instance | Freezes business oracles against an immutable `5cd63ff` archive before any implementation, then reruns them unchanged on the fixed product. |
 | Terra | Implementation instance; Opus-class recommended at this risk | The complete caller, inside the §11 files only. Starts after every before baseline (E1–E5) is frozen and the controller authorizes it. Records its own test run at the reserved path (§11, E6). |
-| Final regression | New instance, distinct from Terra and Sol | Runs §13 row 9 and writes the §14 E26 receipt. |
+| Final regression | New instance, distinct from Terra and Sol | Runs §13 row 10 and writes the §14 E27 receipt. |
 | Final acceptance | New instance, distinct from this author, Terra, Sol and the final-regression verifier | Reconciles every §13 row and every §14 item: source → correct before failure → fixed independent result → actual surface. |
 
 **Exclusions by role.** Luna gets no task: persistence, the async queue, the host, the shell, cross-module isolation and acceptance are its forbidden zones. Spark is never assigned.
 
 **Order.**
 1. Contract.
-2. Controller check, confirmation of A1–A9 (or escalation of A2 to the user, selection memo §7.2 B-2), and registration.
+2. Controller check of this revision, confirmation of A1 and A3–A9 (A2 is the product owner's decision, selection memo §7.2 B-2 option (ii)), and registration.
 3. Frozen before baselines (E1–E5): Sol oracles, the parent production-App host baseline, native before, and the Appearance F1-shape before log.
 4. Terra implementation.
 5. Sol fixed reruns.
@@ -74,6 +107,7 @@ Do not run another caller concurrently.
   - **global re-rendering:** a language draft re-renders the whole application, and theme, density, font scale, accent, background and rail position restyle every page;
   - **cross-document** live updates, which the root keys have never had;
   - asynchronous same-field queue attribution across two surfaces, a dual-field background choice and slider streams;
+  - a bulk Retry all over up to seven fields, whose attempts, attribution and status must stay per field (A2);
   - a six-field reset batch;
   - host and shell edits that every accepted caller renders inside;
   - memory-only export under total storage denial;
@@ -144,7 +178,13 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
    - App's subscriber writes the value raw with `writeLocalPref`, swallowing every failure, and then sets its state (`App.tsx:98–105, 146–157`).
    - The Topbar calls App's setter first and then writes raw, swallowing failures (`Topbar.tsx:26–39, 102–104`). It emits nothing, so the pane's mirrors do not follow a Topbar change.
 3. **No result channel.** The event payload carries no result (`events.ts:193–196`), so no surface can learn whether a root write succeeded.
-4. **Save & apply.** `handleSave` returns the seven current values, taking theme, density and font scale from the pane's mirrors (`AppearancePane.tsx:156–166`). The footer emits them, and App rewrites the four root keys. The footer then shows "Saved"/"已保存" for 1.8 s whatever happened (`SettingsFooter.tsx:41–83`, `:75`).
+4. **The bottom action button: "Save & apply".**
+   - **Markup.** `SettingsFooter` renders `.pane-footer` with "Reset to defaults"/"恢复默认" (`btn ghost`, `data-testid="settings-footer-reset"`) followed by "Save & apply"/"保存生效" (`btn primary pane-save`, `data-testid="settings-footer-save"`) (`SettingsFooter.tsx:108–126`). Both labels are hard-coded bilingual strings (`:98, 101–102`).
+   - **Activation.** `handleSave` (`:41–83`) calls the pane's `onSave`, which returns the seven current values, taking theme, density and font scale from the pane's mirrors (`AppearancePane.tsx:156–166`). It emits one `web:settings:preference-changed` per value (`SettingsFooter.tsx:55–74`) and then sets `saved` unconditionally (`:75`). For 1.8 s the button reads "Saved"/"已保存" and carries `.is-saved` (`:21, 79–82, 101, 120, 124`). The shell's own type documents that the flash shows even for an empty array (`plugin-web-settings-shell/src/types.ts:104–107`).
+   - **Effect.** App's subscriber rewrites the four root keys raw from the emitted values and swallows failures (`App.tsx:146–157`). Nothing writes the three registered keys in response (`:153`).
+   - **Consequence.** The button re-attempts nothing for a failed accent, background or sidebar write. For the root keys it rewrites all four, whether or not they failed, without the per-key lock: theme, density and font scale from the pane's mirrors, language from its `lang` prop (`AppearancePane.tsx:158`). No per-field result exists (H15).
+   - **No other retry path** exists anywhere in the unit.
+   - **Props.** `SettingsFooterProps` is `{ onSave, onReset?, lang }`, where `onSave` is synchronous and returns the change array (`plugin-web-settings-shell/src/types.ts:103–116`). There is no prop for a label, visibility, enabled state, asynchronous result or focus.
 5. **Reset path.**
    - The footer's confirmation reads "Reset every preference to defaults? This clears saved theme, layout, and module toggles." (`SettingsFooter.tsx:85–96`).
    - Then `handleResetAppearance` (`AppearancePane.tsx:170–206`) calls `removePref` for the three registered keys inside a `try/catch` (`:172–183`). `removePref` reports failure by returning `false` and never throws (`storage.ts:242–265`), so failures are invisible.
@@ -159,7 +199,7 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
 9. **No protection or recovery.**
    - `appearancePane.render` forwards only `lang` (`internal/appearancePane.tsx:19`), although the host passes `registerDepartureGuard` (`composedSettingsRegistration.tsx:105`).
    - The Topbar is on every route. `requestDeparture` resolves `true` when no coordinator is mounted (`settingsDeparture.ts:14–16`), and only Settings, Pomodoro and Dashboard mount one.
-   - There is no `beforeunload` listener, export, Retry, Discard, Reload or truthful status.
+   - There is no `beforeunload` listener, export, Retry, Retry all, Discard, Reload or truthful status.
 10. **App lifetime.** `AccountDataGate` keys the whole App subtree, including Shell, Topbar, DesktopPet and CmdK, by `kind:accountId:generation:epoch` (`AccountDataGate.tsx:99`), so App state remounts on every scope change. A second document can force that through the identity channel (`AccountStorageGate.tsx:8, 39`).
 11. **Sign-out.**
     - `handleSignOut` (`App.tsx:189–217`) calls `requestSettingsDeparture("sign-out")` in both the auth-coordinator branch (`:196`) and the fallback branch (`:205`), re-checks scope and owner afterwards (`:197–198, 206`), then invalidates identity, signs out and redirects.
@@ -167,8 +207,13 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
     - The other `signOut` call, in the account-deletion recovery bridge (`AppProviders.tsx:17–24`), is a lifecycle path, not a voluntary sign-out.
 12. **Presentation.**
     - The pane ends with the shared footer, Reset on the left and "Save & apply" on the right (`AppearancePane.tsx:419–423`).
+    - **Footer placement.** Above 640 px the footer is `position: sticky; bottom: 0` with `justify-content: flex-end` (`plugin-web-settings-shell/src/styles.css:131–142`). The same rule exists globally for any `.pane-footer`, together with the `.pane-save` rules (`plugin-web-tokens/src/layout.css:1283–1304`). So "Save & apply" is the inline-end control of a bar pinned to the bottom of the scroll container. At 640 px and below the footer is static, `column-reverse` and stretched to full width (`styles.css:338, 423–433`).
     - At 760 px and below the Topbar hides its summary and shows a 44×44 icon trigger (`layout.css:1832–1839`). `.search-box` is `flex: 1; min-width: 0` (`:294–296`).
-    - The DesktopPet's default position is the viewport's bottom-right corner with a 24 px inset (`DesktopPet.tsx:43`; R-PET).
+    - **DesktopPet geometry** (R-PET):
+      - The default position is `(innerWidth − 108, innerHeight − 108)`: `PET_BODY_PX` 84 plus a 24 px inset (`DesktopPet.tsx:43–58`, `internal/timing.ts:38`). The clamp only bounds it at `innerWidth − 92` (`internal/drag.ts:31–38`), so the default left edge is `innerWidth − 108` at every width: 267, 306, 660, 916 and 1332 px at 375, 414, 768, 1024 and 1440.
+      - `.pet-wrap` is fixed and hit-testable. It is 84×84 above 1024 px, 72×72 from 761 to 1024 px and 56×56 at 760 px and below (`pet.css:128–140, 289–310`). Above 1024 px its swap button extends 10 px above and to the right of it (`:269–287`).
+      - The tip bubble is `pointer-events: none` unless the pet is hovered or contains focus (`:194–220`). It is hidden at 760 px and below (`:312–314`) and clipped by `overflow: hidden` from 761 to 1024 px (`:289–294`).
+      - At 768×1024 the measured box is 660–732 × 916–988 (Features acceptance §5.1).
     - The Appearance stylesheet is global (side-effect import, `index.ts:13`) and has no sibling or child combinators.
 13. **Existing tests that encode current behavior** (dispositions in §11):
     - Appearance package: AC-SAVE-1/2, AC-RESET-1–6 and AC-I18N-4 (footer); AC-LIVE-1–8 (event emissions, synchronous writes); AC-RENDER-3/8 (mirrors seeded from the DOM).
@@ -179,18 +224,164 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
     - **Locking.** Device keys skip the account lock (`prefMutation.ts:244`). Every write takes the per-key lock `prefMutationLockName(<key>)`. Without `navigator.locks` every write is refused (`accountCoordination.ts:12–16`).
     - **Invalid sources** are refused before both the set and the reset branch (`prefMutation.ts:198`).
 
-## 4. Scoping decisions (assumptions awaiting controller confirmation)
+## 4. Scoping decisions (A1 and A3–A9 await controller confirmation; A2 is the product owner's decision)
 
 **A1 — Host- and shell-inclusive scope (selection B-1).**
 - The unit includes `App.tsx`, `Topbar.tsx`, `Shell.tsx`, the shell `types.ts` and `Topbar.test.tsx`, exactly as §11 lists them.
 - The departure coordinator, router, `settingsDeparture`, composition, registrations, providers, storage, tokens, settings shell, core and every other package stay protected.
 - Affected-caller reruns are E16, E24 and E25, and the clean-state chrome-invariance gate (§10 item 6) bounds visual re-verification of other callers.
 
-**A2 — Autosave; no Save button (selection B-2).**
-- Every change keeps applying and persisting immediately, as today.
-- Appearance stops rendering `SettingsFooter`, so its "Save & apply" disappears (the Features D3 precedent).
-- `SettingsFooter`, `confirmAction` and `resetAllPrefs` stay unchanged. After this caller no production pane mounts the footer.
-- If the controller reads SET-02's "统一自动保存或编辑后保存语义" as still open, it escalates this one choice to the user before registration.
+**A2 — Autosave, with the bottom button turned into a real "Retry all" (selection B-2; product-owner decision, option (ii)).**
+
+*Decision.* The product owner chose option (ii) on 2026-10-04 (control plane `2f728f1`), over (i) autosave with the button removed and (iii) edit-then-save. This is not an assumption awaiting controller confirmation.
+- **Autosave stays.** Every change applies and persists immediately on both surfaces, as today. Nothing is buffered for a button, and no edit-then-save state exists.
+- **The old button goes.** Appearance stops rendering `SettingsFooter`. "Save & apply"/"保存生效", its re-emission of seven values (§3 item 4) and its unconditional "Saved"/"已保存" flash (`SettingsFooter.tsx:75`) disappear.
+- **A bottom button stays.** Its place is taken by **Retry all**, inside a pane-local bottom action area (A2.8).
+- **Shared code untouched.** `SettingsFooter`, `confirmAction` and `resetAllPrefs` stay byte-unchanged. After this caller no production pane mounts the footer.
+- Unlike Features D3, which removed its Save button, Appearance repurposes its button, as the product owner decided.
+
+*Terms used below.*
+- A field's draft is **settled unsuccessful** when all three hold:
+  - the field has an actual current draft, set or reset;
+  - no operation for the field is in flight or runnable;
+  - the field's queue is held by a failed request: quota, a throwing `getItem` or `setItem`, missing or rejected Web Lock, conflict, readback uncertainty, or an invalid or unavailable source.
+
+  This includes a latest intent queued behind a failed predecessor, because a held failure stops the queue (`usePrefAsync.ts:170, 195–202`). It is exactly the condition that renders the Topbar status (§7 item 2).
+- **E** is the set of fields whose draft is settled unsuccessful.
+  - **Pending** fields are never in E: in flight, queued and runnable, or held behind the per-key lock.
+  - **Source-only** fields are never in E: they have no draft and show Reload only.
+- A **pass** is the set of fields that one Retry all activation retries. Each member is recorded as (field, the exact draft object current at activation). A pass is **open** while at least one member is still attached and pending.
+
+**A2.1 Labels.**
+- Visible label and accessible name: EN `Retry all`, ZH `全部重试` (meaning "retry all"). It has no count, no icon-only form and no label change during a pass.
+- `aria-describedby` points to the pane status line (A2.4). That line is never empty while the button is rendered, because a pass is open or E is non-empty.
+- "Save & apply", "保存生效", "Saved" and "已保存" never appear in the pane.
+
+**A2.2 Visibility and enabled state.**
+- **Rendered** if and only if E is non-empty or a pass is open. Otherwise there is no DOM node, so the clean, pending-only and source-only states have no Retry all.
+- **Enabled** whenever E is non-empty.
+- **Retained** when E is empty but a pass is open: it stays rendered with `aria-disabled="true"`. It stays focusable, and activation is inert: zero operations and no state change. It never uses the `disabled` attribute, which would drop focus mid-pass.
+- **Never a success state.** It never changes its label, never flashes and never claims success. Results are reported only by the status line under A2.4.
+- **Rationale.**
+  1. A visible Retry all always has real work, so it cannot become the no-op the decision removes.
+  2. Recovery actions in this product render only while relevant: Export and Discard all (§8) and the Topbar status (§7 item 2).
+  3. A permanently disabled "Retry all" in the common clean state would suggest a failure that did not happen.
+  4. Retaining it as `aria-disabled` during a pass keeps focus and announcements stable.
+
+  The pane still always ends with its bottom action area, with Reset to defaults always present and Retry all appearing in it exactly when there is something to retry. The alternative, always rendered and `aria-disabled` when E is empty, was rejected for reason 3 (open question for the controller).
+
+**A2.3 Retry scope and attempts.**
+- **Activation.** The controller synchronously computes E from live operation state, never from the last render.
+  - If E is empty, activation is inert: no pass, zero operations.
+  - Otherwise it creates a pass with its own identity and invokes each member's per-field Retry action (§5 item 8, §6) exactly once, before any asynchronous settlement. The order is the pane's display order: Language, Theme, Density, Accent color, Background palette, Sidebar position, Font scale.
+- **Covered:** every settled unsuccessful set or reset draft across the seven fields, including:
+  - set drafts from the pane and from the Topbar (language, theme, density);
+  - each field of a background choice, independently;
+  - the latest value of a slider stream;
+  - **the failed items of a Reset batch**;
+  - a valid edit over malformed bytes (§5 item 2);
+  - a conflict, an uncertain write, and a latest intent queued behind a failed predecessor.
+- **Excluded:**
+  - pending fields, including members of an open pass, pending Reset batch members and fields being retried individually;
+  - source-only fields;
+  - fields without a draft.
+- **Exactly one attempt.**
+  - Each member's held failed request is re-attempted exactly once, with its own kind and token (`usePrefAsync.ts:262–276`).
+  - With a write-level fault armed, that is exactly one `setItem` (for a set request) or `removeItem` (for a reset request) on the member's key, and zero write or remove attempts on any other key.
+  - A reset draft whose own removal failed is re-attempted as one removal and never writes. No reset draft ever reaches the hook's no-failed-request set path (`:278`; §6).
+  - A latest intent queued behind a failed predecessor then proceeds as its own first attempt (§5 item 5). In the inherited ordering of Features follow-up 2, the held request is the superseded predecessor set, so it runs once before the queued removal (§6).
+  - Nothing is attempted twice, and a member whose attempt fails is not retried again automatically.
+  - Uncertainty keeps its grant and reconciles with exactly one total write or remove (§5 item 6, §6).
+  - A conflict is never overwritten. Retry all gains no authority that a per-field Retry lacks, and it never writes a field without a failed request, so it cannot revert another surface's choice (the H5 class).
+- **No duplicates while pending.**
+  - A second activation while members are pending re-attempts none of them, whether it comes in the same turn, by double click, by Enter then Space, by key auto-repeat or later. It retries only fields that have newly become eligible.
+  - A per-field Retry on a pending member is inert (`usePrefAsync.ts:265`), and Retry all skips a field whose per-field Retry is pending.
+- **Attribution.** A member's completion counts only if its draft object is still the field's current draft (§5 item 4). Each member ends in one of four outcomes:
+  - **succeeded:** verified bytes, verified absence or a verified no-op;
+  - **failed again:** settled unsuccessful;
+  - **superseded:** a newer intent replaced it (a pane edit, a Topbar edit, a background choice for either of its two fields, or Reset);
+  - **detached:** Discard, Discard all, sign-out OK, or controller disposal.
+
+  Only succeeded and failed outcomes feed A2.4.
+- **Latest choice.** A newer intent supersedes the member's draft. The old completion never makes the newer intent look saved, and the hook's conflict settlement of superseded queued sets (`usePrefAsync.ts:284`) never surfaces as the newer intent's failure.
+- **Late completions.** A completion that arrives after its member was superseded or detached, or after unmount, changes no draft, recovery block, export entry, Topbar status, unload warning, status line or focus. If the engine write had already started and commits, the field shows the committed bytes like any other commit, with no draft and no success claim.
+- **No storage path of its own.** Retry all only calls per-field Retry: no raw storage, `StorageEvent`, `web:settings:preference-changed`, lock layer or rebase.
+
+**A2.4 Feedback.**
+- **Per field.** Each member's existing recovery block reports its own state:
+  - "<Label> is saving." or "<Label> is being reset to its default." while pending;
+  - removed on success;
+  - kept, with "<Label> was not saved." or "<Label> was not reset to its default.", after a failed attempt.
+- **Pane status line.** It has `data-testid="appearance-status-line"` and `role="status"` (polite), and it is always rendered, empty when nothing applies. The first matching rule wins:
+  1. A pass is open: `Retrying unsaved appearance changes…`/`正在重试未保存的外观更改…`.
+  2. The most recent pane-level action was a failed Export: `Export failed. Please retry.`/`导出失败，请重试。` (unchanged). The next pane-level action clears it: an edit, a per-field Retry, Discard or Reload, Retry all, Discard all, Reset or Export.
+  3. E is non-empty: `1 appearance change is not saved.` or `<n> appearance changes are not saved.`, ZH `<n> 项外观更改未保存。`, where n = |E|.
+  4. Otherwise the existing success rules apply unchanged (§5 item 7, §6). For a pass that has just settled, ignore superseded and detached members. If at least one member succeeded and none failed again, the line is `Defaults restored.` when every succeeded member was a reset intent and the §6 condition holds, and `Appearance settings saved.` otherwise. In both cases the §5 item 7 conditions must also hold. The line stays until the next pane-level action or operation.
+  5. Otherwise empty.
+- **No unconditional success.** No success line appears while any draft, pending operation or source issue exists, or while a pass is open. Superseded or detached members never count as successes. A pass that settles while the pane is unmounted makes no success claim on remount (§5 item 7).
+
+**A2.5 Focus.**
+- Activation does not move focus.
+- **The pass settles with E empty** (full success, or every remaining member superseded or detached): the button unmounts. If focus was on it, focus moves to Reset to defaults (`data-testid="appearance-reset-defaults"`), which is always rendered inside `.appearance-pane`, never to `<body>`. The status line announces the result.
+- **Partial or no success:** E is non-empty after settlement, so the button stays and focus stays on it.
+- **Open pass with E empty:** the button stays rendered as `aria-disabled`, and focus stays on it.
+- Focus is moved only away from an element that unmounts; focus the user placed elsewhere is never taken. A recovery block that unmounts while focused follows §9, and Discard all follows §9 (focus to Reset).
+
+**A2.6 Interactions.**
+- **Per-field Retry.** Retry all invokes the same action. Whichever starts first owns the attempt; the other is inert for that field.
+- **Per-field Discard** (§5 item 8). On a pending member it detaches that member, and the pass continues for the others. On an eligible field it removes the field from E.
+- **Discard all.** It detaches every member, so the pass closes, the status line falls to rules 3–5 and focus goes to Reset.
+- **Reset to defaults.**
+  - A declined confirmation makes zero attempts and leaves the pass untouched.
+  - An accepted Reset during a pass supersedes the members on its six fields; a language member continues.
+  - Over a batch, Retry all retries failed items once each and skips pending ones. It never turns a reset into a set and never duplicates a removal (§6).
+- **Topbar status.** It depends only on E (§7 item 2). It is hidden while all unsuccessful drafts are pending members and returns if a member fails again. It never retries and never offers Retry all. A Topbar choice during a pass is a newer intent.
+- **`beforeunload`.** Members are drafts, so the listener stays registered throughout a pass. It is removed when the drafts clear after full success and kept after partial success. The handler still makes zero storage attempts.
+- **Sign-out step.** Pending members are drafts, so the step prompts once.
+  - **Cancel** resolves `false`, and the pass continues.
+  - **OK** discards every draft and detaches the members, with zero set or remove attempts by the step; late completions are ignored and the sequence continues as in §7 item 4.
+
+  Retry all never blocks or delays sign-out and adds no confirmation.
+- **Export** is unchanged (§8). **Forced transitions** and App remounts dispose the controller and detach members (REL-09).
+
+**A2.7 Accessibility.**
+- A native `<button type="button">`, reached by Tab in DOM order. Enter and Space each activate it exactly once: one pass, one attempt per eligible field, and no page scroll on Space.
+- While it is `aria-disabled`, Enter and Space make zero operations and keep focus.
+- At least 44×44 CSS px at every width in EN and ZH, sized to its content (never stretched), with a visible focus indicator.
+- EN/ZH copy as in §5, in the language currently displayed. The accessible name equals the visible label, and the description is the status line.
+
+**A2.8 Placement (a gate).**
+- **The area.** The bottom action area is a pane-local block at the end of `.appearance-pane`, where `SettingsFooter` was.
+  - It is in normal flow: not sticky and not fixed.
+  - It is start-aligned (`justify-content: flex-start`) and wraps.
+  - It must not use the `.pane-footer` or `.pane-save` classes, which carry sticky, inline-end styling globally (§3 item 12).
+- **Order:**
+  1. the status line (A2.4);
+  2. the recovery action group: **Retry all first, at the inline start**, then Export, then Discard all;
+  3. Reset to defaults, at the inline start of its own line.
+- **Why** (R-PET).
+  - The pet's default box sits in the bottom-right corner, with its left edge at `innerWidth − 108` at every width (§3 item 12).
+  - Today's primary button sits at the inline end of a footer pinned to the bottom of the scroll container. At 768×1024 that places it inside the pet's box at every scroll position (H14 b).
+  - At the inline start the bound is simple. A pane of width P begins at most at `innerWidth − P`, so a button of at most 140 px at its inline start ends at most at `innerWidth − P + 140`.
+  - With the shared `.settings-detail` content widths measured in the Features E14 receipt ([review-visual-keyboard-5cd63ff.md](../web-features-recovery-native/review-visual-keyboard-5cd63ff.md) §5, §10; P = 289, 328, 604, 608 and 674 px), that bound is 226, 226, 304, 556 and 906 px. The pet's left edge is 267, 306, 660, 916 and 1332 px at 375, 414, 768, 1024 and 1440.
+  - No viewport height and no scroll position can therefore bring the pet over Retry all.
+- **Gate (blocking).** It applies to Retry all only and is stricter than A9's uncovered-center rule; A9 governs every other control unchanged. It runs at 375, 414, 768 (including 768×1024), 1024 and 1440, in EN and ZH, and in every state in which Retry all renders. It requires all of:
+  - **(a) Geometric separation.** The button's border-box right edge is at least 8 px left of the default-position pet's left edge, measured live as the union of `.pet-wrap` and `.pet-swap-btn`.
+  - **(b) Hit-test with the pet on** at its default position, both after scrolling the button into view (§9 protocol) and with `.module-settings` scrolled to the end of its range. The center and four inset points must land on the button, and its box must not intersect the pet box.
+  - **(c) Size and containment.** At least 44×44, contained in `.settings-detail` and the viewport, and no horizontal scroll (§9).
+
+  During the probes the pet is neither hovered nor focused, because its bubble becomes hit-testable only then (§3 item 12). The pet itself is never moved, hidden, restyled or repositioned (A9).
+
+**A2.9 Implementation vehicle.**
+- **Pane-local.** A new Appearance-internal component renders the bottom action area (§11).
+- **Logic in the controller.** Eligibility from live state, pass records, attribution and status derivation belong to the App-scoped controller (A3). So a pass survives pane unmount and route changes, and the Topbar status reads the same E.
+- **No shared change.** `SettingsFooter`, `confirmAction` and `resetAllPrefs` stay byte-unchanged. Retry all cannot be expressed through the shared footer:
+  - `onSave` is synchronous and returns an array;
+  - the flash is unconditional by design (`SettingsFooter.tsx:41–83`; `plugin-web-settings-shell/src/types.ts:104–107`);
+  - there is no label, visibility, enabled-state, result or focus channel (§3 item 4).
+
+  Changing it would alter a protected shared component that no other production pane mounts.
+- **Consequences.** No file outside A1's existing list is needed. A1 is unchanged, no D2 shared-layer change is involved, and no affected-caller rerun is added; the settings-shell suite stays in E24 as an unchanged control.
 
 **A3 — One App-scoped Appearance controller (selection B-3).**
 - The Appearance package exports a controller that App creates exactly once (inside `AccountStorageGate`) and provides to its descendants.
@@ -252,6 +443,7 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
   - any change to legacy `usePref`/`setPref` behavior for other callers;
   - any registry, ownership, codec or lifecycle change.
 - Call `reset` only for Reset to defaults (§6). A failed set or reset is retried through `retry`, which keeps the failed request's kind and token (`usePrefAsync.ts:262–279`).
+- Retry all (A2) adds no storage path. It only invokes the per-field Retry action of item 8 once per eligible field.
 
 1. **Zero-write mounts.**
    - Loading the production App on any route, mounting the pane, opening and closing the Topbar popover, and reloading make zero set or remove attempts on all seven keys and on every other key.
@@ -311,18 +503,48 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
      - a genuine latest success that completed while the pane is mounted;
      - no current drafts, pending operations or source issues.
    - A source-only Reload repair clears its alert but does not by itself claim a save.
+   - The pane status line follows the precedence of A2.4: an open Retry all pass, then an export failure, then the not-saved count, then these success rules.
 8. **Recovery actions.** Each field has its own Retry, Discard and, for source-only issues, Reload, each localized and labelled with the field name.
    - Reload refuses, at invocation time, to erase the same field's actual draft.
    - Discard detaches the field's work before the safe `meta.reload()`. It makes zero set/remove attempts and rereads only that field. The display and the document return to the committed value; for language, the whole application returns to the committed language.
    - "Discard all changes" visits only actual current drafts.
    - A late completion after discard, reload or unmount never revives discarded state or clears newer work.
    - Source repair never acknowledges failed actual work.
+9. **Retry all** (A2.1–A2.7). A2 is the definition; this item lists what must be covered.
+   - **Render and enabled state** in each of these states:
+     - clean, pending only and source only: absent;
+     - one failed field and all seven failed fields: enabled;
+     - an open pass with E empty: `aria-disabled`, inert;
+     - an open pass plus a newly failed field: enabled, retrying only that field.
+   - **Scope:**
+     - set drafts from the pane and from the Topbar;
+     - a background choice with both writes failing, and with either one failing;
+     - a slider stream's latest value;
+     - failed Reset items;
+     - a valid edit over malformed bytes (refused again and kept);
+     - a conflict (kept, never overwritten);
+     - an uncertain write (one total write);
+     - a failed predecessor with a queued latest (the predecessor once, then the latest's own attempt).
+   - **Exclusions:** pending fields, pending Reset batch members, source-only fields and fields without drafts get zero attempts.
+   - **Attempts and duplicates.** Attempt-level counters show exactly one write or remove per member and none elsewhere. A same-turn double activation, an activation while members are pending, a per-field Retry during a pass and a Retry all during a per-field Retry add zero attempts for the fields already pending.
+   - **Attribution and latest choice.** A pane edit, a Topbar edit, a background choice (for either of its two fields), or Reset during a pass supersedes the member. The old completion never acknowledges the newer intent.
+   - **Late completions** after Discard, Discard all, sign-out OK, unmount and App remount are ignored.
+   - **Feedback.** Every A2.4 line appears in EN and ZH with the right n. There is no success line while a member is pending or failed, and the precedence after a settled pass holds.
+   - **Focus** follows A2.5.
+   - **No old button.** No control is named "Save & apply"/"保存生效", and "Saved"/"已保存" never appears.
+   - **Orderings to cover:**
+     - one member succeeds while another fails;
+     - a member fails again, then its per-field Retry succeeds;
+     - two passes, the second retrying only fields that failed after the first began;
+     - Retry all during a Reset batch with one failed item and others pending;
+     - a member held behind the real lock, superseded by a Topbar edit, then released;
+     - Discard all during an open pass, followed by the late completion.
 
 **Stable selectors** (fixed now so that oracles can be frozen):
 - the existing control selectors and accessible names of §2;
 - each recovery block: `[data-appearance-recovery="<fieldId>"]`;
-- Reset `data-testid="appearance-reset-defaults"`, Export `data-testid="appearance-export-draft"`, Discard all `data-testid="appearance-discard-all"`;
-- the pane status line: `role="status"` inside `.appearance-pane`;
+- Reset `data-testid="appearance-reset-defaults"`, Export `data-testid="appearance-export-draft"`, Discard all `data-testid="appearance-discard-all"`, Retry all `data-testid="appearance-retry-all"`;
+- the pane status line: `data-testid="appearance-status-line"` with `role="status"`, inside the bottom action area of `.appearance-pane`, always rendered;
 - the Topbar status button: `data-testid="appearance-status"`.
 
 **Normative wording.** It is fixed here so that oracles can be frozen beforehand.
@@ -331,9 +553,9 @@ These are facts only. Suspected defects appear solely as hypotheses in §12.
 | --- | --- |
 | Field labels (existing `settings.*`) | `Language`/`语言`, `Theme`/`主题`, `Density`/`密度`, `Accent color`/`主题色`, `Background palette`/`背景调子`, `Sidebar position`/`侧栏位置`, `Font scale`/`字体大小` |
 | Per-field actions (accessible names) | `Retry <Label>`/`重试 <Label>`, `Discard <Label>`/`放弃 <Label>`, `Reload <Label>`/`重新读取 <Label>` |
-| Pane actions | `Reset to defaults`/`恢复默认` (existing label), `Export Appearance draft`/`导出外观草稿`, `Discard all changes`/`放弃全部更改` |
+| Pane actions | `Reset to defaults`/`恢复默认` (existing label), `Export Appearance draft`/`导出外观草稿`, `Discard all changes`/`放弃全部更改`, `Retry all`/`全部重试` (visible label and accessible name) |
 | Field messages | `<Label> is saving.`/`<Label>正在保存。`; `<Label> is being reset to its default.`/`<Label>正在恢复默认。`; `<Label> was not saved.`/`<Label>未保存。`; `<Label> was not reset to its default.`/`<Label>未恢复默认。`; `Saved <Label> is unavailable. Reload it; this is not a new unsaved change.`/`已保存的<Label>不可用。请重新读取；这不是新的未保存更改。` |
-| Status lines | `Appearance settings saved.`/`外观设置已保存。`; `Defaults restored.`/`已恢复默认设置。`; `Export failed. Please retry.`/`导出失败，请重试。` |
+| Status lines | `Appearance settings saved.`/`外观设置已保存。`; `Defaults restored.`/`已恢复默认设置。`; `Export failed. Please retry.`/`导出失败，请重试。`; `Retrying unsaved appearance changes…`/`正在重试未保存的外观更改…` (the ellipsis is U+2026); `1 appearance change is not saved.`/`1 项外观更改未保存。`; `<n> appearance changes are not saved.`/`<n> 项外观更改未保存。` (n ≥ 2 in EN; ZH uses one form for every n ≥ 1) |
 | Reset confirmation (`window.confirm`) | `Reset theme, density, font scale, accent color, background palette and sidebar position to their defaults? Language is kept.` / `将主题、密度、字体大小、主题色、背景调子和侧栏位置恢复为默认值？语言保持不变。` |
 | Topbar status | Accessible name `Appearance changes not saved. Review them in Settings.` / `外观更改未保存，前往设置查看。`; visible text `Not saved`/`未保存` where the Topbar summary is visible (above 760 px), icon only otherwise |
 | Sign-out confirmation (`window.confirm`) | `Some appearance changes are not saved. Sign out and discard them?` / `部分外观更改尚未保存。仍要退出并放弃这些更改吗？` |
@@ -347,9 +569,10 @@ All wording appears in the language currently displayed.
 - It is not writing default values, a global reset, or Discard.
 - It never reads, writes or removes `xai_pref_lang` or any other key: Features toggles, pet, rail order, other panes or account data.
 
-**Control.** A pane-local button replaces the footer:
+**Control.** A pane-local button replaces the footer's Reset:
 - visible label `Reset to defaults`/`恢复默认`;
 - `data-testid="appearance-reset-defaults"`;
+- placed in the A2.8 bottom action area, at the inline start of its own line after the recovery action group;
 - keyboard operable, at least 44×44 at every width, and subject to the R-PET rule for new controls (§9).
 
 **Confirmation.**
@@ -366,7 +589,7 @@ All wording appears in the language currently displayed.
 - Track set and reset as distinct draft intents, even when their displayed values are equal.
 - Reset success requires verified absence.
 - A failed remove keeps a **reset draft**. It displays and applies the default with the "was not reset" message, and keeps Retry, Discard, export, Topbar status and the unload warning.
-- Retry of a reset draft re-attempts removal only and never writes. When the hook holds no failed request, its `retry` performs a *set* of the displayed value (`usePrefAsync.ts:278`); a reset draft's Retry must never reach that path.
+- Retry of a reset draft whose removal failed re-attempts removal only and never writes. When the hook holds no failed request, its `retry` performs a *set* of the displayed value (`usePrefAsync.ts:278`); a reset draft's Retry must never reach that path. (The one inherited exception, where the held request is a superseded set, is the Features follow-up 2 ordering under "Retry all over reset drafts" below; this scoping matches Features acceptance §3.)
 - An already-absent field completes through the engine's verified no-op (`prefMutation.ts:203–205`). No default bytes are seeded.
 - An invalid or unavailable source follows the shared refusal (`:198`). The reset intent is kept until legitimate recovery or Discard. Reset is never authority to purge malformed or unreadable bytes.
 
@@ -395,6 +618,13 @@ The latest set or reset's own completion governs the result. An old set or reset
 
 **Status.** "Defaults restored." appears only when all six matching reset operations have completed (verified absence or verified no-op) and no newer contrary edit has superseded any of them.
 
+**Retry all over reset drafts** (A2.3, A2.6).
+- Every failed item of a batch is eligible. For an item whose removal failed, Retry all re-attempts that removal exactly once and never writes.
+- Items still pending are excluded, so Retry all never enqueues a duplicate removal.
+- A Reset accepted while a pass is open supersedes the members on its six fields, and a language member continues.
+- When a pass consisting only of reset members completes the batch, the status line reads "Defaults restored." under the condition above (A2.4 rule 4).
+- The ordering of Features follow-up 2 (an in-flight predecessor set, then Reset, then the predecessor's failure) is inherited. A per-field Retry or a Retry all over such a field first re-runs the superseded set and then the queued removal, so the final bytes are the reset's verified absence. This transient write is recorded, not changed, and is covered in `retry-all` and `queues`.
+
 **No global wiring.** `resetAllPrefs`, `SettingsFooter`, `confirmAction` and `RESET_DEFAULTS` stay untouched.
 
 ## 7. Device continuity, App lifetime and protection
@@ -405,7 +635,7 @@ The latest set or reset's own completion governs the result. An old set or reset
 - An unrelated held account lifecycle lock must not delay a device edit or reset.
 
 **Lifetime.**
-- **Inside one App mount** drafts and operations survive route changes, Settings pane switches, opening and closing the popover, pane unmount and remount, and a held per-key lock.
+- **Inside one App mount** drafts and operations survive route changes, Settings pane switches, opening and closing the popover, pane unmount and remount, and a held per-key lock. So does an open Retry all pass: it lives in the controller (A2.9), and a remounted pane shows its current state.
 - **Sol layer.** With the controller mounted under a real `accountScope` without the gate, drafts, reset drafts and held operations survive A→B, A→locked, locked→A and same-account epoch changes, and an admitted reset batch continues.
 - **Production App.** A scope change remounts the App subtree (§3 item 10), and in-memory drafts are lost. After the remount the controller displays the committed bytes, with no Saved claim and no runtime error. This is the retained REL-09 limitation, documented by host row k.
 
@@ -416,11 +646,13 @@ The latest set or reset's own completion governs the result. An old set or reset
    - **When it renders.** It renders **nothing** (no DOM node) unless at least one field has a settled unsuccessful draft: not saved, not reset, conflict or uncertain. A field that is only pending does not render it; the pane shows "is saving." and the unload warning still protects it.
    - **What it is.** A button, at least 44×44 at every width, with the §5 accessible name and visible text.
    - **What it does.** Activation by pointer, Enter or Space navigates exactly once to `/app/settings/appearance` through an App callback. The callback emits the existing `web:shell:module-change` shortcut event, as Shell does for Settings, then calls `navigate`.
-   - It never touches storage.
+   - It never touches storage, never retries and offers no Retry all.
+   - **During a Retry all pass** its members are pending, so they do not render the status by themselves. The status returns as soon as a member fails again, and stays hidden after a full success (A2.6).
 3. **Unload.**
    - The controller registers a `beforeunload` listener only while at least one draft exists, pending or unresolved, set or reset.
    - It warns synchronously, with zero storage attempts in the handler.
    - It is removed when the drafts clear and on unmount.
+   - It stays registered throughout an open Retry all pass, because members are drafts. It is removed after a full success and kept after a partial one.
    - There is no warning in a clean or source-only state. This is a cancelable warning, not crash durability.
 4. **Voluntary sign-out.** `handleSignOut` awaits the controller's sign-out step immediately before each `requestSettingsDeparture("sign-out")` (`App.tsx:196`, `:205`).
    - **No drafts:** it resolves `true` with zero `window.confirm` calls and zero storage attempts.
@@ -428,8 +660,9 @@ The latest set or reset's own completion governs the result. An old set or reset
      - **Cancel** resolves `false`: drafts, status and warning are kept, nothing is invalidated, and there are zero history mutations.
      - **OK** discards every Appearance draft with zero set/remove attempts, removes the unload listener and resolves `true`. The existing sequence then continues unchanged: the Settings, Pomodoro or Dashboard coordinator step, the auth coordinator, identity invalidation and the redirect.
    - The existing re-checks after the awaits (`App.tsx:197–198, 206`) stay in place and still run after both steps.
+   - **During a Retry all pass** the pending members are drafts, so the step prompts. Cancel lets the pass continue. OK detaches the members with zero set or remove attempts by the step, and their late completions change nothing (A2.3, A2.6).
 5. **Forced transitions** — a scope change from another document, an auth loss, the account-deletion bridge (`AppProviders.tsx:17–24`) — are never blocked by Appearance.
-6. **Unmount** removes the listener, subscriptions and callbacks. Old callbacks refuse, based on live disposal state. Committed writes are not undone.
+6. **Unmount** removes the listener, subscriptions and callbacks. Old callbacks refuse, based on live disposal state, and open Retry all passes are detached. Committed writes are not undone.
 
 ## 8. Sparse memory export
 
@@ -447,6 +680,7 @@ The latest set or reset's own completion governs the result. An old set or reset
 - Never include an account bucket, account ID, physical key or timestamp.
 - Never include saved, default or source-only fields.
 - There is no empty download; Export and Discard all render only while drafts exist.
+- An export during an open Retry all pass includes the pending members as their latest unresolved intents. Retry all itself never exports.
 - This is a recovery file. It is not an import feature and not proof of saving or resetting.
 
 **Behavior.**
@@ -501,15 +735,21 @@ Additionally, one native setup failure (`createObjectURL` or the click throwing)
 | l | Malformed bytes at load | For every §5 item 2 value: no route error, the default displayed and applied, the pane source alert with Reload only, zero writes |
 | m | Status navigation held by another caller | With a More draft held by the Settings coordinator, activating the status shows the coordinator dialog. A successful More Retry releases **exactly once** to `/app/settings/appearance`: one live `proceed()`, zero non-live blocker calls, one router location commit, zero runtime errors |
 | n | Cross-surface latest intent | A pane theme edit then a Topbar theme edit, and the reverse, with the first held behind the real lock. The latest wins, both surfaces show the same state in every sampled frame, and each edit makes exactly one per-key lock request |
+| o | Retry all across surfaces | A failed Topbar theme choice, a failed pane accent edit and a failed Reset item, then one trusted Retry all on the pane. Exactly one write or remove per failed key and zero on every other key. The Topbar status is hidden while the pass is open and absent after full success; `beforeunload` is removed; focus lands on Reset to defaults; "Appearance settings saved." appears only after the last member's verified completion. History counters show zero mutations; zero runtime errors |
+| p | Partial Retry all | As row o with one key still denied. The status line reads "1 appearance change is not saved."; the Topbar status returns; `beforeunload` still warns; Export contains only the unresolved entry; focus stays on Retry all, which stays enabled |
+| q | Open pass, held and superseded | One member held behind the real `prefMutationLockName(<key>)` lock. A second trusted activation by click, Enter and Space adds zero attempts. Leaving the pane by the sidebar and returning keeps the pass, the `aria-disabled` button and the in-flight line. A Topbar choice for the held field then supersedes it: after release, the old completion does not mark the new choice saved, and the final bytes equal the Topbar choice |
+| r | Sign-out during an open pass | One confirm. Cancel resolves `false` and the pass continues to settle. OK discards with zero set or remove attempts by the step; the held member's late completion changes no draft, status line or Topbar status; identity is invalidated as in row g; zero runtime errors |
 
 **Responsive presentation.** EN and ZH, at 375, 414, 768, 1024 and 1440.
 
 States to check:
-- clean;
-- all seven unresolved: 7 recovery blocks (14 Retry/Discard buttons), Export and Discard all;
-- a partial reset;
-- one source-only Reload;
-- the Topbar status visible, from a Topbar failure, on the pane and on `/app/tasks`.
+- clean: Reset to defaults only, with no Retry all, no "Save & apply" and no Saved claim;
+- all seven unresolved: 7 recovery blocks (14 Retry/Discard buttons), Retry all, Export and Discard all;
+- a partial reset, which includes Retry all because failed reset items are eligible;
+- a partial Retry all result: one field still failed and the count line shown;
+- one source-only Reload, with no Retry all;
+- the Topbar status visible, from a Topbar failure, on the pane and on `/app/tasks`;
+- at 768 only (EN and ZH): an open pass held behind the real lock, with Retry all `aria-disabled`.
 
 For each control, after scrolling it into view:
 - a center hit-test lands on the control;
@@ -521,14 +761,17 @@ For each control, after scrolling it into view:
 **DesktopPet and other App-level overlays (R-PET rule).**
 - **Gated run.** All checks above run with the pet hidden through the product's own rail pet toggle (trusted, hit-tested click), as in the accepted Sticky and Features compositions.
 - **Pet-on run.** Every width and language is repeated with the pet on at its default position (`resolveDefaultPetPos`), and the occlusion of each control is recorded.
-  - **Blocking:** a control that this caller adds or moves — the pane recovery blocks, Reset to defaults, Export, Discard all and the Topbar status — must have an uncovered center.
+  - **Blocking:** a control that this caller adds or moves — the pane recovery blocks, Retry all, Reset to defaults, Export, Discard all and the Topbar status — must have an uncovered center.
+  - **Retry all, additionally (A2.8):** it must meet the A2.8 gate. That means geometric separation of at least 8 px from the pet's left edge, center and four inset points on the button, and zero intersection with the pet box. The pet-on probes are taken both after scrolling it into view and with `.module-settings` scrolled to the end of its range, in every state of the list above in which it renders, including 768×1024. This clause applies to Retry all only.
   - **Recorded, not blocking:** coverage of a control left unchanged in place is appended under UX-03/SHELL-05 with before and after evidence.
-  - A caller may not move a functional control into the default pet band. Mitigations are layout inside `.appearance-pane` (for example alignment or bottom clearance).
+  - A caller may not move a functional control into the default pet band. Mitigations are layout inside `.appearance-pane`, such as the start-aligned bottom action area of A2.8 or bottom clearance.
+  - The pet is neither hovered nor focused during probes.
   - The pet itself is never moved, hidden, restyled or repositioned by this caller's code.
 - The sign-out and reset prompts are browser-native and are not hit-tested. CmdK is closed in every run.
 
 **Sizing and CSS.**
-- Recovery, reset and status targets are at least 44×44 at every width.
+- Recovery, Retry all, reset and status targets are at least 44×44 at every width.
+- The bottom action area follows A2.8: normal flow, start-aligned and wrapping, with no `.pane-footer` or `.pane-save` class.
 - Existing control geometry may not shrink.
 - New CSS adds selectors only under `.appearance-pane`, `.appearance-recovery-*` and `.appearance-status*`, in the Appearance stylesheet.
 - Existing Appearance rules stay byte-unchanged: the fixed file begins with the before file.
@@ -539,17 +782,23 @@ For each control, after scrolling it into view:
 - ten all-seven-unresolved screenshots (EN/ZH × five widths);
 - the Topbar status at 375 and 1440 (EN/ZH);
 - the partial-reset state at 375 (EN/ZH);
-- the pet-on 768 captures (EN/ZH, before and fixed).
+- the partial Retry all result at 375 (EN/ZH);
+- the pet-on 768 captures (EN/ZH): before, with the pet over "Save & apply" at the top and the end of the scroll range (H14 b); fixed, with the all-seven bottom action area and Retry all clear of the pet at the end of the scroll range.
 
 **Keyboard.**
-- Trusted Tab reaches every control in DOM order with visible focus, including the Topbar status, before the appearance trigger.
+- Trusted Tab reaches every control in DOM order with visible focus, including the Topbar status, before the appearance trigger. In the bottom action area the order is Retry all, Export, Discard all, then Reset to defaults.
 - Enter and Space each activate a card, segment, swatch or button exactly once: one operation, no double firing, no page scroll on Space. They open the reset confirmation exactly once.
+- **Retry all by keyboard** (A2.7):
+  - Enter and Space each start exactly one pass, with exactly one attempt per eligible field.
+  - A second Enter or Space while members are pending adds zero attempts.
+  - While the button is `aria-disabled`, Enter and Space make zero operations and focus stays.
 - On the sliders, each arrow key step is one edit, Home and End reach the bounds, and the final bytes equal the last value.
 - Focus targets:
   - after a keyboard per-field Discard or Reload, focus lands on the field's selected control (or its slider);
   - a recovery block that unmounts after a successful Retry returns focus to the same place;
   - after Discard all, focus stays inside `.appearance-pane`, on Reset to defaults, never on `<body>`;
-  - after an accepted reset, focus stays on Reset.
+  - after an accepted reset, focus stays on Reset;
+  - after a keyboard Retry all that fully succeeds, focus lands on Reset to defaults, never on `<body>`; after a partial result it stays on Retry all (A2.5).
 - The popover's keyboard behavior is unchanged: Escape closes it.
 
 ## 10. Downstream consistency, crash safety and cross-module isolation
@@ -585,7 +834,7 @@ Required evidence:
      - the `.app` attributes.
    - This proves that other accepted callers' native visual evidence stays valid without rerunning it.
 7. **Cross-module isolation.**
-   - During and after every Appearance operation — edit, Retry, Discard, Discard all, Reload, full and partial reset, export, the sign-out step with Cancel and OK — the product dispatches zero `StorageEvent`s and zero `web:settings:preference-changed` events. Count these with an instrumented `window.dispatchEvent` and bus spy.
+   - During and after every Appearance operation — edit, Retry, Retry all (full and partial), Discard, Discard all, Reload, full and partial reset, export, the sign-out step with Cancel and OK — the product dispatches zero `StorageEvent`s and zero `web:settings:preference-changed` events. Count these with an instrumented `window.dispatchEvent` and bus spy.
    - The bytes of every localStorage key other than the seven are unchanged (snapshot), including the eight Features keys, pet id and position, and rail order.
    - The Features rail, route and search truth and the DesktopPet id and position are unchanged.
 8. **Protected paths unchanged.** `git diff 5cd63ff <fixed>` is empty for:
@@ -595,7 +844,7 @@ Required evidence:
    - every Appearance-package path not listed in §11;
    - `package.json` and `pnpm-lock.yaml`.
 9. **Search repeated at the fixed SHA.** Repeat §2's writer and reader search; new hits may appear only in §11 files. In addition:
-   - the Appearance package's product source contains zero `localStorage`, `setPref(`, `removePref(`, `usePref(`, `emitWebEvent(`, `new StorageEvent` and `dispatchEvent(`;
+   - the Appearance package's product source contains zero `localStorage`, `setPref(`, `removePref(`, `usePref(`, `emitWebEvent(`, `new StorageEvent`, `dispatchEvent(` and `SettingsFooter`, and no `pane-footer` or `pane-save` class (A2, A2.8);
    - `Topbar.tsx` contains zero `localStorage`;
    - `App.tsx` contains no `writeLocalPref`, no `localStorage.setItem`, no `onWebEvent("web:settings:preference-changed"` and no `usePref(`. The only remaining storage access is `readLocalPref`, byte-identical.
 10. **Unchanged host and reader tests pass from the fixed archive and from `5cd63ff`** (G1):
@@ -612,10 +861,14 @@ Required evidence:
   - `src/AppearancePane.tsx`;
   - `src/types.ts`, additive types only;
   - `src/index.ts`, additive exports only: the provider, the Topbar status component and the controller hook with their types; existing exports unchanged;
-  - at most three new local modules under `src/internal/`: the controller (bindings, operation and recovery model, DOM application, unload and sign-out step), the EN/ZH recovery copy, and the Topbar status component;
+  - at most four new local modules under `src/internal/`:
+    - the controller: bindings, the operation and recovery model including Retry all passes, DOM application, unload and the sign-out step;
+    - the EN/ZH recovery copy;
+    - the Topbar status component;
+    - the pane-local bottom action area: status line, Retry all, Export, Discard all and Reset (A2.8, A2.9);
   - additive selectors in `src/styles.css`, scoped as §9 requires;
-  - test files under `src/__tests__/`, per the dispositions below, plus new Appearance-local test files, including a local Web Lock fixture;
-  - the Appearance sections of `docs/api.md` and `docs/test.md`. They must describe the App-scoped controller, the absence of a route guard, the Topbar slot, the sign-out step and the retired event path.
+  - test files under `src/__tests__/`, per the dispositions below, plus new Appearance-local test files, including a local Web Lock fixture and the Retry all tests required below;
+  - the Appearance sections of `docs/api.md` and `docs/test.md`. They must describe the App-scoped controller, the absence of a route guard, the Topbar slot, the sign-out step, the retired event path and Retry all (A2).
 - **Web shell** (`packages/xai-web-shell/`):
   - `src/Topbar.tsx`: each option activation calls its setter exactly once with the option's value and makes zero Storage attempts; render the optional `appearanceStatus` node immediately after `premiumBadge` in `.topbar-controls`. Nothing else.
   - `src/Shell.tsx`: pass `appearanceStatus` through. Nothing else.
@@ -645,7 +898,7 @@ The fixed-product diff (`git diff --name-only 5cd63ff <fixed> -- apps packages p
 | AC-LIVE-1, -2, -7 | Keep the DOM assertions; may install the Web Lock fixture and await real completion; drop the emission assertion |
 | AC-LIVE-3, -4, -5, -6 | Keep the byte assertions after awaiting real completion with the lock fixture; drop the emission assertions |
 | AC-LIVE-8 | Replaced: choosing 简体中文 persists `"zh"` and marks it selected; still no `data-lang` attribute |
-| AC-SAVE-1, AC-SAVE-2 | Retired with the footer (A2). Replaced: no "Save & apply" control, and no Saved claim without a genuine latest success |
+| AC-SAVE-1, AC-SAVE-2 | Retired with the footer (A2). Replaced by Retry all tests: with no settled unsuccessful draft the pane renders no Retry all, no "Save & apply" and no "Saved"/"已保存"; with a failed draft, Retry all renders and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success |
 | AC-RESET-1 | Adapted to the pane-local button: six verified absences, DOM defaults, and `xai_pref_lang` bytes unchanged |
 | AC-RESET-2 | Replaced: six reset intents, zero preference-changed emissions, language untouched |
 | AC-RESET-3 | Same meaning: declined means zero storage attempts (counting injector) and no state change |
@@ -654,9 +907,10 @@ The fixed-product diff (`git diff --name-only 5cd63ff <fixed> -- apps packages p
 | Topbar TP0–TP7, TB-PREMIUM-1 | Unchanged |
 | Topbar TP1-Persist … TP3b-Persist (7) | Replaced: each choice calls its setter once with its value and makes zero Storage attempts. Persistence is asserted at App level in the new App test |
 | Topbar TP-Persist-Quota-Safe | Replaced by an App-level test: a failing write keeps the choice displayed and applied and shows the Topbar status |
+| New Appearance-local tests (required) | Terra's own Retry all coverage at the hook layer, with the real engine and the lock fixture: A2.2 render and enabled states; A2.3 scope, exclusions, one attempt per member and no duplicates; attribution and late completions; the A2.4 lines in EN and ZH; A2.5 focus. These complement, and never replace, Sol's frozen `retry-all` oracle |
 
 **Implementation expectations.**
-- Use one coherent local operation model.
+- Use one coherent local operation model. Retry all is part of it: a controller method over the per-field Retry actions, not a separate retry engine.
 - Do not extract a generic recovery framework, and do not refactor an accepted pane.
 - The pane stays usable standalone (A3).
 
@@ -701,6 +955,7 @@ The fixed-product diff (`git diff --name-only 5cd63ff <fixed> -- apps packages p
 | `queues` | §5 items 4–6 and the §6 orderings, cross-surface latest intent, slider streams, and the in-flight predecessor + Reset + predecessor failure ordering |
 | `continuity-export` | §7 Sol-layer lifetime and unmount refusal; §8 apart from the native disk shapes |
 | `host` | Production `App` with only the auth-session hook substituted: the §7 protection model (no route guard, Topbar status, `beforeunload`, the sign-out step with a `window.confirm` recorder in both auth branches, forced remount), §10 items 3, 4 and 7 at the hook layer |
+| `retry-all` | Production `App` with only the auth-session hook substituted, driven through the pane and the Topbar. **At `5cd63ff`:** H15, today's bottom button after denied writes on each surface, with attempt counters, bytes and the flash. **On both products (H16):** §5 item 9 and A2.2–A2.7: <ul><li>render and enabled states;</li><li>scope and exclusions;</li><li>exactly one write or remove per member and none elsewhere;</li><li>no duplicates: a same-turn double activation, an activation while members are pending, and per-field Retry in both orders;</li><li>exact-draft attribution and supersession by a pane edit, a Topbar edit and Reset;</li><li>late completions after Discard, Discard all, sign-out OK and unmount;</li><li>every A2.4 line in EN and ZH, with its precedence;</li><li>A2.5 focus, `aria-disabled` and `aria-describedby`;</li><li>the §5 item 9 orderings, including the Features follow-up 2 ordering for one root and one registered field.</li></ul> |
 | `original` | The archive's own Appearance package tests and `Topbar.test.tsx`, plus `App.lazy-init`, `App.signout`, `shell.theme` and `shell.smoke` |
 
 - Install a Web Lock fixture with exclusive semantics (pattern: `xai-web-settings-features-panel/src/__tests__/featuresLockFixture.ts`).
@@ -715,13 +970,15 @@ The fixed-product diff (`git diff --name-only 5cd63ff <fixed> -- apps packages p
 - each field's failed edit with its sidebar route outcome and its sign-out outcome;
 - each Topbar field's failed choice with an AppRail outcome and a sign-out-from-`/app/tasks` outcome;
 - a failed reset with its route outcome;
+- a failed Topbar theme choice and a failed pane accent edit, then the expected Retry all, with its Topbar-status, `beforeunload` and sign-out outcomes (H16; at `5cd63ff` the control is absent, which is a correct FAIL);
 - one clean positive control.
 
 **Native before** (parent, Chrome, production `App`):
 - H3 and H5;
 - H6 for every crashing value, with a capture of the route error boundary;
 - H10 across two documents;
-- H14 in EN and ZH: overflow at 375 px, and the default-position pet at 768×1024 over the pane's last right-aligned action;
+- H14 in EN and ZH: (a) overflow at 375 px; (b) the default-position pet at 768×1024 over "Save & apply"/"保存生效", at the top and at the end of the scroll range;
+- H15 in EN and ZH: a denied accent write and a denied Topbar theme write, then a trusted "Save & apply" activation, with attempt-level counters and a capture of the "Saved"/"已保存" flash;
 - provenance: every reader module comes from the archive.
 
 Only the auth-session context may be synthetic.
@@ -740,10 +997,12 @@ None of these is an F1 signature.
 **Validity and positive controls.**
 - Every case asserts its preconditions before its business assertion: control found, seeded bytes present, fault armed and observed.
 - A failed precondition is a fixture or selector error. It is never counted as a product failure.
+- At `5cd63ff` the absence of a Retry all control is the business failure of H16, never a precondition failure. The preconditions of a Retry all case are the edit controls it uses, the seeded bytes and the armed, observed faults.
 - These must pass at `5cd63ff`:
   - zero-write mount;
   - absent defaults;
   - normal persistence and exact bytes for every value through the production App (pane and Topbar);
+  - with no fault, "Save & apply" is present and operable, and writes the four root keys with today's exact bytes (the harness drives the current button);
   - a declined reset confirmation makes zero attempts;
   - a working reset removes the three registered keys;
   - APP-LP1–5;
@@ -769,7 +1028,9 @@ None of these is an F1 signature.
 | H11 | With unsaved failed Appearance work, there is no indicator outside the pane, sign-out resolves `true` from any route, and `beforeunload` does not warn. |
 | H12 | No Retry, Discard, Reload, export, truthful Saved or "Defaults restored." exists. |
 | H13 | A background choice whose accent write fails leaves the tone committed and the hue unsaved, silently. |
-| H14 | At 375 px some Appearance controls overflow `.settings-detail` horizontally, and at 768×1024 the default-position pet covers the pane's last right-aligned action. Both are to be confirmed or refuted. |
+| H14 | (a) At 375 px some Appearance controls overflow `.settings-detail` horizontally. (b) At 768×1024 the default-position pet covers the center of "Save & apply"/"保存生效", the inline-end control of the sticky footer, both at the top and at the end of the scroll range. Both are to be confirmed or refuted. |
+| H15 | "Save & apply" is not a retry. After denied writes on each surface, activating it: <ul><li>makes zero attempts on a failed accent, background or sidebar key;</li><li>rewrites all four root keys raw, without the per-key lock, from the pane's values (theme, density and font scale from its mirrors, language from its prop). That includes keys that never failed, and can overwrite a Topbar choice the pane did not see;</li><li>swallows any failure;</li><li>shows "Saved"/"已保存" for 1.8 s in every case;</li><li>gives no per-field result.</li></ul> |
+| H16 | No real Retry all exists. With several settled failures, including failed Reset items and a Topbar failure, no control re-attempts exactly those drafts once each while skipping pending and source-only fields. There is no truthful bulk status (in flight, the not-saved count, success only after verified completions) and no Retry all focus handling. |
 
 **Freezing and reruns.**
 - Freeze oracle files, before logs and SHA-256 hashes before Terra starts.
@@ -783,15 +1044,16 @@ The E-numbers refer to §14. A row is complete only when every listed item exist
 
 | Gate | Required complete evidence | Checklist items |
 | --- | --- | --- |
-| 1. All seven fields | <ul><li>Every value with exact bytes, default and codec, through both surfaces where they exist.</li><li>Absent zero-write mount.</li><li>Every malformed value and a throwing read per field, with Reload only and no throw.</li><li>Latest-choice failure and Retry per field.</li><li>A value equal to the default is stored.</li><li>Truthful Saved, with no Save footer.</li><li>Partial and targeted recovery: several and all seven unresolved; a conflict plus an unrelated quota failure; both set/reset failure directions; the background dual intent; targeted Discard with zero writes and zero sibling reads; Discard all; late completions ignored.</li></ul> | E1, E2, E6, E7, E9 |
+| 1. All seven fields | <ul><li>Every value with exact bytes, default and codec, through both surfaces where they exist.</li><li>Absent zero-write mount.</li><li>Every malformed value and a throwing read per field, with Reload only and no throw.</li><li>Latest-choice failure and Retry per field.</li><li>A value equal to the default is stored.</li><li>Truthful Saved, with no "Save & apply" and no unconditional "Saved" (A2).</li><li>Partial and targeted recovery: several and all seven unresolved; a conflict plus an unrelated quota failure; both set/reset failure directions; the background dual intent; targeted Discard with zero writes and zero sibling reads; Discard all; late completions ignored.</li></ul> | E1, E2, E6, E7, E9 |
 | 2. Reset to defaults | <ul><li>Normative confirmation; declining makes zero attempts.</li><li>Six verified absences; an already-absent key is a no-op; never writes; language bytes unchanged.</li><li>Per-field remove refusal ×6, with a reset draft and recovery.</li><li>Partial reset with Retry of only the unresolved fields; no duplicate removes while pending.</li><li>Invalid or unavailable source refusal keeps the intent, with no purge.</li><li>Uncertainty resolved with one remove; conflict preserved.</li><li>Truthful "Defaults restored."</li><li>Unrelated keys unchanged.</li></ul> | E1, E2, E6, E7, E10 |
 | 3. Ordering and cross-surface latest intent | <ul><li>§5 items 4–6 for one root and one registered field fully.</li><li>Pane versus Topbar, both directions, with a real held lock.</li><li>Slider streams and keyboard steps.</li><li>Predecessor succeeds while the latest fails; predecessor fails while the latest is queued; repeated failed predecessor; pending Retry is inert.</li><li>Uncertainty with one write; external conflict including restoration and removal.</li><li>set→reset, reset→set, reset→set→reset, a Topbar edit during a batch, and the in-flight predecessor + Reset + failure ordering.</li><li>New work after a discard survives.</li></ul> | E1, E2, E7, E9 |
 | 4. Device continuity and export | <ul><li>Sol-layer A→B→locked→A and a same-account epoch change with a real held device-key lock, including during a reset batch.</li><li>No account key, lock or marker touched; an unrelated held account lock does not serialize.</li><li>Unmount refusal of old callbacks.</li><li>Memory-only export under total denial with attempt counters; setup and click failure; unmount cancel.</li><li>Exact native disk JSON for all eight §8 shapes, with the warning and status asserted after each.</li></ul> | E1, E2, E7, E11 |
-| 5. Production host and protection | <ul><li>The complete §9 matrix rows a–n in the production App, with history counters and runtime-error gates.</li><li>Trusted input for all 40 values.</li><li>New-document reload with zero mount writes.</li><li>A native held lock and native uncertainty; a second-document conflict.</li><li>The Appearance F1-shape cases a1–a4, before and fixed.</li></ul> | E3, E4, E5, E8, E9, E12, E17 |
+| 5. Production host and protection | <ul><li>The complete §9 matrix rows a–r in the production App, with history counters and runtime-error gates.</li><li>Trusted input for all 40 values.</li><li>New-document reload with zero mount writes.</li><li>A native held lock and native uncertainty; a second-document conflict.</li><li>The Appearance F1-shape cases a1–a4, before and fixed.</li></ul> | E3, E4, E5, E8, E9, E12, E17 |
 | 6. Downstream, crash safety, chrome invariance and isolation | <ul><li>§10 items 1–11.</li><li>H6, H7 and H10 before evidence.</li><li>The before byte, default and reader-test controls PASS at `5cd63ff`.</li></ul> | E2, E4, E7, E13, E18, E19, E20, E21, E22, E23 |
 | 7. F1 regression | <ul><li>The 10 frozen F1 invocations and the Features F1 `selfcheck` and `features` modes PASS at the fixed SHA with unchanged runner hashes.</li><li>The Appearance F1-shape mode: before at `5cd63ff` and fixed PASS.</li></ul> | E5, E16, E17 |
 | 8. Presentation and keyboard | <ul><li>EN/ZH at five widths: every-control hit-test (pet hidden), the pet-on R-PET run, 44 px targets, Topbar containment with the status visible, the CSS-scope audit, manual screenshots.</li><li>Keyboard, including the focus targets and slider steps.</li></ul> | E4, E14, E15 |
-| 9. Final regression and affected callers | Independent reruns from the fixed archive (runners and commands as in `../web-features-recovery-final/review-final-regressions-5cd63ff.md`): <ul><li>Appearance package test, typecheck and lint.</li><li>Shell package test, typecheck and lint.</li><li>Web package test, check-types and lint.</li><li>Storage check-types.</li><li>Settings-shell and settings-rest package tests.</li><li>Features package test.</li><li>Accepted caller suites per E24, including the More corrected `boundaries` oracle beside the frozen one.</li><li>The Features native downstream rerun (E25).</li></ul> Any selector outside the §9 scopes needs the affected callers' native visual modes. Any shared delta needs impacted engine, hook and caller reruns plus fresh acceptance. | E6, E18–E26 |
+| 9. Retry all (A2) | <ul><li>**Sol:** H15 and H16 correct FAILs at `5cd63ff`, then every §5 item 9 case PASS: <ul><li>render and enabled states;</li><li>scope, including failed Reset items, and exclusions of pending and source-only fields;</li><li>exactly one write or remove per member and none elsewhere;</li><li>no duplicates;</li><li>exact-draft attribution and supersession;</li><li>late completions ignored;</li><li>every A2.4 line in EN and ZH;</li><li>focus, `aria-disabled` and `aria-describedby`;</li><li>no "Save & apply" and no "Saved" flash.</li></ul></li><li>**Host:** the Topbar status, `beforeunload` and sign-out during and after a pass (jsdom), and native host rows o–r.</li><li>**Native controls:** E26.</li><li>**Presentation:** the A2.8 placement gate (geometric separation, pet-on hit-tests including the end of the scroll range, 44×44, containment) at five widths in EN and ZH, and absence in the clean and source-only states.</li><li>**Keyboard:** Enter and Space once, a pending second activation inert, `aria-disabled` inert, and the A2.5 focus targets.</li></ul> | E1, E2, E3, E4, E7, E8, E12, E14, E15, E26 |
+| 10. Final regression and affected callers | Independent reruns from the fixed archive (runners and commands as in `../web-features-recovery-final/review-final-regressions-5cd63ff.md`): <ul><li>Appearance package test, typecheck and lint.</li><li>Shell package test, typecheck and lint.</li><li>Web package test, check-types and lint.</li><li>Storage check-types.</li><li>Settings-shell and settings-rest package tests.</li><li>Features package test.</li><li>Accepted caller suites per E24, including the More corrected `boundaries` oracle beside the frozen one.</li><li>The Features native downstream rerun (E25).</li></ul> Any selector outside the §9 scopes needs the affected callers' native visual modes. Any shared delta needs impacted engine, hook and caller reruns plus fresh acceptance. | E6, E18–E25, E27 |
 
 **Acceptance condition.**
 - Every row must reconcile four things: the source, a correct before failure, fixed independent behavior, and the actual user surface.
@@ -799,45 +1061,49 @@ The E-numbers refer to §14. A row is complete only when every listed item exist
 - The caller cannot be closed by any of the following:
   - converting the pane without the App writer and the Topbar;
   - keeping "Save & apply";
+  - dropping the bottom Retry all, which is option (i) and not the product owner's decision;
+  - a Retry all that claims success before every member's verified completion, retries a pending or source-only field, attempts a member twice, or is covered by the default-position pet at any of the five widths;
   - keeping any raw write or the event-bus write path;
   - keeping a crash on malformed bytes;
   - shipping recovery without host protection, export, cross-document and chrome-invariance evidence.
 
 ## 14. Required evidence checklist
 
-This list is the single source for gate evidence (lesson G1). The final-regression receipt (E26) must list every ID with its producing commit, artifact paths and SHA-256 before acceptance starts.
+This list is the single source for gate evidence (lesson G1). The final-regression receipt (E27) must list every ID with its producing commit, artifact paths and SHA-256 before acceptance starts.
 
 | ID | Evidence item | Producer | Revision(s) | Gates |
 | --- | --- | --- | --- | --- |
-| E1 | Sol oracle files and runner frozen with a SHA-256 receipt; lockfile gate recorded; the F-B002 spy self-check | Sol | `5cd63ff` | 1–4, 6 |
-| E2 | Sol before logs for the seven §12 modes. They give per-case outcomes for every hypothesis Sol exercises (at least H1–H10, H12 and H13; H11 in E3; H3, H5, H6 and H10 again natively in E4; H14 natively in E4 only), zero precondition failures, and every positive control PASS | Sol | `5cd63ff` | 1–4, 6 |
-| E3 | Parent jsdom host before log (production `App`): per-field and Topbar failures with route and sign-out outcomes, failed reset with route outcome, clean control | Parent | `5cd63ff` | 5 |
-| E4 | Native before, production `App`: H3, H5, H6 (each crashing value, with route-error capture), H10 across two documents, H14 (375 px and the 768×1024 pet observation, EN/ZH); provenance | Parent | `5cd63ff` | 5, 6, 8 |
+| E1 | Sol oracle files and runner frozen with a SHA-256 receipt; lockfile gate recorded; the F-B002 spy self-check | Sol | `5cd63ff` | 1–4, 6, 9 |
+| E2 | Sol before logs for the eight §12 modes. They give per-case outcomes for every hypothesis Sol exercises: at least H1–H10, H12, H13, H15 and H16. H11 is in E3; H3, H5, H6, H10 and H15 run again natively in E4; H14 runs natively in E4 only. Zero precondition failures, and every positive control PASS, including the operable "Save & apply" control | Sol | `5cd63ff` | 1–4, 6, 9 |
+| E3 | Parent jsdom host before log (production `App`): per-field and Topbar failures with route and sign-out outcomes, failed reset with route outcome, the expected Retry all after failures on both surfaces with its Topbar-status, `beforeunload` and sign-out outcomes (H16), clean control | Parent | `5cd63ff` | 5, 9 |
+| E4 | Native before, production `App`: H3, H5, H6 (each crashing value, with route-error capture), H10 across two documents, H14 (a) at 375 px and (b) the 768×1024 pet over "Save & apply" at the top and the end of the scroll range, H15 (attempt counters and the "Saved" flash), all in EN and ZH; provenance | Parent | `5cd63ff` | 5, 6, 8, 9 |
 | E5 | New Appearance F1-shape runner and host fixture (frozen prelude reused read-only, hash-checked); `selfcheck` harness-valid; `appearance` before log (a1–a4) | Parent | `5cd63ff` | 5, 7 |
 | E6 | Terra's fixed SHA; `git diff --name-only 5cd63ff <fixed> -- apps packages package.json pnpm-lock.yaml` lists only §11 product files; Terra's own package-run logs and `implementation.md` under `docs/reviews/web-appearance-recovery-terra/`, with SHA-256 | Terra | fixed | all |
-| E7 | Sol fixed reruns with unchanged oracle hashes: all modes PASS, zero `PRECONDITION` lines | Sol | fixed | 1–4, 6 |
-| E8 | Parent jsdom host fixed rerun PASS | Parent | fixed | 5 |
+| E7 | Sol fixed reruns with unchanged oracle hashes: all eight modes PASS, including `retry-all`; zero `PRECONDITION` lines | Sol | fixed | 1–4, 6, 9 |
+| E8 | Parent jsdom host fixed rerun PASS, including the Retry all case | Parent | fixed | 5, 9 |
 | E9 | Native controls: 40 values by trusted input with exact bytes; new-document reload with zero mount writes; source-only states per key; native held lock; uncertainty with one write; second-document conflict; cross-surface sameness | Parent | fixed | 1, 3, 5 |
 | E10 | Native reset: decline makes zero attempts; accept gives six absences and unchanged language bytes; one-key and two-key faults; uncertainty with one remove; conflict; truthful "Defaults restored."; unrelated-key snapshot unchanged | Parent | fixed | 2 |
 | E11 | Native export: the eight §8 disk shapes under total denial (counters, URL, anchor, warning, status) plus one setup failure | Parent | fixed | 4 |
-| E12 | Native host matrix rows a–n with history counters and runtime-error gates | Parent | fixed | 5 |
+| E12 | Native host matrix rows a–r with history counters and runtime-error gates (rows o–r are Retry all) | Parent | fixed | 5, 9 |
 | E13 | Native downstream: byte compatibility in new documents, display truth, crash safety for every malformed value, cross-document propagation, clean-state chrome invariance against `5cd63ff`, cross-module isolation | Parent | fixed and `5cd63ff` | 6 |
-| E14 | EN/ZH five-width visual: pet-hidden hit-tests, the pet-on R-PET run, 44×44, containment, overflow, Topbar containment with the status visible, a selector audit listing every added selector, and the manually reviewed screenshots of §9 | Parent | fixed (pet captures also `5cd63ff`) | 8 |
-| E15 | Keyboard: Tab order, Enter/Space once, slider steps, the reset confirmation, focus targets after Discard, Reload, Retry, Discard all and Reset, the Topbar status | Parent | fixed | 8 |
+| E14 | EN/ZH five-width visual: pet-hidden hit-tests, the pet-on R-PET run, 44×44, containment, overflow, Topbar containment with the status visible, a selector audit listing every added selector, and the manually reviewed screenshots of §9. Also the A2.8 Retry all gate: geometric separation, pet-on probes after scrolling into view and at the end of the scroll range, in the all-seven, partial-reset and partial-pass states at all five widths, the open-pass state at 768, and absence in the clean and source-only states. Viewport heights recorded | Parent | fixed (pet captures also `5cd63ff`) | 8, 9 |
+| E15 | Keyboard: Tab order, Enter/Space once, slider steps, the reset confirmation, focus targets after Discard, Reload, Retry, Discard all and Reset, the Topbar status. Also Retry all: Enter and Space each start one pass, a second activation while pending is inert, `aria-disabled` is inert, focus goes to Reset after full success and stays after a partial result | Parent | fixed | 8, 9 |
 | E16 | F1 regression: `verify-f1.mjs` sticky, more and collaborate; `verify-f1-callers.mjs` selfcheck, notifications, date-time, smart-lists, header and pomodoro; `verify-f1-race.mjs` race; `verify-f1-features.mjs` selfcheck and features. All 12 PASS with unchanged runner hashes | Parent or final verifier | fixed | 7 |
 | E17 | Appearance F1-shape fixed log PASS for a1–a4: a1 releases exactly once with one live `proceed()` and zero non-live calls; a2 is not held and keeps drafts; a3 has the coordinator hold after OK and Stay resolving `false`; a4 Cancel resolves `false` with identity intact. Zero runtime errors and no `Invalid blocker state transition` | Parent or final verifier | fixed | 5, 7 |
-| E18 | §10 item 9 search at the fixed SHA, with per-file counts compared to `5cd63ff` | Final verifier | `5cd63ff` and fixed | 6, 9 |
-| E19 | §10 item 8 protected-path empty diff | Final verifier | `5cd63ff..fixed` | 6, 9 |
-| E20 | Storage check-types plus the Sol lifecycle assertion for the seven keys | Sol and final verifier | fixed | 6, 9 |
-| E21 | Appearance package full test, typecheck and lint from the fixed archive, plus its unchanged tests at `5cd63ff` as a before control | Final verifier | fixed and `5cd63ff` | 6, 9 |
-| E22 | Shell package full test, typecheck and lint, plus its unchanged tests at `5cd63ff` as a before control | Final verifier | fixed and `5cd63ff` | 6, 9 |
-| E23 | Web package test (including every §10 item 10 test and the new `App.appearance*` tests), check-types and lint | Final verifier | fixed | 6, 9 |
-| E24 | Accepted-caller suites with counts compared to their accepted receipts. Features: Sol bytes 17, fields 49, reset 31, queues 40, continuity-export 26, downstream 15, original 6; host 40; package 45. More: Sol fields 22, reset 20, queues 14, owner-export 13; `boundaries` run with **both** oracles, the frozen one recorded as it falls (known nondeterministic) and the corrected one at 10/10 (C-FB002); original 15; host 11. Sticky: Sol 109, original 10, host 28. Notifications: Sol 41, Astra boundaries 24, Astra host 15, parent host 12. Date & Time 7. Settings-shell 54; settings-rest 44 files / 314 tests | Final verifier | fixed | 9 |
-| E25 | Affected-caller native rerun: the Features native downstream runner (`../web-features-recovery-native/verify-native-downstream.mjs`) PASS at the fixed SHA, because this caller changes the App-level appearance readers that run observes | Parent or final verifier | fixed | 9 |
-| E26 | Final-regression receipt enumerating E1–E25: producing commit, artifact paths, SHA-256, verdict | Final verifier | — | 9 |
+| E18 | §10 item 9 search at the fixed SHA, with per-file counts compared to `5cd63ff` | Final verifier | `5cd63ff` and fixed | 6, 10 |
+| E19 | §10 item 8 protected-path empty diff | Final verifier | `5cd63ff..fixed` | 6, 10 |
+| E20 | Storage check-types plus the Sol lifecycle assertion for the seven keys | Sol and final verifier | fixed | 6, 10 |
+| E21 | Appearance package full test, typecheck and lint from the fixed archive, plus its unchanged tests at `5cd63ff` as a before control | Final verifier | fixed and `5cd63ff` | 6, 10 |
+| E22 | Shell package full test, typecheck and lint, plus its unchanged tests at `5cd63ff` as a before control | Final verifier | fixed and `5cd63ff` | 6, 10 |
+| E23 | Web package test (including every §10 item 10 test and the new `App.appearance*` tests), check-types and lint | Final verifier | fixed | 6, 10 |
+| E24 | Accepted-caller suites with counts compared to their accepted receipts. Features: Sol bytes 17, fields 49, reset 31, queues 40, continuity-export 26, downstream 15, original 6; host 40; package 45. More: Sol fields 22, reset 20, queues 14, owner-export 13; `boundaries` run with **both** oracles, the frozen one recorded as it falls (known nondeterministic) and the corrected one at 10/10 (C-FB002); original 15; host 11. Sticky: Sol 109, original 10, host 28. Notifications: Sol 41, Astra boundaries 24, Astra host 15, parent host 12. Date & Time 7. Settings-shell 54; settings-rest 44 files / 314 tests | Final verifier | fixed | 10 |
+| E25 | Affected-caller native rerun: the Features native downstream runner (`../web-features-recovery-native/verify-native-downstream.mjs`) PASS at the fixed SHA, because this caller changes the App-level appearance readers that run observes | Parent or final verifier | fixed | 10 |
+| E26 | Native Retry all, production `App`, EN and ZH, trusted pointer and keyboard input. <ul><li>**Failures:** set drafts from the pane and the Topbar, a background choice with both writes denied, failed Reset items, and a failed predecessor with a queued latest.</li><li>**Attempts:** exactly one write or remove per member and zero on non-members, from attempt-level counters; exact bytes afterwards.</li><li>**Status line,** sampled per frame: never a success line while a member is pending or failed.</li><li>**Full success:** no Retry all, focus on Reset, no Topbar status, `beforeunload` removed.</li><li>**Partial result:** the count line, focus kept, the Topbar status shown.</li><li>**Held and late:** a member held behind a real lock, where a second activation is inert; supersession by a Topbar choice; Discard and Discard all during an open pass, with late completions ignored.</li><li>**No old button:** no "Save & apply" control and no "Saved"/"已保存".</li></ul> | Parent | fixed | 9 |
+| E27 | Final-regression receipt enumerating E1–E26: producing commit, artifact paths, SHA-256, verdict | Final verifier | — | 10 |
 
 **Rules.**
 - E1–E5 must be committed before Terra starts.
+- E26 is produced before E27, which enumerates it.
 - A later item cannot substitute for a missing earlier one.
 - Acceptance re-derives at least one hash per item and BLOCKS on any absent ID.
 - A frozen More `boundaries` failure is judged by the corrected oracle (C-FB002); the corrected oracle failing is a regression.
@@ -847,13 +1113,15 @@ This list is the single source for gate evidence (lesson G1). The final-regressi
 | Lesson or retained limitation (source) | Appearance treatment |
 | --- | --- |
 | F1: the coordinator regression oracle must keep running (F1 closure, control plane) | **Gate.** All 12 F1 invocations at the fixed SHA (E16). The new Appearance F1-shape mode covers the status navigation released by another caller's Retry and the sign-out ordering (E5, E17). No coordinator change is permitted. |
-| G1: a gate item had no scheduled runner (Sticky) | **Gate.** The single §14 checklist and the enumerated E26 receipt; acceptance blocks on any missing ID. |
+| G1: a gate item had no scheduled runner (Sticky) | **Gate.** The single §14 checklist and the enumerated E27 receipt; acceptance blocks on any missing ID. |
 | F-B002: a test spy re-entered storage; the frozen More oracle is nondeterministic | **Rule.** §12 F-B002 rule with a self-check (E1). E24 runs the corrected More oracle beside the frozen one. |
-| R-PET: the App-level pet covered a moved control and the gated runs had excluded it (Features acceptance §5.1) | **Rule.** §9 states how the pet is judged: gated pet-hidden runs, and a pet-on run that blocks only for controls this caller adds or moves. |
+| R-PET: the App-level pet covered a moved control and the gated runs had excluded it (Features acceptance §5.1) | **Rule.** §9 states how the pet is judged: gated pet-hidden runs, and a pet-on run that blocks only for controls this caller adds or moves. **Gate** for the repurposed bottom button: Retry all moves from the inline end of a sticky footer, which sits in the pet band at 768×1024 (H14 b), to the inline start of a static area. It must be fully uncovered, with geometric separation and pet-on probes at five widths including the end of the scroll range (A2.8, E14). |
+| D3 contrast: Features removed its "Save & apply" because the unconditional "Saved" was false (Features acceptance §5.4) | **Decision (A2).** Appearance keeps a bottom button by the product owner's choice, but it can no longer claim success on its own. Success lines are bound to verified completions (A2.4), and the button renders only while it has real work (A2.2). |
 | E6: the implementer's run existed only as a commit-message self-report (Features acceptance §5.5) | **Rule.** A reserved Terra evidence path (§11); E6 cites its logs with SHA-256. |
-| In-flight predecessor set + Reset + predecessor failure was not in the frozen orderings (Features follow-up 2) | **Gate** in `queues` for one root and one registered field (§6). |
+| In-flight predecessor set + Reset + predecessor failure was not in the frozen orderings (Features follow-up 2) | **Gate** in `queues` and `retry-all` for one root and one registered field (§6). Retry all over such a field inherits the transient re-write of the superseded set before the removal; that is recorded, not changed. |
+| Status after Discard all re-surfaced an earlier "saved" line (Features follow-up 3, UX-04) | **Retained** for Discard (UX-04, §16). Retry all's own lines follow A2.4 and never claim success while a member is pending or failed. |
 | Demo scope was not exercised for Reset (Features follow-up 7) | **Gate.** One Sol `reset` run under a demo scope. |
-| Keyboard Discard all left focus on `<body>` (Sticky follow-up 1) | **Gate.** The §9 focus targets (E15). |
+| Keyboard Discard all left focus on `<body>` (Sticky follow-up 1) | **Gate.** The §9 focus targets (E15), including Retry all: Reset after full success, and kept on Retry all after a partial result (A2.5). |
 | Host compositions lacked App-level readers | **Gate.** Every host, native and visual row runs in the production `App` (§9). |
 | Affected callers' visual modes were not rerun after a shared change (Sticky follow-up 6) | **Rule.** Clean-state chrome invariance (§10 item 6, E13) instead of rerunning every caller's visuals; anything outside the §9 CSS scopes triggers the affected callers' native visual reruns. |
 | Export counters counted only successes; no warning check after export; setup failure proved only in jsdom (More) | **Kept as gates** (§8, E11). |
@@ -871,6 +1139,13 @@ This list is the single source for gate evidence (lesson G1). The final-regressi
 - Repairing malformed stored bytes (REL-07). A valid edit over malformed bytes stays a failed draft, because the engine refuses an invalid source.
 - On a browser without Web Locks every Appearance write is refused and reported, never written unfenced (D2 entry contract item 3).
 - A Topbar write that is only pending (held) shows no Topbar status; it is protected by the unload warning and the sign-out step.
+- **Retry all limits** (none of these is part of this caller):
+  - any Retry all outside the Appearance pane, including in the Topbar status, other panes or a global "retry everything";
+  - automatic retry: timers, backoff, `online` or visibility triggers;
+  - retrying pending or source-only fields;
+  - a second attempt within one activation;
+  - removing the inherited transient write of Features follow-up 2;
+  - a sticky or fixed bottom bar.
 - Cross-pane status semantics after Discard (UX-04) and switch or label copy (UX-05).
 - D2, global reset, migration, deletion or data-export changes.
 - Tauri and native window capability.
