@@ -517,3 +517,16 @@
   outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
   outline-offset: 2px;
 }
+
+/* F-APP-2: the selected accent swatch showed no keyboard focus. Its selection
+   ring `.accent-sw.active { outline: 2px solid var(--text-1); outline-offset:
+   2px }` (0,2,0), in plugin-web-tokens layout.css and above in this file,
+   outranks the global `button:focus-visible` ring in tokens.css (0,1,1) and
+   does not change with focus. This pane-scoped rule (0,4,0) draws the global
+   ring 2px further out and keeps the selection as a 2px box-shadow ring in the
+   selection colour inside it. Outline and box-shadow take no layout space. */
+.appearance-pane .accent-sw.active:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 2px var(--text-1);
+}
