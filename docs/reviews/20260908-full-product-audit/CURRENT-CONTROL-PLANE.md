@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：K-1 已评估完毕（`6b9f0ee`），结论是没有任何已提交证据的结论改变，K-1 关闭。本批登记批次 45：native host 矩阵 a–s、downstream（E12–E13）与 native 全部重试（E26）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：native host 矩阵 a–s（E12）、downstream（E13）与 native 全部重试（E26）在 fixed `24073b5` 上全部 PASS（`32e6753`），按键审计无失配。本批登记批次 46：EN/ZH 五宽度视觉与键盘（E14–E15）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `6b9f0ee` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `32e6753` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -115,7 +115,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：E7、E8、E16、E17 PASS（`31d6335`）；E9–E11 PASS（`3419542`）；K-1 已关闭，没有结论改变（`6b9f0ee`）；待 E12–E15、E26，最终回归 E18–E25 与回执 E27，以及独立最终 acceptance |
+| 状态 | `verification_pending`：E7、E8、E16、E17 PASS（`31d6335`）；E9–E11 PASS（`3419542`）；K-1 已关闭，没有结论改变（`6b9f0ee`）；E12、E13、E26 PASS（`32e6753`）；待 E14–E15，最终回归 E18–E25 与回执 E27，以及独立最终 acceptance |
 | 用户决定（2026-10-04） | **B-2：保留按钮，改为全部重试。** 用户在三个选项中选了 (ii)：<ul><li>(i) 自动保存并去掉按钮，未选；</li><li>(ii) 保留按钮并改为全部重试，**选中**；</li><li>(iii) 编辑后保存，未选。</li></ul>含义：继续自动保存，每次改动立即生效并保存；底部按钮保留，从无条件显示 "Saved" 的空操作，改为真实的"重试全部失败项"。这是产品负责人对 SET-02 开放选择的决定，记入控制面；台账在 Appearance 接受时一并对账 |
 | 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`：r1 有 884 行，含假设 A1–A9、H1–H14、九个 gate、E1–E26；r2 见下方一行。</li></ul> |
 | 合同 r2（批次 35） | `b2e5eb2`（独立 Astra；只原地修订 `contract.md`，1159 行，SHA-256 `e4210cff…`）。<ul><li>A2 改为记录产品负责人的决定：继续自动保存；"Save & apply" 与无条件的 "Saved" 闪现去掉；改为 pane 本地底部区域中的真实"全部重试"。</li><li>重试范围：所有已结算的失败草稿，每项只试一次，按精确草稿归属。</li><li>EN/ZH 文案：`Retry all`/`全部重试`。</li><li>位置：底部区域不吸底、左对齐，全部重试在最左。它只对全部重试设硬 gate：5 个宽度上与宠物盒至少相隔 8px，中心加四个内缩点均无遮挡。</li><li>`SettingsFooter`、`confirmAction`、`resetAllPrefs` 不变。</li><li>计数：H1–H16，gate 1–10，证据 E1–E27 连续（Sol 增加 `retry-all` 模式，新增 E26 native 全部重试，最终回归回执改为 E27）。</li><li>**总控核对：** 只改合同一个文件，worktree clean；A1、A3–A9 与 r1 逐字相同；E1–E27 连续；修订记录位于合同开头。</li></ul> |
@@ -134,12 +134,13 @@
 | E9–E11 native controls、reset 与导出 | `3419542`（独立父级 native 验证者；`web-appearance-recovery-native/` 下 16 个新增文件，回执 `review-controls-reset-export-24073b5.md` 为 `287477b8…`）。<ul><li>**运行环境：** Chrome 154 headless，走 pipe transport；bundle 共 1017 个输入，625 个来自 archive，外来输入为 0；320 处 `@repo` 都固定到 archive；48 个必需模块全部来自 archive；主检出 mtime 扫描为 0 变化。三种模式都在 fixed1 一次通过。</li><li>**E9：** 1345 项检查，产品检查 703 项。<ul><li>40 个值由可信输入写入，字节精确，每值一次写入；背景选择写两次。</li><li>新加载零写入，pane、Topbar 与 `<html>` 一致（总控裁定 3）：重载、浏览器重启、EN/ZH 新 document 都已验证。</li><li>7 个键的 invalid 与 unreadable source-only 状态下，App 始终渲染，包括修复前会崩溃的 `"fr"`、`Infinity`、`"1"`；只提供 Reload，字节从不被重写。</li><li>持锁时 pending，释放后一次写入；uncertainty 恰好一次写入。</li><li>第二 document 冲突的三种形式下，外部字节都被保留。</li><li>pane 与 Topbar 共 14 步，不一致快照为 0。</li></ul></li><li>**E10：** 288 项检查。<ul><li>拒绝确认时零尝试；接受后 6 次删除、0 次写入，语言字节不变，也不读语言键。</li><li>单键与双键故障都给出逐字段结果，并能定向 Retry；uncertainty 恰好一次删除；冲突时外部 `peach` 被保留。</li><li>"Defaults restored." 只在真实全部成功时出现（逐帧检查）。</li><li>无关键快照 ×7 不变；广播、重锁、重挂均为 0。</li></ul></li><li>**E11：** 389 项检查。<ul><li>完全拒绝下，8 种 §8 形态都写到真实磁盘：零存储尝试，object URL 恰好一次创建并撤销，anchor 点击一次后移除，草稿、状态行、Topbar 状态与 unload 警告都正确。</li><li>两种 setup 失败都有本地化错误，失败后的恢复导出正确。</li><li>9 份 JSON 均与期望一致，经 runner 与独立重新解析双重核对。</li></ul></li><li>**开发探测（已披露，未提交）：** reset、controls、export 分别跑了 3、6、3 轮。正式运行前修复了四个 harness 问题，没有削弱断言：<ul><li>Node 到 Chrome 的 WebSocket 掉线，改用 pipe transport，并为每次页面调用设上限；</li><li>Windows 键码作 `nativeVirtualKeyCode` 时 Chrome 持续产生可信 keydown（约 3500 次/秒），改为去掉该字段，并审计只有 runner 自己的按键到达；</li><li>网络审计把自检探针计入了，改为单独计数；</li><li>对话框或布局变化后增加一次 hit-test 重测。</li></ul></li><li>**总控核对：** 16 个文件均为新增，且在允许目录内；回执列全了 hash；三份日志的 result 记录均为 `pass`、`harnessValid`，runtime error 与 console 警告均为 0。</li></ul> |
 | 证据完整性问题 K-1（2026-10-05） | **问题：** 批次 43 发现，在 macOS 上把 Windows 键码作为 CDP `Input.dispatchKeyEvent` 的 `nativeVirtualKeyCode` 发送时，Chrome 会持续产生可信 keydown 事件（`Unidentified`/`Minus`）。<ul><li>**涉及的已提交 runner**（总控检索确认）：<ul><li>`web-appearance-recovery-native/verify-native-before.mjs`，即 Appearance E4 before；</li><li>`web-appearance-recovery-f1/verify-f1-appearance.mjs`，即 Appearance E5 与 E17；</li><li>`web-date-time-recovery-native/verify-native.mjs`，属已接受的 Date & Time。</li></ul></li><li>**不受影响：** Features 的 native runner 没有这种写法，已接受的 Features 键盘证据（E15）不在其列。</li><li>**现状：** 这些证据的现有结论看起来合理，但"夹杂了伪造按键事件"并未被排除。证据完整性不能靠推测，因此冻结为 K-1，交批次 44 独立评估。</li><li>**今后：** 所有 native 批次须去掉 `nativeVirtualKeyCode`，并审计只有 runner 自己的按键到达。</li></ul> |
 | K-1 评估结果（批次 44） | `6b9f0ee`（独立 Sol；`web-native-keyinput-k1/` 下 82 个新增文件，回执 `review-k1.md` 为 `18a98325…`）。结论：**NO-CONCLUSION-CHANGE**。<ul><li>**复现：** 在同一台 macOS、同一 Chrome 154 构建上，问题属实，触发条件是页面未消费的 keyDown 带有该字段。<ul><li>Escape 27（macOS 上即 `kVK_ANSI_Minus`）与 ArrowRight 39，在 11 种焦点环境中有 9 种产生持续的伪造 keydown，约 2200–3300 次/秒，直到 document 被替换，并会跟随前台标签页；</li><li>Tab 9 从不产生；</li><li>伪造事件从未改变任何文本输入、滑块、select、按钮或模态对话框。</li></ul></li><li>**受影响的运行：** 真实 App 中复现出的伪造事件数量：<ul><li>E4 h3：只在 Escape 与重载之间出现，判定都在其外；</li><li>h5、h15：判定是在按键流期间做出的；</li><li>h10：按键流跟随前台标签页进入 document A；</li><li>h17：为 0；</li><li>F1 的 a1、a3、a4：在按键流期间运行；</li><li>已提交的 h15 日志本身留有痕迹：序号比干净重跑高出约 1470。</li></ul></li><li>**逐项比较：** 用去掉该字段、并加按键审计的 runner 副本，在同一 SHA 上重跑，与已提交日志逐项比较，共 18 组。precondition 序列、结论与用例结果全部一致。唯一差异在 h15 的 4 条证据记录：序号，以及 "Saved" 闪现的帧数（110/1817ms 对 108/1783ms），H15 的结论不变。</li><li>**分类：**<ul><li>E4 h3、h5、h10、h15，E5 与 E17：受影响但结论不变；</li><li>E4 h6、h14、h17：不受影响；</li><li>已接受的 Date & Time 全部 109 份日志：不受影响。它的 typeahead 只发送到已聚焦的 select，自身 trace 中伪造事件为 0。</li></ul></li><li>**总控核对：** 82 个文件均为新增，且在允许目录内；回执列全了 hash；冻结的 runner 与日志都未改动。比较日志 18 组中，标为不一致的字段为 0；总控查看了 h15 的差异记录，确实只有序号与帧数。</li><li>**总控裁定：**<ul><li>冻结日志仍是权威证据，K-1 的修正重跑作为补充证据；</li><li>最终回归回执（E27）与最终 acceptance 须引用 `review-k1.md`；</li><li>今后所有 native runner 都去掉 `nativeVirtualKeyCode`（不要改用 macOS 正确的键码，那样会重放真实按键），并做按键审计；</li><li>Date & Time 的接受不受影响，无需复审。</li></ul></li></ul> |
+| E12、E13、E26 native host、downstream 与全部重试 | `32e6753`（独立父级 native 验证者；`web-appearance-recovery-native/` 下 29 个新增文件，回执 `review-host-downstream-retryall-24073b5.md` 为 `ea10ba23…`）。<ul><li>**运行环境：** Chrome 154 走 pipe transport；fixed bundle 共 1017 个输入，外来输入为 0，53 个必需模块全部来自 archive；主检出 mtime 扫描为 0 变化。<ul><li>行 h 的 coordinator 分支，在 auth session context 内用了一个合成的 generation coordinator（已披露，对应 E3 中的 `vi.mock`）。</li><li>三种模式都在 fixed1 一次通过，runtime error 与 console 警告均为 0。</li><li>按键审计：host、downstream、retryall 三种模式中，到达的按键事件与预期一致，失配为空，没有事件带 `nativeVirtualKeyCode`。</li></ul></li><li>**E12：** 1956 项检查。行 a–s 全部 PASS，并记录了 history 计数。其中：<ul><li>行 m 由一次 `router.navigate` 重放恰好释放一次，非 live 调用为 0，提交一次（裁定 4）；</li><li>行 l 中，33 个畸形值与 7 种抛错读取都不会导致导航或错误；</li><li>行 r：pass 打开时登出，Cancel 不改变状态，OK 走 auth replace；</li><li>行 s：禁用的全部重试在 5 种状态下都正确。</li></ul></li><li>**E13：** 1768 项检查。<ul><li>新写入的字节可被 `readLocalPref` 等旧读者读回；5cd63ff 写入的字节在 fixed 上零写入即可读出。</li><li>33 个畸形值在加载时都能渲染：10 个 E4 崩溃值在 `/app/tasks` 与 Appearance pane 上都检查过，其中 6 个另在 ZH 下复查；另一 document 向运行中的 App 写入 9 个畸形值（含 `Infinity`），都没有到达路由错误页。</li><li>7 个字段跨 document 实时传播。</li><li>clean 状态 chrome 与 `5cd63ff` 的 42 项比较全部相同。</li><li>隔离：12 项操作中 `StorageEvent`、`preference-changed` 与 `key:null` 均为 0；无关键、Features 的 rail/路由/搜索与宠物位置均不变。</li></ul></li><li>**E26：** 521 项检查，EN 与 ZH。<ul><li>六种失败来源都覆盖到，每个成员恰好一次尝试，非成员为 0；</li><li>逐帧检查：成员 pending 或失败时，从未出现成功行；</li><li>全部成功后，按钮仍渲染并变为 `aria-disabled`，不挂描述，焦点留在按钮上，没有 Topbar 状态，`beforeunload` 已移除；</li><li>部分结果时显示计数行，焦点保留，Topbar 状态出现；</li><li>持锁时第二次激活无效，可被 Topbar 选择取代，Discard 后迟到的完成被忽略；</li><li>没有 "Save & apply" 与 "Saved"/"已保存"。</li></ul></li><li>**非阻断观察：** 每次 App 挂载都会写两个七键之外的键：auth provider 的身份变更键，以及 supabase-js 的 `lswt-` 探针。两者来自两个版本中逐字节相同的代码，属既有行为，不在本 caller 范围内。</li><li>**总控核对：**<ul><li>29 个文件均为新增，且在允许目录内；回执列全了 hash。</li><li>三份日志的 result 记录均为 `pass`、`harnessValid`，runtime error 与 console 警告均为 0；按键审计 precondition 均通过。</li><li>总控亲自查看了 ZH 部分结果截图：字段恢复块、Topbar "未保存"、计数行、左对齐的全部重试、导出、放弃全部，Reset 单独一行；底部区域远离右下角的宠物。均与日志一致。</li></ul></li></ul> |
 | 范围 | 7 个 device 键：语言、主题、密度、字号、强调色、背景、rail 位置。<ul><li>三个写入面：Settings pane、`App.tsx` 根偏好 writer、Topbar 快速切换。</li><li>Terra 可改的文件见合同 §11：Appearance 包；shell 的 `Topbar.tsx`、`Shell.tsx`、`types.ts` 与 Topbar 测试；`apps/web` 的 `App.tsx` 与新的 App 测试；运行记录目录 `web-appearance-recovery-terra/`。</li><li>全部在 `web` 模块内，不改 D2 共享层。</li></ul> |
 | 312 清单编号 | 关联 SET-02、SHELL-04、REL-05、REL-07、REL-09 等；本任务不关闭任何编号 |
 | 风险等级 | `high`：改动宿主 `App.tsx` 与 shell，影响所有 `/app` 路由。<ul><li>H6：一个畸形根值会让整个 `/app` 落入错误页。</li><li>是开放式 async 路径的第一个 device 生产使用方：在这里发现的缺陷按共享缺陷处理。</li></ul> |
 | 总控核对 | <ul><li>提交只新增 2 个文件，worktree clean。</li><li>总控在 `5cd63ff` 上逐条核实关键源码事实：<ul><li>`plugin-web-tokens/src/i18n.ts:727–733` 遇不支持的语言抛 `TypeError`；</li><li>`apply.ts:64–69、83–88` 遇非法字号或色相抛 `RangeError`；</li><li>`router.tsx:41–43` 的 `/app` 挂 `RouteErrorBoundary`；</li><li>`App.tsx:98–105` 与 `Topbar.tsx:26–39` 吞掉写入失败；</li><li>`SettingsFooter.tsx:75` 无条件 `setSaved(true)`；</li><li>7 个键在 `accountOwnership.ts` 中均为 device。</li></ul></li><li>Terra 文件清单逐个列出；E1–E26 连续，无缺号。</li></ul> |
 | 前置决定 | <ul><li>**B-2 / A2（用户已决定为 (ii)，见上）：** SET-02 原文为"Appearance统一自动保存或编辑后保存语义"，两种方式都写在条目里，属产品负责人的选择。<ul><li>合同按选项 (i) 写成：保留自动保存，去掉 "Save & apply"（Features D3 先例）。</li><li>选 (ii) 或 (iii) 时，须由 Astra 修订合同。</li></ul></li><li>**A1、A3–A9（总控可定）：** 宿主与 shell 范围、App 级单一 controller、开放式 async 路径、保护模型（不加 Settings 路由 guard；Topbar 状态位；App 级 `beforeunload`；登出前确认）、严格值域且只拒绝不修复、Reset 删除 6 个键并保留语言、测试处置、R-PET 判定口径。总控倾向确认，待 B-2 结果后一并确认。</li><li>**其他候选的用户决定（暂不提问，排到对应候选时再提）：** C-1（SET-10）、D-2、E-1（DASH-03）、E-2（SHELL-05）、E-3（SET-03）、F-2（SET-08）。</li></ul> |
-| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ ~~批次 41 OE-1/OE-2 复核~~（`26cfce8`）→ ~~批次 42 重跑 E7、E8、E16、E17~~（`31d6335`）→ ~~批次 43 native E9–E11~~（`3419542`）→ ~~批次 44 K-1 评估~~（`6b9f0ee`）→ 批次 45 native E12–E13 与 E26 → 批次 46 视觉与键盘 E14–E15 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
+| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ ~~批次 41 OE-1/OE-2 复核~~（`26cfce8`）→ ~~批次 42 重跑 E7、E8、E16、E17~~（`31d6335`）→ ~~批次 43 native E9–E11~~（`3419542`）→ ~~批次 44 K-1 评估~~（`6b9f0ee`）→ ~~批次 45 native E12–E13 与 E26~~（`32e6753`）→ 批次 46 视觉与键盘 E14–E15 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
 
 CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
@@ -249,7 +250,8 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 | Appearance（续 5） | `662de52` 登记批次 42 · `31d6335` E7、E8、E16、E17 |
 | Appearance（续 6） | `f8cbcbb` 登记批次 43 · `3419542` native E9–E11 |
 | Appearance（续 7） | `bc1f5f4` 登记批次 44 · `6b9f0ee` K-1 评估 |
-| 本提交 | 关闭 K-1，登记批次 45（E12–E13 与 E26） |
+| Appearance（续 8） | `ce9b68b` 登记批次 45 · `32e6753` native E12、E13、E26 |
+| 本提交 | 记录 E12、E13、E26，登记批次 46（E14–E15） |
 
 ## 台账变化
 
@@ -289,44 +291,58 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 
 ## 本轮唯一任务
 
-批次 45：独立父级 native 验证者在真实 Chrome 中，用生产 `App` composition 验证 fixed Appearance 的 host 矩阵（E12）、downstream（E13）与全部重试（E26）。
+批次 46：独立父级视觉与键盘验证者在真实 Chrome 中验证 fixed Appearance 的 EN/ZH 五宽度视觉（E14）与键盘（E15）。
 
 - **固定点：**
-  - fixed `24073b5`（E13 的 chrome 不变性另需 `5cd63ff`）；不可变 archive；lockfile gate；`@repo` 全部来自 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
-  - headless Chrome 走 pipe transport；**按键不得带 `nativeVirtualKeyCode`**，须审计只有 runner 自己的按键到达（K-1）；
+  - fixed `24073b5`；宠物截图另需 `5cd63ff`；不可变 archive；lockfile gate；`@repo` 全部来自 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
+  - headless Chrome 走 pipe transport；按键不带 `nativeVirtualKeyCode`，并做按键审计；
   - 只有 auth session 为合成；不得在主检出启动 dev server，也不得写入主检出；
   - 合同 r3（`706c9a3`）；控制分支基点为本提交。
-- **E12（host 矩阵）：** 合同 §9 的行 a–s，带 history 计数（push、replace、popstate、commit）与逐行 runtime-error gate。其中：
-  - 行 m 按总控裁定 4：恰好一次释放，即一次 live `proceed()` 或一次 `navigate` 重放，非 live 调用为 0；
-  - 行 o–s 为全部重试相关行，行 s 为禁用态。
-- **E13（downstream）：**
-  - 新 document 中的字节兼容；
-  - 显示真实值；
-  - 每个畸形值都不会让 App 崩溃，覆盖 E4 中的全部 10 个崩溃值，以及另一 document 写入的 `Infinity`；
-  - 跨 document 传播；
-  - clean 状态下的 chrome 与 `5cd63ff` 保持不变；
-  - 跨模块隔离。
-- **E26（native 全部重试，EN 与 ZH，可信指针与键盘输入）：**
-  - **失败来源：** pane 与 Topbar 的 set 草稿；背景选择的两次写入都被拒；失败的 Reset 项；失败的前驱加排队的最新意图。
-  - **尝试次数：** 用 attempt 级计数验证每个成员恰好一次写入或删除、非成员为 0，之后字节精确。
-  - **状态行：** 逐帧采样，任一成员 pending 或失败时，绝不出现成功行。
-  - **全部成功：** 按钮仍渲染并变为禁用，不挂描述；焦点留在按钮上，不落到 `<body>`；没有 Topbar 状态；`beforeunload` 已移除。
-  - **部分结果：** 显示计数行，焦点保留，Topbar 状态出现。
-  - **持锁与迟到：** 成员被真实锁持有时，第二次激活无效；被 Topbar 选择取代；pass 打开期间执行 Discard 与 Discard all 后，迟到的完成被忽略。
-  - **旧按钮：** 不存在 "Save & apply" 控件，也不出现 "Saved"/"已保存"。
-- **惯例：** 参照批次 43 修正后的 runner（`web-appearance-recovery-native/verify-native-fixed.mjs`）与 Features 的 E12–E13 先例（`312b27c`，`review-host-downstream-5cd63ff.md`）。
-- **输出：** 只新增 `docs/reviews/web-appearance-recovery-native/**` 下的文件：runner、fixture、日志、截图，以及回执 `review-host-downstream-retryall-24073b5.md` 与 hash。
+- **E14（EN 与 ZH，375、414、768、1024、1440 五个宽度，记录视口高度）：**
+  - **常规检查：**
+    - 宠物隐藏时，每个控件的中心 hit-test；
+    - 宠物显示时按 R-PET 规则运行：除全部重试外，其他控件只要求中心不被遮挡；
+    - 44×44、水平包含、无横向滚动；EN 375 的溢出（H14(a)）须已修复；
+    - Topbar 状态可见时的 Topbar 包含性；状态文字按总控断点裁定，从 768px 起显示，761–767px 只显示图标；
+    - 选择器审计：列出每个新增选择器，以及禁用全部重试规则的声明；
+    - 合同 §9 规定的截图，由执行者逐张人工审查。
+  - **A2.8 全部重试 gate：**
+    - 与宠物盒至少相隔 8px 的几何间隔；
+    - 显示宠物时，在滚动进入视图后与滚动范围末尾各做探测，中心加四个内缩点均无遮挡；
+    - 覆盖五个宽度上的这些状态：all-seven、partial-reset、partial-pass（可用）；clean、source-only（禁用）；以及 768 下 pass 打开时的禁用态。
+  - **禁用态外观：**
+    - 两种主题 × 六种色调下，对比度 ≥3:1；
+    - 不随强调色变化；
+    - 可用与禁用可区分；
+    - 焦点环与属性正确。
+- **E15（键盘）：**
+  - **常规检查：**
+    - Tab 顺序；
+    - Enter 与 Space 各只触发一次；
+    - 滑块步进；
+    - reset 确认；
+    - Discard、Reload、Retry、Discard all、Reset 之后的焦点落点；
+    - Topbar 状态。
+  - **全部重试：**
+    - 在每种状态下都是 Tab 停靠点；
+    - Enter 与 Space 各启动一次 pass，pending 时的第二次激活无效；
+    - 禁用时 Enter 与 Space 无效，焦点保留，Space 不滚动页面；
+    - 全部成功（变为禁用）与部分结果之后，焦点都留在全部重试上。
+- **惯例：** 参照 Features 的 E14–E15 先例（`5905e37`，`review-visual-keyboard-5cd63ff.md`），以及本 caller 的批次 43、45 runner。
+- **输出：** 只新增 `docs/reviews/web-appearance-recovery-native/**` 下的文件：runner、fixture、日志、截图，以及回执 `review-visual-keyboard-24073b5.md`。回执须列出所有截图的 SHA-256 与人工审查结论。
 - **禁止：** 修改任何已有文件；修改产品、合同、台账或控制面；修复；push；派生子 agent。
-- **成本上限：** 每个模式的诊断迭代不超过 3 轮，用新后缀并保留旧日志；开发探测须在回执中披露。
-- **停止条件：** 出现真实产品失败时，冻结复现、影响范围与正确 oracle，提交后停止，由总控另开修复窗口；harness 不可复现时 BLOCKED。
+- **成本上限：** 每种语言模式的诊断迭代不超过 3 轮，用新后缀并保留旧日志；开发探测须披露。
+- **停止条件：** 出现真实产品失败（溢出、遮挡、目标小于 44、键盘双触发、焦点丢失、视觉破损、对比度不足或宠物 gate 失败）时，冻结复现，提交后停止，由总控另开修复窗口；harness 不可复现时 BLOCKED。
 
 ## 下一步
 
-1. 等待批次 45 回执，总控核对：
+1. 等待批次 46 回执，总控核对：
    - 只新增文件；
-   - 行 a–s 的 history 计数；
-   - E13 的崩溃安全与 chrome 不变性；
-   - E26 的逐成员尝试次数与逐帧状态行；
+   - 逐宽度、逐语言、逐控件的检查表；
+   - 全部重试 gate 与禁用态外观的测量；
+   - 选择器审计；
+   - 截图人工审查（总控至少抽看两张）；
+   - 键盘与焦点落点；
    - 按键审计；
    - hash。
-2. 通过后登记批次 46：EN/ZH 五宽度视觉与键盘（E14–E15）；然后是最终回归 E18–E25 与回执 E27，最后是独立最终 acceptance。
+2. 通过后登记批次 47：最终回归 E18–E25 与回执 E27。登记前，先核对合同中全部 Required evidence 条目（G1 教训）。之后是批次 48：独立最终 acceptance。
