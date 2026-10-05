@@ -3,6 +3,11 @@
  *
  * Port of web design/shell.jsx lines 168-200.
  * i18n via useI18n(lang) from @repo/plugin-web-tokens.
+ *
+ * CP-APPEARANCE-01: each option activation calls its setter exactly once with
+ * the option's value and makes zero Storage attempts; persistence, recovery
+ * and the unsaved-change status belong to the host's App-scoped Appearance
+ * controller, whose status node renders in the optional `appearanceStatus` slot.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -11,32 +16,6 @@ import { useI18n } from "@repo/plugin-web-tokens";
 import type { Density, Lang, Theme } from "@repo/plugin-web-tokens";
 import { Icon } from "./icons.js";
 import type { TopbarProps } from "./types.js";
-
-/**
- * persistAndSet — calls setter first (immediate UI update), then writes the
- * value to localStorage so App.tsx lazy initializers can restore it on reload.
- *
- * Keys used: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density"
- * These are NOT registered in plugin-web-storage's registry (by design —
- * kept minimal to avoid adding a formal pref codec for three plain string enums).
- * Raw localStorage.setItem/JSON.stringify is intentional (see dev_log fix-strategy).
- *
- * localStorage quota / disabled: silently skipped; in-memory state still works.
- */
-function persistAndSet<T extends string>(
-  setter: (v: T) => void,
-  key: string,
-  value: T,
-): void {
-  setter(value);
-  try {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-  } catch {
-    // localStorage quota exceeded or access disabled — in-memory update still applied above.
-  }
-}
 
 const LANG_OPTIONS: ReadonlyArray<{ value: Lang; label: string; short: string }> = [
   { value: "en", label: "English", short: "EN" },
@@ -61,6 +40,7 @@ export function Topbar({
   onOpenSettings,
   onOpenSearch,
   premiumBadge,
+  appearanceStatus,
 }: TopbarProps) {
   const { s } = useI18n(lang);
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -99,9 +79,9 @@ export function Topbar({
   };
   const prefSummary = `${activeLang.short} · ${themeLabel[theme]} · ${densityLabel[density]}`;
 
-  const chooseLang = (next: Lang) => persistAndSet(setLang, "xai_pref_lang", next);
-  const chooseTheme = (next: Theme) => persistAndSet(setTheme, "xai_pref_theme", next);
-  const chooseDensity = (next: Density) => persistAndSet(setDensity, "xai_pref_density", next);
+  const chooseLang = (next: Lang) => setLang(next);
+  const chooseTheme = (next: Theme) => setTheme(next);
+  const chooseDensity = (next: Density) => setDensity(next);
 
   return (
     <header className="topbar">
@@ -132,6 +112,8 @@ export function Topbar({
       <div className="topbar-controls">
         {/* Extension 2026-05-26 — Premium tier badge at left end of controls (F1 render-prop slot) */}
         {premiumBadge ? premiumBadge : null}
+        {/* CP-APPEARANCE-01 — Appearance status slot, immediately after the premium badge */}
+        {appearanceStatus ? appearanceStatus : null}
         <div className="topbar-pref" ref={prefsRef}>
           <button
             type="button"

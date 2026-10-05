@@ -44,6 +44,18 @@ export interface AppearanceDefaults {
   readonly bgTone: BgTone;        // "default"
   // lang intentionally omitted — per-pane Reset does NOT touch language.
 }
+
+// ---- CP-APPEARANCE-01 (additive) ----------------------------------------
+export type AppearanceFieldId = "lang" | "theme" | "density" | "accentHue" | "bgTone" | "railPos" | "fontScale";
+/** Display values: the latest intent while a draft exists, else the strictly validated stored value, else the default. */
+export interface AppearanceValues { lang; theme; density; accentHue: number; bgTone; railPos; fontScale: number }
+export type AppearanceFieldState = "clean" | "saving" | "resetting" | "not-saved" | "not-reset" | "unavailable";
+export type AppearanceStatusLine =
+  | { kind: "none" } | { kind: "retrying" } | { kind: "export-failed" }
+  | { kind: "not-saved"; count: number } | { kind: "saved" } | { kind: "restored" };
+export interface AppearanceController { /* see §15 */ }
+export interface AppearanceProviderProps { readonly controller: AppearanceController; readonly children?: ReactNode }
+export interface AppearanceStatusProps { readonly onReview: () => void }
 ```
 
 ## 2. Constants
@@ -64,28 +76,20 @@ All four objects use `Object.freeze` / `as const` to prevent runtime mutation.
 export function AppearancePane(props: AppearancePaneProps): React.ReactElement;
 ```
 
-Behavioral contract:
+Behavioral contract (CP-APPEARANCE-01; contract `docs/reviews/web-appearance-recovery-contract/contract.md` r3):
 
-- Subscribes via `usePref` to `xai_accent_hue` / `xai_rail_pos` / `xai_bg_tone`.
-- Mirrors `theme` / `density` / `fontScale` from the DOM into local `useState` on mount:
-  - `theme` ← `document.documentElement.getAttribute("data-theme") as Theme | null` (falls back to `appearanceDefaults.theme` if null).
-  - `density` ← `document.documentElement.getAttribute("data-density") as Density | null` (falls back to `appearanceDefaults.density` if null).
-  - `fontScale` ← `parseFloat(getComputedStyle(document.documentElement).fontSize) / 16` (falls back to `1` if NaN).
-- Live binding on `onChange`:
-  - Theme: `applyTheme(value)` + `emitWebEvent("web:settings:preference-changed", { key:"theme", value, changedAt })` + `setThemeLocal(value)`.
-  - Density: `applyDensity(value)` + emit + `setDensityLocal(value)`.
-  - FontScale: `applyFontScale(value)` + emit + `setFontScaleLocal(value)`.
-  - AccentHue (slider OR preset): `setPref("xai_accent_hue", value)` + emit. App.tsx useEffect applies. NO direct `applyAccentHue` call (avoids double-apply race).
-  - RailPos: `setPref("xai_rail_pos", value)` + emit. App.tsx useEffect applies.
-  - BgTone: `setPref("xai_bg_tone", value)` + `setPref("xai_accent_hue", tone.hue)` + emit (bgTone) + emit (accentHue).
-  - Lang: emit `{ key:"lang", value, changedAt }` only — no DOM apply, App.tsx setLang re-renders all consumers.
-- Save: read current state for all 7 dims, emit 7 events with `changedAt: new Date().toISOString()`.
-- Reset (`SettingsFooter onReset` override — chassis owns the confirm prompt; see M1 below):
-  1. For accentHue/railPos/bgTone: call `removePref(key)`.
-  2. For theme/density/fontScale: call `applyX(default)` + `setXLocal(default)` + emit at default.
-  3. Lang NOT touched.
-
-> **M1 (chassis owns confirm)**: `SettingsFooter.handleReset` (packages/plugin-web-settings-shell/src/SettingsFooter.tsx:85-96) already calls `confirmAction(message)` BEFORE invoking `onReset`. The pane's `onReset` therefore MUST NOT call its own confirm — doing so would double-prompt. This mirrors the row #23 precedent (`packages/xai-web-settings-features-panel/src/FeaturesPane.tsx:41-45` — `onReset={resetAllFeaturePrefs}` with no nested confirm). The chassis prompt text ("Reset every preference … clears saved theme, layout, and module toggles") is slightly misleading for a per-pane reset — documented as a known UX gap. Optional follow-up: extend `SettingsFooterProps` with a `confirmMessage?: { en; zh }` override (out of scope for this row — leave as TBD note in design.md §15).
+- The pane is a **view of the App-scoped Appearance controller** (§15). Inside `<AppearanceProvider>` it uses the provided controller; a standalone `<AppearancePane lang>` without a provider owns its own controller, so the package stays usable and testable alone. In the production App there is exactly one controller.
+- **Display values** come from the controller: the latest intent while a draft exists, otherwise the strictly validated stored bytes, otherwise the default. A fresh load therefore shows the stored theme, density and font scale (no DOM mirrors), consistent with what `<html>` applies.
+- **Autosave on every change, applied immediately** on both surfaces (pane and Topbar): the `active` classes, `aria-selected`, slider values, `<html>` attributes and inline style, and for language every string. Controls stay enabled while a write is pending.
+  - Theme / Density / Language / Sidebar position: closure-bound values → `controller.setTheme` / `setDensity` / `setLang` / `setRailPos`.
+  - Accent (preset or slider): today's clamp and rounding `Math.max(0, Math.min(360, Math.round(v)))`, then `controller.setAccentHue`; a non-finite result is ignored.
+  - Font scale slider: today's clamp `Math.max(0.85, Math.min(1.15, v))`, then `controller.setFontScale`; a non-finite result is ignored.
+  - Background tone: `controller.chooseBgTone(tone, hue)` — two intents in one handler, the tone then its hue as the accent; they settle independently.
+- **Field-local recovery** directly below each row (`[data-appearance-recovery="<fieldId>"]`): pending → "<Label> is saving." / "<Label> is being reset to its default."; settled failure → "<Label> was not saved." / "<Label> was not reset to its default." with **Retry** and **Discard**; invalid or unreadable stored bytes → "Saved <Label> is unavailable. Reload it; this is not a new unsaved change." with **Reload** only. Accessible names: `Retry <Label>`, `Discard <Label>`, `Reload <Label>` (ZH `重试 …`, `放弃 …`, `重新读取 …`).
+- **Pane-local bottom action area** (no `SettingsFooter`): the status line (`data-testid="appearance-status-line"`, `role="status"`, always rendered), **Retry all** (`data-testid="appearance-retry-all"`, always rendered, first at the inline start), **Export Appearance draft** and **Discard all changes** (only while drafts exist), then **Reset to defaults** (`data-testid="appearance-reset-defaults"`) on its own line. Normal flow, start-aligned, wrapping; never sticky or fixed.
+- **Reset to defaults** asks `window.confirm` with the truthful text ("Reset theme, density, font scale, accent color, background palette and sidebar position to their defaults? Language is kept.") before any intent exists; declining touches nothing. Accepting removes exactly six keys by verified removal (§15.4); language is never read, written or removed.
+- **Keyboard continuity**: after Discard or Reload focus lands on the field's selected control (or its slider); a recovery block that unmounts while focused returns focus there; after Discard all focus goes to Reset to defaults; Retry all keeps focus in every transition.
+- The pane emits no `web:settings:preference-changed`, dispatches no `StorageEvent`, and registers **no Settings route guard** (`appearancePane.render` still forwards only `lang`).
 
 ## 4. Registry entry
 
@@ -119,98 +123,49 @@ export function composeSettingsPaneRegistry(): readonly Pane[] {
 
 Line-disjoint with row #24 (which appends additional branches for the 10 remaining placeholder panes).
 
-## 6. App.tsx wiring (single anchor edit)
+## 6. App.tsx wiring (CP-APPEARANCE-01)
 
-> **B2 (setter disposition)**: App.tsx lines 62-66 currently suppress FOUR setters via `void setX`: `setAccentHue`, `setRailPos`, `setBgTone`, **and** `setFontScale`. Naively replacing the block with a `useEffect` subscription that only references the 4 useState setters (`setTheme/setDensity/setFontScale/setLang`) would leave the 3 persisted setters (`setAccentHue/setRailPos/setBgTone`) unused → `@typescript-eslint/no-unused-vars` fails → `pnpm --filter @repo/web build` breaks. Plan must specify disposition.
+`apps/web/src/App.tsx` creates the **one** App-scoped controller and provides it; it owns no Appearance state of its own any more.
 
-**Selected disposition** (Option 1 from review — cleanest, matches row #23 precedent of trimming `usePref` destructure when setter is not needed locally):
-
-1. **Drop the 3 persisted setters from the `usePref` destructure** at App.tsx lines 55-57. The pane writes to those keys via `setPref` directly through `usePref`'s shared registry; App.tsx only needs the READ value to feed its `applyX` useEffects (lines 72-74).
-2. **Keep all 4 useState setters** (`setTheme`, `setDensity`, `setFontScale`, `setLang`) — all are referenced by the new subscription.
-3. **Delete all 4 `void setX` lines** at App.tsx lines 62-66.
-
-Final edit hunk (replace lines 55-66 of App.tsx — a contiguous 12-line block):
-
-```ts
-// ---- usePref state pieces (persisted) ------------------------------------
-const [accentHue]      = usePref("xai_accent_hue");   // setter dropped — pane writes via setPref directly
-const [railPos]        = usePref("xai_rail_pos");     // setter dropped — pane writes via setPref directly
-const [bgToneRaw]      = usePref("xai_bg_tone");      // setter dropped — pane writes via setPref directly
-// plugin-web-tokens BgTone is a strict subset of plugin-web-storage's BgTone
-// (storage adds "sage" which tokens doesn't know yet). Cast to BgTone for apply*.
-const bgTone: BgTone = bgToneRaw as BgTone;
-
-// xai-web-settings-appearance row #22 — subscribe to live binding bus.
-// AppearancePane emits web:settings:preference-changed on every onChange + on Save + on Reset.
-// The 3 persisted dims (accentHue/railPos/bgTone) auto-rerender via usePref;
-// the 4 useState dims (theme/density/fontScale/lang) need explicit setters here.
-useEffect(() => {
-  const off = onWebEvent("web:settings:preference-changed", (e) => {
-    const d = e.detail;
-    switch (d.key) {
-      case "theme":     setTheme(d.value); break;
-      case "density":   setDensity(d.value); break;
-      case "fontScale": setFontScale(d.value); break;
-      case "lang":      setLang(d.value); break;
-      // accentHue / railPos / bgTone auto-rerender via usePref — no setter needed.
-    }
-  });
-  return () => off();
-}, []);
-```
-
-Adds one import at the existing event-bus import group:
-
-```ts
-import { onWebEvent } from "@repo/xai-web-event-bus";
-```
-
-This is the ONLY App.tsx edit by row #22. Line-disjoint with row #23's `modules` filter at lines 88-92. Touches:
-- lines 55-57 (drop 3 setters from destructure)
-- lines 62-66 (remove 4 `void setX` lines, replace with subscription useEffect)
-- imports (add `onWebEvent` to existing `@repo/xai-web-event-bus` group)
-
-Lint result post-edit: zero unused-vars warnings; build clean.
+- `AppInner` (inside `AccountStorageGate`, so a scope change remounts the controller with the committed bytes — REL-09) calls `useAppearanceController()` once and wraps its tree in `<AppearanceProvider controller={appearance}>`. `App()` itself is unchanged.
+- Display values feed `WebShellProvider` (`lang`, `railPos`), `Shell` (`lang`, `theme`, `density`), `PremiumTierBadge` and `DesktopPet` (`lang`).
+- The controller's edits are the Topbar's existing setters: `setLang={appearance.setLang}`, `setTheme={appearance.setTheme}`, `setDensity={appearance.setDensity}` (types unchanged).
+- `appearanceStatus={<AppearanceStatus onReview={reviewAppearance} />}` goes through the shell's optional slot; `reviewAppearance` emits `web:shell:module-change` `{ moduleId: "settings", source: "shortcut" }` (as Shell does for Settings) and then `navigate("/app/settings/appearance")` once.
+- `handleSignOut` awaits `appearance.confirmSignOut()` immediately before each `requestSettingsDeparture("sign-out")` (coordinator branch and fallback branch); the existing re-checks after the awaits are unchanged.
+- Retired from App: `writeLocalPref`, the `web:settings:preference-changed` subscriber, the root `useState`s, the three legacy `usePref` reads and the `apply*` / media-query effects (the controller applies the display values). `readLocalPref` stays exported and byte-identical.
 
 ## 7. Event contracts
 
-### 7.1 `web:settings:preference-changed`
+### 7.1 `web:settings:preference-changed` — retired for these fields
 
-Owner row per `packages/core/src/types/events.ts` line 192. Primary emitter is THIS row; chassis is a co-emitter via `SettingsFooter.onSave` and `resetAllPrefs()`.
+The pane emits nothing and App subscribes to nothing. The event type stays declared in `@repo/core` (and `SettingsFooter` / `resetAllPrefs` keep their own emitters, which no production pane mounts or calls). Retry all, Discard, Reload, Reset, Export and the sign-out step broadcast nothing either: zero `StorageEvent` dispatches and zero preference-changed events.
 
-Emit triggers (this row):
-- **On each control's `onChange`**: one emit per change (live binding side-effect).
-- **On Save**: 7 emits (one per dim) using current local + pref values.
-- **On per-pane Reset**: 6 emits (theme/density/fontScale/accentHue/railPos/bgTone), `lang` excluded.
+### 7.2 `web:shell:module-change`
 
-Payload (reuses existing `WebPreferenceChange & { changedAt: string }` shape):
+Emitted once by App's review callback when the Topbar status is activated (`source: "shortcut"`), immediately before the navigation.
 
-```ts
-{ key: WebPreferenceKey; value: <key-specific>; changedAt: string }  // ISO 8601
-```
+### 7.3 Subscriptions
 
-No payload field changes from row #21. No new event channels added.
-
-**bgTone union mismatch (silent guarantee — see M3 from feature-review)**:
-`WebPreferenceChange['bgTone']` (packages/core/src/types/events.ts:26) declares 7 ids — `default | sage | cream | mist | lavender | peach | graphite`. Storage `BgTone` (PREF_REGISTRY) also includes `"sage"`. The pane only ever writes the 6 canonical tokens-side ids defined in the `BG_TONES` constant (see §2 and storage table in §8) — `"sage"` is never emitted by this row. Subscribers that pattern-match on `"sage"` will receive a no-op branch (no harm). Frozen assumption 4 (design.md §2) is the canonical statement; this restatement is for breakpoint continuity at the API surface.
-
-### 7.2 Subscriptions inside the pane
-
-None. The pane is an emitter only.
+None in the pane. The controller's engine bindings follow same-tab publications and cross-document `storage` events for the seven keys, so an idle field updates live; a drafted field receiving another document's commit becomes a preserved conflict.
 
 ## 8. Storage contract
 
-NO new keys. This row claims first-class ownership over the existing 3 entries (already owned by `"xai-web-settings-appearance"` in registry.ts):
+NO new keys, codecs, registry entries, ownership or lifecycle changes. The seven unscoped **device** keys, bound through `usePrefAutosaveAsync` with strict caller-side validators (the engine refuses invalid sources before both set and reset):
 
-| Key | Codec | Default | Type union |
-|-----|-------|---------|------------|
-| `xai_accent_hue` | number | `165` | `number` (0..360 logical range) |
-| `xai_rail_pos` | string | `"left"` | `RailPos` |
-| `xai_bg_tone` | string | `"default"` | `BgTone` (storage + event union allow 7 ids incl. `"sage"`; pane only writes the 6 canonical tokens-side ids via `BG_TONES`) |
+| Field | Key | Binding | Exact bytes | Strict domain | Default |
+|-------|-----|---------|-------------|---------------|---------|
+| `lang` | `xai_pref_lang` | open-ended suffix `"lang"`, `json` | `"en"`, `"zh"` | `en`, `zh` | `"en"` |
+| `theme` | `xai_pref_theme` | suffix `"theme"`, `json` | `"light"`, `"dark"`, `"system"` | those 3 | `"light"` |
+| `density` | `xai_pref_density` | suffix `"density"`, `json` | `"comfortable"`, `"compact"` | those 2 | `"comfortable"` |
+| `fontScale` | `xai_pref_font_scale` | suffix `"font_scale"`, `json` | `JSON.stringify(v)` | finite, 0.85 ≤ v ≤ 1.15 | `1` |
+| `accentHue` | `xai_accent_hue` | registered, `number` | `String(n)` | integer, 0 ≤ n ≤ 360 | `165` |
+| `railPos` | `xai_rail_pos` | registered, `string` | raw | `left`, `right`, `top`, `bottom` | `"left"` |
+| `bgTone` | `xai_bg_tone` | registered, `string` | raw | `default`, `cream`, `mist`, `lavender`, `peach`, `graphite` (storage's widened `"sage"` is outside the domain) | `"default"` |
 
-**bgTone 7-vs-6 union note (M3)**: The storage codec and the `WebPreferenceChange['bgTone']` discriminant both list 7 ids (`default | sage | cream | mist | lavender | peach | graphite`). The pane filters writes through the 6-id `BG_TONES` constant (`default | cream | mist | lavender | peach | graphite`) — `"sage"` is never emitted nor persisted by this row. The widened union is preserved for forward compatibility; the pane treats it as v1 over-spec.
-
-Reset semantics: `removePref(key)` for all 3 → registry default takes over. (No special handling — uses the public `removePref` from `@repo/plugin-web-storage`.)
+- Every write and removal takes the per-key Web Lock `prefMutationLockName(<key>)` with an exact expected baseline and readback; without `navigator.locks` every write is refused and reported, never written unfenced.
+- Invalid or unreadable bytes display and apply the default, never throw, show a Reload-only source alert and are never rewritten, purged or normalized; a valid edit over them is a failed draft (REL-07).
+- Reset to defaults removes six keys by verified removal (an absent key completes as the engine's verified no-op); `xai_pref_lang` is never touched.
+- Readers outside the package (`readLocalPref`, `NotFoundPage`, `AccountStorageGate`) read the same bytes as before.
 
 ## 9. i18n keys (additions to `packages/plugin-web-tokens/src/i18n.ts`)
 
@@ -258,21 +213,19 @@ Line-disjoint with #23 (which appends `features_*` keys) and #24 (which will app
 
 ## 10. Behavioral contract
 
-- All 7 dimensions live-bind on first `onChange` event — pane MUST NOT defer DOM mutation to Save (R1 from review).
+- All 7 dimensions apply on the first change event (no deferral): the controller applies display values to `<html>` (`applyTheme`, `applyDensity`, `applyFontScale`, `applyAccentHue`, `applyBgTone`, `applyRailPos`, plus the `system` media-query listener) in layout effects.
 - `Math.abs(currentHue - presetHue) < 3` matches the source's active-state tolerance for the 6 swatches.
-- Bg-tone card click MUST also write `xai_accent_hue` (verbatim source line 584). Both writes happen in the same synchronous handler; both emits fire.
-- Per-pane Reset wraps in `window.confirm` with bilingual prompt. If user cancels, NO state change, NO emit.
-- Save button shows the chassis "Saved" flash for 1800ms — provided by `<SettingsFooter>` (chassis api.md §2.3 — `onSave` returns array, chassis emits each item, sets flash).
+- A bg-tone card click also writes `xai_accent_hue` (verbatim source line 584): two intents in one synchronous handler, settling independently.
+- Autosave: every change persists immediately; nothing waits for a button. There is no "Save & apply" and no unconditional "Saved" flash; "Appearance settings saved." / "Defaults restored." appear only after a genuine verified completion while the pane is mounted and nothing is pending, failed or source-invalid.
+- Reset to defaults: pane-local, truthful `window.confirm`, six verified removals, language kept; declining makes zero storage attempts and no state change.
 - `appearanceDefaults` matches chassis `defaults.ts` for the shared dims; parity is verified via the **public** `resetAllPrefs()` emit snapshot (see test.md §A1 + §E) — NOT via direct internal import (chassis `defaults.ts` is `@internal`).
-- Per-pane Reset confirm is owned by the chassis `SettingsFooter.handleReset` — the pane does NOT call its own `confirmAction`. See §3 M1 note.
 
 ## 11. Error semantics
 
-- `applyFontScale` may throw `RangeError` for non-finite. Pane clamps to `[0.85, 1.15]` BEFORE calling apply (`clampedScale = Math.max(0.85, Math.min(1.15, parseFloat(input.value)))`). NaN input → no-op + DEV `console.warn`.
-- `applyAccentHue` may throw `RangeError` for non-finite. Pane clamps to `[0, 360]` and rounds.
-- `removePref` failures (storage exception) caught in try/catch with DEV `console.warn`; Reset still proceeds for remaining keys.
-- `emitWebEvent` is synchronous and no-op on missing subscribers — failure modes are not surfaced.
-- Reset confirm: handled by chassis `SettingsFooter.handleReset` — the pane has no DI seam for `confirmAction`. Tests stub the chassis confirm path (jsdom `window.confirm`, or the chassis internal helper if exported) and verify abort vs. proceed paths.
+- Writes never throw to the UI: quota, a throwing `getItem`/`setItem`/`removeItem`, a missing or rejected Web Lock, a conflict or readback uncertainty all keep the latest choice displayed and applied with "was not saved" / "was not reset to its default" feedback, Retry, Discard, the Topbar status and the unload warning. Uncertainty keeps the engine's grant and reconciles with one total write or removal; a conflict is never overwritten.
+- Malformed or unreadable stored bytes (for example `xai_pref_lang` `"fr"`, `"EN"`, `null`; `xai_pref_font_scale` `0`, `"1"`; `xai_accent_hue` `Infinity`, `12.5`; `xai_rail_pos` `diagonal`; `xai_bg_tone` `sage`) never reach `useI18n`, `applyFontScale` or `applyAccentHue`: the default is displayed and applied, so no `/app` route crashes, including for a value written by another document while the App runs.
+- Range inputs keep today's clamp and rounding; a non-finite result is ignored (no operation, no message).
+- Export failures (Blob, object URL, append or click) show "Export failed. Please retry." while a draft exists and keep every draft; the anchor is removed and the URL revoked best-effort.
 
 ## 12. Stability + versioning
 
@@ -287,9 +240,9 @@ Line-disjoint with #23 (which appends `features_*` keys) and #24 (which will app
 - `react-dom ^19.2.0` (peerDep)
 - `@repo/core workspace:*` — types only (EventMap)
 - `@repo/plugin-web-tokens workspace:*` — useI18n, Lang/Theme/Density/BgTone/RailPos, applyX helpers
-- `@repo/plugin-web-storage workspace:*` — usePref, setPref, removePref, PREF_REGISTRY (read for defaults parity test)
-- `@repo/plugin-web-settings-shell workspace:*` — Toggle (not used; included for symmetry), SettingRow, SectionBlock, SettingsFooter, paneRegistry, Pane, PaneRenderProps
-- `@repo/xai-web-event-bus workspace:*` — emitWebEvent, onWebEvent (the latter consumed by App.tsx edit)
+- `@repo/plugin-web-storage workspace:*` — `usePrefAutosaveAsync` (the accepted async engine), `prefMutationLockName` (tests), `PREF_REGISTRY` (read for defaults parity test)
+- `@repo/plugin-web-settings-shell workspace:*` — SettingRow, Pane, PaneRenderProps (the pane no longer mounts the shared settings footer)
+- `@repo/xai-web-event-bus workspace:*` — tests only (the pane emits nothing)
 - `@repo/xai-web-shell workspace:*` — WebShellIconName (type only)
 
 DevDeps: `@repo/eslint-config`, `@repo/typescript-config`, `@testing-library/react`, `@testing-library/jest-dom`, `vitest`, `jsdom`.
@@ -303,3 +256,55 @@ DevDeps: `@repo/eslint-config`, `@repo/typescript-config`, `@testing-library/rea
 - Source: `web design/module-settings.jsx` lines 494-653 (AppearancePane)
 - Event channel declaration: `packages/core/src/types/events.ts` lines 192-196
 - Peer (registration pattern): `packages/plugin-web-statistics/src/registration.tsx`
+
+## 15. App-scoped controller, protection and Retry all (CP-APPEARANCE-01)
+
+Contract: `docs/reviews/web-appearance-recovery-contract/contract.md` r3 (A2–A7, §5–§8). Public surface (additive):
+
+```ts
+export function useAppearanceController(): AppearanceController;          // call once per owner
+export function AppearanceProvider(props: AppearanceProviderProps): React.ReactElement; // provides it
+export function AppearanceStatus(props: AppearanceStatusProps): React.ReactElement | null; // Topbar status
+
+export interface AppearanceController {
+  readonly values: AppearanceValues;                     // display values (§3)
+  readonly fieldStates: Readonly<Record<AppearanceFieldId, AppearanceFieldState>>;
+  readonly hasDraft: boolean;                            // pending or unresolved set/reset drafts
+  readonly unsavedCount: number;                         // |E|
+  readonly retryAllEnabled: boolean;                     // E is non-empty
+  readonly passOpen: boolean;
+  readonly statusLine: AppearanceStatusLine;
+  setLang; setTheme; setDensity; setAccentHue; setRailPos; setFontScale; chooseBgTone(tone, hue);
+  retry(field); discard(field); reload(field); discardAll(); retryAll(); exportDraft();
+  resetToDefaults(confirmReset: () => boolean);
+  confirmSignOut(): Promise<boolean>;
+  attachPane(): () => void;
+}
+```
+
+### 15.1 One controller, two views
+
+- App creates it once inside `AccountStorageGate`; the Settings pane and the Topbar quick switcher are its views, so a pane edit is visible in the Topbar (and vice versa) in the same render. A standalone pane owns its own controller.
+- Drafts live as long as the controller: they survive route changes, Settings pane switches, the popover and pane unmount/remount. A scope change remounts App and drops in-memory drafts (REL-09); the remount shows the committed bytes with no saved claim.
+- The seven bindings are created in a fixed hook order. Every valid edit becomes the field's **exact draft object**; only that object may settle the field (verified bytes, verified absence or the engine's verified no-op). An older completion never makes a newer intent look saved, and the engine's conflict settlement of superseded queued sets never surfaces as a failure of the latest intent. Late completions after Discard, Discard all, sign-out OK or unmount change nothing.
+
+### 15.2 Protection (no route guard)
+
+- **No Settings route guard**: the pane registers none; sidebar, AppRail, Back/Forward and programmatic navigation are never held by Appearance drafts.
+- **Topbar status** (`data-testid="appearance-status"`): rendered through the shell's optional `appearanceStatus` slot immediately after `premiumBadge`; a ≥44×44 button named "Appearance changes not saved. Review them in Settings." (ZH "外观更改未保存，前往设置查看。") with the visible text "Not saved" / "未保存" where the Topbar summary is visible and icon-only below 768 px. It renders nothing unless E is non-empty (a merely pending field never renders it). Activation calls the host's review callback exactly once; it never touches storage and never retries.
+- **`beforeunload`**: registered only while a draft exists (pending or unresolved, set or reset); the handler cancels the event with zero storage attempts; removed when the drafts clear and on unmount.
+- **Sign-out step** (`confirmSignOut`): no drafts → resolves `true` with zero `window.confirm` and zero storage attempts; drafts → one `window.confirm` ("Some appearance changes are not saved. Sign out and discard them?" / ZH "部分外观更改尚未保存。仍要退出并放弃这些更改吗？"). Cancel resolves `false` and keeps drafts, status and warning; OK discards every draft with zero set/remove attempts and resolves `true`. App awaits it immediately before each `requestSettingsDeparture("sign-out")`.
+
+### 15.3 Retry all (product-owner decision A2)
+
+- **E** = fields whose draft is settled unsuccessful: an actual set or reset draft, nothing for it in flight or runnable, and its queue held by a failed request (quota, a throwing storage call, a missing or rejected Web Lock, conflict, readback uncertainty, an invalid or unavailable source), including a latest intent queued behind a failed predecessor. Pending fields, source-only fields and fields without a draft are never in E.
+- **Always rendered** (`data-testid="appearance-retry-all"`, a native `<button type="button">`, label "Retry all" / "全部重试" in every state). **Enabled iff E is non-empty**; otherwise `aria-disabled="true"` — never the native `disabled` attribute — so it stays focusable, a Tab stop, and focus never drops to `<body>` when a pass disables it. Activation while disabled is inert (E is derived live at activation). `aria-describedby` points to the status line only while the button is enabled or a pass is open.
+- **One activation = one pass**: each member's per-field Retry runs exactly once, in display order (Language, Theme, Density, Accent color, Background palette, Sidebar position, Font scale), before any settlement — one write (set) or one removal (reset) per member and none elsewhere. A reset draft is only ever retried as its own removal. A member queued behind a failed predecessor re-runs the predecessor once, then its own request proceeds as its own first attempt (the inherited Features follow-up 2 ordering is kept). A second activation, a per-field Retry or a Retry all while members are pending adds zero attempts.
+- **Outcomes per member**: succeeded, failed again, superseded (pane edit, Topbar edit, background choice, Reset) or detached (Discard, Discard all, sign-out OK, disposal). Only succeeded and failed count.
+- **Status line** (first matching rule): pass open → "Retrying unsaved appearance changes…"; a failed Export while a draft exists → "Export failed. Please retry."; E non-empty → "1 appearance change is not saved." / "<n> appearance changes are not saved." (ZH "<n> 项外观更改未保存。"); otherwise the success rules ("Defaults restored." when every succeeded member of a just-settled pass was a reset of the current batch, "Appearance settings saved." otherwise); otherwise empty. Never a success line while anything is pending, failed or source-invalid, and no success claim for a completion while no pane is mounted.
+- **Disabled look**: one neutral rule set (colours and cursor only) under `.appearance-pane`: `--bg-panel-2` background, `--border-1` border, `--text-3` label (≥ 3.79:1 in both themes with every tone), `cursor: not-allowed`; same box as the enabled `.btn.primary` (1px border, ≥ 44×44), accent-independent, `pointer-events` unchanged, the global focus ring untouched.
+
+### 15.4 Reset to defaults and export
+
+- Reset admits six typed reset intents and one batch identity synchronously after the confirmation; each uses the binding's `reset()` (verified removal; an absent key is a verified no-op). No rollback, no all-or-nothing promise, no account gate. A duplicate Reset while a batch is pending enqueues no duplicate removal (failed items re-attempt their own removal once). An invalid or unreadable source refuses the reset and keeps the intent; Reset never purges malformed bytes.
+- `exportDraft()` downloads `appearance-draft.json` from memory only (zero storage attempts) with the set/reset envelope `{"version":1,"kind":"appearance-draft","changes":{"device":{"<field>":{"operation":"set","value":…}|{"operation":"reset"}}}}` — each field at most once as its latest unresolved intent; never saved, default or source-only fields. Liveness is rechecked before setup, after Blob creation, after URL creation and after append; an unmount during setup cancels the click.

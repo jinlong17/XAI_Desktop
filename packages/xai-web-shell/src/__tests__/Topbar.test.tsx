@@ -8,15 +8,46 @@
  * AC-TOPBAR-5: Search input renders with placeholder (i18n: common.search_placeholder)
  * AC-TOPBAR-6: ⌘K kbd hint is rendered (decorative; no handler)
  *
- * TP*-Persist: clicking a dim toggle also writes the value to localStorage
- *   (Bugfix Tb-02/Tb-03/Tb-04 — Topbar theme/lang/density 切换不持久)
- * TP-Persist-Quota-Safe: localStorage.setItem failure is silently swallowed;
- *   in-memory setter still fires.
+ * TP*-Persist (CP-APPEARANCE-01 disposition): each choice calls its setter
+ *   exactly once with its value and makes zero Storage attempts. Persistence
+ *   now belongs to the host's App-scoped Appearance controller and is asserted
+ *   at App level (apps/web/src/__tests__/App.appearance.test.tsx), which also
+ *   replaces TP-Persist-Quota-Safe.
+ * TP-STATUS-*: the optional appearanceStatus slot renders immediately after
+ *   the premium badge in .topbar-controls, before the appearance popover.
  */
 
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, onTestFinished } from "vitest";
 import { Topbar } from "../Topbar.js";
+
+/**
+ * Storage attempt counter for the TP*-Persist dispositions: records every
+ * getItem/setItem/removeItem attempt, then delegates exactly once. Installed
+ * per test and restored when that test finishes.
+ */
+function countStorage(): string[] {
+  const attempts: string[] = [];
+  const nativeGet = Storage.prototype.getItem;
+  const nativeSet = Storage.prototype.setItem;
+  const nativeRemove = Storage.prototype.removeItem;
+  const spies = [
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(function (this: Storage, key: string) {
+      attempts.push(`get:${key}`);
+      return nativeGet.call(this, key);
+    }),
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(function (this: Storage, key: string, value: string) {
+      attempts.push(`set:${key}`);
+      return nativeSet.call(this, key, value);
+    }),
+    vi.spyOn(Storage.prototype, "removeItem").mockImplementation(function (this: Storage, key: string) {
+      attempts.push(`remove:${key}`);
+      return nativeRemove.call(this, key);
+    }),
+  ];
+  onTestFinished(() => { for (const spy of spies) spy.mockRestore(); });
+  return attempts;
+}
 
 function renderTopbar(overrides?: Partial<React.ComponentProps<typeof Topbar>>) {
   const defaults = {
@@ -155,74 +186,101 @@ describe("Topbar", () => {
     expect(badge.textContent).toContain("Premium (stub)");
   });
 
-  // ---- Persistence tests (TP*-Persist) — Bugfix Tb-02/Tb-03/Tb-04 -----
+  // ---- Persistence dispositions (TP*-Persist) — CP-APPEARANCE-01 -----
+  // Each choice calls its setter exactly once with the option's value and
+  // makes zero Storage attempts; persistence is asserted at App level.
 
-  it("TP1-Persist — clicking 中文 writes xai_pref_lang='zh' to localStorage", () => {
-    renderTopbar({ lang: "en" });
+  it("TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ lang: "en" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "中文" }));
-    expect(localStorage.getItem("xai_pref_lang")).toBe('"zh"');
+    expect(props.setLang).toHaveBeenCalledTimes(1);
+    expect(props.setLang).toHaveBeenCalledWith("zh");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP1b-Persist — clicking EN writes xai_pref_lang='en' to localStorage", () => {
-    renderTopbar({ lang: "zh" });
+  it("TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ lang: "zh" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "English" }));
-    expect(localStorage.getItem("xai_pref_lang")).toBe('"en"');
+    expect(props.setLang).toHaveBeenCalledTimes(1);
+    expect(props.setLang).toHaveBeenCalledWith("en");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP2-Persist — clicking Dark writes xai_pref_theme='dark' to localStorage", () => {
-    renderTopbar({ theme: "light" });
+  it("TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ theme: "light" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "Dark" }));
-    expect(localStorage.getItem("xai_pref_theme")).toBe('"dark"');
+    expect(props.setTheme).toHaveBeenCalledTimes(1);
+    expect(props.setTheme).toHaveBeenCalledWith("dark");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP2b-Persist — clicking System writes xai_pref_theme='system' to localStorage", () => {
-    renderTopbar({ theme: "light" });
+  it("TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ theme: "light" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "System" }));
-    expect(localStorage.getItem("xai_pref_theme")).toBe('"system"');
+    expect(props.setTheme).toHaveBeenCalledTimes(1);
+    expect(props.setTheme).toHaveBeenCalledWith("system");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP2c-Persist — clicking Light writes xai_pref_theme='light' to localStorage", () => {
-    renderTopbar({ theme: "dark" });
+  it("TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ theme: "dark" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "Light" }));
-    expect(localStorage.getItem("xai_pref_theme")).toBe('"light"');
+    expect(props.setTheme).toHaveBeenCalledTimes(1);
+    expect(props.setTheme).toHaveBeenCalledWith("light");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP3-Persist — clicking Compact writes xai_pref_density='compact' to localStorage", () => {
-    renderTopbar({ density: "comfortable" });
+  it("TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ density: "comfortable" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "Compact" }));
-    expect(localStorage.getItem("xai_pref_density")).toBe('"compact"');
+    expect(props.setDensity).toHaveBeenCalledTimes(1);
+    expect(props.setDensity).toHaveBeenCalledWith("compact");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP3b-Persist — clicking Comfortable writes xai_pref_density='comfortable' to localStorage", () => {
-    renderTopbar({ density: "compact" });
+  it("TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts", () => {
+    const { props } = renderTopbar({ density: "compact" });
     openPreferences();
+    const storageAttempts = countStorage();
     fireEvent.click(screen.getByRole("menuitemradio", { name: "Comfortable" }));
-    expect(localStorage.getItem("xai_pref_density")).toBe('"comfortable"');
+    expect(props.setDensity).toHaveBeenCalledTimes(1);
+    expect(props.setDensity).toHaveBeenCalledWith("comfortable");
+    expect(storageAttempts).toEqual([]);
   });
 
-  it("TP-Persist-Quota-Safe — localStorage.setItem throwing QuotaExceededError still calls setter and does not throw", () => {
-    const setThemeFn = vi.fn();
-    renderTopbar({ theme: "light", setTheme: setThemeFn });
+  // ---- Appearance status slot (CP-APPEARANCE-01) -----------------------
 
-    // Simulate localStorage being unavailable / quota exceeded
-    const origSetItem = localStorage.setItem.bind(localStorage);
-    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
-      throw new DOMException("QuotaExceededError");
+  it("TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover", () => {
+    renderTopbar({
+      premiumBadge: <span data-testid="premium-tier-badge">Premium (stub)</span>,
+      appearanceStatus: <button type="button" data-testid="appearance-status">Not saved</button>,
     });
+    const controls = document.querySelector(".topbar-controls")!;
+    const children = Array.from(controls.children);
+    const badge = screen.getByTestId("premium-tier-badge");
+    const status = screen.getByTestId("appearance-status");
+    expect(children.indexOf(status)).toBe(children.indexOf(badge) + 1);
+    expect(status.nextElementSibling?.classList.contains("topbar-pref")).toBe(true);
+  });
 
-    // Should not throw; setter must still be called
-    openPreferences();
-    expect(() => fireEvent.click(screen.getByRole("menuitemradio", { name: "Dark" }))).not.toThrow();
-    expect(setThemeFn).toHaveBeenCalledWith("dark");
-
-    spy.mockRestore();
-    // Restore original in case the mock broke other tests
-    void origSetItem;
+  it("TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged", () => {
+    const Empty = () => null;
+    const { container, unmount } = renderTopbar({ premiumBadge: <span data-testid="premium-tier-badge">P</span> });
+    const before = container.querySelector(".topbar")!.outerHTML;
+    unmount();
+    const second = renderTopbar({ premiumBadge: <span data-testid="premium-tier-badge">P</span>, appearanceStatus: <Empty /> });
+    expect(second.container.querySelector(".topbar")!.outerHTML).toBe(before);
   });
 });

@@ -378,3 +378,133 @@
     min-height: 44px;
   }
 }
+
+/* ---- Appearance recovery caller (CP-APPEARANCE-01) --------------------- */
+/* Additive only: every selector below is scoped under .appearance-pane,
+   .appearance-recovery-* or .appearance-status*. The rules above, the shared
+   settings footer rules and the tokens stylesheets stay unchanged. */
+
+/* Containment at phone widths: the six tone cards need more than the pane's
+   width there, so they wrap into two rows of three (cards get wider, never
+   narrower). */
+@media (max-width: 640px) {
+  .appearance-pane .bg-tones {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Field-local recovery directly below its row: the message, then Retry and
+   Discard, or Reload only for a source issue. */
+.appearance-pane .appearance-recovery-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  background: var(--bg-panel-2);
+}
+.appearance-pane .appearance-recovery-text {
+  flex: 1 1 100%;
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text-1);
+}
+
+/* The bottom action area (A2.8): in normal flow (never sticky or fixed),
+   start-aligned and wrapping. Status line, then Retry all / Export / Discard
+   all, then Reset to defaults on its own line. */
+.appearance-pane .appearance-actions {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-1);
+}
+.appearance-pane .appearance-status-line {
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text-2);
+}
+.appearance-pane .appearance-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+}
+
+/* Every recovery, Retry all, export, discard and reset target is at least
+   44x44 and sized to its content (never stretched). */
+.appearance-pane .appearance-recovery-field > button,
+.appearance-pane .appearance-actions button {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Retry all keeps one box in both states: a 1px border, transparent while
+   enabled (the enabled look is the existing .btn.primary). */
+.appearance-pane .appearance-retry-all {
+  border: 1px solid transparent;
+}
+/* Disabled Retry all (aria-disabled="true", never the disabled attribute):
+   one neutral rule set of colours and the cursor only; accent-independent,
+   still hit-testable and focusable. Label contrast of --text-3 on
+   --bg-panel-2 is 3.79:1 or more in both themes with every tone. */
+.appearance-pane .appearance-actions .appearance-retry-all[aria-disabled="true"] {
+  background-color: var(--bg-panel-2);
+  border-color: var(--border-1);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+/* Topbar status for settled failures (rendered in .topbar-controls). */
+.appearance-status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in oklch, var(--amber) 55%, var(--border-1));
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--amber) 16%, var(--bg-panel));
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.appearance-status:hover {
+  background: color-mix(in oklch, var(--amber) 26%, var(--bg-panel));
+}
+.appearance-status-icon {
+  flex: 0 0 auto;
+}
+/* Icon only where the Topbar summary is hidden. */
+@media (max-width: 767px) {
+  .appearance-status {
+    width: 44px;
+    padding: 0;
+  }
+  .appearance-status-text {
+    display: none;
+  }
+}

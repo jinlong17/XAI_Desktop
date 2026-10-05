@@ -225,6 +225,15 @@ export interface TopbarProps {
   setDensity: (next: Density) => void;
   /** Called when the Settings gear icon is clicked. Host emits + navigates. */
   onOpenSettings: () => void;
+  /** Optional command-palette opener (xai-web-cmdk P4). */
+  onOpenSearch?: () => void;
+  /** Optional premium tier badge node (gap-closure row #8 F1). */
+  premiumBadge?: React.ReactNode;
+  /**
+   * Optional Appearance status node (CP-APPEARANCE-01), rendered immediately
+   * after `premiumBadge` in `.topbar-controls`, before the appearance popover.
+   */
+  appearanceStatus?: React.ReactNode;
 }
 
 export function Topbar(props: TopbarProps): JSX.Element;
@@ -237,7 +246,19 @@ export function Topbar(props: TopbarProps): JSX.Element;
 - The search input is decorative — no `onChange` handler in v1. The
   `⌘K` `<span className="kbd">` is decorative too. (Deferred to a future
   search row per DESIGN.md §11.)
-- Each segment button calls the appropriate `set*` prop.
+- Each option activation (`menuitemradio`) calls the matching `setLang` /
+  `setTheme` / `setDensity` prop **exactly once** with the option's value and
+  makes **zero Storage attempts** (CP-APPEARANCE-01). Persistence, failure
+  recovery and the unsaved-change status belong to the host: `apps/web`
+  passes the App-scoped Appearance controller's edits as these setters, and
+  its display values as `lang` / `theme` / `density`. The former raw
+  `persistAndSet` write path (which swallowed write failures) is removed.
+- `appearanceStatus` (optional `ReactNode`, also on `ShellProps`, which only
+  passes it through) is rendered immediately after `premiumBadge` in
+  `.topbar-controls`. The shell never inspects it; the host passes the
+  Appearance package's `<AppearanceStatus onReview>`, which renders nothing
+  unless an Appearance change has a settled failure, so the clean-state
+  Topbar markup is unchanged.
 - Settings icon click → `props.onOpenSettings()`.
 
 ### §2.4 `<AvatarMenu>`

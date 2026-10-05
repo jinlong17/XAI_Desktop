@@ -119,6 +119,17 @@ export interface ShellProps {
    */
   premiumBadge?: ReactNode;
   /**
+   * Optional Appearance status node passed from the host to the Topbar, which
+   * renders it immediately after `premiumBadge` in `.topbar-controls`. The
+   * host (apps/web/src/App.tsx) passes the Appearance package's status
+   * component; it renders nothing unless an Appearance change has a settled
+   * failure. The shell never inspects it (same render-prop pattern as
+   * `premiumBadge`, no package dependency on the Appearance pane).
+   *
+   * CP-APPEARANCE-01 — Topbar status for unsaved Appearance changes.
+   */
+  appearanceStatus?: ReactNode;
+  /**
    * Optional sign-out handler wired from the host (apps/web/src/App.tsx).
    * When provided, AvatarMenu routes the Sign Out click to this handler
    * (which calls client.auth.signOut + clearSessionStorage + redirect).
@@ -183,6 +194,15 @@ export interface TopbarProps {
    * Extension 2026-05-26 — Premium Stripe Checkout stub (gap-closure row #8 F1).
    */
   premiumBadge?: ReactNode;
+  /**
+   * Optional Appearance status node, rendered immediately after `premiumBadge`
+   * in `.topbar-controls` (before the appearance popover). The host passes the
+   * Appearance package's status component, which renders nothing unless an
+   * Appearance change has a settled failure.
+   *
+   * CP-APPEARANCE-01 — Topbar status for unsaved Appearance changes.
+   */
+  appearanceStatus?: ReactNode;
 }
 
 export interface AvatarMenuProps {

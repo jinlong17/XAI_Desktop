@@ -1,12 +1,16 @@
 /**
  * apps/web/src/App.tsx — Host root state for XAI Web Console.
  *
- * Owns the 8 root state pieces:
- *   lang, theme, density, fontScale, petOn (useState)
- *   accentHue, railPos, bgTone (usePref — persisted)
+ * Owns the root state pieces:
+ *   petOn (useState)
+ *   the seven Appearance dimensions — lang, theme, density, fontScale,
+ *   accentHue, railPos, bgTone — through ONE App-scoped Appearance controller
+ *   (CP-APPEARANCE-01) created here, inside AccountStorageGate.
  *
- * Calls apply* helpers from @repo/plugin-web-tokens on each state change.
- * Wires <WebShellProvider> + <Shell> from @repo/xai-web-shell.
+ * The controller persists every Appearance change through the accepted async
+ * engine, applies the display values to <html>, keeps the unload warning and
+ * owns the sign-out step; the Settings pane and the Topbar quick switcher are
+ * its views. Wires <WebShellProvider> + <Shell> from @repo/xai-web-shell.
  *
  * Port of web design/app.jsx (lines 6-88), re-implemented in TSX using
  * the W1 shipped packages instead of CDN globals.
@@ -17,25 +21,16 @@
  * App wraps AppInner in <CommandPaletteProvider>; AppInner reads the context
  * via useCommandPalette() and passes onOpenSearch to <Shell>.
  *
- * Bugfix Tb-02/Tb-03/Tb-04: lang/theme/density now use lazy useState initializers
- * that read xai_pref_lang / xai_pref_theme / xai_pref_density / xai_pref_font_scale from localStorage,
- * paired with Topbar.tsx's persistAndSet write path.
- * See packages/xai-web-shell/docs/dev_log.md BUGFIX §Fix Strategy Path R1.
+ * Bugfix Tb-02/Tb-03/Tb-04 (superseded by CP-APPEARANCE-01): stored
+ * lang/theme/density/fontScale are read by the controller's strict bindings;
+ * readLocalPref stays exported, byte-identical, for its existing tests.
  */
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Outlet, useNavigate } from "react-router";
-import {
-  applyTheme,
-  applyDensity,
-  applyFontScale,
-  applyAccentHue,
-  applyBgTone,
-  applyRailPos,
-} from "@repo/plugin-web-tokens";
-import { accountScope, usePref } from "@repo/plugin-web-storage";
+import { accountScope } from "@repo/plugin-web-storage";
 import { AccountStorageGate, invalidateAccountIdentity } from "./providers/AccountStorageGate.js";
-import { emitWebEvent, onWebEvent } from "@repo/xai-web-event-bus";
+import { emitWebEvent } from "@repo/xai-web-event-bus";
 import {
   Shell,
   WebShellProvider,
@@ -43,7 +38,12 @@ import {
 } from "@repo/xai-web-shell";
 // xai-web-pet: top-level mount (D1 Option B — sibling of <Shell> per ADR-0007 §S6)
 import { DesktopPet } from "@repo/plugin-web-pet";
-import type { Lang, Theme, Density, BgTone } from "@repo/plugin-web-tokens";
+// CP-APPEARANCE-01 — the App-scoped Appearance controller and its Topbar status
+import {
+  AppearanceProvider,
+  AppearanceStatus,
+  useAppearanceController,
+} from "@repo/plugin-web-settings-appearance";
 import { webShellModuleRegistrations } from "./routes/modules/shellRegistrations";
 import { requestSettingsDeparture } from "./routes/modules/settingsDeparture.js";
 // xai-web-settings-features-panel row #23 — rail filter driven by xai_pref_features_*
@@ -75,12 +75,13 @@ import { useCalendarMutateRequestSubscriber } from "@repo/plugin-web-calendar";
 // (import.meta.env.DEV gate). Carve-out: 20260529-gemini-provider-enablement §6.
 import { useDevAiConfigSeed } from "./dev/seedAiConfigFromEnv.js";
 
-// ---- readLocalPref — safe localStorage reader for lazy useState initializers --
+// ---- readLocalPref — safe localStorage reader (retained, byte-identical) ------
 //
 // Reads a JSON-encoded string value from localStorage with a typed fallback.
-// Used by appearance useState initializers below (lang/theme/density/fontScale).
-// Keys: "xai_pref_lang" | "xai_pref_theme" | "xai_pref_density" | "xai_pref_font_scale"
-// (raw localStorage — not in plugin-web-storage registry by design; see dev_log).
+// No longer used by App itself: since CP-APPEARANCE-01 the App-scoped
+// Appearance controller reads "xai_pref_lang" | "xai_pref_theme" |
+// "xai_pref_density" | "xai_pref_font_scale" through strict engine bindings.
+// Kept unchanged as the reference reader of today's root bytes.
 //
 // Exported for unit tests in apps/web/src/__tests__/App.lazy-init.test.tsx.
 export function readLocalPref<T>(key: string, fallback: T): T {
@@ -92,15 +93,6 @@ export function readLocalPref<T>(key: string, fallback: T): T {
   } catch {
     // JSON.parse failure (corrupt value) — use fallback silently.
     return fallback;
-  }
-}
-
-function writeLocalPref<T>(key: string, value: T): void {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // localStorage quota/access failures should not break the live in-memory update.
   }
 }
 
@@ -123,55 +115,25 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   useDevAiConfigSeed();
 
   // ---- useState state pieces -----------------------------------------------
-  // lang/theme/density use lazy initializers to restore from localStorage on
-  // page load (written by Topbar.tsx persistAndSet — Bugfix Tb-02/Tb-03/Tb-04).
-  const [lang, setLang]       = useState<Lang>(()    => readLocalPref("xai_pref_lang", "en" as Lang));
-  const [theme, setTheme]     = useState<Theme>(()   => readLocalPref("xai_pref_theme", "light" as Theme));
-  const [density, setDensity] = useState<Density>(() => readLocalPref("xai_pref_density", "comfortable" as Density));
-  const [fontScale, setFontScale] = useState<number>(() => readLocalPref("xai_pref_font_scale", 1));
   const [petOn, setPetOn] = useState<boolean>(true);
 
-  // ---- usePref state pieces (persisted) ------------------------------------
-  const [accentHue]      = usePref("xai_accent_hue");   // setter dropped — pane writes via setPref directly
-  const [railPos]        = usePref("xai_rail_pos");     // setter dropped — pane writes via setPref directly
-  const [bgToneRaw]      = usePref("xai_bg_tone");      // setter dropped — pane writes via setPref directly
-  // plugin-web-tokens BgTone is a strict subset of plugin-web-storage's BgTone
-  // (storage adds "sage" which tokens doesn't know yet). Cast to BgTone for apply*.
-  const bgTone: BgTone = bgToneRaw as BgTone;
+  // ---- CP-APPEARANCE-01: the ONE App-scoped Appearance controller ----------
+  // Created once here, inside AccountStorageGate (so a scope change remounts it
+  // with the committed bytes — REL-09). It owns the seven strict bindings, the
+  // operation and recovery model, DOM application (apply* + the system-theme
+  // listener), the unload warning and the sign-out step. The Settings pane and
+  // the Topbar are its views: the Topbar's setLang/setTheme/setDensity are its
+  // edits. The web:settings:preference-changed write path is retired.
+  const appearance = useAppearanceController();
+  const { lang, theme, density, railPos } = appearance.values;
 
-  // xai-web-settings-appearance row #22 — subscribe to live binding bus.
-  // AppearancePane emits web:settings:preference-changed on every onChange + on Save + on Reset.
-  // The 3 persisted dims (accentHue/railPos/bgTone) auto-rerender via usePref;
-  // the 4 useState dims (theme/density/fontScale/lang) need explicit setters here.
-  useEffect(() => {
-    const off = onWebEvent("web:settings:preference-changed", (d) => {
-      switch (d.key) {
-        case "theme":     writeLocalPref("xai_pref_theme", d.value); setTheme(d.value); break;
-        case "density":   writeLocalPref("xai_pref_density", d.value); setDensity(d.value); break;
-        case "fontScale": writeLocalPref("xai_pref_font_scale", d.value); setFontScale(d.value); break;
-        case "lang":      writeLocalPref("xai_pref_lang", d.value); setLang(d.value); break;
-        // accentHue / railPos / bgTone auto-rerender via usePref — no setter needed.
-      }
-    });
-    return () => off();
-  }, []);
-
-  // ---- apply* useEffects (B1: matchMedia cleanup before re-attach) ----------
-  useEffect(() => { applyTheme(theme); }, [theme]);
-  useEffect(() => { applyDensity(density); }, [density]);
-  useEffect(() => { applyFontScale(fontScale); }, [fontScale]);
-  useEffect(() => { applyAccentHue(accentHue); }, [accentHue]);
-  useEffect(() => { applyBgTone(bgTone); }, [bgTone]);
-  useEffect(() => { applyRailPos(railPos); }, [railPos]);
-
-  // system theme: matchMedia listener — B1: cleanup MUST clear before re-attach
-  useEffect(() => {
-    if (theme !== "system") return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => applyTheme("system");
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, [theme]);
+  // Topbar status → Review: the existing shortcut event (as Shell does for
+  // Settings), then one navigation to the Appearance pane.
+  const navigate = useNavigate();
+  const reviewAppearance = useCallback(() => {
+    emitWebEvent("web:shell:module-change", { moduleId: "settings", source: "shortcut" });
+    void navigate("/app/settings/appearance");
+  }, [navigate]);
 
   // xai-web-settings-features-panel row #23 — derive feature-prefs-aware module list.
   // The full registrations array is stable; the filter result re-derives only when
@@ -187,12 +149,16 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   // Steps: 1) best-effort Supabase backend sign-out  2) clear React session state
   //        3) hard-redirect to "/" so AuthRouteGate takes over.
   const { client, clearSessionStorage, coordinator, reportSignOutFailure } = useWebAuthSession();
+  // CP-APPEARANCE-01 sign-out step: no drafts → true without a prompt; drafts →
+  // one window.confirm (Cancel → false, OK → drafts discarded with zero writes).
+  const confirmAppearanceSignOut = appearance.confirmSignOut;
   const handleSignOut = useCallback(async () => {
     onSignOutError(false);
     const capturedScope = accountScope.capture();
     if (coordinator) {
       const captured = coordinator.capture();
       if (!captured) { onSignOutError(true); return; }
+      if (!await confirmAppearanceSignOut()) return;
       if (!await requestSettingsDeparture("sign-out")) return;
       const current = coordinator.capture();
       if (accountScope.capture() !== capturedScope || !current || current.owner !== captured.owner || current.generation !== captured.generation) return;
@@ -202,6 +168,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
       if (result.status === 'applied') window.location.assign('/');
       return;
     }
+    if (!await confirmAppearanceSignOut()) return;
     if (!await requestSettingsDeparture("sign-out")) return;
     if (accountScope.capture() !== capturedScope) return;
     invalidateAccountIdentity(null);
@@ -214,42 +181,45 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
     }
     await clearSessionStorage();
     window.location.assign("/");
-  }, [client, clearSessionStorage, coordinator, onSignOutError, reportSignOutFailure]);
+  }, [client, clearSessionStorage, confirmAppearanceSignOut, coordinator, onSignOutError, reportSignOutFailure]);
 
   return (
-    <WebShellProvider
-      modules={modules}
-      lang={lang}
-      railPos={railPos}
-      petOn={petOn}
-      setPetOn={setPetOn}
-    >
-      {/*
-       * xai-web-cmdk P4: Shell receives onOpenSearch from the palette context.
-       * When the topbar search box is clicked, openPalette fires with source="topbar-click".
-       */}
-      <Shell
+    <AppearanceProvider controller={appearance}>
+      <WebShellProvider
+        modules={modules}
         lang={lang}
-        setLang={setLang}
-        theme={theme}
-        setTheme={setTheme}
-        density={density}
-        setDensity={setDensity}
-        onOpenSearch={() => openPalette({ source: "topbar-click" })}
-        premiumBadge={<PremiumTierBadge lang={lang} />}
-        onSignOut={handleSignOut}
+        railPos={railPos}
+        petOn={petOn}
+        setPetOn={setPetOn}
       >
-        <Outlet />
-      </Shell>
-      {/* xai-web-pet: floats over all routes (position:fixed); not a routed module */}
-      <DesktopPet on={petOn} lang={lang} />
-      {/*
-       * xai-web-cmdk P4: CommandPalette is mounted as a sibling of <Shell>.
-       * It reads from CommandPaletteProvider context (above) and uses
-       * position:fixed to overlay the full viewport. HC1: not a rail entry.
-       */}
-      <CommandPalette />
-    </WebShellProvider>
+        {/*
+         * xai-web-cmdk P4: Shell receives onOpenSearch from the palette context.
+         * When the topbar search box is clicked, openPalette fires with source="topbar-click".
+         */}
+        <Shell
+          lang={lang}
+          setLang={appearance.setLang}
+          theme={theme}
+          setTheme={appearance.setTheme}
+          density={density}
+          setDensity={appearance.setDensity}
+          onOpenSearch={() => openPalette({ source: "topbar-click" })}
+          premiumBadge={<PremiumTierBadge lang={lang} />}
+          appearanceStatus={<AppearanceStatus onReview={reviewAppearance} />}
+          onSignOut={handleSignOut}
+        >
+          <Outlet />
+        </Shell>
+        {/* xai-web-pet: floats over all routes (position:fixed); not a routed module */}
+        <DesktopPet on={petOn} lang={lang} />
+        {/*
+         * xai-web-cmdk P4: CommandPalette is mounted as a sibling of <Shell>.
+         * It reads from CommandPaletteProvider context (above) and uses
+         * position:fixed to overlay the full viewport. HC1: not a rail entry.
+         */}
+        <CommandPalette />
+      </WebShellProvider>
+    </AppearanceProvider>
   );
 }
 
