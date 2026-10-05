@@ -1,0 +1,986 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=host
+suffix=before3
+include=docs/reviews/web-appearance-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-independent/verify-fixed.mjs 5cd63ff host before3
+runner_checkout_head=95d623414c4f58d531e6a512ac4b3f97d55c9e7e
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW/appearance-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host-fixture.tsx=ba137f5856f7c0bf145af88def08af442ba92fcb0bcc611ea834569ac60ad52f host.test.tsx=27589cb660b55105c289f916edd6bfe14283897245115ef58c7a587346cb38cf verify-fixed.mjs=6aac35631594d11aa916a75710beebbf93e083c21d7b02f84df83e2baed8e4b0
+archive_file_sha256 (19/19 equal the contract r3 source table) packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3(contract:match) packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c(contract:match) packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6(contract:match) packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776(contract:match) packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c(contract:match) apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59(contract:match) packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297(contract:match) packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0(contract:match) packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de(contract:match) apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075(contract:match) packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce(contract:match) packages/plugin-web-settings-shell/src/types.ts=513f90fd05ef66f6f8fb1aaa230e9a6844407ae44cf3d7a1d8508c4eabfb4522(contract:match) packages/plugin-web-settings-shell/src/styles.css=e5369cc7ed3a20650465e001537c7714a3715834d678ea17ff3960fbd3992166(contract:match) packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f(contract:match) packages/xai-web-pet/src/pet.css=6326d822b654a22bcad361e57d02413d4569eadf8058f89d90fc3dd43249dcfe(contract:match) packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491(contract:match) packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d(contract:match) packages/plugin-web-countdown/src/internal/CountdownEditDialog.tsx=6bcf6295989381101f99a53c1624db8f491c845c1d6debc6e550d7e04a1afdae(contract:match) packages/plugin-web-ai-chat/src/ErrorBanner.tsx=7cf751dd321f3cdd490984d62ce49c563a3d1aaecf0b229d8fa203e39bb1fbc2(contract:match)
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/docs
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+OBSERVED FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call 3ms
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable 43ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+OBSERVED FX3 composition {"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"hookCalls":9,"network":0,"historyCounters":{"push":0,"replace":0},"productionRouterAtImport":"/"}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation 158ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+OBSERVED PC sign-out without drafts {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route lang after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes 250ms
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 165ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed lang draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout lang {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":24},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 163ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed lang draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route theme after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 118ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed theme draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout theme {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":34},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 126ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed theme draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route density after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 142ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed density draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout density {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":44},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":165,"applied":165,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 148ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed density draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route accentHue after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":165,"applied":165,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 115ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed accentHue draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout accentHue {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":54},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"default","applied":"default","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 126ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed accentHue draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route bgTone after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 119ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed bgTone draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"default","applied":"default","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout bgTone {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":64},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"left","applied":"left","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 142ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed bgTone draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route railPos after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"left","applied":"left","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 118ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed railPos draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout railPos {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":74},"redirects":["/"]}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+OBSERVED F-route fontScale after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 124ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed railPos draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 102ms
+   → H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed fontScale draft: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+OBSERVED F-signout fontScale {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":84},"redirects":["/"]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 116ms
+   → H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed fontScale draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail lang after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 219ms
+   → H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed Topbar lang choice: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout lang {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":94},"redirects":["/"]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 152ms
+   → H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar lang choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail theme after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 148ms
+   → H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar theme choice: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout theme {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":104},"redirects":["/"]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 137ms
+   → H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar theme choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+OBSERVED T-rail density after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 144ms
+   → H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar density choice: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+OBSERVED T-signout density {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":114},"redirects":["/"]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 154ms
+   → H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar density choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+OBSERVED R-route after the failed reset {"confirm":"Reset every preference to defaults? This clears saved theme, layout, and module toggles.","writes":["remove:xai_accent_hue","remove:xai_rail_pos!threw","remove:xai_bg_tone","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"],"bytes":{"lang":null,"theme":"\"light\"","density":"\"comfortable\"","accentHue":null,"bgTone":null,"railPos":"right","fontScale":"1"},"paneShowsRail":"right","notReset":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+OBSERVED R-route after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact 133ms
+   → H11 A5 §7.2: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed reset item: expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+OBSERVED H11-a after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"light","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+OBSERVED H11-a indicator by route {"settingsAbout":{"path":"/app/settings/about","indicator":false},"railTasks":{"path":"/app/tasks","indicator":false},"programmaticCalendar":{"path":"/app/calendar","indicator":false}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+OBSERVED H11-b after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination 248ms
+   → H11 A5 §7.2: with unsaved failed Appearance work an indicator outside the pane (the Topbar status "Appearance changes not saved. Review them in Settings.") is shown on every route: expected { settingsAbout: { …(2) }, …(2) } to strictly equal { settingsAbout: { …(2) }, …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+OBSERVED H11-b beforeunload {"onPane":{"warned":false,"attempts":0},"offPane":{"path":"/app/tasks","warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler 122ms
+   → H11 A5 §7.3 row i: with a failed pane draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { Object (onPane, offPane) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+OBSERVED H11-c after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+OBSERVED H11-c beforeunload {"onTasks":{"warned":false,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":false,"attempts":0}}
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+OBSERVED H11-d after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler 142ms
+   → H11 A5 §7.3 row i: with a failed Topbar draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+OBSERVED H11-d sign-out from About {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":136},"redirects":["/"]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false 122ms
+   → H11 A5 §7.4 row g: sign-out from another Settings pane with the failed font-scale draft asks one window.confirm with the normative text, and Cancel resolves false: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+OBSERVED H16-a before Retry all {"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"topbarStatus":false,"unload":{"warned":false,"attempts":0},"bottom":[{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"settings-footer-reset","className":"btn ghost"},{"text":"Save & apply","ariaDisabled":null,"disabled":false,"testid":"settings-footer-save","className":"btn primary pane-save"}]}
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing 112ms
+   → H16-a: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false 116ms
+   → H16-b: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+OBSERVED H17 the pane's bottom buttons in the clean state [{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"settings-footer-reset","className":"btn ghost"},{"text":"Save & apply","ariaDisabled":null,"disabled":false,"testid":"settings-footer-save","className":"btn primary pane-save"}]
+
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.' 113ms
+   → H16-c: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus 67ms
+   → H17: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  29 failed | 4 passed (33)
+   Start at  21:51:27
+   Duration  8.21s (transform 1.97s, setup 0ms, collect 3.15s, tests 4.41s, environment 394ms, prepare 65ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW/.report-host.json
+
+---- stderr ----
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+[plugin-web-storage] quota exceeded for xai_bg_tone.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+[plugin-web-storage] quota exceeded for xai_rail_pos.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+stderr | docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+[plugin-web-storage] quota exceeded for xai_accent_hue.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed lang draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed lang draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "部分外观更改尚未保存。仍要退出并放弃这些更改吗？",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed theme draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed theme draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed density draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed density draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed accentHue draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed accentHue draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed bgTone draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed bgTone draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed railPos draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed railPos draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed fontScale draft: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:286:173
+    284|     expect(app.pathname(), "A5 §7.1 row d: the Settings sidebar is nev…
+    285|     expect(departureDialog(), "A5 §7.1 row d: no departure dialog").to…
+    286|     expect(topbarStatusNamed(lang), `H11 A5 §7.2 row d: an indicator o…
+       |                                                                                                                                                                             ^
+    287|     await clickAndSettle(sidebarRow(SHELL[lang].appearance));
+    288|     expect(app.pathname()).toBe(SETTINGS_APPEARANCE);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed fontScale draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:303:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed Topbar lang choice: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:329:167
+    327|     expect(departureDialog(), "A5 §7.1 row e: no departure dialog").to…
+    328|     const status = topbarStatusNamed(lang);
+    329|     expect(status, `H11 A5 §7.2 rows b/e: an indicator outside the pan…
+       |                                                                                                                                                                       ^
+    330|     const shownNow = { checked: topbarChecked(entry.field, lang), appl…
+    331|     closeTopbar();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar lang choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "部分外观更改尚未保存。仍要退出并放弃这些更改吗？",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:350:227
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar theme choice: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:329:167
+    327|     expect(departureDialog(), "A5 §7.1 row e: no departure dialog").to…
+    328|     const status = topbarStatusNamed(lang);
+    329|     expect(status, `H11 A5 §7.2 rows b/e: an indicator outside the pan…
+       |                                                                                                                                                                       ^
+    330|     const shownNow = { checked: topbarChecked(entry.field, lang), appl…
+    331|     closeTopbar();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar theme choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:350:227
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar density choice: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:329:167
+    327|     expect(departureDialog(), "A5 §7.1 row e: no departure dialog").to…
+    328|     const status = topbarStatusNamed(lang);
+    329|     expect(status, `H11 A5 §7.2 rows b/e: an indicator outside the pan…
+       |                                                                                                                                                                       ^
+    330|     const shownNow = { checked: topbarChecked(entry.field, lang), appl…
+    331|     closeTopbar();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar density choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:350:227
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+AssertionError: H11 A5 §7.2: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed reset item: expected null not to be null
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:381:161
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+AssertionError: H11 A5 §7.2: with unsaved failed Appearance work an indicator outside the pane (the Topbar status "Appearance changes not saved. Review them in Settings.") is shown on every route: expected { settingsAbout: { …(2) }, …(2) } to strictly equal { settingsAbout: { …(2) }, …(2) }
+
+- Expected
++ Received
+
+  {
+    "programmaticCalendar": {
+-     "indicator": true,
++     "indicator": false,
+      "path": "/app/calendar",
+    },
+    "railTasks": {
+-     "indicator": true,
++     "indicator": false,
+      "path": "/app/tasks",
+    },
+    "settingsAbout": {
+-     "indicator": true,
++     "indicator": false,
+      "path": "/app/settings/about",
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:404:163
+    402|   seen.programmaticCalendar = { path: app.pathname(), indicator: topba…
+    403|   observed("H11-a indicator by route", seen);
+    404|   expect(seen, `H11 A5 §7.2: with unsaved failed Appearance work an in…
+       |                                                                                                                                                                   ^
+    405|     settingsAbout: { path: SETTINGS_ABOUT, indicator: true },
+    406|     railTasks: { path: TASKS, indicator: true },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+AssertionError: H11 A5 §7.3 row i: with a failed pane draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { Object (onPane, offPane) }
+
+- Expected
++ Received
+
+  {
+    "offPane": {
+      "attempts": 0,
+      "path": "/app/tasks",
+-     "warned": true,
++     "warned": false,
+    },
+    "onPane": {
+      "attempts": 0,
+-     "warned": true,
++     "warned": false,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:420:168
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+AssertionError: H11 A5 §7.3 row i: with a failed Topbar draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+    "onCalendar": {
+      "attempts": 0,
+      "path": "/app/calendar",
+-     "warned": true,
++     "warned": false,
+    },
+    "onTasks": {
+      "attempts": 0,
+-     "warned": true,
++     "warned": false,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:432:174
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+AssertionError: H11 A5 §7.4 row g: sign-out from another Settings pane with the failed font-scale draft asks one window.confirm with the normative text, and Cancel resolves false: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+
+- Expected
++ Received
+
+  {
+-   "confirms": [
+-     "Some appearance changes are not saved. Sign out and discard them?",
+-   ],
++   "confirms": [],
+    "outcome": {
+-     "backendSignOuts": 0,
+-     "identityInvalidated": false,
+-     "redirected": false,
++     "backendSignOuts": 1,
++     "identityInvalidated": true,
++     "redirected": true,
+    },
+  }
+
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:446:184
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+AssertionError: H16-a: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:60:38
+     58| /** Business presence assertion: a missing element is a product failur…
+     59| export function need<T>(value: T | null | undefined, message: string):…
+     60|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     61|   return value as T;
+     62| }
+ ❯ RA docs/reviews/web-appearance-recovery-independent/host.test.tsx:176:60
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:463:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+AssertionError: H16-b: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:60:38
+     58| /** Business presence assertion: a missing element is a product failur…
+     59| export function need<T>(value: T | null | undefined, message: string):…
+     60|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     61|   return value as T;
+     62| }
+ ❯ RA docs/reviews/web-appearance-recovery-independent/host.test.tsx:176:60
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:498:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+AssertionError: H16-c: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:60:38
+     58| /** Business presence assertion: a missing element is a product failur…
+     59| export function need<T>(value: T | null | undefined, message: string):…
+     60|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     61|   return value as T;
+     62| }
+ ❯ RA docs/reviews/web-appearance-recovery-independent/host.test.tsx:176:60
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:523:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/29]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+AssertionError: H17: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+ ❯ Module.need docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:60:38
+     58| /** Business presence assertion: a missing element is a product failur…
+     59| export function need<T>(value: T | null | undefined, message: string):…
+     60|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     61|   return value as T;
+     62| }
+ ❯ RA docs/reviews/web-appearance-recovery-independent/host.test.tsx:176:60
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:549:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/29]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=33 numPassedTests=4 numFailedTests=29 numPendingTests=0 numTodoTests=0
+totals cases=33 passed=4 failed=29 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required production modules loaded from the archive (34)
+harness PASS no test-file suite error
+case 001 PASSED | FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+case 002 PASSED | FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable
+case 003 PASSED | FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+case 004 PASSED | PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+case 005 FAILED | pane field lang F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed lang draft: expected null not to be null
+case 006 FAILED | pane field lang F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed lang draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 007 FAILED | pane field theme F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed theme draft: expected null not to be null
+case 008 FAILED | pane field theme F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed theme draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 009 FAILED | pane field density F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed density draft: expected null not to be null
+case 010 FAILED | pane field density F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed density draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 011 FAILED | pane field accentHue F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed accentHue draft: expected null not to be null
+case 012 FAILED | pane field accentHue F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed accentHue draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 013 FAILED | pane field bgTone F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed bgTone draft: expected null not to be null
+case 014 FAILED | pane field bgTone F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed bgTone draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 015 FAILED | pane field railPos F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed railPos draft: expected null not to be null
+case 016 FAILED | pane field railPos F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed railPos draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 017 FAILED | pane field fontScale F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: AssertionError: H11 A5 §7.2 row d: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed fontScale draft: expected null not to be null
+case 018 FAILED | pane field fontScale F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from the Appearance pane with the failed fontScale draft asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 019 FAILED | Topbar field lang T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "外观更改未保存，前往设置查看。", is shown for the failed Topbar lang choice: expected null not to be null
+case 020 FAILED | Topbar field lang T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar lang choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 021 FAILED | Topbar field theme T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar theme choice: expected null not to be null
+case 022 FAILED | Topbar field theme T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar theme choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 023 FAILED | Topbar field density T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: AssertionError: H11 A5 §7.2 rows b/e: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed Topbar density choice: expected null not to be null
+case 024 FAILED | Topbar field density T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from /app/tasks with the failed Topbar density choice asks one window.confirm with the normative text, and Cancel resolves false (identity intact, no redirect, no auth sign-out): expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 025 FAILED | R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+    first: AssertionError: H11 A5 §7.2: an indicator outside the pane, the Topbar status "Appearance changes not saved. Review them in Settings.", is shown for the failed reset item: expected null not to be null
+case 026 FAILED | H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+    first: AssertionError: H11 A5 §7.2: with unsaved failed Appearance work an indicator outside the pane (the Topbar status "Appearance changes not saved. Review them in Settings.") is shown on every route: expected { settingsAbout: { …(2) }, …(2) } to strictly equal { settingsAbout: { …(2) }, …(2) }
+case 027 FAILED | H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+    first: AssertionError: H11 A5 §7.3 row i: with a failed pane draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { Object (onPane, offPane) }
+case 028 FAILED | H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+    first: AssertionError: H11 A5 §7.3 row i: with a failed Topbar draft a cancelable beforeunload warns on every route, with zero storage attempts in the handler: expected { …(2) } to strictly equal { …(2) }
+case 029 FAILED | H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+    first: AssertionError: H11 A5 §7.4 row g: sign-out from another Settings pane with the failed font-scale draft asks one window.confirm with the normative text, and Cancel resolves false: expected { confirms: [], outcome: { …(3) } } to strictly equal { …(2) }
+case 030 FAILED | H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+    first: AssertionError: H16-a: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+case 031 FAILED | H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+    first: AssertionError: H16-b: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+case 032 FAILED | H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+    first: AssertionError: H16-c: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+case 033 FAILED | H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+    first: AssertionError: H17: Retry all ("Retry all") is rendered in the Appearance pane (A2.2: always rendered while the pane is mounted): expected null not to be null
+observed_lines=55
+observed FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+observed FX3 composition {"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"hookCalls":9,"network":0,"historyCounters":{"push":0,"replace":0},"productionRouterAtImport":"/"}
+observed PC sign-out without drafts {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":14},"redirects":["/"]}
+observed F-route lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route lang after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"zh","applied":"zh","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout lang {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":24},"redirects":["/"]}
+observed F-route theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route theme after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout theme {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":34},"redirects":["/"]}
+observed F-route density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route density after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"compact","applied":"compact","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout density {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":44},"redirects":["/"]}
+observed F-route accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":165,"applied":165,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route accentHue after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout accentHue after the failed accentHue choice {"choice":295,"bytes":null,"uiLang":"en","paneShows":165,"applied":165,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout accentHue {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":54},"redirects":["/"]}
+observed F-route bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"default","applied":"default","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route bgTone after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout bgTone after the failed bgTone choice {"choice":"peach","bytes":null,"uiLang":"en","paneShows":"default","applied":"default","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout bgTone {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":64},"redirects":["/"]}
+observed F-route railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"left","applied":"left","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route railPos after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout railPos after the failed railPos choice {"choice":"right","bytes":null,"uiLang":"en","paneShows":"left","applied":"left","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout railPos {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":74},"redirects":["/"]}
+observed F-route fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-route fontScale after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout fontScale after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed F-signout fontScale {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":84},"redirects":["/"]}
+observed T-rail lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-rail lang after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout lang after the failed lang choice {"choice":"zh","bytes":null,"uiLang":"zh","paneShows":"pane not mounted","applied":"zh","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout lang {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":94},"redirects":["/"]}
+observed T-rail theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-rail theme after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout theme after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"dark","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout theme {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":104},"redirects":["/"]}
+observed T-rail density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-rail density after the AppRail {"path":"/app/calendar","dialog":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout density after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed T-signout density {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":114},"redirects":["/"]}
+observed R-route after the failed reset {"confirm":"Reset every preference to defaults? This clears saved theme, layout, and module toggles.","writes":["remove:xai_accent_hue","remove:xai_rail_pos!threw","remove:xai_bg_tone","set:xai_pref_theme=\"light\"","set:xai_pref_density=\"comfortable\"","set:xai_pref_font_scale=1"],"bytes":{"lang":null,"theme":"\"light\"","density":"\"comfortable\"","accentHue":null,"bgTone":null,"railPos":"right","fontScale":"1"},"paneShowsRail":"right","notReset":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed R-route after the sidebar {"path":"/app/settings/about","dialog":false,"topbarStatus":false}
+observed H11-a after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"light","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H11-a indicator by route {"settingsAbout":{"path":"/app/settings/about","indicator":false},"railTasks":{"path":"/app/tasks","indicator":false},"programmaticCalendar":{"path":"/app/calendar","indicator":false}}
+observed H11-b after the failed theme choice {"choice":"dark","bytes":null,"uiLang":"en","paneShows":"dark","applied":"dark","paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H11-b beforeunload {"onPane":{"warned":false,"attempts":0},"offPane":{"path":"/app/tasks","warned":false,"attempts":0}}
+observed H11-c after the failed density choice {"choice":"compact","bytes":null,"uiLang":"en","paneShows":"pane not mounted","applied":"compact","paneMessage":"pane not mounted","topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H11-c beforeunload {"onTasks":{"warned":false,"attempts":0},"onCalendar":{"path":"/app/calendar","warned":false,"attempts":0}}
+observed H11-d after the failed fontScale choice {"choice":1.1,"bytes":null,"uiLang":"en","paneShows":1.1,"applied":1.1,"paneMessage":false,"topbarStatus":false,"unload":{"warned":false,"attempts":0}}
+observed H11-d sign-out from About {"confirms":[],"outcome":{"identityInvalidated":true,"redirected":true,"backendSignOuts":1},"scope":{"kind":"locked","accountId":null,"generation":null,"epoch":136},"redirects":["/"]}
+observed H16-a before Retry all {"bytes":{"lang":null,"theme":null,"density":null,"accentHue":null,"bgTone":null,"railPos":null,"fontScale":null},"topbarStatus":false,"unload":{"warned":false,"attempts":0},"bottom":[{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"settings-footer-reset","className":"btn ghost"},{"text":"Save & apply","ariaDisabled":null,"disabled":false,"testid":"settings-footer-save","className":"btn primary pane-save"}]}
+observed H17 the pane's bottom buttons in the clean state [{"text":"Bottom (Dock)","ariaDisabled":null,"disabled":false,"testid":null,"className":"rail-pos-card rp-bottom"},{"text":"Reset to defaults","ariaDisabled":null,"disabled":false,"testid":"settings-footer-reset","className":"btn ghost"},{"text":"Save & apply","ariaDisabled":null,"disabled":false,"testid":"settings-footer-save","className":"btn primary pane-save"}]
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-l2LChW/.appearance-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-appearance-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/providers/AccountStorageGate.tsx apps/web/src/providers/AppProviders.tsx apps/web/src/observability/runtime.ts apps/web/src/service-worker/register.ts packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/accountCoordination.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/sameTabBus.ts packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/plugin-web-tokens/src/index.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=623 by package: apps/web=30 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23

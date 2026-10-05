@@ -1,0 +1,625 @@
+requested_revision=5cd63ff
+resolved_commit=5cd63ff652f02a2c726187fe12cbc796218d31c0
+resolved_tree=404bf819a42e20b3e4d372c18a981832ccd54954
+appearance_package_tree=ce183d17e8606067c3bc97d7e3b6645ee656fe9e shell_package_tree=0f0fed40fe94a9de5c79eb273d1103757a807a9c web_app_tree=2fbf99f3ebea93b2ac136727267639790ecf3f4a
+mode=host
+suffix=before2
+include=docs/reviews/web-appearance-recovery-independent/host.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-independent/verify-fixed.mjs 5cd63ff host before2
+runner_checkout_head=95d623414c4f58d531e6a512ac4b3f97d55c9e7e
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps/web/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf/appearance-host-host.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf/.report-host.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 host-fixture.tsx=fb2a055778d1dbe3874f8c666b6a201ab711e1aa9d6ceca3f23b1ba86b938b20 host.test.tsx=715f01f6fe13886a287425a345aff9f18754118317f2e0ae158fcba402c95ea0 verify-fixed.mjs=6aac35631594d11aa916a75710beebbf93e083c21d7b02f84df83e2baed8e4b0
+archive_file_sha256 (19/19 equal the contract r3 source table) packages/xai-web-settings-appearance/src/AppearancePane.tsx=552eb224c5103d1c0d0ee878420f8a586ee91575dd8461f908de1147cf2b08c3(contract:match) packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c(contract:match) packages/xai-web-settings-appearance/src/types.ts=18d5894e6603427f933100f9030d6e403c03abc57d9bd561f372b0b4f559f6d6(contract:match) packages/xai-web-settings-appearance/src/index.ts=10bfbed11749e9c65fc3c2d40d0a50e177154254ef83a2e0690c693aeb4dc776(contract:match) packages/xai-web-settings-appearance/src/styles.css=1b17d1f442905e255eae53e4e16a01c02b4a912ed6a1482231e8db5e50d5927c(contract:match) apps/web/src/App.tsx=5d10dba6a879cf0d42f224e58ef70637bd82b71dc1318ee99c4567977638fb59(contract:match) packages/xai-web-shell/src/Topbar.tsx=70ba299e4d8a088ba0d085272fbc4cfe95933265bd6066fb59ae5cdae3de5297(contract:match) packages/xai-web-shell/src/Shell.tsx=7d46423f40adc5412f54b701c2c93ab4f7529e329dc22766f387d78f614f8df0(contract:match) packages/xai-web-shell/src/types.ts=92b68b2ba5da830bd8dcdfe33652b2b440eaef72b8665ccd868d5f49d82b73de(contract:match) apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075(contract:match) packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce(contract:match) packages/plugin-web-settings-shell/src/types.ts=513f90fd05ef66f6f8fb1aaa230e9a6844407ae44cf3d7a1d8508c4eabfb4522(contract:match) packages/plugin-web-settings-shell/src/styles.css=e5369cc7ed3a20650465e001537c7714a3715834d678ea17ff3960fbd3992166(contract:match) packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f(contract:match) packages/xai-web-pet/src/pet.css=6326d822b654a22bcad361e57d02413d4569eadf8058f89d90fc3dd43249dcfe(contract:match) packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491(contract:match) packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d(contract:match) packages/plugin-web-countdown/src/internal/CountdownEditDialog.tsx=6bcf6295989381101f99a53c1624db8f491c845c1d6debc6e550d7e04a1afdae(contract:match) packages/plugin-web-ai-chat/src/ErrorBanner.tsx=7cf751dd321f3cdd490984d62ce49c563a3d1aaecf0b229d8fa203e39bb1fbc2(contract:match)
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+forbidden_source_roots /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/docs /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/packages /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/apps /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a8c228411ddf4f59a/docs
+vitest_exit=1
+harness_checks=PASS (6/6)
+exit=1
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf
+
+stdout | docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+OBSERVED FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call 3ms
+ ✓ docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable 42ms
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation 55ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":6},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":10},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":12},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":14},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":16},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 35ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":18},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 33ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":20},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 33ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":22},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 35ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":24},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":26},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 35ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":28},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":30},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":32},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact 34ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":34},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11) 39ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":36},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 38ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":38},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 43ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":40},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 52ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":42},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 37ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":44},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message 46ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":46},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11) 44ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":48},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact 40ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":50},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination 43ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":52},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler 41ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":54},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler 40ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":56},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false 39ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":58},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing 41ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":60},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false 43ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":62},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.' 42ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":64},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ × docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus 41ms
+   → PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":66},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+
+ Test Files  1 failed (1)
+      Tests  31 failed | 2 passed (33)
+   Start at  21:43:57
+   Duration  5.11s (transform 2.00s, setup 0ms, collect 3.21s, tests 1.25s, environment 351ms, prepare 63ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf/.report-host.json
+
+---- stderr ----
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 31 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":6},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:224:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:244:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":10},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field lang > F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":12},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":14},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field theme > F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":16},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":18},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field density > F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":20},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":22},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field accentHue > F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":24},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":26},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field bgTone > F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":28},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":30},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field railPos > F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":32},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":34},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:277:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > pane field fontScale > F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":36},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:293:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":38},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:319:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field lang > T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":40},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:340:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":42},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:319:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field theme > T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":44},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:340:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":46},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:319:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > Topbar field density > T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":48},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:340:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":50},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:366:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":52},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:391:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":54},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:412:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":56},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:424:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":58},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:436:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":60},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:456:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":62},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:493:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":64},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:517:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/31]⎯
+
+ FAIL  docs/reviews/web-appearance-recovery-independent/host.test.tsx > H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":66},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+ ❯ pre docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:50:25
+     48| 
+     49| export function pre(condition: unknown, message: string): asserts cond…
+     50|   if (!condition) throw new Error(`PRECONDITION: ${message}`);
+       |                         ^
+     51| }
+     52| 
+ ❯ Module.mountApp docs/reviews/web-appearance-recovery-independent/host-fixture.tsx:721:3
+ ❯ docs/reviews/web-appearance-recovery-independent/host.test.tsx:546:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/31]⎯
+
+
+---- runner summary ----
+json_report=success=false numTotalTests=33 numPassedTests=2 numFailedTests=31 numPendingTests=0 numTodoTests=0
+totals cases=33 passed=2 failed=31 skipped=0 precondition_failures=31 suite_errors=0 unhandled_error_lines=0 runtime_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required production modules loaded from the archive (34)
+harness PASS no test-file suite error
+case 001 PASSED | FX1 F-B002 self-check: the Storage wrappers record and delegate exactly once, faulted attempts never delegate, no nested Storage call and no accountScope helper call
+case 002 PASSED | FX2 the Web Lock fixture: asynchronous grants, a test hold keeps a product request waiting until release, shared cohorts, ifAvailable
+case 003 FAILED PRECONDITION | FX3 composition: the production App from the archive with only the auth-session hook substituted; account A g1; Shell, Settings, the Appearance pane and DesktopPet; no network; the location stub delegates reads and the history counters see a router navigation
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":6},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 004 FAILED PRECONDITION | PC clean state: zero-write mount, no indicator outside the pane, no unload warning; successful pane and Topbar edits persist exact bytes; the sidebar is not held; sign-out without drafts asks nothing and completes
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":8},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 005 FAILED PRECONDITION | pane field lang F-route lang: a failed pane lang edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":10},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 006 FAILED PRECONDITION | pane field lang F-signout lang: a failed pane lang edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":12},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 007 FAILED PRECONDITION | pane field theme F-route theme: a failed pane theme edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":14},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 008 FAILED PRECONDITION | pane field theme F-signout theme: a failed pane theme edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":16},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 009 FAILED PRECONDITION | pane field density F-route density: a failed pane density edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":18},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 010 FAILED PRECONDITION | pane field density F-signout density: a failed pane density edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":20},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 011 FAILED PRECONDITION | pane field accentHue F-route accentHue: a failed pane accentHue edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":22},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 012 FAILED PRECONDITION | pane field accentHue F-signout accentHue: a failed pane accentHue edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":24},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 013 FAILED PRECONDITION | pane field bgTone F-route bgTone: a failed pane bgTone edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":26},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 014 FAILED PRECONDITION | pane field bgTone F-signout bgTone: a failed pane bgTone edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":28},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 015 FAILED PRECONDITION | pane field railPos F-route railPos: a failed pane railPos edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":30},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 016 FAILED PRECONDITION | pane field railPos F-signout railPos: a failed pane railPos edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":32},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 017 FAILED PRECONDITION | pane field fontScale F-route fontScale: a failed pane fontScale edit, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":34},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 018 FAILED PRECONDITION | pane field fontScale F-signout fontScale: a failed pane fontScale edit, then sign-out from the Appearance pane: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":36},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 019 FAILED PRECONDITION | Topbar field lang T-rail lang: a failed Topbar lang choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":38},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 020 FAILED PRECONDITION | Topbar field lang T-signout lang: a failed Topbar lang choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":40},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 021 FAILED PRECONDITION | Topbar field theme T-rail theme: a failed Topbar theme choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":42},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 022 FAILED PRECONDITION | Topbar field theme T-signout theme: a failed Topbar theme choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":44},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 023 FAILED PRECONDITION | Topbar field density T-rail density: a failed Topbar density choice on /app/tasks, then the AppRail to Calendar: not held, the Topbar status shown (H11); the choice stays displayed and applied; Review opens the pane with the field message
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":46},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 024 FAILED PRECONDITION | Topbar field density T-signout density: a failed Topbar density choice on /app/tasks, then sign-out from /app/tasks: one confirm; Cancel resolves false (H11)
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":48},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 025 FAILED PRECONDITION | R-route: Reset to defaults accepted with the Sidebar position removal denied, then the Settings sidebar to About: not held, no dialog, the Topbar status shown (H11); on return the reset draft is intact
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":50},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 026 FAILED PRECONDITION | H11-a indicator: with a failed pane accent edit and a failed Topbar theme choice, an indicator outside the pane is shown on another Settings pane, on the AppRail destination and on a programmatic destination
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":52},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 027 FAILED PRECONDITION | H11-b beforeunload after a failed pane theme edit: warns on the pane and after leaving it, with zero storage attempts in the handler
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":54},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 028 FAILED PRECONDITION | H11-c beforeunload after a failed Topbar density choice on /app/tasks: warns there and on the AppRail destination, with zero storage attempts in the handler
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/tasks","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":56},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 029 FAILED PRECONDITION | H11-d sign-out from another Settings pane (About, with the Appearance pane unmounted) after a failed pane font-scale edit: one confirm; Cancel resolves false
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":58},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 030 FAILED PRECONDITION | H16-a full success: one trusted Retry all writes each failed key once and nothing else; the Topbar status is hidden while the pass is open and absent after; beforeunload removed; Retry all disabled with focus kept; 'Appearance settings saved.' only after the last completion; sign-out then asks nothing
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":60},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 031 FAILED PRECONDITION | H16-b partial: with the accent still denied one trusted Retry all attempts each failed key once; the count line, the Topbar status returns, unload warns, focus stays on the enabled button; sign-out asks once and Cancel resolves false
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":62},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 032 FAILED PRECONDITION | H16-c open pass: sign-out while a member is held behind its real lock asks once; Cancel resolves false and the pass settles; afterwards no Topbar status, no unload warning and 'Appearance settings saved.'
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":64},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+case 033 FAILED PRECONDITION | H17 clean state: Retry all is rendered and disabled (aria-disabled="true", no disabled attribute, no description), a Tab stop, and a click, Enter and Space make zero storage attempts and keep focus
+    first: Error: PRECONDITION: the production Shell (Topbar and AppRail) is mounted (diagnostics {"routerPath":"/app/settings/appearance","matches":["0","0-2","0-2-4"],"scope":{"kind":"account","accountId":"appearance-host-parent-A","generation":"g1","epoch":66},"accountGate":null,"hostPage":null,"topbar":false,"rail":false,"pane":false,"body":"","markerBytes":true,"probe":{"hookCalls":0}})
+observed_lines=1
+observed FX1 F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerStep":[1,1,1,0,0,0,1,1],"threwPerStep":[false,false,false,true,true,true,false,false],"logged":["set:appearance-host-selfcheck=1","get:appearance-host-selfcheck","remove:appearance-host-selfcheck","set:appearance-host-selfcheck=2!threw","remove:appearance-host-selfcheck!threw","get:appearance-host-selfcheck!threw","get:appearance-host-selfcheck"],"faultsFired":[1,1,1],"bytesAfterFaultedSet":null,"bytesAfterFaultedRemove":"3","sessionStorageLogged":false}
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-host-64jnyf/.appearance-host-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":[],"include":["docs/reviews/web-appearance-recovery-independent/host.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/index.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/settingsPaneComposition.ts apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/routes/modules/settingsDeparture.ts apps/web/src/providers/AccountStorageGate.tsx apps/web/src/providers/AppProviders.tsx apps/web/src/observability/runtime.ts apps/web/src/service-worker/register.ts packages/plugin-web-storage/src/AccountDataGate.tsx packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/accountCoordination.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/sameTabBus.ts packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/plugin-web-tokens/src/index.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=623 by package: apps/web=30 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=6 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
