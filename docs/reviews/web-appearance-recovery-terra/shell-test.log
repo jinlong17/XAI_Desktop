@@ -1,0 +1,610 @@
+$ pnpm --filter @repo/xai-web-shell run test
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-af4a4f142fbb6336f
+# HEAD: 24073b522262d8b4bec0abfa29347db28adbdd9e
+# started: 2026-10-05T07:37:37Z
+
+> @repo/xai-web-shell@0.0.0 test /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-af4a4f142fbb6336f/packages/xai-web-shell
+> vitest run
+
+
+ RUN  v3.2.7 /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-af4a4f142fbb6336f/packages/xai-web-shell
+
+ ✓ src/__tests__/registry.test.tsx (7 tests) 62ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx (8 tests) 64ms
+ ✓ src/__tests__/AvatarMenu.test.tsx (18 tests) 91ms
+ ✓ src/__tests__/Topbar.test.tsx (24 tests) 275ms
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1 — Shell renders with Topbar (search input present)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1b — Shell renders with AppRail (app-rail aside present)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1 — AppRail module click emits web:shell:module-change with source 'app-rail'
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR1 — renders rail-visible modules sorted by railOrder
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S2 — Shell renders children in app-main
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR1b — settings module with showInRail:false is not in rail-items
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR2 — data-pos attribute matches railPos
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E2 — Pet button click emits web:shell:pet-toggle with { on: true }
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3a — Shell renders with railPos=right
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3b — Shell renders with railPos=top
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3c — Shell renders with railPos=bottom
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR2b — left is the default data-pos
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S4 — Shell renders with empty modules (no crash)
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR3 — clicking a module button calls onModuleClick with the module id
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR4 — active module button has 'active' className
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR4b — inactive buttons do NOT have 'active' className
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR5 — drag-reorder: onDragStart sets dragging class
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR8 — ghost module ids in localStorage are filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+
+stderr | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S-StrictMode — StrictMode double-mount does not throw
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+ ✓ src/__tests__/Shell.smoke.test.tsx (9 tests) 68ms
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR9 — Pet button is rendered in the rail-bottom
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR9b — clicking Pet button calls onPetToggle
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR9c — Pet button has 'active' class when petOn=true
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut'
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR10d — pet button is still present after removing sync/notif/help
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut'
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut'
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1/E3 — emitWebEvent is called exactly once per user interaction
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+ ✓ src/__tests__/event-emit.test.tsx (6 tests) 119ms
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR11 — icon-only rail controls expose accessible names
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail > AR11 — module button has data-tip with i18n label
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+stderr | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N1 — empty modules list renders empty rail-items
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "timetrack" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "countdown" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ai" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "statistics" — filtered out
+
+ ✓ src/__tests__/AppRail.test.tsx (25 tests) 163ms
+ ✓ src/__tests__/internal/dnd.test.ts (9 tests) 6ms
+ ✓ src/__tests__/index-barrel.test.ts (9 tests) 4ms
+
+ Test Files  9 passed (9)
+      Tests  115 passed (115)
+   Start at  00:37:37
+   Duration  1.91s (transform 693ms, setup 1.17s, collect 2.42s, tests 854ms, environment 4.51s, prepare 693ms)
+
+# exit: 0

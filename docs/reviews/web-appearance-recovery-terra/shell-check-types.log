@@ -1,0 +1,9 @@
+$ pnpm --filter @repo/xai-web-shell run check-types
+# cwd: /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-af4a4f142fbb6336f
+# HEAD: 24073b522262d8b4bec0abfa29347db28adbdd9e
+# started: 2026-10-05T07:37:39Z
+
+> @repo/xai-web-shell@0.0.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-af4a4f142fbb6336f/packages/xai-web-shell
+> tsc --noEmit
+
+# exit: 0
