@@ -508,3 +508,12 @@
     display: none;
   }
 }
+
+/* F-APP-1: the Font scale slider showed no keyboard focus. The shared
+   `.slider-row input[type="range"] { outline: none }` in plugin-web-tokens
+   layout.css (0,2,1) outranks the global `input:focus-visible` ring in
+   tokens.css (0,1,1); this pane-scoped rule (0,4,1) restores that same ring. */
+.appearance-pane .slider-row input[type="range"]:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 58%, transparent);
+  outline-offset: 2px;
+}
