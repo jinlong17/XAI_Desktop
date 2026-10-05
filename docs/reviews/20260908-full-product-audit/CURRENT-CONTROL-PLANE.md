@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：Terra 已修复 F-APP-2（产品 `419e56d`，运行记录 `5766c1e`），同类审计确认 pane 内没有其他焦点遮盖；新的 fixed SHA 为 `419e56d`。审计另发现 Topbar 弹层选项没有可见焦点，属受保护 chrome 之外的既有缺陷，记为 F-APP-3 并按后续项处理。本批登记批次 50：在 `419e56d` 上全量运行 E14–E15。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：E14–E15 在 fixed `419e56d` 上全部 PASS（`2696855`），F-APP-1 与 F-APP-2 的修复成立，F-APP-3 的观察证据已冻结。总控已逐项核对 E1–E27 的覆盖（G1）。本批登记批次 51：最终回归 E18–E25 与回执 E27，含 delta 审计与重跑。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `5766c1e` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `2696855` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -115,7 +115,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `verification_pending`：E7、E8、E16、E17 PASS（`31d6335`）；E9–E11 PASS（`3419542`）；K-1 已关闭，没有结论改变（`6b9f0ee`）；E12、E13、E26 PASS（`32e6753`）；F-APP-1 已由 `5bbf473` 修复，并经批次 48 确认；批次 48 发现同类失败 F-APP-2（`bacdbbc`），已由 `419e56d` 修复；待在 `419e56d` 上做 E14–E15，最终回归 E18–E25 与回执 E27，以及独立最终 acceptance |
+| 状态 | `verification_pending`：E7、E8、E16、E17 PASS（`31d6335`）；E9–E11 PASS（`3419542`）；K-1 已关闭，没有结论改变（`6b9f0ee`）；E12、E13、E26 PASS（`32e6753`）；F-APP-1 已由 `5bbf473` 修复，并经批次 48 确认；批次 48 发现同类失败 F-APP-2（`bacdbbc`），已由 `419e56d` 修复；E14–E15 在 `419e56d` 上 PASS（`2696855`）；待最终回归 E18–E25 与回执 E27，以及独立最终 acceptance |
 | 用户决定（2026-10-04） | **B-2：保留按钮，改为全部重试。** 用户在三个选项中选了 (ii)：<ul><li>(i) 自动保存并去掉按钮，未选；</li><li>(ii) 保留按钮并改为全部重试，**选中**；</li><li>(iii) 编辑后保存，未选。</li></ul>含义：继续自动保存，每次改动立即生效并保存；底部按钮保留，从无条件显示 "Saved" 的空操作，改为真实的"重试全部失败项"。这是产品负责人对 SET-02 开放选择的决定，记入控制面；台账在 Appearance 接受时一并对账 |
 | 选择与合同 | `e9fbdb7`，作者为独立 Claude Opus 5.5（Astra 角色映射）。<ul><li>选择备忘录 `docs/reviews/web-next-caller-selection/selection-5cd63ff.md`：比较 7 个候选，推荐 B（Appearance）。</li><li>合同 `docs/reviews/web-appearance-recovery-contract/contract.md`：r1 有 884 行，含假设 A1–A9、H1–H14、九个 gate、E1–E26；r2 见下方一行。</li></ul> |
 | 合同 r2（批次 35） | `b2e5eb2`（独立 Astra；只原地修订 `contract.md`，1159 行，SHA-256 `e4210cff…`）。<ul><li>A2 改为记录产品负责人的决定：继续自动保存；"Save & apply" 与无条件的 "Saved" 闪现去掉；改为 pane 本地底部区域中的真实"全部重试"。</li><li>重试范围：所有已结算的失败草稿，每项只试一次，按精确草稿归属。</li><li>EN/ZH 文案：`Retry all`/`全部重试`。</li><li>位置：底部区域不吸底、左对齐，全部重试在最左。它只对全部重试设硬 gate：5 个宽度上与宠物盒至少相隔 8px，中心加四个内缩点均无遮挡。</li><li>`SettingsFooter`、`confirmAction`、`resetAllPrefs` 不变。</li><li>计数：H1–H16，gate 1–10，证据 E1–E27 连续（Sol 增加 `retry-all` 模式，新增 E26 native 全部重试，最终回归回执改为 E27）。</li><li>**总控核对：** 只改合同一个文件，worktree clean；A1、A3–A9 与 r1 逐字相同；E1–E27 连续；修订记录位于合同开头。</li></ul> |
@@ -139,12 +139,14 @@
 | F-APP-1 修复（批次 47） | `5bbf473` `fix(settings): show focus ring on Appearance font scale slider`（父 `9b76076`）+ `0d34bf2` 运行记录（terra 目录新增 7 个文件：`implementation-r2.md` 与 6 份 `r2-` 日志）。<ul><li>**修复：** 在 `styles.css` 末尾追加 `.appearance-pane .slider-row input[type="range"]:focus-visible`，优先级 (0,4,1)，不在任何 at-rule 内，声明与 `tokens.css:251–252` 逐字节相同。</li><li>**守卫测试：** 新增 `AppearancePane.focus-ring.test.tsx`，共 4 项：规则存在；焦点环与全局规则一致；优先级高于 `layout.css` 中设置 outline 的规则；选择器恰好匹配字体大小滑块。对修复前的样式表运行时，第 1 项失败。</li><li>**自检：** Appearance 包 130/130（原 126 加新增 4）、typecheck、lint（0 warning）；web 178/178；全部 exit 0。</li><li>**native 预检（日志未提交，已披露）：** 在 EN 1024 与 ZH 375 下，聚焦时 outline 为 `solid 2px`，与色相滑块的全局焦点环一致，聚焦与未聚焦的截图不同。负向对照复现了批次 46 冻结的 hash。runtime error 为 0。</li><li>**总控核对：**<ul><li>产品 diff 相对 `24073b5` 只有 `styles.css`（+9/−0）与新测试（+169）；</li><li>按 `24073b5` 的长度截取新 `styles.css` 的前缀，其 hash 等于旧文件 hash，确认原有规则逐字节未变；</li><li>记录提交只在 terra 目录新增文件；worktree 与主检出均 clean。</li></ul></li><li>**总控裁定：**<ol><li>守卫测试第 3 项会在 tokens 后续项移除 `outline: none` 时有意失败，目的是提醒届时重新审视这条 pane 规则。接受；该后续项须连同这项测试一起处理。</li><li>`docs/test.md` 未列入新测试，是因为批次 47 的范围禁止改动其他文件。记为非阻断的文档后续项，最终 acceptance 判断。</li><li>冻结 runner 硬编码了 `24073b5` 与 24 个文件的期望 delta。批次 48 须在新文件中写 runner 副本，期望 delta 相对 `5cd63ff` 为 25 个文件；冻结 runner 不改。</li></ol></li></ul> |
 | 真实产品失败 F-APP-2（批次 48，2026-10-05） | `bacdbbc`（独立视觉与键盘验证者；native 目录 77 个新增文件，回执 `review-visual-keyboard-5bbf473.md` 为 `7095689b…`）。判定为 **FAIL**，按停止规则冻结后停下。<ul><li>**F-APP-1 已确认修复：** 字体大小滑块聚焦时为 `solid 2px`，与色相滑块的焦点环相同；EN 与 ZH 下聚焦与失焦的截图都不同；在 `5cd63ff` 上仍复现冻结的相同 hash。</li><li>**复现：** 当前选中的强调色色块带 `.active` 类。<ul><li>聚焦时它匹配 `:focus-visible`，但 outline 仍是选中环 `solid 2px var(--text-1)`，不随焦点变化。</li><li>聚焦截图与焦点移出色块行后的截图逐字节相同：默认 Sage 下 EN `a9a8821f…`、ZH `300ff1da…`；选中 230 Ocean 时 EN `e9af9a97…`、ZH `5bdf828d…`。</li><li>正向对照：未选中色块的焦点环会改变 537–587 个像素。</li><li>EN 与 ZH 各 5 项产品检查失败：2 项色块复现，加上 3 次 Tab 遍历各在这一站失败。其余 E15 全部 PASS。</li></ul></li><li>**根因（总控在源码中核实）：** `.accent-sw.active { outline: 2px solid var(--text-1); outline-offset: 2px }`，优先级 (0,2,0)，覆盖了 `tokens.css:246–253` 的 `button:focus-visible`，优先级 (0,1,1)。这条规则有两份，都自 `5cd63ff` 起就存在：<ul><li>受保护的 `plugin-web-tokens/src/layout.css:1437–1440`；</li><li>Appearance 的 `styles.css:116–119`。</li></ul></li><li>**违反的条款：** 合同 §9 Keyboard（E15，gate 8）。</li><li>**批次 46 为何没发现：** 它的"outline ≥2px"检查与整块截图比较都会把这种情况判为通过。批次 48 改为按每个停靠点自身的环或盒做像素比较，才查出来。</li><li>**其他观察（非本 caller 范围）：** shell 的 AppRail 停靠点"任务"，其焦点环大部分被 rail 滚动容器裁掉，自身盒子变化 81px；开发截图中可见焦点环。AppRail 受保护，记为后续人工复核项。</li><li>**E14：** 只作为开发探测运行，不作证据；探测中各宽度都未失败，EN 375 溢出已消失，层叠顺序审计中 60775 个计算值变化为 0。</li><li>**总控核对：** 77 个文件均为新增，且在允许目录内；回执列全了 hash；两份日志都是 `harnessValid`，runtime error 为 0；总控逐条列出了失败检查的 ID，确认全部源于选中色块；根因由总控在 `5bbf473` 源码中核实。</li><li>**总控裁定：**<ol><li>**归属：** F-APP-2 与 F-APP-1 同类，归本 caller，在 Appearance `styles.css` 中只追加、限定在 `.appearance-pane` 下修复；受保护的 tokens 不改。</li><li>**修复要求（总控可定的 a11y 细节）：**<ul><li>聚焦且选中的色块，其自身的环或盒在像素上须不同于未聚焦而选中时；</li><li>聚焦时仍能看出选中状态；</li><li>焦点指示使用全局焦点环的颜色与粗细；</li><li>只用 outline 或 box-shadow，不改变布局。</li></ul></li><li>**同类审计：** 连续两次出现同类问题，因此批次 49 须先做全面静态审计。对象是 Appearance pane 内每个可聚焦控件以及 Topbar 状态，在包括 `.active`、`aria-checked` 等选中态在内的每种状态下。须找出所有会遮盖或抵消全局 `:focus-visible` 焦点环的规则，来源包括 tokens 的 `layout.css` 与 `tokens.css`、Appearance 的 `styles.css`、shell CSS。凡属 pane 内的，在同一批中一并修复。</li><li>**修复后的 E15：** 须在每组选项（主题、密度、背景、rail 位置、强调色）的非默认选中状态下，也做逐停靠点的像素焦点遍历。</li></ol></li></ul> |
 | F-APP-2 修复与同类审计（批次 49） | `419e56d` `fix(settings): show focus on selected Appearance options`（父 `6fedfd1`）+ `5766c1e` 运行记录（terra 目录新增 7 个文件：`implementation-r3.md` 与 6 份 `r3-` 日志，其中含静态焦点审计）。<ul><li>**修复：** 在 `styles.css` 末尾追加 `.appearance-pane .accent-sw.active:focus-visible`，优先级 (0,4,0)，不需要 `!important`。<ul><li>焦点环使用全局颜色与 2px 粗细，`outline-offset: 4px`；</li><li>选中状态改用紧贴色块的 2px `box-shadow`（`var(--text-1)`）保留，两者之间留 2px 间隙；</li><li>不改变布局；没有其他样式给色块设 box-shadow，因此不会覆盖任何已有效果。</li></ul></li><li>**守卫测试：** 新增 `AppearancePane.selected-focus.test.tsx`。对修复前的样式表运行时 4 项失败，恰好标出两份 `.accent-sw.active`。</li><li>**同类审计：** 三层方法：<ul><li>静态扫描：29 个样式表中 137 条 outline 或 focus 规则；</li><li>浏览器匹配：4 种配置共 484 条记录；</li><li>Chrome CSSOM。</li></ul>结论：pane 内只有两处遮盖，选中色块即 F-APP-2（本批修复），字体大小滑块即 F-APP-1（已修复）。其余控件都没有遮盖：语言与密度分段只加 box-shadow 与背景；主题、背景、rail 卡片只改 border-color；未选中色块与色相滑块的规则优先级低于全局焦点环；各按钮与 Topbar 状态只匹配全局焦点环；没有祖先元素裁剪焦点环。</li><li>**自检：** Appearance 包 137/137（原 130 加新增 7）、typecheck、lint；web 178/178；全部 exit 0。</li><li>**native 预检（日志未提交，已披露）：** 覆盖 EN/ZH × 浅色/深色 4 种配置，每组选项的每个选项都以键盘选中，非默认选项优先。<ul><li>负向对照（`5bbf473` 样式表）恰好 24 处失败，全部是选中色块；</li><li>修复后为 0 失败。</li></ul></li><li>**过程披露：** 执行者第一次运行时卡住，看门狗未能恢复。总控只读核实了它的半成品 worktree（仅 `styles.css` 一处未提交追加），然后通过 SendMessage 恢复同一窗口完成。执行者另外披露：产品提交信息中"29 个 Web 样式表"实为 28 个 Web 样式表加 1 个 desktop 专用文件，为保持 SHA 未修改。</li><li>**总控核对：**<ul><li>产品 diff 相对 `5bbf473` 只有 `styles.css`（+13）与新测试（+331）；</li><li>新 `styles.css` 的前缀与 `5bbf473` 版本逐字节相同；</li><li>记录提交只在 terra 目录新增文件；</li><li>相对 `5cd63ff` 共 26 个文件。</li></ul></li><li>**总控裁定：**<ol><li>**F-APP-3（Topbar 弹层选项焦点）：** 快速切换弹层中已勾选的 `menuitemradio` 选项，聚焦时像素变化为 0；未勾选的只有很淡的底色。原因是 `layout.css:453–457` 的 `:focus-visible { outline: none }`，加上 `:459–463` 的 `[aria-checked="true"]` 覆盖了底色；修复前后相同，属既有缺陷。合同把弹层列为保持不变的 chrome：第 193 行列出其角色与选项；第 858 行写明键盘行为不变；第 888 行把弹层打开时的 Topbar `outerHTML` 纳入不变性比较；第 1214 行把弹层内容改动列为排除项。因此 F-APP-3 不在本 caller 的修复范围内，不阻断 CP-APPEARANCE-01，记为 UX-05（键盘、焦点、对比度验收）的后续项。批次 50 须把它作为观察冻结成已提交的证据，不设 gate；最终 acceptance 确认或推翻。</li><li>**tokens 后续项（并入 UX-05）：** 已经由 pane 内规则覆盖、但根因仍在 tokens 的三处：<ul><li>`layout.css` 中的 `.accent-sw.active` 与 `.slider-row input[type="range"] { outline: none }`；</li><li>`styles.css:116–119` 的重复规则；</li><li>弹层的 `outline: none`。</li></ul>两个守卫测试都有意与这些规则耦合，处理后续项时须一并更新。</li><li>**文档后续项：** `docs/test.md` 尚未列入这两个守卫测试，为非阻断的文档后续项。</li></ol></li></ul> |
+| E14–E15（`419e56d`，批次 50） | `2696855`（独立视觉与键盘验证者；native 目录 161 个新增文件：runner 副本与 diff、4 份日志、154 张截图、回执 `review-visual-keyboard-419e56d.md` 为 `89ee14cd…`）。<ul><li>**runner：** 相对批次 48 只改了 9 行，都与 SHA 有关；新增 502 行，用于新增的证据要求；没有删除或削弱任何检查。四种模式都在 fixed1 一次通过，runtime error 与 console 警告均为 0，按键审计无失配。</li><li>**E14（EN/ZH 各 3437 项检查）：**<ul><li>宠物隐藏时，5 个宽度上没有失败；EN 375 溢出已消失（pane 289/289，`5cd63ff` 为 380/289）。</li><li>全部重试 gate：每种语言 402 项，与宠物盒相距 145.81–729.81px。</li><li>宠物显示时，没有任何 caller 控件被遮挡。</li><li>Topbar 断点：761 与 767px 只显示图标，768px 起显示文字。</li><li>选择器审计：17 个新增选择器全部在 scope 内。层叠顺序审计：60775 个计算值变化为 0。</li><li>禁用态对比度：浅色 3.795–4.084，深色 4.54–5.078。</li></ul></li><li>**E15（EN 1398、ZH 1468 项）：**<ul><li>合同 §9 的键盘要求与全部重试的各项要求全部 PASS。</li><li>逐停靠点的像素焦点遍历共 1000 个停靠点，失败为 0，覆盖：每组选项的非默认选中状态；两个滑块的非默认值；clean、写入失败与 source 异常三种状态；浅色与深色。</li><li>选中且聚焦的色块与选中而未聚焦时，自身区域相差 830–862 个像素，选中环仍 100% 可见。在 `5cd63ff` 上，两张截图仍逐字节相同。</li></ul></li><li>**F-APP-3 观察（不设 gate）：** 弹层中 12 个已勾选选项聚焦时像素变化为 0；16 个未勾选选项只有对比度 1.163–1.213 的淡色；outline 恒为 none。截图 #85–#96、#143–#154 作为 UX-05 的证据。</li><li>**总控核对：**<ul><li>161 个文件均为新增，且在允许目录内；回执列全了 hash。</li><li>四份日志的 result 记录均为 `pass`、`harnessValid`，runtime error 与 console 警告均为 0。</li><li>总控亲自查看了两张截图：深色主题下聚焦的选中色块（白色选中环在内，强调色焦点环在外，两者都可见）；EN 768 宠物开启、7 项未保存、滚动到底（计数行，左对齐的全部重试、导出、放弃全部，Reset 单独一行，远离宠物；Topbar 显示 "Not saved" 文字）。均与日志一致。</li></ul></li></ul> |
+| Required evidence 覆盖核对（G1，2026-10-05） | 合同 r3 §14 共 E1–E27：<ul><li>**已冻结的 before 证据：** E1–E2 `bd09456`；E3 `b997235`；E4–E5 `72538d1`，另有 K-1 补充证据 `6b9f0ee`。</li><li>**E6 Terra：** r1 `24073b5` 与 `4874170`；r2 `5bbf473` 与 `0d34bf2`；r3 `419e56d` 与 `5766c1e`。最终 fixed 为 `419e56d`，相对 `5cd63ff` 共 26 个文件，全部在 §11 内。</li><li>**在 `24073b5` 产出、须在最终回归时重跑或沿用的：**<ul><li>E7、E8、E16、E17（`31d6335`，含 OE 纠正副本 `26cfce8`）：在 `419e56d` 上低成本重跑。</li><li>E9–E11（`3419542`）与 E12、E13、E26（`32e6753`）：由 delta 审计证明可以沿用。`24073b5` 到 `419e56d` 只多出 `styles.css` 的两段追加与两个测试；须证明生产 JS bundle 逐字节相同；CSS 只涉及 `:focus-visible` 的 outline 与 box-shadow，不占布局。</li></ul></li><li>**E14–E15：** `2696855` 在 `419e56d` 上 PASS。此前两次 FAIL（`5307b6f`、`bacdbbc`）作为历史保留。</li><li>**E18–E25 与 E27：** 由批次 51 产出。</li><li>**没有缺失的 ID。**</li></ul> |
 | 范围 | 7 个 device 键：语言、主题、密度、字号、强调色、背景、rail 位置。<ul><li>三个写入面：Settings pane、`App.tsx` 根偏好 writer、Topbar 快速切换。</li><li>Terra 可改的文件见合同 §11：Appearance 包；shell 的 `Topbar.tsx`、`Shell.tsx`、`types.ts` 与 Topbar 测试；`apps/web` 的 `App.tsx` 与新的 App 测试；运行记录目录 `web-appearance-recovery-terra/`。</li><li>全部在 `web` 模块内，不改 D2 共享层。</li></ul> |
 | 312 清单编号 | 关联 SET-02、SHELL-04、REL-05、REL-07、REL-09 等；本任务不关闭任何编号 |
 | 风险等级 | `high`：改动宿主 `App.tsx` 与 shell，影响所有 `/app` 路由。<ul><li>H6：一个畸形根值会让整个 `/app` 落入错误页。</li><li>是开放式 async 路径的第一个 device 生产使用方：在这里发现的缺陷按共享缺陷处理。</li></ul> |
 | 总控核对 | <ul><li>提交只新增 2 个文件，worktree clean。</li><li>总控在 `5cd63ff` 上逐条核实关键源码事实：<ul><li>`plugin-web-tokens/src/i18n.ts:727–733` 遇不支持的语言抛 `TypeError`；</li><li>`apply.ts:64–69、83–88` 遇非法字号或色相抛 `RangeError`；</li><li>`router.tsx:41–43` 的 `/app` 挂 `RouteErrorBoundary`；</li><li>`App.tsx:98–105` 与 `Topbar.tsx:26–39` 吞掉写入失败；</li><li>`SettingsFooter.tsx:75` 无条件 `setSaved(true)`；</li><li>7 个键在 `accountOwnership.ts` 中均为 device。</li></ul></li><li>Terra 文件清单逐个列出；E1–E26 连续，无缺号。</li></ul> |
 | 前置决定 | <ul><li>**B-2 / A2（用户已决定为 (ii)，见上）：** SET-02 原文为"Appearance统一自动保存或编辑后保存语义"，两种方式都写在条目里，属产品负责人的选择。<ul><li>合同按选项 (i) 写成：保留自动保存，去掉 "Save & apply"（Features D3 先例）。</li><li>选 (ii) 或 (iii) 时，须由 Astra 修订合同。</li></ul></li><li>**A1、A3–A9（总控可定）：** 宿主与 shell 范围、App 级单一 controller、开放式 async 路径、保护模型（不加 Settings 路由 guard；Topbar 状态位；App 级 `beforeunload`；登出前确认）、严格值域且只拒绝不修复、Reset 删除 6 个键并保留语言、测试处置、R-PET 判定口径。总控倾向确认，待 B-2 结果后一并确认。</li><li>**其他候选的用户决定（暂不提问，排到对应候选时再提）：** C-1（SET-10）、D-2、E-1（DASH-03）、E-2（SHELL-05）、E-3（SET-03）、F-2（SET-08）。</li></ul> |
-| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ ~~批次 41 OE-1/OE-2 复核~~（`26cfce8`）→ ~~批次 42 重跑 E7、E8、E16、E17~~（`31d6335`）→ ~~批次 43 native E9–E11~~（`3419542`）→ ~~批次 44 K-1 评估~~（`6b9f0ee`）→ ~~批次 45 native E12–E13 与 E26~~（`32e6753`）→ ~~批次 46 E14–E15~~（`5307b6f`，FAIL：F-APP-1）→ ~~批次 47 Terra 修复~~（`5bbf473`、`0d34bf2`）→ ~~批次 48 在 `5bbf473` 上的 E14–E15~~（`bacdbbc`，FAIL：F-APP-2）→ ~~批次 49 Terra 修复 F-APP-2 与同类审计~~（`419e56d`、`5766c1e`）→ 批次 50 在 `419e56d` 上的 E14–E15 → 批次 46 视觉与键盘 E14–E15 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
+| 后续顺序 | ~~用户决定 B-2~~（(ii)）→ ~~批次 35 Astra 修订合同 r2~~（`b2e5eb2`）→ ~~用户决定二~~（始终显示）→ ~~批次 36 r3 修订~~（`706c9a3`）→ ~~总控确认 A1、A3–A9~~ → ~~批次 37 Sol（E1–E2）~~（`bd09456`）→ ~~批次 38 父级 host（E3）~~（`b997235`）→ ~~批次 39 native before 与 Appearance F1（E4–E5）~~（`72538d1`）→ ~~批次 40 Terra~~（`24073b5`、`4874170`）→ ~~批次 41 OE-1/OE-2 复核~~（`26cfce8`）→ ~~批次 42 重跑 E7、E8、E16、E17~~（`31d6335`）→ ~~批次 43 native E9–E11~~（`3419542`）→ ~~批次 44 K-1 评估~~（`6b9f0ee`）→ ~~批次 45 native E12–E13 与 E26~~（`32e6753`）→ ~~批次 46 E14–E15~~（`5307b6f`，FAIL：F-APP-1）→ ~~批次 47 Terra 修复~~（`5bbf473`、`0d34bf2`）→ ~~批次 48 在 `5bbf473` 上的 E14–E15~~（`bacdbbc`，FAIL：F-APP-2）→ ~~批次 49 Terra 修复 F-APP-2 与同类审计~~（`419e56d`、`5766c1e`）→ ~~批次 50 在 `419e56d` 上的 E14–E15~~（`2696855`）→ 批次 51 最终回归 E18–E25 与 E27 → 批次 52 独立最终 acceptance → 批次 46 视觉与键盘 E14–E15 → E1–E5 全部冻结后才授权 Terra → fixed 重跑与 native → 最终回归 E27 → 独立最终 acceptance |
 
 CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完整记录（总控决定、逐批证据行、R-PET、F-B002 与批次 31 的核对）保留在本文件的 `78e8de2` 版本：
 `git show 78e8de2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
@@ -259,7 +261,8 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 | Appearance（续 10） | `9b76076` 登记批次 47 · `5bbf473` F-APP-1 修复 · `0d34bf2` 运行记录 |
 | Appearance（续 11） | `aa326b4` 登记批次 48 · `bacdbbc` E15 FAIL（F-APP-2 冻结） |
 | Appearance（续 12） | `6fedfd1` 登记批次 49 · `419e56d` F-APP-2 修复 · `5766c1e` 运行记录与审计 |
-| 本提交 | 记录 F-APP-2 修复与审计、F-APP-3 裁定，登记批次 50（`419e56d` 上的 E14–E15） |
+| Appearance（续 13） | `2302b47` 登记批次 50 · `2696855` E14–E15 PASS |
+| 本提交 | 记录 E14–E15、G1 覆盖核对与成本周期 12–15，登记批次 51（最终回归） |
 
 ## 台账变化
 
@@ -286,6 +289,10 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 | 9 | 30–32 | 最终回归（冻结 F-B002）、F-B002 纠正 oracle 证据、独立最终 acceptance；各一次完成 |
 | 10 | 33–35 | 库存刷新、下一项选择与 Appearance 合同、合同 r2；各一次完成。用户的两个产品决定各带来一次合同修订（r2、r3，r3 为批次 36） |
 | 11 | 36–38 | 合同 r3、Sol before oracle、父级 host 基线。后两批各用满 3/3 诊断迭代：Sol 是逐轮补用例与修 harness 假失败；host 前两轮 App 渲染为空树 |
+| 12 | 39–41 | native 与 F1 before、Terra 实施、OE-1/OE-2 判定；各一次完成。OE 是 oracle 缺陷，不是产品失败 |
+| 13 | 42–44 | fixed 重跑 E7/E8/E16/E17、native E9–E11、K-1 评估；各一次完成。K-1 是证据完整性评估，没有结论改变 |
+| 14 | 45–47 | native E12/E13/E26；E14–E15 FAIL，发现 F-APP-1；Terra 修复 F-APP-1 |
+| 15 | 48–50 | E14–E15 FAIL，发现 F-APP-2；Terra 修复 F-APP-2 并做同类审计，期间卡住一次，经 SendMessage 恢复；E14–E15 PASS。同类问题连续两次后改为先做全面审计 |
 
 - **主要额外成本：**
   - F1：必要的共享缺陷修复，以及受影响 caller 的重跑；
@@ -299,58 +306,58 @@ CP-FEATURES-01 已于 `ec55f9e` 接受（见上）。它在进行中阶段的完
 
 ## 本轮唯一任务
 
-批次 50：独立视觉与键盘验证者在 fixed `419e56d` 上，用真实 Chrome 全量运行 Appearance 的 E14（EN/ZH 五宽度视觉）与 E15（键盘）。
+批次 51：独立最终回归验证者（Sol 角色）在 fixed `419e56d` 上产出合同 r3 §14 的 E18–E25 与回执 E27，并完成 delta 审计与重跑。
 
-- **执行者：** 新的独立 Claude Opus 5.5，不是批次 46 或 48 的执行者。
+- **执行者：** 新的独立 Claude Opus 5.5。它不是 Terra，也不是本 caller 任何一批的执行者。
 - **固定点：**
-  - fixed `419e56d`；宠物截图另需 `5cd63ff`；不可变 archive；lockfile gate；`@repo` 全部来自 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
-  - headless Chrome 走 pipe transport；按键不带 `nativeVirtualKeyCode`，并做按键审计；
-  - 只有 auth session 为合成；不得在主检出启动 dev server，也不得写入主检出；
-  - 合同 r3（`706c9a3`）；控制分支基点为本提交。
-- **runner：**
-  - 在新文件中复制批次 48 的 `verify-visual-keyboard-5bbf473.mjs`，只改与 SHA 相关的部分：期望 delta 改为相对 `5cd63ff` 的 26 个文件，标签改为 `419e56d`；
-  - 新旧 runner 的 diff 须提交；冻结文件不改。
-- **E14：** 要求同批次 48 的规格，见合同 r3 §9、§14 及本控制面中 F-APP-1、F-APP-2 两行，包括：
-  - 宠物隐藏与显示两种状态下的 hit-test；
-  - 44×44 与溢出（EN 375 的溢出须已消失）；
-  - Topbar 在 767 与 768 两档的断点；
-  - 选择器审计与层叠顺序审计；
-  - 全部重试的 A2.8 gate；
-  - 禁用态外观的测量；
-  - 截图逐张人工审查。
-- **E15：**
-  - 合同 §9 的全部键盘要求，以及全部重试的各项要求。
-  - 逐停靠点的像素焦点遍历：每个停靠点自身的环或盒在聚焦与失焦时须有像素差异。须覆盖：
-    - 每组选项（语言、主题、密度、背景、rail 位置、强调色）的非默认选中状态；
-    - 两个滑块的非默认值；
-    - clean、写入失败、source 异常三种状态；
-    - Topbar 状态；
-    - 至少一种语言下的浅色与深色两种主题。
-  - 选中且聚焦的强调色色块，须与选中而未聚焦时有像素差异，且选中环仍然可见。
-- **观察（不设 gate）：** 冻结 F-APP-3 的复现：Topbar 快速切换弹层中，已勾选与未勾选的 `menuitemradio` 选项聚焦时的像素差异，以及计算出的 outline 与背景，EN/ZH × 浅色/深色。作为 UX-05 后续项的已提交证据。
-- **输出：** 只新增 `docs/reviews/web-appearance-recovery-native/**` 下的文件：runner 副本与 diff、日志（后缀 `fixed1`，标签 `419e56d`）、截图，以及回执 `review-visual-keyboard-419e56d.md`。回执须列出全部截图的 SHA-256 与逐张人工审查结论。
-- **禁止：** 修改任何已有文件；修改产品、合同、台账或控制面；修复；push；派生子 agent。
-- **成本上限：** 每种语言模式的诊断迭代不超过 3 轮；开发探测须披露；不要运行长时间没有输出的命令。
+  - fixed `419e56d`，before `5cd63ff`；
+  - 不可变 archive，lockfile gate，`@repo` 固定并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
+  - native 运行走 pipe transport，按键不带 `nativeVirtualKeyCode`；
+  - 不得在主检出启动 dev server，也不得写入主检出；
+  - 合同 r3（`706c9a3`）；控制分支基点为本提交；
+  - runner 与命令沿用 `web-features-recovery-final/review-final-regressions-5cd63ff.md`（含 `verify-static.mjs`、`verify-packages.mjs`、`verify-callers.mjs`）。
+- **E18：** 在 fixed 上执行合同 §10 第 9 项的检索，并与 `5cd63ff` 逐文件比较计数。
+- **E19：** §10 第 8 项，`5cd63ff..419e56d` 的受保护路径 diff 为空。
+- **E20：** storage check-types，并在 fixed 上重跑 Sol 对 7 个键的生命周期断言。
+- **E21：** Appearance 包全量测试、typecheck 与 lint；另在 `5cd63ff` 上跑它未改动的测试，作为 before 对照。
+- **E22：** shell 包全量测试、typecheck 与 lint；另在 `5cd63ff` 上跑它未改动的测试，作为 before 对照。
+- **E23：** Web 包测试（含 §10 第 10 项的全部测试与新的 `App.appearance*` 测试）、check-types 与 lint。
+- **E24（已接受 caller 的套件，计数与其接受回执比较）：**
+  - Features：Sol 七个模式（bytes 17、fields 49、reset 31、queues 40、continuity-export 26、downstream 15、original 6），host 40，package 45；
+  - More：Sol fields 22、reset 20、queues 14、owner-export 13；`boundaries` 同时运行冻结 oracle（按实际结果记录，已知不确定）与纠正 oracle（须 10/10，C-FB002）；original 15，host 11；
+  - Sticky：Sol 109，original 10，host 28；
+  - Notifications：Sol 41，Astra boundaries 24，Astra host 15，父级 host 12；
+  - Date & Time：7；
+  - settings-shell：54；settings-rest：44 个文件、314 项。
+- **E25：** 用 Features 的 native downstream runner（`web-features-recovery-native/verify-native-downstream.mjs`）在 fixed 上 PASS。
+- **delta 审计（沿用依据）：**
+  - `git diff 24073b5 419e56d -- apps packages package.json pnpm-lock.yaml` 恰好是 `styles.css` 的两段追加与两个新测试；
+  - 两个 SHA 的生产 JS bundle 逐字节相同；
+  - 由此说明 E9–E13、E26 可以沿用。
+- **低成本重跑：** 在 `419e56d` 上重跑 E7（Sol 8 个模式，`continuity-export` 按 E7 裁定同时运行纠正副本）、E8、E16（12 个 F1 运行）、E17，并与 `24073b5` 上的结果逐 case 比较。
+- **E27 回执：** `docs/reviews/web-appearance-recovery-final/review-final-regressions-419e56d.md`。
+  - 逐项列出 E1–E26 的产出提交、路径、SHA-256 与结论，每项至少重算一个 hash。
+  - 须写明：
+    - E6 的 r1、r2、r3 三轮记录；
+    - 沿用的依据；
+    - E14–E15 的两次历史 FAIL；
+    - 引用 `review-k1.md`、OE 纠正副本、C-FB002、F-APP-1/2/3 与 R-PET。
+- **输出：** 只新增文件：`docs/reviews/web-appearance-recovery-final/**`，以及被调用的既有 runner 在其所在目录写出的、带后缀 `appearance-final-v1` 的新日志。不覆盖任何已有文件。
+- **禁止：** 修改任何已有文件、产品、合同、台账或控制面；修复；push；派生子 agent。
+- **成本上限：** 每个运行单元的诊断迭代不超过 3 轮；不要运行长时间没有输出的命令。
 - **停止条件：**
-  - 出现本 caller 范围内的真实产品失败时，冻结复现，提交后停止，由总控另开修复窗口；
-  - F-APP-3 只作观察，不触发停止；
-  - harness 不可复现时 BLOCKED。
+  - 出现真实产品失败，或计数与已接受回执不符且无法解释：冻结后提交并停止；
+  - harness 不可复现：BLOCKED。
 
 ## 下一步
 
-1. 等待批次 50 回执，总控核对：
+1. 等待批次 51 回执，总控核对：
    - 只新增文件；
-   - E14 的逐宽度、逐语言、逐控件检查表；
-   - E15 的逐停靠点像素遍历（含非默认选中）；
-   - 全部重试 gate 与禁用态外观；
-   - 层叠顺序审计；
-   - F-APP-3 的观察证据；
-   - 截图（总控至少抽看两张）；
-   - 按键审计；
-   - hash。
-2. 通过后登记批次 51：最终回归 E18–E25 与回执 E27。登记前核对合同中全部 Required evidence 条目（G1）。须包含：
-   - `24073b5`→`419e56d` 的 delta 审计：只有 `styles.css` 的两段追加与两个测试；生产 JS bundle 逐字节相同；
-   - 在 `419e56d` 上低成本重跑 E7、E8、E16、E17，`continuity-export` 按 E7 裁定处理；
-   - 引用 `review-k1.md`；
-   - 含 More 的回归同时运行纠正 oracle（C-FB002）。
-3. 之后是批次 52：独立最终 acceptance。
+   - 每个 gate 的退出码与计数，以及与已接受回执的比较；
+   - delta 审计（bundle 逐字节相同）；
+   - 重跑结果的比较；
+   - E27 是否列全 E1–E26（总控至少抽算 3 项 hash）。
+2. 通过后登记批次 52：独立最终 acceptance（Astra 角色，新 reviewer）。须做到：
+   - 逐 gate 对账四类事实；
+   - 明确确认或推翻：R-PET 规则、OE 纠正副本的用法、K-1 结论、E9–E13 与 E26 的沿用、F-APP-3 不在范围内、Topbar 断点勘误、Space 容差，以及各 harness 偏差裁定；
+   - 引用 C-FB002。
