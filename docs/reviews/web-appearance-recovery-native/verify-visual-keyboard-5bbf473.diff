@@ -1,0 +1,921 @@
+diff --git a/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard.mjs b/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs
+index ccda651..6ab9e1a 100644
+--- a/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard.mjs
++++ b/docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs
+@@ -1,4 +1,34 @@
+ /**
++ * BATCH 48 COPY (CP-APPEARANCE-01, fixed 5bbf473, the F-APP-1 repair). A new file: a copy of the frozen batch 46 runner
++ * ./verify-visual-keyboard.mjs (SHA-256 ac268a0af6263772c9e3976d30b7bc2f3502d52c3973de4daa976734aead0781, unchanged and
++ * hash-checked by this copy), committed with a unified diff against it. Independent visual and keyboard verifier (not the
++ * batch 46 executor); verification only. Changes against the frozen runner:
++ *   SHA-specific (control plane batch 48): the expected fixed delta is the 25 product files relative to 5cd63ff (Terra's
++ *     24 plus packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx); the labels name the
++ *     fixed revision (5bbf473) instead of 24073b5; the runner's own file name.
++ *   Additive (required by the batch 48 task and the F-APP-1 ruling; no frozen check is removed or weakened):
++ *     - the frozen probes ./native-visual-keyboard-probes.js are reused read-only and hash-checked (batch 46 hash), and
++ *       the frozen runner's hash is checked (the diff base);
++ *     - E15 per-stop visible focus by pixels: after each frozen full Tab cycle (clean, drafts) and in the source-only
++ *       state, a second full cycle captures every stop focused and again after focus moved on (stop scrolled to the same
++ *       place by script, a quiescent frame before each capture, each capture a stable frame (two consecutive identical
++ *       captures), the same hover state required); the decoded pixels inside
++ *       the stop's own region (its outline band plus its own box; the newly focused stop's ring area excluded) must
++ *       differ, and the computed outline must not be `none` (the F-APP-1 ruling's oracle). A failing stop's two clips are
++ *       saved. Self-tests: the PNG
++ *       decoder equals the browser's own decoding; CDP clips are page coordinates (checked with the window scrolled);
++ *     - E15 reproduction section `swatch-focus` (the per-stop oracle's finding: the SELECTED accent swatch has no visible
++ *       focus): Tab to the swatch, then Shift+Tab until focus leaves the swatch row, decoded-pixel comparison of stable
++ *       frames, in the fixed product (default accent and xai_accent_hue 230) and in 5cd63ff, with non-selected swatches
++ *       as positive controls;
++ *     - E14 cascade-order audit: in every gated state, on /app/tasks and in every presentation load, (a) the computed
++ *       style of every element under the fixed order must equal the computed style under the 5cd63ff order (re-created
++ *       by adopting copies; measurement only, restored), and (b) no rule of the 18 stylesheets emitted after the
++ *       Appearance one may target an element or pseudo-element that an Appearance rule declares the same longhand for;
++ *       synthetic and real (layout.css moved after Appearance) positive controls.
++ *   Fix (disclosed): the frozen captureClip passed viewport-relative rects as CDP clips, which are page coordinates; it
++ *   now adds the visual viewport's page offset (identical result while the window is not scrolled).
++ *
+  * CP-APPEARANCE-01 batch 46 (contract r3 §9 "Responsive presentation", "DesktopPet and other App-level overlays
+  * (R-PET rule)", "Sizing and CSS", "Disabled Retry all presentation (measured)", "Screenshots" and "Keyboard"; A2.1–A2.9;
+  * §13 gates 8 and 9; §14 E14 and E15): the FIXED Settings Appearance caller in real headless Chrome, in the production
+@@ -10,7 +40,7 @@
+  *
+  * Usage, from the root of a worktree whose HEAD carries this directory:
+  *   XAI_DEPS_ROOT=<checkout with node_modules> [XAI_NATIVE_TMPDIR=<scratch dir>] \
+- *     node docs/reviews/web-appearance-recovery-native/verify-visual-keyboard.mjs <fixed revision> <mode> <suffix>
++ *     node docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-5bbf473.mjs <fixed revision> <mode> <suffix>
+  *
+  * Modes (one language each; the UI language is the user's stored xai_pref_lang, seeded on a product-free page):
+  *   visual-en, visual-zh     E14: five widths (375x812 and 414x896 with mobile emulation, 768x1024, 1024x768,
+@@ -61,6 +91,7 @@ import { tmpdir } from "node:os";
+ import { join, relative, sep } from "node:path";
+ import { fileURLToPath, pathToFileURL } from "node:url";
+ import { isDeepStrictEqual } from "node:util";
++import { inflateSync } from "node:zlib";
+ 
+ const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+ const BEFORE_REVISION = "5cd63ff652f02a2c726187fe12cbc796218d31c0";
+@@ -74,7 +105,12 @@ const FROZEN = {
+   e4h14: { file: "native-5cd63ff-before1-h14.log", sha256: "3d1f5763d11207e6e4e24fc2678177aae0960a91fb933985c061b08bde54e02f" },
+ };
+ const PROBES = "native-visual-keyboard-probes.js";
+-const RUNNER = "verify-visual-keyboard.mjs";
++const RUNNER = "verify-visual-keyboard-5bbf473.mjs";
++/** Batch 48: the frozen batch 46 probes are reused read-only, and the frozen batch 46 runner is the diff base of this copy. */
++const FROZEN_BATCH46 = {
++  probes: { file: PROBES, sha256: "4df16575470d739d1655f32cd1bb0101c2b772552439f3ecfefded4f87bc02c4" },
++  runner: { file: "verify-visual-keyboard.mjs", sha256: "ac268a0af6263772c9e3976d30b7bc2f3502d52c3973de4daa976734aead0781" },
++};
+ const root = fileURLToPath(new URL("../../../", import.meta.url));
+ const output = fileURLToPath(new URL("./", import.meta.url));
+ const evidenceDir = process.env.XAI_NATIVE_EVIDENCE_DIR ?? output;
+@@ -168,7 +204,8 @@ const contractSha256 = sha256(execFileSync("git", ["show", `HEAD:${CONTRACT_PATH
+ const versionOf = (name) => {
+   try { return JSON.parse(readFileSync(join(dependencyRoot, "apps/web/node_modules", name, "package.json"), "utf8")).version; } catch { return null; }
+ };
+-/** The 24 product files of the Terra implementation (contract r3 §11; control plane E6 row). */
++/** The 25 product files of the fixed revision 5bbf473 relative to 5cd63ff: the 24 Terra files (contract r3 §11; control
++ *  plane E6 row) plus the batch 47 F-APP-1 guard test (control plane "F-APP-1 修复（批次 47）"). */
+ const EXPECTED_FIXED_DELTA = [
+   "apps/web/src/App.tsx",
+   "apps/web/src/__tests__/App.appearance.test.tsx",
+@@ -177,6 +214,7 @@ const EXPECTED_FIXED_DELTA = [
+   "packages/xai-web-settings-appearance/src/AppearancePane.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx",
++  "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.focus-ring.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx",
+   "packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx",
+@@ -957,8 +995,15 @@ async function captureViewport(name, details = {}) {
+ async function captureClip(name, clip, details = {}) {
+   await parkMouse();
+   await delay(150);
+-  const shot = await main.cdp("Page.captureScreenshot", { format: "png", clip: { ...clip, scale: 1 }, captureBeyondViewport: false });
+-  return saveShot(name, shot.data, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip, ...details });
++  // Batch 48 fix: `clip` is viewport-relative (getBoundingClientRect), but CDP clips are in page (document) coordinates,
++  // so the visual viewport's page offset is added (a no-op while the window is not scrolled; self-tested in E15 runs).
++  const offset = await pageOffset();
++  const shot = await main.cdp("Page.captureScreenshot", { format: "png", clip: { ...clip, x: clip.x + offset.x, y: clip.y + offset.y, scale: 1 }, captureBeyondViewport: false });
++  return saveShot(name, shot.data, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip, pageOffset: offset, ...details });
++}
++/** Batch 48: the visual viewport's offset in the page (CDP screenshot clips are page coordinates). */
++async function pageOffset(page = main) {
++  return evaluate("({ x: visualViewport.pageLeft, y: visualViewport.pageTop, scrollX, scrollY, scale: visualViewport.scale })", page);
+ }
+ /** Full-pane capture (Features v2 pattern): pin the scroller's gutter, grow the height until nothing overflows vertically,
+  *  require the pane layout to equal the realistic layout exactly, clip to the .settings-detail band, then restore. */
+@@ -1131,6 +1176,303 @@ function bundleCssAudit(sourceAudit) {
+   return result;
+ }
+ 
++// ---------------------------------------------------------------------------------------------------
++// Batch 48 addition: cascade-order audit (control plane F-APP-1 ruling, "对执行者其他问题的裁定" 1; batch 48
++// "层叠顺序审计"). The fixed bundle emits the Appearance stylesheet BEFORE 18 stylesheets that followed it at 5cd63ff.
++// In every visited state the live document is audited twice (measurement only; nothing persists):
++//   (a) reorder equivalence: the computed style of every element (and its ::before/::after, and the range inputs'
++//       thumb and track) under the fixed order is compared with the computed style under the 5cd63ff order, which is
++//       re-created by adopting copies of the Appearance, cmdk and global stylesheets after the document's own sheets
++//       (so, effectively, [..., the 18, Appearance, cmdk, global] as at 5cd63ff). Transitions and animations are frozen
++//       by an adopted !important sheet during both measurements so a changed value would show at once. Positive
++//       controls: a synthetic equal-specificity rule after the Appearance one is detected, and moving the real
++//       layout.css after the Appearance stylesheet is detected;
++//   (b) overlap scan: every rule of the 18 stylesheets, parsed by the browser itself (a constructed, never adopted
++//       CSSStyleSheet), is matched against the live DOM (dynamic pseudo-classes stripped, pseudo-elements keyed); no
++//       element or pseudo-element that an Appearance rule targets may also be targeted by such a rule declaring one of
++//       the same longhands. A synthetic positive control must be detected.
++// ---------------------------------------------------------------------------------------------------
++/** Runs IN THE PAGE (serialised with Function.prototype.toString; never called in Node). */
++function cascadePageAudit(input) {
++  "use strict";
++  const DYNAMIC = new Set(["hover", "active", "focus", "focus-visible", "focus-within", "target", "visited", "link"]);
++  const LEGACY_PSEUDO_ELEMENTS = new Set(["before", "after", "first-line", "first-letter"]);
++  const isIdentChar = (ch) => /[\w-]/.test(ch) || ch.charCodeAt(0) > 127;
++  const skipString = (s, i) => { const quote = s[i]; let j = i + 1; while (j < s.length && s[j] !== quote) { if (s[j] === "\\") j += 1; j += 1; } return j + 1; };
++  function skipGroup(s, i) {
++    let depth = 0;
++    for (let j = i; j < s.length; j += 1) {
++      const ch = s[j];
++      if (ch === "\\") { j += 1; continue; }
++      if (ch === '"' || ch === "'") { j = skipString(s, j) - 1; continue; }
++      if (ch === "(" || ch === "[") depth += 1;
++      else if (ch === ")" || ch === "]") { depth -= 1; if (depth === 0) return j + 1; }
++    }
++    return s.length;
++  }
++  function splitTop(s) {
++    const parts = [];
++    let start = 0;
++    for (let i = 0; i < s.length; i += 1) {
++      const ch = s[i];
++      if (ch === "\\") { i += 1; continue; }
++      if (ch === "(" || ch === "[") { i = skipGroup(s, i) - 1; continue; }
++      if (ch === '"' || ch === "'") { i = skipString(s, i) - 1; continue; }
++      if (ch === ",") { parts.push(s.slice(start, i).trim()); start = i + 1; }
++    }
++    parts.push(s.slice(start).trim());
++    return parts.filter(Boolean);
++  }
++  function readIdent(s, i) {
++    let j = i;
++    while (j < s.length && (isIdentChar(s[j]) || s[j] === "\\")) j += s[j] === "\\" ? 2 : 1;
++    return s.slice(i, j);
++  }
++  /** Removes top-level dynamic pseudo-classes (could match in some interaction state) and keys the pseudo-element. */
++  function strip(complex) {
++    let base = "";
++    let pseudo = "";
++    for (let i = 0; i < complex.length;) {
++      const ch = complex[i];
++      if (ch === "\\") { base += complex.slice(i, i + 2); i += 2; continue; }
++      if (ch === "(" || ch === "[") { const end = skipGroup(complex, i); base += complex.slice(i, end); i = end; continue; }
++      if (ch === '"' || ch === "'") { const end = skipString(complex, i); base += complex.slice(i, end); i = end; continue; }
++      if (ch === ":") {
++        if (complex[i + 1] === ":") { pseudo = `::${readIdent(complex, i + 2).toLowerCase()}`; break; }
++        const name = readIdent(complex, i + 1);
++        const lower = name.toLowerCase();
++        if (LEGACY_PSEUDO_ELEMENTS.has(lower)) { pseudo = `::${lower}`; break; }
++        if (DYNAMIC.has(lower) && complex[i + 1 + name.length] !== "(") { i += 1 + name.length; continue; }
++        base += complex.slice(i, i + 1 + name.length);
++        i += 1 + name.length;
++        continue;
++      }
++      base += ch;
++      i += 1;
++    }
++    base = base.trim();
++    if (base === "" || /[\s>+~]$/.test(base)) base += "*";
++    return { base, pseudo };
++  }
++  const parseSheet = (text) => { const sheet = new CSSStyleSheet(); sheet.replaceSync(text); return sheet; };
++  function flatten(sheet) {
++    const rules = [];
++    const skipped = {};
++    const walk = (list, conds) => {
++      for (const rule of list) {
++        if (rule instanceof CSSStyleRule) {
++          rules.push({ selectorText: rule.selectorText, style: rule.style, conds });
++          if (rule.cssRules && rule.cssRules.length) skipped.nestedStyleRules = (skipped.nestedStyleRules || 0) + rule.cssRules.length;
++        } else if (rule instanceof CSSMediaRule) walk(rule.cssRules, [...conds, { media: rule.conditionText ?? rule.media.mediaText }]);
++        else if (typeof CSSSupportsRule !== "undefined" && rule instanceof CSSSupportsRule) walk(rule.cssRules, [...conds, { supports: rule.conditionText }]);
++        else { const kind = rule.constructor.name; skipped[kind] = (skipped[kind] || 0) + 1; }
++      }
++    };
++    walk(sheet.cssRules, []);
++    return { rules, skipped };
++  }
++  const appliesNow = (conds) => conds.every((cond) => (cond.media !== undefined ? matchMedia(cond.media).matches : CSS.supports(cond.supports)));
++  const longhands = (style) => { const out = []; for (let i = 0; i < style.length; i += 1) out.push(style[i]); return out; };
++  const describeElement = (element) => {
++    const testid = element.getAttribute && element.getAttribute("data-testid");
++    const classes = typeof element.className === "string" && element.className.trim() ? `.${element.className.trim().split(/\s+/).join(".")}` : "";
++    return `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${classes}${testid ? `[data-testid=${testid}]` : ""}`;
++  };
++  const invalidSelectors = [];
++  function targetsOf(sheetName, rules) {
++    const targets = new Map();
++    const ruleHits = [];
++    for (const [index, rule] of rules.entries()) {
++      const props = longhands(rule.style);
++      let hits = 0;
++      for (const complex of splitTop(rule.selectorText)) {
++        const { base, pseudo } = strip(complex);
++        let elements;
++        try { elements = document.querySelectorAll(base); } catch { invalidSelectors.push({ sheet: sheetName, selector: complex, base }); continue; }
++        for (const element of elements) {
++          hits += 1;
++          let byPseudo = targets.get(element);
++          if (!byPseudo) targets.set(element, (byPseudo = new Map()));
++          let list = byPseudo.get(pseudo);
++          if (!list) byPseudo.set(pseudo, (list = []));
++          list.push({ index, complex, props, applies: appliesNow(rule.conds) });
++        }
++      }
++      ruleHits.push({ selector: rule.selectorText, conds: rule.conds.map((cond) => cond.media ?? cond.supports), hits });
++    }
++    return { targets, ruleHits };
++  }
++  /** (b) Overlap scan of a list of sections against the Appearance targets. */
++  function overlapScan(appearanceTargets, sections) {
++    const overlaps = [];
++    const matches = [];
++    const perSheet = [];
++    let rulesTotal = 0;
++    let matchedTargets = 0;
++    for (const section of sections) {
++      const parsed = flatten(parseSheet(section.text));
++      let sheetMatched = 0;
++      let selectors = 0;
++      for (const rule of parsed.rules) {
++        rulesTotal += 1;
++        const propSet = new Set(longhands(rule.style));
++        for (const complex of splitTop(rule.selectorText)) {
++          selectors += 1;
++          const { base, pseudo } = strip(complex);
++          let elements;
++          try { elements = document.querySelectorAll(base); } catch { invalidSelectors.push({ sheet: section.path, selector: complex, base }); continue; }
++          for (const element of elements) {
++            const list = appearanceTargets.get(element)?.get(pseudo);
++            if (!list) continue;
++            sheetMatched += 1;
++            matches.push({ element: describeElement(element), pseudo, movedSelector: complex, sheet: section.path, movedProperties: [...propSet].slice(0, 12), appearanceSelectors: [...new Set(list.map((entry) => entry.complex))].slice(0, 6), appearanceProperties: [...new Set(list.flatMap((entry) => entry.props))].slice(0, 16) });
++            for (const entry of list) {
++              const shared = entry.props.filter((prop) => propSet.has(prop));
++              if (shared.length) overlaps.push({ element: describeElement(element), pseudo, appearanceSelector: entry.complex, movedSelector: complex, sheet: section.path, shared: shared.slice(0, 24), sharedCount: shared.length, appearanceApplies: entry.applies, movedApplies: appliesNow(rule.conds) });
++            }
++          }
++        }
++      }
++      perSheet.push({ path: section.path, rules: parsed.rules.length, selectors, skipped: parsed.skipped, matchesOnAppearanceTargets: sheetMatched });
++      matchedTargets += sheetMatched;
++    }
++    return { overlaps, matches, perSheet, rulesTotal, matchedTargets };
++  }
++  // (a) Reorder equivalence.
++  const freeze = parseSheet("*, *::before, *::after { transition: none !important; animation: none !important; }");
++  const SKIP_PROP = /^(transition|animation)/;
++  function hashString(text) {
++    let h1 = 0xdeadbeef;
++    let h2 = 0x41c6ce57;
++    for (let i = 0; i < text.length; i += 1) {
++      const ch = text.charCodeAt(i);
++      h1 = Math.imul(h1 ^ ch, 2654435761);
++      h2 = Math.imul(h2 ^ ch, 1597334677);
++    }
++    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
++    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
++    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
++  }
++  const RANGE_PSEUDOS = ["::-webkit-slider-thumb", "::-webkit-slider-runnable-track"];
++  function entriesOf(scope) {
++    const out = [];
++    for (const element of scope) {
++      out.push([element, null], [element, "::before"], [element, "::after"]);
++      if (element instanceof HTMLInputElement && element.type === "range") for (const pseudo of RANGE_PSEUDOS) out.push([element, pseudo]);
++    }
++    return out;
++  }
++  function styleMap(element, pseudo) {
++    const style = getComputedStyle(element, pseudo);
++    const map = {};
++    for (let i = 0; i < style.length; i += 1) { const prop = style[i]; if (!SKIP_PROP.test(prop)) map[prop] = style.getPropertyValue(prop); }
++    return map;
++  }
++  function signature(element, pseudo) {
++    const style = getComputedStyle(element, pseudo);
++    let text = "";
++    for (let i = 0; i < style.length; i += 1) { const prop = style[i]; if (!SKIP_PROP.test(prop)) text += `${prop}:${style.getPropertyValue(prop)};`; }
++    return { hash: hashString(text), count: style.length };
++  }
++  const original = [...document.adoptedStyleSheets];
++  function compareUnder(scope, sheetsA, sheetsB) {
++    const entries = entriesOf(scope);
++    document.adoptedStyleSheets = [...original, ...sheetsA];
++    const first = entries.map(([element, pseudo]) => signature(element, pseudo));
++    document.adoptedStyleSheets = [...original, ...sheetsB];
++    const second = entries.map(([element, pseudo]) => signature(element, pseudo));
++    const changed = [];
++    entries.forEach((entry, index) => { if (first[index].hash !== second[index].hash) changed.push(index); });
++    const details = [];
++    if (changed.length) {
++      const pick = changed.slice(0, 12);
++      document.adoptedStyleSheets = [...original, ...sheetsA];
++      const before = pick.map((index) => styleMap(entries[index][0], entries[index][1]));
++      document.adoptedStyleSheets = [...original, ...sheetsB];
++      const after = pick.map((index) => styleMap(entries[index][0], entries[index][1]));
++      pick.forEach((index, n) => {
++        const props = Object.keys(before[n]).filter((prop) => before[n][prop] !== after[n][prop]);
++        details.push({ element: describeElement(entries[index][0]), pseudo: entries[index][1], properties: props.slice(0, 12).map((prop) => `${prop}: ${before[n][prop]} -> ${after[n][prop]}`), propertyCount: props.length });
++      });
++    }
++    const pseudoEntriesWithProperties = first.filter((entry, index) => entries[index][1] !== null && entry.count > 0).length;
++    return { elements: scope.length, entries: entries.length, pseudoEntriesWithProperties, changed: changed.length, details };
++  }
++  const result = { invalidSelectors };
++  try {
++    const appearance = flatten(parseSheet(input.appearance.text));
++    const { targets, ruleHits } = targetsOf("appearance", appearance.rules);
++    let targetEntries = 0;
++    for (const byPseudo of targets.values()) targetEntries += byPseudo.size;
++    result.appearance = { rules: appearance.rules.length, skipped: appearance.skipped, targetElements: targets.size, targetEntries, ruleHits };
++    const real = overlapScan(targets, input.moved);
++    result.overlap = { rules: real.rulesTotal, matchesOnAppearanceTargets: real.matchedTargets, matches: real.matches.slice(0, 40), overlaps: real.overlaps.slice(0, 40), overlapCount: real.overlaps.length, perSheet: real.perSheet };
++    const synthetic = overlapScan(targets, [{ path: "synthetic-positive-control", text: input.synthetic.text }]);
++    result.overlapPositiveControl = { selector: input.synthetic.selector, overlapCount: synthetic.overlaps.length, overlaps: synthetic.overlaps.slice(0, 4) };
++    // (a) the whole document body plus the root, measured under the freeze.
++    const scope = [document.documentElement, document.body, ...document.body.querySelectorAll("*")];
++    const restoreCopies = input.restore.map((section) => parseSheet(section.text));
++    result.reorder = compareUnder(scope, [freeze], [freeze, ...restoreCopies]);
++    result.reorder.restoreSheets = input.restore.map((section) => section.path);
++    const syntheticSheet = parseSheet(input.synthetic.text);
++    const syntheticScope = [...document.querySelectorAll(input.synthetic.selector)];
++    result.reorderPositiveControlSynthetic = { selector: input.synthetic.selector, ...compareUnder(syntheticScope, [freeze, syntheticSheet], [freeze, syntheticSheet, ...restoreCopies]) };
++    const pane = document.querySelector(input.paneSelector);
++    if (pane && input.layout) {
++      result.reorderPositiveControlLayout = { sheet: input.layout.path, ...compareUnder([pane, ...pane.querySelectorAll("*")], [freeze], [freeze, parseSheet(input.layout.text)]) };
++    } else result.reorderPositiveControlLayout = null;
++  } finally {
++    document.adoptedStyleSheets = original;
++    result.restored = document.adoptedStyleSheets.length === original.length && original.every((sheet, index) => document.adoptedStyleSheets[index] === sheet);
++  }
++  return result;
++}
++let cascadeInput = null;
++const cascadeLog = [];
++function cascadeSectionsInput() {
++  if (cascadeInput) return cascadeInput;
++  const fixedSections = cssSections(bundles.fixed.css);
++  const beforeSections = cssSections(bundles.before.css);
++  const fixedOrder = fixedSections.map((section) => section.path);
++  const beforeOrder = beforeSections.map((section) => section.path);
++  const appearanceIndex = fixedOrder.indexOf(APPEARANCE_CSS);
++  const moved = beforeOrder.slice(0, beforeOrder.indexOf(APPEARANCE_CSS)).filter((path) => fixedOrder.indexOf(path) > appearanceIndex);
++  const laterInBoth = beforeOrder.slice(beforeOrder.indexOf(APPEARANCE_CSS) + 1);
++  pre("cascade:eighteen-stylesheets-follow-the-appearance-one-in-the-fixed-bundle-and-preceded-it-at-5cd63ff", moved.length === 18 && isDeepStrictEqual(fixedOrder.slice(appearanceIndex + 1, appearanceIndex + 19), moved), { moved });
++  pre("cascade:the-5cd63ff-order-is-the-fixed-order-with-the-appearance-stylesheet-after-the-18", isDeepStrictEqual(beforeOrder, [...fixedOrder.slice(0, appearanceIndex), ...moved, APPEARANCE_CSS, ...laterInBoth])
++    && isDeepStrictEqual(fixedOrder, [...fixedOrder.slice(0, appearanceIndex), APPEARANCE_CSS, ...moved, ...laterInBoth]), { beforeOrder, fixedOrder });
++  const text = (path) => fixedSections.find((section) => section.path === path).text;
++  cascadeInput = {
++    appearance: { path: APPEARANCE_CSS, text: text(APPEARANCE_CSS) },
++    moved: moved.map((path) => ({ path, text: text(path) })),
++    restore: [APPEARANCE_CSS, ...laterInBoth].map((path) => ({ path, text: text(path) })),
++    layout: { path: "packages/plugin-web-tokens/src/layout.css", text: text("packages/plugin-web-tokens/src/layout.css") },
++    paneSelector: PANE,
++  };
++  record("cascade-audit-input", { appearance: APPEARANCE_CSS, moved, restoreOrderAppended: [APPEARANCE_CSS, ...laterInBoth], movedBytes: cascadeInput.moved.reduce((sum, section) => sum + section.text.length, 0) });
++  return cascadeInput;
++}
++async function cascadeAudit(id, { state, width }) {
++  const input = cascadeSectionsInput();
++  const onPane = await evaluate(`!!document.querySelector(${JSON.stringify(`${PANE} .pane-title`)})`);
++  const synthetic = onPane ? { selector: `${PANE} .pane-title`, text: ".appearance-pane .pane-title { color: rgb(255, 0, 0); }" } : { selector: '[data-testid="appearance-status"]', text: ".appearance-status { color: rgb(255, 0, 0); }" };
++  const started = Date.now();
++  const audit = await evaluate(`(${cascadePageAudit.toString()})(${JSON.stringify({ ...input, synthetic })})`);
++  await evaluate("__visual.settle()");
++  const entry = { id, lang: LANG, width, state, ms: Date.now() - started, ...audit };
++  record("cascade-audit", entry);
++  cascadeLog.push({ id, width, state, appearance: { targetElements: audit.appearance?.targetElements, ruleHits: (audit.appearance?.ruleHits ?? []).map((rule) => rule.hits) }, overlapCount: audit.overlap?.overlapCount, matchesOnAppearanceTargets: audit.overlap?.matchesOnAppearanceTargets, reorderChanged: audit.reorder?.changed, reorderEntries: audit.reorder?.entries, synthetic: [audit.overlapPositiveControl?.overlapCount, audit.reorderPositiveControlSynthetic?.changed], layoutControl: audit.reorderPositiveControlLayout?.changed ?? null });
++  pre(`${id}:cascade:audit-ran-and-restored-the-document-stylesheets`, audit.restored === true && Boolean(audit.appearance) && Boolean(audit.reorder), { restored: audit.restored, error: audit.error });
++  pre(`${id}:cascade:every-selector-of-the-appearance-and-the-18-stylesheets-parsed-by-the-browser-is-queryable`, audit.invalidSelectors.length === 0, { invalidSelectors: audit.invalidSelectors.slice(0, 10) });
++  pre(`${id}:cascade:all-18-stylesheets-scanned`, audit.overlap.perSheet.length === 18 && audit.overlap.perSheet.every((sheet) => sheet.rules > 0), { perSheet: audit.overlap.perSheet.map((sheet) => `${sheet.path}:${sheet.rules}`) });
++  pre(`${id}:cascade:overlap-scan-positive-control-detects-a-synthetic-equal-specificity-rule`, audit.overlapPositiveControl.overlapCount >= 1 && audit.overlapPositiveControl.overlaps.some((overlap) => overlap.shared.includes("color")), audit.overlapPositiveControl);
++  pre(`${id}:cascade:reorder-positive-control-detects-a-synthetic-rule-placed-after-the-appearance-one`, audit.reorderPositiveControlSynthetic.elements >= 1 && audit.reorderPositiveControlSynthetic.changed >= 1, { synthetic: audit.reorderPositiveControlSynthetic });
++  if (onPane) pre(`${id}:cascade:reorder-positive-control-detects-layout-css-moved-after-the-appearance-stylesheet`, Boolean(audit.reorderPositiveControlLayout) && audit.reorderPositiveControlLayout.changed >= 1, { layout: audit.reorderPositiveControlLayout && { changed: audit.reorderPositiveControlLayout.changed, details: audit.reorderPositiveControlLayout.details.slice(0, 3) } });
++  checkDeferred(`${id}:cascade:no-rule-of-the-18-later-stylesheets-declares-a-property-on-an-element-or-pseudo-element-an-appearance-rule-declares-it-for`, audit.overlap.overlapCount === 0, { overlaps: audit.overlap.overlaps.slice(0, 8) });
++  checkDeferred(`${id}:cascade:restoring-the-5cd63ff-stylesheet-order-changes-no-computed-value`, audit.reorder.changed === 0 && audit.reorder.entries > 0, { reorder: { elements: audit.reorder.elements, entries: audit.reorder.entries, changed: audit.reorder.changed, details: audit.reorder.details } });
++  return audit;
++}
++
+ // ---------------------------------------------------------------------------------------------------
+ // Presentation checks (deferred)
+ // ---------------------------------------------------------------------------------------------------
+@@ -1428,6 +1770,7 @@ async function gatedRun(id, state, width, { screenshot = null } = {}) {
+     const shrunk = Object.entries(reference.geometry[width]).filter(([desc, before]) => !rowGeometry[desc] || rowGeometry[desc].width < before.width - 0.01 || rowGeometry[desc].height < before.height - 0.01);
+     checkDeferred(`${id}:existing-row-controls-not-smaller-than-5cd63ff`, shrunk.length === 0, { shrunk: shrunk.map(([desc, before]) => ({ desc, before, now: rowGeometry[desc] ?? null })) });
+   }
++  await cascadeAudit(id, { state, width }); // batch 48 addition
+   const summary = {
+     lang: LANG, width, height: HEIGHTS[width], state, controls: probes.length, failures: Object.fromEntries(Object.entries(failures).map(([key, list]) => [key, list.length])),
+     minCallerTarget: minCallerTarget(probes), document: `${lay.document.scrollWidth}/${lay.document.clientWidth}`, detail: `${lay.detail.scrollWidth}/${lay.detail.clientWidth}`, pane: `${lay.pane.scrollWidth}/${lay.pane.clientWidth}`,
+@@ -1467,6 +1810,7 @@ async function fixedState(state, width) {
+     const tbTasks = await evaluate("__visual.topbar()");
+     topbarChecks(`${id}:tasks`, tbTasks, width, { statusExpected: true, referenceTopbar: reference.topbar[width] });
+     record("topbar", { id: `${id}:tasks`, width, topbar: tbTasks });
++    await cascadeAudit(`${id}:tasks`, { state: "topbar-status-on-app-tasks", width }); // batch 48 addition
+     if (width === 375 || width === 1440) await captureViewport(`${width}-topbar-status-tasks`, { state: "Topbar status on /app/tasks after a failed Topbar theme choice (pet hidden)" });
+     await clickDesc("topbar:status", `${id}:review`);
+     pre(`${id}:review-navigated-to-the-pane`, await waitUntil(`verify.location().pathname === "/app/settings/appearance" && ${READY_PANE}`, 6000));
+@@ -1581,6 +1925,7 @@ async function presentationLoad(id, stored) {
+   pre(`${id}:clean-and-retry-all-disabled`, pane.recovery.length === 0 && pane.retryAll.ariaDisabled === "true", { retryAll: pane.retryAll });
+   const colours = await evaluate(`__visual.colours("retry-all")`);
+   pre(`${id}:colour-conversions-agree-with-the-browser`, colours.found && Object.values(colours.conversions).every((entry) => entry.agree) && colours.imagesInUsedLayers.length === 0, { conversions: colours.conversions, imagesInUsedLayers: colours.imagesInUsedLayers });
++  await cascadeAudit(id, { state: `clean ${stored.theme ?? "light"} ${stored.bgTone ?? "default"}${stored.accentHue !== undefined ? ` accent ${stored.accentHue}` : ""}`, width: 1440 }); // batch 48 addition
+   return { colours, html };
+ }
+ async function disabledPresentation() {
+@@ -1649,6 +1994,15 @@ async function runVisual() {
+   if (selected("presentation")) await disabledPresentation();
+   record("width-table", { lang: LANG, rows: widthTable });
+   record("a28-gate-table", { lang: LANG, rows: gateLog });
++  // Batch 48 addition: the cascade-order audits of this run, and which Appearance rules matched an element in at least one audited state.
++  if (cascadeLog.length) {
++    const ruleCount = Math.max(...cascadeLog.map((entry) => entry.appearance.ruleHits?.length ?? 0));
++    const matchedSomewhere = Array.from({ length: ruleCount }, (_, index) => cascadeLog.some((entry) => (entry.appearance.ruleHits?.[index] ?? 0) > 0));
++    const lastAudit = records.filter((entry) => entry.name === "cascade-audit").at(-1);
++    const neverMatched = matchedSomewhere.map((matched, index) => (matched ? null : lastAudit?.appearance?.ruleHits?.[index]?.selector ?? index)).filter((entry) => entry !== null);
++    record("cascade-audit-table", { lang: LANG, audits: cascadeLog.length, rows: cascadeLog, appearanceRules: ruleCount, appearanceRulesMatchedInSomeAuditedState: matchedSomewhere.filter(Boolean).length, appearanceRulesNeverMatched: neverMatched,
++      totals: { overlaps: cascadeLog.reduce((sum, entry) => sum + (entry.overlapCount ?? 0), 0), reorderChanged: cascadeLog.reduce((sum, entry) => sum + (entry.reorderChanged ?? 0), 0), reorderEntries: cascadeLog.reduce((sum, entry) => sum + (entry.reorderEntries ?? 0), 0) } });
++  }
+ }
+ 
+ // ---------------------------------------------------------------------------------------------------
+@@ -1773,6 +2127,7 @@ async function kbTabOrder() {
+     check(`${id}:pane-stops-in-dom-order-retry-all-disabled-is-a-tab-stop-then-reset`, isDeepStrictEqual(paneStops, paneList({}, { drafts: false })), { paneStops });
+     check(`${id}:no-topbar-status-stop-in-the-clean-state`, !inside.includes("topbar:status"), {});
+     visibleFocusCheck(id, stops);
++    await pixelFocusWalk(id, { expectedStops: inside }); // batch 48 addition
+   }
+   // Drafts: all seven unresolved; the Topbar status is reached before the appearance trigger.
+   {
+@@ -1786,6 +2141,7 @@ async function kbTabOrder() {
+     const triggerIndex = inside.indexOf("topbar:trigger");
+     check(`${id}:topbar-status-is-a-tab-stop-immediately-before-the-appearance-trigger`, statusIndex >= 0 && triggerIndex === statusIndex + 1, { statusIndex, triggerIndex, around: inside.slice(Math.max(0, statusIndex - 2), statusIndex + 3) });
+     visibleFocusCheck(id, stops);
++    await pixelFocusWalk(id, { expectedStops: inside }); // batch 48 addition
+   }
+   // Source only: Reload directly after the sidebar-position cards; Retry all (disabled) still a Tab stop.
+   {
+@@ -1794,6 +2150,7 @@ async function kbTabOrder() {
+     const path = await tabUntil("reset", id);
+     const paneStops = path.filter((desc) => ROW_CONTROLS.includes(desc) || CALLER_TARGET(desc));
+     check(`${id}:pane-stops-in-dom-order-reload-after-the-sidebar-cards-retry-all-then-reset`, isDeepStrictEqual(paneStops, paneList({ railPos: "unavailable" }, { drafts: false })), { paneStops });
++    await pixelFocusWalk(id); // batch 48 addition (a full cycle in the source-only state, incl. Reload)
+   }
+ }
+ async function kbActivation() {
+@@ -2098,7 +2455,7 @@ async function kbTopbarStatus() {
+ async function kbFocusVisibility() {
+   const rows = [];
+   for (const variant of ["fixed", "before"]) {
+-    const id = `kb:${LANG}:focus-visibility:${variant === "fixed" ? "24073b5" : "5cd63ff"}`;
++    const id = `kb:${LANG}:focus-visibility:${variant === "fixed" ? "5bbf473" : "5cd63ff"}`;
+     await seed(seedsOf({ lang: LANG }), id);
+     await mountApp(id, { width: KEYBOARD_WIDTH, variant });
+     await petOff(id, KEYBOARD_WIDTH);
+@@ -2108,17 +2465,17 @@ async function kbFocusVisibility() {
+       const focused = await evaluate("__visual.focusInfo()");
+       const clipOf = (rect) => ({ x: Math.floor(rect.left) - 10, y: Math.floor(rect.top) - 10, width: Math.ceil(rect.width) + 20, height: Math.ceil(rect.height) + 20 });
+       const focusedClip = clipOf(focused.rect);
+-      const focusedShot = await captureClip(`${variant === "fixed" ? "24073b5" : "before-5cd63ff"}-${desc}-focused`, focusedClip, { state: `${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 24073b5" : "5cd63ff"}, pet hidden)`, focus: focused });
++      const focusedShot = await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-focused`, focusedClip, { state: `${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)`, focus: focused });
+       // Context for the manual review: the whole SettingRow around the focused control (still focused).
+       const row = await evaluate(`(() => { const r = document.activeElement.closest(".setting-row").getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.left) - 8), y: Math.max(0, Math.floor(r.top) - 8), width: Math.ceil(r.width) + 16, height: Math.ceil(r.height) + 16 }; })()`);
+-      await captureClip(`${variant === "fixed" ? "24073b5" : "before-5cd63ff"}-${desc}-focused-row`, row, { state: `the ${desc === "font-slider" ? "Font scale" : "Accent color"} row with ${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 24073b5" : "5cd63ff"}, pet hidden)`, focus: await evaluate("__visual.focusInfo()") });
++      await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-focused-row`, row, { state: `the ${desc === "font-slider" ? "Font scale" : "Accent color"} row with ${desc} focused by a trusted Tab (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)`, focus: await evaluate("__visual.focusInfo()") });
+       await press("Tab");
+       let moved = await evaluate(`__visual.probe(${JSON.stringify(desc)}, false)`);
+       if (!moved.inViewport) moved = await evaluate(`__visual.probe(${JSON.stringify(desc)})`);
+       const after = await evaluate("__visual.focusInfo()");
+       const fraction = (value) => Math.round((value - Math.floor(value)) * 100) / 100;
+       pre(`${id}:${desc}:unfocused-capture-is-control-relative-and-the-focus-moved-on`, after.desc !== desc && fraction(moved.rect.left) === fraction(focused.rect.left) && fraction(moved.rect.top) === fraction(focused.rect.top), { focused: focused.rect, moved: moved.rect, after: after.desc });
+-      const unfocusedShot = await captureClip(`${variant === "fixed" ? "24073b5" : "before-5cd63ff"}-${desc}-unfocused`, clipOf(moved.rect), { state: `${desc} after focus moved on to ${after.desc} (${variant === "fixed" ? "fixed 24073b5" : "5cd63ff"}, pet hidden)` });
++      const unfocusedShot = await captureClip(`${variant === "fixed" ? "5bbf473" : "before-5cd63ff"}-${desc}-unfocused`, clipOf(moved.rect), { state: `${desc} after focus moved on to ${after.desc} (${variant === "fixed" ? "fixed 5bbf473" : "5cd63ff"}, pet hidden)` });
+       const identical = focusedShot.sha256 === unfocusedShot.sha256;
+       rows.push({ variant, desc, focusVisible: focused.focusVisible, outline: focused.outline, focusedPng: focusedShot.sha256, unfocusedPng: unfocusedShot.sha256, pixelIdentical: identical });
+       if (variant === "fixed") {
+@@ -2131,8 +2488,388 @@ async function kbFocusVisibility() {
+   }
+   record("focus-visibility-table", { lang: LANG, width: KEYBOARD_WIDTH, rows });
+ }
++// ---------------------------------------------------------------------------------------------------
++// Batch 48 addition: visible focus by pixels at EVERY Tab stop (E15; the F-APP-1 ruling's oracle: "每个停靠点都有可见焦点：
++// 计算出的 outline 不为 none，且聚焦与未聚焦的截图像素不同"). A second full Tab cycle per state captures each stop focused
++// and again after focus moved on (both with the stop scrolled to the same place by script; focus is only moved by
++// trusted Tab; each capture a stable frame). The decoded pixels are compared inside the stop's OWN region, its outline
++// band (offset .. offset + width, 2 px tolerance each side) plus its own box, excluding the area of the next stop's ring,
++// so a neighbour's ring cannot pass for this one. The band alone is also recorded; a stop whose own region has no
++// comparable pixel is a harness failure (precondition), never a pass.
++// ---------------------------------------------------------------------------------------------------
++/** A minimal PNG decoder (8-bit RGB/RGBA, non-interlaced; Chrome's screenshot encoding), self-tested against the browser. */
++function decodePng(buffer) {
++  if (buffer.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a") throw Error("not a PNG");
++  let offset = 8;
++  let header = null;
++  const idat = [];
++  while (offset < buffer.length) {
++    const length = buffer.readUInt32BE(offset);
++    const type = buffer.toString("ascii", offset + 4, offset + 8);
++    const data = buffer.subarray(offset + 8, offset + 8 + length);
++    if (type === "IHDR") header = { width: data.readUInt32BE(0), height: data.readUInt32BE(4), bitDepth: data[8], colorType: data[9], interlace: data[12] };
++    else if (type === "IDAT") idat.push(data);
++    else if (type === "IEND") break;
++    offset += 12 + length;
++  }
++  if (!header || header.bitDepth !== 8 || ![2, 6].includes(header.colorType) || header.interlace !== 0) throw Error(`unsupported PNG ${JSON.stringify(header)}`);
++  const { width, height } = header;
++  const channels = header.colorType === 6 ? 4 : 3;
++  const raw = inflateSync(Buffer.concat(idat));
++  const stride = width * channels;
++  const out = new Uint8Array(width * height * 4);
++  let previous = new Uint8Array(stride);
++  let current = new Uint8Array(stride);
++  let position = 0;
++  for (let y = 0; y < height; y += 1) {
++    const filter = raw[position];
++    position += 1;
++    for (let x = 0; x < stride; x += 1) {
++      const value = raw[position + x];
++      const left = x >= channels ? current[x - channels] : 0;
++      const up = previous[x];
++      const upLeft = x >= channels ? previous[x - channels] : 0;
++      let decoded;
++      if (filter === 0) decoded = value;
++      else if (filter === 1) decoded = value + left;
++      else if (filter === 2) decoded = value + up;
++      else if (filter === 3) decoded = value + ((left + up) >> 1);
++      else if (filter === 4) {
++        const estimate = left + up - upLeft;
++        const pa = Math.abs(estimate - left);
++        const pb = Math.abs(estimate - up);
++        const pc = Math.abs(estimate - upLeft);
++        decoded = value + (pa <= pb && pa <= pc ? left : pb <= pc ? up : upLeft);
++      } else throw Error(`bad PNG filter ${filter}`);
++      current[x] = decoded & 255;
++    }
++    position += stride;
++    for (let x = 0; x < width; x += 1) {
++      const target = (y * width + x) * 4;
++      out[target] = current[x * channels];
++      out[target + 1] = current[x * channels + 1];
++      out[target + 2] = current[x * channels + 2];
++      out[target + 3] = channels === 4 ? current[x * channels + 3] : 255;
++    }
++    [previous, current] = [current, previous];
++  }
++  return { width, height, data: out };
++}
++const rgbaSha256 = (image) => sha256(Buffer.from(image.data.buffer, image.data.byteOffset, image.data.byteLength));
++const PIXEL_MARGIN = 10;
++/** Page helper for the pixel walk: a JS global only (no DOM change); placing = scrollIntoView of the measured element. */
++const B48_PAGE_HELPER = `(() => {
++  if (window.__b48) return "present";
++  const visibleBox = (element) => {
++    let box = { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
++    let fixed = getComputedStyle(element).position === "fixed";
++    const rootStyle = getComputedStyle(document.documentElement);
++    const bodyPropagates = rootStyle.overflowX === "visible" && rootStyle.overflowY === "visible";
++    for (let node = element.parentElement; node && !fixed; node = node.parentElement) {
++      const style = getComputedStyle(node);
++      // The root's overflow (and the body's, when the root's is visible) applies to the viewport, not to a box.
++      const propagatesToViewport = node === document.documentElement || (node === document.body && bodyPropagates);
++      if (!propagatesToViewport && (style.overflowX !== "visible" || style.overflowY !== "visible")) {
++        const rect = node.getBoundingClientRect();
++        const left = rect.left + node.clientLeft;
++        const top = rect.top + node.clientTop;
++        box = { left: Math.max(box.left, left), top: Math.max(box.top, top), right: Math.min(box.right, left + node.clientWidth), bottom: Math.min(box.bottom, top + node.clientHeight) };
++      }
++      if (style.position === "fixed") fixed = true;
++    }
++    return box;
++  };
++  const scrolls = (element) => {
++    const out = [{ name: "window", x: scrollX, y: scrollY }];
++    for (let node = element.parentElement; node; node = node.parentElement) if (node.scrollTop || node.scrollLeft) out.push({ name: node.tagName.toLowerCase() + "." + String(node.className).trim().split(/\\s+/).join("."), x: node.scrollLeft, y: node.scrollTop });
++    return out;
++  };
++  const outlineOf = (element) => { const style = getComputedStyle(element); return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) || 0, offset: Number.parseFloat(style.outlineOffset) || 0, color: style.outlineColor }; };
++  const real = (element) => Boolean(element) && element !== document.body && element !== document.documentElement && element.isConnected;
++  const place = async (element, margin) => {
++    if (!real(element)) return { ok: false, reason: "no element" };
++    // Captures follow a quiescent frame: finite transitions/animations (e.g. a neighbour's outline-color transition) have
++    // finished before and after the placing scroll, so anti-aliasing noise of a running transition cannot pass as a ring.
++    const settledBefore = await window.__visual.settle();
++    element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
++    const settledAfter = await window.__visual.settle();
++    const rect = element.getBoundingClientRect();
++    const vis = visibleBox(element);
++    const x0 = Math.ceil(Math.max(vis.left, Math.floor(rect.left) - margin));
++    const y0 = Math.ceil(Math.max(vis.top, Math.floor(rect.top) - margin));
++    const x1 = Math.floor(Math.min(vis.right, Math.ceil(rect.right) + margin));
++    const y1 = Math.floor(Math.min(vis.bottom, Math.ceil(rect.bottom) + margin));
++    const hoveredList = document.querySelectorAll(":hover");
++    const hovered = hoveredList.length ? hoveredList[hoveredList.length - 1] : null;
++    return { ok: x1 - x0 > 0 && y1 - y0 > 0 && settledBefore.running === 0 && settledAfter.running === 0, rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom }, vis, clip: { x: x0, y: y0, width: x1 - x0, height: y1 - y0 }, scroll: scrolls(element), outline: outlineOf(element),
++      hovered: hovered ? hovered.tagName.toLowerCase() + "." + String(hovered.className).trim().split(/\\s+/).join(".") : null, settled: [settledBefore.frames, settledAfter.frames, settledAfter.running] };
++  };
++  window.__b48 = {
++    stopElement: null,
++    placeFocused(margin) { this.stopElement = document.activeElement; return place(this.stopElement, margin); },
++    async placeAgain(margin) {
++      const result = await place(this.stopElement, margin);
++      const now = document.activeElement;
++      result.stillFocused = now === this.stopElement;
++      result.next = real(now) ? { rect: (({ left, top, right, bottom }) => ({ left, top, right, bottom }))(now.getBoundingClientRect()), outline: outlineOf(now) } : null;
++      return result;
++    },
++    async decode(base64) {
++      const bytes = Uint8Array.from(atob(base64), (ch) => ch.charCodeAt(0));
++      const bitmap = await createImageBitmap(new Blob([bytes], { type: "image/png" }), { colorSpaceConversion: "none", premultiplyAlpha: "none" });
++      const canvas = document.createElement("canvas");
++      canvas.width = bitmap.width;
++      canvas.height = bitmap.height;
++      const context = canvas.getContext("2d", { willReadFrequently: true });
++      context.drawImage(bitmap, 0, 0);
++      const data = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
++      const digest = await crypto.subtle.digest("SHA-256", data);
++      return { width: bitmap.width, height: bitmap.height, sha256: Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("") };
++    },
++  };
++  return "installed";
++})()`;
++async function shotViewportClip(clip) {
++  const offset = await pageOffset();
++  const shot = await main.cdp("Page.captureScreenshot", { format: "png", clip: { x: clip.x + offset.x, y: clip.y + offset.y, width: clip.width, height: clip.height, scale: 1 }, captureBeyondViewport: false });
++  return { base64: shot.data, buffer: Buffer.from(shot.data, "base64"), offset };
++}
++/** A stable frame: the clip is captured until two consecutive captures (120 ms apart) are byte-identical, at most 6
++ *  captures, so a transient raster state (seen next to a neighbour's repaint in development) is never compared. */
++async function stableViewportClip(clip) {
++  let previous = await shotViewportClip(clip);
++  for (let attempt = 2; attempt <= 6; attempt += 1) {
++    await delay(120);
++    const next = await shotViewportClip(clip);
++    if (next.buffer.equals(previous.buffer)) return { ...next, attempts: attempt, stable: true };
++    previous = next;
++  }
++  return { ...previous, attempts: 6, stable: false };
++}
++const crop = (image, x0, y0, width, height) => {
++  const out = new Uint8Array(width * height * 4);
++  for (let y = 0; y < height; y += 1) out.set(image.data.subarray(((y0 + y) * image.width + x0) * 4, ((y0 + y) * image.width + x0 + width) * 4), y * width * 4);
++  return { width, height, data: out };
++};
++/** Once per run: (1) this decoder equals the browser's own PNG decoding; (2) CDP clips are page coordinates (exercised with the window scrolled when the page can scroll). */
++async function pixelSelfTests(id) {
++  await parkMouse();
++  const viewport = await evaluate("({ width: innerWidth, height: innerHeight, pageMax: document.documentElement.scrollHeight - document.documentElement.clientHeight })");
++  // A content-rich region: the hue slider's gradient track with a margin (scrolled into view by the probe).
++  const regionAround = (rect) => ({ x: Math.max(0, Math.floor(rect.left) - 10), y: Math.max(0, Math.floor(rect.top) - 10), width: Math.min(160, Math.ceil(rect.width) + 20), height: Math.ceil(rect.height) + 20 });
++  const hue = await evaluate(`__visual.probe("hue-slider")`);
++  pre(`${id}:pixel-self-test-region-found`, hue.found && hue.inViewport, { hue });
++  const region = regionAround(hue.rect);
++  const sample = await shotViewportClip(region);
++  const own = decodePng(sample.buffer);
++  const browserDecode = await evaluate(`__b48.decode(${JSON.stringify(sample.base64)})`);
++  const distinct = new Set();
++  for (let index = 0; index < own.data.length; index += 4) distinct.add(`${own.data[index]},${own.data[index + 1]},${own.data[index + 2]},${own.data[index + 3]}`);
++  record("pixel-self-test-decoder", { id, region, own: { width: own.width, height: own.height, sha256: rgbaSha256(own), distinctColours: distinct.size }, browser: browserDecode, png: sha256(sample.buffer) });
++  pre(`${id}:png-decoder-equals-the-browser-decoding-of-the-same-screenshot`, own.width === browserDecode.width && own.height === browserDecode.height && rgbaSha256(own) === browserDecode.sha256 && distinct.size > 8, { own: rgbaSha256(own), browser: browserDecode, distinctColours: distinct.size });
++  const scrolled = viewport.pageMax > 0 ? await evaluate("__visual.scrollWindowTo('end')") : { y: 0, max: 0 };
++  await delay(150);
++  const hueNow = await evaluate(`__visual.probe("hue-slider", false)`);
++  const scrolledRegion = hueNow.found && hueNow.inViewport ? regionAround(hueNow.rect) : region;
++  const full = decodePng(Buffer.from((await main.cdp("Page.captureScreenshot", { format: "png", captureBeyondViewport: false })).data, "base64"));
++  const clipped = decodePng((await shotViewportClip(scrolledRegion)).buffer);
++  const naive = decodePng(Buffer.from((await main.cdp("Page.captureScreenshot", { format: "png", clip: { ...scrolledRegion, scale: 1 }, captureBeyondViewport: false })).data, "base64"));
++  const reference = crop(full, scrolledRegion.x, scrolledRegion.y, scrolledRegion.width, scrolledRegion.height);
++  const pageCoordinatesMatch = rgbaSha256(clipped) === rgbaSha256(reference);
++  const viewportCoordinatesMatch = rgbaSha256(naive) === rgbaSha256(reference);
++  record("pixel-self-test-clip-coordinates", { id, windowScroll: scrolled, pageMax: viewport.pageMax, region: scrolledRegion, pageCoordinatesMatch, viewportCoordinatesMatch, exercised: scrolled.y > 0 });
++  pre(`${id}:cdp-clip-in-page-coordinates-equals-the-viewport-crop${scrolled.y > 0 ? "-with-the-window-scrolled" : "-window-not-scrollable"}`, pageCoordinatesMatch && (scrolled.y > 0 ? !viewportCoordinatesMatch : true), { pageCoordinatesMatch, viewportCoordinatesMatch, scrolled });
++  await evaluate("__visual.scrollWindowTo(0)");
++  await delay(100);
++}
++function compareFocusBand(focusedBuffer, movedBuffer, first, again) {
++  const a = decodePng(focusedBuffer);
++  const b = decodePng(movedBuffer);
++  const rect = { left: first.rect.left - first.clip.x, top: first.rect.top - first.clip.y, right: first.rect.right - first.clip.x, bottom: first.rect.bottom - first.clip.y };
++  const inner = first.outline.offset - 2;
++  const outer = first.outline.offset + first.outline.width + 2;
++  let next = null;
++  if (again.next) {
++    const pad = (again.next.outline.style === "none" ? 0 : Math.max(0, again.next.outline.offset) + again.next.outline.width) + 3;
++    next = { left: again.next.rect.left - again.clip.x - pad, top: again.next.rect.top - again.clip.y - pad, right: again.next.rect.right - again.clip.x + pad, bottom: again.next.rect.bottom - again.clip.y + pad };
++  }
++  let bandPixels = 0;
++  let bandDiff = 0;
++  let interiorPixels = 0;
++  let interiorDiff = 0;
++  let surroundDiff = 0;
++  let excluded = 0;
++  let totalDiff = 0;
++  for (let y = 0; y < a.height; y += 1) {
++    for (let x = 0; x < a.width; x += 1) {
++      const index = (y * a.width + x) * 4;
++      const differs = a.data[index] !== b.data[index] || a.data[index + 1] !== b.data[index + 1] || a.data[index + 2] !== b.data[index + 2] || a.data[index + 3] !== b.data[index + 3];
++      if (differs) totalDiff += 1;
++      const X = x + 0.5;
++      const Y = y + 0.5;
++      if (next && X >= next.left && X <= next.right && Y >= next.top && Y <= next.bottom) { excluded += 1; continue; }
++      const dx = Math.max(rect.left - X, 0, X - rect.right);
++      const dy = Math.max(rect.top - Y, 0, Y - rect.bottom);
++      const distance = dx > 0 || dy > 0 ? Math.max(dx, dy) : -Math.min(X - rect.left, rect.right - X, Y - rect.top, rect.bottom - Y);
++      if (distance >= inner && distance <= outer) { bandPixels += 1; if (differs) bandDiff += 1; }
++      else if (distance < inner) { interiorPixels += 1; if (differs) interiorDiff += 1; }
++      else if (differs) surroundDiff += 1;
++    }
++  }
++  // The stop's OWN region is its outline band plus its own box (the next stop's ring area excluded): with aligned, stable
++  // frames, identical scroll and hover, a change there can only come from the stop's own focus state.
++  return { size: `${a.width}x${a.height}`, sameSize: a.width === b.width && a.height === b.height, bandPixels, bandDiff, bandRatio: bandPixels ? Math.round((bandDiff / bandPixels) * 1000) / 1000 : 0,
++    interiorPixels, interiorDiff, ownPixels: bandPixels + interiorPixels, ownDiff: bandDiff + interiorDiff, surroundDiff, excluded, totalDiff };
++}
++let pixelSelfTested = false;
++const pixelWalkLog = [];
++/** One full Tab cycle from the anchor; every stop focused vs moved on, by decoded pixels in its own outline band. */
++async function pixelFocusWalk(id, { anchor = `${PANE} .pane-title`, max = 140, expectedStops = null } = {}) {
++  pre(`${id}:pixel-walk-helper-installed`, ["installed", "present"].includes(await evaluate(B48_PAGE_HELPER)));
++  if (!pixelSelfTested) {
++    await pixelSelfTests(id);
++    pixelSelfTested = true;
++  }
++  await clickAnchor(anchor, `${id}:pixel-walk-anchor`);
++  await parkMouse();
++  const tabbable = await evaluate("__visual.tabbables()");
++  const visited = [];
++  const rows = [];
++  const misaligned = [];
++  let first = null;
++  let pending = null;
++  let closed = false;
++  const walkName = id.split(":").slice(2).join("-");
++  for (let index = 0; index < max; index += 1) {
++    await press("Tab");
++    const now = await evaluate("__visual.focusInfo()");
++    if (pending) {
++      const again = await evaluate(`__b48.placeAgain(${PIXEL_MARGIN})`);
++      const aligned = pending.first.ok && again.ok && !again.stillFocused && isDeepStrictEqual(again.clip, pending.first.clip) && again.hovered === pending.first.hovered
++        && ["left", "top", "right", "bottom"].every((side) => Math.abs(again.rect[side] - pending.first.rect[side]) < 0.01);
++      const moved = aligned ? await stableViewportClip(again.clip) : null;
++      const stable = Boolean(moved) && moved.stable && pending.shot.stable === true;
++      if (!aligned || !stable) misaligned.push({ desc: pending.desc, stable: { focused: pending.shot.stable ?? null, movedOn: moved?.stable ?? null }, first: { ok: pending.first.ok, rect: pending.first.rect, clip: pending.first.clip, scroll: pending.first.scroll, hovered: pending.first.hovered }, again: { ok: again.ok, rect: again.rect, clip: again.clip, scroll: again.scroll, hovered: again.hovered, stillFocused: again.stillFocused } });
++      const comparison = aligned && stable ? compareFocusBand(pending.shot.buffer, moved.buffer, pending.first, again) : null;
++      const row = {
++        desc: pending.desc, next: now.isBody ? "body" : now.desc, focusVisible: pending.focus.focusVisible, outline: pending.first.outline, clip: pending.first.clip, pageOffset: pending.shot.offset, hovered: pending.first.hovered,
++        captures: { focused: pending.shot.attempts ?? null, movedOn: moved?.attempts ?? null },
++        focusedPng: sha256(pending.shot.buffer), movedOnPng: moved ? sha256(moved.buffer) : null, ...(comparison ?? {}),
++        visible: Boolean(comparison) && pending.first.outline.style !== "none" && comparison.ownDiff > 0,
++      };
++      if (comparison && !row.visible) {
++        // A failing stop: both clips are kept as evidence (reviewed manually).
++        const safe = pending.desc.replace(/[^a-z0-9]+/gi, "-");
++        row.screenshots = [
++          (await saveShot(`pixel-${walkName}-${safe}-focused`, pending.shot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: pending.first.clip, pageOffset: pending.shot.offset, state: `${walkName} walk: ${pending.desc} focused by a trusted Tab (fixed ${short}, pet hidden)` })).file,
++          (await saveShot(`pixel-${walkName}-${safe}-moved-on`, moved.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: again.clip, pageOffset: moved.offset, state: `${walkName} walk: ${pending.desc} after focus moved on to ${row.next} (fixed ${short}, pet hidden)` })).file,
++        ];
++      }
++      rows.push(row);
++      pending = null;
++    }
++    if (!now.isBody && now.desc === first) { closed = true; break; }
++    visited.push(now.isBody ? "body" : now.desc);
++    if (!now.isBody) {
++      if (first === null) first = now.desc;
++      const placed = await evaluate(`__b48.placeFocused(${PIXEL_MARGIN})`);
++      const shot = placed.ok ? await stableViewportClip(placed.clip) : { buffer: Buffer.alloc(0), offset: null, stable: false, attempts: 0 };
++      pending = { desc: now.desc, focus: now, first: placed, shot };
++    }
++  }
++  const inside = visited.filter((desc) => desc !== "body");
++  const startIndex = tabbable.indexOf(first);
++  const rotated = startIndex >= 0 ? [...tabbable.slice(startIndex), ...tabbable.slice(0, startIndex)] : [];
++  pre(`${id}:pixel-walk-completed-a-full-cycle-with-every-stop-captured-twice-in-stable-aligned-frames`, closed && rows.length === inside.length && misaligned.length === 0 && rows.every((row) => (row.ownPixels ?? 0) > 0) && visited.filter((desc) => desc === "body").length <= 1, { closed, rows: rows.length, inside: inside.length, misaligned: misaligned.slice(0, 4) });
++  const retaken = rows.filter((row) => (row.captures.focused ?? 0) > 2 || (row.captures.movedOn ?? 0) > 2).map((row) => `${row.desc}:${row.captures.focused}/${row.captures.movedOn}`);
++  if (retaken.length) observe(`${id}:captures-that-needed-more-than-two-shots-to-be-stable`, { retaken });
++  if (expectedStops) pre(`${id}:pixel-walk-visited-exactly-the-stops-of-the-tab-cycle`, isDeepStrictEqual(inside, expectedStops), { inside, expectedStops });
++  else checkDeferred(`${id}:full-tab-cycle-equals-the-dom-order-of-tabbable-controls`, isDeepStrictEqual(inside, rotated), { inside, rotated });
++  const failed = rows.filter((row) => !row.visible);
++  const weak = rows.filter((row) => row.visible && row.bandRatio < 0.15);
++  if (weak.length) observe(`${id}:visible-stops-with-a-weak-ring-signal-below-15-percent-of-the-band-for-manual-review`, { weak: weak.map((row) => ({ desc: row.desc, bandPixels: row.bandPixels, bandDiff: row.bandDiff, bandRatio: row.bandRatio, surroundDiff: row.surroundDiff })) });
++  record("pixel-focus-walk", { id, width: KEYBOARD_WIDTH, stops: rows.length, failed: failed.map((row) => row.desc), weak: weak.map((row) => row.desc), rows });
++  checkDeferred(`${id}:every-tab-stop-has-visible-focus-computed-outline-not-none-and-focused-vs-moved-on-pixels-differ-in-its-own-ring-or-box`, rows.length > 0 && failed.length === 0,
++    { failed: failed.map((row) => ({ desc: row.desc, outline: row.outline, bandPixels: row.bandPixels, bandDiff: row.bandDiff, ownPixels: row.ownPixels, ownDiff: row.ownDiff, totalDiff: row.totalDiff })) });
++  const fontRow = rows.find((row) => row.desc === "font-slider");
++  pixelWalkLog.push({ id, stops: rows.length, failed: failed.map((row) => row.desc), minBandDiff: Math.min(...rows.map((row) => row.bandDiff ?? 0)), fontSlider: fontRow ? { outline: fontRow.outline, bandDiff: fontRow.bandDiff, bandPixels: fontRow.bandPixels, focusedPng: fontRow.focusedPng, movedOnPng: fontRow.movedOnPng } : null });
++  return rows;
++}
++/**
++ * Batch 48 reproduction of the per-stop oracle's finding: the SELECTED accent swatch shows no visible focus. Source (read,
++ * not changed): `.accent-sw.active { outline: 2px solid var(--text-1); outline-offset: 2px }`, specificity (0,2,0), in
++ * plugin-web-tokens layout.css:1437–1440 and in the Appearance stylesheet styles.css:116–119 (both unchanged since 5cd63ff),
++ * outranks the global `button:focus-visible` ring (0,1,1) of tokens.css:246–253, so the focused selected swatch keeps its
++ * selection ring. Each case: a trusted Tab to the swatch and a control-relative clip (pet hidden, stable frame); trusted
++ * Shift+Tab until focus leaves the swatch row (density:compact), so no other swatch's ring or repaint is in the clip; the
++ * same clip again (stable frame); decoded pixels compared over the whole clip and inside the swatch's own ring band.
++ * Non-selected swatches are positive controls.
++ */
++async function kbSelectedSwatchFocus() {
++  const cases = [
++    { variant: "fixed", stored: {}, selected: "swatch:0", other: "swatch:1", label: short },
++    { variant: "fixed", stored: { accentHue: 230 }, selected: "swatch:1", other: "swatch:2", label: `${short}-accent-230` },
++    { variant: "before", stored: {}, selected: "swatch:0", other: "swatch:1", label: "before-5cd63ff" },
++  ];
++  const rows = [];
++  for (const entry of cases) {
++    const id = `kb:${LANG}:selected-swatch-focus:${entry.label}`;
++    await seed(seedsOf({ lang: LANG, ...entry.stored }), id);
++    await mountApp(id, { width: KEYBOARD_WIDTH, variant: entry.variant });
++    await petOff(id, KEYBOARD_WIDTH);
++    pre(`${id}:pixel-helper-installed`, ["installed", "present"].includes(await evaluate(B48_PAGE_HELPER)));
++    for (const desc of [entry.selected, entry.other]) {
++      const isSelected = desc === entry.selected;
++      await tabUntil(desc, `${id}:${desc}`);
++      await parkMouse();
++      const focus = await evaluate("__visual.focusInfo()");
++      const activeClass = await evaluate(`document.activeElement.classList.contains("active")`);
++      pre(`${id}:${desc}:is-${isSelected ? "the-selected" : "a-non-selected"}-swatch`, activeClass === isSelected, { activeClass, focus: focus.desc });
++      const first = await evaluate(`__b48.placeFocused(${PIXEL_MARGIN})`);
++      const focusedShot = await stableViewportClip(first.clip);
++      const rowClip = await evaluate(`(() => { const r = document.activeElement.closest(".setting-row").getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.left) - 8), y: Math.max(0, Math.floor(r.top) - 8), width: Math.ceil(r.width) + 16, height: Math.ceil(r.height) + 16 }; })()`);
++      const rowShot = await stableViewportClip(rowClip);
++      // Trusted Shift+Tab until focus leaves the swatch row (to density:compact, the control before it): no other
++      // swatch's ring or repaint is then inside the compared clip.
++      const backPath = [];
++      for (let presses = 0; presses < 7; presses += 1) {
++        await press("ShiftTab");
++        const now = await evaluate("__visual.activeDesc()");
++        backPath.push(now);
++        if (!now.startsWith("swatch:")) break;
++      }
++      const after = await evaluate("__visual.focusInfo()");
++      const again = await evaluate(`__b48.placeAgain(${PIXEL_MARGIN})`);
++      const unfocusedOutline = await evaluate("(() => { const element = window.__b48.stopElement; const s = getComputedStyle(element); return { style: s.outlineStyle, width: s.outlineWidth, color: s.outlineColor, offset: s.outlineOffset, focused: document.activeElement === element, focusVisible: element.matches(':focus-visible') }; })()");
++      const aligned = again.ok && !again.stillFocused && isDeepStrictEqual(again.clip, first.clip) && again.hovered === first.hovered
++        && ["left", "top", "right", "bottom"].every((side) => Math.abs(again.rect[side] - first.rect[side]) < 0.01);
++      pre(`${id}:${desc}:focus-moved-out-of-the-swatch-row-by-trusted-shift-tab-and-the-second-capture-is-aligned`, aligned && after.desc === "density:compact" && !unfocusedOutline.focused, { first: { rect: first.rect, clip: first.clip, hovered: first.hovered }, again: { rect: again.rect, clip: again.clip, hovered: again.hovered, stillFocused: again.stillFocused }, backPath });
++      const movedShot = await stableViewportClip(again.clip);
++      pre(`${id}:${desc}:both-captures-are-stable-frames`, focusedShot.stable && movedShot.stable, { attempts: [focusedShot.attempts, movedShot.attempts] });
++      const comparison = compareFocusBand(focusedShot.buffer, movedShot.buffer, first, again);
++      const decodedIdentical = rgbaSha256(decodePng(focusedShot.buffer)) === rgbaSha256(decodePng(movedShot.buffer));
++      const tag = `${entry.label}-${desc.replace(":", "-")}`;
++      const what = `${desc} (${isSelected ? "the selected swatch" : "a non-selected swatch"}; ${entry.variant === "fixed" ? `fixed ${short}` : "5cd63ff"}${entry.stored.accentHue !== undefined ? `, xai_accent_hue ${entry.stored.accentHue}` : ""}; pet hidden)`;
++      const saved = {
++        focused: (await saveShot(`swatch-${tag}-focused`, focusedShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: first.clip, pageOffset: focusedShot.offset, state: `${what} focused by a trusted Tab`, focus })).file,
++        row: (await saveShot(`swatch-${tag}-focused-row`, rowShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: rowClip, pageOffset: rowShot.offset, state: `the Accent color row with ${what} focused by a trusted Tab` })).file,
++        movedBack: (await saveShot(`swatch-${tag}-focus-moved-back`, movedShot.base64, { width: currentWidth, viewportHeight: HEIGHTS[currentWidth], clip: again.clip, pageOffset: movedShot.offset, state: `${what} after trusted Shift+Tab (${backPath.length}x, via ${backPath.join(" > ")}) moved focus out of the swatch row to ${after.desc}` })).file,
++      };
++      const visible = !decodedIdentical && comparison.ownDiff > 0 && focus.outline.style !== "none";
++      const row = { variant: entry.variant, stored: entry.stored, desc, selected: isSelected, focusVisible: focus.focusVisible, focusedOutline: focus.outline, unfocusedOutline, movedTo: after.desc, backPath, captures: { focused: focusedShot.attempts, movedBack: movedShot.attempts }, decodedIdentical, ...comparison, focusedPng: sha256(focusedShot.buffer), movedBackPng: sha256(movedShot.buffer), saved, visible };
++      rows.push(row);
++      const details = { focusedOutline: focus.outline, unfocusedOutline, decodedIdentical, bandPixels: comparison.bandPixels, bandDiff: comparison.bandDiff, ownPixels: comparison.ownPixels, ownDiff: comparison.ownDiff, totalDiff: comparison.totalDiff, excluded: comparison.excluded, movedTo: after.desc };
++      if (entry.variant === "fixed") {
++        if (isSelected) checkDeferred(`${id}:${desc}:selected-swatch-focus-is-visible-pixels-differ-in-its-own-ring-or-box`, visible, details);
++        else pre(`${id}:${desc}:positive-control-non-selected-swatch-focus-ring-changes-the-pixels`, visible, details);
++      } else observe(`${id}:${desc}:5cd63ff-reference`, details);
++    }
++  }
++  record("selected-swatch-focus-table", { lang: LANG, width: KEYBOARD_WIDTH, rows });
++}
+ async function runKeyboard() {
+   if (selected("focus-visibility")) await kbFocusVisibility();
++  if (selected("swatch-focus")) await kbSelectedSwatchFocus(); // batch 48 addition (reproduction)
+   if (selected("tab")) await kbTabOrder();
+   if (selected("activation")) await kbActivation();
+   if (selected("sliders")) await kbSliders();
+@@ -2140,6 +2877,7 @@ async function runKeyboard() {
+   if (selected("focus")) await kbFocusTargets();
+   if (selected("retry-all")) await kbRetryAll();
+   if (selected("topbar")) await kbTopbarStatus();
++  if (pixelWalkLog.length) record("pixel-focus-walk-table", { lang: LANG, width: KEYBOARD_WIDTH, walks: pixelWalkLog }); // batch 48 addition
+ }
+ 
+ // ---------------------------------------------------------------------------------------------------
+@@ -2178,7 +2916,7 @@ try {
+     browser: version.product, protocol: version.protocolVersion, userAgent: version.userAgent, node: process.version, esbuild: esbuild.version,
+     packages: { react: versionOf("react"), "react-dom": versionOf("react-dom"), "react-router": versionOf("react-router") },
+     lockfileSha256: { fixed: sha256(fixedLock), before: sha256(beforeLock), dependencies: sha256(dependencyLock), extractedFixed: sha256(fixedArchive.extractedLock), extractedBefore: beforeArchive ? sha256(beforeArchive.extractedLock) : null, contractGate: LOCKFILE_GATE_SHA256 },
+-    fileSha256: { [RUNNER]: runnerSha256, [PROBES]: sha256(probesSource), [FROZEN.fixture.file]: sha256(fixtureSource), [FROZEN.prelude.file]: sha256(preludeSource), [FROZEN.e4h14.file]: sha256(e4Raw) },
++    fileSha256: { [RUNNER]: runnerSha256, [PROBES]: sha256(probesSource), [FROZEN.fixture.file]: sha256(fixtureSource), [FROZEN.prelude.file]: sha256(preludeSource), [FROZEN.e4h14.file]: sha256(e4Raw), [`${FROZEN_BATCH46.runner.file} (frozen batch 46 runner, diff base)`]: sha256(readFileSync(join(output, FROZEN_BATCH46.runner.file))) },
+     contract: { path: CONTRACT_PATH, sha256AtHead: contractSha256, expected: CONTRACT_SHA256 },
+     fixedVsBefore: { before: BEFORE_REVISION, productFilesChanged: fixedDelta },
+     viewports: Object.fromEntries((KIND === "visual" ? [...WIDTHS, 760, 761, 767, 1025] : [KEYBOARD_WIDTH]).map((width) => [width, { height: HEIGHTS[width], mobileEmulation: width <= 414 }])),
+@@ -2189,7 +2927,9 @@ try {
+   pre("baseline:lockfile-gate", sha256(dependencyLock) === LOCKFILE_GATE_SHA256 && sha256(fixedLock) === LOCKFILE_GATE_SHA256 && sha256(fixedArchive.extractedLock) === LOCKFILE_GATE_SHA256
+     && (!beforeArchive || sha256(beforeArchive.extractedLock) === LOCKFILE_GATE_SHA256));
+   pre("baseline:contract-r3-hash", contractSha256 === CONTRACT_SHA256, { contractSha256 });
+-  pre("baseline:fixed-delta-is-exactly-the-24-terra-files", isDeepStrictEqual([...fixedDelta].sort(), [...EXPECTED_FIXED_DELTA].sort()), { fixedDelta });
++  pre("baseline:fixed-delta-is-exactly-the-25-files-terra-24-plus-the-f-app-1-guard-test", isDeepStrictEqual([...fixedDelta].sort(), [...EXPECTED_FIXED_DELTA].sort()), { fixedDelta });
++  pre("baseline:frozen-batch-46-probes-reused-read-only-and-frozen-runner-unchanged-hash-checked",
++    sha256(probesSource) === FROZEN_BATCH46.probes.sha256 && sha256(readFileSync(join(output, FROZEN_BATCH46.runner.file))) === FROZEN_BATCH46.runner.sha256, {});
+   pre("baseline:frozen-batch-45-fixture-and-prelude-and-e4-h14-log-reused-read-only-hash-checked",
+     sha256(fixtureSource) === FROZEN.fixture.sha256 && sha256(preludeSource) === FROZEN.prelude.sha256 && sha256(e4Raw) === FROZEN.e4h14.sha256, {});
+ 
