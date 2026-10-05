@@ -1,0 +1,493 @@
+requested_revision=24073b5
+resolved_commit=24073b522262d8b4bec0abfa29347db28adbdd9e
+resolved_tree=95b4aaff59927eee82248a6133e357e9c70e04ec
+appearance_package_tree=4a55201cf0b55ed76c272e90006b5986790d0a2f shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=original
+suffix=fixed1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-appearance-recovery-sol/verify-fixed.mjs 24073b5 original fixed1
+runner_checkout_head=662de52798fe78b2228c7120a98d6d5838a51a46
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-settings-appearance/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=acd26ad860c90e1a688232db2f8da4b2d016b7a537d53afb3fea528f584666e3 bytes.test.tsx=c8338077dab16ca2e095a82dce2d667797d9a33bce8f666a78a57082930e45b0 fields.test.tsx=3ff72da5b1a037b0bbd93fbb910cb0772c6306d495871d8a5fb14c3305acc794 reset.test.tsx=3f9f3f86570c1c8f9350532fb0a5fbc03c2a4f92ac74e9fa959956811a2e6595 queues.test.tsx=1d6c85c28224a2fc1dace8ee754873fd3d2b716264f9b812c753a816b6ac2d66 continuity-export.test.tsx=776da524f7479e03d067c2426345df1fb30e518581c7bbfd33a0f1d0838e79ce host.test.tsx=49528aa335cb9f2db87faf152656b6c55011bf5856b69998c9c31dabbffc3eab retry-all.test.tsx=d851c75a5ca80470e928b52425521d8b549d3e91738796ac9f84708d793c513c verify-fixed.mjs=a451df6aa05fcae5b6fb77266d6ef8d990b4e97b91755c0723f442239fbf5c1e
+archive_file_sha256 packages/xai-web-settings-appearance/src/AppearancePane.tsx=0818f7ee1cb9b525e6fac603ba4958b175dd401e0fd754d05ed3ac7d88e27c8f packages/xai-web-settings-appearance/src/internal/appearancePane.tsx=34b938200d1a43a9e73b1e5e6397ed7014ca763abb5082040d72cd309f43309c packages/xai-web-settings-appearance/src/types.ts=40a72a058ba1e4b64f40afe8a31d590935d800e786d065248a8030f3137eeae3 packages/xai-web-settings-appearance/src/index.ts=9113e85cab3eee31e1f54e5220b87e8d8eac69a48f73b2697a8662dac1d5caef packages/xai-web-settings-appearance/src/styles.css=c3d3393d48b98b61aa4f218d4eec7ff61ed56b5ab2961961e368f3d24ba192bf packages/xai-web-settings-appearance/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-appearance/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-settings-shell/src/SettingsFooter.tsx=afecc734e7a96a8f7d289de2c3f6def5a1391c72e59f2fa61700f67a691c76ce packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] appearance-package: include=packages/xai-web-settings-appearance/src/__tests__/**/*.{test,spec}.{ts,tsx} vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/appearance-sol-original-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-0.json vitest_exit=0 cases=126 passed=126 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=126 numPassedTests=126 numFailedTests=0
+run[1] shell-topbar: include=packages/xai-web-shell/src/__tests__/Topbar.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/appearance-sol-original-1.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-1.json vitest_exit=0 cases=24 passed=24 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=24 numPassedTests=24 numFailedTests=0
+run[2] web-host: include=apps/web/src/__tests__/App.lazy-init.test.tsx,apps/web/src/__tests__/App.signout.test.tsx,apps/web/src/__tests__/shell.theme.test.tsx,apps/web/src/__tests__/shell.smoke.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/appearance-sol-original-2.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-2.json vitest_exit=0 cases=24 passed=24 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=24 numPassedTests=24 numFailedTests=0
+exit=0
+harness_checks=PASS (18/18)
+==== run[0] appearance-package ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI
+
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches 3ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs() 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-1: renders 7 SettingRow elements 91ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible 41ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-3: theme card matching current data-theme has .active class 26ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class 23ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class 50ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class 16ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees 56ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx > AppearancePane rendering > AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded % 45ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA1 clean: rendered with aria-disabled="true" (never disabled), no description, a Tab stop between the font slider and Reset; activation is inert 384ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-1: clicking Dark theme card sets data-theme='dark' 423ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) > AC-SAVE-1: with no settled unsuccessful draft Retry all is rendered disabled (aria-disabled only), no 'Save & apply' or 'Saved', and one activation makes zero storage attempts 428ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-1: lang='zh' shows Chinese strings in segmented controls 400ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar) 15ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names 66ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.bilingual.test.tsx > AppearancePane bilingual > AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter) 98ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3) 379ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-2: clicking Compact density sets data-density='compact' 153ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA2 pending only (write held behind the real per-key lock): disabled, not described, inert 182ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Retry all (replaces Save & apply) > AC-SAVE-2: with a failed draft Retry all is enabled and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success 209ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-3: dragging hue slider to 220 writes localStorage 63ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230 83ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA3 source only (malformed bytes): disabled and inert; nothing is rewritten 119ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC2 a pane edit is visible to every view of the same controller in the same frame, and vice versa 256ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-1: confirm=true → six verified absences, DOM defaults, and xai_pref_lang bytes unchanged 116ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-2: Reset → six reset intents, zero preference-changed emissions, language untouched 89ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295 76ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right' 70ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA4 one failed field: enabled (no aria-disabled), described by the count line 99ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A3 the controller and its views > AC3 the pane emits no web:settings:preference-changed and dispatches no StorageEvent 154ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-1: length=6 and correct id order 2ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-4: hues match source lines 498-503 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > BG_TONES > AC-CONST-7: array is frozen and first element is frozen 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-2: length=6 and correct id order 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-3: hues match source (verbatim) 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > HUE_PRESETS > AC-CONST-6: every entry has non-empty en and zh name 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-5: length=4 and correct id order 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/constants.test.ts > RAIL_POSITIONS > AC-CONST-6: every entry has non-empty en and zh label 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-7: setting font slider to 0.85 applies font-size 32ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx > AppearancePane live binding > AC-LIVE-8: choosing 简体中文 persists "zh" and marks it selected; no DOM apply 82ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-3: confirm=false → zero storage attempts and no state change 90ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA5 ZH: label 全部重试 in every state and the ZH count line for one and two fields 148ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="\"fr\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 131ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable' 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-1: id === 'appearance' 1ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-2: i18nKey === 'settings.appearance' 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder) 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/appearancePane.registry.test.ts > appearancePane registry entry > AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' /> 0ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="en" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 112ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-5: calling Reset twice yields the same end state (idempotent) 104ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx > AppearancePane Reset > AC-RESET-6: confirm called EXACTLY ONCE with the truthful text (no double-prompt) 69ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA6 an open pass with E empty: disabled, described by the in-flight line, inert; it settles to disabled with no description 169ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 101ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 97ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.2 render and enabled state > RA7 an open pass plus a newly failed field: enabled again; the second activation retries only that field 170ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 94ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_lang="\"EN\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 83ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="\"neon\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 83ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA8 set drafts: exactly one write per member in display order and none elsewhere 176ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA9 a background choice with both writes failing is two members; with only the tone failing it is one 142ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="dark" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 81ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="\"Dark\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 78ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_theme="123" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 82ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA10 failed Reset items: one removal each, never a write; a reset-only pass ends with 'Defaults restored.' 86ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA11 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten 123ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="\"cozy\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 82ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA12 an uncertain write reconciles with exactly one total write 82ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="{}" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 78ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_density="compact" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 76ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA13 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt 118ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="0" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="-1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA14 exclusions: pending, source-only and draft-free fields get zero attempts 167ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="\"big\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 82ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="2" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA15 no duplicates: a same-turn double activation, an activation while pending and a per-field Retry during a pass add zero attempts 167ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="0.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 scope and attempts > RA16 a Retry all during a pending per-field Retry skips that field 133ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_pref_font_scale="\"1\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 75ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="abc" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA17 a pane edit supersedes a held member; the old completion never makes the newer choice look saved 151ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="Infinity" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 85ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA18 Discard during an open pass detaches the member: its late completion never writes and no success is claimed 143ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="-5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 95ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="361" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_accent_hue="12.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 78ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="diagonal" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA19 Discard all during an open pass closes it, focus goes to Reset, late completions write nothing 209ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.3 attribution and late completions > RA20 unmount during an open pass detaches the members: the late completion writes nothing 90ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="Left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA21 rule 1 wins while a pass is open even when a member already failed again; then rule 3 136ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA22 ZH lines: in flight 正在重试未保存的外观更改…, then 外观设置已保存。 97ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_rail_pos=" left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 80ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="sage" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 83ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="neon" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 83ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA23 rule 2: a failed Export while a draft exists shows the export line; the next pane action clears it; never shown once clean 192ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA24 focus stays on Retry all when a full-success pass disables it (never <body>, never Reset) 87ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="Mist" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 87ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC4 xai_bg_tone="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept 78ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC5 a throwing read is source-only too; Reload of repaired bytes clears the alert without a saved claim 77ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A6 strict domains > AC6 the range bounds submit exact strict-domain bytes; each slider change is one edit and the final bytes equal the last value 75ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA25 a partial result keeps focus on the enabled button, described by the count line 116ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > A2.4 feedback and A2.5 focus > RA26 a member held behind the lock fails on release: the disabled button becomes enabled, focus stays, the count line describes it 93ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx > RA27 no Retry all activation writes any key outside the seven Appearance keys 106ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A5 protection > AC7 the Topbar status renders nothing while clean or only pending; a settled failure renders a named button that calls onReview exactly once 126ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A5 protection > AC8 the Topbar status in Chinese is named 外观更改未保存，前往设置查看。 with the visible text 未保存 79ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A5 protection > AC9 beforeunload warns while a draft exists (pending or failed) with zero storage attempts, and is removed afterwards 111ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A5 protection > AC10 the sign-out step: no drafts → true without a prompt or storage attempt; Cancel → false and everything kept; OK → drafts discarded with zero writes 86ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > A5 protection > AC11 the sign-out prompt follows the displayed language (ZH) 58ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC12 Discard rereads only its field with zero writes, returns display and document to the committed value and focuses the field's selected control 113ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC13 Reload refuses to erase the same field's actual draft; a successful Retry returns focus from the unmounting block to the field's control 115ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC14 Export is memory-only (zero storage attempts under total denial) and uses the set/reset envelope; one URL created and revoked; the anchor removed 156ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC15 Reset never reads, writes or removes xai_pref_lang and keeps every other key byte-identical 57ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC16 a missing Web Lock capability refuses every write (never unfenced) with failed feedback 92ms
+ ✓ packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx > recovery actions and export > AC17 a success while no pane is mounted makes no success claim when a pane mounts later 54ms
+
+ Test Files  9 passed (9)
+      Tests  126 passed (126)
+   Start at  01:34:36
+   Duration  6.36s (transform 712ms, setup 684ms, collect 3.29s, tests 11.80s, environment 5.41s, prepare 878ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-0.json
+
+---- stderr ----
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-7: appearanceDefaults does NOT contain a lang key
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-8: appearanceDefaults is frozen
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+stderr | packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts > appearanceDefaults parity > AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+[plugin-web-storage] refusing canonical removal because xai_task_cols could not be read.
+[plugin-web-storage] refusing canonical removal because xai_calendar_events could not be read.
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.appearance-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/packages/xai-web-settings-appearance/vitest.setup.ts"],"include":["packages/xai-web-settings-appearance/src/__tests__/**/*.{test,spec}.{ts,tsx}"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-settings-appearance/src/internal/appearancePane.tsx packages/plugin-web-settings-shell/src/SettingsFooter.tsx
+pin_modules=76 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-appearance=19 packages/xai-web-shell=9
+==== run[1] shell-topbar ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI
+
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP0 — preferences trigger opens the appearance popover 52ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1 — appearance popover: clicking 中文 calls setLang('zh') 13ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b — clicking EN calls setLang('en') 9ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1c — active lang option has aria-checked=true 8ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2 — Dark button calls setTheme('dark') 9ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b — System button calls setTheme('system') 10ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c — active theme option has aria-checked=true 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3 — Compact button calls setDensity('compact') 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b — active density option has aria-checked=true 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP4 — Settings row click calls onOpenSettings 11ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat) 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5b — onOpenSearch prop provided → renders <button class='search-box'> 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP6 — ⌘K kbd hint is rendered 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP7 — button click calls onOpenSearch() 4ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided 2ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts 9ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover 2ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged 3ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  01:34:42
+   Duration  881ms (transform 105ms, setup 79ms, collect 112ms, tests 194ms, environment 227ms, prepare 72ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-1.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.appearance-sol-vite-cache-1/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["packages/xai-web-shell/src/__tests__/Topbar.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/Topbar.tsx
+pin_modules=11 by package: packages/plugin-web-tokens=7 packages/xai-web-shell=4
+==== run[2] web-host ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI
+
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T1 — default theme=light sets <html data-theme='light'> 55ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T2 — theme=system resolves via matchMedia (dark preference) 19ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3 — default density=comfortable sets <html data-density='comfortable'> 16ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live cleanup failure is visible and does not redirect or call shared cleanup 87ms
+ ✓ apps/web/src/__tests__/shell.theme.test.tsx > Theme + density effects (T1..T3) > T3b — default railPos=left sets <html data-rail-pos='left'> 20ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount 56ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4) 110ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1b — App renders AppRail (aside.app-rail present) 27ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A2 — StrictMode double-mount does not throw 24ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A3 — App applies default theme on mount (data-theme is set) 25ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A4 — App renders without crash when no child route matches 14ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > superseded A cleanup cannot navigate away from a new B login 32ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live confirmed cleanup redirects through the coordinator only 45ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called 32ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected 74ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount 22ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable) 54ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw) 16ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when key absent 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns parsed value when key present with valid JSON 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when value is corrupt JSON 0ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO2 — order: signOut before clearSessionStorage before assign 24ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort) 20ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign 26ms
+
+ Test Files  4 passed (4)
+      Tests  24 passed (24)
+   Start at  01:34:44
+   Duration  4.27s (transform 2.37s, setup 0ms, collect 13.56s, tests 799ms, environment 1.24s, prepare 254ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.report-original-2.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-appearance-sol-CTEiPI/.appearance-sol-vite-cache-2/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":[],"include":["apps/web/src/__tests__/App.lazy-init.test.tsx","apps/web/src/__tests__/App.signout.test.tsx","apps/web/src/__tests__/shell.theme.test.tsx","apps/web/src/__tests__/shell.smoke.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance apps/web/src/App.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx
+pin_modules=605 by package: apps/web=15 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=19 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=9 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=174 passed=174 failed=0 skipped=0 precondition_failures=0
+harness PASS [appearance-package] JSON report parsed
+harness PASS [appearance-package] reported files match the requested pattern (9 files)
+harness PASS [appearance-package] config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-appearance/vitest.setup.ts], root = archive)
+harness PASS [appearance-package] guard plugin active (archive modules recorded)
+harness PASS [appearance-package] required product modules loaded from the archive (3)
+harness PASS [appearance-package] no test-file suite error
+harness PASS [shell-topbar] JSON report parsed
+harness PASS [shell-topbar] reported files equal the requested include
+harness PASS [shell-topbar] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [shell-topbar] guard plugin active (archive modules recorded)
+harness PASS [shell-topbar] required product modules loaded from the archive (1)
+harness PASS [shell-topbar] no test-file suite error
+harness PASS [web-host] JSON report parsed
+harness PASS [web-host] reported files equal the requested include
+harness PASS [web-host] config in effect (environment jsdom, globals false, setupFiles [], root = archive)
+harness PASS [web-host] guard plugin active (archive modules recorded)
+harness PASS [web-host] required product modules loaded from the archive (3)
+harness PASS [web-host] no test-file suite error
+case 001 PASSED | [appearance-package] A3 the controller and its views AC1 a fresh mount displays and applies the stored values with zero writes (ruling 3)
+case 002 PASSED | [appearance-package] A3 the controller and its views AC2 a pane edit is visible to every view of the same controller in the same frame, and vice versa
+case 003 PASSED | [appearance-package] A3 the controller and its views AC3 the pane emits no web:settings:preference-changed and dispatches no StorageEvent
+case 004 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="\"fr\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 005 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="en" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 006 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 007 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 008 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 009 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_lang="\"EN\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 010 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_theme="\"neon\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 011 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_theme="dark" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 012 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_theme="\"Dark\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 013 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_theme="123" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 014 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_density="\"cozy\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 015 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_density="{}" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 016 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_density="compact" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 017 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="0" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 018 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="-1" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 019 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="null" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 020 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="\"big\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 021 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="2" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 022 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="0.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 023 PASSED | [appearance-package] A6 strict domains AC4 xai_pref_font_scale="\"1\"" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 024 PASSED | [appearance-package] A6 strict domains AC4 xai_accent_hue="abc" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 025 PASSED | [appearance-package] A6 strict domains AC4 xai_accent_hue="Infinity" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 026 PASSED | [appearance-package] A6 strict domains AC4 xai_accent_hue="-5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 027 PASSED | [appearance-package] A6 strict domains AC4 xai_accent_hue="361" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 028 PASSED | [appearance-package] A6 strict domains AC4 xai_accent_hue="12.5" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 029 PASSED | [appearance-package] A6 strict domains AC4 xai_rail_pos="diagonal" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 030 PASSED | [appearance-package] A6 strict domains AC4 xai_rail_pos="Left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 031 PASSED | [appearance-package] A6 strict domains AC4 xai_rail_pos="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 032 PASSED | [appearance-package] A6 strict domains AC4 xai_rail_pos=" left" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 033 PASSED | [appearance-package] A6 strict domains AC4 xai_bg_tone="sage" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 034 PASSED | [appearance-package] A6 strict domains AC4 xai_bg_tone="neon" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 035 PASSED | [appearance-package] A6 strict domains AC4 xai_bg_tone="Mist" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 036 PASSED | [appearance-package] A6 strict domains AC4 xai_bg_tone="" at load: no throw, the default displayed and applied, a Reload-only source alert, zero writes, bytes kept
+case 037 PASSED | [appearance-package] A6 strict domains AC5 a throwing read is source-only too; Reload of repaired bytes clears the alert without a saved claim
+case 038 PASSED | [appearance-package] A6 strict domains AC6 the range bounds submit exact strict-domain bytes; each slider change is one edit and the final bytes equal the last value
+case 039 PASSED | [appearance-package] A5 protection AC7 the Topbar status renders nothing while clean or only pending; a settled failure renders a named button that calls onReview exactly once
+case 040 PASSED | [appearance-package] A5 protection AC8 the Topbar status in Chinese is named 外观更改未保存，前往设置查看。 with the visible text 未保存
+case 041 PASSED | [appearance-package] A5 protection AC9 beforeunload warns while a draft exists (pending or failed) with zero storage attempts, and is removed afterwards
+case 042 PASSED | [appearance-package] A5 protection AC10 the sign-out step: no drafts → true without a prompt or storage attempt; Cancel → false and everything kept; OK → drafts discarded with zero writes
+case 043 PASSED | [appearance-package] A5 protection AC11 the sign-out prompt follows the displayed language (ZH)
+case 044 PASSED | [appearance-package] recovery actions and export AC12 Discard rereads only its field with zero writes, returns display and document to the committed value and focuses the field's selected control
+case 045 PASSED | [appearance-package] recovery actions and export AC13 Reload refuses to erase the same field's actual draft; a successful Retry returns focus from the unmounting block to the field's control
+case 046 PASSED | [appearance-package] recovery actions and export AC14 Export is memory-only (zero storage attempts under total denial) and uses the set/reset envelope; one URL created and revoked; the anchor removed
+case 047 PASSED | [appearance-package] recovery actions and export AC15 Reset never reads, writes or removes xai_pref_lang and keeps every other key byte-identical
+case 048 PASSED | [appearance-package] recovery actions and export AC16 a missing Web Lock capability refuses every write (never unfenced) with failed feedback
+case 049 PASSED | [appearance-package] recovery actions and export AC17 a success while no pane is mounted makes no success claim when a pane mounts later
+case 050 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-1: lang='zh' shows Chinese strings in segmented controls
+case 051 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-2: lang='zh' renders Appearance i18n keys (accent / bg / sidebar)
+case 052 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-3: BG_TONES render zh names with lang='zh'; switch to en re-renders to en names
+case 053 PASSED | [appearance-package] AppearancePane bilingual AC-I18N-4: the pane-local Reset shows 恢复默认 in ZH (CP-APPEARANCE-01: no SettingsFooter)
+case 054 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-1: clicking Dark theme card sets data-theme='dark'
+case 055 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-2: clicking Compact density sets data-density='compact'
+case 056 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-3: dragging hue slider to 220 writes localStorage
+case 057 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-4: clicking Ocean swatch writes xai_accent_hue=230
+case 058 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-5: clicking Lavender bg-tone card writes bgTone + accentHue=295
+case 059 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-6: clicking Right rail-position card writes xai_rail_pos='right'
+case 060 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-7: setting font slider to 0.85 applies font-size
+case 061 PASSED | [appearance-package] AppearancePane live binding AC-LIVE-8: choosing 简体中文 persists "zh" and marks it selected; no DOM apply
+case 062 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-1: renders 7 SettingRow elements
+case 063 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-2: 3 theme cards + 6 hue swatches + 6 bg-tone cards + 4 rail-pos cards visible
+case 064 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-3: theme card matching current data-theme has .active class
+case 065 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-4: hue swatch with |accentHue - p.hue| < 3 has .active class
+case 066 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-5: bg-tone card matching current xai_bg_tone has .active class
+case 067 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-6: rail-pos card matching current xai_rail_pos has .active class
+case 068 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-7: hue slider value reflects accentHue; slider-val shows rounded degrees
+case 069 PASSED | [appearance-package] AppearancePane rendering AC-RENDER-8: font slider value reflects fontScale; slider-val shows rounded %
+case 070 PASSED | [appearance-package] AppearancePane Retry all (replaces Save & apply) AC-SAVE-1: with no settled unsuccessful draft Retry all is rendered disabled (aria-disabled only), no 'Save & apply' or 'Saved', and one activation makes zero storage attempts
+case 071 PASSED | [appearance-package] AppearancePane Retry all (replaces Save & apply) AC-SAVE-2: with a failed draft Retry all is enabled and one activation re-attempts exactly the failed field once; no Saved claim without a genuine latest success
+case 072 PASSED | [appearance-package] AppearancePane Reset AC-RESET-1: confirm=true → six verified absences, DOM defaults, and xai_pref_lang bytes unchanged
+case 073 PASSED | [appearance-package] AppearancePane Reset AC-RESET-2: Reset → six reset intents, zero preference-changed emissions, language untouched
+case 074 PASSED | [appearance-package] AppearancePane Reset AC-RESET-3: confirm=false → zero storage attempts and no state change
+case 075 PASSED | [appearance-package] AppearancePane Reset AC-RESET-4: Reset re-paints DOM — data-theme='light', data-density='comfortable'
+case 076 PASSED | [appearance-package] AppearancePane Reset AC-RESET-5: calling Reset twice yields the same end state (idempotent)
+case 077 PASSED | [appearance-package] AppearancePane Reset AC-RESET-6: confirm called EXACTLY ONCE with the truthful text (no double-prompt)
+case 078 PASSED | [appearance-package] A2.2 render and enabled state RA1 clean: rendered with aria-disabled="true" (never disabled), no description, a Tab stop between the font slider and Reset; activation is inert
+case 079 PASSED | [appearance-package] A2.2 render and enabled state RA2 pending only (write held behind the real per-key lock): disabled, not described, inert
+case 080 PASSED | [appearance-package] A2.2 render and enabled state RA3 source only (malformed bytes): disabled and inert; nothing is rewritten
+case 081 PASSED | [appearance-package] A2.2 render and enabled state RA4 one failed field: enabled (no aria-disabled), described by the count line
+case 082 PASSED | [appearance-package] A2.2 render and enabled state RA5 ZH: label 全部重试 in every state and the ZH count line for one and two fields
+case 083 PASSED | [appearance-package] A2.2 render and enabled state RA6 an open pass with E empty: disabled, described by the in-flight line, inert; it settles to disabled with no description
+case 084 PASSED | [appearance-package] A2.2 render and enabled state RA7 an open pass plus a newly failed field: enabled again; the second activation retries only that field
+case 085 PASSED | [appearance-package] A2.3 scope and attempts RA8 set drafts: exactly one write per member in display order and none elsewhere
+case 086 PASSED | [appearance-package] A2.3 scope and attempts RA9 a background choice with both writes failing is two members; with only the tone failing it is one
+case 087 PASSED | [appearance-package] A2.3 scope and attempts RA10 failed Reset items: one removal each, never a write; a reset-only pass ends with 'Defaults restored.'
+case 088 PASSED | [appearance-package] A2.3 scope and attempts RA11 a valid edit over malformed bytes is refused again and kept; a conflict is kept and never overwritten
+case 089 PASSED | [appearance-package] A2.3 scope and attempts RA12 an uncertain write reconciles with exactly one total write
+case 090 PASSED | [appearance-package] A2.3 scope and attempts RA13 a failed predecessor with a queued latest: the predecessor once, then the latest's own attempt
+case 091 PASSED | [appearance-package] A2.3 scope and attempts RA14 exclusions: pending, source-only and draft-free fields get zero attempts
+case 092 PASSED | [appearance-package] A2.3 scope and attempts RA15 no duplicates: a same-turn double activation, an activation while pending and a per-field Retry during a pass add zero attempts
+case 093 PASSED | [appearance-package] A2.3 scope and attempts RA16 a Retry all during a pending per-field Retry skips that field
+case 094 PASSED | [appearance-package] A2.3 attribution and late completions RA17 a pane edit supersedes a held member; the old completion never makes the newer choice look saved
+case 095 PASSED | [appearance-package] A2.3 attribution and late completions RA18 Discard during an open pass detaches the member: its late completion never writes and no success is claimed
+case 096 PASSED | [appearance-package] A2.3 attribution and late completions RA19 Discard all during an open pass closes it, focus goes to Reset, late completions write nothing
+case 097 PASSED | [appearance-package] A2.3 attribution and late completions RA20 unmount during an open pass detaches the members: the late completion writes nothing
+case 098 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA21 rule 1 wins while a pass is open even when a member already failed again; then rule 3
+case 099 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA22 ZH lines: in flight 正在重试未保存的外观更改…, then 外观设置已保存。
+case 100 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA23 rule 2: a failed Export while a draft exists shows the export line; the next pane action clears it; never shown once clean
+case 101 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA24 focus stays on Retry all when a full-success pass disables it (never <body>, never Reset)
+case 102 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA25 a partial result keeps focus on the enabled button, described by the count line
+case 103 PASSED | [appearance-package] A2.4 feedback and A2.5 focus RA26 a member held behind the lock fails on release: the disabled button becomes enabled, focus stays, the count line describes it
+case 104 PASSED | [appearance-package] RA27 no Retry all activation writes any key outside the seven Appearance keys
+case 105 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-1: chassis emits theme='light'; appearanceDefaults.theme matches
+case 106 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-2: chassis emits density='comfortable'; appearanceDefaults.density matches
+case 107 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-3: chassis emits fontScale=1; appearanceDefaults.fontScale matches
+case 108 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-4: chassis emits accentHue=165; appearanceDefaults.accentHue matches
+case 109 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-5: chassis emits railPos='left'; appearanceDefaults.railPos matches
+case 110 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-6: chassis emits bgTone='default'; appearanceDefaults.bgTone matches
+case 111 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-7: appearanceDefaults does NOT contain a lang key
+case 112 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-8: appearanceDefaults is frozen
+case 113 PASSED | [appearance-package] appearanceDefaults parity AC-DEF-9: every key of appearanceDefaults is captured from resetAllPrefs()
+case 114 PASSED | [appearance-package] appearancePane registry entry AC-REG-1: id === 'appearance'
+case 115 PASSED | [appearance-package] appearancePane registry entry AC-REG-2: i18nKey === 'settings.appearance'
+case 116 PASSED | [appearance-package] appearancePane registry entry AC-REG-3: icon === 'sun' (valid WebShellIconName matching chassis placeholder)
+case 117 PASSED | [appearance-package] appearancePane registry entry AC-REG-4: render({ lang: 'en' }) returns a React element for <AppearancePane lang='en' />
+case 118 PASSED | [appearance-package] BG_TONES AC-CONST-1: length=6 and correct id order
+case 119 PASSED | [appearance-package] BG_TONES AC-CONST-4: hues match source lines 498-503
+case 120 PASSED | [appearance-package] BG_TONES AC-CONST-6: every entry has non-empty en and zh name
+case 121 PASSED | [appearance-package] BG_TONES AC-CONST-7: array is frozen and first element is frozen
+case 122 PASSED | [appearance-package] HUE_PRESETS AC-CONST-2: length=6 and correct id order
+case 123 PASSED | [appearance-package] HUE_PRESETS AC-CONST-3: hues match source (verbatim)
+case 124 PASSED | [appearance-package] HUE_PRESETS AC-CONST-6: every entry has non-empty en and zh name
+case 125 PASSED | [appearance-package] RAIL_POSITIONS AC-CONST-5: length=4 and correct id order
+case 126 PASSED | [appearance-package] RAIL_POSITIONS AC-CONST-6: every entry has non-empty en and zh label
+case 127 PASSED | [shell-topbar] Topbar TP0 — preferences trigger opens the appearance popover
+case 128 PASSED | [shell-topbar] Topbar TP1 — appearance popover: clicking 中文 calls setLang('zh')
+case 129 PASSED | [shell-topbar] Topbar TP1b — clicking EN calls setLang('en')
+case 130 PASSED | [shell-topbar] Topbar TP1c — active lang option has aria-checked=true
+case 131 PASSED | [shell-topbar] Topbar TP2 — Dark button calls setTheme('dark')
+case 132 PASSED | [shell-topbar] Topbar TP2b — System button calls setTheme('system')
+case 133 PASSED | [shell-topbar] Topbar TP2c — active theme option has aria-checked=true
+case 134 PASSED | [shell-topbar] Topbar TP3 — Compact button calls setDensity('compact')
+case 135 PASSED | [shell-topbar] Topbar TP3b — active density option has aria-checked=true
+case 136 PASSED | [shell-topbar] Topbar TP4 — Settings row click calls onOpenSettings
+case 137 PASSED | [shell-topbar] Topbar TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)
+case 138 PASSED | [shell-topbar] Topbar TP5b — onOpenSearch prop provided → renders <button class='search-box'>
+case 139 PASSED | [shell-topbar] Topbar TP6 — ⌘K kbd hint is rendered
+case 140 PASSED | [shell-topbar] Topbar TP7 — button click calls onOpenSearch()
+case 141 PASSED | [shell-topbar] Topbar TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided
+case 142 PASSED | [shell-topbar] Topbar TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts
+case 143 PASSED | [shell-topbar] Topbar TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts
+case 144 PASSED | [shell-topbar] Topbar TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts
+case 145 PASSED | [shell-topbar] Topbar TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts
+case 146 PASSED | [shell-topbar] Topbar TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts
+case 147 PASSED | [shell-topbar] Topbar TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts
+case 148 PASSED | [shell-topbar] Topbar TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts
+case 149 PASSED | [shell-topbar] Topbar TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover
+case 150 PASSED | [shell-topbar] Topbar TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged
+case 151 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount
+case 152 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected
+case 153 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount
+case 154 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable)
+case 155 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw)
+case 156 PASSED | [web-host] readLocalPref unit tests returns fallback when key absent
+case 157 PASSED | [web-host] readLocalPref unit tests returns parsed value when key present with valid JSON
+case 158 PASSED | [web-host] readLocalPref unit tests returns fallback when value is corrupt JSON
+case 159 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live cleanup failure is visible and does not redirect or call shared cleanup
+case 160 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) superseded A cleanup cannot navigate away from a new B login
+case 161 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live confirmed cleanup redirects through the coordinator only
+case 162 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called
+case 163 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO2 — order: signOut before clearSessionStorage before assign
+case 164 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort)
+case 165 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign
+case 166 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)
+case 167 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1b — App renders AppRail (aside.app-rail present)
+case 168 PASSED | [web-host] Shell cross-package smoke (A1..A4) A2 — StrictMode double-mount does not throw
+case 169 PASSED | [web-host] Shell cross-package smoke (A1..A4) A3 — App applies default theme on mount (data-theme is set)
+case 170 PASSED | [web-host] Shell cross-package smoke (A1..A4) A4 — App renders without crash when no child route matches
+case 171 PASSED | [web-host] Theme + density effects (T1..T3) T1 — default theme=light sets <html data-theme='light'>
+case 172 PASSED | [web-host] Theme + density effects (T1..T3) T2 — theme=system resolves via matchMedia (dark preference)
+case 173 PASSED | [web-host] Theme + density effects (T1..T3) T3 — default density=comfortable sets <html data-density='comfortable'>
+case 174 PASSED | [web-host] Theme + density effects (T1..T3) T3b — default railPos=left sets <html data-rail-pos='left'>
