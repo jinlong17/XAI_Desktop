@@ -1,6 +1,6 @@
 # XAI_Desktop 312 审查当前控制面
 
-更新时间：2026-10-05
+更新时间：2026-10-06
 
 控制分支：`codex/web/full-product-audit-20260908`
 
@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：库存已在 `419e56d` 上刷新（CP-LUNA-03，`832f6ab`），只移除 `AppearancePane.tsx` 的 3 行，8 项计数与总控预测一致。本批登记批次 54：由独立 Astra 角色写下一个 caller 的选择备忘录与合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：批次 54（`2c35fee`）推荐时钟小组件，并起草了合同 CP-CLOCK-01 r1。用户随后就 R-1、W-1、C-1、F-2 四项产品决定全部选了推荐选项。R-1 解除阻塞后，风险最高的 AppRail 顺序（崩溃假设 H-RAIL）按产品风险优先，排在时钟之前；时钟合同搁置待用。本批登记批次 55：由独立 Astra 起草 AppRail 顺序合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `832f6ab` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `2c35fee` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -149,7 +149,28 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller。库存已刷新（批次 53），批次 54 正在做选择与合同起草。
+无已选定 caller 进入执行。批次 55 正在起草 AppRail 顺序合同。
+
+### 产品负责人决定登记（2026-10-06）
+
+依据批次 54 的选择备忘录 `selection-419e56d.md` §7，用户在四项决定中都选了推荐选项。这些决定在对应 caller 被接受时写入台账。
+
+| 编号 | 台账条目 | 问题 | 用户决定 | 影响的候选 |
+| --- | --- | --- | --- | --- |
+| R-1 | SET-03（决策类） | 用 Features 关闭模块后再拖动 rail，被关闭模块的存储位置是否保留 | **保留**：拖动只调整可见模块的顺序，被关闭模块保留原位置，重新开启后回到原位 | AppRail 顺序 |
+| W-1 | DASH-03 | 世界时钟列表能否清空 | **允许清空**，并显示空状态与添加入口 | World Clocks |
+| C-1 | SET-10 | 没有 client ID 时如何处理"连接" | **禁用并标为预览**：已开启的保留"断开"，不声称同步数据，与台账原文一致 | Integrations |
+| F-2 | SET-08、CAL-01 | 周起始日的两个设置如何统一 | **由 Date & Time 统一驱动**：日历与统计跟随，日历的控件改为它的一个视图 | Calendar |
+
+另有两项待到对应候选时再问：P-1（SHELL-05，宠物的隐藏状态与位置持久化）与 D-2（SET-15，AI 的 Test Connection），后者另有 D2 共享层前置。
+
+### 批次 54 回执与排程
+
+| 字段 | 当前值 |
+| --- | --- |
+| 选择备忘录与时钟合同 | `2c35fee`（独立 Astra）。<ul><li>`selection-419e56d.md`（326 行，`2b6a95c2…`）比较了 8 个候选，推荐 E1 时钟小组件，因为它是唯一不需要用户决定、也不改 D2 的候选。</li><li>`web-dashboard-clock-recovery-contract/contract.md` r1（890 行，`21624ff5…`）：E1–E25、H1–H10、host 行 a–p，并写入了全部经验。</li></ul> |
+| 总控核对 | <ul><li>只新增 2 个文件。</li><li>关键源码事实已在 `419e56d` 抽查属实：`ClockWidget.tsx:265、286、309` 是写入点；`DashboardModule.tsx:158` 把唯一的离页 guard 交给 Header；`AppRail.tsx:46` 对 `prefOrder` 做 `for…of`，非数组的存储值可能抛错（H-RAIL，静态假设）。</li><li>REL-05 原文针对存储失败时保留草稿，不涉及主动移除小组件。因此 E1-7（移除小组件时丢弃其草稿、零写入）判为总控可定，合同中须披露，最终 acceptance 可复核。</li></ul> |
+| 排程裁定 | 按产品风险优先。<ul><li>AppRail 顺序（E-R）：H-RAIL 若属实，一个畸形字节就会让所有 `/app` 路由不可用，且无法从 UI 修复；另有拖动失败时静默无效、每次 `dragover` 都写入的问题。R-1 已决定，故 E-R 先做。</li><li>CP-CLOCK-01 的合同 r1 保留待用，在 AppRail 之后由总控确认与登记；它不依赖 AppRail。</li></ul> |
 
 - CP-APPEARANCE-01 已于 `a560863` 接受（见上）。进行中阶段的完整记录保留在本文件的 `8c88dd2` 版本：`git show 8c88dd2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
 - CP-FEATURES-01 已于 `ec55f9e` 接受。进行中记录见本文件的 `78e8de2` 版本。
@@ -285,7 +306,8 @@
 | Appearance（续 14） | `68686c5` 登记批次 51 · `c6d1ed4` 最终回归 |
 | Appearance 关闭 | `8c88dd2` 登记批次 52 · `a560863` Appearance acceptance · `0a46577` 台账 |
 | 下一项选择（续 6） | `0daab01` CP-APPEARANCE-01 改为 `accepted`，登记批次 53 · `832f6ab` 库存刷新（CP-LUNA-03） |
-| 本提交 | 记录库存结果，登记批次 54（选择与合同） |
+| 下一项选择（续 7） | `b4e190e` 登记批次 54 · `2c35fee` 选择备忘录与时钟合同 r1 |
+| 本提交 | 登记四项用户决定与排程，登记批次 55（AppRail 合同） |
 
 ## 台账变化
 
@@ -337,44 +359,42 @@
 
 ## 本轮唯一任务
 
-### 批次 54：下一 caller 的选择与合同（独立 Astra 角色）
+### 批次 55：AppRail 顺序合同（独立 Astra 角色）
 
 - **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
 - **固定点：** 产品 `419e56d`；控制分支基点为本提交。
 - **输入：**
-  - 上一份选择备忘录 `web-next-caller-selection/selection-5cd63ff.md`：含候选 C–G 与 E1 的比较，以及各前置决定的分类。须在 `419e56d` 上复核其事实；`5cd63ff` 之后只有 Appearance 的 26 个文件变化。
-  - 后续分组与选择规则：`remaining-writers.md`。
-  - 最新库存：`refresh-419e56d.md`。其边界见上，`.ts` 文件、`apps/` 与间接读者须自行补查。
-  - D2 实施入口合同。
-  - 已接受 caller 的合同与 acceptance：Appearance、Features、More、Sticky、Date & Time、Notifications、Smart Lists。
-  - `ALL-TODO-CURRENT.md` 中的相关条目。
-- **本轮新增的经验：**
-  - **焦点可见：** 按每个停靠点自身的像素比较，并覆盖所有选中状态（F-APP-1、F-APP-2）；共享 CSS 中的选中环与 `outline: none` 可能遮盖焦点。
-  - **oracle 的种子值：** 不得依赖值域外的值（F-FD1）。
-  - **跨 caller 的值域：** 一个 caller 合法收紧值域后，已接受 caller 的 oracle 可能需要纠正副本。
-  - **native runner：** 不带 `nativeVirtualKeyCode`，并做按键审计（K-1）。
-  - **回归：** 须同时运行各纠正副本（C-FB002、C-FD1、OE）。
-  - **oracle 与合同：** oracle 须与合同的每条规则一致，否则会出现 OE-1、OE-2 那样的自相矛盾。
-  - **实施者记录：** 为实施者预留测试运行的记录位置。
-  - **全局浮层：** 合同须写明全局浮层的判定口径（R-PET）。
-- **输出（只新增文件）：**
-  - 选择备忘录 `docs/reviews/web-next-caller-selection/selection-419e56d.md`：
-    - 至少比较 3 个候选；
-    - 推荐其一，并说明其余为何靠后；
-    - 把每个前置决定归类为 (a) 总控可定，或 (b) 需要产品负责人（用户）定，并给出选项与建议。
-  - 合同（视前置决定而定）：
-    - 推荐候选只需要 (a) 类决定时，同时提交 `docs/reviews/web-<slug>-recovery-contract/contract.md`，沿用 Appearance 合同 r3 的结构，集中列出全部 Required evidence，并把这些决定写成待总控确认的假设；
-    - 推荐候选需要 (b) 类决定、须改 D2 共享层，或会跨产品模块时，只交备忘录，并写明需要的决定。
-- **禁止：** 修改任何已有文件、产品、台账或控制面；push；派生子 agent。
-- **停止条件：** 无法在 web 模块内界定有界的完整 caller 时，只提交备忘录。
+  - 选择备忘录 `selection-419e56d.md` 中 E-R 的分析：N1 即 H-RAIL，N2 为拖动失败时静默无效，另有每次 `dragover` 都写入的问题；R-2、R-3 的建议见 §7。
+  - 用户的 R-1 决定：拖动时保留被关闭模块的存储位置。
+  - Appearance 合同 r3 的结构，以及它刚改过的 shell 与 App 表面：Topbar 状态槽、`App.tsx` 的 controller 与登出步骤。
+  - Features 合同与 acceptance：其中涉及 rail 过滤与 AppRail 拖动的 oracle（如 H6 "reset 后拖动持久化的顺序来自存储的自定义顺序"）。
+  - 本控制面列出的全部经验。
+- **合同要求：** 在 `docs/reviews/web-apprail-order-recovery-contract/contract.md` 写 r1，沿用 Appearance r3 的结构。
+  - **记录用户决定：** 把 R-1 写为产品负责人决定。
+  - **给出总控可定的假设并说明理由：**
+    - R-2：rail 草稿的路由无关保护，例如与 Appearance 状态并列的 Topbar 槽，以及登出步骤；
+    - R-3：写入时机，例如只在 drop 时写一次；
+    - 以及其他必要的范围与技术决定。
+  - **假设与 oracle：** 写明 H-RAIL 等 before 假设及其 oracle。
+  - **跨 caller 影响（F-FD1 教训）：** 列出改动会影响的已接受 caller 证据与 oracle，至少包括：
+    - Appearance：Topbar、`App.tsx` 与视觉键盘证据；
+    - Features：rail 过滤、downstream、H6 拖动；
+    - 已接受的 Header 与 Dashboard 相关证据。
+
+    逐一说明哪些须重跑、哪些可能需要纠正副本。尤其是：R-1 改为保留位置，与 Features 中断言"剪掉被关闭模块"的 oracle 是否冲突。
+  - **Terra 文件与保护面：** 精确列出 Terra 可改的文件与受保护面。
+  - **Required evidence：** 唯一且连续，覆盖焦点可见的逐停靠点像素比较、K-1、R-PET、值域内的种子值，以及各纠正副本的回归。
+  - **停止条件：** 若必须改 D2 共享层或跨产品模块，停止并只交说明。
+- **输出：** 只新增该合同文件，并提交一次；不 push。
+- **禁止：** 修改任何已有文件、产品、台账或控制面；派生子 agent。
 
 ## 下一步
 
-1. 等待批次 54 回执，总控核对：
-   - 选择依据可复核；
+1. 等待批次 55 回执，总控核对：
    - 合同基于固定 SHA 的源码，关键事实抽查属实；
+   - 用户决定已如实记录；
+   - 跨 caller 影响清单完整；
    - Required evidence 清单完整；
-   - 范围不越模块；
-   - 前置决定的归类正确。
-2. 若有 (b) 类决定，带选项与建议向用户提出。
-3. 否则登记新的 CP 项，以及首个执行批次（冻结 before oracle）。
+   - 范围不越模块。
+2. 总控确认 (a) 类假设，登记 CP-APPRAIL-01 与首个执行批次（冻结 before oracle）。
+3. AppRail 接受后，再确认并登记 CP-CLOCK-01。
