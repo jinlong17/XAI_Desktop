@@ -1,0 +1,154 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+package_trees packages/xai-web-dashboard-widgets=4d65ad167b0d3712166e96569b1d9f44ed66a500 packages/xai-web-dashboard-grid=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 packages/plugin-web-storage=782c79de33a1da6851b5a235950408eb7ae89f99 packages/xai-web-shell=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 apps/web=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=bytes
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-dashboard-clock-recovery-sol/verify-fixed.mjs f9eb4b1 all before1
+runner_checkout_head=40f07b23fa3a92a221af9dff86617bd69da2be23 product_tree_delta_files_vs_runner_head=0
+archive_method=stream (spawned git archive piped into tar -x; no fixed buffer) archive_bytes=148408320 archive_sha256=bb468cede8a9659d9798bdb4c7f0a528faedf3ddfb344fb946f159ce6305a097
+contract_r2_sha256=214dc7582ff866cf76482b8883cc284edba8fa180f88bbf940fcaa7ab32cf0ae
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-dashboard-widgets/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=589d065cb314928e29082a30aa861d288af7823aacbf1c91b6f944b4811bac00 bytes.test.tsx=996dd32e0ee034ac2d57bcd86b48dfe803290431b0ef8503d8232a730e8c5215 fields.test.tsx=4c6af5f6a41cae2c1a54c4771b7fdea7a705668d5dae0f316d0d5a8837258cef queues.test.tsx=a2be7088a07278a85f5a3b74c091ec7346f34ffb563f7b0e570baad9de9cb850 departure.test.tsx=613d0a8b97ca943425eb4614ca0eb351dab71dd24705e04cf9248acb66f42ecc continuity-export.test.tsx=17d021a2a4873c788f2586d20bf2931a70b9c06e5417e0940704e64701513135 verify-fixed.mjs=8b2c95c2a29763d2a5d11aaa9d22c8ebf6782b3275b79d2a1901e1486ac80d20
+archive_file_sha256 packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx=10bf13e8550bdf1207cfd89b372e5b87f099b1110326248dbf5b7ea2325614e9 packages/xai-web-dashboard-widgets/src/registrations.tsx=346cfddfbb3c299aff251b2e4daff31b909d0690196857c36b8ee71f6e015154 packages/xai-web-dashboard-widgets/src/styles.css=a7a4cf039b343b8c6b06113bf6b6997084524aa4c0413e2ab0396a1ca933a853 packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts=50de913a73caaef2ea98c7021fec24dd46a30d56177527ddda54db89bcb36f48 packages/xai-web-dashboard-widgets/src/internal/Icon.tsx=afd71c525472e5ba9087cfcfe78b6b801767bff34f61c7a73b59a6cdd5b26985 packages/xai-web-dashboard-widgets/src/index.ts=1e22d6b74d4f22655e273415798edd1c255b5af9a108f2a99822299ac8031b0b packages/xai-web-dashboard-grid/src/DashboardModule.tsx=36a8532beb638a5741d3b51338a2ce32da9daa220e1a461cd00729da61e542a2 packages/xai-web-dashboard-grid/src/DashboardGrid.tsx=395a134c9c1c3044ed86afdb48839373a7ba80ff57a387177dd277d76098fc2f packages/xai-web-dashboard-grid/src/types.ts=afeb1112713155f8998ca13cc9dbfc174025c98497148ab21cd4f015201e40f2 packages/xai-web-dashboard-grid/src/index.ts=fc5da5907da4de81a327736297ef2ae377a7cf3e589fb3c121475229f9acf71c packages/xai-web-dashboard-grid/src/DashHeader.tsx=0aaa4ce3b456b1fedf3c4bb3f7163830e6ee7390ba65382564d9c13852e40456 packages/xai-web-dashboard-grid/src/WidgetGhost.tsx=0b476928649a3b24bd35d97869c0b1e9e4588ebdec4908b6ef8c5583d0272c9b packages/xai-web-dashboard-grid/src/WidgetShell.tsx=7d1b74b80076983eb5cc34921d06d58b5365cbcf91efb63128a6c7938b1bd708 packages/xai-web-dashboard-grid/src/styles.css=d9e330e70a375b0579fcf3b98e3d9ea2c633fc4b498b4b3a66fda3df8db9fdc6 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 apps/web/src/routes/modules/dashboardRegistration.tsx=66c524e4e02117275ed369c02049f33a0eb2c42ad068388eb4041fa469c903e8 apps/web/src/routes/modules/settingsDeparture.ts=80c3a5787df8eb02102c4a508f2fe67c1fbd6a6b8ba7f16b3a65c3f542c8548b apps/web/src/routes/modules/shellRegistrations.tsx=c003c499ca3330ff6e3b7e738df4e3366d0daca141d65327dacc3d3665e1b8fe apps/web/src/main.tsx=6a7cdfbc6b17cdc13a3dbcb44611b09c33ddf7c7787da4a6ed31265e4abbf243 apps/web/src/providers/AccountStorageGate.tsx=1c6bf8c695e9bc8b80b83c6da0c3c55c44e9a88498dded1b8dd46f302d8cb666 apps/web/src/providers/AppProviders.tsx=950cde0f7f6ba7cae9776a8e8442a303f938d5bb04d389dd1ac9760e10ebe655 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/internal/railOrderController.tsx=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6 packages/xai-web-shell/src/internal/RailOrderStatus.tsx=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95 packages/xai-web-shell/src/internal/railOrderCopy.ts=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba packages/xai-web-shell/src/railOrderStatus.css=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5 packages/xai-web-shell/src/AvatarMenu.tsx=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2 packages/xai-web-settings-appearance/src/internal/appearanceController.tsx=64d6c8b74f689bc989bc8d1bcfa85bb333b068826829269f1e31d97cd2878e5a packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts=991232e97e44919c1b00b5502a62df05d814de3ccc34ed4452104ad59b54dab0 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-storage/src/internal/accountOwnership.ts=8d5b7fef04a014044b81cb95d56eaf084bfc306d7c8b9a27540b6caa3a2bef20 packages/plugin-web-storage/src/internal/accountCoordination.ts=d669fe47d22f6d9f4b5c56b24ca60eb68dee9fc6877de4901d328ffdd7e50e1c packages/plugin-web-storage/src/internal/codec.ts=99a735801cab8ce9d7208c244efb8eda66dd641cf5c7d795302384207c6b9b8f packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts=f292de4ec2e44d0fe75dde836fb360cfc2c292ceeaa47b2c107036765cd5b922 packages/xai-web-cmdk/src/internal/readModuleStates.ts=1ee898681af67b21bd84308bef99abf196ab8551069d53c8e570a9ec9e0ba008 packages/xai-web-cmdk/src/adapters/dashboard.ts=0c8e6ac9cfbcffd6a52e3f21cd5a09b077d03bd0539798ebcbc626776b64b1eb packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 packages/plugin-web-tokens/src/tokens.css=7c6eddebd1d826f939862ef75ba8159e966f0c76b0b9d34a0911f6b47265615d packages/plugin-web-tokens/src/i18n.ts=d5f2189b081d16a9f26b7146978c5f81660a6a44d6f534b9ac48e6e3c7ccb885 packages/xai-web-pet/src/DesktopPet.tsx=35edb0e686bf6682192ba1bbe7842d159e161a6593b7ccd13a432d59fe58ad6f
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] bytes.test.tsx: include=docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/clock-sol-bytes-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-bytes-0.json vitest_exit=0 cases=45 passed=45 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=45 numPassedTests=45 numFailedTests=0
+exit=0
+harness_checks=PASS (6/6)
+==== run[0] bytes.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu
+
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > FIXTURE the Web Lock fixture is exclusive: a test hold makes a product request wait until release
+SOL-OBS lock self-check {"waitedWhileHeld":true,"grantedAfter":true}
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 2ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > FIXTURE the Web Lock fixture is exclusive: a test hold makes a product request wait until release 31ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H8 §5.1 absent bytes display Classic and Local time with no recovery region; the widget mount writes nothing 36ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 style "classic" through the UI writes exactly "classic" and displays it (baseline split) 38ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 style "split" through the UI writes exactly "split" and displays it (baseline minimal) 36ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 style "minimal" through the UI writes exactly "minimal" and displays it (baseline analog) 41ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 style "analog" through the UI writes exactly "analog" and displays it (baseline classic) 42ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "local" through the popover writes exactly "local", closes the popover and displays it (baseline shanghai) 46ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "shanghai" through the popover writes exactly "shanghai", closes the popover and displays it (baseline london) 40ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "london" through the popover writes exactly "london", closes the popover and displays it (baseline new_york) 40ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "new_york" through the popover writes exactly "new_york", closes the popover and displays it (baseline tokyo) 40ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "tokyo" through the popover writes exactly "tokyo", closes the popover and displays it (baseline sf) 38ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "sf" through the popover writes exactly "sf", closes the popover and displays it (baseline paris) 40ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "paris" through the popover writes exactly "paris", closes the popover and displays it (baseline sydney) 49ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "sydney" through the popover writes exactly "sydney", closes the popover and displays it (baseline berlin) 38ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "berlin" through the popover writes exactly "berlin", closes the popover and displays it (baseline dubai) 40ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "dubai" through the popover writes exactly "dubai", closes the popover and displays it (baseline singapore) 39ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "singapore" through the popover writes exactly "singapore", closes the popover and displays it (baseline hk) 38ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "hk" through the popover writes exactly "hk", closes the popover and displays it (baseline la) 39ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.1 timezone "la" through the popover writes exactly "la", closes the popover and displays it (baseline local) 39ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §5.4 choosing a value equal to the default from absence stores it (never converted to removal) 54ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="classic" displays "classic" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="split" displays "split" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="minimal" displays "minimal" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="analog" displays "analog" with zero writes 23ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="local" displays "local" with zero writes 19ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="shanghai" displays "shanghai" with zero writes 20ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="london" displays "london" with zero writes 20ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="new_york" displays "new_york" with zero writes 19ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="tokyo" displays "tokyo" with zero writes 17ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="sf" displays "sf" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="paris" displays "paris" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="sydney" displays "sydney" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="berlin" displays "berlin" with zero writes 17ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="dubai" displays "dubai" with zero writes 17ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="singapore" displays "singapore" with zero writes 18ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="hk" displays "hk" with zero writes 22ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="la" displays "la" with zero writes 20ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.3 ZH labels: the style buttons' accessible names and the timezone labels are the protected tokens 35ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H8 §5.1 ticks, a language change and opening/closing the popover make zero writes on every key 70ms
+stdout | docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H8 §7.7 the drag ghost renders the committed bytes and makes zero writes over a widget drag
+SOL-OBS ghost read attempts on the Clock keys during the drag (recorded, not asserted; matrix row 9) 6
+
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H8 §5.1 mounting DashboardModule with the real registrations makes zero writes (with and without a departure registration) 65ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H8 §7.7 the drag ghost renders the committed bytes and makes zero writes over a widget drag 61ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > H7 §10.5 an idle Clock follows committed changes and removals from another document live, with zero writes 85ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.11 lifecycleForKey classifies both keys as device-preference, device-recovery, retain and retain-on-device 0ms
+ ✓ docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx > §10.2 byte compatibility: values chosen through the UI are read back by the unchanged CmdK reader, and a style query finds the Clock 63ms
+
+ Test Files  1 passed (1)
+      Tests  45 passed (45)
+   Start at  09:32:14
+   Duration  2.88s (transform 513ms, setup 235ms, collect 571ms, tests 1.51s, environment 306ms, prepare 59ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.report-bytes-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/.clock-sol-vite-cache-bytes-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-clock-sol-d5agGu/packages/xai-web-dashboard-widgets/src/__tests__/setup.ts"],"include":["docs/reviews/web-dashboard-clock-recovery-sol/bytes.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx packages/xai-web-dashboard-widgets/src/registrations.tsx packages/xai-web-dashboard-widgets/src/internal/cityLibrary.ts packages/xai-web-dashboard-grid/src/DashboardModule.tsx packages/xai-web-dashboard-grid/src/DashboardGrid.tsx packages/xai-web-dashboard-grid/src/DashHeader.tsx packages/xai-web-dashboard-grid/src/WidgetShell.tsx packages/xai-web-dashboard-grid/src/WidgetGhost.tsx packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts packages/plugin-web-storage/src/internal/registry.ts packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts packages/xai-web-cmdk/src/internal/readModuleStates.ts packages/xai-web-cmdk/src/adapters/dashboard.ts
+pin_modules=139 by package: docs/reviews=2 packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/xai-web-cmdk=3 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=43 packages/xai-web-event-bus=4 packages/xai-web-shell=14
+---- runner summary ----
+totals cases=45 passed=45 failed=0 skipped=0 precondition_failures=0
+harness PASS [bytes.test.tsx] JSON report parsed
+harness PASS [bytes.test.tsx] reported files equal the requested include
+harness PASS [bytes.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-dashboard-widgets/src/__tests__/setup.ts], root = archive)
+harness PASS [bytes.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [bytes.test.tsx] required product modules loaded from the archive (18)
+harness PASS [bytes.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | FIXTURE the Web Lock fixture is exclusive: a test hold makes a product request wait until release
+case 003 PASSED | H8 §5.1 absent bytes display Classic and Local time with no recovery region; the widget mount writes nothing
+case 004 PASSED | §10.1 style "classic" through the UI writes exactly "classic" and displays it (baseline split)
+case 005 PASSED | §10.1 style "split" through the UI writes exactly "split" and displays it (baseline minimal)
+case 006 PASSED | §10.1 style "minimal" through the UI writes exactly "minimal" and displays it (baseline analog)
+case 007 PASSED | §10.1 style "analog" through the UI writes exactly "analog" and displays it (baseline classic)
+case 008 PASSED | §10.1 timezone "local" through the popover writes exactly "local", closes the popover and displays it (baseline shanghai)
+case 009 PASSED | §10.1 timezone "shanghai" through the popover writes exactly "shanghai", closes the popover and displays it (baseline london)
+case 010 PASSED | §10.1 timezone "london" through the popover writes exactly "london", closes the popover and displays it (baseline new_york)
+case 011 PASSED | §10.1 timezone "new_york" through the popover writes exactly "new_york", closes the popover and displays it (baseline tokyo)
+case 012 PASSED | §10.1 timezone "tokyo" through the popover writes exactly "tokyo", closes the popover and displays it (baseline sf)
+case 013 PASSED | §10.1 timezone "sf" through the popover writes exactly "sf", closes the popover and displays it (baseline paris)
+case 014 PASSED | §10.1 timezone "paris" through the popover writes exactly "paris", closes the popover and displays it (baseline sydney)
+case 015 PASSED | §10.1 timezone "sydney" through the popover writes exactly "sydney", closes the popover and displays it (baseline berlin)
+case 016 PASSED | §10.1 timezone "berlin" through the popover writes exactly "berlin", closes the popover and displays it (baseline dubai)
+case 017 PASSED | §10.1 timezone "dubai" through the popover writes exactly "dubai", closes the popover and displays it (baseline singapore)
+case 018 PASSED | §10.1 timezone "singapore" through the popover writes exactly "singapore", closes the popover and displays it (baseline hk)
+case 019 PASSED | §10.1 timezone "hk" through the popover writes exactly "hk", closes the popover and displays it (baseline la)
+case 020 PASSED | §10.1 timezone "la" through the popover writes exactly "la", closes the popover and displays it (baseline local)
+case 021 PASSED | §5.4 choosing a value equal to the default from absence stores it (never converted to removal)
+case 022 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="classic" displays "classic" with zero writes
+case 023 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="split" displays "split" with zero writes
+case 024 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="minimal" displays "minimal" with zero writes
+case 025 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_style="analog" displays "analog" with zero writes
+case 026 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="local" displays "local" with zero writes
+case 027 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="shanghai" displays "shanghai" with zero writes
+case 028 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="london" displays "london" with zero writes
+case 029 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="new_york" displays "new_york" with zero writes
+case 030 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="tokyo" displays "tokyo" with zero writes
+case 031 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="sf" displays "sf" with zero writes
+case 032 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="paris" displays "paris" with zero writes
+case 033 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="sydney" displays "sydney" with zero writes
+case 034 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="berlin" displays "berlin" with zero writes
+case 035 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="dubai" displays "dubai" with zero writes
+case 036 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="singapore" displays "singapore" with zero writes
+case 037 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="hk" displays "hk" with zero writes
+case 038 PASSED | §10.2 bytes written by f9eb4b1 display identically: seeded xai_clock_tz="la" displays "la" with zero writes
+case 039 PASSED | §10.3 ZH labels: the style buttons' accessible names and the timezone labels are the protected tokens
+case 040 PASSED | H8 §5.1 ticks, a language change and opening/closing the popover make zero writes on every key
+case 041 PASSED | H8 §5.1 mounting DashboardModule with the real registrations makes zero writes (with and without a departure registration)
+case 042 PASSED | H8 §7.7 the drag ghost renders the committed bytes and makes zero writes over a widget drag
+case 043 PASSED | H7 §10.5 an idle Clock follows committed changes and removals from another document live, with zero writes
+case 044 PASSED | §10.11 lifecycleForKey classifies both keys as device-preference, device-recovery, retain and retain-on-device
+case 045 PASSED | §10.2 byte compatibility: values chosen through the UI are read back by the unchanged CmdK reader, and a style query finds the Clock
