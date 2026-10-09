@@ -1,6 +1,6 @@
 # XAI_Desktop 312 审查当前控制面
 
-更新时间：2026-10-06
+更新时间：2026-10-09
 
 控制分支：`codex/web/full-product-audit-20260908`
 
@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：批次 54（`2c35fee`）推荐时钟小组件，并起草了合同 CP-CLOCK-01 r1。用户随后就 R-1、W-1、C-1、F-2 四项产品决定全部选了推荐选项。R-1 解除阻塞后，风险最高的 AppRail 顺序（崩溃假设 H-RAIL）按产品风险优先，排在时钟之前；时钟合同搁置待用。本批登记批次 55：由独立 Astra 起草 AppRail 顺序合同。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：AppRail 顺序合同 r1（`f7726d7`）已接收；总控对 A1–A11 与 §19 的 8 个开放问题全部确认，用户确认并授权继续。CP-APPRAIL-01 登记为 `diagnosis_needed`。本批登记批次 56：由独立 Sol 冻结 before oracle E1–E2（含 C-RD1）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `2c35fee` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `f7726d7` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -149,7 +149,17 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller 进入执行。批次 55 正在起草 AppRail 顺序合同。
+### CP-APPRAIL-01 · AppRail 顺序（`xai_rail_order`）完整 caller
+
+| 字段 | 当前值 |
+| --- | --- |
+| 状态 | `diagnosis_needed`：合同 r1 已确认；before 基线 E1–E5 未冻结；未授权实施 |
+| 合同 | `f7726d7`：`docs/reviews/web-apprail-order-recovery-contract/contract.md` r1（921 行，SHA-256 `b9e407b3…`），作者为独立 Astra。<ul><li>结构沿用 Appearance r3；R-1 记为产品负责人决定。</li><li>假设 A1–A11：下标槽合并、App 级 rail controller、注册 async 绑定、严格值域只拒绝不修复、Topbar 并列状态槽与登出步骤、每次 drop 只写一次、反馈与导出面、测试处置、R-PET、预先登记的纠正副本 C-RD1。</li><li>H1–H11；9 个 gate；E1–E25 连续；Terra 记录目录 `web-apprail-order-recovery-terra/`。</li><li>跨 caller 影响：没有已接受 oracle 断言剪除被关闭模块，故 R-1 不需纠正副本；A7 使 Features `downstream` case 014 的拖动缺少 drop，须以 C-RD1 判定。</li></ul> |
+| 过程披露 | 起草窗口在提交后、交回前卡住（看门狗）；总控只读核实提交与 worktree clean 后直接接收。接收步骤曾被权限分类器拒绝一次，用户确认并授权后执行 |
+| 总控确认（2026-10-09，用户已确认） | <ol><li>R-1 读作存储顺序中的下标。</li><li>未知与非 rail id 同样保留，不剪除。</li><li>source 异常显示 Topbar 状态（rail 无 pane）。</li><li>取消拖动恢复原顺序，是"每次 drop 只写一次"的结果，须披露。</li><li>登出时两个提示依次出现，rail 在前；不改已接受的 Appearance controller。</li><li>controller 由 App 创建。</li><li>C-RD1 预先登记，条件：最终回归须独立证明冻结原件只在预测签名上失败，纠正副本在 before 与 fixed 都通过。</li><li>Smart Lists、Collaborate、Pomodoro、Dashboard Header 的 host 套件纳入回归。</li></ol> |
+| 风险等级 | `high`：H-RAIL 可能让所有 `/app` 路由崩溃；改动 shell 与 `App.tsx`（Appearance 刚改过的表面），须做受影响 caller 重跑 |
+| 后续顺序 | 批次 56 Sol（E1–E2，含 C-RD1）→ 批次 57 父级 host（E3）→ 批次 58 native before 与 rail F1（E4–E5）→ Terra → fixed 重跑与 native → 视觉键盘 → 最终回归 → 独立最终 acceptance |
+
 
 ### 产品负责人决定登记（2026-10-06）
 
@@ -307,7 +317,8 @@
 | Appearance 关闭 | `8c88dd2` 登记批次 52 · `a560863` Appearance acceptance · `0a46577` 台账 |
 | 下一项选择（续 6） | `0daab01` CP-APPEARANCE-01 改为 `accepted`，登记批次 53 · `832f6ab` 库存刷新（CP-LUNA-03） |
 | 下一项选择（续 7） | `b4e190e` 登记批次 54 · `2c35fee` 选择备忘录与时钟合同 r1 |
-| 本提交 | 登记四项用户决定与排程，登记批次 55（AppRail 合同） |
+| AppRail | `eabd47f` 登记批次 55 · `f7726d7` AppRail 合同 r1 |
+| 本提交 | 确认 AppRail 合同，登记 CP-APPRAIL-01 与批次 56 |
 
 ## 台账变化
 
@@ -359,42 +370,18 @@
 
 ## 本轮唯一任务
 
-### 批次 55：AppRail 顺序合同（独立 Astra 角色）
+批次 56：独立 Sol 在不可变 `git archive 419e56d` 上冻结 AppRail 合同 r1 §12 的 jsdom oracle，对应 §15 的 E1 与 E2。
 
-- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。
-- **固定点：** 产品 `419e56d`；控制分支基点为本提交。
-- **输入：**
-  - 选择备忘录 `selection-419e56d.md` 中 E-R 的分析：N1 即 H-RAIL，N2 为拖动失败时静默无效，另有每次 `dragover` 都写入的问题；R-2、R-3 的建议见 §7。
-  - 用户的 R-1 决定：拖动时保留被关闭模块的存储位置。
-  - Appearance 合同 r3 的结构，以及它刚改过的 shell 与 App 表面：Topbar 状态槽、`App.tsx` 的 controller 与登出步骤。
-  - Features 合同与 acceptance：其中涉及 rail 过滤与 AppRail 拖动的 oracle（如 H6 "reset 后拖动持久化的顺序来自存储的自定义顺序"）。
-  - 本控制面列出的全部经验。
-- **合同要求：** 在 `docs/reviews/web-apprail-order-recovery-contract/contract.md` 写 r1，沿用 Appearance r3 的结构。
-  - **记录用户决定：** 把 R-1 写为产品负责人决定。
-  - **给出总控可定的假设并说明理由：**
-    - R-2：rail 草稿的路由无关保护，例如与 Appearance 状态并列的 Topbar 槽，以及登出步骤；
-    - R-3：写入时机，例如只在 drop 时写一次；
-    - 以及其他必要的范围与技术决定。
-  - **假设与 oracle：** 写明 H-RAIL 等 before 假设及其 oracle。
-  - **跨 caller 影响（F-FD1 教训）：** 列出改动会影响的已接受 caller 证据与 oracle，至少包括：
-    - Appearance：Topbar、`App.tsx` 与视觉键盘证据；
-    - Features：rail 过滤、downstream、H6 拖动；
-    - 已接受的 Header 与 Dashboard 相关证据。
-
-    逐一说明哪些须重跑、哪些可能需要纠正副本。尤其是：R-1 改为保留位置，与 Features 中断言"剪掉被关闭模块"的 oracle 是否冲突。
-  - **Terra 文件与保护面：** 精确列出 Terra 可改的文件与受保护面。
-  - **Required evidence：** 唯一且连续，覆盖焦点可见的逐停靠点像素比较、K-1、R-PET、值域内的种子值，以及各纠正副本的回归。
-  - **停止条件：** 若必须改 D2 共享层或跨产品模块，停止并只交说明。
-- **输出：** 只新增该合同文件，并提交一次；不 push。
-- **禁止：** 修改任何已有文件、产品、台账或控制面；派生子 agent。
+- **固定点：** 产品 `419e56d`；合同 r1（`f7726d7`，SHA-256 `b9e407b3…`）；控制分支基点为本提交。
+- **范围：** 合同 §12 的八个 Sol 模式；H1–H11 的 Sol 层逐项结论；F-B002 spy 自检；值域内种子值（畸形值用例除外）；oracle 一致性矩阵。
+- **C-RD1（A11）：** 冻结 C-RD1 副本及其 staging runner 副本与两份 diff；在 `419e56d` 上运行 Features `downstream`：冻结原件 14/15（F-FD1）、C-FD1 15/15、C-RD1 15/15。
+- **运行条件：** lockfile gate；`@repo` 固定到 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；主检出只读，不在主检出启动 dev server。
+- **输出：** 只新增 `docs/reviews/web-apprail-order-recovery-sol/**`（含 C-RD1 相关文件）与 README（hash、逐模式计数、假设结论附日志行、正向对照、F-B002 自检）。
+- **禁止：** 修改任何已有文件、产品、合同、台账或控制面；修复；push；派生子 agent。
+- **成本上限：** 每个模式诊断迭代不超过 3 轮；开发探测须披露；避免长时间无输出的命令。
+- **停止条件：** fixture 有效性 3 轮内无法建立、合同与源码矛盾、或需越权文件时，提交 blocked 回执并停止。
 
 ## 下一步
 
-1. 等待批次 55 回执，总控核对：
-   - 合同基于固定 SHA 的源码，关键事实抽查属实；
-   - 用户决定已如实记录；
-   - 跨 caller 影响清单完整；
-   - Required evidence 清单完整；
-   - 范围不越模块。
-2. 总控确认 (a) 类假设，登记 CP-APPRAIL-01 与首个执行批次（冻结 before oracle）。
-3. AppRail 接受后，再确认并登记 CP-CLOCK-01。
+1. 核对批次 56：只新增文件；正向对照 PASS；precondition 为 0；假设结论有日志行；C-RD1 三份运行结果；hash。
+2. 依次登记批次 57（E3）与批次 58（E4–E5）；E1–E5 全部冻结后才授权 Terra。
