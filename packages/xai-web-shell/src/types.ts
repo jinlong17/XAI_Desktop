@@ -130,6 +130,17 @@ export interface ShellProps {
    */
   appearanceStatus?: ReactNode;
   /**
+   * Optional rail-order status node passed from the host to the Topbar, which
+   * renders it immediately after the `appearanceStatus` slot and before the
+   * appearance popover. The host (apps/web/src/App.tsx) passes
+   * `<RailOrderStatus />`, a view of its App-scoped rail-order controller; it
+   * renders nothing unless the sidebar order has a settled unsaved change or
+   * the stored order is unavailable. The shell only passes it through.
+   *
+   * CP-APPRAIL-01 — Topbar status for the sidebar (rail) order.
+   */
+  railOrderStatus?: ReactNode;
+  /**
    * Optional sign-out handler wired from the host (apps/web/src/App.tsx).
    * When provided, AvatarMenu routes the Sign Out click to this handler
    * (which calls client.auth.signOut + clearSessionStorage + redirect).
@@ -203,6 +214,16 @@ export interface TopbarProps {
    * CP-APPEARANCE-01 — Topbar status for unsaved Appearance changes.
    */
   appearanceStatus?: ReactNode;
+  /**
+   * Optional rail-order status node, rendered immediately after the
+   * `appearanceStatus` slot in `.topbar-controls` (before the appearance
+   * popover). The host passes `<RailOrderStatus />`, which renders nothing
+   * unless the sidebar order has a settled unsaved change or the stored order
+   * is unavailable.
+   *
+   * CP-APPRAIL-01 — Topbar status for the sidebar (rail) order.
+   */
+  railOrderStatus?: ReactNode;
 }
 
 export interface AvatarMenuProps {
@@ -217,3 +238,77 @@ export interface AvatarMenuProps {
   /** Sign-out handler — defaults to a placeholder warning in DEV. */
   onSignOut?: () => void;
 }
+
+// ---- Rail order (CP-APPRAIL-01) ---------------------------------------------
+
+/**
+ * What the Topbar rail-order status shows, or `null` when it renders nothing:
+ * - `"failed"`: the current draft is settled unsuccessful (Retry, Discard, Export);
+ * - `"saving"`: a Retry of a draft that already failed is pending (Retry inert);
+ * - `"source"`: no draft, and the stored order is invalid or unreadable (Reload only).
+ */
+export type RailOrderStatusKind = "failed" | "saving" | "source";
+
+/**
+ * The App-scoped rail-order controller. App creates exactly one inside
+ * `AccountStorageGate` with `useRailOrderController()` and provides it with
+ * `<RailOrderProvider>`; `<AppRail>` and `<RailOrderStatus>` are its views. An
+ * `<AppRail>` rendered without a provider owns its own controller.
+ *
+ * It owns the strict `xai_rail_order` binding (registered `json` path, strict
+ * domain: an array of distinct strings), the draft and operation model,
+ * Retry, Discard, Reload, Export, the unload warning and the sign-out step.
+ * Drafts live as long as the controller; they never hold navigation.
+ */
+export interface RailOrderController {
+  /** The language of the controller's copy (App passes the Appearance display language). */
+  readonly lang: Lang;
+  /**
+   * The stored order the rail displays from: the draft's value if a draft
+   * exists, else the committed bytes, else `DEFAULT_RAIL_ORDER` (absent,
+   * invalid or unreadable bytes). The rail shows D(order, visible).
+   */
+  readonly order: readonly string[];
+  /** An actual draft exists (pending or unresolved). */
+  readonly hasDraft: boolean;
+  /** The Topbar status state, or `null` when the status renders nothing. */
+  readonly statusKind: RailOrderStatusKind | null;
+  /** Retry is runnable now (a draft is settled unsuccessful and nothing is in flight for it). */
+  readonly canRetry: boolean;
+  /** The last Export failed; shown while a draft exists, cleared by the next panel action. */
+  readonly exportFailed: boolean;
+  /**
+   * Admits one drop: merges the dropped visible order into the stored order
+   * (R-1 index-slot merge) and enqueues exactly one absolute set. Returns
+   * `false` and makes zero attempts when the order is not a permutation of the
+   * currently displayed ids.
+   */
+  readonly drop: (order: readonly string[], visible: readonly string[]) => boolean;
+  /** Re-attempts the held failed request exactly once; inert while pending. */
+  readonly retry: () => void;
+  /** Detaches the draft before a safe reread; zero set or remove attempts. */
+  readonly discard: () => void;
+  /** Rereads an invalid or unreadable source; refused while a draft exists. */
+  readonly reload: () => void;
+  /** Memory-only export of the draft (`rail-order-draft.json`). */
+  readonly exportDraft: () => void;
+  /**
+   * The sign-out step: `true` without a draft (no prompt); with a draft one
+   * `window.confirm` — Cancel resolves `false` and keeps the draft, OK
+   * discards it with zero writes and resolves `true`.
+   */
+  readonly confirmSignOut: () => Promise<boolean>;
+}
+
+export interface RailOrderControllerOptions {
+  /** Display language of the controller's copy. */
+  readonly lang: Lang;
+}
+
+export interface RailOrderProviderProps {
+  readonly controller: RailOrderController;
+  readonly children?: ReactNode;
+}
+
+/** `<RailOrderStatus />` takes no props; it reads the provided controller. */
+export type RailOrderStatusProps = Record<string, never>;

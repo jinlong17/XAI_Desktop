@@ -32,8 +32,11 @@ import { accountScope } from "@repo/plugin-web-storage";
 import { AccountStorageGate, invalidateAccountIdentity } from "./providers/AccountStorageGate.js";
 import { emitWebEvent } from "@repo/xai-web-event-bus";
 import {
+  RailOrderProvider,
+  RailOrderStatus,
   Shell,
   WebShellProvider,
+  useRailOrderController,
   type WebModuleSlotRegistration,
 } from "@repo/xai-web-shell";
 // xai-web-pet: top-level mount (D1 Option B — sibling of <Shell> per ADR-0007 §S6)
@@ -127,6 +130,14 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   const appearance = useAppearanceController();
   const { lang, theme, density, railPos } = appearance.values;
 
+  // ---- CP-APPRAIL-01: the ONE App-scoped rail-order controller --------------
+  // Created once here, inside AccountStorageGate, with the Appearance display
+  // language. It owns the strict rail-order binding, the drop drafts and
+  // their recovery (Retry, Discard, Reload, Export), the unload warning and the
+  // sign-out step; AppRail and the Topbar <RailOrderStatus /> are its views.
+  // Rail drafts never hold navigation (no route guard).
+  const railOrder = useRailOrderController({ lang });
+
   // Topbar status → Review: the existing shortcut event (as Shell does for
   // Settings), then one navigation to the Appearance pane.
   const navigate = useNavigate();
@@ -152,12 +163,17 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
   // CP-APPEARANCE-01 sign-out step: no drafts → true without a prompt; drafts →
   // one window.confirm (Cancel → false, OK → drafts discarded with zero writes).
   const confirmAppearanceSignOut = appearance.confirmSignOut;
+  // CP-APPRAIL-01 sign-out step, immediately before the Appearance step: no
+  // rail draft → true without a prompt; a rail draft → one window.confirm
+  // (Cancel → false, nothing else asked; OK → draft discarded with zero writes).
+  const confirmRailOrderSignOut = railOrder.confirmSignOut;
   const handleSignOut = useCallback(async () => {
     onSignOutError(false);
     const capturedScope = accountScope.capture();
     if (coordinator) {
       const captured = coordinator.capture();
       if (!captured) { onSignOutError(true); return; }
+      if (!await confirmRailOrderSignOut()) return;
       if (!await confirmAppearanceSignOut()) return;
       if (!await requestSettingsDeparture("sign-out")) return;
       const current = coordinator.capture();
@@ -168,6 +184,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
       if (result.status === 'applied') window.location.assign('/');
       return;
     }
+    if (!await confirmRailOrderSignOut()) return;
     if (!await confirmAppearanceSignOut()) return;
     if (!await requestSettingsDeparture("sign-out")) return;
     if (accountScope.capture() !== capturedScope) return;
@@ -181,7 +198,7 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
     }
     await clearSessionStorage();
     window.location.assign("/");
-  }, [client, clearSessionStorage, confirmAppearanceSignOut, coordinator, onSignOutError, reportSignOutFailure]);
+  }, [client, clearSessionStorage, confirmAppearanceSignOut, confirmRailOrderSignOut, coordinator, onSignOutError, reportSignOutFailure]);
 
   return (
     <AppearanceProvider controller={appearance}>
@@ -196,20 +213,23 @@ function AppInner({ onSignOutError }: { onSignOutError: (failed: boolean) => voi
          * xai-web-cmdk P4: Shell receives onOpenSearch from the palette context.
          * When the topbar search box is clicked, openPalette fires with source="topbar-click".
          */}
-        <Shell
-          lang={lang}
-          setLang={appearance.setLang}
-          theme={theme}
-          setTheme={appearance.setTheme}
-          density={density}
-          setDensity={appearance.setDensity}
-          onOpenSearch={() => openPalette({ source: "topbar-click" })}
-          premiumBadge={<PremiumTierBadge lang={lang} />}
-          appearanceStatus={<AppearanceStatus onReview={reviewAppearance} />}
-          onSignOut={handleSignOut}
-        >
-          <Outlet />
-        </Shell>
+        <RailOrderProvider controller={railOrder}>
+          <Shell
+            lang={lang}
+            setLang={appearance.setLang}
+            theme={theme}
+            setTheme={appearance.setTheme}
+            density={density}
+            setDensity={appearance.setDensity}
+            onOpenSearch={() => openPalette({ source: "topbar-click" })}
+            premiumBadge={<PremiumTierBadge lang={lang} />}
+            appearanceStatus={<AppearanceStatus onReview={reviewAppearance} />}
+            railOrderStatus={<RailOrderStatus />}
+            onSignOut={handleSignOut}
+          >
+            <Outlet />
+          </Shell>
+        </RailOrderProvider>
         {/* xai-web-pet: floats over all routes (position:fixed); not a routed module */}
         <DesktopPet on={petOn} lang={lang} />
         {/*

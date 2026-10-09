@@ -283,4 +283,29 @@ describe("Topbar", () => {
     const second = renderTopbar({ premiumBadge: <span data-testid="premium-tier-badge">P</span>, appearanceStatus: <Empty /> });
     expect(second.container.querySelector(".topbar")!.outerHTML).toBe(before);
   });
+
+  // ---- Rail-order status slot (CP-APPRAIL-01, additive) -----------------
+
+  it("TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover", () => {
+    renderTopbar({
+      premiumBadge: <span data-testid="premium-tier-badge">Premium (stub)</span>,
+      appearanceStatus: <button type="button" data-testid="appearance-status">Not saved</button>,
+      railOrderStatus: <div className="rail-order-status" data-testid="rail-slot"><button type="button">Order not saved</button></div>,
+    });
+    const controls = document.querySelector(".topbar-controls")!;
+    const children = Array.from(controls.children);
+    const appearance = screen.getByTestId("appearance-status");
+    const rail = screen.getByTestId("rail-slot");
+    expect(children.indexOf(rail)).toBe(children.indexOf(appearance) + 1);
+    expect(rail.nextElementSibling?.classList.contains("topbar-pref")).toBe(true);
+  });
+
+  it("TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged", () => {
+    const Empty = () => null;
+    const { container, unmount } = renderTopbar({ premiumBadge: <span data-testid="premium-tier-badge">P</span> });
+    const before = container.querySelector(".topbar")!.outerHTML;
+    unmount();
+    const second = renderTopbar({ premiumBadge: <span data-testid="premium-tier-badge">P</span>, railOrderStatus: <Empty /> });
+    expect(second.container.querySelector(".topbar")!.outerHTML).toBe(before);
+  });
 });

@@ -3,20 +3,33 @@
  *
  * Port of web design/shell.jsx lines 69-166.
  * Reads state from useWebShell() + useWebModuleRegistry().
- * Persists rail order via usePref("xai_rail_order") from @repo/plugin-web-storage.
+ *
+ * CP-APPRAIL-01: the rail order (`xai_rail_order`) is owned by the App-scoped
+ * rail-order controller (`useRailOrderController`, provided by the host with
+ * `<RailOrderProvider>`); AppRail is its view and makes no storage call of its
+ * own. Without a provider AppRail creates its own controller (standalone use).
+ *
+ * - The rail displays D(order, R): the controller's order (draft, committed
+ *   bytes or default) reconciled against the visible registry R.
+ * - A drag reorders a preview in memory only (dragstart, dragenter and
+ *   dragover make zero storage attempts). Exactly one set intent is admitted at
+ *   a `drop` inside `.rail-items`, and only if the order changed; a gesture
+ *   that ends without a drop is cancelled and the preview reverts.
+ * - The admitted value is the R-1 index-slot merge: modules hidden by Features
+ *   (and non-rail or unknown ids) keep their stored index.
  *
  * API contract: packages/xai-web-shell/docs/api.md §2.2
  */
 
-import { useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import { useI18n } from "@repo/plugin-web-tokens";
-import { usePref } from "@repo/plugin-web-storage";
-import type { ConsoleModuleId } from "@repo/core/types";
 import { AvatarMenu } from "./AvatarMenu.js";
 import { Icon } from "./icons.js";
 import { reorderArray } from "./internal/dnd.js";
+import { RailOrderControllerContext, useRailOrderController } from "./internal/railOrderController.js";
+import { displayRailOrder, isRailPermutation, sameRailOrder } from "./internal/railOrderModel.js";
 import { useWebShell, useWebModuleRegistry } from "./registry.js";
-import type { AppRailProps, WebModuleSlotRegistration, WebShellIconName } from "./types.js";
+import type { AppRailProps, RailOrderController, WebModuleSlotRegistration, WebShellIconName } from "./types.js";
 
 // ---- Bottom-row button definition -----------------------------------------
 
@@ -28,38 +41,59 @@ interface BottomButton {
 
 // ---- AppRail component -----------------------------------------------------
 
-export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOpenSettings, onAvatarOpenStatistics, onSignOut }: AppRailProps) {
+export function AppRail(props: AppRailProps) {
+  const shared = useContext(RailOrderControllerContext);
+  return shared !== null
+    ? <AppRailView {...props} controller={shared} />
+    : <StandaloneAppRail {...props} />;
+}
+
+/** Without a provider the rail owns its controller (the shell stays usable alone). */
+function StandaloneAppRail(props: AppRailProps) {
+  const { lang } = useWebShell();
+  const controller = useRailOrderController({ lang });
+  return <AppRailView {...props} controller={controller} />;
+}
+
+/** One HTML5 drag gesture started on a rail button in this document. */
+interface RailGesture {
+  /** The dragged module id. */
+  readonly dragId: string;
+  /** D0: the order displayed at dragstart. */
+  readonly initial: readonly string[];
+  /** P: the in-memory preview order. */
+  preview: string[];
+  /** A drop already decided this gesture's commit (one gesture, at most one intent). */
+  dropped: boolean;
+}
+
+function AppRailView({
+  activeModuleId,
+  onModuleClick,
+  onPetToggle,
+  onAvatarOpenSettings,
+  onAvatarOpenStatistics,
+  onSignOut,
+  controller,
+}: AppRailProps & { readonly controller: RailOrderController }) {
   const { lang, railPos, petOn } = useWebShell();
   const { t } = useI18n(lang);
   const registryModules = useWebModuleRegistry();
 
-  // Persist rail order via @repo/plugin-web-storage
-  const [prefOrder, setPrefOrder] = usePref("xai_rail_order");
+  // R: the visible registry (Features-filtered, showInRail, sorted by railOrder).
+  const visibleIds: string[] = registryModules.map((m: WebModuleSlotRegistration) => m.moduleId);
+  // D(order, R) for the controller's order (draft, committed bytes or default).
+  const committedDisplay = displayRailOrder(controller.order, visibleIds);
 
-  // Reconcile prefOrder against registry:
-  // 1. filter any ids in prefOrder not in the registry
-  // 2. append any registry ids missing from prefOrder
-  const registryIds = new Set(registryModules.map((m: WebModuleSlotRegistration) => m.moduleId));
-  const validOrder: ConsoleModuleId[] = [];
-  const seenIds = new Set<string>();
-
-  for (const id of prefOrder) {
-    if (registryIds.has(id)) {
-      validOrder.push(id);
-      seenIds.add(id);
-    } else if (
-      typeof import.meta !== "undefined" &&
-      (import.meta as { env?: { DEV?: boolean } }).env?.DEV
-    ) {
-      console.warn(`[xai-web-shell] xai_rail_order contains unknown id "${id}" — filtered out`);
-    }
-  }
-  // Append any registry modules not in the persisted order
-  for (const m of registryModules) {
-    if (!seenIds.has(m.moduleId)) {
-      validOrder.push(m.moduleId);
-    }
-  }
+  // ---- Drag-reorder (HTML5 DnD): preview in memory, one write per drop -----
+  const [gesture] = useState<{ current: RailGesture | null }>(() => ({ current: null }));
+  const [, rerender] = useReducer((version: number) => version + 1, 0);
+  const active = gesture.current;
+  // The preview shows only while it is still a permutation of D(S, R) (§6 item 7).
+  const validOrder: string[] = active !== null && isRailPermutation(active.preview, committedDisplay)
+    ? active.preview
+    : committedDisplay;
+  const dragId = active?.dragId ?? null;
 
   // Map ordered ids back to full module objects
   const moduleMap = new Map<string, WebModuleSlotRegistration>(
@@ -69,27 +103,61 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
     .map((id) => moduleMap.get(id))
     .filter((m): m is WebModuleSlotRegistration => m !== undefined);
 
-  // ---- Drag-reorder (HTML5 DnD) --------------------------------------------
-  const [dragId, setDragId] = useState<string | null>(null);
-
   const onDragStart = (e: React.DragEvent, id: string) => {
     e.dataTransfer.effectAllowed = "move";
     try {
       e.dataTransfer.setData("text/plain", id);
     } catch {
-      // Some sandboxed iframes block setData; drag still works via dragId state
+      // Some sandboxed iframes block setData; drag still works via the gesture state
     }
-    setDragId(id);
+    // Zero storage attempts: the gesture captures D0 and starts the preview P = D0.
+    gesture.current = { dragId: id, initial: [...validOrder], preview: [...validOrder], dropped: false };
+    rerender();
   };
 
+  // dragenter on a rail button accepts the drag; the dragover that the browser
+  // fires at the same button right after it (HTML drag-and-drop processing
+  // model) moves the preview, so the dragged button only takes the hovered
+  // slot once that dragover has reached the hovered button.
+  const onDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  // dragover on a rail button: reorder the in-memory preview only (zero storage attempts).
   const onDragOver = (e: React.DragEvent, id: string) => {
     e.preventDefault();
-    if (!dragId || dragId === id) return;
-    const nextOrder = reorderArray(validOrder, dragId, id);
-    setPrefOrder(nextOrder as typeof prefOrder);
+    const current = gesture.current;
+    if (current === null || current.dropped || current.dragId === id) return;
+    if (!isRailPermutation(current.preview, committedDisplay)) return;
+    const next = reorderArray(current.preview, current.dragId, id);
+    if (next === current.preview) return;
+    current.preview = next;
+    rerender();
   };
 
-  const onDragEnd = () => setDragId(null);
+  // A gap of .rail-items accepts the drop of a gesture started here.
+  const onItemsDragOver = (e: React.DragEvent) => {
+    if (gesture.current !== null) e.preventDefault();
+  };
+
+  // drop anywhere inside .rail-items: at most one set intent per gesture.
+  const onItemsDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const current = gesture.current;
+    // A drop not preceded by a rail-button dragstart here (an external drag) is ignored.
+    if (current === null || current.dropped) return;
+    current.dropped = true;
+    if (sameRailOrder(current.preview, current.initial)) return;
+    // The controller merges over S and R at drop time and refuses a non-permutation.
+    controller.drop(current.preview, visibleIds);
+  };
+
+  // dragend ends the gesture; without a drop it is cancelled and the preview reverts.
+  const onDragEnd = () => {
+    if (gesture.current === null) return;
+    gesture.current = null;
+    rerender();
+  };
 
   // ---- Avatar menu state ---------------------------------------------------
   const [avatarOpen, setAvatarOpen] = useState(false);
@@ -145,7 +213,12 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
       </div>
 
       {/* Module buttons */}
-      <div className="rail-items">
+      <div
+        className="rail-items"
+        onDragEnter={onItemsDragOver}
+        onDragOver={onItemsDragOver}
+        onDrop={onItemsDrop}
+      >
         {orderedModules.map((mod: WebModuleSlotRegistration) => {
           const icon: WebShellIconName = mod.icon ?? "kanban";
           const label = navLabels[(mod.moduleId as keyof typeof navLabels)] ?? mod.moduleId;
@@ -166,6 +239,7 @@ export function AppRail({ activeModuleId, onModuleClick, onPetToggle, onAvatarOp
               aria-label={labelText}
               draggable
               onDragStart={(e) => onDragStart(e, mod.moduleId)}
+              onDragEnter={onDragEnter}
               onDragOver={(e) => onDragOver(e, mod.moduleId)}
               onDragEnd={onDragEnd}
               onClick={() => {

@@ -41,6 +41,7 @@ export function Topbar({
   onOpenSearch,
   premiumBadge,
   appearanceStatus,
+  railOrderStatus,
 }: TopbarProps) {
   const { s } = useI18n(lang);
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -114,6 +115,13 @@ export function Topbar({
         {premiumBadge ? premiumBadge : null}
         {/* CP-APPEARANCE-01 — Appearance status slot, immediately after the premium badge */}
         {appearanceStatus ? appearanceStatus : null}
+        {/*
+         * CP-APPRAIL-01 — rail-order status slot, immediately after the
+         * Appearance status and before the appearance popover. The host passes
+         * <RailOrderStatus />, which renders nothing unless the sidebar order
+         * has a settled unsaved change or the stored order is unavailable.
+         */}
+        {railOrderStatus ? railOrderStatus : null}
         <div className="topbar-pref" ref={prefsRef}>
           <button
             type="button"

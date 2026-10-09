@@ -27,9 +27,24 @@ export type {
   TopbarProps,
   AvatarMenuProps,
 } from "./types";
+
+// App-scoped rail-order controller (CP-APPRAIL-01; additive)
+export { RailOrderProvider, useRailOrderController } from "./internal/railOrderController";
+export { RailOrderStatus }                           from "./internal/RailOrderStatus";
+export type {
+  RailOrderController,
+  RailOrderControllerOptions,
+  RailOrderProviderProps,
+  RailOrderStatusKind,
+  RailOrderStatusProps,
+} from "./types";
+
+// Side effect: the rail-order status stylesheet (selectors begin with .rail-order-status)
+import "./railOrderStatus.css";
 ```
 
-Nothing else is exported. `internal/` is package-private.
+Nothing else is exported. `internal/` is package-private: the pure rail-order
+model, the copy and the drag helper (`reorderArray`) stay unexported.
 
 ---
 
@@ -188,21 +203,87 @@ export interface AppRailProps {
 export function AppRail(props: AppRailProps): JSX.Element;
 ```
 
-**Behavior**
+**Behavior** (CP-APPRAIL-01; contract
+`docs/reviews/web-apprail-order-recovery-contract/contract.md` r1)
 
 1. Reads `lang` + `railPos` + `petOn` from `useWebShell()`.
-2. Reads the modules from `useWebModuleRegistry()` (already sorted/filtered).
-3. Reads `[order, setOrder] = usePref("xai_rail_order")` from
-   `@repo/plugin-web-storage`.
-4. Reconciles `order` against the registry: any registry module whose id is
-   missing from `order` is appended; any id in `order` not in the registry is
-   filtered out (defensive — survives partial W2 rollout).
-5. Drag-reorder: HTML5 DnD on `.rail-btn` elements; on drop, calls
-   `setOrder(nextOrder)` — the hook auto-persists.
-6. Click: calls `onModuleClick(id)` (host handles `emit` + `navigate`).
+2. Reads the modules from `useWebModuleRegistry()` (already sorted/filtered):
+   the visible set R.
+3. **The rail order belongs to the App-scoped rail-order controller.** AppRail
+   reads the provided controller (`<RailOrderProvider>`); without a provider it
+   creates its own (`useRailOrderController({ lang })`, standalone use such as
+   tests and hosts that mount `Shell` without App). In the production App there
+   is exactly one controller. AppRail makes no storage call of its own.
+4. **Display** D(S, R): every id of the controller's order S (the draft, else
+   the committed bytes, else `DEFAULT_RAIL_ORDER`) that is visible, in S order,
+   then the visible ids S lacks, in R order. Unchanged from before; unknown,
+   non-rail and Features-hidden ids are skipped for display only.
+5. **Drag-reorder, one write per drop.** HTML5 DnD on `.rail-btn` elements.
+   `dragstart` captures the displayed order D0 and starts an in-memory preview
+   P; `dragover` on another button moves the dragged id there in P (the
+   `dragging` class marks the source). `dragstart`, `dragenter`, `dragover`
+   and `dragend` make **zero storage attempts**. A `drop` anywhere inside
+   `.rail-items` (a button, the dragged button itself or a gap) admits exactly
+   one set intent, and only when P differs from D0 and is still a permutation
+   of D(S, R) at drop time. A gesture that ends without a drop (Escape, a
+   release outside the rail, a drop on a text field, a cancelled drag) is
+   cancelled: the preview reverts and nothing is written. An external drop
+   (no rail `dragstart` in this document) is ignored. If R or S changes
+   mid-drag so that P is no longer a permutation, the preview is discarded.
+6. **R-1 (product-owner decision): hidden modules keep their stored
+   positions.** The admitted value is the index-slot merge
+   `merge(S, R, P)`: walk S; an element in R is replaced by the next element
+   of P, an element not in R (Features-hidden, `settings`, unknown ids) stays
+   at its index; leftover elements of P are appended. A module hidden by
+   Features therefore returns to its previous place when re-enabled; with all
+   modules visible the stored bytes equal P exactly (today's bytes).
+7. Click: calls `onModuleClick(id)` (host handles `emit` + `navigate`);
+   suppressed while a drag gesture is in progress. Rail drafts never hold
+   navigation (no route guard).
 7. Bottom-row buttons (Pet/Sync/Notif/Help): Pet calls `onPetToggle()` then
    the host emits `web:shell:pet-toggle`; Sync/Notif/Help are visual-only
    placeholders for W1 (no handler beyond logging).
+
+**The rail-order controller** (`useRailOrderController`, `RailOrderController`)
+
+- **Binding.** `usePrefAutosaveAsync("xai_rail_order", { validate })` on the
+  registered path (`json` codec, registry default, today's exact bytes) with
+  the strict A5 domain: a JSON array of strings with no string twice (`[]`,
+  unknown ids and `settings` are valid). No registry, codec, default,
+  ownership or lifecycle change; device key, so no account machinery.
+- **Invalid or unreadable bytes are source-only**: objects, numbers,
+  booleans, strings, `null`, unparsable bytes, non-string elements and
+  repeated ids display D(`DEFAULT_RAIL_ORDER`, R) without throwing on any
+  `/app` route; the Topbar status offers Reload only; mount, Reload and
+  Discard never rewrite, purge or normalize the bytes. A drag over such a
+  source is a set the engine refuses: a failed draft (Retry refused again,
+  Discard, Export).
+- **Drafts.** Each admitted drop is the field's exact draft object: it
+  displays at once (also while the per-key lock is held) and only the
+  matching latest success clears it (verified bytes or the engine's verified
+  no-op). A newer drop supersedes. Failures (quota, throwing `getItem` /
+  `setItem`, missing or rejected Web Lock, conflict, readback uncertainty,
+  invalid or unavailable source) keep the dropped order displayed.
+- **Retry** re-runs the held failed request exactly once with its own kind
+  and token (inert while pending); **Discard** detaches the draft before the
+  safe reload (zero set or remove attempts); **Reload** exists only for a
+  source issue and refuses while a draft exists; **Export** downloads
+  `rail-order-draft.json` from memory only:
+  `{"version":1,"kind":"rail-order-draft","changes":{"device":{"railOrder":{"operation":"set","value":[…]}}}}`
+  (the full merged order, hidden and unknown ids included).
+- **Unload.** A `beforeunload` warning while a draft exists (pending or
+  failed); none when clean or source-only. Zero storage attempts in the
+  handler.
+- **Sign-out step** `confirmSignOut(): Promise<boolean>`: no draft → `true`
+  without a prompt; a draft → one `window.confirm` ("Your sidebar order
+  change is not saved. Sign out and discard it?" / ZH). Cancel → `false`,
+  draft kept; OK → draft discarded with zero writes, `true`. The host awaits
+  it immediately **before** the Appearance step in both auth branches, so with
+  both drafts the prompts are [rail, Appearance].
+- **Lifetime.** Drafts live as long as the controller (App lifetime: route
+  changes, Settings panes, popovers); a scope change remounts App and drops
+  them (REL-09). Unmount detaches callbacks; late completions never revive
+  discarded state.
 
 **DOM contract** (preserved from prototype for CSS compatibility):
 
@@ -234,6 +315,11 @@ export interface TopbarProps {
    * after `premiumBadge` in `.topbar-controls`, before the appearance popover.
    */
   appearanceStatus?: React.ReactNode;
+  /**
+   * Optional rail-order status node (CP-APPRAIL-01), rendered immediately
+   * after `appearanceStatus` in `.topbar-controls`, before the appearance popover.
+   */
+  railOrderStatus?: React.ReactNode;
 }
 
 export function Topbar(props: TopbarProps): JSX.Element;
@@ -259,6 +345,23 @@ export function Topbar(props: TopbarProps): JSX.Element;
   Appearance package's `<AppearanceStatus onReview>`, which renders nothing
   unless an Appearance change has a settled failure, so the clean-state
   Topbar markup is unchanged.
+- `railOrderStatus` (optional `ReactNode`, also on `ShellProps`, which only
+  passes it through) is rendered immediately after the `appearanceStatus`
+  slot and before `.topbar-pref` (CP-APPRAIL-01). The host passes
+  `<RailOrderStatus />`, which renders nothing (no DOM node) unless the
+  current rail draft has been settled unsuccessful (it stays while a Retry of
+  that draft is pending) or no draft exists and the stored order is invalid
+  or unreadable. When rendered it is one `.rail-order-status` root holding a
+  native disclosure button (`data-testid="rail-order-status"`,
+  `aria-expanded`, `aria-controls="rail-order-panel"`, at least 44×44, icon
+  only at 767 px and below) and, while open, a non-modal labelled panel
+  (`role="dialog"`, `id="rail-order-panel"`) after it in DOM order: the
+  message, then Retry, Discard and Export for a draft, or Reload only for a
+  source issue. Escape closes it and returns focus to the button; a mousedown
+  outside closes it. When the status unmounts while it holds focus (verified
+  success, Discard, a Reload repair), focus moves to `.topbar-pref-trigger`.
+  It never navigates and never retries by itself. Without a provider it
+  renders nothing.
 - Settings icon click → `props.onOpenSettings()`.
 
 ### §2.4 `<AvatarMenu>`
@@ -390,7 +493,7 @@ const onOpenSettings = () => {
 
 | Pref key | Owner row | Used here for |
 |---|---|---|
-| `xai_rail_order` | xai-web-shell (this row) | AppRail drag-reorder; `usePref` inside AppRail |
+| `xai_rail_order` | xai-web-shell (this row) | AppRail drag-reorder through the App-scoped rail-order controller (`usePrefAutosaveAsync`, strict domain, one write per drop, R-1 merge; CP-APPRAIL-01) |
 | `xai_rail_pos`   | xai-web-settings-appearance #22 (read here in v1) | host App.tsx; until #22 ships, this row owns runtime read/write |
 | `xai_accent_hue` | xai-web-settings-appearance #22 (read here in v1) | host App.tsx |
 | `xai_bg_tone`    | xai-web-settings-appearance #22 (read here in v1) | host App.tsx |
@@ -423,12 +526,15 @@ This row SUBSCRIBES to none. (Subscribers — statistics row #20, AI Chat row
 
 - **Emit idempotency**: each user click → exactly one `web:shell:module-change`.
   Drag-reorder during navigation does NOT emit `web:shell:module-change`
-  (it persists `xai_rail_order` only).
+  (it persists `xai_rail_order` only, exactly once per drop, and dispatches no
+  `StorageEvent` and no `web:settings:preference-changed`).
 - **Emit ordering**: emit fires BEFORE `navigate()` so subscribers can record
   the intent even if navigation is aborted by a guard.
 - **Cross-tab**: `usePref` keys auto-sync across tabs via the `storage` event
-  (verified in row #3 acceptance). When tab A reorders the rail, tab B's rail
-  re-renders in the new order on its next render tick.
+  (verified in row #3 acceptance). When tab A reorders the rail, an idle rail
+  in tab B follows the committed order; a drafted rail in tab B becomes a
+  preserved conflict (Retry never overwrites; Discard adopts the committed
+  order).
 - **SSR**: this row is browser-only. The `Shell` component will no-op on
   `document.documentElement` mutations (the `apply*` helpers from row #2
   already guard `typeof document === "undefined"`).
@@ -444,7 +550,9 @@ This row SUBSCRIBES to none. (Subscribers — statistics row #20, AI Chat row
 |---|---|
 | `useWebShell()` called outside `<WebShellProvider>` | Throws `TypeError("[xai-web-shell] useWebShell must be inside <WebShellProvider>")`. |
 | `useWebModuleRegistry()` called outside the provider | Throws the same TypeError. |
-| `xai_rail_order` contains an id not in the registry | Filtered out silently; warns once in DEV (`console.warn`). |
+| `xai_rail_order` contains an id not in the registry (unknown id, `settings`, Features-hidden id) | Skipped for display; kept at its stored index by every drop (R-1 merge). |
+| `xai_rail_order` holds malformed bytes or `getItem` throws | Source-only: the default display, the Topbar rail status with Reload; never a throw, never a rewrite (CP-APPRAIL-01). |
+| A rail write fails (quota, lock, conflict, readback uncertainty) | The dropped order stays displayed as a draft; the Topbar status offers Retry, Discard and Export; the unload warning and the sign-out step protect it. |
 | Registry module missing `icon` / `railOrder` / `i18nKey` | Falls back: `icon = "kanban"`, `railOrder = Number.MAX_SAFE_INTEGER` (sorted last), `i18nKey = "nav." + moduleId`. Warns once in DEV. |
 | `emitWebEvent` throws (impossible per bus contract) | Caught by the bus; not the shell's concern. |
 | HTML5 DnD `dataTransfer.setData` blocked (some browsers in iframes with sandbox) | Click handler still fires; drag silently no-ops. Documented but not blocking. |
