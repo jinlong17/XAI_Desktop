@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：Terra 已实施 CP-APPRAIL-01（fixed `f9eb4b1`，运行记录 `0d440ca`），总控核对通过并已接收，状态改为 `implementation_ready_for_review`。本批登记批次 60：独立 Sol 在 fixed 上重跑 E7、E8、E15、E16、E17。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：AppRail fixed 重跑 E7、E8、E15、E16、E17 在 `f9eb4b1` 上全部 PASS（`94b12ba`）。本批登记批次 61：独立父级 native 验证者做 E9（controls 与拖动）、E10（保护）、E11（导出）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `0d440ca` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `94b12ba` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -153,7 +153,8 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `implementation_ready_for_review`：合同 r1 已确认；E1–E5 全部冻结（`d6ea500`、`6e9ec9c`、`04ee6a2`）；E6 Terra 实施 `f9eb4b1` 与运行记录 `0d440ca` 已接收；批次 60 登记 E7、E8、E15、E16、E17 |
+| 状态 | `implementation_ready_for_review`：合同 r1 已确认；E1–E5 全部冻结（`d6ea500`、`6e9ec9c`、`04ee6a2`）；E6 Terra 实施 `f9eb4b1` 与运行记录 `0d440ca` 已接收；E7、E8、E15、E16、E17 PASS（`94b12ba`）；批次 61 登记 native E9–E11 |
+| E7、E8、E15、E16、E17 fixed 重跑 | `94b12ba`（独立 Sol；26 个新增文件：25 份日志与回执 `web-apprail-order-recovery-sol/fixed-f9eb4b1.md`）。<ul><li>**E7：** Sol 八个模式全部 PASS，PRECONDITION 为 0：bytes 26/26、domain 31/31、merge 21/21、drag 18/18、field 24/24、continuity-export 22/22、host 33/33、original 123/123（新增的两个为 TP-RAIL-1、TP-RAIL-2，原 121 项同名全过）。七个业务模式 129 项 FAIL→PASS、46 项 PASS→PASS，没有 PASS→FAIL；20 个冻结文件的 hash 运行前复算一致。</li><li>**E8：** 父级 host 31/31；24 项 FAIL→PASS、7 项 PASS→PASS。</li><li>**E15：** 12 个冻结 F1 运行全部 PASS，runner hash 不变，检查序列与 `419e56d` 的 `appearance-final-v1` 基线逐项相同；没有 `Invalid blocker state transition`。日志中的 `"verdict":"refuted"` 指 F1 假设被否定，即通过，与基线写法相同（总控已核对）。</li><li>**E16：** rail F1 selfcheck harness-valid（165），railorder 的 f1–f3 为 fixed-pass（104 项，与 before 日志同序，恰好 4 个产品检查由 false 变 true）。f1：rail 确认 OK，More 协调器持有，一次 Retry 释放一次，无 router 提交；f2：Cancel 零历史变化；f3：一次 `navigate` 重放、一次 PUSH；selfcheck 中 Back 恰好一次 live `proceed()`；非 live 调用与 runtime error 均为 0。</li><li>**E17：** K-1 副本 selfcheck harness-valid（135），appearance 的 a1–a4 为 fixed-pass（123），F1 签名为 0。</li><li>**披露：** 每个单元一次运行，没有诊断迭代与开发探测；Chrome 155（E15/E17 基线为 154，检查序列仍相同）；E16 用 pipe，E15/E17 保留冻结时的 WebSocket，以免改变 runner hash；没有冻结 runner 拒绝运行，未使用副本；按键审计零失配；可信拖动的 drop 落在被拖按钮自身，合同 §6 第 3 项允许，与 D1 裁定一致。</li><li>**总控核对：** 父提交 `dac8cd3`；26 个文件全部新增，分布在 6 个证据目录；25 份日志的 hash 都出现在回执中；各日志的计数、verdict 与 PRECONDITION 由总控抽查。worktree 被本会话进程的锁标记，确认 clean 后解锁删除。</li></ul> |
 | E6 Terra 实施 | `f9eb4b1`（产品，父提交 `145b073`）与 `0d440ca`（运行记录，只新增 `web-apprail-order-recovery-terra/` 下 7 个文件）。<ul><li>**产品 diff：** 相对 `419e56d`（排除 `docs/reviews`）恰好 19 个 §11 文件，+2960/−76；`package.json`、`pnpm-lock.yaml` 不变；受保护路径 diff 为空。`Topbar.test.tsx` 删除行为 0（只增加两个 TP-RAIL case）；`App.tsx` 的 −15 行仅为 `&lt;Shell&gt;` 块缩进进 provider，忽略空白的 diff 只有导入、controller 创建、两处登出步骤、依赖数组、provider 与 `railOrderStatus`。</li><li>**结构：** 4 个 internal 模块（纯模型、controller、EN/ZH 文案、状态组件）；App 级唯一 controller 在 `AppInner`；AppRail 有 provider 时用共享 controller，否则自建；预览只在内存，`.rail-items` 内 drop 时写一次，无 drop 的 dragend 取消并恢复；登出两个分支中 rail 步骤都在 Appearance 之前。</li><li>**自检（E6）：** shell 12 文件 205 项、`@repo/web` 30 文件 196 项（原 29/178，新增 `App.railorder` 18 项），typecheck 与 lint 无问题；6 份日志 hash 与 `implementation.md` 一致（总控复算）。</li><li>**预检（不计证据，日志已删除并披露）：** Sol 八个模式全部通过（`original` 123 = 121 + 两个新增 TP-RAIL case），C-RD1 15/15，父级 host 31/31，rail F1 selfcheck harness-valid、railorder fixed-pass，PRECONDITION 均为 0；临时提交 `4417e84` 在 dragenter 时就重排预览，导致 rail F1 selfcheck harness-invalid，已改正并在最终提交上全部重跑。</li><li>**总控裁定：**<ol><li>**D1（§6 第 2 项）：** 采纳"dragenter 只接受（`preventDefault`），紧随的 dragover 移动预览"的读法。§6 第 2 项把 `dragenter`/`dragover` 作为一对：两者都 `preventDefault`，指针在 Y 上时预览为 P，零存储尝试，这些都成立；而在 dragenter 时就重排，会使拖动按钮先占住目标位置，让冻结的可信拖动前置条件（`verify-f1-railorder.mjs:632–634`、`verify-native-before.mjs:697`）不可满足，即形成 OE 式矛盾。这是合同与冻结 oracle 都能成立的唯一读法，不修订合同；由 E7 drag、E9 native 与最终 acceptance 复核。</li><li>**D2：** `__tests__/railOrderFixture.tsx` 属于 §11 第 8 项允许的 `src/__tests__/` 新文件（仿照锁 fixture 模式），接受。</li><li>**D3–D6：** 移除未知 id 的 DEV 警告（§2 允许）；Retry 等待中用 `aria-disabled` 保持可聚焦（同 Appearance 先例）；Discard 回到 source 异常时焦点移到状态按钮；767px 及以下面板 fixed 于 Topbar 下方。均接受，由 E13–E14 与最终 acceptance 复核。</li><li>Terra 只做了静态 CSS 探测，没有产生 E9–E14；这些由后续独立批次产生。</li></ol></li><li>**总控核对：** 父提交与 worktree clean；`git diff` 文件清单、受保护路径、Topbar 测试删除行数、`App.tsx` 忽略空白 diff 与 AppRail 拖动代码均由总控直接查看；日志 hash 复算一致。worktree 分支删除时指向其创建基点 `9a61669`（已是 HEAD 的祖先），执行者在 detached HEAD 上提交，无内容丢失。</li></ul> |
 | E4–E5 native before 与 rail F1 before | `04ee6a2`（独立父级 native 验证者；66 个新增文件，含 51 张截图）。<ul><li>Chrome 155.0.8059.39 headless（pipe transport；此前批次为 154，版本变化已记录）；archive 与 lockfile gate 四处一致；625 个 archive 模块，守卫违规为 0；只有 auth session 为合成；每个模式一次 before1 运行。</li><li>**E4：** H1 7 个值 × EN/ZH 共 14 次全部成立，`/app/tasks`、Appearance、dashboard、calendar 都显示 "Route Error (app): prefOrder is not iterable"，页面没有任何可操作控件，字节不被改写；H2 4/4 静默失败；H3 dragover 期间写两次、drop 不写；H4 取消与拖出都被持久化；H5 经真实 Features pane 端到端成立，重新开启的 Boards 排到最后；H6 持锁期间仍写入，产品从不请求锁；H8 重复模块渲染两次；H9 没有状态、没有 `beforeunload`、登出零确认；H11 与 P6 正向对照通过。按键审计零失配，不带 `nativeVirtualKeyCode`。</li><li>**E5：** selfcheck harness-valid（165/165）；railorder 为 before-correct（f1 `before-no-rail-step`、f2 `before-unprotected`、f3 `before-pass-control`）；F1 签名为 0；冻结 prelude 只读复用并校验 hash。</li><li>**开发探测（已披露）：** 补一次静止指针 dragOver 让 drop 到达 rail；修脚本顺序错误；修正登出时 scope 转换次数的 oracle 误判。没有削弱断言。</li><li>**总控裁定：** 合同 §12 "一次 live `proceed()` … 一次 router 提交" 按 Appearance 裁定 4 的读法执行：离页恰好释放一次，POP 时为 live `proceed()`，程序化导航时为一次 `navigate` 重放，登出不产生 router 提交；非 live 调用为 0。E16/E17 验证者同样适用。`/app/tasks` 挂载时的 Tasks 保存失败横幅是既有的无关观察（同批次 39 裁定 5）。</li><li>**总控核对：** 66 个文件均为新增，且在两个允许目录内；两份回执列全了 hash；8 份日志都是 harnessValid，selfcheck 通过，railorder 为 before-correct；总控亲自查看了重新开启 Boards 后的截图（Boards 图标排在 rail 最后）与 ZH H1 截图（整页只剩路由错误），均与日志一致。</li></ul> |
 | E3 父级 host before 基线 | `6e9ec9c`（独立父级 host 验证者；`web-apprail-order-recovery-independent/` 下 5 个新增文件）。<ul><li>生产 `App` composition，只替换 auth session；archive、lockfile gate 与 13 个源文件 hash 一致；40 个必需模块全部来自 archive；一次运行，无开发探测，也无参考实现。</li><li>结果：31 个 case，7 PASS（3 个 fixture 检查、clean 正向对照等），24 FAIL，PRECONDITION 为 0，失败全部是业务断言。</li><li>H2：写入被拒后 rail 回到存储顺序，没有状态。H9：路由不被持有（正确），但没有 rail 状态；只有 rail 草稿时 `beforeunload` 不警告；没有 Appearance 草稿时登出不提示直接完成，有时只出现 Appearance 的提示。H1：`{}` 与 `1` 在两个路由与重载后都显示 "Route Error (app): prefOrder is not iterable"，没有 Topbar 与 rail。</li><li>**总控核对：** 5 个文件均为新增，README 列全了 hash；日志 24 失败 / 7 通过，PRECONDITION 为 0，lockfile 与 resolved SHA 已复核。</li></ul> |
@@ -162,7 +163,7 @@
 | 过程披露 | 起草窗口在提交后、交回前卡住（看门狗）；总控只读核实提交与 worktree clean 后直接接收。接收步骤曾被权限分类器拒绝一次，用户确认并授权后执行 |
 | 总控确认（2026-10-09，用户已确认） | <ol><li>R-1 读作存储顺序中的下标。</li><li>未知与非 rail id 同样保留，不剪除。</li><li>source 异常显示 Topbar 状态（rail 无 pane）。</li><li>取消拖动恢复原顺序，是"每次 drop 只写一次"的结果，须披露。</li><li>登出时两个提示依次出现，rail 在前；不改已接受的 Appearance controller。</li><li>controller 由 App 创建。</li><li>C-RD1 预先登记，条件：最终回归须独立证明冻结原件只在预测签名上失败，纠正副本在 before 与 fixed 都通过。</li><li>Smart Lists、Collaborate、Pomodoro、Dashboard Header 的 host 套件纳入回归。</li></ol> |
 | 风险等级 | `high`：H-RAIL 可能让所有 `/app` 路由崩溃；改动 shell 与 `App.tsx`（Appearance 刚改过的表面），须做受影响 caller 重跑 |
-| 后续顺序 | ~~批次 56 Sol（E1–E2，含 C-RD1）~~（`d6ea500`）→ ~~批次 57 父级 host（E3）~~（`6e9ec9c`）→ ~~批次 58 native before 与 rail F1（E4–E5）~~（`04ee6a2`）→ ~~批次 59 Terra~~（`f9eb4b1`、`0d440ca`）→ 批次 60 fixed 重跑（E7、E8、E15、E16、E17）→ native（E9–E12）→ 视觉键盘 → 最终回归 → 独立最终 acceptance |
+| 后续顺序 | ~~批次 56 Sol（E1–E2，含 C-RD1）~~（`d6ea500`）→ ~~批次 57 父级 host（E3）~~（`6e9ec9c`）→ ~~批次 58 native before 与 rail F1（E4–E5）~~（`04ee6a2`）→ ~~批次 59 Terra~~（`f9eb4b1`、`0d440ca`）→ ~~批次 60 fixed 重跑（E7、E8、E15、E16、E17）~~（`94b12ba`）→ 批次 61 native（E9–E11）→ native E12 → 视觉键盘 → 最终回归 → 独立最终 acceptance |
 
 
 ### 产品负责人决定登记（2026-10-06）
@@ -326,7 +327,8 @@
 | AppRail（续 2） | `995060c` 登记批次 57 · `6e9ec9c` 父级 host 基线 |
 | AppRail（续 3） | `d961694` 登记批次 58 · `04ee6a2` native 与 F1 before |
 | AppRail（续 4） | `145b073` 授权批次 59 · `f9eb4b1` Terra 实施 · `0d440ca` 运行记录 |
-| 本提交 | 接收 Terra 实施，CP-APPRAIL-01 改为 `implementation_ready_for_review`，记录成本周期 17–18，登记批次 60 |
+| AppRail（续 5） | `dac8cd3` 接收 Terra，登记批次 60 · `94b12ba` fixed 重跑 E7、E8、E15、E16、E17 |
+| 本提交 | 记录 fixed 重跑，登记批次 61（native E9–E11） |
 
 ## 台账变化
 
@@ -380,41 +382,50 @@
 
 ## 本轮唯一任务
 
-批次 60：独立 Sol 在 fixed `f9eb4b1` 上重跑合同 r1 §15 的 E7、E8、E15、E16、E17。
+批次 61：独立父级 native 验证者在真实 Chrome 中，用生产 `App` composition 验证 fixed AppRail 的 controls 与拖动（E9）、保护（E10）与导出（E11）。
 
-- **执行者：** 新的独立 Claude Opus 5.5（Sol 角色）。它不是批次 55–59 的作者，也不是 Terra。
+- **执行者：** 新的独立 Claude Opus 5.5（父级 native 验证者）。它不是合同作者，不是 Terra，也不是批次 56–60 的执行者。
 - **固定点：**
-  - fixed `f9eb4b1`（不可变 archive，lockfile gate，`@repo` 固定并带守卫，记录 requested 与 resolved SHA，拒绝覆盖，保留非零退出码）；
-  - 合同 r1（`f7726d7`，SHA-256 `b9e407b3…`）；
-  - 控制分支基点为本提交。
-- **E7（Sol fixed 重跑）：** 用冻结的 `web-apprail-order-recovery-sol/verify-fixed.mjs` 与 oracle（先逐个复算 hash，须与 README 一致），跑 bytes、domain、merge、drag、field、continuity-export、host、original 八个模式：
-  - 预期全部 PASS，PRECONDITION 为 0；
-  - 与权威 before 日志（before1，及有 before2 的模式）逐 case 对照：每个 before FAIL 在 fixed 上转为 PASS，对照 case 保持 PASS；任何 PASS→FAIL 都须解释；
-  - `original` 预期 123：121 加 `Topbar.test.tsx` 新增的两个 case，须逐项列出新增 case 名。
-- **E8（父级 host fixed 重跑）：** 用冻结的 `web-apprail-order-recovery-independent/` runner 与 `host.test.tsx`，预期 31/31、PRECONDITION 为 0，并与 `host-before1-419e56d.log` 逐 case 对照。
-- **E15（12 个冻结 F1 运行，runner 在 `web-sticky-recovery-f1/` 与 `web-features-recovery-f1/`）：** runner hash 不变，全部 PASS，没有 `Invalid blocker state transition`：
-  - `verify-f1.mjs` 的 sticky、more、collaborate；
-  - `verify-f1-callers.mjs` 的 selfcheck、notifications、date-time、smart-lists、header、pomodoro；
-  - `verify-f1-race.mjs` 的 race；
-  - `verify-f1-features.mjs` 的 selfcheck、features。
-- **E16（rail F1 fixed）：** `web-apprail-order-recovery-f1/verify-f1-railorder.mjs` 的 selfcheck 须 harness-valid，`railorder` 的 f1–f3 须 fixed-pass。离页恰好释放一次，按总控裁定的读法：POP 时一次 live `proceed()`，程序化导航时一次 `navigate` 重放，登出不产生 router 提交；非 live blocker 调用为 0；runtime error 为 0。
-- **E17（Appearance F1 fixed）：** 通过 K-1 副本 `web-native-keyinput-k1/verify-f1-appearance-k1.mjs`，selfcheck harness-valid，`appearance` 的 a1–a4 为 fixed-pass，F1 签名为 0。
-- **共同要求：**
-  - native runner 不带 `nativeVirtualKeyCode`，保留按键审计（K-1）；拖动只用可信 CDP 输入。
-  - 冻结 runner 若仅因只适用于旧 SHA 的前置条件拒绝运行：先提交拒绝日志，再用只改该前置条件的副本运行，副本放在新目录并记录 diff（先例：Appearance 的 E25 副本）。其他任何拒绝都停止并报告。
-  - 只能用 worktree 内自己启动的 server；禁止在主检出启动 dev server、使用 preview 工具或写入主检出。
-- **输出：** 各 runner 写出带新后缀 `apprail-fixed1` 的新日志，只新增、不覆盖（F1 runner 写入各自目录；`XAI_F1_EVIDENCE_DIR` 只用于仓库外的开发探测）。另新增回执 `docs/reviews/web-apprail-order-recovery-sol/fixed-f9eb4b1.md`：汇总 E7、E8、E15、E16、E17，列出每份新日志与副本的 SHA-256，以及逐 case 转换表。提交一次，不 push。
+  - fixed `f9eb4b1`：不可变 archive，lockfile gate，`@repo` 全部来自 archive 并带守卫，checkout 模块为 0；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
+  - headless Chrome 经 CDP（pipe transport）；只有 auth session 为合成；
+  - 合同 r1（`f7726d7`）；控制分支基点为本提交。
+- **E9（host 行 b、c、e、f、o、p、r）：**
+  - 可信拖动后的精确字节（A2 合并）；
+  - R-1 端到端：经真实 Features pane 关闭 Boards 再拖动，`board` 保持原下标，重新开启后回到原位；
+  - 每次 drop 恰好一次写入，`dragover` 期间零写入；
+  - 持有真实锁时的拖动，以及持锁期间第二次拖动（最新者胜，每次 drop 恰好一次锁请求）；
+  - uncertainty 恰好一次写入；
+  - 合同 §5 第 2 项的每个畸形值：三个路由都无路由错误，显示默认顺序与只带 Reload 的 source 状态，零写入；在其上拖动成为被拒绝的失败草稿；
+  - 外部修复后 Reload；
+  - 取消的拖动（`dragCancel`、放到主内容区、放到文本输入框）：零写入且预览恢复；
+  - 每个拖动事件都记录 `isTrusted`，源与目标按钮先做中心命中测试。
+- **E10（host 行 a、d、g–l、n、q），带历史计数器与 runtime error gate：**
+  - 状态、面板，以及由可信指针触发的 Retry、Discard、Export 与 Reload；
+  - 导航不被持有，草稿保留；
+  - 登出：只有 rail 草稿、带 Appearance 草稿、两者都有、以及 Settings 协调器持有 More 草稿，覆盖两个 auth 分支；确认列表必须精确；
+  - `beforeunload` 只在有 rail 草稿时警告；
+  - 强制 scope 变化引起的 remount（REL-09）；
+  - Features 的切换、失败、重置与 Retry 都不写 `xai_rail_order`。
+- **E11（导出）：** 在完全拒绝下下载合同 §8 的五种磁盘形态，断言计数器、URL、anchor、警告与状态；另加一次 setup 失败。
+- **惯例：**
+  - 复用冻结的 `web-apprail-order-recovery-native/` before 惯例（`native-before-app.tsx`、`native-before-prelude.js`，只读，校验 hash），以及 Appearance E9–E11 的先例（`3419542`，`web-appearance-recovery-native/review-controls-reset-export-24073b5.md`）；
+  - 拖动只用可信 CDP 输入（合同 §6 第 8 项），不使用页面内合成的 `DragEvent`；
+  - 不带 `nativeVirtualKeyCode`，每次运行保留按键审计（K-1）；
+  - EN 与 ZH 都覆盖断言文本的地方；
+  - runner 只能自己启动 server 或 bundle，不得在主检出启动 dev server、使用 preview 工具或写入主检出。
+- **D1 复核：** 记录每次可信拖动中 `dragenter` 与 `dragover` 的目标，以及预览在哪个事件后变化，供最终 acceptance 复核 D1 裁定。
+- **输出：** 只新增 `docs/reviews/web-apprail-order-recovery-native/**` 下的文件：runner、fixture、日志、截图、下载的 JSON、回执 `review-controls-protection-export-f9eb4b1.md` 与 hash。提交一次，不 push。
 - **禁止：** 修改任何已有文件；修改产品、合同、oracle、台账或控制面；修复；push；派生子 agent。
-- **成本上限：** 每个运行单元的诊断迭代不超过 3 轮；开发探测不计入，但须披露；用新后缀，保留旧日志。
-- **停止条件：** 出现真实产品失败时，冻结复现、影响范围与正确 oracle，提交后停止，由总控另开修复窗口；oracle 与合同矛盾时不改 oracle，写明后停止；harness 不可复现时 BLOCKED。
+- **成本上限：** 每个模式的诊断迭代不超过 3 轮，用新后缀并保留旧日志；正式运行前的开发探测须在回执中披露。
+- **停止条件：** 出现真实产品失败时，冻结复现、影响范围与正确 oracle，提交后停止，由总控另开修复窗口；oracle 与合同矛盾时写明并停止；harness 不可复现时 BLOCKED。
 
 ## 下一步
 
-1. 等待批次 60 回执，总控核对：
+1. 等待批次 61 回执，总控核对：
    - 只新增文件；
-   - oracle 与 runner hash 不变；
-   - 八个模式的计数与逐 case 转换，PRECONDITION 为 0；
-   - E8 31/31；
-   - E15 的 12 个运行全部 PASS；
-   - E16、E17 为 fixed-pass，且 F1 签名为 0。
-2. 通过后，依次登记 native 批次：E9（controls 与拖动）、E10（保护）、E11（导出）、E12（downstream 与 clean 状态 chrome 不变）；然后 E13–E14（视觉与键盘，逐停靠点像素焦点比较）；之后最终回归 E18–E25；最后独立最终 acceptance、台账对账（含 R-1 对 SET-03 的决定）与库存刷新。
+   - 每个 host 行的结果与 runtime error、历史计数；
+   - 拖动全部可信，且每次 drop 恰好一次写入；
+   - 登出确认列表精确；
+   - 导出的五种形态与 setup 失败；
+   - 抽看截图。
+2. 通过后登记 E12（native downstream、跨 document、clean 状态 chrome 相对 `419e56d` 不变、跨模块隔离），然后是 E13–E14（视觉与键盘，逐停靠点像素焦点比较）、最终回归 E18–E25、独立最终 acceptance、台账对账（含 R-1 对 SET-03 的决定）与库存刷新。
