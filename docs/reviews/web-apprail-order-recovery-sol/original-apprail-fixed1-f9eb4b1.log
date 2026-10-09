@@ -1,0 +1,327 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_app_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+mode=original
+suffix=apprail-fixed1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs f9eb4b1 original apprail-fixed1
+runner_checkout_head=dac8cd3ff4d916392051519699577eff084c42e4
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=f7b55802a73251b6eb1b0f0cb0d3d39d798fdb9ff7c472ee4b57a5abca4cea0a merge.test.tsx=05f6e01081156e2d32076606f2b4f314f33246d6b96b0ab7ffa644a9de8d377a drag.test.tsx=4be85f28b053eeed2606e8118641c7ffd93b1a078ce298c3343facfc3fd23063 field.test.tsx=21e7b77f7135bb1debe446f48bafdc9f3f4a3a5b1796084094bbac140f995846 continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=b89a4f6e2ebc12cf4a4952b17deb6ea7c793818198ad16562610f63ec47a4b03 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e packages/xai-web-shell/src/Shell.tsx=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 packages/xai-web-shell/src/types.ts=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 packages/xai-web-shell/src/index.ts=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=cd96f9bccf31b489d442de84d7c02ca855f712edf411da55d9e52ac30f47accd apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] shell-tests: include=packages/xai-web-shell/src/__tests__/AppRail.test.tsx,packages/xai-web-shell/src/__tests__/internal/dnd.test.ts,packages/xai-web-shell/src/__tests__/Topbar.test.tsx,packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx,packages/xai-web-shell/src/__tests__/index-barrel.test.ts vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/apprail-sol-original-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.report-original-0.json vitest_exit=0 cases=78 passed=78 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=78 numPassedTests=78 numFailedTests=0
+run[1] web-host: include=apps/web/src/__tests__/App.appearance.test.tsx,apps/web/src/__tests__/App.signout.test.tsx,apps/web/src/__tests__/App.lazy-init.test.tsx,apps/web/src/__tests__/shell.smoke.test.tsx,apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/apprail-sol-original-1.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.report-original-1.json vitest_exit=0 cases=45 passed=45 failed=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=true numTotalTests=45 numPassedTests=45 numFailedTests=0
+exit=0
+harness_checks=PASS (12/12)
+==== run[0] shell-tests ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB
+
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 0 to position 2 3ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 2 to position 0 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId === toId (N7 — drag onto self) 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId not found 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when toId not found 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > always returns a new array (safe for React state) 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > moves last item to first 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > moves first item to last 0ms
+ ✓ packages/xai-web-shell/src/__tests__/internal/dnd.test.ts > reorderArray > handles 2-element arrays 0ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP0 — preferences trigger opens the appearance popover 50ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1 — appearance popover: clicking 中文 calls setLang('zh') 14ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b — clicking EN calls setLang('en') 9ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1c — active lang option has aria-checked=true 8ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2 — Dark button calls setTheme('dark') 11ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Shell component 2ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AppRail component 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Topbar component 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AvatarMenu component 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports WebShellProvider 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebShell 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebModuleRegistry 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor) 0ms
+ ✓ packages/xai-web-shell/src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape) 0ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b — System button calls setTheme('system') 8ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c — active theme option has aria-checked=true 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3 — Compact button calls setDensity('compact') 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b — active density option has aria-checked=true 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP4 — Settings row click calls onOpenSettings 11ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat) 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP5b — onOpenSearch prop provided → renders <button class='search-box'> 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP6 — ⌘K kbd hint is rendered 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP7 — button click calls onOpenSearch() 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts 7ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts 6ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover 2ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover 1ms
+ ✓ packages/xai-web-shell/src/__tests__/Topbar.test.tsx > Topbar > TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged 2ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1 — Shell renders with Topbar (search input present) 22ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1b — Shell renders with AppRail (app-rail aside present) 5ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S2 — Shell renders children in app-main 4ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3a — Shell renders with railPos=right 4ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3b — Shell renders with railPos=top 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3c — Shell renders with railPos=bottom 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S4 — Shell renders with empty modules (no crash) 3ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke) 11ms
+ ✓ packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S-StrictMode — StrictMode double-mount does not throw 4ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR1 — renders rail-visible modules sorted by railOrder 22ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR1b — settings module with showInRail:false is not in rail-items 3ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR2 — data-pos attribute matches railPos 4ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR2b — left is the default data-pos 3ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR3 — clicking a module button calls onModuleClick with the module id 8ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR4 — active module button has 'active' className 3ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR4b — inactive buttons do NOT have 'active' className 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR5 — drag-reorder: onDragStart sets dragging class 4ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR8 — ghost module ids in localStorage are filtered out 7ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR9 — Pet button is rendered in the rail-bottom 3ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR9b — clicking Pet button calls onPetToggle 3ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR9c — Pet button has 'active' class when petOn=true 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden) 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix) 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix) 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix) 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR10d — pet button is still present after removing sync/notif/help 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR11 — icon-only rail controls expose accessible names 33ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail > AR11 — module button has data-tip with i18n label 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog 7ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible) 5ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P1 — xai_rail_order is restored on remount 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P3 — items missing from xai_rail_order are appended at end 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N1 — empty modules list renders empty rail-items 2ms
+ ✓ packages/xai-web-shell/src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N3 — empty xai_rail_order falls back to registry order 2ms
+
+ Test Files  5 passed (5)
+      Tests  78 passed (78)
+   Start at  04:28:35
+   Duration  1.30s (transform 381ms, setup 708ms, collect 1.02s, tests 396ms, environment 2.31s, prepare 302ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.report-original-0.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["packages/xai-web-shell/src/__tests__/AppRail.test.tsx","packages/xai-web-shell/src/__tests__/internal/dnd.test.ts","packages/xai-web-shell/src/__tests__/Topbar.test.tsx","packages/xai-web-shell/src/__tests__/Shell.smoke.test.tsx","packages/xai-web-shell/src/__tests__/index-barrel.test.ts"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/internal/dnd.ts packages/xai-web-shell/src/index.ts
+pin_modules=55 by package: packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=21
+==== run[1] web-host ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB
+
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-1: default prefs (all true) → all real registrations pass through 8ms
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-2: flipping board off removes it from the filtered list 2ms
+ ✓ apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx > rail feature filter against real webShellModuleRegistrations > AC-APP-3: localStorage persistence — pref set survives a fresh hook mount 1ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4) 82ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live cleanup failure is visible and does not redirect or call shared cleanup 56ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > superseded A cleanup cannot navigate away from a new B login 22ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount 41ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected 54ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A1b — App renders AppRail (aside.app-rail present) 19ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A2 — StrictMode double-mount does not throw 22ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A3 — App applies default theme on mount (data-theme is set) 16ms
+ ✓ apps/web/src/__tests__/shell.smoke.test.tsx > Shell cross-package smoke (A1..A4) > A4 — App renders without crash when no child route matches 19ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount 17ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable) 45ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > App lazy-init from localStorage (APP-LP1..APP-LP5) > APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw) 15ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when key absent 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns parsed value when key present with valid JSON 0ms
+ ✓ apps/web/src/__tests__/App.lazy-init.test.tsx > readLocalPref unit tests > returns fallback when value is corrupt JSON 0ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > live confirmed cleanup redirects through the coordinator only 29ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called 20ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO2 — order: signOut before clearSessionStorage before assign 24ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort) 20ms
+ ✓ apps/web/src/__tests__/App.signout.test.tsx > App.tsx handleSignOut (APP-SO1..APP-SO4) > APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign 17ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP1 — every Topbar choice persists today's exact bytes through the controller; mounting writes nothing 460ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP2 — a failing Topbar write keeps the choice checked and applied and shows the Topbar status (replaces TP-Persist-Quota-Safe) 129ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) > APP-AP2b — a Topbar write held behind the real per-key lock shows no status and keeps the options enabled; after release exactly one write 137ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > one App-scoped controller > APP-AP3 — a pane edit is visible in the Topbar and a Topbar edit in the pane in the same act 125ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > one App-scoped controller > APP-AP4 — Review on the Topbar status emits the shortcut event once and navigates once to the pane, which shows the field message 197ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > one App-scoped controller > APP-AP5 — the Settings sidebar is never held by Appearance drafts (no route guard); the draft survives the round trip 162ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > the sign-out step before requestSettingsDeparture > APP-AP6 — fallback branch without drafts: zero confirm and the existing sequence completes 151ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > the sign-out step before requestSettingsDeparture > APP-AP7 — fallback branch with a failed draft: one confirm; Cancel keeps identity, draft, status and warning; OK discards with zero writes and continues 193ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > the sign-out step before requestSettingsDeparture > APP-AP8 — coordinator branch with a failed draft: Cancel resolves false before the coordinator is asked to sign out 129ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_lang="fr" at load leaves /app rendering with defaults, zero writes and the bytes kept 46ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_lang=null at load leaves /app rendering with defaults, zero writes and the bytes kept 46ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_lang=1 at load leaves /app rendering with defaults, zero writes and the bytes kept 46ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_lang="EN" at load leaves /app rendering with defaults, zero writes and the bytes kept 47ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_font_scale=0 at load leaves /app rendering with defaults, zero writes and the bytes kept 46ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_font_scale=-1 at load leaves /app rendering with defaults, zero writes and the bytes kept 46ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_font_scale=null at load leaves /app rendering with defaults, zero writes and the bytes kept 48ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_font_scale="big" at load leaves /app rendering with defaults, zero writes and the bytes kept 54ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_pref_font_scale="1" at load leaves /app rendering with defaults, zero writes and the bytes kept 56ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP9 — xai_accent_hue=Infinity at load leaves /app rendering with defaults, zero writes and the bytes kept 53ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP10 — an Infinity accent written by another document while the App runs leaves the field source-only without a throw 84ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP11 — a committed root change in another document is reflected live in <html>, the Topbar and the pane 98ms
+ ✓ apps/web/src/__tests__/App.appearance.test.tsx > crash safety and the retired event path > APP-AP12 — Appearance edits, Retry all and Reset emit no web:settings:preference-changed and App writes nothing raw 160ms
+
+ Test Files  5 passed (5)
+      Tests  45 passed (45)
+   Start at  04:28:37
+   Duration  5.99s (transform 2.38s, setup 0ms, collect 13.71s, tests 3.05s, environment 1.31s, prepare 284ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.report-original-1.json
+
+---- stderr ----
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-Xi5WbB/.apprail-sol-vite-cache-1/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":[],"include":["apps/web/src/__tests__/App.appearance.test.tsx","apps/web/src/__tests__/App.signout.test.tsx","apps/web/src/__tests__/App.lazy-init.test.tsx","apps/web/src/__tests__/shell.smoke.test.tsx","apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance apps/web/src/App.tsx packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx
+pin_modules=633 by package: apps/web=33 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=14 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=123 passed=123 failed=0 skipped=0 precondition_failures=0
+harness PASS [shell-tests] JSON report parsed
+harness PASS [shell-tests] reported files equal the requested include
+harness PASS [shell-tests] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [shell-tests] guard plugin active (archive modules recorded)
+harness PASS [shell-tests] required product modules loaded from the archive (5)
+harness PASS [shell-tests] no test-file suite error
+harness PASS [web-host] JSON report parsed
+harness PASS [web-host] reported files equal the requested include
+harness PASS [web-host] config in effect (environment jsdom, globals false, setupFiles [], root = archive)
+harness PASS [web-host] guard plugin active (archive modules recorded)
+harness PASS [web-host] required product modules loaded from the archive (4)
+harness PASS [web-host] no test-file suite error
+case 001 PASSED | [shell-tests] AppRail AR1 — renders rail-visible modules sorted by railOrder
+case 002 PASSED | [shell-tests] AppRail AR1b — settings module with showInRail:false is not in rail-items
+case 003 PASSED | [shell-tests] AppRail AR2 — data-pos attribute matches railPos
+case 004 PASSED | [shell-tests] AppRail AR2b — left is the default data-pos
+case 005 PASSED | [shell-tests] AppRail AR3 — clicking a module button calls onModuleClick with the module id
+case 006 PASSED | [shell-tests] AppRail AR4 — active module button has 'active' className
+case 007 PASSED | [shell-tests] AppRail AR4b — inactive buttons do NOT have 'active' className
+case 008 PASSED | [shell-tests] AppRail AR5 — drag-reorder: onDragStart sets dragging class
+case 009 PASSED | [shell-tests] AppRail AR8 — ghost module ids in localStorage are filtered out
+case 010 PASSED | [shell-tests] AppRail AR9 — Pet button is rendered in the rail-bottom
+case 011 PASSED | [shell-tests] AppRail AR9b — clicking Pet button calls onPetToggle
+case 012 PASSED | [shell-tests] AppRail AR9c — Pet button has 'active' class when petOn=true
+case 013 PASSED | [shell-tests] AppRail AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)
+case 014 PASSED | [shell-tests] AppRail AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)
+case 015 PASSED | [shell-tests] AppRail AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)
+case 016 PASSED | [shell-tests] AppRail AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)
+case 017 PASSED | [shell-tests] AppRail AR10d — pet button is still present after removing sync/notif/help
+case 018 PASSED | [shell-tests] AppRail AR11 — icon-only rail controls expose accessible names
+case 019 PASSED | [shell-tests] AppRail AR11 — module button has data-tip with i18n label
+case 020 PASSED | [shell-tests] AppRail sign-out passthrough (AR-SO1..SO2) AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog
+case 021 PASSED | [shell-tests] AppRail sign-out passthrough (AR-SO1..SO2) AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)
+case 022 PASSED | [shell-tests] AppRail persistence (P1..P4) P1 — xai_rail_order is restored on remount
+case 023 PASSED | [shell-tests] AppRail persistence (P1..P4) P3 — items missing from xai_rail_order are appended at end
+case 024 PASSED | [shell-tests] AppRail persistence (P1..P4) N1 — empty modules list renders empty rail-items
+case 025 PASSED | [shell-tests] AppRail persistence (P1..P4) N3 — empty xai_rail_order falls back to registry order
+case 026 PASSED | [shell-tests] Shell smoke (S1..S4) S1 — Shell renders with Topbar (search input present)
+case 027 PASSED | [shell-tests] Shell smoke (S1..S4) S1b — Shell renders with AppRail (app-rail aside present)
+case 028 PASSED | [shell-tests] Shell smoke (S1..S4) S2 — Shell renders children in app-main
+case 029 PASSED | [shell-tests] Shell smoke (S1..S4) S3a — Shell renders with railPos=right
+case 030 PASSED | [shell-tests] Shell smoke (S1..S4) S3b — Shell renders with railPos=top
+case 031 PASSED | [shell-tests] Shell smoke (S1..S4) S3c — Shell renders with railPos=bottom
+case 032 PASSED | [shell-tests] Shell smoke (S1..S4) S4 — Shell renders with empty modules (no crash)
+case 033 PASSED | [shell-tests] Shell smoke (S1..S4) SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke)
+case 034 PASSED | [shell-tests] Shell smoke (S1..S4) S-StrictMode — StrictMode double-mount does not throw
+case 035 PASSED | [shell-tests] Topbar TP0 — preferences trigger opens the appearance popover
+case 036 PASSED | [shell-tests] Topbar TP1 — appearance popover: clicking 中文 calls setLang('zh')
+case 037 PASSED | [shell-tests] Topbar TP1b — clicking EN calls setLang('en')
+case 038 PASSED | [shell-tests] Topbar TP1c — active lang option has aria-checked=true
+case 039 PASSED | [shell-tests] Topbar TP2 — Dark button calls setTheme('dark')
+case 040 PASSED | [shell-tests] Topbar TP2b — System button calls setTheme('system')
+case 041 PASSED | [shell-tests] Topbar TP2c — active theme option has aria-checked=true
+case 042 PASSED | [shell-tests] Topbar TP3 — Compact button calls setDensity('compact')
+case 043 PASSED | [shell-tests] Topbar TP3b — active density option has aria-checked=true
+case 044 PASSED | [shell-tests] Topbar TP4 — Settings row click calls onOpenSettings
+case 045 PASSED | [shell-tests] Topbar TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)
+case 046 PASSED | [shell-tests] Topbar TP5b — onOpenSearch prop provided → renders <button class='search-box'>
+case 047 PASSED | [shell-tests] Topbar TP6 — ⌘K kbd hint is rendered
+case 048 PASSED | [shell-tests] Topbar TP7 — button click calls onOpenSearch()
+case 049 PASSED | [shell-tests] Topbar TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided
+case 050 PASSED | [shell-tests] Topbar TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts
+case 051 PASSED | [shell-tests] Topbar TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts
+case 052 PASSED | [shell-tests] Topbar TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts
+case 053 PASSED | [shell-tests] Topbar TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts
+case 054 PASSED | [shell-tests] Topbar TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts
+case 055 PASSED | [shell-tests] Topbar TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts
+case 056 PASSED | [shell-tests] Topbar TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts
+case 057 PASSED | [shell-tests] Topbar TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover
+case 058 PASSED | [shell-tests] Topbar TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged
+case 059 PASSED | [shell-tests] Topbar TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover
+case 060 PASSED | [shell-tests] Topbar TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged
+case 061 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports Shell component
+case 062 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports AppRail component
+case 063 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports Topbar component
+case 064 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports AvatarMenu component
+case 065 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports WebShellProvider
+case 066 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports useWebShell
+case 067 PASSED | [shell-tests] index barrel (B1..B3) B1 — exports useWebModuleRegistry
+case 068 PASSED | [shell-tests] index barrel (B1..B3) B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor)
+case 069 PASSED | [shell-tests] index barrel (B1..B3) B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape)
+case 070 PASSED | [shell-tests] reorderArray moves item from position 0 to position 2
+case 071 PASSED | [shell-tests] reorderArray moves item from position 2 to position 0
+case 072 PASSED | [shell-tests] reorderArray returns original array when fromId === toId (N7 — drag onto self)
+case 073 PASSED | [shell-tests] reorderArray returns original array when fromId not found
+case 074 PASSED | [shell-tests] reorderArray returns original array when toId not found
+case 075 PASSED | [shell-tests] reorderArray always returns a new array (safe for React state)
+case 076 PASSED | [shell-tests] reorderArray moves last item to first
+case 077 PASSED | [shell-tests] reorderArray moves first item to last
+case 078 PASSED | [shell-tests] reorderArray handles 2-element arrays
+case 079 PASSED | [web-host] Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) APP-AP1 — every Topbar choice persists today's exact bytes through the controller; mounting writes nothing
+case 080 PASSED | [web-host] Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) APP-AP2 — a failing Topbar write keeps the choice checked and applied and shows the Topbar status (replaces TP-Persist-Quota-Safe)
+case 081 PASSED | [web-host] Topbar persistence at App level (replaces TP1-Persist … TP3b-Persist) APP-AP2b — a Topbar write held behind the real per-key lock shows no status and keeps the options enabled; after release exactly one write
+case 082 PASSED | [web-host] one App-scoped controller APP-AP3 — a pane edit is visible in the Topbar and a Topbar edit in the pane in the same act
+case 083 PASSED | [web-host] one App-scoped controller APP-AP4 — Review on the Topbar status emits the shortcut event once and navigates once to the pane, which shows the field message
+case 084 PASSED | [web-host] one App-scoped controller APP-AP5 — the Settings sidebar is never held by Appearance drafts (no route guard); the draft survives the round trip
+case 085 PASSED | [web-host] the sign-out step before requestSettingsDeparture APP-AP6 — fallback branch without drafts: zero confirm and the existing sequence completes
+case 086 PASSED | [web-host] the sign-out step before requestSettingsDeparture APP-AP7 — fallback branch with a failed draft: one confirm; Cancel keeps identity, draft, status and warning; OK discards with zero writes and continues
+case 087 PASSED | [web-host] the sign-out step before requestSettingsDeparture APP-AP8 — coordinator branch with a failed draft: Cancel resolves false before the coordinator is asked to sign out
+case 088 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_lang="fr" at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 089 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_lang=null at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 090 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_lang=1 at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 091 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_lang="EN" at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 092 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_font_scale=0 at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 093 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_font_scale=-1 at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 094 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_font_scale=null at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 095 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_font_scale="big" at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 096 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_pref_font_scale="1" at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 097 PASSED | [web-host] crash safety and the retired event path APP-AP9 — xai_accent_hue=Infinity at load leaves /app rendering with defaults, zero writes and the bytes kept
+case 098 PASSED | [web-host] crash safety and the retired event path APP-AP10 — an Infinity accent written by another document while the App runs leaves the field source-only without a throw
+case 099 PASSED | [web-host] crash safety and the retired event path APP-AP11 — a committed root change in another document is reflected live in <html>, the Topbar and the pane
+case 100 PASSED | [web-host] crash safety and the retired event path APP-AP12 — Appearance edits, Retry all and Reset emit no web:settings:preference-changed and App writes nothing raw
+case 101 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP1 — xai_pref_theme='dark' in localStorage → html data-theme='dark' on mount
+case 102 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP2 — xai_pref_lang='zh' in localStorage → Topbar marks 中文 as selected
+case 103 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP3 — xai_pref_density='compact' in localStorage → html data-density='compact' on mount
+case 104 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP4 — localStorage empty → three dims use fallback (en/light/comfortable)
+case 105 PASSED | [web-host] App lazy-init from localStorage (APP-LP1..APP-LP5) APP-LP5 — corrupt JSON in xai_pref_theme → JSON.parse fails → fallback to 'light' (no throw)
+case 106 PASSED | [web-host] readLocalPref unit tests returns fallback when key absent
+case 107 PASSED | [web-host] readLocalPref unit tests returns parsed value when key present with valid JSON
+case 108 PASSED | [web-host] readLocalPref unit tests returns fallback when value is corrupt JSON
+case 109 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live cleanup failure is visible and does not redirect or call shared cleanup
+case 110 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) superseded A cleanup cannot navigate away from a new B login
+case 111 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) live confirmed cleanup redirects through the coordinator only
+case 112 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO1 — happy path: signOut + clearSessionStorage + redirect all called
+case 113 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO2 — order: signOut before clearSessionStorage before assign
+case 114 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO3 — network error on signOut: clearSessionStorage + assign still called (best-effort)
+case 115 PASSED | [web-host] App.tsx handleSignOut (APP-SO1..APP-SO4) APP-SO4 — null client: skips signOut, still calls clearSessionStorage + assign
+case 116 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1 — App renders Shell with Topbar (search button present, xai-web-cmdk P4)
+case 117 PASSED | [web-host] Shell cross-package smoke (A1..A4) A1b — App renders AppRail (aside.app-rail present)
+case 118 PASSED | [web-host] Shell cross-package smoke (A1..A4) A2 — StrictMode double-mount does not throw
+case 119 PASSED | [web-host] Shell cross-package smoke (A1..A4) A3 — App applies default theme on mount (data-theme is set)
+case 120 PASSED | [web-host] Shell cross-package smoke (A1..A4) A4 — App renders without crash when no child route matches
+case 121 PASSED | [web-host] rail feature filter against real webShellModuleRegistrations AC-APP-1: default prefs (all true) → all real registrations pass through
+case 122 PASSED | [web-host] rail feature filter against real webShellModuleRegistrations AC-APP-2: flipping board off removes it from the filtered list
+case 123 PASSED | [web-host] rail feature filter against real webShellModuleRegistrations AC-APP-3: localStorage persistence — pref set survives a fresh hook mount
