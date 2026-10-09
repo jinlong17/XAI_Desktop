@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-APPRAIL-01 已由独立最终 acceptance `efe05ea` 接受，台账已对账（`9a3e3aa`）。本批登记批次 66：CP-LUNA-04 在 `f9eb4b1` 上刷新直接 `usePref` 库存，之后确认并登记 CP-CLOCK-01。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：库存已在 `f9eb4b1` 上刷新（CP-LUNA-04，`32a265c`），只移除 `AppRail.tsx:37` 一行，8 项计数与总控预测一致。时钟合同 r1 固定在 `419e56d`，而 `f9eb4b1` 改了它依赖的登出序列、Topbar 与受影响 caller 集合，须改为 r2。本批登记批次 67：由独立 Astra 把 CP-CLOCK-01 合同改写为基于 `f9eb4b1` 的 r2。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `9a3e3aa` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `32a265c` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -178,7 +178,16 @@
 
 ## 当前进行中的调用方
 
-无已选定 caller 进入执行。批次 66 刷新库存，之后由总控确认并登记 CP-CLOCK-01（时钟合同 r1 已在 `2c35fee` 起草，见下）。
+无已选定 caller 进入执行。库存已刷新（批次 66）；批次 67 正在把时钟合同改写为 r2，之后由总控确认并登记 CP-CLOCK-01。
+
+**时钟合同 r1 须改为 r2 的依据（总控在 `f9eb4b1` 上核对）：**
+- r1 第 11 行声明除 `App.tsx` 外所列文件在 `5cd63ff` 与 `419e56d` 之间逐字节相同，并在 hash 表中固定 `App.tsx`（第 32 行）；`f9eb4b1` 改了 `App.tsx`、`AppRail.tsx`、`Topbar.tsx`、`Shell.tsx` 等 19 个文件。
+- **登出序列：** r1 §3 第 9 项与 §7 第 5 项按"Appearance 步骤，然后 `requestSettingsDeparture`"描述；`f9eb4b1` 在两个分支都先执行 rail 步骤（无 rail 草稿时零确认）。r1 的 `window.confirm` 记录器只要求 Appearance 步骤零调用，须扩展到 rail 步骤。
+- **Topbar：** 新增 `railOrderStatus` 槽；r1 §9 要求 Appearance 状态不出现，须同样处理 rail 状态。
+- **AppRail：** r1 多个 host 行与 before oracle（c、d、k，c2、H5）以 AppRail 点击作为离页动作；AppRail 的点击行为未改，但组件结构与拖动已改，须核实这些 oracle 在 `f9eb4b1` 上的前置条件仍成立。
+- **受影响 caller 与回归：** AppRail 已成为已接受 caller，回归须加入其 Sol 八个模式、父级 host、rail F1 形态（E16 同类）与 C-RD1；E15 的 F1 清单须加入 rail F1。
+- **经验：** archive 已超过 100 MiB，runner 须流式读取或按大小设缓冲；D1 限定；F-E14-1（窄屏非模态浮层遮挡后续焦点）。
+
 
 ### 产品负责人决定登记（2026-10-06）
 
@@ -205,17 +214,17 @@
 - CP-APPEARANCE-01 已于 `a560863` 接受（见上）。进行中阶段的完整记录保留在本文件的 `8c88dd2` 版本：`git show 8c88dd2:docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md`。
 - CP-FEATURES-01 已于 `ec55f9e` 接受。进行中记录见本文件的 `78e8de2` 版本。
 
-**最新库存：** `refresh-419e56d.md` / `bindings-419e56d.json`（CP-LUNA-03，`832f6ab`），将由批次 66（CP-LUNA-04）在 `f9eb4b1` 上刷新。相对 `5cd63ff` 只移除 `AppearancePane.tsx` 第 52、53、55 行（`xai_accent_hue`、`xai_rail_pos`、`xai_bg_tone`，只读）；余下 48 行逐字段不变。
-- **剩余规模：** 23 个文件、48 个直接绑定、27 个字面量键、1 个动态位点、31 个 setter 绑定（28 个直接、3 个仅下游）、17 个只读绑定。
+**最新库存：** `refresh-f9eb4b1.md` / `bindings-f9eb4b1.json`（CP-LUNA-04，`32a265c`）。相对 `419e56d` 只移除 `packages/xai-web-shell/src/AppRail.tsx:37`（`xai_rail_order`，setter `setPrefOrder`）；余下 47 行逐字段、同序不变。上一份为 `refresh-419e56d.md`（CP-LUNA-03，`832f6ab`）。相对 `5cd63ff` 只移除 `AppearancePane.tsx` 第 52、53、55 行（`xai_accent_hue`、`xai_rail_pos`、`xai_bg_tone`，只读）；余下 48 行逐字段不变。
+- **剩余规模：** 22 个文件、47 个直接绑定、26 个字面量键、1 个动态位点、30 个 setter 绑定（27 个直接、3 个仅下游）、17 个只读绑定。
 - **按包分布：**
   - dashboard-widgets 11、settings-rest 10、board-workspaces 8、statistics 4；
   - board-views、calendar 各 3；
   - board-core、pet 各 2；
-  - pomodoro、dashboard-grid、features-panel、shell、tasks 各 1。
+  - pomodoro、dashboard-grid、features-panel、tasks 各 1（shell 已无直接绑定）。
 - **扫描边界：**
   - 只扫描 `packages/**/*.tsx`（不含 `__tests__`）中直接以 `usePref` 为标识符的调用；
   - `.ts` 文件（如 `useFeaturePrefs.ts`）、`apps/`、CmdK 的 `getPref` 读取，以及 `usePrefAutosaveAsync` 都不可见；
-  - 例如 `App.tsx` 在 `5cd63ff` 有三处 `usePref`，在 `419e56d` 已没有，但两份库存都看不到。
+  - 例如 `App.tsx` 在 `5cd63ff` 有三处 `usePref`，在 `419e56d` 已没有，但库存都看不到；同样，`usePrefAutosaveAsync` 绑定（Appearance 与 AppRail controller）不计入。
 - 这些是排程输入，不是完整 writer 数，也不是缺陷数。
 
 按 [remaining-writers.md](../web-date-time-recovery-contract/remaining-writers.md)，Sticky5 是排程中最后一个"剩余普通 Settings 控件"caller。后续 caller 属于该文件"Follow-on caller grouping"中尚待分别规定的组，依次为：
@@ -294,7 +303,7 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `assigned_to_luna` |
+| 状态 | `accepted`（总控核对通过，作为库存证据，不涉及产品范围）：`32a265c`。<ul><li>新增 `bindings-f9eb4b1.json`（`5ef90bd3…`）与 `refresh-f9eb4b1.md`（`8b9e613c…`）；扫描器一次运行，退出 0，无诊断轮次。</li><li>按整行对账：移除 1 行（`AppRail.tsx:37`），新增 0 行，变化 0 行；8 项计数与总控预测完全一致。总控另行比对两份 JSON，结果相同。</li><li>新增的 shell `internal/railOrderController.tsx` 经 `usePrefAutosaveAsync` 绑定，`RailOrderStatus.tsx`、`Shell.tsx`、`Topbar.tsx` 不含 `usePref`；`App.tsx` 在扫描边界外。</li></ul> |
 | 执行者 | 新的独立 Claude Sonnet 5.5（Luna 角色映射），隔离 worktree |
 | 风险 | 低：只读 git 中的固定修订，并运行既有扫描器 |
 | 固定点 | 产品 `f9eb4b1`；对照 `419e56d` 的 `bindings-419e56d.json` 与 `refresh-419e56d.md` |
@@ -362,7 +371,8 @@
 | AppRail（续 8） | `641ca45` 登记批次 63 · `5c6bcd2` 键盘 E14 |
 | AppRail（续 9） | `9aeec39` 登记批次 64 · `ee60b48` 最终回归 E18–E25 |
 | AppRail 关闭 | `82d5057` 登记批次 65 · `efe05ea` AppRail acceptance · `9a3e3aa` 台账 |
-| 本提交 | CP-APPRAIL-01 改为 `accepted`，登记批次 66（CP-LUNA-04） |
+| 下一项选择（续 8） | `37dd138` CP-APPRAIL-01 改为 `accepted`，登记批次 66 · `32a265c` 库存刷新（CP-LUNA-04） |
+| 本提交 | 记录库存结果与时钟合同须改 r2 的依据，登记批次 67（时钟合同 r2） |
 
 ## 台账变化
 
@@ -425,16 +435,36 @@
 
 ## 本轮唯一任务
 
-批次 66：CP-LUNA-04，在 `f9eb4b1` 上刷新直接 `usePref` 库存。固定点、命令、允许文件、验收条件、禁止事项与停止条件见上方 Luna 任务卡。
+### 批次 67：时钟合同 r2（独立 Astra 角色）
 
-- **成本上限：** 扫描器只运行一次；若需诊断，最多 3 轮。
-- **输出：** 一个提交，只新增两个允许的文件；不 push。
+- **执行者：** 新的独立 Claude Opus 5.5（Astra 角色映射），隔离 worktree，只读分析，不改产品。它不是时钟合同 r1 的作者（批次 54），也不是 AppRail 任何一批的执行者。
+- **固定点：** 产品 `f9eb4b1`（AppRail 接受后的产品头）；控制分支基点为本提交。
+- **输入：**
+  - 时钟合同 r1：`docs/reviews/web-dashboard-clock-recovery-contract/contract.md`（`2c35fee`，SHA-256 `21624ff5…`）与选择备忘录 `selection-419e56d.md`；
+  - 上方"时钟合同 r1 须改为 r2 的依据"；
+  - AppRail 合同 r1 与 acceptance `acceptance-f9eb4b1.md`，以及 Appearance 合同 r3；
+  - 本控制面列出的全部经验与裁定（F1、G1、F-B002/C-FB002、OE、F-FD1/C-FD1、C-RD1、K-1、F-APP-1/2/3、F-E14-1、R-PET、release-once、delta 审计沿用、archive 缓冲、D1 限定）。
+- **合同要求：** 在同一路径把合同改写为 r2，并在开头写修订记录（r1→r2 改了什么、为什么）。
+  - **重新固定：** 所有源码引用、行号与 hash 表改为在 `f9eb4b1` 上核实；写明 `419e56d..f9eb4b1` 的 19 个文件对时钟范围的影响。
+  - **登出：** 按 `f9eb4b1` 的序列（rail 步骤 → Appearance 步骤 → `requestSettingsDeparture`）重写 §3、§7 与相关 host 行和 oracle；确认记录器须要求 rail 与 Appearance 步骤在无草稿时都零调用；补充 rail 草稿与 Clock 草稿同时存在时的登出用例（rail 确认先出现，Cancel 时不触及 Clock 与协调器）。
+  - **Topbar：** rail 状态与 Appearance 状态都须不出现（未播种时），出现即前置条件失败；或说明为何需要它们出现。
+  - **AppRail 作为离页动作：** 核实以 AppRail 点击作为离页动作的 host 行与 before oracle 在 `f9eb4b1` 上仍有效（点击行为未变，组件结构已变）；不得依赖 rail 拖动。
+  - **受影响 caller 与回归：** 加入 AppRail（Sol 八个模式、父级 host、rail F1 形态、C-RD1 等）；E15 的 F1 清单加入 rail F1；列出所有判定副本与预测结果。
+  - **runner 惯例：** 流式读取 `git archive` 或按大小设缓冲；native 用 pipe transport、不带 `nativeVirtualKeyCode`、保留按键审计；拖动只用可信 CDP 输入。
+  - **焦点可见：** 逐停靠点像素比较（冻结 `pixelFocusWalk`），并说明 Clock 的新增控件或浮层是否存在 F-E14-1 同类遮挡。
+  - **假设：** 保留 r1 的 A1–A9（如需修改须说明理由），全部列为待总控确认；需要产品负责人决定的事项单独列出（r1 的结论是没有）。
+  - **Required evidence：** 唯一且连续，按 G1 列全；为实施者预留测试运行的记录目录。
+  - **停止条件：** 若必须改 D2 共享层、受保护的 shell 或 `App.tsx`，或跨产品模块，停止并只交说明。
+- **输出：** 只修改该合同文件（这是本批唯一允许修改的已有文件），并提交一次；不 push。
+- **禁止：** 修改任何其他已有文件、产品、台账或控制面；派生子 agent。
 
 ## 下一步
 
-1. 等待批次 66 回执，总控核对：
-   - 只新增两个文件；
-   - delta 是否只有 `AppRail.tsx:37` 一行；
-   - 各项计数及其解释。
-2. 通过后，确认 CP-CLOCK-01：在 `f9eb4b1` 上复核时钟合同 r1（`2c35fee`，`21624ff5…`）的关键源码事实与 Required evidence。`419e56d..f9eb4b1` 改了 shell 与 `App.tsx`，须判断合同是否需要 r2（例如受影响 caller 清单须加入 AppRail，并沿用 C-RD1 等纠正副本、archive 缓冲经验与 F-E14-1 教训）。需要时另开独立 Astra 写 r2；不需要时登记 CP-CLOCK-01 与首个执行批次（冻结 before oracle）。
+1. 等待批次 67 回执，总控核对：
+   - r2 只改合同文件，修订记录完整；
+   - 关键源码事实在 `f9eb4b1` 上抽查属实（尤其登出序列、Topbar 槽与 AppRail 点击）；
+   - 受影响 caller 与判定副本完整；
+   - Required evidence 清单完整；
+   - 范围不越模块。
+2. 总控确认 A1–A9，登记 CP-CLOCK-01 与首个执行批次（冻结 before oracle）。
 3. 用户已作的 W-1、C-1、F-2 决定在对应 caller 时使用；P-1 与 D-2 待到对应候选时再问。
