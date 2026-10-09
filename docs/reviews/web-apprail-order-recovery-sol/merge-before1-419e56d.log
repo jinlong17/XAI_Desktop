@@ -1,0 +1,706 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=merge
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d merge before1
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=9dc5784b574768b1f71c13260aa68aabed9a80322497224e689ebe3cb316b989 merge.test.tsx=dd6961f6463db641601a369d5dd135e135d99b888dfee8bbbdc77cb42b50d2c6 drag.test.tsx=8a8da1134fceb5a90ec7de7c7453d617d6ffe496ce42c6f953903d31a2e54f17 field.test.tsx=440f08929d625558d14dbd3084d22a26e3e899214071419a51dad8f1832c67fc continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=e9b64c02373c552775d64ba603572a2467c4b4d909930682cfcbaf13aa7c2bc3 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] merge.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB/apprail-sol-merge-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB/.report-merge-0.json vitest_exit=1 cases=21 passed=4 failed=17 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=21 numPassedTests=4 numFailedTests=17
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] merge.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 5ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > FIXTURE the oracle merge implements A2 on hand-checked examples 1ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled
+SOL-OBS tasks hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["tasks"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled
+SOL-OBS board hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["board"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled 104ms
+   → tasks hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 tasks keeps index 12', …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled 51ms
+   → board hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 11', …(2) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled
+SOL-OBS dashboard hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["dashboard"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","board","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","board","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled
+SOL-OBS calendar hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["calendar"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","dashboard","board","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","dashboard","board","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled 56ms
+   → dashboard hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 dashboard keeps index 10', …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled 51ms
+   → calendar hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 9', …(2) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled
+SOL-OBS matrix hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["matrix"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","calendar","dashboard","board","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","calendar","dashboard","board","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled
+SOL-OBS pomodoro hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["pomodoro"],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","matrix","calendar","dashboard","board","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","matrix","calendar","dashboard","board","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled 148ms
+   → matrix hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 matrix keeps index 8', …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled 58ms
+   → pomodoro hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 pomodoro keeps index 7', …(2) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled
+SOL-OBS habits hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["habits"],"order":["countdown","meditation","metrics","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"written":["countdown","meditation","metrics","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"expected":["countdown","meditation","metrics","habits","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled
+SOL-OBS meditation hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["meditation"],"order":["countdown","habits","metrics","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"written":["countdown","habits","metrics","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"expected":["countdown","habits","meditation","metrics","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro)
+SOL-OBS three hidden written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":["board","habits","pomodoro"],"order":["countdown","meditation","metrics","bookkeeping","statistics","timetrack","matrix","calendar","dashboard","tasks","ai"],"written":["countdown","meditation","metrics","bookkeeping","statistics","timetrack","matrix","calendar","dashboard","tasks","ai"],"expected":["countdown","meditation","metrics","habits","bookkeeping","statistics","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled 53ms
+   → habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled 48ms
+   → meditation hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 meditation keeps index 2', …(2) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end
+SOL-OBS three hidden far written {"stored":["calendar","tasks","board","ai","dashboard","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"hidden":["tasks","calendar","meditation"],"order":["ai","dashboard","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","countdown","board","statistics"],"written":["ai","dashboard","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","countdown","board","statistics"],"expected":["calendar","tasks","ai","dashboard","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","countdown","meditation","board","statistics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed)
+SOL-OBS unknown ids written {"stored":["ghost-module","tasks","board","ghost-2","ai","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"hidden":[],"order":["board","ai","dashboard","calendar","tasks","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"written":["board","ai","dashboard","calendar","tasks","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"expected":["ghost-module","board","ai","ghost-2","dashboard","calendar","tasks","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro) 46ms
+   → three hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(4) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end 43ms
+   → three hidden far: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 0', …(4) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed) 47ms
+   → unknown ids: P1–P4 hold for the written value (H5 when a P2 fails): expected [ …(4) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices
+SOL-OBS settings and habits hidden written {"stored":["matrix","settings","habits","ai","tasks","board","dashboard","calendar","pomodoro","timetrack","bookkeeping","metrics","meditation","countdown","statistics"],"hidden":["habits"],"order":["ai","tasks","board","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","meditation","countdown","statistics"],"written":["ai","tasks","board","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","meditation","countdown","statistics"],"expected":["ai","settings","habits","tasks","board","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","meditation","countdown","statistics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7
+SOL-OBS P7 absent habits written {"stored":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics"],"hidden":["habits"],"order":["board","dashboard","calendar","matrix","tasks","pomodoro","timetrack","meditation","countdown","ai","statistics","bookkeeping","metrics"],"written":["board","dashboard","calendar","matrix","tasks","pomodoro","timetrack","meditation","countdown","ai","statistics","bookkeeping","metrics"],"expected":["board","dashboard","calendar","matrix","tasks","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices
+SOL-OBS P7 absent board+meditation written {"stored":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics"],"hidden":["board","meditation"],"order":["dashboard","calendar","matrix","pomodoro","tasks","timetrack","habits","countdown","ai","statistics","bookkeeping","metrics"],"written":["dashboard","calendar","matrix","pomodoro","tasks","timetrack","habits","countdown","ai","statistics","bookkeeping","metrics"],"expected":["dashboard","board","calendar","matrix","pomodoro","tasks","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices 47ms
+   → settings and habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 settings keeps index 1', …(3) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7 49ms
+   → P7 absent habits: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 7', …(2) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > PC A2 P3/P4 a `[]` base with Boards hidden stores exactly P (nothing to keep)
+SOL-OBS [] base written {"stored":[],"hidden":["board"],"order":["tasks","dashboard","calendar","matrix","ai","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"written":["tasks","dashboard","calendar","matrix","ai","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"expected":["tasks","dashboard","calendar","matrix","ai","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices 49ms
+   → P7 absent board+meditation: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 1', …(3) ] to deeply equal []
+ ✓ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > PC A2 P3/P4 a `[]` base with Boards hidden stores exactly P (nothing to keep) 63ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > PC A2 P6 every module visible over a full custom order: S' = P
+SOL-OBS P6 all visible written {"stored":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"hidden":[],"order":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"written":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"expected":["countdown","meditation","habits","metrics","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > PC A2 P6 every module visible over a full custom order: S' = P 64ms
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > §6.7 A2 a non-permutation input (R changes mid-drag: Boards re-enabled) makes no merge and zero writes 62ms
+   → §6.7: zero attempts when P is not a permutation of D(S, R) at drop time: expected [ Array(1) ] to deeply equal []
+stdout | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there
+SOL-OBS R-1 end to end written {"order":["tasks","ai","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"written":["tasks","ai","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"],"expected":["tasks","ai","board","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there 163ms
+   → H5/R-1: P1–P4 for the written value: expected [ 'P2 board keeps index 2', …(2) ] to deeply equal []
+ × docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 in the production App with Habits hidden at load: the drop keeps `habits` at its stored index 202ms
+   → H5: the production App writes the A2 merge: expected '["statistics","meditation","metrics",…' to be '["statistics","meditation","metrics",…' // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  17 failed | 4 passed (21)
+   Start at  02:40:02
+   Duration  4.97s (transform 2.01s, setup 87ms, collect 3.00s, tests 1.41s, environment 201ms, prepare 52ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB/.report-merge-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "dashboard" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "matrix" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro)
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro)
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end
+[xai-web-shell] xai_rail_order contains unknown id "calendar" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed)
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ghost-2" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed)
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ghost-2" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "meditation" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > §6.7 A2 a non-permutation input (R changes mid-drag: Boards re-enabled) makes no merge and zero writes
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > §6.7 A2 a non-permutation input (R changes mid-drag: Boards re-enabled) makes no merge and zero writes
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 in the production App with Habits hidden at load: the drop keeps `habits` at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 in the production App with Habits hidden at load: the drop keeps `habits` at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled
+AssertionError: tasks hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 tasks keeps index 12', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 tasks keeps index 12",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled
+AssertionError: board hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 11', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 board keeps index 11",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled
+AssertionError: dashboard hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 dashboard keeps index 10', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 dashboard keeps index 10",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled
+AssertionError: calendar hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 9', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 calendar keeps index 9",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled
+AssertionError: matrix hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 matrix keeps index 8', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 matrix keeps index 8",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled
+AssertionError: pomodoro hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 pomodoro keeps index 7', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 pomodoro keeps index 7",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled
+AssertionError: habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 habits keeps index 3",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled
+AssertionError: meditation hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 meditation keeps index 2', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 meditation keeps index 2",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro)
+AssertionError: three hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 habits keeps index 3",
++   "P2 pomodoro keeps index 7",
++   "P2 board keeps index 11",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:108:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end
+AssertionError: three hidden far: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 0', …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 calendar keeps index 0",
++   "P2 tasks keeps index 1",
++   "P2 meditation keeps index 11",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:112:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed)
+AssertionError: unknown ids: P1–P4 hold for the written value (H5 when a P2 fails): expected [ …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 ghost-module keeps index 0",
++   "P2 ghost-2 keeps index 3",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:117:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices
+AssertionError: settings and habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 settings keeps index 1', …(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 settings keeps index 1",
++   "P2 habits keeps index 2",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:122:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7
+AssertionError: P7 absent habits: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 7', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 habits keeps index 7",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:126:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices
+AssertionError: P7 absent board+meditation: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 1', …(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 board keeps index 1",
++   "P2 meditation keeps index 8",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ generated docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:86:121
+     84|   const written: unknown = JSON.parse(raw() ?? "null");
+     85|   observe(`${tag} written`, { stored: base, hidden, order, written, ex…
+     86|   expect(propertyFailures(base, rail, order, written), `${tag}: P1–P4 …
+       |                                                                                                                         ^
+     87|   expect(raw(), `${tag}: the bytes are exactly the A2 merge`).toBe(enc…
+     88|   expect(railWrites(from).filter(entry => !entry.endsWith("!")).length…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:131:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > §6.7 A2 a non-permutation input (R changes mid-drag: Boards re-enabled) makes no merge and zero writes
+AssertionError: §6.7: zero attempts when P is not a permutation of D(S, R) at drop time: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "[\"tasks\",\"ai\",\"dashboard\",\"calendar\",\"matrix\",\"pomodoro\",\"timetrack\",\"bookkeeping\",\"metrics\",\"habits\",\"meditation\",\"countdown\",\"statistics\"]",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:156:103
+    154|   dragEnd(gesture, shown[0]!);
+    155|   await flush();
+    156|   expect(railWrites(from), "§6.7: zero attempts when P is not a permut…
+       |                                                                                                       ^
+    157|   expect(raw(), "the bytes are unchanged").toBe(encode(BOARD_AT_2));
+    158|   expect(railIds(), "the rail displays D(S, R) for the current S and R…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there
+AssertionError: H5/R-1: P1–P4 for the written value: expected [ 'P2 board keeps index 2', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "P2 board keeps index 2",
++   "P3 set(S') = S ∪ R",
++   "P4 |S'| = |S| + |R \\ S|",
++ ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:180:101
+    178|   const written: unknown = JSON.parse(raw() ?? "null");
+    179|   observe("R-1 end to end written", { order, written, expected });
+    180|   expect(propertyFailures(BOARD_AT_2, rail, order, written), "H5/R-1: …
+       |                                                                                                     ^
+    181|   expect(raw(), "H5/R-1: the bytes keep `board` at index 2 and their v…
+    182|   fireEvent.click(featureSwitch("board"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/17]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx > H5 R-1 in the production App with Habits hidden at load: the drop keeps `habits` at its stored index
+AssertionError: H5: the production App writes the A2 merge: expected '["statistics","meditation","metrics",…' to be '["statistics","meditation","metrics",…' // Object.is equality
+
+Expected: "["statistics","meditation","metrics","habits","bookkeeping","timetrack","pomodoro","countdown","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["statistics","meditation","metrics","bookkeeping","timetrack","pomodoro","countdown","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx:198:63
+    196|   const order = await drag(railIds()[1]!, [railIds()[6]!]);
+    197|   const expected = merge(REVERSED, rail, order)!;
+    198|   expect(raw(), "H5: the production App writes the A2 merge").toBe(enc…
+       |                                                               ^
+    199|   expect((JSON.parse(raw() ?? "[]") as string[]).indexOf("habits"), "H…
+    200| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/17]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EJubyB/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=21 passed=4 failed=17 skipped=0 precondition_failures=0
+harness PASS [merge.test.tsx] JSON report parsed
+harness PASS [merge.test.tsx] reported files equal the requested include
+harness PASS [merge.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [merge.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [merge.test.tsx] required product modules loaded from the archive (27)
+harness PASS [merge.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | FIXTURE the oracle merge implements A2 on hand-checked examples
+case 003 FAILED | H5 A2 P1–P5 tasks hidden over a full custom order: the drop keeps tasks at its stored index and it returns there when re-enabled
+    first: AssertionError: tasks hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 tasks keeps index 12', …(2) ] to deeply equal []
+case 004 FAILED | H5 A2 P1–P5 board hidden over a full custom order: the drop keeps board at its stored index and it returns there when re-enabled
+    first: AssertionError: board hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 11', …(2) ] to deeply equal []
+case 005 FAILED | H5 A2 P1–P5 dashboard hidden over a full custom order: the drop keeps dashboard at its stored index and it returns there when re-enabled
+    first: AssertionError: dashboard hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 dashboard keeps index 10', …(2) ] to deeply equal []
+case 006 FAILED | H5 A2 P1–P5 calendar hidden over a full custom order: the drop keeps calendar at its stored index and it returns there when re-enabled
+    first: AssertionError: calendar hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 9', …(2) ] to deeply equal []
+case 007 FAILED | H5 A2 P1–P5 matrix hidden over a full custom order: the drop keeps matrix at its stored index and it returns there when re-enabled
+    first: AssertionError: matrix hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 matrix keeps index 8', …(2) ] to deeply equal []
+case 008 FAILED | H5 A2 P1–P5 pomodoro hidden over a full custom order: the drop keeps pomodoro at its stored index and it returns there when re-enabled
+    first: AssertionError: pomodoro hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 pomodoro keeps index 7', …(2) ] to deeply equal []
+case 009 FAILED | H5 A2 P1–P5 habits hidden over a full custom order: the drop keeps habits at its stored index and it returns there when re-enabled
+    first: AssertionError: habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(2) ] to deeply equal []
+case 010 FAILED | H5 A2 P1–P5 meditation hidden over a full custom order: the drop keeps meditation at its stored index and it returns there when re-enabled
+    first: AssertionError: meditation hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 meditation keeps index 2', …(2) ] to deeply equal []
+case 011 FAILED | H5 A2 P1–P5 three modules hidden at once (Boards, Habits, Pomodoro)
+    first: AssertionError: three hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 3', …(4) ] to deeply equal []
+case 012 FAILED | H5 A2 P1–P5 three different modules hidden at once (Tasks, Calendar, Meditation) with the drag reaching the far end
+    first: AssertionError: three hidden far: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 calendar keeps index 0', …(4) ] to deeply equal []
+case 013 FAILED | H5 A2 P2/P3 unknown ids keep their stored indices (REL-07: bytes this build does not understand are never destroyed)
+    first: AssertionError: unknown ids: P1–P4 hold for the written value (H5 when a P2 fails): expected [ …(4) ] to deeply equal []
+case 014 FAILED | H5 A2 P2 `settings` and a hidden module in the stored order both keep their indices
+    first: AssertionError: settings and habits hidden: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 settings keeps index 1', …(3) ] to deeply equal []
+case 015 FAILED | H5 A2 P7 absent bytes with Habits hidden: `habits` keeps its default index 7
+    first: AssertionError: P7 absent habits: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 habits keeps index 7', …(2) ] to deeply equal []
+case 016 FAILED | H5 A2 P7 absent bytes with Boards and Meditation hidden keep their default indices
+    first: AssertionError: P7 absent board+meditation: P1–P4 hold for the written value (H5 when a P2 fails): expected [ 'P2 board keeps index 1', …(3) ] to deeply equal []
+case 017 PASSED | PC A2 P3/P4 a `[]` base with Boards hidden stores exactly P (nothing to keep)
+case 018 PASSED | PC A2 P6 every module visible over a full custom order: S' = P
+case 019 FAILED | §6.7 A2 a non-permutation input (R changes mid-drag: Boards re-enabled) makes no merge and zero writes
+    first: AssertionError: §6.7: zero attempts when P is not a permutation of D(S, R) at drop time: expected [ Array(1) ] to deeply equal []
+case 020 FAILED | H5 R-1 end to end: Boards turned off in the real Features pane, a drag, then Boards back on — `board` keeps index 2 and returns there
+    first: AssertionError: H5/R-1: P1–P4 for the written value: expected [ 'P2 board keeps index 2', …(2) ] to deeply equal []
+case 021 FAILED | H5 R-1 in the production App with Habits hidden at load: the drop keeps `habits` at its stored index
+    first: AssertionError: H5: the production App writes the A2 merge: expected '["statistics","meditation","metrics",…' to be '["statistics","meditation","metrics",…' // Object.is equality

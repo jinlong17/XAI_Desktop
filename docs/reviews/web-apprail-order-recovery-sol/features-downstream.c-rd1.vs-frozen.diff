@@ -1,0 +1,28 @@
+--- a/docs/reviews/web-features-recovery-sol/downstream.test.tsx
++++ b/docs/reviews/web-apprail-order-recovery-sol/features-downstream.c-rd1.test.tsx
+@@ -161,7 +161,7 @@
+ }
+ function seedAppearanceRailAndPet(): void {
+   seedKey("xai_accent_hue", "210");
+-  seedKey("xai_bg_tone", "sage");
++  seedKey("xai_bg_tone", "mist");
+   seedKey("xai_rail_pos", "right");
+   seedKey("xai_rail_order", JSON.stringify(CUSTOM_ORDER));
+   seedKey("xai_pet_id", "pip");
+@@ -183,7 +183,7 @@
+ }
+ const SEEDED_DISPLAY: Display = {
+   accentHue: "210",
+-  bgTone: "sage",
++  bgTone: "mist",
+   railPosAttr: "right",
+   railDataPos: "right",
+   railOrder: CUSTOM_ORDER.map(labelOfModule),
+@@ -508,6 +508,7 @@
+   const transfer = { effectAllowed: "", dropEffect: "", setData() {}, getData() { return ""; } };
+   fireEvent.dragStart(buttons[0]!, { dataTransfer: transfer });
+   fireEvent.dragOver(buttons[2]!, { dataTransfer: transfer });
++  fireEvent.drop(buttons[2]!, { dataTransfer: transfer });
+   fireEvent.dragEnd(buttons[0]!, { dataTransfer: transfer });
+   await flush();
+   const persisted = nativeGet.call(localStorage, "xai_rail_order");

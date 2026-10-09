@@ -1,0 +1,689 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=field
+suffix=before2
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d field before2
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=f7b55802a73251b6eb1b0f0cb0d3d39d798fdb9ff7c472ee4b57a5abca4cea0a merge.test.tsx=05f6e01081156e2d32076606f2b4f314f33246d6b96b0ab7ffa644a9de8d377a drag.test.tsx=4be85f28b053eeed2606e8118641c7ffd93b1a078ce298c3343facfc3fd23063 field.test.tsx=21e7b77f7135bb1debe446f48bafdc9f3f4a3a5b1796084094bbac140f995846 continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=b89a4f6e2ebc12cf4a4952b17deb6ea7c793818198ad16562610f63ec47a4b03 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] field.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/field.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd/apprail-sol-field-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd/.report-field-0.json vitest_exit=1 cases=24 passed=1 failed=23 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=24 numPassedTests=1 numFailedTests=23
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] field.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a quota failure keeps the dropped order displayed with the status, Retry, Discard and Export; the bytes keep the old order
+SOL-OBS quota-failed drop {"dropped":["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"rail":["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"],"status":false,"retry":false,"unloadWarning":false,"bytes":"[\"statistics\",\"countdown\",\"meditation\",\"habits\",\"metrics\",\"bookkeeping\",\"timetrack\",\"pomodoro\",\"matrix\",\"calendar\",\"dashboard\",\"board\",\"tasks\",\"ai\"]"}
+
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a quota failure keeps the dropped order displayed with the status, Retry, Discard and Export; the bytes keep the old order 241ms
+   → H2 quota: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a throwing setItem (not quota) keeps the dropped order displayed as a failed draft 157ms
+   → H2 setItem throws: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a throwing getItem during the write is a failed draft; after the read recovers, Retry makes exactly one write 121ms
+   → H2 throwing getItem: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 without navigator.locks every rail write is refused and reported, never written unfenced; Retry after the capability returns writes once 110ms
+   → H6/D2 item 3: no unfenced write without Web Locks: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 a rejected per-key Web Lock is a failed draft with zero writes; Retry after the lock is allowed writes once 110ms
+   → H6: a rejected lock never writes: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Retry re-attempts exactly once; after a success the status unmounts and focus moves to .topbar-pref-trigger 108ms
+   → H2 before Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry that fails again makes exactly one attempt, keeps the draft and leaves focus on Retry 124ms
+   → H2 before the failing Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry while the field is pending is inert: the saving message, one lock request, one write after release 124ms
+   → H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Discard makes zero set or remove attempts, returns to the committed order and moves focus to .topbar-pref-trigger 149ms
+   → H2 before Discard: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.3 a drop back to the committed order over a failed draft is admitted and completes as the engine's verified no-op 128ms
+   → H2 before the drop back: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.3 while the real per-key lock is held the bytes are unchanged, the dropped order displays, no status shows and the rail stays operable; one write after release 107ms
+   → H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.3 host row f: a second drop while the first is held — the latest wins, each drop makes exactly one lock request, the first never acknowledges the second 104ms
+   → H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 1: the predecessor succeeds and the latest fails — the latest stays displayed with the status; Retry writes it 104ms
+   → H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 2: the predecessor fails while the latest is queued; Retry advances the predecessor without acknowledging the latest, which then commits 101ms
+   → H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 3: repeated failed-predecessor recovery — the first Retry fails again with one attempt, the second succeeds 102ms
+   → H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 4: a later failure of the latest — Retry fails again, then succeeds 101ms
+   → H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an uncertain write keeps its grant across a denied read and a denied lock and reconciles with exactly one total write 135ms
+   → §5.5: an unverified (readback-uncertain) write is reported as not saved: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an external replacement during a held write stays a preserved conflict; repeated Retry never overwrites; Discard adopts it with zero writes 137ms
+   → H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an external removal during a held write stays a preserved conflict; Retry never recreates the key; Discard shows the default 123ms
+   → H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an uncertain write whose original bytes are externally restored stays a conflict; a distinct new drop is a new operation 114ms
+   → §5.5: the unverified write is reported as not saved: expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a late completion after Discard never revives the discarded order or writes 112ms
+   → H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §7.6 a held write when the App unmounts refuses on release (live disposal state); no runtime error or rejection 103ms
+   → H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5 a failed drop in Chinese: the draft accessible name, the message and the action names 100ms
+   → H2: the dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+ Test Files  1 failed (1)
+      Tests  23 failed | 1 passed (24)
+   Start at  02:44:50
+   Duration  5.98s (transform 1.82s, setup 63ms, collect 2.69s, tests 2.82s, environment 195ms, prepare 41ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd/.report-field-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a quota failure keeps the dropped order displayed with the status, Retry, Discard and Export; the bytes keep the old order
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a throwing setItem (not quota) keeps the dropped order displayed as a failed draft
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Retry re-attempts exactly once; after a success the status unmounts and focus moves to .topbar-pref-trigger
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry that fails again makes exactly one attempt, keeps the draft and leaves focus on Retry
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry while the field is pending is inert: the saving message, one lock request, one write after release
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Discard makes zero set or remove attempts, returns to the committed order and moves focus to .topbar-pref-trigger
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.3 a drop back to the committed order over a failed draft is admitted and completes as the engine's verified no-op
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a late completion after Discard never revives the discarded order or writes
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5 a failed drop in Chinese: the draft accessible name, the message and the action names
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 23 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a quota failure keeps the dropped order displayed with the status, Retry, Discard and Export; the bytes keep the old order
+AssertionError: H2 quota: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:85:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a throwing setItem (not quota) keeps the dropped order displayed as a failed draft
+AssertionError: H2 setItem throws: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:94:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.4 a throwing getItem during the write is a failed draft; after the read recovers, Retry makes exactly one write
+AssertionError: H2 throwing getItem: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:104:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 without navigator.locks every rail write is refused and reported, never written unfenced; Retry after the capability returns writes once
+AssertionError: H6/D2 item 3: no unfenced write without Web Locks: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:119:70
+    117|   const from = mark();
+    118|   const order = await drag(X, [Y1]);
+    119|   expect(raw(), "H6/D2 item 3: no unfenced write without Web Locks").t…
+       |                                                                      ^
+    120|   expect(railWrites(from), "zero set attempts without the lock").toEqu…
+    121|   expectFailedDraft("missing Web Locks", order);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 a rejected per-key Web Lock is a failed draft with zero writes; Retry after the lock is allowed writes once
+AssertionError: H6: a rejected lock never writes: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:136:53
+    134|   const from = mark();
+    135|   const order = await drag(X, [Y1]);
+    136|   expect(raw(), "H6: a rejected lock never writes").toBe(encode(REVERS…
+       |                                                     ^
+    137|   expect(locks().rejectedFor(LOCK, before), "the write requested the p…
+    138|   expect(railWrites(from), "zero set attempts").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Retry re-attempts exactly once; after a success the status unmounts and focus moves to .topbar-pref-trigger
+AssertionError: H2 before Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:153:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry that fails again makes exactly one attempt, keeps the draft and leaves focus on Retry
+AssertionError: H2 before the failing Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:169:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a Retry while the field is pending is inert: the saving message, one lock request, one write after release
+AssertionError: H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:184:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 Discard makes zero set or remove attempts, returns to the committed order and moves focus to .topbar-pref-trigger
+AssertionError: H2 before Discard: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:207:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.3 a drop back to the committed order over a failed draft is admitted and completes as the engine's verified no-op
+AssertionError: H2 before the drop back: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:222:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.3 while the real per-key lock is held the bytes are unchanged, the dropped order displays, no status shows and the rail stays operable; one write after release
+AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:242:72
+    240|   const from = mark();
+    241|   const order = await drag(X, [Y1]);
+    242|   expect(raw(), "H6: the held per-key lock keeps the bytes unchanged")…
+       |                                                                        ^
+    243|   expect(railIds(), "§5.3: the draft displays at once").toEqual(order);
+    244|   expect(status(), "A8: a first attempt that is only pending shows no …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.3 host row f: a second drop while the first is held — the latest wins, each drop makes exactly one lock request, the first never acknowledges the second
+AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ twoHeldDrops docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:260:64
+    258|   const from = mark();
+    259|   const first = await drag(X, [Y1]);
+    260|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+       |                                                                ^
+    261|   const merged1 = merge(REVERSED, RAIL_IDS, first)!;
+    262|   const second = await drag(first[6]!, [first[1]!]);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:269:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 1: the predecessor succeeds and the latest fails — the latest stays displayed with the status; Retry writes it
+AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ twoHeldDrops docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:260:64
+    258|   const from = mark();
+    259|   const first = await drag(X, [Y1]);
+    260|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+       |                                                                ^
+    261|   const merged1 = merge(REVERSED, RAIL_IDS, first)!;
+    262|   const second = await drag(first[6]!, [first[1]!]);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:281:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 2: the predecessor fails while the latest is queued; Retry advances the predecessor without acknowledging the latest, which then commits
+AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ twoHeldDrops docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:260:64
+    258|   const from = mark();
+    259|   const first = await drag(X, [Y1]);
+    260|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+       |                                                                ^
+    261|   const merged1 = merge(REVERSED, RAIL_IDS, first)!;
+    262|   const second = await drag(first[6]!, [first[1]!]);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:295:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 3: repeated failed-predecessor recovery — the first Retry fails again with one attempt, the second succeeds
+AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ twoHeldDrops docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:260:64
+    258|   const from = mark();
+    259|   const first = await drag(X, [Y1]);
+    260|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+       |                                                                ^
+    261|   const merged1 = merge(REVERSED, RAIL_IDS, first)!;
+    262|   const second = await drag(first[6]!, [first[1]!]);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:310:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §5.4 ordering 4: a later failure of the latest — Retry fails again, then succeeds
+AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ twoHeldDrops docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:260:64
+    258|   const from = mark();
+    259|   const first = await drag(X, [Y1]);
+    260|   expect(raw(), "H6: the held lock keeps the bytes unchanged").toBe(en…
+       |                                                                ^
+    261|   const merged1 = merge(REVERSED, RAIL_IDS, first)!;
+    262|   const second = await drag(first[6]!, [first[1]!]);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:327:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an uncertain write keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+AssertionError: §5.5: an unverified (readback-uncertain) write is reported as not saved: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:355:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an external replacement during a held write stays a preserved conflict; repeated Retry never overwrites; Discard adopts it with zero writes
+AssertionError: H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:381:67
+    379|   const lock = await hold(LOCK);
+    380|   const order = await drag(X, [Y1]);
+    381|   expect(raw(), "H6: the held per-key lock serializes the write").toBe…
+       |                                                                   ^
+    382|   const replacement = [...RAIL_IDS];
+    383|   nativeSet.call(localStorage, KEY, encode(replacement));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an external removal during a held write stays a preserved conflict; Retry never recreates the key; Discard shows the default
+AssertionError: H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:406:67
+    404|   const lock = await hold(LOCK);
+    405|   const order = await drag(X, [Y1]);
+    406|   expect(raw(), "H6: the held per-key lock serializes the write").toBe…
+       |                                                                   ^
+    407|   nativeRemove.call(localStorage, KEY);
+    408|   pre(raw() === null, "external removal present");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > §5.5 an uncertain write whose original bytes are externally restored stays a conflict; a distinct new drop is a new operation
+AssertionError: §5.5: the unverified write is reported as not saved: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:430:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5.7 a late completion after Discard never revives the discarded order or writes
+AssertionError: H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ expectFailedDraft docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:65:87
+     63| /** A settled unsuccessful draft: the latest order displayed, the draf…
+     64| function expectFailedDraft(tag: string, order: readonly string[], hypo…
+     65|   expect(railIds(), `${hypothesis} ${tag}: the latest dropped order st…
+       |                                                                                       ^
+     66|   need(statusNamed("draft"), `${hypothesis} ${tag}: the Topbar status …
+     67|   openPanel(tag);
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:456:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H6 §7.6 a held write when the App unmounts refuses on release (live disposal state); no runtime error or rejection
+AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+
+Expected: "["statistics","countdown","meditation","habits","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","habits","statistics","metrics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:476:72
+    474|   const lock = await hold(LOCK);
+    475|   await drag(X, [Y1]);
+    476|   expect(raw(), "H6: the held per-key lock keeps the bytes unchanged")…
+       |                                                                        ^
+    477|   app.unmount();
+    478|   const from = mark();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/23]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/field.test.tsx > H2 §5 a failed drop in Chinese: the draft accessible name, the message and the action names
+AssertionError: H2: the dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+-   "statistics",
+    "metrics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/field.test.tsx:495:62
+    493|   pre(uiLang() === "zh", "the UI is in Chinese");
+    494|   const { order } = await failedDrop(X, [Y1]);
+    495|   expect(railIds(), "H2: the dropped order stays displayed").toEqual(o…
+       |                                                              ^
+    496|   need(statusNamed("draft", "zh"), `the ZH draft accessible name "${W.…
+    497|   openPanel("ZH");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/23]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-c74fWd/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/field.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=24 passed=1 failed=23 skipped=0 precondition_failures=0
+harness PASS [field.test.tsx] JSON report parsed
+harness PASS [field.test.tsx] reported files equal the requested include
+harness PASS [field.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [field.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [field.test.tsx] required product modules loaded from the archive (27)
+harness PASS [field.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H2 §5.4 a quota failure keeps the dropped order displayed with the status, Retry, Discard and Export; the bytes keep the old order
+    first: AssertionError: H2 quota: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 003 FAILED | H2 §5.4 a throwing setItem (not quota) keeps the dropped order displayed as a failed draft
+    first: AssertionError: H2 setItem throws: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 004 FAILED | H2 §5.4 a throwing getItem during the write is a failed draft; after the read recovers, Retry makes exactly one write
+    first: AssertionError: H2 throwing getItem: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 005 FAILED | H6 §5.4 without navigator.locks every rail write is refused and reported, never written unfenced; Retry after the capability returns writes once
+    first: AssertionError: H6/D2 item 3: no unfenced write without Web Locks: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 006 FAILED | H6 §5.4 a rejected per-key Web Lock is a failed draft with zero writes; Retry after the lock is allowed writes once
+    first: AssertionError: H6: a rejected lock never writes: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 007 FAILED | H2 §5.7 Retry re-attempts exactly once; after a success the status unmounts and focus moves to .topbar-pref-trigger
+    first: AssertionError: H2 before Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 008 FAILED | H2 §5.7 a Retry that fails again makes exactly one attempt, keeps the draft and leaves focus on Retry
+    first: AssertionError: H2 before the failing Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 009 FAILED | H2 §5.7 a Retry while the field is pending is inert: the saving message, one lock request, one write after release
+    first: AssertionError: H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 010 FAILED | H2 §5.7 Discard makes zero set or remove attempts, returns to the committed order and moves focus to .topbar-pref-trigger
+    first: AssertionError: H2 before Discard: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 011 FAILED | H2 §5.3 a drop back to the committed order over a failed draft is admitted and completes as the engine's verified no-op
+    first: AssertionError: H2 before the drop back: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 012 FAILED | H6 §5.3 while the real per-key lock is held the bytes are unchanged, the dropped order displays, no status shows and the rail stays operable; one write after release
+    first: AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 013 FAILED | H6 §5.3 host row f: a second drop while the first is held — the latest wins, each drop makes exactly one lock request, the first never acknowledges the second
+    first: AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 014 FAILED | H6 §5.4 ordering 1: the predecessor succeeds and the latest fails — the latest stays displayed with the status; Retry writes it
+    first: AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 015 FAILED | H6 §5.4 ordering 2: the predecessor fails while the latest is queued; Retry advances the predecessor without acknowledging the latest, which then commits
+    first: AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 016 FAILED | H6 §5.4 ordering 3: repeated failed-predecessor recovery — the first Retry fails again with one attempt, the second succeeds
+    first: AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 017 FAILED | H6 §5.4 ordering 4: a later failure of the latest — Retry fails again, then succeeds
+    first: AssertionError: H6: the held lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 018 FAILED | §5.5 an uncertain write keeps its grant across a denied read and a denied lock and reconciles with exactly one total write
+    first: AssertionError: §5.5: an unverified (readback-uncertain) write is reported as not saved: expected null not to be null
+case 019 FAILED | §5.5 an external replacement during a held write stays a preserved conflict; repeated Retry never overwrites; Discard adopts it with zero writes
+    first: AssertionError: H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 020 FAILED | §5.5 an external removal during a held write stays a preserved conflict; Retry never recreates the key; Discard shows the default
+    first: AssertionError: H6: the held per-key lock serializes the write: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 021 FAILED | §5.5 an uncertain write whose original bytes are externally restored stays a conflict; a distinct new drop is a new operation
+    first: AssertionError: §5.5: the unverified write is reported as not saved: expected null not to be null
+case 022 FAILED | H2 §5.7 a late completion after Discard never revives the discarded order or writes
+    first: AssertionError: H2 before the held Retry: the latest dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 023 FAILED | H6 §7.6 a held write when the App unmounts refuses on release (live disposal state); no runtime error or rejection
+    first: AssertionError: H6: the held per-key lock keeps the bytes unchanged: expected '["countdown","meditation","habits","s…' to be '["statistics","countdown","meditation…' // Object.is equality
+case 024 FAILED | H2 §5 a failed drop in Chinese: the draft accessible name, the message and the action names
+    first: AssertionError: H2: the dropped order stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]

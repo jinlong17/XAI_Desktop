@@ -1,0 +1,271 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=bytes
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d bytes before1
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=9dc5784b574768b1f71c13260aa68aabed9a80322497224e689ebe3cb316b989 merge.test.tsx=dd6961f6463db641601a369d5dd135e135d99b888dfee8bbbdc77cb42b50d2c6 drag.test.tsx=8a8da1134fceb5a90ec7de7c7453d617d6ffe496ce42c6f953903d31a2e54f17 field.test.tsx=440f08929d625558d14dbd3084d22a26e3e899214071419a51dad8f1832c67fc continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=e9b64c02373c552775d64ba603572a2467c4b4d909930682cfcbaf13aa7c2bc3 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] bytes.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb/apprail-sol-bytes-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb/.report-bytes-0.json vitest_exit=1 cases=26 passed=21 failed=5 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=26 numPassedTests=21 numFailedTests=5
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] bytes.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 3ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing 1ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability 41ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe and download harness are observable 20ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the production App mounts with only the auth-session hook substituted, real modules and no network 189ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > FIXTURE the drag driver fires dragStart → dragEnter → dragOver → drop → dragEnd on the real rail nodes with one DataTransfer stub 169ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §2/§10.11 lifecycle classification, registry entry, device ownership and the per-key lock name are unchanged 1ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §3.7 absent bytes display the 12 defaults then Bookkeeping and Metrics, with no status and no unload warning 97ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §3.7 `[]` displays all 14 modules in R order with XAI Chat first, with no status 86ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.2 a value written by the before product is read identically: a seeded custom order displays as D(S, R) 166ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write
+SOL-OBS other-key writes during the zero-write mount []
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write 247ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 a seeded custom order is displayed on every route with zero attempts to write and unchanged bytes 204ms
+stdout | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+SOL-OBS after language and position changes {"lang":"统计","pos":"top"}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts 183ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 a standalone AppRail mounts with zero attempts to write, absent and seeded 50ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over a stored custom order writes exactly P 109ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over absent bytes writes exactly P (12 defaults plus Bookkeeping and Metrics) 108ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 an all-visible drop over `[]` writes exactly P 105ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.1 P6 a two-step all-visible drop writes the final preview 107ms
+ × docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2 102ms
+   → H5 one hidden: the stored bytes are exactly the A2 merge: expected '["tasks","ai","dashboard","matrix","c…' to be '["tasks","ai","board","dashboard","ma…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index 110ms
+   → H5 three hidden: the stored bytes are exactly the A2 merge: expected '["countdown","meditation","metrics","…' to be '["countdown","meditation","metrics","…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index 154ms
+   → H5 unknown id: the stored bytes are exactly the A2 merge: expected '["ai","board","dashboard","calendar",…' to be '["ai","ghost-module","board","dashboa…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 `settings` in the stored order keeps its index 141ms
+   → H5 settings: the stored bytes are exactly the A2 merge: expected '["ai","tasks","board","calendar","mat…' to be '["ai","settings","tasks","board","cal…' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1 104ms
+   → P7 absent: the stored bytes are exactly the A2 merge: expected '["dashboard","calendar","matrix","tas…' to be '["dashboard","board","calendar","matr…' // Object.is equality
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.2 bytes written by a drop decode identically through the unchanged legacy getPref and appear verbatim in exportDeviceRecoveryData() 103ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H11 PC a committed order in another document updates an idle rail live; a removal there displays the default 111ms
+ ✓ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §2 the rail buttons keep their markup: .rail-btn.has-tip with data-tip, aria-label and draggable; the pet button stays outside .rail-items 76ms
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 21 passed (26)
+   Start at  02:39:40
+   Duration  6.26s (transform 1.86s, setup 91ms, collect 2.80s, tests 2.79s, environment 300ms, prepare 76ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb/.report-bytes-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §10.2 a value written by the before product is read identically: a seeded custom order displays as D(S, R)
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > PC §5.1 a standalone AppRail mounts with zero attempts to write, absent and seeded
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index
+[xai-web-shell] xai_rail_order contains unknown id "habits" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "pomodoro" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index
+[xai-web-shell] xai_rail_order contains unknown id "ghost-module" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 `settings` in the stored order keeps its index
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 `settings` in the stored order keeps its index
+[xai-web-shell] xai_rail_order contains unknown id "settings" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1
+[xai-web-shell] xai_rail_order contains unknown id "board" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2
+AssertionError: H5 one hidden: the stored bytes are exactly the A2 merge: expected '["tasks","ai","dashboard","matrix","c…' to be '["tasks","ai","board","dashboard","ma…' // Object.is equality
+
+Expected: "["tasks","ai","board","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+Received: "["tasks","ai","dashboard","matrix","calendar","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+
+ ❯ exactDrop docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:362:70
+    360|   pre(expected !== null && JSON.stringify(order) !== JSON.stringify(di…
+    361|   expect(railIds(), `${tag}: the rail displays the dropped order P`).t…
+    362|   expect(raw(), `${tag}: the stored bytes are exactly the A2 merge`).t…
+       |                                                                      ^
+    363|   const written = attempts(start, [KEY], ["set"]).filter(item => !item…
+    364|   expect(written.at(-1)?.value, `${tag}: the last successful setItem w…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:389:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index
+AssertionError: H5 three hidden: the stored bytes are exactly the A2 merge: expected '["countdown","meditation","metrics","…' to be '["countdown","meditation","metrics","…' // Object.is equality
+
+Expected: "["countdown","meditation","metrics","habits","statistics","bookkeeping","timetrack","pomodoro","matrix","calendar","dashboard","board","tasks","ai"]"
+Received: "["countdown","meditation","metrics","statistics","bookkeeping","timetrack","matrix","calendar","dashboard","tasks","ai"]"
+
+ ❯ exactDrop docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:362:70
+    360|   pre(expected !== null && JSON.stringify(order) !== JSON.stringify(di…
+    361|   expect(railIds(), `${tag}: the rail displays the dropped order P`).t…
+    362|   expect(raw(), `${tag}: the stored bytes are exactly the A2 merge`).t…
+       |                                                                      ^
+    363|   const written = attempts(start, [KEY], ["set"]).filter(item => !item…
+    364|   expect(written.at(-1)?.value, `${tag}: the last successful setItem w…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:393:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index
+AssertionError: H5 unknown id: the stored bytes are exactly the A2 merge: expected '["ai","board","dashboard","calendar",…' to be '["ai","ghost-module","board","dashboa…' // Object.is equality
+
+Expected: "["ai","ghost-module","board","dashboard","calendar","tasks","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+Received: "["ai","board","dashboard","calendar","tasks","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+
+ ❯ exactDrop docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:362:70
+    360|   pre(expected !== null && JSON.stringify(order) !== JSON.stringify(di…
+    361|   expect(railIds(), `${tag}: the rail displays the dropped order P`).t…
+    362|   expect(raw(), `${tag}: the stored bytes are exactly the A2 merge`).t…
+       |                                                                      ^
+    363|   const written = attempts(start, [KEY], ["set"]).filter(item => !item…
+    364|   expect(written.at(-1)?.value, `${tag}: the last successful setItem w…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:398:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P2 `settings` in the stored order keeps its index
+AssertionError: H5 settings: the stored bytes are exactly the A2 merge: expected '["ai","tasks","board","calendar","mat…' to be '["ai","settings","tasks","board","cal…' // Object.is equality
+
+Expected: "["ai","settings","tasks","board","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","dashboard","meditation","countdown","statistics"]"
+Received: "["ai","tasks","board","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","dashboard","meditation","countdown","statistics"]"
+
+ ❯ exactDrop docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:362:70
+    360|   pre(expected !== null && JSON.stringify(order) !== JSON.stringify(di…
+    361|   expect(railIds(), `${tag}: the rail displays the dropped order P`).t…
+    362|   expect(raw(), `${tag}: the stored bytes are exactly the A2 merge`).t…
+       |                                                                      ^
+    363|   const written = attempts(start, [KEY], ["set"]).filter(item => !item…
+    364|   expect(written.at(-1)?.value, `${tag}: the last successful setItem w…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:403:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx > H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1
+AssertionError: P7 absent: the stored bytes are exactly the A2 merge: expected '["dashboard","calendar","matrix","tas…' to be '["dashboard","board","calendar","matr…' // Object.is equality
+
+Expected: "["dashboard","board","calendar","matrix","tasks","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]"
+Received: "["dashboard","calendar","matrix","tasks","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]"
+
+ ❯ exactDrop docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:362:70
+    360|   pre(expected !== null && JSON.stringify(order) !== JSON.stringify(di…
+    361|   expect(railIds(), `${tag}: the rail displays the dropped order P`).t…
+    362|   expect(raw(), `${tag}: the stored bytes are exactly the A2 merge`).t…
+       |                                                                      ^
+    363|   const written = attempts(start, [KEY], ["set"]).filter(item => !item…
+    364|   expect(written.at(-1)?.value, `${tag}: the last successful setItem w…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx:407:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-2l6xpb/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx packages/plugin-web-storage/src/internal/dataExport.ts packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=26 passed=21 failed=5 skipped=0 precondition_failures=0
+harness PASS [bytes.test.tsx] JSON report parsed
+harness PASS [bytes.test.tsx] reported files equal the requested include
+harness PASS [bytes.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [bytes.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [bytes.test.tsx] required product modules loaded from the archive (29)
+harness PASS [bytes.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 the storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 PASSED | FIXTURE the attempt-counting Storage injector logs before delegation, faults precisely and proves firing
+case 003 PASSED | FIXTURE the exclusive Web Lock fixture serves async grants, holds, programmed holds, denial and a missing capability
+case 004 PASSED | FIXTURE accountScope transitions, confirm recorder, StorageEvent counter, bus spy, unload probe and download harness are observable
+case 005 PASSED | FIXTURE the production App mounts with only the auth-session hook substituted, real modules and no network
+case 006 PASSED | FIXTURE the drag driver fires dragStart → dragEnter → dragOver → drop → dragEnd on the real rail nodes with one DataTransfer stub
+case 007 PASSED | PC §2/§10.11 lifecycle classification, registry entry, device ownership and the per-key lock name are unchanged
+case 008 PASSED | PC §3.7 absent bytes display the 12 defaults then Bookkeeping and Metrics, with no status and no unload warning
+case 009 PASSED | PC §3.7 `[]` displays all 14 modules in R order with XAI Chat first, with no status
+case 010 PASSED | PC §10.2 a value written by the before product is read identically: a seeded custom order displays as D(S, R)
+case 011 PASSED | PC §5.1 loading the production App on the three host-row-a routes, the Topbar popover and a reload make zero attempts to write
+case 012 PASSED | PC §5.1 a seeded custom order is displayed on every route with zero attempts to write and unchanged bytes
+case 013 PASSED | PC §5.1 AppRail re-renders caused by a Features toggle, a rail-position change and a language change from another document make zero attempts
+case 014 PASSED | PC §5.1 a standalone AppRail mounts with zero attempts to write, absent and seeded
+case 015 PASSED | PC §10.1 P6 an all-visible drop over a stored custom order writes exactly P
+case 016 PASSED | PC §10.1 P6 an all-visible drop over absent bytes writes exactly P (12 defaults plus Bookkeeping and Metrics)
+case 017 PASSED | PC §10.1 P6 an all-visible drop over `[]` writes exactly P
+case 018 PASSED | PC §10.1 P6 a two-step all-visible drop writes the final preview
+case 019 FAILED | H5 §10.1 P2 a drop with Boards hidden keeps `board` at its stored index 2
+    first: AssertionError: H5 one hidden: the stored bytes are exactly the A2 merge: expected '["tasks","ai","dashboard","matrix","c…' to be '["tasks","ai","board","dashboard","ma…' // Object.is equality
+case 020 FAILED | H5 §10.1 P2 a drop with three modules hidden keeps each at its stored index
+    first: AssertionError: H5 three hidden: the stored bytes are exactly the A2 merge: expected '["countdown","meditation","metrics","…' to be '["countdown","meditation","metrics","…' // Object.is equality
+case 021 FAILED | H5 §10.1 P2 an unknown id (`ghost-module`) in the stored order keeps its index
+    first: AssertionError: H5 unknown id: the stored bytes are exactly the A2 merge: expected '["ai","board","dashboard","calendar",…' to be '["ai","ghost-module","board","dashboa…' // Object.is equality
+case 022 FAILED | H5 §10.1 P2 `settings` in the stored order keeps its index
+    first: AssertionError: H5 settings: the stored bytes are exactly the A2 merge: expected '["ai","tasks","board","calendar","mat…' to be '["ai","settings","tasks","board","cal…' // Object.is equality
+case 023 FAILED | H5 §10.1 P7 over absent bytes with Boards hidden, `board` keeps its default index 1
+    first: AssertionError: P7 absent: the stored bytes are exactly the A2 merge: expected '["dashboard","calendar","matrix","tas…' to be '["dashboard","board","calendar","matr…' // Object.is equality
+case 024 PASSED | PC §10.2 bytes written by a drop decode identically through the unchanged legacy getPref and appear verbatim in exportDeviceRecoveryData()
+case 025 PASSED | H11 PC a committed order in another document updates an idle rail live; a removal there displays the default
+case 026 PASSED | PC §2 the rail buttons keep their markup: .rail-btn.has-tip with data-tip, aria-label and draggable; the pet button stays outside .rail-items

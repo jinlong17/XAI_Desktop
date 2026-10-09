@@ -1,0 +1,1494 @@
+requested_revision=419e56d
+resolved_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1 web_app_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+mode=domain
+suffix=before1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop node docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs 419e56d domain before1
+runner_checkout_head=1094d96776b26c020632823eb84fdb7e8768b489
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/packages/xai-web-shell/node_modules/.bin/vitest
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 typescript_version=5.9.2 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop
+lockfile_gate_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=07c4f87674e5a14d7cbeffc4cd8ae18d0c9d725cfe052ce45b55fb631720c236 bytes.test.tsx=d4827472827f284178944dd621198a39d7b7ffc34be19781714e61f91103d6cd domain.test.tsx=9dc5784b574768b1f71c13260aa68aabed9a80322497224e689ebe3cb316b989 merge.test.tsx=dd6961f6463db641601a369d5dd135e135d99b888dfee8bbbdc77cb42b50d2c6 drag.test.tsx=8a8da1134fceb5a90ec7de7c7453d617d6ffe496ce42c6f953903d31a2e54f17 field.test.tsx=440f08929d625558d14dbd3084d22a26e3e899214071419a51dad8f1832c67fc continuity-export.test.tsx=b92790b3f989e66b5e3b549995c58abcaee88d5acb700e7f2c31af577f5dd5fc host.test.tsx=e9b64c02373c552775d64ba603572a2467c4b4d909930682cfcbaf13aa7c2bc3 verify-fixed.mjs=e944cb226e3fa342727c913547ff5084e0ad38fad5293ed306cb512bf9f5a4e8
+archive_file_sha256 packages/xai-web-shell/src/AppRail.tsx=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 packages/xai-web-shell/src/internal/dnd.ts=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9 packages/xai-web-shell/src/registry.tsx=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e packages/xai-web-shell/src/Topbar.tsx=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 packages/xai-web-shell/src/Shell.tsx=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f packages/xai-web-shell/src/types.ts=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a packages/xai-web-shell/src/index.ts=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed packages/xai-web-shell/src/__tests__/AppRail.test.tsx=cbe4179146b7f9565cb038027f004520b46917db3da6c0e9f653cf319b309e8f packages/xai-web-shell/src/__tests__/Topbar.test.tsx=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 apps/web/src/App.tsx=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a packages/plugin-web-storage/src/internal/registry.ts=dd961a214c94ac97753e1878323ed387cde3362f4e85f1dfaa8154f1011d29d3 packages/plugin-web-tokens/src/layout.css=9397dc735d8d80a9720e81561dca73a0ed02a98fd16c1f15634e5c775e2bc6b7 apps/web/src/routes/modules/departureCoordinator.tsx=0844a697b146b07fceb1835da7c4410db8812bc07bdea362f3386e991a2bc075 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts=e27f9f86196c08166b3c03f8450a546d486c2035adec42f91a90ae2723350332 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188 packages/plugin-web-storage/src/internal/storage.ts=b51bcaa0de96cb9731df1253d256896397286cdbdad2ff9285984be15ebd6421
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 @testing-library/user-event->node_modules/.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.1/node_modules/@testing-library/user-event@14.6.1 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1 vitest->node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 @types/react->node_modules/.pnpm/@types+react@19.2.2/node_modules/@types/react@19.2.2
+node_modules_links third_party=448 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+run[0] domain.test.tsx: include=docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/apprail-sol-domain-0.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/.report-domain-0.json vitest_exit=1 cases=31 passed=1 failed=30 precondition_failures=0 suite_errors=0 unhandled_error_lines=0 json_report=success=false numTotalTests=31 numPassedTests=1 numFailedTests=30
+exit=1
+harness_checks=PASS (6/6)
+==== run[0] domain.test.tsx ====
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+SOL-OBS F-B002 self-check {"nested":0,"tripwire":0,"delegatedPerCall":[1,1,0,1,1,0,1,0,0,0]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "{}" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{\"tasks\":1}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "{\"tasks\":1}" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+ ✓ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers 4ms
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 60ms
+   → H1 "{}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{\"tasks\":1}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 37ms
+   → H1 "{\"tasks\":1}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "1" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "0" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "0" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "-1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "-1" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 36ms
+   → H1 "1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "0" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 35ms
+   → H1 "0": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "true" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "true" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "false" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "false" {"routeError":"Route Error (app): prefOrder is not iterable","rail":[]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "-1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 35ms
+   → H1 "-1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "true" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 35ms
+   → H1 "true": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "false" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 34ms
+   → H1 "false": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "\"tasks\"" (a string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "\"tasks\"" {"routeError":null,"rail":["ai","tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "\"tasks\"" (a string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 183ms
+   → H7 "\"tasks\"": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[1]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[1]" {"routeError":null,"rail":["ai","tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[\"tasks\",2]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[\"tasks\",2]" {"routeError":null,"rail":["tasks","ai","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[1]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 124ms
+   → H7 "[1]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[\"tasks\",2]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 99ms
+   → H7 "[\"tasks\",2]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'ai', 'board', …(11) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[null]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[null]" {"routeError":null,"rail":["ai","tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[[\"tasks\"]]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[[\"tasks\"]]" {"routeError":null,"rail":["ai","tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[null]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 143ms
+   → H7 "[null]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"tasks\",\"tasks\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[\"tasks\",\"tasks\"]" {"routeError":null,"rail":["tasks","tasks","ai","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[[\"tasks\"]]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 83ms
+   → H7 "[[\"tasks\"]]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"tasks\",\"tasks\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 84ms
+   → H8 "[\"tasks\",\"tasks\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"board\",\"tasks\",\"board\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[\"board\",\"tasks\",\"board\"]" {"routeError":null,"rail":["board","tasks","board","ai","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"board\",\"tasks\",\"board\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 106ms
+   → H8 "[\"board\",\"tasks\",\"board\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'board', 'tasks', 'board', …(12) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "null" (null literal) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "null" {"routeError":null,"rail":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[tasks" (unparsable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "[tasks" {"routeError":null,"rail":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "null" (null literal) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 136ms
+   → H7 "null": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "" (unparsable (empty string)) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+SOL-OBS at load "" {"routeError":null,"rail":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[tasks" (unparsable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 97ms
+   → H7 "[tasks": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "" (unparsable (empty string)) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes 79ms
+   → H7 "": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 §5.2 a throwing getItem(xai_rail_order) at load: the default display, the source status with Reload only, zero writes
+SOL-OBS unreadable at load {"routeError":null,"rail":["tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","habits","meditation","countdown","ai","statistics","bookkeeping","metrics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 §5.2 a throwing getItem(xai_rail_order) at load: the default display, the source status with Reload only, zero writes 79ms
+   → H10 unreadable: /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 the source status and panel in Chinese for `{}` 34ms
+   → H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 A5 a drag over `{}` is a refused failed draft: Retry refused again, Discard back to the default display, bytes unchanged 34ms
+   → H1: no route error before or after the drag: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 A5 a drag over `[1]` never overwrites the malformed bytes: a refused failed draft with Retry, Discard and Export 109ms
+   → H7 A5 [1]: the malformed bytes are never overwritten by a drag: expected '["tasks","board","dashboard","ai","ca…' to be '[1]' // Object.is equality
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 A5 a drag over `["tasks","tasks"]` never overwrites the malformed bytes 108ms
+   → H8 A5 duplicate: the malformed bytes are never overwritten by a drag: expected '["tasks","ai","board","tasks","dashbo…' to be '["tasks","tasks"]' // Object.is equality
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "{}" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+SOL-OBS external "{}" {"routeError":"Route Error (app): prefOrder is not iterable","rail":null}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 A5 a drag over an unreadable source is a failed draft, never a silent no-op 109ms
+   → H10: the dropped order stays displayed as a draft: expected [ Array(14) ] to deeply equal [ 'board', 'dashboard', …(12) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "1" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+SOL-OBS external "1" {"routeError":"Route Error (app): prefOrder is not iterable","rail":null}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "{}" written by another document while the rail is idle: no throw, the default display, the source status, zero writes 97ms
+   → §10.4/H1: the running App must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "1" written by another document while the rail is idle: no throw, the default display, the source status, zero writes 112ms
+   → §10.4/H1: the running App must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[\"tasks\",\"tasks\"]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+SOL-OBS external "[\"tasks\",\"tasks\"]" {"routeError":null,"rail":["tasks","tasks","ai","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[\"tasks\",\"tasks\"]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes 132ms
+   → §10.4: the default display: expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+stdout | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[1]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+SOL-OBS external "[1]" {"routeError":null,"rail":["ai","tasks","board","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]}
+
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[1]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes 113ms
+   → §10.4: the default display: expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 `{}` written by another document over a failed draft becomes a preserved conflict: Retry refused, bytes kept, Discard shows the source state 101ms
+   → H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.7 an external repair behind the App, then Reload: the status disappears and the committed order displays, with no write 33ms
+   → H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+ × docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.7 a repair committed by another document over `"tasks"`, then Reload if offered: the committed order displays, no status, no write 81ms
+   → H7: the source status before the repair: expected null not to be null
+
+ Test Files  1 failed (1)
+      Tests  30 failed | 1 passed (31)
+   Start at  02:39:52
+   Duration  6.26s (transform 1.98s, setup 91ms, collect 3.03s, tests 2.55s, environment 303ms, prepare 56ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/.report-domain-0.json
+
+---- stderr ----
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{\"tasks\":1}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "0" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "-1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "true" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "false" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "\"tasks\"" (a string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "t" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "a" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "k" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "t" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "a" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "k" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[1]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[\"tasks\",2]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "2" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "2" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[null]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "null" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "null" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[[\"tasks\"]]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "tasks" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"tasks\",\"tasks\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"board\",\"tasks\",\"board\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+Encountered two children with the same key, `board`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `board`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "null" (null literal) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[tasks" (unparsable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "" (unparsable (empty string)) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+[plugin-web-storage] decode failed for xai_rail_order: Error: Cannot decode stored value with codec "json"
+    at getPref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/storage.ts:150:7)
+    at /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:108:20
+    at mountStateImpl (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8268:24)
+    at mountState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:8289:22)
+    at Object.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:26243:18)
+    at process.env.NODE_ENV.exports.useState (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react@19.2.0/node_modules/react/cjs/react.development.js:1263:34)
+    at usePrefBrowser (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:117:37)
+    at usePref (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/plugin-web-storage/src/internal/usePref.ts:77:10)
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:37:37)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 the source status and panel in Chinese for `{}`
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 A5 a drag over `{}` is a refused failed draft: Retry refused again, Discard back to the default display, bytes unchanged
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 A5 a drag over `[1]` never overwrites the malformed bytes: a refused failed draft with Retry, Discard and Export
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 A5 a drag over `[1]` never overwrites the malformed bytes: a refused failed draft with Retry, Discard and Export
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 A5 a drag over `["tasks","tasks"]` never overwrites the malformed bytes
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 A5 a drag over `["tasks","tasks"]` never overwrites the malformed bytes
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 A5 a drag over an unreadable source is a failed draft, never a silent no-op
+[plugin-web-storage] localStorage is unavailable (possibly Safari Private Mode); all operations will no-op.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "{}" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "1" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[\"tasks\",\"tasks\"]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+Encountered two children with the same key, `tasks`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[1]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+[xai-web-shell] xai_rail_order contains unknown id "1" — filtered out
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 `{}` written by another document over a failed draft becomes a preserved conflict: Retry refused, bytes kept, Discard shows the source state
+[plugin-web-storage] quota exceeded for xai_rail_order.
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.7 an external repair behind the App, then Reload: the status disappears and the committed order displays, with no write
+TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35) {
+  [stack]: [Getter/Setter],
+  [message]: 'prefOrder is not iterable'
+}
+
+The above error occurred in the <AppRail> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+React Router caught the following error during render TypeError: prefOrder is not iterable
+    at AppRail (/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/AppRail.tsx:46:20)
+    at Object.react_stack_bottom_frame (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20)
+    at renderWithHooks (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22)
+    at updateFunctionComponent (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19)
+    at beginWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18)
+    at runWithFiberInDEV (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+    at performUnitOfWork (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22)
+    at workLoopSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+    at renderRootSync (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+    at performWorkOnRoot (/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35)
+
+stderr | docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.7 a repair committed by another document over `"tasks"`, then Reload if offered: the committed order displays, no status, no write
+[xai-web-shell] xai_rail_order contains unknown id "t" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "a" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "k" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "t" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "a" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "k" — filtered out
+[xai-web-shell] xai_rail_order contains unknown id "s" — filtered out
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 30 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "{}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "{\"tasks\":1}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "{\"tasks\":1}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "0" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "0": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "-1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "-1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "true" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "true": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 "false" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H1 "false": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:81:85
+     79| /** The source state on the current route: no throw, default display, …
+     80| function expectSourceState(tag: string, route: string, openThePanel: b…
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+       |                                                                                     ^
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "\"tasks\"" (a string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "\"tasks\"": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "ai",
+    "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[1]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "[1]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "ai",
+    "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[\"tasks\",2]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "[\"tasks\",2]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'ai', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
+    "tasks",
++   "ai",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[null]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "[null]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "ai",
+    "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[[\"tasks\"]]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "[[\"tasks\"]]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "ai",
+    "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"tasks\",\"tasks\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H8 "[\"tasks\",\"tasks\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
+    "tasks",
++   "tasks",
++   "ai",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 §5.2 "[\"board\",\"tasks\",\"board\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H8 "[\"board\",\"tasks\",\"board\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'board', 'tasks', 'board', …(12) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "board",
+    "tasks",
+    "board",
++   "ai",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:83:109
+     81|   expect(routeError(), `${tag}: ${route} must not render the route err…
+     82|   const shown = railIds();
+     83|   expect(shown, `${tag}: ${route} displays D(DEFAULT_RAIL_ORDER, R) (n…
+       |                                                                                                             ^
+     84|   const button = need(statusNamed("source"), `${tag}: ${route} shows t…
+     85|   expect(button.getAttribute("aria-controls"), `${tag}: the status con…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "null" (null literal) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "null": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:84:18
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "[tasks" (unparsable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "[tasks": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:84:18
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.2 "" (unparsable (empty string)) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+AssertionError: H7 "": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:84:18
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:106:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 §5.2 a throwing getItem(xai_rail_order) at load: the default display, the source status with Reload only, zero writes
+AssertionError: H10 unreadable: /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ expectSourceState docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:84:18
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:122:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.2 the source status and panel in Chinese for `{}`
+AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:132:46
+    130|   seedKey("xai_pref_lang", JSON.stringify("zh"));
+    131|   await mountApp("/app/tasks");
+    132|   expect(routeError(), "H1: no route error").toBeNull();
+       |                                              ^
+    133|   pre(uiLang() === "zh", "the UI is in Chinese");
+    134|   need(statusNamed("source", "zh"), `the ZH source accessible name "${…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 A5 a drag over `{}` is a refused failed draft: Retry refused again, Discard back to the default display, bytes unchanged
+AssertionError: H1: no route error before or after the drag: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:183:112
+    181|   seedMalformed("{}");
+    182|   await mountApp("/app/tasks");
+    183|   await dragOverSource("H1 A5 {}", () => { expect(routeError(), "H1: n…
+       |                                                                                                                ^
+    184| });
+    185| 
+ ❯ dragOverSource docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:148:3
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:183:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 A5 a drag over `[1]` never overwrites the malformed bytes: a refused failed draft with Retry, Discard and Export
+AssertionError: H7 A5 [1]: the malformed bytes are never overwritten by a drag: expected '["tasks","board","dashboard","ai","ca…' to be '[1]' // Object.is equality
+
+Expected: "[1]"
+Received: "["tasks","board","dashboard","ai","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+
+ ❯ dragOverSource docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:154:80
+    152|   const order = await drag(initial[0]!, [initial[3]!]);
+    153|   check();
+    154|   expect(raw(), `${tag}: the malformed bytes are never overwritten by …
+       |                                                                                ^
+    155|   expect(initial, `${tag}: the drag started from D(DEFAULT_RAIL_ORDER,…
+    156|   expect(railIds(), `${tag}: the dropped order stays displayed as a dr…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:189:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H8 A5 a drag over `["tasks","tasks"]` never overwrites the malformed bytes
+AssertionError: H8 A5 duplicate: the malformed bytes are never overwritten by a drag: expected '["tasks","ai","board","tasks","dashbo…' to be '["tasks","tasks"]' // Object.is equality
+
+Expected: "["tasks","tasks"]"
+Received: "["tasks","ai","board","tasks","dashboard","calendar","matrix","pomodoro","timetrack","bookkeeping","metrics","habits","meditation","countdown","statistics"]"
+
+ ❯ dragOverSource docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:154:80
+    152|   const order = await drag(initial[0]!, [initial[3]!]);
+    153|   check();
+    154|   expect(raw(), `${tag}: the malformed bytes are never overwritten by …
+       |                                                                                ^
+    155|   expect(initial, `${tag}: the drag started from D(DEFAULT_RAIL_ORDER,…
+    156|   expect(railIds(), `${tag}: the dropped order stays displayed as a dr…
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:195:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H10 A5 a drag over an unreadable source is a failed draft, never a silent no-op
+AssertionError: H10: the dropped order stays displayed as a draft: expected [ Array(14) ] to deeply equal [ 'board', 'dashboard', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  [
++   "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+-   "tasks",
+    "matrix",
+    "pomodoro",
+    "timetrack",
+    "habits",
+    "meditation",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:206:74
+    204|   const initial = railIds();
+    205|   const order = await drag(initial[0]!, [initial[3]!]);
+    206|   expect(railIds(), "H10: the dropped order stays displayed as a draft…
+       |                                                                          ^
+    207|   expect(initial, "H10: the drag started from the default display").to…
+    208|   need(statusNamed("draft"), "H10: the draft status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "{}" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "1" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+AssertionError: §10.4/H1: the running App must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:227:96
+    225|     await external(KEY, bytes);
+    226|     observe(`external ${JSON.stringify(bytes)}`, { routeError: routeEr…
+    227|     expect(routeError(), "§10.4/H1: the running App must not render th…
+       |                                                                                                ^
+    228|     expect(railIds(), "§10.4: the default display").toEqual(DEFAULT_DI…
+    229|     need(statusNamed("source"), "§10.4: the source status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[\"tasks\",\"tasks\"]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+AssertionError: §10.4: the default display: expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
+    "tasks",
++   "tasks",
++   "ai",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:228:53
+    226|     observe(`external ${JSON.stringify(bytes)}`, { routeError: routeEr…
+    227|     expect(routeError(), "§10.4/H1: the running App must not render th…
+    228|     expect(railIds(), "§10.4: the default display").toEqual(DEFAULT_DI…
+       |                                                     ^
+    229|     need(statusNamed("source"), "§10.4: the source status");
+    230|     expect(railWrites(from), "§10.4: zero writes").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 "[1]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+AssertionError: §10.4: the default display: expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+
+- Expected
++ Received
+
+  [
++   "ai",
+    "tasks",
+    "board",
+    "dashboard",
+    "calendar",
+    "matrix",
+    "pomodoro",
+    "timetrack",
++   "bookkeeping",
++   "metrics",
+    "habits",
+    "meditation",
+    "countdown",
+-   "ai",
+    "statistics",
+-   "bookkeeping",
+-   "metrics",
+  ]
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:228:53
+    226|     observe(`external ${JSON.stringify(bytes)}`, { routeError: routeEr…
+    227|     expect(routeError(), "§10.4/H1: the running App must not render th…
+    228|     expect(railIds(), "§10.4: the default display").toEqual(DEFAULT_DI…
+       |                                                     ^
+    229|     need(statusNamed("source"), "§10.4: the source status");
+    230|     expect(railWrites(from), "§10.4: zero writes").toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > §10.4 `{}` written by another document over a failed draft becomes a preserved conflict: Retry refused, bytes kept, Discard shows the source state
+AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  [
++   "statistics",
+    "countdown",
+    "meditation",
+    "habits",
+    "metrics",
+-   "statistics",
+    "bookkeeping",
+    "timetrack",
+    "pomodoro",
+    "matrix",
+    "calendar",
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:241:60
+    239|   const { order, quota } = await failedDrop(REVERSED[0]!, [REVERSED[4]…
+    240|   fired(quota, "the rail write");
+    241|   expect(railIds(), "H2: the failed drop stays displayed").toEqual(ord…
+       |                                                            ^
+    242|   quota.off();
+    243|   await external(KEY, "{}");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H1 §5.7 an external repair behind the App, then Reload: the status disappears and the committed order displays, with no write
+AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+
+- Expected: 
+null
+
++ Received: 
+"Route Error (app): prefOrder is not iterable"
+
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:268:46
+    266|   seedMalformed("{}");
+    267|   await mountApp("/app/tasks");
+    268|   expect(routeError(), "H1: no route error").toBeNull();
+       |                                              ^
+    269|   need(statusNamed("source"), "H1: the source status before the repair…
+    270|   nativeSet.call(localStorage, KEY, encode(REVERSED));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/30]⎯
+
+ FAIL  docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx > H7 §5.7 a repair committed by another document over `"tasks"`, then Reload if offered: the committed order displays, no status, no write
+AssertionError: H7: the source status before the repair: expected null not to be null
+ ❯ Module.need docs/reviews/web-apprail-order-recovery-sol/fixture.tsx:53:38
+     51| /** Business presence assertion: fails as a product failure (not a pre…
+     52| export function need<T>(value: T | null | undefined, message: string):…
+     53|   expect(value ?? null, message).not.toBeNull();
+       |                                      ^
+     54|   return value as T;
+     55| }
+ ❯ docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx:283:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/30]⎯
+
+
+---- run pin record ----
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/.apprail-sol-vite-cache-0/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-sol-EAFOQT/packages/xai-web-shell/src/__tests__/setup.ts"],"include":["docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePref.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/accountScope.ts packages/plugin-web-storage/src/internal/storage.ts apps/web/src/App.tsx apps/web/src/routes/router.tsx apps/web/src/routes/RouteGateElements.tsx apps/web/src/routes/RouteErrorBoundary.tsx apps/web/src/routes/modules/shellRegistrations.tsx apps/web/src/routes/modules/composedSettingsRegistration.tsx apps/web/src/routes/modules/departureCoordinator.tsx apps/web/src/providers/AccountStorageGate.tsx packages/plugin-web-storage/src/AccountDataGate.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts packages/xai-web-settings-features-panel/src/filterModulesByFeaturePrefs.ts packages/xai-web-settings-appearance/src/AppearancePane.tsx packages/xai-web-pet/src/DesktopPet.tsx packages/xai-web-cmdk/src/CommandPalette.tsx packages/xai-web-event-bus/src/emitter.ts packages/web-auth-device-session/src/session.tsx packages/web-auth-device-session/src/guards.tsx
+pin_modules=625 by package: apps/web=27 docs/reviews=2 packages/core-data=11 packages/core=8 packages/plugin-productivity=8 packages/plugin-web-ai-chat=29 packages/plugin-web-board-core=21 packages/plugin-web-board-views=16 packages/plugin-web-board-workspaces=30 packages/plugin-web-bookkeeping=13 packages/plugin-web-countdown=17 packages/plugin-web-metric-tracker=10 packages/plugin-web-pomodoro=22 packages/plugin-web-settings-rest=42 packages/plugin-web-settings-shell=14 packages/plugin-web-statistics=26 packages/plugin-web-storage=23 packages/plugin-web-time-tracker=9 packages/plugin-web-tokens=7 packages/web-auth-device-session=20 packages/xai-web-calendar=46 packages/xai-web-cmdk=28 packages/xai-web-dashboard-grid=20 packages/xai-web-dashboard-widgets=42 packages/xai-web-event-bus=4 packages/xai-web-habits=26 packages/xai-web-matrix=20 packages/xai-web-meditation=19 packages/xai-web-pet=10 packages/xai-web-settings-appearance=10 packages/xai-web-settings-features-panel=12 packages/xai-web-shell=10 packages/xai-web-tasks=23
+---- runner summary ----
+totals cases=31 passed=1 failed=30 skipped=0 precondition_failures=0
+harness PASS [domain.test.tsx] JSON report parsed
+harness PASS [domain.test.tsx] reported files equal the requested include
+harness PASS [domain.test.tsx] config in effect (environment jsdom, globals false, setupFiles [packages/xai-web-shell/src/__tests__/setup.ts], root = archive)
+harness PASS [domain.test.tsx] guard plugin active (archive modules recorded)
+harness PASS [domain.test.tsx] required product modules loaded from the archive (27)
+harness PASS [domain.test.tsx] no test-file suite error
+case 001 PASSED | FIXTURE F-B002 this file's storage wrappers record and delegate exactly once, never re-enter Storage and never call accountScope helpers
+case 002 FAILED | H1 §5.2 "{}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "{}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 003 FAILED | H1 §5.2 "{\"tasks\":1}" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "{\"tasks\":1}": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 004 FAILED | H1 §5.2 "1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 005 FAILED | H1 §5.2 "0" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "0": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 006 FAILED | H1 §5.2 "-1" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "-1": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 007 FAILED | H1 §5.2 "true" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "true": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 008 FAILED | H1 §5.2 "false" (not iterable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H1 "false": /app/tasks must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 009 FAILED | H7 §5.2 "\"tasks\"" (a string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "\"tasks\"": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 010 FAILED | H7 §5.2 "[1]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "[1]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 011 FAILED | H7 §5.2 "[\"tasks\",2]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "[\"tasks\",2]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'ai', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 012 FAILED | H7 §5.2 "[null]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "[null]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 013 FAILED | H7 §5.2 "[[\"tasks\"]]" (a non-string element) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "[[\"tasks\"]]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 014 FAILED | H8 §5.2 "[\"tasks\",\"tasks\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H8 "[\"tasks\",\"tasks\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+case 015 FAILED | H8 §5.2 "[\"board\",\"tasks\",\"board\"]" (a repeated string) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H8 "[\"board\",\"tasks\",\"board\"]": /app/tasks displays D(DEFAULT_RAIL_ORDER, R) (no duplicate, no filtered remainder): expected [ 'board', 'tasks', 'board', …(12) ] to deeply equal [ Array(14) ]
+case 016 FAILED | H7 §5.2 "null" (null literal) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "null": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+case 017 FAILED | H7 §5.2 "[tasks" (unparsable) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "[tasks": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+case 018 FAILED | H7 §5.2 "" (unparsable (empty string)) at load: no route error on the three routes, the default display, the source status with Reload only, zero writes
+    first: AssertionError: H7 "": /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+case 019 FAILED | H10 §5.2 a throwing getItem(xai_rail_order) at load: the default display, the source status with Reload only, zero writes
+    first: AssertionError: H10 unreadable: /app/tasks shows the Topbar rail status with the source accessible name "Saved sidebar order is unavailable. Review it.": expected null not to be null
+case 020 FAILED | H1 §5.2 the source status and panel in Chinese for `{}`
+    first: AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+case 021 FAILED | H1 A5 a drag over `{}` is a refused failed draft: Retry refused again, Discard back to the default display, bytes unchanged
+    first: AssertionError: H1: no route error before or after the drag: expected 'Route Error (app): prefOrder is not i…' to be null
+case 022 FAILED | H7 A5 a drag over `[1]` never overwrites the malformed bytes: a refused failed draft with Retry, Discard and Export
+    first: AssertionError: H7 A5 [1]: the malformed bytes are never overwritten by a drag: expected '["tasks","board","dashboard","ai","ca…' to be '[1]' // Object.is equality
+case 023 FAILED | H8 A5 a drag over `["tasks","tasks"]` never overwrites the malformed bytes
+    first: AssertionError: H8 A5 duplicate: the malformed bytes are never overwritten by a drag: expected '["tasks","ai","board","tasks","dashbo…' to be '["tasks","tasks"]' // Object.is equality
+case 024 FAILED | H10 A5 a drag over an unreadable source is a failed draft, never a silent no-op
+    first: AssertionError: H10: the dropped order stays displayed as a draft: expected [ Array(14) ] to deeply equal [ 'board', 'dashboard', …(12) ]
+case 025 FAILED | §10.4 "{}" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+    first: AssertionError: §10.4/H1: the running App must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 026 FAILED | §10.4 "1" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+    first: AssertionError: §10.4/H1: the running App must not render the route error boundary: expected 'Route Error (app): prefOrder is not i…' to be null
+case 027 FAILED | §10.4 "[\"tasks\",\"tasks\"]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+    first: AssertionError: §10.4: the default display: expected [ 'tasks', 'tasks', 'ai', …(12) ] to deeply equal [ Array(14) ]
+case 028 FAILED | §10.4 "[1]" written by another document while the rail is idle: no throw, the default display, the source status, zero writes
+    first: AssertionError: §10.4: the default display: expected [ 'ai', 'tasks', 'board', …(11) ] to deeply equal [ Array(14) ]
+case 029 FAILED | §10.4 `{}` written by another document over a failed draft becomes a preserved conflict: Retry refused, bytes kept, Discard shows the source state
+    first: AssertionError: H2: the failed drop stays displayed: expected [ 'statistics', 'countdown', …(12) ] to deeply equal [ 'countdown', 'meditation', …(12) ]
+case 030 FAILED | H1 §5.7 an external repair behind the App, then Reload: the status disappears and the committed order displays, with no write
+    first: AssertionError: H1: no route error: expected 'Route Error (app): prefOrder is not i…' to be null
+case 031 FAILED | H7 §5.7 a repair committed by another document over `"tasks"`, then Reload if offered: the committed order displays, no status, no write
+    first: AssertionError: H7: the source status before the repair: expected null not to be null
