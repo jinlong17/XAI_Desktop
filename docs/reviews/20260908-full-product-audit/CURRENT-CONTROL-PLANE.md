@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：时钟合同 r2（`8bf6139`）已在 `f9eb4b1` 上重新固定并经总控核对；总控确认 A1–A9 与 §17 的五个问题，登记 CP-CLOCK-01。本批登记批次 68：独立 Sol 在 `f9eb4b1` 上冻结 before oracle（E1–E2）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：CP-CLOCK-01 的 Sol before oracle（E1–E2）已在 `f9eb4b1` 冻结（`cb7e49b`）。本批登记批次 69：独立父级 host 验证者产出 E3（生产 `App` jsdom host 基线与跨 caller 种子扫描）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `8bf6139` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `cb7e49b` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -182,12 +182,13 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `diagnosis_needed`：合同 r2 已确认；批次 68 冻结 Sol before oracle（E1–E2） |
+| 状态 | `diagnosis_needed`：合同 r2 已确认；E1–E2 已冻结（`cb7e49b`）；批次 69 登记父级 host 基线（E3） |
+| E1–E2 Sol before oracle | `cb7e49b`（独立 Sol；`web-dashboard-clock-recovery-sol/` 下 16 个新增文件）。<ul><li>**runner：** `git archive` 流式读入 `tar`（148,408,320 字节，每份日志都记录）；四处 lockfile hash 一致；运行前校验合同 r2 的 hash；`@repo` 固定到 archive，越界导入为 0；50 个 archive 文件 hash 与合同 r2 的表一致；拒绝覆盖，保留非零退出码。</li><li>**权威日志（PRECONDITION 均为 0）：** bytes 45/45、fields 1/38、queues 1/24、departure 7/25（before2 为权威，before1 保留）、continuity-export 4/23、original 579/579（widgets 351、grid 228）。97 个失败全部是带 H/D/A/§ 标签的业务断言，没有 suite 错误与未处理错误；静态 typecheck 无 oracle 诊断。</li><li>**H1–H6 全部成立：** H1/H2 各种写入失败下 style、城市与本地时间的选择都被静默丢弃且没有恢复控件；H3 持锁期间字节仍被改写；H4 12 个畸形值与两种按 key 抛错的读取；H5 AppRail、程序化导航、`goTo`、Back/Forward、登出、`beforeunload` 与导出都不受保护（rail 草稿子句须在 App 中，留给 host 行 q 与 F1 c5）；H6 两种草稿并存时对话框显示 "Dashboard header has unsaved changes."。</li><li>**正向对照全部 PASS：** H7 跨 document 实时更新；H8 挂载、tick、弹层与拖动 ghost 零写入；D1 Header 单独时的等价性（三个 case）；D10 tick；D5 零确认记录器（分别计数 rail、Appearance 与其他确认）。</li><li>**迭代：** 六个模式均为 before1；只有 `departure` 跑了 before2，为一致性矩阵第 3 行（source-only 从不持有）补一个正向 case；没有第三轮。</li><li>**披露：** `probe1` 开发探测的日志已删除，不作证据。执行者在 scratchpad 中写了一个临时的 Clock controller 与聚合器，用来检验 oracle 自身，未提交，不作证据；它发现并修正了 D12 复用仍处于激活状态的 quota 故障的 oracle 缺陷，修正后 155 个 case 全过。</li><li>**总控裁定（合同与 oracle 的张力）：**<ol><li>**拖动 ghost 的"零存储尝试"：** 本审计中"存储尝试"一贯指 set/remove 写入尝试（如 Appearance、AppRail 的用法）；合同同句要求 ghost 显示已提交字节，必须读取。因此绑定读法为零写入与零删除，读取只记录（`f9eb4b1` 上 6 次）。host 行 n 与 native 证据按此判定。</li><li>**已在途的写入被对话框 Discard 截断：** 可能提交任一值；只对卸载后被持有的工作断言零写入。与已接受 caller 中"迟到的完成被忽略"的处理一致，接受。</li><li>**无参与者阻断时对话框标签取先注册者（Header 或 Clock）：** 合同未规定顺序，D7 接受任一，接受。</li><li>**两种排序读法**（Retry 先重写失败的前驱再执行排队的最新选择；外部恢复后的新选择正常结算）直接取自合同文本，接受。</li></ol>以上由最终 acceptance 复核。总控认可 scratch 临时实现只作冻结前的 oracle 自检，同 AppRail 批次 56 的裁定；Terra 仍须独立实现。</li><li>**总控核对：** 父提交 `40f07b2`；16 个文件全部新增且都在 Sol 目录；README 列全另外 15 个文件的 hash，总控逐个复算一致；8 份日志的 PRECONDITION 计数均为 0，各模式计数与回执一致。</li></ul> |
 | 合同 | r2：`docs/reviews/web-dashboard-clock-recovery-contract/contract.md`（`8bf6139`，1187 行，SHA-256 `214dc758…`），作者为独立 Astra（不是 r1 作者）；r1 为 `2c35fee`（890 行，`21624ff5…`）。<ul><li>**r1→r2 的依据（总控在 `f9eb4b1` 上核对）：** r1 固定在 `419e56d`；`f9eb4b1` 改了它依赖的登出序列（rail 步骤先于 Appearance 步骤）、Topbar（新增 rail 状态槽）与已接受 caller 集合（AppRail），hash 表中的 `App.tsx` 也已过时。</li><li>**r2 主要改动：** 全部源码引用、行号与 hash 在 `f9eb4b1` 上重新核实，所有 before 基线在 `f9eb4b1` 上取得；登出按 rail → Appearance → 协调器重写，确认记录器要求两个步骤在无草稿时零调用，并按确认文本区分；新增 host 行 q 与 F1 case c5（rail 草稿加 Clock 草稿：rail 确认先出现，Cancel 不触及 Clock 与协调器）；未播种时 rail 状态与 Appearance 状态都不得出现（q、c5 除外）；AppRail 离页只用按无障碍名称选中的单次点击，不用拖动；回归加入 AppRail（Sol 八个模式、父级 host、rail F1 形态、C-RD1），E15 的 F1 清单加入 rail F1；撤回 r1 中 "C-FD1 15/15"（在 `f9eb4b1` 上按设计为 14/15，C-RD1 为 case 014 的唯一判定）；新 runner 流式读取 archive 或按大小设缓冲，Header 的四个 100 MiB runner 预先登记缓冲副本；焦点按冻结 `pixelFocusWalk` 判定，并断言其身份 hash。</li><li>E1–E25 连续；Terra 记录目录 `web-dashboard-clock-recovery-terra/`；风险等级 medium（产品风险低，但改动已接受的 Dashboard Header 离页路径）。</li></ul> |
 | 总控核对 | <ul><li>`8bf6139` 只修改该合同文件，父提交 `61469c4`。</li><li>总控在 `f9eb4b1` 上抽查：`App.tsx:176–178` 与 `:187–189` 两个分支均为 rail → Appearance → `requestSettingsDeparture`；`Topbar.tsx:117` 为 Appearance 槽、`:124` 为 rail 槽；Clock 写入点 `ClockWidget.tsx:265、286、309` 与 `DashboardModule.tsx:158`（Header 的离页 guard）不变。</li><li>`git diff 419e56d f9eb4b1` 在 dashboard-widgets、dashboard-grid 与 storage 包上为空，与 r2 的声明一致。</li></ul> |
 | 总控确认（2026-10-09） | <ol><li>**A1–A9：** 确认。A2–A8 沿用 r1 原文；A1 只把 AppRail 文件与 `App.tsx` 加入受保护清单、把 AppRail 加入重跑；A9 只加入 rail 状态与隐藏宠物的步骤。A7（移除小组件时丢弃其草稿、零写入）维持批次 54 的裁定：REL-05 针对存储失败时保留草稿，不涉及主动移除，属总控可定，须披露，最终 acceptance 复核。</li><li>**时区弹层 Tab 移出时的遮挡：** 采用默认方案，与 F-E14-1 一致记入 UX-05，只作探测记录；恢复控件的 gate 在弹层关闭时判定。不改为焦点离开时关闭（那需要 r3）。</li><li>**预先登记的容量副本：** 确认。Header runner 的缓冲副本，以及 200 MiB F1 runner 若拒绝运行时的条件副本，按 AppRail host 套件的已接受程序执行：先提交拒绝日志，副本只改缓冲与路径层级并提交 diff，测试文件逐字节相同；不另设裁定批次。</li><li>**重跑范围：** 确认。纳入 Smart Lists、Collaborate、Pomodoro 的 host 套件（经已接受的副本）；Features native 与 AppRail native 套件不重跑，以 E12 与 E19 为界；若这两项任何一项不成立，再补跑。</li><li>**登出时的部分丢弃：** 确认"rail 确认 OK、协调器对话框选 Stay"会丢弃 rail 草稿，作为披露项而非阻止项。这与 AppRail 已接受的"OK 后 Cancel"同类；阻止它需要改受保护的 `App.tsx`，属合同停止条件。</li></ol>产品负责人决定：无。 |
 | 风险等级 | `medium`：产品风险低；改动已接受的 Dashboard Header 离页路径（单一 guard 改为组合 guard），登出前有三步，App 内有三个 async device controller |
-| 后续顺序 | 批次 68 Sol（E1–E2）→ 父级 host 基线（E3）→ native before 与 Clock F1 形态（E4–E5）→ Terra → fixed 重跑与 native → 视觉键盘 → Header 与 AppRail 受影响 caller 重跑与最终回归 → 独立最终 acceptance |
+| 后续顺序 | ~~批次 68 Sol（E1–E2）~~（`cb7e49b`）→ 批次 69 父级 host 基线（E3）→ native before 与 Clock F1 形态（E4–E5）→ Terra → fixed 重跑与 native → 视觉键盘 → Header 与 AppRail 受影响 caller 重跑与最终回归 → 独立最终 acceptance |
 
 ### 产品负责人决定登记（2026-10-06）
 
@@ -373,7 +374,8 @@
 | AppRail 关闭 | `82d5057` 登记批次 65 · `efe05ea` AppRail acceptance · `9a3e3aa` 台账 |
 | 下一项选择（续 8） | `37dd138` CP-APPRAIL-01 改为 `accepted`，登记批次 66 · `32a265c` 库存刷新（CP-LUNA-04） |
 | 时钟 | `61469c4` 登记批次 67 · `8bf6139` 时钟合同 r2 |
-| 本提交 | 确认 r2 与 A1–A9，登记 CP-CLOCK-01 与批次 68（Sol before oracle） |
+| 时钟（续） | `40f07b2` 登记 CP-CLOCK-01 与批次 68 · `cb7e49b` Sol before oracle |
+| 本提交 | 记录 E1–E2 与裁定，登记批次 69（父级 host 基线） |
 
 ## 台账变化
 
@@ -436,31 +438,36 @@
 
 ## 本轮唯一任务
 
-批次 68：独立 Sol 在 `f9eb4b1` 上冻结 CP-CLOCK-01 的 before oracle（合同 r2 §14 的 E1–E2）。
+批次 69：独立父级 host 验证者在 `f9eb4b1` 上产出 CP-CLOCK-01 的 E3（合同 r2 §12 "Parent host baseline" 与 §14 E3）。
 
-- **执行者：** 新的独立 Claude Opus 5.5（Sol 角色）。它不是合同 r1 或 r2 的作者，也不是 AppRail 任何一批的执行者。
+- **执行者：** 新的独立 Claude Opus 5.5（父级 host 验证者）。它不是合同作者，不是批次 68 的 Sol，也不是 AppRail 任何一批的执行者。
 - **固定点：**
-  - 产品 `f9eb4b1`（不可变 archive；lockfile gate；`@repo` 固定到 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码）；
-  - archive 须流式读取或按其字节数设缓冲，并在回执中记录 archive 字节数与方法；
-  - 合同 r2（`8bf6139`，SHA-256 `214dc758…`）；控制分支基点为本提交。
-- **E1：** Sol oracle 文件与 runner 冻结，带 SHA-256 回执；lockfile gate；F-B002 spy 自检（spy 不得重入存储）；值域内的种子表（F-FD1）；合同 §12 的一致性矩阵与 case 引用（避免 OE 式矛盾：每条 oracle 须与合同每条规则一致）。
-- **E2：** 合同 §12 六个模式（`bytes`、`fields`、`queues`、`departure`、`continuity-export`、`original`）的 before 日志。逐 case 记录 H1–H6 的结果；正向对照（H7、H8、D1、D10，以及 D5 的零确认记录器）须 PASS；前置条件失败为 0。
+  - 产品 `f9eb4b1`，生产 `App` composition，jsdom；只有 auth session 为合成；
+  - 不可变 archive（流式读取或按大小设缓冲，记录字节数）；lockfile gate；`@repo` 全部来自 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；
+  - 合同 r2（`8bf6139`）；控制分支基点为本提交。
+- **E3 必须包含（合同 §14 E3）：**
+  - 正确的 FAIL：行 b–h、j、k、m、n，行 i 的草稿一半，行 q 的 OK 一半；
+  - PASS：行 a、l、o、p，行 i 的空闲一半，行 c 的锁无关运行，行 q 的 Cancel 一半，以及 clean 对照；
+  - 每行的 Topbar 状态普查（未播种时 rail 与 Appearance 状态都不得出现，q 除外）与确认记录器（按确认文本区分 rail、Appearance 与其他）；
+  - **跨 caller 种子扫描（F-FD1）：** 列出所有已接受的 oracle、runner、fixture 与测试中播种或断言 `xai_clock_style`、`xai_clock_tz` 的位置；
+  - 一致性矩阵（OE-1/OE-2）：每行由哪些 case 断言，且 case 之间、case 与合同之间不矛盾。
 - **规则：**
-  - before 失败必须是业务断言失败，不得是 harness 失败；
-  - 确认记录器按确认文本区分 rail 与 Appearance 步骤，无草稿时两者都零调用；
-  - 不得写参考实现作为产品实现；若为检验 oracle 自身在 scratch 中写临时实现，须披露、不得提交，且不作为任何证据；
+  - before 失败必须是业务断言，不得是 harness 失败；前置条件失败为 0；
+  - AppRail 离页只用按无障碍名称选中的单次点击，不用拖动；行 q 的 rail 草稿按合同由一次写入失败的 rail 拖动建立（jsdom 中按合同规定的方式）；
+  - 拖动 ghost 的"零存储尝试"按总控裁定读作零写入与零删除，读取只记录；
   - 只能用 worktree 内自己启动的进程；禁止在主检出启动 dev server、使用 preview 工具或写入主检出。
-- **输出：** 只新增 `docs/reviews/web-dashboard-clock-recovery-sol/` 下的文件：oracle、fixture、runner、日志与 `README.md`（列全 hash）。提交一次，不 push。
-- **禁止：** 修改任何已有文件、产品、合同、台账或控制面；修复；push；派生子 agent。
-- **成本上限：** 每个模式的诊断迭代不超过 3 轮，用新后缀并保留旧日志；开发探测不计入，但须披露。
-- **停止条件：** oracle 与合同矛盾时不迁就，写明后停止；harness 不可复现时 BLOCKED；需要越出合同 §11 或跨模块时停止并报告。
+- **惯例：** 沿用 AppRail 的父级 host（`web-apprail-order-recovery-independent/`）与 Appearance 父级 host 的结构；不得写参考实现作为产品实现。
+- **输出：** 只新增 `docs/reviews/web-dashboard-clock-recovery-independent/` 下的文件：host fixture、测试、runner、日志、`README.md`（列全 hash 与种子扫描结果）。提交一次，不 push。
+- **禁止：** 修改任何已有文件、产品、合同、oracle、台账或控制面；修复；push；派生子 agent。
+- **成本上限：** 诊断迭代不超过 3 轮，用新后缀并保留旧日志；开发探测须披露。
+- **停止条件：** oracle 与合同矛盾时写明并停止；harness 不可复现时 BLOCKED；需要越出合同 §11 或跨模块时停止并报告。
 
 ## 下一步
 
-1. 等待批次 68 回执，总控核对：
-   - 只新增文件，且都在 Sol 目录内；
+1. 等待批次 69 回执，总控核对：
+   - 只新增文件，且都在 independent 目录内；
    - README 列全 hash；
-   - 六个模式的 before 结果与 PRECONDITION 计数；
-   - H1–H6 的失败都是业务断言，正向对照都 PASS；
-   - 一致性矩阵覆盖合同 §12。
-2. 通过后登记批次 69：父级 host 基线（E3，生产 `App`，含跨 caller 种子扫描）。
+   - 各行的 FAIL/PASS 与合同 §14 E3 的预期一致，PRECONDITION 为 0；
+   - Topbar 普查与确认记录器；
+   - 跨 caller 种子扫描结果。
+2. 通过后登记批次 70：native before 与 Clock F1 形态 before（E4–E5）。
