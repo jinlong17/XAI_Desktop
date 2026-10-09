@@ -1,5 +1,7 @@
 # 全清单执行台账
 
+最新检查点（2026-10-09，AppRail顺序）：AppRail顺序（xai_rail_order）完整调用方已接受（efe05ea，web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md）。固定产品f9eb4b1，before为419e56d，相对before共改合同r1 §11的19个文件（xai-web-shell与apps/web/src/App.tsx）。独立最终acceptance结论：合同§14九个gate逐行对账全部PASS；E1–E25齐全，456个hash全部重算一致；15项裁定全部确认。产品负责人对SET-03相关的R-1决定：用Features关闭模块后再拖动rail时，保留被关闭模块的存储位置，重新开启后回到原位。修复前任一畸形rail顺序值（如{}或1）都会让所有/app路由显示"Route Error (app): prefOrder is not iterable"且无法从UI修复（H-RAIL）；修复后不崩溃，显示默认顺序与只带Reload的source状态，字节不被改写。另修复：拖动失败不再静默；dragover期间不写入，每次drop只写一次，取消的拖动恢复原顺序；持锁写入；Topbar状态、关页提醒与登出确认（rail在Appearance之前）。链路：选择与时钟合同2c35fee；用户决定eabd47f；AppRail合同f7726d7；Sol before d6ea500；host before 6e9ec9c；native与F1 before 04ee6a2；Terra f9eb4b1/0d440ca；fixed重跑94b12ba；native E9–E11 ae7b69e；E12–E13 55cf1e9；键盘E14 5c6bcd2；最终回归ee60b48；acceptance efe05ea。附带裁定：D1（dragenter只接受、dragover移动预览）；C-RD1为预先登记的Features downstream判定副本，C-FB002、C-FD1、OE继续适用；F-E14-1（375px下打开的rail面板几乎遮住后续获得焦点的侧栏行）与375px搜索框占位文字换行记入UX-05，非阻断；host套件runner因archive增长出现ENOBUFS，经只改缓冲的副本运行。caller接受不关闭SET-03、SHELL-04、SHELL-05、UX-03、UX-05、REL-05、REL-07、REL-09或其他编号；SET-03中Time Tracker/Bookkeeping/Metrics的处置与search/deep-link一致性仍未核销。正式13/312完成、299未关闭不变。
+
 最新检查点（2026-10-05，Appearance）：Settings Appearance完整调用方已接受（a560863，web-appearance-recovery-acceptance/acceptance-419e56d.md），范围为7个device键：语言、主题、密度、字号、强调色、背景、rail位置；写入面三个：pane、App根偏好writer、Topbar快速切换。固定产品419e56d，before为5cd63ff，相对before共改26个合同r3 §11文件。独立最终acceptance结论：合同§13十个gate逐行对账全部PASS；E1–E27齐全，697个hash全部重算一致；15项裁定全部确认。产品负责人对SET-02的决定：继续自动保存，底部按钮保留并改为真实的"全部重试"；按钮始终显示，没有可重试项时为aria-disabled。链路：选择与合同e9fbdb7，r2 b2e5eb2，r3 706c9a3；Sol before bd09456；host before b997235；native与F1 before 72538d1；Terra 24073b5/4874170；OE判定26cfce8；fixed重跑31d6335；native E9–E11 3419542；K-1评估6b9f0ee；native E12/E13/E26 32e6753；E14–E15两次FAIL（5307b6f发现F-APP-1，bacdbbc发现F-APP-2），分别由5bbf473与419e56d修复，2696855 PASS；最终回归c6d1ed4；acceptance a560863。修复前任一畸形根值（如语言写成"fr"或"EN"、强调色写成Infinity）都会让整个/app崩溃，修复后均不崩溃。附带裁定：F-APP-3（Topbar弹层选项无可见焦点）属受保护chrome之外的既有缺陷，记入UX-05并建议优先处理；F-FD1：已接受的Features downstream oracle种子值"sage"不在严格值域内，以纠正副本为准，Features附条件C-FD1；K-1：nativeVirtualKeyCode按键注入问题，评估后无结论改变。caller接受不关闭SET-02、SHELL-04、SHELL-05、UX-03、UX-04、UX-05、REL-05、REL-07、REL-09或其他编号；SET-02中"实际正文随字号缩放"仍未满足，因为字号token为固定px。正式13/312完成、299未关闭不变。
 
 最新检查点（2026-10-04，Features）：Settings Features 8个模块开关与Reset to defaults调用方已接受（ec55f9e，web-features-recovery-acceptance/acceptance-5cd63ff.md）。固定产品5cd63ff，before为f359be6；Features实施只改合同§11的11个文件，均在xai-web-settings-features-panel。独立最终acceptance（Astra角色）结论如下：合同§13八个gate逐行对账全部PASS；E1–E25齐全，242个工件hash全部重算一致；六项裁定全部确认；未发现产品缺陷。链路：合同6ded3dc；Sol before oracle 11e0afb；父级host基线b732c27；native before与Features F1 before 4c5323f；Terra实施5cd63ff；fixed重跑eb37a59；Chrome native controls/reset/导出58a93ef；host矩阵与downstream 312b27c；EN/ZH五宽度视觉与键盘5905e37；最终回归0056299（冻结F-B002）；F-B002纠正oracle证据05b21f4；acceptance ec55f9e。裁定一R-PET：768×1024下默认位置的DesktopPet遮挡Reset（ZH中心被盖），判为非阻断；该复现作为UX-03与SHELL-05的缺陷证据记录，不是完成证据。裁定二F-B002：More已接受oracle（boundaries case 002）的getItem spy经physicalKey递归自身，权威before4日志中的失败为RangeError假象。05b21f4证明afbfb24上为业务失败（13/13），三个fixed SHA上整文件每次10/10；More接受条件C-FB002满足，计数不变。caller接受不关闭SET-03、REL-05、REL-07、REL-09、REL-10、UX-03、UX-04、UX-05、SHELL-02、SHELL-03、SHELL-05、QA-01/03/04/09或其他编号；正式13/312完成、299未关闭不变。
@@ -267,3 +269,18 @@ Settings Appearance recovery caller在固定产品419e56d由独立最终acceptan
 证据：`../web-appearance-recovery-contract/contract.md`、`../web-appearance-recovery-final/review-final-regressions-419e56d.md`、`../web-native-keyinput-k1/review-k1.md`、`../web-appearance-recovery-oracle-erratum/review-oe.md`、`../web-appearance-recovery-acceptance/acceptance-419e56d.md`。
 
 caller接受不关闭SET-02、SHELL-04、UX-05、REL-05或其他编号。本轮不新增编号关闭，正式13/312完成、299未关闭不变。
+
+## 2026-10-09 AppRail顺序完整调用方接受
+
+AppRail order recovery caller在固定产品f9eb4b1由独立最终acceptance efe05ea接受：合同r1的九个gate全部PASS，E1–E25齐全。产品负责人在合同起草前作出R-1决定（保留被关闭模块的存储位置），由eabd47f登记。
+
+验证中的发现与裁定：
+
+- H-RAIL：存储的rail顺序不是数组时，所有/app路由崩溃且无法从UI修复。由f9eb4b1修复，before与fixed证据见native与acceptance。
+- D1：合同§6第2项按"dragenter只接受、紧随的dragover移动预览"读，否则冻结的可信拖动前置条件不可满足；native 78次可信拖动证实。
+- F-E14-1：375px下打开的rail面板几乎遮住后续获得焦点的settings侧栏行。符合合同（面板只在Escape与外部mousedown时关闭），记入UX-05作为非阻断后续项。
+- host套件runner：archive增长超过100 MiB缓冲导致ENOBUFS，经只改缓冲与路径层级的副本运行，测试文件逐字节相同。
+
+证据：`../web-apprail-order-recovery-contract/contract.md`、`../web-apprail-order-recovery-native/before-419e56d.md`、`../web-apprail-order-recovery-native/review-keyboard-f9eb4b1.md`、`../web-apprail-order-recovery-final/review-final-regressions-f9eb4b1.md`、`../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md`。
+
+caller接受不关闭SET-03、SHELL-04、UX-05、REL-05或其他编号。本轮不新增编号关闭，正式13/312完成、299未关闭不变。

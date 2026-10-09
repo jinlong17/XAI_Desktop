@@ -614,7 +614,33 @@
         "commit:c6d1ed4",
         "../web-appearance-recovery-final/review-final-regressions-419e56d.md",
         "commit:a560863",
-        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md",
+        "commit:2c35fee",
+        "../web-next-caller-selection/selection-419e56d.md",
+        "commit:f7726d7",
+        "../web-apprail-order-recovery-contract/contract.md",
+        "commit:d6ea500",
+        "../web-apprail-order-recovery-sol/README.md",
+        "commit:6e9ec9c",
+        "../web-apprail-order-recovery-independent/README.md",
+        "commit:04ee6a2",
+        "../web-apprail-order-recovery-native/before-419e56d.md",
+        "../web-apprail-order-recovery-f1/before-419e56d.md",
+        "commit:f9eb4b1",
+        "commit:0d440ca",
+        "../web-apprail-order-recovery-terra/implementation.md",
+        "commit:94b12ba",
+        "../web-apprail-order-recovery-sol/fixed-f9eb4b1.md",
+        "commit:ae7b69e",
+        "../web-apprail-order-recovery-native/review-controls-protection-export-f9eb4b1.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:5c6bcd2",
+        "../web-apprail-order-recovery-native/review-keyboard-f9eb4b1.md",
+        "commit:ee60b48",
+        "../web-apprail-order-recovery-final/review-final-regressions-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
       ]
     },
     {
@@ -1527,7 +1553,15 @@
     {
       "id": "SET-03",
       "status": "pending",
-      "evidence": []
+      "evidence": [
+        "commit:eabd47f",
+        "commit:f7726d7",
+        "../web-apprail-order-recovery-contract/contract.md",
+        "commit:ae7b69e",
+        "../web-apprail-order-recovery-native/review-controls-protection-export-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
+      ]
     },
     {
       "id": "SET-04",
@@ -1613,7 +1647,13 @@
         "commit:32e6753",
         "../web-appearance-recovery-native/review-host-downstream-retryall-24073b5.md",
         "commit:a560863",
-        "../web-appearance-recovery-acceptance/acceptance-419e56d.md"
+        "../web-appearance-recovery-acceptance/acceptance-419e56d.md",
+        "commit:04ee6a2",
+        "../web-apprail-order-recovery-native/before-419e56d.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
       ]
     },
     {
@@ -1670,7 +1710,13 @@
         "commit:5766c1e",
         "../web-appearance-recovery-terra/implementation-r3.md",
         "commit:2696855",
-        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md"
+        "../web-appearance-recovery-native/review-visual-keyboard-419e56d.md",
+        "commit:55cf1e9",
+        "../web-apprail-order-recovery-native/review-downstream-visual-f9eb4b1.md",
+        "commit:5c6bcd2",
+        "../web-apprail-order-recovery-native/review-keyboard-f9eb4b1.md",
+        "commit:efe05ea",
+        "../web-apprail-order-recovery-acceptance/acceptance-f9eb4b1.md"
       ]
     },
     {
