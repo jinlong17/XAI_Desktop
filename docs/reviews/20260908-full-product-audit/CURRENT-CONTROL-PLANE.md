@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：AppRail 顺序合同 r1（`f7726d7`）已接收；总控对 A1–A11 与 §19 的 8 个开放问题全部确认，用户确认并授权继续。CP-APPRAIL-01 登记为 `diagnosis_needed`。本批登记批次 56：由独立 Sol 冻结 before oracle E1–E2（含 C-RD1）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：AppRail 的 Sol before oracle（E1–E2，含 C-RD1）已在 `419e56d` 冻结（`d6ea500`）：H1–H10 全部成立，H1 实证 `prefOrder is not iterable` 让 `/app` 崩溃。本批登记批次 57：父级 host before 基线（E3）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `f7726d7` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `d6ea500` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -153,12 +153,13 @@
 
 | 字段 | 当前值 |
 | --- | --- |
-| 状态 | `diagnosis_needed`：合同 r1 已确认；before 基线 E1–E5 未冻结；未授权实施 |
+| 状态 | `diagnosis_needed`：合同 r1 已确认；E1–E2 已冻结（`d6ea500`），E3–E5 未冻结；未授权实施 |
+| E1–E2 Sol before oracle | `d6ea500`（独立 Sol；`web-apprail-order-recovery-sol/` 下 32 个新增文件）。<ul><li>权威日志：bytes 21/26、domain 1/31、merge 4/21、drag 8/18、field 1/24、continuity-export 4/22、host 7/33、original 121/121（76+45）；PRECONDITION 为 0，失败全部是业务断言；F-B002 自检通过。</li><li>H1–H10 全部成立；H11 是正向对照并通过。H1：`{}` 或 `1` 让 `/app` 显示 "Route Error (app): prefOrder is not iterable"，另一 document 写入也会让运行中的 App 崩溃；H3：dragover 期间写两次、drop 时不写；H4：取消的预览被持久化；H5：重新开启 Boards 后排到最后；H9：登出没有 rail 提示。</li><li>C-RD1：Features `downstream` 在 `419e56d` 上冻结原件 14/15（F-FD1）、C-FD1 15/15、C-RD1 15/15；C-RD1 相对 C-FD1 只加一行 `fireEvent.drop`，相对冻结原件三行；staging runner 副本只改被 stage 的文件、hash 与日志路径。</li><li>迭代：before2 只为 5 个模式加观察行，结果与 before1 逐 case 相同。</li><li>**披露与裁定：** 执行者在 scratch 中写了一个按合同实现的临时参考实现，用来检验 oracle 自身（7 个模式全过），又用注入 6 个缺陷的版本证明 oracle 能抓住缺陷；均未提交。由此修正了一个会在 dragenter 与 dragover 双触发时振荡的驱动缺陷。总控认可：这是冻结前的 oracle 自检，不构成产品实现，也不作为 fixed 产品的证据；Terra 仍须独立实现。</li><li>**总控核对：** 32 个文件均为新增，且在允许目录内；README 列全了 hash；8 份权威日志的计数与 PRECONDITION 由总控复核；H1 的错误文本与 C-RD1 的 diff 已抽查。</li></ul> |
 | 合同 | `f7726d7`：`docs/reviews/web-apprail-order-recovery-contract/contract.md` r1（921 行，SHA-256 `b9e407b3…`），作者为独立 Astra。<ul><li>结构沿用 Appearance r3；R-1 记为产品负责人决定。</li><li>假设 A1–A11：下标槽合并、App 级 rail controller、注册 async 绑定、严格值域只拒绝不修复、Topbar 并列状态槽与登出步骤、每次 drop 只写一次、反馈与导出面、测试处置、R-PET、预先登记的纠正副本 C-RD1。</li><li>H1–H11；9 个 gate；E1–E25 连续；Terra 记录目录 `web-apprail-order-recovery-terra/`。</li><li>跨 caller 影响：没有已接受 oracle 断言剪除被关闭模块，故 R-1 不需纠正副本；A7 使 Features `downstream` case 014 的拖动缺少 drop，须以 C-RD1 判定。</li></ul> |
 | 过程披露 | 起草窗口在提交后、交回前卡住（看门狗）；总控只读核实提交与 worktree clean 后直接接收。接收步骤曾被权限分类器拒绝一次，用户确认并授权后执行 |
 | 总控确认（2026-10-09，用户已确认） | <ol><li>R-1 读作存储顺序中的下标。</li><li>未知与非 rail id 同样保留，不剪除。</li><li>source 异常显示 Topbar 状态（rail 无 pane）。</li><li>取消拖动恢复原顺序，是"每次 drop 只写一次"的结果，须披露。</li><li>登出时两个提示依次出现，rail 在前；不改已接受的 Appearance controller。</li><li>controller 由 App 创建。</li><li>C-RD1 预先登记，条件：最终回归须独立证明冻结原件只在预测签名上失败，纠正副本在 before 与 fixed 都通过。</li><li>Smart Lists、Collaborate、Pomodoro、Dashboard Header 的 host 套件纳入回归。</li></ol> |
 | 风险等级 | `high`：H-RAIL 可能让所有 `/app` 路由崩溃；改动 shell 与 `App.tsx`（Appearance 刚改过的表面），须做受影响 caller 重跑 |
-| 后续顺序 | 批次 56 Sol（E1–E2，含 C-RD1）→ 批次 57 父级 host（E3）→ 批次 58 native before 与 rail F1（E4–E5）→ Terra → fixed 重跑与 native → 视觉键盘 → 最终回归 → 独立最终 acceptance |
+| 后续顺序 | ~~批次 56 Sol（E1–E2，含 C-RD1）~~（`d6ea500`）→ 批次 57 父级 host（E3）→ 批次 58 native before 与 rail F1（E4–E5）→ Terra → fixed 重跑与 native → 视觉键盘 → 最终回归 → 独立最终 acceptance |
 
 
 ### 产品负责人决定登记（2026-10-06）
@@ -318,7 +319,8 @@
 | 下一项选择（续 6） | `0daab01` CP-APPEARANCE-01 改为 `accepted`，登记批次 53 · `832f6ab` 库存刷新（CP-LUNA-03） |
 | 下一项选择（续 7） | `b4e190e` 登记批次 54 · `2c35fee` 选择备忘录与时钟合同 r1 |
 | AppRail | `eabd47f` 登记批次 55 · `f7726d7` AppRail 合同 r1 |
-| 本提交 | 确认 AppRail 合同，登记 CP-APPRAIL-01 与批次 56 |
+| AppRail（续） | `1094d96` 登记批次 56 · `d6ea500` Sol before oracle |
+| 本提交 | 记录 E1–E2，登记批次 57（父级 host E3） |
 
 ## 台账变化
 
@@ -370,18 +372,17 @@
 
 ## 本轮唯一任务
 
-批次 56：独立 Sol 在不可变 `git archive 419e56d` 上冻结 AppRail 合同 r1 §12 的 jsdom oracle，对应 §15 的 E1 与 E2。
+批次 57：独立父级 host 验证者在 jsdom 中用生产 `App` composition 冻结 AppRail 的 host before 基线（合同 r1 §15 E3）。
 
-- **固定点：** 产品 `419e56d`；合同 r1（`f7726d7`，SHA-256 `b9e407b3…`）；控制分支基点为本提交。
-- **范围：** 合同 §12 的八个 Sol 模式；H1–H11 的 Sol 层逐项结论；F-B002 spy 自检；值域内种子值（畸形值用例除外）；oracle 一致性矩阵。
-- **C-RD1（A11）：** 冻结 C-RD1 副本及其 staging runner 副本与两份 diff；在 `419e56d` 上运行 Features `downstream`：冻结原件 14/15（F-FD1）、C-FD1 15/15、C-RD1 15/15。
-- **运行条件：** lockfile gate；`@repo` 固定到 archive 并带守卫；记录 requested 与 resolved SHA；拒绝覆盖；保留非零退出码；主检出只读，不在主检出启动 dev server。
-- **输出：** 只新增 `docs/reviews/web-apprail-order-recovery-sol/**`（含 C-RD1 相关文件）与 README（hash、逐模式计数、假设结论附日志行、正向对照、F-B002 自检）。
-- **禁止：** 修改任何已有文件、产品、合同、台账或控制面；修复；push；派生子 agent。
-- **成本上限：** 每个模式诊断迭代不超过 3 轮；开发探测须披露；避免长时间无输出的命令。
-- **停止条件：** fixture 有效性 3 轮内无法建立、合同与源码矛盾、或需越权文件时，提交 blocked 回执并停止。
+- **固定点：** before `419e56d`（不可变 archive、lockfile gate、`@repo` 固定并带守卫、记录 requested 与 resolved SHA、拒绝覆盖、保留非零退出码）；合同 r1（`f7726d7`）；控制分支基点为本提交。
+- **用例（合同 §12 的父级 host 基线）：** 失败的拖动，以及之后的路由结果与登出结果，分别在有与没有 Appearance 草稿时（H2、H9）；加载时存储为 `{}` 与 `1`（H1）；一个 clean 正向对照。
+- **惯例：** 沿用 `web-appearance-recovery-independent/` 的 runner、host fixture 与 harness 裁定（内存 data router，`RouterProvider` 从 `react-router` 导入）；F-B002 规则；种子值在值域内（畸形值用例除外）。
+- **输出：** 只新增 `docs/reviews/web-apprail-order-recovery-independent/**`：runner、fixture、oracle、before 日志与 README（hash、逐用例结果、H1/H2/H9 的 host 层结论附日志行、正向对照）。
+- **禁止：** 修改任何已有文件、产品、合同、台账或控制面；修复；push；派生子 agent；在主检出启动 dev server 或写入主检出。
+- **成本上限：** 诊断迭代不超过 3 轮；开发探测须披露。
+- **停止条件：** harness 有效性 3 轮内无法建立、合同与源码矛盾或需越权文件时，提交 blocked 回执并停止。
 
 ## 下一步
 
-1. 核对批次 56：只新增文件；正向对照 PASS；precondition 为 0；假设结论有日志行；C-RD1 三份运行结果；hash。
-2. 依次登记批次 57（E3）与批次 58（E4–E5）；E1–E5 全部冻结后才授权 Terra。
+1. 核对批次 57：只新增文件；正向对照 PASS；失败为业务断言；H1/H2/H9 结论有日志行；hash。
+2. 登记批次 58（E4–E5：native before 与 rail F1 形态 before）；E1–E5 全部冻结后才授权 Terra。
