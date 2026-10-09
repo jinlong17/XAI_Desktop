@@ -1,0 +1,65 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1
+mode=original
+suffix=apprail-final-v1
+include=packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-features-recovery-sol/verify-fixed.mjs f9eb4b1 original apprail-final-v1
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+vitest_bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-settings-features-panel/node_modules/.bin/vitest
+vitest_args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh/features-sol-original.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh/.report-original.json
+vitest_version=3.2.7 vite_version=7.3.6 jsdom_version=26.1.0 node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+extracted_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+oracle_sha256 fixture.tsx=f0b5d272695026f8e60df6dd2dbf5889790b3d2e834256259e86bb0432050ef8 bytes.test.tsx=904cb0de88eb5047365309df501ebbb8cb725a485963d23df022e7bbd26aba14 fields.test.tsx=506d54cbc39d0b69c53e7f45d4e3fa90ae77ae99f2ea68beb23d7540f08c0bc4 reset.test.tsx=dc4ee31e52a5800f30e7dbd924834e25f6f8a77dd5e88c8262443e1c322ac8e9 queues.test.tsx=d58160748187b7d7a7aeabfc620b694e7bc1e2714d37491aa99dbf8d8cb16f2b continuity-export.test.tsx=1e3066f963edc15ba161937d26cbee949cb2886f1c3122740fd4c7c143c5a55a downstream.test.tsx=88cf89c821b5f51abf2e4f373d1047304d51bb8817b33a1d7b8094516d38624d verify-fixed.mjs=b5ac75fa1bc5ff65352afb5b598dc7309fb7435aa9ca96518dfd1d7ffb2f2f16
+archive_file_sha256 packages/xai-web-settings-features-panel/src/FeaturesPane.tsx=54a3f10c90fdc415a9c1bb89801fe4cdc1870022235752229e9180a2a683d701 packages/xai-web-settings-features-panel/src/internal/featuresPane.tsx=572bdd478954059f02dde83c8ec7383f992ca0f6f33f8b5e2c96ba85e7f935a7 packages/xai-web-settings-features-panel/src/types.ts=f97c4e6212d99723d9baeb1133866f05860db7b97ce274ba2be0b27128cd8406 packages/xai-web-settings-features-panel/src/styles.css=65fdf6f08b299c242bf79397a5e731fa0b605cc2f5a7476e2778a4caa350b5c3 packages/xai-web-settings-features-panel/src/index.ts=cf89e7454252927a457f48f9e4bcf9190219b94862d896240999626a1b097c68 packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx=993f0d069b9dc23de53d910d5dda4967eca2e436596ec3fbc2b33fad16ed1d64 packages/xai-web-settings-features-panel/vitest.setup.ts=8f6aedf733a84b6244bde5e8be1421625cf2eccab78683488963f0e749a9057e packages/xai-web-settings-features-panel/vitest.config.ts=d12410da12f81e89d4aa07db2fc0856d3b58768e398809d3e31942052bc465c6 apps/web/src/App.tsx=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 packages/plugin-web-storage/src/AccountDataGate.tsx=7519485bb7bbec8765909ae1855391e0458ca6a2a18ef6f81fa0fcac472328b9 packages/plugin-web-storage/src/internal/prefMutation.ts=3f8840ac8e7e824ddc9aacb6839d19a0602244235dbfd542f686ca749125ec00 packages/plugin-web-storage/src/internal/usePrefAsync.ts=541fae97413104b8db90c20d7b565a5492f17fc74d79b3e975f954d7189a4491 packages/plugin-web-storage/src/internal/usePref.ts=e1f2c9131cb9a00a2dff3951f4c95b2a7ad68692d0bf409b0ef511df137fa188
+oracle_dependency_links react->node_modules/.pnpm/react@19.2.0/node_modules/react@19.2.0 react-dom->node_modules/.pnpm/react-dom@19.2.0_react@19.2.0/node_modules/react-dom@19.2.0 @testing-library/react->node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.2_@types+reac_e3xwhmuswug3dvrnpc5jogthwq/node_modules/@testing-library/react@16.3.2 react-router->node_modules/.pnpm/react-router@7.15.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/react-router@7.15.1
+node_modules_links third_party=449 workspace=281
+tsconfig_extends_unresolved=none (checked 46)
+aliases=75 exact-match archive export specifiers
+vitest_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh
+
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-1: renders 8 feature cards in featureIdOrder 31ms
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-2: each row shows the nav.<id> i18n label (EN) 20ms
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-3: clicking a Toggle flips the underlying pref 43ms
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-4: renders 8 distinct FeatureThumb SVGs (no img/network) 10ms
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-5: bilingual — lang='zh' shows Chinese strings 12ms
+ ✓ packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx > FeaturesPane > AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true 61ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  07:57:20
+   Duration  932ms (transform 223ms, setup 42ms, collect 328ms, tests 177ms, environment 195ms, prepare 49ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh/.report-original.json
+
+---- stderr ----
+
+---- runner summary ----
+json_report=success=true numTotalTests=6 numPassedTests=6 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals cases=6 passed=6 failed=0 skipped=0 precondition_failures=0 suite_errors=0 unhandled_error_lines=0
+harness PASS JSON report parsed
+harness PASS reported files equal the requested include
+harness PASS config in effect (environment jsdom, globals true, setupFiles [packages/xai-web-settings-features-panel/vitest.setup.ts], root = archive)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (2)
+harness PASS no test-file suite error
+case 001 PASSED | FeaturesPane AC-PANE-1: renders 8 feature cards in featureIdOrder
+case 002 PASSED | FeaturesPane AC-PANE-2: each row shows the nav.<id> i18n label (EN)
+case 003 PASSED | FeaturesPane AC-PANE-3: clicking a Toggle flips the underlying pref
+case 004 PASSED | FeaturesPane AC-PANE-4: renders 8 distinct FeatureThumb SVGs (no img/network)
+case 005 PASSED | FeaturesPane AC-PANE-5: bilingual — lang='zh' shows Chinese strings
+case 006 PASSED | FeaturesPane AC-PANE-6: SettingsFooter Reset restores all 8 prefs to true
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh/.features-sol-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":true,"setupFiles":["/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-features-sol-Was2qh/packages/xai-web-settings-features-panel/vitest.setup.ts"],"include":["packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance_missing=none
+pin_required_provenance packages/xai-web-settings-features-panel/src/FeaturesPane.tsx packages/plugin-web-storage/src/internal/usePref.ts
+pin_modules=70 by package: packages/plugin-web-settings-shell=14 packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-settings-features-panel=8 packages/xai-web-shell=14

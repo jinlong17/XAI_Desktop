@@ -1,0 +1,1067 @@
+requested_fixed=f9eb4b1
+resolved_fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_fixed_tree=05887cf113639116b228a25041a37b3d5c69a322
+requested_before=419e56d
+resolved_before_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_before_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-static.mjs f9eb4b1 419e56d apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=c7dea48432c8568c64f91fe590fca1656c44674c0790f79ccb74d12f3690a47c
+node=v24.16.0 platform=darwin-arm64 git=git version 2.54.0 (Apple Git-157)
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+before_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=not applicable (no product code is executed; text scan and git object comparison only)
+archives fixed_files=7603 (symlinks 22) before_files=7205 (symlinks 22) scanned_text_files fixed=2136 before=2126 binary_skipped fixed=23 before=23
+log=E18 (contract §10 item 9) writer/reader search
+## Per-pattern, per-file matching-line counts (scope: every committed file outside docs/ and *.md; text files only)
+pattern K1 rail order key "xai_rail_order": 419e56d files=6 lines=19; f9eb4b1 files=11 lines=26
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=2 f9eb4b1=2
+  DOWN packages/xai-web-shell/src/AppRail.tsx 419e56d=3 f9eb4b1=1 [§11]
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 419e56d=9 f9eb4b1=9
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderModel.ts 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=1 [§11]
+pattern K2 rail order fragment "rail_order": 419e56d files=7 lines=20; f9eb4b1 files=12 lines=27
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=2 f9eb4b1=2
+  DOWN packages/xai-web-shell/src/AppRail.tsx 419e56d=3 f9eb4b1=1 [§11]
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 419e56d=9 f9eb4b1=9
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderModel.ts 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=1 [§11]
+  same scripts/cowork/roadmap_bg_run_xai-web-console_w1.sh 419e56d=1 f9eb4b1=1
+pattern K3 default constant "RAIL_ORDER": 419e56d files=1 lines=2; f9eb4b1 files=3 lines=7
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=2 f9eb4b1=2
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=4 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=1 [§11]
+pattern G1 registry iteration "PREF_REGISTRY": 419e56d files=24 lines=108; f9eb4b1 files=25 lines=110
+  same packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts 419e56d=12 f9eb4b1=12
+  same packages/plugin-web-storage/src/__tests__/registry.test.ts 419e56d=17 f9eb4b1=17
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/index.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/accountMigrationValidation.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/prefMutation.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/internal/storage.ts 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/internal/usePrefAsync.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-calendar/src/__tests__/registry-presence.test.ts 419e56d=7 f9eb4b1=7
+  same packages/xai-web-cmdk/src/internal/readModuleStates.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/registry-presence.test.ts 419e56d=7 f9eb4b1=7
+  same packages/xai-web-matrix/src/__tests__/registry-presence.test.ts 419e56d=9 f9eb4b1=9
+  same packages/xai-web-meditation/src/__tests__/registry-presence.test.ts 419e56d=10 f9eb4b1=10
+  same packages/xai-web-meditation/src/constants.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/internal/useMeditationPrefs.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts 419e56d=1 f9eb4b1=1
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=2 [§11]
+pattern G2 ownership iteration "LOCAL_KEY_OWNERSHIP": 419e56d files=6 lines=16; f9eb4b1 files=6 lines=16
+  same packages/plugin-web-storage/src/__tests__/dataExport.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/index.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/accountMigration.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/accountOwnership.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/internal/dataExport.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts 419e56d=4 f9eb4b1=4
+pattern G3 production clear "localStorage.clear()": 419e56d files=96 lines=119; f9eb4b1 files=97 lines=120
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 419e56d=1 f9eb4b1=1
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  same apps/web/src/__tests__/App.signout.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/cmdkIntegration.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/shell.smoke.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/shell.theme.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/__tests__/accountTestSetup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-core/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-views/src/__tests__/BoardModule.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-views/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-board-workspaces/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-bookkeeping/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-countdown/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-metric-tracker/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-pomodoro/src/__tests__/durableSession.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts 419e56d=11 f9eb4b1=11
+  same packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-statistics/src/__tests__/StatisticsModule.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-statistics/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountCoordination.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountMigration.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountScope.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandCommit.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/canonicalDatasetMutation.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/dataExport.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/prefMutation.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-time-tracker/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-cmdk/vitest.setup.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.i18n.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.views.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-habits/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.bubble-side.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.persistence.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.resize.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-shell/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same scripts/clean-and-restart.sh 419e56d=1 f9eb4b1=1
+pattern S0 localStorage "localStorage": 419e56d files=296 lines=1614; f9eb4b1 files=298 lines=1630
+  same .codex/agents-backup-20260516-004426/bug-diagnose.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/bug-fix.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/bug-verify.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/bugfix-loop.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/feature-build.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/feature-dev-loop.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/feature-plan.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/feature-review.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/feature-verify.toml 419e56d=2 f9eb4b1=2
+  same .codex/agents-backup-20260516-004426/ship.toml 419e56d=2 f9eb4b1=2
+  same apps/web/src/App.tsx 419e56d=4 f9eb4b1=4 [§11]
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=10 f9eb4b1=10
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 419e56d=15 f9eb4b1=15
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=6 [§11]
+  same apps/web/src/__tests__/App.signout.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/accountFixture.ts 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/cmdkIntegration.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/shell.smoke.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/__tests__/shell.theme.test.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/observability/runtime.ts 419e56d=1 f9eb4b1=1
+  same apps/web/src/pages/NotFoundPage.tsx 419e56d=2 f9eb4b1=2
+  same apps/web/src/providers/AccountStorageGate.tsx 419e56d=2 f9eb4b1=2
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/core-data/package.json 419e56d=1 f9eb4b1=1
+  same packages/core-data/src/organizer-layout-migration.ts 419e56d=2 f9eb4b1=2
+  same packages/core/src/types/grid.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-ai-cube/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-ai-cube/src/hooks/useCostGuard.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-calendar/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-clipboard/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-clipboard/src/hooks/useClipboardStore.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-console/src/components/ConsoleLayout.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-console/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-labels/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-labels/src/hooks/useLabelStore.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-organizer/src/index.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-organizer/src/layoutStore.test.ts 419e56d=7 f9eb4b1=7
+  same packages/plugin-organizer/src/layoutStore.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-organizer/src/useGridSystem.tsx 419e56d=6 f9eb4b1=6
+  same packages/plugin-pet/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-productivity/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-project/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-ai-chat/src/AiChatModule.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/__tests__/AiChatModule.test.tsx 419e56d=25 f9eb4b1=25
+  same packages/plugin-web-ai-chat/src/__tests__/accountAsync.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/__tests__/accountSecrets.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/__tests__/accountTestSetup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/__tests__/claudeStreamAdapter.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-ai-chat/src/__tests__/contextProvider.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/__tests__/llmProvider.test.ts 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-ai-chat/src/__tests__/no-plaintext-key.test.ts 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-ai-chat/src/__tests__/openAiRoundTrip.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/__tests__/openAiToolFormat.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-ai-chat/src/__tests__/openAiToolProtocol.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/__tests__/saveRecovery.test.tsx 419e56d=15 f9eb4b1=15
+  same packages/plugin-web-ai-chat/src/internal/isAiConvoRecord.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/internal/llmProvider.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/internal/secretStore.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/internal/useChatPreference.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-ai-chat/src/internal/useConversationRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-core/src/__tests__/BoardModule.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/plugin-web-board-core/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-views/src/__tests__/BoardModule.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-board-views/src/internal/filter.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-views/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 419e56d=26 f9eb4b1=26
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardRecoveryInitialization.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardWorkspacesModule.test.tsx 419e56d=78 f9eb4b1=78
+  same packages/plugin-web-board-workspaces/src/__tests__/WorkspaceSaveRecovery.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts 419e56d=20 f9eb4b1=20
+  same packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-workspaces/src/internal/useBoardComposerRecovery.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-workspaces/src/internal/useBoardCreateRecovery.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-board-workspaces/src/internal/useBoardDetailSaveRecovery.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-board-workspaces/src/internal/useWorkspaceSaveRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-bookkeeping/src/__tests__/saveFailure.test.tsx 419e56d=13 f9eb4b1=13
+  same packages/plugin-web-bookkeeping/src/__tests__/storage.test.ts 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-bookkeeping/src/internal/storage.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-bookkeeping/src/types.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-bookkeeping/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-countdown/src/__tests__/CountdownModule.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/plugin-web-countdown/src/__tests__/saveRecovery.test.tsx 419e56d=13 f9eb4b1=13
+  same packages/plugin-web-countdown/src/internal/presets.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-countdown/src/internal/useCountdownSaveRecovery.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-countdown/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-metric-tracker/src/__tests__/MetricTrackerModule.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-metric-tracker/src/__tests__/saveRecovery.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-metric-tracker/src/__tests__/storage.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-metric-tracker/src/internal/storage.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-metric-tracker/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-pomodoro/src/__tests__/PomodoroModule.test.tsx 419e56d=13 f9eb4b1=13
+  same packages/plugin-web-pomodoro/src/__tests__/durableSession.test.ts 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-pomodoro/src/__tests__/eventEmit.integration.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/__tests__/preferenceRecovery.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-pomodoro/src/internal/sessionsReducer.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/types.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/docs/verify-browser-deletion-recovery.mjs 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx 419e56d=18 f9eb4b1=18
+  same packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts 419e56d=12 f9eb4b1=12
+  same packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 419e56d=11 f9eb4b1=11
+  same packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx 419e56d=19 f9eb4b1=19
+  same packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionIntent.ts 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionRecovery.ts 419e56d=14 f9eb4b1=14
+  same packages/plugin-web-settings-rest/src/internal/integrationConnectButton.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/internal/oauthState.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/src/internal/usePremiumTier.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/src/panes/aiPane.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 419e56d=16 f9eb4b1=16
+  same packages/plugin-web-settings-shell/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-statistics/src/__tests__/StatisticsModule.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-statistics/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/package.json 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/AccountDataGate.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 419e56d=12 f9eb4b1=12
+  same packages/plugin-web-storage/src/__tests__/accountCoordination.test.ts 419e56d=30 f9eb4b1=30
+  same packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts 419e56d=29 f9eb4b1=29
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-storage/src/__tests__/accountMigration.test.ts 419e56d=29 f9eb4b1=29
+  same packages/plugin-web-storage/src/__tests__/accountScope.test.ts 419e56d=10 f9eb4b1=10
+  same packages/plugin-web-storage/src/__tests__/accountTestHarness.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandCommit.test.ts 419e56d=30 f9eb4b1=30
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/__tests__/canonicalDatasetMutation.test.ts 419e56d=14 f9eb4b1=14
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/dataExport.test.ts 419e56d=22 f9eb4b1=22
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/prefMutation.test.ts 419e56d=15 f9eb4b1=15
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 419e56d=43 f9eb4b1=43
+  same packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/internal/accountDataLifecycle.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/internal/accountScope.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/canonicalCommandState.ts 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-storage/src/internal/codec.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/internal/dataExport.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/prefMutation.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/storage.ts 419e56d=21 f9eb4b1=21
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-storage/src/internal/usePrefAsync.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/usePrefAutosave.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-time-tracker/src/TimeTrackerModule.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-time-tracker/src/__tests__/TimeTrackerModule.test.tsx 419e56d=16 f9eb4b1=16
+  same packages/plugin-web-time-tracker/src/__tests__/sessionController.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-time-tracker/src/__tests__/windowConsumers.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-time-tracker/src/internal/storage.ts 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-time-tracker/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-widgets/src/data/LocalStorageAdapter.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-widgets/src/hooks/useWidgetStore.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.activedate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.boardfeed.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.dst-recurrence.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.eventcrud.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.recurrence.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.saveRecovery.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/xai-web-calendar/src/__tests__/YearView.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/aiCalendarInputValidation.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-calendar/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/canonicalSubscriberHarness.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/setup.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-calendar/src/internal/eventStore/eventStore.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-cmdk/src/__tests__/CommandPalette.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-cmdk/src/adapters/settings.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-cmdk/src/internal/readModuleStates.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-cmdk/vitest.setup.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/DashHeader.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.async.test.tsx 419e56d=11 f9eb4b1=11
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx 419e56d=14 f9eb4b1=14
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx 419e56d=16 f9eb4b1=16
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.picker.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 419e56d=14 f9eb4b1=14
+  same packages/xai-web-dashboard-grid/src/__tests__/setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-dashboard-grid/src/__tests__/useWidgetAppearance.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/useWidgetLayout.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/internal/useOrderSaveRecovery.ts 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-grid/src/internal/useWidgetMapRecovery.ts 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-widgets/src/__tests__/ClockWidget.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MiniCalWidget.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatPomos.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatStreak.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-widgets/src/__tests__/StatTasks.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-dashboard-widgets/src/__tests__/StickiesWidget.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/xai-web-dashboard-widgets/src/__tests__/UpcomingWidget.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-widgets/src/__tests__/WeatherWidget.test.tsx 419e56d=15 f9eb4b1=15
+  same packages/xai-web-dashboard-widgets/src/__tests__/WorldClocks.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-dashboard-widgets/src/__tests__/analogClockTicks.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-widgets/src/__tests__/setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/useStickies.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-widgets/src/__tests__/useWeather.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/__tests__/notifications.test.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/stickiesStore/stickiesStore.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/weatherStore/weatherStore.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-habits/src/__tests__/HabitsModule.i18n.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-habits/src/__tests__/HabitsModule.toggle.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.views.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/xai-web-habits/src/__tests__/setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-habits/src/constants.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/internal/seed.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/internal/usePersistedHabits.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-habits/src/types.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/MatrixModule.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.create.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.edge.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.kbd.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-matrix/src/__tests__/move.test.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/saveRecovery.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/xai-web-matrix/src/__tests__/setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-matrix/src/constants.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/internal/seed.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/internal/usePersistedMatrix.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.persist.test.tsx 419e56d=15 f9eb4b1=15
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.saveRecovery.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-meditation/src/__tests__/durableSession.test.ts 419e56d=15 f9eb4b1=15
+  same packages/xai-web-meditation/src/__tests__/setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-meditation/src/constants.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/internal/sessionController.ts 419e56d=4 f9eb4b1=4
+  same packages/xai-web-meditation/src/internal/useMeditationPrefs.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-meditation/src/internal/validate.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-pet/src/__tests__/DesktopPet.bubble-side.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-pet/src/__tests__/DesktopPet.drag.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.persistence.test.tsx 419e56d=11 f9eb4b1=11
+  same packages/xai-web-pet/src/__tests__/DesktopPet.resize.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-pet/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 419e56d=15 f9eb4b1=15
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.selected-focus.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-appearance/src/__tests__/AppearanceRetryAll.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-settings-appearance/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 419e56d=12 f9eb4b1=12
+  same packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-features-panel/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-shell/src/__tests__/AppRail.test.tsx 419e56d=6 f9eb4b1=6
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=10 [§11]
+  same packages/xai-web-shell/src/__tests__/setup.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-tasks/docs/native-save-recovery.ts 419e56d=9 f9eb4b1=9
+  same packages/xai-web-tasks/manifest.json 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/TasksModule.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-tasks/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-tasks/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-tasks/src/__tests__/canonicalMigrationCompatibility.test.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-tasks/src/__tests__/canonicalSubscriberHarness.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/completionContract.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/dueDate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/filterCardsByList.test.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/persistence.test.tsx 419e56d=36 f9eb4b1=36
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 419e56d=23 f9eb4b1=23
+  same packages/xai-web-tasks/src/internal/seed/tasksMock.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/vitest.setup.ts 419e56d=2 f9eb4b1=2
+  same scripts/clean-and-restart.sh 419e56d=4 f9eb4b1=4
+  same scripts/cowork/roadmap_bg_run_xai-web-console_w1.sh 419e56d=1 f9eb4b1=1
+pattern S1 setPref call "setPref(": 419e56d files=37 lines=148; f9eb4b1 files=37 lines=148
+  same apps/web/src/dev/seedAiConfigFromEnv.ts 419e56d=3 f9eb4b1=3
+  same apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardComposerRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardCreateRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/__tests__/taskLinkCommand.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/internal/taskLinkCommand.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/plugin-web-settings-rest/src/internal/integrationDisconnectButton.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-statistics/src/__tests__/StatisticsModule.test.tsx 419e56d=11 f9eb4b1=11
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=18 f9eb4b1=18
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.dst-recurrence.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.eventcrud.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.recurrence.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.saveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.weekstart.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-calendar/src/__tests__/YearView.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.persist.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.addWidget.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.removeWidget.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/useDashOrder.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx 419e56d=13 f9eb4b1=13
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.rendering.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-settings-features-panel/src/__tests__/useFeaturePrefs.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/src/__tests__/withDisabledFallback.test.tsx 419e56d=2 f9eb4b1=2
+pattern S2 removePref call "removePref(": 419e56d files=6 lines=9; f9eb4b1 files=6 lines=9
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/registration.test.tsx 419e56d=2 f9eb4b1=2
+pattern S3 legacy usePref call "usePref(": 419e56d files=55 lines=109; f9eb4b1 files=54 lines=107
+  same packages/plugin-web-ai-chat/src/internal/useChatPreference.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/internal/useConversationRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-core/src/BoardModule.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-core/src/internal/persistence.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-board-core/src/internal/seed/board-data.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-views/src/BoardModule.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-board-views/src/internal/persistence.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/BoardWorkspacesModule.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-countdown/src/internal/useCountdownSaveRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/PomodoroModule.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/CallbackPage.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-rest/src/internal/usePremiumTier.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/src/panes/aiPane.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-settings-rest/src/panes/integrationsPane.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-statistics/src/StatisticsModule.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-statistics/src/internal/narrowTaskCols.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/consumer.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/CalendarModule.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/DashboardModule.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/internal/useDashOrder.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-widgets/src/StickyComposer.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/calMonthDots.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/calUpcoming.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/habitStreak.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isHabitsState.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isTaskColsRecord.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/isUserCalEventMap.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/notifications.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/dataReads/pomoStats.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/stickiesStore/useStickies.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/internal/weatherStore/useWeather.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-widgets/src/widgets/ClockWidget.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-widgets/src/widgets/MailWidget.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-widgets/src/widgets/MiniCalWidget.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatPomos.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatStreak.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/widgets/StatTasks.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/widgets/UpcomingWidget.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/widgets/WorldClocks.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/internal/usePersistedHabits.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/internal/usePersistedMatrix.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/internal/useMeditationPrefs.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/DesktopPet.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/src/useFeaturePrefs.ts 419e56d=8 f9eb4b1=8
+  same packages/xai-web-settings-features-panel/src/withDisabledFallback.tsx 419e56d=1 f9eb4b1=1
+  DOWN packages/xai-web-shell/src/AppRail.tsx 419e56d=2 f9eb4b1=0 [§11]
+  same packages/xai-web-tasks/src/TasksModule.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-tasks/src/internal/validate.ts 419e56d=1 f9eb4b1=1
+pattern S4 open-ended async binding "usePrefAutosaveAsync(": 419e56d files=9 lines=68; f9eb4b1 files=10 lines=69
+  same packages/plugin-web-settings-rest/src/panes/collaboratePane.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-rest/src/panes/dateTimePane.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/panes/morePane.tsx 419e56d=15 f9eb4b1=15
+  same packages/plugin-web-settings-rest/src/panes/notificationsPane.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-settings-rest/src/panes/smartListsPane.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/panes/stickyPane.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 419e56d=16 f9eb4b1=16
+  same packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-settings-features-panel/src/internal/featuresRecovery.ts 419e56d=8 f9eb4b1=8
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=1 [§11]
+pattern S5 getPref call "getPref(": 419e56d files=35 lines=147; f9eb4b1 files=35 lines=147
+  same packages/plugin-web-ai-chat/src/AiChatModule.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-ai-chat/src/__tests__/contextProvider.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/internal/claudeAdapter.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/internal/claudeStreamAdapter.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/internal/contextProvider.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-ai-chat/src/internal/llmProvider.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-ai-chat/src/internal/secretStore.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/internal/useChatPreference.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/imperative.test.ts 419e56d=14 f9eb4b1=14
+  same packages/plugin-web-storage/src/__tests__/ssr.test.ts 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-storage/src/__tests__/types.test-d.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/usePref.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/aiCalendarInputValidation.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-calendar/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-calendar/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/xai-web-cmdk/src/CommandPalette.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-cmdk/src/internal/readModuleStates.ts 419e56d=14 f9eb4b1=14
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.remove.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/MailWidget.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPane.test.tsx 419e56d=6 f9eb4b1=6
+  same packages/xai-web-tasks/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-tasks/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=10 f9eb4b1=10
+  same packages/xai-web-tasks/src/__tests__/completionContract.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/dueDate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/persistence.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 419e56d=3 f9eb4b1=3
+pattern S6 global reset "resetAllPrefs": 419e56d files=11 lines=42; f9eb4b1 files=11 lines=42
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-settings-shell/src/__tests__/index-barrel.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 419e56d=14 f9eb4b1=14
+  same packages/plugin-web-settings-shell/src/index.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-shell/src/internal/defaults.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-settings-shell/src/types.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/registry.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts 419e56d=5 f9eb4b1=5
+  same packages/xai-web-settings-appearance/src/appearanceDefaults.ts 419e56d=1 f9eb4b1=1
+pattern S7 legacy setter "setPrefOrder": 419e56d files=1 lines=2; f9eb4b1 files=0 lines=0
+  DOWN packages/xai-web-shell/src/AppRail.tsx 419e56d=2 f9eb4b1=0 [§11]
+pattern B1 storage event construction "new StorageEvent": 419e56d files=19 lines=26; f9eb4b1 files=20 lines=27
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/internal/useOrderSaveRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=1 [§11]
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 419e56d=2 f9eb4b1=2
+pattern B2 event dispatch "dispatchEvent(": 419e56d files=55 lines=98; f9eb4b1 files=57 lines=101
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=3 f9eb4b1=3
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  same apps/web/src/providers/AccountStorageGate.tsx 419e56d=2 f9eb4b1=2
+  same apps/web/src/providers/AppProviders.tsx 419e56d=1 f9eb4b1=1
+  same apps/web/src/routes/router.integration.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-ai-cube/src/hooks/useAiConversation.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-organizer/src/hooks/useFileDrop.test.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-productivity/src/web/TodoWebModuleRoute.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-board-views/src/__tests__/BoardCalendarView.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-board-views/src/__tests__/TimelineView.test.tsx 419e56d=14 f9eb4b1=14
+  same packages/plugin-web-board-views/src/__tests__/_helpers/timelineDrag.ts 419e56d=3 f9eb4b1=3
+  same packages/plugin-web-board-workspaces/src/__tests__/BoardDetailSaveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-bookkeeping/src/internal/storage.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-countdown/src/__tests__/useDaysUntil.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-countdown/vitest.setup.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-metric-tracker/src/internal/storage.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/__tests__/preferenceRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/__tests__/useTimerTick.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionIntent.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-rest/src/internal/accountDeletionRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/AccountDataGate.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/__tests__/usePref.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-time-tracker/src/__tests__/dayRollover.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-time-tracker/src/internal/storage.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-tokens/src/__tests__/localDate.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-calendar/src/__tests__/useUserCalEvents.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.departure.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/DashHeader.recovery.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/gridSaveRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/internal/useOrderSaveRecovery.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/registration.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-widgets/src/__tests__/WeatherEditor.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-event-bus/src/emitter.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/AddHabitDialog.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.add.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.events.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/HabitsModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/__tests__/saveRecovery.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-matrix/src/__tests__/MatrixComposer.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.events.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/__tests__/MatrixModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-meditation/src/__tests__/MeditationModule.persist.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.drag.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-pet/src/__tests__/DesktopPet.resize.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-features-panel/src/__tests__/FeaturesPaneRecovery.test.tsx 419e56d=1 f9eb4b1=1
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=2 [§11]
+  same packages/xai-web-tasks/docs/native-save-recovery.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/dueDate.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-tasks/src/__tests__/saveRecovery.test.tsx 419e56d=2 f9eb4b1=2
+pattern B3 retired event channel "web:settings:preference-changed": 419e56d files=16 lines=34; f9eb4b1 files=16 lines=34
+  same apps/web/src/App.tsx 419e56d=1 f9eb4b1=1 [§11]
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/core/src/types/events.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-shell/package.json 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-settings-shell/src/__tests__/SettingsFooter.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/__tests__/resetAllPrefs.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 419e56d=8 f9eb4b1=8
+  same packages/xai-web-event-bus/src/emitter.test.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-event-bus/src/events.test-d.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/src/AppearancePane.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.live-binding.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/src/__tests__/AppearancePane.save-reset.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-settings-appearance/src/__tests__/appearanceDefaults.test.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-settings-appearance/src/types.ts 419e56d=1 f9eb4b1=1
+pattern B4 event emit "emitWebEvent(": 419e56d files=36 lines=119; f9eb4b1 files=36 lines=119
+  same apps/web/src/App.tsx 419e56d=3 f9eb4b1=3 [§11]
+  same apps/web/src/__tests__/event-bus.smoke.test.tsx 419e56d=5 f9eb4b1=5
+  same apps/web/src/routes/modules/dashboardRegistration.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/AiChatModule.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-ai-chat/src/__tests__/AiChatModule.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/plugin-web-ai-chat/src/internal/claudeStreamAdapter.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-ai-chat/src/internal/requestToolWrite.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-board-workspaces/src/ShareModal.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-pomodoro/src/internal/sessionController.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/CallbackPage.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/CheckoutSuccessPage.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/internal/integrationDisconnectButton.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/internal/premiumCancelButton.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-rest/src/panes/accountPane.tsx 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-settings-shell/src/SettingsFooter.tsx 419e56d=7 f9eb4b1=7
+  same packages/plugin-web-settings-shell/src/internal/resetAllPrefs.ts 419e56d=7 f9eb4b1=7
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.deeplink.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/CalendarModule.dst-recurrence.test.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-calendar/src/__tests__/aiCalendarInputValidation.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-calendar/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-calendar/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=8 f9eb4b1=8
+  same packages/xai-web-cmdk/src/CommandPalette.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-dashboard-grid/src/DashboardModule.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-dashboard-grid/src/__tests__/DashboardModule.events.test.tsx 419e56d=2 f9eb4b1=2
+  same packages/xai-web-dashboard-grid/src/registration.tsx 419e56d=1 f9eb4b1=1
+  same packages/xai-web-event-bus/src/emitter.test.ts 419e56d=12 f9eb4b1=12
+  same packages/xai-web-event-bus/src/events.test-d.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-event-bus/src/listener.test.tsx 419e56d=7 f9eb4b1=7
+  same packages/xai-web-event-bus/src/toolWriteReceipt.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-habits/src/internal/emit.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-matrix/src/internal/emit.ts 419e56d=1 f9eb4b1=1
+  same packages/xai-web-pet/src/__tests__/DesktopPet.event.test.tsx 419e56d=5 f9eb4b1=5
+  same packages/xai-web-pet/src/__tests__/useToggleSync.test.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-shell/src/Shell.tsx 419e56d=5 f9eb4b1=5 [§11]
+  same packages/xai-web-tasks/src/__tests__/aiCreateSubscriber.test.tsx 419e56d=9 f9eb4b1=9
+  same packages/xai-web-tasks/src/__tests__/aiMutateSubscriber.test.tsx 419e56d=10 f9eb4b1=10
+pattern R1 device recovery export "exportDeviceRecoveryData": 419e56d files=4 lines=12; f9eb4b1 files=4 lines=12
+  same packages/plugin-web-settings-rest/src/internal/DeviceRecoveryExport.tsx 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/dataExport.test.ts 419e56d=8 f9eb4b1=8
+  same packages/plugin-web-storage/src/index.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/dataExport.ts 419e56d=1 f9eb4b1=1
+pattern R2 lifecycle classification "lifecycleForKey": 419e56d files=6 lines=14; f9eb4b1 files=6 lines=14
+  same packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/__tests__/dataExport.test.ts 419e56d=5 f9eb4b1=5
+  same packages/plugin-web-storage/src/index.ts 419e56d=1 f9eb4b1=1
+  same packages/plugin-web-storage/src/internal/dataExport.ts 419e56d=2 f9eb4b1=2
+  same packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-meditation/src/__tests__/durableSession.test.ts 419e56d=2 f9eb4b1=2
+pattern R3 reorder helper "reorderArray": 419e56d files=4 lines=18; f9eb4b1 files=4 lines=18
+  same packages/xai-web-shell/src/AppRail.tsx 419e56d=2 f9eb4b1=2 [§11]
+  same packages/xai-web-shell/src/__tests__/index-barrel.test.ts 419e56d=2 f9eb4b1=2
+  same packages/xai-web-shell/src/__tests__/internal/dnd.test.ts 419e56d=13 f9eb4b1=13
+  same packages/xai-web-shell/src/internal/dnd.ts 419e56d=1 f9eb4b1=1
+pattern A1 App raw reader "readLocalPref": 419e56d files=3 lines=11; f9eb4b1 files=3 lines=11
+  same apps/web/src/App.tsx 419e56d=3 f9eb4b1=3 [§11]
+  same apps/web/src/__tests__/App.appearance.test.tsx 419e56d=2 f9eb4b1=2
+  same apps/web/src/__tests__/App.lazy-init.test.tsx 419e56d=6 f9eb4b1=6
+pattern N1 Topbar rail slot "railOrderStatus": 419e56d files=0 lines=0; f9eb4b1 files=10 lines=16
+  UP   apps/web/src/App.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   apps/web/src/__tests__/App.railorder.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/Shell.tsx 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/Topbar.tsx 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/__tests__/Topbar.test.tsx 419e56d=0 f9eb4b1=4 [§11]
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/index.ts 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/internal/RailOrderStatus.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=2 [§11]
+pattern N2 provider "RailOrderProvider": 419e56d files=0 lines=0; f9eb4b1 files=6 lines=14
+  UP   apps/web/src/App.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/AppRail.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/index.ts 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=2 [§11]
+pattern N3 controller hook "useRailOrderController": 419e56d files=0 lines=0; f9eb4b1 files=6 lines=11
+  UP   apps/web/src/App.tsx 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/AppRail.tsx 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/index.ts 419e56d=0 f9eb4b1=2 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=1 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=1 [§11]
+pattern N4 sign-out step "confirmSignOut": 419e56d files=5 lines=12; f9eb4b1 files=9 lines=26
+  UP   apps/web/src/App.tsx 419e56d=1 f9eb4b1=2 [§11]
+  same packages/xai-web-settings-appearance/src/__tests__/AppearanceController.test.tsx 419e56d=4 f9eb4b1=4
+  same packages/xai-web-settings-appearance/src/internal/appearanceController.tsx 419e56d=3 f9eb4b1=3
+  same packages/xai-web-settings-appearance/src/internal/appearanceRecoveryCopy.ts 419e56d=3 f9eb4b1=3
+  same packages/xai-web-settings-appearance/src/types.ts 419e56d=1 f9eb4b1=1
+  UP   packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx 419e56d=0 f9eb4b1=5 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderController.tsx 419e56d=0 f9eb4b1=4 [§11]
+  UP   packages/xai-web-shell/src/internal/railOrderCopy.ts 419e56d=0 f9eb4b1=3 [§11]
+  UP   packages/xai-web-shell/src/types.ts 419e56d=0 f9eb4b1=1 [§11]
+## Delta rows (files whose count differs between 419e56d and f9eb4b1): 51
+  K1 rail order key apps/web/src/__tests__/App.railorder.test.tsx 0->1 §11
+  K1 rail order key packages/xai-web-shell/src/AppRail.tsx 3->1 §11
+  K1 rail order key packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->3 §11
+  K1 rail order key packages/xai-web-shell/src/internal/railOrderController.tsx 0->3 §11
+  K1 rail order key packages/xai-web-shell/src/internal/railOrderModel.ts 0->1 §11
+  K1 rail order key packages/xai-web-shell/src/types.ts 0->1 §11
+  K2 rail order fragment apps/web/src/__tests__/App.railorder.test.tsx 0->1 §11
+  K2 rail order fragment packages/xai-web-shell/src/AppRail.tsx 3->1 §11
+  K2 rail order fragment packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->3 §11
+  K2 rail order fragment packages/xai-web-shell/src/internal/railOrderController.tsx 0->3 §11
+  K2 rail order fragment packages/xai-web-shell/src/internal/railOrderModel.ts 0->1 §11
+  K2 rail order fragment packages/xai-web-shell/src/types.ts 0->1 §11
+  K3 default constant packages/xai-web-shell/src/internal/railOrderController.tsx 0->4 §11
+  K3 default constant packages/xai-web-shell/src/types.ts 0->1 §11
+  G1 registry iteration packages/xai-web-shell/src/internal/railOrderController.tsx 0->2 §11
+  G3 production clear apps/web/src/__tests__/App.railorder.test.tsx 0->1 §11
+  S0 localStorage apps/web/src/__tests__/App.railorder.test.tsx 0->6 §11
+  S0 localStorage packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->10 §11
+  S3 legacy usePref call packages/xai-web-shell/src/AppRail.tsx 2->0 §11
+  S4 open-ended async binding packages/xai-web-shell/src/internal/railOrderController.tsx 0->1 §11
+  S7 legacy setter packages/xai-web-shell/src/AppRail.tsx 2->0 §11
+  B1 storage event construction packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->1 §11
+  B2 event dispatch apps/web/src/__tests__/App.railorder.test.tsx 0->1 §11
+  B2 event dispatch packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->2 §11
+  N1 Topbar rail slot apps/web/src/App.tsx 0->1 §11
+  N1 Topbar rail slot apps/web/src/__tests__/App.railorder.test.tsx 0->1 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/Shell.tsx 0->2 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/Topbar.tsx 0->2 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx 0->1 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/__tests__/Topbar.test.tsx 0->4 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->1 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/index.ts 0->1 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/internal/RailOrderStatus.tsx 0->1 §11
+  N1 Topbar rail slot packages/xai-web-shell/src/types.ts 0->2 §11
+  N2 provider apps/web/src/App.tsx 0->3 §11
+  N2 provider packages/xai-web-shell/src/AppRail.tsx 0->1 §11
+  N2 provider packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->3 §11
+  N2 provider packages/xai-web-shell/src/index.ts 0->3 §11
+  N2 provider packages/xai-web-shell/src/internal/railOrderController.tsx 0->2 §11
+  N2 provider packages/xai-web-shell/src/types.ts 0->2 §11
+  N3 controller hook apps/web/src/App.tsx 0->2 §11
+  N3 controller hook packages/xai-web-shell/src/AppRail.tsx 0->3 §11
+  N3 controller hook packages/xai-web-shell/src/__tests__/railOrderFixture.tsx 0->2 §11
+  N3 controller hook packages/xai-web-shell/src/index.ts 0->2 §11
+  N3 controller hook packages/xai-web-shell/src/internal/railOrderController.tsx 0->1 §11
+  N3 controller hook packages/xai-web-shell/src/types.ts 0->1 §11
+  N4 sign-out step apps/web/src/App.tsx 1->2 §11
+  N4 sign-out step packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx 0->5 §11
+  N4 sign-out step packages/xai-web-shell/src/internal/railOrderController.tsx 0->4 §11
+  N4 sign-out step packages/xai-web-shell/src/internal/railOrderCopy.ts 0->3 §11
+  N4 sign-out step packages/xai-web-shell/src/types.ts 0->1 §11
+## Shell product source
+f9eb4b1: shell product source files (non-test, under src/): 17
+  packages/xai-web-shell/src/AppRail.tsx sha256=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44
+  packages/xai-web-shell/src/AvatarMenu.tsx sha256=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2
+  packages/xai-web-shell/src/Shell.tsx sha256=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432
+  packages/xai-web-shell/src/SignOutConfirmDialog.tsx sha256=c3e9b96b8113625f4f1c86379151e82e3938a36ef3906ce8732d4f309e8d4436
+  packages/xai-web-shell/src/Topbar.tsx sha256=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e
+  packages/xai-web-shell/src/__fixtures__/ShellFixture.tsx sha256=9e8f3ad70d2238862fdc0c68a450575a25a4d0ae48066b326da2efd197e85884
+  packages/xai-web-shell/src/icons.tsx sha256=cc5d6a26498b31cf1a3e65b99a06a146ee0572326428309e6a4b9ff209aa9c73
+  packages/xai-web-shell/src/index.ts sha256=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab
+  packages/xai-web-shell/src/internal/RailOrderStatus.tsx sha256=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95
+  packages/xai-web-shell/src/internal/dnd.ts sha256=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9
+  packages/xai-web-shell/src/internal/popoverGeometry.ts sha256=a6adfd39431a1f0d3718ea46f0ba89ee592c0bd3ac19b50d6e9d3819da5d922e
+  packages/xai-web-shell/src/internal/railOrderController.tsx sha256=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6
+  packages/xai-web-shell/src/internal/railOrderCopy.ts sha256=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba
+  packages/xai-web-shell/src/internal/railOrderModel.ts sha256=0a4520e5923c02a5ffa101d09c5f39f592a569a1192132c302a999ead6d8beb2
+  packages/xai-web-shell/src/railOrderStatus.css sha256=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5
+  packages/xai-web-shell/src/registry.tsx sha256=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e
+  packages/xai-web-shell/src/types.ts sha256=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0
+  gated "localStorage": 0 lines
+  gated "usePref(": 0 lines
+  gated "setPref(": 0 lines
+  gated "removePref(": 0 lines
+  gated "new StorageEvent": 0 lines
+  gated "dispatchEvent(": 0 lines
+419e56d: shell product source files (non-test, under src/): 12
+  packages/xai-web-shell/src/AppRail.tsx sha256=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67
+  packages/xai-web-shell/src/AvatarMenu.tsx sha256=3401b838a2dc5a16d1c6f1113a2aaf1ef6d8673897029bb2a1614db8c379c4c2
+  packages/xai-web-shell/src/Shell.tsx sha256=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f
+  packages/xai-web-shell/src/SignOutConfirmDialog.tsx sha256=c3e9b96b8113625f4f1c86379151e82e3938a36ef3906ce8732d4f309e8d4436
+  packages/xai-web-shell/src/Topbar.tsx sha256=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0
+  packages/xai-web-shell/src/__fixtures__/ShellFixture.tsx sha256=9e8f3ad70d2238862fdc0c68a450575a25a4d0ae48066b326da2efd197e85884
+  packages/xai-web-shell/src/icons.tsx sha256=cc5d6a26498b31cf1a3e65b99a06a146ee0572326428309e6a4b9ff209aa9c73
+  packages/xai-web-shell/src/index.ts sha256=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed
+  packages/xai-web-shell/src/internal/dnd.ts sha256=a538b51f119f9cedbed3421f8cd21549f1730d0ede9059257402bee9a63deaf9
+  packages/xai-web-shell/src/internal/popoverGeometry.ts sha256=a6adfd39431a1f0d3718ea46f0ba89ee592c0bd3ac19b50d6e9d3819da5d922e
+  packages/xai-web-shell/src/registry.tsx sha256=b621abbecfda785a5d7da628465925dacdb3249638b181cc3ca074687b734c1e
+  packages/xai-web-shell/src/types.ts sha256=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a
+  info  "localStorage": 0 lines
+  info  "usePref(": 2 lines (src/AppRail.tsx:2)
+  info  "setPref(": 0 lines
+  info  "removePref(": 0 lines
+  info  "new StorageEvent": 0 lines
+  info  "dispatchEvent(": 0 lines
+## AppRail.tsx imports and App.tsx
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L24: import { useContext, useReducer, useState } from "react";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L25: import { useI18n } from "@repo/plugin-web-tokens";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L26: import { AvatarMenu } from "./AvatarMenu.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L27: import { Icon } from "./icons.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L28: import { reorderArray } from "./internal/dnd.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L29: import { RailOrderControllerContext, useRailOrderController } from "./internal/railOrderController.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L30: import { displayRailOrder, isRailPermutation, sameRailOrder } from "./internal/railOrderModel.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L31: import { useWebShell, useWebModuleRegistry } from "./registry.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx L32: import type { AppRailProps, RailOrderController, WebModuleSlotRegistration, WebShellIconName } from "./types.js";
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "@repo/plugin-web-storage"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "localStorage"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "usePref"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "usePrefAsync"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "usePrefAutosaveAsync"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "setPref"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "getPref"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "removePref"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "PREF_REGISTRY"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx "prefMutation"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx L11: import { useState } from "react";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L12: import { useI18n } from "@repo/plugin-web-tokens";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L13: import { usePref } from "@repo/plugin-web-storage";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L14: import type { ConsoleModuleId } from "@repo/core/types";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L15: import { AvatarMenu } from "./AvatarMenu.js";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L16: import { Icon } from "./icons.js";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L17: import { reorderArray } from "./internal/dnd.js";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L18: import { useWebShell, useWebModuleRegistry } from "./registry.js";
+  419e56d packages/xai-web-shell/src/AppRail.tsx L19: import type { AppRailProps, WebModuleSlotRegistration, WebShellIconName } from "./types.js";
+  419e56d packages/xai-web-shell/src/AppRail.tsx "@repo/plugin-web-storage"=3
+  419e56d packages/xai-web-shell/src/AppRail.tsx "localStorage"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "usePref"=3
+  419e56d packages/xai-web-shell/src/AppRail.tsx "usePrefAsync"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "usePrefAutosaveAsync"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "setPref"=2
+  419e56d packages/xai-web-shell/src/AppRail.tsx "getPref"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "removePref"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "PREF_REGISTRY"=0
+  419e56d packages/xai-web-shell/src/AppRail.tsx "prefMutation"=0
+  f9eb4b1 packages/xai-web-shell/src/AppRail.tsx import specifiers: ["react","@repo/plugin-web-tokens","./AvatarMenu.js","./icons.js","./internal/dnd.js","./internal/railOrderController.js","./internal/railOrderModel.js","./registry.js","./types.js"]
+  f9eb4b1 apps/web/src/App.tsx "xai_rail_order"=0
+  f9eb4b1 apps/web/src/App.tsx "usePref("=0
+  f9eb4b1 apps/web/src/App.tsx "readLocalPref"=3
+  f9eb4b1 apps/web/src/App.tsx "localStorage"=4
+  f9eb4b1 apps/web/src/App.tsx "getItem("=1
+  f9eb4b1 apps/web/src/App.tsx "setItem("=0
+  f9eb4b1 apps/web/src/App.tsx "removeItem("=0
+  419e56d apps/web/src/App.tsx "xai_rail_order"=0
+  419e56d apps/web/src/App.tsx "usePref("=0
+  419e56d apps/web/src/App.tsx "readLocalPref"=3
+  419e56d apps/web/src/App.tsx "localStorage"=4
+  419e56d apps/web/src/App.tsx "getItem("=1
+  419e56d apps/web/src/App.tsx "setItem("=0
+  419e56d apps/web/src/App.tsx "removeItem("=0
+  readLocalPref 419e56d L87-L97 sha256=3675ffe3ba163e40fa232325008b862ffd61a96bfe049c3458399fa4b9582a44; f9eb4b1 L90-L100 sha256=3675ffe3ba163e40fa232325008b862ffd61a96bfe049c3458399fa4b9582a44
+  f9eb4b1 apps/web/src/App.tsx L81 outside readLocalPref (comment): // ---- readLocalPref — safe localStorage reader (retained, byte-identical) ------
+  f9eb4b1 apps/web/src/App.tsx L83 outside readLocalPref (comment): // Reads a JSON-encoded string value from localStorage with a typed fallback.
+## Checks
+PASS [harness] f9eb4b1: every committed path exists in the extracted archive (7603 paths, .gitattributes absent)
+PASS [harness] f9eb4b1: extracted file count equals the committed tree (7603)
+PASS [harness] 419e56d: every committed path exists in the extracted archive (7205 paths, .gitattributes absent)
+PASS [harness] 419e56d: extracted file count equals the committed tree (7205)
+PASS [harness] f9eb4b1 K1 rail order key: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] 419e56d K1 rail order key: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f9eb4b1 K2 rail order fragment: archive scan equals git grep -I -c -F (12 files)
+PASS [harness] 419e56d K2 rail order fragment: archive scan equals git grep -I -c -F (7 files)
+PASS [harness] f9eb4b1 K3 default constant: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d K3 default constant: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] f9eb4b1 G1 registry iteration: archive scan equals git grep -I -c -F (25 files)
+PASS [harness] 419e56d G1 registry iteration: archive scan equals git grep -I -c -F (24 files)
+PASS [harness] f9eb4b1 G2 ownership iteration: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d G2 ownership iteration: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f9eb4b1 G3 production clear: archive scan equals git grep -I -c -F (97 files)
+PASS [harness] 419e56d G3 production clear: archive scan equals git grep -I -c -F (96 files)
+PASS [harness] f9eb4b1 S0 localStorage: archive scan equals git grep -I -c -F (298 files)
+PASS [harness] 419e56d S0 localStorage: archive scan equals git grep -I -c -F (296 files)
+PASS [harness] f9eb4b1 S1 setPref call: archive scan equals git grep -I -c -F (37 files)
+PASS [harness] 419e56d S1 setPref call: archive scan equals git grep -I -c -F (37 files)
+PASS [harness] f9eb4b1 S2 removePref call: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d S2 removePref call: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f9eb4b1 S3 legacy usePref call: archive scan equals git grep -I -c -F (54 files)
+PASS [harness] 419e56d S3 legacy usePref call: archive scan equals git grep -I -c -F (55 files)
+PASS [harness] f9eb4b1 S4 open-ended async binding: archive scan equals git grep -I -c -F (10 files)
+PASS [harness] 419e56d S4 open-ended async binding: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] f9eb4b1 S5 getPref call: archive scan equals git grep -I -c -F (35 files)
+PASS [harness] 419e56d S5 getPref call: archive scan equals git grep -I -c -F (35 files)
+PASS [harness] f9eb4b1 S6 global reset: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] 419e56d S6 global reset: archive scan equals git grep -I -c -F (11 files)
+PASS [harness] f9eb4b1 S7 legacy setter: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] 419e56d S7 legacy setter: archive scan equals git grep -I -c -F (1 files)
+PASS [harness] f9eb4b1 B1 storage event construction: archive scan equals git grep -I -c -F (20 files)
+PASS [harness] 419e56d B1 storage event construction: archive scan equals git grep -I -c -F (19 files)
+PASS [harness] f9eb4b1 B2 event dispatch: archive scan equals git grep -I -c -F (57 files)
+PASS [harness] 419e56d B2 event dispatch: archive scan equals git grep -I -c -F (55 files)
+PASS [harness] f9eb4b1 B3 retired event channel: archive scan equals git grep -I -c -F (16 files)
+PASS [harness] 419e56d B3 retired event channel: archive scan equals git grep -I -c -F (16 files)
+PASS [harness] f9eb4b1 B4 event emit: archive scan equals git grep -I -c -F (36 files)
+PASS [harness] 419e56d B4 event emit: archive scan equals git grep -I -c -F (36 files)
+PASS [harness] f9eb4b1 R1 device recovery export: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 419e56d R1 device recovery export: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] f9eb4b1 R2 lifecycle classification: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d R2 lifecycle classification: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] f9eb4b1 R3 reorder helper: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] 419e56d R3 reorder helper: archive scan equals git grep -I -c -F (4 files)
+PASS [harness] f9eb4b1 A1 App raw reader: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] 419e56d A1 App raw reader: archive scan equals git grep -I -c -F (3 files)
+PASS [harness] f9eb4b1 N1 Topbar rail slot: archive scan equals git grep -I -c -F (10 files)
+PASS [harness] 419e56d N1 Topbar rail slot: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] f9eb4b1 N2 provider: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d N2 provider: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] f9eb4b1 N3 controller hook: archive scan equals git grep -I -c -F (6 files)
+PASS [harness] 419e56d N3 controller hook: archive scan equals git grep -I -c -F (0 files)
+PASS [harness] f9eb4b1 N4 sign-out step: archive scan equals git grep -I -c -F (9 files)
+PASS [harness] 419e56d N4 sign-out step: archive scan equals git grep -I -c -F (5 files)
+PASS [assert] E18: every file whose writer/reader count changed is a contract §11 file
+PASS [assert] E18: every new or increased hit is in a contract §11 file
+PASS [assert] E18: shell product source at f9eb4b1 has zero "localStorage"
+PASS [assert] E18: shell product source at f9eb4b1 has zero "usePref("
+PASS [assert] E18: shell product source at f9eb4b1 has zero "setPref("
+PASS [assert] E18: shell product source at f9eb4b1 has zero "removePref("
+PASS [assert] E18: shell product source at f9eb4b1 has zero "new StorageEvent"
+PASS [assert] E18: shell product source at f9eb4b1 has zero "dispatchEvent("
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "@repo/plugin-web-storage" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "localStorage" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "usePref" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "usePrefAsync" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "usePrefAutosaveAsync" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "setPref" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "getPref" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "removePref" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "PREF_REGISTRY" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: packages/xai-web-shell/src/AppRail.tsx at f9eb4b1 has zero "prefMutation" (no storage API except through the new controller) :: count=0
+PASS [assert] E18: every packages/xai-web-shell/src/AppRail.tsx import at f9eb4b1 is React, tokens, an unchanged shell module or the new controller/model (9 imports)
+PASS [assert] E18: apps/web/src/App.tsx at f9eb4b1 has zero "xai_rail_order" :: count=0
+PASS [assert] E18: apps/web/src/App.tsx at f9eb4b1 has zero "usePref(" :: count=0
+PASS [assert] E18: readLocalPref in apps/web/src/App.tsx is byte-identical between 419e56d and f9eb4b1
+PASS [assert] E18: apps/web/src/App.tsx adds no localStorage line (419e56d=4, f9eb4b1=4)
+PASS [assert] E18: in apps/web/src/App.tsx at f9eb4b1 every localStorage/getItem/setItem/removeItem line outside readLocalPref is a comment (the only storage access is the unchanged readLocalPref)
+assertions=140/140 harness=56/56
+exit=0

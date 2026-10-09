@@ -1,0 +1,11 @@
+revision=f9eb4b1 fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+exit=0
+
+ RUN  v3.2.7 /var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-detail-review-iiQHQr
+
+ ✓ docs/reviews/web-collaborate-recovery-independent/host.test.tsx (8 tests) 344ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  08:05:19
+   Duration  1.64s (transform 565ms, setup 0ms, collect 879ms, tests 344ms, environment 209ms, prepare 61ms)

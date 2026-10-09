@@ -1,0 +1,92 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=storage-check-types
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-features-recovery-final/verify-packages.mjs f9eb4b1 storage-check-types apprail-final-v1
+output_dir=docs/reviews/web-features-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=f7758f28fd98cba97f2a04ba8a85b8410a381749f4aa8e8d1b6cca6a45653c05
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/plugin-web-storage (packages/plugin-web-storage) kind=tsc script=check-types: "tsc --noEmit"
+archive_file_sha256 packages/plugin-web-storage/package.json=cb441e2c168f419102a4301da09a7d6a2828f0bd91376f2b183e064014502778 packages/plugin-web-storage/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/plugin-web-storage/vitest.config.ts=87367d81da10e0d0318ca05177f85ec82aff7649491e517691a4d0f5310bac44
+package_tree=782c79de33a1da6851b5a235950408eb7ae89f99 features_package_tree=3f25c84b5b582719d74fda8872db4e6e1db388f1
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/typescript-config->packages/typescript-config
+tsconfig_extends_checked=46 unresolved=none own=@repo/plugin-web-storage:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/plugin-web-storage/node_modules/.bin/tsc
+args=--noEmit --listFiles
+typescript=node_modules/.pnpm/typescript@5.9.2/node_modules/typescript@5.9.2
+tool_exit=0
+harness_checks=PASS (6/6)
+exit=0
+---- stdout ----
+[--listFiles output: 315 paths, summarised in the runner summary]
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "check-types" is "tsc --noEmit" (found "tsc --noEmit")
+harness PASS program file list parsed (--listFiles)
+harness PASS no program file from a checkout's packages/, apps/ or docs/
+harness PASS every program file is inside the archive or the dependency store node_modules/.pnpm
+harness PASS required product files in the type program (5 present of 5 listed)
+harness PASS own tsconfig extends resolves inside the archive (@repo/plugin-web-storage:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json)
+tsc_exit=0 diagnostics_lines=0
+program_files=315 archive=46 store=269 elsewhere=0 forbidden=0
+archive_files_by_package packages/plugin-web-storage=46
+archive_file_list_sha256=be95384a4afea9368bcbd40e1c3cc9489ad44e36a9826d33e9ff3473fc6d72e1
+pin_required_provenance packages/plugin-web-storage/src/index.ts packages/plugin-web-storage/src/internal/prefMutation.ts packages/plugin-web-storage/src/internal/usePrefAsync.ts packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts packages/plugin-web-storage/src/internal/accountOwnership.ts
+pin_required_provenance_missing=none
+program packages/plugin-web-storage/src/AccountDataGate.tsx
+program packages/plugin-web-storage/src/__tests__/AccountDataGate.test.tsx
+program packages/plugin-web-storage/src/__tests__/accountCoordination.test.ts
+program packages/plugin-web-storage/src/__tests__/accountDataLifecycle.test.ts
+program packages/plugin-web-storage/src/__tests__/accountHooks.test.tsx
+program packages/plugin-web-storage/src/__tests__/accountMigration.test.ts
+program packages/plugin-web-storage/src/__tests__/accountScope.test.ts
+program packages/plugin-web-storage/src/__tests__/accountTestHarness.ts
+program packages/plugin-web-storage/src/__tests__/canonicalCommandCommit.test.ts
+program packages/plugin-web-storage/src/__tests__/canonicalCommandState.test.tsx
+program packages/plugin-web-storage/src/__tests__/canonicalDatasetMutation.test.ts
+program packages/plugin-web-storage/src/__tests__/consumer.test.tsx
+program packages/plugin-web-storage/src/__tests__/dataExport.test.ts
+program packages/plugin-web-storage/src/__tests__/imperative.test.ts
+program packages/plugin-web-storage/src/__tests__/migrate.test.ts
+program packages/plugin-web-storage/src/__tests__/parity-design-md.test.ts
+program packages/plugin-web-storage/src/__tests__/prefAutosave-readpath.test.tsx
+program packages/plugin-web-storage/src/__tests__/prefMutation.test.ts
+program packages/plugin-web-storage/src/__tests__/registry.test.ts
+program packages/plugin-web-storage/src/__tests__/ssr.test.ts
+program packages/plugin-web-storage/src/__tests__/types.test-d.ts
+program packages/plugin-web-storage/src/__tests__/usePref.test.tsx
+program packages/plugin-web-storage/src/__tests__/usePref.writeResult.test.tsx
+program packages/plugin-web-storage/src/__tests__/usePrefAsync.contract.test.tsx
+program packages/plugin-web-storage/src/__tests__/usePrefAutosave.test.tsx
+program packages/plugin-web-storage/src/index.ts
+program packages/plugin-web-storage/src/internal/accountCoordination.ts
+program packages/plugin-web-storage/src/internal/accountDataLifecycle.ts
+program packages/plugin-web-storage/src/internal/accountDeletionReceipt.ts
+program packages/plugin-web-storage/src/internal/accountMigration.ts
+program packages/plugin-web-storage/src/internal/accountMigrationValidation.ts
+program packages/plugin-web-storage/src/internal/accountOwnership.ts
+program packages/plugin-web-storage/src/internal/accountScope.ts
+program packages/plugin-web-storage/src/internal/canonicalCommandState.ts
+program packages/plugin-web-storage/src/internal/codec.ts
+program packages/plugin-web-storage/src/internal/dataExport.ts
+program packages/plugin-web-storage/src/internal/lifecycleDeclaration.ts
+program packages/plugin-web-storage/src/internal/migrate.ts
+program packages/plugin-web-storage/src/internal/prefMutation.ts
+program packages/plugin-web-storage/src/internal/registry.ts
+program packages/plugin-web-storage/src/internal/sameTabBus.ts
+program packages/plugin-web-storage/src/internal/storage.ts
+program packages/plugin-web-storage/src/internal/usePref.ts
+program packages/plugin-web-storage/src/internal/usePrefAsync.ts
+program packages/plugin-web-storage/src/internal/usePrefAutosave.ts
+program packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts

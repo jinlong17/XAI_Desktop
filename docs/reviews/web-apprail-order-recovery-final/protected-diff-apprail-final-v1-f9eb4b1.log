@@ -1,0 +1,675 @@
+requested_fixed=f9eb4b1
+resolved_fixed_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_fixed_tree=05887cf113639116b228a25041a37b3d5c69a322
+requested_before=419e56d
+resolved_before_commit=419e56de9f23e4467fea806fbd4a990e1f429941
+resolved_before_tree=7aabbd832be446aeca1441eff34f2fd35945290a
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-static.mjs f9eb4b1 419e56d apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=c7dea48432c8568c64f91fe590fca1656c44674c0790f79ccb74d12f3690a47c
+node=v24.16.0 platform=darwin-arm64 git=git version 2.54.0 (Apple Git-157)
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+fixed_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+before_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9 extracted=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+repo_pin=not applicable (no product code is executed; text scan and git object comparison only)
+archives fixed_files=7603 (symlinks 22) before_files=7205 (symlinks 22) scanned_text_files fixed=2136 before=2126 binary_skipped fixed=23 before=23
+log=E19 (contract §10 item 8) protected-path diff, E6 product delta and §11 "Unchanged" test dispositions
+## Contract §10 item 8 fully protected paths
+protected packages/plugin-web-storage: 419e56d=782c79de33a1da6851b5a235950408eb7ae89f99 f9eb4b1=782c79de33a1da6851b5a235950408eb7ae89f99 diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-settings-shell: 419e56d=8fe33026603bdbf50676b25ce99ba78a444ead34 f9eb4b1=8fe33026603bdbf50676b25ce99ba78a444ead34 diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-tokens: 419e56d=3ea903458975b90129f563ddbf4b31224e9b4b52 f9eb4b1=3ea903458975b90129f563ddbf4b31224e9b4b52 diff_name_only=empty diff_quiet_exit=0
+protected packages/core: 419e56d=6bfdb0eac1ff1a597128e5c8c9b9feba52d11051 f9eb4b1=6bfdb0eac1ff1a597128e5c8c9b9feba52d11051 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-event-bus: 419e56d=c68c77fae4984e8b60aaf9684c61bbe21224a38d f9eb4b1=c68c77fae4984e8b60aaf9684c61bbe21224a38d diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-pet: 419e56d=6594df5e7009a47018b217f171c7895c11105b5a f9eb4b1=6594df5e7009a47018b217f171c7895c11105b5a diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-cmdk: 419e56d=a8c733f2d0fdf269bb4f0131bca7a8de342469a2 f9eb4b1=a8c733f2d0fdf269bb4f0131bca7a8de342469a2 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-settings-appearance: 419e56d=1fea1045b8cca0a1539238f106828e78f1c20308 f9eb4b1=1fea1045b8cca0a1539238f106828e78f1c20308 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-settings-features-panel: 419e56d=3f25c84b5b582719d74fda8872db4e6e1db388f1 f9eb4b1=3f25c84b5b582719d74fda8872db4e6e1db388f1 diff_name_only=empty diff_quiet_exit=0
+protected packages/plugin-web-settings-rest: 419e56d=21f0bbb61dae92948ebddfc82946a3ff6b36e2a6 f9eb4b1=21f0bbb61dae92948ebddfc82946a3ff6b36e2a6 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-dashboard-grid: 419e56d=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 f9eb4b1=8e96464cae57ba35a7f1a4c39c9b0a8f9df64509 diff_name_only=empty diff_quiet_exit=0
+protected packages/xai-web-dashboard-widgets: 419e56d=4d65ad167b0d3712166e96569b1d9f44ed66a500 f9eb4b1=4d65ad167b0d3712166e96569b1d9f44ed66a500 diff_name_only=empty diff_quiet_exit=0
+protected package.json: 419e56d=548cfbbe3a66e90058ea8fe8d2e3fb94a61efbec f9eb4b1=548cfbbe3a66e90058ea8fe8d2e3fb94a61efbec diff_name_only=empty diff_quiet_exit=0
+protected pnpm-lock.yaml: 419e56d=b8685855ef4d58601b45835b27853b3f01186ca2 f9eb4b1=b8685855ef4d58601b45835b27853b3f01186ca2 diff_name_only=empty diff_quiet_exit=0
+## Contract §10 item 8 partially protected trees (every path except that tree's §11 files)
+partial packages/xai-web-shell: 419e56d paths=32 f9eb4b1 paths=41; changed=17 (packages/xai-web-shell/docs/api.md, packages/xai-web-shell/docs/test.md, packages/xai-web-shell/src/AppRail.tsx, packages/xai-web-shell/src/Shell.tsx, packages/xai-web-shell/src/Topbar.tsx, packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx, packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx, packages/xai-web-shell/src/__tests__/Topbar.test.tsx, packages/xai-web-shell/src/__tests__/railOrderFixture.tsx, packages/xai-web-shell/src/__tests__/railOrderModel.test.ts, packages/xai-web-shell/src/index.ts, packages/xai-web-shell/src/internal/RailOrderStatus.tsx, packages/xai-web-shell/src/internal/railOrderController.tsx, packages/xai-web-shell/src/internal/railOrderCopy.ts, packages/xai-web-shell/src/internal/railOrderModel.ts, packages/xai-web-shell/src/railOrderStatus.css, packages/xai-web-shell/src/types.ts); non-§11 paths with identical blob ids=24/24
+partial apps: 419e56d paths=269 f9eb4b1 paths=270; changed=2 (apps/web/src/App.tsx, apps/web/src/__tests__/App.railorder.test.tsx); non-§11 paths with identical blob ids=268/268
+## Contract §11 protected files inside xai-web-shell
+shell-protected packages/xai-web-shell/src/AvatarMenu.tsx: 419e56d=91d3bb0e5b7f3525e68275844b87a9f9298d256a f9eb4b1=91d3bb0e5b7f3525e68275844b87a9f9298d256a unchanged
+shell-protected packages/xai-web-shell/src/SignOutConfirmDialog.tsx: 419e56d=d1cc0511d50d9dd5ee36604c9e191dbec690cdea f9eb4b1=d1cc0511d50d9dd5ee36604c9e191dbec690cdea unchanged
+shell-protected packages/xai-web-shell/src/registry.tsx: 419e56d=0cc982df4a3f80acf8147703ac91d13f127a2e0b f9eb4b1=0cc982df4a3f80acf8147703ac91d13f127a2e0b unchanged
+shell-protected packages/xai-web-shell/src/icons.tsx: 419e56d=9c9b611c889b3a6473c33a47caf4e363a663fee8 f9eb4b1=9c9b611c889b3a6473c33a47caf4e363a663fee8 unchanged
+shell-protected packages/xai-web-shell/src/internal/dnd.ts: 419e56d=2639ba86d10e51c315b7d3a79fca6f906202e803 f9eb4b1=2639ba86d10e51c315b7d3a79fca6f906202e803 unchanged
+shell-protected packages/xai-web-shell/src/internal/popoverGeometry.ts: 419e56d=66be9557ed3a9db08f06d3b683aed214e1d40e97 f9eb4b1=66be9557ed3a9db08f06d3b683aed214e1d40e97 unchanged
+shell-protected packages/xai-web-shell/package.json: 419e56d=aa58c2f297445d3f97be2029943027e74ba37fe3 f9eb4b1=aa58c2f297445d3f97be2029943027e74ba37fe3 unchanged
+shell-protected packages/xai-web-shell/manifest.json: 419e56d=3a4bd1856c0550d577dbe66c73c2b304ee6af641 f9eb4b1=3a4bd1856c0550d577dbe66c73c2b304ee6af641 unchanged
+shell-protected packages/xai-web-shell/tsconfig.json: 419e56d=ca86687c4bb77d8aed541bc31f9e81156880764a f9eb4b1=ca86687c4bb77d8aed541bc31f9e81156880764a unchanged
+shell-protected packages/xai-web-shell/vitest.config.ts: 419e56d=f3c6ed780aefbe7ffc6945f8dde0aa23ca74c11a f9eb4b1=f3c6ed780aefbe7ffc6945f8dde0aa23ca74c11a unchanged
+shell-protected packages/xai-web-shell/eslint.config.js: 419e56d=23721e3c744c34d105bd27be738ba140d3db5724 f9eb4b1=23721e3c744c34d105bd27be738ba140d3db5724 unchanged
+shell-protected packages/xai-web-shell/README.md: 419e56d=3a8c3856128fa6ae5117db230055f9a13758ee0b f9eb4b1=3a8c3856128fa6ae5117db230055f9a13758ee0b unchanged
+shell-protected packages/xai-web-shell/docs/design.md: 419e56d=a80890805d1c945dd545e37ab66b6882ee931d8a f9eb4b1=a80890805d1c945dd545e37ab66b6882ee931d8a unchanged
+shell-protected packages/xai-web-shell/docs/dev_log.md: 419e56d=3c580a2a976c25103ed98ed66ec9d221ca04e74c f9eb4b1=3c580a2a976c25103ed98ed66ec9d221ca04e74c unchanged
+shell-protected packages/xai-web-shell/src/__fixtures__/: 419e56d=235db512554e72fff5dae3f500a087ed0b986b24 f9eb4b1=235db512554e72fff5dae3f500a087ed0b986b24 unchanged
+## Full unrestricted diff 419e56d..f9eb4b1 (--name-status --no-renames): 411 entries, 392 under docs/, 19 outside docs/
+  outside-docs A apps/web/src/__tests__/App.railorder.test.tsx
+  outside-docs A packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx
+  outside-docs A packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx
+  outside-docs A packages/xai-web-shell/src/__tests__/railOrderFixture.tsx
+  outside-docs A packages/xai-web-shell/src/__tests__/railOrderModel.test.ts
+  outside-docs A packages/xai-web-shell/src/internal/RailOrderStatus.tsx
+  outside-docs A packages/xai-web-shell/src/internal/railOrderController.tsx
+  outside-docs A packages/xai-web-shell/src/internal/railOrderCopy.ts
+  outside-docs A packages/xai-web-shell/src/internal/railOrderModel.ts
+  outside-docs A packages/xai-web-shell/src/railOrderStatus.css
+  outside-docs M apps/web/src/App.tsx
+  outside-docs M packages/xai-web-shell/docs/api.md
+  outside-docs M packages/xai-web-shell/docs/test.md
+  outside-docs M packages/xai-web-shell/src/AppRail.tsx
+  outside-docs M packages/xai-web-shell/src/Shell.tsx
+  outside-docs M packages/xai-web-shell/src/Topbar.tsx
+  outside-docs M packages/xai-web-shell/src/__tests__/Topbar.test.tsx
+  outside-docs M packages/xai-web-shell/src/index.ts
+  outside-docs M packages/xai-web-shell/src/types.ts
+  docs A docs/reviews/web-appearance-recovery-acceptance/acceptance-419e56d.md
+  docs A docs/reviews/web-appearance-recovery-acceptance/acceptance-checks-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-acceptance/verify-acceptance.mjs
+  docs A docs/reviews/web-appearance-recovery-final/appearance-lint-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-typecheck-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-unchanged-cases-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-unchanged-cases-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-unchanged-files-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/appearance-unchanged-files-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-final/compare-accepted-appearance-final-v1.log
+  docs A docs/reviews/web-appearance-recovery-final/compare-accepted.mjs
+  docs A docs/reviews/web-appearance-recovery-final/compare-reruns-appearance-final-v1.log
+  docs A docs/reviews/web-appearance-recovery-final/compare-reruns.mjs
+  docs A docs/reviews/web-appearance-recovery-final/delta-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/diag-features-sol-corrected.mjs
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/diag-features-sol-corrected.diff
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/f1-bundle-depth-appearance-final-v1.log
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/f1-bundle-depth.mjs
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/features-downstream.corrected.diff
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/features-downstream.corrected.test.tsx
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-final/diagnostics/make-features-downstream-corrected.mjs
+  docs A docs/reviews/web-appearance-recovery-final/hash-evidence.mjs
+  docs A docs/reviews/web-appearance-recovery-final/hashes-appearance-final-v1.log
+  docs A docs/reviews/web-appearance-recovery-final/native-419e56d-appearance-final-v1-downstream.log
+  docs A docs/reviews/web-appearance-recovery-final/native-downstream.tsx
+  docs A docs/reviews/web-appearance-recovery-final/native-host-harness.e25.diff
+  docs A docs/reviews/web-appearance-recovery-final/native-host-harness.mjs
+  docs A docs/reviews/web-appearance-recovery-final/native-host-prelude.js
+  docs A docs/reviews/web-appearance-recovery-final/protected-diff-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/review-final-regressions-419e56d.md
+  docs A docs/reviews/web-appearance-recovery-final/search-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-check-types-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-lint-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-topbar-unchanged-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-topbar-unchanged-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-unchanged-files-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/shell-unchanged-files-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-final/verify-delta.mjs
+  docs A docs/reviews/web-appearance-recovery-final/verify-native-downstream.mjs
+  docs A docs/reviews/web-appearance-recovery-final/verify-packages.mjs
+  docs A docs/reviews/web-appearance-recovery-final/verify-static.mjs
+  docs A docs/reviews/web-appearance-recovery-final/web-check-types-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/web-lint-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/web-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-final/web-test-appearance-final-v1-5cd63ff.log
+  docs A docs/reviews/web-appearance-recovery-independent/host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-font-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-font-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-font-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-hue-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-hue-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-419e56d-hue-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-font-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-font-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-font-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-hue-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-hue-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-before-5cd63ff-hue-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-checked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-checked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-checked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-unchecked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-unchecked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-dark-unchecked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-checked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-checked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-checked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-unchecked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-unchecked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-popover-light-unchecked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-0-control-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-0-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-1-control-swatch-2-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-dark-swatch-1-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-0-control-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-0-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-4-control-swatch-5-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-4-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-4-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-selring-light-swatch-4-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-2-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-2-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-accent-230-swatch-2-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-0-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-419e56d-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-0-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en-swatch-before-5cd63ff-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-en.log
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-font-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-font-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-font-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-hue-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-hue-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-419e56d-hue-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-font-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-font-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-font-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-hue-slider-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-hue-slider-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-before-5cd63ff-hue-slider-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-checked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-checked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-checked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-unchecked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-unchecked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-dark-unchecked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-checked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-checked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-checked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-unchecked-focused-panel.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-unchecked-option-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-popover-light-unchecked-option-moved-on.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-0-control-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-0-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-1-control-swatch-2-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-dark-swatch-1-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-0-control-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-0-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-4-control-swatch-5-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-4-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-4-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-selring-light-swatch-4-unfocused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-2-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-2-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-accent-230-swatch-2-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-0-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-419e56d-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-0-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-0-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-0-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-1-focus-moved-back.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-1-focused-row.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh-swatch-before-5cd63ff-swatch-1-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-keyboard-zh.log
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-1024-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-1440-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-1440-clean-retry-all-disabled-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-1440-topbar-status-pane.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-1440-topbar-status-tasks.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-clean-retry-all-disabled-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-partial-pass.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-partial-reset.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-topbar-status-pane.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-375-topbar-status-tasks.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-414-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-767-topbar-status-breakpoint.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-pet-on-all-seven-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-pet-on-before-5cd63ff-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-pet-on-before-5cd63ff-top.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-pet-on-clean-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en-768-topbar-status-breakpoint.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-en.log
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-1024-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-1440-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-1440-clean-retry-all-disabled-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-1440-topbar-status-pane.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-1440-topbar-status-tasks.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-clean-retry-all-disabled-focused.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-partial-pass.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-partial-reset.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-topbar-status-pane.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-375-topbar-status-tasks.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-414-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-767-topbar-status-breakpoint.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-all-seven.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-pet-on-all-seven-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-pet-on-before-5cd63ff-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-pet-on-before-5cd63ff-top.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-pet-on-clean-end.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh-768-topbar-status-breakpoint.png
+  docs A docs/reviews/web-appearance-recovery-native/native-419e56d-fixed1-visual-zh.log
+  docs A docs/reviews/web-appearance-recovery-native/review-visual-keyboard-419e56d.md
+  docs A docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-419e56d.diff
+  docs A docs/reviews/web-appearance-recovery-native/verify-visual-keyboard-419e56d.mjs
+  docs A docs/reviews/web-appearance-recovery-oracle-erratum/corrected-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/bytes-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/continuity-export-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/fields-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/original-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/queues-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/reset-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-sol/retry-all-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-appearance-recovery-terra/implementation-r3.md
+  docs A docs/reviews/web-appearance-recovery-terra/r3-appearance-lint.log
+  docs A docs/reviews/web-appearance-recovery-terra/r3-appearance-test.log
+  docs A docs/reviews/web-appearance-recovery-terra/r3-appearance-typecheck.log
+  docs A docs/reviews/web-appearance-recovery-terra/r3-negative-control-selected-focus-test.log
+  docs A docs/reviews/web-appearance-recovery-terra/r3-static-focus-audit.log
+  docs A docs/reviews/web-appearance-recovery-terra/r3-web-test.log
+  docs A docs/reviews/web-apprail-order-recovery-contract/contract.md
+  docs A docs/reviews/web-apprail-order-recovery-f1/before-419e56d.md
+  docs A docs/reviews/web-apprail-order-recovery-f1/f1-419e56d-railorder-before1.log
+  docs A docs/reviews/web-apprail-order-recovery-f1/f1-419e56d-selfcheck-before1.log
+  docs A docs/reviews/web-apprail-order-recovery-f1/f1-railorder-host.tsx
+  docs A docs/reviews/web-apprail-order-recovery-f1/verify-f1-railorder.mjs
+  docs A docs/reviews/web-apprail-order-recovery-independent/README.md
+  docs A docs/reviews/web-apprail-order-recovery-independent/host-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-independent/host-fixture.tsx
+  docs A docs/reviews/web-apprail-order-recovery-independent/host.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-independent/verify-fixed.mjs
+  docs A docs/reviews/web-apprail-order-recovery-native/before-419e56d.md
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h2-en-quota-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h2-en-throwing-setitem-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h2-zh-quota-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h2-zh-throwing-setitem-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h3-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h4-cancel-after.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-h4-drop-outside-after.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag-pc-p6-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-drag.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-false-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-false-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-0-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-0-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-1-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-1-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-minus-1-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-number-minus-1-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-object-empty-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-object-empty-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-object-tasks-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-object-tasks-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-true-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-en-true-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-false-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-false-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-0-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-0-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-1-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-1-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-minus-1-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-number-minus-1-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-object-empty-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-object-empty-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-object-tasks-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-object-tasks-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-true-settings-appearance.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1-zh-true-tasks.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h1.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h11-en-a-after-b-commits.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h11-en-a-before.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h11-zh-a-after-b-commits.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h11-zh-a-before.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h11.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h8-en-board-tasks-board.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h8-en-tasks-twice.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h8-zh-board-tasks-board.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h8-zh-tasks-twice.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h8.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h9-en-after-failed-drag.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h9-en-after-sign-out.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h9-zh-after-failed-drag.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h9-zh-after-sign-out.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-h9.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-r1-h5-en-1440-after-drop.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-r1-h5-en-1440-after-re-enabling.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-r1-h5-en-1440-boards-hidden.png
+  docs A docs/reviews/web-apprail-order-recovery-native/native-419e56d-before1-r1.log
+  docs A docs/reviews/web-apprail-order-recovery-native/native-before-app.tsx
+  docs A docs/reviews/web-apprail-order-recovery-native/native-before-prelude.js
+  docs A docs/reviews/web-apprail-order-recovery-native/verify-native-before.mjs
+  docs A docs/reviews/web-apprail-order-recovery-sol/README.md
+  docs A docs/reviews/web-apprail-order-recovery-sol/bytes-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/bytes.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/continuity-export-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/continuity-export.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/diag-features-sol-c-rd1.diff
+  docs A docs/reviews/web-apprail-order-recovery-sol/diag-features-sol-c-rd1.mjs
+  docs A docs/reviews/web-apprail-order-recovery-sol/domain-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/domain-before2-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/domain.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/drag-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/drag-before2-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/drag.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-downstream.c-rd1.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-downstream.c-rd1.vs-c-fd1.diff
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-downstream.c-rd1.vs-frozen.diff
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-sol-downstream-c-fd1-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-sol-downstream-c-rd1-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/features-sol-downstream-frozen-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/field-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/field-before2-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/field.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/fixture.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/host-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/host-before2-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/host.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/merge-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/merge-before2-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/merge.test.tsx
+  docs A docs/reviews/web-apprail-order-recovery-sol/original-before1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/typecheck-static1-419e56d.log
+  docs A docs/reviews/web-apprail-order-recovery-sol/verify-fixed.mjs
+  docs A docs/reviews/web-d2-pref-binding-inventory/bindings-419e56d.json
+  docs A docs/reviews/web-d2-pref-binding-inventory/refresh-419e56d.md
+  docs A docs/reviews/web-dashboard-clock-recovery-contract/contract.md
+  docs A docs/reviews/web-features-recovery-f1/f1-419e56d-features-appearance-final-v1.log
+  docs A docs/reviews/web-features-recovery-f1/f1-419e56d-selfcheck-appearance-final-v1.log
+  docs A docs/reviews/web-features-recovery-final/datetime-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/features-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-boundaries-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-fields-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-original-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-owner-export-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-queues-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/more-reset-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-astra-boundaries-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-astra-host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-boundaries-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-core-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-extended-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-operations-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-original-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-parent-host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/notifications-recovery-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/settings-rest-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/settings-shell-test-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-final/storage-check-types-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-independent/host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-native/native-419e56d-appearance-final-v1-downstream.log
+  docs A docs/reviews/web-features-recovery-sol/bytes-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/continuity-export-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/downstream-appearance-final-v1-24073b5.log
+  docs A docs/reviews/web-features-recovery-sol/downstream-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/downstream-appearance-final-v2-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/fields-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/original-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/queues-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-features-recovery-sol/reset-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-more-recovery-fb002/logs/corrected-full-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-native-keyinput-k1/f1-419e56d-appearance-appearance-final-v1.log
+  docs A docs/reviews/web-native-keyinput-k1/f1-419e56d-selfcheck-appearance-final-v1.log
+  docs A docs/reviews/web-next-caller-selection/selection-419e56d.md
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-collaborate-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-date-time-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-header-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-more-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-notifications-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-pomodoro-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-race-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-selfcheck-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-smart-lists-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-f1/f1-419e56d-sticky-appearance-final-v1.log
+  docs A docs/reviews/web-sticky-recovery-independent/host-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-sticky-recovery-sol/bytes-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-sticky-recovery-sol/continuity-export-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-sticky-recovery-sol/fields-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-sticky-recovery-sol/original-appearance-final-v1-419e56d.log
+  docs A docs/reviews/web-sticky-recovery-sol/queues-appearance-final-v1-419e56d.log
+  docs M docs/reviews/20260908-full-product-audit/ALL-TODO-CURRENT.md
+  docs M docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md
+  docs M docs/reviews/20260908-full-product-audit/EXECUTION.json
+  docs M docs/reviews/20260908-full-product-audit/EXECUTION.md
+## Product-scope diff (-- apps packages package.json pnpm-lock.yaml): 19 entries, +2960/-76 lines
+  M apps/web/src/App.tsx -> 10 apps/web/src/App.tsx
+  A apps/web/src/__tests__/App.railorder.test.tsx -> 11 new apps/web/src/__tests__/App.railorder*.test.tsx
+  M packages/xai-web-shell/docs/api.md -> 9 shell docs/api.md or docs/test.md
+  M packages/xai-web-shell/docs/test.md -> 9 shell docs/api.md or docs/test.md
+  M packages/xai-web-shell/src/AppRail.tsx -> 1 shell src/AppRail.tsx
+  M packages/xai-web-shell/src/Shell.tsx -> 3 shell src/Shell.tsx
+  M packages/xai-web-shell/src/Topbar.tsx -> 2 shell src/Topbar.tsx
+  A packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx -> 8 new shell test file under src/__tests__/
+  A packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx -> 8 new shell test file under src/__tests__/
+  M packages/xai-web-shell/src/__tests__/Topbar.test.tsx -> 8 shell src/__tests__/Topbar.test.tsx (additive cases)
+  A packages/xai-web-shell/src/__tests__/railOrderFixture.tsx -> 8 new shell test file under src/__tests__/
+  A packages/xai-web-shell/src/__tests__/railOrderModel.test.ts -> 8 new shell test file under src/__tests__/
+  M packages/xai-web-shell/src/index.ts -> 5 shell src/index.ts (additive exports, stylesheet import)
+  A packages/xai-web-shell/src/internal/RailOrderStatus.tsx -> 7 new shell module under src/internal/ (at most four)
+  A packages/xai-web-shell/src/internal/railOrderController.tsx -> 7 new shell module under src/internal/ (at most four)
+  A packages/xai-web-shell/src/internal/railOrderCopy.ts -> 7 new shell module under src/internal/ (at most four)
+  A packages/xai-web-shell/src/internal/railOrderModel.ts -> 7 new shell module under src/internal/ (at most four)
+  A packages/xai-web-shell/src/railOrderStatus.css -> 6 new shell src/railOrderStatus.css
+  M packages/xai-web-shell/src/types.ts -> 4 shell src/types.ts (additive)
+## Contract §11 files: SHA-256 at both revisions
+  M packages/xai-web-shell/docs/api.md f9eb4b1_sha256=b96d858d2501571631194cf7a3e444b000a584cdad5e31f2d3ff8c9483d57cef 419e56d_sha256=5ce33b6cdba6bce0936b264157909810063ef74d4094d55762b8e8d41b5d1e24 numstat=124/16
+  M packages/xai-web-shell/docs/test.md f9eb4b1_sha256=c730b245e44f9c4df11357c44fbc12d6e419dbdaec8ede0320bd7e49c6ca02e0 419e56d_sha256=8a3b0b14f9d6be3e2be761b4b1413e4132eda9b44e6523176c1b2de463639aec numstat=10/2
+  M packages/xai-web-shell/src/AppRail.tsx f9eb4b1_sha256=fe789078fecc60936d3e6c5fc2b203001a15490aecf30f3a0ca301da1399fb44 419e56d_sha256=6312caa162a7d194774bf95282c203ddc633ccc54068edcd2854dfbfd4633f67 numstat=117/43
+  M packages/xai-web-shell/src/Shell.tsx f9eb4b1_sha256=38e25c6b20f6413c9362f53e9be7e2aa121001170898a6097e29fccabf22e432 419e56d_sha256=1f5fc6c7281c74d1c08b5fac99d90feae79637f5c349fa38823dc2f042428c5f numstat=2/0
+  M packages/xai-web-shell/src/Topbar.tsx f9eb4b1_sha256=aa5ac56e7b6a7652df70e82ed4d83dc81b44558181bfb48a30eb40b157d43c0e 419e56d_sha256=87b243344cb055d0a55b5e749bfeceb97b16c6a72a442ee1f990a76ced74c1f0 numstat=8/0
+  A packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx f9eb4b1_sha256=d0c85cc3742c417b2bbc1299a3943bc5b07fb5abdc186b98a39563498f189472 419e56d_sha256=absent numstat=380/0
+  A packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx f9eb4b1_sha256=1f3298b4215aa70576fb563731cc4fc7390d0951fb43f6873991c957d830713b 419e56d_sha256=absent numstat=317/0
+  M packages/xai-web-shell/src/__tests__/Topbar.test.tsx f9eb4b1_sha256=cd96f9bccf31b489d442de84d7c02ca855f712edf411da55d9e52ac30f47accd 419e56d_sha256=b3a068eab6bbb95e62cb2ec73f8a715921a48549f090bf7237e8d8c0dabfcb12 numstat=25/0
+  A packages/xai-web-shell/src/__tests__/railOrderFixture.tsx f9eb4b1_sha256=5daa526e5deb34e19d232185092f9a637a7ba6ff5d3f56db20e6da9ab7c90f67 419e56d_sha256=absent numstat=407/0
+  A packages/xai-web-shell/src/__tests__/railOrderModel.test.ts f9eb4b1_sha256=c04db55a1a1908473160885f25a8c6f74735ad7460a4cfb63b7cc91ca66ce44d 419e56d_sha256=absent numstat=155/0
+  M packages/xai-web-shell/src/index.ts f9eb4b1_sha256=396a894d09b5b2b95f2ed063b615b41f371044f356d4d2ef9f224189e09b66ab 419e56d_sha256=c404a9713dee4d821ba3ec6b5c7591f984da3c92b5fb1a62d88fbab5cec368ed numstat=17/0
+  A packages/xai-web-shell/src/internal/RailOrderStatus.tsx f9eb4b1_sha256=48b611ff1e2efbc96a888fd87f048925472702db898530cbf21f5df560ecff95 419e56d_sha256=absent numstat=218/0
+  A packages/xai-web-shell/src/internal/railOrderController.tsx f9eb4b1_sha256=d7f2f0b699e087c34d453309d9fe4c0eb6ba38ef52e6dfc70fe49d2f75c4e2a6 419e56d_sha256=absent numstat=347/0
+  A packages/xai-web-shell/src/internal/railOrderCopy.ts f9eb4b1_sha256=268fb934f921843efd1c3e41cd9a81614ce26b3a94026e5884e10d633a05d7ba 419e56d_sha256=absent numstat=78/0
+  A packages/xai-web-shell/src/internal/railOrderModel.ts f9eb4b1_sha256=0a4520e5923c02a5ffa101d09c5f39f592a569a1192132c302a999ead6d8beb2 419e56d_sha256=absent numstat=113/0
+  A packages/xai-web-shell/src/railOrderStatus.css f9eb4b1_sha256=338f0eae7338458da54b996880cfa93034940e0f19220a1669c1570a8fd4b6e5 419e56d_sha256=absent numstat=149/0
+  M packages/xai-web-shell/src/types.ts f9eb4b1_sha256=d18f637e9bec8c05f305fb29467acfd3fdcf2649e83ad2b28b877389752139c0 419e56d_sha256=ada0b296ed314bdb74b8847dac2b6a20bc3ffc297ded929b7f4f8ad09a88d93a numstat=95/0
+  M apps/web/src/App.tsx f9eb4b1_sha256=f644e78ec482c0b9b66f9702407eb34e1dcd110e837293e4a736964bfe7ac408 419e56d_sha256=24461a52a34c83d9e9e51dc92d99db6d76e4c56435bec3e5293e0937a8cc935a numstat=35/15
+  A apps/web/src/__tests__/App.railorder.test.tsx f9eb4b1_sha256=5c58233e44e96ea8a5864ecacf11a9e15756704de696e79eaf17850165f817ee 419e56d_sha256=absent numstat=363/0
+fixed_shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 before_shell_package_tree=372b08be267a7dd7f734c8ff0c770a7ca3a87cf1
+fixed_apps_web_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b before_apps_web_tree=23f1070ec28841df45d13c12f0523e679f46dcba
+## Contract §11 / §10 item 10 test dispositions: "Unchanged" cases (it-block text) and files (blob ids)
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP0 —" 419e56d L72-L79 f9eb4b1 L72-L79 sha256=ddb628d62425134b
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP1 —" 419e56d L81-L86 f9eb4b1 L81-L86 sha256=c3ce296f4197aadc
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP1b —" 419e56d L88-L93 f9eb4b1 L88-L93 sha256=3d0c184959820493
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP1c —" 419e56d L95-L100 f9eb4b1 L95-L100 sha256=9a4608cd3b2c210b
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2 —" 419e56d L102-L108 f9eb4b1 L102-L108 sha256=3b88f93452e84e28
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2b —" 419e56d L110-L116 f9eb4b1 L110-L116 sha256=e926bb207c8a19ae
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2c —" 419e56d L118-L123 f9eb4b1 L118-L123 sha256=9e26bd0ddf22ff47
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP3 —" 419e56d L125-L130 f9eb4b1 L125-L130 sha256=fc29efbe2928c9af
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP3b —" 419e56d L132-L136 f9eb4b1 L132-L136 sha256=46972afb505a2445
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP4 —" 419e56d L138-L143 f9eb4b1 L138-L143 sha256=87d5ca49418152be
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP5a —" 419e56d L145-L152 f9eb4b1 L145-L152 sha256=7b5dc859496488a7
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP5b —" 419e56d L154-L163 f9eb4b1 L154-L163 sha256=dc4502b7cb44a0e1
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP6 —" 419e56d L165-L168 f9eb4b1 L165-L168 sha256=16aeefd661a6a4df
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP7 —" 419e56d L170-L176 f9eb4b1 L170-L176 sha256=5104254a7b822add
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TB-PREMIUM-1 —" 419e56d L178-L187 f9eb4b1 L178-L187 sha256=532980b1a87e3c3d
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP1-Persist —" 419e56d L193-L201 f9eb4b1 L193-L201 sha256=ceb46536e500f19e
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP1b-Persist —" 419e56d L203-L211 f9eb4b1 L203-L211 sha256=be811683004a43e0
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2-Persist —" 419e56d L213-L221 f9eb4b1 L213-L221 sha256=68821e69ab31c483
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2b-Persist —" 419e56d L223-L231 f9eb4b1 L223-L231 sha256=6174cce4e3cc4b0c
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP2c-Persist —" 419e56d L233-L241 f9eb4b1 L233-L241 sha256=6d5faafaf09f6622
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP3-Persist —" 419e56d L243-L251 f9eb4b1 L243-L251 sha256=f7e9d6b529ced3fd
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP3b-Persist —" 419e56d L253-L261 f9eb4b1 L253-L261 sha256=79c200fc7e678279
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP-STATUS-1 —" 419e56d L265-L276 f9eb4b1 L265-L276 sha256=86b2a857d217a522
+  same xai-web-shell/src/__tests__/Topbar.test.tsx "TP-STATUS-2 —" 419e56d L278-L285 f9eb4b1 L278-L285 sha256=79f576df07d70add
+  same xai-web-shell/src/__tests__/AppRail.test.tsx blob 419e56d=5c50b857d8d23224f9272715deeb199105178727 f9eb4b1=5c50b857d8d23224f9272715deeb199105178727
+  same xai-web-shell/src/__tests__/internal/dnd.test.ts blob 419e56d=571ae0bce7d5c8528f0a9cffc405449bf29b1ba8 f9eb4b1=571ae0bce7d5c8528f0a9cffc405449bf29b1ba8
+  same xai-web-shell/src/__tests__/Shell.smoke.test.tsx blob 419e56d=cd1c34a1f45d12e5e37dd14c57733432412b85c1 f9eb4b1=cd1c34a1f45d12e5e37dd14c57733432412b85c1
+  same xai-web-shell/src/__tests__/event-emit.test.tsx blob 419e56d=a6923aa88abb5e3528e949036690c70e98c5796b f9eb4b1=a6923aa88abb5e3528e949036690c70e98c5796b
+  same xai-web-shell/src/__tests__/registry.test.tsx blob 419e56d=952290b2ab1af8ab71271ae5cfdd45e70438a90f f9eb4b1=952290b2ab1af8ab71271ae5cfdd45e70438a90f
+  same xai-web-shell/src/__tests__/AvatarMenu.test.tsx blob 419e56d=56d15dc23a9a4e261cbb8a68e3a436bf0faab4bd f9eb4b1=56d15dc23a9a4e261cbb8a68e3a436bf0faab4bd
+  same xai-web-shell/src/__tests__/SignOutConfirmDialog.test.tsx blob 419e56d=3bbd6e1512ef19862306cde243614613d278a8e2 f9eb4b1=3bbd6e1512ef19862306cde243614613d278a8e2
+  same xai-web-shell/src/__tests__/index-barrel.test.ts blob 419e56d=2a6b22002ce82908198d230720ef50136e5ec9ac f9eb4b1=2a6b22002ce82908198d230720ef50136e5ec9ac
+  same ../apps/web/src/__tests__/App.appearance.test.tsx blob 419e56d=b6aed4d9574564428022747f0394dc8ecafaa2ef f9eb4b1=b6aed4d9574564428022747f0394dc8ecafaa2ef
+  same ../apps/web/src/__tests__/App.signout.test.tsx blob 419e56d=837e4fc91fc4c50022eb21f0c9da027baf0325ed f9eb4b1=837e4fc91fc4c50022eb21f0c9da027baf0325ed
+  same ../apps/web/src/__tests__/App.lazy-init.test.tsx blob 419e56d=a0ad00cc9527b5f84bdbc5a75efdcc4f38000908 f9eb4b1=a0ad00cc9527b5f84bdbc5a75efdcc4f38000908
+  same ../apps/web/src/__tests__/shell.smoke.test.tsx blob 419e56d=6193737c62612fa2d5a931269aac1b869c2e6cbb f9eb4b1=6193737c62612fa2d5a931269aac1b869c2e6cbb
+  same ../apps/web/src/__tests__/shell.theme.test.tsx blob 419e56d=4370e4f6c89dc7cf30113be83fdf36664c5b199e f9eb4b1=4370e4f6c89dc7cf30113be83fdf36664c5b199e
+  same ../apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts blob 419e56d=273ef91af978586a4dc6e4e317b4a59166758404 f9eb4b1=273ef91af978586a4dc6e4e317b4a59166758404
+  same ../apps/web/src/__tests__/settingsPaneComposition.rest.test.ts blob 419e56d=768599bc3f4eff9e598a65e61711c38d89cf3870 f9eb4b1=768599bc3f4eff9e598a65e61711c38d89cf3870
+  same ../apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx blob 419e56d=6cb240b59d72c4ef5c0521b4e9663f61cb10a6b6 f9eb4b1=6cb240b59d72c4ef5c0521b4e9663f61cb10a6b6
+  same ../apps/web/src/__tests__/cmdkIntegration.test.tsx blob 419e56d=644b96dcca9b3d9015b0e8fdbbb2381f787e41b2 f9eb4b1=644b96dcca9b3d9015b0e8fdbbb2381f787e41b2
+  same ../apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx blob 419e56d=1d26aaa0fdd3208752218f71845d7b3ad25cb554 f9eb4b1=1d26aaa0fdd3208752218f71845d7b3ad25cb554
+  same ../apps/web/src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx blob 419e56d=a76dd937e05517feeea9e3e28e8a81233d7e82d6 f9eb4b1=a76dd937e05517feeea9e3e28e8a81233d7e82d6
+  same ../apps/web/src/routes/router.integration.test.tsx blob 419e56d=bc4a8c484ebb11c751e8d9c0630d4fa1183f87c5 f9eb4b1=bc4a8c484ebb11c751e8d9c0630d4fa1183f87c5
+  same ../apps/web/src/routes/__tests__/router-modules.integration.test.tsx blob 419e56d=65b901e502d5b4c19e0a117efd0dfe13833e169e f9eb4b1=65b901e502d5b4c19e0a117efd0dfe13833e169e
+  same plugin-web-storage/src/__tests__/imperative.test.ts blob 419e56d=f04ac8d4842198b1417306c2707085e53d388ec9 f9eb4b1=f04ac8d4842198b1417306c2707085e53d388ec9
+  same plugin-web-storage/src/__tests__/registry.test.ts blob 419e56d=77179f4018222c8b6a42fdfcb9d7c79be4b51982 f9eb4b1=77179f4018222c8b6a42fdfcb9d7c79be4b51982
+## Checks
+PASS [assert] E19: packages/plugin-web-storage exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/plugin-web-storage is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-settings-shell exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/plugin-web-settings-shell is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-tokens exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/plugin-web-tokens is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/core exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/core is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-event-bus exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-event-bus is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-pet exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-pet is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-cmdk exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-cmdk is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-settings-appearance exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-settings-appearance is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-settings-features-panel exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-settings-features-panel is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/plugin-web-settings-rest exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/plugin-web-settings-rest is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-dashboard-grid exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-dashboard-grid is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: packages/xai-web-dashboard-widgets exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- packages/xai-web-dashboard-widgets is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: package.json exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- package.json is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: pnpm-lock.yaml exists in both trees
+PASS [assert] E19: git diff 419e56d f9eb4b1 -- pnpm-lock.yaml is empty (object ids equal, --quiet exit 0)
+PASS [assert] E19: in packages/xai-web-shell every changed path is a contract §11 file (17 changed)
+PASS [assert] E19: in packages/xai-web-shell every non-§11 path has an identical blob id at both revisions (24 paths)
+PASS [assert] E19: in apps every changed path is a contract §11 file (2 changed)
+PASS [assert] E19: in apps every non-§11 path has an identical blob id at both revisions (268 paths)
+PASS [assert] E19: shell protected file src/AvatarMenu.tsx unchanged and present
+PASS [assert] E19: shell protected file src/SignOutConfirmDialog.tsx unchanged and present
+PASS [assert] E19: shell protected file src/registry.tsx unchanged and present
+PASS [assert] E19: shell protected file src/icons.tsx unchanged and present
+PASS [assert] E19: shell protected file src/internal/dnd.ts unchanged and present
+PASS [assert] E19: shell protected file src/internal/popoverGeometry.ts unchanged and present
+PASS [assert] E19: shell protected file package.json unchanged and present
+PASS [assert] E19: shell protected file manifest.json unchanged and present
+PASS [assert] E19: shell protected file tsconfig.json unchanged and present
+PASS [assert] E19: shell protected file vitest.config.ts unchanged and present
+PASS [assert] E19: shell protected file eslint.config.js unchanged and present
+PASS [assert] E19: shell protected file README.md unchanged and present
+PASS [assert] E19: shell protected file docs/design.md unchanged and present
+PASS [assert] E19: shell protected file docs/dev_log.md unchanged and present
+PASS [assert] E19: shell protected tree src/__fixtures__/ unchanged (tree ids equal, or absent at both)
+PASS [assert] E19/E6: product-scope diff (-- apps packages package.json pnpm-lock.yaml) is exactly the 19 contract §11 files with the expected statuses :: A apps/web/src/__tests__/App.railorder.test.tsx, A packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx, A packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx, A packages/xai-web-shell/src/__tests__/railOrderFixture.tsx, A packages/xai-web-shell/src/__tests__/railOrderModel.test.ts, A packages/xai-web-shell/src/internal/RailOrderStatus.tsx, A packages/xai-web-shell/src/internal/railOrderController.tsx, A packages/xai-web-shell/src/internal/railOrderCopy.ts, A packages/xai-web-shell/src/internal/railOrderModel.ts, A packages/xai-web-shell/src/railOrderStatus.css, M apps/web/src/App.tsx, M packages/xai-web-shell/docs/api.md, M packages/xai-web-shell/docs/test.md, M packages/xai-web-shell/src/AppRail.tsx, M packages/xai-web-shell/src/Shell.tsx, M packages/xai-web-shell/src/Topbar.tsx, M packages/xai-web-shell/src/__tests__/Topbar.test.tsx, M packages/xai-web-shell/src/index.ts, M packages/xai-web-shell/src/types.ts
+PASS [assert] E19: full unrestricted diff outside docs/ is exactly the 19 contract §11 files :: A apps/web/src/__tests__/App.railorder.test.tsx, A packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx, A packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx, A packages/xai-web-shell/src/__tests__/railOrderFixture.tsx, A packages/xai-web-shell/src/__tests__/railOrderModel.test.ts, A packages/xai-web-shell/src/internal/RailOrderStatus.tsx, A packages/xai-web-shell/src/internal/railOrderController.tsx, A packages/xai-web-shell/src/internal/railOrderCopy.ts, A packages/xai-web-shell/src/internal/railOrderModel.ts, A packages/xai-web-shell/src/railOrderStatus.css, M apps/web/src/App.tsx, M packages/xai-web-shell/docs/api.md, M packages/xai-web-shell/docs/test.md, M packages/xai-web-shell/src/AppRail.tsx, M packages/xai-web-shell/src/Shell.tsx, M packages/xai-web-shell/src/Topbar.tsx, M packages/xai-web-shell/src/__tests__/Topbar.test.tsx, M packages/xai-web-shell/src/index.ts, M packages/xai-web-shell/src/types.ts
+PASS [assert] E19: apps/web/src/App.tsx matches a contract §11 category
+PASS [assert] E19: apps/web/src/__tests__/App.railorder.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/docs/api.md matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/docs/test.md matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/AppRail.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/Shell.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/Topbar.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/__tests__/AppRail.railorder.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/__tests__/RailOrderStatus.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/__tests__/Topbar.test.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/__tests__/railOrderFixture.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/__tests__/railOrderModel.test.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/index.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/internal/RailOrderStatus.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/internal/railOrderController.tsx matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/internal/railOrderCopy.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/internal/railOrderModel.ts matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/railOrderStatus.css matches a contract §11 category
+PASS [assert] E19: packages/xai-web-shell/src/types.ts matches a contract §11 category
+PASS [assert] E19: at most four new shell modules under src/internal/ (found 4)
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP0 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP1 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP1b —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP1c —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2b —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2c —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP3 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP3b —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP4 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP5a —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP5b —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP6 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP7 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TB-PREMIUM-1 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP1-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP1b-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2b-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP2c-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP3-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP3b-Persist —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP-STATUS-1 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": xai-web-shell/src/__tests__/Topbar.test.tsx case "TP-STATUS-2 —" has a byte-identical block at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/AppRail.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/internal/dnd.test.ts has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/Shell.smoke.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/event-emit.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/registry.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/AvatarMenu.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/SignOutConfirmDialog.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file xai-web-shell/src/__tests__/index-barrel.test.ts has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/App.appearance.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/App.signout.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/App.lazy-init.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/shell.smoke.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/shell.theme.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/settingsPaneComposition.appearance.test.ts has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/settingsPaneComposition.rest.test.ts has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/routes/modules/__tests__/settingsPaneComposition.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/__tests__/cmdkIntegration.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/routes/modules/__tests__/railFeatureFilter.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/routes/router.integration.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file ../apps/web/src/routes/__tests__/router-modules.integration.test.tsx has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file plugin-web-storage/src/__tests__/imperative.test.ts has an identical blob id at both revisions
+PASS [assert] §11 disposition "Unchanged": test file plugin-web-storage/src/__tests__/registry.test.ts has an identical blob id at both revisions
+assertions=140/140 harness=56/56
+exit=0

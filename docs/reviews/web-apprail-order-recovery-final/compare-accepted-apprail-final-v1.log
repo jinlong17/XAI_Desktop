@@ -1,0 +1,353 @@
+comparison=apprail-final-v1
+## A. E21–E22 package gates (web-apprail-order-recovery-final/verify-packages.mjs) vs Terra's run record and the 419e56d before controls
+MATCH E21 shell-test @f9eb4b1: files=12 tests=205 passed=205 vs Terra 205 passed (205) (per-file equal=true); vs accepted Appearance final @419e56d 9/115: added src/__tests__/AppRail.railorder.test.tsx(40),src/__tests__/railOrderModel.test.ts(30),src/__tests__/RailOrderStatus.test.tsx(18); changed src/__tests__/Topbar.test.tsx(24->26)
+      new web-apprail-order-recovery-final/shell-test-apprail-final-v1-f9eb4b1.log sha256=4aa2586c4bafb3788b03bf934bfdfa4f3deab0fd5207d1efbc5a9603c663e7b8 exit=0 tests="205 passed (205)" preconditions=0
+      terra web-apprail-order-recovery-terra/shell-test-f9eb4b1.log sha256=72876c4e194de93f91e11d0197d7ea6ff1b270c862b8ab044c4c580d39ab92fa
+      accepted web-appearance-recovery-final/shell-test-appearance-final-v1-419e56d.log sha256=ea8348139704afd4176c926e66e8ae716d96e5fae8cde306c4de01a622caa220 exit=0 tests="115 passed (115)" preconditions=0
+      files src/__tests__/AppRail.railorder.test.tsx=40 src/__tests__/AppRail.test.tsx=25 src/__tests__/AvatarMenu.test.tsx=18 src/__tests__/event-emit.test.tsx=6 src/__tests__/index-barrel.test.ts=9 src/__tests__/internal/dnd.test.ts=9 src/__tests__/railOrderModel.test.ts=30 src/__tests__/RailOrderStatus.test.tsx=18 src/__tests__/registry.test.tsx=7 src/__tests__/Shell.smoke.test.tsx=9 src/__tests__/SignOutConfirmDialog.test.tsx=8 src/__tests__/Topbar.test.tsx=26
+MATCH shell-unchanged-files: 91 executed at f9eb4b1 vs 91 at 419e56d (before control); executed names and statuses equal=true
+      fixed web-apprail-order-recovery-final/shell-unchanged-files-apprail-final-v1-f9eb4b1.log sha256=1c0637d75b4aeae231d97e351acccaddfaefd88efac79035c7c63ae9966de82b exit=0 tests="91 passed (91)" preconditions=0
+      before web-apprail-order-recovery-final/shell-unchanged-files-apprail-final-v1-419e56d.log sha256=c9876c175543d98dcc9026c8c0171144046034dc2a760377ecf03167b128db4a exit=0 tests="91 passed (91)" preconditions=0
+      name_filter=none (whole files)
+      accepted Appearance final web-appearance-recovery-final/shell-unchanged-files-appearance-final-v1-419e56d.log sha256=2feab553f0d064c0cb0df8d1348040cc73fa39b6cfca5f7f3cdf82198405108b exit=0 tests="91 passed (91)" preconditions=0 executed names equal to this 419e56d control=true
+MATCH shell-topbar-unchanged: 24 executed at f9eb4b1 vs 24 at 419e56d (before control); executed names and statuses equal=true
+      fixed web-apprail-order-recovery-final/shell-topbar-unchanged-apprail-final-v1-f9eb4b1.log sha256=5a086440edb983c07046a95758899f22344b645d1ff35895cf092669ae0dc07e exit=0 tests="24 passed | 2 skipped (26)" preconditions=0
+      before web-apprail-order-recovery-final/shell-topbar-unchanged-apprail-final-v1-419e56d.log sha256=a2e7a314dd114387763518c8636ee0a5cf945cb3b14591a03b547c354677ca5a exit=0 tests="24 passed (24)" preconditions=0
+      name_filter="^Topbar (TP[0-7][a-c]?(-Persist)? —|TB-PREMIUM-1 —|TP-STATUS-[12] —)" executed=24 filtered_out=2 expected=24 missing=none stray=none
+MATCH web-unchanged-files: 118 executed at f9eb4b1 vs 118 at 419e56d (before control); executed names and statuses equal=true
+      fixed web-apprail-order-recovery-final/web-unchanged-files-apprail-final-v1-f9eb4b1.log sha256=2ea3d948d0ab088452c0310acd386fa043dfb0a0ff9d90844d2073dfca7c404a exit=0 tests="118 passed (118)" preconditions=0
+      before web-apprail-order-recovery-final/web-unchanged-files-apprail-final-v1-419e56d.log sha256=87e47fa28e2214796ad7d821c52cc6b1db437397d1716d6fec7dba4ca10e9269 exit=0 tests="118 passed (118)" preconditions=0
+      name_filter=none (whole files)
+MATCH storage-unchanged: 31 executed at f9eb4b1 vs 31 at 419e56d (before control); executed names and statuses equal=true
+      fixed web-apprail-order-recovery-final/storage-unchanged-apprail-final-v1-f9eb4b1.log sha256=aae0154a6ebe278534b0895ecdfa38e41a169ae5c8956b00ebf2a9d8133938e6 exit=0 tests="31 passed (31)" preconditions=0
+      before web-apprail-order-recovery-final/storage-unchanged-apprail-final-v1-419e56d.log sha256=1dfd05ec8843a195654268b630585c6e878a6599765a2873f97a1d8c0e621248 exit=0 tests="31 passed (31)" preconditions=0
+      name_filter=none (whole files)
+MATCH E22 web-test: 196/196 in 30 files at f9eb4b1 vs control 178/178 in 29 files at 419e56d; delta = added src/__tests__/App.railorder.test.tsx(18), changed counts none
+      fixed web-apprail-order-recovery-final/web-test-apprail-final-v1-f9eb4b1.log sha256=8560b7e54374b72c4538b5750841a5097c96541b34fc8ab986d8c458f573dd44 exit=0 tests="196 passed (196)" preconditions=0
+      control web-apprail-order-recovery-final/web-test-apprail-final-v1-419e56d.log sha256=5f04fa5d99f58775fb5f69640ef1764184b380e86c978f9531e9480c58ce8f15 exit=0 tests="178 passed (178)" preconditions=0
+      accepted Appearance final web-appearance-recovery-final/web-test-appearance-final-v1-419e56d.log sha256=9c8c470225bbae25f2503804bed47af0666a4eee20cd79570d585022ec916c58 exit=0 tests="178 passed (178)" preconditions=0
+      terra web-apprail-order-recovery-terra/web-test-f9eb4b1.log sha256=98f9673a134bc49f20b6f4bd3c849d32f065daf9e509683d86a1656c0855bbd3 196 passed (196)
+      control per-file equal to the accepted Appearance final @419e56d=true; fixed per-file equal to Terra=true
+      fixed files deploy/security/cspEndpoint.test.ts=1 deploy/security/headers.test.ts=2 deploy/security/rumEndpoint.test.ts=1 src/__tests__/App.appearance.test.tsx=22 src/__tests__/App.lazy-init.test.tsx=8 src/__tests__/App.railorder.test.tsx=18 src/__tests__/App.signout.test.tsx=7 src/__tests__/build-manifest.test.ts=2 src/__tests__/cmdkIntegration.test.tsx=5 src/__tests__/csp.test.ts=9 src/__tests__/event-bus.smoke.test.tsx=4 src/__tests__/settingsPaneComposition.appearance.test.ts=4 src/__tests__/settingsPaneComposition.rest.test.ts=3 src/__tests__/shell.smoke.test.tsx=5 src/__tests__/shell.theme.test.tsx=4 src/host/capabilities.test.ts=3 src/observability/controller.test.ts=3 src/observability/privacy.test.ts=4 src/observability/routeGroup.test.ts=4 src/observability/sentry.test.ts=2 src/observability/transport.test.ts=2 src/routes/__tests__/router-modules.integration.test.tsx=38 src/routes/modules/__tests__/departureCoordinator.blocker.test.tsx=10 src/routes/modules/__tests__/railFeatureFilter.test.tsx=3 src/routes/modules/__tests__/settingsPaneComposition.test.tsx=3 src/routes/modules/__tests__/shellRegistrations.integration.test.tsx=11 src/routes/modules/buildModuleRoutes.test.ts=6 src/routes/router.integration.test.tsx=6 src/security/cspReport.test.ts=2 src/security/nonce.test.ts=4
+MATCH shell-check-types @f9eb4b1: exit=0 tsc_exit=0 diagnostics_lines=0 (accepted Appearance final @419e56d: tsc_exit=0 diagnostics_lines=0 program_files=355 archive=60 store=295 elsewhere=0 forbidden=0)
+      new web-apprail-order-recovery-final/shell-check-types-apprail-final-v1-f9eb4b1.log sha256=f89fe39b7a742e89d3aec70c1ed929a477f2fd92b1d1940d60d3e7543aa60c23 harness_checks=PASS (6/6) program_files=363 archive=68 store=295 elsewhere=0 forbidden=0
+MATCH shell-lint @f9eb4b1: exit=0 eslint_exit=0 files=32 errors=0 warnings=0 fatal=0 (accepted Appearance final @419e56d: eslint_exit=0 files=24 errors=0 warnings=0 fatal=0 )
+      new web-apprail-order-recovery-final/shell-lint-apprail-final-v1-f9eb4b1.log sha256=c5d6114b285bdf34b76bab6b472f2d95d6f561c74ce95a129ab4b50ef450fb47 harness_checks=PASS (6/6) 
+MATCH web-check-types @f9eb4b1: exit=0 tsc_exit=0 diagnostics_lines=0 (accepted Appearance final @419e56d: tsc_exit=0 diagnostics_lines=0 program_files=1384 archive=667 store=717 elsewhere=0 forbidden=0)
+      new web-apprail-order-recovery-final/web-check-types-apprail-final-v1-f9eb4b1.log sha256=6dd00b221e8862973a81b18c644df23c6610a289f756ab7468f18bcb92309a46 harness_checks=PASS (6/6) program_files=1389 archive=672 store=717 elsewhere=0 forbidden=0
+MATCH web-lint @f9eb4b1: exit=0 eslint_exit=0 files=84 errors=0 warnings=0 fatal=0 (accepted Appearance final @419e56d: eslint_exit=0 files=83 errors=0 warnings=0 fatal=0 )
+      new web-apprail-order-recovery-final/web-lint-apprail-final-v1-f9eb4b1.log sha256=c90b33faad36e9c998bf3798686131bea8b22130fa1726a7ca7bfae0cdd919cc harness_checks=PASS (6/6) 
+## B. E20 storage check-types and the Sol lifecycle assertion for xai_rail_order
+MATCH storage-check-types: exit=0 tsc_exit=0 diagnostics_lines=0; program files 315/46/269/0/0 vs accepted Appearance final @419e56d 315/46/269/0/0
+      new web-features-recovery-final/storage-check-types-apprail-final-v1-f9eb4b1.log sha256=a0b00ec439810bbfb8cd8e5c6305325ff610249eda6f8168893f37ae708273eb
+      accepted web-features-recovery-final/storage-check-types-appearance-final-v1-419e56d.log sha256=ae923a15e1a42085d7014a541eb9f05728d23d73b2b75b035c67afad40039896
+MATCH E20 Sol lifecycle assertion (AppRail Sol bytes.test.tsx L237, "PC §2/§10.11 lifecycle classification …"): PASSED at f9eb4b1; bytes-apprail-fixed1-f9eb4b1.log PASSED; bytes-before1-419e56d.log PASSED; whole mode 26/26, names and statuses equal to E7 fixed1=true
+      new web-apprail-order-recovery-sol/bytes-apprail-final-v1-f9eb4b1.log sha256=6a9d290f0f3d8f321caca0070beda1d6110762cd219569ebdeb8552a88c49fe5 harness_checks=PASS (6/6)
+## C. Appearance (accepted a560863): Sol eight modes, OE corrected copy, parent host and package vs the accepted Appearance final logs at 419e56d
+MATCH appearance-sol bytes: 65/65 vs accepted 65/65; names/statuses equal=true
+      new web-appearance-recovery-sol/bytes-apprail-final-v1-f9eb4b1.log sha256=a6472f68a5943cc3125e1e31bf354546da774752519e779a9d74ad9a883383c3 exit=0 tests="65 passed (65)" preconditions=0
+      accepted web-appearance-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=cf616e933931eda06ffa7cd08e886de74322a8573e28cfee13b3d26fe11bcfbf exit=0 tests="65 passed (65)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol fields: 89/89 vs accepted 89/89; names/statuses equal=true
+      new web-appearance-recovery-sol/fields-apprail-final-v1-f9eb4b1.log sha256=e4527d2738dbbf674e01b551d76da716c45f3339606148daa31144f978eca80a exit=0 tests="89 passed (89)" preconditions=0
+      accepted web-appearance-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=91b4164c8a832aa7d4f29a8fe7616bf8ffa39da1203ead0b991c23760782d067 exit=0 tests="89 passed (89)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol reset: 34/34 vs accepted 34/34; names/statuses equal=true
+      new web-appearance-recovery-sol/reset-apprail-final-v1-f9eb4b1.log sha256=3ddd834b32cb4e47751a03c501ecb61c87c348d974d181b4e7ce74e07d1c185a exit=0 tests="34 passed (34)" preconditions=0
+      accepted web-appearance-recovery-sol/reset-appearance-final-v1-419e56d.log sha256=81aaf11d19688ea07b705f43ac26c270e078a7efa7d4eda85907ea95228e8545 exit=0 tests="34 passed (34)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol queues: 56/56 vs accepted 56/56; names/statuses equal=true
+      new web-appearance-recovery-sol/queues-apprail-final-v1-f9eb4b1.log sha256=56b301d388caea558c9dc5e5a649579a5130f84f910aad64fe3760dab285cb38 exit=0 tests="56 passed (56)" preconditions=0
+      accepted web-appearance-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=c5b9b2b2e51b88ce3b4922f27b1589775e6f144d53b797dd893b7b0083ff3b59 exit=0 tests="56 passed (56)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol continuity-export: 24/26 vs accepted 24/26 [frozen; §13 predicts 24/26 (006 OE-1, 007 OE-2)]; names/statuses equal=true
+      new web-appearance-recovery-sol/continuity-export-apprail-final-v1-f9eb4b1.log sha256=ea440facce1e28f9820dc62c7b8e79d288df149dd29bfb781867eef8fa7629d9 exit=1 tests="2 failed | 24 passed (26)" preconditions=0
+      accepted web-appearance-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=ecb2cf50a2916f82d638e93dbca72a8433f31e4f3bef26476381b98f8387df23 exit=1 tests="2 failed | 24 passed (26)" preconditions=0
+      oracle_sha256 equal=true
+      non-pass: INV §7 an unrelated held account lifecycle lock never delays a device edit or a reset
+      non-pass: §7.3 §7.6 unmount removes the unload listener and detaches old callbacks; committed writes and removals are never undone
+MATCH appearance-sol host: 33/33 vs accepted 33/33; names/statuses equal=true
+      new web-appearance-recovery-sol/host-apprail-final-v1-f9eb4b1.log sha256=ccc392d59dc9913cfc55954f889326f0516973ff31ce6cc1cdddab073d476c52 exit=0 tests="33 passed (33)" preconditions=0
+      accepted web-appearance-recovery-sol/host-appearance-final-v1-419e56d.log sha256=65142e3d18e53d7a0e21a8405edd3df39e153b646a407b7e54661f0d70803662 exit=0 tests="33 passed (33)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol retry-all: 48/48 vs accepted 48/48; names/statuses equal=true
+      new web-appearance-recovery-sol/retry-all-apprail-final-v1-f9eb4b1.log sha256=ecabc62da195accd3fd5c8cc8fc4002c942c96055bb2a0dca117e9818f0d20f0 exit=0 tests="48 passed (48)" preconditions=0
+      accepted web-appearance-recovery-sol/retry-all-appearance-final-v1-419e56d.log sha256=e87c05693358d7d368ac66bc5be73f6e7af638cfbae3fc546635bf65ff2370e4 exit=0 tests="48 passed (48)" preconditions=0
+      oracle_sha256 equal=true
+MATCH appearance-sol original: 187/187 vs accepted 185/185; names/statuses equal=false; additive TP-RAIL-1/2 only=true
+      new web-appearance-recovery-sol/original-apprail-final-v1-f9eb4b1.log sha256=8f427689ae7e9278188fc8348dea141611bdf402729be911fb6c85590f0f5c1c exit=0 tests="137 passed (137)" preconditions=0
+      accepted web-appearance-recovery-sol/original-appearance-final-v1-419e56d.log sha256=946c8481a9c353178b3cae89dde1f258dba85079872984305f91ed1182b13837 exit=0 tests="137 passed (137)" preconditions=0
+      oracle_sha256 equal=true
+      added: PASSED | [shell-topbar] Topbar TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover
+      added: PASSED | [shell-topbar] Topbar TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged
+MATCH OE corrected continuity-export (judging copy): 26/26 vs accepted 26/26 [§13 predicts 26/26]
+      new web-appearance-recovery-oracle-erratum/corrected-apprail-final-v1-f9eb4b1.log sha256=8da0b9c7381759280804588f1c8f1b0a8b567040755c0092543a82185e6d5659 exit=0 tests="26 passed (26)" preconditions=0
+      accepted web-appearance-recovery-oracle-erratum/corrected-appearance-final-v1-419e56d.log sha256=d2ce51d322271487a45e421e93693763d7faf81e365fc3a22bad292348a19bfa exit=0 tests="26 passed (26)" preconditions=0
+MATCH appearance parent host: 33/33 vs accepted 33/33
+      new web-appearance-recovery-independent/host-apprail-final-v1-f9eb4b1.log sha256=5b867c0f89fe3ab90223e7f978f32e3e8c324145e70af124ae88ebba36c87f2b exit=0 tests="33 passed (33)" preconditions=0
+      accepted web-appearance-recovery-independent/host-appearance-final-v1-419e56d.log sha256=e010516873a940f6e61b997a1086a97b4a2b0b1e62beb1c81e43c492c6eae334 exit=0 tests="33 passed (33)" preconditions=0
+MATCH appearance package test: files=11 tests=137 passed=137 vs accepted 11/137 (per-file equal=true)
+      new web-appearance-recovery-final/appearance-test-apprail-final-v1-f9eb4b1.log sha256=3dc4fbfe4e11bc90ba19242cf0028d97212d45f181b452c9d9479ab9ccdacaa3 exit=0 tests="137 passed (137)" preconditions=0
+      accepted web-appearance-recovery-final/appearance-test-appearance-final-v1-419e56d.log sha256=4b986489a694c22f3c49e1bbab18f789e94ed081dbb6307e6dbff70f3773f934 exit=0 tests="137 passed (137)" preconditions=0
+## D. Features (accepted ec55f9e): Sol seven modes, downstream three ways at both revisions, host, package and reader tests
+MATCH features-sol bytes: 17/17 vs accepted 17/17; names/statuses equal=true
+      new web-features-recovery-sol/bytes-apprail-final-v1-f9eb4b1.log sha256=69811961af443798d3864ef880cf97e6201d816f429b9ab66530921befbefbca exit=0 tests="17 passed (17)" preconditions=0
+      accepted web-features-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=1b578329deba12bb1763620b4fa031608d64704aaebfb23ca25065d29b86abcd exit=0 tests="17 passed (17)" preconditions=0
+      oracle_sha256 equal=true
+MATCH features-sol fields: 49/49 vs accepted 49/49; names/statuses equal=true
+      new web-features-recovery-sol/fields-apprail-final-v1-f9eb4b1.log sha256=5aa03f2172ee92db65ae4a54ad0559357bb34d9673374ad28d78600d5cb4a82a exit=0 tests="49 passed (49)" preconditions=0
+      accepted web-features-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=eed4822d5ebba7ab8ee4a2d01a4a5430ed666a4290b85db819749a25359ceb8e exit=0 tests="49 passed (49)" preconditions=0
+      oracle_sha256 equal=true
+MATCH features-sol reset: 31/31 vs accepted 31/31; names/statuses equal=true
+      new web-features-recovery-sol/reset-apprail-final-v1-f9eb4b1.log sha256=b58a9fa46001a8ef807a814c268600a73bf96685a6ee817d57911430644ff67b exit=0 tests="31 passed (31)" preconditions=0
+      accepted web-features-recovery-sol/reset-appearance-final-v1-419e56d.log sha256=d225025ce443e861475d70749ecc18f17cc6c3daf5219e162928686a42423ce3 exit=0 tests="31 passed (31)" preconditions=0
+      oracle_sha256 equal=true
+MATCH features-sol queues: 40/40 vs accepted 40/40; names/statuses equal=true
+      new web-features-recovery-sol/queues-apprail-final-v1-f9eb4b1.log sha256=4d307c05006e6e4932bc19d7051aa268a2427065b520ce913d0db2e69aabdfdc exit=0 tests="40 passed (40)" preconditions=0
+      accepted web-features-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=c2eceefd3f9e165f8aaef2b69501f99d851aa38dbf1e809f9561a573adc4925e exit=0 tests="40 passed (40)" preconditions=0
+      oracle_sha256 equal=true
+MATCH features-sol continuity-export: 26/26 vs accepted 26/26; names/statuses equal=true
+      new web-features-recovery-sol/continuity-export-apprail-final-v1-f9eb4b1.log sha256=c4bc122ff23a2d48437d0024c56051de9b9716e470f5d2c1549e058af1dafb2f exit=0 tests="26 passed (26)" preconditions=0
+      accepted web-features-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=5075920292da74a7a7e3d1051b3fc6f223c14407e442cf526dc3891519aeed0b exit=0 tests="26 passed (26)" preconditions=0
+      oracle_sha256 equal=true
+MATCH features-sol original: 6/6 vs accepted 6/6; names/statuses equal=true
+      new web-features-recovery-sol/original-apprail-final-v1-f9eb4b1.log sha256=eb552bea3cc362bb0173613c063eac7f77455a3c3b7ec4c364bd67fe9d0469fd exit=0 tests="6 passed (6)" preconditions=0
+      accepted web-features-recovery-sol/original-appearance-final-v1-419e56d.log sha256=80ef943098f07f31e70ba130c4ed2f78f1751c27ed8f61baab5d1a214a8196a7 exit=0 tests="6 passed (6)" preconditions=0
+      oracle_sha256 equal=true
+MATCH Features downstream frozen @f9eb4b1: 13/15; non-pass 012 PRECONDITION, 014 PRECONDITION [§13 predicts 13/15 (case 012 PRECONDITION, F-FD1; case 014 PRECONDITION, A7)]
+      run web-features-recovery-sol/downstream-apprail-final-v1-f9eb4b1.log sha256=3ae4d8a40ac416a22522638ac94681b7d8cc059850eb9454cb328f85b2b01431 exit=1 tests="2 failed | 13 passed (15)" preconditions=8
+      
+      case 014 first line: Error: PRECONDITION: the drag-reorder persisted a changed rail order
+MATCH Features downstream frozen @419e56d: 14/15; non-pass 012 PRECONDITION [§13 predicts 14/15 (case 012 PRECONDITION, F-FD1)]
+      run web-features-recovery-sol/downstream-apprail-final-v1-419e56d.log sha256=95ca0bf779f69dd49043fd380e99c18fd97e76df1a88305cf2453875fe1486ba exit=1 tests="1 failed | 14 passed (15)" preconditions=4
+      
+MATCH Features downstream C-FD1 @f9eb4b1: 14/15; non-pass 014 PRECONDITION [§13 predicts 14/15 (case 014 PRECONDITION, A7)]
+      run web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-apprail-final-v1-f9eb4b1.log sha256=8aeb646255eac8eed1cc5be9d4f17c40e777c7fe7c4295a066874813ea4ef8c0 exit=1 tests="1 failed | 14 passed (15)" preconditions=4
+      diagnostic_runner_sha256=cfe596be41218d288362a34ccd06c63a5d3c7c99ec7a625c4f6d06d611950810 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1 (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+      case 014 first line: Error: PRECONDITION: the drag-reorder persisted a changed rail order
+MATCH Features downstream C-FD1 @419e56d: 15/15; non-pass none [§13 predicts 15/15]
+      run web-appearance-recovery-final/diagnostics/features-sol-downstream-corrected-apprail-final-v1-419e56d.log sha256=29ab19f1fa01993ee96b511b18588aa30a8dda67cfd452a05e8cf18f29fea52f exit=0 tests="15 passed (15)" preconditions=0
+      diagnostic_runner_sha256=cfe596be41218d288362a34ccd06c63a5d3c7c99ec7a625c4f6d06d611950810 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=7bb5ad3cda8fec7957e999c2aa62956212b52934be20b942df72e286e90959e1 (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+MATCH Features downstream C-RD1 (judging) @f9eb4b1: 15/15; non-pass none [§13 predicts 15/15]
+      run web-apprail-order-recovery-sol/features-sol-downstream-c-rd1-apprail-final-v1-f9eb4b1.log sha256=a2428179491794154bbed3bfa133b4e2ea8a15de4bc5f34d24ccf1d85f8f0730 exit=0 tests="15 passed (15)" preconditions=0
+      diagnostic_runner_sha256=7d6e8c3fdce61fb66e7be26ebac9908144401eaa722cea10f86f129dd5cdcbe0 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=6c57164ef5040444dad96fbf5933e90b095d465c64bdd6e8e5f3dcb6be2d1c7a (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+MATCH Features downstream C-RD1 (judging) @419e56d: 15/15; non-pass none [§13 predicts 15/15]
+      run web-apprail-order-recovery-sol/features-sol-downstream-c-rd1-apprail-final-v1-419e56d.log sha256=41f97eccc4a77a2ec6e5e636ca844b722892e5ecb969318ae15c0ce0427fef7f exit=0 tests="15 passed (15)" preconditions=0
+      diagnostic_runner_sha256=7d6e8c3fdce61fb66e7be26ebac9908144401eaa722cea10f86f129dd5cdcbe0 corrected_oracle_staged_as=docs/reviews/web-features-recovery-sol/downstream.test.tsx corrected_oracle_sha256=6c57164ef5040444dad96fbf5933e90b095d465c64bdd6e8e5f3dcb6be2d1c7a (oracle_sha256 below lists the frozen files read; downstream.test.tsx there is the frozen hash, replaced in the run)
+MATCH features host: 40/40 vs accepted 40/40
+      new web-features-recovery-independent/host-apprail-final-v1-f9eb4b1.log sha256=86fe4956ba096f234d9afc729dc52c428f35fa45eefb3ff04082b76041974576 exit=0 tests="40 passed (40)" preconditions=0
+      accepted web-features-recovery-independent/host-appearance-final-v1-419e56d.log sha256=1c91a0a8ad9faccdb369617b9952553f0f9bb79f8b64b227fa0aae8331c9e14d exit=0 tests="40 passed (40)" preconditions=0
+MATCH features-test: files=7 tests=45 passed=45 vs accepted 7/45 (per-file equal=true)
+      new web-features-recovery-final/features-test-apprail-final-v1-f9eb4b1.log sha256=2c39b20bcd1e36b5bee5a4b7f7d49ead37187b56c140866d61d6b1cba6139136 exit=0 tests="45 passed (45)" preconditions=0
+      accepted web-features-recovery-final/features-test-appearance-final-v1-419e56d.log sha256=fc4ea3738e168b994fd604ca62b0d828d1b5ac8736d30d89a98d96ded4f116a3 exit=0 tests="45 passed (45)" preconditions=0
+MATCH features-readers: files=5 tests=17 passed=17 vs accepted 5/17 (per-file equal=true)
+      new web-features-recovery-final/features-readers-apprail-final-v1-f9eb4b1.log sha256=a59b4a95100b1885e385b0464798de90c4df1c3dea9f6d1a89927ba5572040ba exit=0 tests="17 passed (17)" preconditions=0
+      accepted web-features-recovery-final/features-readers-features-final-v1-5cd63ff.log sha256=d491f6fb39d5f2fe793e8361c88776a16938c4850139ddc80a53cbf07cc0229c exit=0 tests="17 passed (17)" preconditions=0
+## E. More (accepted 27adb10), Notifications (ad223a2) and Date & Time (d0d934d): verify-callers.mjs 17 modes and C-FB002
+MATCH more-fields @f9eb4b1: 22/22 vs accepted 22/22 (receipt count 22)
+      new web-features-recovery-final/more-fields-apprail-final-v1-f9eb4b1.log sha256=19854a92c249a17cfcfb3ad26d19125bc539efed71337a6b1f9b9ab6fa98d458 exit=0 tests="22 passed (22)" preconditions=0
+      accepted web-features-recovery-final/more-fields-appearance-final-v1-419e56d.log sha256=adff9ea4d35b224d4a9423fcd980a8e10a5623a005acfcc7498a6e50fd02502c exit=0 tests="22 passed (22)" preconditions=0
+      names equal=true
+MATCH more-reset @f9eb4b1: 20/20 vs accepted 20/20 (receipt count 20)
+      new web-features-recovery-final/more-reset-apprail-final-v1-f9eb4b1.log sha256=bcb100dfcf62b6616cdd89c87504efa9d9fc5f6a3621797c71d0924d5f43f775 exit=0 tests="20 passed (20)" preconditions=0
+      accepted web-features-recovery-final/more-reset-appearance-final-v1-419e56d.log sha256=76f05f0a4c41366841c0356270efd1f2ecee3ff90a86d41bf83918b1108c3e06 exit=0 tests="20 passed (20)" preconditions=0
+      names equal=true
+MATCH more-queues @f9eb4b1: 14/14 vs accepted 14/14 (receipt count 14)
+      new web-features-recovery-final/more-queues-apprail-final-v1-f9eb4b1.log sha256=8d6717930a6acdedffd6ce8d2964c9668972ccffd8e4a0fc3014c42a532ca224 exit=0 tests="14 passed (14)" preconditions=0
+      accepted web-features-recovery-final/more-queues-appearance-final-v1-419e56d.log sha256=7867d6f5c2b88fd6ba5e943cc1a4403b29cd9bea8df2259ae323d53ce7130ff3 exit=0 tests="14 passed (14)" preconditions=0
+      names equal=true
+MATCH more-boundaries @f9eb4b1: 10/10 vs accepted 10/10 (receipt count 10) [frozen oracle, recorded as it falls; nondeterministic per F-B002; §13: not judging]
+      new web-features-recovery-final/more-boundaries-apprail-final-v1-f9eb4b1.log sha256=5ba53c5c92b98dc30b18ec2ba3a4c8027d9574c490560386a4a421d3504a4274 exit=0 tests="10 passed (10)" preconditions=0
+      accepted web-features-recovery-final/more-boundaries-appearance-final-v1-419e56d.log sha256=ab59784d6af3270ea2c4b7be5d31b4cc7972fc143587c19b542428e35350d866 exit=0 tests="10 passed (10)" preconditions=0
+      names equal=true; frozen outcome 10/10 exit=0
+MATCH more-owner-export @f9eb4b1: 13/13 vs accepted 13/13 (receipt count 13)
+      new web-features-recovery-final/more-owner-export-apprail-final-v1-f9eb4b1.log sha256=6eeb378a5fa789fcb1c10e23bcee5db07b8547dc89322d7887e8f441ad133d5a exit=0 tests="13 passed (13)" preconditions=0
+      accepted web-features-recovery-final/more-owner-export-appearance-final-v1-419e56d.log sha256=6357d1e817dd0b51ce7113627ffdfc5defac1c51ec74c7528294045cf02a5f9d exit=0 tests="13 passed (13)" preconditions=0
+      names equal=true
+MATCH more-original @f9eb4b1: 15/15 vs accepted 15/15 (receipt count 15)
+      new web-features-recovery-final/more-original-apprail-final-v1-f9eb4b1.log sha256=8346ae977cd0e6a60da734f7a54f21bf52e7a37835cae77ff87331ececf7782c exit=0 tests="15 passed (15)" preconditions=0
+      accepted web-features-recovery-final/more-original-appearance-final-v1-419e56d.log sha256=c009da759897952eb9a79a88ed00ed2bc6e2f3413a66256f62805a705fcddd32 exit=0 tests="15 passed (15)" preconditions=0
+      names equal=true
+MATCH more-host @f9eb4b1: 11/11 vs accepted 11/11 (receipt count 11)
+      new web-features-recovery-final/more-host-apprail-final-v1-f9eb4b1.log sha256=4133baabcb9069395bd13628d91ca8fbb8521f20d2de67dd988738c7e4f7890b exit=0 tests="11 passed (11)" preconditions=0
+      accepted web-features-recovery-final/more-host-appearance-final-v1-419e56d.log sha256=0d81d7c5f9947273bd3f32cb398ebeaa1c8acceae8058f73f1b9901ee1d574af exit=0 tests="11 passed (11)" preconditions=0
+      names equal=true
+MATCH notifications-core @f9eb4b1: 11/11 vs accepted 11/11 (receipt count 11)
+      new web-features-recovery-final/notifications-core-apprail-final-v1-f9eb4b1.log sha256=7c1c6bd68a2eadeb98a0bafcf912c0627219f20866172be61708b4cbc7832992 exit=0 tests="11 passed (11)" preconditions=0
+      accepted web-features-recovery-final/notifications-core-appearance-final-v1-419e56d.log sha256=ad6e084c928aec36cbda85285f57b8d7698f7b8cd37d1c6c0c7b88f1de51e160 exit=0 tests="11 passed (11)" preconditions=0
+      names equal=true
+MATCH notifications-recovery @f9eb4b1: 3/3 vs accepted 3/3 (receipt count 3)
+      new web-features-recovery-final/notifications-recovery-apprail-final-v1-f9eb4b1.log sha256=a8cff3bc96e0dc5f54e1fd0d3cc1fa800030ec22ad0dc38948d03d54e8d4a608 exit=0 tests="3 passed (3)" preconditions=0
+      accepted web-features-recovery-final/notifications-recovery-appearance-final-v1-419e56d.log sha256=87dcf77955857cb6e216a93fc52f80157060b904690771df5855e6a006d1c99e exit=0 tests="3 passed (3)" preconditions=0
+      names equal=true
+MATCH notifications-operations @f9eb4b1: 2/2 vs accepted 2/2 (receipt count 2)
+      new web-features-recovery-final/notifications-operations-apprail-final-v1-f9eb4b1.log sha256=09d153b65a759fd29b9aca9998af0e23f2b0e846da52eea5631e548fe5f64713 exit=0 tests="2 passed (2)" preconditions=0
+      accepted web-features-recovery-final/notifications-operations-appearance-final-v1-419e56d.log sha256=08e815df02f7c52c9d05b37af1e7907c9749088ecafb63f9623ae89040029264 exit=0 tests="2 passed (2)" preconditions=0
+      names equal=true
+MATCH notifications-boundaries @f9eb4b1: 4/4 vs accepted 4/4 (receipt count 4)
+      new web-features-recovery-final/notifications-boundaries-apprail-final-v1-f9eb4b1.log sha256=8864e71938be87c29c04f501d6f5f35156053e01e0619bb208b0adee509dd4e8 exit=0 tests="4 passed (4)" preconditions=0
+      accepted web-features-recovery-final/notifications-boundaries-appearance-final-v1-419e56d.log sha256=ea21d24ad5aa706d2fdd99ec21eba305251a095c6e9d570d70240ea6649eac6c exit=0 tests="4 passed (4)" preconditions=0
+      names equal=true
+MATCH notifications-extended @f9eb4b1: 10/10 vs accepted 10/10 (receipt count 10)
+      new web-features-recovery-final/notifications-extended-apprail-final-v1-f9eb4b1.log sha256=7726fa5d413cd42514babf3523fd990ca8a53d14e815bc5a1ff5ddaa42607b2a exit=0 tests="10 passed (10)" preconditions=0
+      accepted web-features-recovery-final/notifications-extended-appearance-final-v1-419e56d.log sha256=bf03979dd7cbcfada64306facdcfae1afbffbab667dcb22895413e14ccbb966c exit=0 tests="10 passed (10)" preconditions=0
+      names equal=true
+MATCH notifications-original @f9eb4b1: 11/11 vs accepted 11/11 (receipt count 11)
+      new web-features-recovery-final/notifications-original-apprail-final-v1-f9eb4b1.log sha256=8bb57f82fd843e82e87fd193336c790bf8e502fdbbd6601dc4a3b379f382fe5d exit=0 tests="11 passed (11)" preconditions=0
+      accepted web-features-recovery-final/notifications-original-appearance-final-v1-419e56d.log sha256=eeddefa60665c61b8b3aa8447eba9e32f02041f15c987b6e52133142382ec6e2 exit=0 tests="11 passed (11)" preconditions=0
+      names equal=true
+MATCH notifications-astra-boundaries @f9eb4b1: 24/24 vs accepted 24/24 (receipt count 24)
+      new web-features-recovery-final/notifications-astra-boundaries-apprail-final-v1-f9eb4b1.log sha256=8001e448064f828db9cd6e8811cc5c39731f0f4f18019d604cd1b3144965de4a exit=0 tests="24 passed (24)" preconditions=0
+      accepted web-features-recovery-final/notifications-astra-boundaries-appearance-final-v1-419e56d.log sha256=917804b5f684e9000cda2551d195b7217ccbfe1a099e3558ac45ad843a143a2a exit=0 tests="24 passed (24)" preconditions=0
+      names equal=true
+MATCH notifications-astra-host @f9eb4b1: 15/15 vs accepted 15/15 (receipt count 15)
+      new web-features-recovery-final/notifications-astra-host-apprail-final-v1-f9eb4b1.log sha256=54215c9065b9ac2f3fa221e0612666ee3e68bbff37fce93916fdffeb36508d7b exit=0 tests="15 passed (15)" preconditions=0
+      accepted web-features-recovery-final/notifications-astra-host-appearance-final-v1-419e56d.log sha256=9fe2e31f5ff44d7948ecb05e0fdd456211e869e06cafabf3eae051038223e0d3 exit=0 tests="15 passed (15)" preconditions=0
+      names equal=true
+MATCH notifications-parent-host @f9eb4b1: 12/12 vs accepted 12/12 (receipt count 12)
+      new web-features-recovery-final/notifications-parent-host-apprail-final-v1-f9eb4b1.log sha256=3a517692c87f57127e53666de9ed120258ad00e4173ecdc2e354a6275c8b9b79 exit=0 tests="12 passed (12)" preconditions=0
+      accepted web-features-recovery-final/notifications-parent-host-appearance-final-v1-419e56d.log sha256=6f6ba35e1b7f54a727d23606026154291710ea7b3f5e10591953e63e37bf8155 exit=0 tests="12 passed (12)" preconditions=0
+      names equal=true
+MATCH datetime @f9eb4b1: 7/7 vs accepted 7/7 (receipt count 7)
+      new web-features-recovery-final/datetime-apprail-final-v1-f9eb4b1.log sha256=6b412979aed81806482ae3e4431ff2f31e9a913aaf74a15a5d477e50da53dc3b exit=0 tests="7 passed (7)" preconditions=0
+      accepted web-features-recovery-final/datetime-appearance-final-v1-419e56d.log sha256=540f9efde01df20c51e51bb8884207a2d9efca3e4b6868a3f4fab31349dc9f03 exit=0 tests="7 passed (7)" preconditions=0
+      names equal=true
+MATCH More boundaries corrected (C-FB002, judging) @f9eb4b1: 10/10, RangeError cases/lines 0/0 [§13 predicts 10/10]
+      new web-more-recovery-fb002/logs/corrected-full-apprail-final-v1-f9eb4b1.log sha256=06726b6ede08e3c0874f9a43c3a3f0d71054f5a74a4031ea8b647de849c9684b exit=0 tests="10 passed (10)" preconditions=0
+      accepted web-more-recovery-fb002/logs/corrected-full-appearance-final-v1-419e56d.log sha256=6ea3eb542a95866636856d42735ff7cf2da2d9ff2597efe08cc41d08a4412cb4 exit=0 tests="10 passed (10)" preconditions=0
+## F. Sticky (accepted 699f6e6): Sol five modes and host vs the accepted Appearance final logs at 419e56d
+MATCH sticky bytes: 13/13 vs accepted 13/13 (receipt count 13)
+      new web-sticky-recovery-sol/bytes-apprail-final-v1-f9eb4b1.log sha256=8b0b5e6a4ad83ea77eacf2d2d57bdfce0f9b0f3295af636f2640f5e9fdb1c0e0 exit=0 tests="13 passed (13)" preconditions=0
+      accepted web-sticky-recovery-sol/bytes-appearance-final-v1-419e56d.log sha256=748d5d832d6c45cac18cab789bcab2192198dc7cca1db6427a816a32b1b70871 exit=0 tests="13 passed (13)" preconditions=0
+      ordered test titles equal=true (13); oracle_sha256 equal=true
+MATCH sticky fields: 47/47 vs accepted 47/47 (receipt count 47)
+      new web-sticky-recovery-sol/fields-apprail-final-v1-f9eb4b1.log sha256=079fb6f38f992071c6067f2dfb57b87f3d81197c31f7d32a895c460656315a41 exit=0 tests="47 passed (47)" preconditions=0
+      accepted web-sticky-recovery-sol/fields-appearance-final-v1-419e56d.log sha256=563e7de6700f29e41b3ab1b5b1a3e177f18cfaf4f93247bcd93588b1b7d647e6 exit=0 tests="47 passed (47)" preconditions=0
+      ordered test titles equal=true (47); oracle_sha256 equal=true
+MATCH sticky queues: 27/27 vs accepted 27/27 (receipt count 27)
+      new web-sticky-recovery-sol/queues-apprail-final-v1-f9eb4b1.log sha256=bc5ffd2cbf791e8a748fc57e224cbf00f422585a61beb990038cb518810bd30b exit=0 tests="27 passed (27)" preconditions=0
+      accepted web-sticky-recovery-sol/queues-appearance-final-v1-419e56d.log sha256=9fbc33b699ef56cdd0daabf48fff68b7fb1715798b12d19e2b9d5fca46cf0ebf exit=0 tests="27 passed (27)" preconditions=0
+      ordered test titles equal=true (27); oracle_sha256 equal=true
+MATCH sticky continuity-export: 22/22 vs accepted 22/22 (receipt count 22)
+      new web-sticky-recovery-sol/continuity-export-apprail-final-v1-f9eb4b1.log sha256=2ec4d85a16c58b59acccd0f68adee9d8d730ab25b36599487f41360953b5e737 exit=0 tests="22 passed (22)" preconditions=0
+      accepted web-sticky-recovery-sol/continuity-export-appearance-final-v1-419e56d.log sha256=af29370482e4888f53ba6fde4440428944fd2c73af39d3fd0b4aaa8bd4c9e810 exit=0 tests="22 passed (22)" preconditions=0
+      ordered test titles equal=true (22); oracle_sha256 equal=true
+MATCH sticky original: 10/10 vs accepted 10/10 (receipt count 10)
+      new web-sticky-recovery-sol/original-apprail-final-v1-f9eb4b1.log sha256=ed2deb0a885347b6b39f2b0b21bfd0de53d556ce3a0bc5e32d24c6631748cc7e exit=0 tests="10 passed (10)" preconditions=0
+      accepted web-sticky-recovery-sol/original-appearance-final-v1-419e56d.log sha256=33d49939f9e8c153db550984b3a6f1f1b76e39d85a31e57f04295c1fe6a05be6 exit=0 tests="10 passed (10)" preconditions=0
+      ordered test titles equal=true (10); oracle_sha256 equal=true
+MATCH sticky host: 28/28 vs accepted 28/28 (receipt count 28)
+      new web-sticky-recovery-independent/host-apprail-final-v1-f9eb4b1.log sha256=354436aa2ace53f38a46bf312ff685da961e64e834775652cec7b777e47e91be exit=0 tests="28 passed (28)" preconditions=0
+      accepted web-sticky-recovery-independent/host-appearance-final-v1-419e56d.log sha256=ec948594e9ea8f5b8efe6608460693fca69f9c1e763a8a6965b912bd5a495c5f exit=0 tests="28 passed (28)" preconditions=0
+      ordered test titles equal=true (28); oracle_sha256 equal=true
+## G. settings-shell and settings-rest packages
+MATCH settings-shell-test: files=11 tests=54 passed=54 vs accepted 11/54 (per-file equal=true)
+      new web-features-recovery-final/settings-shell-test-apprail-final-v1-f9eb4b1.log sha256=adccdac78fc7e905a8c189a81ec807315bf15a0cbf5f63e8d876be48fa76edfd exit=0 tests="54 passed (54)" preconditions=0
+      accepted web-features-recovery-final/settings-shell-test-appearance-final-v1-419e56d.log sha256=f63be7fac4cbe7400366abf87d057a0a47f5bfe205c0cf4cf05ce1d8da4d2f66 exit=0 tests="54 passed (54)" preconditions=0
+MATCH settings-rest-test: files=44 tests=314 passed=314 vs accepted 44/314 (per-file equal=true)
+      new web-features-recovery-final/settings-rest-test-apprail-final-v1-f9eb4b1.log sha256=0848048bd95bdc84764c11ccf74980eef746d8d5a2a2171d19d8adaa084c451f exit=0 tests="314 passed (314)" preconditions=0
+      accepted web-features-recovery-final/settings-rest-test-appearance-final-v1-419e56d.log sha256=863283f39d93164ac34363538904497913577de7078522b432991e7c162a0d88 exit=0 tests="314 passed (314)" preconditions=0
+## H. Smart Lists, Collaborate, Pomodoro and Dashboard Header host suites (E23 copies of the frozen older runners, host-suites/; default reporter) vs their accepted logs, with 419e56d controls
+MATCH smart-lists-astra export @f9eb4b1: 8/8 (accepted count 8)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/export-apprail-final-v1-f9eb4b1.log sha256=b1fecae4f0a1f39edd91b1be3e19f7227c69f81d31def03d8c61d6d21f12c8e5 exit=0 tests="8 passed (8)" preconditions=0
+      files docs/reviews/web-smart-lists-recovery-astra/export.test.tsx=8
+      accepted web-smart-lists-recovery-astra/export-f1post1-f359be6.log sha256=5d1ca03cdb2259cd298d06b632b3584ba5cb071fe5dda25a5de15b0a63a8e3e1 exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/export-apprail-final-v1-419e56d.log sha256=0816b61051ce0637c4653d0c132d2fc68175151e2370b7b0c7cd534a6a2698c7 exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra host @f9eb4b1: 10/10 (accepted count 10)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-apprail-final-v1-f9eb4b1.log sha256=7915361f589c9f088035dd69466f636f591867c685447a89c195150463cae19c exit=0 tests="10 passed (10)" preconditions=0
+      files docs/reviews/web-smart-lists-recovery-astra/host.test.tsx=10
+      accepted web-smart-lists-recovery-astra/host-f1post1-f359be6.log sha256=1bcc92e1d28d6c7b4f51ba75e217529049e30789befed1125bd2a91ea038057f exit=0 tests="10 passed (10)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-apprail-final-v1-419e56d.log sha256=fcceb9a03c0143354f30fa68b51c0264d8e5b75993c40d59f8075dfed5636e1c exit=0 tests="10 passed (10)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra host-entry @f9eb4b1: 3/3 (accepted count 3)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-entry-apprail-final-v1-f9eb4b1.log sha256=8f47a078ffb631f733ac51345ae84ba994248ae24a26e5467fb01fbd4c651933 exit=0 tests="3 passed (3)" preconditions=0
+      files docs/reviews/web-smart-lists-recovery-astra/host-entry.test.tsx=3
+      accepted web-smart-lists-recovery-astra/host-entry-f1post1-f359be6.log sha256=94f5c657dd69e813135a82b6bce59485c526a9939f5537f51793a1bcb02ac396 exit=0 tests="3 passed (3)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-entry-apprail-final-v1-419e56d.log sha256=8f7763f2d010bc04cf692cca46f963abfc8c909904199ae4b66b4311e775e3d9 exit=0 tests="3 passed (3)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra host-wrapper @f9eb4b1: 5/5 (accepted count 5)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-wrapper-apprail-final-v1-f9eb4b1.log sha256=7f01090b3347c04269b7578037e375644f8ce840abe8c05249fb7ed6d84b3781 exit=0 tests="5 passed (5)" preconditions=0
+      files docs/reviews/web-smart-lists-recovery-astra/host-wrapper.test.tsx=5
+      accepted web-smart-lists-recovery-astra/host-wrapper-f1post1-f359be6.log sha256=6142a52688e329ee492270f6e7c9d35580214bc9981e9e621fdb27aba84349c7 exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/host-wrapper-apprail-final-v1-419e56d.log sha256=7edb73b22b5d1351c086f7c41db12fa5eed6fea8ba6a8c72a7a9dda4c10a819f exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra app @f9eb4b1: 5/5 (accepted count 5)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/app-apprail-final-v1-f9eb4b1.log sha256=6b4e824d6e26fd9e0cb2e966367f3913f759cdd7b2557c0027c300fcd21d9bf2 exit=0 tests="5 passed (5)" preconditions=0
+      files docs/reviews/web-smart-lists-recovery-astra/app.test.tsx=5
+      accepted web-smart-lists-recovery-astra/app-f1post1-f359be6.log sha256=53aadedd315227c2bbb2eab285a7c05f321e0b6feb60cfe754b94499f2738aa4 exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/app-apprail-final-v1-419e56d.log sha256=91603f95470988049dbf0d0fec3a23ab16496cc639a09fb3539fd00ac3ade56d exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra original39 @f9eb4b1: 39/39 (accepted count 39)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/original39-apprail-final-v1-f9eb4b1.log sha256=a967ac6c947b55265c20df14636fc4bd85482a7766f817d66af67442f4a6e274 exit=0 tests="39 passed (39)" preconditions=0
+      files docs/reviews/web-d2-smart-lists-astra/contracts.test.tsx=39
+      accepted web-smart-lists-recovery-astra/original39-f1post1-f359be6.log sha256=e4c9bce83d0b7ede468d59c144ddee524dbe5bc7a5da44b6f85678e7358924e5 exit=0 tests="39 passed (39)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/original39-apprail-final-v1-419e56d.log sha256=89145fb5556ac87799209e4d37f6b85624484a8635a65dffd1bcf208517e08c8 exit=0 tests="39 passed (39)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra original-parent @f9eb4b1: 4/4 (accepted count 4)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/original-parent-apprail-final-v1-f9eb4b1.log sha256=6a364276d83b467b8210d21b2135e62fb6f38a27fda436771bcac93feaa0ffb5 exit=0 tests="4 passed (4)" preconditions=0
+      files docs/reviews/web-d2-smart-lists-independent/contracts.test.tsx=4
+      accepted web-smart-lists-recovery-astra/original-parent-f1post1-f359be6.log sha256=158d1208598fb2c2b111c26dc255aa4993db4e0e3e4b217ee2d77c4ce8c892da exit=0 tests="4 passed (4)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/original-parent-apprail-final-v1-419e56d.log sha256=0d4bdcf55bbe7e5d306cdc18d19b7288103d971b4f2d161f215993fd4428bcaa exit=0 tests="4 passed (4)" preconditions=0 per-file equal=true
+MATCH smart-lists-astra package @f9eb4b1: 314/314 (accepted count 314)
+      new web-apprail-order-recovery-final/host-suites/web-smart-lists-recovery-astra/package-apprail-final-v1-f9eb4b1.log sha256=26f100a3dcdf27222ec65f44bde96607f2444acbfdc66d08351e3d498da16804 exit=0 tests="314 passed (314)" preconditions=0
+      files packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx=12 packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx=13 packages/plugin-web-settings-rest/src/__tests__/applyRestPanesToRegistry.test.ts=5 packages/plugin-web-settings-rest/src/__tests__/buildAuthorizeUrl.test.ts=6 packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx=8 packages/plugin-web-settings-rest/src/__tests__/DeleteAccountConfirmModal.test.tsx=19 packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/hotkeysPane.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/index-barrel.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx=18 packages/plugin-web-settings-rest/src/__tests__/integrationStubBanner.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/no-hex-literals.test.ts=1 packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts=7 packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/oauthState.test.ts=12 packages/plugin-web-settings-rest/src/__tests__/pkce.test.ts=8 packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/premiumDisclosureBanner.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/premiumTier.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/premiumUpgradeButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/restPanesById.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx=14 packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/usePremiumConfig.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx=6
+      accepted web-smart-lists-recovery-astra/package-f1post1-f359be6.log sha256=2289f3b16d732ba8d7412324f966401d446665fa51fc57e52213934498351c6d exit=0 tests="314 passed (314)" preconditions=0 per-file equal=true
+MATCH collaborate-independent contracts @f9eb4b1: 37/37 (accepted count 37)
+      new web-apprail-order-recovery-final/host-suites/web-collaborate-recovery-independent/contracts-apprail-final-v1-f9eb4b1.log sha256=bae7cc2a3745112551917d9545ecf1e5e4802ca07b1c37f41a6e49d6c5ead068 exit=0 tests="37 passed (37)" preconditions=0
+      files docs/reviews/web-collaborate-recovery-independent/contracts.test.tsx=37
+      accepted web-collaborate-recovery-independent/contracts-lock-complete-c604951.log sha256=4e6d903c1b21fc9eb4699cce78b6f4e2100db7313e6ae2c105ac019ccc80b5d2 exit=0 tests="37 passed (37)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-collaborate-recovery-independent/contracts-apprail-final-v1-419e56d.log sha256=3c0b4afdd4267396f6df26f88f6b4f6138eb67ee12ab99cb2c6fa1a2dc0e95e8 exit=0 tests="37 passed (37)" preconditions=0 per-file equal=true
+MATCH collaborate-independent host @f9eb4b1: 8/8 (accepted count 8)
+      new web-apprail-order-recovery-final/host-suites/web-collaborate-recovery-independent/host-apprail-final-v1-f9eb4b1.log sha256=8553714b01a3e061b90f752ab82248cc2fb1ba3431e895e69ef3a705bf30de60 exit=0 tests="8 passed (8)" preconditions=0
+      files docs/reviews/web-collaborate-recovery-independent/host.test.tsx=8
+      accepted web-collaborate-recovery-independent/host-header-parent-c9a388d.log sha256=70da3b37f11593ea92293f808b71e81eb58b09f72ed92b01c36c8881c77f0498 exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-collaborate-recovery-independent/host-apprail-final-v1-419e56d.log sha256=675a8d662aa052773024d981bb7f5bbf944d27be18fcb656aaa08fa7c7c35b59 exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+MATCH collaborate-independent package @f9eb4b1: 314/314 (accepted count 314)
+      new web-apprail-order-recovery-final/host-suites/web-collaborate-recovery-independent/package-apprail-final-v1-f9eb4b1.log sha256=a562bca1bd2c109a06f0e1c38100d78d760f92f0ae0f5eebb85d95e89d06e8b8 exit=0 tests="314 passed (314)" preconditions=0
+      files packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx=12 packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx=13 packages/plugin-web-settings-rest/src/__tests__/applyRestPanesToRegistry.test.ts=5 packages/plugin-web-settings-rest/src/__tests__/buildAuthorizeUrl.test.ts=6 packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx=8 packages/plugin-web-settings-rest/src/__tests__/DeleteAccountConfirmModal.test.tsx=19 packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/hotkeysPane.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/index-barrel.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx=18 packages/plugin-web-settings-rest/src/__tests__/integrationStubBanner.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/no-hex-literals.test.ts=1 packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts=7 packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/oauthState.test.ts=12 packages/plugin-web-settings-rest/src/__tests__/pkce.test.ts=8 packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/premiumDisclosureBanner.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/premiumTier.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/premiumUpgradeButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/restPanesById.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx=14 packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/usePremiumConfig.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx=6
+      no accepted log of this mode exists; per-file equal to this batch's settings-rest package gate web-features-recovery-final/settings-rest-test-apprail-final-v1-f9eb4b1.log=true
+MATCH pomodoro-independent departure @f9eb4b1: 9/9 (accepted count 9)
+      new web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/departure-apprail-final-v1-f9eb4b1.log sha256=6d06d786decf04f37cd59fc0774227f10886904989bf739b06a5aad99c433d25 exit=0 tests="9 passed (9)" preconditions=0
+      files docs/reviews/web-pomodoro-departure-independent/departure.test.tsx=9
+      accepted web-pomodoro-departure-independent/departure-f1post1-f359be6.log sha256=86708154ba4b9d867105dcb3d85fb40e9b26b7805b24dbc3001df82c1a008261 exit=0 tests="9 passed (9)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/departure-apprail-final-v1-419e56d.log sha256=33ee7d4c1af61816c5ad768d35bc5af5660b299bec60acbacc09dc501bf6475b exit=0 tests="9 passed (9)" preconditions=0 per-file equal=true
+MATCH pomodoro-independent advanced @f9eb4b1: 8/8 (accepted count 8)
+      new web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/advanced-apprail-final-v1-f9eb4b1.log sha256=d0de4fd971281d13b57fd0bd033a948fa1a89b3594d4adc11ef78519d528128f exit=0 tests="8 passed (8)" preconditions=0
+      files docs/reviews/web-pomodoro-departure-independent/advanced.test.tsx=8
+      accepted web-pomodoro-departure-independent/advanced-f1post1-f359be6.log sha256=2cd06ee63ae2c15cfc3704c92433b18d4773e31d7c0ad44e290064d47336992e exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/advanced-apprail-final-v1-419e56d.log sha256=f0003e51a9464b158a360f5ce7470b65f39ee3697da29d77561af408e2b39fb1 exit=0 tests="8 passed (8)" preconditions=0 per-file equal=true
+MATCH pomodoro-independent package @f9eb4b1: 314/314 (accepted count 314)
+      new web-apprail-order-recovery-final/host-suites/web-pomodoro-departure-independent/package-apprail-final-v1-f9eb4b1.log sha256=007c779f9fbb00d431a61dcbc8e2d960c07a88d91c164254bb67920c24e0997f exit=0 tests="314 passed (314)" preconditions=0
+      files packages/plugin-web-settings-rest/src/__tests__/aboutPane.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeleteHttpFailure.test.tsx=7 packages/plugin-web-settings-rest/src/__tests__/accountDeletionRecovery.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/accountPane.test.tsx=12 packages/plugin-web-settings-rest/src/__tests__/aiPane.test.tsx=13 packages/plugin-web-settings-rest/src/__tests__/applyRestPanesToRegistry.test.ts=5 packages/plugin-web-settings-rest/src/__tests__/buildAuthorizeUrl.test.ts=6 packages/plugin-web-settings-rest/src/__tests__/CallbackPage.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/CheckoutCancelPage.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/CheckoutSuccessPage.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/collaboratePane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/dateTimePane.test.tsx=8 packages/plugin-web-settings-rest/src/__tests__/DeleteAccountConfirmModal.test.tsx=19 packages/plugin-web-settings-rest/src/__tests__/DeviceRecoveryExport.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/hotkeysPane.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/index-barrel.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/integrationConnectButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/integrationDisconnectButton.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/integrationProviders.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/integrationsPane.test.tsx=18 packages/plugin-web-settings-rest/src/__tests__/integrationStubBanner.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/morePane.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/no-hex-literals.test.ts=1 packages/plugin-web-settings-rest/src/__tests__/no-localstorage-clear.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-math-random.test.ts=7 packages/plugin-web-settings-rest/src/__tests__/no-stripe-js-bundle.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/no-stripe-secret-key.test.ts=2 packages/plugin-web-settings-rest/src/__tests__/notificationsPane.test.tsx=11 packages/plugin-web-settings-rest/src/__tests__/oauthState.test.ts=12 packages/plugin-web-settings-rest/src/__tests__/pkce.test.ts=8 packages/plugin-web-settings-rest/src/__tests__/premiumCancelButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/premiumDisclosureBanner.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/premiumPane.test.tsx=9 packages/plugin-web-settings-rest/src/__tests__/premiumTier.test.ts=4 packages/plugin-web-settings-rest/src/__tests__/PremiumTierBadge.test.tsx=2 packages/plugin-web-settings-rest/src/__tests__/premiumUpgradeButton.test.tsx=5 packages/plugin-web-settings-rest/src/__tests__/restPanesById.test.ts=3 packages/plugin-web-settings-rest/src/__tests__/smartListsPane.test.tsx=6 packages/plugin-web-settings-rest/src/__tests__/smartListsRecovery.test.tsx=4 packages/plugin-web-settings-rest/src/__tests__/stickyPane.test.tsx=10 packages/plugin-web-settings-rest/src/__tests__/stickyPaneRecovery.test.tsx=14 packages/plugin-web-settings-rest/src/__tests__/useAccountDeleteOrchestrator.test.tsx=15 packages/plugin-web-settings-rest/src/__tests__/usePremiumConfig.test.tsx=3 packages/plugin-web-settings-rest/src/__tests__/usePremiumTier.test.tsx=6
+      accepted web-pomodoro-departure-independent/package-f1post1-f359be6.log sha256=ba42efbc2a81c97d248b10e98277ebdff17fff3e8dfeddddc6ce37a1a593f5db exit=0 tests="314 passed (314)" preconditions=0 per-file equal=true
+MATCH dashboard-header-independent departure @f9eb4b1: 5/5 (accepted count 5)
+      new web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/departure-apprail-final-v1-f9eb4b1.log sha256=f56bf4cee1314881f2a57cdbbd8b756d50c543ce10ea99f96a6ac08db8e72379 exit=0 tests="5 passed (5)" preconditions=0
+      files docs/reviews/web-dashboard-header-departure-independent/departure.test.tsx=5
+      accepted web-dashboard-header-departure-independent/departure-f1post1-f359be6.log sha256=b341d5dc44e19fb282c9343026b3d48b5dad88dae675bc6e257aacc7b7834107 exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/departure-apprail-final-v1-419e56d.log sha256=f0b3d9236c44f6649569003001ffc0f434bfe89669f2d78d3f66329fbaaeabaa exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+MATCH dashboard-header-independent advanced @f9eb4b1: 5/5 (accepted count 5)
+      new web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/advanced-apprail-final-v1-f9eb4b1.log sha256=8dc39ca71eb84425fd8a99d1261dac2cd58a7c780b6c1059cf020caee103950f exit=0 tests="5 passed (5)" preconditions=0
+      files docs/reviews/web-dashboard-header-departure-independent/advanced.test.tsx=5
+      accepted web-dashboard-header-departure-independent/advanced-f1post1-f359be6.log sha256=d8a171e5029242f4c4a17301bf7b9a0b5a6a69b5e2eb85b251f084fb8e377863 exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/advanced-apprail-final-v1-419e56d.log sha256=95d7a7badc71fe6349f8ddb685b669f303542127b6ae7b18a9f8cca2b53f2c74 exit=0 tests="5 passed (5)" preconditions=0 per-file equal=true
+MATCH dashboard-header-independent followon @f9eb4b1: 2/2 (accepted count 2)
+      new web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/followon-apprail-final-v1-f9eb4b1.log sha256=9c92db509fbea9571c019f662976546212b0eb63d82bdec6330e49f36f941fb8 exit=0 tests="2 passed (2)" preconditions=0
+      files docs/reviews/web-dashboard-header-departure-independent/followon.test.tsx=2
+      accepted web-dashboard-header-departure-independent/followon-f1post1-f359be6.log sha256=fddc12b18d2aa36508f3577d9f700f1f89637246d54c15f8206bbd3ad88e0d53 exit=0 tests="2 passed (2)" preconditions=0 per-file equal=true
+      control @419e56d web-apprail-order-recovery-final/host-suites/web-dashboard-header-departure-independent/followon-apprail-final-v1-419e56d.log sha256=a7b941f0b258e1f536e00e3d6888d104ab176e5f518db880743538234699401e exit=0 tests="2 passed (2)" preconditions=0 per-file equal=true
+## I. E24 Features native host and downstream: frozen refusals and the harness copy vs the accepted logs
+MATCH E24 frozen host runner (unchanged): harness-invalid at exactly the caller-bound precondition baseline:fixed-delta-only-in-features-package, every earlier precondition PASS (4 PASS)
+      frozen web-features-recovery-native/native-f9eb4b1-apprail-final-v1-host.log sha256=ffdb8f749fea9f28521a4754c57cb34a5fce76f4e3a9ee2a6f2220653d06e847
+      checks baseline:docs-head-product-tree-equals-fixed=true baseline:lockfile-gate=true baseline:guard-no-module-from-a-checkout=true baseline:every-required-module-bundled-from-archive=true baseline:fixed-delta-only-in-features-package=false
+      fixedDelta recorded=50 files
+MATCH E24 frozen downstream runner (unchanged): harness-invalid at exactly the caller-bound precondition baseline:fixed-delta-only-in-features-package, every earlier precondition PASS (4 PASS)
+      frozen web-features-recovery-native/native-f9eb4b1-apprail-final-v1-downstream.log sha256=350d8e8a194f7c2fbd0d0bef70fee1fbb23673f98992279f86e666e65285bc4e
+      checks baseline:docs-head-product-tree-equals-fixed=true baseline:lockfile-gate=true baseline:guard-no-module-from-a-checkout=true baseline:every-required-module-bundled-from-archive=true baseline:fixed-delta-only-in-features-package=false
+      fixedDelta recorded=50 files
+MATCH E24 copy host: pass=true harnessValid=true 751 checks, 341 product (accepted 750/341); check id/kind/pass sequence equal after mapping the delta precondition and removing the K-1 audit check=true
+      copy web-apprail-order-recovery-final/native-f9eb4b1-apprail-final-v1-host.log sha256=20f6273e43758aa8f7f84994f5839bba99e2139570b1c98a9a4ab8bed15e0522
+      accepted web-features-recovery-native/native-5cd63ff-fixed1-host.log sha256=f025b831b432df2c31a6c295560d25923705f30e21332eb8e792e023f5c9cb0d
+      delta precondition: features=11 appearance=26 apprail=19 fixedDelta=50
+      K-1 audit: pressed=1 keydowns=1 keyups=1 keypresses=0 ok=true; dialogs 2 vs 2; runtimeErrors=0 consoleWarnings=0 (accepted 0)
+MATCH E24 copy downstream: pass=true harnessValid=true 344 checks, 140 product (accepted 344/140); check id/kind/pass sequence equal after mapping the delta precondition=true
+      copy web-apprail-order-recovery-final/native-f9eb4b1-apprail-final-v1-downstream.log sha256=4efcab6bc4c3a5222e2c34ad2c91bc6033b1121aa5914f835ecd1e14e91a7c55
+      accepted web-appearance-recovery-final/native-419e56d-appearance-final-v1-downstream.log sha256=937572d82d950c00af92b7c496924915a988850a64a736941d7a849a551a76d3
+      delta precondition: features=11 appearance=26 apprail=19 fixedDelta=50
+      K-1 audit: pressed=7 keydowns=7 keyups=7 keypresses=0 ok=true; dialogs 3 vs 3; runtimeErrors=0 consoleWarnings=0 (accepted 0)
+## Summary: 85 MATCH, 0 DIFF
+exit=0

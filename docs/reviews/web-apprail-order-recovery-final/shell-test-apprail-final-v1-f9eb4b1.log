@@ -1,0 +1,492 @@
+requested_revision=f9eb4b1
+resolved_commit=f9eb4b1f207bc4b46f547b90afc250424b3c8695
+resolved_tree=05887cf113639116b228a25041a37b3d5c69a322
+mode=shell-test
+suffix=apprail-final-v1
+command=XAI_DEPS_ROOT=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc node docs/reviews/web-apprail-order-recovery-final/verify-packages.mjs f9eb4b1 shell-test apprail-final-v1
+output_dir=docs/reviews/web-apprail-order-recovery-final
+runner_checkout_head=9aeec39ecc3d9da70837e97b9660837fe887b765
+runner_sha256=fd9d9988c8c38c904555c4a539836db62aceda005098919d02bba4daf53dde15
+node=v24.16.0 platform=darwin-arm64 tz=America/Los_Angeles
+dependency_root=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc
+expected_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+dependency_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+archive_lockfile_sha256=df05f2ddfd7f2d04d526ec3cccf6559991686188a0e4bcbc48d2b0451c9aeab9
+package=@repo/xai-web-shell (packages/xai-web-shell) kind=vitest script=test: "vitest run"
+archive_file_sha256 packages/xai-web-shell/package.json=af4bcd1decf7542296ee89b648ec714efec94cdb3591b91bdb18cf85a0111376 packages/xai-web-shell/tsconfig.json=d6ed012dbb7ba814d3ad10969827e9e91ca33dc1c5a292550967032d367dca1a packages/xai-web-shell/vitest.config.ts=4ce52c49da38a9e12b08433dcfbff33e192e53d9d73d37430d6a5e47d7766a0c packages/xai-web-shell/eslint.config.js=79fded991853b3cfcad93ce8fe1312d993926017697438ddc2bb5ea770a6f55f
+package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 appearance_package_tree=1fea1045b8cca0a1539238f106828e78f1c20308 shell_package_tree=4ea3eb5bc1048055e7870fa2a1c01e889aab8cb8 web_tree=61ddf71751eaa9f1a456897ecb7fbe23e708be4b
+node_modules_links third_party=449 workspace=281; package_workspace_links @repo/core->packages/core @repo/eslint-config->packages/eslint-config @repo/plugin-web-storage->packages/plugin-web-storage @repo/plugin-web-tokens->packages/plugin-web-tokens @repo/typescript-config->packages/typescript-config @repo/xai-web-event-bus->packages/xai-web-event-bus
+tsconfig_extends_checked=46 unresolved=none own=@repo/xai-web-shell:@repo/typescript-config/react-library.json->packages/typescript-config/react-library.json
+aliases=75 exact-match archive export specifiers
+forbidden=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/apps,/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/docs
+required_provenance_absent_from_archive=none
+bin=/Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6a467b4a410199bc/packages/xai-web-shell/node_modules/.bin/vitest
+args=run --config /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/packages/xai-web-shell/final-shell-test.vitest.config.mjs --reporter=verbose --reporter=json --outputFile.json=/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/.final-guard/report-shell-test.json
+vitest=node_modules/.pnpm/vitest@3.2.7_@types+node@22.15.3_jsdom@26.1.0/node_modules/vitest@3.2.7 vite=7.3.6 jsdom=26.1.0
+tool_exit=0
+harness_checks=PASS (19/19)
+exit=0
+---- stdout ----
+
+ RUN  v3.2.7 /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/packages/xai-web-shell
+
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D1 — [] is in-domain 2ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D1 — the defaults is in-domain 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D1 — unknown, settings and empty-string ids is in-domain 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes {} are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes {"tasks":1} are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes 1 are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes 0 are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes -1 are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes true are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes false are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes "tasks" are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes [1] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes ["tasks",2] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes [null] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes [["tasks"]] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes ["tasks","tasks"] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes ["board","tasks","board"] are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D2 — the decoded bytes null are invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) > RM-D3 — a sparse array or undefined is invalid 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) > RM-V1 — absent bytes display the 12 defaults, then Bookkeeping and Metrics 1ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) > RM-V2 — [] displays R order 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) > RM-V3 — hidden, unknown and non-rail ids are skipped; missing visible ids are appended in R order 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) > RM-V4 — permutation and equality helpers 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P1..P4 — each of the eight toggleable modules hidden in turn keeps its stored index 1ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P2 — three hidden modules each keep their stored index 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P2 — unknown ids and settings keep their stored index 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P5 — the only hidden module returns to exactly its previous place when re-enabled 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P6 — with every stored id visible the merge equals the dropped order (today's bytes) 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P7 — over absent bytes a hidden default module keeps its default index 0ms
+ ✓ src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) > RM-P8 — a non-permutation, a duplicate or a malformed stored order gives no merge 0ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R1 — <WebShellProvider modules={[]}> renders without crash (AC-SLOT-1) 12ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R2 — useWebShell() outside provider throws (AC-SLOT-2) 4ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R2b — useWebModuleRegistry() outside provider throws (AC-SLOT-2) 1ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R3 — useWebModuleRegistry sorts by railOrder then id alphabetical (AC-SLOT-3) 6ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R4 — modules with showInRail:false are excluded from registry list (AC-SLOT-4) 3ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > R6 — re-rendering with new modules array updates registry synchronously (AC-SLOT-6) 31ms
+ ✓ src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) > useWebShell returns correct context values 1ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV1 — returns null when open is false 13ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV1b — renders menu when open is true 9ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV2 — clicking Settings entry calls onOpenSettings then onClose 8ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'left-top-right' when railPos=left 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'right-top-left' when railPos=right 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'top-bottom-left' when railPos=top 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV3 — data-anchor is 'bottom-top-left' when railPos=bottom 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV4 — scrim click calls onClose 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV5 — Escape key calls onClose 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV5b — Escape key does NOT call onClose when menu is closed 1ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV6 — clicking Statistics entry calls onOpenStatistics then onClose 3ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7 — Sign Out menu item is rendered in the menu 2ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7b — clicking Sign Out with undefined onSignOut: closes popover, warns in DEV, no dialog 9ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7c — clicking Sign Out with onSignOut wired opens confirmation dialog 5ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7d — confirming in dialog calls onSignOut and closes dialog 8ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV7e — cancelling in dialog does NOT call onSignOut 4ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV8 — user name shows 'Aki Chen' in EN 5ms
+ ✓ src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) > AV8 — user name shows '百事可爱' in ZH 2ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP0 — preferences trigger opens the appearance popover 49ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1 — appearance popover: clicking 中文 calls setLang('zh') 13ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1b — clicking EN calls setLang('en') 14ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1c — active lang option has aria-checked=true 13ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2 — Dark button calls setTheme('dark') 9ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2b — System button calls setTheme('system') 11ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2c — active theme option has aria-checked=true 8ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3 — Compact button calls setDensity('compact') 7ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3b — active density option has aria-checked=true 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP4 — Settings row click calls onOpenSettings 14ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat) 2ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP5b — onOpenSearch prop provided → renders <button class='search-box'> 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP6 — ⌘K kbd hint is rendered 2ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP7 — button click calls onOpenSearch() 8ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided 1ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts 10ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts 9ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts 7ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts 6ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover 2ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged 2ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover 4ms
+ ✓ src/__tests__/Topbar.test.tsx > Topbar > TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged 4ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-M — zero-write mounts > RO-M1 — absent bytes display the default with zero attempts to write; the status is absent 72ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR1 — renders rail-visible modules sorted by railOrder 31ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR1b — settings module with showInRail:false is not in rail-items 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR2 — data-pos attribute matches railPos 4ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR2b — left is the default data-pos 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR3 — clicking a module button calls onModuleClick with the module id 5ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR4 — active module button has 'active' className 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR4b — inactive buttons do NOT have 'active' className 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR5 — drag-reorder: onDragStart sets dragging class 4ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR8 — ghost module ids in localStorage are filtered out 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9 — Pet button is rendered in the rail-bottom 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9b — clicking Pet button calls onPetToggle 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR9c — Pet button has 'active' class when petOn=true 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix) 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix) 3ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix) 6ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR10d — pet button is still present after removing sync/notif/help 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR11 — icon-only rail controls expose accessible names 36ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail > AR11 — module button has data-tip with i18n label 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog 13ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) > AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible) 61ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P1 — xai_rail_order is restored on remount 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > P3 — items missing from xai_rail_order are appended at end 30ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N1 — empty modules list renders empty rail-items 2ms
+ ✓ src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) > N3 — empty xai_rail_order falls back to registry order 5ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-M — zero-write mounts > RO-M2 — a seeded order, a Features change and a standalone mount make zero attempts to write 166ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T1 — dragover previews in memory with zero attempts; the drop writes exactly once with the merge bytes 63ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) > RS-C1 — no DOM node in a clean state or while a first attempt is only pending 248ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T2 — a two-step drag writes only the final preview, once 55ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T3 — dragEnd without a drop cancels: zero attempts and the preview reverts 58ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1 — AppRail module click emits web:shell:module-change with source 'app-rail' 30ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E2 — Pet button click emits web:shell:pet-toggle with { on: true } 5ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut' 45ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) > RS-C2 — a settled failure renders the draft status; it stays while its Retry is pending; success removes it 122ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) > RS-C3 — an invalid source with no draft renders the source status 22ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut' 32ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut' 61ms
+ ✓ src/__tests__/event-emit.test.tsx > Event emits (E1..E5) > E1/E3 — emitWebEvent is called exactly once per user interaction 9ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-1 — dialog is closed (no open attribute) when open=false 20ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-2 — dialog is open and shows title, body, and both buttons when open=true 100ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-3 — clicking Confirm (Sign out) button calls onConfirm 7ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-4 — clicking Cancel button calls onCancel 2ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-5 — ESC key (native dialog cancel event) calls onCancel 1ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-6 — clicking the dialog backdrop (dialog element itself) calls onCancel 1ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-7 — renders ZH strings when lang=zh 2ms
+ ✓ src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog > SOCD-8 — renders EN strings when lang=en 1ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T3 — a release outside .rail-items cancels: zero attempts and the preview reverts 52ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel > RS-P1 — a native disclosure button toggles a labelled non-modal dialog without storage attempts 108ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel > RS-P2 — the source panel offers Reload only, in an alert 40ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel > RS-P3 — Chinese wording 57ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1 — Shell renders with Topbar (search input present) 24ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S1b — Shell renders with AppRail (app-rail aside present) 5ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S2 — Shell renders children in app-main 4ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3a — Shell renders with railPos=right 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3b — Shell renders with railPos=top 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S3c — Shell renders with railPos=bottom 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S4 — Shell renders with empty modules (no crash) 3ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke) 16ms
+ ✓ src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) > S-StrictMode — StrictMode double-mount does not throw 4ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Shell component 2ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AppRail component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports Topbar component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports AvatarMenu component 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports WebShellProvider 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebShell 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B1 — exports useWebModuleRegistry 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor) 0ms
+ ✓ src/__tests__/index-barrel.test.ts > index barrel (B1..B3) > B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape) 0ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T4 — a drop on a gap and on the dragged button commit once; an unchanged order makes zero attempts 121ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel > RS-P4 — the status root sits in .topbar-controls before .topbar-pref 56ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 0 to position 2 2ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves item from position 2 to position 0 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId === toId (N7 — drag onto self) 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when fromId not found 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > returns original array when toId not found 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > always returns a new array (safe for React state) 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves last item to first 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > moves first item to last 0ms
+ ✓ src/__tests__/internal/dnd.test.ts > reorderArray > handles 2-element arrays 0ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T5 — two drop events in one gesture admit one intent; an external drop is ignored 109ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T6 — R changing mid-drag discards the preview: zero attempts, the rail shows D(S, R) 64ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets > RS-F1 — a successful Retry unmounts the status and focuses .topbar-pref-trigger 66ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets > RS-F2 — a failed Retry keeps focus on Retry; Export keeps focus on Export 70ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop > RO-T7 — clicks are suppressed during a gesture and navigate after it 39ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-R — R-1 index-slot merge in the rail > RO-R1 — with Boards hidden the drop keeps board at its stored index; re-enabled it returns there 59ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets > RS-F3 — Discard unmounts the status and focuses .topbar-pref-trigger 60ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets > RS-F4 — Escape closes the panel and returns focus to the status button 42ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets > RS-F5 — an outside mousedown closes the panel; focus moves only when it was inside the panel 42ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-R — R-1 index-slot merge in the rail > RO-R2 — unknown ids keep their stored index 42ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "{}" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "{\"tasks\":1}" at load: no throw, the default display, the source status with Reload only, zero writes 35ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-E — memory-only export > RS-E1 — the set envelope with the full merged order, zero storage attempts, cleanup 50ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-E — memory-only export > RS-E2 — a setup failure shows the export error until the next panel action 60ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "1" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "0" at load: no throw, the default display, the source status with Reload only, zero writes 35ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "-1" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step > RS-U1 — no draft: confirmSignOut resolves true with zero confirm calls 21ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step > RS-U2 — a draft: Cancel keeps it; OK discards it with zero writes and removes the warning 57ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step > RS-U3 — the Chinese sign-out confirmation 40ms
+ ✓ src/__tests__/RailOrderStatus.test.tsx > RS-T — Topbar slot > RS-T1 — without a provider <RailOrderStatus /> renders nothing and the controls are unchanged 3ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "true" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "false" at load: no throw, the default display, the source status with Reload only, zero writes 46ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "\"tasks\"" at load: no throw, the default display, the source status with Reload only, zero writes 41ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[1]" at load: no throw, the default display, the source status with Reload only, zero writes 39ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[\"tasks\",2]" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[null]" at load: no throw, the default display, the source status with Reload only, zero writes 36ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[[\"tasks\"]]" at load: no throw, the default display, the source status with Reload only, zero writes 36ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[\"tasks\",\"tasks\"]" at load: no throw, the default display, the source status with Reload only, zero writes 37ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[\"board\",\"tasks\",\"board\"]" at load: no throw, the default display, the source status with Reload only, zero writes 37ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "null" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "[tasks" at load: no throw, the default display, the source status with Reload only, zero writes 37ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S1 — "" at load: no throw, the default display, the source status with Reload only, zero writes 38ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S2 — a throwing getItem at load is unavailable: default display and the source status 20ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S3 — a drag over `{}` is a refused failed draft; Retry refused again; Discard returns to the source state 79ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) > RO-S4 — malformed bytes written by another document leave an idle rail in its source state without a throw 56ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F1 — a quota failure keeps the dropped order with the status; Retry after recovery writes once 65ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F2 — a held per-key lock keeps the bytes; no status while pending; one write after release 60ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F3 — without navigator.locks the write is refused and reported, never written unfenced 64ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F4 — Discard makes zero attempts and returns to the committed order 60ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F5 — the latest of two held drops wins; each drop makes one lock request 80ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F6 — a drop back to the committed order over a failed draft completes as the engine's verified no-op 67ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F7 — the committed order of another document updates an idle rail live 53ms
+ ✓ src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock > RO-F8 — a held write refuses on release after unmount 56ms
+
+ Test Files  12 passed (12)
+      Tests  205 passed (205)
+   Start at  07:51:33
+   Duration  3.67s (transform 704ms, setup 1.61s, collect 2.16s, tests 4.38s, environment 5.42s, prepare 954ms)
+
+JSON report written to /private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/.final-guard/report-shell-test.json
+
+---- stderr ----
+
+---- runner summary ----
+harness PASS archive package.json script "test" is "vitest run" (found "vitest run")
+harness PASS JSON report parsed
+harness PASS reported test files equal the expected set (12 files, from the archive by the package include)
+harness PASS required test file ran: src/__tests__/Topbar.test.tsx
+harness PASS required test file ran: src/__tests__/AppRail.test.tsx
+harness PASS required test file ran: src/__tests__/AvatarMenu.test.tsx
+harness PASS required test file ran: src/__tests__/Shell.smoke.test.tsx
+harness PASS required test file ran: src/__tests__/SignOutConfirmDialog.test.tsx
+harness PASS required test file ran: src/__tests__/event-emit.test.tsx
+harness PASS required test file ran: src/__tests__/index-barrel.test.ts
+harness PASS required test file ran: src/__tests__/internal/dnd.test.ts
+harness PASS required test file ran: src/__tests__/registry.test.tsx
+harness PASS required test file ran: src/__tests__/AppRail.railorder.test.tsx
+harness PASS required test file ran: src/__tests__/RailOrderStatus.test.tsx
+harness PASS required test file ran: src/__tests__/railOrderModel.test.ts
+harness PASS package config in effect (environment jsdom, globals false, setupFiles [src/__tests__/setup.ts], include undefined, root = archive package)
+harness PASS guard plugin active (archive modules recorded)
+harness PASS required product modules loaded from the archive (13 present of 13 listed)
+harness PASS no test-file suite error
+required_tests_absent_from_archive=none
+json_report=success=true numTotalTestSuites=37 numTotalTests=205 numPassedTests=205 numFailedTests=0 numPendingTests=0 numTodoTests=0
+totals files=12 tests=205 passed=205 failed=0 other=0 suite_errors=0 unhandled_error_lines=0
+file src/__tests__/AppRail.railorder.test.tsx status=passed tests=40 passed=40 failed=0
+file src/__tests__/AppRail.test.tsx status=passed tests=25 passed=25 failed=0
+file src/__tests__/AvatarMenu.test.tsx status=passed tests=18 passed=18 failed=0
+file src/__tests__/event-emit.test.tsx status=passed tests=6 passed=6 failed=0
+file src/__tests__/index-barrel.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/internal/dnd.test.ts status=passed tests=9 passed=9 failed=0
+file src/__tests__/railOrderModel.test.ts status=passed tests=30 passed=30 failed=0
+file src/__tests__/RailOrderStatus.test.tsx status=passed tests=18 passed=18 failed=0
+file src/__tests__/registry.test.tsx status=passed tests=7 passed=7 failed=0
+file src/__tests__/Shell.smoke.test.tsx status=passed tests=9 passed=9 failed=0
+file src/__tests__/SignOutConfirmDialog.test.tsx status=passed tests=8 passed=8 failed=0
+file src/__tests__/Topbar.test.tsx status=passed tests=26 passed=26 failed=0
+case 001 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-M — zero-write mounts RO-M1 — absent bytes display the default with zero attempts to write; the status is absent
+case 002 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-M — zero-write mounts RO-M2 — a seeded order, a Features change and a standalone mount make zero attempts to write
+case 003 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T1 — dragover previews in memory with zero attempts; the drop writes exactly once with the merge bytes
+case 004 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T2 — a two-step drag writes only the final preview, once
+case 005 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T3 — dragEnd without a drop cancels: zero attempts and the preview reverts
+case 006 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T3 — a release outside .rail-items cancels: zero attempts and the preview reverts
+case 007 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T4 — a drop on a gap and on the dragged button commit once; an unchanged order makes zero attempts
+case 008 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T5 — two drop events in one gesture admit one intent; an external drop is ignored
+case 009 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T6 — R changing mid-drag discards the preview: zero attempts, the rail shows D(S, R)
+case 010 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-T — one write per drop RO-T7 — clicks are suppressed during a gesture and navigate after it
+case 011 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-R — R-1 index-slot merge in the rail RO-R1 — with Boards hidden the drop keeps board at its stored index; re-enabled it returns there
+case 012 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-R — R-1 index-slot merge in the rail RO-R2 — unknown ids keep their stored index
+case 013 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "{}" at load: no throw, the default display, the source status with Reload only, zero writes
+case 014 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "{\"tasks\":1}" at load: no throw, the default display, the source status with Reload only, zero writes
+case 015 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "1" at load: no throw, the default display, the source status with Reload only, zero writes
+case 016 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "0" at load: no throw, the default display, the source status with Reload only, zero writes
+case 017 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "-1" at load: no throw, the default display, the source status with Reload only, zero writes
+case 018 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "true" at load: no throw, the default display, the source status with Reload only, zero writes
+case 019 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "false" at load: no throw, the default display, the source status with Reload only, zero writes
+case 020 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "\"tasks\"" at load: no throw, the default display, the source status with Reload only, zero writes
+case 021 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[1]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 022 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[\"tasks\",2]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 023 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[null]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 024 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[[\"tasks\"]]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 025 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[\"tasks\",\"tasks\"]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 026 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[\"board\",\"tasks\",\"board\"]" at load: no throw, the default display, the source status with Reload only, zero writes
+case 027 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "null" at load: no throw, the default display, the source status with Reload only, zero writes
+case 028 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "[tasks" at load: no throw, the default display, the source status with Reload only, zero writes
+case 029 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S1 — "" at load: no throw, the default display, the source status with Reload only, zero writes
+case 030 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S2 — a throwing getItem at load is unavailable: default display and the source status
+case 031 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S3 — a drag over `{}` is a refused failed draft; Retry refused again; Discard returns to the source state
+case 032 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-S — source truth and crash safety (contract §5 item 2) RO-S4 — malformed bytes written by another document leave an idle rail in its source state without a throw
+case 033 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F1 — a quota failure keeps the dropped order with the status; Retry after recovery writes once
+case 034 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F2 — a held per-key lock keeps the bytes; no status while pending; one write after release
+case 035 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F3 — without navigator.locks the write is refused and reported, never written unfenced
+case 036 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F4 — Discard makes zero attempts and returns to the committed order
+case 037 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F5 — the latest of two held drops wins; each drop makes one lock request
+case 038 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F6 — a drop back to the committed order over a failed draft completes as the engine's verified no-op
+case 039 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F7 — the committed order of another document updates an idle rail live
+case 040 PASSED | src/__tests__/AppRail.railorder.test.tsx > RO-F — failures, Retry, Discard and the held lock RO-F8 — a held write refuses on release after unmount
+case 041 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR1 — renders rail-visible modules sorted by railOrder
+case 042 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR1b — settings module with showInRail:false is not in rail-items
+case 043 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR2 — data-pos attribute matches railPos
+case 044 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR2b — left is the default data-pos
+case 045 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR3 — clicking a module button calls onModuleClick with the module id
+case 046 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR4 — active module button has 'active' className
+case 047 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR4b — inactive buttons do NOT have 'active' className
+case 048 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR5 — drag-reorder: onDragStart sets dragging class
+case 049 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR8 — ghost module ids in localStorage are filtered out
+case 050 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9 — Pet button is rendered in the rail-bottom
+case 051 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9b — clicking Pet button calls onPetToggle
+case 052 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR9c — Pet button has 'active' class when petOn=true
+case 053 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10 — bottom row has exactly 1 button (pet only; sync/notif/help hidden)
+case 054 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10a — sync icon is NOT rendered in the rail-bottom (Rail-05 fix)
+case 055 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10b — notif icon is NOT rendered in the rail-bottom (Rail-06 fix)
+case 056 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10c — help icon is NOT rendered in the rail-bottom (Rail-07 fix)
+case 057 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR10d — pet button is still present after removing sync/notif/help
+case 058 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR11 — icon-only rail controls expose accessible names
+case 059 PASSED | src/__tests__/AppRail.test.tsx > AppRail AR11 — module button has data-tip with i18n label
+case 060 PASSED | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) AR-SO1 — renderRail with onSignOut wired: opening AvatarMenu and clicking Sign Out opens confirmation dialog
+case 061 PASSED | src/__tests__/AppRail.test.tsx > AppRail sign-out passthrough (AR-SO1..SO2) AR-SO2 — renderRail without onSignOut: AvatarMenu renders normally (backward-compatible)
+case 062 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) P1 — xai_rail_order is restored on remount
+case 063 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) P3 — items missing from xai_rail_order are appended at end
+case 064 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) N1 — empty modules list renders empty rail-items
+case 065 PASSED | src/__tests__/AppRail.test.tsx > AppRail persistence (P1..P4) N3 — empty xai_rail_order falls back to registry order
+case 066 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV1 — returns null when open is false
+case 067 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV1b — renders menu when open is true
+case 068 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV2 — clicking Settings entry calls onOpenSettings then onClose
+case 069 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'left-top-right' when railPos=left
+case 070 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'right-top-left' when railPos=right
+case 071 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'top-bottom-left' when railPos=top
+case 072 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV3 — data-anchor is 'bottom-top-left' when railPos=bottom
+case 073 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV4 — scrim click calls onClose
+case 074 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV5 — Escape key calls onClose
+case 075 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV5b — Escape key does NOT call onClose when menu is closed
+case 076 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV6 — clicking Statistics entry calls onOpenStatistics then onClose
+case 077 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7 — Sign Out menu item is rendered in the menu
+case 078 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7b — clicking Sign Out with undefined onSignOut: closes popover, warns in DEV, no dialog
+case 079 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7c — clicking Sign Out with onSignOut wired opens confirmation dialog
+case 080 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7d — confirming in dialog calls onSignOut and closes dialog
+case 081 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV7e — cancelling in dialog does NOT call onSignOut
+case 082 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV8 — user name shows 'Aki Chen' in EN
+case 083 PASSED | src/__tests__/AvatarMenu.test.tsx > AvatarMenu (AV1..AV8) AV8 — user name shows '百事可爱' in ZH
+case 084 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) RS-C1 — no DOM node in a clean state or while a first attempt is only pending
+case 085 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) RS-C2 — a settled failure renders the draft status; it stays while its Retry is pending; success removes it
+case 086 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-C — render conditions (A8) RS-C3 — an invalid source with no draft renders the source status
+case 087 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel RS-P1 — a native disclosure button toggles a labelled non-modal dialog without storage attempts
+case 088 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel RS-P2 — the source panel offers Reload only, in an alert
+case 089 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel RS-P3 — Chinese wording
+case 090 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-P — the button and the panel RS-P4 — the status root sits in .topbar-controls before .topbar-pref
+case 091 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets RS-F1 — a successful Retry unmounts the status and focuses .topbar-pref-trigger
+case 092 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets RS-F2 — a failed Retry keeps focus on Retry; Export keeps focus on Export
+case 093 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets RS-F3 — Discard unmounts the status and focuses .topbar-pref-trigger
+case 094 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets RS-F4 — Escape closes the panel and returns focus to the status button
+case 095 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-F — focus targets RS-F5 — an outside mousedown closes the panel; focus moves only when it was inside the panel
+case 096 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-E — memory-only export RS-E1 — the set envelope with the full merged order, zero storage attempts, cleanup
+case 097 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-E — memory-only export RS-E2 — a setup failure shows the export error until the next panel action
+case 098 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step RS-U1 — no draft: confirmSignOut resolves true with zero confirm calls
+case 099 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step RS-U2 — a draft: Cancel keeps it; OK discards it with zero writes and removes the warning
+case 100 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-U — unload warning and the sign-out step RS-U3 — the Chinese sign-out confirmation
+case 101 PASSED | src/__tests__/RailOrderStatus.test.tsx > RS-T — Topbar slot RS-T1 — without a provider <RailOrderStatus /> renders nothing and the controls are unchanged
+case 102 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S1 — Shell renders with Topbar (search input present)
+case 103 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S1b — Shell renders with AppRail (app-rail aside present)
+case 104 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S2 — Shell renders children in app-main
+case 105 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3a — Shell renders with railPos=right
+case 106 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3b — Shell renders with railPos=top
+case 107 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S3c — Shell renders with railPos=bottom
+case 108 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S4 — Shell renders with empty modules (no crash)
+case 109 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) SH-SO1 — Shell accepts onSignOut prop and passes it to AppRail (structural smoke)
+case 110 PASSED | src/__tests__/Shell.smoke.test.tsx > Shell smoke (S1..S4) S-StrictMode — StrictMode double-mount does not throw
+case 111 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-1 — dialog is closed (no open attribute) when open=false
+case 112 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-2 — dialog is open and shows title, body, and both buttons when open=true
+case 113 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-3 — clicking Confirm (Sign out) button calls onConfirm
+case 114 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-4 — clicking Cancel button calls onCancel
+case 115 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-5 — ESC key (native dialog cancel event) calls onCancel
+case 116 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-6 — clicking the dialog backdrop (dialog element itself) calls onCancel
+case 117 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-7 — renders ZH strings when lang=zh
+case 118 PASSED | src/__tests__/SignOutConfirmDialog.test.tsx > SignOutConfirmDialog SOCD-8 — renders EN strings when lang=en
+case 119 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP0 — preferences trigger opens the appearance popover
+case 120 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1 — appearance popover: clicking 中文 calls setLang('zh')
+case 121 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1b — clicking EN calls setLang('en')
+case 122 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1c — active lang option has aria-checked=true
+case 123 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2 — Dark button calls setTheme('dark')
+case 124 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2b — System button calls setTheme('system')
+case 125 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2c — active theme option has aria-checked=true
+case 126 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3 — Compact button calls setDensity('compact')
+case 127 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3b — active density option has aria-checked=true
+case 128 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP4 — Settings row click calls onOpenSettings
+case 129 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP5a — no onOpenSearch prop → renders readOnly input with EN placeholder (backwards-compat)
+case 130 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP5b — onOpenSearch prop provided → renders <button class='search-box'>
+case 131 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP6 — ⌘K kbd hint is rendered
+case 132 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP7 — button click calls onOpenSearch()
+case 133 PASSED | src/__tests__/Topbar.test.tsx > Topbar TB-PREMIUM-1 — premiumBadge render-prop renders in Topbar when provided
+case 134 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1-Persist — clicking 中文 calls setLang('zh') once and makes zero Storage attempts
+case 135 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP1b-Persist — clicking EN calls setLang('en') once and makes zero Storage attempts
+case 136 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2-Persist — clicking Dark calls setTheme('dark') once and makes zero Storage attempts
+case 137 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2b-Persist — clicking System calls setTheme('system') once and makes zero Storage attempts
+case 138 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP2c-Persist — clicking Light calls setTheme('light') once and makes zero Storage attempts
+case 139 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3-Persist — clicking Compact calls setDensity('compact') once and makes zero Storage attempts
+case 140 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP3b-Persist — clicking Comfortable calls setDensity('comfortable') once and makes zero Storage attempts
+case 141 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP-STATUS-1 — appearanceStatus renders immediately after the premium badge, before the appearance popover
+case 142 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP-STATUS-2 — without appearanceStatus (or when it renders nothing) the controls are unchanged
+case 143 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP-RAIL-1 — railOrderStatus renders immediately after appearanceStatus and before the appearance popover
+case 144 PASSED | src/__tests__/Topbar.test.tsx > Topbar TP-RAIL-2 — without railOrderStatus (or when it renders nothing) the Topbar outerHTML is unchanged
+case 145 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E1 — AppRail module click emits web:shell:module-change with source 'app-rail'
+case 146 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E2 — Pet button click emits web:shell:pet-toggle with { on: true }
+case 147 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E3 — Topbar Settings row click emits web:shell:module-change with source 'shortcut'
+case 148 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E4 — AvatarMenu Settings click emits web:shell:module-change with source 'shortcut'
+case 149 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E5 — AvatarMenu Statistics click emits web:shell:module-change with source 'shortcut'
+case 150 PASSED | src/__tests__/event-emit.test.tsx > Event emits (E1..E5) E1/E3 — emitWebEvent is called exactly once per user interaction
+case 151 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports Shell component
+case 152 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports AppRail component
+case 153 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports Topbar component
+case 154 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports AvatarMenu component
+case 155 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports WebShellProvider
+case 156 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports useWebShell
+case 157 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B1 — exports useWebModuleRegistry
+case 158 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B2 — does NOT export internal symbols (reorderArray, getPopoverAnchor)
+case 159 PASSED | src/__tests__/index-barrel.test.ts > index barrel (B1..B3) B3 — WebModuleSlotRegistration type extends WebModuleRouteRegistration (structural check via runtime object shape)
+case 160 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D1 — [] is in-domain
+case 161 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D1 — the defaults is in-domain
+case 162 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D1 — unknown, settings and empty-string ids is in-domain
+case 163 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes {} are invalid
+case 164 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes {"tasks":1} are invalid
+case 165 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes 1 are invalid
+case 166 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes 0 are invalid
+case 167 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes -1 are invalid
+case 168 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes true are invalid
+case 169 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes false are invalid
+case 170 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes "tasks" are invalid
+case 171 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes [1] are invalid
+case 172 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes ["tasks",2] are invalid
+case 173 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes [null] are invalid
+case 174 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes [["tasks"]] are invalid
+case 175 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes ["tasks","tasks"] are invalid
+case 176 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes ["board","tasks","board"] are invalid
+case 177 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D2 — the decoded bytes null are invalid
+case 178 PASSED | src/__tests__/railOrderModel.test.ts > RM-D — strict A5 domain (refuse, never repair) RM-D3 — a sparse array or undefined is invalid
+case 179 PASSED | src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) RM-V1 — absent bytes display the 12 defaults, then Bookkeeping and Metrics
+case 180 PASSED | src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) RM-V2 — [] displays R order
+case 181 PASSED | src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) RM-V3 — hidden, unknown and non-rail ids are skipped; missing visible ids are appended in R order
+case 182 PASSED | src/__tests__/railOrderModel.test.ts > RM-V — display reconcile D(S, R) (contract §2, unchanged) RM-V4 — permutation and equality helpers
+case 183 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P1..P4 — each of the eight toggleable modules hidden in turn keeps its stored index
+case 184 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P2 — three hidden modules each keep their stored index
+case 185 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P2 — unknown ids and settings keep their stored index
+case 186 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P5 — the only hidden module returns to exactly its previous place when re-enabled
+case 187 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P6 — with every stored id visible the merge equals the dropped order (today's bytes)
+case 188 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P7 — over absent bytes a hidden default module keeps its default index
+case 189 PASSED | src/__tests__/railOrderModel.test.ts > RM-P — A2 index-slot merge (R-1) RM-P8 — a non-permutation, a duplicate or a malformed stored order gives no merge
+case 190 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R1 — <WebShellProvider modules={[]}> renders without crash (AC-SLOT-1)
+case 191 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R2 — useWebShell() outside provider throws (AC-SLOT-2)
+case 192 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R2b — useWebModuleRegistry() outside provider throws (AC-SLOT-2)
+case 193 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R3 — useWebModuleRegistry sorts by railOrder then id alphabetical (AC-SLOT-3)
+case 194 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R4 — modules with showInRail:false are excluded from registry list (AC-SLOT-4)
+case 195 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) R6 — re-rendering with new modules array updates registry synchronously (AC-SLOT-6)
+case 196 PASSED | src/__tests__/registry.test.tsx > WebShellProvider + hooks (R1..R6) useWebShell returns correct context values
+case 197 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves item from position 0 to position 2
+case 198 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves item from position 2 to position 0
+case 199 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when fromId === toId (N7 — drag onto self)
+case 200 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when fromId not found
+case 201 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray returns original array when toId not found
+case 202 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray always returns a new array (safe for React state)
+case 203 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves last item to first
+case 204 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray moves first item to last
+case 205 PASSED | src/__tests__/internal/dnd.test.ts > reorderArray handles 2-element arrays
+pin_config {"root":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/packages/xai-web-shell","cacheDir":"/private/var/folders/zk/bxw8sv_15xx51q2mf6xhdb8c0000gn/T/xai-apprail-final-pkg-Jld1Ak/.final-vite-cache/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709","environment":"jsdom","globals":false,"setupFiles":["./src/__tests__/setup.ts"]}
+pin_unaliased_repo_imports=0
+pin_required_provenance packages/xai-web-shell/src/AppRail.tsx packages/xai-web-shell/src/Topbar.tsx packages/xai-web-shell/src/Shell.tsx packages/xai-web-shell/src/internal/railOrderController.tsx packages/xai-web-shell/src/internal/railOrderModel.ts packages/xai-web-shell/src/internal/RailOrderStatus.tsx packages/xai-web-shell/src/internal/railOrderCopy.ts packages/xai-web-shell/src/AvatarMenu.tsx packages/xai-web-shell/src/SignOutConfirmDialog.tsx packages/xai-web-shell/src/registry.tsx packages/xai-web-shell/src/internal/dnd.ts packages/plugin-web-storage/src/internal/usePrefAutosaveAsync.ts packages/plugin-web-storage/src/internal/prefMutation.ts
+pin_required_provenance_missing=none
+pin_modules=63 by package: packages/plugin-web-storage=23 packages/plugin-web-tokens=7 packages/xai-web-event-bus=4 packages/xai-web-shell=29
