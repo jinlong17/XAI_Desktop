@@ -8,13 +8,13 @@
 
 模块归属：`web`
 
-本轮模式：CP-CLOCK-01 的父级 host 基线（E3）已在 `f9eb4b1` 冻结（`521fd9a`）。本批登记批次 70：独立父级 native 验证者产出 native before（E4）与 Clock F1 形态 before（E5）。当前 Claude 总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
+本轮模式：**已暂停并交接给 Codex（2026-10-09）。** CP-CLOCK-01 的 E1–E3 已冻结（`cb7e49b`、`521fd9a`）；批次 70（E4–E5）已登记，但 Claude 启动的执行窗口在完成前被停止，没有提交，须由 Codex 重新执行。当前总控角色由 Codex 接任；总控窗口不实施产品或 verifier 修复，也不关闭任何 312 编号。
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
 ## 当前仓库状态
 
-- 本提交前工作树 clean；HEAD `521fd9a` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
+- 本提交前工作树 clean；HEAD `0ee7ab9` 与 `origin/codex/web/full-product-audit-20260908` 为 `0 0`。本会话创建的所有隔离 worktree 与临时本地分支均已在快进接收后清理。
 - 产品基线依次前进：`2023526` → `210abdf`（合同 §11 的 8 个 Sticky 文件）→ `f359be6`（`departureCoordinator.tsx` 与新测试 `departureCoordinator.blocker.test.tsx`）→ `5cd63ff`（Features 合同 §11 的 11 个文件，全部位于 `xai-web-settings-features-panel`）→ `24073b5`（Appearance 合同 r3 §11 的 24 个文件：Appearance 包、shell 的 Topbar/Shell/types 与 Topbar 测试、`App.tsx` 与新 App 测试）→ `5bbf473`（F-APP-1：Appearance `styles.css` 追加 9 行，并新增一个焦点环守卫测试）→ `419e56d`（F-APP-2：`styles.css` 再追加 13 行，并新增一个选中焦点守卫测试）。共享 storage、shell、widgets、其他宿主文件、其他 caller 与 lockfile 均无变化。
 - 归档 ref `codex/archive/audit-more-b1b2-evidence-c3ab20d` 保全 Sol 原证据提交 `c3ab20d`，不得合并。
 - 每次 push 后运行 `pnpm git:sync-check -- --fetch`，最近一次为 failures=0、warnings=1（未请求 deep 扫描）。
@@ -377,7 +377,8 @@
 | 时钟 | `61469c4` 登记批次 67 · `8bf6139` 时钟合同 r2 |
 | 时钟（续） | `40f07b2` 登记 CP-CLOCK-01 与批次 68 · `cb7e49b` Sol before oracle |
 | 时钟（续 2） | `bbd8971` 登记批次 69 · `521fd9a` 父级 host 基线 |
-| 本提交 | 记录 E3 与裁定，登记批次 70（native before 与 Clock F1 形态） |
+| 时钟（续 3） | `0ee7ab9` 记录 E3 与裁定，登记批次 70 |
+| 本提交 | 暂停：批次 70 执行窗口被停止、无提交；总控交接给 Codex |
 
 ## 台账变化
 
@@ -437,6 +438,17 @@
   - 实施批次须给执行者预留测试运行的记录位置；
   - 含 More 的回归须同时运行纠正 oracle（C-FB002）；
   - 总控脚本须先完成全部读取与校验，再写文件。本批出过一次事故：脚本先以写模式截断了 `ALL-TODO-CURRENT.md`，随后报错；已从 HEAD 恢复，未进入任何提交。
+
+## 交接记录（2026-10-09，Claude → Codex）
+
+- **原因：** 用户要求暂停 Claude 总控窗口，后续全部交给 Codex。
+- **批次 70 状态：** 已登记（见下方"本轮唯一任务"，卡片不变）。Claude 启动的父级 native 执行窗口在两个焦点模式运行前被总控停止，**没有任何提交**，结果未经核对，**不是证据**。
+- **残留的未提交文件：** 位于本机的 `.claude/worktrees/agent-a5f481d9b8ded5030/`（detached 于 `0ee7ab9`，未跟踪目录 `docs/reviews/web-dashboard-clock-recovery-native/` 与 `docs/reviews/web-dashboard-clock-recovery-f1/`，包括 F1 runner、host fixture、`clock`/`selfcheck` before1 日志、native 的 departure/fields/source 日志与若干截图；焦点模式未运行）。没有遗留的 Chrome 或 runner 进程。处理规则：
+  - 不得快进接收、cherry-pick 或复制为证据；
+  - 批次 70 须在新的独立窗口/worktree 中从 `0ee7ab9` 之后的控制 HEAD 重新执行；新执行者可只读参考残留文件，但须在回执中披露参考了哪些文件；
+  - 新批次确认完成后，由总控在检查其内容后清理该 worktree 与其本地分支 `worktree-agent-a5f481d9b8ded5030`；在其他机器上不存在该残留，不影响执行。
+- **其他 worktree：** `~/.claude/worktrees/agent-harness-review-20260909` 与 `~/.codex/worktrees/*` 属于其他会话，与本审计无关，不得触碰。
+- **不变项：** 正式 13/312 完成、299 未关闭；CP-CLOCK-01 状态 `diagnosis_needed`；所有裁定与经验见上文。
 
 ## 本轮唯一任务
 
