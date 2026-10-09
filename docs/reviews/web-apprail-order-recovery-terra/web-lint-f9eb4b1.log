@@ -1,0 +1,4 @@
+
+> @repo/web@0.1.0 lint /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6b59dd5867022ced/apps/web
+> eslint --max-warnings 0 .
+

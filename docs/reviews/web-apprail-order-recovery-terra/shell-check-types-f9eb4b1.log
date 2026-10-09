@@ -1,0 +1,4 @@
+
+> @repo/xai-web-shell@0.0.0 check-types /Users/lijinlong/Desktop/Jinlong_Project/Coding_project/AI_Desktop/XAI_Desktop/.claude/worktrees/agent-a6b59dd5867022ced/packages/xai-web-shell
+> tsc --noEmit
+
