@@ -445,7 +445,8 @@
       "archive_ref": "codex/archive/parallel-task06-prep-r1-20261010",
       "input_hashes_checked": 195,
       "output_hashes_checked": 2,
-      "protected_P0_source_identities": 169
+      "protected_P0_source_identities": 169,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/verify3",
@@ -474,7 +475,8 @@
       "readonly_tool_calls": 60,
       "reported_turns": 61,
       "full_governance_input_blocks": 4,
-      "mandatory_rule_read_gap_resolved": true
+      "mandatory_rule_read_gap_resolved": true,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-03/CONTRACT-REVIEW2",
@@ -492,7 +494,8 @@
       "integration_commit": "f2c1c1d3838556c55d22500dd88ef0a871726fda",
       "archive_ref": "codex/archive/parallel-world-clocks-review2-20261010",
       "input_hashes_checked": 130,
-      "owner_question": "U1asked async after concrete source receipt; A lossless occurrenceedit vs B visibleexportbutdisabled; no answer oradoption"
+      "owner_question": "U1asked async after concrete source receipt; A lossless occurrenceedit vs B visibleexportbutdisabled; no answer oradoption",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/CONTRACT-REVIEW",
@@ -509,7 +512,8 @@
       "input_hashes_checked": 210,
       "review_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/STATUS-WRITER",
@@ -524,7 +528,8 @@
       "source_commit": "b4c33120bde198214bbe3bf76ead543b5f139c3a",
       "integration_commit": "023451abc9df575c24056cb07cf1c9bebe4a6d43",
       "archive_ref": "codex/archive/parallel-tt08-status-r1-20261010",
-      "input_hashes_checked": 575
+      "input_hashes_checked": 575,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "REL02+03/BUDGET-IMPACT",
@@ -539,7 +544,8 @@
       "source_commit": "9885870aa55ea4a8f7c6bb475958989b429aeaf2",
       "integration_commit": "125501cbb2d63fc691725d9154e365888d7b68e0",
       "archive_ref": "codex/archive/parallel-rel-budget-impact-r1-20261010",
-      "input_hashes_checked": 9685
+      "input_hashes_checked": 9685,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/RUNNER-SOURCE",
@@ -562,8 +568,12 @@
       "provider_attested": false,
       "fixed_parent": "a317d0c8a876cb29d21a6dc2e56eb3eaacca9a8f",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-prepare-20261010/XAI_Desktop",
-      "state": "running_source_discovery",
-      "formal_invocations": 0
+      "state": "received_preparation_only_NEEDS_FRESH_REVIEW",
+      "formal_invocations": 0,
+      "source_commit": "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
+      "integration_commit": "a559b2b0eff8893d2813e41fe22e401ad9138253",
+      "archive_ref": "codex/archive/parallel-met05-prep-r1-20261010",
+      "input_hashes_checked": 110
     },
     {
       "id": "TT-08/FINAL-ACCEPTANCE",
@@ -582,8 +592,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -594,16 +604,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 15,
+    "static_passes": 24,
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 26,
+    "completed_source_receipts": 27,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
-    "actual_vendor_elapsed_seconds": 676.167
+    "actual_vendor_elapsed_seconds": 676.167,
+    "static_passes_basis": "27 source deliveries minus3 actual vendor launches; retention3 synthetic validations separately retained"
   },
   "events": [
     {
@@ -739,6 +750,11 @@
       "at": "2026-10-10T11:12:32.085284+00:00",
       "event": "Fresh fullTT08 final acceptance launched; MET05 and TASK06 source continue actual3workers+root, latest26source/ancestry full check; RELhistorychoice centralizedpending",
       "registration": "c086837e2c4030aa2a9cf631f504b0d1248939be"
+    },
+    {
+      "at": "2026-10-10T11:16:53.788082+00:00",
+      "event": "Receive MET110input bounded Planned proposal, fresh review registered;6 completed ownedwts archivedconfirmed after knownsame5deep fail snapshot; all formalstates unchanged",
+      "input": "a559b2b0eff8893d2813e41fe22e401ad9138253"
     }
   ],
   "wave_P2_tasks": [
@@ -754,7 +770,9 @@
     "P2_owned_worktrees": "all3archived/recoverable confirmedviaapp; no unrelated cleanup",
     "deep_intermediate_P6": "3FAIL/0WARN = same5knownunreachable plus 1 newlycompleted local TTcorrector source in refs/reflog before sourcepush; now remote-preserved; no deletion to hide",
     "deep_before_owned_cleanup_P7": "1FAIL/0WARN same5knownunreachable; refs/reflog/source remote PASS; no deletion forgreen",
-    "P3_P4_P5_P6_owned_completed_worktrees": "14archived recoverable, confirmedviaapp list; originals remote refs checked; active3worktrees retained, unrelateduntouched"
+    "P3_P4_P5_P6_owned_completed_worktrees": "14archived recoverable, confirmedviaapp list; originals remote refs checked; active3worktrees retained, unrelateduntouched",
+    "deep_before_owned_cleanup_P8": "1FAIL/0WARN same5knownunreachable; refs/reflog26sourcePASS/all23stash remote; retained notdeleted",
+    "P8_owned_completed_worktrees": "6clean originals remotely preserved then archivedrecoverableconfirmedviaapp; active3andunrelateduntouched"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
