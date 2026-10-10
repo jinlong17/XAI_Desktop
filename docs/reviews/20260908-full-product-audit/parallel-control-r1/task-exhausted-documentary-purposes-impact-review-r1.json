@@ -1,0 +1,53 @@
+{
+  "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW1",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent WHOLE budget/provenance impact proposal reviewer1 neverrepair",
+  "model": "gpt-6-astra",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "2d01d827d7ede5aaddb853b3d4caad2a5a23adf4",
+  "source_inputs": [
+    "eb69c0bef221f15500824ab72d1db1ee4f86df8e",
+    "19a072dedea5414ca75e00773930a2c2ae7d62cd",
+    "77a61a767cfd67ff5773abd343be2e59cc45829a"
+  ],
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-exhausted-documentary-purposes-impact-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths",
+    "oldcontracts/failurelogs/evidence/caps/measurements/runners/product/tests/fixtures/accepteddecisions",
+    "globalcontrol/ledgers/otherwts",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "input/hash/dirty/protected scope drift",
+    "need oldbusinessvalidator/measurement/qualification or exhaustedunit attempt",
+    "actual concluding checker failure STOP no retry/write/materialization/commit/amend"
+  ],
+  "acceptance": [
+    "Review WHOLE 120161byte impact1/all423 actuallyused immutablebindings/full originalgoalcap3/canonical completeG1Rules/16rawfailure receipts/29cards/fullacceptedreviews/relevantsourcecorpora. Independently check exact samecaller/unit/purpose/phase provenance and cumulativeiterations vs actualprograms vs collector calls vs prohibitedmaterialization; UNKNOWN stays UNKNOWN. Specific wholeunits sharedcollector/review3, Outerfullreview3, BRD12technicalauthor3, CD03sourceauthor2/fullreview3, DASHavailabilityauthor3 with4actualfailedprograms/overrun1, AI05actual3failedPythonchecks/overrun2+illegalmaterialization1. Do not count other static/rootmetadata as business attempts, or reinterpret real program failures as pretool errors. Source-root body claims and embeddedfailure facts separately assessed. Source423hashchecks not integrityqualification of recursively referenced bundles or oldverifiers.",
+    "Assess concrete recommended five documentary-only exceptions E1 sharedreview4 no collector4, E2 BRDauthor4+existingreview3, E3 existingCDauthor3+review4, E4 DASHauthor4+existingreview2 (phase4/actual5checks iflaunch), E5 AIauthor4+freshfullreview (illegalmaterialization remains separate). All original3/3 retained, anynewi4=4/4 and one actual checker per newdispatch; no fifth/unlimitedretry/newlabel/wtreset. Proposed perdispatch30min/static120sec/drain30sec costwalls are reviewable proposal not newgrants. Whole originalacceptance/finitefiles/independentfreshactors/reviewer neverfixes/methodstandards/module and protected boundaries/correction+reviewcapacity must hold. No extra shared designauthor4; Outerreview4 optionalNOTrecommended, cannot supplyO12admittedfixture/lawfulallocation. Does oneexception truly suffice or fundamentalholds remain? BRDfullaccountsecret/terminalredaction, CDsubscriptionobservability scope, DASHfullcanonicalRules, AIunsupportedsourcepolicy all require exactlawfulsourcegrounds. Approve/REVISE/BLOCKED own wholeproposal honestly, no implicitactualbudgetadoption.",
+    "Exclude sixpending ownerquestions(goalpanel, Clockretentioni4, WorldU1, RELV1unknownhistory/exception, CALlineage, BKminimalcarry/history/legacy); do notduplicate/assumeanswers. Budget cannot supply configuredfixture/ReactDOMforwarding/SDKadmission/quiescence/sourcequalification/fullvalidbefore/nativevisualvendor/runtime/creds. Priorwholeacceptedtechnicaldocs unchanged, missinglogs no0; M8RELunknownholds; original312939/formal13/3/3/293=312299unclosed. Root minimalconsolidatedownerdecision only after independentreview, no worker userquestion or adoption/newi4 launch. Otherreadywork continues.",
+    "Do NOT rerun exhausted business assertions/source-validator/hashcorruptionqualification or import authorchecker. Read complete relevantoriginal/source/integration MDs and actualparentcard/control at eachSHA; source423bindingschecked meaningful ownfullverdict, not enormous unrelatedhistoricalcase-count recreation. Bothcomplete finalbuffers and ALL immutableinputchecks BEFORE ANY write. Sole documentary static1, actualfailure freezes. Actualmanifest grammar no guessed counts/minsize/headlines/P0auditdoc parity; safeUTF8 compactJSON/newline/Python3.9 write_text no newlinekeyword. Preserve exactPID/session/chunk/numericexit/ownedEOFdrain UNKNOWNnot0. Exact2ADD onehooksdisabledcommit realnewlineWhyWhatScopeRiskDocsTests clean noamendpush. P56 quotedEOFformatresidual only never semanticfailurepermission."
+  ]
+}
