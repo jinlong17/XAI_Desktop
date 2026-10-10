@@ -3663,6 +3663,21 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-shell05-web-pet-source1-20261010/XAI_Desktop",
       "fixed_parent": "5272ab08b3afd1aba9f89515054a23b40ba0b6c4",
       "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+    },
+    {
+      "id": "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY1",
+      "workflow": "C",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "queued_fresh_whole_source1_after_ready_independent_reviews",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r1.json",
+      "fixed_input": "851eb216fe29e6d102cc4fb83f02c6d93aee7186",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": []
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
@@ -3675,7 +3690,11 @@
       "/root/parallel_c_hab01_hab05_whole_technical_contract_r1",
       "/root/parallel_c_mat01_mat03_final_whole_source_r3",
       "/root/parallel_c_shell05_web_pet_source_r1"
-    ]
+    ],
+    "queued_next": [
+      "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY1"
+    ],
+    "dispatch_priority": "Fresh independent full reviews of delivered Matrix/WebPet/Habcontract first; Calendar4source1 only spare lawfulslot; root4capacity."
   },
   "cost": {
     "new_formal": 0,
@@ -3790,7 +3809,15 @@
       "business_static": 0,
       "reason": "roothelper lackedoutput:discovery selfhash grammar adaptedmetadataonly sourceartifactunchanged e1a088exit0 all92declarations"
     },
-    "gov04_gov07_review3_input_acquisition_failures": 1
+    "gov04_gov07_review3_input_acquisition_failures": 1,
+    "last_controller_cycle": {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p84-p86-cost-cycle.json",
+      "source_receipts_after": 120,
+      "new_concluding_static": 2,
+      "new_failed": 1,
+      "new_acquisition_FAILED": 1,
+      "actual_billing_USD": "UNKNOWN"
+    }
   },
   "events": [
     {
@@ -4437,6 +4464,11 @@
       "at": "2026-10-10T19:55:42.563928+00:00",
       "event": "P86 proveALL120originalheads exactremote+120integrationpushedoriginancestors527 completehashboundproof. Actualroot+HabWHOLEtechnicalcontract1(parent0d/input610)+MatrixFINALwholeauthor3+WebPetSHELL05source1(bothparent527/input0d)=4/4 newreportlogicalsinglewriters; no code/runtime/qualification/before/caller grants. Histories/caps/83rework/148known35FAILED3UNKNOWN110reportedPASS/SK5classificationHELD/vendorbillingUNKNOWN allretained. Formal13/3/3/293312299unclosed939 unchanged; AsharedClockholds/Bimplementationgateholds/Cthreeauthors/Dwholeindependentreviewsnextslots; P85normal0FAIL1WARN/allcontrolpushed no recoverydelete. Oldsevenpendinggroups/newE6E7E8HELD goalunfinished.",
       "input": "5272ab08b3afd1aba9f89515054a23b40ba0b6c4"
+    },
+    {
+      "at": "2026-10-10T19:57:30.038928+00:00",
+      "event": "P87 rootcostcycleP84-P86:1newHabWHOLEsourceD2PASS+1Matrixsource2actualFAIL=2concluding;1GovfinalacquisitionFAILconcludingUNRUN. Newruntime/vendor/formalprobe0 actualbillingUNKNOWN retained3overruns/SK5classificationHELD/rework83. Currentroot+Habtechnical1+Matrixfinalsource3+WebPetsource1=4/4 distinctnewreports. QueuefournewCalendaroriginalitems01/02/04/05source1/3 afterdeliveredsourcefullreviewspriority; originalCAL03pendingpolicy/history NOTrepeated/reset nor new decisions.120sources148known35FAILED3UNKNOWN110reportedPASS formal13/3/3/293312299unclosed939 unchanged. P86normal0FAIL1WARN/851eb21pushed/all120proof preserved oldsevenpendinggroups/newE6E7E8HELD goalunfinished.",
+      "input": "851eb216fe29e6d102cc4fb83f02c6d93aee7186"
     }
   ],
   "wave_P2_tasks": [
@@ -4445,7 +4477,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P85literal0FAIL1WARN P86freshpending",
+    "normal": "P86literal0FAIL1WARN P87freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",

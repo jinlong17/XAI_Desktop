@@ -1,0 +1,39 @@
+{
+  "id": "P84-P86",
+  "source_receipts_before": 119,
+  "source_receipts_after": 120,
+  "new_delivered_whole_source_reviews": 1,
+  "new_concluding_static": 2,
+  "new_concluding_static_PASS": 1,
+  "new_concluding_static_FAILED": 1,
+  "new_acquisition_FAILED": 1,
+  "acquisition_failed_static_UNRUN": true,
+  "new_rework_findings": 0,
+  "new_runtime_tests_qualification_probes_vendor": 0,
+  "actual_billing_USD": "UNKNOWN",
+  "retained_counts": {
+    "sources": 120,
+    "known_concluding": 148,
+    "failed": 35,
+    "completion_unknown": 3,
+    "reported_PASS": 110,
+    "rework": 83
+  },
+  "SK_five_observed_classification": "HELD_UNKNOWN nozero/reset",
+  "budget_overruns_retained": 3,
+  "no_original_budget_reset": true,
+  "normal_logs": [
+    {
+      "path": "/tmp/audit-parallel-p84-normal-sync.log",
+      "sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b"
+    },
+    {
+      "path": "/tmp/audit-parallel-p85-normal-sync.log",
+      "sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b"
+    },
+    {
+      "path": "/tmp/audit-parallel-p86-normal-sync.log",
+      "sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b"
+    }
+  ]
+}
