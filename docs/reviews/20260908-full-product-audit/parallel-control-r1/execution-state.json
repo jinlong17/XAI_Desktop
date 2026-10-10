@@ -2222,7 +2222,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-sol",
       "provider_attested": false,
-      "state": "running_fresh_bounded_independent_task",
+      "state": "FAILED_static1_registration_card_wrong_fixedSHA_nooutputs_frozen_review2of3",
       "fixed_input": "2461db7d47e19b0a254fe14a9b82985152e94611",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2232,19 +2232,29 @@
       "actual_actor_launched": true,
       "fixed_parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-byte-review2-20261010/XAI_Desktop",
-      "attachment_registration": "identity count exceeds100 existingcheckout used"
+      "attachment_registration": "identity count exceeds100 existingcheckout used",
+      "source_commit": null,
+      "static_pass": 1,
+      "static_result": "FAILED",
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shared-byte-review2-failure-receipt.json",
+      "failure_receipt_sha256": "4ce5df7318d4a02d5d301c33be1e3c44bb9bb7c28c58d7d32896aac87d12ed76"
     },
     {
       "id": "BRD-28/SOURCE-MACHINERY-IMPACT2",
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_task",
+      "state": "running_fresh_FULL_independent_impactauthor2",
       "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-r2.json",
+      "actor": "/root/parallel_a_brd28_machinery_impact_r2",
+      "fixed_parent": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-machinery-impact2-20261010/XAI_Desktop",
+      "actual_actor_launched": true,
+      "attachment_registration": "identity count exceeds100 existingcheckout used"
     },
     {
       "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW2",
@@ -2314,6 +2324,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-outer-capture-admission-impact-r2.json"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION-REVIEW3",
+      "workflow": "D",
+      "configured_model": "gpt-6-sol",
+      "provider_attested": false,
+      "state": "queued_fresh_FULL_final_independent_review3",
+      "fixed_input": "2461db7d47e19b0a254fe14a9b82985152e94611",
+      "family_iteration": 3,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-review-r3.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -2341,14 +2363,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "87delivered static84incl7FAILED +pending9FAILED1UNKNOWN=94known16FAILED1UNKNOWN; twoPASSsourcesnew no runtime; collectionactual3/mechanical1/pretool1 separate.",
+    "static_passes_basis": "87delivered static84incl7FAILED +pending10FAILED1UNKNOWN=95known17FAILED1UNKNOWN; byte-review2 newFAILED nooutputs; originalreview1partialPASS preserved; collection3/mechanical1/pretool1 separate.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 7,
     "rework_findings_basis": "Prior61 pluswholeouterreviewR1 mandatoryactualfixture noncircular prerequisite absent. UncommittedBRD/CD/MEDdraftobservations not findingsaccepted.",
-    "pending_no_delivery_static_invocations": 10,
-    "pending_no_delivery_static_failures": 9,
-    "actual_static_invocations_total_known": 94,
-    "actual_static_failed_total_known": 16,
+    "pending_no_delivery_static_invocations": 11,
+    "pending_no_delivery_static_failures": 10,
+    "actual_static_invocations_total_known": 95,
+    "actual_static_failed_total_known": 17,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
@@ -2781,6 +2803,11 @@
       "at": "2026-10-10T16:01:49.425056+00:00",
       "event": "P47 outerfullreview682e originalremote ->75ee126 FULL2963hashes/static1PASS semanticREVISE R1 mandatoryO12realViteReactSDKfixture absent/admission circular/source2REVISE/source3dependsinfra. NOimplementation/card/source3release. RegisterfreshFULLimpactcorrector2/3 actualexistingadmittedfixture evidenceonly no genericplaceholder/movedcallerhost/newcode/exhaustedshared4; ifnonepreciseBLOCK localdescendants only. POMOsourcebe6 originalremote ->da0f76f0ae52a4371fff128904700ce88d4a3b0a FULL3031identities2601objects122634845bytes/exact2ADD/static1PASS PID38180nodeReplstdoutstderrENDcloseexit0/sourcecheckerappendixFhashb7c769; full15rows/L1-L8/11paths20machinery/fullcanonicalactual13214Rules PROPOSEDUNADOPTED freshwholeDreview1queued. SourceSDK/config/acquisition/rootcapture/nativefocus/historicalholds remain. Root+MEDfullreview+sharedbytefullreview2+GOV01/02Bsource-onlydiscovery=4/4; B actualparserscan no historical19/3current claim/no parserexecution. NinearchiveQUEUED_UNCONFIRMED remainpreserved/cleanupisolatednotglobalhold. P46normal2FAIL1WARN capturedtwonewsourcecommitsbeforeremotepreservation, nowbothoriginalrefs pushed andintegrated; no recoverydelete or losthistory, freshnormalP47pending.87receipts94knownstatic16FAILED1UNKNOWN/overrun1/rework62/collection3/mechanical1/vendor3LISTnotbilling. Formal13/3/3/293=312/939unchanged TT08onlynewacceptedfullcaller, no newmethod/runtime/caller/releaseacceptance. Nextfreeslot oldestBRD28impact2/BRDtechnicalreview2/CDreview2/POMOfullreview1/outerimpact2 underfairaging.",
       "input": "da0f76f0ae52a4371fff128904700ce88d4a3b0a"
+    },
+    {
+      "at": "2026-10-10T16:04:27.841144+00:00",
+      "event": "P48 sharedbyteFULLreview2/static1FAILED02f132 synchronousexit1/PIDcatPIDUNKNOWN cardlookedupatfixed2461beforecardadded; manifestparsedcompletehash/payload/dependencies/provenanceUNRUN/nooutputs/clean. FreezeNOTbundlecorruption; registerfreshFULLreview3/3FINAL existingfrozen2461input/B719drafts, actualnewdispatchparentcardexplicitbinding+alloriginal/integration/parentMDs beforeonechecker no retry/recollect/capreset. Originalcollection3/3EXHAUSTED NO4/review1partial remains. BRD28backupmachineryimpactauthor2 startsparent28ba/fixedaed originalfullscope; root+MEDreview+GOVdiscovery+BRD28impact2=4/4. GOVsource-onlyusesxai-dev-dashboard-sync skillread; currenthistorical19/3notasserted/no generator or testsrun. P47normal0FAIL1WARN aftertwofreshsourceorigins preserved; allnormalfailurelogs kept. Nineownedarchive requestsstillQUEUED_UNCONFIRMED no cleanupsuccess/otherwts/recoverydeletion; independentworkersdistincttrees continue.87receipts95knownstatic17FAILED1UNKNOWN/overrun1/rework62/collection3/mechanical1/vendor3LISTnotbilling. Formal13/3/3/293=312/939unchanged TT08onlynewfullcalleraccepted, no newruntime/method/source3/contract/releasegrant. Nextslots oldestBRDfullreview2/CDfullreview2 pluscriticalbytefinalreview3 andPOMOfullreview1/outercorrectingimpact2 withfairaging.",
+      "input": "af48d69854e9d6157bc51969fd19e09911fe81c0"
     }
   ],
   "wave_P2_tasks": [
@@ -2789,7 +2816,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P46literal2FAIL1WARN duringtwofreshsource682e/be6 readybeforearchivepush; both nowremote preserved andreceived; originalfailurelog retained, freshP47normalpending",
+    "normal": "P47af48d69 pushedliteral0FAIL1WARN afterbothneworiginalsources682e/be6 remote preservation; priorP46twoFAIL retained",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -2824,7 +2851,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "491b002658518fe9d9cc3ea221c812174462a60cca3c862d139b649b13390e3d",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
