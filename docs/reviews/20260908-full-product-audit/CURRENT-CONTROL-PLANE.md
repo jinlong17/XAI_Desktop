@@ -541,3 +541,13 @@ The user explicitly replaces global serialization and authorizes dependency-driv
 ### Parallel wave P1 dispatch receipt
 
 A `/root/parallel_a_clock_q1_impact_r1`, C `/root/parallel_c_tt08_contract_r1`, D `/root/parallel_d_scope_acceptance_r1` launched in three new owned worktrees from7bb8df1; configuredgpt-6-astra, actual provider model not independently attested. 3workers+root=4/4 slots. Each writer restricted to two distinct ADD-only reports/index files; no browser/native/product edit, no historical reruns. B rotates in after reviewed preparation/slot. New formal/probe cost0; retained Q1focus1/3, other six0/3, dev2/83; B70 counters preserved. No global completion or release claim.
+
+### Parallel P1 receipt and P2 registration
+
+P1 complete: TT08 preparation sourcec6ab3c9→integration832013f (131inputs), Clockimpactf37c860→3f106c6 (1401hashes including embedded/slices), D scope review4ba9c44→0d6124d (42inputs). Every original source remotely preserved on dedicatedcodex/archive refs before scoped cherry-pick; output bytes/patch scopes unchanged, integrated commits pushed/ancestor checked. ProductP0/canonicalr2/threeledgers unchanged. TT08 is proposal only, Clockimpact supports narrow correction only, D resultREVISE—not scheduleracceptance.
+
+D-R1-01:299reconcile nodes reference undeclaredcontroller-receipt-lock; full312scope,933evidence and formalcounts correct. Fresh bounded schema correction then fresh review2/3; originalr1review retained. Other tasks proceed with explicit controller serialization.
+
+P2 registered inparallel-control-r1/tasks-P2.json: A CLOCK/CORRECT-IMPL (new r2retention adapter, synthetic fault validation only, no native); B PARALLEL/LOCK-CORRECT (new typed recurring resource docs, no product); D TT08/contract-review (fresh reviewer, no repairs). Fresh actor per phase, max3workers. Next Clockactualcorrectionreview precedes fresh native continuation; Q1focus1/3 and six0/3/B70budgets preserved. FullMGB+Clockrecoverychain remainsgated.
+
+Cost checkpoint for3receivedP1tasks:3staticpasses,0newformal,0browser/native/probes/package runs,1REVISE finding; no historical iteration reset. Formal13/3/3/293=312,299unclosed unchanged. Runtime goalmetadata remainsblocked/API-no-resume; repository schedule continues per directuserauthorization.

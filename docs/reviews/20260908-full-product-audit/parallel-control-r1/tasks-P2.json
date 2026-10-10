@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "wave": "P2",
+  "fixed_input": "0d6124dac872e040e8eac389b44bb5e52602197a",
+  "registration_sha": "commit containing this exact card",
+  "tasks": [
+    {
+      "fixed_card_input": "0d6124dac872e040e8eac389b44bb5e52602197a",
+      "dispatch_parent": "resolve commit containing this exact card; never change after launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "no_children": true,
+      "forbidden": [
+        "any non-allowed path",
+        "all original contracts/evidence/runners/failed logs",
+        "product/CSS/source behavior changes",
+        "control-plane/three ledgers",
+        "other-session worktrees",
+        "push/merge/rebase/deploy/release/promotion/D3",
+        "browser/native formal continuation without independent actual correction review"
+      ],
+      "stop": [
+        "hash or scope conflict",
+        "unsupported product behavior",
+        "source retention/causality standard weakened",
+        "unit cap exhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "CLOCK/CORRECT-IMPL",
+      "workflow": "A",
+      "role": "fresh independent Sol lifecycle corrector",
+      "model": "gpt-6.1-sol",
+      "depends_on": [
+        "CLOCK/R1"
+      ],
+      "source_inputs": [
+        "f37c8607ef30fc5bd927425ae1ee6837f7276c53",
+        "686e98b6251364aee1fa26c63ad30e6af15c3b25",
+        "213aafd92e4ea3a43d943fb766efa73fb4cbbe96",
+        "710fd8421ed651ec366c5bb5e3b15fa5151ec7e6",
+        "bacdbbc17d395e320cd100234aa5738cdbae3414"
+      ],
+      "allowed_files": [
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/manifest.md",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/qualification.md",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-qualification.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/evidence-retention.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/source-diff.patch",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-evidence-retention.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/pixel-focus-qualified-r1.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-native-focus-qualified-r1.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/verify-native-geometry-reload-r1.mjs",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/native-clock-focus-probes-r1.js",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/focus-controls.html",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/reload-controls.html",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i1.log",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i1.json",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i2.log",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i2.json",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i3.log",
+        "docs/reviews/web-dashboard-clock-recovery-qualification-r2/retention-checks-i3.json"
+      ],
+      "scope": "New hash-bound evidence-lifecycle/primary-cleanup-error/causal-negative-check adapter only. Last six dependency files copied byte-identical. No pixel algorithm/fixture change and no native/browser/Q1 qualification invocation. Pure synthetic owned process/filesystem retention validation permitted. Every line change justified by accepted impact section3-5. Whole original seven units preserved.",
+      "acceptance": [
+        "Durable append-only raw records before cleanup and guarded final snapshots; partial evidence visible",
+        "stream child stdout/stderr before return and checkout cleanup, preserve original exits",
+        "bounded CDP close and own child exit/streams; startup failure tracked; no unrelated process/profile touches",
+        "primary,cleanup,persistence errors independent; any incomplete harness/persistence nonzero",
+        "specific induced-cause predicates from exact existing raw data; unrelated refusal never counts as success",
+        "fixed cumulative reservations use originalr1focus1 and other six0, no directory-reset",
+        "11 impact-listed retention fault scenarios plus ownership/overwrite/reservation tests and complete raw/hash/check counts",
+        "fresh independent correction review before formal continuation; method remains unqualified"
+      ],
+      "budgets": {
+        "retention-suite": {
+          "used": 0,
+          "cap": 3,
+          "kind": "deterministic correction validation, distinct from formal Q1 seven units; disclose all failed invocations"
+        },
+        "q1": "focus1/3,other six0/3 unchanged; ZERO new browser/native/probe allowed here",
+        "b70": "immutable,visual3/3 exhausted,focusEN2/ZH2 no third"
+      },
+      "owned_lifecycle_policy": "Only exact newly spawned synthetic child/profile; per operation deadline <=5s, total lifecycle<=15s; own SIGTERM plus <=2s grace then own SIGKILL<=2s wait permitted, record all outcomes. Prefer exact profile retention if quiescence/ownership uncertain. No historicalQ1profile deletion, no glob/global kill, no unbounded retry."
+    },
+    {
+      "fixed_card_input": "0d6124dac872e040e8eac389b44bb5e52602197a",
+      "dispatch_parent": "resolve commit containing this exact card; never change after launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "no_children": true,
+      "forbidden": [
+        "any non-allowed path",
+        "all original contracts/evidence/runners/failed logs",
+        "product/CSS/source behavior changes",
+        "control-plane/three ledgers",
+        "other-session worktrees",
+        "push/merge/rebase/deploy/release/promotion/D3",
+        "browser/native formal continuation without independent actual correction review"
+      ],
+      "stop": [
+        "hash or scope conflict",
+        "unsupported product behavior",
+        "source retention/causality standard weakened",
+        "unit cap exhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "PARALLEL/LOCK-CORRECT",
+      "workflow": "B",
+      "role": "fresh independent documentation/schema corrector",
+      "model": "gpt-6.1-sol",
+      "depends_on": [
+        "PARALLEL/MAP-REVIEW"
+      ],
+      "source_inputs": [
+        "4ba9c44a60fe97eeee8d5489c320eaedf2e342cc",
+        "7bb8df1631b94295bb7c3f928fcd9924b1337873"
+      ],
+      "allowed_files": [
+        "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r2/scheduler.md",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r2/correction.md",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r2/inputs.sha256",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r2/checks.json"
+      ],
+      "scope": "ADD versioned r2 artifacts only. Preserve full original312 mapping,2420IDs,existinggate identities/all business acceptance,all original evidence. Repair ONLY D-R1-01 typed recurring controller resource; no product/worker implementation readiness change. Do not replace r1 files or current CP pointers.",
+      "acceptance": [
+        "strict reference completeness0 unknown across nodes/external gates/declared typed resources",
+        "retain2420task identities and original completion edges except explicitly recorded unknown-resource-to-required-resource transform",
+        "recurring exclusive root-owned lease for every receipt/integration/control/ledger mutation incl Clock adopt/baseline/ledger",
+        "release on completion/error, never one-time completed gate or permanently held status",
+        "two-ready-receipts conceptual check permits one root writer at a time without starvation/deadlock",
+        "DAG acyclic, all312records formal/evidence unchanged; old REVISE and reviewiteration1 retained"
+      ],
+      "budgets": {
+        "static_correction_pass": 1,
+        "review_family": "initial review1 consumed, next fresh review2/3; no reset by r2 suffix",
+        "runtime": 0
+      }
+    },
+    {
+      "fixed_card_input": "0d6124dac872e040e8eac389b44bb5e52602197a",
+      "dispatch_parent": "resolve commit containing this exact card; never change after launch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "no_children": true,
+      "forbidden": [
+        "any non-allowed path",
+        "all original contracts/evidence/runners/failed logs",
+        "product/CSS/source behavior changes",
+        "control-plane/three ledgers",
+        "other-session worktrees",
+        "push/merge/rebase/deploy/release/promotion/D3",
+        "browser/native formal continuation without independent actual correction review"
+      ],
+      "stop": [
+        "hash or scope conflict",
+        "unsupported product behavior",
+        "source retention/causality standard weakened",
+        "unit cap exhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "TT-08/contract-review",
+      "workflow": "D",
+      "role": "fresh independent Astra reviewer",
+      "model": "gpt-6-astra",
+      "depends_on": [
+        "TT-08/prepare"
+      ],
+      "source_inputs": [
+        "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-tt08-contract-review-r1/review.md",
+        "docs/reviews/audit-parallel-tt08-contract-review-r1/inputs.sha256"
+      ],
+      "scope": "Static independent review proposedTT08 contract D1-D7, exact5 futuredocs and TT01/02/03/REL01 preservation. No repair/no product edits/no runtime. Original TT08 wording/page correspondence/status gates cannot shrink.",
+      "acceptance": [
+        "actual mode consumes/source truth vs accepted historical TT02 rules independently checked",
+        "canonical TimeTrackerPRD bounded slice plus all requirement/page/docs obligations preserved",
+        "exact5-doc candidate scope and GOV04/GOV05semantic locks, no Clock/source/CSS writes",
+        "static before/new author/independent verification/separate current-status publication/full acceptance/evidence-onlyledger remain separate",
+        "READY_TO_SHIP label only documentation iteration after actual independent receipt; no wholeproduct/business/release verdict",
+        "APP/vendor/module/external and allhistoricalbudgets remain; no invented owner behavior"
+      ],
+      "budgets": {
+        "static_review_iteration": 1,
+        "review_family_cap": 3,
+        "browser_native_package_probe": 0
+      }
+    }
+  ],
+  "max_total_slots": 4,
+  "max_workers": 3,
+  "order": "rotate all three independent scopes; no read/write/semantic conflict; reviewers never repair",
+  "after": "CLOCK/CORRECT-REVIEW fresh, then freshQ1-CONTINUE remainingseven, thenfreshQ2. PARALLEL/MAP-REVIEW2 fresh exactr2. TT08/before fresh only after approvedcontract."
+}
