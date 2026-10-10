@@ -71,12 +71,22 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop",
       "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
       "parent_graph_node": "CLOCK/CORRECT",
-      "state": "running",
+      "state": "finalizing_validation3_of3_exhausted",
       "source_commit": null,
       "integration_commit": null,
       "formal_invocations": 0,
       "new_development_probes": 0,
-      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
+      "retention_validation": {
+        "invocations": 3,
+        "assertions": 145,
+        "case_executions": 42,
+        "passed_case_executions": 41,
+        "last_exit": 0,
+        "last_cases": "14/14",
+        "method_qualified": false
+      },
+      "additional_blocker": "unstable-capture metadata absent in immutable helper; fresh scope impact required"
     },
     {
       "id": "PARALLEL/LOCK-CORRECT",
@@ -87,12 +97,15 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-lock-correct-20261010/XAI_Desktop",
       "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
       "parent_graph_node": "PARALLEL/MAP-REVIEW",
-      "state": "running",
-      "source_commit": null,
-      "integration_commit": null,
+      "state": "received_unaccepted_await_fresh_review2",
+      "source_commit": "11b8d721f9d423fcabb19857e96c927375b9323a",
+      "integration_commit": "b9ef48342385c1ed2e28f14f4788596dcb095272",
       "formal_invocations": 0,
       "new_development_probes": 0,
-      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
+      "input_hashes_checked": 84,
+      "archive_ref": "codex/archive/parallel-lock-correct-r2-20261010",
+      "static_pass": 1
     },
     {
       "id": "TT-08/contract-review",
@@ -103,19 +116,22 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-review-20261010/XAI_Desktop",
       "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
       "parent_graph_node": "TT-08/contract-review",
-      "state": "running",
-      "source_commit": null,
-      "integration_commit": null,
+      "state": "accepted_contract_only_APPROVED",
+      "source_commit": "287547e2b0e0724a48a89e50377ccc7e840db93b",
+      "integration_commit": "01408fb386b3d3e11a31e0a0ed24622395566aea",
       "formal_invocations": 0,
       "new_development_probes": 0,
-      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited",
+      "input_hashes_checked": 137,
+      "archive_ref": "codex/archive/parallel-tt08-contract-review-r1-20261010",
+      "static_pass": 1
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -127,8 +143,10 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 3,
-    "rework_findings": 1
+    "static_passes": 5,
+    "rework_findings": 1,
+    "retention_validation_invocations": 3,
+    "retention_assertions": 145
   },
   "events": [
     {
@@ -155,6 +173,11 @@
         "PARALLEL/LOCK-CORRECT",
         "TT-08/contract-review"
       ]
+    },
+    {
+      "at": "2026-10-10T09:49:12.127939+00:00",
+      "event": "P2 TT08 contract approved; schema correction received unaccepted; fresh before and review2 registered",
+      "fixed_input": "b9ef48342385c1ed2e28f14f4788596dcb095272"
     }
   ],
   "wave_P2_tasks": [
