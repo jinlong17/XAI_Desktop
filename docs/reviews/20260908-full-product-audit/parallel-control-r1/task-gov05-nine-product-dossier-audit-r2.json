@@ -1,0 +1,122 @@
+{
+  "id": "GOV-05/NINE-PRODUCT-DOSSIER-AUDIT2",
+  "workflow": "C",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh independent whole ninefeature traceability audit author2 after prewrite failure, no PRD writes",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "2736a112964974d6ed17b88025feb66c50a68846",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_item": {
+    "id": "GOV-05",
+    "priority": "P2",
+    "kind": "文档",
+    "action": "补AI、Countdown、Habits、Matrix、Meditation、Metrics、Pet、Statistics、Time Tracker九份canonical PRD",
+    "acceptance": "按用户能力而非npm包建档；需求→实现→测试→发布有链，未确认需求不臆造",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+    "primary_workflow": "B",
+    "original_module": "web（project-system）",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "GOV-05",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [],
+    "source_section": "GOV",
+    "acceptance_evidence": {
+      "business_acceptance": "按用户能力而非npm包建档；需求→实现→测试→发布有链，未确认需求不臆造",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "GOV-05/prepare",
+      "GOV-05/contract-review",
+      "GOV-05/before",
+      "GOV-05/implement",
+      "GOV-05/verify",
+      "GOV-05/accept",
+      "GOV-05/reconcile",
+      "GOV-05/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "features": [
+    "AI chat",
+    "Countdown",
+    "Habits",
+    "Matrix",
+    "Meditation",
+    "Metric Tracker",
+    "Pet",
+    "Statistics",
+    "Time Tracker"
+  ],
+  "skill": {
+    "path": ".teams/skills/xai-feature-dossier-sync/SKILL.md",
+    "mode": "audit"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov05-nine-product-dossier-audit-r2/audit.md",
+    "docs/reviews/audit-parallel-gov05-nine-product-dossier-audit-r2/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths especially docs/product PRDs/apps/packages sources/tests/release/logs",
+    "all original accepted evidence/failures/contracts/runner/methods",
+    "globalcontrol/ledgers/otherwts/modulegates/productdecisions",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "audit_iteration": 2,
+    "audit_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "logical_locks": {
+    "write": [
+      "newGOV05nine-dossier-audit-only"
+    ],
+    "read": [
+      "nineproducthistoricalevidence",
+      "currentTT08acceptedDOCdelta"
+    ],
+    "future_shared_writer": "future canonical PRD edits must serialize actual feature doc writers; no sharedparser/mirror/source repair grants"
+  },
+  "stop": [
+    "actualinput/hash/dirty/protectedscope drift",
+    "need inferred productdecision without acceptedrule",
+    "actual concluding static failure STOP no retry/materialization/commit/amend"
+  ],
+  "acceptance": [
+    "Cover whole original GOV05 nine user-facing features, not npm-package PRDs. Apply named dossier skill AUDIT mode only. Resolve feature-package map from existing canonical rules/feature inventory/actualregistrations, infra excluded. Full evidence-backed requirement matrix for each feature Source from exactdevlog iteration/brief/discovery/roadmap/commit/releaselog; sourcecode only identifies implementation, never invent requirement. Exact existing canonicalPRD state (missing vs present), design/API/testcoverage trace chain, historical implemented/independentverified/shipped/deployed separated, unknowns honest. Each row real Source or marked pendingconfirmation; no userquestion yourself, no assumed productpolicy. Accepted TT08docdelta at currentparent preserved, P0 product source still unchanged. Recent MED/CD/POMO/BRD accepted technicaldocs not runtimepasses. Metricplannedtabs/PetandAI scope/owner existingrules retained.",
+    "Read original goal/human authorityoverlay/CLAUDE documentation contract/modulemap/feature-plan Increment/release-log/complete relevant packages docs dev_log/design/api/test/productPRD/actual brief discovery and reviewed acceptance entries. Enumerate finite relevant sources then fully read/bind them; no entire unrelated audit corpus reproduction. Exact used commit bodies/diffs for requirement source identities if cited. Do not rerun valid historical tests/replay batches. Source-only read coverage does not prove runtime/provider behavior. No old AI05sourcechecker/allocation correction or renamed exhausted purpose: GOV05 requirement-to-document traceability distinct, all exhausted original units remain held.",
+    "Deliver nine complete per-feature traceability matrices and concrete gap/backfill plan ordered by userimpact, finite futurecanonicalpaths and proposed evidencebound content boundary (not draft/apply), explicit perfeature holds and sourcekind. No canonicalwrite, no threshold/budgetrelaxation or sourcequalification/fullvalidbefore claim. Fresh independent wholecontract/impact acceptance and rootboundedgrant required before any apply/draft. Formal13/3/3/293=312 and939refs preserved; all nine are ONE GOV05 ownership no nine duplicated audititems. No unrelated GOV04/07/parser repair.",
+    "ALL inputchecks and BOTH complete outputbuffers BEFORE ANY writes; sole meaningful documentary static1 checks own evidence bindings/whole nine coverage/Source rows. No guessed minsize/count/headline/P0auditdocs equality or oldbusinessvalidator. Raw PID/session/chunk/numericexit/fullEOFdrain receipts, missing UNKNOWN not0. Python3.9 API safeUTF8 JSON/newline transport. Exact2ADD one hooksdisabled commit realnewline WhyWhatScopeRiskDocsTests clean noamend/push. Actual checkerfailure immediatefreeze; no postfailurewrites. Existing quotedbytes EOFformat residual disclosure only P56, notsemanticfailure permission.",
+    "Original author1 premature output write FAILED_PREWRITE_PROCESS, its two rawdraft bytes/hash captured in registrationparent controlreceipt, unaccepted/untrusted not requirement source. Author2 retains cumulative1/3 used, no reset; do NOT amend/rewrite olddraft/oldreceipt. Mandatory in-memory ALL source/input acquisition+validation and BOTH complete finalbuffers before first filesystem write, including intermediate draft/manifest. Capture exact actual write PID/session/chunk/exit and checker beforewrite provenance, missingUNKNOWN. Fully read exact actualparent TT08_reconciliation and accepted_documentary_callers plus sourcec5874e5f6e803aa391ef2e5fb677e4bab592f4ef complete acceptance.md and parentledger: full D1-D7+authorizedpostPASS documentary caller accepted/reconciled46e2/freshstaticinventory8c481; excludes runtime/release/GOV/312 closure. Original PRD pending-candidate wording is historical/stale sourcebody, not current acceptedstatus; preservequoted text and distinguish later accepted evidence. Never infer runtimePASS. All nine feature matrix/source/backfill requirements remain full. No old AI05source validator or exhaustedpurpose replay; reviewer separate. Singleconcludingstatic1 actualfailurefreeze, exact2newpaths only no source/runtime/canonical write."
+  ],
+  "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov05-prewrite-failure-p62-preservation-receipt.json"
+}

@@ -1,0 +1,39 @@
+{
+  "source": "327e5006cc2511f0faec8b61d638576eb96501b5",
+  "integration": "2736a112964974d6ed17b88025feb66c50a68846",
+  "archive_ref": "codex/archive/parallel-gov06-authority-contract-impact-r1-20261010",
+  "parent": "741be24e8937b8ca86d6f70217fdeeb600fbbd5a",
+  "fixed_input": "0348f1e73725991e3bb2cc402b2d5aac95918b23",
+  "all_input_hashes_checked": 127,
+  "outputs": {
+    "docs/reviews/audit-parallel-gov06-authority-source-contract-impact-r1/inputs.sha256": "595e9c51244b85713326f27f50ce8cde29e003e2a10d98dd731de65cfcf212d9",
+    "docs/reviews/audit-parallel-gov06-authority-source-contract-impact-r1/contract.md": "23ff90f518e2cc356b7818520d44a64ed98966086e253ab0849b5ac84b789114"
+  },
+  "author_iteration": 1,
+  "author_cap": 3,
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 52293,
+    "session": 96497,
+    "start_chunk": "274dd0",
+    "payload_chunk": "d3b0d4",
+    "final_chunk": "572a8d",
+    "exit": 0,
+    "bytes": 5926195,
+    "both_complete_buffers_beforewrite": true,
+    "owned_EOF_drained": true
+  },
+  "finalization": {
+    "format_chunk": "2559c2",
+    "format_exit": 0,
+    "commit_chunk": "8ecbc1",
+    "commit_exit": 0,
+    "final_chunk": "1bdef2",
+    "final_exit": 0,
+    "clean": true,
+    "amend": 0
+  },
+  "disposition": "wholePROPOSALONLY_UNADOPTED fresh independentD1 required; no authority/registry/code/before/method grant",
+  "root_role": "metadataonly"
+}
