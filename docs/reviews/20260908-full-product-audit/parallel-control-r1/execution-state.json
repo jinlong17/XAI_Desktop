@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "controller": "/root",
+  "registration_sha": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+  "original_goal_runtime_status": "blocked; no edit/resume API; user authorized actual continued execution",
+  "formal_counts": {
+    "completed": 13,
+    "verification_pending": 3,
+    "in_progress": 3,
+    "pending": 293
+  },
+  "unclosed": 299,
+  "tasks": [
+    {
+      "id": "CLOCK/R1",
+      "workflow": "A",
+      "actor": "/root/parallel_a_clock_q1_impact_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-q1-impact-20261010/XAI_Desktop",
+      "fixed_parent": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "static_pass": 1,
+      "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/prepare",
+      "workflow": "C",
+      "actor": "/root/parallel_c_tt08_contract_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-prepare-20261010/XAI_Desktop",
+      "fixed_parent": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "static_pass": 1,
+      "formal_invocations": 0
+    },
+    {
+      "id": "PARALLEL/MAP-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_scope_acceptance_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-map-review-20261010/XAI_Desktop",
+      "fixed_parent": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "static_pass": 1,
+      "formal_invocations": 0
+    }
+  ],
+  "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
+  "concurrency": {
+    "root": 1,
+    "workers": 3,
+    "total": 4,
+    "capacity": 4
+  },
+  "cost": {
+    "accepted_parallel_tasks": 0,
+    "new_formal": 0,
+    "new_development_probes": 0,
+    "clock_inherited_focus_formal": 1,
+    "clock_inherited_six_units_formal": 0,
+    "clock_inherited_development_invocations": 2,
+    "clock_inherited_development_checks": 83,
+    "b70_counters": "immutable original receipts; no reset"
+  },
+  "events": [
+    {
+      "at": "2026-10-10T09:20:36.740907+00:00",
+      "event": "P1 dispatched",
+      "fixed_parent": "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+      "tasks": [
+        "CLOCK/R1",
+        "TT-08/prepare",
+        "PARALLEL/MAP-REVIEW"
+      ]
+    }
+  ]
+}
