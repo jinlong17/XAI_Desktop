@@ -3493,7 +3493,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_independent_whole_source_and_processD2",
+      "state": "FAILED_STATIC_NO_ARTIFACT_freshremainingiteration",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov04-gov07-status-source-discovery-review-r2.json",
       "fixed_input": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746",
       "family_iteration": 2,
@@ -3504,7 +3504,11 @@
       "actor": "/root/parallel_d_gov04_gov07_whole_source_process_review_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov04-gov07-review2-20261010/XAI_Desktop",
       "fixed_parent": "5ca699b982d3a1adca29867bff5057c5a78fbee8",
-      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation",
+      "static_invocations": 1,
+      "static_result": "FAILED",
+      "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov04-gov07-review2-p82-failed-static-receipt.json",
+      "source_commit": null
     },
     {
       "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY1",
@@ -3512,7 +3516,7 @@
       "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_whole_source1",
+      "state": "FAILED_STATIC_NO_ARTIFACT_freshremainingiteration",
       "fixed_input": "5ca699b982d3a1adca29867bff5057c5a78fbee8",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-mat01-mat03-source-discovery-r1.json",
       "family_iteration": 1,
@@ -3523,7 +3527,11 @@
       "actor": "/root/parallel_c_mat01_mat03_source_discovery_r1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-mat01-mat03-source1-20261010/XAI_Desktop",
       "fixed_parent": "3267e34b99f9f58ce065a21416e523b8cd084962",
-      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation",
+      "static_invocations": 1,
+      "static_result": "FAILED",
+      "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/matrix-source1-p82-missing-input-failure-receipt.json",
+      "source_commit": null
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW2",
@@ -3531,9 +3539,43 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_wholeD2",
+      "state": "running_fresh_independent_whole_source_and_processD2",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-source-discovery-review-r2.json",
       "fixed_input": "8a05231add157e43f31bb1f853b3b2fadb69cace",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "actual_actor_launched": true,
+      "adopted": false,
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_hab01_hab05_whole_source_process_review_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-review2-20261010/XAI_Desktop",
+      "fixed_parent": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
+    },
+    {
+      "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY-REVIEW3",
+      "workflow": "D",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "registered_ready_waiting_slot",
+      "fixed_input": "ae9ea3ce70d1d822b462b726fcdb43f1d59e2746",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov04-gov07-status-source-discovery-review-r3.json",
+      "family_iteration": 3,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": []
+    },
+    {
+      "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY2",
+      "workflow": "C",
+      "primary_workflow": "mixed_B_and_C_preserve_original_ownership",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_ready_waiting_slot",
+      "fixed_input": "66060a9caa7bd4c5443c202bf8fad99469e1e123",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-mat01-mat03-source-discovery-r2.json",
       "family_iteration": 2,
       "family_cap": 3,
       "actual_actor_launched": false,
@@ -3544,15 +3586,15 @@
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 1,
+    "total": 2,
     "capacity": 4,
     "actors": [
-      "/root/parallel_d_gov04_gov07_whole_source_process_review_r2",
-      "/root/parallel_c_mat01_mat03_source_discovery_r1"
+      "/root/parallel_d_hab01_hab05_whole_source_process_review_r2"
     ],
     "ready_next": [
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY-REVIEW2"
+      "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY-REVIEW3",
+      "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY2"
     ]
   },
   "cost": {
@@ -3573,14 +3615,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "119delivered118reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending22FAILED3UNKNOWN1reportedPASSfactualFAIL=>144known32FAILED3UNKNOWN109reportedPASSinclwhitespace1; SK5actualprewriteguardfailureclassificationHELD separate no0.",
+    "static_passes_basis": "119delivered118reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending24FAILED3UNKNOWN1reportedPASSfactualFAIL=>146known34FAILED3UNKNOWN109reportedPASSinclwhitespace1; SK5actualprewriteguardfailureclassificationHELD separate no0.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "76prior+4wholeSKD2+3wholeHabD1; Gov04source2producerfactual1 separateunvalidated",
-    "pending_no_delivery_static_invocations": 26,
-    "pending_no_delivery_static_failures": 22,
-    "actual_static_invocations_total_known": 144,
-    "actual_static_failed_total_known": 32,
+    "pending_no_delivery_static_invocations": 28,
+    "pending_no_delivery_static_failures": 24,
+    "actual_static_invocations_total_known": 146,
+    "actual_static_failed_total_known": 34,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 3,
     "actual_static_completion_unknown_total_known": 3,
@@ -4289,6 +4331,11 @@
       "at": "2026-10-10T19:36:29.806943+00:00",
       "event": "P81 preserveHabsource2e7d113remote->8a05231 exact2ADD/171bindings/alloriginal5rowsprewrite static37109exit0.292561s3Git0EOF, sourceonlyUNADOPTED freshwholeD2/3 registered. FinalbudgetimpactWHOLED3actualPython41397exit1syntaxline120 missingbrace/bodyUNRUN stdout0stderr885EOF/drain1ms/75ms/capturedreceiptbeforeprinter/handledstdinEPIPE kernelalive/nooutputs/retrycommit frozenfamily3/3EXHAUSTED no fourth or new E6E7E8decision/dispatchgrant; originalrawownfailedtoolrecord included existing7pendinggroups unchanged. Matrixoriginalthree freshsource1launchedactualparent3267; Gov04wholeD2running; root+2=3/4 nextHabD2. P80normal2FAIL1WARN exactnewHablocalrefs/reflognoworiginalremote saved no recoverydelete.119sources144knownconcluding32FAILED3UNKNOWN109reportedPASS+SK5observedclassificationHELD/rework83/formal13/3/3/293312299unclosed939 unchanged. Goalunfinished.",
       "input": "8a05231add157e43f31bb1f853b3b2fadb69cace"
+    },
+    {
+      "at": "2026-10-10T19:41:26.057272+00:00",
+      "event": "P82 freeze/preserveGov04WHOLED2solePython43144exit1badJSnewline intoPythonbyte/bodyUNRUN95ms/EOFclose/handledEPIPE/noartifact; freshFINALD3/3 whole unchangedsource3 registered no author4/no reviewerrepair. FreezeMatrixsource1soleprewritemissingguessedbrief exit1 PIDUNKNOWN/rootconfirmedcleanabsent newsource2/3 wholeoriginalthreeactualtree-first no inventedmandatorybrief/no reset. Recover exactHabsource2prewrite bdd255exit0 toolwall.222682375/internal.292561 DISTINCT PID37109/threeGit37118/19/20exit0EOF pluscommitwrapperc03987exit1_tempfileobject beforeGitcommit; originalrawprovidedreadonlytoreviewerbindfilehash no rerun/repin, keptunavailablefieldsUNKNOWN. Actualroot+HabWHOLED2=2/4 readyGOVD3+MATsource2; 119sources146knownconcluding34FAILED3UNKNOWN109reportedPASS+SK5observedclassificationHELD/rework83/formal13/3/3/293312299unclosed939 unchanged. ClarifyMAToriginalownershipB/C/B notP80proseB/B/C actualmapneverchanged. P81root660Hab8aancestor/pushed normal0FAIL1WARN; goalunfinished.",
+      "input": "66060a9caa7bd4c5443c202bf8fad99469e1e123"
     }
   ],
   "wave_P2_tasks": [
@@ -4297,7 +4344,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P80literal2FAIL1WARN exactlynewconcurrentHabsource2localref/reflog noworiginalremotepreserved P81freshpending",
+    "normal": "P81literal0FAIL1WARN P82freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4332,7 +4379,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4341,7 +4388,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "Habits source2 receivedUNADOPTED pendingfreshwholeD2; Matrixthreeoriginal source1 RUNNING. Gov04source3pendingwholeD2; SKsourcecapacityHELD five original executedguardfailures notzero. Otherlocalblocks retained.",
+  "workflow_C": "Matrixsource1actualmissingguessedbriefFAIL/noartifact; freshwholeMatrixsource2registeredwithinoriginalcap3. Habsource2receivedUNADOPTED nowwholeD2running. SKactualfiveoriginalguardfailures classificationHELD. OriginalMATitemownershipsequence MAT01B/MAT02C/MAT03B (P80proseB/B/C order incorrect, machineoriginalitemsneverchanged).",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -4737,5 +4784,5 @@
     "no_recovery_deletion": true
   },
   "workflow_A": "Clock MGBconditionalgrant retained; retention3/3/sourcequalification/nativebudgetholds pendingownerexceptions. Sharedtechnicaldocumentadopted but engine/method/runtimequalification/before/sourceadmission held. Existingfivebudgetquestion and pendingE6E7E8proposal nogrant.",
-  "workflow_D": "Gov04+07wholeD2 RUNNING; HabitsfreshwholeD2 registered nextslot. FINALexhaustionimpactD3actualPythonparseFAILED41397exit1/bodyUNRUN/nooutputs/retries, wholepurpose3/3EXHAUSTED no4/adoptedverdict/newE6E7E8authority. Existingsevenpendinggroups unchanged."
+  "workflow_D": "HabfreshwholeD2RUNNING. Gov04wholeD2actualPythonparseFAIL43144exit1/bodyUNRUN/nooutputs; originalreview2/3 consumed freshFINALwholeD3/3 registered, sourceauthor3/3exhausted no4. Finalbudgetimpactreview3/3EXHAUSTED failed no E6E7E8grant; oldsevenpendinggroups unchanged."
 }
