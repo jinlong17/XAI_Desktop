@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent complete conditional S contract reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 2,
+    "review_cap": 3,
+    "prior_source_author_used": 2,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "DASH-06/CONTRACT-REVIEW2",
+  "source_inputs": [
+    "dbc818c01045637104fa3ed2f833a77b758ff55d",
+    "c269ae212135f3b7729f843825ece70c7a00a724"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-contract-review-r2/review.md",
+    "docs/reviews/audit-parallel-dash06-contract-review-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verifycomplete8424inputs8351blobs/4rawtrees/63embeddedUTF8JSONstrings/4exactfrozenblockfunctionslices/2externalfiles definednamespaces/exact2ADD/hash/fixedparent28ced47. MEMORY.md unchangednavigation only neverproductauthority. Source1/review1 full541/556 corpus retained, all312fields39reversibleoriginal_module/933+6evidence939/status13/3/3/293 unchanged",
+    "Independentfull original DASH06 action/acceptance/all16D06rows/exactnineconditionalpaths/fullcanonicalClockr2G1 E1-E25/E24/judgingcopies/currenthistories/before/qualifiedmethods/vendor/freshacceptance/rootreconcile/inventory. VerifyR1existingrules support S no unsupportednewS/Gownerquestion, G inactive future request noeditor/key/default/schema/writer. ConcretevisibleENZHscale andtrueN0,1,7,8,9,10/accurateabove8AX/localday/readonly/actualhosterror/accountdata semantics, no CSSescape",
+    "VerifyR2finitegenuinenew visible scale/nogoal+localizedAX sourcepurposes againstactualtests/docs/history, rootmay registerfinite firstsource units afteradoption but mixed inheritedsuite actualhistoriesunknown/exhausted/refusals remain. No genericcallerunknown basedevidence[] or name/actor/path/worktreebudgetreset; sharedClockmethodnotfresh0",
+    "D06-08availability/partialsource ambiguity fullacceptance prerequisite separatefreshimpact/independentreview/exactallowance, no display-only acceptance or silentpublicstorage/ninepaths expansion. Scope/technicaldependency gates onlycorrespondingnodes hold, no weakstandard or newownerdecision. ReturnAPPROVEDconditionalproposal orpreciseREVISE finalauthor3 paths; noimplementation/sourceadoption/businessacceptance"
+  ]
+}

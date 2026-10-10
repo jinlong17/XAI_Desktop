@@ -726,10 +726,16 @@
       "provider_attested": false,
       "fixed_parent": "1496abed5ea19e8de687a9abf326918e7cb07b1f",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-source-correct2-20261010/XAI_Desktop",
-      "state": "running_source_only",
+      "state": "received_SOURCE_UNQUALIFIED_R6_and_host_gap_pending_review2",
       "family_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "f8821c1bb99a51f07a3e6d077bc3391affde7a99",
+      "integration_commit": "e0d63000297ed83f379012a7e717489692577f03",
+      "archive_ref": "codex/archive/parallel-task06-runner-source-r2-20261010",
+      "input_hashes_checked": 447,
+      "static_pass": 1,
+      "source_patch_sha256": "648436d64cb21e552c8b057e8ecb76fa34cf1e5586e78a7769b8e18944982f4d"
     },
     {
       "id": "MET-05/RUNNER-SOURCE-REVIEW",
@@ -801,43 +807,55 @@
       "integration_commit": "42ca98c92e12c10772f496b72da7653f20a61be1",
       "archive_ref": "codex/archive/parallel-brd12-review-r1-20261010",
       "input_hashes_checked": 10166,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-06/PREPARE-CORRECT2",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_bounded_full_contract_corrector2",
+      "state": "received_conditional_S_proposal_UNADOPTED_pending_review2",
       "fixed_input": "85065cccad251747da97944a80dd805c4dae44ef",
       "author_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "actor": "/root/parallel_c_dash06_contract_correct2",
       "fixed_parent": "28ced47ca7a324caead3f67ca31a0e048ec1d98c",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-correct2-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-correct2-20261010/XAI_Desktop",
+      "source_commit": "dbc818c01045637104fa3ed2f833a77b758ff55d",
+      "integration_commit": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+      "archive_ref": "codex/archive/parallel-dash06-prep-r2-20261010",
+      "input_hashes_checked": 8424,
+      "static_pass": 1
     },
     {
       "id": "POMO-04/PREPARE",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_after_older_DASHcorrect2_and_readyreviews",
+      "state": "running_full_original_contract_discovery",
       "fixed_input": "28ced47ca7a324caead3f67ca31a0e048ec1d98c",
       "preparation_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_c_pomo04_prepare_r1",
+      "fixed_parent": "876552e9024cbc816a811ea98cbb0888cf956317",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-prepare-20261010/XAI_Desktop"
     },
     {
       "id": "BRD-12/PREPARE-CORRECT2",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_after_older_POMO04_and_readyreviews",
+      "state": "running_concrete_full_contract_corrector2",
       "fixed_input": "42ca98c92e12c10772f496b72da7653f20a61be1",
       "author_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_c_brd12_contract_correct2",
+      "fixed_parent": "41295a0f57728d93bb764f3679f5e2f3dafb86d4",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-correct2-20261010/XAI_Desktop"
     },
     {
       "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT",
@@ -847,6 +865,28 @@
       "state": "queued_source_grounded_shared_read_prerequisite_only",
       "fixed_input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4",
       "impact_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-REVIEW2",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_independent_review2",
+      "fixed_input": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+      "review_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "DASH-06/CONTRACT-REVIEW2",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_independent_review2",
+      "fixed_input": "a58a119d5efe4eb508701ea050349a44b16aec7f",
+      "review_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0
     }
@@ -866,17 +906,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 35,
+    "static_passes": 37,
     "rework_findings": 35,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 38,
+    "completed_source_receipts": 40,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "38source deliveries minus3actualvendor; retention3 separatelyretained",
+    "static_passes_basis": "40source deliveries minus3actualvendor; retention3 separatelyretained",
     "postaccept_AST_scanner_invocations": 1
   },
   "events": [
@@ -1105,6 +1145,11 @@
       "at": "2026-10-10T12:19:09.900285+00:00",
       "event": "Register fresh source-availability impact prerequisite queued, no product scope grant; all38remote source andancestor checksPASS/normal0FAIL1WARN",
       "input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4"
+    },
+    {
+      "at": "2026-10-10T12:28:04.810834+00:00",
+      "event": "TASKsource2 exact12/447/fullpatch andDASHcorrect2 exact2/8424 receivedunqualified/unadopted; freshreviews2registeredqueued. POMO04+BRDcorrect2 actuallylaunched fixed876552e/41295a0 alongsideMETsourcecorrector2 threeworkers+root",
+      "input": "a58a119d5efe4eb508701ea050349a44b16aec7f"
     }
   ],
   "wave_P2_tasks": [
