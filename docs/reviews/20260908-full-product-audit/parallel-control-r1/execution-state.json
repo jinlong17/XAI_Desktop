@@ -1474,13 +1474,16 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_original_scope",
+      "state": "running_fresh_exact_full_technical_amendment1",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "actual_actor_launched": false,
-      "canonical_parent_phase": "BRD-12/prepare"
+      "actual_actor_launched": true,
+      "canonical_parent_phase": "BRD-12/prepare",
+      "actor": "/root/parallel_c_brd12_technical_amendment_r1",
+      "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment1-20261010/XAI_Desktop"
     },
     {
       "id": "BRD-28/CONTRACT-REVIEW1",
@@ -1579,7 +1582,7 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_full_independent_task",
+      "state": "FAILED_parser1_allsemanticUNRUN_nooutputs_frozen_finalauthor3remaining",
       "fixed_input": "bf08ae70f2e51a679cc5f87f0880435c601cdbc8",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1588,7 +1591,13 @@
       "actor": "/root/parallel_c_dash06_availability_correct_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-correct2-20261010/XAI_Desktop",
       "fixed_parent": "64cf765699dccceeff527f040d09f78761cbb88f",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "static_pass": 1,
+      "static_result": "FAILED_PARSER_UNRUN",
+      "source_commit": null,
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/dash06-availability-author2-failure-receipt.json",
+      "failure_receipt_sha256": "66215897690d92b22e0374162add237f4ceaeaa36548d0c4c2fdf61f91a6d3bf",
+      "no_semantic_rerun": true
     },
     {
       "id": "BK-07/PREPARE2",
@@ -1656,6 +1665,20 @@
       "canonical_parent_phase": "BRD-28/contract-review",
       "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd28-contract-review1-failure-receipt.json",
       "failure_receipt_sha256": "90b4a14be7bd1f574ee431474b78ee16ae727d3db2569b71d04b4ec4dd8b28b0"
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-CONTRACT3",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_FINAL_fresh_author3_after_parserfailed2",
+      "fixed_input": "bf08ae70f2e51a679cc5f87f0880435c601cdbc8",
+      "family_iteration": 3,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "canonical_parent_phase": "DASH-06/prepare",
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/dash06-availability-author2-failure-receipt.json",
+      "failure_receipt_sha256": "66215897690d92b22e0374162add237f4ceaeaa36548d0c4c2fdf61f91a6d3bf"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1683,14 +1706,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "70delivered minus3vendor plus1DASHoverrun=68deliveredstatic incl6FAILED; pendingsharedFAILED1 BRDreviewFAILED1 BKUNKNOWN1 =>71knownattempts/8FAILED/1UNKNOWN",
+    "static_passes_basis": "70delivered minus3vendor plus1DASHoverrun=68deliveredstatic incl6FAILED; pending sharedFAILED1 BRDreviewFAILED1 DASHauthor2parserFAILED1 BKUNKNOWN1 =>72knowncommandattempts/9FAILED/1UNKNOWN; parserattempt1 allsemanticUNRUN distinct",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior58 plusCALreviewR1 policy-narrowing; BRDcheckerfailurecost counted separately notbusinessfinding",
-    "pending_no_delivery_static_invocations": 3,
-    "pending_no_delivery_static_failures": 2,
-    "actual_static_invocations_total_known": 71,
-    "actual_static_failed_total_known": 8,
+    "pending_no_delivery_static_invocations": 4,
+    "pending_no_delivery_static_failures": 3,
+    "actual_static_invocations_total_known": 72,
+    "actual_static_failed_total_known": 9,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1
@@ -2039,6 +2062,11 @@
       "at": "2026-10-10T14:27:07.001151+00:00",
       "event": "P31 CALfullreviewd3b6adf sourceoriginalremote/full3831metadata/2ADD/clean received08c89246f5f12b4e7c60e35f3c92fd17c403336d REVISEsingleR1/three-scopealreadyapproved; minimumexception+lineagepolicy questionqueued, noadoption. REPLprocessundefined beforecommit disclosed/no staticretry. BRD28review1staticFAILED session21390exit1 falseinitialtask-registryidentityassert: actualdynamiccard+execution-state registered; nooutputs/uniqueunknown/latercanonical+parity+buffersUNRUN; rootfailurehash90b4a14be7bd1f574ee431474b78ee16ae727d3db2569b71d04b4ec4dd8b28b0 freshindependentreview2registered sameoriginalfixedinput/2of3notreset. RootdoesnotrepairverifierorretroPASS. Actualworkers sharedDreview2/DASHCauthor2/CDDreview1 root+3=4/4; no logicalwriteoverlap.70receipts68deliveredstatic6FAILED+pendingFAILED2/UNKNOWN1=71actual/8FAILED/1UNKNOWN/overrun1; rework59/vendor3. P30normal0FAIL1WARN atc2641e8/no deepclaim. Formal13/3/3/293=312/939 unchanged; no newcalleracceptance/release. QueuedBRDtechnicalamendment/BKreconstruct/MEDimpact/POMOreview waitrotation; CALpolicyholds onlyCALdescendants.",
       "input": "08c89246f5f12b4e7c60e35f3c92fd17c403336d"
+    },
+    {
+      "at": "2026-10-10T14:32:22.890094+00:00",
+      "event": "P32 DASHauthor2 failedPythonparserline240 chunkc1fc90exit1 beforefirststatement ALLinputhash/semantics/buffers/writesUNRUN clean64cf/nooutputs; failurehash66215897690d92b22e0374162add237f4ceaeaa36548d0c4c2fdf61f91a6d3bf no retry, finalfreshauthor3/3registered samebf08fullscope/noauthor4. VacantslotassignedolderBRD12fulltechnicalamendment1 parent6bcb/fixedb52; sharedfullDreview2 andCDfullDreview1continue root+3=4/4. CALminimumexception-lineage questionaskedafterfullreview once pending/localhold. All70originalremoteidentities+integrationancestorPASS; P31normal0FAIL1WARN/deep1FAIL0WARN fiveunreachable kept/no fullidentityrescan, all23stashesremote. Tencompleted ownwts recoverablearchiveconfirmed, active3+readyBRDreview2+unrelated5untouched.70receipts/68deliveredstatic6FAILED+pendingFAILED3/UNKNOWN1=72knownattempts/9FAILED/1UNKNOWN/overrun1/rework59/vendor3; no newformal/probes/calleracceptance. Formal13/3/3/293/939unchanged; schedule BKreconstruct/MEDimpact/POMOreview/BRDreview2/finalDASH accordingaging/dependencies.",
+      "input": "214dc41c8c9677ef32e391c89c8b4ad3c1d0d6f4"
     }
   ],
   "wave_P2_tasks": [
@@ -2047,7 +2075,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at9ffa307 afterpreservation/archive, all23stashesremote, no deletion; nextCALrootreceiptpushrequiresrepeat",
+    "normal": "P31literal0FAIL1WARN at214dc41 after70sourcepreservation/push and10ownedrecoverablearchival; all23stashesremote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -2079,7 +2107,9 @@
     "deep_P23": "Literal1FAIL0WARN fiveunreachable; refs/reflog/63source/all23stashes remotePASS; priorfive exactIDs recorded earlier, no fullobjectidentity rescanthisbatch/no deletion; completedowned recoverablecleanup follows",
     "deep_P23_log_sha256": "9c47ad75eebe846da6d9e957bbe4c6d5c4a0d13eebf4f35a2bdc96350ad24516",
     "P23_owned_completed_worktrees": "Nine completedown wts clean exactoriginalHEADs/all63remote refs+integrationancestor verification/deep literalfailure retained then archivedrecoverableconfirmedviaapp; activeCALnowcompleted/BK/CD/shared, idleMED+DASH andother-session5notcleanup",
-    "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush"
+    "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
+    "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
+    "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched"
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
@@ -2102,7 +2132,8 @@
     "clock_retention_budget": "freshimpact no validpath within3/3; minimalone cumulativei4exception asked separately, pending; noMGBreapproval",
     "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage",
     "REL02+03_V1": "9885870a full9685 inputs: no complete historical count proof; launch BLOCKED. Need provenance-backed census or explicit narrow exception, no missingcount0 or reset. Centralized async decision asked once after exactimpactreceipt: preserved cap/history proof recommended or explicit single bounded staticV1 accounting exception, pending. No waiver adopted.",
-    "WorldClocks_U1": "centralized question remains pending, no default adoption"
+    "WorldClocks_U1": "centralized question remains pending, no default adoption",
+    "CAL03_exception_lineage_policy": "Fullreview1d3b6adf REVISEsingleR1; three scopes/localfloating/same-day restrictionalreadydecided; minimumexceptionpreserve-vsrebase-vsclear/orphanrule+splitALLsegment-vslineage policy questionaskedonce async afterreview, pending; onlyCALdescendantsheld, noredundant scopeauthorization."
   },
   "ready_inventory_collection": {
     "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
