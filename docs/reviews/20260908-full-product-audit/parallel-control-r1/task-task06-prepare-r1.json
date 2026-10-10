@@ -1,0 +1,48 @@
+{
+  "id": "TASK-06/PREPARE",
+  "workflow": "C",
+  "module": "web",
+  "role": "fresh Astra bounded source-grounded contract discovery",
+  "model": "gpt-6-astra",
+  "fixed_input": "bfbe3ed0b3967038375e41e5b10f738574ea0d54",
+  "dispatch_parent": "commit containing exactcard resolved beforelaunch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+    "7bb8df1631b94295bb7c3f928fcd9924b1337873"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-preparation-r1/contract.md",
+    "docs/reviews/audit-parallel-task06-preparation-r1/inputs.sha256"
+  ],
+  "action": "处置Local Calendars/已完成/不做/垃圾桶无动作入口",
+  "acceptance": [
+    "Preserve full original TASK06 acceptance 已实现则接真实数据与恢复路径；未实现则禁用/隐藏并说明，计数不写死 and actual scope-map source paragraphs",
+    "Static trace actualfour sidebar entries/actions/store/routes/lifecycle/history/docs/current rules; implemented vsplaceholder evidenced, no assumed backend/deletion/recovery/calendar policy",
+    "Use existing explicit owner/project rules first; permit technical unavailable-control disposition only where authority exists; record smallest genuinely ungrounded product choice, do not ask proactively or invent",
+    "Define exactfutureallowlist/source/logicalconflicts/separatebefore/oracles/fullpositive-negative/account/runtime/native/regression/crossvendor/finalacceptance/state-preservation chain; no implementation permission from proposal",
+    "Protect shared taskstore/account/cloud/calendar/app/shell/pet/Clock/CSS; diagnose whether source component-local safety can proceed independently of Clock geometry vs later fullnative dependence",
+    "Existing evidence/history reuse, qualified new evidence instrumentation separately reviewed; no rerun validhistory, no standards weakening"
+  ],
+  "budgets": {
+    "static_preparation_pass": 1,
+    "runtime": 0,
+    "future_review_cap": 3,
+    "history": "neverreset prior units by renamed tasks"
+  },
+  "protected": [
+    "allnonallowedpaths",
+    "globalcontrol/ledgers/inventory",
+    "runtime/source/CSS/tests/runner",
+    "originalreports/contracts/logs",
+    "otherworktrees",
+    "push/merge/rebase/release/deploy/promote/D3"
+  ],
+  "stop": [
+    "unknown dirty ownership/hash/scope",
+    "runtime needed",
+    "unsupported product choice",
+    "protected boundary or cap"
+  ],
+  "no_children": true
+}

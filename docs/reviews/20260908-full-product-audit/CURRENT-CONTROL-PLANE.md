@@ -607,3 +607,7 @@ Actual Claude CLI verification returned BLOCKED F1; transport exit0 is not PASS.
 ## Parallel controller checkpoint: P5 receipts / P6 registration
 
 WorldClocks REVISE source792a6ba95157de6430d5f16a5b392aa8f0f89f22 accepted as a review only: all100 inputs verified. REL02+03 proposal sourcec6050091f21aca4f3003da8f67f92a41a4a528d4 received, all5616 inputs verified, neither caller accepted. Source refs remote-preserved before serial integration. Fresh REL contract review registered, WorldClocks versioned correction2 queued; fresh TT08 two-doc correction2 and full299-readiness inventory running at immutable respective parents. Clock hard budget remains frozen; formal13/3/3/293 and299unclosed unchanged.
+
+## Parallel controller checkpoint: full312 collection and P6 successors
+
+Full312/299 readiness collection sourceacd21f9b15a735e2202ca9553aff54b3e3b46e17 received; all226 input hashes and every original312 mapping field verified, no formal state changes. REL02+03 contractreview03dcf47931aba6d92daed76cf9f04a119d29c359 APPROVED preparation only; all5626 input records verified. V1 permanent budget reconciliation pending: one REL02 actual401 documented, REL03 distinct process count unknown; never infer0/reset. TT08 corrected candidate59809b32 received with short/full-index patch serialization clarified, actualClaude fresh2/3 PID32336 running, max900s/$12. WorldClocks fresh versioned author2 running, noimplementationready. TASK06 independent discovery registered from top10 inventory, existing owner rules first. Formal13/3/3/293,299unclosed unchanged.

@@ -337,9 +337,14 @@
       "provider_attested": false,
       "fixed_parent": "5bcc15d937ee8bd9880ccf6ad5dba205178f793c",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-ready-inventory-20261010/XAI_Desktop",
-      "state": "running_collection_only",
+      "state": "accepted_static_collection_only",
       "static_pass": 1,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+      "integration_commit": "f6ea3e62c723195353cc2d5f000ddc4c10cc396e",
+      "archive_ref": "codex/archive/parallel-ready-inventory-r1-20261010",
+      "input_hashes_checked": 226,
+      "original312_fields_verified": true
     },
     {
       "id": "REL02+03/CONTRACT-REVIEW",
@@ -349,9 +354,51 @@
       "provider_attested": false,
       "fixed_parent": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-rel02-rel03-review-20261010/XAI_Desktop",
-      "state": "running",
+      "state": "APPROVED_preparation_contract_only",
       "review_iteration": 1,
       "family_cap": 3,
+      "formal_invocations": 0,
+      "source_commit": "03dcf47931aba6d92daed76cf9f04a119d29c359",
+      "integration_commit": "bfbe3ed0b3967038375e41e5b10f738574ea0d54",
+      "archive_ref": "codex/archive/parallel-rel02-rel03-review-r1-20261010",
+      "input_hashes_checked": 5626,
+      "historical_budget_clarification": {
+        "REL02": "at least1 actualClaude401 documented ced7bc0f report9-11, repeatedreports notextra; exhaustivecountunreconciled",
+        "REL03": "revokedOAuth pending references do not identify distinctprocess; historicalcountunknown not0",
+        "persistent_ledger": "not found in frozen reviewedcorpus; V1 launchBLOCKED untilsource-groundedreconciliation, no capreset",
+        "clarification_cost": "no writes/runtime/newreviewiteration"
+      }
+    },
+    {
+      "id": "DASH-03/CONTRACT-CORRECT2",
+      "workflow": "C",
+      "actor": "/root/parallel_c_world_clocks_correct2",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-correct2-20261010/XAI_Desktop",
+      "state": "running_versioned_proposal_only",
+      "author_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/verify2",
+      "workflow": "D",
+      "actor": "external-cli/TT-08/verify/i2",
+      "tool": "ClaudeCode2.1.280",
+      "configured_model": "opus",
+      "provider_attested": false,
+      "fixed_parent": "47fed55c23113dc22cc158704b673c055c7101cb",
+      "candidate": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-vendor2-20261010/XAI_Desktop",
+      "state": "running_actual_cross_vendor_readonly",
+      "owned_pid": 32336,
+      "exec_session_id": 89092,
+      "verification_iteration": 2,
+      "family_cap": 3,
+      "max_usd": 12,
+      "wall_seconds": 900,
       "formal_invocations": 0
     }
   ],
@@ -371,11 +418,11 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 13,
+    "static_passes": 15,
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
-    "actual_cross_vendor_verification_invocations": 1
+    "actual_cross_vendor_verification_invocations": 2
   },
   "events": [
     {
@@ -461,6 +508,11 @@
       "at": "2026-10-10T10:34:08.542582+00:00",
       "event": "TTcorrect2 exact2MOD received after patch serialization clarification; fresh actualvendor2/3 registered, noauthoriteration increment",
       "input": "d08b5c6ee46a98fad6354a1b626f9ebea74ed474"
+    },
+    {
+      "at": "2026-10-10T10:40:22.724402+00:00",
+      "event": "Full312 collection and RELcontractreview received; TT actualvendor2 and Worldversion2 running; TASK06 first independentnewcaller discovery registered; RELvendorbudget sourcegap retained no invented0",
+      "input": "bfbe3ed0b3967038375e41e5b10f738574ea0d54"
     }
   ],
   "wave_P2_tasks": [
@@ -496,5 +548,11 @@
     "goal_runtime": "originalgoal metadata stillblocked; noedit/resumeAPI, CUA refusesCodexappaccessforsafety; useraskedresumeviaapp, pending; directauthorizedworkcontinues",
     "clock_retention_budget": "freshimpact no validpath within3/3; minimalone cumulativei4exception asked separately, pending; noMGBreapproval",
     "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage"
+  },
+  "ready_inventory_collection": {
+    "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
+    "state": "receivedfull312/299staticcollection; rootqueueonly; no businessacceptance",
+    "next_discovery": "TASK-06",
+    "ranked_source_not_authority_for_new_product_choices": true
   }
 }
