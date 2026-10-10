@@ -838,6 +838,17 @@
       "author_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_source_grounded_shared_read_prerequisite_only",
+      "fixed_input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4",
+      "impact_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1089,6 +1100,11 @@
       "at": "2026-10-10T12:15:55.925727+00:00",
       "event": "BRDfull10166review REVISE received, QLQU notprovenownerquestions; freshconcreteauthor2registeredqueued; DASHcorrector2 actuallylaunchedfixed28ced47 alongsideTASK/METsourcecorrectors3workers+root4/4",
       "input": "42ca98c92e12c10772f496b72da7653f20a61be1"
+    },
+    {
+      "at": "2026-10-10T12:19:09.900285+00:00",
+      "event": "Register fresh source-availability impact prerequisite queued, no product scope grant; all38remote source andancestor checksPASS/normal0FAIL1WARN",
+      "input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4"
     }
   ],
   "wave_P2_tasks": [
@@ -1097,7 +1113,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at28ced47 after37source refs+37integration ancestry verified; all23stashes remote",
+    "normal": "0FAIL1WARN at41295a0; all38source refs+38integration ancestry verified; all23stashesremote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
