@@ -493,13 +493,52 @@
       "archive_ref": "codex/archive/parallel-world-clocks-review2-20261010",
       "input_hashes_checked": 130,
       "owner_question": "U1asked async after concrete source receipt; A lossless occurrenceedit vs B visibleexportbutdisabled; no answer oradoption"
+    },
+    {
+      "id": "TASK-06/CONTRACT-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_task06_contract_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "acd36a8974b877cd24063cbd1b5bd390e29e0bd6",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-review-20261010/XAI_Desktop",
+      "state": "APPROVED_preparation_only_NOT_IMPLEMENTATION_READY",
+      "source_commit": "9bd435df80345e6e94f256777a3d865144cb9611",
+      "integration_commit": "05dcf91c1025e58b90cab13ccb7fc576e88770e6",
+      "archive_ref": "codex/archive/parallel-task06-review-r1-20261010",
+      "input_hashes_checked": 210,
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/STATUS-WRITER",
+      "workflow": "B",
+      "actor": "/root/parallel_b_tt08_status_writer_r1",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "fixed_parent": "0af25048f7fb5706d19f2948a344fd319347c14d",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-status-20261010/XAI_Desktop",
+      "state": "running",
+      "formal_invocations": 0
+    },
+    {
+      "id": "REL02+03/BUDGET-IMPACT",
+      "workflow": "A",
+      "actor": "/root/parallel_a_rel_budget_impact_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "0af25048f7fb5706d19f2948a344fd319347c14d",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-rel-budget-impact-20261010/XAI_Desktop",
+      "state": "running",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -516,7 +555,7 @@
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 23,
+    "completed_source_receipts": 24,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167
@@ -630,6 +669,11 @@
       "at": "2026-10-10T10:56:33.728513+00:00",
       "event": "Actualvendor3 completeAPPROVED, allruleinputsread; source+literal/tools received. Worldreview2 U1necessity accepted only, ownerquestioncentralized. Register freshstatuswriter and independentRELbudgetimpact; TASK06review running",
       "input": "4b6e0db589002a7a6d36c73e5c1337995ff80a64"
+    },
+    {
+      "at": "2026-10-10T11:04:10.876860+00:00",
+      "event": "TASK06 independent contract approved full210 identities; P8 status writer andREL budget impact launched; fresh runner source registered, before implementation still blocked",
+      "input": "05dcf91c1025e58b90cab13ccb7fc576e88770e6"
     }
   ],
   "wave_P2_tasks": [

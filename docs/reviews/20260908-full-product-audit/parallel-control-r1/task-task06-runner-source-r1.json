@@ -1,0 +1,61 @@
+{
+  "id": "TASK-06/RUNNER-SOURCE",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent evidence machinery source author, no qualification or business runs",
+  "model": "gpt-6.1-sol",
+  "fixed_input": "05dcf91c1025e58b90cab13ccb7fc576e88770e6",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+    "9bd435df80345e6e94f256777a3d865144cb9611"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-runner-source-r1/driver.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/fixture.tsx",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/vite.config.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/qualification-controls.test.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/execution-manifest.json",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/qualification.md",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/inputs.sha256",
+    "docs/reviews/audit-parallel-task06-runner-source-r1/source.patch"
+  ],
+  "acceptance": [
+    "Build versioned evidence machinery covering complete ten approved oracles and 64 visual combinations without product patches; real actual TasksModule/store and whole host lanes distinguished from component controls; all affected/regression/vendor/final acceptance gates retained",
+    "Stream immutable git archive; requested/resolved SHA and lockfile/@repo guards; exact finite commands, case IDs, outputs and preconditions; refuse overwrite, retain nonzero child exit, deadline and complete stdout/stderr/journals even partial failure; bounded teardown with final outcome after all closes",
+    "Create positive/negative qualification control suite: SHA drift, alias drift, archive/fixture/launch failure, timeout/signal/stream-close/journal/cleanup errors, late failures, unsupported preconditions and false oracle rejection; no simulated fixture proves actual product runtime",
+    "Native trusted CDP pipe, passive keyboard audit, no nativeVirtualKeyCode; canonical pixelFocusWalk hash bound unchanged, no threshold/settle/visibility/union relaxation; dependency-specific Clock foundation BLOCKED remains explicit, no exhausted unit launch",
+    "Enumerate future exact artifact paths and executable source/case coverage in manifest for fresh review and root future qualification card; no recursive write grants, no unregistered output or business execution",
+    "Input manifest full source identities; patch exact source vs fixed parent with documented serialization; honest unqualified/source-only readiness; fresh independent source review then independent qualification controls/adoption then separate before all rows required before implementation"
+  ],
+  "locks": [
+    "TASK06:evidence-source",
+    "TASK06:runtime-source-readonly"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/shared sources/CSS/config/lockfile",
+    "canonical/historical runners/reports/logs",
+    "globalcontrol/threeledgers/inventory/otherworktrees",
+    "push/merge/rebase/deploy/release/promote/D3"
+  ],
+  "budgets": {
+    "source_author_iteration": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "native": 0,
+    "browser": 0,
+    "tests": 0,
+    "development_probes": 0,
+    "qualification": "not launched; future exact separately registered independent unit cap3 includes refusals; original Clock/TASK histories retained"
+  },
+  "stop": [
+    "unsupported source or dirty/hash drift",
+    "protected scope needed",
+    "runtime/qualification needed during source pass",
+    "frozen method or inherited budget contradiction"
+  ],
+  "no_children": true
+}
