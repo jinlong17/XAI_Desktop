@@ -1954,7 +1954,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_full_independent_task",
+      "state": "FAILED_static1_schemaadapter_allfullintegrityUNRUN_collectionfamily3of3exhausted_known3dirtyoutputs_frozen",
       "fixed_input": "5b3192eb2b8d59a0304454523c71769d91888a5d",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1964,7 +1964,50 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes2-20261010/XAI_Desktop",
       "fixed_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e",
       "actual_actor_launched": true,
-      "accounting_clarification": "qualification0; concludingfullinput+bundle/output integritychecker iflaunched consumes existingstatic1 allowance andreportedactualPASS/FAIL; collectioncommandsalways actualPIDsessionexit; earlierdispatchstatic0shorthand referredNOmethodqualification notpermissiontolabelchecker0. Samecollectionfamily2/3/no reset/no actualcheckerretry."
+      "accounting_clarification": "qualification0; concludingfullinput+bundle/output integritychecker iflaunched consumes existingstatic1 allowance andreportedactualPASS/FAIL; collectioncommandsalways actualPIDsessionexit; earlierdispatchstatic0shorthand referredNOmethodqualification notpermissiontolabelchecker0. Samecollectionfamily2/3/no reset/no actualcheckerretry.",
+      "static_pass": 1,
+      "static_result": "FAILED_entry_count0_wrongbundle_schema",
+      "source_commit": null,
+      "actual_collection_family_used": 3,
+      "collection_processes": [
+        {
+          "pid": 94024,
+          "exit": 1,
+          "purpose": "collectionread+buffers+limits/writerfailureunsupportednewline/nofiles"
+        },
+        {
+          "pid": 94186,
+          "exit": 0,
+          "purpose": "payload rereadfullcollector/existing104preserved/threeoutputs12roots617files14488785bytes14edges0missingREPORTED_UNVERIFIED"
+        }
+      ],
+      "failed_checker": {
+        "chunk": "3b6b64",
+        "exit_code": 1,
+        "session_id": null,
+        "pid": null,
+        "error": "CHECK=FAIL entry_count=0 wrong recursivelynestedlogical_path schema, concludingintegrityUNRUN"
+      },
+      "unverified_output_hashes": [
+        {
+          "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/collection.md",
+          "bytes": 14947,
+          "sha256": "248ec11134e9f3397630c8b4b513854e4583f85608e53bb41bb22b0a1b106d88"
+        },
+        {
+          "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/source-bytes.json",
+          "bytes": 15319210,
+          "sha256": "69fb91aebacf4720028fbdf8a06e70d64294ca6c0cf7b8124bf6d38ce6eeee4b"
+        },
+        {
+          "path": "docs/reviews/audit-parallel-shared-source-byte-collection-r2/inputs.sha256",
+          "bytes": 1581127,
+          "sha256": "660427500adcddded8f4ec852af38dd0ab7f9e3951be8c82d34b0105764faa21"
+        }
+      ],
+      "bundle_pending_exit_field": "pending final executor result despite actual94186exit0; frozenunmodified",
+      "qualification": 0,
+      "no_collector4": true
     },
     {
       "id": "MED-03/SOURCE-CONTRACT1",
@@ -2069,6 +2112,17 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-review-r1.json"
+    },
+    {
+      "id": "SHARED/SOURCE-BYTE-COLLECTION2-FAILURE-PRESERVATION",
+      "workflow": "D",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "queued_fresh_independent_mechanical_FAILpreservation_ONLY",
+      "fixed_input": "546bbed6593c6b4938929b668550449461f02c75",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-r2-failure-preservation.json",
+      "formal_invocations": 0,
+      "mechanical_preservation_cap": 1
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -2096,19 +2150,20 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "83delivered-3vendor-1collection+1overrun=80staticincl6FAILED; pending6FAILED+1UNKNOWN=>87known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate; in-flightbyte2 commandfailure/cost classification pendingfinalreceipt notsilentlyzero",
+    "static_passes_basis": "83delivered-3vendor-1collection+1overrun=80staticincl6FAILED; pending7FAILED+1UNKNOWN=>88known13FAILED1UNKNOWN; bytefamily actual3collectioncommands(1old+2new), source2static1FAILED newpending; pretoolreview1checker0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior59 plussharedreview factualissues falsemissingpnpm paths and incompletepriorinputinventory; rootmetadata/CDcheckerfailures separate",
-    "pending_no_delivery_static_invocations": 7,
-    "pending_no_delivery_static_failures": 6,
-    "actual_static_invocations_total_known": 87,
-    "actual_static_failed_total_known": 12,
+    "pending_no_delivery_static_invocations": 8,
+    "pending_no_delivery_static_failures": 7,
+    "actual_static_invocations_total_known": 88,
+    "actual_static_failed_total_known": 13,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
-    "source_byte_collection_invocations": 1,
-    "pretool_no_checker_review_attempts": 1
+    "source_byte_collection_invocations": 3,
+    "pretool_no_checker_review_attempts": 1,
+    "source_byte_collection2_command_failures": 1
   },
   "events": [
     {
@@ -2509,6 +2564,11 @@
       "at": "2026-10-10T15:29:37.065725+00:00",
       "event": "P42 MEDsourcecontractdc9f004 originalremote ->b643171fa4ef7a17a7c1cd6cde4c6dea1a509588 full1697identities42106559bytes/exact2ADD/clean/static1PASS PID92925session72409c1f0ed8fee5eexit0/allbuffersbeforewrites. Completepredicate/API/migrationcompatibility/R1R2R3/full16controls/87explicitREL10Resetregistry/11+23paths18roles/fullcanonicalG1/histories; PROPOSEDUNADOPTED freshWHOLEreview1registered including87registryNOTwritepermission. P41controla4cfb2e pushednormal0FAIL1WARN/all82sourcesexactoriginalremote+82integrationancestorsPASS/initialsharedreviewrecoveryremote. Actualsharedbytecollector2/BRD28impact1/outercaptureadmissionimpact1 root+3=4/4; outercapturecriticaldependency impactprioritizedwithoutreset/dependentcodegrant, oldDfullreviews agingnextfreeslot. InflightbytecollectorPID94024exit1 Pythonwrite_text unsupportednewline AFTERreadybuffers/nofiles, rootinstructedmechanicalunchangedwriteronly/no semanticrecollect; anyactualrerunpayload counts3/3/no4; concludingfullcheckercountsstatic1 not0. Finalactualpurpose/costclassification pendingactorreceipt, no acceptedbytes yet.83receipts87knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0 plusinflightbyte2 failureunclassified NOTzero. Formal13/3/3/293/939unchanged/no caller/runtime/releaseacceptance.",
       "input": "b643171fa4ef7a17a7c1cd6cde4c6dea1a509588"
+    },
+    {
+      "at": "2026-10-10T15:33:00.411081+00:00",
+      "event": "P43 freezebytecollector2 sourcefamily3/3 exhausted: PID94024exit1 unsupportedwrite_text newline afterbufferprep/nofiles; beforemessage94024correction94186rereadpayload exit0 wroteexact3uncommittedfiles;12roots617files14488785bytes14edges0missing SELFREPORTED_UNVERIFIED. Soleactualconcludingstatic3b6b64exit1/no session/PIDunknown expectedwrongrecursivelynestedlogical_path schema foundentry_count0; fullintegrityUNRUN/no retry/no edits/no commit. Bundlependingfinalexitfield retainednotrewritten. Rootmetadataidentifiedexact3files+hashes/knownowneddirtyafba; registerfreshindependentmechanicalpreservationONLY exact3unchanged+truthfulfailureJSON/onecommit/runtimechecker0/no sourcecollect4/testfix/acceptance. Freshreview2 existingcap mayjudgefrozenbytes later onlyafterpreservation notretrosourceauthorPASS. ActualBRD28impact+outercaptureimpact root+2=3/4 awaitingpreserverthird.83receipts88knownstatic13FAILED1UNKNOWN/overrun1/rework61/vendor3/actualbytecollectioncommands3/pretoolreview1checker0. Formal13/3/3/293/939unchanged/no caller/method/runtime/releaseacceptance; othertaskscontinue.",
+      "input": "546bbed6593c6b4938929b668550449461f02c75"
     }
   ],
   "wave_P2_tasks": [
