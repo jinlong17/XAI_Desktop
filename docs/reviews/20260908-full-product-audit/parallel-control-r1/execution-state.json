@@ -1755,7 +1755,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "FAILED_static1_wrong_normalized_label_guard_hashloopUNRUN_nooutputs_frozen",
       "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
       "family_iteration": 1,
       "family_cap": 3,
@@ -1765,7 +1765,12 @@
       "actor": "/root/parallel_a_cd03_source_contract_r1",
       "fixed_parent": "b7324936f5880c2050e6eecc8c22567fade05444",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-source-contract1-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/cd03-source-contract-author1-failure-receipt.json",
+      "failure_receipt_sha256": "b701c0e3bce274a4115fe659119549fb0c43993b5d14a5a9e1a1cc0d5e56f338",
+      "source_commit": null,
+      "static_pass": 1,
+      "static_result": "FAILED_WRONG_NORMALIZED_MODULE_COUNTER_ASSERTION_LATER_UNRUN"
     },
     {
       "id": "SHARED/SOURCE-BYTE-COLLECTION1",
@@ -1797,13 +1802,17 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_bounded_independent_phase",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "canonical_parent_phase": "BRD-12/prepare",
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd12-technical-contract-amendment-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd12-technical-contract-amendment-r2.json",
+      "actor": "/root/parallel_c_brd12_technical_amendment_r2",
+      "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment2-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "BK-07/CONTRACT-REVIEW1",
@@ -1862,6 +1871,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-machinery-impact-review-r1.json"
+    },
+    {
+      "id": "CD-03/SOURCE-CONTRACT2",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_independent_author2",
+      "fixed_input": "61b6644d2eac5af6c70749bf672839ba7ba79bca",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cd03-source-contract-r2.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1889,14 +1910,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "76delivered minus3vendor minus1bytecollection plus1DASHoverrun=73 incl6FAILED; pending5FAILED+1UNKNOWN=79knownstatic/11FAILED/1UNKNOWN. POMOpretoolreview1 consumed attempt butactualchecker0/unrun separate. Collectionroutine1 separate/static0.",
+    "static_passes_basis": "76delivered minus3vendor minus1collection plus1overrun=73staticincl6FAILED; pending6FAILED+1UNKNOWN=>80known/12FAILED/1UNKNOWN; POMOpretoolreview1/static0 andcollection1/static0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior58 plusCALreviewR1 policy-narrowing; BRDcheckerfailurecost counted separately notbusinessfinding",
-    "pending_no_delivery_static_invocations": 6,
-    "pending_no_delivery_static_failures": 5,
-    "actual_static_invocations_total_known": 79,
-    "actual_static_failed_total_known": 11,
+    "pending_no_delivery_static_invocations": 7,
+    "pending_no_delivery_static_failures": 6,
+    "actual_static_invocations_total_known": 80,
+    "actual_static_failed_total_known": 12,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
@@ -2267,6 +2288,11 @@
       "at": "2026-10-10T15:02:58.000295+00:00",
       "event": "P35 BRD28 fullreview2 source0a0bd4a originalremote receivede8cf1ae full46284identities/6030blobs/raw79853refs/static1PASS; adoptcompleteconditionalDOCbasis ce9 only, existingOptionC/noUI resolvesQ-B28/noownerquestion/noAPIgrant. MEDimpact5a8d714 originalremote receivedf8cc150544e050bbb8f38076b1e5d3c41ca47fac full1216static1PASS PROPOSEDunadopted/fullreview1queued. DASHfinalauthor3 solecheckerFAILED stdin151 unsupportednonemptygatecount118 after8705hashes passed; latercanonical/buffers/writesUNRUN/nooutputs/clean62fde; author3/3exhaustedfreeze/noauthor4. POMOreview1 pretoolJSconstructionFAIL checker0/allsemanticsUNRUN/nooutputs/cleanb732; attempt1/3consumed/no draftAPPROVED; freshfullreview2queued preservingalloriginalpurposecounts. CDsourcecontract1+BKfullreview1+sharedbytefullreview1 root+3=4/4. 76receipts/79knownstatic11FAILED1UNKNOWN/overrun1/rework59/vendor3/collection1static0/pretoolreview1static0. Rootmetadata initially used nonexistent BRD contract directory; validation stopped BEFOREANYwrites, corrected exact preparation-r1 Git path/rawbytes, not product iteration. Formal13completed3verification_pending3in_progress293pending/299unclosed/939unchanged. No newcaller/runtime/method/releaseacceptance; continueagedBRDtechnical2/MEDreview/POMOreview2 afterslotsfree; allhumanpendingdecisionsholdonlydescendants.",
       "input": "f8cc150544e050bbb8f38076b1e5d3c41ca47fac"
+    },
+    {
+      "at": "2026-10-10T15:05:16.994892+00:00",
+      "event": "P36 freezeCDsourcecontractauthor1 b94d30exit1/0.300388792s/stdin109 wrongmoduleCounter/fullhashloopcanonicalbuffersALLwritesUNRUN/nooutputs/cleanb732/memorydraftnotartifact. Independentlyrootmetadataestablishednormalizedmoduleweb213/app22/plugin16/sync41/admin16/site4 vsoriginal_moduleweb174+project-system30+crossmodule9; nonemptygateobligations150 not118distinctgatepolicy. RegisterfreshCDsourcecontract2/3 samefixed61/fulloriginal5857; no standards/capsreset. BRDtechnicalauthor2startedatbd4fixedb52+BKfullreview1+sharedbytefullreview1 actualroot+3=4/4; pendingMEDfullreview/POMOfullreview2continueFIFOaging. P35control26f7875pushedliteralnormal0FAIL1WARN/76exactoriginalremote+76integrationancestorsPASS. 76receipts/80knownstatic12FAILED1UNKNOWN/overrun1/pretoolreview1static0/collection1static0/rework59/vendor3; formal13/3/3/293/939unchanged no producttest or calleracceptance.",
+      "input": "26f7875d3dd318d62a08afbf5946036af4b19692"
     }
   ],
   "wave_P2_tasks": [
@@ -2275,7 +2301,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P33literal0FAIL1WARN atb732493, all72originalsourceexactremote/72integrationancestors checked, no deepPASS orrecoverydeletion",
+    "normal": "P35literal0FAIL1WARN at26f7875d3dd318d62a08afbf5946036af4b19692; all76originalremoteidentities+76integrationancestors PASS; recovery retained",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -2309,7 +2335,8 @@
     "P23_owned_completed_worktrees": "Nine completedown wts clean exactoriginalHEADs/all63remote refs+integrationancestor verification/deep literalfailure retained then archivedrecoverableconfirmedviaapp; activeCALnowcompleted/BK/CD/shared, idleMED+DASH andother-session5notcleanup",
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
-    "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched"
+    "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
+    "normal_log_sha256": "db335c9b192cd91ac61e4d9fbc611e38ef2cc9e6686dedc668dda65a73b3db0e"
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
