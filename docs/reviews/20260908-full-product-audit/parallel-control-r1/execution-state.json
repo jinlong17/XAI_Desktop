@@ -788,6 +788,11 @@
       "at": "2026-10-10T11:21:51.188320+00:00",
       "event": "Root TT08 evidence-only reconciliation preserves full312 IDs/order/status/all nonTT records and prior evidence; inventory next",
       "registration": "4833f7fbaa2f3c28204b3ff0f0669cf2205027b8"
+    },
+    {
+      "at": "2026-10-10T11:22:44.177214+00:00",
+      "event": "AcceptedTT08 evidence-only ledger commitremote46e2d96, freshfixed currentinventoryexact3ADDregistered",
+      "input": "46e2d967993d61f41706e15f69308d75ac1f0346"
     }
   ],
   "wave_P2_tasks": [
@@ -873,6 +878,7 @@
       "EXECUTION.md": "f052f0072abd3ef3e15603c06c37386a7ba65128934c8b05c4f970220c825f38",
       "EXECUTION.json": "b11bd620c608b9d56ea1f0f879e0705278a1bda86f09cd09675f598552d181fc"
     },
-    "fresh_inventory": "pending"
+    "fresh_inventory": "registered_pending",
+    "commit": "46e2d967993d61f41706e15f69308d75ac1f0346"
   }
 }

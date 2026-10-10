@@ -1,0 +1,55 @@
+{
+  "id": "TT-08/POSTACCEPT-INVENTORY",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent Luna lowrisk static binding inventory collector, no business acceptance",
+  "model": "gpt-6-luna",
+  "fixed_input": "46e2d967993d61f41706e15f69308d75ac1f0346",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "accepted_source": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef",
+  "reconciliation_sha": "46e2d967993d61f41706e15f69308d75ac1f0346",
+  "allowed_files": [
+    "docs/reviews/web-d2-pref-binding-inventory/bindings-46e2d96.json",
+    "docs/reviews/web-d2-pref-binding-inventory/refresh-46e2d96.md",
+    "docs/reviews/web-d2-pref-binding-inventory/inputs-46e2d96.sha256"
+  ],
+  "scan_source": "docs/reviews/web-d2-pref-binding-inventory/scan.mjs",
+  "scan_sha256": "b9dfbec4aa3122c920293068a5fab76e3275728a44ec9e6f4b31f81719f2df61",
+  "command": [
+    "node",
+    "docs/reviews/web-d2-pref-binding-inventory/scan.mjs",
+    "46e2d967993d61f41706e15f69308d75ac1f0346"
+  ],
+  "acceptance": [
+    "Exactly one fresh static existing scanner invocation on fixed reconciledSHA, no historicalsuite rerun; only packages/**/*.tsx excluding__tests__ directidentifierusePref syntax, never fullwriter/defect inventory",
+    "Compare complete ordered47rows andboundary/counts with acceptedbindings-f9eb4b1.json, expectedzerochange, detectactualdelta notforceexpected. RuntimeP0 unchanged; fourpackage docs andcanonicalPRD intentionallydifferent. Requested/resolved SHA/dependency path/version/rootwrite protection/command/exit/stdout stated",
+    "Full312ID/order/status andallnonTT records/old evidence intact; TT08only six accepted references added. Reportdocumentarycaller acceptance vs formal13/3/3/293,299unclosed andproduct/release gates; nogloballedger/inventory/control writes",
+    "Read only dependency via NODE_PATH or mainreadonly ancestor valid priorLuna convention; verifytypescript5.9.2matcheslock, no install ormainwrite. Scannerfail orunexpecteddelta stops withhonest exactallowed report, no scannerrepair/retry",
+    "Three exactADD artifacts, fullinputs identities inclscanner/acceptedoldinventory/acceptance/reconcile/currentthreeledgers/runtimeboundary hashes. Rootadoptsafterhash/rowdelta check thenremoteancestry/sync"
+  ],
+  "protected": [
+    "allnonallowedpaths",
+    "scanner/code/tests/CSS/config/runtime",
+    "originalinventory/contracts/failurelogs",
+    "globalcontrol/threeledgers/featureinventory/otherwts",
+    "push/merge/rebase/deploy/release/promote/D3"
+  ],
+  "budgets": {
+    "static_scan_invocations": 1,
+    "diagnostic_retries": 0,
+    "runtime": 0,
+    "native": 0,
+    "browser": 0,
+    "tests": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "dependency/scannerfailure",
+    "unexplaineddelta/hash/scope/dirty",
+    "formalcount orruntimeclaim mismatch",
+    "protected boundary"
+  ],
+  "no_children": true
+}
