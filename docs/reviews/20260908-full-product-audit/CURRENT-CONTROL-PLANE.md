@@ -591,3 +591,11 @@ Fresh A `/root/parallel_a_clock_impact2` configuredgpt-6-astra dispatchedfixed68
 ### TT08 candidate received / actual cross-vendor verification registered
 
 Source01efd359d910fbe5cd5092570fe9060ffc9d8ef7 archivedremote→integration8f56a03310cf268e1f04cafbfa65cf8d7d0776dc. RootexactADD1MOD4/output5hashes/fullpatchfdc0c619/30protectedpackagehostidentities/P0runtimeequalityverified. Fourpackage-docs deliberatelydiffer; no longer claim fullproducttreeempty. Candidate pendingverification, no currentREADY_TO_SHIP; source/page/runtime/threeledgersunchanged. NewactualClaudeCode readonlyverification1/3registered maxUSD12/wall900s, ownexactchildshutdown2+2s, onlyReadGlobGrep/nohooks/MCP/children/shell/write/fallback. Rootpersistsliteralrawexternalresult/provenanceonly; freshfullAstraacceptance stillneeded.
+
+### P4 receipt / Clock external budget condition / P5 rotation
+
+Worldprepfd52c37→3dd85e6,79fullinputhashes/proposalonly; freshWC01-WC20contractreview registered. Clockimpact44d04c8→1cc4cae,380hashesincl51embedded, substantiatesR1-R6andmetadataexacttechnicalscope; hard3/3budgetBLOCKED, noautomaticrepair/fourthrun. Onecumulativei4exception questionpending, MGBnotreasked. Applicationgoalstillblocked/noresumeAPI; CUArefusedCodexappaccessforsafety, userappresume questionpending; directauthorizedtaskworkcontinues.
+
+ActualindependentClaudeCodeTT08verifyi1/3runningPID17860,execsession9249, fixed908873442fa043149da7211ae9105bbb1e47e970; init reportsclaude-opus-5-5andONLYReadGlobGrep. Provider/model self-report isretainedraw, no independentengineattestation/noPASSyet. MaxUSD12/900s+2+2ownshutdown; stdoutstderrwxstreaming inownwt. P5registerfreshWorldcontractreview(D) andREL02/03residualgateprep(C), queuedLunafull312readyinventory. ExternalCLIcountsone slot, root+2newworkers+CLI≤4total.
+
+Formal13/3/3/293=312and299unclosed unchanged; no newruntime/native/browser/formal/probes. Docs5candidate changed4package-docs deliberately; P0runtimeclosure protected. Source/controlcommits preservedremote, originalfailures/contracts remain.

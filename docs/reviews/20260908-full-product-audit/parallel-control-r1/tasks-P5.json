@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "wave": "P5",
+  "registration_sha": "commit containing exactcards",
+  "fixed_input": "1cc4caedcb3398e72eb5f017409820877b57b681",
+  "tasks": [
+    {
+      "fixed_card_input": "1cc4caedcb3398e72eb5f017409820877b57b681",
+      "dispatch_parent": "commit containing exactcard resolved fullSHA beforelaunch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "forbidden": [
+        "nonallowedwrites",
+        "product/source/CSS/runner/testrepair or runtime/browser/native/package/probes",
+        "globalcontrol/ledgers/inventory",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "hash/scopeconflict",
+        "newruntime needed",
+        "unsupportedownerbehavior",
+        "budgetexhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "DASH-03/contract-review",
+      "workflow": "D",
+      "role": "fresh independent Astra fullcontractreviewer, neverrepair",
+      "model": "gpt-6-astra",
+      "depends_on": [
+        "DASH-03/prepare"
+      ],
+      "source_inputs": [
+        "fd52c3746ba322e3cb0048748263b8cc29f2c932",
+        "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+        "44d04c8edc9cfc793317059a503152f8b27f6171"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-world-clocks-contract-review-r1/review.md",
+        "docs/reviews/audit-parallel-world-clocks-contract-review-r1/inputs.sha256"
+      ],
+      "scope": "Static fullWC01-WC20 independent review, existingW1 and originalDASH03fullaction/acceptance. Strictdomaincompatibility/picker/focus/JSON account/export/liveness/exactscope/deps. No repair orbefore/native. Pin actualClockREVISE+hardcap",
+      "acceptance": [
+        "All79inputhashes/actualsources/proposaloutputs verified, readcomplete WC01-WC20 each originalacceptance notshrunk",
+        "Existinglegitimate xai_zonescompatibility/empty-vs-absent/semanticJSON/rawpreservation/accountgeneration/admission/departureexport/uncertainty fullymapped; no newownerdecision under technicalguise",
+        "All3viewlocalbehavior/pickerfocus/datecrosszone/fullnativecycle/occlusion/geometry/writes/reopen/recovery/sourceguards andfixedbefore matrices",
+        "Exactfutureallowlist, sharedDashboardguardprerequisite, CSS/Clockmethodgates/multipleparticipants/reviewindependence andcrossvendor preserved",
+        "No WorldClocksimplementationreadyfromproposalapproval whilefoundationblocked; honestAPPROVEDorREVISEwithcoordinates; cannotfix"
+      ],
+      "budgets": {
+        "contract_review_iteration": 1,
+        "family_cap": 3,
+        "static_pass": 1,
+        "runtime": 0
+      }
+    },
+    {
+      "fixed_card_input": "1cc4caedcb3398e72eb5f017409820877b57b681",
+      "dispatch_parent": "commit containing exactcard resolved fullSHA beforelaunch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "forbidden": [
+        "nonallowedwrites",
+        "product/source/CSS/runner/testrepair or runtime/browser/native/package/probes",
+        "globalcontrol/ledgers/inventory",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "hash/scopeconflict",
+        "newruntime needed",
+        "unsupportedownerbehavior",
+        "budgetexhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "REL02+03/GATE-PREPARE",
+      "workflow": "C",
+      "role": "fresh independent Astra residual gate discovery/contract author",
+      "model": "gpt-6-astra",
+      "items": [
+        "REL-02",
+        "REL-03"
+      ],
+      "supports_nodes": [
+        "REL-02/prepare",
+        "REL-03/prepare"
+      ],
+      "depends_on": [],
+      "source_inputs": [
+        "1cc4caedcb3398e72eb5f017409820877b57b681",
+        "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+        "e041c2bc293b70db367444c62c4300231976dbf7"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-rel02-rel03-gate-preparation-r1/contract.md",
+        "docs/reviews/audit-parallel-rel02-rel03-gate-preparation-r1/inputs.sha256"
+      ],
+      "scope": "Read-only complete residualcross-tool gate preparation for existingREL02/03functionalpassed/verification_pending. Freeze allhistoricalcontracts/runners/failedruns/currentindependentreports/source closures. Propose exactfresh actualvendorverification paths/matrices byauthority, reusingvalidhistoricalevidence ratherthanrerunning. No implementation or acceptance/globalstatus.",
+      "acceptance": [
+        "Preserve BOTH exactoriginal actions/acceptance plusentireEXECUTIONrecords/evidence/functionalpassed/cross_toolpending, no cross-caller substitution",
+        "Independently check fixedP0 sourcevsoriginalacceptedfunctional source andcurrentindependentreviews; distinguish actualcompleteunchangedclosure vsdrift/untested integration",
+        "Allsession→device/device→session/concurrentfreshIDB/oldmigration preservedata, allAexit→Bisolation/content/key/unownedmigrationchoice+rollback obligations mappedto exactexistingvalidrecords",
+        "Define realcross-vendor source+evidenceverification acceptanceandnecessarynewcasesifcurrentclosureactuallyrequires, neverauthavailable/namedCodex model asPASS",
+        "No newcloud/accountschema/security/productbehavior or credentialsread, no maskedmissingownerdecision; explicitnextfreshreview/before-ifneeded/vendorverification/finalAstraccept/rootreconcile retainingformalcounts",
+        "Actualreadyvsblocked steps andexactfutureallowlist/budgets/logs/locks; knownClockblockdoesnotblockindependentaccountread-only scope"
+      ],
+      "budgets": {
+        "static_preparation_pass": 1,
+        "newruntime_browser_native_probe_package": 0,
+        "futureverificationfamilycap": 3,
+        "historical": "do notreset or rerun validpastbatches"
+      }
+    },
+    {
+      "fixed_card_input": "1cc4caedcb3398e72eb5f017409820877b57b681",
+      "dispatch_parent": "commit containing exactcard resolved fullSHA beforelaunch",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "no_children": true,
+      "state": "registered_not_launched",
+      "actor": "unassigned",
+      "worktree": "unassigned",
+      "forbidden": [
+        "nonallowedwrites",
+        "product/source/CSS/runner/testrepair or runtime/browser/native/package/probes",
+        "globalcontrol/ledgers/inventory",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "hash/scopeconflict",
+        "newruntime needed",
+        "unsupportedownerbehavior",
+        "budgetexhausted",
+        "unknown dirty ownership"
+      ],
+      "id": "FULL312/READY-INVENTORY-R1",
+      "workflow": "C",
+      "role": "fresh Luna read-only candidate evidence inventory, not design or acceptance",
+      "model": "gpt-6-luna",
+      "depends_on": [],
+      "source_inputs": [
+        "1cc4caedcb3398e72eb5f017409820877b57b681",
+        "7bb8df1631b94295bb7c3f928fcd9924b1337873",
+        "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-ready-inventory-r1/inventory.md",
+        "docs/reviews/audit-parallel-ready-inventory-r1/inputs.sha256"
+      ],
+      "scope": "Queued cheap evidencecollection over all312 obligations/299unclosed to rankactual independent candidate discovery. No newcontractdesign or globalinventory/stateadoption. Rootalonewilladoptreadyqueue.",
+      "acceptance": [
+        "All312 unique IDs/states/primaryworkflows/evidence preserved; full299 readiness rows notsample, original118modulegated untouched",
+        "Mark existingaccepted/active/blocked/undeveloped stages fromexactcurrentcontrol/task receipts/source, retain no duplicationorimplicitcompletion",
+        "For top10 independentlyready discoverycandidates provideactualsource/docpaths/dependency+logicalwriteconflicts/requiredexistingrule orminimalunknownownerdecision, no invented readiness from unreviewedcode",
+        "Clockhardcap affectsdescendantonly; TTdoc/cross-tool/Worldfoundationactualstates truthful; citeexactsourcehashes, cheapercollectionnotarchitecture/businessacceptance"
+      ],
+      "budgets": {
+        "static_inventory_pass": 1,
+        "runtime": 0,
+        "architecture_or_acceptance": 0
+      }
+    }
+  ],
+  "max_workers": 3,
+  "dispatch_now": [
+    "DASH-03/contract-review",
+    "REL02+03/GATE-PREPARE"
+  ],
+  "queued": [
+    "FULL312/READY-INVENTORY-R1"
+  ],
+  "already_running_external": "TT-08/verify CLIcountsoneworkerslot"
+}

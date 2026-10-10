@@ -212,8 +212,13 @@
       "provider_attested": false,
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-prep-20261010/XAI_Desktop",
       "fixed_parent": "c7df57204698b015554759b29af5a61b13a07207",
-      "state": "running",
-      "formal_invocations": 0
+      "state": "received_proposal_only_not_implementation_ready",
+      "formal_invocations": 0,
+      "source_commit": "fd52c3746ba322e3cb0048748263b8cc29f2c932",
+      "integration_commit": "3dd85e67e770d69b6507fbc7a883cbcf6f492c85",
+      "input_hashes_checked": 79,
+      "archive_ref": "codex/archive/parallel-world-clocks-prep-r1-20261010",
+      "static_pass": 1
     },
     {
       "id": "CLOCK/CORRECT-IMPACT2",
@@ -223,16 +228,47 @@
       "provider_attested": false,
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-impact2-20261010/XAI_Desktop",
       "fixed_parent": "683d3b1ea5e824170d00cb0b09364df29271d181",
-      "state": "running_static_impact_only",
+      "state": "accepted_technical_impact_HARD_BUDGET_BLOCKED",
       "formal_invocations": 0,
-      "retention_budget": "3/3exhausted; no exception"
+      "retention_budget": "3/3exhausted; no exception",
+      "source_commit": "44d04c8edc9cfc793317059a503152f8b27f6171",
+      "integration_commit": "1cc4caedcb3398e72eb5f017409820877b57b681",
+      "input_hashes_checked": 380,
+      "archive_ref": "codex/archive/parallel-clock-impact2-20261010",
+      "static_pass": 1,
+      "repair_authorized": false
+    },
+    {
+      "id": "TT-08/verify",
+      "workflow": "D",
+      "actor": "external-cli/TT-08/verify/i1",
+      "tool": "ClaudeCode2.1.280",
+      "configured_model": "opus",
+      "reported_init_model": "claude-opus-5-5",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-vendor-20261010/XAI_Desktop",
+      "fixed_parent": "908873442fa043149da7211ae9105bbb1e47e970",
+      "candidate": "01efd359d910fbe5cd5092570fe9060ffc9d8ef7",
+      "state": "running_actual_cross_vendor_readonly",
+      "owned_pid": 17860,
+      "exec_session_id": 9249,
+      "verification_iteration": 1,
+      "family_cap": 3,
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep"
+      ],
+      "max_usd": 12,
+      "wall_seconds": 900,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -244,10 +280,11 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 8,
+    "static_passes": 11,
     "rework_findings": 7,
     "retention_validation_invocations": 3,
-    "retention_assertions": 145
+    "retention_assertions": 145,
+    "actual_cross_vendor_verification_invocations": 1
   },
   "events": [
     {
@@ -309,6 +346,10 @@
     {
       "at": "2026-10-10T10:08:24.333192+00:00",
       "event": "ExactADD1MOD4 TT08candidate received; actual cross-vendor readonly verification registered"
+    },
+    {
+      "at": "2026-10-10T10:18:08.212299+00:00",
+      "event": "Received WorldClocks proposal and Clock hard-budget impact; actual vendorCLI running; P5 ready independent tasks registered"
     }
   ],
   "wave_P2_tasks": [
@@ -338,5 +379,10 @@
     "retention_validation": "3/3exhausted; fourth or renamed reset unauthorized; preserve source and all costs",
     "dependent_chain": "Q1/Q2/adopt/Q3/G/B/Clockrecovery descendants only; otherworkflows continue"
   },
-  "runtime_product_source": "P0 f9eb4b1 remains runtime baseline; exact4 authorized package-docs now differ, never claim fullpackage treeempty"
+  "runtime_product_source": "P0 f9eb4b1 remains runtime baseline; exact4 authorized package-docs now differ, never claim fullpackage treeempty",
+  "external_conditions": {
+    "goal_runtime": "originalgoal metadata stillblocked; noedit/resumeAPI, CUA refusesCodexappaccessforsafety; useraskedresumeviaapp, pending; directauthorizedworkcontinues",
+    "clock_retention_budget": "freshimpact no validpath within3/3; minimalone cumulativei4exception asked separately, pending; noMGBreapproval",
+    "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage"
+  }
 }
