@@ -1,0 +1,589 @@
+{
+  "at": "2026-10-10T17:09:13.909182+00:00",
+  "control_sha": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+  "command": "git ls-remote --heads origin",
+  "raw_sha256": "43846b92a9dd41c4ddd13271b2ed85e033e403a767a6a238d5f5d1483e1a1abc",
+  "heads": [
+    {
+      "ref": "refs/heads/claude/frosty-nash-c4bf16",
+      "sha": "72902b7d176385f77e48276b0047a2796f25b738"
+    },
+    {
+      "ref": "refs/heads/claude/web/agent-harness-foundation-review-20260909",
+      "sha": "91d8a06cc77775377b8d4b26777f16dbbde105b2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/audit-20260909-review-snapshots",
+      "sha": "2a4fbb4c6822599bcff7424e5757c5cda2648177"
+    },
+    {
+      "ref": "refs/heads/codex/archive/audit-amend-recovery-20260911",
+      "sha": "6f4345eede8632c1f662efa1dcab4507c87fdaa5"
+    },
+    {
+      "ref": "refs/heads/codex/archive/audit-more-b1b2-evidence-c3ab20d",
+      "sha": "c3ab20d9475ef4a60b35cbbec34b87a73de9984e"
+    },
+    {
+      "ref": "refs/heads/codex/archive/audit-split-0645a0c",
+      "sha": "0645a0c50699d83bc99bfe40e418c4ac774ce0ad"
+    },
+    {
+      "ref": "refs/heads/codex/archive/clock-impact-r1-draft-20261009",
+      "sha": "193c7f11d3ebf0c41d42f0b133aada0f1484f1b3"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-codex-snapshot",
+      "sha": "f00f6fa7a1d95f77e33a1d278ecba9d5fc0c3556"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-design-assets",
+      "sha": "58f641d68112188a93f7ef03825c776ce74b39bc"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-reflog",
+      "sha": "bd4c9f286e9adfde6694ae602adf62b427015824"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-00",
+      "sha": "abcb0f47fdb6d90e7c75713d519837948694b5b6"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-01",
+      "sha": "d97ada462bd64b29f110b5e25141504ebc5ef70f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-02",
+      "sha": "0ba58c6296127b13f924205989a1671c8e1ec3d6"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-03",
+      "sha": "54f0bdbee34654fa2838e7ad6ffe1c310b9d57f6"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-04",
+      "sha": "c1ec3695a3e468d7cb2adafbec767396043c2381"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-05",
+      "sha": "7437b7fdb91908b2b29b76d58a71afce962c8ecc"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-06",
+      "sha": "173e16674bfb1e820244b9b583bee88d06fc1ba7"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-07",
+      "sha": "885a937097f84a0edde032d488a96bdb43fbd8fb"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-08",
+      "sha": "95c715335e35c6108a9b564a425319df2bf449f8"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-09",
+      "sha": "5b191056b5508db64eb53abf82b423513c1c8b84"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-10",
+      "sha": "375d4273689f4186279ead6e5c847ff6d080a990"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-11",
+      "sha": "f1a2d735df677139af7e7193218a5896de670fc0"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-12",
+      "sha": "4a32d84a1deca0e5a6962fcaa216b394b3130dd2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-13",
+      "sha": "3da24ccfb6c6e589d20ff94f8c84f8e8965e81d5"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-14",
+      "sha": "f4fb06cffa9e40f809484ea78d8a60fa39cac1d1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-15",
+      "sha": "b55436d72872f214a1da018a417dd10045449990"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-16",
+      "sha": "665385caa0bbb96388045b83dae4cce80833fae2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-17",
+      "sha": "cf98c40ee74c6fbe027814f627db50e11649353d"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-18",
+      "sha": "c45c8b66edfde9b1d844b58f21a4de08cb899921"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-19",
+      "sha": "ec65baac1b67ac58ea24114b4c3b1f90b9b4482c"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-20",
+      "sha": "81af492834746b2e3c0ef82886eedc7d3be55877"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-21",
+      "sha": "e9905ce122f7bc0a30b797d0ad73d60262ee62db"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-stash-22",
+      "sha": "7c2414fb38ae1eaf0e1b57cfa012a78f3e8a4f23"
+    },
+    {
+      "ref": "refs/heads/codex/archive/migration-20260908-unreachable",
+      "sha": "1ddcd5bb5fe9df2581618e6f7f15b4cce4c18e62"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-ai05-discovery-r1-failed-20261010",
+      "sha": "4f3bc63cd396319e3b1b9d043485b9d742c2bdd3"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-ai05-discovery-r1-initial-20261010",
+      "sha": "11197c0d6af1d580ca2f6138766dd3c4e3038791"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-bk07-contract-review-r1-20261010",
+      "sha": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-bk07-prep-r2-20261010",
+      "sha": "59ac17754b28771d62a2830c144f8d89cea7f6ec"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-contract-review-r2-20261010",
+      "sha": "cdb8820b434aa7f2adb9cc5ad5f14118eb24230c"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-lifecycle-impact-review-r1-20261010",
+      "sha": "68d0f14b243a1becb70811ca01a503cdcd244022"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-prep-r1-20261010",
+      "sha": "5d1f28a0f81ae01155a213fac93133730f7bad51"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-prep-r2-20261010",
+      "sha": "5fa4cccb106d10e16562e0a8d6f3b103495607b1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-review-r1-20261010",
+      "sha": "bb08478d692091e6362926e2b75c1d0c34fc0ca2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-technical-amendment-r2-20261010",
+      "sha": "3a7d5f1b8a448ac44ac6d5090af63a6a81097546"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-technical-review-r2-20261010",
+      "sha": "1de3ac344a0a7a5068f89be57b734c705d316f48"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd12-writer-lifecycle-impact-r1-20261010",
+      "sha": "11d6527709a5a735200151768296a312a3a30314"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd28-contract-review-r2-20261010",
+      "sha": "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd28-machinery-impact-r2-20261010",
+      "sha": "4d1c1bdfb4378fcb5c9c0307bbf60333881a4de1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-brd28-prep-r1-20261010",
+      "sha": "ce9eef6cb50b592e05593dc800ed3439615f7458"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cal03-contract-review-r1-20261010",
+      "sha": "d3b6adf994d9e4938b99056fbe0738af9b2b1389"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cal03-prep-r1-20261010",
+      "sha": "57b2bfe7a94ed06f5359952a73b0f728759868a4"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-contract-review-r1-20261010",
+      "sha": "fda069eb300704f24384eccacfd74ffc147aef37"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-machinery-impact-r1-20261010",
+      "sha": "b5e6843bce9a6feb62afb6c451451e626b51c999"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-machinery-impact-review-r1-20261010",
+      "sha": "a8a75d15c9c482547e50905dc237344c9b49d9c2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-prep-r1-20261010",
+      "sha": "2a35488361bfbad596473fc355bd18d8feb5b164"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-source-contract-r2-20261010",
+      "sha": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-cd03-source-contract-review-r3-20261010",
+      "sha": "0d4f8870b6f080b2ec45d69605892a00bf83d812"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-clock-correction-review-r1-20261010",
+      "sha": "cbf18b491ef10941d396bc9655d10c8beed4a68b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-clock-impact2-20261010",
+      "sha": "44d04c8edc9cfc793317059a503152f8b27f6171"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-clock-q1-impact-r1-20261010",
+      "sha": "f37c8607ef30fc5bd927425ae1ee6837f7276c53"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-clock-retention-r2-20261010",
+      "sha": "a6a78097120094464701bf833a51bf0014d1d8d0"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-control-review-r1-20261010",
+      "sha": "4ba9c44a60fe97eeee8d5489c320eaedf2e342cc"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-availability-contract-r1-20261010",
+      "sha": "d39ab343f8aa0d1ce742aa77ba95ab4ceedcead1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-availability-contract-review-r1-20261010",
+      "sha": "6fd7786e7ed734b7ca407169a07dc75727e7365f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-availability-impact-r1-20261010",
+      "sha": "309483d66397a1e4bc83760de032321bd1f01432"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-availability-impact-review-r1-20261010",
+      "sha": "ab1ea42c09a055a599902d4d2b42d7c42d77e252"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-contract-review-r2-20261010",
+      "sha": "a441a0b0022deb856edac3ef2751fb9ebce7be0d"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-prep-r1-20261010",
+      "sha": "f8546788d28106aac17b96797dcb08469717dcdc"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-prep-r2-20261010",
+      "sha": "dbc818c01045637104fa3ed2f833a77b758ff55d"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-dash06-review-r1-20261010",
+      "sha": "c269ae212135f3b7729f843825ece70c7a00a724"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-gov01-gov02-discovery-r1-20261010",
+      "sha": "3b1633722b1f84efeaa29d110e5c37b7704b5f92"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-gov01-gov02-source-contract-r1-20261010",
+      "sha": "3ae8bd48502131a8d30bfaa38b04de3d733de97a"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-lock-correct-r2-20261010",
+      "sha": "11b8d721f9d423fcabb19857e96c927375b9323a"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-map-review2-20261010",
+      "sha": "240ce1ff1b3b4573ba11ef3cd4255422b0fda4e3"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-contract-review-r1-20261010",
+      "sha": "a87f90c40490e3ac02d392fe9f89aa038e439ec5"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-contract-review-r2-20261010",
+      "sha": "291a4175d9ea237451bec9fe87cd9fc6cc736de7"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-machinery-impact-r1-20261010",
+      "sha": "5a8d7141d8e032ae08c56a7650cdf47597d717ff"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-machinery-impact-review-r1-20261010",
+      "sha": "30e0a903196db8b11c3f30cc02f173bfe2a4bffd"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-prep-r1-20261010",
+      "sha": "23bd8545b317e2d5565ad069aaabd0e65061737b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-prep-r2-20261010",
+      "sha": "1e2d0ac42ecdc142c34291294fca09bce1f77dae"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-source-contract-r1-20261010",
+      "sha": "dc9f0046c431d1357d947884c282a53a6e257f30"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-source-contract-r2-20261010",
+      "sha": "5bc80abca8845b2ed0b2645fb616e73b2c156273"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-med03-source-review-r1-20261010",
+      "sha": "2f98491db76707a3965198b9dbb64f3e586a6e4b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-prep-r1-20261010",
+      "sha": "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-review-r1-20261010",
+      "sha": "adf06b6936efa9c6cc0437c603159302aaa0c88a"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-runner-source-r1-20261010",
+      "sha": "0d5a65390d5a30bc0a034c08aaf4740bb6834a29"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-runner-source-r2-20261010",
+      "sha": "624e016359a0b48662828ffc9cc15db453792278"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-source-review-r1-20261010",
+      "sha": "476b89f43ddbf07c7122a4ffb4b2b3335568de25"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-met05-source-review-r2-20261010",
+      "sha": "21519e7f55db4fa609e194e5d2a9bd622445107c"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-outer-capture-admission-impact-r1-20261010",
+      "sha": "cefb29401bd6a413044c6783c7d01510d720b235"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-outer-capture-admission-impact-r2-20261010",
+      "sha": "01e67a94b694fda26013447b8fe966414b136f18"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-outer-capture-admission-review-r1-20261010",
+      "sha": "682e932b960acd0ef36dfaa7beb33d020c993c5f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-contract-review-r1-20261010",
+      "sha": "0f2f5c1a155f8fda127758f7986010dd57335f21"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-contract-review-r2-20261010",
+      "sha": "d75a0d6de0521abde0128339049bd860bc0ec7a2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-machinery-impact-r1-20261010",
+      "sha": "a9054733b4f1179dac138b73031e3d0fd22b2416"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-machinery-impact-review-r2-20261010",
+      "sha": "86de30ce7c16dd1823ccf9327f67993f45f193b5"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-prep-r1-20261010",
+      "sha": "59dae0b524e19e6d0c273174488b84d68fb323f3"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-prep-r2-20261010",
+      "sha": "9e2e6cf722171936dc8c085d588f0c047d968e92"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-source-contract-r1-20261010",
+      "sha": "be6afe0e22fac540ae156ff53c23159874f17b8a"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-pomo04-source-contract-review-r1-20261010",
+      "sha": "d496488920779530d8b8e7ec1d982acb2b9a250f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-ready-inventory-r1-20261010",
+      "sha": "acd21f9b15a735e2202ca9553aff54b3e3b46e17"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-rel-budget-impact-r1-20261010",
+      "sha": "9885870aa55ea4a8f7c6bb475958989b429aeaf2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-rel02-rel03-prep-r1-20261010",
+      "sha": "c6050091f21aca4f3003da8f67f92a41a4a528d4"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-rel02-rel03-review-r1-20261010",
+      "sha": "03dcf47931aba6d92daed76cf9f04a119d29c359"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-native-host-focus-impact-r1-20261010",
+      "sha": "516495625056a6123f22ff67df61c9c34dff2484"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-native-host-focus-impact-r3-20261010",
+      "sha": "f667a0b6996b4039d2c4e5ca28657953703e830b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-native-host-focus-impact-review-r1-20261010",
+      "sha": "b7e075c51e77fbf9c376ae33e3a9e2fb3b69fd06"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-native-host-focus-impact-review-r2-20261010",
+      "sha": "bdc06bd5b57f026caf6d7838563bfdae6f8684c9"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-source-bytes-r1-20261010",
+      "sha": "05e8514429e9f24bd2e1d6ffa9dd9e9312899e1d"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-source-bytes-r2-failure-preservation-20261010",
+      "sha": "b719ee3c54992c905b7f91d82eb3c8646d16df6f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-source-bytes-review-r1-20261010",
+      "sha": "6c3451eda23a90841db907502b647c53b43fe1a2"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
+      "sha": "fd03d46b06e963c4144314b61848038b68e6f12f"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-prep-r1-20261010",
+      "sha": "d6a310f2472356bd69d7a240c81f4b71e35d5ac1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-review-r1-20261010",
+      "sha": "9bd435df80345e6e94f256777a3d865144cb9611"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-runner-source-r1-20261010",
+      "sha": "9c85a2f1049d54145bdb72366f6d4df26d3c1567"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-runner-source-r2-20261010",
+      "sha": "f8821c1bb99a51f07a3e6d077bc3391affde7a99"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-source-review-r1-20261010",
+      "sha": "3145fd8442895bae14fab7e5d16cb0edd5b6ad1b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-task06-source-review-r2-20261010",
+      "sha": "cd7be1409e6198e5032dceb85bad8cca2182c3ae"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-before-r1-20261010",
+      "sha": "00933c91241159e26f444213146d9ba949bac823"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-contract-review-r1-20261010",
+      "sha": "287547e2b0e0724a48a89e50377ccc7e840db93b"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-doc-correct2-20261010",
+      "sha": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-docs-r1-20261010",
+      "sha": "01efd359d910fbe5cd5092570fe9060ffc9d8ef7"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-final-acceptance-r1-20261010",
+      "sha": "c5874e5f6e803aa391ef2e5fb677e4bab592f4ef"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-inventory-initial-20261010",
+      "sha": "6debb65b76840a08aca1d57c08933a3ee12eee37"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-inventory-r1-20261010",
+      "sha": "8c481eb796f90c8d88283d27d39acbb9f1c074ea"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-prep-r1-20261010",
+      "sha": "c6ab3c967074595ab59b7e0bf7dc86d66b229e97"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-status-r1-20261010",
+      "sha": "b4c33120bde198214bbe3bf76ead543b5f139c3a"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-vendor-i1-20261010",
+      "sha": "68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-vendor-i2-20261010",
+      "sha": "541a016fa64051a0b952e6c87ea839de99cc623d"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-tt08-vendor-i3-20261010",
+      "sha": "f475cf5d0598dcb18e0e75e2e025969e7c16b056"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-world-clocks-correct2-20261010",
+      "sha": "d8ac35cc64e8f764166af9ca4aa02c17b8faf384"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-world-clocks-prep-r1-20261010",
+      "sha": "fd52c3746ba322e3cb0048748263b8cc29f2c932"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-world-clocks-review-r1-20261010",
+      "sha": "792a6ba95157de6430d5f16a5b392aa8f0f89f22"
+    },
+    {
+      "ref": "refs/heads/codex/archive/parallel-world-clocks-review2-20261010",
+      "sha": "527a9a1e29e344526e44ebae52b8965113fdb915"
+    },
+    {
+      "ref": "refs/heads/codex/archive/web-design-source",
+      "sha": "58f641d68112188a93f7ef03825c776ce74b39bc"
+    },
+    {
+      "ref": "refs/heads/codex/mobile/native-thin-shell-mvp",
+      "sha": "05f04b151998fa5bc2e8f01f7e3300aed9582e5b"
+    },
+    {
+      "ref": "refs/heads/codex/plugin/common-capabilities-phase2",
+      "sha": "9670078fda8b0ad3d10b24c23e4beb0ec29719fe"
+    },
+    {
+      "ref": "refs/heads/codex/plugin/platform-docs",
+      "sha": "dadaa0714dfdd3aef2ed627e80d679b17cdb2790"
+    },
+    {
+      "ref": "refs/heads/codex/web/agent-harness-foundation-design-20260909",
+      "sha": "43798a69e1ac9fcc4f042c3f62581311b21fc557"
+    },
+    {
+      "ref": "refs/heads/codex/web/full-product-audit-20260908",
+      "sha": "6f5910ea036ee6f54a26f25c4faba63389aac496"
+    },
+    {
+      "ref": "refs/heads/codex/web/production-launch-operations-20260908",
+      "sha": "b9d4227d7ed42afd2edb6e698a986189c89cbad3"
+    },
+    {
+      "ref": "refs/heads/desktop-plugin-next",
+      "sha": "ae72888f4c50d8d678eef670c9bff4c27b3e373d"
+    },
+    {
+      "ref": "refs/heads/dev",
+      "sha": "343cc5f1002559291b3f8fd1511b93c6e1196082"
+    },
+    {
+      "ref": "refs/heads/main",
+      "sha": "9a61669b1f67197f6f75f341c79ef35be8a6d0e4"
+    },
+    {
+      "ref": "refs/heads/web",
+      "sha": "9257be40c03216b1006691bfa289bd29d6dfe839"
+    }
+  ],
+  "limits": "remote advertised Git identities only; branch existence is not machine/runtime parity, shipment/deployment proof or permission to advance; no names inferred absent refs"
+}

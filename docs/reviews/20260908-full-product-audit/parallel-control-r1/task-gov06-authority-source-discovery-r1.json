@@ -1,0 +1,123 @@
+{
+  "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
+  "workflow": "B",
+  "module": "web",
+  "role": "fresh bounded read-only sixmodule authority source discovery no repair",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "original_item": {
+    "id": "GOV-06",
+    "priority": "P2",
+    "kind": "文档",
+    "action": "统一六模块、分支存在性、G1与Organizer冻结例外的authority镜像",
+    "acceptance": "CLAUDE/AGENTS/Cursor/模块图一致；独立web/dev正常分叉不当错误合并",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+    "primary_workflow": "B",
+    "original_module": "web（project-system）",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "GOV-06",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [],
+    "source_section": "GOV",
+    "acceptance_evidence": {
+      "business_acceptance": "CLAUDE/AGENTS/Cursor/模块图一致；独立web/dev正常分叉不当错误合并",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "GOV-06/prepare",
+      "GOV-06/contract-review",
+      "GOV-06/before",
+      "GOV-06/implement",
+      "GOV-06/verify",
+      "GOV-06/accept",
+      "GOV-06/reconcile",
+      "GOV-06/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/inputs.sha256"
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/product-module-routing.mdc",
+    "docs/PRODUCT_MODULE_MAP.md",
+    "docs/MODULE_BOUNDARIES.md",
+    "docs/PLUGIN_MAP.md",
+    "docs/adr/0010-p1-desktop-resume-plan.md",
+    "docs/adr/0013-branch-sync-governance.md",
+    "docs/planning/LONG_TERM_PRODUCT_ROADMAP.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/workflow/project/dev-dashboard.md",
+    "docs/prototypes/dev-dashboard/index.html",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov06-branch-observation-p54.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json"
+  ],
+  "protected": [
+    "ALL nonallowed files",
+    "all actualauthority mirrors/generateddashboard/skills/agents/product/config/lockfiles",
+    "original contracts/runners/logs/evidence/failures",
+    "globalcontrol/threeledgers/otherwts",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "logical_locks": {
+    "write": [
+      "newGOV06source-discovery-only"
+    ],
+    "read": [
+      "sixmoduleauthority-mirrors",
+      "branch-metadata"
+    ],
+    "future_shared_write": "GOV01+02 parser/dashboard candidate sharing must be reviewed before any implementation; no authoritywrites now"
+  },
+  "budgets": {
+    "discovery_iteration": 1,
+    "discovery_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "actualinput/hash/dirty/protected-scope drift",
+    "need productdecision/boundaryweakening",
+    "actualconcludingchecker failure: STOP no retries/writes/commit/amend"
+  ],
+  "acceptance": [
+    "Full original GOV06 action and acceptance, six normalizedmodule responsibilities and each authoritymirror matched to exact current acceptedADR/routing boundaries/G1 platformruntime versus pausedpackages/Organizer deliveredexception/web-dev intentionaldivergence/web-to-appD3/branchcreationpromoteoperatorgates. Distinguish actualremoteheads frozen rootobservation from stale documentary noneexist statements; branchpresence never authorizes merge/rebase/main/dev/web writes, no branch modifications. Surface every actualcontradiction or unsupportedproductpolicy, do not decide from implementation alone.",
+    "Inspect complete relevant authorityfiles and active dashboard source/prototype consumed module map without executinggenerator. Canonicalmachinecontract and skill applies if checking currentOverview freshness readannounce fullskill; staleindex source-only no generatedrefresh. Preserve all crossplatform mirror requirement CLAUDE/AGENTS/Cursor/modulemap; finite exactcandidatepaths/blocks proposed only. Avoid GOV01/02 parserwork duplication: referencesreadonly dependencies; no parserstate/status/GOV03-05scope grants. No runtime/branchparity/closureclaims from staticdocs.",
+    "Inventory original accepted evidence so no valid historical batch rerun. Complete source-output discovery with exact references/hashes, observed versus assumed branchclaims, finite futurecontract/before/implementation/independentverification/actualcrossvendor/fullcalleraccept/rootappendinventory plan. Fresh independent wholecontract-impact review/rootboundedgrant required beforeany authorityrepair. Missing necessary behavior rules leave minimum questions only; all original312939/formal13,3,3,293 retained.",
+    "Bind every required full input at EACH actualusedSHA; actualtaskcard/currentrootmetadata/branchobservation at dispatchparent not olderfixedinput. Readvalidate ALL inputs and BOTH completebuffers BEFORE ANY write. Sole meaningfulconcludingstatic validates immutableinputhash/sourcecoverage/outputcompleteness, not whitespace-only. No unsupported headline/minsize/countguards or P0auditdocs comparisons. CompactJSON safeUTF8/chr(10) transport; actualPython syntax/runtime failure counts actualattempt and immediateSTOP no retry or postfailurematerialization. Preserve raw numericexit/PID/session/chunk/ownedEOFdrain receipts not only r.output. Exact2ADD onehookdisabledcommit realnewlineWhyWhatScopeRiskDocsTests clean/noamendpush."
+  ]
+}

@@ -2591,24 +2591,34 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_task",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "7e57bb81594476e28727430b4fb9ed87dbdcfb2d",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-review-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-review-r2.json",
+      "actor": "/root/parallel_d_med03_source_full_review_r2",
+      "fixed_parent": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-source-review2-20261010/XAI_Desktop",
+      "actual_actor_launched": true,
+      "attachment_registration": "appidentitycount>100 existingownedcheckout used; prior retryfailed no duplicates"
     },
     {
       "id": "GOV-01+GOV-02/SOURCE-CONTRACT-IMPACT-REVIEW1",
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_task",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "46b6d12067c3f348e250751dff8a3c80b31b4382",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-impact-review-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-impact-review-r1.json",
+      "actor": "/root/parallel_d_gov_source_contract_full_review_r1",
+      "fixed_parent": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov-source-contract-review1-20261010/XAI_Desktop",
+      "actual_actor_launched": true,
+      "attachment_registration": "appidentitycount>100 existingownedcheckout used; prior retryfailed no duplicates"
     },
     {
       "id": "BRD-28/SOURCE-MACHINERY-IMPACT-REVIEW2",
@@ -2621,14 +2631,35 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-review-r2.json"
+    },
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
+      "workflow": "B",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "queued_fresh_bounded_SOURCE_ONLY_discovery",
+      "fixed_input": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov06-authority-source-discovery-r1.json"
     }
   ],
-  "workflow_B": "GOV01/02 fresh complete sourcecontract1 queued after source-only discovery; next independent AI05 source discovery exact bound, no unsupported attachment/voice implementation. TT08 full documentary acceptance retained, formalstate unchanged.",
+  "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
   "concurrency": {
     "root": 1,
     "workers": 3,
     "total": 4,
-    "capacity": 4
+    "capacity": 4,
+    "actors": [
+      "/root/parallel_d_outer_capture_full_review_r2",
+      "/root/parallel_d_med03_source_full_review_r2",
+      "/root/parallel_d_gov_source_contract_full_review_r1"
+    ],
+    "next_ready": [
+      "BRD-28/SOURCE-MACHINERY-IMPACT-REVIEW2",
+      "GOV-06/AUTHORITY-SOURCE-DISCOVERY1"
+    ]
   },
   "cost": {
     "new_formal": 0,
@@ -3126,6 +3157,11 @@
       "at": "2026-10-10T17:05:46.590016+00:00",
       "event": "P53 receiveMEDsource2 5bc80abca8845b2ed0b2645fb616e73b2c156273 ->7e57bb81594476e28727430b4fb9ed87dbdcfb2d full2133; GOVsourcecontract1 3ae8bd48502131a8d30bfaa38b04de3d733de97a ->46b6d12067c3f348e250751dff8a3c80b31b4382 full534; both PROPOSED UNADOPTED registerfreshWHOLE MEDreview2/GOVfullimpactreview1. PreserveAI source4f3 andinitial111 remote plusFAILEDcandidate integration de172da0b2d05e48db62cf625ffae6c411770479 ONLY; 3actualPython failures/declaredstatic1 overrun2, missingnumericPIDsession receipts UNKNOWN, prohibitedfourthmaterialization/commit/amend fullydisclosed; NOvaliddiscovery/regularcorrection/review/sourcegrant. ReceiveCDfinalfullreview3 0d4f8870b6f080b2ec45d69605892a00bf83d812 ->863257ed4976b1ce4ec21936464c0f84295c11d6 full15869 identities/7627objects documentaryPASS REVISE R3-01 stringhelpers/R3-02 silentno-opbinding; review3EXHAUSTED NO4 orroutineauthor3. BRD12 finalauthor3 actual73011exit1 overbroadreadPathsP0guard noartifact author3EXHAUSTED; BRD28firstfullreview actual85323exit1 PythonnewlineSyntaxError beforeassertions noartifact, registerfreshwhole2/3. AppendDASH provenancecorrectiveaddendum source633raw633unique vs review649raw649unique DISTINCTARTIFACTS; oldreceipt/card/events immutable no retroPASS. Actualroot+outerfullreview2=2/4, queuedMED/GOV/BRD28freshreviews; sharedsource3review3/Clockretentionvisual3/M8RELunknown holds descendantsONLY/ninecleanuprequests unconfirmed.97deliveredreceipts111knownconcludingstatic24FAILED1UNKNOWN/overruns3/rework69/AIprohibitedmaterialization1; vendor3LIST7.6052402notbilling. Formal13/3/3/293=312/939 unchanged TT08onlynewfullcalleraccepted. No method/sourcequalification/implementation/caller/releaseadoption; P52normal0FAIL1WARN preserved P53freshpending.",
       "input": "863257ed4976b1ce4ec21936464c0f84295c11d6"
+    },
+    {
+      "at": "2026-10-10T17:09:13.910004+00:00",
+      "event": "P54 actualroot+Outerfullreview2/MEDfullsource-review2/GOVfullsource-impactreview1=4/4; ownedcleanworktrees eachpinnedP53 orP52actualparent, no hiddenrepin. All97distinctsourceoriginals exactremoterefs + integrationsancestor toP53 andadditionalAIinitial recoveryref confirmedmetadataONLY; P53normal0FAIL1WARN preserved/P54freshpending, deepnotrun. Register unrelatedoriginalGOV06 fullsixmodule authoritysource-discovery1 exact2ADD/Luna/source-only currentADR/G1platformruntime/pausedpackages/Organizerexception/webdevdivergence/actualfrozenremoteheads/crossplatformmirrors finitefuturepaths; no parser/authority/generateddashboardwrite or policygrant. BRD28freshwholeimpactreview2 nextready; allfailed/exhausted/unknownhistories frozen descendants-only. Fouroriginalprompts/all312mapping/DAG retained, manualrootleases notimplementedengine; formal13/3/3/293=312/939 unchanged/TT08onlynewfullcalleraccepted/cost111knownstatic24FAIL1UNKNOWN/rework69/providerLISTnotbilling/ninearchivespending. Goal remains unfinished, runtimegoalpanelblocked userresume pending; authorized work continues.",
+      "input": "6f5910ea036ee6f54a26f25c4faba63389aac496"
     }
   ],
   "wave_P2_tasks": [
@@ -3134,7 +3170,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P52literal0FAIL1WARN; allfourneworiginals plusAIinitial preservedremote; P53freshnormalpending",
+    "normal": "P53literal0FAIL1WARN + all97originalremote/integrationancestor metadataPASS + AIinitial recoveryref preserved; P54freshnormalpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -3176,7 +3212,7 @@
     "unreachable_identity_receipt_sha256": "38c195d9b18f24304822ee8aaed603a2eb3604a0591481976c95e13117072484",
     "preservation_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/preservation-ancestry-p50-receipt.json"
   },
-  "workflow_C": "MED03 exactsource correction2 then BRD12 finaltechnical amendment3 queued; original scope remains whole caller. Missing policies/cappedshared dependencies localholds; no productscope grant.",
+  "workflow_C": "MED03 correcting fullsourcecontract2 awaiting whole review2 RUNNING; BRD12 finaltechnicalauthor3 FAILED exhausted no4; CAL/BK/World minimumownerdecision localholds; prepare other original candidates without sharedcap resets.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
