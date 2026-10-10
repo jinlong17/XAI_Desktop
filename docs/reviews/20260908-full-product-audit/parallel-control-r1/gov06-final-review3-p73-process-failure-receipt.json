@@ -1,0 +1,51 @@
+{
+  "id": "GOV-06/AUTHORITY-CONTRACT-IMPACT-REVIEW3",
+  "parent": "cfbed9bfe6e480eed8062ee9248be48f32c57c9d",
+  "fixed_input": "32670e894d7779e0870e73ffef23d64a13e734a6",
+  "source": "c103a93602736652c08e6ca71d6b6c070e63f4f2",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov06-fullreview3-20261010/XAI_Desktop",
+  "review_iteration": 3,
+  "review_cap": 3,
+  "concluding_static_invocations": 1,
+  "result": "BLOCKED_PROCESS_completionUNKNOWN",
+  "raw_error": "node_repl kernel uncaught exception: write EPIPE; kernel reset. Catch or handle async errors (including Promise rejections and EventEmitter 'error' events) to avoid kernel termination.",
+  "checker_pid": "UNKNOWN",
+  "numeric_exit": "UNKNOWN",
+  "complete_stdout_stderr": "UNKNOWN",
+  "session": "UNKNOWN",
+  "chunk": "UNKNOWN",
+  "EOF_drain": "UNKNOWN",
+  "owned_child_quiescence": "UNPROVEN no matching processcandidate inventory is not proof",
+  "source_identities_assembled_reported": 474,
+  "prepared_unvalidated_buffers": [
+    {
+      "path": "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r3/review.md",
+      "bytes": 41801,
+      "sha256": "e94e9f0fc0223f8161241f2f50f7857f0b974fa2479feb6122fbeff16db8d64c"
+    },
+    {
+      "path": "docs/reviews/audit-parallel-gov06-authority-contract-impact-review-r3/inputs.sha256",
+      "bytes": 78532,
+      "sha256": "362cc5ef6c7de3a8cc02beed273c320933959dfceddec4a700d0aa08816ccbe1"
+    }
+  ],
+  "no_outputs": true,
+  "no_commit": true,
+  "no_materialization": true,
+  "no_checker_retry": true,
+  "clean_root_readonly_confirmed": true,
+  "readonly_confirmation": {
+    "chunk": "872351",
+    "numeric_exit": 0,
+    "outputs_absent": true,
+    "status_diff_empty": true
+  },
+  "acquisition_only_error": {
+    "pid": 93910,
+    "numeric_exit": 128,
+    "EOF": true,
+    "reason": "registration card queried at preregistration integration, acquired correctcard atactualparent"
+  },
+  "accepted_verdict": null,
+  "disposition": "EXHAUSTED3/3 freezeGOV06descendantsonly/source2UNADOPTED no fourth/reset; potentialminimumextension requires independentwholeimpact beforeownerdecision"
+}
