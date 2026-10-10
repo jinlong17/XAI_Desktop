@@ -1,11 +1,11 @@
 # Time Tracker Design
 
-Source: `/Users/lijinlong/Desktop/AI_Desktop/web design/module-timetrack.jsx`, `tt-shared.jsx`, `tt-insights.jsx`.
+Historical prototype provenance (external files not reverified in TT08): `/Users/lijinlong/Desktop/AI_Desktop/web design/module-timetrack.jsx`, `tt-shared.jsx`, `tt-insights.jsx`.
 
-This implementation ports the releasable Time Tracker surface from the Claude Design prototype:
+Existing surface ported from the Claude Design prototype (capability inventory, not a current release verdict):
 
 - Category-based start flow with Study, Work, Life, and Rest defaults.
-- Single-task and multi-task modes, including switch confirmation when a single-task session is already active.
+- Single-task and multi-task modes, including explicit End and start confirmation when Start encounters running sessions in single-task mode.
 - Category subcategory picker before starting categories such as Study and Life.
 - Active tray with pause, resume, end, and edit.
 - Date navigation across previous, next, today, and selected-day history.
@@ -31,8 +31,23 @@ Shared owner: `@repo/plugin-web-tokens` public `localDateKey`, `parseLocalDateKe
 
 Regression evidence is tracked in `docs/reviews/web-local-time-contract/dev_log.md`; focused localDate suites run under UTC, America/Los_Angeles, Asia/Shanghai and Australia/Lord_Howe. Full feature suites retain unrelated behavior coverage. Independent verification remains a separate workflow step.
 
-REL-01 changes civil-day navigation/window boundaries only. Segment splitting and cross-midnight allocation remain TT-01 follow-up work; running segment epoch values are preserved.
+REL-01 changes civil-day navigation/refresh behavior. TT-01 window allocation was subsequently independently accepted at `c5b08a723a47cf8cec59a585a714195efa98b1ba` ([report](../../../docs/reviews/web-time-window-independent/20260909-verification.md)); TT-03 hourly/rhythm/CSV acceptance uses `cd3146b8c241a6ac5434a10e555ae813b2cc2961` ([report](../../../docs/reviews/web-time-hour-independent/20260909-review.md)). Report-window projections retain source identity and do not replace persisted source segments. Running segment epoch values remain absolute instants. These are historical acceptances, not new executions in this documentation iteration.
 
 ### TT02 cross-tab state contract
 
 Single task is the default: Start while another session runs requires explicit End and start confirmation. The confirmed old running-source snapshot is rechecked inside the account-scoped lock; changed sessions reject the stale confirmation. Multiple tasks is explicitly selectable, permits distinct running sessions, and never permits duplicate open intervals within one session. Stale commands reject/replay as no-ops rather than resurrecting terminal sessions. No lock availability means writes are disabled with a visible explanation, not an emulated localStorage CAS. UI errors preserve editor drafts on the mounted page and offer a guarded download of original persisted session bytes; this export is not an unsaved-draft export or automatic cross-reload recovery.
+
+
+## TT08 mode/page correspondence — 2026-10-10
+
+The [bounded canonical PRD](../../../docs/product/time-tracker/prd.md) records accepted mode/session requirements and their historical evidence. Current source is frozen at `f9eb4b1f207bc4b46f547b90afc250424b3c8695`; TT08 changes documentation only. The old audit's unused-mode observation is historical and is superseded for current claims by TT02 and these consumers.
+
+The actual [module](../src/TimeTrackerModule.tsx) consumes `useTimeTrackerMode` in its EN/ZH selector (`Timer mode` / `计时模式`, `Single task` / `单任务`, `Multiple tasks` / `多任务`) and Start path. Start is available for selected Today. Single is the default. Start with running sessions asks for explicit End and start, rechecks the captured running-source set inside the account-scoped entry lock, ends the running set and appends a distinct new session at the same timestamp. Multi permits distinct running sessions without this switch dialog. Neither mode permits duplicate open intervals within a session.
+
+“Active” means unfinished, which includes paused sessions; “running” means unfinished with an open last segment ([time helpers](../src/internal/time.ts)). Single does not limit the number of paused/unfinished records. Pause, Resume and End use the entry controller. Resume does not open Start's confirmation: a newly resumed session that would leave multiple running sessions in single mode is rejected with the controller error. Replays do not resurrect a terminal session.
+
+**Observed conversion limit, not owner-approved migration policy:** [mode writes](../src/internal/storage.ts) only change the device preference and emit the event. Selecting Single after Multi can leave several existing running sessions; the controller's single-mode check rejects newly running IDs rather than reconciling unchanged existing IDs. A later confirmed single Start ends the then-running set. Immediate reconciliation on selection would require a separate product decision. Mode preference writes do not inherit the entry controller's storage-error/recovery guarantees.
+
+The [dashboard widget](../../xai-web-dashboard-widgets/src/widgets/TimeTrackerWidget.tsx) reads snapshot totals/runningCount and opens `timetrack`; it has no direct mode selector or Start/Pause/End handler. Insights/CSV use entry/window helpers, not another mode controller. The selector, confirmation and mounted-page error/export surface already match this description in both languages; page synchronization for TT08 is static source correspondence with zero page/source edits, not a browser, visual or accessibility acceptance.
+
+TT02's [independent report](../../../docs/reviews/web-time-tracker-session-independent/20260909-report.md) covers lock/source refusal, terminal replay and source-preserving edits. Original-byte export is not unsaved-draft export or automatic reload restore; multi-segment interval editing is disabled while note/category editing preserves source segments, and no in-app import/repair exists. REL01's [independent report](../../../docs/reviews/web-local-time-consumers-independent/20260909-review.md) preserves the initial idle-midnight failure and subsequent `91497787b9ca7deabf88a3683d5a344699c39bf6` repair. TT02→current package changes only module day refresh/selected-day behavior and the added day-rollover test; the complete historical TT02 package is not byte-identical to current P0.
