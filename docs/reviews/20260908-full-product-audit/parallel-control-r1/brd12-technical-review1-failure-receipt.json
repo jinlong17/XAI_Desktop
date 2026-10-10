@@ -1,0 +1,38 @@
+{
+  "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW1",
+  "fixed_input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+  "parent": "51398daf98c0d41e2d3ca2074c2f04cc4a673bb7",
+  "result": "FAILED_STATIC_NO_REVIEW_ARTIFACT",
+  "review_iteration": 1,
+  "review_cap": 3,
+  "static_invocations": 1,
+  "process": {
+    "pid": null,
+    "session": 83092,
+    "chunks": [
+      "44bb23",
+      "fa5230",
+      "f83f09"
+    ],
+    "exit": 1,
+    "fully_drained": true
+  },
+  "failed_guard": "stdin131/get127 missing explicitly bound git:51398daf98c0d41e2d3ca2074c2f04cc4a673bb7:docs/reviews/audit-parallel-brd12-technical-contract-amendment-r2/contract.md",
+  "classification": "missing parent SHA identity; source ownoutput at3a7 explicitly added; inheritedindex excludes own output",
+  "initial_hash_loop": "COMPLETE_NO_MISMATCH_REPORTED",
+  "unrun": [
+    "complete basis/schema/parity/candidate assertions",
+    "both full output buffers",
+    "all writes",
+    "stage",
+    "commit"
+  ],
+  "source_commit": null,
+  "unvalidated_memory_findings": [
+    "RecoveryTarget.raw embedded in surviving deletion LossPlan receipt may retain Board content",
+    "fresh-generation rollback lacks full nonBoard/secret staging/previousRaw=null contract"
+  ],
+  "finding_status": "NOT accepted REVISE evidence; require fresh independent full review",
+  "all_runtime_categories": 0,
+  "worktree_clean": true
+}
