@@ -35,10 +35,12 @@ The [canonical PRD](../../../docs/product/time-tracker/prd.md), [design](design.
 |---|---|
 | [sessionController.test.ts](../src/__tests__/sessionController.test.ts) | Locked source checks, single/newly-running enforcement and distinct multi sessions. |
 | [sessionInvariants.test.ts](../src/__tests__/sessionInvariants.test.ts) | Pause gaps, replay/terminal safety and interval invariants. |
-| [sessionEditor.test.tsx](../src/__tests__/sessionEditor.test.tsx) | Source-preserving metadata edits and mounted editor retention on failed save. |
-| [TimeTrackerModule.test.tsx](../src/__tests__/TimeTrackerModule.test.tsx) | Bilingual module, mode selection/Start and multiple distinct sessions. |
+| [sessionEditor.test.tsx](../src/__tests__/sessionEditor.test.tsx) | Default-Single End and start confirmation and atomic session switch; source-preserving metadata edits and mounted editor retention on failed save. |
+| [TimeTrackerModule.test.tsx](../src/__tests__/TimeTrackerModule.test.tsx) | Bilingual module and Start; multiple distinct sessions seeded with the raw `localStorage.setItem("xai_tt_mode", "multi")` fixture, without selector interaction. |
 | [windowAccounting.test.ts](../src/__tests__/windowAccounting.test.ts), [windowConsumers.test.tsx](../src/__tests__/windowConsumers.test.tsx) | Intersections, source identity and report consumers. |
 | [localDate.test.ts](../src/__tests__/localDate.test.ts), [dayRollover.test.tsx](../src/__tests__/dayRollover.test.tsx) | Local civil dates and idle/current-day rollover while preserving selected history. |
+
+No existing automated package test or TT02 native test exercises the mode selector UI. The EN/ZH selector correspondence is a static reading of [TimeTrackerModule.tsx](../src/TimeTrackerModule.tsx) at P0 lines 789–791 only; the raw-key Multi fixtures and historical native Single Start evidence do not establish selector interaction coverage.
 
 | Historical accepted evidence | Fixed source and exact reported result | Limits retained |
 |---|---|---|
