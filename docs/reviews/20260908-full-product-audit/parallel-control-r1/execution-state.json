@@ -3433,15 +3433,19 @@
       "primary_workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_waiting_slot",
+      "state": "running_fresh_whole_independent",
       "fixed_input": "8c2e5e8b2490df303eda91d7c1adc08d4a8c6811",
       "family_iteration": 3,
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-exhausted-documentary-purposes-impact-review-r3.json",
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "new_budget_grant": [],
-      "adopted": false
+      "adopted": false,
+      "actor": "/root/parallel_d_exhausted_documentary_whole_impact_review_r3",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-exhaustion-review3-20261010/XAI_Desktop",
+      "fixed_parent": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9",
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY2",
@@ -3449,29 +3453,31 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "registered_ready_waiting_slot",
+      "state": "running_fresh_whole_independent",
       "fixed_input": "fbd0ab3bfa951c901107116fb07c435ee37e6552",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-source-discovery-r2.json",
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "new_budget_grant": [],
-      "adopted": false
+      "adopted": false,
+      "actor": "/root/parallel_c_hab01_hab05_whole_source_correction_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-source2-20261010/XAI_Desktop",
+      "fixed_parent": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9",
+      "worktree_registration": "checkoutcreatedsuccessful appattachment100error no retry/recreation"
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
     "actors": [
-      "/root/parallel_c_gov04_gov07_whole_source_correction_r3"
-    ],
-    "ready_next": [
-      "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW3",
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/SOURCE-DISCOVERY2"
+      "/root/parallel_c_gov04_gov07_whole_source_correction_r3",
+      "/root/parallel_d_exhausted_documentary_whole_impact_review_r3",
+      "/root/parallel_c_hab01_hab05_whole_source_correction_r2"
     ]
   },
   "cost": {
@@ -4174,6 +4180,11 @@
       "at": "2026-10-10T19:25:29.347030+00:00",
       "event": "P77 preserve3originalremote and receiveSKD2 0364->f022 wholeREVISE4 sourceprocessFORENSIC_ONLY/failedvalidationclassificationUNKNOWN sourcecapacityHELD noimplicitauthor2; HabD1 9c36->fbd0 wholeREVISE3 sourceattribution/trueacceptedclock+saverecovery/AllStats+10pxdots+remindercoverage freshwholeauthor2thenD2 withincaps; finalimpact3 037d->8c2e PROPOSED_UNADOPTED E8onlysameGOV06D4 noauthor4/no5 maxE6E7E8fivepotentialdispatch150min/10min/2.5min allocationONLY pendingfreshFINALwholeimpactD3 beforeminimumquestion no grant existing7pendinggroups unchanged. All746bindings/clean/exact2ADD/rootmetadataonly; solepassedowncheckers21038/21978/22418 retained numeric0+EOF/elapsed/beforewrite no historicalrerun. RegisterFINALimpactreview3/3 andHabsource2/3; Gov04FINALsource3runningparent9d.117sources141knownconcluding31FAILED3UNKNOWN107reportedPASSinclwhitespace1/rework83/baseoverrun3+SKUNKNOWNclassificationmaterialization1/formal13/3/3/293=312299unclosed939refs/newformalprobevendor0 unchanged. P76normal0FAIL1WARN no cleanup/goalcomplete; P77pushsyncpending.",
       "input": "fbd0ab3bfa951c901107116fb07c435ee37e6552"
+    },
+    {
+      "at": "2026-10-10T19:27:34.722006+00:00",
+      "event": "P78 prove117originalheads exactremote and117integrations allancestorofpushedorigin8e3bad2 completeproof retained; normalP77literal0FAIL1WARN. LaunchFINALwholeimpactD3/3 andwholeHabsource2/3 atfixedactualparent8e3bad2; Gov04FINALsource3at9d remains, root+3=4/4 distinctnewreports no canonicalwriters/runtime/qualification/before/newexceptiongrants. Currentmetrics117sources141knownconcluding31FAILED3UNKNOWN107reportedPASS/rework83/formal13/3/3/293312299unclosed939 unchanged. SKsourcebudgetclassificationUNKNOWN stricthold noimplicitauthor2; sevenpendinggroups unchanged newE6E7E8minimumdecision awaitswholeD3. Appattachment100limit checkoutactualsuccess no newretry/recreation/cleanup. Goalunfinished.",
+      "input": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9"
     }
   ],
   "wave_P2_tasks": [
@@ -4182,7 +4193,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P76literal0FAIL1WARN P77freshpending",
+    "normal": "P77literal0FAIL1WARN P78freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4610,5 +4621,15 @@
     "actual_parser_admission": [],
     "extra4_grant": [],
     "other_ready_work_continues": true
+  },
+  "preservation_checkpoint": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p78-117-originals-remote-integration-ancestry.json",
+    "sha256": "c51b9ebbaf99490ee24e196d4eae057959d060ae29820fffebcb61dddb7be43a",
+    "fixed_remote_control": "8e3bad2985f9818f23c4df1c0fb4007b16921ef9",
+    "originals": 117,
+    "exact_remote": true,
+    "integrations_origin_ancestors": true,
+    "normal": "P77literal0FAIL1WARN",
+    "no_recovery_deletion": true
   }
 }
