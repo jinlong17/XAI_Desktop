@@ -715,7 +715,8 @@
       "source_commit": "5d1f28a0f81ae01155a213fac93133730f7bad51",
       "integration_commit": "83508ec199a6d759c4eba07460131ea91e417b82",
       "archive_ref": "codex/archive/parallel-brd12-prep-r1-20261010",
-      "input_hashes_checked": 5083
+      "input_hashes_checked": 5083,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
@@ -766,7 +767,8 @@
       "integration_commit": "85065cccad251747da97944a80dd805c4dae44ef",
       "archive_ref": "codex/archive/parallel-dash06-review-r1-20261010",
       "input_hashes_checked": 556,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "MET-05/RUNNER-SOURCE-CORRECT2",
@@ -804,6 +806,17 @@
       "state": "queued_next_slot_fresh_contract_corrector2",
       "fixed_input": "85065cccad251747da97944a80dd805c4dae44ef",
       "author_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "POMO-04/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_after_older_DASHcorrect2_and_readyreviews",
+      "fixed_input": "28ced47ca7a324caead3f67ca31a0e048ec1d98c",
+      "preparation_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
     }
@@ -1047,6 +1060,11 @@
       "at": "2026-10-10T12:08:16.383673+00:00",
       "event": "DASHreview556 REVISE no S/G ownerquestion received; fresh2/3 contractcorrector registeredqueued; BRDreview actuallylaunchedfixed008bc70; twoSolsourcecorrectors continue3workers+root",
       "input": "85065cccad251747da97944a80dd805c4dae44ef"
+    },
+    {
+      "at": "2026-10-10T12:09:44.220087+00:00",
+      "event": "All37remote originalrefs andintegrations ancestors checked; normal0FAIL1WARN; two owncompletedwts archivedconfirmed; next independent POMO04 full original discovery queued",
+      "input": "28ced47ca7a324caead3f67ca31a0e048ec1d98c"
     }
   ],
   "wave_P2_tasks": [
@@ -1055,7 +1073,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at ee30c5f after35 sources; all23stashes retainedremote",
+    "normal": "0FAIL1WARN at28ced47 after37source refs+37integration ancestry verified; all23stashes remote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -1072,7 +1090,8 @@
     "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5",
     "P10_fullidentity_scan": "literal six commit IDs: priorfive plus1955d250a7b33cde0f51c09c5836822f92bd0807 createdduring scan and nowancestororigin52a80bc; currentref/refloglocalonly0, priorfive retained; notstabledeepPASS",
     "P11_owned_completed_worktrees": "3completed clean original heads exactremote then recoverablearchivesconfirmed, active3/unrelated5untouched; all34originalrefs+integrationancestry checked",
-    "normal_intermediate_P12": "2FAIL1WARN at008bc70 while new DASHreviewsource localref/reflog completed before remote preservation; exactsource now remote, repeat after controlpush"
+    "normal_intermediate_P12": "2FAIL1WARN at008bc70 while new DASHreviewsource localref/reflog completed before remote preservation; exactsource now remote, repeat after controlpush",
+    "P12_owned_completed_worktrees": "BRDpreparer andDASHreviewer clean exactheads/remote identities proved thenrecoverablearchive confirmed viaapp; METreviewarchive confirmed; active3/unrelated5 untouched"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
