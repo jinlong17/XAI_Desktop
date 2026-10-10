@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Isolated Q1 Reload names</title><style>body{font:16px system-ui;padding:32px;background:white;color:#222}body.dark{background:#181818;color:#eee}button{min-width:44px;min-height:44px;margin:10px}</style><main class="widget-shell" data-widget-id="clock"><div class="w-clock-body"><div id="blocks"></div></div></main><div id="outside"></div>
+<script>
+const q=new URLSearchParams(location.search),lang=q.get('lang')||'en',field=q.get('field')||'style',variant=q.get('case')||'valid';document.documentElement.lang=lang;document.body.className=q.get('theme')||'light';
+const label=lang==='zh'?(field==='style'?'时钟样式':'时钟时区'):(field==='style'?'Clock style':'Clock timezone');const exact=(lang==='zh'?'重新读取 ':'Reload ')+label;const message=lang==='zh'?`已保存的${label}不可用。请重新读取；这不是新的未保存更改。`:`Saved ${label} is unavailable. Reload it; this is not a new unsaved change.`;
+const block=document.createElement('section');block.dataset.clockRecovery=variant==='wrong-field'?(field==='style'?'timezone':'style'):field;block.className='clock-recovery';block.append(document.createTextNode(variant==='wrong-message'?'Incorrect source message':message));document.querySelector('#blocks').append(block);
+function add(where,visible,aria){const b=document.createElement('button');b.textContent=visible;if(aria!==null)b.setAttribute('aria-label',aria);where.append(b);return b;}
+if(variant!=='missing-action')add(variant==='outside-block'?document.querySelector('#outside'):block,variant==='wrong-visible'?'Incorrect label':variant==='synonym'?exact.replace('重新读取','重新加载'):variant==='missing-label'?'':exact,variant==='wrong-accessible'?'Incorrect accessible name':variant==='missing-label'?null:exact);
+if(variant==='duplicate')add(block,exact,exact);
+if(['retry','discard','export'].includes(variant))add(block,variant==='retry'?(lang==='zh'?'重试 ':'Retry ')+label:variant==='discard'?(lang==='zh'?'放弃 ':'Discard ')+label:(lang==='zh'?'导出时钟草稿':'Export Clock draft'),null);
+if(variant==='inline-export'){const b=add(document.querySelector('#blocks'),'Export Clock draft',null);b.dataset.testid='clock-export-draft';}
+</script></html>
