@@ -1,0 +1,54 @@
+{
+  "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT1",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh independent shared technical design/impact author; never source/product repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "cd7be1409e6198e5032dceb85bad8cca2182c3ae",
+    "21519e7f55db4fa609e194e5d2a9bd622445107c",
+    "f8821c1bb99a51f07a3e6d077bc3391affde7a99",
+    "624e016359a0b48662828ffc9cc15db453792278"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-r1/impact.md",
+    "docs/reviews/audit-parallel-shared-native-host-focus-impact-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "One combined technical design/impact for shared TASK06+MET05 final-source prerequisites; supersedes unlaunchedTASK-onlyimpact0passes, no native/source budget reset. Bind complete frozen reviews477+2663 corpora/exactsource2 outputs/protectedoriginalAppearancefullblock/function/surroundingprobe hashes/alloriginal111TASKcases4440history64visual/added1125072/59 controls and89METrows2437originalobligations2497closure/fulltenTASKoracles/M1-M9/G1-G9/E1-E9/fullcanonicalr2G1. No movingroot or draftinputs.",
+    "Public managed-generation account/testtransport fixture feasibility, actual AppProviders auxiliary deletion/device/Todo bridges and original main.tsx initialization. Actual canonicalactivation prerequisite remainsclosed unless already-supported qualification-only seam independentlyauthorized; never enableprotectedproductiongate, use legacyconfig=null inrequiredmanagedproof, privatecontext mock or pretendqueuedwriter. Finite first-frame transition-wide passive ledger catches wrong-account/epoch/same-node content/locked flash beforelatercorrect remount; no filteringoutbad samples. Reload newloader mustwaitnon-null matchingready fixture; allsource/attempt/queue effects measured from realhost.",
+    "Full originalfocus environment/census/nonfocusableanchor/realcentre hit/finitefonts animationsstableframes, meaningfulhuePNG/scrolled-coordinate tests withoutfakehue or injectedCSS; actualMetric repeateddescriptorinjectivity/wholeoutside stops/reverse/EnterSpaceonce/deferredfatal/capture completeness. Independent genuineAppearance calibration document transfer vs exact equallystrong versionedcontext successor mustbeproved sourcefeasible and separatelyqualified later. RasterCSSmapping atrealRetinaDPR/genuineChrome menu200 effectiveviewport, foreground ownedprocess/window/CDPtab identity, revalidationtargetcalibration; neverpixelSelfTested=true bypass/skip/thresholdrelax/replacedfunction or borrowedClockbudget. Actualmobile dialog visible route/full original expectedfailure mapping and targetcensus.",
+    "One enclosing root-reserved supervisor/admission/actor/permanenthistory/stream/descendant/allocation plan for TASK12/MET16 exactr3 candidate sets. Canonical tools/cache/loadclosure, pairedactualVite/setupfailure andlatepipe/journal/finalwrite/malformedcard/replay/refusal controls, fullartifactoriginal-to-lane-emitter bijection andquiescentimmutableterminal vsunjoinedquarantine. Rootreceipts/resourceconsumption onlyroot serial. No runtime/bootstrapqualification here. Give precisecomplete viable finalauthor3 design or finite additionalprotectedtechnicalscope/methodcopy prerequisite, never intentionallyincomplete final skeleton. Fresh independentimpactreview beforeadoption/author3; allsourceauthor2/review2 retainedcap3, M8unknown/Clockretention3/visual3/RELunknown blocked no resets.",
+    "Only two impact ADDs. No product/runner/test/method implementation, no new ownerdecision or acceptancewaiver. Full before/fixed/candidateintegrated/native/affected/fullG1/actualvendor/freshfullacceptance/reconcile/inventory chain retained for both separatelyownedcallers. Map shareddependency explicitly without duplicate312 ownership or assigningonecaller acceptance toother."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "technical_impact_iteration": 1,
+    "technical_impact_cap": 3
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true
+}
