@@ -702,7 +702,7 @@
     {
       "id": "BRD-12/PREPARE",
       "workflow": "C",
-      "state": "running_static_preparation_only",
+      "state": "received_proposal_only_NEEDS_independentreview_decisions",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
       "fixed_input": "1955d250a7b33cde0f51c09c5836822f92bd0807",
@@ -711,7 +711,11 @@
       "fixed_parent": "52a80bcbf0293b0bb0446e6360d379edc1f26387",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-prepare-20261010/XAI_Desktop",
       "preparation_iteration": 1,
-      "family_cap": 3
+      "family_cap": 3,
+      "source_commit": "5d1f28a0f81ae01155a213fac93133730f7bad51",
+      "integration_commit": "83508ec199a6d759c4eba07460131ea91e417b82",
+      "archive_ref": "codex/archive/parallel-brd12-prep-r1-20261010",
+      "input_hashes_checked": 5083
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
@@ -762,11 +766,23 @@
       "id": "MET-05/RUNNER-SOURCE-CORRECT2",
       "workflow": "D",
       "configured_model": "gpt-6.1-sol",
-      "state": "queued_after_DASH_contractreview",
+      "state": "running_source_only_cumulative_author2",
       "fixed_input": "25c4dea3d03e867fba898928a21cbf859050075d",
       "formal_invocations": 0,
       "author_iteration": 2,
-      "family_cap": 3
+      "family_cap": 3,
+      "actor": "/root/parallel_d_met05_source_correct2",
+      "fixed_parent": "ee30c5fae3cd5f74e7ee26906f8a84f296a7a61f",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-source-correct2-20261010/XAI_Desktop",
+      "provider_attested": false
+    },
+    {
+      "id": "BRD-12/CONTRACT-REVIEW",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "state": "queued_next_review_slot",
+      "fixed_input": "83508ec199a6d759c4eba07460131ea91e417b82",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -784,17 +800,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 32,
+    "static_passes": 33,
     "rework_findings": 31,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 35,
+    "completed_source_receipts": 36,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "35source deliveries minus3 actualvendor; retention3 separatelyretained",
+    "static_passes_basis": "36source deliveries minus3 actualvendor; retention3 separatelyretained",
     "postaccept_AST_scanner_invocations": 1
   },
   "events": [
@@ -999,6 +1015,10 @@
     {
       "event": "Older DASH06 contractreview actuallylaunchedfixed2a06400; TASKcorrector2+BRDpreparer continue, actual3workers+root4/4; METcorrector2 queued",
       "registration": "2a06400aa9628afc28430e442425bd4dd0cbff8a"
+    },
+    {
+      "event": "BRD5083proposal received; fresh reviewregisteredqueued; METcorrector2 actuallylaunchedfixedee30, TASKcorrector2+DASHreviewcontinue3workers+root4/4",
+      "input": "83508ec199a6d759c4eba07460131ea91e417b82"
     }
   ],
   "wave_P2_tasks": [
@@ -1007,7 +1027,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at1496abe after33sources; all23stashes remote, priorfive recoveryretained",
+    "normal": "0FAIL1WARN at ee30c5f after35 sources; all23stashes retainedremote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
