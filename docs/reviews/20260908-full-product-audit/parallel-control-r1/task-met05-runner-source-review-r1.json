@@ -1,0 +1,51 @@
+{
+  "id": "MET-05/RUNNER-SOURCE-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent full executable source reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "0d5a65390d5a30bc0a034c08aaf4740bb6834a29",
+    "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
+    "adf06b6936efa9c6cc0437c603159302aaa0c88a"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-met05-runner-source-review-r1/review.md",
+    "docs/reviews/audit-parallel-met05-runner-source-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Verify full2594 source/110prep/130review identities, exact8ADD/7filefullindexpatch/frozenblock; actual M1-M9 executable coverage of89rows/12surfaces/48pointer/2Weight/8keyboard/14entry/2M7/M8M9 and finite2437declared paths nevercountedasexecutedevidence",
+    "Fullhost source actualpublicAuthProvider/App/AppProviders/AccountStorageGate/AccountDataGate/router andfirst-render identity capture, realpositiveWeight andlegacy/normalization/account fields, disabled trustedtarget effects/selectedstate/realkeyboard/fullfrozencontext. Missing bridges/sourceGate/browser-control/focus adapter mandatorysource vs actualexternalqualifiedenvironment separate; unimplemented required source yields preciseREVISE not acceptedresiduals",
+    "Lifecycle actual cancellation/ownership/join/stream/journal/finalstatus lateerror semantics, strict readonlydependency/closure/alias andoutercapture/noclobberlaneartifact validation; causal pairedactualqualification faultpath/parser/idleerrors/latefailure and no genericnonzero-PASS. No runtime/tests/qualification or reviewerrepair",
+    "Preserve originalPlannedWeight-onlyrule andfullG1-G9/E1-E9/affectedjudgingcopies/originalhistories. M8 substantivelyoldREL05native at least2 unknowncomplete cap remainsBLOCKED, not genericnewPlannedunitblock or unknown0. Fulltypedactor/permanentunit reservation binding and originalrequiredregressions, no scopeorcountreset",
+    "Return complete coordinate-specific verdict and exact bounded recommended freshversioned correction allowlist preserving sourceauthor1/3/review1/3. SourceAPPROVED isnotqualification/adoption/before/caller/formalrelease; actualdifferenttoolvendorandfreshacceptance preserved"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/sharedsources/CSS/config/lockfile",
+    "r1 originalsources/contracts/methods/failures/reviews/otherworktrees",
+    "globalcontrol/threeledgers/inventory",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "source_review_iteration": 1,
+    "source_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "extra/protected file need freeze onlyaffected gap",
+    "unresolved product decision or weakened acceptance",
+    "runtime need or old cap exhaustion"
+  ],
+  "no_children": true
+}

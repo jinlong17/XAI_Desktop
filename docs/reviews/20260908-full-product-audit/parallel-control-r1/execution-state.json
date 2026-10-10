@@ -648,10 +648,16 @@
       "provider_attested": false,
       "fixed_parent": "cfee9f81a7ef378f2f425eaa833027dc2bfe4760",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-runner-source-20261010/XAI_Desktop",
-      "state": "running_source_only_noqualification",
+      "state": "received_SOURCE_ONLY_UNQUALIFIED_NEEDS_FRESH_REVIEW",
       "source_author_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "0d5a65390d5a30bc0a034c08aaf4740bb6834a29",
+      "integration_commit": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d",
+      "archive_ref": "codex/archive/parallel-met05-runner-source-r1-20261010",
+      "input_hashes_checked": 2594,
+      "output_hashes_checked": 8,
+      "static_pass": 1
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-REVIEW",
@@ -661,11 +667,16 @@
       "provider_attested": false,
       "fixed_parent": "50b0bb4719af682e9e44f64206afa6d59333f929",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-source-review-20261010/XAI_Desktop",
-      "state": "running_static_only",
+      "state": "REVISE_R1_to_R9_qualifiedsource_BLOCKED",
       "static_pass": 1,
       "family_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "3145fd8442895bae14fab7e5d16cb0edd5b6ad1b",
+      "integration_commit": "84c919c0622409a2f815828f7c29fa37e7d438ac",
+      "archive_ref": "codex/archive/parallel-task06-source-review-r1-20261010",
+      "input_hashes_checked": 265,
+      "review_iteration": 1
     },
     {
       "id": "DASH-06/PREPARE",
@@ -694,8 +705,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -706,17 +717,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 28,
-    "rework_findings": 11,
+    "static_passes": 30,
+    "rework_findings": 20,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 31,
+    "completed_source_receipts": 33,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "31source deliveries minus3 actualvendor; retention3 separatelyretained",
+    "static_passes_basis": "33source deliveries minus3 actualvendor; retention3 separatelyretained",
     "postaccept_AST_scanner_invocations": 1
   },
   "events": [
@@ -898,6 +909,10 @@
     {
       "event": "Register BRD12 full original decision/data contract discovery for next free slot, do not reduce or invent defaults",
       "input": "1955d250a7b33cde0f51c09c5836822f92bd0807"
+    },
+    {
+      "event": "FullTASK source REVISE nine findings and MET source2594identities received, fresh technical corrector2 and MET source review registered",
+      "input": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d"
     }
   ],
   "wave_P2_tasks": [
@@ -920,7 +935,8 @@
     "normal_intermediate_P10": "3FAIL1WARN: two justpreserved sourcearchives lacked upstream and one concurrent root reflogcheckpoint prepush; upstream corrected without source/deletion, repush and repeat",
     "P10_owned_completed_worktrees": "5clean completed original heads exactremote then recoverablearchive confirmed; active3/unrelated5untouched",
     "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion",
-    "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5"
+    "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5",
+    "P10_fullidentity_scan": "literal six commit IDs: priorfive plus1955d250a7b33cde0f51c09c5836822f92bd0807 createdduring scan and nowancestororigin52a80bc; currentref/refloglocalonly0, priorfive retained; notstabledeepPASS"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {

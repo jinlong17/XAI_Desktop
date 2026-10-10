@@ -1,0 +1,70 @@
+{
+  "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent technical source corrector, no runtime or self-review",
+  "model": "gpt-6.1-sol",
+  "fixed_input": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "9c85a2f1049d54145bdb72366f6d4df26d3c1567",
+    "3145fd8442895bae14fab7e5d16cb0edd5b6ad1b",
+    "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+    "9bd435df80345e6e94f256777a3d865144cb9611"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-runner-source-r2/driver.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/fixture.tsx",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/host-fixture.tsx",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/vite.config.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/frozen-focus-adapter.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/browser-zoom-adapter.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/run-unit.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/qualification-controls.test.mjs",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/execution-manifest.json",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/qualification.md",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/inputs.sha256",
+    "docs/reviews/audit-parallel-task06-runner-source-r2/source.patch"
+  ],
+  "acceptance": [
+    "Resolve complete independent review R1-R9 and ten-row table without omission; exact12new versioned ADD, retain r1 and full111 existing case IDs/64visual tuples; missing executable mandatory source cannot become acceptable residual. Bind adopted canonical Clockr2 fullG1/E24subrows currentaddenda not stale r1; originals remain history",
+    "Lifecycle register ownership before async launch; cancellation/quiescence or truthful unresolvedresources, every-child independent cleanup, preserve allprimary/late stream/journal/flush/close/final-record errors, finaloutcome onlyafterjoined operations; latefail never PASS; no bounded Promise.race leaving sideeffects unobserved",
+    "Implement coherent run-unit outer noclobber/allocator/refusal protocol and lane-specific exact required/optional/notapplicable artifacts, isolated archive resolution for every pnpm/Vitest/tsc/eslint/build command with dependency-root strictlyreadonly and caches owned; full candidate/integrateddelta protected-boundary validation",
+    "Full actual module CRUD/drop/persistedcounts, exact destinations AX/reasons/visibility/allbus/dialog/source effects, premount source/readfault receipts, completionundo/postreloadpublication, physical disk Export/draft/heldsettlement/restoredlock successfulretry. PublicAuthProvider + actualApp/Tasks/gates fullhost adapter without private replacements; sourcehostfocus and genuinebrowserzoom adapters no device/page/pinch substitution, no forcedfocus/trust bypass or frozenalgorithmthreshold relax. External method/adoption/realenv remain separate gates after complete source",
+    "Alloriginal24causalcontrols plus actual paired fault-path/parser/schema/truncation/oversize/lateexception/deadline/startup/cleanup/alias/cache/admission negatives; expectedcontrolcause unique no generic nonzeroacceptance. Typed root reservation/sourcequalification vsbusiness schemas exactactor histories/budgetfamily counts includingrefusals, unknown/exhausted correspondingunits refuse, no Clock/RELreset",
+    "Full allimmutableinputmanifest includingcomplete195/210/229/265 priorcorpus and exactoutputs; selfexcluding11file fullindex sourcepatch. Accurate soleleadA-Codex builtinworker label and sourceauthor2/3, zero execution; freshfullsourcereview2 thenindependentqualifiedcontrols/adoption andallrow before required; candid exact unresolved feasibilityblocks not fakedsourcecomplete"
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/sharedsources/CSS/config/lockfile",
+    "r1 originalsources/contracts/methods/failures/reviews/otherworktrees",
+    "globalcontrol/threeledgers/inventory",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "locks": [
+    "TASK06:evidence-source-version2",
+    "TASK06:runtime-source-readonly"
+  ],
+  "budgets": {
+    "source_author_iteration": 2,
+    "source_author_cap": 3,
+    "inherited_source_author_iteration": 1,
+    "source_review_used": 1,
+    "source_review_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "native": 0,
+    "browser": 0,
+    "qualification": 0,
+    "probes": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "extra/protected file need freeze onlyaffected gap",
+    "unresolved product decision or weakened acceptance",
+    "runtime need or old cap exhaustion"
+  ],
+  "no_children": true
+}
