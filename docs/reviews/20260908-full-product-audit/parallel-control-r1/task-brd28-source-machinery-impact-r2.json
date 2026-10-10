@@ -1,0 +1,104 @@
+{
+  "id": "BRD-28/SOURCE-MACHINERY-IMPACT2",
+  "workflow": "A",
+  "module": "web",
+  "role": "fresh complete BRD28 machinery impact author2 after frozen source-buffer guard failure",
+  "model": "gpt-6-astra",
+  "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "ce9eef6cb50b592e05593dc800ed3439615f7458",
+    "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe",
+    "68d0f14b243a1becb70811ca01a503cdcd244022"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-brd28-source-machinery-impact-r2/impact.md",
+    "docs/reviews/audit-parallel-brd28-source-machinery-impact-r2/inputs.sha256"
+  ],
+  "acceptance": [
+    "Whole46284review2/25729originalbackup/30933BRD12review/20349BRD12review allretained originalB01–13/R01–12/T1–4/publichost/backup preview+logicalschema/rawstores/referenceclosure/isolatedtrialrestore/errorrollback fullsourcefeasibility. Rootadoptedce9 proposal+0a0reviewconditionalDOCONLY; existingrow13OptionChelper-only originalnoUIalternative resolvesQ-B28, no newUIquestion/grant, no backup/schema/API/storage grant. ActualexistingAccountdownloadrawexport isnotrestore/draftpayloadIDlist!=fullstoragegraph; fullproductcalleracceptance notreduced.",
+    "Finiteactualsource signatures/ownercapsule/storagegraph/versions/backwardcodec/errors/crossreferences/accountlocks+globalresetwriter/lifecycle/AppProvidersmainstartupSDKHTTPaux/wholewriters/exportdisk/defaultaction/importrollback/generation/tombstone/nativebootavailability/loadedclosure/stdoutstderr/rootoutercapture/realmethod qualification/case-sourceemittercontrols. Preserve fullBRD12 reviewedfiniteT1–T4 independently its technicalamendment notyetadopted; dependenciesconditional no originalmoduletrespass/new arbitrarymergepolicy/irreversiblemigration/deletion/no UI. Sourcecontractexactpaths thenfreshfullimpactreview/rootgrant BEFOREmethods/qualification/fullvalidbefore/productcode. Allhistories/permanentpurpose/mixedunknown cap3/failed/refusal/duplicate/probes/olduncooperativeclientexternalquiescence retained; no Item1fiction/atomicrestore claim/testonlyseam.",
+    "FullcanonicalClock§14E1–25/E24ANDRules/acceptedjudgingcopies/wholebeforefixedintegratedaffectednativevisualtrustedkeys/G1/actualcrossvendor/freshfullacceptance/rootappendinventory intact. ReactDOMSDK/config/rootcapture/sharedsource3held/retention3visual3/M8RELunknown/prodactivation localholds preserve no author4 or weakenedmeasurements. SourceproposalOnly allruntime/tests/build/lint/native/browser/server/qualification/probes/vendor0/exact2ADD/nochildrenpush.",
+    "Whole312originalfields/39original_modulelabels/939/formal13,3,3,293 preserved; normalizedmodule vsoriginal_module andnonemptygateobligations150vsdifferentgatedpolicy notassumed118; dynamicexecution-state.tasksLIST/card notinitialregistry/fourTTdocs vsP0runtime. ReadvalidateALLinputs/BOTHbuffersbeforeANYwrites/static1actualfailurefreeze/noretry/FULLsessionexitdrain safeASCII/Unicodeescapes/correctquotedUTF8/pretoolassembly!=actualchecker noMarkdownbacktickJS templates.",
+    "Previous actual impactauthor1/static1 failed required complete source-document membership guard atline107, nooutputs/clean. Actorreported53462identities6089objects245064408bytes hashesPASS, subsequent rows/canonical/appendix/buffers/writesUNRUN no memorydraftacceptance. Same fixedaed and same complete original task, cumulative impact2/3 no budgetreset. Explicitly read and index ALL required full source-output documents themselves before required-buffer membership guard because inherited inputs.sha256 ordinarily omits ownoutputMD. Do not unsupported minimumlengthassertions or abbreviate whole46284/25729/30933/20349 corpora. Original noUI OptionC already resolved/no ownerquestion. Full backup graph/B01-13/R01-12/T1-4 actual writers/lifecycle/importrollback/export/reset/retirement/source/emitter/qualification/before/fixedintegratedaffectednativeG1vendoracceptance preserved. Allinputs+BOTHbuffersbeforewrite/static1failSTOP/no retry/runtime0."
+  ],
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/sharedCSS/storage/schema/account/host/config/lockfile",
+    "all original contracts/runners/failures/evidence",
+    "globalcontrols/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "technical_impact_iteration": 2,
+    "technical_impact_cap": 3,
+    "static_pass": 1
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "unsupported producttradeoff or weakeningstandards",
+    "runtime orprotectedwrite need"
+  ],
+  "no_children": true,
+  "original_item": {
+    "id": "BRD-28",
+    "priority": "P2",
+    "kind": "决策",
+    "action": "将Board导入导出合同接成可用备份入口或明确尚无UI",
+    "acceptance": "导出预览、schema/引用校验、试恢复和错误回滚可验证",
+    "status": "待复核/待办",
+    "module": "web",
+    "gate": "当前范围",
+    "source": "02-tasks-time-boards.md;05-visual-ux-audit.md",
+    "primary_workflow": "C",
+    "original_module": "web",
+    "formal_state": "pending",
+    "retained_execution_record": {
+      "id": "BRD-28",
+      "status": "pending",
+      "evidence": []
+    },
+    "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+    "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+    "gate_obligations": [
+      "existing-owner-rule-or-minimal-decision:BRD-28"
+    ],
+    "source_section": "BRD",
+    "acceptance_evidence": {
+      "business_acceptance": "导出预览、schema/引用校验、试恢复和错误回滚可验证",
+      "existing": [],
+      "required_future": [
+        "fixed-source contract and before evidence",
+        "implementation commit and exact scoped patch where needed",
+        "independent frozen verification and affected regressions",
+        "independent Astra full-scope acceptance",
+        "controller evidence reconciliation with unchanged formal states",
+        "inventory refresh and remote ancestry/sync receipt"
+      ]
+    },
+    "tasks": [
+      "BRD-28/prepare",
+      "BRD-28/contract-review",
+      "BRD-28/before",
+      "BRD-28/implement",
+      "BRD-28/verify",
+      "BRD-28/accept",
+      "BRD-28/reconcile",
+      "BRD-28/inventory"
+    ],
+    "execution_state": "needs_fixed_scope_discovery"
+  },
+  "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd28-machinery-impact-author1-failure-receipt.json",
+  "failure_receipt_sha256": "dceaa58f44752a2bb13f9b95fff12ef0797d580591712d58222d1d32b8155ce5"
+}
