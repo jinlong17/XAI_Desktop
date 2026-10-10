@@ -746,12 +746,13 @@
       "integration_commit": "25c4dea3d03e867fba898928a21cbf859050075d",
       "archive_ref": "codex/archive/parallel-met05-source-review-r1-20261010",
       "input_hashes_checked": 2612,
-      "review_iteration": 1
+      "review_iteration": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-06/CONTRACT-REVIEW",
       "workflow": "D",
-      "state": "running_static_minimumdecision_review",
+      "state": "REVISE_R1_R2_no_new_SG_owner_question",
       "configured_model": "gpt-6-astra",
       "fixed_input": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
       "formal_invocations": 0,
@@ -760,7 +761,12 @@
       "fixed_parent": "2a06400aa9628afc28430e442425bd4dd0cbff8a",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-review-20261010/XAI_Desktop",
       "review_iteration": 1,
-      "family_cap": 3
+      "family_cap": 3,
+      "source_commit": "c269ae212135f3b7729f843825ece70c7a00a724",
+      "integration_commit": "85065cccad251747da97944a80dd805c4dae44ef",
+      "archive_ref": "codex/archive/parallel-dash06-review-r1-20261010",
+      "input_hashes_checked": 556,
+      "static_pass": 1
     },
     {
       "id": "MET-05/RUNNER-SOURCE-CORRECT2",
@@ -780,8 +786,25 @@
       "id": "BRD-12/CONTRACT-REVIEW",
       "workflow": "D",
       "configured_model": "gpt-6-astra",
-      "state": "queued_next_review_slot",
+      "state": "running_static_independent_minimumdecision_review",
       "fixed_input": "83508ec199a6d759c4eba07460131ea91e417b82",
+      "formal_invocations": 0,
+      "actor": "/root/parallel_d_brd12_contract_review_r1",
+      "provider_attested": false,
+      "fixed_parent": "008bc70e10c0898a8ad227a92bb73a5ccb62d02b",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-review-20261010/XAI_Desktop",
+      "review_iteration": 1,
+      "family_cap": 3
+    },
+    {
+      "id": "DASH-06/PREPARE-CORRECT2",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_next_slot_fresh_contract_corrector2",
+      "fixed_input": "85065cccad251747da97944a80dd805c4dae44ef",
+      "author_iteration": 2,
+      "family_cap": 3,
       "formal_invocations": 0
     }
   ],
@@ -800,17 +823,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 33,
-    "rework_findings": 31,
+    "static_passes": 34,
+    "rework_findings": 33,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 36,
+    "completed_source_receipts": 37,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "36source deliveries minus3 actualvendor; retention3 separatelyretained",
+    "static_passes_basis": "37source deliveries minus3 actualvendor; retention3 separatelyretained",
     "postaccept_AST_scanner_invocations": 1
   },
   "events": [
@@ -1019,6 +1042,11 @@
     {
       "event": "BRD5083proposal received; fresh reviewregisteredqueued; METcorrector2 actuallylaunchedfixedee30, TASKcorrector2+DASHreviewcontinue3workers+root4/4",
       "input": "83508ec199a6d759c4eba07460131ea91e417b82"
+    },
+    {
+      "at": "2026-10-10T12:08:16.383673+00:00",
+      "event": "DASHreview556 REVISE no S/G ownerquestion received; fresh2/3 contractcorrector registeredqueued; BRDreview actuallylaunchedfixed008bc70; twoSolsourcecorrectors continue3workers+root",
+      "input": "85065cccad251747da97944a80dd805c4dae44ef"
     }
   ],
   "wave_P2_tasks": [
@@ -1043,7 +1071,8 @@
     "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion",
     "deep_P10": "2FAIL0WARN scanstartedbefore extra initialinventorysource remote preservation: one reflog and six unreachable commits vs priorfive; preserveexactresult, fullobjectidentity scanpending, no deletion or assertion ofsame5",
     "P10_fullidentity_scan": "literal six commit IDs: priorfive plus1955d250a7b33cde0f51c09c5836822f92bd0807 createdduring scan and nowancestororigin52a80bc; currentref/refloglocalonly0, priorfive retained; notstabledeepPASS",
-    "P11_owned_completed_worktrees": "3completed clean original heads exactremote then recoverablearchivesconfirmed, active3/unrelated5untouched; all34originalrefs+integrationancestry checked"
+    "P11_owned_completed_worktrees": "3completed clean original heads exactremote then recoverablearchivesconfirmed, active3/unrelated5untouched; all34originalrefs+integrationancestry checked",
+    "normal_intermediate_P12": "2FAIL1WARN at008bc70 while new DASHreviewsource localref/reflog completed before remote preservation; exactsource now remote, repeat after controlpush"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
@@ -1071,7 +1100,7 @@
   "ready_inventory_collection": {
     "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
     "state": "receivedfull312/299staticcollection; rootqueueonly; no businessacceptance",
-    "next_discovery": "TASK-06",
+    "next_discovery": "POMO-04 after queued corrections/reviews slots",
     "ranked_source_not_authority_for_new_product_choices": true
   },
   "accepted_documentary_callers": [
