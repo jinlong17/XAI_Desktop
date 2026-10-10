@@ -2451,9 +2451,21 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-review-r1.json"
+    },
+    {
+      "id": "AI-05/SOURCE-DISCOVERY1",
+      "workflow": "B",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "queued_fresh_bounded_SOURCE_ONLY_discovery",
+      "fixed_input": "ed5b9ad6789beebfe1b1df4e7d554312c208dafb",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-ai05-source-discovery-r1.json"
     }
   ],
-  "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
+  "workflow_B": "GOV01/02 fresh complete sourcecontract1 queued after source-only discovery; next independent AI05 source discovery exact bound, no unsupported attachment/voice implementation. TT08 full documentary acceptance retained, formalstate unchanged.",
   "concurrency": {
     "root": 1,
     "workers": 3,
@@ -2935,6 +2947,11 @@
       "at": "2026-10-10T16:25:45.441655+00:00",
       "event": "P50 receiveBRD28wholeimpact2 4d1c1bdfb4378fcb5c9c0307bbf60333881a4de1 ->02e34fa2153bac16c1c82db7e9e53ba6534ccdbe exact2ADD/clean/70445 immutableinputhashes checked; source-only PROPOSEDUNADOPTED queuefreshFULLDimpactreview1. ReceiveBRD12wholetechnicalreview2 1de3ac344a0a7a5068f89be57b734c705d316f48 ->147b4dc7286a4ce75f58f9de8befe913696283a3 exact2ADD/clean/41547hashes checked; independentlyREVISE R2-01 deletedrawbearing survivingreceipt andR2-02 incomplete wholeaccount freshgeneration/secret/nullpreviousRaw restoration; registerfresh finalauthor3/3 and futurefreshfullreview3/3 no4/no scopegrant. Sharedbytefinalreview3/static1 FAILED75d511exit1 KeyError omitted6c manifestbatchmap inputconstruction NOTcorruption; nooutputs/repair/commit; cleanparent984f independentlychecked; collection3/review3 EXHAUSTED NO4, TASKMETlastsource3HELD/dependencydescendantsONLY. P49normalactual2FAIL1WARN freshtwoBoardoriginals nowremote+received, preservefailurelogfreshP50normalpending. Actualroot+CDsourcefullreview2+POMOsourcefullreview1+outercapturecorrectingimpact2=4/4; ninecleanuprequests remainQUEUEDUNCONFIRMED no otherwt/recoverydeletion.91receipts100knownconcludingstatic18FAILED1UNKNOWN/1whitespace-only/overrun1/rework67/collection3/mechanical1/vendor3LIST7.6052402notbilling. Formal13/3/3/293=312/939unchanged TT08onlynewfullcalleraccepted. No runtime/method/implementation/caller/releaseadoption.",
       "input": "147b4dc7286a4ce75f58f9de8befe913696283a3"
+    },
+    {
+      "at": "2026-10-10T16:29:53.103155+00:00",
+      "event": "P51 metadata checkpoint only: P50 ed5b9ad pushed, all91 distinct sourceoriginalremote refs exactSHA and integrationoriginancestor PASS; normal0FAIL1WARN actuallogSHAb6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b; knownfive deepunreachable retained notdeleted/notnewdeepPASS. Ninequeuedapparchives remainunconfirmed actualarchived0 forrequests. Registerindependent B AI05 bounded sourceonlydiscovery1 with whole originalattachment/voice unsupportedtruthfulness rule, no newproductdecision/JOBgatechange/providercredentials/runtime. QueuedafterolderGOV/MED/BRDtasks as slots free; currentactualroot+CDfullreview2+POMOfullreview1+outerimpact2=4/4. UpdatecurrentB/C descriptions no overwriteoriginal acceptedprompts/mapping/DAG or sourcecontracts.91receipts100knownconcludingstatic18FAILED1UNKNOWN/rework67/collection3/vendor3LISTnotbilling; formal13/3/3/293=312/939unchanged. No caller/runtime/method/implementation/releaseadoption.",
+      "input": "ed5b9ad6789beebfe1b1df4e7d554312c208dafb"
     }
   ],
   "wave_P2_tasks": [
@@ -2943,7 +2960,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P49literal2FAIL1WARN twofreshBoard originals beforearchivepush, nowboth originalsremote+integrated; P50freshnormalpending",
+    "normal": "P50literal0FAIL1WARN all91originalrefs+integrationancestry PASS; deepP44knownfive retained1FAIL0WARN, no newdeepPASS",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -2978,13 +2995,14 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "491b002658518fe9d9cc3ea221c812174462a60cca3c862d139b649b13390e3d",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
-    "unreachable_identity_receipt_sha256": "38c195d9b18f24304822ee8aaed603a2eb3604a0591481976c95e13117072484"
+    "unreachable_identity_receipt_sha256": "38c195d9b18f24304822ee8aaed603a2eb3604a0591481976c95e13117072484",
+    "preservation_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/preservation-ancestry-p50-receipt.json"
   },
-  "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
+  "workflow_C": "MED03 exactsource correction2 then BRD12 finaltechnical amendment3 queued; original scope remains whole caller. Missing policies/cappedshared dependencies localholds; no productscope grant.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
