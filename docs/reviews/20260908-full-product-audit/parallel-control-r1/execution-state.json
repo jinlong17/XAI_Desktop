@@ -560,11 +560,12 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "source_commit": "9c85a2f1049d54145bdb72366f6d4df26d3c1567",
-      "integration_commit": "bb4eb28",
+      "integration_commit": "bb4eb28687ea853c6b9cedec6831686618107423",
       "archive_ref": "codex/archive/parallel-task06-runner-source-r1-20261010",
       "input_hashes_checked": 229,
       "output_hashes_checked": 8,
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "MET-05/PREPARE",
@@ -579,7 +580,8 @@
       "source_commit": "ced574944f5defd14e9bf558cd9e8dbe55eb8ec6",
       "integration_commit": "a559b2b0eff8893d2813e41fe22e401ad9138253",
       "archive_ref": "codex/archive/parallel-met05-prep-r1-20261010",
-      "input_hashes_checked": 110
+      "input_hashes_checked": 110,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/FINAL-ACCEPTANCE",
@@ -597,7 +599,8 @@
       "integration_commit": "9ff5df698458611104a217b172b71aa3efd9cc82",
       "archive_ref": "codex/archive/parallel-tt08-final-acceptance-r1-20261010",
       "input_hashes_checked": 539,
-      "acceptance_sha256": "1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca"
+      "acceptance_sha256": "1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "MET-05/CONTRACT-REVIEW",
@@ -614,7 +617,8 @@
       "source_commit": "adf06b6936efa9c6cc0437c603159302aaa0c88a",
       "integration_commit": "23e7a34421fbe2141fe4a25ed0f8e331aec5c8f2",
       "archive_ref": "codex/archive/parallel-met05-review-r1-20261010",
-      "input_hashes_checked": 130
+      "input_hashes_checked": 130,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/POSTACCEPT-INVENTORY",
@@ -633,7 +637,8 @@
       "input_hashes_checked": 335,
       "output_hashes_checked": 3,
       "static_pass": 1,
-      "static_scanner_invocations": 1
+      "static_scanner_invocations": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "MET-05/RUNNER-SOURCE",
@@ -877,6 +882,9 @@
     {
       "event": "Fresh TASKsource reviewer and DASH06 preparer actuallylaunched; METsource continues exactly3workers+root4/4",
       "registration": "50b0bb4719af682e9e44f64206afa6d59333f929"
+    },
+    {
+      "event": "Five own completed worktrees archivedrecoverable; inventory message-only earliercommit remote-preserved; full31originalrefs+31integrationancestry checked"
     }
   ],
   "wave_P2_tasks": [
@@ -896,7 +904,9 @@
     "deep_before_owned_cleanup_P8": "1FAIL/0WARN same5knownunreachable; refs/reflog26sourcePASS/all23stash remote; retained notdeleted",
     "P8_owned_completed_worktrees": "6clean originals remotely preserved then archivedrecoverableconfirmedviaapp; active3andunrelateduntouched",
     "normal_intermediate_P9": "2FAIL/1WARN one newlycompleted source commit in refs/reflog while audit ran before its preservation; expected transient, source receipt/push thenrepeat, no deleting recovery",
-    "normal_intermediate_P10": "3FAIL1WARN: two justpreserved sourcearchives lacked upstream and one concurrent root reflogcheckpoint prepush; upstream corrected without source/deletion, repush and repeat"
+    "normal_intermediate_P10": "3FAIL1WARN: two justpreserved sourcearchives lacked upstream and one concurrent root reflogcheckpoint prepush; upstream corrected without source/deletion, repush and repeat",
+    "P10_owned_completed_worktrees": "5clean completed original heads exactremote then recoverablearchive confirmed; active3/unrelated5untouched",
+    "P10_inventory_intermediate": "6debb65b76840a08aca1d57c08933a3ee12eee37 identified as inventory initial commit before message correction, exactsame tree as final8c481eb; preservedadditionalremote archiveparallel-tt08-inventory-initial, not evidenceaccepted or extra scanneriteration; no recoverydeletion"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
