@@ -1,0 +1,30 @@
+# GOV-06/AUTHORITY-SOURCE-DISCOVERY1 input SHA-256 manifest
+# Read-set bound to worktree HEAD 56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50; task fixed_input 6f5910ea036ee6f54a26f25c4faba63389aac496
+# Product reference SHA: f9eb4b1f207bc4b46f547b90afc250424b3c8695
+# Source-hashes.json historical parent e041c2bc293b70db367444c62c4300231976dbf7; each hash below is for the actual current bytes read in this task.
+40f9dcad8a5930725ce16685bac45b7bebfd0e4b2a5e30ba912c69441f20b615  /Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md
+519c72bcbdd1018af9a369614b9db04a674bf91870d99dcca03665dabe162100  AGENTS.md
+6597e484cb5bde938fadb3c728f2e76c6228364584306a453655eeebd1e61ffb  CLAUDE.md
+8a2533f1315bd772fd20a5f4856bbe8f84c9ef3695b9055ac038ee0a7c758291  .cursor/rules/product-module-routing.mdc
+abad4dc91756c1b214646c0d2f63469b8d83380f195c96851dde7148262145db  docs/PRODUCT_MODULE_MAP.md
+5ee238e0d7e8e1bef208f29dd78af49730776ea2edea77ceecab0c68edb20349  docs/MODULE_BOUNDARIES.md
+896e01507f771656c6162bfa8e09383c714e958c0f4df62b3a910c77804e1a6a  docs/PLUGIN_MAP.md
+060c18b7744eb634d27ca5cceb04bf56194113eb041cf25b5b397827d15abb07  docs/adr/0010-p1-desktop-resume-plan.md
+890009df9fc8f1e331fc07b258dfb40a0d4bcbd353106c95c37999daff49e467  docs/adr/0013-branch-sync-governance.md
+6e919053888d2f3247efd65baa1e900d27ad1d60b6b79219de83ed13985e0898  docs/planning/LONG_TERM_PRODUCT_ROADMAP.md
+99bb429d2a9facd7cebfbcb52e97c7ccea648d19953e05e10f824189f6b9f050  docs/workflow/project/workflow.md
+92572a6ea33865753d3a461d96830d38e1dbcded58e684114eab450c81ab4b59  docs/workflow/project/multi-machine-development.md
+1b5b4d5bd4c71a3792ba8f9951c6955659faa28a679eff9b41be39992b6ef9ec  docs/workflow/project/dev-dashboard.md
+3fa6f8e42c49e3992ab405d9c0a79792dca25a953a0615b71070807cf183b323  docs/prototypes/dev-dashboard/index.html
+ace620f1d6475412855d5310b0515ac2e6612917a2cf5ca8fa63841e72982ddf  docs/reviews/20260908-full-product-audit/parallel-control-r1/gov06-branch-observation-p54.json
+29be78e04b59fbaf1a818a6ab2ad7542ddc161512367b451fd472789f7a52b7a  docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json
+c2d32f4f3ea81c57aa845eb90a8d072edb7722bc1f79b6b068ce24e710309793  docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json
+21aed48881ce567710af8d7660b56879e5f23ba5bc7a33ff7482adf777652ab4  docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov06-authority-source-discovery-r1.json
+b03da6f40722c7f48cd6a19f21fa86b56494aaed46cb90f22bb75ae51399dc01  docs/reviews/20260908-full-product-audit/parallel-control-r1/source-hashes.json
+9362a199fdccefef4f9867bb935758d4676db649580e8a510d4d5a8631655cb8  docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md
+3b9836481a920a38674e6e7c17229782bdeb086495becffa0e8538f65d070ae9  docs/reviews/20260908-full-product-audit/TODO.json
+59bf980531bfe869597aa0db9f1a7f09a850a7c9d03483e61e98f09ace1e5cf2  docs/reviews/20260908-full-product-audit/ALL-TODO-CURRENT.md
+f052f0072abd3ef3e15603c06c37386a7ba65128934c8b05c4f970220c825f38  docs/reviews/20260908-full-product-audit/EXECUTION.md
+b11bd620c608b9d56ea1f0f879e0705278a1bda86f09cd09675f598552d181fc  docs/reviews/20260908-full-product-audit/EXECUTION.json
+184ebab89778a4ebfd837d72bd299f882d8b121893c1b897e8ba8482c3f49583  docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md
+641e38f01a42978107e345bd90447b285c5bc12011de260194d133de5beb04fa  .teams/skills/xai-dev-dashboard-sync/SKILL.md
