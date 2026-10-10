@@ -686,11 +686,15 @@
       "provider_attested": false,
       "fixed_parent": "50b0bb4719af682e9e44f64206afa6d59333f929",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-prepare-20261010/XAI_Desktop",
-      "state": "running_static_only",
+      "state": "received_proposal_only_choice_needs_independentreview",
       "static_pass": 1,
       "family_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "f8546788d28106aac17b96797dcb08469717dcdc",
+      "integration_commit": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
+      "archive_ref": "codex/archive/parallel-dash06-prep-r1-20261010",
+      "input_hashes_checked": 541
     },
     {
       "id": "BRD-12/PREPARE",
@@ -700,13 +704,47 @@
       "provider_attested": false,
       "fixed_input": "1955d250a7b33cde0f51c09c5836822f92bd0807",
       "formal_invocations": 0
+    },
+    {
+      "id": "TASK-06/RUNNER-SOURCE-CORRECT2",
+      "workflow": "D",
+      "actor": "/root/parallel_d_task06_source_correct2",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "fixed_parent": "1496abed5ea19e8de687a9abf326918e7cb07b1f",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-source-correct2-20261010/XAI_Desktop",
+      "state": "running_source_only",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "MET-05/RUNNER-SOURCE-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_met05_source_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "1496abed5ea19e8de687a9abf326918e7cb07b1f",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-source-review-20261010/XAI_Desktop",
+      "state": "running_source_only",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "DASH-06/CONTRACT-REVIEW",
+      "workflow": "D",
+      "state": "queued_next_review_slot",
+      "configured_model": "gpt-6-astra",
+      "fixed_input": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -717,17 +755,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 30,
+    "static_passes": 31,
     "rework_findings": 20,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 33,
+    "completed_source_receipts": 34,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "33source deliveries minus3 actualvendor; retention3 separatelyretained",
+    "static_passes_basis": "34source deliveries minus3 actualvendor; retention3 separatelyretained",
     "postaccept_AST_scanner_invocations": 1
   },
   "events": [
@@ -913,6 +951,10 @@
     {
       "event": "FullTASK source REVISE nine findings and MET source2594identities received, fresh technical corrector2 and MET source review registered",
       "input": "54b193f429f46ee04e748e1b1e5f45bcd36ead7d"
+    },
+    {
+      "event": "DASH541input proposal received; freshminimumdecision reviewregisteredqueued; TASKcorrector2+METreview actuallyrunningfixed1496abe, BRD12nextfree queued",
+      "input": "7e83bac6010fd28680583d3151fb17ad0fd53c04"
     }
   ],
   "wave_P2_tasks": [
@@ -921,7 +963,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN after initialinventorymessage-onlyremote preservation/fiveownedarchives atfae60b6 checkpoint; all23stashes retainedremote",
+    "normal": "0FAIL1WARN at1496abe after33sources; all23stashes remote, priorfive recoveryretained",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
