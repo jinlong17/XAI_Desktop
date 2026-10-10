@@ -1,0 +1,66 @@
+{
+  "wave": "P7",
+  "fixed_input": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
+  "max_workers": 3,
+  "tasks": [
+    {
+      "fixed_input": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
+      "dispatch_parent": "commit containing exactcard resolved beforelaunch",
+      "module": "web",
+      "no_children": true,
+      "protected": [
+        "allnonallowedfiles",
+        "globalcontrol/ledgers/inventory",
+        "product/runtime/tests/CSS/runner",
+        "originalcontracts/reports/logs",
+        "otherworktrees",
+        "push/merge/rebase/deploy/release/promote/D3"
+      ],
+      "stop": [
+        "unexpecteddirt/hash/scope",
+        "unsupportedownerbehavior",
+        "runtime needed",
+        "budgetexhausted"
+      ],
+      "id": "DASH-03/CONTRACT-REVIEW2",
+      "workflow": "D",
+      "role": "fresh independent fullcontractreviewer neverrepair",
+      "model": "gpt-6-astra",
+      "source_inputs": [
+        "d8ac35cc64e8f764166af9ca4aa02c17b8faf384",
+        "fd52c3746ba322e3cb0048748263b8cc29f2c932",
+        "792a6ba95157de6430d5f16a5b392aa8f0f89f22",
+        "cbf18b491ef10941d396bc9655d10c8beed4a68b",
+        "44d04c8edc9cfc793317059a503152f8b27f6171"
+      ],
+      "allowed_files": [
+        "docs/reviews/audit-parallel-world-clocks-contract-review-r2/review.md",
+        "docs/reviews/audit-parallel-world-clocks-contract-review-r2/inputs.sha256"
+      ],
+      "acceptance": [
+        "Newversion only preserve entire WC01-WC20/originalactionacceptance/approvedW1 allowempty, nooverwrite r1",
+        "R1 source-grounded compatibility table semanticJSON/raw/exactexpectedRaw guards; preserve admitted legacy usable visibility and rawbytes/export-only actuallimits; no invented restoration/productdecision. If irreducible behavior decision explicitly record smallest unresolvedchoice and stopapproval, other bounded fixes continue",
+        "R2 causespecific nonmodal Tab/ShiftTab/pointer exit neverstealsoutsidefocus; Escape/success invoker and recoverydisappearance onlyownfocus withlivenessfence; fullnativepositive/negative matrices preserved",
+        "R3 mandatory streaming gitarchive preserved without bufferedalternative; exactbytecount/root/lock/partial-evidence guards",
+        "Pin actualClockREVISE/hardcap, full14futureallowlist andWC01-20 account/source/export/multiparticipant/native/date/regression/vendoraccept gates remain, noimplementationready fromproposal",
+        "Allold79andreview100 identities hashbound, exactsourcegrounded changes limitedR1-R3, no runtime/engine/schema/accountUI/shared modifications",
+        "Independently decide R1-R3 resolved/missing and U1 smallestgenuinelynecessaryproductchoice vs existingrule; neverpickpolicy or inventowneranswer",
+        "EntireWC01-WC20 unchanged and14futurepaths/requirednative/JSON/account/export/fullregressions/Clockgates preserved; no readiness fromdocumentaryapproval; exactcoordinates andhonestAPPROVED/REVISE/BLOCKED"
+      ],
+      "budgets": {
+        "review_iteration": 2,
+        "family_cap": 3,
+        "static_pass": 1,
+        "runtime": 0
+      },
+      "state": "registered_queued_slot"
+    }
+  ],
+  "dispatch_now": [
+    "DASH-03/CONTRACT-REVIEW2"
+  ],
+  "already_running": [
+    "TASK-06/PREPARE"
+  ],
+  "registered_external": "TT-08/verify3 countsoneworker"
+}

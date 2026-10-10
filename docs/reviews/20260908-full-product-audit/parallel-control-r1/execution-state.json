@@ -377,10 +377,15 @@
       "provider_attested": false,
       "fixed_parent": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-correct2-20261010/XAI_Desktop",
-      "state": "running_versioned_proposal_only",
+      "state": "received_versioned_proposal_U1_POLICY_BLOCKED_foundationBLOCKED",
       "author_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "d8ac35cc64e8f764166af9ca4aa02c17b8faf384",
+      "integration_commit": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
+      "archive_ref": "codex/archive/parallel-world-clocks-correct2-20261010",
+      "input_hashes_checked": 115,
+      "unresolved_choice": "legacy mixed/duplicate admitted arrays editing disposition U1; fresh review2 validates necessity before centralized question"
     },
     {
       "id": "TT-08/verify2",
@@ -392,21 +397,42 @@
       "fixed_parent": "47fed55c23113dc22cc158704b673c055c7101cb",
       "candidate": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-vendor2-20261010/XAI_Desktop",
-      "state": "running_actual_cross_vendor_readonly",
+      "state": "received_RAW_APPROVED_WITHHELD_GOVERNANCE_GAP",
       "owned_pid": 32336,
       "exec_session_id": 89092,
       "verification_iteration": 2,
       "family_cap": 3,
       "max_usd": 12,
       "wall_seconds": 900,
+      "formal_invocations": 0,
+      "source_commit": "541a016fa64051a0b952e6c87ea839de99cc623d",
+      "integration_commit": "18f9913f957b17941c5cf1596c2a105f84ee8389",
+      "archive_ref": "codex/archive/parallel-tt08-vendor-i2-20261010",
+      "reported_init_model": "claude-opus-5-5",
+      "reported_cost_usd_list": 2.0480052,
+      "elapsed_seconds": 185.167,
+      "readonly_tool_calls": 45,
+      "reported_turns": 46,
+      "root_receipt": "mandatoryAGENTS/CLAUDEunread; no status publication; freshfinal3/3"
+    },
+    {
+      "id": "TASK-06/PREPARE",
+      "workflow": "C",
+      "actor": "/root/parallel_c_task06_prepare_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "8a994c4405affcfb3439d931f9d344eae6f3b904",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-prep-20261010/XAI_Desktop",
+      "state": "running",
+      "static_pass": 1,
       "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 1,
+    "total": 2,
     "capacity": 4
   },
   "cost": {
@@ -422,7 +448,8 @@
     "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
-    "actual_cross_vendor_verification_invocations": 2
+    "actual_cross_vendor_verification_invocations": 2,
+    "reported_vendor_usd_list_total": 4.3731168
   },
   "events": [
     {
@@ -513,6 +540,11 @@
       "at": "2026-10-10T10:40:22.724402+00:00",
       "event": "Full312 collection and RELcontractreview received; TT actualvendor2 and Worldversion2 running; TASK06 first independentnewcaller discovery registered; RELvendorbudget sourcegap retained no invented0",
       "input": "bfbe3ed0b3967038375e41e5b10f738574ea0d54"
+    },
+    {
+      "at": "2026-10-10T10:44:28.399836+00:00",
+      "event": "Preserve vendor2 rawAPPROVED butwithholdrequiredrulegap; finalfresh3/3 registered with complete actualgovernance input blocks. Receive World115hashes version2 U1blocked andfreshreview2 registered; TASK06 runs",
+      "input": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d"
     }
   ],
   "wave_P2_tasks": [
