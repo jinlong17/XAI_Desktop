@@ -3216,7 +3216,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_samephase1_pretool_NUL_assembly_continuation_actualcheckerunused0",
+      "state": "BLOCKED_PROCESS_completionUNKNOWN_phase1used_noartifact",
       "fixed_input": "cfbed9bfe6e480eed8062ee9248be48f32c57c9d",
       "family_iteration": 1,
       "family_cap": 3,
@@ -3231,8 +3231,11 @@
       "concluding_static_started": 0,
       "infrastructure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/sk-whole-review1-p73-pretool-launch-continuation.json",
       "pretool_launcher_attempts": 1,
-      "static_invocations": 0,
-      "static_result": "NOT_STARTED no Pythoncheckercreated"
+      "static_invocations": 1,
+      "static_result": "completionUNKNOWN",
+      "failure_record": "docs/reviews/20260908-full-product-audit/parallel-control-r1/sk-whole-review1-p74-final-completion-unknown-receipt.json",
+      "pretool_launch_attempts": 1,
+      "no_checker_retry": true
     },
     {
       "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT-REVIEW2",
@@ -3280,31 +3283,51 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "registered_ready_fresh_whole_sourcecorrection2_waiting_slot",
+      "state": "running_fresh_whole_sourcecorrection2",
       "fixed_input": "5cc7f5e6c940016aa5f414127213d219f21ea5a2",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov04-gov07-status-source-discovery-r2.json",
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "reserved_whole_review_iteration": 2,
-      "product_write_grant": []
+      "product_write_grant": [],
+      "actor": "/root/parallel_c_gov04_gov07_whole_source_correction_r2",
+      "fixed_parent": "d4ef588af67ac6cc49afe75c0afd42ea01c126b9",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov04-gov07-source2-20261010/XAI_Desktop",
+      "worktree_registration": "createdsuccessful appattachmentidentity100error no retry/recreation"
+    },
+    {
+      "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY-REVIEW2",
+      "workflow": "D",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "registered_ready_fresh_whole_review2_waiting_slot",
+      "fixed_input": "d4ef588af67ac6cc49afe75c0afd42ea01c126b9",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-sk01-sk06-trace-source-discovery-review-r2.json",
+      "actual_actor_launched": false,
+      "source_admission": "FORENSIC_ONLY_HELD",
+      "new_budget_grant": []
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4,
     "actors": [
-      "/root/parallel_d_sk01_sk06_whole_source_process_review_r1",
       "/root/parallel_d_exhausted_documentary_whole_impact_review_r2",
-      "/root/parallel_c_hab01_hab05_source_discovery_r1"
+      "/root/parallel_c_gov04_gov07_whole_source_correction_r2"
     ],
     "ready_next": [
-      "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY2"
-    ]
+      "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY-REVIEW2"
+    ],
+    "reported_delivery_waiting_reception": "HABsource7c6 withcommitbodyliteralbackslashn defect sourceunchanged"
   },
   "cost": {
     "new_formal": 0,
@@ -3324,17 +3347,17 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "112delivered111reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending21FAILED2completionUNKNOWN=>134known31FAILED2completionUNKNOWN101reportedPASSinclwhitespace1. Gov06D3EPIPEcompletionUNKNOWN no numericexit1 inferred; SK3failedvalidationsclassificationUNKNOWN/materialization1 separate.",
+    "static_passes_basis": "112delivered111reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending21FAILED3completionUNKNOWN=>135known31FAILED3completionUNKNOWN101reportedPASSinclwhitespace1. SKreview1actualstartedreceiptlostUNKNOWN1/NULpretoolrejection1separate; SKsource1threefailedvalidationclassificationUNKNOWN/materialization1 nothidden0.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "74prior+2WHOLEGOV04+07D1findings; failedGOV06inmemoryjudgments notacceptedverdict",
-    "pending_no_delivery_static_invocations": 23,
+    "pending_no_delivery_static_invocations": 24,
     "pending_no_delivery_static_failures": 21,
-    "actual_static_invocations_total_known": 134,
+    "actual_static_invocations_total_known": 135,
     "actual_static_failed_total_known": 31,
     "static_budget_overruns": 3,
-    "pending_no_delivery_static_unknown": 2,
-    "actual_static_completion_unknown_total_known": 2,
+    "pending_no_delivery_static_unknown": 3,
+    "actual_static_completion_unknown_total_known": 3,
     "source_byte_collection_invocations": 3,
     "pretool_no_checker_review_attempts": 1,
     "source_byte_collection2_command_failures": 1,
@@ -3973,6 +3996,14 @@
     },
     {
       "event": "P73 additional infrastructure receipt: SKwholeD1 synchronousNodecp.spawn argsNUL rejection BEFOREPythonchildcreation, actualconcludingchecker0/unspentstatic1; originalphase1/3 and launchattempt1 retained. Rootauthorizedsameactor/fixedc024assemblytransportcontinuation once, nobusinessretry/oldsourcevalidationrerun, total30minwallcontinuous and soleactualcheckerfailureSTOP. OriginalSKsource1threeactualfailedvalidations unchangedFORENSIC_ONLY. Rootmetadata duplicateEOF_close Pythonparse36ba22exit1 beforeANYrootread/write correctedfieldonly71775dexit0; businessstatic0. Actualroot+HABsource1+exhaustionD2+SKD1continuation=4/4."
+    },
+    {
+      "at": "2026-10-10T19:04:36.620694+00:00",
+      "event": "P74 freezeSKwholeD1 samephasepretoolNULassemblycontinuation then actualPythonchecker1 awaited but receiptassignmentstaticReceiptundefined after3.1s; result/PID/numericexit/EOF/session/chunkUNKNOWN. Nooutputs/materialization/commit/retry cleanownedc024 readonlyconfirmed; phase1/3 used/no reset. FreshwholeD2/3 registered originalsource1FORENSIC_ONLY threevalidationfailures unchanged, provisionalR1-R4 unvalidated wholefullsource+process review required. Actualroot+impactD2+HABsource1=3/4 Gov04+07freshwholecorrection2 readycheckoutpending thenfillslot; futureSKD2queued.135knownconcluding31FAILED3completionUNKNOWN101reportedPASSinclwhitespace1/112sources/rework76/overrunbase3+SKsourceclassificationUNKNOWN/materialization1. P73rootd4efpushed/5ccancestor/syncliteral0FAIL1WARN/formal13/3/3/293=312299unclosed939/newformalprobevendor0 unchanged. No repeatpendingownerquestion/capwaiver, goalunfinished.",
+      "input": "d4ef588af67ac6cc49afe75c0afd42ea01c126b9"
+    },
+    {
+      "event": "P74 additionaldispatch Gov04+07freshWHOLEsourcecorrection2 atfixedd4 parent/frozen5cc; sourcepurpose2/3 separatefreshD2reserved. HABsource7c6 reportedcommittedclean/static1PASS but commitmessage literalbackslashn metadataformatdefect; originalsourceunchanged pendingremotepreservation+hashreception, noadoptionyet. Actualroot+impactD2+Gov04source2=3/4 plusbriefHabmechanicalreceiptclarification transient no checker. SKD2queuedremainingcapacity no userquestion."
     }
   ],
   "wave_P2_tasks": [
@@ -3981,7 +4012,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P72literal0FAIL1WARN P73freshpending",
+    "normal": "P73literal0FAIL1WARN P74freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
