@@ -1,0 +1,352 @@
+{
+  "path": "/Users/lijinlong/.codex/sessions/2026/10/10/rollout-2026-10-10T13-04-21-01a1276a-9d91-7181-b4f9-fb8029e2c72e.jsonl",
+  "actor": "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_r1",
+  "source": "INERT original records never executed/imported",
+  "records": [
+    {
+      "index": 164,
+      "record": {
+        "timestamp": "2026-10-10T20:06:45.391Z",
+        "ordinal": 164,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9acdf0d48190b2290fecb8222a16",
+          "status": "completed",
+          "call_id": "call_de6bd43fa9b94790a8a1d09365d3d485",
+          "name": "exec",
+          "input": "const r = await tools.exec_command({cmd:\"python3 - <<'PY'\\nimport hashlib, os, subprocess, sys\\nfrom pathlib import Path\\nroot = Path.cwd()\\nparent = '6715c4367799366a10a9337a863f78036ec07ed9'\\nproduct = 'f9eb4b1f207bc4b46f547b90afc250424b3c8695'\\nrepo_paths = [\\n'AGENTS.md','CLAUDE.md','docs/workflow/project/workflow.md','docs/workflow/project/multi-machine-development.md',\\n'docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md',\\n'docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md',\\n'docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md',\\n'docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md',\\n'docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json',\\n'docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json',\\n'docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r1.json',\\n]\\nproduct_paths = [\\n'packages/xai-web-calendar/src/CalendarModule.tsx','packages/xai-web-calendar/src/CalendarToolbar.tsx',\\n'packages/xai-web-calendar/src/MonthGrid.tsx','packages/xai-web-calendar/src/MonthRow.tsx','packages/xai-web-calendar/src/MonthCell.tsx',\\n'packages/xai-web-calendar/src/DayOverview.tsx','packages/xai-web-calendar/src/DayView.tsx','packages/xai-web-calendar/src/WeekView.tsx',\\n'packages/xai-web-calendar/src/YearView.tsx','packages/xai-web-calendar/src/CalendarBanner.tsx','packages/xai-web-calendar/src/EventComposer.tsx',\\n'packages/xai-web-calendar/src/TimeGrid.tsx','packages/xai-web-calendar/src/TimeGridAllDayStrip.tsx','packages/xai-web-calendar/src/EventBlock.tsx',\\n'packages/xai-web-calendar/src/styles.css','packages/xai-web-calendar/src/internal/boardCalendarFeed.ts',\\n'packages/xai-web-calendar/src/internal/eventStore/types.ts','packages/xai-web-calendar/src/internal/eventStore/mergeEventsForViewport.ts',\\n'packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts','packages/xai-web-calendar/src/internal/dateKeys.ts',\\n'packages/xai-web-calendar/src/internal/civilDate.ts','packages/xai-web-calendar/src/internal/sampleEvents.ts',\\n'packages/plugin-web-tokens/src/useLocalDayClock.ts','packages/plugin-web-tokens/src/localDate.ts',\\n'packages/plugin-calendar/src/components/CalendarMini.tsx','packages/plugin-calendar/src/hooks/useCalendarStore.ts','packages/plugin-calendar/src/utils/date.ts',\\n'packages/xai-web-board-calendar-feed/docs/api.md','packages/xai-web-board-calendar-feed/docs/design.md',\\n'packages/plugin-web-board-core/src/internal/dateModel.ts','packages/plugin-web-board-core/src/internal/storageContract.ts','packages/plugin-web-board-core/src/types.ts',\\n]\\nmeta = subprocess.run(['git','rev-parse','HEAD'],capture_output=True,text=True,check=True)\\nprint('HEAD',meta.stdout.strip(),'PARENT',parent,'PRODUCT',subprocess.run(['git','rev-parse',product],capture_output=True,text=True,check=True).stdout.strip())\\nprint('WORKTREE_STATUS',repr(subprocess.run(['git','status','--porcelain=v1'],capture_output=True,text=True,check=True).stdout))\\nmanifest=[]\\nfor p in repo_paths:\\n    b=Path(p).read_bytes()\\n    q=subprocess.Popen(['git','show',f'{parent}:{p}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)\\n    out,err=q.communicate()\\n    print(f'GIT pid={q.pid} exit={q.returncode} stdout_eof=True stdout_bytes={len(out)} stderr_eof=True stderr_bytes={len(err)} path={p}')\\n    if q.returncode or err or out != b:\\n        print('VALIDATION_FAIL',p,err[:300],file=sys.stderr);sys.exit(2)\\n    manifest.append((hashlib.sha256(b).hexdigest(),p))\\nfor p in product_paths:\\n    q=subprocess.Popen(['git','show',f'{product}:{p}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)\\n    out,err=q.communicate()\\n    print(f'GIT pid={q.pid} exit={q.returncode} stdout_eof=True stdout_bytes={len(out)} stderr_eof=True stderr_bytes={len(err)} path={product}:{p}')\\n    if q.returncode or err:\\n        print('VALIDATION_FAIL',p,err[:300],file=sys.stderr);sys.exit(2)\\n    manifest.append((hashlib.sha256(out).hexdigest(),f'{product}:{p}'))\\ngoal=Path('/Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md').read_bytes()\\ngh=hashlib.sha256(goal).hexdigest()\\nprint('EXTERNAL goal sha256',gh,'bytes',len(goal))\\nif gh!='40f9dcad8a5930725ce16685bac45b7bebfd0e4b2a5e30ba912c69441f20b615':\\n    print('VALIDATION_FAIL goal hash',file=sys.stderr);sys.exit(2)\\nmanifest.append((gh,'/Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md'))\\nprint('INPUT_COUNT',len(manifest))\\nfor h,p in manifest: print(h+'  '+p)\\nPY\",\"workdir\":\"/Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop\",\"max_output_tokens\":9000});\ntext(r.output);\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662798.0022938
+          }
+        }
+      }
+    },
+    {
+      "index": 167,
+      "record": {
+        "timestamp": "2026-10-10T20:06:46.521Z",
+        "ordinal": 167,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276c-d5f9-73d1-829d-cf7d691fca0e",
+          "call_id": "call_de6bd43fa9b94790a8a1d09365d3d485",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 1.1 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "HEAD 6715c4367799366a10a9337a863f78036ec07ed9 PARENT 6715c4367799366a10a9337a863f78036ec07ed9 PRODUCT f9eb4b1f207bc4b46f547b90afc250424b3c8695\nWORKTREE_STATUS ''\nGIT pid=56911 exit=0 stdout_eof=True stdout_bytes=13273 stderr_eof=True stderr_bytes=0 path=AGENTS.md\nGIT pid=56912 exit=0 stdout_eof=True stdout_bytes=22269 stderr_eof=True stderr_bytes=0 path=CLAUDE.md\nGIT pid=56913 exit=0 stdout_eof=True stdout_bytes=12660 stderr_eof=True stderr_bytes=0 path=docs/workflow/project/workflow.md\nGIT pid=56914 exit=0 stdout_eof=True stdout_bytes=6390 stderr_eof=True stderr_bytes=0 path=docs/workflow/project/multi-machine-development.md\nGIT pid=56915 exit=0 stdout_eof=True stdout_bytes=210506 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md\nGIT pid=56916 exit=0 stdout_eof=True stdout_bytes=38235 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md\nGIT pid=56917 exit=0 stdout_eof=True stdout_bytes=15524 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md\nGIT pid=56918 exit=0 stdout_eof=True stdout_bytes=2051 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md\nGIT pid=56919 exit=0 stdout_eof=True stdout_bytes=324329 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json\nGIT pid=56920 exit=0 stdout_eof=True stdout_bytes=629924 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json\nGIT pid=56921 exit=0 stdout_eof=True stdout_bytes=12248 stderr_eof=True stderr_bytes=0 path=docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r1.json\nGIT pid=56922 exit=0 stdout_eof=True stdout_bytes=14592 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarModule.tsx\nGIT pid=56923 exit=0 stdout_eof=True stdout_bytes=7178 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarToolbar.tsx\nGIT pid=56924 exit=0 stdout_eof=True stdout_bytes=1862 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthGrid.tsx\nGIT pid=56925 exit=0 stdout_eof=True stdout_bytes=1804 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthRow.tsx\nGIT pid=56926 exit=0 stdout_eof=True stdout_bytes=6150 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthCell.tsx\nGIT pid=56927 exit=0 stdout_eof=True stdout_bytes=5728 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayOverview.tsx\nGIT pid=56928 exit=0 stdout_eof=True stdout_bytes=3415 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayView.tsx\nGIT pid=56929 exit=0 stdout_eof=True stdout_bytes=3297 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/WeekView.tsx\nGIT pid=56930 exit=0 stdout_eof=True stdout_bytes=7531 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/YearView.tsx\nGIT pid=56931 exit=0 stdout_eof=True stdout_bytes=696 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarBanner.tsx\nGIT pid=56932 exit=0 stdout_eof=True stdout_bytes=22697 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventComposer.tsx\nGIT pid=56933 exit=0 stdout_eof=True stdout_bytes=5317 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGrid.tsx\nGIT pid=56934 exit=0 stdout_eof=True stdout_bytes=2950 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGridAllDayStrip.tsx\nGIT pid=56935 exit=0 stdout_eof=True stdout_bytes=2946 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventBlock.tsx\nGIT pid=56936 exit=0 stdout_eof=True stdout_bytes=36599 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/styles.css\nGIT pid=56937 exit=0 stdout_eof=True stdout_bytes=3416 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/boardCalendarFeed.ts\nGIT pid=56938 exit=0 stdout_eof=True stdout_bytes=3217 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/types.ts\nGIT pid=56939 exit=0 stdout_eof=True stdout_bytes=7550 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/mergeEventsForViewport.ts\nGIT pid=56940 exit=0 stdout_eof=True stdout_bytes=4770 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts\nGIT pid=56941 exit=0 stdout_eof=True stdout_bytes=1001 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/dateKeys.ts\nGIT pid=56942 exit=0 stdout_eof=True stdout_bytes=1194 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/civilDate.ts\nGIT pid=56943 exit=0 stdout_eof=True stdout_bytes=6773 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/sampleEvents.ts\nGIT pid=56944 exit=0 stdout_eof=True stdout_bytes=1181 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/useLocalDayClock.ts\nGIT pid=56945 exit=0 stdout_eof=True stdout_bytes=1073 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/localDate.ts\nGIT pid=56946 exit=0 stdout_eof=True stdout_bytes=2709 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/components/CalendarMini.tsx\nGIT pid=56947 exit=0 stdout_eof=True stdout_bytes=2195 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/hooks/useCalendarStore.ts\nGIT pid=56948 exit=0 stdout_eof=True stdout_bytes=321 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/utils/date.ts\nGIT pid=56949 exit=0 stdout_eof=True stdout_bytes=1451 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/api.md\nGIT pid=56950 exit=0 stdout_eof=True stdout_bytes=1276 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/design.md\nGIT pid=56952 exit=0 stdout_eof=True stdout_bytes=8222 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/dateModel.ts\nGIT pid=56953 exit=0 stdout_eof=True stdout_bytes=10647 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/storageContract.ts\nGIT pid=56954 exit=0 stdout_eof=True stdout_bytes=6560 stderr_eof=True stderr_bytes=0 path=f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/types.ts\nEXTERNAL goal sha256 40f9dcad8a5930725ce16685bac45b7bebfd0e4b2a5e30ba912c69441f20b615 bytes 8293\nINPUT_COUNT 44\n519c72bcbdd1018af9a369614b9db04a674bf91870d99dcca03665dabe162100  AGENTS.md\n6597e484cb5bde938fadb3c728f2e76c6228364584306a453655eeebd1e61ffb  CLAUDE.md\n99bb429d2a9facd7cebfbcb52e97c7ccea648d19953e05e10f824189f6b9f050  docs/workflow/project/workflow.md\n92572a6ea33865753d3a461d96830d38e1dbcded58e684114eab450c81ab4b59  docs/workflow/project/multi-machine-development.md\nadfab0464c40b55e4ffc90e1de607e33370c6f87f26c4c982a942824442c8f24  docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md\n7eb1df2b7173949a3171e7cbafa467839b2ae2c515c86a6850980a0b9e36c1da  docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md\n06fd804b06fa0425fe472f333e5a4f0b3e11e3cae75b9274f34eee2894488129  docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md\n184ebab89778a4ebfd837d72bd299f882d8b121893c1b897e8ba8482c3f49583  docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md\nc1b4637e1225b34c712956be61b7981c1ece51d69f8081ba55967138f36e813e  docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json\n29be78e04b59fbaf1a818a6ab2ad7542ddc161512367b451fd472789f7a52b7a  docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json\na345d0276d54ba2f1211fb9774ca991ac43b5094787f537f5ce12f0f987b4867  docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r1.json\n70720fc68ae849c64aba0093d2f931fa9ac4bbee7f3780eea689a9c45335e129  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarModule.tsx\nff1a02ad9e568b194fba3d0ec9ab7405519e0c01d448675e3d78ea12ba647d3f  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarToolbar.tsx\n39a65dabeba987466f7f861968300d92117534f753a2a3760dacd37a693e9d19  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthGrid.tsx\n0d333a07008ceda3bf0f429b4ad46d02d221c257b0b59b3d93f224bc71873e89  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthRow.tsx\n08ab250c703991bd6c92929adb734d4bfee521f84106631adce9de3b945bd509  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthCell.tsx\ne02e87dfb699f75541db257adc3a93f0e2938d5f14c075ed8805338d2ac8d3ea  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayOverview.tsx\na252fffc63cd8057c89b4451299226ed2df967af1ab824c40be2f99431e2e1c5  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayView.tsx\ncdc27b44a52cec9d21f9662a32c654cb9298b570fcd7f24c94e41953b072ea6d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/WeekView.tsx\nac2946a3cab9bc10936713cb3611b15acdbf7e4eda0c4e81c11760b377ec05e6  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/YearView.tsx\n706d5fe10d41bf5b4fed19dc1c313ca2624b8029e9efbaa438cfe50665762f68  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarBanner.tsx\na06f77b32f75b44c458b5d94625a664218a083ee9ee00c1ee9f33e6132d83ea2  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventComposer.tsx\n7c8b1b388535c7bd0ccb5253722b613d5b5b180ee7e1061bd6f5650caa2d8226  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGrid.tsx\nf0b1544b0d9f155d7cb5b97ea9628362d6551710efae724d3fd212e5b7099549  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGridAllDayStrip.tsx\ne22f18af8884c098e401d380b82cf48bb933f4b88c4c3a9c7d89a18483831778  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventBlock.tsx\n0c90652e991a2fc3c361c33eff19c49851984e786d1d8ed17224202c6a4ac681  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/styles.css\neee087199dc111ab3351cb4a6f447ede969a5228541ed2c0a51c124cff0c169e  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/boardCalendarFeed.ts\n5a6187e69ca84438c5c9bc2cddb2c2ef29e814f7b6ec599e2d504c754a066545  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/types.ts\n935a3f7f0fdebcdd96676976769fa40039f9dac62308c2a8085aff6e9c4c0acc  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/mergeEventsForViewport.ts\nd08357df3080af24e77fff557984a35c2584f62f5550999e27f723ec53aa7b90  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts\na8b3ae493c8d65490872a70c6c4b139ebc2e56d09575f7b75176764a77e18478  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/dateKeys.ts\n50a48a40a878f2c3aa3ea0fadd78f28ec7c0ad451b01dec946fadd017627332d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/civilDate.ts\n85d191bb44aa3793ff37e6084475a65d0aeafbccf8cc1eb4e430ae32121cd437  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/sampleEvents.ts\n3b0b9e03d361b24aa62fae17bd44bf66d92c5537155972f22324b4f8b83f9dd7  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/useLocalDayClock.ts\nc499e101ba384766df3939a95edce57f27862ef8fdd3553eb80a0907ed4a7264  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/localDate.ts\nff1e28e64b69d383a22722027b5d5f2fe9330aa919a8531552c10c79a8ce7b10  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/components/CalendarMini.tsx\n8ef166a87637ac285338b660a913ffd2d6dc07f08c7eb58a1a94116cceb3b26d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/hooks/useCalendarStore.ts\n664646200b2f518cd3ba7e7f30cd24fb3745dd7630df4987f8216489cb32b592  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/utils/date.ts\nde8e0f5140f220f8d6b703c4f8c6e43eb647aafce77937a55a8985a838868cda  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/api.md\nf8ee7ae9b8d38d2a99b68e7876a5ae54ff38bdf1b1f62ff361dcf3815c38b2ee  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/design.md\na0d19c2285f1f0a110e0dd58a7d2a0a171d6c5fe56b10f57a4e75a183795291b  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/dateModel.ts\ne6cc2d2a89cd18fa4807f98c2c5dbda3ab0aa0cb0442a80e01c9e4eff43a4ab3  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/storageContract.ts\n27c216aa9856492a7ebf33f7cb38df685d73259ad1b19bc2d1ce3c42c6bad8cb  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/types.ts\n40f9dcad8a5930725ce16685bac45b7bebfd0e4b2a5e30ba912c69441f20b615  /Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md\n"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662806.521487
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 181,
+      "record": {
+        "timestamp": "2026-10-10T20:07:44.431Z",
+        "ordinal": 181,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9ae8a730819080b98535e9b7c820",
+          "status": "completed",
+          "call_id": "call_77785a35d28d40fc8b6e281d492a2130",
+          "name": "exec",
+          "input": "const patch = \"*** Begin Patch\\n*** Add File: /Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop/docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/inputs.sha256\\n+# SHA-256 of complete input bytes; repository source rows are bound to the displayed commit.\\n+519c72bcbdd1018af9a369614b9db04a674bf91870d99dcca03665dabe162100  AGENTS.md\\n+6597e484cb5bde938fadb3c728f2e76c6228364584306a453655eeebd1e61ffb  CLAUDE.md\\n+99bb429d2a9facd7cebfbcb52e97c7ccea648d19953e05e10f824189f6b9f050  docs/workflow/project/workflow.md\\n+92572a6ea33865753d3a461d96830d38e1dbcded58e684114eab450c81ab4b59  docs/workflow/project/multi-machine-development.md\\n+adfab0464c40b55e4ffc90e1de607e33370c6f87f26c4c982a942824442c8f24  docs/reviews/20260908-full-product-audit/CURRENT-CONTROL-PLANE.md\\n+7eb1df2b7173949a3171e7cbafa467839b2ae2c515c86a6850980a0b9e36c1da  docs/reviews/20260908-full-product-audit/02-tasks-time-boards.md\\n+06fd804b06fa0425fe472f333e5a4f0b3e11e3cae75b9274f34eee2894488129  docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md\\n+184ebab89778a4ebfd837d72bd299f882d8b121893c1b897e8ba8482c3f49583  docs/reviews/20260908-full-product-audit/parallel-control-r1/authority-overlay.md\\n+c1b4637e1225b34c712956be61b7981c1ece51d69f8081ba55967138f36e813e  docs/reviews/20260908-full-product-audit/parallel-control-r1/execution-state.json\\n+29be78e04b59fbaf1a818a6ab2ad7542ddc161512367b451fd472789f7a52b7a  docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json\\n+a345d0276d54ba2f1211fb9774ca991ac43b5094787f537f5ce12f0f987b4867  docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r1.json\\n+70720fc68ae849c64aba0093d2f931fa9ac4bbee7f3780eea689a9c45335e129  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarModule.tsx\\n+ff1a02ad9e568b194fba3d0ec9ab7405519e0c01d448675e3d78ea12ba647d3f  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarToolbar.tsx\\n+39a65dabeba987466f7f861968300d92117534f753a2a3760dacd37a693e9d19  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthGrid.tsx\\n+0d333a07008ceda3bf0f429b4ad46d02d221c257b0b59b3d93f224bc71873e89  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthRow.tsx\\n+08ab250c703991bd6c92929adb734d4bfee521f84106631adce9de3b945bd509  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/MonthCell.tsx\\n+e02e87dfb699f75541db257adc3a93f0e2938d5f14c075ed8805338d2ac8d3ea  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayOverview.tsx\\n+a252fffc63cd8057c89b4451299226ed2df967af1ab824c40be2f99431e2e1c5  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/DayView.tsx\\n+cdc27b44a52cec9d21f9662a32c654cb9298b570fcd7f24c94e41953b072ea6d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/WeekView.tsx\\n+ac2946a3cab9bc10936713cb3611b15acdbf7e4eda0c4e81c11760b377ec05e6  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/YearView.tsx\\n+706d5fe10d41bf5b4fed19dc1c313ca2624b8029e9efbaa438cfe50665762f68  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/CalendarBanner.tsx\\n+a06f77b32f75b44c458b5d94625a664218a083ee9ee00c1ee9f33e6132d83ea2  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventComposer.tsx\\n+7c8b1b388535c7bd0ccb5253722b613d5b5b180ee7e1061bd6f5650caa2d8226  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGrid.tsx\\n+f0b1544b0d9f155d7cb5b97ea9628362d6551710efae724d3fd212e5b7099549  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/TimeGridAllDayStrip.tsx\\n+e22f18af8884c098e401d380b82cf48bb933f4b88c4c3a9c7d89a18483831778  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/EventBlock.tsx\\n+0c90652e991a2fc3c361c33eff19c49851984e786d1d8ed17224202c6a4ac681  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/styles.css\\n+eee087199dc111ab3351cb4a6f447ede969a5228541ed2c0a51c124cff0c169e  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/boardCalendarFeed.ts\\n+5a6187e69ca84438c5c9bc2cddb2c2ef29e814f7b6ec599e2d504c754a066545  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/types.ts\\n+935a3f7f0fdebcdd96676976769fa40039f9dac62308c2a8085aff6e9c4c0acc  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/mergeEventsForViewport.ts\\n+d08357df3080af24e77fff557984a35c2584f62f5550999e27f723ec53aa7b90  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/eventStore/useUserCalEvents.ts\\n+a8b3ae493c8d65490872a70c6c4b139ebc2e56d09575f7b75176764a77e18478  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/dateKeys.ts\\n+50a48a40a878f2c3aa3ea0fadd78f28ec7c0ad451b01dec946fadd017627332d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/civilDate.ts\\n+85d191bb44aa3793ff37e6084475a65d0aeafbccf8cc1eb4e430ae32121cd437  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-calendar/src/internal/sampleEvents.ts\\n+3b0b9e03d361b24aa62fae17bd44bf66d92c5537155972f22324b4f8b83f9dd7  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/useLocalDayClock.ts\\n+c499e101ba384766df3939a95edce57f27862ef8fdd3553eb80a0907ed4a7264  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-tokens/src/localDate.ts\\n+ff1e28e64b69d383a22722027b5d5f2fe9330aa919a8531552c10c79a8ce7b10  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/components/CalendarMini.tsx\\n+8ef166a87637ac285338b660a913ffd2d6dc07f08c7eb58a1a94116cceb3b26d  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/hooks/useCalendarStore.ts\\n+664646200b2f518cd3ba7e7f30cd24fb3745dd7630df4987f8216489cb32b592  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-calendar/src/utils/date.ts\\n+de8e0f5140f220f8d6b703c4f8c6e43eb647aafce77937a55a8985a838868cda  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/api.md\\n+f8ee7ae9b8d38d2a99b68e7876a5ae54ff38bdf1b1f62ff361dcf3815c38b2ee  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/xai-web-board-calendar-feed/docs/design.md\\n+a0d19c2285f1f0a110e0dd58a7d2a0a171d6c5fe56b10f57a4e75a183795291b  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/dateModel.ts\\n+e6cc2d2a89cd18fa4807f98c2c5dbda3ab0aa0cb0442a80e01c9e4eff43a4ab3  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/internal/storageContract.ts\\n+27c216aa9856492a7ebf33f7cb38df685d73259ad1b19bc2d1ce3c42c6bad8cb  f9eb4b1f207bc4b46f547b90afc250424b3c8695:packages/plugin-web-board-core/src/types.ts\\n+40f9dcad8a5930725ce16685bac45b7bebfd0e4b2a5e30ba912c69441f20b615  /Users/lijinlong/.codex/attachments/5ad08a9a-b470-446f-9ee0-205f5ffb672a/goal-objective.md\\n*** Add File: /Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop/docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/discovery.md\\n+# CAL-01 + CAL-02 + CAL-04 + CAL-05 source discovery 1/3\\n+\\n+## Scope and disposition\\n+\\n+- Workflow C; primary workflow B; module `web` (project-system task partition); fresh bounded whole Calendar discovery, iteration 1 of 3.\\n+- Exact parent: `6715c4367799366a10a9337a863f78036ec07ed9`. Product source: `f9eb4b1f207bc4b46f547b90afc250424b3c8695`. Fixed control input: `851eb216fe29e6d102cc4fb83f02c6d93aee7186`.\\n+- The initial worktree was clean at the exact parent. Product files below were read from the fixed product commit; governance and original-source files were byte-compared to the exact parent. Complete-file SHA-256 bindings are in `inputs.sha256`.\\n+- Result: **source discovery complete for this iteration; no implementation, before-evidence, qualification, caller acceptance, or item closure.** Current code presence is not a runtime or requirement pass. Source history is not rerun or requalified here.\\n+- Original owners and all formal states remain unchanged: 13 completed, 3 verification-pending, 3 in-progress, 293 pending; 299 unclosed. CAL-03 recurrence policy and its history remain immutable and separate. This report covers the four distinct original items CAL-01, CAL-02, CAL-04, CAL-05.\\n+\\n+## Input and process record\\n+\\n+- The original goal attachment hash matches the immutable hash recorded by the overlay. The entire current control plane, task card, authority overlay, execution state, scope map, AGENTS/CLAUDE rules, workflow, multi-machine rules, and both full source Markdown files were read and hashed before writing either output.\\n+- Product-source buffers were obtained by `git show` at the fixed product SHA, with one Python capture routine using `Popen.communicate()` to capture each actual PID, exit code, stdout/stderr byte count, and EOF before printing. All 44 reads exited 0, stderr was empty, and both streams reached EOF. That capture routine took 1.1 seconds wall time; no source code was run.\\n+- Earlier bounded path-resolution/read-only inspection calls were made through the command wrapper, which did not expose their child PIDs. Their per-command PIDs are **UNKNOWN**, not zero. They performed no tests, runtime, build, lint, browser, native, server, parser, generator, qualification, probe, vendor, network, or child-agent work.\\n+- Budgets: discovery iteration 1/3; one static/source pass; static cap 120 seconds; overall wall cap 30 minutes; process drain cap 30 seconds. Runtime/tests/build/lint/browser/native/server/qualification/probes/vendor/network/children were 0. No measured runner or qualification budget was created.\\n+\\n+## Original item origins and source findings\\n+\\n+### CAL-01 — local date, default date, and long-lived Today\\n+\\n+Origin: `02-tasks-time-boards.md` Calendar row and T06/T08 (`:86-102`, `:138`); `05-visual-ux-audit.md`; original B owner and the existing F-2 decision. The acceptance is one locally defined date across the main Calendar, mini Calendar, and event-record/default-date paths, with Today remaining current after a page stays open across midnight.\\n+\\n+At the fixed source, `CalendarModule` consumes `useLocalDayClock().dayKey`; the hook resamples around local midnight and on focus/pageshow/visibility plus clock calibration. `activeDate` is initialized from `todayKey` once, while the Today action separately resets it from the current `todayKey`. The selected historical date therefore has an intentional preservation boundary; advancing Today must not silently replace a user-selected historical date. Event creation passes the current day key when opened from Today, but the composer also has its own local-Date fallback. The legacy `plugin-calendar` mini component has a distinct `useCalendarStore` with a mount-time `Date` and a separate local-date conversion. Its relationship to the active `xai-web-calendar` surface is unresolved; do not treat the two models as already aligned.\\n+\\n+Gaps to resolve in a contract: define the shared date-key authority for main/mini/record creation; distinguish current Today indicators and quick-create defaults from a selected historical date; cover local midnight, month/year boundaries, DST and timezone changes, focus/resume, and preserving an explicit historical selection. The existing F-2 owner decision applies; no new preference decision is requested. Shared date-hook/token ownership remains locked.\\n+\\n+### CAL-02 — user events and Board feed across views and back to source\\n+\\n+Origin: `02-tasks-time-boards.md` Calendar and Board feed rows (`:138-139`, `:175`); `05-visual-ux-audit.md`. Acceptance: a card visible in a month cell is also present in day detail, across relevant views, and has a usable route back to its Board source.\\n+\\n+At the fixed source, the read-only feed adapter reads `xai_boards_v2`, skips invalid storage and archived boards/lists/cards, and projects a card to `dueDate ?? startDate` with board/list/card IDs in a source object. `CalendarModule` merges that feed into month data and supplies feed data to week/day views. Its day-overview selector merges fixtures and user events only, omitting Board feed. Year view is also composed from fixture and user-event month data. Feed events carry `source`, while the user-event UI callbacks are keyed from `_source`/`_userId`; the source locator is not itself a rendered return-to-Board action. The adapter currently chooses one date rather than projecting an entire start/due range.\\n+\\n+Contract gaps: define one shared projected-event union and date-key query for main, mini, month, week, day, year, and day detail; make user/fixture/Board source and permissions explicit; cover missing, valid-empty, invalid, and unavailable Board data; decide range display from existing owner rules; and prove a Board card can return to its source. Board storage/date model and account/storage ownership are read-only dependencies and remain locked. No bidirectional Board write or account-sync activation is authorized.\\n+\\n+### CAL-04 — empty versus demo, all weeks, overflow, and mobile view\\n+\\n+Origin: `02-tasks-time-boards.md` Calendar row and design recommendations (`:138`, `:183`); `05-visual-ux-audit.md`. Acceptance: lawful empty state is distinct from demo/sample mode; every desktop week row is reachable; an existing `+N` affordance is visible and opens the hidden events; mobile prioritizes agenda/week behavior.\\n+\\n+At the fixed source, `SAMPLE_EVENTS` are merged into Calendar views. `CalendarModule` shows the banner when there are no user events, so the predicate currently conflates “no user events” with whether samples are being shown. Month rows, cells, and event layout are implemented in the Calendar package and its stylesheet. Source inspection establishes the owners and DOM/CSS paths only; it cannot establish actual clipping, reachability, hit-target visibility, or responsive behavior.\\n+\\n+Contract gaps: distinguish no data from sample/demo data and its entry/exit affordance; establish whether the existing banner and sample badge are the intended demo controls; verify all 5/6-row month shapes, event overflow and opening behavior, keyboard access, and mobile agenda/week at the project’s supported widths. No screenshot, browser, or geometry evidence was collected. Any layout verdict remains **UNKNOWN**.\\n+\\n+### CAL-05 — saved reminder preference versus a scheduled system reminder\\n+\\n+Origin: `02-tasks-time-boards.md` T06 (`:86-90`) and Calendar row (`:138`); `05-visual-ux-audit.md`. Acceptance: saving an event must not imply that a system reminder has been arranged; disclose the current capability boundary before any scheduler exists.\\n+\\n+The event composer offers reminder presets and defaults to `none`; the Calendar event model stores the selected preset and merge/display code carries it as metadata. A fixed-tree source search for `EventReminderPreset`, `.reminder`, and `reminder:` in non-test/non-doc product files found only Calendar UI/model/pass-through uses plus unrelated pet/habit reminder concepts. No Calendar reminder scheduler or system-notification delivery consumer was found in this source search. This supports a source-level absence finding only; it does not prove runtime behavior or operating-system capability.\\n+\\n+Contract gaps: keep saved selection, permission state, scheduling state, and delivery state distinct; truthfully represent unsupported/default, denied, granted, and unavailable cases; do not claim a positive scheduled/delivered state without a real consumer and evidence. JOB/scheduler work is a separate gate and remains unactivated. Notification preference UI is not evidence of Calendar delivery.\\n+\\n+## Finite candidate writers and locked seams\\n+\\n+This is an inventory for contract planning, not a write grant. The active Calendar candidate surface is `packages/xai-web-calendar/src/` (module state, toolbar, month rows/cells, year/day/week views, day overview, event composer, event-store/query helpers, date helpers, sample/banner semantics, and `styles.css`). A separate legacy candidate exists at `packages/plugin-calendar/src/` for `CalendarMini` and its independent store/date conversion; its active product relationship must be settled from the tracked host registration before anyone treats it as a required writer. The Calendar Board adapter is `packages/xai-web-calendar/src/internal/boardCalendarFeed.ts`; its read dependencies are `packages/plugin-web-board-core` Board storage/date/type owners. The Calendar event persistence adapter and validator are candidate read/write seams for CAL-05 field truth only.\\n+\\n+Locked shared seams include `packages/plugin-web-tokens` local-date clock, `packages/plugin-web-storage` preference registry/account ownership and storage lifecycle, Board core storage/date/schema and `xai_boards_v2`, app route/module host and registration, and any notification/JOB scheduler. A future Calendar-only writer may not modify them without a separate impact review and writer grant. No native app, plugin platform, account-sync, schema, host, or JOB scope is activated.\\n+\\n+## Future evidence needed before any fix can be reviewed\\n+\\n+- Freeze the four business contracts against the existing task rows, owner decisions, and prior accepted REL-01/REL-05 scope. Distinguish accepted historical evidence from current-source presence; do not rerun or relabel accepted history.\\n+- Before implementation, capture truthful failure oracles for local date rollover and record defaults; all-view Board projection and source return; empty/demo and row/overflow/mobile interaction; and reminder preference versus system delivery. Keep selected historical dates, missing/empty/invalid data, archived Board records, recurrence-family separation, and unsupported/denied notification cases in the negative controls.\\n+- Future date regressions: local midnight, DST and timezone change, focus/pageshow/visibility recovery, month/year rollover, Today highlight/selection, mini-date selection, event default date, and preservation of a selected historical date.\\n+- Future projection regressions: user, sample, and Board source identity in month/week/day/year/mini/day detail; due/start range boundaries; archive and invalid Board storage; visible-card/detail parity; source navigation and permission boundaries.\\n+- Future layout regressions: all calendar row counts, event overflow/+N visibility and open action by pointer and keyboard, scroll/reachability, and mobile agenda/week at supported widths. Trust and geometry require browser evidence; source inspection cannot pass them.\\n+- Future reminder regressions: persisted preset round-trip separately from actual schedule creation, permission denied/granted/unavailable, timezone/date changes, duplicate/retry/cancel behavior if a scheduler is separately authorized, and delivered versus merely queued UI. Until then no positive system-reminder claim.\\n+- Whole-scope independent acceptance must check the four original B items and shared-seam impacts. Controller reconciliation and inventory refresh remain later gates; original ledger states stay unchanged until caller acceptance.\\n+\\n+## Limitations and handoff\\n+\\n+No product code, tests, fixtures, canonical ledger, control plane, contracts, runners, or source files were changed. No browser/native/trusted-interaction or runtime behavior was evaluated. No conclusion is made about actual active mini-calendar mounting, production scheduling, screen geometry, or complete scope beyond the fixed tracked source read. The 13/3/3/293 state remains unchanged.\\n+\\n+Only the two card-authorized files are added. This draft requires a fresh independent whole-source review before root adoption or any follow-on contract/before/fix work.\\n*** End Patch\";\ntext(await tools.apply_patch(patch));\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662824.653708
+          }
+        }
+      }
+    },
+    {
+      "index": 184,
+      "record": {
+        "timestamp": "2026-10-10T20:07:44.470Z",
+        "ordinal": 184,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276d-b856-74c2-9c10-59dbfe091365",
+          "call_id": "call_77785a35d28d40fc8b6e281d492a2130",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 0.0 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "{}"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662864.470845
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 192,
+      "record": {
+        "timestamp": "2026-10-10T20:07:55.792Z",
+        "ordinal": 192,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9b1a32548190b20fbc49f7fdc31f",
+          "status": "completed",
+          "call_id": "call_0c55be5afe834e0ea941561b8e52dbf4",
+          "name": "exec",
+          "input": "const patch = \"*** Begin Patch\\n*** Update File: /Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop/docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/discovery.md\\n@@\\n-- Product-source buffers were obtained by `git show` at the fixed product SHA, with one Python capture routine using `Popen.communicate()` to capture each actual PID, exit code, stdout/stderr byte count, and EOF before printing. All 44 reads exited 0, stderr was empty, and both streams reached EOF. That capture routine took 1.1 seconds wall time; no source code was run.\\n+- Product-source buffers were obtained by `git show` at the fixed product SHA, with one Python capture routine using `Popen.communicate()` to capture each actual PID, exit code, stdout/stderr byte count, and EOF before printing. All 43 Git reads exited 0, stderr was empty, and both streams reached EOF; the 44th input row is the external goal attachment whose complete bytes match the pinned SHA-256. That capture routine took 1.1 seconds wall time; no source code was run.\\n*** End Patch\";\ntext(await tools.apply_patch(patch));\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662874.1985784
+          }
+        }
+      }
+    },
+    {
+      "index": 195,
+      "record": {
+        "timestamp": "2026-10-10T20:07:55.862Z",
+        "ordinal": 195,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276d-e4d6-7743-b945-083bf8419f63",
+          "call_id": "call_0c55be5afe834e0ea941561b8e52dbf4",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 0.0 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "{}"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662875.862634
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 201,
+      "record": {
+        "timestamp": "2026-10-10T20:08:04.454Z",
+        "ordinal": 201,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9b20daa881908402962e7ce49b40",
+          "status": "completed",
+          "call_id": "call_169f6583f9864373891ec3e57580e38b",
+          "name": "exec",
+          "input": "const r = await tools.exec_command({cmd:\"python3 - <<'PY'\\nimport hashlib, subprocess, sys\\nfrom pathlib import Path\\nbase=Path('docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1')\\nmanifest=base/'inputs.sha256'\\nrows=[]\\nfor n,line in enumerate(manifest.read_text(encoding='utf-8').splitlines(),1):\\n    if not line.strip() or line.lstrip().startswith('#'): continue\\n    parts=line.split(None,1)\\n    if len(parts)!=2 or len(parts[0])!=64:\\n        print('MANIFEST_PARSE_FAIL',n,repr(line));sys.exit(2)\\n    rows.append((parts[0],parts[1]))\\nif len(rows)!=44:\\n    print('MANIFEST_ROW_COUNT_FAIL',len(rows));sys.exit(2)\\nfor expected,path in rows:\\n    if ':' in path and path.split(':',1)[0].startswith(('f9eb4b1','6715c436')):\\n        ref,rel=path.split(':',1)\\n        p=subprocess.Popen(['git','show',f'{ref}:{rel}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)\\n        out,err=p.communicate()\\n        if p.returncode or err:\\n            print('INPUT_READ_FAIL',path,'pid',p.pid,'exit',p.returncode,'stderr_bytes',len(err));sys.exit(2)\\n    else:\\n        out=Path(path).read_bytes()\\n    actual=hashlib.sha256(out).hexdigest()\\n    if actual!=expected:\\n        print('INPUT_HASH_FAIL',path,expected,actual);sys.exit(2)\\nprint('MANIFEST_ROWS_VALID',len(rows))\\nfor p in [base/'discovery.md',manifest]:\\n    b=p.read_bytes()\\n    b.decode('utf-8')\\n    print('OUTPUT_UTF8_VALID',p,'bytes',len(b),'sha256',hashlib.sha256(b).hexdigest())\\nstatus=subprocess.Popen(['git','status','--short'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)\\nout,err=status.communicate()\\nprint('GIT_STATUS_PID',status.pid,'EXIT',status.returncode,'EOF',True,'STDERR_BYTES',len(err))\\nprint(out.decode('utf-8'),end='')\\ncheck=subprocess.Popen(['git','diff','--check'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)\\nout,err=check.communicate()\\nprint('DIFF_CHECK_PID',check.pid,'EXIT',check.returncode,'STDOUT_EOF',True,'STDOUT_BYTES',len(out),'STDERR_EOF',True,'STDERR_BYTES',len(err))\\nif check.returncode: sys.exit(check.returncode)\\nPY\",\"workdir\":\"/Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop\",\"max_output_tokens\":2200});\ntext(r.output);\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662880.856979
+          }
+        }
+      }
+    },
+    {
+      "index": 204,
+      "record": {
+        "timestamp": "2026-10-10T20:08:05.164Z",
+        "ordinal": 204,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276e-092c-77f2-b0e3-8752b1d3c51e",
+          "call_id": "call_169f6583f9864373891ec3e57580e38b",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 0.7 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "MANIFEST_ROWS_VALID 44\nOUTPUT_UTF8_VALID docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/discovery.md bytes 12668 sha256 4c2a8acb0b37e7500a625d1006a053aa029b9e33ac0e4ee84c1e4321a1c5e768\nOUTPUT_UTF8_VALID docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/inputs.sha256 bytes 6676 sha256 a7640a2d5e83c9ae4bd0cf893d6d579f6ca592eddfeab334c0abfcaf88a1af62\nGIT_STATUS_PID 57420 EXIT 0 EOF True STDERR_BYTES 0\n?? docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/\nDIFF_CHECK_PID 57421 EXIT 0 STDOUT_EOF True STDOUT_BYTES 0 STDERR_EOF True STDERR_BYTES 0\n"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662885.164471
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 222,
+      "record": {
+        "timestamp": "2026-10-10T20:08:12.740Z",
+        "ordinal": 222,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9b2ae5c08190a52be2b385877ef1",
+          "status": "completed",
+          "call_id": "call_106cb299d4794e29a320a8d5beda59e3",
+          "name": "exec",
+          "input": "const r = await tools.exec_command({cmd:\"git -c core.hooksPath=/dev/null commit -m 'docs(audit): record Calendar source discovery' -m 'Why: Pin the finite source findings for four original Calendar audit items before any new contract or implementation work.' -m 'What: Add the whole-source discovery report and complete-input SHA-256 manifest.' -m 'Scope: Exactly the two files authorized by the CAL-01/CAL-02/CAL-04/CAL-05 source-discovery card; product, canonical ledger, control plane, and CAL-03 history untouched.' -m 'Risk: Source-level findings only. Mini Calendar activation, browser geometry, runtime notification delivery, and acceptance remain unverified; fresh independent review is required.' -m 'Docs: Record original item provenance, exact fixed inputs, finite candidate writers, locked shared seams, and future regression/evidence gates.' -m 'Tests: Not run by the authorized zero-test source-discovery budget.'\",\"workdir\":\"/Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop\",\"yield_time_ms\":30000,\"max_output_tokens\":1200});\ntext(r.output);\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662890.8990324
+          }
+        }
+      }
+    },
+    {
+      "index": 225,
+      "record": {
+        "timestamp": "2026-10-10T20:08:12.877Z",
+        "ordinal": 225,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276e-274d-74c0-829b-2f60647cea41",
+          "call_id": "call_106cb299d4794e29a320a8d5beda59e3",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 0.1 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "[detached HEAD 369c265] docs(audit): record Calendar source discovery\n 2 files changed, 117 insertions(+)\n create mode 100644 docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/discovery.md\n create mode 100644 docs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/inputs.sha256\n"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662892.877335
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 231,
+      "record": {
+        "timestamp": "2026-10-10T20:08:15.479Z",
+        "ordinal": 231,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call",
+          "id": "ctc_0b1d7837b0eac3dd016aca9b2eca4c81909444854af46f5b19",
+          "status": "completed",
+          "call_id": "call_496418f201444b3e97d3ea02cf76f578",
+          "name": "exec",
+          "input": "const r = await tools.exec_command({cmd:\"git rev-parse HEAD^ && git rev-parse HEAD && git diff-tree --no-commit-id --name-status -r HEAD && git status --porcelain=v1 -uall && git diff --check HEAD^ HEAD\",\"workdir\":\"/Users/lijinlong/.codex/worktrees/audit-cal01-cal02-cal04-cal05-source1-20261010/XAI_Desktop\",\"max_output_tokens\":700});\ntext(r.output);\n",
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662894.7952864
+          }
+        }
+      }
+    },
+    {
+      "index": 234,
+      "record": {
+        "timestamp": "2026-10-10T20:08:15.672Z",
+        "ordinal": 234,
+        "type": "response_item",
+        "payload": {
+          "type": "custom_tool_call_output",
+          "id": "ctco_01a1276e-3238-7a43-ba78-5d1a2dc85a0a",
+          "call_id": "call_496418f201444b3e97d3ea02cf76f578",
+          "output": [
+            {
+              "type": "input_text",
+              "text": "Script completed\nWall time 0.2 seconds\nOutput:\n"
+            },
+            {
+              "type": "input_text",
+              "text": "6715c4367799366a10a9337a863f78036ec07ed9\n369c265290e0f52e6d764f463dea0ea632e0fecc\nA\tdocs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/discovery.md\nA\tdocs/reviews/audit-parallel-cal01-cal02-cal04-cal05-source-discovery-r1/inputs.sha256\n"
+            }
+          ],
+          "internal_chat_message_metadata_passthrough": {
+            "turn_id": "01a1276a-9e31-75f1-9c13-546b937288e0",
+            "create_time": 1791662895.67254
+          }
+        },
+        "metadata": {
+          "client_authored": false,
+          "fallback_token_limit_override": 12000
+        }
+      }
+    },
+    {
+      "index": 259,
+      "record": {
+        "timestamp": "2026-10-10T20:09:38.568Z",
+        "ordinal": 259,
+        "type": "token_usage_record",
+        "payload": {
+          "thread_id": "01a1276a-9d91-7181-b4f9-fb8029e2c72e",
+          "turn_id": "01a1276e-dbfe-74c1-9b8b-e6faed04ebd2",
+          "session_id": "01a122ac-de03-7af0-b0c7-628fe6eb1cfd",
+          "root_turn_id": "01a12511-76b2-7862-8c59-fc26beeec791",
+          "response_id": "resp_0b1d7837b0eac3dd016aca9b5ba8108190a3290692925eedb9",
+          "usage": {
+            "input_tokens": 154072,
+            "cached_input_tokens": 152320,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5860,
+            "reasoning_output_tokens": 2324,
+            "total_tokens": 159932
+          },
+          "turn_token_usage": {
+            "input_tokens": 154072,
+            "cached_input_tokens": 152320,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5860,
+            "reasoning_output_tokens": 2324,
+            "total_tokens": 159932
+          },
+          "thread_token_usage": {
+            "input_tokens": 2777315,
+            "cached_input_tokens": 2651904,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 35510,
+            "reasoning_output_tokens": 19590,
+            "total_tokens": 2812825
+          }
+        }
+      }
+    }
+  ]
+}

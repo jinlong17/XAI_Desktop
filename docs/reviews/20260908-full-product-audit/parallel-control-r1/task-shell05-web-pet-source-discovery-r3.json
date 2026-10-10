@@ -1,0 +1,173 @@
+{
+  "id": "SHELL-05/SOURCE-DISCOVERY3",
+  "workflow": "C",
+  "primary_workflow": "C",
+  "module": "web",
+  "role": "fresh independent FINAL WHOLE WebPet source discovery3/3 original cap no fourth/reset",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "no_children": true,
+  "budgets": {
+    "discovery_iteration": 3,
+    "discovery_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "original_items": [
+    {
+      "id": "SHELL-05",
+      "priority": "P2",
+      "kind": "修复",
+      "action": "Web Pet保存隐藏偏好并在拖动结束后持久化位置",
+      "acceptance": "重开不强制显示；位置不越安全区，不每pointermove同步写盘",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "03-web-data-ai-settings.md;05-visual-ux-audit.md",
+      "primary_workflow": "C",
+      "original_module": "web",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "SHELL-05",
+        "status": "pending",
+        "evidence": [
+          "commit:5905e37",
+          "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+          "commit:ec55f9e",
+          "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+        ]
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [
+        "owner-P-1"
+      ],
+      "source_section": "SHELL",
+      "acceptance_evidence": {
+        "business_acceptance": "重开不强制显示；位置不越安全区，不每pointermove同步写盘",
+        "existing": [
+          "commit:5905e37",
+          "../web-features-recovery-native/review-visual-keyboard-5cd63ff.md",
+          "commit:ec55f9e",
+          "../web-features-recovery-acceptance/acceptance-5cd63ff.md"
+        ],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "SHELL-05/prepare",
+        "SHELL-05/contract-review",
+        "SHELL-05/before",
+        "SHELL-05/implement",
+        "SHELL-05/verify",
+        "SHELL-05/accept",
+        "SHELL-05/reconcile",
+        "SHELL-05/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-shell05-web-pet-source-discovery-r3/discovery.md",
+    "docs/reviews/audit-parallel-shell05-web-pet-source-discovery-r3/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "logical_locks": {
+    "write": [
+      "newSHELL05source3_report_only"
+    ],
+    "read": [
+      "Web Pet actual owners and host seams"
+    ],
+    "future_writer": "finiteWebPetonly no sharedstorage/Features/token/host grants"
+  },
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "read_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/workflow/project/workflow.md",
+    "docs/workflow/project/multi-machine-development.md",
+    "docs/reviews/20260908-full-product-audit/03-web-data-ai-settings.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/scope-map.json"
+  ],
+  "source_roots": [
+    "packages/xai-web-pet",
+    "apps/web",
+    "packages/plugin-web-storage"
+  ],
+  "acceptance": [
+    "Whole exact SHELL05 action/acceptance: hide preference survives reopen, persisted safe-area position, no sync write on every pointermove. Primary C owner-P-1 existinggate retained; source-only no productdecision/canonicaldossier/runtimetestgrant. Distinct originalSHELL05 product source phase, not GOV05exhausted ninePRDpurpose restart or nativePLUG05/AI/UX03scope expansion.",
+    "Actual finite trackedGit tree FIRST; identify real Web Pet package/hostmount/Featuresvisibility/device vs account keys/dragend-cancel-resize-clamp/toggle lifecycle/style boundaries and owning brief/accepted Features evidence. Read full owning requirement docs/caller acceptance at exactSHAs if realpaths. No imagined filename/missingoptionalbrief means mandatoryfailure. Static codepresence not productrequirements/runtimePASS. Retain canonical P0 except fouracceptedTT08owningdocs no entireapps/packagesdocparity assertion.",
+    "Full matrix originalrequirement/currentfacts/gaps/keywritersandaccountscope/reset/migration/export/delete impacts/finitefuturewriterpaths+lockedsharedseams/before-fix-affectedregression-fixture requirements and budgetsUNKNOWN/stop. TrueP-1undecided question minimalbasis only after prior accepted rules lookup, no askuser or invented policy; distinguish existingFeaturesaccepted behavior vs unverifiedpetpersistence. New sharedkey/schema/lifecycle requires independent impactreview/writergrant. Positiondragend/no eachmove and hide initialization/storagefailure/conflicts/capturedowner/safeareas/resizerestore touchkeyboard candidateevidence finite.",
+    "ALLactuallyused completeMD/source individually bound immutable exactSHA/file. Parse manifest actualrowgrammar ignore comments; never guess cardfields at wrong level. ALLrequiredinputs and BOTH entirebuffers BEFOREANYwrite. One meaningful ownstatic<=120s/wall30min/drain30s actualFAILUNKNOWNfreeze no retry/materialization/commit. Rawliteraltransport avoid JSnewlines inPythonstrings. Captureactualreceiptbeforeprinter PID/exit/stdoutstderrEOFdrain/sessionchunk UNKNOWNnot0; realreadonlyGit children disclosed. No oldvalidrunner rerun/import, runtime/tests/build/lint/browser/native/server/parser/generator/productmoduleimport/qualification/probes/vendor/network/children0. Exact2ADD hooksdisabled singlecommit REALnewlineWhyWhatScopeRiskDocsTests clean noamendpushsync; independentfreshfullreview before sourceadoption rootonlyreception. Alloriginal312formalstates13/3/3/293939 unchanged goalunfinished.",
+    "Source1actual hashvalidation sha256sum-c stdin CLI failure consumed1/3 no sourceartifact. Fresh independent WHOLE2/3 fromactualtree/alloriginalaction+acceptance, priorin-memoryfindingsUNVALIDATED notadopted no extra scope/P1decision. Ownhashvalidation use actual available standard hashing API, never assume sha256sum CLI options/stdin; no priorfailed script/checker reuse/import. ExplicitUTF8 safeliteraltransport/capturePopenactualPID (CompletedProcess lacksPID) captureactualresultbeforeprinter, every input+BOTHwholebuffersbeforeANYwrite. ActualFAIL freezes no retry/materialization.",
+    "Source2 actual57693 exit1 b2aeeb wrong top-level cardfield consumed2/3; source1 actualCLIhash failure consumed1/3. Fresh FINAL3/3 whole original action/acceptance actual finite tree and accepted owning history, not a guard-only change. Original owner-P-1 is original_items[0].gate_obligations and identical top-level navigation copy in this card, no new product grant. Read actual nested field structure before any assertion; do not invent guessed guards. ActualFAIL/UNKNOWN immediately freeze no materialization/retry/commit, source family then EXHAUSTED no4."
+  ],
+  "previous_failure": {
+    "id": "SHELL-05/SOURCE-DISCOVERY2",
+    "actor": "/root/parallel_c_shell05_web_pet_whole_source_correction_r2",
+    "parent": "ac6d1e7daf5d26a7c0cfa244620f5bd2514035a7",
+    "fixed_input": "6715c4367799366a10a9337a863f78036ec07ed9",
+    "result": "FAILED_WRONG_CARD_FIELD_PREWRITE_NO_ARTIFACT",
+    "family_iteration": 2,
+    "family_cap": 3,
+    "concluding_invocations": 1,
+    "pid": 57693,
+    "numeric_exit": 1,
+    "tool_chunk": "b2aeeb",
+    "tool_wall_seconds": 0.326133458,
+    "reported_process_seconds": 0.363,
+    "stdout": "STATIC_PID=57693\n",
+    "stderr": "FAIL: task card owner gate\n",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "drain_method": "Popen.communicate",
+    "separate_drain_seconds": "UNKNOWN",
+    "session": null,
+    "filesystem_writes": 0,
+    "retries": 0,
+    "commits": 0,
+    "source_findings": "UNVALIDATED no adoption",
+    "cause": "guessed top-level gate_obligations; actual gate remains original_items[0].gate_obligations",
+    "raw_provenance": {
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shell05-source2-p90-original-tool-records.json",
+      "sha256": "c2faa1c6a196f4dcd12f2aa7d24b143a2f4b5ae2fdbe9bdbc2aa53e07b3c42bb"
+    },
+    "new_budget_grant": []
+  },
+  "gate_obligations": [
+    "owner-P-1"
+  ]
+}
