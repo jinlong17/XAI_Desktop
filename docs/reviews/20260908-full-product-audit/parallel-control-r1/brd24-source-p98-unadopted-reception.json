@@ -1,0 +1,32 @@
+{
+  "id": "BRD-24/SOURCE-DISCOVERY1",
+  "source": "84e60b92bac4d85461fb89ff6b4c224edf35ab8f",
+  "parent": "57f693e512f9db0837aac529a5f2c70d8903bff6",
+  "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
+  "integration": "a3098012c1193c544e0291456247cc5b0f888c78",
+  "archive_ref": "codex/archive/parallel-brd24-source1-20261010",
+  "inputs_checked": 39,
+  "outputs": {
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/discovery.md": "06c42d24834a4cdef42606a8883f730c432f96e3686a57dcc70ff8c87fd670b5",
+    "docs/reviews/audit-parallel-brd24-source-discovery-r1/inputs.sha256": "00c7349a66a9c92e62719763b0e9fa3221dc2c6b762e7e30ad1058c8e6ead720"
+  },
+  "raw_path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/brd24-source-p98-original-tool-records.json",
+  "raw_sha256": "84741c1a27b29edf260e6d15c644a9fc4b189eccdc1f8decba868ddbc554ca76",
+  "disposition": "RECEIVED_FORENSIC_SOURCE_ONLY_UNADOPTED_PENDING_FRESH_WHOLE_REVIEW",
+  "root_business_checks": 0,
+  "concluding_invocations": 2,
+  "first_buffer_check": "reportedPASS beforefirstwrite originalreport11f3e338",
+  "second_buffer_check": "reportedPASS aftermaterialization ofsource: corrected nonexistentpackage-name toactualplugin-web-storage; finalreport06c42d24",
+  "static_cap": 1,
+  "static_budget_overrun": 1,
+  "process": "BLOCKED_PENDING_WHOLE_REVIEW finalcompleteinputprewritechecks notrerun; bothfinalbuffersverified but secondcheckafterfirstwrite",
+  "parent_PID_numeric_exit_seconds_outerEOF_drain": "UNKNOWN discarded tool fields bytext(r.output); rawchildren preserved",
+  "acquisition_shell_error": {
+    "chunk": "1177f9",
+    "exit": 1,
+    "error": "zsh unquotedglob no matches plugin-web-*; read-only search notconcludingstatic",
+    "PID_EOF_drain": "UNKNOWN"
+  },
+  "source_author": "1/3",
+  "whole_source_review": "UNRUN"
+}
