@@ -747,10 +747,16 @@
     {
       "id": "DASH-06/CONTRACT-REVIEW",
       "workflow": "D",
-      "state": "queued_next_review_slot",
+      "state": "running_static_minimumdecision_review",
       "configured_model": "gpt-6-astra",
       "fixed_input": "7e83bac6010fd28680583d3151fb17ad0fd53c04",
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_d_dash06_contract_review_r1",
+      "provider_attested": false,
+      "fixed_parent": "2a06400aa9628afc28430e442425bd4dd0cbff8a",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-review-20261010/XAI_Desktop",
+      "review_iteration": 1,
+      "family_cap": 3
     },
     {
       "id": "MET-05/RUNNER-SOURCE-CORRECT2",
@@ -766,8 +772,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -989,6 +995,10 @@
     {
       "event": "FullMETsourceREVISE2612inputreceipt received, fresh14ADDcorrector2 registeredqueued; olderDASHcontractreviewnextfree; TASKcorrector2+BRDprepcontinue",
       "input": "25c4dea3d03e867fba898928a21cbf859050075d"
+    },
+    {
+      "event": "Older DASH06 contractreview actuallylaunchedfixed2a06400; TASKcorrector2+BRDpreparer continue, actual3workers+root4/4; METcorrector2 queued",
+      "registration": "2a06400aa9628afc28430e442425bd4dd0cbff8a"
     }
   ],
   "wave_P2_tasks": [
