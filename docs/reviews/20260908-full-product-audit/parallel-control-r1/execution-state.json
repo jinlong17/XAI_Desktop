@@ -314,10 +314,20 @@
       "provider_attested": false,
       "fixed_parent": "b87b6b66a0cefe6a401ec130fca2f738ef9f67b0",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-correct2-20261010/XAI_Desktop",
-      "state": "running",
+      "state": "received_corrected_candidate_PENDING_fresh_vendor2",
       "author_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "59809b32a4dc19dbdefff871cf9c60bb5b0b96b1",
+      "integration_commit": "d08b5c6ee46a98fad6354a1b626f9ebea74ed474",
+      "archive_ref": "codex/archive/parallel-tt08-doc-correct2-20261010",
+      "output_hashes_checked": 2,
+      "exact_patch_sha256": "90bc2ec9a5ea000e8ae93ebe0e0533e22cf5e0537d4687353c49d37364565df7",
+      "hash_clarification": {
+        "author_hash_no_full_index": "df6e53b381ce0f500c8b7d48b21a0324135b502b1c79c0c707a81fb09c097683",
+        "root_hash_full_index": "90bc2ec9a5ea000e8ae93ebe0e0533e22cf5e0537d4687353c49d37364565df7",
+        "finding": "Root initial full-index expectation differed from author abbreviated-index serialization; both reproduced, author explained no edit/newiteration; no candidate byte mismatch"
+      }
     },
     {
       "id": "FULL312/READY-INVENTORY-R1",
@@ -348,8 +358,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -446,6 +456,11 @@
       "at": "2026-10-10T10:31:28.532273+00:00",
       "event": "Fresh TTdoccorrect2, full299inventory andREL02+03review running; exactly3workers+root capacity4; Worldversion2queued; normal sync0FAIL1WARN",
       "registration": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a"
+    },
+    {
+      "at": "2026-10-10T10:34:08.542582+00:00",
+      "event": "TTcorrect2 exact2MOD received after patch serialization clarification; fresh actualvendor2/3 registered, noauthoriteration increment",
+      "input": "d08b5c6ee46a98fad6354a1b626f9ebea74ed474"
     }
   ],
   "wave_P2_tasks": [
@@ -458,7 +473,8 @@
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
-    "P2_owned_worktrees": "all3archived/recoverable confirmedviaapp; no unrelated cleanup"
+    "P2_owned_worktrees": "all3archived/recoverable confirmedviaapp; no unrelated cleanup",
+    "deep_intermediate_P6": "3FAIL/0WARN = same5knownunreachable plus 1 newlycompleted local TTcorrector source in refs/reflog before sourcepush; now remote-preserved; no deletion to hide"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {
