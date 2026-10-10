@@ -1,0 +1,25 @@
+{
+  "controller_batches": [
+    90,
+    91,
+    92
+  ],
+  "new_source_receipts": 2,
+  "new_known_concluding": 2,
+  "new_failed": 1,
+  "new_reported_PASS": 1,
+  "units": [
+    "SHELL05source2actualFAIL",
+    "Habitscontract2reportedPASS"
+  ],
+  "calendar_separate_actual": {
+    "input_only_capture": 1,
+    "postwrite_unqualified_checker": 1,
+    "materialization_without_valid_prewrite": 1,
+    "concluding_classification": "HELD no implicit0 or validprewritePASS"
+  },
+  "actual_billing_USD": "UNKNOWN",
+  "new_runtime_tests_formal_probes_vendor_network": 0,
+  "rework_findings": 83,
+  "all_prior_iterations_and_overruns_retained": true
+}

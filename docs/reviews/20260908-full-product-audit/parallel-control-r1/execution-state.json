@@ -3806,6 +3806,38 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-contract-review1-20261010/XAI_Desktop",
       "fixed_parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
       "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
+    },
+    {
+      "id": "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
+      "workflow": "C",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_queued_new_original_item_source1_capacity_wait",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shell01-shell02-shell03-source-discovery-r1.json",
+      "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": [],
+      "logical_writer": "new source report only"
+    },
+    {
+      "id": "BRD-24/SOURCE-DISCOVERY1",
+      "workflow": "C",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "state": "registered_queued_new_original_item_source1_capacity_wait",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd24-source-discovery-r1.json",
+      "fixed_input": "a68c2295c1aa0db359b0a62cb38317b29168c24c",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": [],
+      "logical_writer": "new source report only"
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
@@ -3936,10 +3968,12 @@
     },
     "gov04_gov07_review3_input_acquisition_failures": 1,
     "last_controller_cycle": {
-      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p87-p89-cost-cycle.json",
-      "source_receipts_after": 120,
-      "new_concluding_static": 3,
-      "new_failed": 3,
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p90-p92-cost-cycle.json",
+      "source_receipts_after": 122,
+      "new_concluding_static": 2,
+      "new_failed": 1,
+      "new_calendar_input_only": 1,
+      "new_calendar_postwrite_unqualified": 1,
       "actual_billing_USD": "UNKNOWN"
     },
     "calendar_input_only_capture": 1,
@@ -4638,6 +4672,11 @@
       "at": "2026-10-10T20:19:42.202996+00:00",
       "event": "P92 currentnavigation refreshedmetadataONLY old686checkpoint markedhistorical; actualP0productCODE+fouracceptedTT08owningdocs, notwholeproducttreeparity. ALL122distinctoriginals exactremote andintegrationoriginancestors396 proof; freshformal312unique13/3/3/293299unclosed939 verified. Actualroot+CalendarWHOLEsource/processD1(parent96/input965)+HabitsWHOLEtechnicalD1(parent396/input036)+WebPetFINALwhole3(parent396/input965)=4/4 fixedinputs/no silentrepin.153knownconcluding39FAIL3UNKNOWN111reportedPASS plusCalinputonly1/postwriteUNQUALIFIED1/rework83/overruns3/newformalprobevendor0. Sevenpendinggroups/E6E7E8/Clockholds retained no scope/owner/gate/budgetwaiver. Goal unfinished.",
       "input": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647"
+    },
+    {
+      "at": "2026-10-10T20:21:27.564921+00:00",
+      "event": "P93 nextoriginal-item source queue registered SHELL01/02/03 and BRD24 atfixedinputa68; eachWHOLEoriginalactionacceptance finite source-only twoNEWreport paths, primaryB unchanged, no existingexhausted caller renamed/restarted or sharedwriter/runtimegrant. Queue no active extraagent while3workers occupied: CalendarWHOLEsource/processD1+HabitsWHOLEtechnicalD1+WebPetFINAL3 plusroot4/4. P90-P92cost2newconcluding1FAIL1reportedPASS+Calinputonly1/postwriteUNQUALIFIED1 separately preserved/billingUNKNOWN/newformalprobevendor0/rework83.122sources153known39FAIL3UNKNOWN111reportedPASS/formal13/3/3/293312299unclosed939 unchanged. Reviewpriority upondelivery, rootserialreceive/integration/globalstate only; userdecisions and all oldgates held goalunfinished.",
+      "input": "a68c2295c1aa0db359b0a62cb38317b29168c24c"
     }
   ],
   "wave_P2_tasks": [
@@ -4646,7 +4685,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P91literal0FAIL1WARN P92freshpending",
+    "normal": "P92literal0FAIL1WARN P93freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4690,7 +4729,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "WebPetFINALwhole3 RUNNING parent396/input965; originalownerP1 held, originaltwoactualFAIL retained. Calendar andHabits authors completed source/proposal unadopted pendingwholeD.",
+  "workflow_C": "WebPetFINALwhole3 RUNNING parent396/input965; originalownerP1 held, originaltwoactualFAIL retained. Calendar andHabits authors completed source/proposal unadopted pendingwholeD. Queued next distinct original source units SHELL01/02/03 and BRD24, no old caller family reset; dispatch when capacity available after review priority.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -5107,5 +5146,9 @@
     "current_range_with_obligations": 32,
     "goal_C_118_gated_statement": "correct outside-current-range count not count of all gate_obligations",
     "scope_ownership_thresholds_unchanged": true
-  }
+  },
+  "ready_queue_next_original_sources": [
+    "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
+    "BRD-24/SOURCE-DISCOVERY1"
+  ]
 }
