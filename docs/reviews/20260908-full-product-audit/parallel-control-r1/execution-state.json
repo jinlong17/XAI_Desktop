@@ -3708,13 +3708,13 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "UNADOPTED_WHOLE_TECHNICAL_PROPOSAL_PENDING_FRESH_INDEPENDENT_REVIEW",
+      "state": "WHOLE_independently_APPROVED_BOUNDED_TECHNICAL_DOCUMENT_ONLY_BLOCKED_ROWS_RETAINED",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-technical-contract-r2.json",
       "fixed_input": "6715c4367799366a10a9337a863f78036ec07ed9",
       "family_iteration": 2,
       "family_cap": 3,
       "actual_actor_launched": true,
-      "adopted": false,
+      "adopted": true,
       "new_budget_grant": [],
       "actor": "/root/parallel_c_hab01_hab05_whole_technical_correction_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-contract2-20261010/XAI_Desktop",
@@ -3727,7 +3727,8 @@
       "input_hashes_checked": 134,
       "static_invocations": 1,
       "static_result": "reported_PASS_pending_independent_process_review",
-      "receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/hab-contract2-p91-proposal-reception.json"
+      "receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/hab-contract2-p91-proposal-reception.json",
+      "whole_review": "3bf59cfa2a250b513f619f9e7ad740f493151b9f"
     },
     {
       "id": "SHELL-05/SOURCE-DISCOVERY2",
@@ -3783,7 +3784,7 @@
       "primary_workflow": "C",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_WHOLE_independent",
+      "state": "FAILED_INTENDED_PREWRITE_FINAL3of3_EXHAUSTED_NO_ARTIFACT",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shell05-web-pet-source-discovery-r3.json",
       "fixed_input": "965a66a7991b426007dea316e6045f30ecade1ec",
       "family_iteration": 3,
@@ -3794,7 +3795,10 @@
       "actor": "/root/parallel_c_shell05_web_pet_final_whole_source_r3",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-shell05-web-pet-source3-20261010/XAI_Desktop",
       "fixed_parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
-      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation",
+      "static_invocations": 1,
+      "static_result": "FAIL",
+      "receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/shell05-source3-p96-final-failed-prewrite-receipt.json"
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT-REVIEW1",
@@ -3802,18 +3806,25 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_WHOLE_independent",
+      "state": "WHOLE_APPROVED_scoped_technical_DOCUMENT_ONLY_no_implementation_admission",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-technical-contract-review-r1.json",
       "fixed_input": "036e2f39c653ef7198704e3df38458c16ec3e35c",
       "family_iteration": 1,
       "family_cap": 3,
       "actual_actor_launched": true,
-      "adopted": false,
+      "adopted": true,
       "new_budget_grant": [],
       "actor": "/root/parallel_d_hab01_hab05_whole_technical_contract_review_r1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab01-hab05-contract-review1-20261010/XAI_Desktop",
       "fixed_parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
-      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation",
+      "source_commit": "3bf59cfa2a250b513f619f9e7ad740f493151b9f",
+      "integration_commit": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc",
+      "archive_ref": "codex/archive/parallel-hab01-hab05-contract-review1-20261010",
+      "input_hashes_checked": 156,
+      "static_invocations": 1,
+      "static_result": "PASS",
+      "receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/hab-whole-technical-review1-p96-scoped-document-admission.json"
     },
     {
       "id": "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
@@ -3853,7 +3864,7 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "running_fresh_WHOLE_source_correction2",
+      "state": "running_SAME_source2_read_transport_continuation_no_intended_checker_retry",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-r2.json",
       "fixed_input": "bcea5fd02b41021bfb444d81d7528829ab70c26c",
       "family_iteration": 2,
@@ -3864,25 +3875,45 @@
       "actor": "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_correction_r2",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-cal4-source2-20261010/XAI_Desktop",
       "fixed_parent": "55cba78f2acc01eeda1d42210dfaf495122835c1",
-      "worktree_registration": "checkoutcreatedsuccess requestedHEAD rootverifiedexact55parent no silentrepin appattachment100error no retry/recreation"
+      "worktree_registration": "checkoutcreatedsuccess requestedHEAD rootverifiedexact55parent no silentrepin appattachment100error no retry/recreation",
+      "transport_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/cal4-source2-p96-read-transport-continuation-receipt.json",
+      "continuous_wall_original": true,
+      "meaningful_static": "UNRUN",
+      "raw_input_capture": 1
+    },
+    {
+      "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/JOURNAL-SOURCEHEALTH-LIFECYCLE-IMPACT1",
+      "workflow": "A",
+      "primary_workflow": "B",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "registered_ready_fresh_exact_Habits_technical_impact1",
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-journal-sourcehealth-lifecycle-impact-r1.json",
+      "fixed_input": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "actual_actor_launched": false,
+      "adopted": false,
+      "new_budget_grant": []
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 1,
+    "total": 2,
     "capacity": 4,
     "actors": [
-      "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_correction_r2",
-      "/root/parallel_d_hab01_hab05_whole_technical_contract_review_r1",
-      "/root/parallel_c_shell05_web_pet_final_whole_source_r3"
+      "/root/parallel_c_cal01_cal02_cal04_cal05_whole_source_correction_r2"
+    ],
+    "ready_next": [
+      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/JOURNAL-SOURCEHEALTH-LIFECYCLE-IMPACT1",
+      "BRD-24/SOURCE-DISCOVERY1"
     ],
     "queued_original_sources": [
       "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
       "BRD-24/SOURCE-DISCOVERY1"
-    ],
-    "policy": "review reception/corrections priority; distinct newsource queue on next free slot"
+    ]
   },
   "cost": {
     "new_formal": 0,
@@ -3892,24 +3923,24 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 121,
+    "static_passes": 122,
     "rework_findings": 89,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 123,
+    "completed_source_receipts": 124,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "123delivered121reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending29FAILED3UNKNOWN1reportedPASSfactualFAIL=>154known39FAILED3UNKNOWN112reportedPASSinclwhitespace1; Calinputonly1+postwriteUNQUALIFIED1 separately preserved no source1adoption",
+    "static_passes_basis": "124delivered122reportedconcluding incl10FAILED1WHITESPACE_ONLY; pending30FAILED3UNKNOWN1reportedPASSfactualFAIL=>156known40FAILED3UNKNOWN113reportedPASS; Cal1inputonly1/postwriteUNQUALIFIED1 separate, Cal2readcapture1transporttruncation ownmeaningfulstaticUNRUN no free concludingretry",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "83prior+6WHOLECalendarD1 findings; originalprocessclassificationinputonly1/postwriteUNQUALIFIED1 separate no0/PASS",
-    "pending_no_delivery_static_invocations": 33,
-    "pending_no_delivery_static_failures": 29,
-    "actual_static_invocations_total_known": 154,
-    "actual_static_failed_total_known": 39,
+    "pending_no_delivery_static_invocations": 34,
+    "pending_no_delivery_static_failures": 30,
+    "actual_static_invocations_total_known": 156,
+    "actual_static_failed_total_known": 40,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 3,
     "actual_static_completion_unknown_total_known": 3,
@@ -3919,8 +3950,8 @@
     "mechanical_failure_preservation_invocations": 1,
     "delivered_whitespace_only_static": 1,
     "discovery_input_checksum_invocations": 1,
-    "delivered_concluding_static_invocations": 121,
-    "actual_concluding_static_successes_known": 112,
+    "delivered_concluding_static_invocations": 122,
+    "actual_concluding_static_successes_known": 113,
     "ai_source_discovery_authoring_attempts": 4,
     "ai_actual_failed_concluding_attempts": 3,
     "ai_postfailure_materialization_invocations": 1,
@@ -3999,12 +4030,11 @@
     },
     "gov04_gov07_review3_input_acquisition_failures": 1,
     "last_controller_cycle": {
-      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p90-p92-cost-cycle.json",
-      "source_receipts_after": 122,
-      "new_concluding_static": 2,
-      "new_failed": 1,
-      "new_calendar_input_only": 1,
-      "new_calendar_postwrite_unqualified": 1,
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p93-p95-cost-cycle.json",
+      "source_receipts_after": 123,
+      "new_concluding_static": 1,
+      "new_failed": 0,
+      "new_rework_findings": 6,
       "actual_billing_USD": "UNKNOWN"
     },
     "calendar_input_only_capture": 1,
@@ -4018,6 +4048,15 @@
       "masked_underlying_exit": "UNKNOWN numeric not retained",
       "corrected": "ed7886 all44 actualparent metadataONLY source unchanged",
       "business_static": 0
+    },
+    "calendar_source2_input_transport_truncations": 1,
+    "controller_p96_parent_metadata_guard_failure": {
+      "chunk": "228031",
+      "numeric_exit": 1,
+      "seconds": 0.020174291,
+      "error": "guessed eighth prefix character before ANY root file read/write; corrected exact observed48bd21c2fullSHA e593d9",
+      "business_static": 0,
+      "no_worker_artifact_change": true
     }
   },
   "events": [
@@ -4718,6 +4757,11 @@
       "at": "2026-10-10T20:26:51.099602+00:00",
       "event": "P95 ALL123distinctoriginals exactremote andintegrationoriginancestors55 proven fullproof. FreshCalendarWHOLEsource2 RUNNING actualverified55parent/fixedbcea input despite createHEAD request no silentrepin; originalauthor1/D1spent and processBLOCKED retained. Actualroot+Calendar2+HabitsWHOLEtechnicalD1+WebPetFINAL3=4/4; nextSHELL01/02/03+BRD24 queued no extraagent whilefull.123sources154knownconcluding39FAIL3UNKNOWN112reportedPASS/rework89 plusCalinputcapture1/postwriteUNQUALIFIED1 separately preserved/newformalprobevendor0; no oldexhaustedfamilyrestart. Formal13/3/3/293312299unclosed939 unchanged P94literal0FAIL1WARN all oldgates/sevenpendinggroups/E6E7E8/Clockholds retained goalunfinished.",
       "input": "55cba78f2acc01eeda1d42210dfaf495122835c1"
+    },
+    {
+      "at": "2026-10-10T20:32:25.021206+00:00",
+      "event": "P96 HabitsWHOLEtechnicalD1 original3bf59 exactarchive->82ddebb9994eed255cd35a7c701c5bd84a5fa6dc exact2ADDclean156bindings sole66696exit0 2.433004s outer2541ms157Git0EOFclosed/allinputs+BOTHbuffersbeforewrite rawsessionchunk/fullwall/historicaldrainUNKNOWN; WHOLEboundedtechnicalproposal DOCONLY ADOPTED decidedrows, P-WEEK1..4/newjournal/sourcehealth/lifecycleallwriters/qualificationbeforeexecutionbusinessBLOCKED. Fresh exactimpact1/3registered no oldshared/Clock/exhaustedfamilyreset. WebPetFINAL3actualexit1.846289875s guessedgoal literal13completed beforefullmanifest/BOTHbuffers UNRUN butintendedFAILED counts3/3EXHAUSTED noartifact/no4 rawPIDEOFUNKNOWN originalcallpreserved. Calendar2 exactrawcall proves inputretrievalONLY no intendedchecker; originaltruncatedinterleavedread1/UNKNOWN frozen; SAMEphase splitreadcontinuation within original20:26:09+30min wall no staticbudgetreset/retry, failureofactualconcludingstillfreeze.124sources156known40FAIL3UNKNOWN113reportedPASS/rework89 plusCal1input1/postwriteUNQUALIFIED1+Cal2readtransport1 separate/newformalprobevendor0. P95literal2FAIL1WARN due exactnewHaboriginal nowarchived no deletion. Actualroot+Cal2=2/4 readyHabimpact1+BRD24; formal13/3/3/293312299unclosed939 unchanged all oldgates goalunfinished.",
+      "input": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc"
     }
   ],
   "wave_P2_tasks": [
@@ -4726,7 +4770,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P94literal0FAIL1WARN P95freshpending",
+    "normal": "P95literal2FAIL1WARN exactnewHabrevieworiginallocalref/reflog nowarchivepreserved; P96freshpending no recoverydelete",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4761,7 +4805,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
+    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4770,7 +4814,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "CalendarWHOLEsource2 freshauthor RUNNING parent55/inputbcea original4scope retained, source1processBLOCKED/fullD1REVISE6 remain immutable. WebPetFINAL3 RUNNING. SHELL01/02/03 and BRD24 originalsource queue unlaunched no capacity reset.",
+  "workflow_C": "CalendarSAMEsource2 splitreadtransport continuation with originalfixedparent/input/wall no intendedconcludingretry; WebPetFINAL3actualFAIL EXHAUSTED no4. BRD24 originalsource ready next free slot; SHELL01/02/03 queue preserved.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -5165,8 +5209,8 @@
     "no_recovery_deletion": true,
     "normal": "P94literal0FAIL1WARN"
   },
-  "workflow_A": "Clock MGBconditionalgrant retained; retention3/3/sourcequalification/nativebudgetholds pendingownerexceptions. Sharedtechnicaldocumentadopted but engine/method/runtimequalification/before/sourceadmission held. Existingfivebudgetquestion and pendingE6E7E8proposal nogrant.",
-  "workflow_D": "HabitsWHOLEtechnicalD1 RUNNING after all134input acquisition. CalendarwholeD1receivedREVISE6 processBLOCKED, no sourceadoption. Reviewerneverrepair; all unknownfullwall/drain/session facts held.",
+  "workflow_A": "Habits boundedtechnicalproposal independentlyWHOLEAPPROVED docONLY, fresh exactjournal/sourcehealth/lifecycleimpact1 registered no oldClock/sharedunitreset or codegrant. Clock sevenpendinggroups+E6E7E8holds unchanged.",
+  "workflow_D": "HabitsWHOLEtechnicalD1receivedscopedDOCUMENTONLY; weeklyfullydeterminedrequirements/implementationBLOCKED. Next independentimpactreview afterauthorartifact. CalendarD1REVISE6 source1forensiconly.",
   "Habits_source_admission": {
     "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
     "source_integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",
@@ -5191,5 +5235,21 @@
   "ready_queue_next_original_sources": [
     "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
     "BRD-24/SOURCE-DISCOVERY1"
-  ]
+  ],
+  "Habits_technical_admission": {
+    "source": "4db69a0d026c7788766953d342cb7dd994716602",
+    "whole_review": "3bf59cfa2a250b513f619f9e7ad740f493151b9f",
+    "review_integration": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc",
+    "disposition": "decided technical proposal/document ONLY; not fullydeterminedweekly or execution/admission",
+    "holds": [
+      "P-WEEK1 obligation designated weekday vs Nquota undecided",
+      "P-WEEK2 civil quota boundary vs display preference undecided",
+      "P-WEEK3 partial/monthsplit allocation undecided",
+      "P-WEEK4 weeklystreak/currentperiodexpiry undecided",
+      "newjournal/key/schema/sourcehealth/lifecycle/allwriters independent exact impact and later grant",
+      "sourcequalification/oracle/runner completeP0before/fixed/G1/native/closeactualtwotabs businessacceptance/ledger/inventory all unmet"
+    ],
+    "canonical_changes": 0,
+    "no_code_runtime_qualification_before_business_release_grant": true
+  }
 }

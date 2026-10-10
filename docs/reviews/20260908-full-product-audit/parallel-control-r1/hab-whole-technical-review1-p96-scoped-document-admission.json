@@ -1,0 +1,61 @@
+{
+  "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/TECHNICAL-CONTRACT-REVIEW1",
+  "source": "3bf59cfa2a250b513f619f9e7ad740f493151b9f",
+  "parent": "396f2e6e0e4f171586b85328ccdf0f49ec5ec647",
+  "fixed_input": "036e2f39c653ef7198704e3df38458c16ec3e35c",
+  "integration": "82ddebb9994eed255cd35a7c701c5bd84a5fa6dc",
+  "archive_ref": "codex/archive/parallel-hab01-hab05-contract-review1-20261010",
+  "all_inputs_checked": 156,
+  "inherited_bindings": 134,
+  "outputs": {
+    "docs/reviews/audit-parallel-hab01-hab05-technical-contract-review-r1/inputs.sha256": "9dd7f1bfb96d6b744312a2a5de4653e81e0761e6cc5c6d5f3ba9417b411c0eaf",
+    "docs/reviews/audit-parallel-hab01-hab05-technical-contract-review-r1/review.md": "67310f2bc0e0e62f6ed4679940643724cfe3391ff00cd0bb6e957b325bf82122"
+  },
+  "disposition": "WHOLE_APPROVED_BOUNDED_TECHNICAL_DOCUMENT_ONLY_BLOCKED_DESCENDANTS_RETAINED",
+  "dimensions": {
+    "factual": "APPROVED",
+    "binding": "APPROVED",
+    "bounded_original_process": "APPROVED UNKNOWNs retained",
+    "coverage": "APPROVED",
+    "fully_determined_weekly_requirements": "BLOCKED",
+    "technical_proposals": "APPROVED",
+    "implementation_before_qualification_business": "BLOCKED"
+  },
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 66696,
+    "numeric_exit": 0,
+    "internal_seconds": 2.433004374965094,
+    "outer_ms": 2541,
+    "stdout_bytes": 58692,
+    "stdout_sha256": "8b577baef884803ca19bc44b536dc7248adf50e43ef95ee8d4d303c3da7c17a9",
+    "stderr_empty": true,
+    "stdout_stderr_EOF": true,
+    "process_closed": true,
+    "exit_to_close_ms": 0,
+    "Git_children": 157,
+    "Git_all_exit": 0,
+    "Git_all_EOF": true,
+    "Git_all_closed": true,
+    "all_inputs_and_BOTHbuffers_beforewrite": true,
+    "session_chunk_fullwall_independent_historical_drain": "UNKNOWN"
+  },
+  "preparation_exceptions": [
+    "read-only12bf37 truncated output JSON.parse failure before checker; exact receivedreturn preserved review",
+    "node64000byte autoreview sizerejection beforeJS; smaller memorychunks used no checkerretry"
+  ],
+  "holds": [
+    "P-WEEK1 obligation designated weekday vs Nquota undecided",
+    "P-WEEK2 civil quota boundary vs display preference undecided",
+    "P-WEEK3 partial/monthsplit allocation undecided",
+    "P-WEEK4 weeklystreak/currentperiodexpiry undecided",
+    "newjournal/key/schema/sourcehealth/lifecycle/allwriters independent exact impact and later grant",
+    "sourcequalification/oracle/runner completeP0before/fixed/G1/native/closeactualtwotabs businessacceptance/ledger/inventory all unmet"
+  ],
+  "source_author": "2/3 originalauthor1decode actualFAIL retained",
+  "source_discovery": "2/3",
+  "source_review": "2/3",
+  "technical_review": "1/3",
+  "root_business_checker": 0
+}

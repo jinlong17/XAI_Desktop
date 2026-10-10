@@ -1,0 +1,16 @@
+{
+  "controller_batches": [
+    93,
+    94,
+    95
+  ],
+  "new_source_receipts": 1,
+  "new_known_concluding": 1,
+  "new_failed": 0,
+  "new_reported_PASS": 1,
+  "whole_revision_findings_added": 6,
+  "rework_findings_after": 89,
+  "new_runtime_tests_formal_probes_vendor_network": 0,
+  "actual_billing_USD": "UNKNOWN",
+  "all_old_caps_and_UNKNOWNs_retained": true
+}
