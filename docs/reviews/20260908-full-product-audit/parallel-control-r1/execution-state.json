@@ -882,14 +882,19 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_independent_source_only",
+      "state": "received_static_impact_UNADOPTED_pending_fresh_review",
       "fixed_input": "41295a0f57728d93bb764f3679f5e2f3dafb86d4",
       "impact_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "actor": "/root/parallel_a_dash06_availability_impact_r1",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-impact-20261010/XAI_Desktop",
-      "fixed_parent": "b142c8ebb8b16f42919f5f4b253d64e8994afd0b"
+      "fixed_parent": "b142c8ebb8b16f42919f5f4b253d64e8994afd0b",
+      "source_commit": "309483d66397a1e4bc83760de032321bd1f01432",
+      "integration_commit": "07fc0c5b897a2fadb94e135829b735098c1907c4",
+      "archive_ref": "codex/archive/parallel-dash06-availability-impact-r1-20261010",
+      "input_hashes_checked": 633,
+      "static_pass": 1
     },
     {
       "id": "TASK-06/RUNNER-SOURCE-REVIEW2",
@@ -924,11 +929,14 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_independent_review",
+      "state": "running_fresh_full_source_review2",
       "fixed_input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae",
       "review_iteration": 2,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_d_met05_source_review_r2",
+      "fixed_parent": "9e437064fee350795005554d5a80e9d80bf719dc",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-review2-20261010/XAI_Desktop"
     },
     {
       "id": "BRD-12/CONTRACT-REVIEW2",
@@ -951,6 +959,17 @@
       "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_independent_impact_review1",
+      "fixed_input": "07fc0c5b897a2fadb94e135829b735098c1907c4",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -968,17 +987,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 40,
+    "static_passes": 41,
     "rework_findings": 35,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 43,
+    "completed_source_receipts": 44,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "43deliveries minus3actualvendor; includes METsource2 consumed FAILEDstatic1, not40PASS; retention3 separate",
+    "static_passes_basis": "44deliveries minus3actualvendor, includes1FAILED consumed METstatic pass; retention3 separatelypreserved",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 1
   },
@@ -1218,6 +1237,11 @@
       "at": "2026-10-10T12:41:11.598052+00:00",
       "event": "METsource2/BRDconcrete2/POMO04prep exact receipts received UNQUALIFIED/UNADOPTED; fresh full reviews registered queued. Actual A availabilityimpact +TASKsource review2+DASHcontractreview2 running distinct fixedparents root+3=4/4. Cycle37 DASHcorrect2/METsource2/BRDcorrect2 complete; cycle38 firstPOMOprep. No runtime/tests/probes/vendor or formal closure.",
       "input": "5ebbdd57f1b02e5cab36751bbefe6129ee97d2ae"
+    },
+    {
+      "at": "2026-10-10T12:43:12.647859+00:00",
+      "event": "Aavailabilityimpact633inputs receivedPROPOSED; freshindependentreview1registeredqueued; actualTASK/DASH/MET freshDreviews root+3=4/4. Cycle38 POMOprep+availabilityimpact two receipts; nextqueuedBRDreview/POMOreview/impactreview. No runtime or scope adoption.",
+      "input": "07fc0c5b897a2fadb94e135829b735098c1907c4"
     }
   ],
   "wave_P2_tasks": [
@@ -1226,7 +1250,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at41295a0; all38source refs+38integration ancestry verified; all23stashesremote",
+    "normal": "0FAIL1WARN at9e43706; all23stashesremote, no ref/reflog localonly; latestimpact integration requires nextpush",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",

@@ -1,0 +1,51 @@
+{
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent source-availability technical impact reviewer, never repair",
+  "model": "gpt-6-astra",
+  "fixed_input": "07fc0c5b897a2fadb94e135829b735098c1907c4",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "protected": [
+    "all nonallowed paths",
+    "product/tests/runner/CSS/storage/schema/host/config/lockfile",
+    "all original contracts/methods/runners/failurelogs/evidence",
+    "globalcontrol/ledgers/inventory/otherwts",
+    "push/merge/rebase/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "prior_source_author_used": 1,
+    "source_author_cap": 3,
+    "static_pass": 1,
+    "runtime": 0,
+    "tests": 0,
+    "browser": 0,
+    "native": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0
+  },
+  "stop": [
+    "input/hash/dirty/scope drift",
+    "protected write/runtime need",
+    "unsupported authority or weakened acceptance"
+  ],
+  "no_children": true,
+  "id": "DASH-06/SOURCE-AVAILABILITY-IMPACT-REVIEW1",
+  "source_inputs": [
+    "309483d66397a1e4bc83760de032321bd1f01432",
+    "c269ae212135f3b7729f843825ece70c7a00a724"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-dash06-source-availability-impact-review-r1/review.md",
+    "docs/reviews/audit-parallel-dash06-source-availability-impact-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "Full633 immutable identities including556rehashedinherited/478P0vsparent parity/exact2ADD/parentb142c8e/alloriginal312fields39reversiblelabels933+6 evidence939/13,3,3,293 preserved. ActualD06-08 originalfull complete-count sourcehonesty and all16D06/fullcanonicalr2G1 required, no G activation or weakening.",
+    "Independently challenge finite technicalalternatives A additive readonlyobservations vs existing usePrefAsync B adapter vs C ownerpublic validation and rejectglobal D. Existingasync exposed sourceavailability yet projecterror/conflictoldstate and retrycanwrite; cannotapproveasdropinreadonly. Scopephysicalkeyepoch observation coherent, eventinvalidatesauthoritativeread, denied/null/partial invalid rows ownerfullvalidator parity/lazyregistration routeorder/unavailable ownerlocks/historynotavailable proof. No new product policy/default/owner question invented.",
+    "Exact A16/B11/C ownerconditionalsets/displayunion18 and storageowningdocs explicit exceptions notgrants. Full readonly/zero writes/no reset/no ownercommands; value/raw/source lifetime and stale account firstframe/marker/deletion/ghost/sametab/StorageEvent/midnight owner settleC1C2C3, SSR, deniedrepair, allactualconsumers83? sourcecensus82candidatefiles notactivecalls; comparefull retained finitecensus. No deepowner import/sharedstorage or host scope expansion.",
+    "Actual permanent old sharedasync/storage/owner/native/Clock/REL families unknown/exhausted preserved cap3, genuinelynew sourcehonesty purpose source-grounded separatelyregisterable notcalleremptybudget0. Positive/negativepairedcontrols/fullqualifiedbefore/fixed/affected/vendor/freshfullacceptance/rootreconcile/inventory staymandatory. APPROVED technicalimpactbasis only orpreciseREVISE bounded impact2 paths; no implementationadoption, reviewer neverrepair/runtime0."
+  ]
+}
