@@ -680,6 +680,15 @@
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "BRD-12/PREPARE",
+      "workflow": "C",
+      "state": "queued_next_available_slot",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_input": "1955d250a7b33cde0f51c09c5836822f92bd0807",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -885,6 +894,10 @@
     },
     {
       "event": "Five own completed worktrees archivedrecoverable; inventory message-only earliercommit remote-preserved; full31originalrefs+31integrationancestry checked"
+    },
+    {
+      "event": "Register BRD12 full original decision/data contract discovery for next free slot, do not reduce or invent defaults",
+      "input": "1955d250a7b33cde0f51c09c5836822f92bd0807"
     }
   ],
   "wave_P2_tasks": [
