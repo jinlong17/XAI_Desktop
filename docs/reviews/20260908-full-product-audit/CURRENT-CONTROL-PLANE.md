@@ -551,3 +551,9 @@ D-R1-01:299reconcile nodes reference undeclaredcontroller-receipt-lock; full312s
 P2 registered inparallel-control-r1/tasks-P2.json: A CLOCK/CORRECT-IMPL (new r2retention adapter, synthetic fault validation only, no native); B PARALLEL/LOCK-CORRECT (new typed recurring resource docs, no product); D TT08/contract-review (fresh reviewer, no repairs). Fresh actor per phase, max3workers. Next Clockactualcorrectionreview precedes fresh native continuation; Q1focus1/3 and six0/3/B70budgets preserved. FullMGB+Clockrecoverychain remainsgated.
 
 Cost checkpoint for3receivedP1tasks:3staticpasses,0newformal,0browser/native/probes/package runs,1REVISE finding; no historical iteration reset. Formal13/3/3/293=312,299unclosed unchanged. Runtime goalmetadata remainsblocked/API-no-resume; repository schedule continues per directuserauthorization.
+
+### Parallel P2 actual dispatch / owned recovery checkpoint
+
+Registrationparentfb95dd39117ca98a9b5a038a29b40d015936fe85 pinned for three new owned worktrees/actors: A `/root/parallel_a_clock_retention_corrector` (configuredgpt-6.1-sol), B `/root/parallel_b_lock_schema_corrector` (configuredgpt-6.1-sol), D `/root/parallel_d_tt08_contract_review` (configuredgpt-6-astra). No providerattestation claimed. Actual3workers+root=4/4. C rotates into next free slot; TT08prepare remains proposal only. ClockCORRECT is explicitly split into implementation→fresh correctionreview→fresh remainingformalexecutor→Q2; no sameauthor self-acceptance or budgetreset.
+
+P1 three ownedworktrees archived/recoverable confirmed viaappartifacts, after deepcheck1FAIL/0WARN showing same5knownunreachable (preserved) and23stash remote-reachable. No other-session worktree touched. Normal afterregistration0FAIL/1WARN; no formal states or product baseline changed. Newnative/browser/probe/formalcount remains0; correction synthetic fault validation accounted separately when received.

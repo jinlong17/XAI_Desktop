@@ -26,7 +26,7 @@
       "formal_invocations": 0,
       "archive_ref": "codex/archive/parallel-clock-q1-impact-r1-20261010",
       "input_hashes_checked": 1401,
-      "worktree_state": "completed_clean_pending_owned_archive"
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/prepare",
@@ -43,7 +43,7 @@
       "formal_invocations": 0,
       "archive_ref": "codex/archive/parallel-tt08-prep-r1-20261010",
       "input_hashes_checked": 131,
-      "worktree_state": "completed_clean_pending_owned_archive"
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "PARALLEL/MAP-REVIEW",
@@ -60,14 +60,62 @@
       "formal_invocations": 0,
       "archive_ref": "codex/archive/parallel-control-review-r1-20261010",
       "input_hashes_checked": 42,
-      "worktree_state": "completed_clean_pending_owned_archive"
+      "worktree_state": "archived_recoverable_confirmed"
+    },
+    {
+      "id": "CLOCK/CORRECT-IMPL",
+      "workflow": "A",
+      "actor": "/root/parallel_a_clock_retention_corrector",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-clock-retention-20261010/XAI_Desktop",
+      "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
+      "parent_graph_node": "CLOCK/CORRECT",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "formal_invocations": 0,
+      "new_development_probes": 0,
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
+    },
+    {
+      "id": "PARALLEL/LOCK-CORRECT",
+      "workflow": "B",
+      "actor": "/root/parallel_b_lock_schema_corrector",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-lock-correct-20261010/XAI_Desktop",
+      "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
+      "parent_graph_node": "PARALLEL/MAP-REVIEW",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "formal_invocations": 0,
+      "new_development_probes": 0,
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
+    },
+    {
+      "id": "TT-08/contract-review",
+      "workflow": "D",
+      "actor": "/root/parallel_d_tt08_contract_review",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-review-20261010/XAI_Desktop",
+      "fixed_parent": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
+      "parent_graph_node": "TT-08/contract-review",
+      "state": "running",
+      "source_commit": null,
+      "integration_commit": null,
+      "formal_invocations": 0,
+      "new_development_probes": 0,
+      "cumulative_review_family": "schema review1 consumed; next fresh2/3; TTcontractreview1/3; Clockoriginalseven inherited"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 0,
-    "total": 1,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -97,11 +145,27 @@
       "at": "2026-10-10T09:32:36.078550+00:00",
       "event": "P1 three receipts completed/source preserved/P2 registered",
       "input": "0d6124dac872e040e8eac389b44bb5e52602197a"
+    },
+    {
+      "at": "2026-10-10T09:36:07.223007+00:00",
+      "event": "P2 three fresh independent agents dispatched",
+      "registration": "fb95dd39117ca98a9b5a038a29b40d015936fe85",
+      "tasks": [
+        "CLOCK/CORRECT-IMPL",
+        "PARALLEL/LOCK-CORRECT",
+        "TT-08/contract-review"
+      ]
     }
   ],
   "wave_P2_tasks": [
     "CLOCK/CORRECT-IMPL",
     "PARALLEL/LOCK-CORRECT",
     "TT-08/contract-review"
-  ]
+  ],
+  "sync_checkpoint": {
+    "normal": "0FAIL/1WARN after P2 registration",
+    "deep_before_owned_cleanup": "1FAIL/0WARN, same5unreachable retained,23stash remote reachable",
+    "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved"
+  },
+  "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization"
 }
