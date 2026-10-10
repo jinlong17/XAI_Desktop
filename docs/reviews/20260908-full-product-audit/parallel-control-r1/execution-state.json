@@ -1802,7 +1802,7 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_PROPOSED_UNADOPTED_needs_fresh_fullreview1",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1812,7 +1812,14 @@
       "actor": "/root/parallel_c_brd12_technical_amendment_r2",
       "fixed_parent": "bd4dce4aa7a5b96d533b7a570b5bfb97843f392b",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment2-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "3a7d5f1b8a448ac44ac6d5090af63a6a81097546",
+      "integration_commit": "84f0048a74c34bfef2b463e3b525b514e67586d2",
+      "archive_ref": "codex/archive/parallel-brd12-technical-amendment-r2-20261010",
+      "input_hashes_checked": 36229,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": []
     },
     {
       "id": "BK-07/CONTRACT-REVIEW1",
@@ -1876,7 +1883,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "received_FULL_APPROVED_conditional_technical_basis_ONLY",
       "fixed_input": "e96543bed85056d9a2581a0681ff44a7f1d0583e",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1885,7 +1892,14 @@
       "actor": "/root/parallel_d_pomo04_machinery_full_review_r2",
       "fixed_parent": "26f7875d3dd318d62a08afbf5946036af4b19692",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review2-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "source_commit": "86de30ce7c16dd1823ccf9327f67993f45f193b5",
+      "integration_commit": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+      "archive_ref": "codex/archive/parallel-pomo04-machinery-impact-review-r2-20261010",
+      "input_hashes_checked": 3007,
+      "static_pass": 1,
+      "static_result": "PASS",
+      "product_write_grant": []
     },
     {
       "id": "MED-03/SOURCE-MACHINERY-IMPACT-REVIEW1",
@@ -1932,24 +1946,32 @@
       "workflow": "A",
       "configured_model": "gpt-6-luna",
       "provider_attested": false,
-      "state": "queued_fresh_bounded_bytecorrection2",
+      "state": "running_fresh_full_independent_task",
       "fixed_input": "5b3192eb2b8d59a0304454523c71769d91888a5d",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-source-byte-collection-r2.json",
+      "actor": "/root/parallel_a_shared_source_bytes_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes2-20261010/XAI_Desktop",
+      "fixed_parent": "afba9ebd3eabd1adebc5fc0f30ab86ff73ce0e9e",
+      "actual_actor_launched": true
     },
     {
       "id": "MED-03/SOURCE-CONTRACT1",
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_bounded_technical_phase",
+      "state": "running_fresh_full_independent_task",
       "fixed_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-r1.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-med03-source-contract-r1.json",
+      "actor": "/root/parallel_a_med03_source_contract_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-source-contract1-20261010/XAI_Desktop",
+      "fixed_parent": "e8b29df83f34fc13a55a04d78c3db2002b2d5fb6",
+      "actual_actor_launched": true
     },
     {
       "id": "BRD-28/SOURCE-MACHINERY-IMPACT1",
@@ -1962,6 +1984,42 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-r1.json"
+    },
+    {
+      "id": "BRD-12/TECHNICAL-CONTRACT-AMENDMENT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_bounded_technical_phase",
+      "fixed_input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd12-technical-contract-amendment-review-r1.json"
+    },
+    {
+      "id": "POMO-04/SOURCE-CONTRACT1",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_bounded_technical_phase",
+      "fixed_input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-pomo04-source-contract-r1.json"
+    },
+    {
+      "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT1",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_bounded_technical_phase",
+      "fixed_input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301",
+      "family_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-outer-capture-admission-impact-r1.json"
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1979,23 +2037,23 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 76,
+    "static_passes": 78,
     "rework_findings": 61,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 79,
+    "completed_source_receipts": 81,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "79delivered-3vendor-1collection+1overrun=76staticincl6FAILED; pending6FAILED+1UNKNOWN=>83known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate",
+    "static_passes_basis": "81delivered-3vendor-1collection+1overrun=78staticincl6FAILED; pending6FAILED+1UNKNOWN=>85known12FAILED1UNKNOWN; pretoolreview1/static0/collection1/static0 separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior59 plussharedreview factualissues falsemissingpnpm paths and incompletepriorinputinventory; rootmetadata/CDcheckerfailures separate",
     "pending_no_delivery_static_invocations": 7,
     "pending_no_delivery_static_failures": 6,
-    "actual_static_invocations_total_known": 83,
+    "actual_static_invocations_total_known": 85,
     "actual_static_failed_total_known": 12,
     "static_budget_overruns": 1,
     "pending_no_delivery_static_unknown": 1,
@@ -2387,6 +2445,11 @@
       "at": "2026-10-10T15:16:30.413420+00:00",
       "event": "P39 MEDfullmachineryreview30e0a9 originalremote receivedaed09103a71c7e939ffc71d23c7b9b802ac47b51 full1307hashes37463698bytes/exact2ADD/clean/static1PASS PID86837session54285chunks7ccec6a017b462ed5bexit0. Adoptwholeconditionaltechnicalbasis5a8dimpactd074+review469d ONLY/noproductmethodgrant; registerfreshcompleteMEDsourcecontract1/fullreviewlater. RegistercompleteBRD28machineryimpact1 fromapprovedfullDOC/noUIOptionC noUIquestion/fulloriginalbackup+BRD12T1–T4dependencies no grantedAPI. Preservation13owncompletedworktrees cleanexactheads/78sourceoriginalremote+integrationancestorcheckpoint thenappall13archived_worktree confirmed; activeBRDtech2POMOreview2CDsourcecontract2+other5untouched/MEDreview1completedunarchived. Sharedreviewinitialfd03 identicalfiles to6c345 butcommitmessageamend omittedfromhandoff, rootremote-preservedrecoveryref notextraPASS/source receipt; actorreasonpending. P38normal1FAIL1WARN tracedthisinitialreflog; earlierP36P37normal4FAIL1WARN transientprepush/race retained. P38deep1FAIL0WARN allrefs/reflog/23stashesremote/5knownunreachable retained; independentbatchallobjectmetadata minusreachable set confirms SAME5identities/2981commitobjects2976reachable, no rawbodydump or deletion. 79receipts83knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/pretoolreview1static0/collection1static0. Formal13/3/3/293/939unchanged/no newcalleracceptance; BKminimumquestionssubmittedonce afterfullreview otherhumanpendingnotrepeated. Continuebytecollection2nextfree andagedMEDsource/BRDimpact queues.",
       "input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51"
+    },
+    {
+      "at": "2026-10-10T15:22:28.124140+00:00",
+      "event": "P40 receiveBRDtechnical3a7d5f originalremote ->84f0048/full36229/4247objects202614763bytes/static1PASS PID89800session4682a8db7813f8ccexit0/author2/3/pretoolASCIIemdashguard0launch correctedbeforeonlypass. Whole80candidates24+40+9+7UNGRANTED/PROPOSED freshFULLreview1registered. ReceivePOMO86de30 originalremote ->b21a2450e6d2607487ba3f5ae7663bdf7ad7c301 full3007review/full2979/106logs/15P04L1-L8/11paths20source/static1PASS PID89940session63151f84af9bfdfebexit0. Adoptexacta905impact9729+review136dwholeconditionaltechnicalONLY/nativePOMOlockdistinctcanonicalactivation; sourcecontract1registered/freshfullreviewlater. RegisterindependentoutercaptureadmissionIMPACTONLY existingcaptureunidentified: judgelegal genuineprerequisiteimplementationphase underapprovedP-OUTER; disguisedsharedauthor4/designrepair/budgetreset BLOCKS. No code/adoption/lastsource3release beforefreshfullimpactreview/rootdecision/sourcequal. RootP40 firstfunctions.exec JSstringassemblySyntaxError beforeANYtool/filewrites, correctedconstruction not productiteration. ActualCDsourcecontract2/bytecollector2/MEDsourcecontract1 root+3=4/4. 81receipts85knownstatic12FAILED1UNKNOWN/overrun1/rework61/vendor3/collection1static0/pretoolreview1static0. Formal13/3/3/293/939unchanged/no newcaller/runtime/releaseacceptance. OldreadyBRD28impact thenBRDfullreview/captureimpact/POMOsourcedraft rotate dependencies/FIFOaging.",
+      "input": "b21a2450e6d2607487ba3f5ae7663bdf7ad7c301"
     }
   ],
   "wave_P2_tasks": [
@@ -2681,6 +2744,15 @@
       "independent_review": "30e0a903196db8b11c3f30cc02f173bfe2a4bffd",
       "review_sha256": "469dd5e8083bd405168cbb9a411dd75bd515b3bcf648dcb9362f645911e1c22f",
       "scope": "Whole16rows/11original+23candidateexceptions/18machinery conditionaltechnicalbasisONLY; no API/schema/path/sourcequalification orimplementationgrant.",
+      "product_write_grant": []
+    },
+    {
+      "caller": "POMO-04",
+      "source": "a9054733b4f1179dac138b73031e3d0fd22b2416",
+      "source_sha256": "9729f7dc8947f232d1c431c99d7a31685fe792ba568f5a92303cb9def398e417",
+      "independent_review": "86de30ce7c16dd1823ccf9327f67993f45f193b5",
+      "review_sha256": "136d2e05f824006e691c7a39bf41631145c78971fccc5b0857d405024929e1f5",
+      "scope": "Whole15rows/L1-L8/11paths/20machinery conditionaltechnicalbasisONLY; nativePOMOlock distinct canonicalactivation. No source/method/runtime/implementationgrant.",
       "product_write_grant": []
     }
   ]
