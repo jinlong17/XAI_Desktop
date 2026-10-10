@@ -1,0 +1,47 @@
+{
+  "id": "TASK-06/CONTRACT-REVIEW",
+  "workflow": "D",
+  "module": "web",
+  "role": "fresh independent fullcontractreviewer neverrepair",
+  "model": "gpt-6-astra",
+  "fixed_input": "9442530e7194e7b5c62ae69cdcc68bc4c4e8d550",
+  "dispatch_parent": "exact registration commit resolved beforelaunch",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_inputs": [
+    "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+    "acd21f9b15a735e2202ca9553aff54b3e3b46e17"
+  ],
+  "allowed_files": [
+    "docs/reviews/audit-parallel-task06-contract-review-r1/review.md",
+    "docs/reviews/audit-parallel-task06-contract-review-r1/inputs.sha256"
+  ],
+  "acceptance": [
+    "All195 input identities verified, completeoriginalTASK06action+conditionalacceptance andallfourentries preserved",
+    "Independently challenge implemented completion/undo vs unimplementeddedicatedCompletedsidebar destination, actualunderlyingproviders/views/routecounts andexistingowner/projectrules; cannot hide genuinely implemented capability or inventpermanentunavailablepolicy",
+    "Preciselyassess proposedcomponentlocal sevenpath futureallowlist, nofalsecounts, bilingualaccessibleunavailableexplanation, read-model/source/accountliveness/recovery andothercallerboundaries",
+    "Allten fullbefore/fixed requiredoracles plusrealhost/native/visual/account/storage-error/regression/actualvendor/freshaccept/rootstates matrices preserved; qualifiedfrozen oracle identity andClockdeps distinguished",
+    "Meaningfulexacttests/source/account/protected diff sourceenvelopes andcross-tool evidence, no historicalreruns orcurrentnativePASSfromsourceequality",
+    "HonestAPPROVED/REVISEwith precisecoordinates/readiness/minimalgenuinelymissingdecision, reviewer neverrepair"
+  ],
+  "protected": [
+    "allnonallowedfiles",
+    "globalcontrol/ledgers/inventory",
+    "runtime/product/tests/CSS/runner",
+    "originalcontract/reports/failurelogs",
+    "otherworktrees",
+    "push/merge/rebase/release/deploy/promote/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "family_cap": 3,
+    "static_pass": 1,
+    "runtime": 0
+  },
+  "stop": [
+    "hash/scope/unexpecteddirt",
+    "unsupportedproductrule",
+    "runtime needed",
+    "cap/protectedboundary"
+  ],
+  "no_children": true
+}

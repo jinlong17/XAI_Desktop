@@ -149,7 +149,8 @@
       "input_hashes_checked": 95,
       "archive_ref": "codex/archive/parallel-map-review2-20261010",
       "static_pass": 1,
-      "review_iteration": 2
+      "review_iteration": 2,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/before",
@@ -166,7 +167,8 @@
       "integration_commit": "f4522752ded589a6909bdc17cb961233eeafeae8",
       "input_hashes_checked": 307,
       "archive_ref": "codex/archive/parallel-tt08-before-r1-20261010",
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "CLOCK/CORRECT-REVIEW",
@@ -184,7 +186,8 @@
       "integration_commit": "6e7d95b36ca3ac18e4609d72729eae1308290deb",
       "input_hashes_checked": 368,
       "archive_ref": "codex/archive/parallel-clock-correction-review-r1-20261010",
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/implement",
@@ -202,7 +205,8 @@
       "output_hashes_checked": 5,
       "protected_package_host_identities": 30,
       "exact_patch_sha256": "fdc0c61977b3427a87758736cc334aad1bf6814a7bbf2ef869631b5ab47f8a22",
-      "author_pass": 1
+      "author_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-03/prepare",
@@ -218,7 +222,8 @@
       "integration_commit": "3dd85e67e770d69b6507fbc7a883cbcf6f492c85",
       "input_hashes_checked": 79,
       "archive_ref": "codex/archive/parallel-world-clocks-prep-r1-20261010",
-      "static_pass": 1
+      "static_pass": 1,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "CLOCK/CORRECT-IMPACT2",
@@ -236,7 +241,8 @@
       "input_hashes_checked": 380,
       "archive_ref": "codex/archive/parallel-clock-impact2-20261010",
       "static_pass": 1,
-      "repair_authorized": false
+      "repair_authorized": false,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/verify",
@@ -271,7 +277,8 @@
       "reported_cost_usd_list": 2.3251116,
       "transport_exit": 0,
       "business_verdict": "BLOCKED",
-      "output_hashes_checked": 5
+      "output_hashes_checked": 5,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-03/contract-review",
@@ -288,7 +295,8 @@
       "input_hashes_checked": 100,
       "review_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "REL02+03/GATE-PREPARE",
@@ -304,7 +312,8 @@
       "archive_ref": "codex/archive/parallel-rel02-rel03-prep-r1-20261010",
       "input_hashes_checked": 5616,
       "static_pass": 1,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/DOC-CORRECT2",
@@ -327,7 +336,8 @@
         "author_hash_no_full_index": "df6e53b381ce0f500c8b7d48b21a0324135b502b1c79c0c707a81fb09c097683",
         "root_hash_full_index": "90bc2ec9a5ea000e8ae93ebe0e0533e22cf5e0537d4687353c49d37364565df7",
         "finding": "Root initial full-index expectation differed from author abbreviated-index serialization; both reproduced, author explained no edit/newiteration; no candidate byte mismatch"
-      }
+      },
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "FULL312/READY-INVENTORY-R1",
@@ -344,7 +354,8 @@
       "integration_commit": "f6ea3e62c723195353cc2d5f000ddc4c10cc396e",
       "archive_ref": "codex/archive/parallel-ready-inventory-r1-20261010",
       "input_hashes_checked": 226,
-      "original312_fields_verified": true
+      "original312_fields_verified": true,
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "REL02+03/CONTRACT-REVIEW",
@@ -367,7 +378,8 @@
         "REL03": "revokedOAuth pending references do not identify distinctprocess; historicalcountunknown not0",
         "persistent_ledger": "not found in frozen reviewedcorpus; V1 launchBLOCKED untilsource-groundedreconciliation, no capreset",
         "clarification_cost": "no writes/runtime/newreviewiteration"
-      }
+      },
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "DASH-03/CONTRACT-CORRECT2",
@@ -385,7 +397,8 @@
       "integration_commit": "5ab57eb953a99bb58c27caf173e8a088c5b85e6d",
       "archive_ref": "codex/archive/parallel-world-clocks-correct2-20261010",
       "input_hashes_checked": 115,
-      "unresolved_choice": "legacy mixed/duplicate admitted arrays editing disposition U1; fresh review2 validates necessity before centralized question"
+      "unresolved_choice": "legacy mixed/duplicate admitted arrays editing disposition U1; fresh review2 validates necessity before centralized question",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TT-08/verify2",
@@ -413,7 +426,8 @@
       "elapsed_seconds": 185.167,
       "readonly_tool_calls": 45,
       "reported_turns": 46,
-      "root_receipt": "mandatoryAGENTS/CLAUDEunread; no status publication; freshfinal3/3"
+      "root_receipt": "mandatoryAGENTS/CLAUDEunread; no status publication; freshfinal3/3",
+      "worktree_state": "archived_recoverable_confirmed"
     },
     {
       "id": "TASK-06/PREPARE",
@@ -423,9 +437,15 @@
       "provider_attested": false,
       "fixed_parent": "8a994c4405affcfb3439d931f9d344eae6f3b904",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-task06-prep-20261010/XAI_Desktop",
-      "state": "running",
+      "state": "received_PROPOSAL_NEEDS_FRESH_REVIEW",
       "static_pass": 1,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "source_commit": "d6a310f2472356bd69d7a240c81f4b71e35d5ac1",
+      "integration_commit": "9442530e7194e7b5c62ae69cdcc68bc4c4e8d550",
+      "archive_ref": "codex/archive/parallel-task06-prep-r1-20261010",
+      "input_hashes_checked": 195,
+      "output_hashes_checked": 2,
+      "protected_P0_source_identities": 169
     },
     {
       "id": "TT-08/verify3",
@@ -463,8 +483,8 @@
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -481,7 +501,7 @@
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 4.3731168,
-    "completed_source_receipts": 20,
+    "completed_source_receipts": 21,
     "accepted_parallel_tasks_P1_historical": 3
   },
   "events": [
@@ -583,6 +603,11 @@
       "at": "2026-10-10T10:47:23.675378+00:00",
       "event": "P7 actualvendor3 PID36897 andfreshWorldreview2 launched; TASK06 continuing; total3workers+root; all20receivedsource remote identities+integration ancestry checked",
       "registration": "6db0903f966b49d4c9cfeb099db5885d5ec76758"
+    },
+    {
+      "at": "2026-10-10T10:51:14.586440+00:00",
+      "event": "Receive TASK06195input proposal; freshcontractreview registered;14completeownworktrees safelyarchived; parallelcostcycles24-30 recorded; formalcountsunchanged",
+      "input": "9442530e7194e7b5c62ae69cdcc68bc4c4e8d550"
     }
   ],
   "wave_P2_tasks": [
@@ -591,12 +616,14 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN after48b4b4d push/fetch, all23stashremote",
+    "normal": "0FAIL/1WARN after14ownedrecoverablearchives; all23stash remote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
     "P2_owned_worktrees": "all3archived/recoverable confirmedviaapp; no unrelated cleanup",
-    "deep_intermediate_P6": "3FAIL/0WARN = same5knownunreachable plus 1 newlycompleted local TTcorrector source in refs/reflog before sourcepush; now remote-preserved; no deletion to hide"
+    "deep_intermediate_P6": "3FAIL/0WARN = same5knownunreachable plus 1 newlycompleted local TTcorrector source in refs/reflog before sourcepush; now remote-preserved; no deletion to hide",
+    "deep_before_owned_cleanup_P7": "1FAIL/0WARN same5knownunreachable; refs/reflog/source remote PASS; no deletion forgreen",
+    "P3_P4_P5_P6_owned_completed_worktrees": "14archived recoverable, confirmedviaapp list; originals remote refs checked; active3worktrees retained, unrelateduntouched"
   },
   "workflow_C": "TT08 preparation accepted as proposal; next candidate preparation rotates into a free slot, no product implementation authorization",
   "active_scheduler": {

@@ -615,3 +615,21 @@ Full312/299 readiness collection sourceacd21f9b15a735e2202ca9553aff54b3e3b46e17 
 ## Parallel controller checkpoint: P7 verification integrity
 
 TT08 actualvendor2 rawreportedAPPROVED received source541a016fa64051a0b952e6c87ea839de99cc623d, literal report/tools45/streams preserved; root withholds gate acceptance because required AGENTS and CLAUDE were not read. Fresh finalvendor3/3 registered with complete hashbound governance inputs, no fourthautomaticattempt/statuspublication. Vendor1+2 reported listprice total$4.3731168; no runtime. WorldClocks version2 d8ac35cc64e8f764166af9ca4aa02c17b8faf384 all115inputs checked; U1 legacy-edit policy andClockfoundation stillblocked; freshreview2 registered toverify actualminimumdecision. TASK06 source-grounded sidebar discovery active. Formal13/3/3/293,299unclosed unchanged; originals/failedattempts untouched.
+
+## Parallel cost cycles24–30 (source receipt accounting, no acceptance substitution)
+
+| Cycle | Three bounded source deliveries | Additional execution / correction cost |
+| --- | --- | --- |
+|24|Clock Q1 impact, TT08 preparation, initial scheduling review|Static only; scheduling REVISE retained|
+|25|Clock retention author, scheduling correction, TT08 contractreview|Retention three cumulative validations:145 assertions,41/42 cases; finalgreen remains unqualified after freshREVISE. No native/browser/probes|
+|26|Scheduling review2, TT08 fullbefore, Clock actual-source review|Static only; schemaAPPROVED documentcontract, ClockREVISE R1–R6|
+|27|TT08 five-doc author, WorldClocks proposal, Clock impact2|Static only; Clock3/3exhausted hardblock, no fourth|
+|28|Actual TT08 vendor1, WorldClocks review1, REL02+03 preparation|Vendor1 BLOCKED F1:227.612s/52reads/reported list$2.3251116; WorldREVISE3. No runtime|
+|29|TT08 two-doc corrector2, full312 readiness collection, REL contractreview|Static only; full312fields/299unclosed verified; RELproposalAPPROVED but vendorbudget unresolved|
+|30|Actual TT08 vendor2, WorldClocks version2, TASK06 preparation|Vendor2 rawAPPROVED withheldrequiredgovernancegap:185.167s/45reads/list$2.0480052. WorldU1blocked. No runtime|
+
+Vendor3/3 currentlyrunning, cap900s/$12; no fourth automaticattempt. Firsttwo reported list total$4.3731168, notsubscriptioncharge. OriginalB70/Q1/native/F1/probe/history counters remain untouched. Receipt hash decoder rejected unfamiliar header/attachmentlabels before reading allidentities; corrected only controllerdecoder, then verified full226/5626/195 inputs, no evidence/product repair or test rerun. Formal13/3/3/293,299unclosed unchanged.
+
+## Parallel controller checkpoint: TASK06 successor / recoverable cleanup
+
+TASK06 proposal d6a310f2472356bd69d7a240c81f4b71e35d5ac1 received with all195input hashes, twooutputs/exactparent/scope checked; fresh independent contractreview registered, noimplementationready. Fourteen completed own worktrees allclean/originalsource remote-preserved before app recoverablearchive, confirmedinlist; active worktrees and allunrelatedworktrees untouched. Deep1FAIL sameknown5unreachable preserved, normal0FAIL/1WARN. Receipt integration ancestors20checked beforethisnewreceipt, sourcearchive refs exact; nextpush verifieslatest.
