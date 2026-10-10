@@ -1,0 +1,142 @@
+{
+  "input_root": "b85b019ea255bcbb3830f7728e80ad24beba6e2a",
+  "sources": [
+    {
+      "id": "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT2",
+      "source": "c103a93602736652c08e6ca71d6b6c070e63f4f2",
+      "parent": "a9b22ebbec423028960f3c7332a6526f9c04ff45",
+      "integration": "32670e894d7779e0870e73ffef23d64a13e734a6",
+      "archive_ref": "codex/archive/parallel-gov06-authority-contract2-20261010",
+      "all_declared_immutable_bindings_checked": 295,
+      "output_hashes": {
+        "docs/reviews/audit-parallel-gov06-authority-source-contract-impact-r2/inputs.sha256": "399e2fb395d7e5b9f898d42f13e0ac8b31e9fd58722f3dd4ac4d6dd1813cb3be",
+        "docs/reviews/audit-parallel-gov06-authority-source-contract-impact-r2/contract.md": "c9b117a9a815086de901f04ccd015e4bda3dd2425f3b5d666e6463d4aa003f18"
+      },
+      "scope": "exact2ADD",
+      "worktree_clean": true,
+      "disposition": "documentary_staticPASS_pending_fresh_finalwholeD3",
+      "business_verification_by_root": false,
+      "static": {
+        "invocations": 1,
+        "result": "PASS",
+        "pid": 81789,
+        "numeric_exit": 0,
+        "elapsed_seconds": 4.705,
+        "checks": 3525,
+        "corpus_bytes": 13270010,
+        "owned_git_children": 297,
+        "children_exit": 0,
+        "EOF_drained": true,
+        "stderr_empty": true,
+        "tool_chunk": "UNKNOWN",
+        "tool_session": "UNKNOWN",
+        "author_iteration": 2,
+        "author_cap": 3,
+        "wall_seconds": 442.821,
+        "commit_pid": 82206,
+        "commit_exit": 0
+      }
+    },
+    {
+      "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY1",
+      "source": "4093bbb99a1eb5578975f61351a71f4f7fc88135",
+      "parent": "41111042c093c2110770d1e12829d377242d4c74",
+      "integration": "47ca69965cfcd5f3e0fcc7bba98aa9c35034c4fd",
+      "archive_ref": "codex/archive/parallel-gov04-gov07-source1-20261010",
+      "all_declared_immutable_bindings_checked": 165,
+      "output_hashes": {
+        "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r1/discovery.md": "c86daccd5a553910c69465739fbfbb4c7fa912d3417d55dac615685389f2972b",
+        "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r1/inputs.sha256": "1a47887534ddf279d01fe1b2d0a7516fed1317fd02c44403a2ac9e2918c6cb2e"
+      },
+      "scope": "exact2ADD",
+      "worktree_clean": true,
+      "disposition": "source_only_staticPASS_pending_independentwholeD1",
+      "business_verification_by_root": false,
+      "static": {
+        "reported_invocations": 1,
+        "result": "PASS",
+        "pids": [
+          82280,
+          82292
+        ],
+        "numeric_exit": 0,
+        "detailed_raw_metadata": "Node single in-memory static1 returned pass:true; explicitEOF/toolchunk/session/elapsed/taskwall UNKNOWN; Git close observed stdoutstderrcollected",
+        "unique_identities": 165,
+        "prewrite": true,
+        "EOF": "UNKNOWN explicitEOFflagnotcaptured",
+        "tool_chunk": "UNKNOWN",
+        "tool_session": "UNKNOWN",
+        "elapsed_seconds": "UNKNOWN",
+        "task_wall_seconds": "UNKNOWN",
+        "commit_pid": 82370,
+        "commit_exit": 0
+      }
+    },
+    {
+      "id": "SK-01+SK-02+SK-03+SK-04+SK-05+SK-06/TRACE-SOURCE-DISCOVERY1",
+      "source": "56de3d65d9619e93c27c69c06a382ea0382f3aa5",
+      "parent": "41111042c093c2110770d1e12829d377242d4c74",
+      "integration": "97054ea69f55c4fb4dbed58f817fe96c023c1795",
+      "archive_ref": "codex/archive/parallel-sk01-sk06-source1-20261010",
+      "all_declared_immutable_bindings_checked": 69,
+      "output_hashes": {
+        "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-r1/discovery.md": "22c085e45c14e46ead2eadef7678f09214f37992b39a3ab19aee1eb702b1501e",
+        "docs/reviews/audit-parallel-sk01-sk06-trace-source-discovery-r1/inputs.sha256": "e3d360554aa3c1d2ee64841b3a6c62b1f60860cf12a9a6ec5fb3a1b01b573fa5"
+      },
+      "scope": "exact2ADD",
+      "worktree_clean": true,
+      "disposition": "FORENSIC_source_preserved_prewrite_validation_and_postwrite_process_admission_HELD",
+      "business_verification_by_root": false,
+      "process_hold": {
+        "reported_postwrite_static": 1,
+        "reported_result": "PASS",
+        "prewrite_validation_stops_reported": 3,
+        "failures": [
+          "PREWRITE_STOP: incomplete real-newline buffers",
+          "PREWRITE_STOP: manifest grammar copied63hex",
+          "PREWRITE_STOP: report newline missing"
+        ],
+        "original_raw_exploratory_provenance": "UNKNOWN rawcommands/PID/numericexit/session/chunk/EOF of failedbranches; actorcannotestablish concludingclassification",
+        "successful_prewrite": {
+          "status_pid": 82837,
+          "parent_pid": 82849,
+          "cat_file_pid": 82861,
+          "Git_refs": 68,
+          "external_refs": 1,
+          "cat_file_bytes": 2006359,
+          "exits": 0,
+          "close_observed": true
+        },
+        "commit_path": {
+          "untracked_pid": 82873,
+          "add_pid": 82885,
+          "staged_pid": 82897,
+          "commit_pid": 82909,
+          "head_pid": 82922,
+          "parent_pid": 82934,
+          "diff_pid": 82946,
+          "clean_pid": 82958,
+          "exits": 0
+        },
+        "questions": "actual concluding invocationclassification unresolved; actualthree failedprewrite validations/postfailurematerialization and fourthpostwritevalidation conservatively frozen pending independentreview, no waivedSTOP",
+        "no_checker_reruns": true,
+        "no_retroactive_admission": true,
+        "source_preserved_only": true
+      }
+    }
+  ],
+  "source_count": 110,
+  "all_bindings": 529,
+  "archival_push_chunk": "cadb4e/d5e6b2",
+  "remote_check_chunk": "8b2187",
+  "metadata_check_chunk": "2d66a3",
+  "integration_chunk": "6739a9",
+  "preservation_not_adoption": true,
+  "formal_counts_unchanged": [
+    13,
+    3,
+    3,
+    293
+  ],
+  "evidence_references": 939
+}

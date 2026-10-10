@@ -1,0 +1,163 @@
+{
+  "id": "GOV-04+GOV-07/STATUS-SOURCE-DISCOVERY-REVIEW1",
+  "workflow": "D",
+  "primary_workflow": "B",
+  "module": "web",
+  "model": "gpt-6-astra",
+  "role": "fresh whole independent source-only statusdiscovery review1, no repair",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "47ca69965cfcd5f3e0fcc7bba98aa9c35034c4fd",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "source_commit": "4093bbb99a1eb5578975f61351a71f4f7fc88135",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-review-r1/review.md",
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-review-r1/inputs.sha256"
+  ],
+  "protected": [
+    "ALLnonallowed files/source/contracts/runner/evidence/failurelogs",
+    "globalcontrol/ledgers/otherworktrees/canonicaldocs/skills/generator/registry",
+    "module/ownerdecisions/caps/measurementstandards",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "review_iteration": 1,
+    "review_cap": 3,
+    "static_pass": 1,
+    "total_wall_minutes": 30,
+    "static_seconds": 120,
+    "owned_process_drain_seconds": 30,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "network": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "actualinput/dirty/hash/protecteddrift",
+    "need new undecidedproductrule or unauthorizedexec",
+    "actual concluding staticFAIL immediatelyfreeze no retry/materialization/commit"
+  ],
+  "original_items": [
+    {
+      "id": "GOV-04",
+      "priority": "P2",
+      "kind": "文档",
+      "action": "校准CmdK、Time Tracker、Bookkeeping、Metrics等状态和日志字段",
+      "acceptance": "实现/独立验证/发布分别记录；不因已合入倒推验证通过",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "GOV-04",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "GOV",
+      "acceptance_evidence": {
+        "business_acceptance": "实现/独立验证/发布分别记录；不因已合入倒推验证通过",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "GOV-04/prepare",
+        "GOV-04/contract-review",
+        "GOV-04/before",
+        "GOV-04/implement",
+        "GOV-04/verify",
+        "GOV-04/accept",
+        "GOV-04/reconcile",
+        "GOV-04/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    },
+    {
+      "id": "GOV-07",
+      "priority": "P2",
+      "kind": "文档",
+      "action": "清理PLUGIN_MAP的旧Next.js、无音频、统计代理与陈旧状态描述",
+      "acceptance": "历史与当前分区；Stable和最新迭代状态分列；真实运行包和文档anchor区分",
+      "status": "待复核/待办",
+      "module": "web",
+      "gate": "当前范围",
+      "source": "01-inventory-governance.md;05-visual-ux-audit.md",
+      "primary_workflow": "B",
+      "original_module": "web（project-system）",
+      "formal_state": "pending",
+      "retained_execution_record": {
+        "id": "GOV-07",
+        "status": "pending",
+        "evidence": []
+      },
+      "fixed_input_sha": "e041c2bc293b70db367444c62c4300231976dbf7",
+      "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+      "gate_obligations": [],
+      "source_section": "GOV",
+      "acceptance_evidence": {
+        "business_acceptance": "历史与当前分区；Stable和最新迭代状态分列；真实运行包和文档anchor区分",
+        "existing": [],
+        "required_future": [
+          "fixed-source contract and before evidence",
+          "implementation commit and exact scoped patch where needed",
+          "independent frozen verification and affected regressions",
+          "independent Astra full-scope acceptance",
+          "controller evidence reconciliation with unchanged formal states",
+          "inventory refresh and remote ancestry/sync receipt"
+        ]
+      },
+      "tasks": [
+        "GOV-07/prepare",
+        "GOV-07/contract-review",
+        "GOV-07/before",
+        "GOV-07/implement",
+        "GOV-07/verify",
+        "GOV-07/accept",
+        "GOV-07/reconcile",
+        "GOV-07/inventory"
+      ],
+      "execution_state": "needs_fixed_scope_discovery"
+    }
+  ],
+  "read_paths": [
+    "docs/PLUGIN_MAP.md",
+    "docs/reviews/20260908-full-product-audit/01-inventory-governance.md",
+    "docs/reviews/20260908-full-product-audit/05-visual-ux-audit.md",
+    "docs/workflow/project/dev-dashboard.md",
+    "scripts/dashboard/generate-state.mjs",
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r1/discovery.md",
+    "docs/reviews/audit-parallel-gov04-gov07-status-source-discovery-r1/inputs.sha256",
+    "docs/reviews/20260908-full-product-audit/parallel-control-r1/gov04-gov07-p68-exec-transport-continuation.json"
+  ],
+  "acceptance": [
+    "Source-only new discovery not valid-before/qualification or acceptedcontract. Read originalgoal/humanparalleloverlay/AGENTS/CLAUDE/workflow/multimachine/card and exactoriginalitems at actualdispatchparent. Existing312map/taskownership unchanged, do not duplicateitems or shrinkscope. Formal13/3/3/293=312/299unclosed939refs intact.",
+    "All complete actually used inputbytes bound individually at exact immutableSHA, including actualparentcard/state and ownsourceMD. Finite relevant source inventory obtained from actualGit tree/paths before acquisition; no imagined filename/headline/minsize/cardinality guard, no P0audit/control/docs equality. Code source proves only implementation presence, not product requirement/runtime or independentverification.",
+    "Reported/evidenced0/UNKNOWN distinct. No historicalvalidbatch rerun, oldbusinesschecker/scriptimport or actualprovider/browser/runtimeexecution to fillgaps. Discover gaps honest and propose finite newscope+dependency gates only, nogrant. Do not reinterpret missing evidence as a productdecision.",
+    "ALLrequiredinputchecks and BOTH entirefinalbuffers in memory BEFORE ANYfilesystemwrite includinginterimdraft/index. One own-document static1 actualhashes/manifestgrammar/originalitemcoverage/outputbuffers; meaningful semanticfindings explained in prose not brittle guessedstring assertions. Actualcheckfailure STOP no retry/postfailurewrite/materialization/commit. Python3.9safeUTF8 realnewline API no write_textnewline keyword.",
+    "Raw actualPID/session/chunk/numericexit/stdoutstderr/EOF/ownedGitchilddrain preserved, UNKNOWNnot0. Exact2ADD hooksdisabled singlecommit realnewlineWhy/What/Scope/Risk/Docs/Tests clean noamend/no push; newfreshfullreview and rootscopedadmission required beforecanonicalimplementation.",
+    "Cover full two originalactions: GOV04 CmdK/TimeTracker/Bookkeeping/Metrics and every additional target literally named originalaudit rows, implementation/independentverification/release/deploy separated no merged=>PASS. GOV07 wholePLUGIN_MAP obsoleteNext.js/noaudio/statisticsproxy/stalestatus, currentvsdatedhistory separate Stablevslatestiteration columns, actualruntimepackage vs documentaryanchor. Read whole canonicalPLUGIN_MAP then finite actualrelatedpkgdocs/devlogs/roadmaps/implementation/tests/releaselog and exactcitedcommitbodies; preserve datedhistory/acceptedproductdecisions.",
+    "Bind currentTT08 full documentaryacceptance c5874e5f6e803aa391ef2e5fb677e4bab592f4ef, rootreconciliation andstaticinventory currentstate; unchangedP0 runtime source and acceptedfourTT08docs distinct from old pendingcandidatewording. OtherrecentMED/CD/POMO/BRD conditional technicalDOCUMENTnotruntimeacceptance.",
+    "Locate actualgenerator/consumer use of currentstatus/log/pluginanchor fields source-only. Finite before/after source spans and field schema candidates + truthful evidencegaps and exact futurepaths, no apply/proposeparserrepairgrant. GOV06T39 draftlead unvalidated andGOV01+02 docsourcecontract2 adoptedconditional only; sourcepreparation mayreadfixedwholeproposals not drafts in otherwts. Separate twooriginalitem matrices and ownership, noformalcompletion.",
+    "WHOLE originaltwoitems/sourcefulldiscovery/input165bindings, source-present vs dated historicaldescription vs actualruntime/validbefore qualification distinct. Exact category/docstatus matrices all originalitemactionsacceptance; Metrics/status/evidence vs runtimehealth/deployment/sourceCODEnotrequirement; PLUGIN_MAP Next.js/audio/Statistics proxy/syncblob mismatch precise fullsource spans and blockers; originalpluginproject G01log isolated not G01closed. Treat acceptedTT08DOC not312completion. Preserve reportedtwo unifiedexecprocesscreationrejections neverchildPID/exit0; successful localnode finalprewritechecking rawreceipt gaps UNKNOWN. Independent factual coverage/truth and finite nextcontract/impact/sourcequalification/before/fullverification requirements. Do not impose new productdecisions if existingrules suffice. Source-only APPROVED cannotadopt canonicalcontract, createproductgrant, or markformalcomplete. Singlewriter dependencies GOV01+02/GOV06/sharedregistry/sourceSK explicit. EverycompleteusedsourceMD at actualSHA, manifestself fileabsolute immutablehash matches receivedsource, retain original externalgoal. ALLinputs+BOTHbuffers BEFOREANYwrite, static1 only no authorchecker/oldbusinessvalidator, no inventedproseword/count/minsize/P0docparity. Freshreviewneverrepairs. Exact2ADD singlehooksdisabledcommit noamendpush, failureSTOP."
+  ]
+}
