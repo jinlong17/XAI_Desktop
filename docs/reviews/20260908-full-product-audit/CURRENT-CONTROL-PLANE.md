@@ -8,7 +8,7 @@ Updated: 2026-10-10
 
 模块归属：`web`
 
-Current mode: **A-Codex controller; 70-R2 docs-only proposal received.** `213aafd` adds only two proposals and is pushed. E4 remains BLOCKED; E5 is valid BEFORE. Canonical r2/product/frozen oracles/ledgers unchanged. Explicit M+G+B / M-only / retain-current decision requested, answer PENDING. Q1, geometry and Terra71 unstarted.
+Current mode: **A-Codex controller; explicit M+G+B conditional authorization received 2026-10-10.** Register only Q1 oracle qualification next. E4 remains BLOCKED, E5 valid BEFORE; product/r2/frozen originals/ledgers unchanged. Geometry and baseline stages wait for their accepted prerequisites; Terra71 not started.
 
 本文件是后续执行的唯一当前入口。`ALL-TODO-CURRENT.md`、`EXECUTION.json`、`EXECUTION.md` 和各 review 目录保留历史明细与证据，不再把长历史流水复制到这里。任务状态只允许：`not_started`、`diagnosis_needed`、`ready_for_luna`、`assigned_to_luna`、`implementation_ready_for_review`、`verification_pending`、`accepted`、`blocked_by_gate`。
 
@@ -386,7 +386,8 @@ Current mode: **A-Codex controller; 70-R2 docs-only proposal received.** `213aaf
 | 时钟（续 4） | `01bd516` 新独立 Sol 批次 70：E5 BEFORE 有效，E4 阻断证据；733 个新增文件，已 push |
 | 时钟（续 5） | `b5a1285` 同步批次70 BLOCKED与成本/清理 · `01fc448` 70-R1独立影响审查 |
 | Clock continuation 6 | `9715892` R1 receipt/R2 card; `213aafd` R2 two-file docs-only proposal, pushed |
-| This control commit | Receive R2 proposal, archive/checks/credits disclosure and pending operator choice; E4 remains BLOCKED; Q1/71 unstarted |
+| Clock continuation 7 | `48cee62` R2 receipt/control sync; operator M+G+B answer recorded in the following control commit |
+| This control commit | Record conditional M/G/B authority and Q1 fixed task card; no method/product acceptance |
 
 ## 台账变化
 
@@ -485,19 +486,29 @@ Current mode: **A-Codex controller; 70-R2 docs-only proposal received.** `213aaf
 - `213aafd` fast-forward receipt, push and origin ancestry verified. Normal sync-check **failures=0/warnings=1**. Before cleanup, deep **failures=1/warnings=0**: only existing five unreachable objects; refs/reflogs/branches/23 stashes pass. No new recovery gap and no old object deletion.
 - Product/canonical r2/frozen inputs/all three ledgers unchanged; E4, method qualification, geometry/caller acceptance and whole goal incomplete.
 
-## Current single task
+## Operator authorization receipt (2026-10-10)
 
-**Obtain operator decision on the concrete 213aafd M/G/B exception proposal.** Request sent; no answer. Elapsed time or automatic goal continuation is not approval.
+- Human reply to questionItemId `["request_user_input_async","call_lDH6A8Sf9160XAcwi36qglON",0]`: approved the recommended **M+G+B conditional authorization** for proposal commit `213aafd92e4ea3a43d943fb766efa73fb4cbbe96` and its two exact file hashes in the CP row. This is direct user authorization, not an automatic goal continuation.
+- **M approved:** exception to goal:58 and r2:655-657 for separately named/hash-bound qualification copies; conditional adoption only after all positive/negative/equivalence controls and independent Q2 PASS with exact identities recorded.
+- **G approved conditionally:** only additive Clock-scoped grid/widgets CSS layout reservations after qualified/adopted M and complete valid frozen P0 Q3 before. Exact two-file scope/prohibitions/affected surfaces from the approved plan remain binding.
+- **B approved conditionally:** controller may adopt a versioned exact-hash baseline addendum after independent G2 verification/G3 geometry acceptance; B2 E1-E5 reconciliation precedes Terra71. No repeated human approval for conditions already granted; scope expansion still stops.
+- This receipt supersedes proposal-time PENDING statements as authority only. Original proposal/r2 bytes remain immutable, and no qualification/geometry/caller acceptance is asserted. Formal counts 13/312 completed, 299 unclosed unchanged.
 
-- Choices at `web-dashboard-clock-recovery-amendment/contract-r3-proposal.md:114-130` and `qualification-geometry-plan-r1.md:203-209`, exact output identities above.
-- Goal:58 explicitly requires frozen pixelFocusWalk identity; r2:649 protects grid CSS. General audit authorization does not revoke these explicit bounds. Reviewable proposal completed before requesting decision.
-- Recommended M+G+B gives one conditional authorization with all independent qualification/acceptance/task-card/hash gates retained; conditions passing require no repeated human permission. M-only permits qualification/conditional method adoption; retain-current keeps E4 blocked.
-- Only explicit M approval permits next Q1: new independent oracle author, qualification-only files in plan section9, exact positive/negative/equivalence controls, <=3 formal iterations per registered unit; separate Q2 review follows. No early geometry or Terra71, no B70 budget reset.
-- Until answer, no oracle/product/native implementation, r2 or ledger edits. Controller may complete receipt/state sync only.
+## Current single task: 70-Q1 oracle qualification
+
+- **Owner:** new independent Terra-responsibility oracle author, configured `gpt-6.1-sol`; not any prior Clock/AppRail author. One new isolated managed worktree from this control commit. No children, no parallel task. Provider model configuration is not independently attested.
+- **Fixed inputs:** P0 `f9eb4b1f207bc4b46f547b90afc250424b3c8695`; r2 `8bf6139`/`214dc758...`; B70 `01bd51684488596e2ecd8b7f6d3e71bbc235f258`; R1 `01fc44837d60e00a5b0fa1b25cf69a8652dce232`; approved proposal `213aafd`; original frozen `bacdbbc` file/block/function identities in plan. Authorization source is this control commit's Git blob, exact hash frozen in Q1 manifest; later CP edits do not mutate that input.
+- **Only write:** ADD-only under `docs/reviews/web-dashboard-clock-recovery-qualification-r1/`: `manifest.md`, `qualification.md`, `verify-qualification.mjs`, `pixel-focus-qualified-r1.mjs`, `verify-native-focus-qualified-r1.mjs`, `verify-native-geometry-reload-r1.mjs`, `native-clock-focus-probes-r1.js`, `focus-controls.html`, `reload-controls.html`, `source-diff.patch`, and `q1-*` evidence with grammar `<unit>-<full-product-sha>-<mode>-i<1|2|3>` plus log/json/png. No changes anywhere else. Table of permitted code changes is approved plan section3.1, unchanged assertions/guards and real Tab census retained.
+- **Units/cap:** focus-controls, reload-controls (isolated fixtures, EN/ZH light/dark 375/768/1440); historical appearance-fapp1, appearance-fapp2, appearance-accepted, apprail-accepted (each complete applicable historical contract matrix, source/evidence refs in plan section3.3); and geometry-reload-p0 (original/corrected full existing EN/ZH five-width/six-state geometry matrix to preserve 48 obstruction + 30/20 recovery absence facts and 60 overflow outcomes). Each registered unit has <=3 formal iterations TOTAL including refusals. No renamed fourth run or B70 budget reset; every probe disclosed separately.
+- **Before first formal invocation:** author sends a frozen preflight manifest to controller, binding actual docs/product/tree/source/helper/fixture hashes, historical matrices, expected old/new outcomes, modes and exact refusal-safe output names. Controller checks it before permitting recorded execution; this is evidence scheduling, no new human permission. New candidate changes require preserved earlier source identities/diff and remaining cap accounting. No ad hoc matrix reduction.
+- **Acceptance:** faithful source diff mapping; stable own-region Clock semantics, proposed transformed outside-stop union without rescale/threshold relaxation; full native cycle closure/census, causal/occlusion/scroll/hover/unstable controls and exact field-local visible/accessibility Reload labels; all approved positive/negative/historical equivalence outcomes accounted for with original refusals/failures retained. Complete hashed logs/native screenshots/manually reviewed samples; requested/resolved archive/lock/@repo guards, trusted pipe CDP/no nativeVirtualKeyCode/passive keys; no overwrite/nonzero exit suppression. Q1 author PASS is not qualification adoption: independent Q2 follows.
+- **Forbidden:** product/CSS/test/fixture edits outside isolated oracle controls, scratch Clock/recovery reference implementation, product DOM/CSS injection to fix behavior, private focus/tabindex/inert mutation, skipped outside stops, tolerances relaxed, canonical r2/frozen B70/proposal/ledger/CP edits, main server/preview, other-session worktrees, push/merge/rebase/deploy/release/promotion/D3.
+- **Cost/stop:** <=3 per registered unit, bounded capture settling; development probes separately recorded, not formal replacements. Stop/freeze on scope/hash/provenance conflict, false-positive control, incomplete census, unstable/unattributable/occluded comparison, cap exhaustion, unreproducible original outcome or new real product defect. No repair under Q1; disclose partial results and all consumed costs.
+- **Commit:** exact files, one final commit after static checks, real-newline Why/What/Scope/Risk/Docs/Tests body; no amend-away draft. Report full SHA/parent, manifest/output hashes, raw formal/probe counts and clean worktree; do not push. Controller performs receipt/push/ancestry/owned cleanup/deep/normal checks and one consolidated result update.
 
 ## Next step
 
-1. End this batch with commit/push/normal sync-check, await operator choice. Goal active; no completion claim or premature blocked designation.
-2. If M approved, register Q1 then Q2; M+G+B activates later Q3/G1/G2/G3/B1/B2 serially only after exact conditions. Broader scope requires new decision; existing authority persists.
-3. Complete E1-E5 under adopted hash-bound addendum before original authorized Terra71 and fixed/native/visual/Header/AppRail/all Required evidence/final acceptance/ledger/inventory sequence.
-4. Formal counts unchanged: 13/312 completed, 299 unclosed. Normal PASS does not close deep recovery gap, E4, caller or release acceptance.
+1. Commit/push/sync this authority and Q1 registration, create new independent Q1 worktree and author; check preflight manifest before runs.
+2. Receive Q1 bounded result, then new independent Q2 review; no early M adoption, geometry, baseline or Terra71.
+3. Remaining Q3/G1/G2/G3/B1/B2/Terra71/fixed/final/acceptance chain follows approved conditions; no repeated permission or narrower substitute.
+4. Ledger states/product baseline remain unchanged; known five-object deep recovery gap remains preserved.
