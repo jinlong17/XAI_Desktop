@@ -1,0 +1,25 @@
+{
+  "source": "a9346fc1efd565833bbc715d848b9a414a87175d",
+  "integration": "0348f1e73725991e3bb2cc402b2d5aac95918b23",
+  "archive_ref": "codex/archive/parallel-gov06-authority-source-discovery-r1-20261010",
+  "source_parent": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+  "fixed_input": "6f5910ea036ee6f54a26f25c4faba63389aac496",
+  "outputs": {
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/discovery.md": "88bff24cba1168f7467d23867920b9b0c11ac5ef95900c5ed2c7e94186c3c930",
+    "docs/reviews/audit-parallel-gov06-authority-source-discovery-r1/inputs.sha256": "b6823731e7fe70debe115e4bd4bf02d26b18dd02993dee157ba02cd9e03ba803"
+  },
+  "all_input_hashes_checked": 26,
+  "role": "controller metadataonly no businessverification",
+  "static": {
+    "invocations": 1,
+    "chunk": "0b42e2",
+    "exit": 0,
+    "pid": null,
+    "session": null,
+    "pid_session_status": "UNKNOWN original receipt",
+    "runtime": 0
+  },
+  "startup_process_creation_rejections": 6,
+  "body_identity_claim_mismatch": "CP text says6f; manifest26 explicit56fe parent correct; retained discovery unadopted notvalidbefore",
+  "acceptance": "source-only received not contract/adopted/before/runtime/grant; whole missingauthority+consumer contract queued"
+}
