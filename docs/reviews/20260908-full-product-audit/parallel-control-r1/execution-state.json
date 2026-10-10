@@ -1080,14 +1080,19 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_one_shared_technicaldesign_beforefinalsource3",
+      "state": "received_technicaldesign_PROPOSED_needs_fresh_impactreview",
       "fixed_input": "d39d8a9a32bf9e66310535c8622355daefb6b280",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
       "actor": "/root/parallel_a_shared_native_host_focus_impact_r1",
       "fixed_parent": "cc012a5976919fb6cca8e0f19d0d6a628b033bc4",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-native-host-focus-impact-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-native-host-focus-impact-20261010/XAI_Desktop",
+      "source_commit": "516495625056a6123f22ff67df61c9c34dff2484",
+      "integration_commit": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-r1-20261010",
+      "input_hashes_checked": 2808,
+      "static_pass": 1
     },
     {
       "id": "BRD-12/WRITER-LIFECYCLE-IMPACT1",
@@ -1122,11 +1127,14 @@
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_finite_availability_contract_afterolder_ready_tasks",
+      "state": "running_fresh_finite_readonly_source_contract1",
       "fixed_input": "ccf2ee5b4980393e5b506eb6ebaeede9604fbd48",
       "family_iteration": 1,
       "family_cap": 3,
-      "formal_invocations": 0
+      "formal_invocations": 0,
+      "actor": "/root/parallel_c_dash06_availability_contract_r1",
+      "fixed_parent": "53a961aaa4ae87e1453f27d91af3c8edd6ddaeeb",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-contract-20261010/XAI_Desktop"
     },
     {
       "id": "MED-03/CONTRACT-REVIEW1",
@@ -1149,6 +1157,56 @@
       "review_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_shared_technicalimpact_review1",
+      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "BRD-28/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_ranked_discovery_afterolder_preparations_andreviews",
+      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": false,
+      "static_pass": 0
+    },
+    {
+      "id": "CAL-03/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_ranked_discovery_afterolder_preparations_andreviews",
+      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": false,
+      "static_pass": 0
+    },
+    {
+      "id": "BK-07/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_ranked_discovery_afterolder_preparations_andreviews",
+      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": false,
+      "static_pass": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
@@ -1166,17 +1224,17 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 49,
+    "static_passes": 50,
     "rework_findings": 53,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 52,
+    "completed_source_receipts": 53,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "52 deliveries minus3 actualvendor includes2FAILED consumed statics METsource2 andMEDprep1; retention3separate; rootidentityreceipt neverreplaces authorfailedstatic",
+    "static_passes_basis": "53 deliveries minus3actualvendor includes2FAILEDconsumed authorstatics; retention3separate",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 2,
     "rework_findings_basis": "Accumulated review blocking groups, includes sixTASKreview2 R3-R8 and eleven METreview2 R1-R11; repeated groups retain original iterations, not unique defects or new runtime attempts"
@@ -1452,6 +1510,11 @@
       "at": "2026-10-10T13:07:40.907882+00:00",
       "event": "FullMED649 andCD3326 inputidentities/exact2ADD/cleanparents checked; originals remote preserved thenreceived. MEDauthorfailedstatic1 neverrerun/notPASS; two fresh fullreview1 queued. ActualsharedA+BRDimpactA+POMOcorrectorC root+3=4/4. Cycle40 complete POMOreview/availabilityimpactreview/MEDprep;cycle41 CDprep first. 52deliveries49consumedstatics2FAILED/vendor3/rework53. Ledgers13/3/3/293/939 unchanged.",
       "input": "a489adcb1205c56623738a8fa54696e40f22d17a"
+    },
+    {
+      "at": "2026-10-10T13:11:23.161953+00:00",
+      "event": "Sharednativehostfocusimpact full2808 identities/exact2ADD/cleanparent received PROPOSED; fresh fullimpactreview1 registered beforebothlastauthor3. No productionactivation/methodadoption. Ranked BRD28/CAL03/BK07fullprep exactoriginalitemregistered laterFIFO. ActualBRDimpactA/POMOcorrectorC/DASHavailabilitycontractC root+3=4/4. Cycle41CDprep+sharedimpact2receipts;53deliveries50statics2FAILED/3vendor/rework53; formalunchanged.",
+      "input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473"
     }
   ],
   "wave_P2_tasks": [
@@ -1460,7 +1523,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at9e43706; all23stashesremote, no ref/reflog localonly; latestimpact integration requires nextpush",
+    "normal": "0FAIL1WARN at2236ab6; allsource refs/reflog/stashes remote, no recoverydeletion; latest sharedsource/integration checkpoint requires nextpush",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
