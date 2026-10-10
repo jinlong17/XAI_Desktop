@@ -272,13 +272,71 @@
       "transport_exit": 0,
       "business_verdict": "BLOCKED",
       "output_hashes_checked": 5
+    },
+    {
+      "id": "DASH-03/contract-review",
+      "workflow": "D",
+      "actor": "/root/parallel_d_world_clocks_contract_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "5bcc15d937ee8bd9880ccf6ad5dba205178f793c",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-world-clocks-review-20261010/XAI_Desktop",
+      "state": "REVISE_R1_R2_R3",
+      "source_commit": "792a6ba95157de6430d5f16a5b392aa8f0f89f22",
+      "integration_commit": "ba08206bad48bad7e8822220a5f56e38cbc8159a",
+      "archive_ref": "codex/archive/parallel-world-clocks-review-r1-20261010",
+      "input_hashes_checked": 100,
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "REL02+03/GATE-PREPARE",
+      "workflow": "C",
+      "actor": "/root/parallel_c_rel02_rel03_gate_prepare_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "5bcc15d937ee8bd9880ccf6ad5dba205178f793c",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-rel02-rel03-prep-20261010/XAI_Desktop",
+      "state": "received_PROPOSAL_NEEDS_FRESH_REVIEW",
+      "source_commit": "c6050091f21aca4f3003da8f67f92a41a4a528d4",
+      "integration_commit": "d9c36dbb9400a39e447e47fb0a82d4868fb18195",
+      "archive_ref": "codex/archive/parallel-rel02-rel03-prep-r1-20261010",
+      "input_hashes_checked": 5616,
+      "static_pass": 1,
+      "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/DOC-CORRECT2",
+      "workflow": "B",
+      "actor": "/root/parallel_b_tt08_doc_correct2",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "fixed_parent": "b87b6b66a0cefe6a401ec130fca2f738ef9f67b0",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-correct2-20261010/XAI_Desktop",
+      "state": "running",
+      "author_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0
+    },
+    {
+      "id": "FULL312/READY-INVENTORY-R1",
+      "workflow": "C",
+      "actor": "/root/parallel_c_ready_inventory_r1",
+      "configured_model": "gpt-6-luna",
+      "provider_attested": false,
+      "fixed_parent": "5bcc15d937ee8bd9880ccf6ad5dba205178f793c",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-ready-inventory-20261010/XAI_Desktop",
+      "state": "running_collection_only",
+      "static_pass": 1,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 0,
-    "total": 1,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -290,8 +348,8 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 11,
-    "rework_findings": 7,
+    "static_passes": 13,
+    "rework_findings": 11,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 1
@@ -365,6 +423,11 @@
       "at": "2026-10-10T10:28:25.841417+00:00",
       "event": "Actual vendor verification1 BLOCKED F1 persisted literal, author correction2 registered; P5 static actors finished awaiting source receipt; queued full312 inventory ready",
       "input": "16645a9ca033902229146c6387d7a0990c5a4b2e"
+    },
+    {
+      "at": "2026-10-10T10:30:36.635768+00:00",
+      "event": "P5 fullreceipts World100/REL5616 acceptedasREVISE/proposal only; P6 fresh RELfullreview registered; TTdoccorrector2+full299inventory actualrunning; Worldcorrect2queued",
+      "input": "d9c36dbb9400a39e447e47fb0a82d4868fb18195"
     }
   ],
   "wave_P2_tasks": [

@@ -603,3 +603,7 @@ Formal13/3/3/293=312and299unclosed unchanged; no newruntime/native/browser/forma
 ## Parallel controller checkpoint: TT08 vendor iteration1
 
 Actual Claude CLI verification returned BLOCKED F1; transport exit0 is not PASS. Exact raw source 68ac65f8fa1b8d9868b0fe15392dc9d445aa94b4 received at 16645a9ca033902229146c6387d7a0990c5a4b2e. Family1/3, 52 readonly calls, 227.612 seconds; reported list-price cost $2.3251116 (not subscription billing). Fresh exact2-doc correction2 registered; current status remains PENDING. WorldClocks contract review REVISE and REL02/03 static proposal awaiting full root receipts. Formal13/3/3/293,299unclosed unchanged. Clock retention3/3 budget exception and app goal resume pending; independent work continues.
+
+## Parallel controller checkpoint: P5 receipts / P6 registration
+
+WorldClocks REVISE source792a6ba95157de6430d5f16a5b392aa8f0f89f22 accepted as a review only: all100 inputs verified. REL02+03 proposal sourcec6050091f21aca4f3003da8f67f92a41a4a528d4 received, all5616 inputs verified, neither caller accepted. Source refs remote-preserved before serial integration. Fresh REL contract review registered, WorldClocks versioned correction2 queued; fresh TT08 two-doc correction2 and full299-readiness inventory running at immutable respective parents. Clock hard budget remains frozen; formal13/3/3/293 and299unclosed unchanged.
