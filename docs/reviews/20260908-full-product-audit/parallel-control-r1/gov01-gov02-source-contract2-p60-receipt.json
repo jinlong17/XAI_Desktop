@@ -1,0 +1,49 @@
+{
+  "source": "d116728b145a9a4608ca0be1b6504163038574e5",
+  "integration": "f7ba38de07dc41d4d1a29be75a142afe89ac4524",
+  "archive_ref": "codex/archive/parallel-gov01-gov02-source-contract-r2-20261010",
+  "parent": "e834a75b9de1c4b021cd58388748d1fe92b2bdd8",
+  "fixed_input": "61ca9c77e183a94bb4a3c58d5bee1eec35f5e230",
+  "outputs": {
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-r2/inputs.sha256": "a115a992141c9e19ecf9ad5051614da644b10d0bff304a486ca87177ca6ad981",
+    "docs/reviews/audit-parallel-gov01-gov02-source-contract-r2/contract.md": "f52592359f98fc357a42cfce8d9ea235b6b751a51eeada57dc9132e2fb33e68e"
+  },
+  "all_input_hashes_checked": 1028,
+  "sourceauthor_iteration": 2,
+  "sourceauthor_cap": 3,
+  "static": {
+    "invocations": 1,
+    "result": "PASS",
+    "pid": 44725,
+    "exit": 0,
+    "signal": null,
+    "session": null,
+    "session_status": "no asynchronous session",
+    "chunk": null,
+    "chunk_status": "node_repl exposes no toolchunk",
+    "assertions_prewrite": 9639,
+    "assertions_total": 9646,
+    "checker_sha256": "03ba418750244a7638a76305cc1a76ee1a35a86d940031ad97c153356e9b2243",
+    "payload_sha256": "21da7c418b014f3114f9022e9740f2c5064a1e9b47539a04248752e90e430eea",
+    "git_subprocesses": 1034,
+    "owned_streams": "allEOFfullydrained",
+    "runtime": 0
+  },
+  "finalization": {
+    "stage_pid": 45842,
+    "default_diffcheck_pid": 45865,
+    "scopecheck_pid": 45877,
+    "commit_pid": 46109,
+    "final_pids": [
+      46291,
+      46303,
+      46315
+    ],
+    "all_exit": 0,
+    "clean": true,
+    "amend": 0
+  },
+  "disposition": "source-only UNADOPTED whole freshindependentreview2 queued; oldparsercounts/19/3/167 UNKNOWN; no qualification/before/code/callergrant",
+  "rootrole": "metadataonly",
+  "controller_transport": "One pretool functions JavaScript syntax assembly failure before apply_patch execution; no file/write/checker/businessattempt. Corrected assembly only."
+}
