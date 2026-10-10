@@ -1,0 +1,81 @@
+{
+  "checkpoint": "P46",
+  "status": "NINE_ARCHIVE_REQUESTS_QUEUED_UNCONFIRMED",
+  "candidates": [
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-machinery-review1-20261010/XAI_Desktop",
+      "head": "30e0a903196db8b11c3f30cc02f173bfe2a4bffd",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment2-20261010/XAI_Desktop",
+      "head": "3a7d5f1b8a448ac44ac6d5090af63a6a81097546",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review2-20261010/XAI_Desktop",
+      "head": "86de30ce7c16dd1823ccf9327f67993f45f193b5",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-source-contract2-20261010/XAI_Desktop",
+      "head": "1d26bc1ed1d4af6f1c311fe34f9640c0f68e2e36",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-source-contract1-20261010/XAI_Desktop",
+      "head": "dc9f0046c431d1357d947884c282a53a6e257f30",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-machinery-impact1-20261010/XAI_Desktop",
+      "head": "e8b29df83f34fc13a55a04d78c3db2002b2d5fb6",
+      "clean": true,
+      "original_remote_exact": false
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes2-20261010/XAI_Desktop",
+      "head": "b719ee3c54992c905b7f91d82eb3c8646d16df6f",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-outer-capture-admission-impact1-20261010/XAI_Desktop",
+      "head": "cefb29401bd6a413044c6783c7d01510d720b235",
+      "clean": true,
+      "original_remote_exact": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-review1-20261010/XAI_Desktop",
+      "head": "51398daf98c0d41e2d3ca2074c2f04cc4a673bb7",
+      "clean": true,
+      "original_remote_exact": false
+    }
+  ],
+  "remote_original_receipts_checked": 85,
+  "normal_sync": "P45 0FAIL1WARN",
+  "deep_sync": "P44 1FAIL0WARN; exactfiveidentitiesconfirmedP45",
+  "retained_unreachable": {
+    "head": "28ba1cf444f2545fb93dd0340204530e07f8f6f6",
+    "unreachable_commit_ids": [
+      "17672dd3bac30bee5a0a06c0a7ab915883a33785",
+      "395f17dd6f925ec8c6cf4b0d9abdf3a891516afc",
+      "4417e8475e0bc07482dc2eaf86fad79ae13e94f0",
+      "7be576163fcabb94ecfda661ef9b418b6a00685a",
+      "ea9201d24e46d8e3bab97cf1c5bf06342b0abf14"
+    ],
+    "actual_commit_objects": 3001,
+    "reachable_commit_objects": 2996,
+    "known_identity_match": true,
+    "recovery_deletion": false
+  },
+  "other_session_worktrees_touched": false,
+  "recovery_deleted": false,
+  "actual_archive_completed": 0,
+  "continuation": "Cleanup queue only isolated, not wholeaudit stop; no successlabel or repeateddelete. Fresh workers use distinct trees, source archives/rootremote and fixed identities already preserved. Root reception/control operations remain serial; no candidate tree mutated while appqueue pending."
+}
