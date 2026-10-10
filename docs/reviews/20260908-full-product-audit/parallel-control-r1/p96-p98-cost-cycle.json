@@ -1,0 +1,19 @@
+{
+  "controller_batches": [
+    96,
+    97,
+    98
+  ],
+  "new_source_receipts": 3,
+  "new_known_concluding": 5,
+  "new_concluding_failed": 1,
+  "new_reported_PASS": 4,
+  "new_input_acquisition_failed": 1,
+  "postcommit_metadata_failed": 1,
+  "static_budget_overruns_added": 1,
+  "static_budget_overruns_after": 4,
+  "whole_rework_findings_after": 89,
+  "new_runtime_tests_formal_probes_vendor_network": 0,
+  "actual_billing_USD": "UNKNOWN",
+  "all_prior_UNKNOWN_failed_caps_retained": true
+}

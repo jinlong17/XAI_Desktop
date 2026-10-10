@@ -3926,14 +3926,18 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE_independent",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-cal01-cal02-cal04-cal05-source-discovery-review-r2.json",
       "fixed_input": "c6ed59543468ba91eb04d3127822fdf299e04653",
       "family_iteration": 2,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_cal01_cal02_cal04_cal05_whole_source_review_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-cal4-source-review2-20261010/XAI_Desktop",
+      "fixed_parent": "fbe7b2549150b02df4cd1f3488b5de6130968182",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     },
     {
       "id": "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/JOURNAL-SOURCEHEALTH-LIFECYCLE-IMPACT2",
@@ -3941,14 +3945,18 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE_independent",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-hab01-hab05-journal-sourcehealth-lifecycle-impact-r2.json",
       "fixed_input": "a3098012c1193c544e0291456247cc5b0f888c78",
       "family_iteration": 2,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_a_hab01_hab05_whole_journal_sourcehealth_lifecycle_impact_r2",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-hab-journal-sourcehealth-impact2-20261010/XAI_Desktop",
+      "fixed_parent": "fbe7b2549150b02df4cd1f3488b5de6130968182",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     },
     {
       "id": "BRD-24/SOURCE-DISCOVERY-REVIEW1",
@@ -3956,27 +3964,32 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_WHOLE_independent",
+      "state": "running_fresh_WHOLE_independent",
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd24-source-discovery-review-r1.json",
       "fixed_input": "a3098012c1193c544e0291456247cc5b0f888c78",
       "family_iteration": 1,
       "family_cap": 3,
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "adopted": false,
-      "new_budget_grant": []
+      "new_budget_grant": [],
+      "actor": "/root/parallel_d_brd24_map_whole_source_review_r1",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-brd24-source-review1-20261010/XAI_Desktop",
+      "fixed_parent": "fbe7b2549150b02df4cd1f3488b5de6130968182",
+      "worktree_registration": "checkoutcreatedsuccess appattachment100error no retry/recreation"
     }
   ],
   "workflow_B": "TT08 FULL documentary caller accepted/reconciled/inventoryaccepted; unchangedruntimeP0. MEDsource2/BRD28wholeimpact2/GOV01+02sourcecontract2 conditionaltechnicalDOCUMENT adopted. Otherimplementation descendants wait eachowningqualification/before/scope/gate; no newruntime/caller/formal/releasegrant.",
   "concurrency": {
     "root": 1,
-    "workers": 0,
-    "total": 1,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
-    "ready_next": [
-      "CAL-01+CAL-02+CAL-04+CAL-05/SOURCE-DISCOVERY-REVIEW2",
-      "HAB-01+HAB-02+HAB-03+HAB-04+HAB-05/JOURNAL-SOURCEHEALTH-LIFECYCLE-IMPACT2",
-      "BRD-24/SOURCE-DISCOVERY-REVIEW1"
-    ]
+    "actors": [
+      "/root/parallel_d_cal01_cal02_cal04_cal05_whole_source_review_r2",
+      "/root/parallel_a_hab01_hab05_whole_journal_sourcehealth_lifecycle_impact_r2",
+      "/root/parallel_d_brd24_map_whole_source_review_r1"
+    ],
+    "next_free_slot": "newWHOLEdependentreview priority else queuedSHELL01/02/03"
   },
   "cost": {
     "new_formal": 0,
@@ -4004,7 +4017,7 @@
     "pending_no_delivery_static_failures": 30,
     "actual_static_invocations_total_known": 159,
     "actual_static_failed_total_known": 40,
-    "static_budget_overruns": 3,
+    "static_budget_overruns": 4,
     "pending_no_delivery_static_unknown": 3,
     "actual_static_completion_unknown_total_known": 3,
     "source_byte_collection_invocations": 3,
@@ -4093,11 +4106,13 @@
     },
     "gov04_gov07_review3_input_acquisition_failures": 1,
     "last_controller_cycle": {
-      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p93-p95-cost-cycle.json",
-      "source_receipts_after": 123,
-      "new_concluding_static": 1,
-      "new_failed": 0,
-      "new_rework_findings": 6,
+      "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p96-p98-cost-cycle.json",
+      "source_receipts_after": 126,
+      "new_concluding_static": 5,
+      "new_failed": 1,
+      "new_reported_PASS": 4,
+      "new_acquisitionFAIL_separate": 1,
+      "new_overrun": 1,
       "actual_billing_USD": "UNKNOWN"
     },
     "calendar_input_only_capture": 1,
@@ -4123,7 +4138,8 @@
     },
     "hab_impact_input_acquisition_failures": 1,
     "brd24_source_static_budget_overruns": 1,
-    "calendar_source2_postcommit_metadata_failures": 1
+    "calendar_source2_postcommit_metadata_failures": 1,
+    "static_budget_overruns_basis": "3retainedhistorical +BRD24source1secondownconcludingbuffercheck=1 noreset"
   },
   "events": [
     {
@@ -4838,6 +4854,11 @@
       "at": "2026-10-10T20:42:31.330326+00:00",
       "event": "P98 originalCalendar08e78->c6ed595 andBRD24 84e60->a309801 exactarchive beforecherry/exact2ADDeachclean68+39hashbindings forensicUNADOPTED. CalendarreportedprewritePASS1.099s then falsepostcommitwrapper32 cleanstatus70133exit0/commit70130exit0 malformedold67997comment/initialreadUNKNOWN/pretoolJSparse continuouswall retained freshWHOLED2/3ready. BRD24actualinitialprewritebuffercheck +afterwritefinalcorrectionbuffercheck=2vsstaticcap1 overrun1 processUNADOPTED no retroadoption freshWHOLED1ready. Habimpact1 actualGit69773exit12816ms wrongfixed82ddvsreceipt57 stdoutempty EOFclosed noartifact/staticUNRUN phase1/3spent freshWHOLEimpact2/3ready explicitimmutablefileSHAmap no reset.126sources159known40FAIL3UNKNOWN116reportedPASS/rework89 old3overruns+BRDnew1/newruntimeformalvendor0. P97literal2FAIL1WARN retained originalsnowarchived no deletion; rootserialreceive/reviewneverrepair formal13/3/3/293312299unclosed939 unchanged alloldowner/exhausted/Clocksharedgates goalunfinished.",
       "input": "a3098012c1193c544e0291456247cc5b0f888c78"
+    },
+    {
+      "at": "2026-10-10T20:45:01.490745+00:00",
+      "event": "P99 ALL126distinctoriginals exactremote +integrationoriginancestorsfbe7 proven fullproof. Actualroot+fresh CalendarWHOLED2/3+freshHabits WHOLEjournal/sourcehealth/lifecycleimpact2/3+freshBRD24WHOLEsourceD1/3=4/4 exactfbe7parent allreadrefsimmutable percardno silentrepin. SHELL01/02/03queued nextfree; noexhaustedfamilyrestart. P96-P98cost3sources5concluding1FAIL4reportedPASS plusHabacquisitionGit1281FAILseparate/Calpostcommitmetadata32separate/BRDoverrun1 total4, rework89 billingUNKNOWN.126sources159known40FAIL3UNKNOWN116reportedPASS newruntimeformalvendor0; P98normal0FAIL1WARN recoverypreserved no deletion. Formal13/3/3/293312299unclosed939 unchanged originalsevenpendinggroups/E6E7E8/Clocksharedholds no waivers goalunfinished.",
+      "input": "fbe7b2549150b02df4cd1f3488b5de6130968182"
     }
   ],
   "wave_P2_tasks": [
@@ -4846,7 +4867,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P97literal2FAIL1WARN recoveryrefs preserved exacttwooriginals beforecherry; P98freshpending no recoverydeletion",
+    "normal": "P98literal0FAIL1WARN P99freshpending; P97literal2FAIL1WARN preserved originalsnowexactremote no deletion",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -4881,7 +4902,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
@@ -4890,7 +4911,7 @@
     "normal_intermediate_P59": "Literal2FAIL1WARN: one newlycompleted GOVsource2 original in localrefs/reflog before archive push; exactd116 original nowremotepreserved before rootreception; freshrepeat pending, no recovery deletion",
     "normal_intermediate_P59_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e"
   },
-  "workflow_C": "Calendarwholecorrectedsource2 andBRD24wholeoriginalsource1 originalremote archived hashmetadata68/39 receivedUNADOPTED; sourceonly notruntime orbefore. SHELL01/02/03 queued.",
+  "workflow_C": "Calendarcorrectedsource2+BRD24source1 receivedFORENSICONLY notadopted; nextSHELL01/02/03originalwhole source queued no extraagent while4slotsused.",
   "active_scheduler": {
     "graph": "docs/reviews/20260908-full-product-audit/parallel-control-r2/dependencies.json",
     "sha256": "d36e93284d069015129fa78afb24264da1730d636d5893453b2e72d8de110984",
@@ -5276,17 +5297,17 @@
     "other_ready_work_continues": true
   },
   "preservation_checkpoint": {
-    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p97-124-originals-remote-integration-ancestry.json",
-    "sha256": "ee81652a518b58ecff175c6cf7e9c4c0c1897f5a3589ec6339e04932155ce576",
-    "fixed_remote_control": "57f693e512f9db0837aac529a5f2c70d8903bff6",
-    "originals": 124,
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/p99-126-originals-remote-integration-ancestry.json",
+    "sha256": "5d9c25391722f769024c21d42bc39f40f6f35f88c01167081fd88b38c458a604",
+    "fixed_remote_control": "fbe7b2549150b02df4cd1f3488b5de6130968182",
+    "originals": 126,
     "exact_remote": true,
     "integrations_origin_ancestors": true,
     "no_recovery_deletion": true,
-    "normal": "P96literal0FAIL1WARN"
+    "normal": "P98literal0FAIL1WARN"
   },
-  "workflow_A": "Habits exactimpact1 actualGit128 acquisitionFAIL staticUNRUN/noartifact frozen; freshWHOLEimpact2/3 ready withexplicitfileSHAmap. Clockoriginalholds unchanged.",
-  "workflow_D": "Fresh CalendarwholeD2/3 andBRD24wholeD1/3 ready; factual and originalboundedprocess separate includingsourceanomalies. No rootbusinesschecker/reviewerrepair.",
+  "workflow_A": "Habits freshWHOLEimpact2/3 RUNNING with exactperpath SHA map; originalimpact1Git128 actualacquisitionFAIL staticUNRUN retained. Clockalloldholds unchanged.",
+  "workflow_D": "Fresh CalendarWHOLED2/3 andBRD24WHOLED1/3 RUNNING fixedfbe7parent; reviewer neverrepair/waivecap orproductpolicy. Inputfixedpercard doesnot silently advance withcontrolHEAD.",
   "Habits_source_admission": {
     "source": "e7d113e01bbe5b1df47d5fb51821779b30916bf0",
     "source_integration": "8a05231add157e43f31bb1f853b3b2fadb69cace",
@@ -5309,8 +5330,7 @@
     "scope_ownership_thresholds_unchanged": true
   },
   "ready_queue_next_original_sources": [
-    "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1",
-    "BRD-24/SOURCE-DISCOVERY1"
+    "SHELL-01+SHELL-02+SHELL-03/SOURCE-DISCOVERY1"
   ],
   "Habits_technical_admission": {
     "source": "4db69a0d026c7788766953d342cb7dd994716602",
