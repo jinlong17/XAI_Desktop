@@ -1,0 +1,102 @@
+{
+  "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS3",
+  "workflow": "C",
+  "primary_workflow": "B",
+  "module": "web",
+  "role": "fresh FINAL existingcap historical parser purpose provenance census3 source-only",
+  "model": "gpt-6-luna",
+  "dispatch_parent": "exact registration commit resolved before launch",
+  "fixed_input": "2434373d391b6cfafec0a3883623650a57a0a366",
+  "product_sha": "f9eb4b1f207bc4b46f547b90afc250424b3c8695",
+  "allowed_files": [
+    "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r3/census.md",
+    "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r3/inputs.sha256"
+  ],
+  "protected": [
+    "ALL nonallowed paths/oldcontracts/runner/scripts/fixtures/failures/evidence",
+    "globalcontrol/ledgers/otherwts/acceptedbudgets/standards/decisions",
+    "merge/rebase/dev/main/web/promote/deploy/release/D3"
+  ],
+  "budgets": {
+    "census_iteration": 3,
+    "census_cap": 3,
+    "static_pass": 1,
+    "parser_execution": 0,
+    "generator_execution": 0,
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "no_children": true,
+  "stop": [
+    "input/hash/dirty/protected scope drift",
+    "need actual parser/generator/oldbusinesschecker/qualification run",
+    "actual concluding static failure STOP no retry/write/materialization/commit"
+  ],
+  "acceptance": [
+    "Read complete exactadopted sourcecontract2 d116/f525, wholeindependentreview2 5045, originaldiscovery3b/full41/source1/fullreview1/currentactualparent state/taskcards/control/oldgoal/relevant immutable initialaudit and relatedproject-system execution receipts. Trace named GOV01/02 parser-purpose families separately source-author/review/documentchecksum/sourcequalification/wholebefore/semantic parser/generator/consumer UI/vendor/formal/probe histories. Actual command/PID/session/chunk/exit/iteration/receiptSHA/count provenance and gaps; reported0 versus evidenced0 versus UNKNOWN explicit. Historical generation/freshness/export metadata neither proves business parsercorrectness nor counts automatically as samepurpose qualification. Do not rename oldsamepurpose or missingcount0. No parser/generator invocation, packageimports or test to gather before. Bound exactfinite relevant acquisition set not entire unrelatedrootcorpus.",
+    "Determine whether exacthistorical available receipts suffice for a lawful next sourcequalification/before budget and minimum bounded prerequisites; if history incomplete clearly no runtimeadmission grant, list missing rawreceipts/one minimum future independentimpact question preparation without asking user. Current19/3/167 are original audit expectations, not assertcurrentmeasured totals until qualified futurewholecensus. Successful docsourcehashes cannot certify parser discovery/status winner/errorconservation or observed count. Preserve wholecontract D/I/R/A/C, all121 devlogs/35 roadmaps finitefixture/consumer/registry/threeAI associations sourcepaths, UNKNOWN external histories, root adoptedDOCUMENTONLY versus qualification/before/code/caller states. Futurecandidate task card budget proposal only no launch.",
+    "GOV06 authority proposals/registry sharing and GOV05 ninePRD source-only work readonly at their fixedinputs, no uncommittedotherworktree reads. Newcensus distinct lowriskhistoricalaccounting not an exhausted checker continuation or relabeledsameunit; shared/Outer/Clock/BRD/CD/DASH/AI caps/failures/ownerpending intact. No reenacting failingassertions/no originalbusinessvalidator or script imports. Missing log conclusions truthful BLOCKED not guessed; no providercredentials/network. Original312939/formal13/3/3/293299unclosed unchanged. Independentfresh wholecensusreview/rootadmission assessment required before any actual parserfixture/qualification/before grant.",
+    "ALL completeactuallyused inputs eachimmutableSHA inclactualregistrationcard/control and BOTH ENTIRE finalbuffers in memory validated before ANY file write includinginterimdraft/manifest. One meaningful own-document static1, actualfailureSTOPnoretry or materialization/commit. SafecompactJSON/newline/Python3.9API no write_textnewlinekeyword, actualmanifestgrammars no guessedcount/headline/minsize/P0auditdocs parity. Raw numericexit/PID/session/chunk/fullEOFdrain UNKNOWNnot0. Exact2ADD single hooksdisabled realnewlineWhyWhatScopeRiskDocsTests commit clean noamendpush; no children no tests/qualification/probes/vendor.",
+    "Census1 actual concluding input-hash check FAILED before writes, raw PID/session/chunk/numericexit/EOF UNKNOWN; iteration1/3 consumed. Fresh census2/3 retains history. Acquire and bind each input independently at its actual SHA, including AGENTS.md at registered dispatch parent and any historical versions used; never assume one current hash covers all versions. Do not import previous unvalidated draft or retry the old script. Own-document static checks actual hashes/manifest syntax/complete two buffers, not guessed prose/cardinality. Whole historical command-purpose census remains incomplete until this independently prepared report and a distinct full review pass. No rerun actual parser/generator/qualification to manufacture missing evidence. ALL required reads and BOTH buffers before ANY file write including interim drafts. Strictstatic1/failurefreeze; <=30min wall/static<=120sec/drain<=30sec, no childagents.",
+    "This is FINALcensus3/3 originalcap, not newpurpose/reset. Census1staticFAILED; census2onepreparation FAILED missingguessedcard before concluding0, both retained. Resolve actual taskcard/control input identities from registered execution-state tasks fixed_parent/source_commit/task_card at dispatchparent before choosing historicalSHA: sourceauthorparent is not independentreviewregistrationparent. Complete sourceoutputs at their originalsourceSHA and actualreviewcards at recordedreviewparent, inspect Git tree paths; no manufactured historical filename/SHA. Existing reviewer1 recordfixedparent is6f5910ea036ee6f54a26f25c4faba63389aac496, not authorparent19c55. Current b27 registry contains old taskcards as additional immutable source, bind actualversionused. Missing rawhistorical process evidence remainsUNKNOWN and lawful futureadmissionheld. The sole own-document concludingcheck remains1; fulloutputs and allrequiredinputs beforeanywrite, failureSTOP. Originaltaskscope allpurposefamilies/fullhistorical docs unchanged."
+  ],
+  "failure_history": [
+    {
+      "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS1",
+      "parent": "878570a6307308a2853067f0fe58af8747093488",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-gov-parser-census1-20261010/XAI_Desktop",
+      "concluding_static_invocations": 1,
+      "result": "FAILED",
+      "no_artifact": true,
+      "no_commit": true,
+      "clean_readonly_confirmation": true,
+      "outputs_absent": [
+        "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/census.md",
+        "docs/reviews/audit-parallel-gov01-gov02-parser-purpose-provenance-census-r1/inputs.sha256"
+      ],
+      "stop_observed": true,
+      "independent_new_iteration_required": true,
+      "chunk": null,
+      "pid": null,
+      "numeric_exit": null,
+      "session": null,
+      "EOF": null,
+      "drain": null,
+      "process_provenance": "UNKNOWN raw process/chunk/exit/EOF; traceback reported a failed invocation, not fabricated exit1",
+      "failure": "input-hash assertion for AGENTS.md failed",
+      "finding_status": "no census artifact or lawful admission"
+    },
+    {
+      "id": "GOV-01+GOV-02/PARSER-PURPOSE-PROVENANCE-CENSUS2",
+      "parent": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov-parser-census2-20261010/XAI_Desktop",
+      "iteration": 2,
+      "cap": 3,
+      "preparation_invocations": 1,
+      "preparation_exit": 1,
+      "chunk": "6e6e89",
+      "session": null,
+      "session_status": "synchronous no continuation session reported",
+      "pid": null,
+      "pid_status": "UNKNOWN",
+      "git_show_exit": 128,
+      "concluding_static_invocations": 0,
+      "concluding_static_state": "not reached reported",
+      "missing_guessed_input": "19c55bad0a7d5a002a262e47c79c1a3ff74f21a3:docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov01-gov02-source-contract-impact-review-r1.json",
+      "no_outputs": true,
+      "no_commit": true,
+      "clean_readonly_confirmed": true,
+      "whole_census_incomplete": true,
+      "root_disposition": "freeze attempt2 acrossactors; register fresh final3 withinoriginalcap; no parser/admissiongrant"
+    }
+  ]
+}
