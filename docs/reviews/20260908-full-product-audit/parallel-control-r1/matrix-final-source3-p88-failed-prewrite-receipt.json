@@ -1,0 +1,55 @@
+{
+  "id": "MAT-01+MAT-02+MAT-03/SOURCE-DISCOVERY3",
+  "actor": "/root/parallel_c_mat01_mat03_final_whole_source_r3",
+  "parent": "5272ab08b3afd1aba9f89515054a23b40ba0b6c4",
+  "fixed_input": "0d62992ef39a6075281c0bbe83e4c7318ab3598e",
+  "result": "FAILED_PREWRITE_STATIC_NO_ARTIFACT_FINAL_FAMILY_EXHAUSTED",
+  "family_iteration": 3,
+  "family_cap": 3,
+  "concluding_invocations": 1,
+  "pid": 52530,
+  "numeric_exit": 1,
+  "internal_elapsed_seconds": 0.012817,
+  "tool_chunk": "298e94",
+  "tool_numeric_exit": 1,
+  "tool_wall_seconds": 1.9e-05,
+  "tool_session": "UNKNOWN",
+  "outer_stream_split_EOF_drain": "UNKNOWN",
+  "Git_child_pid_exit_stdout_stderr": "UNKNOWN",
+  "empty_Git_children_does_not_mean_no_Git": true,
+  "error": "AttributeError(\"CompletedProcess object has no attribute pid\") on first actual Git call",
+  "acquisition_and_both_outputbuffers": "UNRUN",
+  "filesystem_writes": 0,
+  "retries": 0,
+  "materializations": 0,
+  "commits": 0,
+  "final_rootmetadata_parent_clean_allowed_outputs_absent": true,
+  "prior_source1_source2_failures_retained": true,
+  "no_fourth_or_reset": true,
+  "new_budget_grants": [],
+  "runtime_tests_qualification_probes_vendor_network_delegation": 0,
+  "original_raw_tool_provenance": {
+    "path": "docs/reviews/20260908-full-product-audit/parallel-control-r1/matrix-source3-p88-original-failed-tool-records.json",
+    "sha256": "05181cf168614352ad0542120f055f053eeb61b49f2d0706e0713e63ff91f2c9",
+    "response": {
+      "type": "custom_tool_call_output",
+      "id": "ctco_01a12765-1734-7372-92b8-5c0586647d65",
+      "call_id": "call_f44826a7442343548605d112727e63de",
+      "output": [
+        {
+          "type": "input_text",
+          "text": "Script completed\nWall time 0.2 seconds\nOutput:\n"
+        },
+        {
+          "type": "input_text",
+          "text": "{\"output\":\"{\\\"EOF_and_drain\\\": \\\"Git subprocess.run calls returned and were drained; outer exact EOF state UNKNOWN\\\", \\\"elapsed_seconds\\\": 0.012817, \\\"error\\\": \\\"AttributeError(\\\\\\\"'CompletedProcess' object has no attribute 'pid'\\\\\\\")\\\", \\\"git_children\\\": [], \\\"numeric_exit\\\": 1, \\\"pid\\\": 52530, \\\"result\\\": \\\"FAILED_PREWRITE_STATIC_NO_ARTIFACT\\\", \\\"stdout_stderr_split\\\": \\\"UNKNOWN at outer tool boundary; Git child streams captured separately\\\"}\\n\",\"exit_code\":1,\"chunk_id\":\"298e94\",\"wall_time_seconds\":0.000019292}"
+        }
+      ],
+      "internal_chat_message_metadata_passthrough": {
+        "turn_id": "01a12762-067e-7573-afca-d30d8bcc2472",
+        "create_time": 1791662298.932798
+      }
+    },
+    "call_id": "call_f44826a7442343548605d112727e63de"
+  }
+}
