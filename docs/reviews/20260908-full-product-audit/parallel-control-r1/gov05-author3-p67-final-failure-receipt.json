@@ -1,0 +1,29 @@
+{
+  "id": "GOV-05/NINE-PRODUCT-DOSSIER-AUDIT3",
+  "parent": "b27b38fa924feaecf9766f9aa81fae0ee5d2c246",
+  "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov05-audit3-20261010/XAI_Desktop",
+  "iteration": 3,
+  "cap": 3,
+  "static_invocations": 1,
+  "result": "FAILED",
+  "pid": 69805,
+  "chunk": "5721bb",
+  "numeric_exit": 1,
+  "elapsed_seconds": 0.8,
+  "session": null,
+  "session_status": "synchronous no continuation session",
+  "failure": "own checker treated P0 metadata aliases as Git refs and mishandled literalnewline validation",
+  "whole_buffers_reported_ready": true,
+  "buffer_integrity": "UNVALIDATED no materialized artifact; no memoryacceptance",
+  "no_outputs": true,
+  "no_write": true,
+  "no_commit": true,
+  "clean_readonly_confirmed": true,
+  "original_histories": [
+    "author1 prematurewrite failure raw2draft rootbase64 preserved P62, originalwriteprovenanceUNKNOWN",
+    "author2 concludingFAILED 0099 exit1 missingguessedmanifest PIDsessionUNKNOWN"
+  ],
+  "disposition": "EXHAUSTED3/3 no author4 or review/materialization reset; wholeoriginalGOV05 stillpending, separate independentimpact and explicitbudgetexception needed ifnecessary",
+  "part_of_pending_five_exception_request": false,
+  "root_role": "metadataonly"
+}
