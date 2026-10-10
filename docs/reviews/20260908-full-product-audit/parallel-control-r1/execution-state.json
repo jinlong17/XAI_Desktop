@@ -330,13 +330,26 @@
       "state": "running_collection_only",
       "static_pass": 1,
       "formal_invocations": 0
+    },
+    {
+      "id": "REL02+03/CONTRACT-REVIEW",
+      "workflow": "D",
+      "actor": "/root/parallel_d_rel02_rel03_contract_review_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-rel02-rel03-review-20261010/XAI_Desktop",
+      "state": "running",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -428,6 +441,11 @@
       "at": "2026-10-10T10:30:36.635768+00:00",
       "event": "P5 fullreceipts World100/REL5616 acceptedasREVISE/proposal only; P6 fresh RELfullreview registered; TTdoccorrector2+full299inventory actualrunning; Worldcorrect2queued",
       "input": "d9c36dbb9400a39e447e47fb0a82d4868fb18195"
+    },
+    {
+      "at": "2026-10-10T10:31:28.532273+00:00",
+      "event": "Fresh TTdoccorrect2, full299inventory andREL02+03review running; exactly3workers+root capacity4; Worldversion2queued; normal sync0FAIL1WARN",
+      "registration": "48b4b4de2421ce31e4aeb58654bb39c0f0afae0a"
     }
   ],
   "wave_P2_tasks": [
@@ -436,7 +454,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN after source/controlpush",
+    "normal": "0FAIL/1WARN after48b4b4d push/fetch, all23stashremote",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
