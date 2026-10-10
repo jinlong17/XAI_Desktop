@@ -125,13 +125,37 @@
       "input_hashes_checked": 137,
       "archive_ref": "codex/archive/parallel-tt08-contract-review-r1-20261010",
       "static_pass": 1
+    },
+    {
+      "id": "PARALLEL/MAP-REVIEW2",
+      "workflow": "D",
+      "actor": "/root/parallel_d_map_review2",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-map-review2-20261010/XAI_Desktop",
+      "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a",
+      "source_input": "11b8d721f9d423fcabb19857e96c927375b9323a",
+      "state": "running",
+      "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/before",
+      "workflow": "C",
+      "actor": "/root/parallel_c_tt08_before_r1",
+      "configured_model": "gpt-6.1-sol",
+      "provider_attested": false,
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-before-20261010/XAI_Desktop",
+      "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a",
+      "source_input": "287547e2b0e0724a48a89e50377ccc7e840db93b",
+      "state": "running",
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 1,
-    "total": 2,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -178,6 +202,11 @@
       "at": "2026-10-10T09:49:12.127939+00:00",
       "event": "P2 TT08 contract approved; schema correction received unaccepted; fresh before and review2 registered",
       "fixed_input": "b9ef48342385c1ed2e28f14f4788596dcb095272"
+    },
+    {
+      "at": "2026-10-10T09:50:19.545483+00:00",
+      "event": "P3 fresh mapreview2 and TT08before dispatched",
+      "fixed_parent": "3eb262b3e45a0ae4658ed86a523473fdef75858a"
     }
   ],
   "wave_P2_tasks": [
