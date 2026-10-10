@@ -604,3 +604,9 @@
 每条更新为进行中、已修待验、已验证、已发布或不适用时，附上负责人、当前提交、实现/测试/部署证据；说明不适用原因。实现与上线分别登记。需要决策的条目在决策后拆成被批准的实现工作，不默认启动。
 
 如果一条共同修复同时覆盖多个功能，在各关联ID登记同一证据并注明复用，避免重复开发。只有清单中的复现脚本通过仍不足以关闭缺陷，必须先将其改为正确业务预期。
+
+## 2026-10-10 TT08 文档调用方接受（仅追加证据）
+
+独立 Astra 完整接受原 TT08 文档义务及 D1–D7：[acceptance](../audit-parallel-tt08-final-acceptance-r1/acceptance.md)，源提交 `c5874e5f6e803aa391ef2e5fb677e4bab592f4ef`，SHA-256 `1c2d4b8ec5cf22d8a97c2519adba4cb4078b4500a9be2d94ee2889c3c46a68ca`。实际 Claude Code 验证第3/3次通过限定文档范围后，独立状态作者 `b4c33120bde198214bbe3bf76ead543b5f139c3a` 记录 TT08 documentation-only READY_TO_SHIP；原失败1/F1、验证2治理输入缺口及全部原日志保留。五份文档对齐真实 Single/Multi 消费、确认和限制；页面无需改动，selector/native/Resume 等未新增验证的范围继续明确。
+
+这是 TT08 完整文档 caller acceptance，不是运行时、发布、GOV04/GOV05 或正式核销。TT-08 状态仍为 pending；全部312条原状态、顺序与旧证据保留，正式13 completed /3 verification_pending /3 in_progress /293 pending，299未闭环。作者3/3、vendor3/3均保留，无第四次自动重试；库存刷新为后续独立任务。C-FB002、OE、C-RD1、预测C-FD1及全部受影响 Required evidence 不被豁免。

@@ -661,3 +661,7 @@ Fresh MET05contractreview `/root/parallel_d_met05_contract_review_r1` launched i
 ## Parallel controller checkpoint: full TT08 documentary caller accepted
 
 FreshAstra finalsourcec5874e5f6e803aa391ef2e5fb677e4bab592f4ef remote-preserved received9ff5df6, all539inputs and exactpatch1481f348 checked. Complete originalTT08 obligation, D1-D7 and authorized postPASSstatusdelta ACCEPTED; limitations N1-N4/static/native/historical retained. This is documentarycaller acceptance, not runtime/release/GOV04GOV05/formalclosure. Sole-root exact evidence-only reconciliation card registeredbefore anyledgerwrite; freshinventory follows. ActualTASKsource andMETcontractreview continue; formal13/3/3/293 and299unclosed unchanged.
+
+## Parallel controller checkpoint: TT08 evidence-only ledger reconciliation
+
+Registered root transaction4833f7f applied only accepted TT08 evidence: bothMarkdown ledger priorbytes remainprefix, JSONall312ID/order/status/topmetadata/nonTTrecords/prior evidence preserved. Siximmutable TT08 source/report/hash references appended; formal13/3/3/293 and299unclosed unchanged, TT08pending. Complete documentarycaller acceptance distinctfrom runtime/release/GOV04GOV05. FreshLuna inventory follows, P0runtimeunchanged with bounded4package-docs/onecanonicalPRD differences. No originalcontract/runner/failure overwritten; alloutputs constructed after completeinput validation beforewrites.
