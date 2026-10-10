@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "controller_input": "aed09103a71c7e939ffc71d23c7b9b802ac47b51",
+  "archived_recoverable_worktrees": [
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-full-review2-20261010/XAI_Desktop",
+      "head": "bdc06bd5b57f026caf6d7838563bfdae6f8684c9",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-correct2-20261010/XAI_Desktop",
+      "head": "64cf765699dccceeff527f040d09f78761cbb88f",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-machinery-review1-20261010/XAI_Desktop",
+      "head": "a8a75d15c9c482547e50905dc237344c9b49d9c2",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-full-review2-20261010/XAI_Desktop",
+      "head": "0a0bd4a2bf006c53f2d098ebab29451c5bd0a0fe",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-technical-amendment1-20261010/XAI_Desktop",
+      "head": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-preparation2-20261010/XAI_Desktop",
+      "head": "59ac17754b28771d62a2830c144f8d89cea7f6ec",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-source-bytes1-20261010/XAI_Desktop",
+      "head": "05e8514429e9f24bd2e1d6ffa9dd9e9312899e1d",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-machinery-impact1-20261010/XAI_Desktop",
+      "head": "5a8d7141d8e032ae08c56a7650cdf47597d717ff",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-pomo04-machinery-review1-20261010/XAI_Desktop",
+      "head": "b7324936f5880c2050e6eecc8c22567fade05444",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-final3-20261010/XAI_Desktop",
+      "head": "62fde14c9a63d37edf66714ba63dcf6a7975870c",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-cd03-source-contract1-20261010/XAI_Desktop",
+      "head": "b7324936f5880c2050e6eecc8c22567fade05444",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-byte-review1-20261010/XAI_Desktop",
+      "head": "6c3451eda23a90841db907502b647c53b43fe1a2",
+      "clean": true
+    },
+    {
+      "root": "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-full-review1-20261010/XAI_Desktop",
+      "head": "e1d8ae4b2304a91382d4aa2c4ab2dc06d46fc65b",
+      "clean": true
+    }
+  ],
+  "app_attachment_states": "all13 confirmedarchived_worktree via list_artifacts afterqueued",
+  "other_session_worktrees_untouched": 5,
+  "active_worktrees_retained": [
+    "BRDtechnical2",
+    "POMOmachineryreview2",
+    "CDsourcecontract2"
+  ],
+  "completed_MEDreview1_unarchived": true,
+  "source_remote_and_integration_ancestor_checkpoint": 78,
+  "source_remote_preserved_before_adoption": "30e0a903196db8b11c3f30cc02f173bfe2a4bffd",
+  "deep_summary": "1FAIL0WARN known5 retained; notdeepPASS",
+  "deep_log_sha256": "ccab88a7daec3d6b1decbd78d91add7ec99db194680fefc40b727fb26ebff8fc",
+  "unreachable_identity": {
+    "method": "cat-file batch-all-objects objecttype metadata minus rev-list --all commit set; no object deletion/body dump",
+    "unreachable_commit_ids": [
+      "17672dd3bac30bee5a0a06c0a7ab915883a33785",
+      "395f17dd6f925ec8c6cf4b0d9abdf3a891516afc",
+      "4417e8475e0bc07482dc2eaf86fad79ae13e94f0",
+      "7be576163fcabb94ecfda661ef9b418b6a00685a",
+      "ea9201d24e46d8e3bab97cf1c5bf06342b0abf14"
+    ],
+    "matches_prior_known5": true,
+    "commit_objects": 2981,
+    "reachable_commits": 2976
+  },
+  "initial_shared_review_commit": {
+    "sha": "fd03d46b06e963c4144314b61848038b68e6f12f",
+    "archive_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
+    "final": "6c3451eda23a90841db907502b647c53b43fe1a2",
+    "file_diff": [],
+    "source_reporting_omission": "initial/amend command reason pendingactor explanation; NOT extra semanticpass inferred"
+  },
+  "normal_failures_preserved": [
+    {
+      "path": "/tmp/audit-parallel-p36-normal-sync.log",
+      "sha256": "4db74692c9322de9286f11950bd5299e38067b43fccdf9444c2e50c4ca1bc7a8"
+    },
+    {
+      "path": "/tmp/audit-parallel-p37-normal-sync.log",
+      "sha256": "d9a07326362aeded339d2961de1f57dea881b627a573948928f9a227bb19c891"
+    },
+    {
+      "path": "/tmp/audit-parallel-p38-normal-sync.log",
+      "sha256": "ba7be5b25c14f7ccb808804cb78dbbb4d58491d8f6cf3ba10e5985918641e7c6"
+    }
+  ],
+  "recovery_deleted": false
+}
