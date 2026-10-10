@@ -3089,29 +3089,50 @@
       "primary_workflow": "B",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "registered_ready_fresh_whole_correction2",
+      "state": "running_fresh_whole_contract_correction2",
       "fixed_input": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov06-authority-source-contract-impact-r2.json",
-      "actual_actor_launched": false,
+      "actual_actor_launched": true,
       "reserved_full_review_iteration": 3,
-      "reserved_full_review_cap": 3
+      "reserved_full_review_cap": 3,
+      "actor": "/root/parallel_c_gov06_whole_contract_impact_r2",
+      "fixed_parent": "a9b22ebbec423028960f3c7332a6526f9c04ff45",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-gov06-contract2-20261010/XAI_Desktop",
+      "worktree_registration": "createdsuccessful appattachmentidentity100error no recreation"
+    },
+    {
+      "id": "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT2",
+      "workflow": "A",
+      "primary_workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "registered_supplementary_impact2_ready_waiting_slot",
+      "fixed_input": "a9b22ebbec423028960f3c7332a6526f9c04ff45",
+      "family_iteration": 2,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-exhausted-documentary-purposes-impact-r2.json",
+      "actual_actor_launched": false,
+      "new_budget_grant": [],
+      "excluded_from_existing_five_question": true
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4,
     "actors": [
       "/root/parallel_c_gov04_gov07_status_source_discovery_r1",
-      "/root/parallel_c_sk01_sk06_trace_source_discovery_r1"
+      "/root/parallel_c_sk01_sk06_trace_source_discovery_r1",
+      "/root/parallel_c_gov06_whole_contract_impact_r2"
     ],
     "ready_next": [
-      "GOV-06/AUTHORITY-SOURCE-CONTRACT-IMPACT2"
+      "AUDIT/EXHAUSTED-DOCUMENTARY-PURPOSES-IMPACT2"
     ]
   },
   "cost": {
@@ -3174,6 +3195,14 @@
       "error": "helper JSON outerarray omitted ValueError beforemetadataacquisition",
       "business_static": 0,
       "corrected_metadata_invocation": "3349be exit0 all231hashes; rootonlyprovenance notbusinessverification"
+    },
+    "controller_p69_metadata_assembly_failure": {
+      "count": 1,
+      "chunk": "1f008e",
+      "numeric_exit": 1,
+      "error": "list.append given3arguments before anymainrepo write",
+      "business_static": 0,
+      "corrected": "metadataassembly extendlist only, no businesscheck or scopechange"
     }
   },
   "events": [
@@ -3722,6 +3751,11 @@
       "at": "2026-10-10T18:31:02.586526+00:00",
       "event": "P68 receive/preserve GOV06wholeD2 c583 ->7e9d953 exact2ADD clean231immutablehashes/static1PASS PID69972session96532a67ae0/e1e409exit0 3.461s/234Gitall0EOF. WHOLE_REVISE3 realfindings T39consumedstatuspayload/G1OrganizerApp→Pluginmirrors/Sitecopiedreleasefacts; originalsourceUNADOPTED freshcompleteauthor2/3 registered reserveduninvolvedfinalD3/3. Parsercensus3final ownwordguardFAILEDdce6d1exit1 PIDUNKNOWN clean4112outputsabsent/noartifact, cap3/3EXHAUSTED currentcounts/purposebudgets UNKNOWN, noextra4 norincludedinpending5exceptions. Gov04source1twoUNIFIEDexeccreationENOENTnotphysicaldelete rootfs/Gitpresentclean411, sameunitinfratransportcontinuationviaverifiedlocalnode no business/checkerreset; SK01-06source1 nowrunning411. P67normal2FAIL1WARN exactsingleconcurrentc583unpreservedlocalref/reflog, noworiginalremotepreserved; no recoverydelete. RootmetadatahelperbadouterJSON592e7aexit1 preacquisition corrected3349be231hashes provenanceONLY.107sources128knownconcluding31FAILED1completionUNKNOWN96successinclwhitespace1/rework74/overrun3/preparationfailure1/root+2=3/4/formal13/3/3/293/939 unchanged. P68freshpending allholds preserved goalunfinished.",
       "input": "7e9d95316c3b25fbcb9fa9de05dd323e6b1f903b"
+    },
+    {
+      "at": "2026-10-10T18:37:57.243493+00:00",
+      "event": "P69 GOV06freshWHOLEauthor2 dispatcheda9 fixed7e9 withthreefullreviewfindings/canonicalprotected/reservedfreshfinalD3; actualroot+Gov04source1+SK01-06source1+GOV06author2=4/4. Verifiedlocalnode transport restoredGov04source1 samephase checker0 noexecutableloop/recreate, initialtwoprocesscreationrejections remain. Register supplementarydocumentaryimpact2/3 queued for newly exhaustedGOV05/census purposes; preserve existingfullreviewedfive questionpendingunchanged; proposalonly originalcap3/noextra4/nocorrectionlaunch. Wholeoldfive+newtwo technicalviability/minimumfuturefiniteopportunities independentlyreviewedbeforeanynewownerquestion; no checkerreset or quotaexcuse.107sources128knownconcluding31FAILED1completionUNKNOWN96successinclwhitespace1/rework74/overrun3/onepreparationfailure/formal13/3/3/293/939 unchanged. P68normal0FAIL1WARN all107receivedintegrations originancestors, goalunfinished.",
+      "input": "a9b22ebbec423028960f3c7332a6526f9c04ff45"
     }
   ],
   "wave_P2_tasks": [
@@ -3730,7 +3764,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P67known2FAIL1WARN singleconcurrentGOV06D2source localref/reflog beforearchive; originalsource nowexactremote P68freshpending",
+    "normal": "P68literal0FAIL1WARN P69freshpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -3765,7 +3799,7 @@
     "normal_intermediate_P27": "Literal2FAIL1WARN at4d780b6 raced newlycompletedDASHrevieworiginal localrefs/reflog beforepreservation; exact6fdsource nowremote preserved thenreceived; no recoverydeletion, repeatafterpush",
     "deep_P31": "Literal1FAIL0WARN fiveunreachable retained; refs/reflog/70source/all23stashesremotePASS; no fullidentityrescan/deletion",
     "P31_owned_completed_worktrees": "Ten ownedcompleted cleanheads+70remote identities/ancestors/deepreceipt thenrecoverablearchivesconfirmedviaapp; active3workers/readyunlaunchedBRDreview2/other-session5untouched",
-    "normal_log_sha256": "8e344e3ce761d58da573eaebd0552e2d94135cd882f5b840b6d4dec9758a427e",
+    "normal_log_sha256": "b6f2cf28cd22218f20ccb6158e37c481cfb8a059a281202a6e997465d203a60b",
     "deep": "P44 1FAIL0WARN exactfiveoriginalunreachable identities confirmedP45 retainedno deletion",
     "initial_shared_review_recovery_ref": "codex/archive/parallel-shared-source-bytes-review-r1-initial-20261010",
     "deep_log_sha256": "81179a39509cd6990ed115565d43bcb22a280b4cdd999f074f1ed52ae3e97079",
