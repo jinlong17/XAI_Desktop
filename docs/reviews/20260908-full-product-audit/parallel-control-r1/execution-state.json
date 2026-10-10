@@ -564,13 +564,26 @@
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-met05-prepare-20261010/XAI_Desktop",
       "state": "running_source_discovery",
       "formal_invocations": 0
+    },
+    {
+      "id": "TT-08/FINAL-ACCEPTANCE",
+      "workflow": "D",
+      "actor": "/root/parallel_d_tt08_final_acceptance_r1",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "fixed_parent": "c086837e2c4030aa2a9cf631f504b0d1248939be",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-tt08-final-accept-20261010/XAI_Desktop",
+      "state": "running_fullchain_documentary_acceptance",
+      "acceptance_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 2,
-    "total": 3,
+    "workers": 3,
+    "total": 4,
     "capacity": 4
   },
   "cost": {
@@ -721,6 +734,11 @@
       "at": "2026-10-10T11:10:50.031050+00:00",
       "event": "Receive REL9685 impact blocked and TT sole1MOD status; fresh final Astra acceptance registered; MET05 discovery and TASK06 source continue",
       "input": "023451abc9df575c24056cb07cf1c9bebe4a6d43"
+    },
+    {
+      "at": "2026-10-10T11:12:32.085284+00:00",
+      "event": "Fresh fullTT08 final acceptance launched; MET05 and TASK06 source continue actual3workers+root, latest26source/ancestry full check; RELhistorychoice centralizedpending",
+      "registration": "c086837e2c4030aa2a9cf631f504b0d1248939be"
     }
   ],
   "wave_P2_tasks": [
@@ -729,7 +747,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL/1WARN after14ownedrecoverablearchives; all23stash remote",
+    "normal": "0FAIL/1WARN at c086837, all23stash remotely reachable, 26originalsource refs exact and26integration ancestors checked",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -758,7 +776,8 @@
     "goal_runtime": "originalgoal metadata stillblocked; noedit/resumeAPI, CUA refusesCodexappaccessforsafety; useraskedresumeviaapp, pending; directauthorizedworkcontinues",
     "clock_retention_budget": "freshimpact no validpath within3/3; minimalone cumulativei4exception asked separately, pending; noMGBreapproval",
     "no_new_product_decisions": "TT08/WorldClocks existingrules enoughforcurrentstage",
-    "REL02+03_V1": "9885870a full9685 inputs: no complete historical count proof; launch BLOCKED. Need provenance-backed census or explicit narrow exception, no missingcount0 or reset."
+    "REL02+03_V1": "9885870a full9685 inputs: no complete historical count proof; launch BLOCKED. Need provenance-backed census or explicit narrow exception, no missingcount0 or reset. Centralized async decision asked once after exactimpactreceipt: preserved cap/history proof recommended or explicit single bounded staticV1 accounting exception, pending. No waiver adopted.",
+    "WorldClocks_U1": "centralized question remains pending, no default adoption"
   },
   "ready_inventory_collection": {
     "source": "acd21f9b15a735e2202ca9553aff54b3e3b46e17",
