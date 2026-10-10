@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task": "SHARED/NATIVE-HOST-FOCUS-IMPACT2",
+  "actor": "/root/parallel_a_shared_impact_correct2",
+  "parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+  "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
+  "product_sha": "P0 f9eb4b1 remains runtime baseline; exact4 authorized package-docs now differ, never claim fullpackage treeempty",
+  "failure": "One semanticstatic validation FAILED1/1 at line33 assert len(tinputs)==477 and len(minputs)==2663. Dictionaries held normalized unique identities; inherited477/2663 are raw manifest record counts. source/git aliases deduplicate. Author checker error; no input drift established. No rerun/no outputs/no commit.",
+  "reached": [
+    "exact parent/clean/taskcard/allowedpaths/absentoutputs",
+    "review1 raw2821 records",
+    "impact1 raw2808 records subset"
+  ],
+  "unrun": [
+    "fullblobhashvalidation",
+    "completepatch/datacomparison",
+    "bothoutputbuffers",
+    "writes"
+  ],
+  "unwritten_design": "Source-only intended I1 preimport transparent native descriptor/DOM boundary capture/native event-before-React/immutable detached snapshots/sourceconfiguration and14pairedcontrols. Not accepted artifact; futureactor may read only exactfailedhandoff reference and disclose.",
+  "discovery_errors": [
+    "guessed Metrics package absent then plugin-web-metric-tracker found",
+    "truncated combined reads supplemented"
+  ],
+  "cost": {
+    "impact_author_iteration": 2,
+    "impact_author_cap": 3,
+    "semantic_static": 1,
+    "result": "FAILED",
+    "runtime": 0,
+    "tests": 0,
+    "build": 0,
+    "lint": 0,
+    "browser": 0,
+    "native": 0,
+    "server": 0,
+    "qualification": 0,
+    "probes": 0,
+    "vendor": 0,
+    "children": 0
+  },
+  "verification_scope": "Rootmetadata cleanHEAD/absence check only; no replacement author PASS, no source/method/adoption grant",
+  "preservation": "Exact author final handoff failure facts fixed in this root receipt; no new source artifact inferred"
+}

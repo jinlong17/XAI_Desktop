@@ -1112,7 +1112,8 @@
       "archive_ref": "codex/archive/parallel-brd12-writer-lifecycle-impact-r1-20261010",
       "input_hashes_checked": 25632,
       "static_pass": 1,
-      "static_result": "FAILED_original_attempt_no_semantic_rerun_documentaryclosure_only"
+      "static_result": "FAILED_original_attempt_no_semantic_rerun_documentaryclosure_only",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "POMO-04/PREPARE-CORRECT2",
@@ -1163,7 +1164,8 @@
       "input_hashes_checked": 8548,
       "static_pass": 2,
       "static_result": "FAILED_both_original_semantic_passes_no_rerun",
-      "documentary_closure_new_static_invocations": 0
+      "documentary_closure_new_static_invocations": 0,
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "MED-03/CONTRACT-REVIEW1",
@@ -1183,7 +1185,8 @@
       "archive_ref": "codex/archive/parallel-med03-contract-review-r1-20261010",
       "input_hashes_checked": 688,
       "static_pass": 1,
-      "static_result": "FAILED_original_attempt_no_semantic_rerun_documentaryclosure_only"
+      "static_result": "FAILED_original_attempt_no_semantic_rerun_documentaryclosure_only",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "CD-03/CONTRACT-REVIEW1",
@@ -1203,7 +1206,8 @@
       "archive_ref": "codex/archive/parallel-cd03-contract-review-r1-20261010",
       "input_hashes_checked": 3351,
       "static_pass": 1,
-      "static_result": "PASS"
+      "static_result": "PASS",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT-REVIEW1",
@@ -1223,7 +1227,8 @@
       "archive_ref": "codex/archive/parallel-shared-native-host-focus-impact-review-r1-20261010",
       "input_hashes_checked": 2821,
       "static_pass": 1,
-      "static_result": "PASS"
+      "static_result": "PASS",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "BRD-28/PREPARE",
@@ -1244,10 +1249,33 @@
       "static_result": "PASS",
       "actor": "/root/parallel_c_brd28_prepare_r1",
       "fixed_parent": "7b890e0f027c5a1d258954bfc002731b23950c15",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-preparation-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-preparation-20261010/XAI_Desktop",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "CAL-03/PREPARE",
+      "workflow": "C",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "received_full_PROPOSED_UNADOPTED_owner_delta_draft_only_needs_fullreview1",
+      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
+      "preparation_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": true,
+      "static_pass": 1,
+      "actor": "/root/parallel_c_cal03_prepare_r1",
+      "fixed_parent": "7b890e0f027c5a1d258954bfc002731b23950c15",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cal03-preparation-20261010/XAI_Desktop",
+      "source_commit": "57b2bfe7a94ed06f5359952a73b0f728759868a4",
+      "integration_commit": "936c197dcf732bddf27bac00a6fc694fd010f6d1",
+      "archive_ref": "codex/archive/parallel-cal03-prep-r1-20261010",
+      "input_hashes_checked": 3634,
+      "static_result": "PASS",
+      "prepared_rows": 18
+    },
+    {
+      "id": "BK-07/PREPARE",
       "workflow": "C",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
@@ -1258,22 +1286,9 @@
       "formal_invocations": 0,
       "actual_actor_launched": true,
       "static_pass": 0,
-      "actor": "/root/parallel_c_cal03_prepare_r1",
-      "fixed_parent": "7b890e0f027c5a1d258954bfc002731b23950c15",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-cal03-preparation-20261010/XAI_Desktop"
-    },
-    {
-      "id": "BK-07/PREPARE",
-      "workflow": "C",
-      "configured_model": "gpt-6-astra",
-      "provider_attested": false,
-      "state": "queued_ranked_discovery_afterolder_preparations_andreviews",
-      "fixed_input": "ead710ffa47c45f6d5e0ce3bad3c7fcdb4ff9473",
-      "preparation_iteration": 1,
-      "family_cap": 3,
-      "formal_invocations": 0,
-      "actual_actor_launched": false,
-      "static_pass": 0
+      "actor": "/root/parallel_c_bk07_prepare_r1",
+      "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-bk07-preparation-20261010/XAI_Desktop"
     },
     {
       "id": "POMO-04/CONTRACT-REVIEW2",
@@ -1293,7 +1308,8 @@
       "archive_ref": "codex/archive/parallel-pomo04-contract-review-r2-20261010",
       "input_hashes_checked": 2954,
       "static_pass": 1,
-      "static_result": "PASS"
+      "static_result": "PASS",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "MED-03/PREPARE-CORRECT2",
@@ -1313,7 +1329,8 @@
       "static_result": "PASS",
       "actor": "/root/parallel_c_med03_correct2",
       "fixed_parent": "b9ed5f63256620b1135ba9e782f08992923bd3c4",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-correct2-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-med03-correct2-20261010/XAI_Desktop",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "BRD-12/WRITER-LIFECYCLE-IMPACT-REVIEW1",
@@ -1333,7 +1350,8 @@
       "static_result": "PASS",
       "actor": "/root/parallel_d_brd12_lifecycle_impact_review_r1",
       "fixed_parent": "b9ed5f63256620b1135ba9e782f08992923bd3c4",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-lifecycle-impact-review1-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd12-lifecycle-impact-review1-20261010/XAI_Desktop",
+      "worktree_state": "archived_recoverable_confirmed_via_app_after_exactHEAD_clean_remote_deep"
     },
     {
       "id": "CD-03/SOURCE-MACHINERY-IMPACT1",
@@ -1356,7 +1374,7 @@
       "workflow": "A",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_full_shared_impact_author2_I1_correction",
+      "state": "FAILED_static1_no_outputs_clean_frozen",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 2,
       "family_cap": 3,
@@ -1365,7 +1383,11 @@
       "canonical_parent_phase": "shared-methods/prerequisite",
       "actor": "/root/parallel_a_shared_impact_correct2",
       "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
-      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-correct2-20261010/XAI_Desktop"
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-shared-impact-correct2-20261010/XAI_Desktop",
+      "static_pass": 1,
+      "static_result": "FAILED_normalized_unique_count_vs_raw_record_count",
+      "source_outputs_exist": false,
+      "remaining_static_invocations": 0
     },
     {
       "id": "MED-03/CONTRACT-REVIEW2",
@@ -1385,13 +1407,16 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_full_original_scope",
+      "state": "running_fresh_full_independent_contract_review1",
       "fixed_input": "b52b5da64f1c7ff355b41e49d7972b6c8e8703d1",
       "family_iteration": 1,
       "family_cap": 3,
       "formal_invocations": 0,
-      "actual_actor_launched": false,
-      "canonical_parent_phase": "DASH-06/prepare"
+      "actual_actor_launched": true,
+      "canonical_parent_phase": "DASH-06/prepare",
+      "actor": "/root/parallel_d_dash06_availability_contract_review_r1",
+      "fixed_parent": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-dash06-availability-review1-20261010/XAI_Desktop"
     },
     {
       "id": "POMO-04/SOURCE-MACHINERY-IMPACT1",
@@ -1431,13 +1456,43 @@
       "formal_invocations": 0,
       "actual_actor_launched": false,
       "canonical_parent_phase": "BRD-28/prepare"
+    },
+    {
+      "id": "CAL-03/CONTRACT-REVIEW1",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_full_contract_review_before_owner_question",
+      "fixed_input": "936c197dcf732bddf27bac00a6fc694fd010f6d1",
+      "review_iteration": 1,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": false,
+      "canonical_parent_phase": "CAL-03/prepare"
+    },
+    {
+      "id": "SHARED/NATIVE-HOST-FOCUS-IMPACT3",
+      "workflow": "A",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_final_independent_full_impact_author3_after_failedauthor2",
+      "fixed_input": "936c197dcf732bddf27bac00a6fc694fd010f6d1",
+      "family_iteration": 3,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "actual_actor_launched": false,
+      "canonical_parent_phase": "shared-methods/prerequisite",
+      "mandatory_root_inputs": [
+        "docs/reviews/20260908-full-product-audit/parallel-control-r1/shared-impact-author2-failure-receipt.json",
+        "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-native-host-focus-impact-r3.json"
+      ]
     }
   ],
   "workflow_B": "waits for exact contract/review/before/locks; choose ready task when slot available",
   "concurrency": {
     "root": 1,
-    "workers": 3,
-    "total": 4,
+    "workers": 2,
+    "total": 3,
     "capacity": 4
   },
   "cost": {
@@ -1448,24 +1503,24 @@
     "clock_inherited_development_invocations": 2,
     "clock_inherited_development_checks": 83,
     "b70_counters": "immutable original receipts; no reset",
-    "static_passes": 61,
+    "static_passes": 62,
     "rework_findings": 57,
     "retention_validation_invocations": 3,
     "retention_assertions": 145,
     "actual_cross_vendor_verification_invocations": 3,
     "reported_vendor_usd_list_total": 7.6052402,
-    "completed_source_receipts": 63,
+    "completed_source_receipts": 64,
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "63 delivered receipts minus3actualvendor plus1documentedDASHoverrun =61 semanticstaticinvocations incl6FAILED; static_passes field counts consumed, not allPASS",
+    "static_passes_basis": "64delivered minus3vendor plus1DASHoverrun=62 delivered semanticstatic incl6FAILED plus sharedauthor2 noartifactFAILED1 givesknownactual63/7FAILED; no author2source receipt invented",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 6,
     "rework_findings_basis": "Prior56 plus sharedreview I1; no reset or repeatedfinding inflated",
-    "pending_no_delivery_static_invocations": 0,
-    "pending_no_delivery_static_failures": 0,
-    "actual_static_invocations_total_known": 61,
-    "actual_static_failed_total_known": 6,
+    "pending_no_delivery_static_invocations": 1,
+    "pending_no_delivery_static_failures": 1,
+    "actual_static_invocations_total_known": 63,
+    "actual_static_failed_total_known": 7,
     "static_budget_overruns": 1
   },
   "events": [
@@ -1773,6 +1828,16 @@
       "at": "2026-10-10T13:48:21.237934+00:00",
       "event": "P23 normal0FAIL1WARN at6bcb03c/all63 originalremote identities+integrationancestors verified. Actualfresh root+CALfullprepC+CDfullmachineryA+sharedimpact2A=4/4; fullMEDreview2/DASHavailabilityreview1 idleprepared6bcb parents retain fixedinputb52b5da. Newsharedcorrector fresh independentlyowned exact2ADD author2/3 static1/noexecution beforefullreview2/rootadoption. Ninecompletedownclean wts queuedrecoverablearchives onlyafterliteraldeep receipt; fiveother-session untouched. Parent filename/schema misstatement discoveredbyCAL/CD read-only: actualEXECUTIONitems vsTODOsections.tasks; newcards corrected beforewriting, priorfailedchecker results unchanged/no semanticretry.",
       "input": "6bcb03c31d7bcd50ac81bd2549f949276fa4d641"
+    },
+    {
+      "at": "2026-10-10T13:53:06.932380+00:00",
+      "event": "CAL03 source57b2bfe full3634 identities/18rows/static1PASS/zeroexecution originalremote preserved andreceived936c197dcf732bddf27bac00a6fc694fd010f6d1; fullproposal unadopted, exceptionlineage ownerdelta draftonly pendingfreshfullreview1 registered. Originalaudit alreadyauthorizesthree-scope work, reviewmustavoid askingredundantpermission andnarrowonlyundecidedpolicy. Existinglocaltime/samedayrules retained/productionactivationclosed. BKprep1 freshC running6bcbparent/eada input; CDmachineryA+sharedimpact2A continue root+3=4/4. Ninecompletedownwts recoverablearchiveappconfirmed/other-session5untouched, normal9ffa0FAIL1WARN/deep1FAIL0WARN recoverykept.64deliveries/62staticconsumed6FAILED/overrun1/rework57/vendor3 unchanged; cycle45firstCAL; formal13/3/3/293 and939evidence unchanged.",
+      "input": "936c197dcf732bddf27bac00a6fc694fd010f6d1"
+    },
+    {
+      "at": "2026-10-10T13:56:03.083901+00:00",
+      "event": "Sharedimpactauthor2 staticFAILED1/1 unique-normalized vsrawrecords count; no outputs/commit/worktreeclean, hash/driftnotestablished/fullhash+buffer/writesunrun. Root freezesexactfailure receipt andregisters freshFINALimpactauthor3/3 exactly2ADD newr3/full5rowI1design/allcorpora, no author4 or caller sourcebudgetreset. Fullindependentreview2/rootadoption stillrequired beforeTASK/METfinalsource3. CurrentBKprepC+DASHavailabilityreviewD root+2=3/4;CDimpactfinished b5e6843 pending fullrootreceipt not sourcegrant.64deliveries62deliveredstatic6FAILED+sharedpendingFAILED1 actual63/7FAILED/overrun1/rework57/vendor3 unchanged. CALfullreview1newcard; no unreviewedownerquestion; formal13/3/3/293/939unchanged.",
+      "input": "936c197dcf732bddf27bac00a6fc694fd010f6d1"
     }
   ],
   "wave_P2_tasks": [
@@ -1781,7 +1846,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "0FAIL1WARN at6bcb03c; all63originalremote refs and63integration ancestors checked; refs/reflog/all23stashesremote no deletion",
+    "normal": "0FAIL1WARN at9ffa307 afterpreservation/archive, all23stashesremote, no deletion; nextCALrootreceiptpushrequiresrepeat",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",
@@ -1811,7 +1876,8 @@
     "P20_owned_completed_worktrees": "MEDprep/CDprep/sharedimpact/POMOcorrector fourrecoverablearchivesconfirmedviaapp, activeworkers/unrelated5untouched",
     "P23_precleanup": "Nine completed ownedworktrees exactHEADclean+remote verified; deep receipt and recoverable archival pending; activeCAL/CD/shared and two idlefreshreview worktrees plus other-session5 excluded.",
     "deep_P23": "Literal1FAIL0WARN fiveunreachable; refs/reflog/63source/all23stashes remotePASS; priorfive exactIDs recorded earlier, no fullobjectidentity rescanthisbatch/no deletion; completedowned recoverablecleanup follows",
-    "deep_P23_log_sha256": "9c47ad75eebe846da6d9e957bbe4c6d5c4a0d13eebf4f35a2bdc96350ad24516"
+    "deep_P23_log_sha256": "9c47ad75eebe846da6d9e957bbe4c6d5c4a0d13eebf4f35a2bdc96350ad24516",
+    "P23_owned_completed_worktrees": "Nine completedown wts clean exactoriginalHEADs/all63remote refs+integrationancestor verification/deep literalfailure retained then archivedrecoverableconfirmedviaapp; activeCALnowcompleted/BK/CD/shared, idleMED+DASH andother-session5notcleanup"
   },
   "workflow_C": "Full ready preparation advances; POMO04 r1, DASH06 r2, BRD12 r2 received UNADOPTED and fresh reviews queued/running; next MED03/CD03 discovery after older ready reviews. No runtime or product authority from proposals.",
   "active_scheduler": {
