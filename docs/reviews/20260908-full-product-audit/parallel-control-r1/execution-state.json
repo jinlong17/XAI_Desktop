@@ -2575,7 +2575,7 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "running_fresh_FULL_independent_task",
+      "state": "FAILED_static1_validbareSHA_normalization_noartifact_frozen",
       "fixed_input": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
       "family_iteration": 2,
       "family_cap": 3,
@@ -2584,7 +2584,12 @@
       "actor": "/root/parallel_d_outer_capture_full_review_r2",
       "fixed_parent": "dce3ea904104da8a89b0ca5a4d6482b6e8dc6e93",
       "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-outer-capture-review2-20261010/XAI_Desktop",
-      "actual_actor_launched": true
+      "actual_actor_launched": true,
+      "failure_receipt": "docs/reviews/20260908-full-product-audit/parallel-control-r1/outer-capture-impact-review2-failure-receipt.json",
+      "static_result": "FAILED",
+      "static_invocations": 1,
+      "review_verdict": "UNRUN_NO_VALID_ARTIFACT",
+      "source_commit": null
     },
     {
       "id": "MED-03/SOURCE-CONTRACT-REVIEW2",
@@ -2625,12 +2630,16 @@
       "workflow": "D",
       "configured_model": "gpt-6-astra",
       "provider_attested": false,
-      "state": "queued_fresh_FULL_independent_task",
+      "state": "running_fresh_FULL_independent_task",
       "fixed_input": "02e34fa2153bac16c1c82db7e9e53ba6534ccdbe",
       "family_iteration": 2,
       "family_cap": 3,
       "formal_invocations": 0,
-      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-review-r2.json"
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-brd28-source-machinery-impact-review-r2.json",
+      "actor": "/root/parallel_d_brd28_machinery_full_review_r2",
+      "fixed_parent": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50",
+      "worktree": "/Users/lijinlong/.codex/worktrees/audit-parallel-brd28-machinery-review2-20261010/XAI_Desktop",
+      "actual_actor_launched": true
     },
     {
       "id": "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
@@ -2643,6 +2652,18 @@
       "family_cap": 3,
       "formal_invocations": 0,
       "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-gov06-authority-source-discovery-r1.json"
+    },
+    {
+      "id": "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW3",
+      "workflow": "D",
+      "configured_model": "gpt-6-astra",
+      "provider_attested": false,
+      "state": "queued_fresh_FINAL_FULL_independent_task",
+      "fixed_input": "2cfd71ada03bb13017c703c37ec7a9a604edd9cb",
+      "family_iteration": 3,
+      "family_cap": 3,
+      "formal_invocations": 0,
+      "task_card": "docs/reviews/20260908-full-product-audit/parallel-control-r1/task-shared-outer-capture-admission-impact-review-r3.json"
     }
   ],
   "workflow_B": "GOV01+02 whole sourcecontract impact review1 RUNNING; AI05 failedcontinuation candidate frozen NOvaliddiscovery; next unrelated GOV06 sixmodule authority source discovery registered, no parser/authority/code grant.",
@@ -2652,13 +2673,13 @@
     "total": 4,
     "capacity": 4,
     "actors": [
-      "/root/parallel_d_outer_capture_full_review_r2",
+      "/root/parallel_d_brd28_machinery_full_review_r2",
       "/root/parallel_d_med03_source_full_review_r2",
       "/root/parallel_d_gov_source_contract_full_review_r1"
     ],
     "next_ready": [
-      "BRD-28/SOURCE-MACHINERY-IMPACT-REVIEW2",
-      "GOV-06/AUTHORITY-SOURCE-DISCOVERY1"
+      "GOV-06/AUTHORITY-SOURCE-DISCOVERY1",
+      "SHARED/OUTER-CAPTURE-ADMISSION-IMPACT-REVIEW3"
     ]
   },
   "cost": {
@@ -2679,14 +2700,14 @@
     "accepted_parallel_tasks_P1_historical": 3,
     "actual_vendor_readonly_calls": 157,
     "actual_vendor_elapsed_seconds": 676.167,
-    "static_passes_basis": "97delivered receipts inclAI FAILEDpreservationonly; delivered96concluding invocations incl10FAILED+1whitespaceONLY, pending14FAILED1UNKNOWN =>111known24FAILED1UNKNOWN/86knownsuccessful incl1whitespaceONLY. AI3actualPythonFAILED cap1 overrun2, prohibitedpostfailurematerialization1 separate not legitimate preservation. MED/GOV/CD3staticPASS documentaryonly; BRDauthor3+BRD28review1 failed noartifacts.",
+    "static_passes_basis": "97delivered96concluding incl10FAILED+1whitespaceONLY; pending15FAILED1UNKNOWN =>112known25FAILED1UNKNOWN. Newouterreview2 validbareSHAidentity-normalizationFAILED noartifact. AI3actualPythonFAILED/cap1overrun2/prohibitedmaterialization1 retained. Knownsuccessful86 incl1whitespaceONLY; documentarynotbusinessPASS.",
     "postaccept_AST_scanner_invocations": 1,
     "documented_failed_static_passes": 10,
     "rework_findings_basis": "67prior plus2 actual independentlyvalidated fullCDreview3 findings=69; AIinvaliddiscovery and BRDmemoryfindings not accepted.",
-    "pending_no_delivery_static_invocations": 15,
-    "pending_no_delivery_static_failures": 14,
-    "actual_static_invocations_total_known": 111,
-    "actual_static_failed_total_known": 24,
+    "pending_no_delivery_static_invocations": 16,
+    "pending_no_delivery_static_failures": 15,
+    "actual_static_invocations_total_known": 112,
+    "actual_static_failed_total_known": 25,
     "static_budget_overruns": 3,
     "pending_no_delivery_static_unknown": 1,
     "actual_static_completion_unknown_total_known": 1,
@@ -3162,6 +3183,11 @@
       "at": "2026-10-10T17:09:13.910004+00:00",
       "event": "P54 actualroot+Outerfullreview2/MEDfullsource-review2/GOVfullsource-impactreview1=4/4; ownedcleanworktrees eachpinnedP53 orP52actualparent, no hiddenrepin. All97distinctsourceoriginals exactremoterefs + integrationsancestor toP53 andadditionalAIinitial recoveryref confirmedmetadataONLY; P53normal0FAIL1WARN preserved/P54freshpending, deepnotrun. Register unrelatedoriginalGOV06 fullsixmodule authoritysource-discovery1 exact2ADD/Luna/source-only currentADR/G1platformruntime/pausedpackages/Organizerexception/webdevdivergence/actualfrozenremoteheads/crossplatformmirrors finitefuturepaths; no parser/authority/generateddashboardwrite or policygrant. BRD28freshwholeimpactreview2 nextready; allfailed/exhausted/unknownhistories frozen descendants-only. Fouroriginalprompts/all312mapping/DAG retained, manualrootleases notimplementedengine; formal13/3/3/293=312/939 unchanged/TT08onlynewfullcalleraccepted/cost111knownstatic24FAIL1UNKNOWN/rework69/providerLISTnotbilling/ninearchivespending. Goal remains unfinished, runtimegoalpanelblocked userresume pending; authorized work continues.",
       "input": "6f5910ea036ee6f54a26f25c4faba63389aac496"
+    },
+    {
+      "at": "2026-10-10T17:13:13.739376+00:00",
+      "event": "P55 Outerfullreview2actual98572/60031f/exit1/1.973s validbareSHA:path normalization defect, no outputs/commit/integrity/acceptedBLOCKED; immutablefailure receipt and freshFINALwhole3/3 registered no4/hiddenretry. Root+BRD28wholeimpactreview2/MEDfullsource-review2/GOVfullsource-impactreview1=4/4; GOV06discovery ownedreadyworktreepinnedP54 queuesnext thenouterfinalreview3. Fourworkflowprompts navigation refreshed from staleinitialTT/map descriptions to exactcurrentfixedtaskcard/dynamicstate+adoptedr2scheduler, full312scope/DAG/standards/budgets/protectedgates intact; originalpromptSHAhashes preservedinreceipt.97receipts112knownstatic25FAILED1UNKNOWN/rework69/AIpostfailurematerialization1/vendor3LISTnotbilling; formal13/3/3/293=312/939 unchanged TT08onlynewfullcalleraccepted/ninecleanupstillpending. P54normal0FAIL1WARN retained P55freshpending; no runtime/sourcequalification/productimplementation/caller/releaseadoption.",
+      "input": "56fe7e8e4eae4d3d46efa1aed0fcea23e6d3cc50"
     }
   ],
   "wave_P2_tasks": [
@@ -3170,7 +3196,7 @@
     "TT-08/contract-review"
   ],
   "sync_checkpoint": {
-    "normal": "P53literal0FAIL1WARN + all97originalremote/integrationancestor metadataPASS + AIinitial recoveryref preserved; P54freshnormalpending",
+    "normal": "P54literal0FAIL1WARN; P55freshnormalpending",
     "deep_before_owned_cleanup": "1FAIL/0WARN same5knownunreachable, all23stash remote-reachable; no new source/reflog unreachable",
     "P1_owned_worktrees": "three archived; confirmed by list_artifacts; originalsource refs remote preserved",
     "normal_intermediate": "2FAIL/1WARN while new Clock source local-only; source archive now pushed, pending controlpush repeat; do not hide transitional result",

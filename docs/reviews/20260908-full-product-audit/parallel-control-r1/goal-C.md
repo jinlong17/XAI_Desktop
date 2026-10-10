@@ -8,6 +8,6 @@
 
 发现局部阻塞立即冻结当前任务证据、报告下一可行独立纠正/复验，不能重置预算或停掉其他工作流。产品行为只使用已确认规则，缺依据登记最小问题。精确 stage、一意图提交（Why/What/Scope/Risk/Docs/Tests 真实换行），报告 SHA/parent/hash/commands/formal与开发成本/worktree clean/未知与未跑范围；总控串行接收、保存原提交远端、push、祖先核对和 sync-check。caller acceptance、13/312正式完成、工作流进度与发布就绪分列，不改 formal states。
 
-为全量未关闭项目持续形成需求/现状/合同/影响/已有before索引/候选任务卡。首个TT08只读actual single/multi mode与文档差异，提出确切docs范围、业务接受条件及独立验收计划。维护既有W1/C1/F2/R1决定，不重复询问；P1/D2或无既有规则的行为仅集中最小问题，先调度其他可准备项目。118 gated范围完整保留，APP/G1/admin按原路线仅准备既有已授权门内工作，site/sync/具体paused插件不解冻；不从实现臆造产品需求。库存刷新仅在相应accepted后执行，历史有效证据不重跑。
+为全量未关闭项目持续形成需求/现状/合同/影响/已有before索引/候选任务卡。TT08文档链已验收，仅作既有有效证据，不重跑。对下一原范围候选提出确切docs/产品范围、业务接受条件及独立验收计划。维护既有W1/C1/F2/R1决定，不重复询问；P1/D2或无既有规则的行为仅集中最小问题，先调度其他可准备项目。118 gated范围完整保留，APP/G1/admin按原路线仅准备既有已授权门内工作，site/sync/具体paused插件不解冻；不从实现臆造产品需求。库存刷新仅在相应accepted后执行，历史有效证据不重跑。
 
-执行入口：本目录 scheduler.md、task-registry.json、scope-map.json、dependencies.json。只有总控注册并派发的ready任务可写文件。
+执行入口：先读当前控制面、execution-state.json中精确派发任务卡及其固定父SHA；scope-map.json保留完整原范围，active_scheduler指向已审查的r2规则与依赖图，初始task-registry不是动态任务全集。仅总控注册并派发的ready任务可写文件；固定输入不随控制HEAD改变，旧首批描述不构成重复执行授权。

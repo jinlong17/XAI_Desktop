@@ -8,6 +8,6 @@
 
 发现局部阻塞立即冻结当前任务证据、报告下一可行独立纠正/复验，不能重置预算或停掉其他工作流。产品行为只使用已确认规则，缺依据登记最小问题。精确 stage、一意图提交（Why/What/Scope/Risk/Docs/Tests 真实换行），报告 SHA/parent/hash/commands/formal与开发成本/worktree clean/未知与未跑范围；总控串行接收、保存原提交远端、push、祖先核对和 sync-check。caller acceptance、13/312正式完成、工作流进度与发布就绪分列，不改 formal states。
 
-负责已授权模块内且与A无语义/写入冲突的具体产品、文档和治理任务。当前等待TT08 prepare独立合同审查；也从完整B归属库存选择ready候选，先固定诊断/合同/before，不直接凭清单修。精准scope、固定父与回归满足后由新独立作者实施；与A同组件或消费关系必须锁定/后置。GOV/SK等project-system写入仍须其技能与跨平台镜像规则；不能顺便改变全局管理状态。
+负责已授权模块内且与A无语义/写入冲突的具体产品、文档和治理任务。TT08已完成新的完整caller文档验收和证据对账，正式状态保持；不重跑有效历史批次。按当前固定任务卡与execution-state.json选择下一候选；也从完整B归属库存选择ready候选，先固定诊断/合同/before，不直接凭清单修。精准scope、固定父与回归满足后由新独立作者实施；与A同组件或消费关系必须锁定/后置。GOV/SK等project-system写入仍须其技能与跨平台镜像规则；不能顺便改变全局管理状态。
 
-执行入口：本目录 scheduler.md、task-registry.json、scope-map.json、dependencies.json。只有总控注册并派发的ready任务可写文件。
+执行入口：先读当前控制面、execution-state.json中精确派发任务卡及其固定父SHA；scope-map.json保留完整原范围，active_scheduler指向已审查的r2规则与依赖图，初始task-registry不是动态任务全集。仅总控注册并派发的ready任务可写文件；固定输入不随控制HEAD改变，旧首批描述不构成重复执行授权。

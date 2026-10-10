@@ -8,6 +8,6 @@
 
 发现局部阻塞立即冻结当前任务证据、报告下一可行独立纠正/复验，不能重置预算或停掉其他工作流。产品行为只使用已确认规则，缺依据登记最小问题。精确 stage、一意图提交（Why/What/Scope/Risk/Docs/Tests 真实换行），报告 SHA/parent/hash/commands/formal与开发成本/worktree clean/未知与未跑范围；总控串行接收、保存原提交远端、push、祖先核对和 sync-check。caller acceptance、13/312正式完成、工作流进度与发布就绪分列，不改 formal states。
 
-负责共享可靠性、偏好层、Clock完整M→G→B→原r2实施链和共享组件依赖。当前先 CLOCK/R1 审查 Q1 ENOTEMPTY/finalization loss；独立纠正作者处理受审查且在授权产品范围内的技术副本；保留focus1/3、其它六单元0/3及B70全部旧预算。七单元全部资格+独立Q2后才能采用方法，完整有效P0 before后仅提案两个CSS内Clock范围布局，G2/G3通过才采纳hash-bound baseline addendum并E1-E5对账，之后完整r2§11实施及全部固定/受影响/最终验收链。每共享写入资源单一作者，不能因worktree隔离推断独立。
+负责共享可靠性、偏好层、Clock完整M→G→B→原r2实施链和共享组件依赖。当前 Clock retention 已耗尽3/3，后继等待已集中请求的最小预算决定；按当前固定任务卡与永久历史继续共享前置准备，不重新运行已接受或耗尽的历史任务；独立纠正作者处理受审查且在授权产品范围内的技术副本；保留focus1/3、其它六单元0/3及B70全部旧预算。七单元全部资格+独立Q2后才能采用方法，完整有效P0 before后仅提案两个CSS内Clock范围布局，G2/G3通过才采纳hash-bound baseline addendum并E1-E5对账，之后完整r2§11实施及全部固定/受影响/最终验收链。每共享写入资源单一作者，不能因worktree隔离推断独立。
 
-执行入口：本目录 scheduler.md、task-registry.json、scope-map.json、dependencies.json。只有总控注册并派发的ready任务可写文件。
+执行入口：先读当前控制面、execution-state.json中精确派发任务卡及其固定父SHA；scope-map.json保留完整原范围，active_scheduler指向已审查的r2规则与依赖图，初始task-registry不是动态任务全集。仅总控注册并派发的ready任务可写文件；固定输入不随控制HEAD改变，旧首批描述不构成重复执行授权。

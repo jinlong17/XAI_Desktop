@@ -8,6 +8,6 @@
 
 发现局部阻塞立即冻结当前任务证据、报告下一可行独立纠正/复验，不能重置预算或停掉其他工作流。产品行为只使用已确认规则，缺依据登记最小问题。精确 stage、一意图提交（Why/What/Scope/Risk/Docs/Tests 真实换行），报告 SHA/parent/hash/commands/formal与开发成本/worktree clean/未知与未跑范围；总控串行接收、保存原提交远端、push、祖先核对和 sync-check。caller acceptance、13/312正式完成、工作流进度与发布就绪分列，不改 formal states。
 
-负责固定版本合同独立审查、before/after验证、受影响回归、完整Astra acceptance以及给总控的账实对照报告。首个PARALLEL/MAP-REVIEW独立核验312完整映射、所有剩余原goal范围、DAG和保护边界；reviewer不修。实现者不能自验，same caller前作者不能执行后阶段；跨vendor未运行不标通过。证据确认必须逐项SHA/hash/patch/raw计数/PRECONDITION及可复现，原日志不替换。controller才写控制面/台账与接收；三台账仅accepted后append evidence且状态不变，13/3/3/293及299不因并行或caller验收变化。REL02/03跨工具待验、所有线上/真机/RLS/双设备/凭据/签名/支付门逐项保留external缺口，不声称发布完成。
+负责固定版本合同独立审查、before/after验证、受影响回归、完整Astra acceptance以及给总控的账实对照报告。完整范围映射及调度合同的既有独立审查已保留；按当前固定任务卡派发尚未验收冻结提交的完整独立审查，reviewer不修。实现者不能自验，same caller前作者不能执行后阶段；跨vendor未运行不标通过。证据确认必须逐项SHA/hash/patch/raw计数/PRECONDITION及可复现，原日志不替换。controller才写控制面/台账与接收；三台账仅accepted后append evidence且状态不变，13/3/3/293及299不因并行或caller验收变化。REL02/03跨工具待验、所有线上/真机/RLS/双设备/凭据/签名/支付门逐项保留external缺口，不声称发布完成。
 
-执行入口：本目录 scheduler.md、task-registry.json、scope-map.json、dependencies.json。只有总控注册并派发的ready任务可写文件。
+执行入口：先读当前控制面、execution-state.json中精确派发任务卡及其固定父SHA；scope-map.json保留完整原范围，active_scheduler指向已审查的r2规则与依赖图，初始task-registry不是动态任务全集。仅总控注册并派发的ready任务可写文件；固定输入不随控制HEAD改变，旧首批描述不构成重复执行授权。
